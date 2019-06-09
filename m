@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE42C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB4CC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8997E205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D51205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100266;
-	bh=gF7m42X1PrEptWyk5LBiKFn0g3ZJIyjsxi25BehhXFk=;
+	s=default; t=1560100276;
+	bh=lnr7WKWDC06I1cPV045ulpop/x38GR84FYHwtpV3j18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P9F/nfZ0mCoKUQpLWWot+56e9AZ2KGHciZsd6fK6gdpwGE+6Xz/dh/g1n8P3SrlD7
-	 /vcb7iNrvdSsVm6KKeWLcj+fNtMldbV6wxTgXC/Zaj17iprOAFV4WUiAZfhQdJjDFX
-	 pbC88kBUB5gN7gtgz94bzdYA2I5zd8/rQcsRd43w=
+	b=ki8E9I5dV7OuGzX+nDFfrmVHIiS4te/mkxhuf18W7lTKlsSEBXBxMQQR2P/Gqe3ec
+	 O5iYuAeNLSdmDUDvP6Y1SZPrcy0UHjxUwYeKotIZuRssD82Z9KBIKK/q62LKOpdTjr
+	 9hDVIHIFRyQK617XEMnpuHtTa1BbPik4kPLMOeW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388862AbfFIRLF (ORCPT
+        id S2389022AbfFIRLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39358 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:11:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733260AbfFIRBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:01:50 -0400
+        id S1733133AbfFIRBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A5D5208C0;
-        Sun,  9 Jun 2019 17:01:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A9F120868;
+        Sun,  9 Jun 2019 17:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099710;
-        bh=gF7m42X1PrEptWyk5LBiKFn0g3ZJIyjsxi25BehhXFk=;
+        s=default; t=1560099693;
+        bh=lnr7WKWDC06I1cPV045ulpop/x38GR84FYHwtpV3j18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rbtQnkWhrpuepuQnsADvEBcEAUkTY4ljEeE9nYiWWZ42YyV/JWdiMlBIWKA2BJc4I
-         Qov6AeLNriBeEU/N7HVovoUBbVfKmHsS+fcu0fqqR+YsQl5qtBvSDltPVeeP//wb+P
-         2UzJ6vjdkPOLp1baJkJ911T6zum/4wnzFJHK5U5c=
+        b=Ph4EMCQ+XwZYUoVxg9McfWN1gWmiUxw3wLQVF8g40zxr/NqEYpi53SQTBsW4kFlPV
+         9k1WyM8NqWDj2jhDDx6iiDmbBNwLdw5vq51Zrp6S+XTMNUiJzw6DmSy2+J9ojt1Dlh
+         UJJqKdZ7V7rxqEKPSrym4hGmXEJ0JC33q7fU63Eo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        Nicholas Nunley <nicholas.d.nunley@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 095/241] mmc: core: Verify SD bus width
-Date:   Sun,  9 Jun 2019 18:40:37 +0200
-Message-Id: <20190609164150.538605430@linuxfoundation.org>
+Subject: [PATCH 4.4 130/241] i40e: dont allow changes to HW VLAN stripping on active port VLANs
+Date:   Sun,  9 Jun 2019 18:41:12 +0200
+Message-Id: <20190609164151.550219288@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,53 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
+[ Upstream commit bfb0ebed53857cfc57f11c63fa3689940d71c1c8 ]
 
-The SD Physical Layer Spec says the following: Since the SD Memory Card
-shall support at least the two bus modes 1-bit or 4-bit width, then any SD
-Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
+Modifying the VLAN stripping options when a port VLAN is configured
+will break traffic for the VSI, and conceptually doesn't make sense,
+so don't allow this.
 
-This change verifies the card has specified a bus width.
-
-AMD SDHC Device 7806 can get into a bad state after a card disconnect
-where anything transferred via the DATA lines will always result in a
-zero filled buffer. Currently the driver will continue without error if
-the HC is in this condition. A block device will be created, but reading
-from it will result in a zero buffer. This makes it seem like the SD
-device has been erased, when in actuality the data is never getting
-copied from the DATA lines to the data buffer.
-
-SCR is the first command in the SD initialization sequence that uses the
-DATA lines. By checking that the response was invalid, we can abort
-mounting the card.
-
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/sd.c | 8 ++++++++
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index 967535d76e346..fb8741f18c1f5 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -216,6 +216,14 @@ static int mmc_decode_scr(struct mmc_card *card)
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 06b38f50980c5..22c43a776c6cd 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -2263,6 +2263,10 @@ void i40e_vlan_stripping_enable(struct i40e_vsi *vsi)
+ 	struct i40e_vsi_context ctxt;
+ 	i40e_status ret;
  
- 	if (scr->sda_spec3)
- 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
++	/* Don't modify stripping options if a port VLAN is active */
++	if (vsi->info.pvid)
++		return;
 +
-+	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
-+	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
-+	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
-+		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
+ 	if ((vsi->info.valid_sections &
+ 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
+ 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_MODE_MASK) == 0))
+@@ -2293,6 +2297,10 @@ void i40e_vlan_stripping_disable(struct i40e_vsi *vsi)
+ 	struct i40e_vsi_context ctxt;
+ 	i40e_status ret;
  
++	/* Don't modify stripping options if a port VLAN is active */
++	if (vsi->info.pvid)
++		return;
++
+ 	if ((vsi->info.valid_sections &
+ 	     cpu_to_le16(I40E_AQ_VSI_PROP_VLAN_VALID)) &&
+ 	    ((vsi->info.port_vlan_flags & I40E_AQ_VSI_PVLAN_EMOD_MASK) ==
 -- 
 2.20.1
 
