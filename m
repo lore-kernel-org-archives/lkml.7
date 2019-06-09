@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B94BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE03C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8FE208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188F3206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099641;
-	bh=orFbGQNmIg/UlgOMEjrkVkWSq42RPN7hoa0UHDkDI8s=;
+	s=default; t=1560099644;
+	bh=Bw3SHpj2ecdzkWtEukyPKNA55yL5HmRX/b8iyGO5ICk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ih81CTHp4krpQLDuDS4Lho/5pBa65V57tHUxikCIIA4liJPuPRMAadZ6Uznra0/bg
-	 sgGwZzsV9NB5mtW9LCPHD9GWQHz0s3zTdO0Oj0Aw2WHqR050yY6VAOeeWsG0FyqMeS
-	 kEwitssF7m64CigSFDziHjp5dFQSjiwNtPX8Xn7o=
+	b=KeW699ilOQpmzefcI4w3eRAswTEHkSTAcoQsUZLsyBcFRV4sqNpZTHIXTO7UbemRY
+	 okwXZCIFvm38sP+To3eT2yu/3TAMluirScTFfqcNagABjjpke6b2hzJeBkCTghn/UN
+	 IEUjNdKnJHc2wLIMizJIWj2ufAyGXnldYsj9pKvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387903AbfFIRAj (ORCPT
+        id S2387915AbfFIRAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:00:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37240 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:00:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387885AbfFIRAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:00:37 -0400
+        id S2387904AbfFIRAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:00:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5857520833;
-        Sun,  9 Jun 2019 17:00:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5B6A206DF;
+        Sun,  9 Jun 2019 17:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099636;
-        bh=orFbGQNmIg/UlgOMEjrkVkWSq42RPN7hoa0UHDkDI8s=;
+        s=default; t=1560099639;
+        bh=Bw3SHpj2ecdzkWtEukyPKNA55yL5HmRX/b8iyGO5ICk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZIrZ1JCPXqj6/RcZG7TlQuh6SChwP/imS+5fw/CwstuW3IGgPrL7wimLwNgg3LPk
-         x180w3Pn159leTf0Rw4eHJ86+XQ6oLt47M1QQrM4EQkYgLSaKoTl3XmZa29Ywp+jwB
-         qjDEnFKCHmpsOs8saoi0UgKTmWkmB/Rbt0p3jAAY=
+        b=0hkUwxGTsIq03wyVCyJLHrAzUopvh11P/fw9QlHokXZdYkKAHa3aCIG6g4ZFcv9Ql
+         sFdHyzSah3jhd8Er+2W1JN2h9ciA0gGj4SEr+y3fXuD9gxdZ4UNlp5AWaZByfplT++
+         TS2D+TWxlz+FSwFAp0W0TFJ8N17QeklEGx/VFYxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: [PATCH 4.4 111/241] x86/build: Move _etext to actual end of .text
-Date:   Sun,  9 Jun 2019 18:40:53 +0200
-Message-Id: <20190609164150.998565143@linuxfoundation.org>
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 112/241] smpboot: Place the __percpu annotation correctly
+Date:   Sun,  9 Jun 2019 18:40:54 +0200
+Message-Id: <20190609164151.027300184@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -65,49 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 392bef709659abea614abfe53cf228e7a59876a4 ]
+[ Upstream commit d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb ]
 
-When building x86 with Clang LTO and CFI, CFI jump regions are
-automatically added to the end of the .text section late in linking. As a
-result, the _etext position was being labelled before the appended jump
-regions, causing confusion about where the boundaries of the executable
-region actually are in the running kernel, and broke at least the fault
-injection code. This moves the _etext mark to outside (and immediately
-after) the .text area, as it already the case on other architectures
-(e.g. arm64, arm).
+The test robot reported a wrong assignment of a per-CPU variable which
+it detected by using sparse and sent a report. The assignment itself is
+correct. The annotation for sparse was wrong and hence the report.
+The first pointer is a "normal" pointer and points to the per-CPU memory
+area. That means that the __percpu annotation has to be moved.
 
-Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
+Move the __percpu annotation to pointer which points to the per-CPU
+area. This change affects only the sparse tool (and is ignored by the
+compiler).
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190423183827.GA4012@beast
+Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
+Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/smpboot.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 17e1e60b6b400..68dd72248919b 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -110,11 +110,11 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--
--		/* End of text section */
--		_etext = .;
- 	} :text = 0x9090
- 
-+	/* End of text section */
-+	_etext = .;
-+
- 	NOTES :text :note
- 
- 	EXCEPTION_TABLE(16) :text = 0x9090
+diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
+index 12910cf19869c..12a4b09f4d08b 100644
+--- a/include/linux/smpboot.h
++++ b/include/linux/smpboot.h
+@@ -30,7 +30,7 @@ struct smpboot_thread_data;
+  * @thread_comm:	The base name of the thread
+  */
+ struct smp_hotplug_thread {
+-	struct task_struct __percpu	**store;
++	struct task_struct		* __percpu *store;
+ 	struct list_head		list;
+ 	int				(*thread_should_run)(unsigned int cpu);
+ 	void				(*thread_fn)(unsigned int cpu);
 -- 
 2.20.1
 
