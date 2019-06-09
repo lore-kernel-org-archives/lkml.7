@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85689C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F398C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEB62067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F51206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100796;
-	bh=5Gn3cKXeLvaaV9cKG5BUsjf22qJuT6vgfoenKD8ddLE=;
+	s=default; t=1560100800;
+	bh=IbT8X3DgZm5nk+OV3IJ5ml/dTNHDkUuw6SOafKmU2Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/sqs9LZ5grbDLzlkeBAQ/st0Gp90DhqQpQVt1TNhWp1jXDCStqHDOFGezITpr5y6
-	 tAo9ZuSVbTT5FHdAKNEj//onEvhNkhQrpuxIYUPeHGj0u/9uYvJX6IGMf9lg91J8ry
-	 9DbhMEUzx6EuZx2W6tXvY90nDr2pIgs5RiBTbWM8=
+	b=Ga6WWrKgXgMsR304br5PCy/rbBDCjC7/pe7otwccPuax2tXMSkCyaqAPbK+I5XZNg
+	 DwFY0qzHXbljxO3n0jzpoc6ULIsENqUl1jAMDd8A05O7o1L48pugt3Vc6hmP62LTey
+	 FvIdAIDpdn31MJEbZVZtCmC5zbnww2v3/XLyHRpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731079AbfFIQsE (ORCPT
+        id S1731430AbfFIRT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46776 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:19:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729963AbfFIQrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:55 -0400
+        id S1731071AbfFIQsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0664205ED;
-        Sun,  9 Jun 2019 16:47:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B79FA206C3;
+        Sun,  9 Jun 2019 16:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098875;
-        bh=5Gn3cKXeLvaaV9cKG5BUsjf22qJuT6vgfoenKD8ddLE=;
+        s=default; t=1560098883;
+        bh=IbT8X3DgZm5nk+OV3IJ5ml/dTNHDkUuw6SOafKmU2Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/im7NW30Gcg+VMjMuCuDNKX68zVI0ViOl8ZFE9s3N/s04ih9NHcAnU0qqD8Q4ZXc
-         y/7m4tPNnYo70feZQswfqzYQ4oKmKgqXJRlJUjMHtEj+vEWEihQp0EOOrf3G4DVjkH
-         CGlRSM4sTl8EUK0o87dsOgVuD920nr+sSOyvUcPQ=
+        b=GPeHn/dl919QWKg/4JDXQJRVsg5Ab/+X0Y//JY2Len1Yj3ntHdd3Tm0CFhdUoqlfg
+         73vFut+Kcn2xYTXEHTtlpBfwTptknLSGhIo67NM2E0OZeCDu3gDtIZxVhhS0/jR01b
+         R2bgLGaDAXdCv5q2zwZLqgrmk44KB8ki+aMpFBrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yihao Wu <wuyihao@linux.alibaba.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 21/51] NFSv4.1: Fix bug only first CB_NOTIFY_LOCK is handled
-Date:   Sun,  9 Jun 2019 18:42:02 +0200
-Message-Id: <20190609164128.316056941@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 4.19 23/51] pstore: Remove needless lock during console writes
+Date:   Sun,  9 Jun 2019 18:42:04 +0200
+Message-Id: <20190609164128.456426716@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,54 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yihao Wu <wuyihao@linux.alibaba.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit ba851a39c9703f09684a541885ed176f8fb7c868 upstream.
+commit b77fa617a2ff4d6beccad3d3d4b3a1f2d10368aa upstream.
 
-When a waiter is waked by CB_NOTIFY_LOCK, it will retry
-nfs4_proc_setlk(). The waiter may fail to nfs4_proc_setlk() and sleep
-again. However, the waiter is already removed from clp->cl_lock_waitq
-when handling CB_NOTIFY_LOCK in nfs4_wake_lock_waiter(). So any
-subsequent CB_NOTIFY_LOCK won't wake this waiter anymore. We should
-put the waiter back to clp->cl_lock_waitq before retrying.
+Since the console writer does not use the preallocated crash dump buffer
+any more, there is no reason to perform locking around it.
 
-Cc: stable@vger.kernel.org #4.9+
-Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 70ad35db3321 ("pstore: Convert console write to use ->write_buf")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/pstore/platform.c |   29 ++++++-----------------------
+ 1 file changed, 6 insertions(+), 23 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6905,20 +6905,22 @@ nfs4_retry_setlk(struct nfs4_state *stat
- 	init_wait(&wait);
- 	wait.private = &waiter;
- 	wait.func = nfs4_wake_lock_waiter;
--	add_wait_queue(q, &wait);
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -476,31 +476,14 @@ static void pstore_unregister_kmsg(void)
+ #ifdef CONFIG_PSTORE_CONSOLE
+ static void pstore_console_write(struct console *con, const char *s, unsigned c)
+ {
+-	const char *e = s + c;
++	struct pstore_record record;
  
- 	while(!signalled()) {
-+		add_wait_queue(q, &wait);
- 		status = nfs4_proc_setlk(state, cmd, request);
--		if ((status != -EAGAIN) || IS_SETLK(cmd))
-+		if ((status != -EAGAIN) || IS_SETLK(cmd)) {
-+			finish_wait(q, &wait);
- 			break;
-+		}
+-	while (s < e) {
+-		struct pstore_record record;
+-		unsigned long flags;
++	pstore_record_init(&record, psinfo);
++	record.type = PSTORE_TYPE_CONSOLE;
  
- 		status = -ERESTARTSYS;
- 		freezer_do_not_count();
- 		wait_woken(&wait, TASK_INTERRUPTIBLE, NFS4_LOCK_MAXTIMEOUT);
- 		freezer_count();
-+		finish_wait(q, &wait);
- 	}
- 
--	finish_wait(q, &wait);
- 	return status;
+-		pstore_record_init(&record, psinfo);
+-		record.type = PSTORE_TYPE_CONSOLE;
+-
+-		if (c > psinfo->bufsize)
+-			c = psinfo->bufsize;
+-
+-		if (oops_in_progress) {
+-			if (!spin_trylock_irqsave(&psinfo->buf_lock, flags))
+-				break;
+-		} else {
+-			spin_lock_irqsave(&psinfo->buf_lock, flags);
+-		}
+-		record.buf = (char *)s;
+-		record.size = c;
+-		psinfo->write(&record);
+-		spin_unlock_irqrestore(&psinfo->buf_lock, flags);
+-		s += c;
+-		c = e - s;
+-	}
++	record.buf = (char *)s;
++	record.size = c;
++	psinfo->write(&record);
  }
- #else /* !CONFIG_NFS_V4_1 */
+ 
+ static struct console pstore_console = {
 
 
