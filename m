@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77448C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9579AC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 467F42067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4792067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100653;
-	bh=6Ajabuw9ON+eshjxs/JE69Gi3UxizKO+uTGIS/9UZe4=;
+	s=default; t=1560100659;
+	bh=GLP0+RZM/cxX0XznA1xTTCFuzjQJbaxieRi83J0s7pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZXeMYhmk7tjs5MXST5it3rMmGEH2dxlhHOQPVXETXC3DtlQY+0g3gcZuV65vK6So
-	 sk8mEm7Ftj5ZW4NNFPqqCNvmQxqtpxuJVtlqliifvrQc8LNLJEzlUplTfXe43AkwmM
-	 SeIqeA+ZNBI64wFG1od6fb4ikyshfLmBfMKI5kkI=
+	b=BjE+TnVvnhX93ALuU31BlQye160BQFRcBt1kfzHOdrMYHf48Z3Ovl9Fk5IA6L6tLV
+	 hxjMQl8UNXIDaInT0Ki8NJO0EbTx35hwWyxEbveDu1FSE8qhQESLx5Vj9ajpNviWfx
+	 8PdzZdIvsuwiVpp+cBLbSQE3clE1gjb8l+WNJY9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732010AbfFIQvn (ORCPT
+        id S1731988AbfFIQvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731994AbfFIQvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:51:41 -0400
+        id S1731967AbfFIQvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F741205ED;
-        Sun,  9 Jun 2019 16:51:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5254120840;
+        Sun,  9 Jun 2019 16:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099100;
-        bh=6Ajabuw9ON+eshjxs/JE69Gi3UxizKO+uTGIS/9UZe4=;
+        s=default; t=1560099094;
+        bh=GLP0+RZM/cxX0XznA1xTTCFuzjQJbaxieRi83J0s7pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TkAl4slx/mw0L7RiMi38pUyDls72nZuf2RFrLt0ZMH1pwgho3tQpgXYzouK/+izGz
-         HdyUFfiInPO/b1W86Jw0folFYjVtDpSz/IJrYiaZ2ksauqbWQlAcjK6KgR2LtCFXSn
-         oLCnR4A5z3ojCHtgO1EHn6bIiVNL7jtjtRxwERXw=
+        b=gf1l9MH6D4HOItikrQV9jRMuRDQRGTlPzkZ5pFiyJi68IqMfO8eZp8ZPghsiXe9WH
+         fkBIGeyt/PhvAJjjG/r9lUWdc5JVZkLTOMPVJmf74l64RJVG/vdkinWga0wheznNAj
+         kYHKlbKQRvMPFtZtRCVgvSu66Gtg0zDrQyxTJ0Ck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        kbuild test robot <lkp@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 10/83] ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
-Date:   Sun,  9 Jun 2019 18:41:40 +0200
-Message-Id: <20190609164128.423181141@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.14 15/35] fuse: fallocate: fix return with locked inode
+Date:   Sun,  9 Jun 2019 18:42:21 +0200
+Message-Id: <20190609164126.383573160@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
-References: <20190609164127.843327870@linuxfoundation.org>
+In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
+References: <20190609164125.377368385@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,58 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit 903869bd10e6719b9df6718e785be7ec725df59f ]
+commit 35d6fcbb7c3e296a52136347346a698a35af3fda upstream.
 
-ip_sf_list_clear_all() needs to be defined even if !CONFIG_IP_MULTICAST
+Do the proper cleanup in case the size check fails.
 
-Fixes: 3580d04aa674 ("ipv4/igmp: fix another memory leak in igmpv3_del_delrec()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Tested with xfstests:generic/228
+
 Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 0cbade024ba5 ("fuse: honor RLIMIT_FSIZE in fuse_file_fallocate")
+Cc: Liu Bo <bo.liu@linux.alibaba.com>
+Cc: <stable@vger.kernel.org> # v3.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/igmp.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
 
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -190,6 +190,17 @@ static void ip_ma_put(struct ip_mc_list
- 	     pmc != NULL;					\
- 	     pmc = rtnl_dereference(pmc->next_rcu))
- 
-+static void ip_sf_list_clear_all(struct ip_sf_list *psf)
-+{
-+	struct ip_sf_list *next;
-+
-+	while (psf) {
-+		next = psf->sf_next;
-+		kfree(psf);
-+		psf = next;
-+	}
-+}
-+
- #ifdef CONFIG_IP_MULTICAST
- 
- /*
-@@ -635,17 +646,6 @@ static void igmpv3_clear_zeros(struct ip
+---
+ fs/fuse/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2978,7 +2978,7 @@ static long fuse_file_fallocate(struct f
+ 	    offset + length > i_size_read(inode)) {
+ 		err = inode_newsize_ok(inode, offset + length);
+ 		if (err)
+-			return err;
++			goto out;
  	}
- }
  
--static void ip_sf_list_clear_all(struct ip_sf_list *psf)
--{
--	struct ip_sf_list *next;
--
--	while (psf) {
--		next = psf->sf_next;
--		kfree(psf);
--		psf = next;
--	}
--}
--
- static void kfree_pmc(struct ip_mc_list *pmc)
- {
- 	ip_sf_list_clear_all(pmc->sources);
+ 	if (!(mode & FALLOC_FL_KEEP_SIZE))
 
 
