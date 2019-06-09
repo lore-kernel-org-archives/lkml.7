@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77331C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB83C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511AC204EC
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D7E0206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099664;
-	bh=QKhxoq+ZGG8surwWJErUo2NwjwiA2uOO6hateWKMdGs=;
+	s=default; t=1560099667;
+	bh=W8GmZPJc4D810AHXg6dPjhl3exR5bbQA/CYA32qdfBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dkjcv0L3JrkDyfMGfWgqDQtrmfbFe/jRGDBgl3sQxllLF06UlzPEM/1vcvHuvW1Cx
-	 TKTHp0Yh+3x66FlCZ0Oon/aiJ1il1NaMtqppOO/PSu4Ne9u7gJWC4TFkr74eBsC0WE
-	 ABp581etmi5wIMLi7ixw8eTiDbOt3Vs59TxT8axc=
+	b=FUrsvVvjL7giPgUfRnKlZsWXCyRa87a5y8/D1GNkn37+dkMk/PGtiaMKGoMoyyAjV
+	 6qf30eeTneP7dkMO8O8lXEpRLL4eHjytIkM2F2hjY0gHLD936x9FD5x9T0hlKExfU/
+	 SWTQnh868gWTf5eIxjk1BnazECpymCXP76RMb3kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387972AbfFIRBD (ORCPT
+        id S2387984AbfFIRBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:01:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37898 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:01:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387963AbfFIRBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:01:00 -0400
+        id S2387968AbfFIRBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B0CD206C3;
-        Sun,  9 Jun 2019 17:00:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA03A206C3;
+        Sun,  9 Jun 2019 17:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099659;
-        bh=QKhxoq+ZGG8surwWJErUo2NwjwiA2uOO6hateWKMdGs=;
+        s=default; t=1560099662;
+        bh=W8GmZPJc4D810AHXg6dPjhl3exR5bbQA/CYA32qdfBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkW5geIA1jEFxwU8VCuXWtHWNDORSm2qPw0TmEHo1gZvAAMqtXFOY0S1U2vRA+9ke
-         dRBFtycBsUdiS5ykkno5nrndnqmrE0JcfZcbVnxlOMoJECg/DzL7CLJ6ubtJ8LoZrv
-         He2vXTmKaoB4gxJCNoHLOZrBQJN3HE4IPqXXG+KE=
+        b=HOR1LzqxFvBbZjOKnV6y79L71GmZB8t6JspLxDCfLGFvViP3XqCCJf1NvGGEO8yDE
+         eaaVktWvq5sl0mDEU91StfM5Tt1cVJNHUQZHTeD9kA/jDx6zFWnWruCd0Xlat4aHD9
+         O5m+/gYiWoX5hPOz0IPjz3CgUryZcuevkKDWhhQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 119/241] media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
-Date:   Sun,  9 Jun 2019 18:41:01 +0200
-Message-Id: <20190609164151.235655039@linuxfoundation.org>
+Subject: [PATCH 4.4 093/241] gfs2: Fix lru_count going negative
+Date:   Sun,  9 Jun 2019 18:40:35 +0200
+Message-Id: <20190609164150.478175234@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,77 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ccdd85d518d8b9320ace1d87271f0ba2175f21fa ]
+[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
 
-In preparation for adding asynchronous subdevice support to the driver,
-don't acquire v4l2_clk from the driver .probe() callback as that may
-fail if the clock is provided by a bridge driver which may be not yet
-initialized.  Move the v4l2_clk_get() to ov6650_video_probe() helper
-which is going to be converted to v4l2_subdev_internal_ops.registered()
-callback, executed only when the bridge driver is ready.
+Under certain conditions, lru_count may drop below zero resulting in
+a large amount of log spam like this:
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
+    negative objects to delete nr=-1
+
+This happens as follows:
+1) A glock is moved from lru_list to the dispose list and lru_count is
+   decremented.
+2) The dispose function calls cond_resched() and drops the lru lock.
+3) Another thread takes the lru lock and tries to add the same glock to
+   lru_list, checking if the glock is on an lru list.
+4) It is on a list (actually the dispose list) and so it avoids
+   incrementing lru_count.
+5) The glock is moved to lru_list.
+5) The original thread doesn't dispose it because it has been re-added
+   to the lru list but the lru_count has still decreased by one.
+
+Fix by checking if the LRU flag is set on the glock rather than checking
+if the glock is on some list and rearrange the code so that the LRU flag
+is added/removed precisely when the glock is added/removed from lru_list.
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/soc_camera/ov6650.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ fs/gfs2/glock.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
-index 1e9ebfda25525..4e19f5e5d8cf7 100644
---- a/drivers/media/i2c/soc_camera/ov6650.c
-+++ b/drivers/media/i2c/soc_camera/ov6650.c
-@@ -839,9 +839,16 @@ static int ov6650_video_probe(struct i2c_client *client)
- 	u8		pidh, pidl, midh, midl;
- 	int		ret;
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 09a0cf5f3dd86..1eb737c466ddc 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -136,22 +136,26 @@ static int demote_ok(const struct gfs2_glock *gl)
  
-+	priv->clk = v4l2_clk_get(&client->dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(&client->dev, "v4l2_clk request err: %d\n", ret);
-+		return ret;
+ void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
+ {
++	if (!(gl->gl_ops->go_flags & GLOF_LRU))
++		return;
++
+ 	spin_lock(&lru_lock);
+ 
+-	if (!list_empty(&gl->gl_lru))
+-		list_del_init(&gl->gl_lru);
+-	else
++	list_del(&gl->gl_lru);
++	list_add_tail(&gl->gl_lru, &lru_list);
++
++	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
++		set_bit(GLF_LRU, &gl->gl_flags);
+ 		atomic_inc(&lru_count);
 +	}
-+
- 	ret = ov6650_s_power(&priv->subdev, 1);
- 	if (ret < 0)
--		return ret;
-+		goto eclkput;
  
- 	msleep(20);
- 
-@@ -878,6 +885,11 @@ static int ov6650_video_probe(struct i2c_client *client)
- 
- done:
- 	ov6650_s_power(&priv->subdev, 0);
-+	if (!ret)
-+		return 0;
-+eclkput:
-+	v4l2_clk_put(priv->clk);
-+
- 	return ret;
+-	list_add_tail(&gl->gl_lru, &lru_list);
+-	set_bit(GLF_LRU, &gl->gl_flags);
+ 	spin_unlock(&lru_lock);
  }
  
-@@ -1035,18 +1047,9 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
- 	priv->colorspace  = V4L2_COLORSPACE_JPEG;
+ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
+ {
+ 	spin_lock(&lru_lock);
+-	if (!list_empty(&gl->gl_lru)) {
++	if (test_bit(GLF_LRU, &gl->gl_flags)) {
+ 		list_del_init(&gl->gl_lru);
+ 		atomic_dec(&lru_count);
+ 		clear_bit(GLF_LRU, &gl->gl_flags);
+@@ -1040,8 +1044,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
+ 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
+ 			fast_path = 1;
+ 	}
+-	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
+-	    (glops->go_flags & GLOF_LRU))
++	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
+ 		gfs2_glock_add_to_lru(gl);
  
--	priv->clk = v4l2_clk_get(&client->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		ret = PTR_ERR(priv->clk);
--		goto eclkget;
--	}
--
- 	ret = ov6650_video_probe(client);
--	if (ret) {
--		v4l2_clk_put(priv->clk);
--eclkget:
-+	if (ret)
- 		v4l2_ctrl_handler_free(&priv->hdl);
--	}
- 
- 	return ret;
- }
+ 	trace_gfs2_glock_queue(gh, 0);
+@@ -1341,6 +1344,7 @@ __acquires(&lru_lock)
+ 		if (!spin_trylock(&gl->gl_lockref.lock)) {
+ add_back_to_lru:
+ 			list_add(&gl->gl_lru, &lru_list);
++			set_bit(GLF_LRU, &gl->gl_flags);
+ 			atomic_inc(&lru_count);
+ 			continue;
+ 		}
+@@ -1348,7 +1352,6 @@ __acquires(&lru_lock)
+ 			spin_unlock(&gl->gl_lockref.lock);
+ 			goto add_back_to_lru;
+ 		}
+-		clear_bit(GLF_LRU, &gl->gl_flags);
+ 		gl->gl_lockref.count++;
+ 		if (demote_ok(gl))
+ 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
+@@ -1384,6 +1387,7 @@ static long gfs2_scan_glock_lru(int nr)
+ 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
+ 			list_move(&gl->gl_lru, &dispose);
+ 			atomic_dec(&lru_count);
++			clear_bit(GLF_LRU, &gl->gl_flags);
+ 			freed++;
+ 			continue;
+ 		}
 -- 
 2.20.1
 
