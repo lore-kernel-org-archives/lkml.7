@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9A9C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEB8C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A36420840
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C3520840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099530;
-	bh=KmF2Wb/HQ1Owpq+RuPASGw4mknamJNAsMfX/T2WR/oM=;
+	s=default; t=1560099532;
+	bh=hUrbPY7IN/rpIaxZKcAD7a2dpTEBENJLSDw7TYuQIG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j7PvFOA7nuGM8Jckoan61GUKh/KqG7A8FLj5W84FvbIzcm1JXDBqEfkeZKL/mSfWd
-	 AI2hYT2Kzg1RIxk9VpSCA/c/2rvWgdIN9rLBZLZU6UEjvnXb4jqOAUYJFuyZazSqWd
-	 h/8rS7zIYaghcH3TlxYSlQnqN7xSA22jiiR/jIhU=
+	b=k14lRJTJxUnvDEloxESZdyzE77ee50ObJMlpooGOPZ1gIMqbaplh5R9iPx8IvtijJ
+	 WmJHyXj1FJOL6LB8jtA7oh4hCg50wIfH6HNEX513DJIw01ZxHxBykA8K9LMG8+Ex/h
+	 3J0+sa1xKZF9X+NFMUo/iLg9ToueLS9pbv/7y8RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387543AbfFIQ6t (ORCPT
+        id S2387555AbfFIQ6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:58:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34210 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732797AbfFIQ6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:58:47 -0400
+        id S1732449AbfFIQ6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:58:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2849A206C3;
-        Sun,  9 Jun 2019 16:58:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28659204EC;
+        Sun,  9 Jun 2019 16:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099526;
-        bh=KmF2Wb/HQ1Owpq+RuPASGw4mknamJNAsMfX/T2WR/oM=;
+        s=default; t=1560099529;
+        bh=hUrbPY7IN/rpIaxZKcAD7a2dpTEBENJLSDw7TYuQIG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iFOPWrblVrvv/CXQ2psI5nYGgDXIOei/wjL3Hvn9UTcLdqIf42h5hO8shxrkTnv7s
-         4ehqwEbNI0tyX/apHMYWIfN9gqNo1KeoSVPuu6i8enQ0TeJxRocaQx4jdGp2TOIo0N
-         HP8Cl4nf3wsao/EcUsv0GjAmW0Q2DqwjbGm68Kis=
+        b=1om3Zk5I6ut4E6cRhKre+wsWMkr1kY9oaNokLBxxErORP0KWOKXyxzN+PW8n4cnJs
+         R6Wo7N83Ow7P/ZLCfsOJx812tcdQ+J90jL+tAUBwWQ7NP0mU2T/yp2uRORw0SDBs51
+         E+fQhoB1pSBX331zfNqgA4v7HDHEU0ECgkxwYxkw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antonio SJ Musumeci <trapexit@spawn.link>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.4 045/241] fuse: fix writepages on 32bit
-Date:   Sun,  9 Jun 2019 18:39:47 +0200
-Message-Id: <20190609164149.072929521@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Nigel Croxon <ncroxon@redhat.com>, Xiao Ni <xni@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.4 072/241] Revert "Dont jump to compute_result state from check_result state"
+Date:   Sun,  9 Jun 2019 18:40:14 +0200
+Message-Id: <20190609164149.850042067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,36 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Song Liu <songliubraving@fb.com>
 
-commit 9de5be06d0a89ca97b5ab902694d42dfd2bb77d2 upstream.
+commit a25d8c327bb41742dbd59f8c545f59f3b9c39983 upstream.
 
-Writepage requests were cropped to i_size & 0xffffffff, which meant that
-mmaped writes to any file larger than 4G might be silently discarded.
+This reverts commit 4f4fd7c5798bbdd5a03a60f6269cf1177fbd11ef.
 
-Fix by storing the file size in a properly sized variable (loff_t instead
-of size_t).
-
-Reported-by: Antonio SJ Musumeci <trapexit@spawn.link>
-Fixes: 6eaf4782eb09 ("fuse: writepages: crop secondary requests")
-Cc: <stable@vger.kernel.org> # v3.13
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Nigel Croxon <ncroxon@redhat.com>
+Cc: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/raid5.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1533,7 +1533,7 @@ __acquires(fc->lock)
- {
- 	struct fuse_conn *fc = get_fuse_conn(inode);
- 	struct fuse_inode *fi = get_fuse_inode(inode);
--	size_t crop = i_size_read(inode);
-+	loff_t crop = i_size_read(inode);
- 	struct fuse_req *req;
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -3897,15 +3897,26 @@ static void handle_parity_checks6(struct
+ 	case check_state_check_result:
+ 		sh->check_state = check_state_idle;
  
- 	while (fi->writectr >= 0 && !list_empty(&fi->queued_writes)) {
+-		if (s->failed > 1)
+-			break;
+ 		/* handle a successful check operation, if parity is correct
+ 		 * we are done.  Otherwise update the mismatch count and repair
+ 		 * parity if !MD_RECOVERY_CHECK
+ 		 */
+ 		if (sh->ops.zero_sum_result == 0) {
+-			/* Any parity checked was correct */
+-			set_bit(STRIPE_INSYNC, &sh->state);
++			/* both parities are correct */
++			if (!s->failed)
++				set_bit(STRIPE_INSYNC, &sh->state);
++			else {
++				/* in contrast to the raid5 case we can validate
++				 * parity, but still have a failure to write
++				 * back
++				 */
++				sh->check_state = check_state_compute_result;
++				/* Returning at this point means that we may go
++				 * off and bring p and/or q uptodate again so
++				 * we make sure to check zero_sum_result again
++				 * to verify if p or q need writeback
++				 */
++			}
+ 		} else {
+ 			atomic64_add(STRIPE_SECTORS, &conf->mddev->resync_mismatches);
+ 			if (test_bit(MD_RECOVERY_CHECK, &conf->mddev->recovery))
 
 
