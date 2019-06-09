@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F0DC468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32885C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52852146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C5420868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098712;
-	bh=LnQDjO4Vhdgtle2baR7Jpn2WfXmPbMBsg1JM9CfT5io=;
+	s=default; t=1560098716;
+	bh=PNNRAQtybQcafoxDwBfgfl8iuKndtpVW8pix/Q4wujM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fb24/lnFAsuUvxc7DBWtd5zWxZnul25a+y8nnxNit7lQs7xEu38DT/tctYbSBnklw
-	 wmfLd+HVvMN+loxhObUHmLekVWv8XRuo/mkdqQ2JD6wsz1JJwjQmRSXrxQMPTnu0+4
-	 9YGXzkJwV9O8NYt4SzfwRlSDqB21UJrN0F1ekME0=
+	b=dRxKU4SWwqUsHnE/lz/zL44jrwFu+2pL5dldZBVGr/qfSF04iGYFL49eS7gXctdcK
+	 YznMbz8c81jeGsbUf54S52gba2SHGDQdtfHGI+/LjnoQt+K/UJUIKzoTpSpi1wNRqx
+	 6f8iGWSjoZgbwWnK1r279pcVE/0ewF+GWZLycbWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbfFIQpL (ORCPT
+        id S1729730AbfFIQpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:45:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42692 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729667AbfFIQpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:09 -0400
+        id S1729667AbfFIQpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B9962081C;
-        Sun,  9 Jun 2019 16:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 297A92084A;
+        Sun,  9 Jun 2019 16:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098708;
-        bh=LnQDjO4Vhdgtle2baR7Jpn2WfXmPbMBsg1JM9CfT5io=;
+        s=default; t=1560098711;
+        bh=PNNRAQtybQcafoxDwBfgfl8iuKndtpVW8pix/Q4wujM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAYXPSSg6lOhmO018jbjekSgdaKu5KJ2g1JEwjhHtVaCOv9Xa1JbJrpF16unHAKPw
-         Im3ChJiMGLsn3evKhBmhiUM3NW49wr6LGZRZOxkLjsjPFSCRSoLYscZyoMccNOep6/
-         XuGTBmVC+O5Gqlg54cvkZxa/W4Kfg1pew/byLwO0=
+        b=xbDTNCmQoHSuP6TPDpRdi3blryQqG6TgF/tUvOnn8jCqA4828IwvWGnO2xOgfk89j
+         O1C0acxpAN6vpjNOZ2PUQatROozvVnDPkVVllCycqovdamMiXwIIyq4unIvgBaWT5H
+         zo2JqrLf4Hu6BfDoVNhPoDO4B4fv9KeojcBx6VJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.1 31/70] fuse: fallocate: fix return with locked inode
-Date:   Sun,  9 Jun 2019 18:41:42 +0200
-Message-Id: <20190609164129.661807429@linuxfoundation.org>
+        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.1 32/70] fuse: fix copy_file_range() in the writeback case
+Date:   Sun,  9 Jun 2019 18:41:43 +0200
+Message-Id: <20190609164129.780863006@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -63,34 +60,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 35d6fcbb7c3e296a52136347346a698a35af3fda upstream.
+commit a2bc92362941006830afa3dfad6caec1f99acbf5 upstream.
 
-Do the proper cleanup in case the size check fails.
+Prior to sending COPY_FILE_RANGE to userspace filesystem, we must flush all
+dirty pages in both the source and destination files.
 
-Tested with xfstests:generic/228
+This patch adds the missing flush of the source file.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 0cbade024ba5 ("fuse: honor RLIMIT_FSIZE in fuse_file_fallocate")
-Cc: Liu Bo <bo.liu@linux.alibaba.com>
-Cc: <stable@vger.kernel.org> # v3.5
+Tested on libfuse-3.5.0 with:
+
+  libfuse/example/passthrough_ll /mnt/fuse/ -o writeback
+  libfuse/test/test_syscalls /mnt/fuse/tmp/test
+
+Fixes: 88bc7d5097a1 ("fuse: add support for copy_file_range()")
+Cc: <stable@vger.kernel.org> # v4.20
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/file.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 --- a/fs/fuse/file.c
 +++ b/fs/fuse/file.c
-@@ -3050,7 +3050,7 @@ static long fuse_file_fallocate(struct f
- 	    offset + length > i_size_read(inode)) {
- 		err = inode_newsize_ok(inode, offset + length);
- 		if (err)
--			return err;
-+			goto out;
- 	}
+@@ -3098,6 +3098,7 @@ static ssize_t fuse_copy_file_range(stru
+ {
+ 	struct fuse_file *ff_in = file_in->private_data;
+ 	struct fuse_file *ff_out = file_out->private_data;
++	struct inode *inode_in = file_inode(file_in);
+ 	struct inode *inode_out = file_inode(file_out);
+ 	struct fuse_inode *fi_out = get_fuse_inode(inode_out);
+ 	struct fuse_conn *fc = ff_in->fc;
+@@ -3121,6 +3122,17 @@ static ssize_t fuse_copy_file_range(stru
+ 	if (fc->no_copy_file_range)
+ 		return -EOPNOTSUPP;
  
- 	if (!(mode & FALLOC_FL_KEEP_SIZE))
++	if (fc->writeback_cache) {
++		inode_lock(inode_in);
++		err = filemap_write_and_wait_range(inode_in->i_mapping,
++						   pos_in, pos_in + len);
++		if (!err)
++			fuse_sync_writes(inode_in);
++		inode_unlock(inode_in);
++		if (err)
++			return err;
++	}
++
+ 	inode_lock(inode_out);
+ 
+ 	if (fc->writeback_cache) {
 
 
