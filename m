@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB83C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7586FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7E0206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E41A206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099667;
-	bh=W8GmZPJc4D810AHXg6dPjhl3exR5bbQA/CYA32qdfBs=;
+	s=default; t=1560099670;
+	bh=q9DT7E2hEWC+QTIvUN7fwvH/GC0dUAlOfDHYjUaAZCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FUrsvVvjL7giPgUfRnKlZsWXCyRa87a5y8/D1GNkn37+dkMk/PGtiaMKGoMoyyAjV
-	 6qf30eeTneP7dkMO8O8lXEpRLL4eHjytIkM2F2hjY0gHLD936x9FD5x9T0hlKExfU/
-	 SWTQnh868gWTf5eIxjk1BnazECpymCXP76RMb3kA=
+	b=HWvecCQTCrcwz3enXdrshn/1ys0qXRa0ezxyw+hvVGXeSMEcQxPHtIZ5He54zU/4d
+	 PTRUCS70h2c1xgSzR/xjVwTQ9ThIMrucnAXXN74gfX97eFe8i5SDSjKgzbqgGaNEo1
+	 jseVTXYOzkfVj/N4GNZPKU3J6llwWtmS8SIiCl8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387984AbfFIRBG (ORCPT
+        id S2387994AbfFIRBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:01:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37988 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387968AbfFIRBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:01:03 -0400
+        id S2387977AbfFIRBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA03A206C3;
-        Sun,  9 Jun 2019 17:01:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9EF7204EC;
+        Sun,  9 Jun 2019 17:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099662;
-        bh=W8GmZPJc4D810AHXg6dPjhl3exR5bbQA/CYA32qdfBs=;
+        s=default; t=1560099665;
+        bh=q9DT7E2hEWC+QTIvUN7fwvH/GC0dUAlOfDHYjUaAZCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HOR1LzqxFvBbZjOKnV6y79L71GmZB8t6JspLxDCfLGFvViP3XqCCJf1NvGGEO8yDE
-         eaaVktWvq5sl0mDEU91StfM5Tt1cVJNHUQZHTeD9kA/jDx6zFWnWruCd0Xlat4aHD9
-         O5m+/gYiWoX5hPOz0IPjz3CgUryZcuevkKDWhhQs=
+        b=JLPG7Tx5fOnBdC4LBKZwWYwm3SgsUz104XQ7a+24u0aQzZ48NM4Lm/cCwAq88gA2Z
+         JT8frJzIXt3yK1HjQ1a7LKvlYWYN5nbSOzLILzeK9YakDN/DWt3S6ZH8cliEW4S9JD
+         w1Jc17pKj2jGNcgOGzbgCsEO2j06MwGwEzeQ+9cc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Shuah Khan <shuah@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 093/241] gfs2: Fix lru_count going negative
-Date:   Sun,  9 Jun 2019 18:40:35 +0200
-Message-Id: <20190609164150.478175234@linuxfoundation.org>
+Subject: [PATCH 4.4 120/241] media: au0828: stop video streaming only when last user stops
+Date:   Sun,  9 Jun 2019 18:41:02 +0200
+Message-Id: <20190609164151.264901801@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,108 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
+[ Upstream commit f604f0f5afb88045944567f604409951b5eb6af8 ]
 
-Under certain conditions, lru_count may drop below zero resulting in
-a large amount of log spam like this:
+If the application was streaming from both videoX and vbiX, and streaming
+from videoX was stopped, then the vbi streaming also stopped.
 
-vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
-    negative objects to delete nr=-1
+The cause being that stop_streaming for video stopped the subdevs as well,
+instead of only doing that if dev->streaming_users reached 0.
 
-This happens as follows:
-1) A glock is moved from lru_list to the dispose list and lru_count is
-   decremented.
-2) The dispose function calls cond_resched() and drops the lru lock.
-3) Another thread takes the lru lock and tries to add the same glock to
-   lru_list, checking if the glock is on an lru list.
-4) It is on a list (actually the dispose list) and so it avoids
-   incrementing lru_count.
-5) The glock is moved to lru_list.
-5) The original thread doesn't dispose it because it has been re-added
-   to the lru list but the lru_count has still decreased by one.
+au0828_stop_vbi_streaming was also wrong since it didn't stop the subdevs
+at all when dev->streaming_users reached 0.
 
-Fix by checking if the LRU flag is set on the glock rather than checking
-if the glock is on some list and rearrange the code so that the LRU flag
-is added/removed precisely when the glock is added/removed from lru_list.
-
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Tested-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/media/usb/au0828/au0828-video.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 09a0cf5f3dd86..1eb737c466ddc 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -136,22 +136,26 @@ static int demote_ok(const struct gfs2_glock *gl)
+diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
+index 7b2fe1b56039e..1ff66e7e26a81 100644
+--- a/drivers/media/usb/au0828/au0828-video.c
++++ b/drivers/media/usb/au0828/au0828-video.c
+@@ -799,9 +799,9 @@ int au0828_start_analog_streaming(struct vb2_queue *vq, unsigned int count)
+ 			return rc;
+ 		}
  
- void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
- {
-+	if (!(gl->gl_ops->go_flags & GLOF_LRU))
-+		return;
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 1);
 +
- 	spin_lock(&lru_lock);
+ 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+-			v4l2_device_call_all(&dev->v4l2_dev, 0, video,
+-						s_stream, 1);
+ 			dev->vid_timeout_running = 1;
+ 			mod_timer(&dev->vid_timeout, jiffies + (HZ / 10));
+ 		} else if (vq->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
+@@ -821,10 +821,11 @@ static void au0828_stop_streaming(struct vb2_queue *vq)
  
--	if (!list_empty(&gl->gl_lru))
--		list_del_init(&gl->gl_lru);
--	else
-+	list_del(&gl->gl_lru);
-+	list_add_tail(&gl->gl_lru, &lru_list);
-+
-+	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
-+		set_bit(GLF_LRU, &gl->gl_flags);
- 		atomic_inc(&lru_count);
+ 	dprintk(1, "au0828_stop_streaming called %d\n", dev->streaming_users);
+ 
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
 +	}
  
--	list_add_tail(&gl->gl_lru, &lru_list);
--	set_bit(GLF_LRU, &gl->gl_flags);
- 	spin_unlock(&lru_lock);
- }
+-	v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
+ 	dev->vid_timeout_running = 0;
+ 	del_timer_sync(&dev->vid_timeout);
  
- static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
- {
- 	spin_lock(&lru_lock);
--	if (!list_empty(&gl->gl_lru)) {
-+	if (test_bit(GLF_LRU, &gl->gl_flags)) {
- 		list_del_init(&gl->gl_lru);
- 		atomic_dec(&lru_count);
- 		clear_bit(GLF_LRU, &gl->gl_flags);
-@@ -1040,8 +1044,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
- 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			fast_path = 1;
- 	}
--	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
--	    (glops->go_flags & GLOF_LRU))
-+	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
- 		gfs2_glock_add_to_lru(gl);
+@@ -853,8 +854,10 @@ void au0828_stop_vbi_streaming(struct vb2_queue *vq)
+ 	dprintk(1, "au0828_stop_vbi_streaming called %d\n",
+ 		dev->streaming_users);
  
- 	trace_gfs2_glock_queue(gh, 0);
-@@ -1341,6 +1344,7 @@ __acquires(&lru_lock)
- 		if (!spin_trylock(&gl->gl_lockref.lock)) {
- add_back_to_lru:
- 			list_add(&gl->gl_lru, &lru_list);
-+			set_bit(GLF_LRU, &gl->gl_flags);
- 			atomic_inc(&lru_count);
- 			continue;
- 		}
-@@ -1348,7 +1352,6 @@ __acquires(&lru_lock)
- 			spin_unlock(&gl->gl_lockref.lock);
- 			goto add_back_to_lru;
- 		}
--		clear_bit(GLF_LRU, &gl->gl_flags);
- 		gl->gl_lockref.count++;
- 		if (demote_ok(gl))
- 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
-@@ -1384,6 +1387,7 @@ static long gfs2_scan_glock_lru(int nr)
- 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
- 			list_move(&gl->gl_lru, &dispose);
- 			atomic_dec(&lru_count);
-+			clear_bit(GLF_LRU, &gl->gl_flags);
- 			freed++;
- 			continue;
- 		}
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+ 	spin_lock_irqsave(&dev->slock, flags);
+ 	if (dev->isoc_ctl.vbi_buf != NULL) {
 -- 
 2.20.1
 
