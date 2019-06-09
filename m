@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A85FC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DA9C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D553920868
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431062083D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098734;
-	bh=zscYZ7OpHrYkSXLWm/g6hkpoajMFBmOE1MoQzGHx6WU=;
+	s=default; t=1560098737;
+	bh=uU1kXwXG1oCL2aC9YDl3NCCE28IjcN/JXSLj40MqnAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xp7T/5Gte0MUlskB7OPaAEPoSumpSpLDk0dGQh4oEwvVN98iaxa3HbshwQBcyySOR
-	 YGLLIMQcdO7+B3ea8xAzUwdE2BsodS1CRU0Cp2lzmTpVzSR7/6wp5GkoaqaZHP8izo
-	 ho6V9/l23/Nkfy999+TuAvRrxDfkw7BIJghNeuEs=
+	b=J7vMioz1PHQJjYBHyTt26Jjk1tsCIxr3p1hUGMhB1XJ/Qmz8qj6+QX0JD4mScLYO6
+	 tXXKf/e+fROKRZXU3itaTiDygqkmgHHrKElYp/H3e+YvyqoyxX8An/zgi7dwlKr/5X
+	 GTmt4ntnSyYksgfta5zK4c5j3Njrbu7UgwoMkMJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbfFIQpe (ORCPT
+        id S1730006AbfFIQpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43316 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729906AbfFIQpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:31 -0400
+        id S1729906AbfFIQpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD302081C;
-        Sun,  9 Jun 2019 16:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE122083D;
+        Sun,  9 Jun 2019 16:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098731;
-        bh=zscYZ7OpHrYkSXLWm/g6hkpoajMFBmOE1MoQzGHx6WU=;
+        s=default; t=1560098734;
+        bh=uU1kXwXG1oCL2aC9YDl3NCCE28IjcN/JXSLj40MqnAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F+/affbIGcdbQRQj4DD71ojex5R9bQ+WFlPMn/dt46nr9hqMz+bmrw58/6FEhPlB6
-         N2LRiV7WFhkSEhfF2UIysUix8jwMTFR50Qtu3imPlkz04E3qA/sAuW2cIHBiVN3lSh
-         7hn64PLk41QQtR8Xj8K3o26BGtsAnxvVYNKyJMDE=
+        b=XU0jX0CbKl1XcydQech+OssDtQWlsJJBzb/x+cP30FAF5L6erb61+LMOm4Ux+GQlG
+         GGFQ5j26aaek9iPUGHXxo4rbunqnq+7F7rxMP6nfuBLEa015JutfMajpiOVEGUVavM
+         dsCW+hsHbtcdP1UjrZURgEUgKylIzww9CUl2xzH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 08/70] net: sfp: read eeprom in maximum 16 byte increments
-Date:   Sun,  9 Jun 2019 18:41:19 +0200
-Message-Id: <20190609164127.948003960@linuxfoundation.org>
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH 5.1 09/70] packet: unconditionally free po->rollover
+Date:   Sun,  9 Jun 2019 18:41:20 +0200
+Message-Id: <20190609164128.000227333@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,75 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 28e74a7cfd6403f0d1c0f8b10b45d6fae37b227e ]
+[ Upstream commit afa0925c6fcc6a8f610e996ca09bc3215048033c ]
 
-Some SFP modules do not like reads longer than 16 bytes, so read the
-EEPROM in chunks of 16 bytes at a time.  This behaviour is not specified
-in the SFP MSAs, which specifies:
+Rollover used to use a complex RCU mechanism for assignment, which had
+a race condition. The below patch fixed the bug and greatly simplified
+the logic.
 
- "The serial interface uses the 2-wire serial CMOS E2PROM protocol
-  defined for the ATMEL AT24C01A/02/04 family of components."
+The feature depends on fanout, but the state is private to the socket.
+Fanout_release returns f only when the last member leaves and the
+fanout struct is to be freed.
 
-and
+Destroy rollover unconditionally, regardless of fanout state.
 
- "As long as the SFP+ receives an acknowledge, it shall serially clock
-  out sequential data words. The sequence is terminated when the host
-  responds with a NACK and a STOP instead of an acknowledge."
-
-We must avoid breaking a read across a 16-bit quantity in the diagnostic
-page, thankfully all 16-bit quantities in that page are naturally
-aligned.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 57f015f5eccf2 ("packet: fix crash in fanout_demux_rollover()")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Diagnosed-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/sfp.c |   24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ net/packet/af_packet.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/phy/sfp.c
-+++ b/drivers/net/phy/sfp.c
-@@ -281,6 +281,7 @@ static int sfp_i2c_read(struct sfp *sfp,
- {
- 	struct i2c_msg msgs[2];
- 	u8 bus_addr = a2 ? 0x51 : 0x50;
-+	size_t this_len;
- 	int ret;
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3016,8 +3016,8 @@ static int packet_release(struct socket
  
- 	msgs[0].addr = bus_addr;
-@@ -292,11 +293,26 @@ static int sfp_i2c_read(struct sfp *sfp,
- 	msgs[1].len = len;
- 	msgs[1].buf = buf;
+ 	synchronize_net();
  
--	ret = i2c_transfer(sfp->i2c, msgs, ARRAY_SIZE(msgs));
--	if (ret < 0)
--		return ret;
-+	while (len) {
-+		this_len = len;
-+		if (this_len > 16)
-+			this_len = 16;
- 
--	return ret == ARRAY_SIZE(msgs) ? len : 0;
-+		msgs[1].len = this_len;
-+
-+		ret = i2c_transfer(sfp->i2c, msgs, ARRAY_SIZE(msgs));
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ret != ARRAY_SIZE(msgs))
-+			break;
-+
-+		msgs[1].buf += this_len;
-+		dev_addr += this_len;
-+		len -= this_len;
-+	}
-+
-+	return msgs[1].buf - (u8 *)buf;
- }
- 
- static int sfp_i2c_write(struct sfp *sfp, bool a2, u8 dev_addr, void *buf,
++	kfree(po->rollover);
+ 	if (f) {
+-		kfree(po->rollover);
+ 		fanout_release_data(f);
+ 		kfree(f);
+ 	}
 
 
