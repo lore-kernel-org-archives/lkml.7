@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5A8C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50892C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F11920833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269F920833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098776;
-	bh=2fcdwPav0b+daDdMQZAj1lg9khaMKU8brF9jrKOJOdc=;
+	s=default; t=1560098782;
+	bh=xZk6V8W47holid3x8sEAl6DZJWT45f42r7gly3AseKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jF3y6S6zyG+ih7rMsX41N5iLywFfQPdxbu5r4txx/yXpAgnmz+K8GTw3U+hL9roDN
-	 ywD75XXe0SSByGcDBp/pjwzyGjRFjk9BaL1Rbh7vqbhZHZsN1jaZ/u+sy9aWBds2lu
-	 VX4nQa8u5jegXlW7VrBypgvK6lwzZPHwdyIoUROw=
+	b=q/OvXpgs5n8p6okNOsRNmu0OKzVi4g/a7aFE2Luz2BEdN/Ojt094ZlC/KtAYCtO9s
+	 zC7eJW3j4lsaEeSeO08tNGouybo+SGPMik8w8h2lA3vpn+azU55eJB6b3B36b+yyMC
+	 jDPOul3Q58cvQJt5XrQ6rqpyUQaIi1qfxgO7quD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbfFIQqP (ORCPT
+        id S1729410AbfFIQqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730329AbfFIQqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:46:11 -0400
+        id S1730337AbfFIQqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:46:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD8D620833;
-        Sun,  9 Jun 2019 16:46:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 730C32081C;
+        Sun,  9 Jun 2019 16:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098771;
-        bh=2fcdwPav0b+daDdMQZAj1lg9khaMKU8brF9jrKOJOdc=;
+        s=default; t=1560098774;
+        bh=xZk6V8W47holid3x8sEAl6DZJWT45f42r7gly3AseKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VzclyqJJfmf1JZK3njLq8G4nwSf5MZkZYW6eCCjnrpgEXikomDqT0jfuJgLHDOwyc
-         tOkQhc2VwF9usHP+mIPHMbbU4gVw7h1vmuK99Wk4XoxT0sYe+GO8K7kJzLoilbin92
-         bdJ0ZyNGOEX45OM5dCIVMv8B2UVk3P6uGnCkTk1E=
+        b=GQ18AyBjCnfSORN4gXbYQ8iRohdH0bv+pvNM7o/1asCIyMPNCW0xCFLZDtLkWgfpl
+         Q9xUVTJeG3EVrDW1JKBvttIqS4/EG0xqdFDExH9hrYDc1vX4hYFEuhLiIGv8ieMEFI
+         OJgpqdaahKBsFbgCxZ/bmFU8jrjSxMwUtxkJbgpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ryan Pavlik <ryan.pavlik@collabora.com>,
-        Daniel Stone <daniels@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 5.1 55/70] drm: add non-desktop quirks to Sensics and OSVR headsets.
-Date:   Sun,  9 Jun 2019 18:42:06 +0200
-Message-Id: <20190609164132.082290881@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.1 56/70] drm: Fix timestamp docs for variable refresh properties.
+Date:   Sun,  9 Jun 2019 18:42:07 +0200
+Message-Id: <20190609164132.173948370@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,39 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Pavlik <ryan.pavlik@collabora.com>
+From: Mario Kleiner <mario.kleiner.de@gmail.com>
 
-commit 29054230f3e11ea818eccfa7bb4e4b3e89544164 upstream.
+commit 0cbd0adc4429930567083d18cc8c0fbc5f635d96 upstream.
 
-Add two EDID vendor/product pairs used across a variety of
-Sensics products, as well as the OSVR HDK and HDK 2.
+As discussed with Nicholas and Daniel Vetter (patchwork
+link to discussion below), the VRR timestamping behaviour
+produced utterly useless and bogus vblank/pageflip
+timestamps. We have found a way to fix this and provide
+sane behaviour.
 
-Signed-off-by: Ryan Pavlik <ryan.pavlik@collabora.com>
-Signed-off-by: Daniel Stone <daniels@collabora.com>
-Reviewed-by: Daniel Stone <daniels@collabora.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181203164644.13974-1-ryan.pavlik@collabora.com
-Cc: <stable@vger.kernel.org> # v4.15+
+As of Linux 5.2, the amdgpu driver will be able to
+provide exactly the same vblank / pageflip timestamp
+semantic in variable refresh rate mode as in standard
+fixed refresh rate mode. This is achieved by deferring
+core vblank handling (drm_crtc_handle_vblank()) until
+the end of front porch, and also defer the sending of
+pageflip completion events until end of front porch,
+when we can safely compute correct pageflip/vblank
+timestamps.
+
+The same approach will be possible for other VRR
+capable kms drivers, so we can actually have sane
+and useful timestamps in VRR mode.
+
+This patch removes the section of the docs that
+describes the broken timestamp behaviour present
+in Linux 5.0/5.1.
+
+Fixes: ab7a664f7a2d ("drm: Document variable refresh properties")
+Link: https://patchwork.freedesktop.org/patch/285333/
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Mario Kleiner <mario.kleiner.de@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190418060157.18968-1-mario.kleiner.de@gmail.com
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/drm_connector.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -212,6 +212,12 @@ static const struct edid_quirk {
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -1385,12 +1385,6 @@ EXPORT_SYMBOL(drm_mode_create_scaling_mo
+  *
+  *	The driver may place further restrictions within these minimum
+  *	and maximum bounds.
+- *
+- *	The semantics for the vertical blank timestamp differ when
+- *	variable refresh rate is active. The vertical blank timestamp
+- *	is defined to be an estimate using the current mode's fixed
+- *	refresh rate timings. The semantics for the page-flip event
+- *	timestamp remain the same.
+  */
  
- 	/* Sony PlayStation VR Headset */
- 	{ "SNY", 0x0704, EDID_QUIRK_NON_DESKTOP },
-+
-+	/* Sensics VR Headsets */
-+	{ "SEN", 0x1019, EDID_QUIRK_NON_DESKTOP },
-+
-+	/* OSVR HDK and HDK2 VR Headsets */
-+	{ "SVR", 0x1019, EDID_QUIRK_NON_DESKTOP },
- };
- 
- /*
+ /**
 
 
