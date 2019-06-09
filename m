@@ -6,36 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C215C468BC
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC1C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E150E216C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E235A216C8
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfFICpl (ORCPT
+        id S1728092AbfFICpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:45:41 -0400
+        Sat, 8 Jun 2019 22:45:44 -0400
 Received: from mga01.intel.com ([192.55.52.88]:21699 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbfFICpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:45:36 -0400
+        id S1727981AbfFICpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 22:45:38 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2019 19:45:36 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2019 19:45:38 -0700
 X-ExtLoop1: 1
 Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Jun 2019 19:45:34 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Jun 2019 19:45:36 -0700
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         David Woodhouse <dwmw2@infradead.org>
 Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
         sai.praneeth.prakhya@intel.com, cai@lca.pw,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 4/6] iommu/vt-d: Fix suspicious RCU usage in probe_acpi_namespace_devices()
-Date:   Sun,  9 Jun 2019 10:38:01 +0800
-Message-Id: <20190609023803.23832-5-baolu.lu@linux.intel.com>
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH 5/6] iommu/vt-d: Cleanup after delegating DMA domain to generic iommu
+Date:   Sun,  9 Jun 2019 10:38:02 +0800
+Message-Id: <20190609023803.23832-6-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190609023803.23832-1-baolu.lu@linux.intel.com>
 References: <20190609023803.23832-1-baolu.lu@linux.intel.com>
@@ -44,65 +46,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The drhd and device scope list should be iterated with the
-iommu global lock held. Otherwise, a suspicious RCU usage
-message will be displayed.
+From: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
 
-[    3.695886] =============================
-[    3.695917] WARNING: suspicious RCU usage
-[    3.695950] 5.2.0-rc2+ #2467 Not tainted
-[    3.695981] -----------------------------
-[    3.696014] drivers/iommu/intel-iommu.c:4569 suspicious rcu_dereference_check() usage!
-[    3.696069]
-               other info that might help us debug this:
+[No functional changes]
 
-[    3.696126]
-               rcu_scheduler_active = 2, debug_locks = 1
-[    3.696173] no locks held by swapper/0/1.
-[    3.696204]
-               stack backtrace:
-[    3.696241] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc2+ #2467
-[    3.696370] Call Trace:
-[    3.696404]  dump_stack+0x85/0xcb
-[    3.696441]  intel_iommu_init+0x128c/0x13ce
-[    3.696478]  ? kmem_cache_free+0x16b/0x2c0
-[    3.696516]  ? __fput+0x14b/0x270
-[    3.696550]  ? __call_rcu+0xb7/0x300
-[    3.696583]  ? get_max_files+0x10/0x10
-[    3.696631]  ? set_debug_rodata+0x11/0x11
-[    3.696668]  ? e820__memblock_setup+0x60/0x60
-[    3.696704]  ? pci_iommu_init+0x16/0x3f
-[    3.696737]  ? set_debug_rodata+0x11/0x11
-[    3.696770]  pci_iommu_init+0x16/0x3f
-[    3.696805]  do_one_initcall+0x5d/0x2e4
-[    3.696844]  ? set_debug_rodata+0x11/0x11
-[    3.696880]  ? rcu_read_lock_sched_held+0x6b/0x80
-[    3.696924]  kernel_init_freeable+0x1f0/0x27c
-[    3.696961]  ? rest_init+0x260/0x260
-[    3.696997]  kernel_init+0xa/0x110
-[    3.697028]  ret_from_fork+0x3a/0x50
+1. Starting with commit df4f3c603aeb ("iommu/vt-d: Remove static identity
+map code") there are no callers for iommu_prepare_rmrr_dev() but the
+implementation of the function still exists, so remove it. Also, as a
+ripple effect remove get_domain_for_dev() and iommu_prepare_identity_map()
+because they aren't being used either.
 
-Fixes: fa212a97f3a36 ("iommu/vt-d: Probe DMA-capable ACPI name space devices")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+2. init_dmars() runs the same loop (for_each_active_iommu(iommu, drhd))
+over different functions back to back. So, remove the duplicate loop to
+make it a single for_each_active_iommu().
+
+3. Cleanup few double spaces.
+
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Sohil Mehta <sohil.mehta@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
 ---
- drivers/iommu/intel-iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/intel-iommu.c | 68 ++++---------------------------------
+ 1 file changed, 6 insertions(+), 62 deletions(-)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 5251533a18a4..d1cd7e449161 100644
+index d1cd7e449161..d60cf0fd9500 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -4793,8 +4793,10 @@ int __init intel_iommu_init(void)
- 	cpuhp_setup_state(CPUHP_IOMMU_INTEL_DEAD, "iommu/intel:dead", NULL,
- 			  intel_iommu_cpu_dead);
+@@ -909,7 +909,6 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
+ 	return pte;
+ }
  
-+	down_read(&dmar_global_lock);
- 	if (probe_acpi_namespace_devices())
- 		pr_warn("ACPI name space devices didn't probe correctly\n");
-+	up_read(&dmar_global_lock);
+-
+ /* return address's pte at specific level */
+ static struct dma_pte *dma_pfn_level_pte(struct dmar_domain *domain,
+ 					 unsigned long pfn,
+@@ -1578,7 +1577,6 @@ static void iommu_disable_translation(struct intel_iommu *iommu)
+ 	raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
+ }
  
- 	/* Finally, we enable the DMA remapping hardware. */
- 	for_each_iommu(iommu, drhd) {
+-
+ static int iommu_init_domains(struct intel_iommu *iommu)
+ {
+ 	u32 ndomains, nlongs;
+@@ -1616,8 +1614,6 @@ static int iommu_init_domains(struct intel_iommu *iommu)
+ 		return -ENOMEM;
+ 	}
+ 
+-
+-
+ 	/*
+ 	 * If Caching mode is set, then invalid translations are tagged
+ 	 * with domain-id 0, hence we need to pre-allocate it. We also
+@@ -2649,29 +2645,6 @@ static struct dmar_domain *set_domain_for_dev(struct device *dev,
+ 	return domain;
+ }
+ 
+-static struct dmar_domain *get_domain_for_dev(struct device *dev, int gaw)
+-{
+-	struct dmar_domain *domain, *tmp;
+-
+-	domain = find_domain(dev);
+-	if (domain)
+-		goto out;
+-
+-	domain = find_or_alloc_domain(dev, gaw);
+-	if (!domain)
+-		goto out;
+-
+-	tmp = set_domain_for_dev(dev, domain);
+-	if (!tmp || domain != tmp) {
+-		domain_exit(domain);
+-		domain = tmp;
+-	}
+-
+-out:
+-
+-	return domain;
+-}
+-
+ static int iommu_domain_identity_map(struct dmar_domain *domain,
+ 				     unsigned long long start,
+ 				     unsigned long long end)
+@@ -2736,33 +2709,6 @@ static int domain_prepare_identity_map(struct device *dev,
+ 	return iommu_domain_identity_map(domain, start, end);
+ }
+ 
+-static int iommu_prepare_identity_map(struct device *dev,
+-				      unsigned long long start,
+-				      unsigned long long end)
+-{
+-	struct dmar_domain *domain;
+-	int ret;
+-
+-	domain = get_domain_for_dev(dev, DEFAULT_DOMAIN_ADDRESS_WIDTH);
+-	if (!domain)
+-		return -ENOMEM;
+-
+-	ret = domain_prepare_identity_map(dev, domain, start, end);
+-	if (ret)
+-		domain_exit(domain);
+-
+-	return ret;
+-}
+-
+-static inline int iommu_prepare_rmrr_dev(struct dmar_rmrr_unit *rmrr,
+-					 struct device *dev)
+-{
+-	if (dev->archdata.iommu == DUMMY_DEVICE_DOMAIN_INFO)
+-		return 0;
+-	return iommu_prepare_identity_map(dev, rmrr->base_address,
+-					  rmrr->end_address);
+-}
+-
+ static int md_domain_init(struct dmar_domain *domain, int guest_width);
+ 
+ static int __init si_domain_init(int hw)
+@@ -3306,14 +3252,13 @@ static int __init init_dmars(void)
+ 		if (pasid_supported(iommu))
+ 			intel_svm_init(iommu);
+ #endif
+-	}
+ 
+-	/*
+-	 * Now that qi is enabled on all iommus, set the root entry and flush
+-	 * caches. This is required on some Intel X58 chipsets, otherwise the
+-	 * flush_context function will loop forever and the boot hangs.
+-	 */
+-	for_each_active_iommu(iommu, drhd) {
++		/*
++		 * Now that qi is enabled on all iommus, set the root entry and
++		 * flush caches. This is required on some Intel X58 chipsets,
++		 * otherwise the flush_context function will loop forever and
++		 * the boot hangs.
++		 */
+ 		iommu_flush_write_buffer(iommu);
+ 		iommu_set_root_entry(iommu);
+ 		iommu->flush.flush_context(iommu, 0, 0, 0, DMA_CCMD_GLOBAL_INVL);
+@@ -4058,7 +4003,6 @@ static void __init init_iommu_pm_ops(void)
+ static inline void init_iommu_pm_ops(void) {}
+ #endif	/* CONFIG_PM */
+ 
+-
+ int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
+ {
+ 	struct acpi_dmar_reserved_memory *rmrr;
 -- 
 2.17.1
 
