@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890A1C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3E7C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6312B206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183D4205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099430;
-	bh=Y8oJCHiy9npagKhzo9B/f4LmystzcxN77rUJ468IJ08=;
+	s=default; t=1560099434;
+	bh=/pIo0pbZ5dvuVjf8AdRgDj+IjW75lkMisHZCMXWEGOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F2KKG2K0HkArNW2DKZXO6Fuz3xr7E2j3ae3q7lfqMsI4Pw6/kuo+3NPhIlQgl68wO
-	 RoQcu6PiTW2QMkfVBvG7LMC9T6YaiHG/dgvDG+dwNI89IVJ4ucSB7nyBG5FItkcu7I
-	 duslC7xvRdi4P2VJxS36SYx68JkJK9xgizyVZ8vw=
+	b=YvDNdqF7nI+zjBXDvsICgAE48G2fx7xf7hMCRvI8zlAugxXqJ5kTGhUI/VH4UNn4+
+	 xV2ZBbnY9FN4JThL4m0w5Zb7Nk0fTfhW0GvP1ldbJNam1AhOF819hyLNA3JIeF1KXR
+	 Dtq5LpQKm0NBbopt0dK71lVs71N7dhwB37Po14LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733112AbfFIQ5I (ORCPT
+        id S1733137AbfFIQ5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:57:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:57:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733099AbfFIQ5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:57:05 -0400
+        id S1733121AbfFIQ5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:57:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91204205ED;
-        Sun,  9 Jun 2019 16:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 520D120840;
+        Sun,  9 Jun 2019 16:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099425;
-        bh=Y8oJCHiy9npagKhzo9B/f4LmystzcxN77rUJ468IJ08=;
+        s=default; t=1560099430;
+        bh=/pIo0pbZ5dvuVjf8AdRgDj+IjW75lkMisHZCMXWEGOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Na+mAeF8ZzYIN3fSzhkXE1tW8f70sbn58g/jb7RXE6UDYfT7tT8qTBRsx8gibSJtY
-         5eo5H3o/llKOSelAbEmYQn8NTg2XeI7P+geAhyc5wujH/1kPy9hW2bqu34UbazGcr3
-         pVyqhhBER3ZMe+0mxQ1qon8kVRFM06xLMdaCletY=
+        b=fvd9TRrLTHVy8wpeuzJVfBBiYvMo2g4G2rid0Tpae/KLRbJNU/btMcIGGu5vkkqvR
+         tanycK6Xncy62QXFeRJhNd+RET/Xh5oG8XzxYy9ByRGMroF3bRoc26xRKlzD06B/MH
+         5XRIYqiTnvGSz9duPGyYIBHS2yNbHk6MahggHm0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 008/241] ALSA: hda/hdmi - Consider eld_valid when reporting jack event
-Date:   Sun,  9 Jun 2019 18:39:10 +0200
-Message-Id: <20190609164148.028253491@linuxfoundation.org>
+        stable@vger.kernel.org, Junwei Hu <hujunwei4@huawei.com>,
+        Wang Wang <wangwang2@huawei.com>,
+        Kang Zhou <zhoukang7@huawei.com>,
+        Suanming Mou <mousuanming@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 036/241] tipc: fix modprobe tipc failed after switch order of device registration
+Date:   Sun,  9 Jun 2019 18:39:38 +0200
+Message-Id: <20190609164148.817617035@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,58 +62,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Junwei Hu <hujunwei4@huawei.com>
 
-commit 7f641e26a6df9269cb25dd7a4b0a91d6586ed441 upstream.
+[ Upstream commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e ]
 
-On the machines with AMD GPU or Nvidia GPU, we often meet this issue:
-after s3, there are 4 HDMI/DP audio devices in the gnome-sound-setting
-even there is no any monitors plugged.
+Error message printed:
+modprobe: ERROR: could not insert 'tipc': Address family not
+supported by protocol.
+when modprobe tipc after the following patch: switch order of
+device registration, commit 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
 
-When this problem happens, we check the /proc/asound/cardX/eld#N.M, we
-will find the monitor_present=1, eld_valid=0.
+Because sock_create_kern(net, AF_TIPC, ...) is called by
+tipc_topsrv_create_listener() in the initialization process
+of tipc_net_ops, tipc_socket_init() must be execute before that.
 
-The root cause is BIOS or GPU driver makes the PRESENCE valid even no
-monitor plugged, and of course the driver will not get the valid
-eld_data subsequently.
+I move tipc_socket_init() into function tipc_init_net().
 
-In this situation, we should not report the jack_plugged event, to do
-so, let us change the function hdmi_present_sense_via_verbs(). In this
-function, it reads the pin_sense via snd_hda_pin_sense(), after
-calling this function, the jack_dirty is 0, and before exiting
-via_verbs(), we change the shadow pin_sense according to both
-monitor_present and eld_valid, then in the snd_hda_jack_report_sync(),
-since the jack_dirty is still 0, it will report jack event according
-to this modified shadow pin_sense.
-
-After this change, the driver will not report Jack_is_plugged event
-through hdmi_present_sense_via_verbs() if monitor_present is 1 and
-eld_valid is 0.
-
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+Reviewed-by: Suanming Mou <mousuanming@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_hdmi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/tipc/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1636,9 +1636,11 @@ static bool hdmi_present_sense(struct hd
- 	ret = !repoll || !pin_eld->monitor_present || pin_eld->eld_valid;
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -61,6 +61,10 @@ static int __net_init tipc_init_net(stru
+ 	INIT_LIST_HEAD(&tn->node_list);
+ 	spin_lock_init(&tn->node_list_lock);
  
- 	jack = snd_hda_jack_tbl_get(codec, pin_nid);
--	if (jack)
-+	if (jack) {
- 		jack->block_report = !ret;
++	err = tipc_socket_init();
++	if (err)
++		goto out_socket;
++
+ 	err = tipc_sk_rht_init(net);
+ 	if (err)
+ 		goto out_sk_rht;
+@@ -87,6 +91,8 @@ out_subscr:
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+ out_sk_rht:
++	tipc_socket_stop();
++out_socket:
+ 	return err;
+ }
+ 
+@@ -97,6 +103,7 @@ static void __net_exit tipc_exit_net(str
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+ 	tipc_sk_rht_destroy(net);
++	tipc_socket_stop();
+ }
+ 
+ static struct pernet_operations tipc_net_ops = {
+@@ -134,10 +141,6 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_pernet;
+ 
+-	err = tipc_socket_init();
+-	if (err)
+-		goto out_socket;
 -
-+		jack->pin_sense = (eld->monitor_present && eld->eld_valid) ?
-+			AC_PINSENSE_PRESENCE : 0;
-+	}
- 	mutex_unlock(&per_pin->lock);
- 	snd_hda_power_down_pm(codec);
- 	return ret;
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -145,8 +148,6 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
+-	tipc_socket_stop();
+-out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+@@ -162,7 +163,6 @@ out_netlink:
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
+-	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
 
 
