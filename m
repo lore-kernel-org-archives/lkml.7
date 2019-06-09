@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA334C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D43C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF28720833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2162084A
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098743;
-	bh=qu3AXhIjStH1+re7tKqaUvy781oKsZ24j3DKALUl09Q=;
+	s=default; t=1560098747;
+	bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d6kw/rEHbquXO2yAkMOoUVM3m/OpqkiZQVkz67b9EoStJc/NEM+bl641+BmZU6GEp
-	 qsJ9DGChYwkOD22o3QEOK5D36Sxp0d/j6GIXOhEmszn4tWaX8/fwNHxjbLEBXv10ZI
-	 65I4VanjY3Sl+ceA1qNsbgSy7cZ/duTAW8RL0+g8=
+	b=fIjbIaTeeOP2CCd+x8pVJacx6uPsHgeCtoIDULQrOARNVJG5eF1SgduahHWr6EGxQ
+	 N0Hb3klbnv3BnsP3NvL0VodmQUhosQywLZt/KEq+npBfSJ6AGPDwdDWo3jwljG/QwL
+	 CD3S18aFa/qV5RP/0oHdMW2NEo89NpFhFYknHp5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfFIQpm (ORCPT
+        id S1730089AbfFIQpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43524 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730033AbfFIQpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:39 -0400
+        id S1730033AbfFIQpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AE0920833;
-        Sun,  9 Jun 2019 16:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C1702083D;
+        Sun,  9 Jun 2019 16:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098739;
-        bh=qu3AXhIjStH1+re7tKqaUvy781oKsZ24j3DKALUl09Q=;
+        s=default; t=1560098742;
+        bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gUQKr7UyaweXsUPpQKmV7+LO9ySn7zvqjn7ZUxGMGhKlHMBN8HOrRdmNqbHUteCZ6
-         bH878uUO7nMo0H1O6ZeacsFmKHn7rNQXu/lVU9J2Ajz+Fvjrv5f4E9Gm8cdpoAJSIz
-         EnzBi22KrVjO4pobOIUN9b/c6tSb5aAiMbtYDrJQ=
+        b=2qylCrXwmupjvbIXv2h7FRWKdojG2pxBXbplrrY59vl5EJ9xaR2Mr7ZCTTbGyW4XK
+         akd6CQGsduTJWmOZEi5we47qxOtuBU8GR93eU+nyImCu3sttwRsHeR2HM/XebWfeQ7
+         ytphZodQ11JKYoiG3C44sypeCY3dKLNmlQrJVgpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.1 36/70] memstick: mspro_block: Fix an error code in mspro_block_issue_req()
-Date:   Sun,  9 Jun 2019 18:41:47 +0200
-Message-Id: <20190609164130.189649566@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Julien Cristau <jcristau@debian.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        YunQiang Su <ysu@wavecomp.com>, linux-mips@vger.kernel.org
+Subject: [PATCH 5.1 45/70] MIPS: Bounds check virt_addr_valid
+Date:   Sun,  9 Jun 2019 18:41:56 +0200
+Message-Id: <20190609164131.137151634@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -59,88 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Paul Burton <paul.burton@mips.com>
 
-commit 61009f82a93f7c0b33cd9b3b263a6ab48f8b49d4 upstream.
+commit 074a1e1167afd82c26f6d03a9a8b997d564bb241 upstream.
 
-We accidentally changed the error code from -EAGAIN to 1 when we did the
-blk-mq conversion.
+The virt_addr_valid() function is meant to return true iff
+virt_to_page() will return a valid struct page reference. This is true
+iff the address provided is found within the unmapped address range
+between PAGE_OFFSET & MAP_BASE, but we don't currently check for that
+condition. Instead we simply mask the address to obtain what will be a
+physical address if the virtual address is indeed in the desired range,
+shift it to form a PFN & then call pfn_valid(). This can incorrectly
+return true if called with a virtual address which, after masking,
+happens to form a physical address corresponding to a valid PFN.
 
-Maybe a contributing factor to this mistake is that it wasn't obvious
-that the "while (chunk) {" condition is always true.  I have cleaned
-that up as well.
+For example we may vmalloc an address in the kernel mapped region
+starting a MAP_BASE & obtain the virtual address:
 
-Fixes: d0be12274dad ("mspro_block: convert to blk-mq")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  addr = 0xc000000000002000
+
+When masked by virt_to_phys(), which uses __pa() & in turn CPHYSADDR(),
+we obtain the following (bogus) physical address:
+
+  addr = 0x2000
+
+In a common system with PHYS_OFFSET=0 this will correspond to a valid
+struct page which should really be accessed by virtual address
+PAGE_OFFSET+0x2000, causing virt_addr_valid() to incorrectly return 1
+indicating that the original address corresponds to a struct page.
+
+This is equivalent to the ARM64 change made in commit ca219452c6b8
+("arm64: Correctly bounds check virt_addr_valid").
+
+This fixes fallout when hardened usercopy is enabled caused by the
+related commit 517e1fbeb65f ("mm/usercopy: Drop extra
+is_vmalloc_or_module() check") which removed a check for the vmalloc
+range that was present from the introduction of the hardened usercopy
+feature.
+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Reported-by: Julien Cristau <jcristau@debian.org>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Tested-by: YunQiang Su <ysu@wavecomp.com>
+URL: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=929366
+Cc: stable@vger.kernel.org # v4.12+
+Cc: linux-mips@vger.kernel.org
+Cc: Yunqiang Su <ysu@wavecomp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/memstick/core/mspro_block.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ arch/mips/mm/mmap.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/memstick/core/mspro_block.c
-+++ b/drivers/memstick/core/mspro_block.c
-@@ -694,13 +694,13 @@ static void h_mspro_block_setup_cmd(stru
+--- a/arch/mips/mm/mmap.c
++++ b/arch/mips/mm/mmap.c
+@@ -203,6 +203,11 @@ unsigned long arch_randomize_brk(struct
  
- /*** Data transfer ***/
- 
--static int mspro_block_issue_req(struct memstick_dev *card, bool chunk)
-+static int mspro_block_issue_req(struct memstick_dev *card)
+ int __virt_addr_valid(const volatile void *kaddr)
  {
- 	struct mspro_block_data *msb = memstick_get_drvdata(card);
- 	u64 t_off;
- 	unsigned int count;
- 
--	while (chunk) {
-+	while (true) {
- 		msb->current_page = 0;
- 		msb->current_seg = 0;
- 		msb->seg_count = blk_rq_map_sg(msb->block_req->q,
-@@ -709,6 +709,7 @@ static int mspro_block_issue_req(struct
- 
- 		if (!msb->seg_count) {
- 			unsigned int bytes = blk_rq_cur_bytes(msb->block_req);
-+			bool chunk;
- 
- 			chunk = blk_update_request(msb->block_req,
- 							BLK_STS_RESOURCE,
-@@ -718,7 +719,7 @@ static int mspro_block_issue_req(struct
- 			__blk_mq_end_request(msb->block_req,
- 						BLK_STS_RESOURCE);
- 			msb->block_req = NULL;
--			break;
-+			return -EAGAIN;
- 		}
- 
- 		t_off = blk_rq_pos(msb->block_req);
-@@ -735,8 +736,6 @@ static int mspro_block_issue_req(struct
- 		memstick_new_req(card->host);
- 		return 0;
- 	}
--
--	return 1;
++	unsigned long vaddr = (unsigned long)vaddr;
++
++	if ((vaddr < PAGE_OFFSET) || (vaddr >= MAP_BASE))
++		return 0;
++
+ 	return pfn_valid(PFN_DOWN(virt_to_phys(kaddr)));
  }
- 
- static int mspro_block_complete_req(struct memstick_dev *card, int error)
-@@ -779,7 +778,7 @@ static int mspro_block_complete_req(stru
- 		chunk = blk_update_request(msb->block_req,
- 				errno_to_blk_status(error), t_len);
- 		if (chunk) {
--			error = mspro_block_issue_req(card, chunk);
-+			error = mspro_block_issue_req(card);
- 			if (!error)
- 				goto out;
- 		} else {
-@@ -849,7 +848,7 @@ static blk_status_t mspro_queue_rq(struc
- 	msb->block_req = bd->rq;
- 	blk_mq_start_request(bd->rq);
- 
--	if (mspro_block_issue_req(card, true))
-+	if (mspro_block_issue_req(card))
- 		msb->block_req = NULL;
- 
- 	spin_unlock_irq(&msb->q_lock);
+ EXPORT_SYMBOL_GPL(__virt_addr_valid);
 
 
