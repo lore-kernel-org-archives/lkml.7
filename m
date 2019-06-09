@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58737C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A317C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E8A205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27228205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100539;
-	bh=GaK5bodEMpnjuCxoFdhWYcoPSFD4LwikbbsaoZE2hbw=;
+	s=default; t=1560100545;
+	bh=89GpvrFgzcN4Wj9MAnyH0h18e4NiL3Ko+h4Lw6xvsNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5qQgzb1CPWr/0Bspn27SbtZKSYyTFZHH3qNTTttOIJTqYBrtGHAwJFb4SQmvcfMS
-	 /ioQv+7JE93GzRjimjdgNv6RFdvhgi5FQooh7AMoD5TBH0MVn+tEY9rI4Rd0W832ca
-	 vRqW1ESHawjzzWQueu8A1zmzgfs4CtB5cSAtoJHw=
+	b=xhS1OGV8w8EJXTh6ejk1e2RtIXDLzgN4/t4xJjqu0NFwzqy223W2LffXR+aANI8xe
+	 B+Vl9CEItu6sHzTd2ZAXGbGd2lKjsgANTawZB22sFKHgLEev0Eri5UKC9NtPtgWlBQ
+	 m8G2SwQ1bWc9TRqf4DmipFkNbMOyEHQW300U8UK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732595AbfFIQy1 (ORCPT
+        id S1732570AbfFIQyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56010 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:54:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732583AbfFIQyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:54:22 -0400
+        id S1732163AbfFIQyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:54:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BF4B206BB;
-        Sun,  9 Jun 2019 16:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17683206BB;
+        Sun,  9 Jun 2019 16:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099261;
-        bh=GaK5bodEMpnjuCxoFdhWYcoPSFD4LwikbbsaoZE2hbw=;
+        s=default; t=1560099253;
+        bh=89GpvrFgzcN4Wj9MAnyH0h18e4NiL3Ko+h4Lw6xvsNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K/woSCit+hJMkfmrhuvQFgd68Dx3ec+5z/ZXzlGJVeU/8wEEUERY8qFSTUXpADX8O
-         QZg4CTrGIPHvA7xe7jHi61iksJHGvy3/397IjMZ2weR/v8gNHaDsSEUSErMtJOuQ2f
-         ZTyqTQustKgzCuStxzLxOhMCv3Tk6axX7rLVv08M=
+        b=xxbFPUFMBCKh5FZZnXV5xW1aXhOp+lIcGSU/LRhbLqoyUxdkvUvpHrHtTSJo2vm8+
+         MKpXdB15fimpEMnLncXy+iOtnJPq4DVgi9nnW+8ViJa5ceFyusfkGATrj8MAR2paOk
+         fpGm48XMqDkeLv3lIU04dkPuVKqnSV6LeQxPV0Ew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Matz <olivier.matz@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 68/83] ipv6: use READ_ONCE() for inet->hdrincl as in ipv4
-Date:   Sun,  9 Jun 2019 18:42:38 +0200
-Message-Id: <20190609164133.591210838@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.9 30/83] USB: rio500: fix memory leak in close after disconnect
+Date:   Sun,  9 Jun 2019 18:42:00 +0200
+Message-Id: <20190609164130.215498292@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,64 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Matz <olivier.matz@6wind.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 59e3e4b52663a9d97efbce7307f62e4bc5c9ce91 ]
+commit e0feb73428b69322dd5caae90b0207de369b5575 upstream.
 
-As it was done in commit 8f659a03a0ba ("net: ipv4: fix for a race
-condition in raw_sendmsg") and commit 20b50d79974e ("net: ipv4: emulate
-READ_ONCE() on ->hdrincl bit-field in raw_sendmsg()") for ipv4, copy the
-value of inet->hdrincl in a local variable, to avoid introducing a race
-condition in the next commit.
+If a disconnected device is closed, rio_close() must free
+the buffers.
 
-Signed-off-by: Olivier Matz <olivier.matz@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/raw.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -774,6 +774,7 @@ static int rawv6_sendmsg(struct sock *sk
- 	struct sockcm_cookie sockc;
- 	struct ipcm6_cookie ipc6;
- 	int addr_len = msg->msg_namelen;
-+	int hdrincl;
- 	u16 proto;
- 	int err;
+---
+ drivers/usb/misc/rio500.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+--- a/drivers/usb/misc/rio500.c
++++ b/drivers/usb/misc/rio500.c
+@@ -103,9 +103,22 @@ static int close_rio(struct inode *inode
+ {
+ 	struct rio_usb_data *rio = &rio_instance;
  
-@@ -787,6 +788,13 @@ static int rawv6_sendmsg(struct sock *sk
- 	if (msg->msg_flags & MSG_OOB)
- 		return -EOPNOTSUPP;
+-	rio->isopen = 0;
++	/* against disconnect() */
++	mutex_lock(&rio500_mutex);
++	mutex_lock(&(rio->lock));
  
-+	/* hdrincl should be READ_ONCE(inet->hdrincl)
-+	 * but READ_ONCE() doesn't work with bit fields.
-+	 * Doing this indirectly yields the same result.
-+	 */
-+	hdrincl = inet->hdrincl;
-+	hdrincl = READ_ONCE(hdrincl);
-+
- 	/*
- 	 *	Get and verify the address.
- 	 */
-@@ -904,7 +912,7 @@ static int rawv6_sendmsg(struct sock *sk
- 		fl6.flowi6_oif = np->ucast_oif;
- 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
+-	dev_info(&rio->rio_dev->dev, "Rio closed.\n");
++	rio->isopen = 0;
++	if (!rio->present) {
++		/* cleanup has been delayed */
++		kfree(rio->ibuf);
++		kfree(rio->obuf);
++		rio->ibuf = NULL;
++		rio->obuf = NULL;
++	} else {
++		dev_info(&rio->rio_dev->dev, "Rio closed.\n");
++	}
++	mutex_unlock(&(rio->lock));
++	mutex_unlock(&rio500_mutex);
+ 	return 0;
+ }
  
--	if (inet->hdrincl)
-+	if (hdrincl)
- 		fl6.flowi6_flags |= FLOWI_FLAG_KNOWN_NH;
- 
- 	if (ipc6.tclass < 0)
-@@ -927,7 +935,7 @@ static int rawv6_sendmsg(struct sock *sk
- 		goto do_confirm;
- 
- back_from_confirm:
--	if (inet->hdrincl)
-+	if (hdrincl)
- 		err = rawv6_send_hdrinc(sk, msg, len, &fl6, &dst, msg->msg_flags);
- 	else {
- 		ipc6.opt = opt;
 
 
