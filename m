@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E4EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4A6C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14772206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05193206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098890;
-	bh=4qmowM5JJpBMNXkmUPasC4LAMw1lFmnjPbSvlw/hn1M=;
+	s=default; t=1560098896;
+	bh=QjKTBDFXtqzZ+YF044l7hB5jMgsETESIngSJvWGBCc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Btu64QVGIqXQOspVpxH7FAARJIDkjdJYlPP0PcZWaMcPVo6LP18FsuMYRxG4VJsEV
-	 dupLSBRTyLyfsLWNg8moOC1faloEtJnBGFIhPcBXe0eQ7zhVAHYVlCsXgYYEfN1AJh
-	 +WWvPMUzEoymCLyR6p1Fkd4VsP4RzDOpZlRwN/LM=
+	b=bB5DsrvXhx764iRYRKC0Ywv5YxbRyQlQO0OshEr2wJ0lDD95Bb6zw1jIBxDxBZ/Lz
+	 IFlwwnpdWVefPtxGh5sy4549LfuMBWVmUj1PUoxeJlmNHyQpOoW3ke5QgERfiITFuF
+	 acK2YEn6g+CkXb7vNEndCTV2E4+2YuauKj5aRtK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfFIQsJ (ORCPT
+        id S1731144AbfFIQsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47040 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731091AbfFIQsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:06 -0400
+        id S1731122AbfFIQsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2AAF205ED;
-        Sun,  9 Jun 2019 16:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8305D206C3;
+        Sun,  9 Jun 2019 16:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098886;
-        bh=4qmowM5JJpBMNXkmUPasC4LAMw1lFmnjPbSvlw/hn1M=;
+        s=default; t=1560098892;
+        bh=QjKTBDFXtqzZ+YF044l7hB5jMgsETESIngSJvWGBCc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=an8bSv0nY7IL1mK6op70OZb/mKtyktJyaVnX8oOmVSqewZaf/7kG3VzAsE3rbWhCh
-         UmqnnVomnnX4ezuG29d5xfBUahEP7Bv1l6zyWrFgt//znkq4M292M3rMEkJRBoPXQw
-         rgo2/p4SsuAywFZjspf4qEA2K0oPNIeeW0aNUHU8=
+        b=RqRV/sE5SUfkWpmRm4J4q3P8Cd62igic20XsJW1/h0pZpbtvJZ1dtcOiCqHCKnC5B
+         A8bDVTxNErXeB/WZ6Zl5I0XMJo8Wlwkx2O4QkMff8f93YsaUu1GemZnWAfiKUIyjkU
+         JEN+cS7avcpgZaRbjWssPx0oGwQ6Akr4icD0J8X4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.19 24/51] pstore: Convert buf_lock to semaphore
-Date:   Sun,  9 Jun 2019 18:42:05 +0200
-Message-Id: <20190609164128.532925182@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Yaro Slav <yaro330@gmail.com>
+Subject: [PATCH 4.19 26/51] pstore/ram: Run without kernel crash dump region
+Date:   Sun,  9 Jun 2019 18:42:07 +0200
+Message-Id: <20190609164128.663731310@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -62,240 +61,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-commit ea84b580b95521644429cc6748b6c2bf27c8b0f3 upstream.
+commit 8880fa32c557600f5f624084152668ed3c2ea51e upstream.
 
-Instead of running with interrupts disabled, use a semaphore. This should
-make it easier for backends that may need to sleep (e.g. EFI) when
-performing a write:
+The ram pstore backend has always had the crash dumper frontend enabled
+unconditionally. However, it was possible to effectively disable it
+by setting a record_size=0. All the machinery would run (storing dumps
+to the temporary crash buffer), but 0 bytes would ultimately get stored
+due to there being no przs allocated for dumps. Commit 89d328f637b9
+("pstore/ram: Correctly calculate usable PRZ bytes"), however, assumed
+that there would always be at least one allocated dprz for calculating
+the size of the temporary crash buffer. This was, of course, not the
+case when record_size=0, and would lead to a NULL deref trying to find
+the dprz buffer size:
 
-|BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
-|in_atomic(): 1, irqs_disabled(): 1, pid: 2236, name: sig-xstate-bum
-|Preemption disabled at:
-|[<ffffffff99d60512>] pstore_dump+0x72/0x330
-|CPU: 26 PID: 2236 Comm: sig-xstate-bum Tainted: G      D           4.20.0-rc3 #45
-|Call Trace:
-| dump_stack+0x4f/0x6a
-| ___might_sleep.cold.91+0xd3/0xe4
-| __might_sleep+0x50/0x90
-| wait_for_completion+0x32/0x130
-| virt_efi_query_variable_info+0x14e/0x160
-| efi_query_variable_store+0x51/0x1a0
-| efivar_entry_set_safe+0xa3/0x1b0
-| efi_pstore_write+0x109/0x140
-| pstore_dump+0x11c/0x330
-| kmsg_dump+0xa4/0xd0
-| oops_exit+0x22/0x30
+BUG: unable to handle kernel NULL pointer dereference at (null)
 ...
+IP: ramoops_probe+0x285/0x37e (fs/pstore/ram.c:808)
 
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Fixes: 21b3ddd39fee ("efi: Don't use spinlocks for efi vars")
+        cxt->pstore.bufsize = cxt->dprzs[0]->buffer_size;
+
+Instead, we need to only enable the frontends based on the success of the
+prz initialization and only take the needed actions when those zones are
+available. (This also fixes a possible error in detecting if the ftrace
+frontend should be enabled.)
+
+Reported-and-tested-by: Yaro Slav <yaro330@gmail.com>
+Fixes: 89d328f637b9 ("pstore/ram: Correctly calculate usable PRZ bytes")
+Cc: stable@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/nvram_64.c    |    2 -
- drivers/acpi/apei/erst.c          |    1 
- drivers/firmware/efi/efi-pstore.c |    4 ---
- fs/pstore/platform.c              |   44 +++++++++++++++++++-------------------
- fs/pstore/ram.c                   |    1 
- include/linux/pstore.h            |    7 ++----
- 6 files changed, 27 insertions(+), 32 deletions(-)
+ fs/pstore/platform.c |    3 ++-
+ fs/pstore/ram.c      |   36 +++++++++++++++++++++++-------------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
 
---- a/arch/powerpc/kernel/nvram_64.c
-+++ b/arch/powerpc/kernel/nvram_64.c
-@@ -563,8 +563,6 @@ static int nvram_pstore_init(void)
- 	nvram_pstore_info.buf = oops_data;
- 	nvram_pstore_info.bufsize = oops_data_sz;
- 
--	spin_lock_init(&nvram_pstore_info.buf_lock);
--
- 	rc = pstore_register(&nvram_pstore_info);
- 	if (rc && (rc != -EPERM))
- 		/* Print error only when pstore.backend == nvram */
---- a/drivers/acpi/apei/erst.c
-+++ b/drivers/acpi/apei/erst.c
-@@ -1176,7 +1176,6 @@ static int __init erst_init(void)
- 	"Error Record Serialization Table (ERST) support is initialized.\n");
- 
- 	buf = kmalloc(erst_erange.size, GFP_KERNEL);
--	spin_lock_init(&erst_info.buf_lock);
- 	if (buf) {
- 		erst_info.buf = buf + sizeof(struct cper_pstore_record);
- 		erst_info.bufsize = erst_erange.size -
---- a/drivers/firmware/efi/efi-pstore.c
-+++ b/drivers/firmware/efi/efi-pstore.c
-@@ -259,8 +259,7 @@ static int efi_pstore_write(struct pstor
- 		efi_name[i] = name[i];
- 
- 	ret = efivar_entry_set_safe(efi_name, vendor, PSTORE_EFI_ATTRIBUTES,
--			      !pstore_cannot_block_path(record->reason),
--			      record->size, record->psi->buf);
-+			      preemptible(), record->size, record->psi->buf);
- 
- 	if (record->reason == KMSG_DUMP_OOPS)
- 		efivar_run_worker();
-@@ -369,7 +368,6 @@ static __init int efivars_pstore_init(vo
- 		return -ENOMEM;
- 
- 	efi_pstore_info.bufsize = 1024;
--	spin_lock_init(&efi_pstore_info.buf_lock);
- 
- 	if (pstore_register(&efi_pstore_info)) {
- 		kfree(efi_pstore_info.buf);
 --- a/fs/pstore/platform.c
 +++ b/fs/pstore/platform.c
-@@ -124,26 +124,27 @@ static const char *get_reason_str(enum k
+@@ -583,7 +583,8 @@ int pstore_register(struct pstore_info *
+ 		return -EINVAL;
  	}
- }
  
--bool pstore_cannot_block_path(enum kmsg_dump_reason reason)
-+/*
-+ * Should pstore_dump() wait for a concurrent pstore_dump()? If
-+ * not, the current pstore_dump() will report a failure to dump
-+ * and return.
-+ */
-+static bool pstore_cannot_wait(enum kmsg_dump_reason reason)
- {
--	/*
--	 * In case of NMI path, pstore shouldn't be blocked
--	 * regardless of reason.
--	 */
-+	/* In NMI path, pstore shouldn't block regardless of reason. */
- 	if (in_nmi())
- 		return true;
+-	allocate_buf_for_compression();
++	if (psi->flags & PSTORE_FLAGS_DMESG)
++		allocate_buf_for_compression();
  
- 	switch (reason) {
- 	/* In panic case, other cpus are stopped by smp_send_stop(). */
- 	case KMSG_DUMP_PANIC:
--	/* Emergency restart shouldn't be blocked by spin lock. */
-+	/* Emergency restart shouldn't be blocked. */
- 	case KMSG_DUMP_EMERG:
- 		return true;
- 	default:
- 		return false;
- 	}
- }
--EXPORT_SYMBOL_GPL(pstore_cannot_block_path);
- 
- #if IS_ENABLED(CONFIG_PSTORE_DEFLATE_COMPRESS)
- static int zbufsize_deflate(size_t size)
-@@ -378,23 +379,23 @@ static void pstore_dump(struct kmsg_dump
- 	unsigned long	total = 0;
- 	const char	*why;
- 	unsigned int	part = 1;
--	unsigned long	flags = 0;
--	int		is_locked;
- 	int		ret;
- 
- 	why = get_reason_str(reason);
- 
--	if (pstore_cannot_block_path(reason)) {
--		is_locked = spin_trylock_irqsave(&psinfo->buf_lock, flags);
--		if (!is_locked) {
--			pr_err("pstore dump routine blocked in %s path, may corrupt error record\n"
--				       , in_nmi() ? "NMI" : why);
-+	if (down_trylock(&psinfo->buf_lock)) {
-+		/* Failed to acquire lock: give up if we cannot wait. */
-+		if (pstore_cannot_wait(reason)) {
-+			pr_err("dump skipped in %s path: may corrupt error record\n",
-+				in_nmi() ? "NMI" : why);
-+			return;
-+		}
-+		if (down_interruptible(&psinfo->buf_lock)) {
-+			pr_err("could not grab semaphore?!\n");
- 			return;
- 		}
--	} else {
--		spin_lock_irqsave(&psinfo->buf_lock, flags);
--		is_locked = 1;
- 	}
-+
- 	oopscount++;
- 	while (total < kmsg_bytes) {
- 		char *dst;
-@@ -411,7 +412,7 @@ static void pstore_dump(struct kmsg_dump
- 		record.part = part;
- 		record.buf = psinfo->buf;
- 
--		if (big_oops_buf && is_locked) {
-+		if (big_oops_buf) {
- 			dst = big_oops_buf;
- 			dst_size = big_oops_buf_sz;
- 		} else {
-@@ -429,7 +430,7 @@ static void pstore_dump(struct kmsg_dump
- 					  dst_size, &dump_size))
- 			break;
- 
--		if (big_oops_buf && is_locked) {
-+		if (big_oops_buf) {
- 			zipped_len = pstore_compress(dst, psinfo->buf,
- 						header_size + dump_size,
- 						psinfo->bufsize);
-@@ -452,8 +453,8 @@ static void pstore_dump(struct kmsg_dump
- 		total += record.size;
- 		part++;
- 	}
--	if (is_locked)
--		spin_unlock_irqrestore(&psinfo->buf_lock, flags);
-+
-+	up(&psinfo->buf_lock);
- }
- 
- static struct kmsg_dumper pstore_dumper = {
-@@ -572,6 +573,7 @@ int pstore_register(struct pstore_info *
- 		psi->write_user = pstore_write_user_compat;
- 	psinfo = psi;
- 	mutex_init(&psinfo->read_mutex);
-+	sema_init(&psinfo->buf_lock, 1);
- 	spin_unlock(&pstore_lock);
- 
- 	if (owner && !try_module_get(owner)) {
+ 	if (pstore_is_mounted())
+ 		pstore_get_records(0);
 --- a/fs/pstore/ram.c
 +++ b/fs/pstore/ram.c
-@@ -814,7 +814,6 @@ static int ramoops_probe(struct platform
- 		err = -ENOMEM;
- 		goto fail_clear;
- 	}
--	spin_lock_init(&cxt->pstore.buf_lock);
+@@ -803,26 +803,36 @@ static int ramoops_probe(struct platform
  
- 	cxt->pstore.flags = PSTORE_FLAGS_DMESG;
+ 	cxt->pstore.data = cxt;
+ 	/*
+-	 * Since bufsize is only used for dmesg crash dumps, it
+-	 * must match the size of the dprz record (after PRZ header
+-	 * and ECC bytes have been accounted for).
++	 * Prepare frontend flags based on which areas are initialized.
++	 * For ramoops_init_przs() cases, the "max count" variable tells
++	 * if there are regions present. For ramoops_init_prz() cases,
++	 * the single region size is how to check.
+ 	 */
+-	cxt->pstore.bufsize = cxt->dprzs[0]->buffer_size;
+-	cxt->pstore.buf = kzalloc(cxt->pstore.bufsize, GFP_KERNEL);
+-	if (!cxt->pstore.buf) {
+-		pr_err("cannot allocate pstore crash dump buffer\n");
+-		err = -ENOMEM;
+-		goto fail_clear;
+-	}
+-
+-	cxt->pstore.flags = PSTORE_FLAGS_DMESG;
++	cxt->pstore.flags = 0;
++	if (cxt->max_dump_cnt)
++		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
  	if (cxt->console_size)
---- a/include/linux/pstore.h
-+++ b/include/linux/pstore.h
-@@ -26,7 +26,7 @@
- #include <linux/errno.h>
- #include <linux/kmsg_dump.h>
- #include <linux/mutex.h>
--#include <linux/spinlock.h>
-+#include <linux/semaphore.h>
- #include <linux/time.h>
- #include <linux/types.h>
+ 		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+-	if (cxt->ftrace_size)
++	if (cxt->max_ftrace_cnt)
+ 		cxt->pstore.flags |= PSTORE_FLAGS_FTRACE;
+ 	if (cxt->pmsg_size)
+ 		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
  
-@@ -88,7 +88,7 @@ struct pstore_record {
-  * @owner:	module which is repsonsible for this backend driver
-  * @name:	name of the backend driver
-  *
-- * @buf_lock:	spinlock to serialize access to @buf
-+ * @buf_lock:	semaphore to serialize access to @buf
-  * @buf:	preallocated crash dump buffer
-  * @bufsize:	size of @buf available for crash dump bytes (must match
-  *		smallest number of bytes available for writing to a
-@@ -173,7 +173,7 @@ struct pstore_info {
- 	struct module	*owner;
- 	char		*name;
- 
--	spinlock_t	buf_lock;
-+	struct semaphore buf_lock;
- 	char		*buf;
- 	size_t		bufsize;
- 
-@@ -199,7 +199,6 @@ struct pstore_info {
- 
- extern int pstore_register(struct pstore_info *);
- extern void pstore_unregister(struct pstore_info *);
--extern bool pstore_cannot_block_path(enum kmsg_dump_reason reason);
- 
- struct pstore_ftrace_record {
- 	unsigned long ip;
++	/*
++	 * Since bufsize is only used for dmesg crash dumps, it
++	 * must match the size of the dprz record (after PRZ header
++	 * and ECC bytes have been accounted for).
++	 */
++	if (cxt->pstore.flags & PSTORE_FLAGS_DMESG) {
++		cxt->pstore.bufsize = cxt->dprzs[0]->buffer_size;
++		cxt->pstore.buf = kzalloc(cxt->pstore.bufsize, GFP_KERNEL);
++		if (!cxt->pstore.buf) {
++			pr_err("cannot allocate pstore crash dump buffer\n");
++			err = -ENOMEM;
++			goto fail_clear;
++		}
++	}
++
+ 	err = pstore_register(&cxt->pstore);
+ 	if (err) {
+ 		pr_err("registering with pstore failed\n");
 
 
