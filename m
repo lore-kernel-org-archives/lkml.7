@@ -2,153 +2,128 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CD6C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EB5C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59CF20679
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A34920679
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Yw5lxz2M"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="Xv7G/IV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbfFIW3D (ORCPT
+        id S1729873AbfFIWaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 18:29:03 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35462 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729529AbfFIW3C (ORCPT
+        Sun, 9 Jun 2019 18:30:16 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36933 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729304AbfFIWaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 18:29:02 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j19so6630701otq.2;
-        Sun, 09 Jun 2019 15:29:02 -0700 (PDT)
+        Sun, 9 Jun 2019 18:30:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v14so7229691wrr.4
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 15:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sePl1BxoH8M2Ag9hWKHMM9PC7HT35mw+FBXMYc8ap6c=;
-        b=Yw5lxz2MiGWV6OwbaX63dQW+cirM/W4o6b7Xia0ej4yEhpRzVI0DltV0GAL7UAgwaM
-         91vcaOnjNUJVMHrChqbrsdrWY1l2Pa5hrSha6gqLWFmHolBLQThdwquKORq0rFPGJTEn
-         gZn4TkcAPDzh40IsgK0PORqVgyrCwVi4/QyzPw03MCCouiZZuHfzu16PhSjZnuX7pkA7
-         eJ0xRRqfgEK1OJNXktIsRvAD4kIC/8m+yQgBfYmzQnLkefvqmaESBfZ+7XJoqqfzlx87
-         i0dDU/jG2ZRsV61cQKa9bl8ip8+MV72DncqyaXYNGoJxCZHJLUbY0n7nRGhZ/GjAfjKk
-         ZZ5w==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=VbwrAx1UuhYUk33Eb6Nh7Ho50cD83TFR3BNTlq7pRds=;
+        b=Xv7G/IV3EOLxpvGYFNodCktudkRopSI5EOZgt7FkFUy2H13fWaCDi7JZ4iBiSjdNdr
+         Br+oQEBapIqJrTdR0in2ZsAZaSiwzG3FOB1Ecs8//ZBKm6vG9sjCi/4as5JyxcLFBoMx
+         3RnNUDNvQwWRBy45VM5xDl9z8jgoYL0FaOZOnmTrgfBiKygKSkYNUrzgJH70Rsat8OiF
+         SE5XF7dwHA1/3mh1qbOIDnqXrN8vl5wjO2KEXwPHJzIoOcWvGfBSZ4jkrGkV+75EZ1De
+         BTB54sTiEgmrmRC6PEltVplR7pIfFOj0b3XrWkXypllPgfxCwiq0VFrAiou7wdV6xSEg
+         13ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sePl1BxoH8M2Ag9hWKHMM9PC7HT35mw+FBXMYc8ap6c=;
-        b=cR80pgrn0UQWgQDdgj8MjyJmrz/5D/5MVj0MVFZVX8HowBATlpqGds+JGdeqKlHiYk
-         0vQJj+i7W3sHI6PfCFDk7sFPE20kIsIUmV81XlLo7RigPpZIi77/ZH2VKn0sdx/4eaGU
-         hkTn5CS0pvZmmm7Sun1XmUQ7DR1VTU6Utnf0m8xiAVwZBuGN0HF6bOE2wOKHzVNqde98
-         +uNBu3bfU0zvoAbwYXRlsVAgdzw9efu6/SiEuNPupu48qb535mh0V35HU8TazAPMlizy
-         LDrylnZDkyTbiDME0P5pRnrJJUsyE9I/wt4P1jtzoF0xofotUiZjsvZ/9JR8geWODFlb
-         fUdA==
-X-Gm-Message-State: APjAAAWGcNpDgAAeW+QGYH3vQxwL6PDjFi6XyV5izyqN1rwBI8lsU7/n
-        kB4NoZxbDhV2eGyWK0mSj1gFp46zhrijnVcGdW4=
-X-Google-Smtp-Source: APXvYqy+T7mpPqt6GkRiQjZzGluZ3AiR4EAUVviHS6NHy+UPPLubdx6ZNTH4stn3vXNw9TQ8wcN2BMs2ClwdoqNifV0=
-X-Received: by 2002:a9d:6405:: with SMTP id h5mr16693612otl.42.1560119341436;
- Sun, 09 Jun 2019 15:29:01 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=VbwrAx1UuhYUk33Eb6Nh7Ho50cD83TFR3BNTlq7pRds=;
+        b=AjlG7kT5aDK5o7HsRrcAtrYLAps6eTHrZ/15EWCcRSEw1mQHuoPF+Y6923R4ilfGMc
+         JqeSM2aAF8y8PSNgLDF367MMl/+QIzpzi/i8WZQSiZxparkb4k9lu8TlPvbSaVqEeuC4
+         ECv8mVeUU35isGjZxO5j7IefKC39dd60Z/U8NtzQViRuPCPsqo1bhIrS2x6E8CK0rZCR
+         LktpFP8pIGdQLPoJT0y1/PD3y9+JoP3EEyWJZnJ10qouh+J3sZ4qeVXFnjQ+ey8+DR4y
+         +viEovU5XizI3KQAXi23bl+43IDIE8o30C78fz6pZfkBhym/9EWmy8GF9oGfLSU09sJ1
+         EQFA==
+X-Gm-Message-State: APjAAAXX3IKShLCWZl+wrOFtrb6HQ5ilSCdpIT38MREmNaGaVhazcUK0
+        xaHpV+uLr9Jol1cJMfsMNzhXYT3qrJo=
+X-Google-Smtp-Source: APXvYqxnDohVWMWpdwiz6rnPyllv0BfV0QvQ5Es7z3p0OgxWoRq7LCubNLGPO52u5he+3Yqe6M45Mw==
+X-Received: by 2002:a05:6000:1206:: with SMTP id e6mr2968719wrx.182.1560119414287;
+        Sun, 09 Jun 2019 15:30:14 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id 32sm22129828wra.35.2019.06.09.15.30.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Jun 2019 15:30:13 -0700 (PDT)
+Message-ID: <5cfd8875.1c69fb81.5cb9b.0f42@mx.google.com>
+Date:   Sun, 09 Jun 2019 15:30:13 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609180621.7607-6-martin.blumenstingl@googlemail.com>
- <CACRpkdYzeiLB7Yuixv6NsnLJoa_FnGKRHHQm=t4gMH34NdFSYA@mail.gmail.com>
- <CAFBinCBgoLb+Hfdo-sZ_0H6ct=UJm7j6wD_C6udbA6BTRvFOWQ@mail.gmail.com> <CACRpkdYur+dwC1LqasQR-cvTWcpV12vr+8Wi5o9kXVWe-0teZw@mail.gmail.com>
-In-Reply-To: <CACRpkdYur+dwC1LqasQR-cvTWcpV12vr+8Wi5o9kXVWe-0teZw@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 10 Jun 2019 00:28:50 +0200
-Message-ID: <CAFBinCDOhBUqNx4y+j1NeE08wWuZ-bhX5DsE8kcG4LUHKEQ+nQ@mail.gmail.com>
-Subject: Re: [RFC next v1 5/5] arm64: dts: meson: g12a: x96-max: fix the
- Ethernet PHY reset line
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Giuseppe CAVALLARO <peppe.cavallaro@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.4.180-242-gc9c6a085b72e
+X-Kernelci-Branch: linux-4.4.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
+References: <20190609164147.729157653@linuxfoundation.org>
+Subject: Re: [PATCH 4.4 000/241] 4.4.181-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+stable-rc/linux-4.4.y boot: 94 boots: 1 failed, 92 passed with 1 conflict (=
+v4.4.180-242-gc9c6a085b72e)
 
-On Mon, Jun 10, 2019 at 12:06 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Sun, Jun 9, 2019 at 11:36 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->
-> > > If "snps,reset-active-low" was set it results in the sequence 1, 0, 1
-> > > if it is not set it results in the sequence 0, 1, 0.
-> >
-> > I'm changing this logic with earlier patches of this series.
-> > can you please look at these as well because GPIO_OPEN_SOURCE doesn't
-> > work with the old version of stmmac_mdio_reset() that you are showing.
->
-> OK but the logic is the same, just that the polarity handling is moved
-> into gpiolib.
->
-> > > The high (reset) is asserted by switching the pin into high-z open drain
-> > > mode, which happens by switching the line into input mode in some
-> > > cases.
-> > >
-> > > I think the real reason it works now is that reset is actually active high.
-> >
-> > let me write down what I definitely know so far
-> >
-> > the RTL8211F PHY wants the reset line to be LOW for a few milliseconds
-> > to put it into reset mode.
-> > driving the reset line HIGH again takes it out of reset.
-> >
-> > Odroid-N2's schematics [0] (page 30) shows that there's a pull-up for
-> > the PHYRSTB pin, which is also connected to the NRST signal which is
-> > GPIOZ_15
->
-> Looks correct, R143 is indeed a pull up indicating that the line is
-> open drain, active low.
-good so far
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.4.y/kernel/v4.4.180-242-gc9c6a085b72e/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
+/kernel/v4.4.180-242-gc9c6a085b72e/
 
-> > > It makes a lot of sense, since if it resets the device when set as input
-> > > (open drain) it holds all devices on that line in reset, which is likely
-> > > what you want as most GPIOs come up as inputs (open drain).
-> > > A pull-up resistor will ascertain that the devices are in reset.
-> >
-> > my understanding is that the pull-up resistor holds it out of reset
-> > driving GPIOZ_15's (open drain) output LOW pulls the signal to ground
-> > and asserts the reset
->
-> Yep that seems correct.
->
-> Oh I guess it is this:
->
->         amlogic,tx-delay-ns = <2>;
-> -       snps,reset-gpio = <&gpio GPIOZ_14 0>;
-> +       snps,reset-gpio = <&gpio GPIOZ_15 GPIO_OPEN_SOURCE>;
->         snps,reset-delays-us = <0 10000 1000000>;
-> -       snps,reset-active-low;
->
-> Can you try:
-> snps,reset-gpio = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-> ?
-I tried it and it works!
+Tree: stable-rc
+Branch: linux-4.4.y
+Git Describe: v4.4.180-242-gc9c6a085b72e
+Git Commit: c9c6a085b72ef62ce2cdcfbee79476ad2bdbd703
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 44 unique boards, 20 SoC families, 14 builds out of 190
 
-> Open source is nominally (and rarely) used for lines that are active high.
-> For lines that are active low, we want to use open drain combined
-> with active low.
-thank you for the explanation - I'll take your version for v2 :)
+Boot Regressions Detected:
 
+x86_64:
 
-Martin
+    x86_64_defconfig:
+        gcc-8:
+          qemu:
+              lab-baylibre: new failure (last pass: v4.4.180-230-g17950b5be=
+27c)
+
+Boot Failure Detected:
+
+arm64:
+    defconfig:
+        gcc-8:
+            qcom-qdf2400: 1 failed lab
+
+Conflicting Boot Failure Detected: (These likely are not failures as other =
+labs are reporting PASS. Needs review.)
+
+x86_64:
+    x86_64_defconfig:
+        qemu:
+            lab-drue: PASS (gcc-8)
+            lab-baylibre: FAIL (gcc-8)
+            lab-collabora: PASS (gcc-8)
+            lab-linaro-lkft: PASS (gcc-8)
+            lab-mhart: PASS (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
