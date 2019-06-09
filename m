@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91986C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268D3C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C485206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE935206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099411;
-	bh=ISzGiHCBv8wniRLyahJSfJFScHVAsSJgClPxPxkgjSg=;
+	s=default; t=1560099418;
+	bh=tJbJ7ioO8tf45D1i6csUXGqnyclm2ovKlhW9IshVaQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z4q3L1pk8jXxfVQy5tSZ+jL/bYrTeL/bPwgz2USu7SWyJvzg3DWeEpc21Bn56KibF
-	 ObYqqaOUyEkyUiOs7WqOk7YKxfUW/xLvVoMUfOlqWUopC3Gp81ciq16hF7FnEsQXQY
-	 HGpj1CIF+2HPtZPDklUQsCvE4Vk2JU9U+Vryu8JQ=
+	b=R+oWo3uu0+bX9RVqMFTM2oTUrZXkppB8OM4dzo3OUJBQlruq0fp391HHEPaXz0l7W
+	 BK/2pOlqV89tIiHmmR+I3EMWlx9kYNscMq69mgDvr2sx+a4Ro13f8Ebza2XGIbcxk8
+	 OXV0hPed7mlB3vEHDFttCvD1wzPqz0Ahlep80psw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733038AbfFIQ4p (ORCPT
+        id S1733066AbfFIQ45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59376 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732675AbfFIQ4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:56:43 -0400
+        id S1732552AbfFIQ4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:56:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FFC1204EC;
-        Sun,  9 Jun 2019 16:56:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20B8D204EC;
+        Sun,  9 Jun 2019 16:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099402;
-        bh=ISzGiHCBv8wniRLyahJSfJFScHVAsSJgClPxPxkgjSg=;
+        s=default; t=1560099413;
+        bh=tJbJ7ioO8tf45D1i6csUXGqnyclm2ovKlhW9IshVaQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6AwRXqVpyDAzu9SvnYWqfe3MfnPTI05du+j8eKO4Z80qmDmJfW1FMQvn2VqTzSFc
-         mt8DYcjKAIlOWtCmrNJWy2lOIW/AYHS/G1yJhVFgmKNPjYnIV5bd3Wu7Ap0QAgv4HU
-         qJ12ox04WpQaT5OotZvEjHwu1KWM9bhk0SLXrSRs=
+        b=Bvc5acFWlLZ4yPAs97QA9C4lxaRYtyXeYPYbwNOi68OgDCtlAGzmfiJDCV214RXM3
+         x61Yr0Yk6QYlg4i7tZ81FZaX2GOTX7tkVAMSZLqoj3YM6ucvTaMBzM1NI2vFs9gdCK
+         mAnBojFBtx28SNMtxVdxedZdJSgLrmK7+HiinJEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sriram Rajagopalan <sriramr@arista.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.4 029/241] ext4: zero out the unused memory region in the extent tree block
-Date:   Sun,  9 Jun 2019 18:39:31 +0200
-Message-Id: <20190609164148.621401348@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 031/241] KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes
+Date:   Sun,  9 Jun 2019 18:39:33 +0200
+Message-Id: <20190609164148.679564892@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,82 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriram Rajagopalan <sriramr@arista.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 592acbf16821288ecdc4192c47e3774a4c48bb64 upstream.
+commit 11988499e62b310f3bf6f6d0a807a06d3f9ccc96 upstream.
 
-This commit zeroes out the unused memory region in the buffer_head
-corresponding to the extent metablock after writing the extent header
-and the corresponding extent node entries.
+KVM allows userspace to violate consistency checks related to the
+guest's CPUID model to some degree.  Generally speaking, userspace has
+carte blanche when it comes to guest state so long as jamming invalid
+state won't negatively affect the host.
 
-This is done to prevent random uninitialized data from getting into
-the filesystem when the extent block is synced.
+Currently this is seems to be a non-issue as most of the interesting
+EFER checks are missing, e.g. NX and LME, but those will be added
+shortly.  Proactively exempt userspace from the CPUID checks so as not
+to break userspace.
 
-This fixes CVE-2019-11833.
+Note, the efer_reserved_bits check still applies to userspace writes as
+that mask reflects the host's capabilities, e.g. KVM shouldn't allow a
+guest to run with NX=1 if it has been disabled in the host.
 
-Signed-off-by: Sriram Rajagopalan <sriramr@arista.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fixes: d80174745ba39 ("KVM: SVM: Only allow setting of EFER_SVME when CPUID SVM is set")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/extents.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c |   33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -1049,6 +1049,7 @@ static int ext4_ext_split(handle_t *hand
- 	__le32 border;
- 	ext4_fsblk_t *ablocks = NULL; /* array of allocated blocks */
- 	int err = 0;
-+	size_t ext_size = 0;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -990,11 +990,8 @@ static u32 emulated_msrs[] = {
  
- 	/* make decision: where to split? */
- 	/* FIXME: now decision is simplest: at current extent */
-@@ -1140,6 +1141,10 @@ static int ext4_ext_split(handle_t *hand
- 		le16_add_cpu(&neh->eh_entries, m);
+ static unsigned num_emulated_msrs;
+ 
+-bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
++static bool __kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
+-	if (efer & efer_reserved_bits)
+-		return false;
+-
+ 	if (efer & EFER_FFXSR) {
+ 		struct kvm_cpuid_entry2 *feat;
+ 
+@@ -1012,19 +1009,33 @@ bool kvm_valid_efer(struct kvm_vcpu *vcp
  	}
  
-+	/* zero out unused area in the extent block */
-+	ext_size = sizeof(struct ext4_extent_header) +
-+		sizeof(struct ext4_extent) * le16_to_cpu(neh->eh_entries);
-+	memset(bh->b_data + ext_size, 0, inode->i_sb->s_blocksize - ext_size);
- 	ext4_extent_block_csum_set(inode, neh);
- 	set_buffer_uptodate(bh);
- 	unlock_buffer(bh);
-@@ -1219,6 +1224,11 @@ static int ext4_ext_split(handle_t *hand
- 				sizeof(struct ext4_extent_idx) * m);
- 			le16_add_cpu(&neh->eh_entries, m);
- 		}
-+		/* zero out unused area in the extent block */
-+		ext_size = sizeof(struct ext4_extent_header) +
-+		   (sizeof(struct ext4_extent) * le16_to_cpu(neh->eh_entries));
-+		memset(bh->b_data + ext_size, 0,
-+			inode->i_sb->s_blocksize - ext_size);
- 		ext4_extent_block_csum_set(inode, neh);
- 		set_buffer_uptodate(bh);
- 		unlock_buffer(bh);
-@@ -1284,6 +1294,7 @@ static int ext4_ext_grow_indepth(handle_
- 	ext4_fsblk_t newblock, goal = 0;
- 	struct ext4_super_block *es = EXT4_SB(inode->i_sb)->s_es;
- 	int err = 0;
-+	size_t ext_size = 0;
+ 	return true;
++
++}
++bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer)
++{
++	if (efer & efer_reserved_bits)
++		return false;
++
++	return __kvm_valid_efer(vcpu, efer);
+ }
+ EXPORT_SYMBOL_GPL(kvm_valid_efer);
  
- 	/* Try to prepend new index to old one */
- 	if (ext_depth(inode))
-@@ -1309,9 +1320,11 @@ static int ext4_ext_grow_indepth(handle_
- 		goto out;
- 	}
+-static int set_efer(struct kvm_vcpu *vcpu, u64 efer)
++static int set_efer(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ {
+ 	u64 old_efer = vcpu->arch.efer;
++	u64 efer = msr_info->data;
  
-+	ext_size = sizeof(EXT4_I(inode)->i_data);
- 	/* move top-level index/leaf into new block */
--	memmove(bh->b_data, EXT4_I(inode)->i_data,
--		sizeof(EXT4_I(inode)->i_data));
-+	memmove(bh->b_data, EXT4_I(inode)->i_data, ext_size);
-+	/* zero out unused area in the extent block */
-+	memset(bh->b_data + ext_size, 0, inode->i_sb->s_blocksize - ext_size);
+-	if (!kvm_valid_efer(vcpu, efer))
+-		return 1;
++	if (efer & efer_reserved_bits)
++		return false;
  
- 	/* set size of new block */
- 	neh = ext_block_hdr(bh);
+-	if (is_paging(vcpu)
+-	    && (vcpu->arch.efer & EFER_LME) != (efer & EFER_LME))
+-		return 1;
++	if (!msr_info->host_initiated) {
++		if (!__kvm_valid_efer(vcpu, efer))
++			return 1;
++
++		if (is_paging(vcpu) &&
++		    (vcpu->arch.efer & EFER_LME) != (efer & EFER_LME))
++			return 1;
++	}
+ 
+ 	efer &= ~EFER_LMA;
+ 	efer |= vcpu->arch.efer & EFER_LMA;
+@@ -2055,7 +2066,7 @@ int kvm_set_msr_common(struct kvm_vcpu *
+ 		break;
+ 
+ 	case MSR_EFER:
+-		return set_efer(vcpu, data);
++		return set_efer(vcpu, msr_info);
+ 	case MSR_K7_HWCR:
+ 		data &= ~(u64)0x40;	/* ignore flush filter disable */
+ 		data &= ~(u64)0x100;	/* ignore ignne emulation enable */
 
 
