@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB5BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F0DC468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D723E2084A
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52852146E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098709;
-	bh=JdUzlv4TObo/slAwFsxFXuX8Bv/1SQfiN8q6c86HR1k=;
+	s=default; t=1560098712;
+	bh=LnQDjO4Vhdgtle2baR7Jpn2WfXmPbMBsg1JM9CfT5io=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e+Dy0Pg9PP/wpiV8o/hqLENitHbIAh71TX3GHv/I4ZwKCnOtQEPG2GBzlZ6oEOCOK
-	 +Sg6iCOsAyv/vs9yVS8YYew0N7a3+DsqxbZE78R0Uic69XF5o4+A+whdJi3uB7qQTM
-	 2rPeSI8kXEeYcgYz2W9l/mEh5UuvqhuuTyclMsEE=
+	b=fb24/lnFAsuUvxc7DBWtd5zWxZnul25a+y8nnxNit7lQs7xEu38DT/tctYbSBnklw
+	 wmfLd+HVvMN+loxhObUHmLekVWv8XRuo/mkdqQ2JD6wsz1JJwjQmRSXrxQMPTnu0+4
+	 9YGXzkJwV9O8NYt4SzfwRlSDqB21UJrN0F1ekME0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbfFIQpJ (ORCPT
+        id S1729692AbfFIQpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42646 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729590AbfFIQpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:06 -0400
+        id S1729667AbfFIQpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 773432145D;
-        Sun,  9 Jun 2019 16:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B9962081C;
+        Sun,  9 Jun 2019 16:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098705;
-        bh=JdUzlv4TObo/slAwFsxFXuX8Bv/1SQfiN8q6c86HR1k=;
+        s=default; t=1560098708;
+        bh=LnQDjO4Vhdgtle2baR7Jpn2WfXmPbMBsg1JM9CfT5io=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWoeE5xyyjWtNdHc4QfwsXkZaHiXc0anaJWXqLEwKuJ5rNJKc3DNP3AXy6pz90vXZ
-         evtIAiXdfxX1EOhWytKcEKdhW6ndO372DGsBfDfsD8e2eVATu0ynRh91YJY2ly+a07
-         U78yIgIIcyYcxkFd8v0bGC9rplGZWExiwX6DItl8=
+        b=aAYXPSSg6lOhmO018jbjekSgdaKu5KJ2g1JEwjhHtVaCOv9Xa1JbJrpF16unHAKPw
+         Im3ChJiMGLsn3evKhBmhiUM3NW49wr6LGZRZOxkLjsjPFSCRSoLYscZyoMccNOep6/
+         XuGTBmVC+O5Gqlg54cvkZxa/W4Kfg1pew/byLwO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yihao Wu <wuyihao@linux.alibaba.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.1 30/70] NFSv4.1: Fix bug only first CB_NOTIFY_LOCK is handled
-Date:   Sun,  9 Jun 2019 18:41:41 +0200
-Message-Id: <20190609164129.571095091@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.1 31/70] fuse: fallocate: fix return with locked inode
+Date:   Sun,  9 Jun 2019 18:41:42 +0200
+Message-Id: <20190609164129.661807429@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,54 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yihao Wu <wuyihao@linux.alibaba.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit ba851a39c9703f09684a541885ed176f8fb7c868 upstream.
+commit 35d6fcbb7c3e296a52136347346a698a35af3fda upstream.
 
-When a waiter is waked by CB_NOTIFY_LOCK, it will retry
-nfs4_proc_setlk(). The waiter may fail to nfs4_proc_setlk() and sleep
-again. However, the waiter is already removed from clp->cl_lock_waitq
-when handling CB_NOTIFY_LOCK in nfs4_wake_lock_waiter(). So any
-subsequent CB_NOTIFY_LOCK won't wake this waiter anymore. We should
-put the waiter back to clp->cl_lock_waitq before retrying.
+Do the proper cleanup in case the size check fails.
 
-Cc: stable@vger.kernel.org #4.9+
-Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Tested with xfstests:generic/228
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 0cbade024ba5 ("fuse: honor RLIMIT_FSIZE in fuse_file_fallocate")
+Cc: Liu Bo <bo.liu@linux.alibaba.com>
+Cc: <stable@vger.kernel.org> # v3.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/fuse/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6922,20 +6922,22 @@ nfs4_retry_setlk(struct nfs4_state *stat
- 	init_wait(&wait);
- 	wait.private = &waiter;
- 	wait.func = nfs4_wake_lock_waiter;
--	add_wait_queue(q, &wait);
- 
- 	while(!signalled()) {
-+		add_wait_queue(q, &wait);
- 		status = nfs4_proc_setlk(state, cmd, request);
--		if ((status != -EAGAIN) || IS_SETLK(cmd))
-+		if ((status != -EAGAIN) || IS_SETLK(cmd)) {
-+			finish_wait(q, &wait);
- 			break;
-+		}
- 
- 		status = -ERESTARTSYS;
- 		freezer_do_not_count();
- 		wait_woken(&wait, TASK_INTERRUPTIBLE, NFS4_LOCK_MAXTIMEOUT);
- 		freezer_count();
-+		finish_wait(q, &wait);
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -3050,7 +3050,7 @@ static long fuse_file_fallocate(struct f
+ 	    offset + length > i_size_read(inode)) {
+ 		err = inode_newsize_ok(inode, offset + length);
+ 		if (err)
+-			return err;
++			goto out;
  	}
  
--	finish_wait(q, &wait);
- 	return status;
- }
- #else /* !CONFIG_NFS_V4_1 */
+ 	if (!(mode & FALLOC_FL_KEEP_SIZE))
 
 
