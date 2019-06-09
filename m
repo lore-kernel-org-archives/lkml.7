@@ -2,185 +2,106 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DC7C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 05:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5CCC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 05:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5538208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 05:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3FB208E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 05:50:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVKqLpUc"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="j/5W+Sr8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbfFIFhs (ORCPT
+        id S1726770AbfFIFuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 01:37:48 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44742 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfFIFhs (ORCPT
+        Sun, 9 Jun 2019 01:50:20 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37324 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfFIFuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 01:37:48 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c5so2350141pll.11
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 22:37:47 -0700 (PDT)
+        Sun, 9 Jun 2019 01:50:20 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so2587893pfa.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 22:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+QmFFtwzYvOqX8rE4J9oMMueMclohVG5ztZbavEVIvY=;
-        b=pVKqLpUcBQbuFjOPoFDW9DvZwqlmCeicF4D8kRjzDI8sz1x1dS/1gxsVHEXV1aaOec
-         LQ48OtzS3wtFn0SlrBqixahVqCcplI1Xk1g30rr9eLUQFHqTGFDJO3a0aZyK+9G8BZb5
-         1XIZKUwGVZ6TtdFURmSSBRi99LQqvOWA51viAV7XcsSFjRtdP/jUPkU5nSL03nhMlrJt
-         HPBGcfCoQ58m4wR6DnGmqert7JM9CmOeXo0GnCvIzeoi4f+0SzLSNdNFgdCt88AJHa3R
-         j1bQOxKvbzmRCk6gr0lllbVlRxH+88MDA0De3sh8fnYH7+AzdiSmbCkcbOeSBKtEQh74
-         ppvw==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=g5g0galx8RyvOsGO1iYuup0nP37+YQK2f5/z3KYX1Es=;
+        b=j/5W+Sr8ZHhSAf244dwdVTBvj2tr7+iZOWOKMMfzhIdFRqi7/u2TWYwP2epGcXpNlW
+         I/pwIxHeXTA7MG4TUk0ufCyZSyIIQCyjiYyrHyWYIDcTZHo1r+jsI0EBt7hr3FN0zF6I
+         9aQi/LIdQB7E6GlEfpTnYulqzgptG5UTsd45QMT4YAbNIlHdVNnESvsPdRQyDQdtMXPS
+         jPux964RM50+CXs/BZwcQ7pdwuI3t2VFovovnu6vLXDKg5CDrROdsbaULSS6ohRCdHuV
+         S0Iv21sLf6xxu5Yv8dwERodWihPDBsIc7gff7PUgGOY1ooe1vEiFAqb/Yrg666boUpoB
+         aieA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+QmFFtwzYvOqX8rE4J9oMMueMclohVG5ztZbavEVIvY=;
-        b=ooFMM7T1BjhKRu6+vg49MSlitmSdBpE+happk2LHbA76toHnVGnwVO4aUDjxAOZ/kd
-         qMSakeVsM1YB8f3+xy0qynTDDy7B/07N0WUuLPb70lpnDCpjRRdRl97tKTplmhabtHiY
-         aSePZCdaJVebwyeD//X3MP13e7fw7m9J77NQsjpohTyQUabJRFvQ825H3aLuuuVarIhJ
-         l1DXontCx0LhdtMBSSwlNhZ8eYRbPOYZfAr2Rl9d8W+Sgm8phjGG2tP0vqtH4XVNwe4q
-         DG1ntCDreZ2WCK8BO8tdnJx06XtU1axigb5CBtKZpupRFOExEJVG4p7leC85VD/khIfF
-         7QSA==
-X-Gm-Message-State: APjAAAXoN8iJtuBQIJZE/cnbkUKHowByoM2HQfQgMrVPLhYlqTHb2wLt
-        xjb/6dyCNXNwXKmN7GBS8baxCqz4
-X-Google-Smtp-Source: APXvYqwS/QT7pzWb9tSjsBsHlHkN21ha7wCJ7VS5WQdqtuh22Kpwk4OsR11ZHr9Mt1DXkoFczwHfKw==
-X-Received: by 2002:a17:902:4481:: with SMTP id l1mr65412216pld.121.1560058666983;
-        Sat, 08 Jun 2019 22:37:46 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id k16sm6486953pfa.87.2019.06.08.22.37.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Jun 2019 22:37:46 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 11:07:41 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: fix indentation issues
-Message-ID: <20190609053741.GA12637@hari-Inspiron-1545>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=g5g0galx8RyvOsGO1iYuup0nP37+YQK2f5/z3KYX1Es=;
+        b=OHKIcNmrEIQF+pYOstuCtZt2USVmKEPjRck4sDZXoOnravxWIc5EhhDmS0brrZbxQi
+         eUdFyGWqIfQlrO6pT1OKcc2qKywmTRLIvgAdWmM1x+lW8ihLdK6WcN1ClmrMHnhvb+q9
+         9yKloM7HmS8RUQ7aDRK3khAdsl0tume/ZeBBWWYnKFxnNVOrAXhycmNTJzVN1siXFAq9
+         UO2rQ5xLNQ1XM6mfSJ+zhkFjOMahWuzIc1rWVfAbFS/NWUAzR9Ce9T9OGLgMr5PWopyP
+         CTL2BkGfqy33ApQI0jNTu3jhF3LAr1Eko1Hm9TKmIJDxDYYK7ngc3Dpx+F6/kpZlMjKi
+         oROg==
+X-Gm-Message-State: APjAAAVm2LqU8my/fcA7+RNaewAstIv0z0vD6P5rVCoXBzPiikaiMSgx
+        U5rYJlQNAcnh2SjKjppe/dCY3Q==
+X-Google-Smtp-Source: APXvYqxz5Y4VKifbCFKug9kpochpBP/0jxW+Ow0eYUlsETgxmERQpqyTgihHK+7isHFvK+mEGd1Mhw==
+X-Received: by 2002:a62:15c3:: with SMTP id 186mr3310072pfv.141.1560059419499;
+        Sat, 08 Jun 2019 22:50:19 -0700 (PDT)
+Received: from localhost ([202.131.137.2])
+        by smtp.gmail.com with ESMTPSA id y13sm8257212pfb.143.2019.06.08.22.50.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 08 Jun 2019 22:50:18 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 22:50:14 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Palmer Dabbelt <palmer@sifive.com>
+cc:     lollivier@baylibre.com, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, paul@pwsan.com,
+        aou@eecs.berkeley.edu
+Subject: Re: [PATCH v3 1/5] arch: riscv: add support for building DTB files
+ from DT source data
+In-Reply-To: <mhng-802d67ce-9f78-4ebc-9981-a27e5e4e40df@palmer-si-x1e>
+Message-ID: <alpine.DEB.2.21.9999.1906082245300.720@viisi.sifive.com>
+References: <mhng-802d67ce-9f78-4ebc-9981-a27e5e4e40df@palmer-si-x1e>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below issues reported by checkpatch
+On Sat, 8 Jun 2019, Palmer Dabbelt wrote:
 
-CHECK: Please don't use multiple blank lines
-WARNING: space prohibited between function name and open parenthesis '('
-+void _rtw_open_pktfile (_pkt *pktptr, struct pkt_file *pfile)
-WARNING: space prohibited before semicolon
-WARNING: space prohibited between function name and open parenthesis '('
-CHECK: spaces preferred around that '-' (ctx:VxV)
-CHECK: Comparison to NULL could be written "!pxmitbuf->pallocated_buf"
-CHECK: spaces preferred around that '*' (ctx:VxV)
-CHECK: spaces preferred around that '/' (ctx:VxV)
-WARNING: Missing a blank line after declarations
-WARNING: braces {} are not necessary for single statement blocks
-CHECK: spaces preferred around that '/' (ctx:VxV)
-CHECK: Using comparison to true is error prone
+> On Thu, 06 Jun 2019 22:12:05 PDT (-0700), Paul Walmsley wrote:
+> > On Tue, 4 Jun 2019, Loys Ollivier wrote:
+> > 
+> > > Always build it ?
+> > > Any particular reason to drop ARCH_SIFIVE ?
+> > 
+> > Palmer had some reservations about it, so I dropped it for now.  But then
+> > as I was thinking about it, I remembered that I also had some reservations
+> > about it, years ago: that everyone should use CONFIG_SOC_* for this,
+> > rather than CONFIG_ARCH.  CONFIG_ARCH_* seems better reserved for
+> > CPU architectures.
+> 
+> The SOC stuff will, of course, be vendor specific.  In this idealized world
+> SiFive's SOC support has nothing to do with RISC-V, but of course all of
+> SiFive's SOCs are RISC-V based so the separation is a bit of pedantry.  That
+> said, in this case I think getting the name right does make it slightly easier
+> to espouse this "one kernel can run on all RISC-V systems" philosophy.
+> Balancing the SiFive and RISC-V stuff can be a bit tricky, which is why I am
+> sometimes a bit pedantic about these sorts of things.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/xmit_linux.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+Once there are SoC variants that have different CPU cores, but with the 
+remaining chip integration the same, I think it would make sense to move 
+the CONFIG_SOC_ stuff out from ARM, RISC-V, etc., into something that's 
+not CPU architecture-specific.  But for the time being, that seems 
+premature.  Might as well have it be driven by an actual use-case.
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/xmit_linux.c b/drivers/staging/rtl8723bs/os_dep/xmit_linux.c
-index 4e4e565..39abfaf 100644
---- a/drivers/staging/rtl8723bs/os_dep/xmit_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/xmit_linux.c
-@@ -9,22 +9,21 @@
- #include <drv_types.h>
- #include <rtw_debug.h>
- 
--
- uint rtw_remainder_len(struct pkt_file *pfile)
- {
- 	return (pfile->buf_len - ((SIZE_PTR)(pfile->cur_addr) - (SIZE_PTR)(pfile->buf_start)));
- }
- 
--void _rtw_open_pktfile (_pkt *pktptr, struct pkt_file *pfile)
-+void _rtw_open_pktfile(_pkt *pktptr, struct pkt_file *pfile)
- {
- 	pfile->pkt = pktptr;
- 	pfile->cur_addr = pfile->buf_start = pktptr->data;
- 	pfile->pkt_len = pfile->buf_len = pktptr->len;
- 
--	pfile->cur_buffer = pfile->buf_start ;
-+	pfile->cur_buffer = pfile->buf_start;
- }
- 
--uint _rtw_pktfile_read (struct pkt_file *pfile, u8 *rmem, uint rlen)
-+uint _rtw_pktfile_read(struct pkt_file *pfile, u8 *rmem, uint rlen)
- {
- 	uint	len = 0;
- 
-@@ -32,7 +31,7 @@ uint _rtw_pktfile_read (struct pkt_file *pfile, u8 *rmem, uint rlen)
- 	len = (rlen > len) ? len : rlen;
- 
- 	if (rmem)
--		skb_copy_bits(pfile->pkt, pfile->buf_len-pfile->pkt_len, rmem, len);
-+		skb_copy_bits(pfile->pkt, pfile->buf_len - pfile->pkt_len, rmem, len);
- 
- 	pfile->cur_addr += len;
- 	pfile->pkt_len -= len;
-@@ -50,7 +49,7 @@ int rtw_os_xmit_resource_alloc(struct adapter *padapter, struct xmit_buf *pxmitb
- {
- 	if (alloc_sz > 0) {
- 		pxmitbuf->pallocated_buf = rtw_zmalloc(alloc_sz);
--		if (pxmitbuf->pallocated_buf == NULL)
-+		if (!pxmitbuf->pallocated_buf)
- 			return _FAIL;
- 
- 		pxmitbuf->pbuf = (u8 *)N_BYTE_ALIGMENT((SIZE_PTR)(pxmitbuf->pallocated_buf), XMITBUF_ALIGN_SZ);
-@@ -65,7 +64,7 @@ void rtw_os_xmit_resource_free(struct adapter *padapter, struct xmit_buf *pxmitb
- 		kfree(pxmitbuf->pallocated_buf);
- }
- 
--#define WMM_XMIT_THRESHOLD	(NR_XMITFRAME*2/5)
-+#define WMM_XMIT_THRESHOLD	(NR_XMITFRAME * 2 / 5)
- 
- void rtw_os_pkt_complete(struct adapter *padapter, _pkt *pkt)
- {
-@@ -148,13 +147,13 @@ static int rtw_mlcst2unicst(struct adapter *padapter, struct sk_buff *skb)
- 	/* free sta asoc_queue */
- 	while (phead != plist) {
- 		int stainfo_offset;
-+
- 		psta = LIST_CONTAINOR(plist, struct sta_info, asoc_list);
- 		plist = get_next(plist);
- 
- 		stainfo_offset = rtw_stainfo_offset(pstapriv, psta);
--		if (stainfo_offset_valid(stainfo_offset)) {
-+		if (stainfo_offset_valid(stainfo_offset))
- 			chk_alive_list[chk_alive_num++] = stainfo_offset;
--		}
- 	}
- 	spin_unlock_bh(&pstapriv->asoc_list_lock);
- 
-@@ -229,9 +228,9 @@ int _rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev)
- 			#endif
- 			)
- 		&& padapter->registrypriv.wifi_spec == 0) {
--		if (pxmitpriv->free_xmitframe_cnt > (NR_XMITFRAME/4)) {
-+		if (pxmitpriv->free_xmitframe_cnt > (NR_XMITFRAME / 4)) {
- 			res = rtw_mlcst2unicst(padapter, pkt);
--			if (res == true)
-+			if (res)
- 				goto exit;
- 		} else {
- 			/* DBG_871X("Stop M2U(%d, %d)! ", pxmitpriv->free_xmitframe_cnt, pxmitpriv->free_xmitbuf_cnt); */
--- 
-2.7.4
 
+- Paul
