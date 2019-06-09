@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A317C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E09C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27228205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E33205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100545;
-	bh=89GpvrFgzcN4Wj9MAnyH0h18e4NiL3Ko+h4Lw6xvsNU=;
+	s=default; t=1560100552;
+	bh=PHC6wVTNr/ilVN+aLfu0QMFCGVE1NOjtBg+sd/FYZzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xhS1OGV8w8EJXTh6ejk1e2RtIXDLzgN4/t4xJjqu0NFwzqy223W2LffXR+aANI8xe
-	 B+Vl9CEItu6sHzTd2ZAXGbGd2lKjsgANTawZB22sFKHgLEev0Eri5UKC9NtPtgWlBQ
-	 m8G2SwQ1bWc9TRqf4DmipFkNbMOyEHQW300U8UK8=
+	b=CItZf4hESE6PWaYquJZ/QIe/Mo1GLdu+ceuBtDZfncVz/39/2Ia35c9WNQl4MfWXa
+	 mG1i7kbrndZwF4VfMMhbklVFOEq6QQ+5q+xCezW7XfsXXW2uNULuAeCmP1modGdknZ
+	 T0AwCIa0zQlH2BfNyuwp5zwmW8jgcrfowU4tMaxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732570AbfFIQyS (ORCPT
+        id S1732744AbfFIRPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55824 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:15:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732163AbfFIQyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:54:14 -0400
+        id S1732538AbfFIQyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:54:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17683206BB;
-        Sun,  9 Jun 2019 16:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CA94206BB;
+        Sun,  9 Jun 2019 16:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099253;
-        bh=89GpvrFgzcN4Wj9MAnyH0h18e4NiL3Ko+h4Lw6xvsNU=;
+        s=default; t=1560099247;
+        bh=PHC6wVTNr/ilVN+aLfu0QMFCGVE1NOjtBg+sd/FYZzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxbFPUFMBCKh5FZZnXV5xW1aXhOp+lIcGSU/LRhbLqoyUxdkvUvpHrHtTSJo2vm8+
-         MKpXdB15fimpEMnLncXy+iOtnJPq4DVgi9nnW+8ViJa5ceFyusfkGATrj8MAR2paOk
-         fpGm48XMqDkeLv3lIU04dkPuVKqnSV6LeQxPV0Ew=
+        b=RQQfvQuAg5SNG2ICWGyfQyi3gxIcZnKxzcnhlcx8dMW0wL/NG/E9RS7HvlIL/4OPz
+         9jq1XnSzYQgxr9URkLRRcRbovtK/7Y+CXzQpCG1GRoJ4ilWHmn2fR2lqhGaDrjfWxL
+         rsJ/n9660CrHqkx0WVuNs/Rk5/meCpqicreTpM5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.9 30/83] USB: rio500: fix memory leak in close after disconnect
-Date:   Sun,  9 Jun 2019 18:42:00 +0200
-Message-Id: <20190609164130.215498292@linuxfoundation.org>
+        stable@vger.kernel.org, Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 4.9 28/83] USB: Add LPM quirk for Surface Dock GigE adapter
+Date:   Sun,  9 Jun 2019 18:41:58 +0200
+Message-Id: <20190609164129.996434973@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -58,47 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Maximilian Luz <luzmaximilian@gmail.com>
 
-commit e0feb73428b69322dd5caae90b0207de369b5575 upstream.
+commit ea261113385ac0a71c2838185f39e8452d54b152 upstream.
 
-If a disconnected device is closed, rio_close() must free
-the buffers.
+Without USB_QUIRK_NO_LPM ethernet will not work and rtl8152 will
+complain with
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+    r8152 <device...>: Stop submitting intr, status -71
+
+Adding the quirk resolves this. As the dock is externally powered, this
+should not have any drawbacks.
+
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/rio500.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/misc/rio500.c
-+++ b/drivers/usb/misc/rio500.c
-@@ -103,9 +103,22 @@ static int close_rio(struct inode *inode
- {
- 	struct rio_usb_data *rio = &rio_instance;
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -64,6 +64,9 @@ static const struct usb_device_id usb_qu
+ 	/* Microsoft LifeCam-VX700 v2.0 */
+ 	{ USB_DEVICE(0x045e, 0x0770), .driver_info = USB_QUIRK_RESET_RESUME },
  
--	rio->isopen = 0;
-+	/* against disconnect() */
-+	mutex_lock(&rio500_mutex);
-+	mutex_lock(&(rio->lock));
- 
--	dev_info(&rio->rio_dev->dev, "Rio closed.\n");
-+	rio->isopen = 0;
-+	if (!rio->present) {
-+		/* cleanup has been delayed */
-+		kfree(rio->ibuf);
-+		kfree(rio->obuf);
-+		rio->ibuf = NULL;
-+		rio->obuf = NULL;
-+	} else {
-+		dev_info(&rio->rio_dev->dev, "Rio closed.\n");
-+	}
-+	mutex_unlock(&(rio->lock));
-+	mutex_unlock(&rio500_mutex);
- 	return 0;
- }
++	/* Microsoft Surface Dock Ethernet (RTL8153 GigE) */
++	{ USB_DEVICE(0x045e, 0x07c6), .driver_info = USB_QUIRK_NO_LPM },
++
+ 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
+ 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
  
 
 
