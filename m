@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E6C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28960C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A333920652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED11220652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100776;
-	bh=aI2xmFamXF/0UTAWDGIGWTN9D41YnsbOcTzuDUadPCk=;
+	s=default; t=1560100782;
+	bh=s+85UkDRD4Gmb7EflBa5nFb+DWD4qiK/bjOx8AjW+6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KKlIHbv8NncJze4+309dcbN+p6/ajDvYJNXhIm/9qxXTMgq/4PBcyxGjOfNJtI9Zk
-	 1H7WDhzkgg9Jw+K9gMEbb0RKJDVycwCMzz/OM4beY/slCrKhHPx0/7aH+GqrmSiTfy
-	 li4ighy0q7aMA/lNP49LIZjcet+7mrw3/2zVgEG8=
+	b=C7F7oUx4gu7eKSOTwQcD0Zu12GemOOMWcER6mQYsWG+Z5uUKfC1Jc6s1ckPJ7TSBy
+	 PnMjDiU5trvMfXgE+G9YbDo+ivx9KqHiFAtXcrv5mTifGVsGJPPHNXIax5AWd21hzf
+	 7b/Le2lamJaJN8hPRYnLSHBCiU3Svcg4v+t23Ldo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731942AbfFIRTg (ORCPT
+        id S1730477AbfFIQs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730482AbfFIQsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:38 -0400
+        id S1731181AbfFIQsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A62205ED;
-        Sun,  9 Jun 2019 16:48:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5B8A205ED;
+        Sun,  9 Jun 2019 16:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098917;
-        bh=aI2xmFamXF/0UTAWDGIGWTN9D41YnsbOcTzuDUadPCk=;
+        s=default; t=1560098903;
+        bh=s+85UkDRD4Gmb7EflBa5nFb+DWD4qiK/bjOx8AjW+6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDjDBr17F7D3Bw/qD/AhDkZURV04HfPVC/NbpJg6dHdKkDloYLSzUzeyZo2Kpr44z
-         nNM0ITJefsnJEm8o1AQosHZWhzeQ+JEuWt+wmMj3cFtoHYoaArFftxI3T0XpCCVtAP
-         D/lNn8SzwdYsyG9Km9oK7znT+vtRSBZPhGRMmQAk=
+        b=TlI2QwfDdq+Plaj+thedd/v6NMok1/ZkOFxG+QnSSdbYuyIOiCdUiZ3gaUevPBfIl
+         FK9KFDBF/fJMtPoNvLpt5eKd9aNCpRP9r2+iz2op5nUnKQjPj0nERgmmgCoAMyhDEg
+         Bq3bPCoNadRCUePAuvlQ3J8c6LyX/UynpkPLiDjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Kevin ldir Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        John Crispin <john@phrozen.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/51] Revert "MIPS: perf: ath79: Fix perfcount IRQ assignment"
-Date:   Sun,  9 Jun 2019 18:42:15 +0200
-Message-Id: <20190609164129.317004440@linuxfoundation.org>
+        stable@vger.kernel.org, Janosch Frank <frankja@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: [PATCH 4.19 30/51] s390/mm: fix address space detection in exception handling
+Date:   Sun,  9 Jun 2019 18:42:11 +0200
+Message-Id: <20190609164128.993661015@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -68,81 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-This reverts commit ca8648816e3dcc8dadba0e79a034f61c85eb206d which is
-commit a1e8783db8e0d58891681bc1e6d9ada66eae8e20 upstream.
+commit 962f0af83c239c0aef05639631e871c874b00f99 upstream.
 
-Petr writes:
-	Karl has reported to me today, that he's experiencing weird
-	reboot hang on his devices with 4.9.180 kernel and that he has
-	bisected it down to my backported patch.
+Commit 0aaba41b58bc ("s390: remove all code using the access register
+mode") removed access register mode from the kernel, and also from the
+address space detection logic. However, user space could still switch
+to access register mode (trans_exc_code == 1), and exceptions in that
+mode would not be correctly assigned.
 
-	I would like to kindly ask you for removal of this patch.  This
-	patch should be reverted from all stable kernels up to 5.1,
-	because perf counters were not broken on those kernels, and this
-	patch won't work on the ath79 legacy IRQ code anyway, it needs
-	new irqchip driver which was enabled on ath79 with commit
-	51fa4f8912c0 ("MIPS: ath79: drop legacy IRQ code").
+Fix this by adding a check for trans_exc_code == 1 to get_fault_type(),
+and remove the wrong comment line before that function.
 
-Reported-by: Petr Štetiar <ynezz@true.cz>
-Cc: Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-Cc: John Crispin <john@phrozen.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Sasha Levin <sashal@kernel.org>
+Fixes: 0aaba41b58bc ("s390: remove all code using the access register mode")
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: <stable@vger.kernel.org> # v4.15+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/mips/ath79/setup.c          |    6 ++++++
- drivers/irqchip/irq-ath79-misc.c |   11 -----------
- 2 files changed, 6 insertions(+), 11 deletions(-)
 
---- a/arch/mips/ath79/setup.c
-+++ b/arch/mips/ath79/setup.c
-@@ -211,6 +211,12 @@ const char *get_system_type(void)
- 	return ath79_sys_type;
+---
+ arch/s390/mm/fault.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -107,7 +107,6 @@ void bust_spinlocks(int yes)
+ 
+ /*
+  * Find out which address space caused the exception.
+- * Access register mode is impossible, ignore space == 3.
+  */
+ static inline enum fault_type get_fault_type(struct pt_regs *regs)
+ {
+@@ -132,6 +131,10 @@ static inline enum fault_type get_fault_
+ 		}
+ 		return VDSO_FAULT;
+ 	}
++	if (trans_exc_code == 1) {
++		/* access register mode, not used in the kernel */
++		return USER_FAULT;
++	}
+ 	/* home space exception -> access via kernel ASCE */
+ 	return KERNEL_FAULT;
  }
- 
-+int get_c0_perfcount_int(void)
-+{
-+	return ATH79_MISC_IRQ(5);
-+}
-+EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
-+
- unsigned int get_c0_compare_int(void)
- {
- 	return CP0_LEGACY_COMPARE_IRQ;
---- a/drivers/irqchip/irq-ath79-misc.c
-+++ b/drivers/irqchip/irq-ath79-misc.c
-@@ -22,15 +22,6 @@
- #define AR71XX_RESET_REG_MISC_INT_ENABLE	4
- 
- #define ATH79_MISC_IRQ_COUNT			32
--#define ATH79_MISC_PERF_IRQ			5
--
--static int ath79_perfcount_irq;
--
--int get_c0_perfcount_int(void)
--{
--	return ath79_perfcount_irq;
--}
--EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
- 
- static void ath79_misc_irq_handler(struct irq_desc *desc)
- {
-@@ -122,8 +113,6 @@ static void __init ath79_misc_intc_domai
- {
- 	void __iomem *base = domain->host_data;
- 
--	ath79_perfcount_irq = irq_create_mapping(domain, ATH79_MISC_PERF_IRQ);
--
- 	/* Disable and clear all interrupts */
- 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
- 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
 
 
