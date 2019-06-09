@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0FBC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2C9C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA9E20833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0CFE204EC
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099806;
-	bh=v5+OdRiroJNePL+EMSWqYBpZD6+2xfylolszboFxqXU=;
+	s=default; t=1560099808;
+	bh=p0eGVAx9DEf+yAbE4wGVkaYf4pxiEFbzlWxBWGIOJm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y1Vbjy8mHTMQpAuvryC3MrDDoGCvFs9nuJiJBO4L6oPMdAKYbTvk0PbyBX+BkIX+t
-	 TLMk/Vkjvz3UBjQhLadJs9cLGrTXPR4Vx6wjsFgBy1nOTXY+8RyerpDQBHeD8C4CNP
-	 XhxhxFI7hBXv+U8aj1N5Fxtk7JEWHxglpXTIi6+c=
+	b=och0th/v/+tieG3N5xD3y/YffhjoHjfLNJ/MUw1/iFH2JaP5EPWyq3XCVdicR6rsx
+	 vJ/zpaV2tELwxwzfjmIFWoXGuNAVEIV/PZJwuIB3OekveSWldb1Z7v1fpl7c2d9riF
+	 gNOkiv/+3USewxnT0TYL5mgK5wNEvtUFqZKeCduA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388412AbfFIRDZ (ORCPT
+        id S2387651AbfFIRD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41628 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:03:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388367AbfFIRDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:17 -0400
+        id S2387792AbfFIRDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:03:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A3FC20840;
-        Sun,  9 Jun 2019 17:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ADD7204EC;
+        Sun,  9 Jun 2019 17:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099797;
-        bh=v5+OdRiroJNePL+EMSWqYBpZD6+2xfylolszboFxqXU=;
+        s=default; t=1560099802;
+        bh=p0eGVAx9DEf+yAbE4wGVkaYf4pxiEFbzlWxBWGIOJm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bB5q47QC3PnO/54wxQQdkZQyDJchgT6J7Q1fJvo3gB8LnrcGyDsO08nyaUVR7F+2H
-         Hsy1/Fo9050iENQ1Hk/P4+sZ6D/PAQB7ra3HhB7XwP/xmL53C8pePXNv+y4ravdRi/
-         uAe/eLjCC0vWDHuXYA4bLfrdqg4xTXAJjGEWMGwM=
+        b=0the2MwAiQ1HMszK+E2vSNyABB/Y3K0/K6RRJNtXQVoaMKr/SatP6QUIPPk0NB4qs
+         limJejdiSa+kPEgt0DqN4AiCf+omiyXUNolXa+2vOP6fqbQsPIF8gwgcZI7hgr6WAV
+         JQ5kZ3XtlhJYSHB7kGucpbTECwwoSa3jFgRevOe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 168/241] tty: ipwireless: fix missing checks for ioremap
-Date:   Sun,  9 Jun 2019 18:41:50 +0200
-Message-Id: <20190609164152.626825312@linuxfoundation.org>
+Subject: [PATCH 4.4 170/241] usb: core: Add PM runtime calls to usb_hcd_platform_shutdown
+Date:   Sun,  9 Jun 2019 18:41:52 +0200
+Message-Id: <20190609164152.691212874@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,47 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1bbb1c318cd8a3a39e8c3e2e83d5e90542d6c3e3 ]
+[ Upstream commit 8ead7e817224d7832fe51a19783cb8fcadc79467 ]
 
-ipw->attr_memory and ipw->common_memory are assigned with the
-return value of ioremap. ioremap may fail, but no checks
-are enforced. The fix inserts the checks to avoid potential
-NULL pointer dereferences.
+If ohci-platform is runtime suspended, we can currently get an "imprecise
+external abort" on reboot with ohci-platform loaded when PM runtime
+is implemented for the SoC.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: David Sterba <dsterba@suse.com>
+Let's fix this by adding PM runtime support to usb_hcd_platform_shutdown.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/ipwireless/main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/usb/core/hcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/ipwireless/main.c b/drivers/tty/ipwireless/main.c
-index 655c7948261c7..2fa4f91234693 100644
---- a/drivers/tty/ipwireless/main.c
-+++ b/drivers/tty/ipwireless/main.c
-@@ -113,6 +113,10 @@ static int ipwireless_probe(struct pcmcia_device *p_dev, void *priv_data)
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 9c4f9b6e57e29..99c146f4b6b51 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -3007,6 +3007,9 @@ usb_hcd_platform_shutdown(struct platform_device *dev)
+ {
+ 	struct usb_hcd *hcd = platform_get_drvdata(dev);
  
- 	ipw->common_memory = ioremap(p_dev->resource[2]->start,
- 				resource_size(p_dev->resource[2]));
-+	if (!ipw->common_memory) {
-+		ret = -ENOMEM;
-+		goto exit1;
-+	}
- 	if (!request_mem_region(p_dev->resource[2]->start,
- 				resource_size(p_dev->resource[2]),
- 				IPWIRELESS_PCCARD_NAME)) {
-@@ -133,6 +137,10 @@ static int ipwireless_probe(struct pcmcia_device *p_dev, void *priv_data)
- 
- 	ipw->attr_memory = ioremap(p_dev->resource[3]->start,
- 				resource_size(p_dev->resource[3]));
-+	if (!ipw->attr_memory) {
-+		ret = -ENOMEM;
-+		goto exit3;
-+	}
- 	if (!request_mem_region(p_dev->resource[3]->start,
- 				resource_size(p_dev->resource[3]),
- 				IPWIRELESS_PCCARD_NAME)) {
++	/* No need for pm_runtime_put(), we're shutting down */
++	pm_runtime_get_sync(&dev->dev);
++
+ 	if (hcd->driver->shutdown)
+ 		hcd->driver->shutdown(hcd);
+ }
 -- 
 2.20.1
 
