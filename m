@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FC0C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEF5C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34A120652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF5A205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100475;
-	bh=gVTEveb/aumh0iU0IEwtM0Zuf7f6w6/4SFOhMCJm8lk=;
+	s=default; t=1560100479;
+	bh=Mwn0la2kKALrzVnHw/CUt7sGtRZAX3FCIjjG4eCZ6b4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oo2rpa2AdPmaeOUjve3cnBcl4+yQXmc010EtwrNS864dGfuesISNa1ZD0zeS0ZoXV
-	 4XT55Be9g6S2NKotXNdD8jReziju03zQ+4fKXHtx9rsHpsHpuEPyzdxrbmRZTpoZ/v
-	 WRJd0zN3mXwysG48Th7QockxprEwg1YQ9MEcZA4E=
+	b=cmdIiPv2p8ZMShu1aEfTqoJ0ESkHG1S/o72Cvb6jMpmtaudoPvlkavTrbtx0m8p+G
+	 /DMAXnPSKqI7+Qn7Fl+/pvbamegbDnLrjHoEvXijFDTBBRNGuQ57SA0QSDddoNLkUH
+	 M06JgKZyH0IQSF/BCnEFJzLRvYt+YTIDfVYTODFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733001AbfFIQ4d (ORCPT
+        id S1732982AbfFIQ42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:56:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59028 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:56:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732987AbfFIQ43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:56:29 -0400
+        id S1730524AbfFIQ40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:56:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2978C206DF;
-        Sun,  9 Jun 2019 16:56:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21717206C3;
+        Sun,  9 Jun 2019 16:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099388;
-        bh=gVTEveb/aumh0iU0IEwtM0Zuf7f6w6/4SFOhMCJm8lk=;
+        s=default; t=1560099385;
+        bh=Mwn0la2kKALrzVnHw/CUt7sGtRZAX3FCIjjG4eCZ6b4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gN1JOwo4WBSvDVfRspXbtA+8HEA3/t/bdZlPOA7GvwjAJTQJk62nFO9GCFLEbPxmx
-         cvCAXLuHO75O0jrqI+BfPazEjZoXJhKlKbPIUQoEixNqjGJqwt6Q5T1yWIjzNcQpPx
-         Unr7lm/g/fnX9SyzgaE3jC6RqneGcec2lQThkeig=
+        b=Jbe9ZCZP6bFNU46fZmRwfmQV/Gk89kA+bB7AxRTjpOSyhwemrM9pOK/vAxofL6mJB
+         Dh5JPw9hlpxEmrRUCL+XZurHr/OjoedVIdkYxV1LOdNM5EiUhhC/mHMz541ve0Y283
+         YeP926n65lf0dO/Ly/eBjfApTlLJV80oTajgZfhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 007/241] ALSA: usb-audio: Fix a memory leak bug
-Date:   Sun,  9 Jun 2019 18:39:09 +0200
-Message-Id: <20190609164147.999654229@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 024/241] crypto: chacha20poly1305 - set cra_name correctly
+Date:   Sun,  9 Jun 2019 18:39:26 +0200
+Message-Id: <20190609164148.477719416@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,40 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wang6495@umn.edu>
+From: Eric Biggers <ebiggers@google.com>
 
-commit cb5173594d50c72b7bfa14113dfc5084b4d2f726 upstream.
+commit 5e27f38f1f3f45a0c938299c3a34a2d2db77165a upstream.
 
-In parse_audio_selector_unit(), the string array 'namelist' is allocated
-through kmalloc_array(), and each string pointer in this array, i.e.,
-'namelist[]', is allocated through kmalloc() in the following for loop.
-Then, a control instance 'kctl' is created by invoking snd_ctl_new1(). If
-an error occurs during the creation process, the string array 'namelist',
-including all string pointers in the array 'namelist[]', should be freed,
-before the error code ENOMEM is returned. However, the current code does
-not free 'namelist[]', resulting in memory leaks.
+If the rfc7539 template is instantiated with specific implementations,
+e.g. "rfc7539(chacha20-generic,poly1305-generic)" rather than
+"rfc7539(chacha20,poly1305)", then the implementation names end up
+included in the instance's cra_name.  This is incorrect because it then
+prevents all users from allocating "rfc7539(chacha20,poly1305)", if the
+highest priority implementations of chacha20 and poly1305 were selected.
+Also, the self-tests aren't run on an instance allocated in this way.
 
-To fix the above issue, free all string pointers 'namelist[]' in a loop.
+Fix it by setting the instance's cra_name from the underlying
+algorithms' actual cra_names, rather than from the requested names.
+This matches what other templates do.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 71ebc4d1b27d ("crypto: chacha20poly1305 - Add a ChaCha20-Poly1305 AEAD construction, RFC7539")
+Cc: <stable@vger.kernel.org> # v4.2+
+Cc: Martin Willi <martin@strongswan.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Martin Willi <martin@strongswan.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- sound/usb/mixer.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2112,6 +2112,8 @@ static int parse_audio_selector_unit(str
- 	kctl = snd_ctl_new1(&mixer_selectunit_ctl, cval);
- 	if (! kctl) {
- 		usb_audio_err(state->chip, "cannot malloc kcontrol\n");
-+		for (i = 0; i < desc->bNrInPins; i++)
-+			kfree(namelist[i]);
- 		kfree(namelist);
- 		kfree(cval);
- 		return -ENOMEM;
+---
+ crypto/chacha20poly1305.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/crypto/chacha20poly1305.c
++++ b/crypto/chacha20poly1305.c
+@@ -637,8 +637,8 @@ static int chachapoly_create(struct cryp
+ 
+ 	err = -ENAMETOOLONG;
+ 	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
+-		     "%s(%s,%s)", name, chacha_name,
+-		     poly_name) >= CRYPTO_MAX_ALG_NAME)
++		     "%s(%s,%s)", name, chacha->cra_name,
++		     poly->cra_name) >= CRYPTO_MAX_ALG_NAME)
+ 		goto out_drop_chacha;
+ 	if (snprintf(inst->alg.base.cra_driver_name, CRYPTO_MAX_ALG_NAME,
+ 		     "%s(%s,%s)", name, chacha->cra_driver_name,
 
 
