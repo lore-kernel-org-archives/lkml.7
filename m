@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FD0C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD96DC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E4F20833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38A320833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098969;
-	bh=PjM8XhUNVxe75X+ylHHcOfoz1DpJBfdQF8bioJZenW0=;
+	s=default; t=1560098971;
+	bh=1c+o3/7V0O751Ht5MWn9iPWJGyCBzUlkNbK9RaDe2H8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=obAIzxHU0ivCWfUKEbxz6Mez7r+RVAf5VSxBfltpbVo4TOuC0S5aJXcN4mNeOVliO
-	 qknjkjL4hHr84l79YvarXHIYk5Y4Ivp7OorBfUnbC6x2ysX/0upOPUgKawZlGZOgOw
-	 M5DdD9Hffy9rURlkWJ9NfIjQXieHozI0Pnc94N9s=
+	b=EZOAPXEzQcXD6QOUt3JuC2j+9RFdF7p9lwlxLJJzeQy/leHbMhcEO4w/3zVx+oO4n
+	 D43Z62VGz7c4x6PMc+uV3+yAaxtYOBj8vQN+HVs84J0S4Tl9fwsuV/bP4adf3WBLP6
+	 FnQpImYgaMMlNqvkQZoEijmJNHw0HmAVKnLmJmcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731484AbfFIQt2 (ORCPT
+        id S1730353AbfFIQta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:49:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48862 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731458AbfFIQtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:49:22 -0400
+        id S1731458AbfFIQt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:49:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB11208E4;
-        Sun,  9 Jun 2019 16:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 899DD20840;
+        Sun,  9 Jun 2019 16:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098962;
-        bh=PjM8XhUNVxe75X+ylHHcOfoz1DpJBfdQF8bioJZenW0=;
+        s=default; t=1560098968;
+        bh=1c+o3/7V0O751Ht5MWn9iPWJGyCBzUlkNbK9RaDe2H8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQPm38OjxrRMNdc0+807x/zskML5v5ivLpXpFUxkEO0jSdoqQTIJ805uZ+G7BhEU6
-         atXDrbA3DsgaCOQzXSw6Z2TN5ufrcdRkuWYts/2W58wdFi2AmiMCdRpsdHChtz/DHh
-         rfX28688dALuXzpi463myI0JkIu24PZutAsdkFB8=
+        b=DdE3Qtd4EdvzdDZmPhm5oCWqAHBX/uR5dAjtlonLzimXM/4Z1mhUUm8EJ9d2vYbjD
+         B2Dd3wE9kSukvjXEb7EnQrzzZpjPuYqMZ/hoGarb8CQnLD6g9c83iwjwy1t54MJVTN
+         y3Iit+vftbhM0OVRuh81uKUcHvq6ClNu8gFYSbcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Rob Clark <robdclark@gmail.com>
-Subject: [PATCH 4.19 38/51] drm/msm: fix fb references in async update
-Date:   Sun,  9 Jun 2019 18:42:19 +0200
-Message-Id: <20190609164129.687643766@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>
+Subject: [PATCH 4.19 40/51] drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)
+Date:   Sun,  9 Jun 2019 18:42:21 +0200
+Message-Id: <20190609164129.889291936@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -61,45 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Dave Airlie <airlied@redhat.com>
 
-commit 474d952b4870cfbdc55d3498f4d498775fe77e81 upstream.
+commit b30a43ac7132cdda833ac4b13dd1ebd35ace14b7 upstream.
 
-Async update callbacks are expected to set the old_fb in the new_state
-so prepare/cleanup framebuffers are balanced.
+There was a nouveau DDX that relied on legacy context ioctls to work,
+but we fixed it years ago, give distros that have a modern DDX the
+option to break the uAPI and close the mess of holes that legacy
+context support is.
 
-Cc: <stable@vger.kernel.org> # v4.14+
-Fixes: 224a4c970987 ("drm/msm: update cursors asynchronously through atomic")
-Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Acked-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190603165610.24614-4-helen.koike@collabora.com
+Full context of the story:
+
+commit 0e975980d435d58df2d430d688b8c18778b42218
+Author: Peter Antoine <peter.antoine@intel.com>
+Date:   Tue Jun 23 08:18:49 2015 +0100
+
+    drm: Turn off Legacy Context Functions
+
+    The context functions are not used by the i915 driver and should not
+    be used by modeset drivers. These driver functions contain several bugs
+    and security holes. This change makes these functions optional can be
+    turned on by a setting, they are turned off by default for modeset
+    driver with the exception of the nouvea driver that may require them with
+    an old version of libdrm.
+
+    The previous attempt was
+
+    commit 7c510133d93dd6f15ca040733ba7b2891ed61fd1
+    Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+    Date:   Thu Aug 8 15:41:21 2013 +0200
+
+        drm: mark context support as a legacy subsystem
+
+    but this had to be reverted
+
+    commit c21eb21cb50d58e7cbdcb8b9e7ff68b85cfa5095
+    Author: Dave Airlie <airlied@redhat.com>
+    Date:   Fri Sep 20 08:32:59 2013 +1000
+
+        Revert "drm: mark context support as a legacy subsystem"
+
+    v2: remove returns from void function, and formatting (Daniel Vetter)
+
+    v3:
+    - s/Nova/nouveau/ in the commit message, and add references to the
+      previous attempts
+    - drop the part touching the drm hw lock, that should be a separate
+      patch.
+
+    Signed-off-by: Peter Antoine <peter.antoine@intel.com> (v2)
+    Cc: Peter Antoine <peter.antoine@intel.com> (v2)
+    Reviewed-by: Peter Antoine <peter.antoine@intel.com>
+    Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+v2: move DRM_VM dependency into legacy config.
+v3: fix missing dep (kbuild robot)
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/nouveau/Kconfig       |   13 ++++++++++++-
+ drivers/gpu/drm/nouveau/nouveau_drm.c |    7 +++++--
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-@@ -503,6 +503,8 @@ static int mdp5_plane_atomic_async_check
- static void mdp5_plane_atomic_async_update(struct drm_plane *plane,
- 					   struct drm_plane_state *new_state)
- {
-+	struct drm_framebuffer *old_fb = plane->state->fb;
-+
- 	plane->state->src_x = new_state->src_x;
- 	plane->state->src_y = new_state->src_y;
- 	plane->state->crtc_x = new_state->crtc_x;
-@@ -525,6 +527,8 @@ static void mdp5_plane_atomic_async_upda
+--- a/drivers/gpu/drm/nouveau/Kconfig
++++ b/drivers/gpu/drm/nouveau/Kconfig
+@@ -16,10 +16,21 @@ config DRM_NOUVEAU
+ 	select INPUT if ACPI && X86
+ 	select THERMAL if ACPI && X86
+ 	select ACPI_VIDEO if ACPI && X86
+-	select DRM_VM
+ 	help
+ 	  Choose this option for open-source NVIDIA support.
  
- 	*to_mdp5_plane_state(plane->state) =
- 		*to_mdp5_plane_state(new_state);
++config NOUVEAU_LEGACY_CTX_SUPPORT
++	bool "Nouveau legacy context support"
++	depends on DRM_NOUVEAU
++	select DRM_VM
++	default y
++	help
++	  There was a version of the nouveau DDX that relied on legacy
++	  ctx ioctls not erroring out. But that was back in time a long
++	  ways, so offer a way to disable it now. For uapi compat with
++	  old nouveau ddx this should be on by default, but modern distros
++	  should consider turning it off.
 +
-+	new_state->fb = old_fb;
- }
+ config NOUVEAU_PLATFORM_DRIVER
+ 	bool "Nouveau (NVIDIA) SoC GPUs"
+ 	depends on DRM_NOUVEAU && ARCH_TEGRA
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -1015,8 +1015,11 @@ nouveau_driver_fops = {
+ static struct drm_driver
+ driver_stub = {
+ 	.driver_features =
+-		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER |
+-		DRIVER_KMS_LEGACY_CONTEXT,
++		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER
++#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
++		| DRIVER_KMS_LEGACY_CONTEXT
++#endif
++		,
  
- static const struct drm_plane_helper_funcs mdp5_plane_helper_funcs = {
+ 	.load = nouveau_drm_load,
+ 	.unload = nouveau_drm_unload,
 
 
