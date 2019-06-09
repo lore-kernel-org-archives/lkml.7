@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE64AC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D88C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933BC205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB585205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100087;
-	bh=XONFkhvklEDy0qBqvx2NkPgKJUQtzHBtKYVtk9U+114=;
+	s=default; t=1560100096;
+	bh=agtC4ZKvCXiD09LkBMOirdyQMeA1+xMR2WblZ6cln/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pq3sk1xJcrtcnWzGreXw+0pVlY95Cu9l1OgKfs8PZExosbK7dgKIUWb2HOY0JLZk4
-	 nGNX1F/h0qLL6euNYyGiQ+EX6te3p9sf+nuEI4MqK5lnNKnY9YyQ6iOz6A8y0IKpjX
-	 jTG3OxCmxLqhGSzzfARdxu09XEd1ejnvfXmsGSOk=
+	b=QU3rcukia0bJmL7HCDtvR6a1zn2OsANS7c0KF4774iU598qQSlO2FSpv6JEUskgcZ
+	 QNDdqZ9/hmK0gUpM9vDF6Eob8+rZ8gtqTgXL+IMxp6GZAU51hK9AFuOUoig9GgPP+h
+	 PkNBorOCMqogkiG2IKzjfcHoxKtDW+6rXSW1fJPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388915AbfFIRIG (ORCPT
+        id S2388861AbfFIRFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45160 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:05:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388896AbfFIRFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:05:47 -0400
+        id S2388423AbfFIRFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 681E0206C3;
-        Sun,  9 Jun 2019 17:05:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E2B0206C3;
+        Sun,  9 Jun 2019 17:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099946;
-        bh=XONFkhvklEDy0qBqvx2NkPgKJUQtzHBtKYVtk9U+114=;
+        s=default; t=1560099932;
+        bh=agtC4ZKvCXiD09LkBMOirdyQMeA1+xMR2WblZ6cln/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kXLDe+gApzvVDumsm5AC7vdmHRoCtfSaOSx9am/Mmz2uKD6bM8f+vltNpicud4IBw
-         BjKfPYdPytg4yCJ8IECrka0EVPkj3AFq03N5lRtNd3UIwQV+TPCHCITWrE8WaW6KV8
-         C+va24BX8DQU0MTdqabONDFTuqU3YHiCTpUp0b+4=
+        b=dzuPRQ5AJ/yXofeY7PP955+uY+22mwbtZVGC1otRz22wgfKaBSY7iLVayW2G1b9fG
+         vawXLPQQvYWhgC7/KlPFDeafWFpo+FgTeN5BhAKkA2uRthUHqDtkF/kRozodYsxkF3
+         dJ/O981aMd+FOwRjts1rW/Dcrmklu5sCc14amI+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 222/241] brcmfmac: add length checks in scheduled scan result handler
-Date:   Sun,  9 Jun 2019 18:42:44 +0200
-Message-Id: <20190609164155.095136210@linuxfoundation.org>
+Subject: [PATCH 4.4 217/241] bnx2x: disable GSO where gso_size is too big for hardware
+Date:   Sun,  9 Jun 2019 18:42:39 +0200
+Message-Id: <20190609164154.935768309@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -64,72 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arend Van Spriel <arend.vanspriel@broadcom.com>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 4835f37e3bafc138f8bfa3cbed2920dd56fed283 upstream.
+commit 8914a595110a6eca69a5e275b323f5d09e18f4f9 upstream.
 
-Assure the event data buffer is long enough to hold the array
-of netinfo items and that SSID length does not exceed the maximum
-of 32 characters as per 802.11 spec.
+If a bnx2x card is passed a GSO packet with a gso_size larger than
+~9700 bytes, it will cause a firmware error that will bring the card
+down:
 
-Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
-Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
-Reviewed-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 4.4:
- - Move the assignment to "data" along with the assignment to "netinfo_start"
-   that depends on it
- - Adjust filename, context, indentation]
+bnx2x: [bnx2x_attn_int_deasserted3:4323(enP24p1s0f0)]MC assert!
+bnx2x: [bnx2x_mc_assert:720(enP24p1s0f0)]XSTORM_ASSERT_LIST_INDEX 0x2
+bnx2x: [bnx2x_mc_assert:736(enP24p1s0f0)]XSTORM_ASSERT_INDEX 0x0 = 0x00000000 0x25e43e47 0x00463e01 0x00010052
+bnx2x: [bnx2x_mc_assert:750(enP24p1s0f0)]Chip Revision: everest3, FW Version: 7_13_1
+... (dump of values continues) ...
+
+Detect when the mac length of a GSO packet is greater than the maximum
+packet size (9700 bytes) and disable GSO.
+
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/cfg80211.c
-@@ -3328,6 +3328,7 @@ brcmf_notify_sched_scan_results(struct b
- 	struct brcmf_pno_scanresults_le *pfn_result;
- 	u32 result_count;
- 	u32 status;
-+	u32 datalen;
- 
- 	brcmf_dbg(SCAN, "Enter\n");
- 
-@@ -3354,6 +3355,14 @@ brcmf_notify_sched_scan_results(struct b
- 	if (result_count > 0) {
- 		int i;
- 
-+		data += sizeof(struct brcmf_pno_scanresults_le);
-+		netinfo_start = (struct brcmf_pno_net_info_le *)data;
-+		datalen = e->datalen - ((void *)netinfo_start - (void *)pfn_result);
-+		if (datalen < result_count * sizeof(*netinfo)) {
-+			brcmf_err("insufficient event data\n");
-+			goto out_err;
-+		}
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -12824,6 +12824,24 @@ static netdev_features_t bnx2x_features_
+ 					      struct net_device *dev,
+ 					      netdev_features_t features)
+ {
++	/*
++	 * A skb with gso_size + header length > 9700 will cause a
++	 * firmware panic. Drop GSO support.
++	 *
++	 * Eventually the upper layer should not pass these packets down.
++	 *
++	 * For speed, if the gso_size is <= 9000, assume there will
++	 * not be 700 bytes of headers and pass it through. Only do a
++	 * full (slow) validation if the gso_size is > 9000.
++	 *
++	 * (Due to the way SKB_BY_FRAGS works this will also do a full
++	 * validation in that case.)
++	 */
++	if (unlikely(skb_is_gso(skb) &&
++		     (skb_shinfo(skb)->gso_size > 9000) &&
++		     !skb_gso_validate_mac_len(skb, 9700)))
++		features &= ~NETIF_F_GSO_MASK;
 +
- 		request = kzalloc(sizeof(*request), GFP_KERNEL);
- 		ssid = kcalloc(result_count, sizeof(*ssid), GFP_KERNEL);
- 		channel = kcalloc(result_count, sizeof(*channel), GFP_KERNEL);
-@@ -3363,9 +3372,6 @@ brcmf_notify_sched_scan_results(struct b
- 		}
- 
- 		request->wiphy = wiphy;
--		data += sizeof(struct brcmf_pno_scanresults_le);
--		netinfo_start = (struct brcmf_pno_net_info_le *)data;
--
- 		for (i = 0; i < result_count; i++) {
- 			netinfo = &netinfo_start[i];
- 			if (!netinfo) {
-@@ -3375,6 +3381,8 @@ brcmf_notify_sched_scan_results(struct b
- 				goto out_err;
- 			}
- 
-+			if (netinfo->SSID_len > IEEE80211_MAX_SSID_LEN)
-+				netinfo->SSID_len = IEEE80211_MAX_SSID_LEN;
- 			brcmf_dbg(SCAN, "SSID:%s Channel:%d\n",
- 				  netinfo->SSID, netinfo->channel);
- 			memcpy(ssid[i].ssid, netinfo->SSID, netinfo->SSID_len);
+ 	features = vlan_features_check(skb, features);
+ 	return vxlan_features_check(skb, features);
+ }
 
 
