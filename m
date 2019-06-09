@@ -2,78 +2,84 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_ABUSE_SURBL,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587EAC468BC
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A401EC468C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6565216C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6700121707
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047265;
-	bh=D14jPmaLe4vpESe/Fo/zHbOrwnlW882k9tN5LxCfznY=;
+	s=default; t=1560047269;
+	bh=El6iXOT3vqc3SqT4ko4b4SbcE/vEI4c1SPbnwM8wNhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EcvVxt9ZltIPgtyPRvKCXNR5jipMluiBB5tdS3mufpZrdhp6OuB5nYULNY0BZ/ipn
-	 sYDNzSP+/uVXU0H201VfpAnUSftlnCZKO7KmfxdLnRLv0wGhoS8DHWawDZDavxFVCH
-	 RDkO2iHyohG9JtLDF81MlhOdYIK9bfKjbel4lCZg=
+	b=gNDrIYmot6NJhVe8hymykK15x7ea/bzw30tnblf8voNo1Up8+Kl/AqQZqPa0s+GS7
+	 dquAx0WeU0orW+ZKWPBOAStaWpSUQigD0hBN8cVJZvDBeWq1tgtnJCQeRx6FdoHLlY
+	 y5AAPg4N0bX61kfVhMdnsvH5tavfhzBGWYZrqnA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfFIC1n (ORCPT
+        id S1728308AbfFIC1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:27:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55768 "EHLO
+        Sat, 8 Jun 2019 22:27:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55936 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbfFIC1h (ORCPT
+        with ESMTP id S1728258AbfFIC1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:27:37 -0400
+        Sat, 8 Jun 2019 22:27:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vKCQWgt5woJD7cycF7a8gc+P9PUs+f1gJ+dPGvuQKlM=; b=P98G5NOML/lVj87EUEWecOAiYH
-        k7do3sFR9kFXHxdCWtGgwwr1GlWW5uOph5nVWAqwF8HbkLoCFO5Kr8Wc+/XeNovQzIugQphqCmQwy
-        +egq3eN79qRTXv/UiDZonYWDG5kgS191eAsCnbuuO66aXkaYi11gy5/QoriOB4h5un2cqrXoNp61n
-        uHkrzRr65MQ6mVYf7FNEYabHLEp6Jat4qGMBVAJR7vReZalcIPpC9yNOqbC+oxNlH2KgsE2XN/YoX
-        mcAiRgO2hFLUU8ecK0dJXLqKm8NuCYEy5OQ73ZMU4uBatc7y9QqSpDbCR2CL6T1B574HAS53aAAyO
-        BEyWrV9w==;
+        bh=PLM2jH/nWKR+z/A68BNgNq/xVQO+NrIlGzHKIvyb9vk=; b=YeP/MgUc/76WZXZOUblyg46waL
+        6yqvPSZWkuRPThkgHlXWHGXSMn4s9V/8Z+jr0xoTAGUHjDCiYnYgeA9MtYgf7dhWD0Fy1Y3XNBGBO
+        v9fC5A9hTMR/OMB5c23LFbxLU2v3wXFh28j+fRps+FyKcRu7RgRMWIYhX8t/ObbXO0gz7P+TqgQSI
+        xlZqpFDef97bieRGTgiqrxtzhhcSU37+Ftqxitxcb/aX3kXdxLi+72g8ysR/5u34ZRVLTWK4IWxxt
+        lFf6ExZTN0u82OwLwp1SK3cNr9N8VsyHf4bO+K8X+9vTO3cK7KFEkgyVsuu8NQuLNpUv7+ZEpq85L
+        B4JOZcww==;
 Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZnYO-0001mq-1I; Sun, 09 Jun 2019 02:27:30 +0000
+        id 1hZnYS-0001mt-4S; Sun, 09 Jun 2019 02:27:34 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZnYL-0000Io-1q; Sat, 08 Jun 2019 23:27:25 -0300
+        id 1hZnYK-0000IR-TS; Sat, 08 Jun 2019 23:27:24 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Maik Broemme <mbroemme@libmpq.org>,
-        Thomas Winischhofer <thomas@winischhofer.net>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bernie Thompson <bernie@plugable.com>,
-        Michal Januszewski <spock@gentoo.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: [PATCH v3 10/33] docs: fb: convert docs to ReST and rename to *.rst
-Date:   Sat,  8 Jun 2019 23:27:00 -0300
-Message-Id: <f7f9c692a870f836e5657b8a763d751b6ac0e86e.1560045490.git.mchehab+samsung@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: [PATCH v3 05/33] docs: cgroup-v1: convert docs to ReST and rename to *.rst
+Date:   Sat,  8 Jun 2019 23:26:55 -0300
+Message-Id: <79865a4248ce5b042106e5ec69bb493292a8d392.1560045490.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560045490.git.mchehab+samsung@kernel.org>
 References: <cover.1560045490.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+Convert the cgroup-v1 files to ReST format, in order to
+allow a later addition to the admin-guide.
 
 The conversion is actually:
   - add blank lines and identation in order to identify paragraphs;
@@ -87,1367 +93,1386 @@ the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../admin-guide/kernel-parameters.txt         |   2 +-
- Documentation/fb/{api.txt => api.rst}         |  29 +-
- Documentation/fb/{arkfb.txt => arkfb.rst}     |   8 +-
- .../fb/{aty128fb.txt => aty128fb.rst}         |  35 +-
- .../fb/{cirrusfb.txt => cirrusfb.rst}         |  47 +-
- .../fb/{cmap_xfbdev.txt => cmap_xfbdev.rst}   |  57 +-
- .../fb/{deferred_io.txt => deferred_io.rst}   |  28 +-
- Documentation/fb/{efifb.txt => efifb.rst}     |  18 +-
- .../fb/{ep93xx-fb.txt => ep93xx-fb.rst}       |  27 +-
- Documentation/fb/{fbcon.txt => fbcon.rst}     | 177 +++---
- .../fb/{framebuffer.txt => framebuffer.rst}   |  79 +--
- Documentation/fb/{gxfb.txt => gxfb.rst}       |  24 +-
- Documentation/fb/index.rst                    |  50 ++
- .../fb/{intel810.txt => intel810.rst}         |  79 +--
- Documentation/fb/{intelfb.txt => intelfb.rst} |  62 +-
- .../fb/{internals.txt => internals.rst}       |  24 +-
- Documentation/fb/{lxfb.txt => lxfb.rst}       |  25 +-
- .../fb/{matroxfb.txt => matroxfb.rst}         | 528 +++++++++---------
- .../fb/{metronomefb.txt => metronomefb.rst}   |   8 +-
- Documentation/fb/{modedb.txt => modedb.rst}   |  44 +-
- Documentation/fb/{pvr2fb.txt => pvr2fb.rst}   |  55 +-
- Documentation/fb/{pxafb.txt => pxafb.rst}     |  81 ++-
- Documentation/fb/{s3fb.txt => s3fb.rst}       |   8 +-
- .../fb/{sa1100fb.txt => sa1100fb.rst}         |  23 +-
- .../fb/{sh7760fb.txt => sh7760fb.rst}         | 153 +++--
- Documentation/fb/{sisfb.txt => sisfb.rst}     |  40 +-
- Documentation/fb/{sm501.txt => sm501.rst}     |   7 +-
- Documentation/fb/{sm712fb.txt => sm712fb.rst} |  18 +-
- Documentation/fb/{sstfb.txt => sstfb.rst}     | 231 ++++----
- Documentation/fb/{tgafb.txt => tgafb.rst}     |  30 +-
- .../fb/{tridentfb.txt => tridentfb.rst}       |  36 +-
- Documentation/fb/{udlfb.txt => udlfb.rst}     |  55 +-
- Documentation/fb/{uvesafb.txt => uvesafb.rst} | 128 +++--
- Documentation/fb/{vesafb.txt => vesafb.rst}   | 121 ++--
- Documentation/fb/{viafb.txt => viafb.rst}     | 393 +++++++------
- .../fb/{vt8623fb.txt => vt8623fb.rst}         |  10 +-
- MAINTAINERS                                   |  10 +-
- drivers/tty/Kconfig                           |   2 +-
- drivers/video/fbdev/Kconfig                   |  24 +-
- drivers/video/fbdev/matrox/matroxfb_base.c    |   2 +-
- drivers/video/fbdev/pxafb.c                   |   2 +-
- drivers/video/fbdev/sh7760fb.c                |   2 +-
- 42 files changed, 1535 insertions(+), 1247 deletions(-)
- rename Documentation/fb/{api.txt => api.rst} (97%)
- rename Documentation/fb/{arkfb.txt => arkfb.rst} (92%)
- rename Documentation/fb/{aty128fb.txt => aty128fb.rst} (61%)
- rename Documentation/fb/{cirrusfb.txt => cirrusfb.rst} (75%)
- rename Documentation/fb/{cmap_xfbdev.txt => cmap_xfbdev.rst} (50%)
- rename Documentation/fb/{deferred_io.txt => deferred_io.rst} (86%)
- rename Documentation/fb/{efifb.txt => efifb.rst} (75%)
- rename Documentation/fb/{ep93xx-fb.txt => ep93xx-fb.rst} (85%)
- rename Documentation/fb/{fbcon.txt => fbcon.rst} (69%)
- rename Documentation/fb/{framebuffer.txt => framebuffer.rst} (92%)
- rename Documentation/fb/{gxfb.txt => gxfb.rst} (60%)
- create mode 100644 Documentation/fb/index.rst
- rename Documentation/fb/{intel810.txt => intel810.rst} (83%)
- rename Documentation/fb/{intelfb.txt => intelfb.rst} (73%)
- rename Documentation/fb/{internals.txt => internals.rst} (82%)
- rename Documentation/fb/{lxfb.txt => lxfb.rst} (60%)
- rename Documentation/fb/{matroxfb.txt => matroxfb.rst} (32%)
- rename Documentation/fb/{metronomefb.txt => metronomefb.rst} (98%)
- rename Documentation/fb/{modedb.txt => modedb.rst} (87%)
- rename Documentation/fb/{pvr2fb.txt => pvr2fb.rst} (36%)
- rename Documentation/fb/{pxafb.txt => pxafb.rst} (78%)
- rename Documentation/fb/{s3fb.txt => s3fb.rst} (94%)
- rename Documentation/fb/{sa1100fb.txt => sa1100fb.rst} (64%)
- rename Documentation/fb/{sh7760fb.txt => sh7760fb.rst} (39%)
- rename Documentation/fb/{sisfb.txt => sisfb.rst} (85%)
- rename Documentation/fb/{sm501.txt => sm501.rst} (65%)
- rename Documentation/fb/{sm712fb.txt => sm712fb.rst} (59%)
- rename Documentation/fb/{sstfb.txt => sstfb.rst} (28%)
- rename Documentation/fb/{tgafb.txt => tgafb.rst} (71%)
- rename Documentation/fb/{tridentfb.txt => tridentfb.rst} (70%)
- rename Documentation/fb/{udlfb.txt => udlfb.rst} (77%)
- rename Documentation/fb/{uvesafb.txt => uvesafb.rst} (52%)
- rename Documentation/fb/{vesafb.txt => vesafb.rst} (57%)
- rename Documentation/fb/{viafb.txt => viafb.rst} (18%)
- rename Documentation/fb/{vt8623fb.txt => vt8623fb.rst} (85%)
+ Documentation/admin-guide/hw-vuln/l1tf.rst    |   2 +-
+ .../admin-guide/kernel-parameters.txt         |   4 +-
+ .../admin-guide/mm/numa_memory_policy.rst     |   2 +-
+ Documentation/block/bfq-iosched.txt           |   2 +-
+ ...io-controller.txt => blkio-controller.rst} |  96 ++--
+ .../cgroup-v1/{cgroups.txt => cgroups.rst}    | 184 +++----
+ .../cgroup-v1/{cpuacct.txt => cpuacct.rst}    |  15 +-
+ .../cgroup-v1/{cpusets.txt => cpusets.rst}    | 205 ++++----
+ .../cgroup-v1/{devices.txt => devices.rst}    |  40 +-
+ ...er-subsystem.txt => freezer-subsystem.rst} |  14 +-
+ .../cgroup-v1/{hugetlb.txt => hugetlb.rst}    |  39 +-
+ Documentation/cgroup-v1/index.rst             |  30 ++
+ .../{memcg_test.txt => memcg_test.rst}        | 263 ++++++----
+ .../cgroup-v1/{memory.txt => memory.rst}      | 449 +++++++++++-------
+ .../cgroup-v1/{net_cls.txt => net_cls.rst}    |  37 +-
+ .../cgroup-v1/{net_prio.txt => net_prio.rst}  |  24 +-
+ .../cgroup-v1/{pids.txt => pids.rst}          |  78 +--
+ .../cgroup-v1/{rdma.txt => rdma.rst}          |  66 +--
+ Documentation/filesystems/tmpfs.txt           |   2 +-
+ Documentation/scheduler/sched-deadline.txt    |   2 +-
+ Documentation/scheduler/sched-design-CFS.txt  |   2 +-
+ Documentation/scheduler/sched-rt-group.txt    |   2 +-
+ Documentation/vm/numa.rst                     |   4 +-
+ Documentation/vm/page_migration.rst           |   2 +-
+ Documentation/vm/unevictable-lru.rst          |   2 +-
+ .../x86/x86_64/fake-numa-for-cpusets.rst      |   4 +-
+ MAINTAINERS                                   |   2 +-
+ block/Kconfig                                 |   2 +-
+ include/linux/cgroup-defs.h                   |   2 +-
+ include/uapi/linux/bpf.h                      |   2 +-
+ init/Kconfig                                  |   2 +-
+ kernel/cgroup/cpuset.c                        |   2 +-
+ security/device_cgroup.c                      |   2 +-
+ tools/include/uapi/linux/bpf.h                |   2 +-
+ 34 files changed, 952 insertions(+), 634 deletions(-)
+ rename Documentation/cgroup-v1/{blkio-controller.txt => blkio-controller.rst} (90%)
+ rename Documentation/cgroup-v1/{cgroups.txt => cgroups.rst} (88%)
+ rename Documentation/cgroup-v1/{cpuacct.txt => cpuacct.rst} (90%)
+ rename Documentation/cgroup-v1/{cpusets.txt => cpusets.rst} (90%)
+ rename Documentation/cgroup-v1/{devices.txt => devices.rst} (88%)
+ rename Documentation/cgroup-v1/{freezer-subsystem.txt => freezer-subsystem.rst} (95%)
+ rename Documentation/cgroup-v1/{hugetlb.txt => hugetlb.rst} (70%)
+ create mode 100644 Documentation/cgroup-v1/index.rst
+ rename Documentation/cgroup-v1/{memcg_test.txt => memcg_test.rst} (62%)
+ rename Documentation/cgroup-v1/{memory.txt => memory.rst} (71%)
+ rename Documentation/cgroup-v1/{net_cls.txt => net_cls.rst} (50%)
+ rename Documentation/cgroup-v1/{net_prio.txt => net_prio.rst} (71%)
+ rename Documentation/cgroup-v1/{pids.txt => pids.rst} (62%)
+ rename Documentation/cgroup-v1/{rdma.txt => rdma.rst} (79%)
 
+diff --git a/Documentation/admin-guide/hw-vuln/l1tf.rst b/Documentation/admin-guide/hw-vuln/l1tf.rst
+index 31653a9f0e1b..656aee262e23 100644
+--- a/Documentation/admin-guide/hw-vuln/l1tf.rst
++++ b/Documentation/admin-guide/hw-vuln/l1tf.rst
+@@ -241,7 +241,7 @@ Guest mitigation mechanisms
+    For further information about confining guests to a single or to a group
+    of cores consult the cpusets documentation:
+ 
+-   https://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.txt
++   https://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.rst
+ 
+ .. _interrupt_isolation:
+ 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a2c36cbad438..d5f01f7eb5ca 100644
+index c80c670b86e3..a2c36cbad438 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5046,7 +5046,7 @@
- 			vector=percpu: enable percpu vector domain
+@@ -4098,7 +4098,7 @@
  
- 	video=		[FB] Frame buffer configuration
--			See Documentation/fb/modedb.txt.
-+			See Documentation/fb/modedb.rst.
+ 	relax_domain_level=
+ 			[KNL, SMP] Set scheduler's default relax_domain_level.
+-			See Documentation/cgroup-v1/cpusets.txt.
++			See Documentation/cgroup-v1/cpusets.rst.
  
- 	video.brightness_switch_enabled= [0,1]
- 			If set to 1, on receiving an ACPI notify event
-diff --git a/Documentation/fb/api.txt b/Documentation/fb/api.rst
-similarity index 97%
-rename from Documentation/fb/api.txt
-rename to Documentation/fb/api.rst
-index d52cf1e3b975..79ec33dded74 100644
---- a/Documentation/fb/api.txt
-+++ b/Documentation/fb/api.rst
-@@ -1,5 +1,6 @@
--			The Frame Buffer Device API
--			---------------------------
-+===========================
-+The Frame Buffer Device API
-+===========================
+ 	reserve=	[KNL,BUGS] Force kernel to ignore I/O ports or memory
+ 			Format: <base1>,<size1>[,<base2>,<size2>,...]
+@@ -4608,7 +4608,7 @@
+ 	swapaccount=[0|1]
+ 			[KNL] Enable accounting of swap in memory resource
+ 			controller if no parameter or 1 is given or disable
+-			it if 0 is given (See Documentation/cgroup-v1/memory.txt)
++			it if 0 is given (See Documentation/cgroup-v1/memory.rst)
  
- Last revised: June 21, 2011
+ 	swiotlb=	[ARM,IA-64,PPC,MIPS,X86]
+ 			Format: { <int> | force | noforce }
+diff --git a/Documentation/admin-guide/mm/numa_memory_policy.rst b/Documentation/admin-guide/mm/numa_memory_policy.rst
+index d78c5b315f72..546f174e5d6a 100644
+--- a/Documentation/admin-guide/mm/numa_memory_policy.rst
++++ b/Documentation/admin-guide/mm/numa_memory_policy.rst
+@@ -15,7 +15,7 @@ document attempts to describe the concepts and APIs of the 2.6 memory policy
+ support.
  
-@@ -21,13 +22,13 @@ deal with different behaviours.
- ---------------
- 
- Device and driver capabilities are reported in the fixed screen information
--capabilities field.
-+capabilities field::
- 
--struct fb_fix_screeninfo {
-+  struct fb_fix_screeninfo {
- 	...
- 	__u16 capabilities;		/* see FB_CAP_*			*/
- 	...
--};
-+  };
- 
- Application should use those capabilities to find out what features they can
- expect from the device and driver.
-@@ -151,9 +152,9 @@ fb_fix_screeninfo and fb_var_screeninfo structure respectively.
- struct fb_fix_screeninfo stores device independent unchangeable information
- about the frame buffer device and the current format. Those information can't
- be directly modified by applications, but can be changed by the driver when an
--application modifies the format.
-+application modifies the format::
- 
--struct fb_fix_screeninfo {
-+  struct fb_fix_screeninfo {
- 	char id[16];			/* identification string eg "TT Builtin" */
- 	unsigned long smem_start;	/* Start of frame buffer mem */
- 					/* (physical address) */
-@@ -172,13 +173,13 @@ struct fb_fix_screeninfo {
- 					/*  specific chip/card we have	*/
- 	__u16 capabilities;		/* see FB_CAP_*			*/
- 	__u16 reserved[2];		/* Reserved for future compatibility */
--};
-+  };
- 
- struct fb_var_screeninfo stores device independent changeable information
- about a frame buffer device, its current format and video mode, as well as
--other miscellaneous parameters.
-+other miscellaneous parameters::
- 
--struct fb_var_screeninfo {
-+  struct fb_var_screeninfo {
- 	__u32 xres;			/* visible resolution		*/
- 	__u32 yres;
- 	__u32 xres_virtual;		/* virtual resolution		*/
-@@ -216,7 +217,7 @@ struct fb_var_screeninfo {
- 	__u32 rotate;			/* angle we rotate counter clockwise */
- 	__u32 colorspace;		/* colorspace for FOURCC-based modes */
- 	__u32 reserved[4];		/* Reserved for future compatibility */
--};
-+  };
- 
- To modify variable information, applications call the FBIOPUT_VSCREENINFO
- ioctl with a pointer to a fb_var_screeninfo structure. If the call is
-@@ -255,14 +256,14 @@ monochrome, grayscale or pseudocolor visuals, although this is not required.
- 
- - For truecolor and directcolor formats, applications set the grayscale field
-   to zero, and the red, blue, green and transp fields to describe the layout of
--  color components in memory.
-+  color components in memory::
- 
--struct fb_bitfield {
-+    struct fb_bitfield {
- 	__u32 offset;			/* beginning of bitfield	*/
- 	__u32 length;			/* length of bitfield		*/
- 	__u32 msb_right;		/* != 0 : Most significant bit is */
- 					/* right */
--};
-+    };
- 
-   Pixel values are bits_per_pixel wide and are split in non-overlapping red,
-   green, blue and alpha (transparency) components. Location and size of each
-diff --git a/Documentation/fb/arkfb.txt b/Documentation/fb/arkfb.rst
-similarity index 92%
-rename from Documentation/fb/arkfb.txt
-rename to Documentation/fb/arkfb.rst
-index e8487a9d6a05..aeca8773dd7e 100644
---- a/Documentation/fb/arkfb.txt
-+++ b/Documentation/fb/arkfb.rst
-@@ -1,6 +1,6 @@
--
--	arkfb - fbdev driver for ARK Logic chips
--	========================================
-+========================================
-+arkfb - fbdev driver for ARK Logic chips
-+========================================
- 
- 
- Supported Hardware
-@@ -47,7 +47,7 @@ Missing Features
- (alias TODO list)
- 
- 	* secondary (not initialized by BIOS) device support
--   	* big endian support
-+	* big endian support
- 	* DPMS support
- 	* MMIO support
- 	* interlaced mode variant
-diff --git a/Documentation/fb/aty128fb.txt b/Documentation/fb/aty128fb.rst
-similarity index 61%
-rename from Documentation/fb/aty128fb.txt
-rename to Documentation/fb/aty128fb.rst
-index b605204fcfe1..3f107718f933 100644
---- a/Documentation/fb/aty128fb.txt
-+++ b/Documentation/fb/aty128fb.rst
-@@ -1,8 +1,9 @@
--[This file is cloned from VesaFB/matroxfb]
--
-+=================
- What is aty128fb?
- =================
- 
-+.. [This file is cloned from VesaFB/matroxfb]
+ Memory policies should not be confused with cpusets
+-(``Documentation/cgroup-v1/cpusets.txt``)
++(``Documentation/cgroup-v1/cpusets.rst``)
+ which is an administrative mechanism for restricting the nodes from which
+ memory may be allocated by a set of processes. Memory policies are a
+ programming interface that a NUMA-aware application can take advantage of.  When
+diff --git a/Documentation/block/bfq-iosched.txt b/Documentation/block/bfq-iosched.txt
+index 1a0f2ac02eb6..b2265cf6c9c3 100644
+--- a/Documentation/block/bfq-iosched.txt
++++ b/Documentation/block/bfq-iosched.txt
+@@ -539,7 +539,7 @@ As for cgroups-v1 (blkio controller), the exact set of stat files
+ created, and kept up-to-date by bfq, depends on whether
+ CONFIG_DEBUG_BLK_CGROUP is set. If it is set, then bfq creates all
+ the stat files documented in
+-Documentation/cgroup-v1/blkio-controller.txt. If, instead,
++Documentation/cgroup-v1/blkio-controller.rst. If, instead,
+ CONFIG_DEBUG_BLK_CGROUP is not set, then bfq creates only the files
+ blkio.bfq.io_service_bytes
+ blkio.bfq.io_service_bytes_recursive
+diff --git a/Documentation/cgroup-v1/blkio-controller.txt b/Documentation/cgroup-v1/blkio-controller.rst
+similarity index 90%
+rename from Documentation/cgroup-v1/blkio-controller.txt
+rename to Documentation/cgroup-v1/blkio-controller.rst
+index 673dc34d3f78..2c1b907afc14 100644
+--- a/Documentation/cgroup-v1/blkio-controller.txt
++++ b/Documentation/cgroup-v1/blkio-controller.rst
+@@ -1,5 +1,7 @@
+-				Block IO Controller
+-				===================
++===================
++Block IO Controller
++===================
 +
- This is a driver for a graphic framebuffer for ATI Rage128 based devices
- on Intel and PPC boxes.
+ Overview
+ ========
+ cgroup subsys "blkio" implements the block io controller. There seems to be
+@@ -22,28 +24,35 @@ Proportional Weight division of bandwidth
+ You can do a very simple testing of running two dd threads in two different
+ cgroups. Here is what you can do.
  
-@@ -24,15 +25,15 @@ How to use it?
- ==============
- 
- Switching modes is done using the  video=aty128fb:<resolution>... modedb
--boot parameter or using `fbset' program.
-+boot parameter or using `fbset` program.
- 
--See Documentation/fb/modedb.txt for more information on modedb
-+See Documentation/fb/modedb.rst for more information on modedb
- resolutions.
- 
- You should compile in both vgacon (to boot if you remove your Rage128 from
- box) and aty128fb (for graphics mode). You should not compile-in vesafb
--unless you have primary display on non-Rage128 VBE2.0 device (see 
--Documentation/fb/vesafb.txt for details).
-+unless you have primary display on non-Rage128 VBE2.0 device (see
-+Documentation/fb/vesafb.rst for details).
- 
- 
- X11
-@@ -48,16 +49,18 @@ Configuration
- =============
- 
- You can pass kernel command line options to vesafb with
--`video=aty128fb:option1,option2:value2,option3' (multiple options should
--be separated by comma, values are separated from options by `:'). 
-+`video=aty128fb:option1,option2:value2,option3` (multiple options should
-+be separated by comma, values are separated from options by `:`).
- Accepted options:
- 
--noaccel  - do not use acceleration engine. It is default.
--accel    - use acceleration engine. Not finished.
--vmode:x  - chooses PowerMacintosh video mode <x>. Deprecated.
--cmode:x  - chooses PowerMacintosh colour mode <x>. Deprecated.
--<XxX@X>  - selects startup videomode. See modedb.txt for detailed
--	   explanation. Default is 640x480x8bpp.
-+========= =======================================================
-+noaccel   do not use acceleration engine. It is default.
-+accel     use acceleration engine. Not finished.
-+vmode:x   chooses PowerMacintosh video mode <x>. Deprecated.
-+cmode:x   chooses PowerMacintosh colour mode <x>. Deprecated.
-+<XxX@X>   selects startup videomode. See modedb.txt for detailed
-+	  explanation. Default is 640x480x8bpp.
-+========= =======================================================
- 
- 
- Limitations
-@@ -65,8 +68,8 @@ Limitations
- 
- There are known and unknown bugs, features and misfeatures.
- Currently there are following known bugs:
-- + This driver is still experimental and is not finished.  Too many
+-- Enable Block IO controller
++- Enable Block IO controller::
 +
-+ - This driver is still experimental and is not finished.  Too many
-    bugs/errata to list here.
+ 	CONFIG_BLK_CGROUP=y
  
----
- Brad Douglas <brad@neruo.com>
-diff --git a/Documentation/fb/cirrusfb.txt b/Documentation/fb/cirrusfb.rst
-similarity index 75%
-rename from Documentation/fb/cirrusfb.txt
-rename to Documentation/fb/cirrusfb.rst
-index f75950d330a4..8c3e6c6cb114 100644
---- a/Documentation/fb/cirrusfb.txt
-+++ b/Documentation/fb/cirrusfb.rst
-@@ -1,32 +1,32 @@
-+============================================
-+Framebuffer driver for Cirrus Logic chipsets
-+============================================
- 
--		Framebuffer driver for Cirrus Logic chipsets
--		Copyright 1999 Jeff Garzik <jgarzik@pobox.com>
-+Copyright 1999 Jeff Garzik <jgarzik@pobox.com>
- 
- 
--
--{ just a little something to get people going; contributors welcome! }
--
-+.. just a little something to get people going; contributors welcome!
- 
- 
- Chip families supported:
--	SD64
--	Piccolo
--	Picasso
--	Spectrum
--	Alpine (GD-543x/4x)
--	Picasso4 (GD-5446)
--	GD-5480
--	Laguna (GD-546x)
-+	- SD64
-+	- Piccolo
-+	- Picasso
-+	- Spectrum
-+	- Alpine (GD-543x/4x)
-+	- Picasso4 (GD-5446)
-+	- GD-5480
-+	- Laguna (GD-546x)
- 
- Bus's supported:
--	PCI
--	Zorro
-+	- PCI
-+	- Zorro
- 
- Architectures supported:
--	i386
--	Alpha
--	PPC (Motorola Powerstack)
--	m68k (Amiga)
-+	- i386
-+	- Alpha
-+	- PPC (Motorola Powerstack)
-+	- m68k (Amiga)
- 
- 
- 
-@@ -34,10 +34,9 @@ Default video modes
- -------------------
- At the moment, there are two kernel command line arguments supported:
- 
--mode:640x480
--mode:800x600
--	or
--mode:1024x768
-+- mode:640x480
-+- mode:800x600
-+- mode:1024x768
- 
- Full support for startup video modes (modedb) will be integrated soon.
- 
-@@ -93,5 +92,3 @@ Version 1.9.4
- Version 1.9.3
- -------------
- * Bundled with kernel 2.3.14-pre1 or later.
--
--
-diff --git a/Documentation/fb/cmap_xfbdev.txt b/Documentation/fb/cmap_xfbdev.rst
-similarity index 50%
-rename from Documentation/fb/cmap_xfbdev.txt
-rename to Documentation/fb/cmap_xfbdev.rst
-index 55e1f0a3d2b4..5db5e9787361 100644
---- a/Documentation/fb/cmap_xfbdev.txt
-+++ b/Documentation/fb/cmap_xfbdev.rst
-@@ -1,26 +1,29 @@
-+==========================
- Understanding fbdev's cmap
----------------------------
-+==========================
- 
- These notes explain how X's dix layer uses fbdev's cmap structures.
- 
--*. example of relevant structures in fbdev as used for a 3-bit grayscale cmap
--struct fb_var_screeninfo {
--        .bits_per_pixel = 8,
--        .grayscale      = 1,
--        .red =          { 4, 3, 0 },
--        .green =        { 0, 0, 0 },
--        .blue =         { 0, 0, 0 },
--}
--struct fb_fix_screeninfo {
--        .visual =       FB_VISUAL_STATIC_PSEUDOCOLOR,
--}
--for (i = 0; i < 8; i++)
-+-  example of relevant structures in fbdev as used for a 3-bit grayscale cmap::
+-- Enable group scheduling in CFQ
++- Enable group scheduling in CFQ:
 +
-+    struct fb_var_screeninfo {
-+	    .bits_per_pixel = 8,
-+	    .grayscale      = 1,
-+	    .red =          { 4, 3, 0 },
-+	    .green =        { 0, 0, 0 },
-+	    .blue =         { 0, 0, 0 },
-+    }
-+    struct fb_fix_screeninfo {
-+	    .visual =       FB_VISUAL_STATIC_PSEUDOCOLOR,
-+    }
-+    for (i = 0; i < 8; i++)
- 	info->cmap.red[i] = (((2*i)+1)*(0xFFFF))/16;
--memcpy(info->cmap.green, info->cmap.red, sizeof(u16)*8);
--memcpy(info->cmap.blue, info->cmap.red, sizeof(u16)*8);
-+    memcpy(info->cmap.green, info->cmap.red, sizeof(u16)*8);
-+    memcpy(info->cmap.blue, info->cmap.red, sizeof(u16)*8);
- 
--*. X11 apps do something like the following when trying to use grayscale.
--for (i=0; i < 8; i++) {
-+-  X11 apps do something like the following when trying to use grayscale::
 +
-+    for (i=0; i < 8; i++) {
- 	char colorspec[64];
- 	memset(colorspec,0,64);
- 	sprintf(colorspec, "rgb:%x/%x/%x", i*36,i*36,i*36);
-@@ -28,26 +31,26 @@ for (i=0; i < 8; i++) {
- 		printf("Can't get color %s\n",colorspec);
- 	XAllocColor(outputDisplay, testColormap, &wantedColor);
- 	grays[i] = wantedColor;
--}
-+    }
+ 	CONFIG_CFQ_GROUP_IOSCHED=y
+ 
+ - Compile and boot into kernel and mount IO controller (blkio); see
+   cgroups.txt, Why are cgroups needed?.
+ 
++  ::
 +
- There's also named equivalents like gray1..x provided you have an rgb.txt.
+ 	mount -t tmpfs cgroup_root /sys/fs/cgroup
+ 	mkdir /sys/fs/cgroup/blkio
+ 	mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
  
- Somewhere in X's callchain, this results in a call to X code that handles the
- colormap. For example, Xfbdev hits the following:
- 
--xc-011010/programs/Xserver/dix/colormap.c:
-+xc-011010/programs/Xserver/dix/colormap.c::
- 
--FindBestPixel(pentFirst, size, prgb, channel)
-+  FindBestPixel(pentFirst, size, prgb, channel)
- 
--dr = (long) pent->co.local.red - prgb->red;
--dg = (long) pent->co.local.green - prgb->green;
--db = (long) pent->co.local.blue - prgb->blue;
--sq = dr * dr;
--UnsignedToBigNum (sq, &sum);
--BigNumAdd (&sum, &temp, &sum);
-+  dr = (long) pent->co.local.red - prgb->red;
-+  dg = (long) pent->co.local.green - prgb->green;
-+  db = (long) pent->co.local.blue - prgb->blue;
-+  sq = dr * dr;
-+  UnsignedToBigNum (sq, &sum);
-+  BigNumAdd (&sum, &temp, &sum);
- 
- co.local.red are entries that were brought in through FBIOGETCMAP which come
- directly from the info->cmap.red that was listed above. The prgb is the rgb
- that the app wants to match to. The above code is doing what looks like a least
- squares matching function. That's why the cmap entries can't be set to the left
- hand side boundaries of a color range.
--
-diff --git a/Documentation/fb/deferred_io.txt b/Documentation/fb/deferred_io.rst
-similarity index 86%
-rename from Documentation/fb/deferred_io.txt
-rename to Documentation/fb/deferred_io.rst
-index 748328370250..7300cff255a3 100644
---- a/Documentation/fb/deferred_io.txt
-+++ b/Documentation/fb/deferred_io.rst
-@@ -1,5 +1,6 @@
-+===========
- Deferred IO
-------------
-+===========
- 
- Deferred IO is a way to delay and repurpose IO. It uses host memory as a
- buffer and the MMU pagefault as a pretrigger for when to perform the device
-@@ -16,7 +17,7 @@ works:
- - app continues writing to that page with no additional cost. this is
-   the key benefit.
- - the workqueue task comes in and mkcleans the pages on the list, then
-- completes the work associated with updating the framebuffer. this is
-+  completes the work associated with updating the framebuffer. this is
-   the real work talking to the device.
- - app tries to write to the address (that has now been mkcleaned)
- - get pagefault and the above sequence occurs again
-@@ -47,29 +48,32 @@ How to use it: (for fbdev drivers)
- ----------------------------------
- The following example may be helpful.
- 
--1. Setup your structure. Eg:
-+1. Setup your structure. Eg::
- 
--static struct fb_deferred_io hecubafb_defio = {
--	.delay		= HZ,
--	.deferred_io	= hecubafb_dpy_deferred_io,
--};
-+	static struct fb_deferred_io hecubafb_defio = {
-+		.delay		= HZ,
-+		.deferred_io	= hecubafb_dpy_deferred_io,
-+	};
- 
- The delay is the minimum delay between when the page_mkwrite trigger occurs
- and when the deferred_io callback is called. The deferred_io callback is
- explained below.
- 
--2. Setup your deferred IO callback. Eg:
--static void hecubafb_dpy_deferred_io(struct fb_info *info,
--				struct list_head *pagelist)
-+2. Setup your deferred IO callback. Eg::
+-- Create two cgroups
++- Create two cgroups::
 +
-+	static void hecubafb_dpy_deferred_io(struct fb_info *info,
-+					     struct list_head *pagelist)
+ 	mkdir -p /sys/fs/cgroup/blkio/test1/ /sys/fs/cgroup/blkio/test2
  
- The deferred_io callback is where you would perform all your IO to the display
- device. You receive the pagelist which is the list of pages that were written
- to during the delay. You must not modify this list. This callback is called
- from a workqueue.
- 
--3. Call init
-+3. Call init::
+-- Set weights of group test1 and test2
++- Set weights of group test1 and test2::
 +
- 	info->fbdefio = &hecubafb_defio;
- 	fb_deferred_io_init(info);
+ 	echo 1000 > /sys/fs/cgroup/blkio/test1/blkio.weight
+ 	echo 500 > /sys/fs/cgroup/blkio/test2/blkio.weight
  
--4. Call cleanup
-+4. Call cleanup::
+ - Create two same size files (say 512MB each) on same disk (file1, file2) and
+-  launch two dd threads in different cgroup to read those files.
++  launch two dd threads in different cgroup to read those files::
+ 
+ 	sync
+ 	echo 3 > /proc/sys/vm/drop_caches
+@@ -65,24 +74,27 @@ cgroups. Here is what you can do.
+ 
+ Throttling/Upper Limit policy
+ -----------------------------
+-- Enable Block IO controller
++- Enable Block IO controller::
 +
- 	fb_deferred_io_cleanup(info);
-diff --git a/Documentation/fb/efifb.txt b/Documentation/fb/efifb.rst
-similarity index 75%
-rename from Documentation/fb/efifb.txt
-rename to Documentation/fb/efifb.rst
-index 1a85c1bdaf38..04840331a00e 100644
---- a/Documentation/fb/efifb.txt
-+++ b/Documentation/fb/efifb.rst
-@@ -1,6 +1,6 @@
--
-+==============
- What is efifb?
--===============
-+==============
+ 	CONFIG_BLK_CGROUP=y
  
- This is a generic EFI platform driver for Intel based Apple computers.
- efifb is only for EFI booted Intel Macs.
-@@ -8,16 +8,17 @@ efifb is only for EFI booted Intel Macs.
- Supported Hardware
- ==================
- 
--iMac 17"/20"
--Macbook
--Macbook Pro 15"/17"
--MacMini
-+- iMac 17"/20"
-+- Macbook
-+- Macbook Pro 15"/17"
-+- MacMini
- 
- How to use it?
- ==============
- 
- efifb does not have any kind of autodetection of your machine.
--You have to add the following kernel parameters in your elilo.conf:
-+You have to add the following kernel parameters in your elilo.conf::
+-- Enable throttling in block layer
++- Enable throttling in block layer::
 +
- 	Macbook :
- 		video=efifb:macbook
- 	MacMini :
-@@ -29,9 +30,10 @@ You have to add the following kernel parameters in your elilo.conf:
+ 	CONFIG_BLK_DEV_THROTTLING=y
  
- Accepted options:
+-- Mount blkio controller (see cgroups.txt, Why are cgroups needed?)
++- Mount blkio controller (see cgroups.txt, Why are cgroups needed?)::
++
+         mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
  
-+======= ===========================================================
- nowc	Don't map the framebuffer write combined. This can be used
- 	to workaround side-effects and slowdowns on other CPU cores
- 	when large amounts of console data are written.
-+======= ===========================================================
+ - Specify a bandwidth rate on particular device for root group. The format
+-  for policy is "<major>:<minor>  <bytes_per_second>".
++  for policy is "<major>:<minor>  <bytes_per_second>"::
  
----
- Edgar Hucek <gimli@dark-green.com>
-diff --git a/Documentation/fb/ep93xx-fb.txt b/Documentation/fb/ep93xx-fb.rst
-similarity index 85%
-rename from Documentation/fb/ep93xx-fb.txt
-rename to Documentation/fb/ep93xx-fb.rst
-index 5af1bd9effae..6f7767926d1a 100644
---- a/Documentation/fb/ep93xx-fb.txt
-+++ b/Documentation/fb/ep93xx-fb.rst
-@@ -4,7 +4,7 @@ Driver for EP93xx LCD controller
+         echo "8:16  1048576" > /sys/fs/cgroup/blkio/blkio.throttle.read_bps_device
  
- The EP93xx LCD controller can drive both standard desktop monitors and
- embedded LCD displays. If you have a standard desktop monitor then you
--can use the standard Linux video mode database. In your board file:
-+can use the standard Linux video mode database. In your board file::
+   Above will put a limit of 1MB/second on reads happening for root group
+   on device having major/minor number 8:16.
  
- 	static struct ep93xxfb_mach_info some_board_fb_info = {
- 		.num_modes	= EP93XXFB_USE_MODEDB,
-@@ -12,7 +12,7 @@ can use the standard Linux video mode database. In your board file:
- 	};
+-- Run dd to read a file and see if rate is throttled to 1MB/s or not.
++- Run dd to read a file and see if rate is throttled to 1MB/s or not::
  
- If you have an embedded LCD display then you need to define a video
--mode for it as follows:
-+mode for it as follows::
+         # dd iflag=direct if=/mnt/common/zerofile of=/dev/null bs=4K count=1024
+         1024+0 records in
+@@ -99,7 +111,7 @@ throttling's hierarchy support is enabled iff "sane_behavior" is
+ enabled from cgroup side, which currently is a development option and
+ not publicly available.
  
- 	static struct fb_videomode some_board_video_modes[] = {
- 		{
-@@ -23,11 +23,11 @@ mode for it as follows:
+-If somebody created a hierarchy like as follows.
++If somebody created a hierarchy like as follows::
  
- Note that the pixel clock value is in pico-seconds. You can use the
- KHZ2PICOS macro to convert the pixel clock value. Most other values
--are in pixel clocks. See Documentation/fb/framebuffer.txt for further
-+are in pixel clocks. See Documentation/fb/framebuffer.rst for further
- details.
+ 			root
+ 			/  \
+@@ -115,7 +127,7 @@ directly generated by tasks in that cgroup.
  
- The ep93xxfb_mach_info structure for your board should look like the
--following:
+ Throttling without "sane_behavior" enabled from cgroup side will
+ practically treat all groups at same level as if it looks like the
+-following.
 +following::
  
- 	static struct ep93xxfb_mach_info some_board_fb_info = {
- 		.num_modes	= ARRAY_SIZE(some_board_video_modes),
-@@ -37,7 +37,7 @@ following:
- 	};
+ 				pivot
+ 			     /  /   \  \
+@@ -152,27 +164,31 @@ Proportional weight policy files
+ 	  These rules override the default value of group weight as specified
+ 	  by blkio.weight.
  
- The framebuffer device can be registered by adding the following to
--your board initialisation function:
-+your board initialisation function::
+-	  Following is the format.
++	  Following is the format::
  
- 	ep93xx_register_fb(&some_board_fb_info);
+-	  # echo dev_maj:dev_minor weight > blkio.weight_device
+-	  Configure weight=300 on /dev/sdb (8:16) in this cgroup
+-	  # echo 8:16 300 > blkio.weight_device
+-	  # cat blkio.weight_device
+-	  dev     weight
+-	  8:16    300
++	    # echo dev_maj:dev_minor weight > blkio.weight_device
  
-@@ -50,6 +50,7 @@ to configure the controller. The video attributes flags are fully
- documented in section 7 of the EP93xx users' guide. The following
- flags are available:
+-	  Configure weight=500 on /dev/sda (8:0) in this cgroup
+-	  # echo 8:0 500 > blkio.weight_device
+-	  # cat blkio.weight_device
+-	  dev     weight
+-	  8:0     500
+-	  8:16    300
++	  Configure weight=300 on /dev/sdb (8:16) in this cgroup::
  
-+=============================== ==========================================
- EP93XXFB_PCLK_FALLING		Clock data on the falling edge of the
- 				pixel clock. The default is to clock
- 				data on the rising edge.
-@@ -62,10 +63,12 @@ EP93XXFB_SYNC_HORIZ_HIGH	Horizontal sync is active high. By
- 
- EP93XXFB_SYNC_VERT_HIGH		Vertical sync is active high. By
- 				default the vertical sync is active high.
-+=============================== ==========================================
- 
- The physical address of the framebuffer can be controlled using the
- following flags:
- 
-+=============================== ======================================
- EP93XXFB_USE_SDCSN0		Use SDCSn[0] for the framebuffer. This
- 				is the default setting.
- 
-@@ -74,6 +77,7 @@ EP93XXFB_USE_SDCSN1		Use SDCSn[1] for the framebuffer.
- EP93XXFB_USE_SDCSN2		Use SDCSn[2] for the framebuffer.
- 
- EP93XXFB_USE_SDCSN3		Use SDCSn[3] for the framebuffer.
-+=============================== ======================================
- 
- ==================
- Platform callbacks
-@@ -87,7 +91,7 @@ blanked or unblanked.
- 
- The setup and teardown devices pass the platform_device structure as
- an argument. The fb_info and ep93xxfb_mach_info structures can be
--obtained as follows:
-+obtained as follows::
- 
- 	static int some_board_fb_setup(struct platform_device *pdev)
- 	{
-@@ -101,17 +105,17 @@ obtained as follows:
- Setting the video mode
- ======================
- 
--The video mode is set using the following syntax:
-+The video mode is set using the following syntax::
- 
- 	video=XRESxYRES[-BPP][@REFRESH]
- 
- If the EP93xx video driver is built-in then the video mode is set on
--the Linux kernel command line, for example:
-+the Linux kernel command line, for example::
- 
- 	video=ep93xx-fb:800x600-16@60
- 
- If the EP93xx video driver is built as a module then the video mode is
--set when the module is installed:
-+set when the module is installed::
- 
- 	modprobe ep93xx-fb video=320x240
- 
-@@ -121,13 +125,14 @@ Screenpage bug
- 
- At least on the EP9315 there is a silicon bug which causes bit 27 of
- the VIDSCRNPAGE (framebuffer physical offset) to be tied low. There is
--an unofficial errata for this bug at:
-+an unofficial errata for this bug at::
+-	  Remove specific weight for /dev/sda in this cgroup
+-	  # echo 8:0 0 > blkio.weight_device
+-	  # cat blkio.weight_device
+-	  dev     weight
+-	  8:16    300
++	    # echo 8:16 300 > blkio.weight_device
++	    # cat blkio.weight_device
++	    dev     weight
++	    8:16    300
 +
- 	http://marc.info/?l=linux-arm-kernel&m=110061245502000&w=2
- 
- By default the EP93xx framebuffer driver checks if the allocated physical
- address has bit 27 set. If it does, then the memory is freed and an
- error is returned. The check can be disabled by adding the following
--option when loading the driver:
-+option when loading the driver::
- 
-       ep93xx-fb.check_screenpage_bug=0
- 
-diff --git a/Documentation/fb/fbcon.txt b/Documentation/fb/fbcon.rst
-similarity index 69%
-rename from Documentation/fb/fbcon.txt
-rename to Documentation/fb/fbcon.rst
-index 60a5ec04e8f0..cfb9f7c38f18 100644
---- a/Documentation/fb/fbcon.txt
-+++ b/Documentation/fb/fbcon.rst
-@@ -1,39 +1,41 @@
-+=======================
- The Framebuffer Console
- =======================
- 
--	The framebuffer console (fbcon), as its name implies, is a text
-+The framebuffer console (fbcon), as its name implies, is a text
- console running on top of the framebuffer device. It has the functionality of
- any standard text console driver, such as the VGA console, with the added
- features that can be attributed to the graphical nature of the framebuffer.
- 
--	 In the x86 architecture, the framebuffer console is optional, and
-+In the x86 architecture, the framebuffer console is optional, and
- some even treat it as a toy. For other architectures, it is the only available
- display device, text or graphical.
- 
--	 What are the features of fbcon?  The framebuffer console supports
-+What are the features of fbcon?  The framebuffer console supports
- high resolutions, varying font types, display rotation, primitive multihead,
- etc. Theoretically, multi-colored fonts, blending, aliasing, and any feature
- made available by the underlying graphics card are also possible.
- 
- A. Configuration
-+================
- 
--	The framebuffer console can be enabled by using your favorite kernel
-+The framebuffer console can be enabled by using your favorite kernel
- configuration tool.  It is under Device Drivers->Graphics Support->Frame
- buffer Devices->Console display driver support->Framebuffer Console Support.
- Select 'y' to compile support statically or 'm' for module support.  The
- module will be fbcon.
- 
--	In order for fbcon to activate, at least one framebuffer driver is
-+In order for fbcon to activate, at least one framebuffer driver is
- required, so choose from any of the numerous drivers available. For x86
- systems, they almost universally have VGA cards, so vga16fb and vesafb will
- always be available. However, using a chipset-specific driver will give you
- more speed and features, such as the ability to change the video mode
- dynamically.
- 
--	To display the penguin logo, choose any logo available in Graphics
-+To display the penguin logo, choose any logo available in Graphics
- support->Bootup logo.
- 
--	Also, you will need to select at least one compiled-in font, but if
-+Also, you will need to select at least one compiled-in font, but if
- you don't do anything, the kernel configuration tool will select one for you,
- usually an 8x16 font.
- 
-@@ -44,6 +46,7 @@ fortunate to have a driver that does not alter the graphics chip, then you
- will still get a VGA console.
- 
- B. Loading
-+==========
- 
- Possible scenarios:
- 
-@@ -72,33 +75,33 @@ Possible scenarios:
- 
- C. Boot options
- 
--         The framebuffer console has several, largely unknown, boot options
--         that can change its behavior.
-+	 The framebuffer console has several, largely unknown, boot options
-+	 that can change its behavior.
- 
- 1. fbcon=font:<name>
- 
--        Select the initial font to use. The value 'name' can be any of the
--        compiled-in fonts: 10x18, 6x10, 7x14, Acorn8x8, MINI4x6,
--        PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, VGA8x16, VGA8x8.
-+	Select the initial font to use. The value 'name' can be any of the
-+	compiled-in fonts: 10x18, 6x10, 7x14, Acorn8x8, MINI4x6,
-+	PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, VGA8x16, VGA8x8.
- 
- 	Note, not all drivers can handle font with widths not divisible by 8,
--        such as vga16fb.
-+	such as vga16fb.
- 
- 2. fbcon=scrollback:<value>[k]
- 
--        The scrollback buffer is memory that is used to preserve display
--        contents that has already scrolled past your view.  This is accessed
--        by using the Shift-PageUp key combination.  The value 'value' is any
--        integer. It defaults to 32KB.  The 'k' suffix is optional, and will
--        multiply the 'value' by 1024.
-+	The scrollback buffer is memory that is used to preserve display
-+	contents that has already scrolled past your view.  This is accessed
-+	by using the Shift-PageUp key combination.  The value 'value' is any
-+	integer. It defaults to 32KB.  The 'k' suffix is optional, and will
-+	multiply the 'value' by 1024.
- 
- 3. fbcon=map:<0123>
- 
--        This is an interesting option. It tells which driver gets mapped to
--        which console. The value '0123' is a sequence that gets repeated until
--        the total length is 64 which is the number of consoles available. In
--        the above example, it is expanded to 012301230123... and the mapping
--        will be:
-+	This is an interesting option. It tells which driver gets mapped to
-+	which console. The value '0123' is a sequence that gets repeated until
-+	the total length is 64 which is the number of consoles available. In
-+	the above example, it is expanded to 012301230123... and the mapping
-+	will be::
- 
- 		tty | 1 2 3 4 5 6 7 8 9 ...
- 		fb  | 0 1 2 3 0 1 2 3 0 ...
-@@ -126,20 +129,20 @@ C. Boot options
- 
- 4. fbcon=rotate:<n>
- 
--        This option changes the orientation angle of the console display. The
--        value 'n' accepts the following:
-+	This option changes the orientation angle of the console display. The
-+	value 'n' accepts the following:
- 
--	      0 - normal orientation (0 degree)
--	      1 - clockwise orientation (90 degrees)
--	      2 - upside down orientation (180 degrees)
--	      3 - counterclockwise orientation (270 degrees)
-+	    - 0 - normal orientation (0 degree)
-+	    - 1 - clockwise orientation (90 degrees)
-+	    - 2 - upside down orientation (180 degrees)
-+	    - 3 - counterclockwise orientation (270 degrees)
- 
- 	The angle can be changed anytime afterwards by 'echoing' the same
- 	numbers to any one of the 2 attributes found in
- 	/sys/class/graphics/fbcon:
- 
--		rotate     - rotate the display of the active console
--		rotate_all - rotate the display of all consoles
-+		- rotate     - rotate the display of the active console
-+		- rotate_all - rotate the display of all consoles
- 
- 	Console rotation will only become available if Framebuffer Console
- 	Rotation support is compiled in your kernel.
-@@ -177,9 +180,9 @@ Before going on to how to attach, detach and unload the framebuffer console, an
- illustration of the dependencies may help.
- 
- The console layer, as with most subsystems, needs a driver that interfaces with
--the hardware. Thus, in a VGA console:
-+the hardware. Thus, in a VGA console::
- 
--console ---> VGA driver ---> hardware.
-+	console ---> VGA driver ---> hardware.
- 
- Assuming the VGA driver can be unloaded, one must first unbind the VGA driver
- from the console layer before unloading the driver.  The VGA driver cannot be
-@@ -187,9 +190,9 @@ unloaded if it is still bound to the console layer. (See
- Documentation/console/console.txt for more information).
- 
- This is more complicated in the case of the framebuffer console (fbcon),
--because fbcon is an intermediate layer between the console and the drivers:
-+because fbcon is an intermediate layer between the console and the drivers::
- 
--console ---> fbcon ---> fbdev drivers ---> hardware
-+	console ---> fbcon ---> fbdev drivers ---> hardware
- 
- The fbdev drivers cannot be unloaded if bound to fbcon, and fbcon cannot
- be unloaded if it's bound to the console layer.
-@@ -204,12 +207,12 @@ So, how do we unbind fbcon from the console? Part of the answer is in
- Documentation/console/console.txt. To summarize:
- 
- Echo a value to the bind file that represents the framebuffer console
--driver. So assuming vtcon1 represents fbcon, then:
-+driver. So assuming vtcon1 represents fbcon, then::
- 
--echo 1 > sys/class/vtconsole/vtcon1/bind - attach framebuffer console to
--                                           console layer
--echo 0 > sys/class/vtconsole/vtcon1/bind - detach framebuffer console from
--                                           console layer
-+  echo 1 > sys/class/vtconsole/vtcon1/bind - attach framebuffer console to
-+					     console layer
-+  echo 0 > sys/class/vtconsole/vtcon1/bind - detach framebuffer console from
-+					     console layer
- 
- If fbcon is detached from the console layer, your boot console driver (which is
- usually VGA text mode) will take over.  A few drivers (rivafb and i810fb) will
-@@ -223,19 +226,19 @@ restored properly. The following is one of the several methods that you can do:
- 2. In your kernel configuration, ensure that CONFIG_FRAMEBUFFER_CONSOLE is set
-    to 'y' or 'm'. Enable one or more of your favorite framebuffer drivers.
- 
--3. Boot into text mode and as root run:
-+3. Boot into text mode and as root run::
- 
- 	vbetool vbestate save > <vga state file>
- 
--	The above command saves the register contents of your graphics
--	hardware to <vga state file>.  You need to do this step only once as
--	the state file can be reused.
-+   The above command saves the register contents of your graphics
-+   hardware to <vga state file>.  You need to do this step only once as
-+   the state file can be reused.
- 
--4. If fbcon is compiled as a module, load fbcon by doing:
-+4. If fbcon is compiled as a module, load fbcon by doing::
- 
-        modprobe fbcon
- 
--5. Now to detach fbcon:
-+5. Now to detach fbcon::
- 
-        vbetool vbestate restore < <vga state file> && \
-        echo 0 > /sys/class/vtconsole/vtcon1/bind
-@@ -243,7 +246,7 @@ restored properly. The following is one of the several methods that you can do:
- 6. That's it, you're back to VGA mode. And if you compiled fbcon as a module,
-    you can unload it by 'rmmod fbcon'.
- 
--7. To reattach fbcon:
-+7. To reattach fbcon::
- 
-        echo 1 > /sys/class/vtconsole/vtcon1/bind
- 
-@@ -266,82 +269,82 @@ the following:
- 
- Variation 1:
- 
--    a. Before detaching fbcon, do
-+    a. Before detaching fbcon, do::
- 
--       vbetool vbemode save > <vesa state file> # do once for each vesafb mode,
--						# the file can be reused
-+	vbetool vbemode save > <vesa state file> # do once for each vesafb mode,
-+						 # the file can be reused
- 
-     b. Detach fbcon as in step 5.
- 
--    c. Attach fbcon
-+    c. Attach fbcon::
- 
--        vbetool vbestate restore < <vesa state file> && \
-+	vbetool vbestate restore < <vesa state file> && \
- 	echo 1 > /sys/class/vtconsole/vtcon1/bind
- 
- Variation 2:
- 
--    a. Before detaching fbcon, do:
-+    a. Before detaching fbcon, do::
++	  Configure weight=500 on /dev/sda (8:0) in this cgroup::
 +
- 	echo <ID> > /sys/class/tty/console/bind
++	    # echo 8:0 500 > blkio.weight_device
++	    # cat blkio.weight_device
++	    dev     weight
++	    8:0     500
++	    8:16    300
++
++	  Remove specific weight for /dev/sda in this cgroup::
++
++	    # echo 8:0 0 > blkio.weight_device
++	    # cat blkio.weight_device
++	    dev     weight
++	    8:16    300
  
--
--       vbetool vbemode get
-+	vbetool vbemode get
+ - blkio.leaf_weight[_device]
+ 	- Equivalents of blkio.weight[_device] for the purpose of
+@@ -297,30 +313,30 @@ Throttling/Upper limit policy files
+ - blkio.throttle.read_bps_device
+ 	- Specifies upper limit on READ rate from the device. IO rate is
+ 	  specified in bytes per second. Rules are per device. Following is
+-	  the format.
++	  the format::
  
-     b. Take note of the mode number
+-  echo "<major>:<minor>  <rate_bytes_per_second>" > /cgrp/blkio.throttle.read_bps_device
++	    echo "<major>:<minor>  <rate_bytes_per_second>" > /cgrp/blkio.throttle.read_bps_device
  
-     b. Detach fbcon as in step 5.
+ - blkio.throttle.write_bps_device
+ 	- Specifies upper limit on WRITE rate to the device. IO rate is
+ 	  specified in bytes per second. Rules are per device. Following is
+-	  the format.
++	  the format::
  
--    c. Attach fbcon:
-+    c. Attach fbcon::
+-  echo "<major>:<minor>  <rate_bytes_per_second>" > /cgrp/blkio.throttle.write_bps_device
++	    echo "<major>:<minor>  <rate_bytes_per_second>" > /cgrp/blkio.throttle.write_bps_device
  
--       vbetool vbemode set <mode number> && \
--       echo 1 > /sys/class/vtconsole/vtcon1/bind
-+	vbetool vbemode set <mode number> && \
-+	echo 1 > /sys/class/vtconsole/vtcon1/bind
+ - blkio.throttle.read_iops_device
+ 	- Specifies upper limit on READ rate from the device. IO rate is
+ 	  specified in IO per second. Rules are per device. Following is
+-	  the format.
++	  the format::
  
- Samples:
- ========
+-  echo "<major>:<minor>  <rate_io_per_second>" > /cgrp/blkio.throttle.read_iops_device
++	   echo "<major>:<minor>  <rate_io_per_second>" > /cgrp/blkio.throttle.read_iops_device
  
- Here are 2 sample bash scripts that you can use to bind or unbind the
--framebuffer console driver if you are on an X86 box:
-+framebuffer console driver if you are on an X86 box::
+ - blkio.throttle.write_iops_device
+ 	- Specifies upper limit on WRITE rate to the device. IO rate is
+ 	  specified in io per second. Rules are per device. Following is
+-	  the format.
++	  the format::
  
-----------------------------------------------------------------------------
--#!/bin/bash
--# Unbind fbcon
-+  #!/bin/bash
-+  # Unbind fbcon
+-  echo "<major>:<minor>  <rate_io_per_second>" > /cgrp/blkio.throttle.write_iops_device
++	    echo "<major>:<minor>  <rate_io_per_second>" > /cgrp/blkio.throttle.write_iops_device
  
--# Change this to where your actual vgastate file is located
--# Or Use VGASTATE=$1 to indicate the state file at runtime
--VGASTATE=/tmp/vgastate
-+  # Change this to where your actual vgastate file is located
-+  # Or Use VGASTATE=$1 to indicate the state file at runtime
-+  VGASTATE=/tmp/vgastate
+ Note: If both BW and IOPS rules are specified for a device, then IO is
+       subjected to both the constraints.
+diff --git a/Documentation/cgroup-v1/cgroups.txt b/Documentation/cgroup-v1/cgroups.rst
+similarity index 88%
+rename from Documentation/cgroup-v1/cgroups.txt
+rename to Documentation/cgroup-v1/cgroups.rst
+index 059f7063eea6..46bbe7e022d4 100644
+--- a/Documentation/cgroup-v1/cgroups.txt
++++ b/Documentation/cgroup-v1/cgroups.rst
+@@ -1,35 +1,39 @@
+-				CGROUPS
+-				-------
++==============
++Control Groups
++==============
  
--# path to vbetool
--VBETOOL=/usr/local/bin
-+  # path to vbetool
-+  VBETOOL=/usr/local/bin
+ Written by Paul Menage <menage@google.com> based on
+-Documentation/cgroup-v1/cpusets.txt
++Documentation/cgroup-v1/cpusets.rst
  
+ Original copyright statements from cpusets.txt:
++
+ Portions Copyright (C) 2004 BULL SA.
++
+ Portions Copyright (c) 2004-2006 Silicon Graphics, Inc.
++
+ Modified by Paul Jackson <pj@sgi.com>
++
+ Modified by Christoph Lameter <cl@linux.com>
  
--for (( i = 0; i < 16; i++))
--do
--  if test -x /sys/class/vtconsole/vtcon$i; then
--      if [ `cat /sys/class/vtconsole/vtcon$i/name | grep -c "frame buffer"` \
--           = 1 ]; then
-+  for (( i = 0; i < 16; i++))
-+  do
-+    if test -x /sys/class/vtconsole/vtcon$i; then
-+	if [ `cat /sys/class/vtconsole/vtcon$i/name | grep -c "frame buffer"` \
-+	     = 1 ]; then
- 	    if test -x $VBETOOL/vbetool; then
- 	       echo Unbinding vtcon$i
- 	       $VBETOOL/vbetool vbestate restore < $VGASTATE
- 	       echo 0 > /sys/class/vtconsole/vtcon$i/bind
- 	    fi
--      fi
--  fi
--done
-+	fi
-+    fi
-+  done
+-CONTENTS:
+-=========
++.. CONTENTS:
  
- ---------------------------------------------------------------------------
--#!/bin/bash
--# Bind fbcon
+-1. Control Groups
+-  1.1 What are cgroups ?
+-  1.2 Why are cgroups needed ?
+-  1.3 How are cgroups implemented ?
+-  1.4 What does notify_on_release do ?
+-  1.5 What does clone_children do ?
+-  1.6 How do I use cgroups ?
+-2. Usage Examples and Syntax
+-  2.1 Basic Usage
+-  2.2 Attaching processes
+-  2.3 Mounting hierarchies by name
+-3. Kernel API
+-  3.1 Overview
+-  3.2 Synchronization
+-  3.3 Subsystem API
+-4. Extended attributes usage
+-5. Questions
++	1. Control Groups
++	1.1 What are cgroups ?
++	1.2 Why are cgroups needed ?
++	1.3 How are cgroups implemented ?
++	1.4 What does notify_on_release do ?
++	1.5 What does clone_children do ?
++	1.6 How do I use cgroups ?
++	2. Usage Examples and Syntax
++	2.1 Basic Usage
++	2.2 Attaching processes
++	2.3 Mounting hierarchies by name
++	3. Kernel API
++	3.1 Overview
++	3.2 Synchronization
++	3.3 Subsystem API
++	4. Extended attributes usage
++	5. Questions
  
--for (( i = 0; i < 16; i++))
--do
--  if test -x /sys/class/vtconsole/vtcon$i; then
--      if [ `cat /sys/class/vtconsole/vtcon$i/name | grep -c "frame buffer"` \
--           = 1 ]; then
+ 1. Control Groups
+ =================
+@@ -72,7 +76,7 @@ On their own, the only use for cgroups is for simple job
+ tracking. The intention is that other subsystems hook into the generic
+ cgroup support to provide new attributes for cgroups, such as
+ accounting/limiting the resources which processes in a cgroup can
+-access. For example, cpusets (see Documentation/cgroup-v1/cpusets.txt) allow
++access. For example, cpusets (see Documentation/cgroup-v1/cpusets.rst) allow
+ you to associate a set of CPUs and a set of memory nodes with the
+ tasks in each cgroup.
+ 
+@@ -108,7 +112,7 @@ As an example of a scenario (originally proposed by vatsa@in.ibm.com)
+ that can benefit from multiple hierarchies, consider a large
+ university server with various users - students, professors, system
+ tasks etc. The resource planning for this server could be along the
+-following lines:
++following lines::
+ 
+        CPU :          "Top cpuset"
+                        /       \
+@@ -136,7 +140,7 @@ depending on who launched it (prof/student).
+ With the ability to classify tasks differently for different resources
+ (by putting those resource subsystems in different hierarchies),
+ the admin can easily set up a script which receives exec notifications
+-and depending on who is launching the browser he can
++and depending on who is launching the browser he can::
+ 
+     # echo browser_pid > /sys/fs/cgroup/<restype>/<userclass>/tasks
+ 
+@@ -151,7 +155,7 @@ wants to do online gaming :))  OR give one of the student's simulation
+ apps enhanced CPU power.
+ 
+ With ability to write PIDs directly to resource classes, it's just a
+-matter of:
++matter of::
+ 
+        # echo pid > /sys/fs/cgroup/network/<new_class>/tasks
+        (after some time)
+@@ -306,7 +310,7 @@ configuration from the parent during initialization.
+ --------------------------
+ 
+ To start a new job that is to be contained within a cgroup, using
+-the "cpuset" cgroup subsystem, the steps are something like:
++the "cpuset" cgroup subsystem, the steps are something like::
+ 
+  1) mount -t tmpfs cgroup_root /sys/fs/cgroup
+  2) mkdir /sys/fs/cgroup/cpuset
+@@ -320,7 +324,7 @@ the "cpuset" cgroup subsystem, the steps are something like:
+ 
+ For example, the following sequence of commands will setup a cgroup
+ named "Charlie", containing just CPUs 2 and 3, and Memory Node 1,
+-and then start a subshell 'sh' in that cgroup:
++and then start a subshell 'sh' in that cgroup::
+ 
+   mount -t tmpfs cgroup_root /sys/fs/cgroup
+   mkdir /sys/fs/cgroup/cpuset
+@@ -345,8 +349,9 @@ and then start a subshell 'sh' in that cgroup:
+ Creating, modifying, using cgroups can be done through the cgroup
+ virtual filesystem.
+ 
+-To mount a cgroup hierarchy with all available subsystems, type:
+-# mount -t cgroup xxx /sys/fs/cgroup
++To mount a cgroup hierarchy with all available subsystems, type::
++
++  # mount -t cgroup xxx /sys/fs/cgroup
+ 
+ The "xxx" is not interpreted by the cgroup code, but will appear in
+ /proc/mounts so may be any useful identifying string that you like.
+@@ -355,18 +360,19 @@ Note: Some subsystems do not work without some user input first.  For instance,
+ if cpusets are enabled the user will have to populate the cpus and mems files
+ for each new cgroup created before that group can be used.
+ 
+-As explained in section `1.2 Why are cgroups needed?' you should create
++As explained in section `1.2 Why are cgroups needed?` you should create
+ different hierarchies of cgroups for each single resource or group of
+ resources you want to control. Therefore, you should mount a tmpfs on
+ /sys/fs/cgroup and create directories for each cgroup resource or resource
+-group.
++group::
+ 
+-# mount -t tmpfs cgroup_root /sys/fs/cgroup
+-# mkdir /sys/fs/cgroup/rg1
++  # mount -t tmpfs cgroup_root /sys/fs/cgroup
++  # mkdir /sys/fs/cgroup/rg1
+ 
+ To mount a cgroup hierarchy with just the cpuset and memory
+-subsystems, type:
+-# mount -t cgroup -o cpuset,memory hier1 /sys/fs/cgroup/rg1
++subsystems, type::
++
++  # mount -t cgroup -o cpuset,memory hier1 /sys/fs/cgroup/rg1
+ 
+ While remounting cgroups is currently supported, it is not recommend
+ to use it. Remounting allows changing bound subsystems and
+@@ -375,9 +381,10 @@ hierarchy is empty and release_agent itself should be replaced with
+ conventional fsnotify. The support for remounting will be removed in
+ the future.
+ 
+-To Specify a hierarchy's release_agent:
+-# mount -t cgroup -o cpuset,release_agent="/sbin/cpuset_release_agent" \
+-  xxx /sys/fs/cgroup/rg1
++To Specify a hierarchy's release_agent::
++
++  # mount -t cgroup -o cpuset,release_agent="/sbin/cpuset_release_agent" \
++    xxx /sys/fs/cgroup/rg1
+ 
+ Note that specifying 'release_agent' more than once will return failure.
+ 
+@@ -390,32 +397,39 @@ Then under /sys/fs/cgroup/rg1 you can find a tree that corresponds to the
+ tree of the cgroups in the system. For instance, /sys/fs/cgroup/rg1
+ is the cgroup that holds the whole system.
+ 
+-If you want to change the value of release_agent:
+-# echo "/sbin/new_release_agent" > /sys/fs/cgroup/rg1/release_agent
++If you want to change the value of release_agent::
++
++  # echo "/sbin/new_release_agent" > /sys/fs/cgroup/rg1/release_agent
+ 
+ It can also be changed via remount.
+ 
+-If you want to create a new cgroup under /sys/fs/cgroup/rg1:
+-# cd /sys/fs/cgroup/rg1
+-# mkdir my_cgroup
++If you want to create a new cgroup under /sys/fs/cgroup/rg1::
+ 
+-Now you want to do something with this cgroup.
+-# cd my_cgroup
++  # cd /sys/fs/cgroup/rg1
++  # mkdir my_cgroup
+ 
+-In this directory you can find several files:
+-# ls
+-cgroup.procs notify_on_release tasks
+-(plus whatever files added by the attached subsystems)
++Now you want to do something with this cgroup:
+ 
+-Now attach your shell to this cgroup:
+-# /bin/echo $$ > tasks
++  # cd my_cgroup
++
++In this directory you can find several files::
++
++  # ls
++  cgroup.procs notify_on_release tasks
++  (plus whatever files added by the attached subsystems)
++
++Now attach your shell to this cgroup::
++
++  # /bin/echo $$ > tasks
+ 
+ You can also create cgroups inside your cgroup by using mkdir in this
+-directory.
+-# mkdir my_sub_cs
++directory::
+ 
+-To remove a cgroup, just use rmdir:
+-# rmdir my_sub_cs
++  # mkdir my_sub_cs
++
++To remove a cgroup, just use rmdir::
++
++  # rmdir my_sub_cs
+ 
+ This will fail if the cgroup is in use (has cgroups inside, or
+ has processes attached, or is held alive by other subsystem-specific
+@@ -424,19 +438,21 @@ reference).
+ 2.2 Attaching processes
+ -----------------------
+ 
+-# /bin/echo PID > tasks
 +::
 +
-+  #!/bin/bash
-+  # Bind fbcon
-+
-+  for (( i = 0; i < 16; i++))
-+  do
-+    if test -x /sys/class/vtconsole/vtcon$i; then
-+	if [ `cat /sys/class/vtconsole/vtcon$i/name | grep -c "frame buffer"` \
-+	     = 1 ]; then
- 	  echo Unbinding vtcon$i
- 	  echo 1 > /sys/class/vtconsole/vtcon$i/bind
--      fi
--  fi
--done
-----------------------------------------------------------------------------
-+	fi
-+    fi
-+  done
++  # /bin/echo PID > tasks
  
----
- Antonino Daplas <adaplas@pol.net>
-diff --git a/Documentation/fb/framebuffer.txt b/Documentation/fb/framebuffer.rst
-similarity index 92%
-rename from Documentation/fb/framebuffer.txt
-rename to Documentation/fb/framebuffer.rst
-index 58c5ae2e9f59..b50b8268de92 100644
---- a/Documentation/fb/framebuffer.txt
-+++ b/Documentation/fb/framebuffer.rst
+ Note that it is PID, not PIDs. You can only attach ONE task at a time.
+-If you have several tasks to attach, you have to do it one after another:
++If you have several tasks to attach, you have to do it one after another::
+ 
+-# /bin/echo PID1 > tasks
+-# /bin/echo PID2 > tasks
+-	...
+-# /bin/echo PIDn > tasks
++  # /bin/echo PID1 > tasks
++  # /bin/echo PID2 > tasks
++	  ...
++  # /bin/echo PIDn > tasks
+ 
+-You can attach the current shell task by echoing 0:
++You can attach the current shell task by echoing 0::
+ 
+-# echo 0 > tasks
++  # echo 0 > tasks
+ 
+ You can use the cgroup.procs file instead of the tasks file to move all
+ threads in a threadgroup at once. Echoing the PID of any task in a
+@@ -529,7 +545,7 @@ Each subsystem may export the following methods. The only mandatory
+ methods are css_alloc/free. Any others that are null are presumed to
+ be successful no-ops.
+ 
+-struct cgroup_subsys_state *css_alloc(struct cgroup *cgrp)
++``struct cgroup_subsys_state *css_alloc(struct cgroup *cgrp)``
+ (cgroup_mutex held by caller)
+ 
+ Called to allocate a subsystem state object for a cgroup. The
+@@ -544,7 +560,7 @@ identified by the passed cgroup object having a NULL parent (since
+ it's the root of the hierarchy) and may be an appropriate place for
+ initialization code.
+ 
+-int css_online(struct cgroup *cgrp)
++``int css_online(struct cgroup *cgrp)``
+ (cgroup_mutex held by caller)
+ 
+ Called after @cgrp successfully completed all allocations and made
+@@ -554,7 +570,7 @@ callback can be used to implement reliable state sharing and
+ propagation along the hierarchy. See the comment on
+ cgroup_for_each_descendant_pre() for details.
+ 
+-void css_offline(struct cgroup *cgrp);
++``void css_offline(struct cgroup *cgrp);``
+ (cgroup_mutex held by caller)
+ 
+ This is the counterpart of css_online() and called iff css_online()
+@@ -564,7 +580,7 @@ all references it's holding on @cgrp. When all references are dropped,
+ cgroup removal will proceed to the next step - css_free(). After this
+ callback, @cgrp should be considered dead to the subsystem.
+ 
+-void css_free(struct cgroup *cgrp)
++``void css_free(struct cgroup *cgrp)``
+ (cgroup_mutex held by caller)
+ 
+ The cgroup system is about to free @cgrp; the subsystem should free
+@@ -573,7 +589,7 @@ is completely unused; @cgrp->parent is still valid. (Note - can also
+ be called for a newly-created cgroup if an error occurs after this
+ subsystem's create() method has been called for the new cgroup).
+ 
+-int can_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)
++``int can_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)``
+ (cgroup_mutex held by caller)
+ 
+ Called prior to moving one or more tasks into a cgroup; if the
+@@ -594,7 +610,7 @@ fork. If this method returns 0 (success) then this should remain valid
+ while the caller holds cgroup_mutex and it is ensured that either
+ attach() or cancel_attach() will be called in future.
+ 
+-void css_reset(struct cgroup_subsys_state *css)
++``void css_reset(struct cgroup_subsys_state *css)``
+ (cgroup_mutex held by caller)
+ 
+ An optional operation which should restore @css's configuration to the
+@@ -608,7 +624,7 @@ This prevents unexpected resource control from a hidden css and
+ ensures that the configuration is in the initial state when it is made
+ visible again later.
+ 
+-void cancel_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)
++``void cancel_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)``
+ (cgroup_mutex held by caller)
+ 
+ Called when a task attach operation has failed after can_attach() has succeeded.
+@@ -617,26 +633,26 @@ function, so that the subsystem can implement a rollback. If not, not necessary.
+ This will be called only about subsystems whose can_attach() operation have
+ succeeded. The parameters are identical to can_attach().
+ 
+-void attach(struct cgroup *cgrp, struct cgroup_taskset *tset)
++``void attach(struct cgroup *cgrp, struct cgroup_taskset *tset)``
+ (cgroup_mutex held by caller)
+ 
+ Called after the task has been attached to the cgroup, to allow any
+ post-attachment activity that requires memory allocations or blocking.
+ The parameters are identical to can_attach().
+ 
+-void fork(struct task_struct *task)
++``void fork(struct task_struct *task)``
+ 
+ Called when a task is forked into a cgroup.
+ 
+-void exit(struct task_struct *task)
++``void exit(struct task_struct *task)``
+ 
+ Called during task exit.
+ 
+-void free(struct task_struct *task)
++``void free(struct task_struct *task)``
+ 
+ Called when the task_struct is freed.
+ 
+-void bind(struct cgroup *root)
++``void bind(struct cgroup *root)``
+ (cgroup_mutex held by caller)
+ 
+ Called when a cgroup subsystem is rebound to a different hierarchy
+@@ -649,6 +665,7 @@ that is being created/destroyed (and hence has no sub-cgroups).
+ 
+ cgroup filesystem supports certain types of extended attributes in its
+ directories and files.  The current supported types are:
++
+ 	- Trusted (XATTR_TRUSTED)
+ 	- Security (XATTR_SECURITY)
+ 
+@@ -666,12 +683,13 @@ in containers and systemd for assorted meta data like main PID in a cgroup
+ 5. Questions
+ ============
+ 
+-Q: what's up with this '/bin/echo' ?
+-A: bash's builtin 'echo' command does not check calls to write() against
+-   errors. If you use it in the cgroup file system, you won't be
+-   able to tell whether a command succeeded or failed.
++::
+ 
+-Q: When I attach processes, only the first of the line gets really attached !
+-A: We can only return one error code per call to write(). So you should also
+-   put only ONE PID.
++  Q: what's up with this '/bin/echo' ?
++  A: bash's builtin 'echo' command does not check calls to write() against
++     errors. If you use it in the cgroup file system, you won't be
++     able to tell whether a command succeeded or failed.
+ 
++  Q: When I attach processes, only the first of the line gets really attached !
++  A: We can only return one error code per call to write(). So you should also
++     put only ONE PID.
+diff --git a/Documentation/cgroup-v1/cpuacct.txt b/Documentation/cgroup-v1/cpuacct.rst
+similarity index 90%
+rename from Documentation/cgroup-v1/cpuacct.txt
+rename to Documentation/cgroup-v1/cpuacct.rst
+index 9d73cc0cadb9..d30ed81d2ad7 100644
+--- a/Documentation/cgroup-v1/cpuacct.txt
++++ b/Documentation/cgroup-v1/cpuacct.rst
 @@ -1,5 +1,6 @@
--			The Frame Buffer Device
--			-----------------------
-+=======================
-+The Frame Buffer Device
-+=======================
++=========================
+ CPU Accounting Controller
+--------------------------
++=========================
  
- Maintained by Geert Uytterhoeven <geert@linux-m68k.org>
- Last revised: May 10, 2001
-@@ -26,7 +27,7 @@ other device in /dev. It's a character device using major 29; the minor
- specifies the frame buffer number.
+ The CPU accounting controller is used to group tasks using cgroups and
+ account the CPU usage of these groups of tasks.
+@@ -8,9 +9,9 @@ The CPU accounting controller supports multi-hierarchy groups. An accounting
+ group accumulates the CPU usage of all of its child groups and the tasks
+ directly present in its group.
  
- By convention, the following device nodes are used (numbers indicate the device
--minor numbers):
-+minor numbers)::
+-Accounting groups can be created by first mounting the cgroup filesystem.
++Accounting groups can be created by first mounting the cgroup filesystem::
  
-       0 = /dev/fb0	First frame buffer
-       1 = /dev/fb1	Second frame buffer
-@@ -34,15 +35,15 @@ minor numbers):
-      31 = /dev/fb31	32nd frame buffer
+-# mount -t cgroup -ocpuacct none /sys/fs/cgroup
++  # mount -t cgroup -ocpuacct none /sys/fs/cgroup
  
- For backwards compatibility, you may want to create the following symbolic
--links:
-+links::
+ With the above step, the initial or the parent accounting group becomes
+ visible at /sys/fs/cgroup. At bootup, this group includes all the tasks in
+@@ -19,11 +20,11 @@ the system. /sys/fs/cgroup/tasks lists the tasks in this cgroup.
+ by this group which is essentially the CPU time obtained by all the tasks
+ in the system.
  
-     /dev/fb0current -> fb0
-     /dev/fb1current -> fb1
+-New accounting groups can be created under the parent group /sys/fs/cgroup.
++New accounting groups can be created under the parent group /sys/fs/cgroup::
  
- and so on...
+-# cd /sys/fs/cgroup
+-# mkdir g1
+-# echo $$ > g1/tasks
++  # cd /sys/fs/cgroup
++  # mkdir g1
++  # echo $$ > g1/tasks
  
--The frame buffer devices are also `normal' memory devices, this means, you can
--read and write their contents. You can, for example, make a screen snapshot by
-+The frame buffer devices are also `normal` memory devices, this means, you can
-+read and write their contents. You can, for example, make a screen snapshot by::
+ The above steps create a new group g1 and move the current shell
+ process (bash) into it. CPU time consumed by this bash and its children
+diff --git a/Documentation/cgroup-v1/cpusets.txt b/Documentation/cgroup-v1/cpusets.rst
+similarity index 90%
+rename from Documentation/cgroup-v1/cpusets.txt
+rename to Documentation/cgroup-v1/cpusets.rst
+index 8402dd6de8df..b6a42cdea72b 100644
+--- a/Documentation/cgroup-v1/cpusets.txt
++++ b/Documentation/cgroup-v1/cpusets.rst
+@@ -1,35 +1,36 @@
+-				CPUSETS
+-				-------
++=======
++CPUSETS
++=======
  
-   cp /dev/fb0 myfile
- 
-@@ -54,11 +55,11 @@ Application software that uses the frame buffer device (e.g. the X server) will
- use /dev/fb0 by default (older software uses /dev/fb0current). You can specify
- an alternative frame buffer device by setting the environment variable
- $FRAMEBUFFER to the path name of a frame buffer device, e.g. (for sh/bash
--users):
-+users)::
- 
-     export FRAMEBUFFER=/dev/fb1
- 
--or (for csh users):
-+or (for csh users)::
- 
-     setenv FRAMEBUFFER /dev/fb1
- 
-@@ -90,9 +91,9 @@ which data structures they work. Here's just a brief overview:
-     possible).
- 
-   - You can get and set parts of the color map. Communication is done with 16
--    bits per color part (red, green, blue, transparency) to support all 
--    existing hardware. The driver does all the computations needed to apply 
--    it to the hardware (round it down to less bits, maybe throw away 
-+    bits per color part (red, green, blue, transparency) to support all
-+    existing hardware. The driver does all the computations needed to apply
-+    it to the hardware (round it down to less bits, maybe throw away
-     transparency).
- 
- All this hardware abstraction makes the implementation of application programs
-@@ -113,10 +114,10 @@ much trouble...
- 3. Frame Buffer Resolution Maintenance
- --------------------------------------
- 
--Frame buffer resolutions are maintained using the utility `fbset'. It can
-+Frame buffer resolutions are maintained using the utility `fbset`. It can
- change the video mode properties of a frame buffer device. Its main usage is
--to change the current video mode, e.g. during boot up in one of your /etc/rc.*
--or /etc/init.d/* files.
-+to change the current video mode, e.g. during boot up in one of your `/etc/rc.*`
-+or `/etc/init.d/*` files.
- 
- Fbset uses a video mode database stored in a configuration file, so you can
- easily add your own modes and refer to them with a simple identifier.
-@@ -129,8 +130,8 @@ The X server (XF68_FBDev) is the most notable application program for the frame
- buffer device. Starting with XFree86 release 3.2, the X server is part of
- XFree86 and has 2 modes:
- 
--  - If the `Display' subsection for the `fbdev' driver in the /etc/XF86Config
--    file contains a
-+  - If the `Display` subsection for the `fbdev` driver in the /etc/XF86Config
-+    file contains a::
- 
- 	Modes "default"
- 
-@@ -146,7 +147,7 @@ XFree86 and has 2 modes:
-     same virtual desktop size. The frame buffer device that's used is still
-     /dev/fb0current (or $FRAMEBUFFER), but the available resolutions are
-     defined by /etc/XF86Config now. The disadvantage is that you have to
--    specify the timings in a different format (but `fbset -x' may help).
-+    specify the timings in a different format (but `fbset -x` may help).
- 
- To tune a video mode, you can use fbset or xvidtune. Note that xvidtune doesn't
- work 100% with XF68_FBDev: the reported clock values are always incorrect.
-@@ -172,29 +173,29 @@ retrace, the electron beam is turned off (blanked).
- 
- The speed at which the electron beam paints the pixels is determined by the
- dotclock in the graphics board. For a dotclock of e.g. 28.37516 MHz (millions
--of cycles per second), each pixel is 35242 ps (picoseconds) long:
-+of cycles per second), each pixel is 35242 ps (picoseconds) long::
- 
-     1/(28.37516E6 Hz) = 35.242E-9 s
- 
--If the screen resolution is 640x480, it will take
-+If the screen resolution is 640x480, it will take::
- 
-     640*35.242E-9 s = 22.555E-6 s
- 
- to paint the 640 (xres) pixels on one scanline. But the horizontal retrace
--also takes time (e.g. 272 `pixels'), so a full scanline takes
-+also takes time (e.g. 272 `pixels`), so a full scanline takes::
- 
-     (640+272)*35.242E-9 s = 32.141E-6 s
- 
--We'll say that the horizontal scanrate is about 31 kHz:
-+We'll say that the horizontal scanrate is about 31 kHz::
- 
-     1/(32.141E-6 s) = 31.113E3 Hz
- 
- A full screen counts 480 (yres) lines, but we have to consider the vertical
--retrace too (e.g. 49 `lines'). So a full screen will take
-+retrace too (e.g. 49 `lines`). So a full screen will take::
- 
-     (480+49)*32.141E-6 s = 17.002E-3 s
- 
--The vertical scanrate is about 59 Hz:
-+The vertical scanrate is about 59 Hz::
- 
-     1/(17.002E-3 s) = 58.815 Hz
- 
-@@ -212,7 +213,7 @@ influenced by the moments at which the synchronization pulses occur.
- The following picture summarizes all timings. The horizontal retrace time is
- the sum of the left margin, the right margin and the hsync length, while the
- vertical retrace time is the sum of the upper margin, the lower margin and the
--vsync length.
-+vsync length::
- 
-   +----------+---------------------------------------------+----------+-------+
-   |          |                ↑                            |          |       |
-@@ -256,7 +257,8 @@ The frame buffer device expects all horizontal timings in number of dotclocks
- 6. Converting XFree86 timing values info frame buffer device timings
- --------------------------------------------------------------------
- 
--An XFree86 mode line consists of the following fields:
-+An XFree86 mode line consists of the following fields::
+ Copyright (C) 2004 BULL SA.
 +
-  "800x600"     50      800  856  976 1040    600  637  643  666
-  < name >     DCF       HR  SH1  SH2  HFL     VR  SV1  SV2  VFL
+ Written by Simon.Derr@bull.net
  
-@@ -271,19 +273,27 @@ The frame buffer device uses the following fields:
-   - vsync_len: length of vertical sync
+-Portions Copyright (c) 2004-2006 Silicon Graphics, Inc.
+-Modified by Paul Jackson <pj@sgi.com>
+-Modified by Christoph Lameter <cl@linux.com>
+-Modified by Paul Menage <menage@google.com>
+-Modified by Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
++- Portions Copyright (c) 2004-2006 Silicon Graphics, Inc.
++- Modified by Paul Jackson <pj@sgi.com>
++- Modified by Christoph Lameter <cl@linux.com>
++- Modified by Paul Menage <menage@google.com>
++- Modified by Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
  
- 1) Pixelclock:
+-CONTENTS:
+-=========
++.. CONTENTS:
+ 
+-1. Cpusets
+-  1.1 What are cpusets ?
+-  1.2 Why are cpusets needed ?
+-  1.3 How are cpusets implemented ?
+-  1.4 What are exclusive cpusets ?
+-  1.5 What is memory_pressure ?
+-  1.6 What is memory spread ?
+-  1.7 What is sched_load_balance ?
+-  1.8 What is sched_relax_domain_level ?
+-  1.9 How do I use cpusets ?
+-2. Usage Examples and Syntax
+-  2.1 Basic Usage
+-  2.2 Adding/removing cpus
+-  2.3 Setting flags
+-  2.4 Attaching processes
+-3. Questions
+-4. Contact
++   1. Cpusets
++     1.1 What are cpusets ?
++     1.2 Why are cpusets needed ?
++     1.3 How are cpusets implemented ?
++     1.4 What are exclusive cpusets ?
++     1.5 What is memory_pressure ?
++     1.6 What is memory spread ?
++     1.7 What is sched_load_balance ?
++     1.8 What is sched_relax_domain_level ?
++     1.9 How do I use cpusets ?
++   2. Usage Examples and Syntax
++     2.1 Basic Usage
++     2.2 Adding/removing cpus
++     2.3 Setting flags
++     2.4 Attaching processes
++   3. Questions
++   4. Contact
+ 
+ 1. Cpusets
+ ==========
+@@ -48,7 +49,7 @@ hooks, beyond what is already present, required to manage dynamic
+ job placement on large systems.
+ 
+ Cpusets use the generic cgroup subsystem described in
+-Documentation/cgroup-v1/cgroups.txt.
++Documentation/cgroup-v1/cgroups.rst.
+ 
+ Requests by a task, using the sched_setaffinity(2) system call to
+ include CPUs in its CPU affinity mask, and using the mbind(2) and
+@@ -157,7 +158,7 @@ modifying cpusets is via this cpuset file system.
+ The /proc/<pid>/status file for each task has four added lines,
+ displaying the task's cpus_allowed (on which CPUs it may be scheduled)
+ and mems_allowed (on which Memory Nodes it may obtain memory),
+-in the two formats seen in the following example:
++in the two formats seen in the following example::
+ 
+   Cpus_allowed:   ffffffff,ffffffff,ffffffff,ffffffff
+   Cpus_allowed_list:      0-127
+@@ -181,6 +182,7 @@ files describing that cpuset:
+  - cpuset.sched_relax_domain_level: the searching range when migrating tasks
+ 
+ In addition, only the root cpuset has the following file:
 +
-    xfree: in MHz
+  - cpuset.memory_pressure_enabled flag: compute memory_pressure?
+ 
+ New cpusets are created using the mkdir system call or shell
+@@ -266,7 +268,8 @@ to monitor a cpuset for signs of memory pressure.  It's up to the
+ batch manager or other user code to decide what to do about it and
+ take action.
+ 
+-==> Unless this feature is enabled by writing "1" to the special file
++==>
++    Unless this feature is enabled by writing "1" to the special file
+     /dev/cpuset/memory_pressure_enabled, the hook in the rebalance
+     code of __alloc_pages() for this metric reduces to simply noticing
+     that the cpuset_memory_pressure_enabled flag is zero.  So only
+@@ -399,6 +402,7 @@ have tasks running on them unless explicitly assigned.
+ 
+ This default load balancing across all CPUs is not well suited for
+ the following two situations:
 +
-    fb: in picoseconds (ps)
- 
-    pixclock = 1000000 / DCF
- 
- 2) horizontal timings:
+  1) On large systems, load balancing across many CPUs is expensive.
+     If the system is managed using cpusets to place independent jobs
+     on separate sets of CPUs, full load balancing is unnecessary.
+@@ -501,6 +505,7 @@ all the CPUs that must be load balanced.
+ The cpuset code builds a new such partition and passes it to the
+ scheduler sched domain setup code, to have the sched domains rebuilt
+ as necessary, whenever:
 +
-    left_margin = HFL - SH2
+  - the 'cpuset.sched_load_balance' flag of a cpuset with non-empty CPUs changes,
+  - or CPUs come or go from a cpuset with this flag enabled,
+  - or 'cpuset.sched_relax_domain_level' value of a cpuset with non-empty CPUs
+@@ -553,13 +558,15 @@ this searching range as you like.  This file takes int value which
+ indicates size of searching range in levels ideally as follows,
+ otherwise initial value -1 that indicates the cpuset has no request.
+ 
+-  -1  : no request. use system default or follow request of others.
+-   0  : no search.
+-   1  : search siblings (hyperthreads in a core).
+-   2  : search cores in a package.
+-   3  : search cpus in a node [= system wide on non-NUMA system]
+-   4  : search nodes in a chunk of node [on NUMA system]
+-   5  : search system wide [on NUMA system]
++====== ===========================================================
++  -1   no request. use system default or follow request of others.
++   0   no search.
++   1   search siblings (hyperthreads in a core).
++   2   search cores in a package.
++   3   search cpus in a node [= system wide on non-NUMA system]
++   4   search nodes in a chunk of node [on NUMA system]
++   5   search system wide [on NUMA system]
++====== ===========================================================
+ 
+ The system default is architecture dependent.  The system default
+ can be changed using the relax_domain_level= boot parameter.
+@@ -578,13 +585,14 @@ and whether it is acceptable or not depends on your situation.
+ Don't modify this file if you are not sure.
+ 
+ If your situation is:
 +
-    right_margin = SH1 - HR
+  - The migration costs between each cpu can be assumed considerably
+    small(for you) due to your special application's behavior or
+    special hardware support for CPU cache etc.
+  - The searching cost doesn't have impact(for you) or you can make
+    the searching cost enough small by managing cpuset to compact etc.
+  - The latency is required even it sacrifices cache hit rate etc.
+-then increasing 'sched_relax_domain_level' would benefit you.
++   then increasing 'sched_relax_domain_level' would benefit you.
+ 
+ 
+ 1.9 How do I use cpusets ?
+@@ -678,7 +686,7 @@ To start a new job that is to be contained within a cpuset, the steps are:
+ 
+ For example, the following sequence of commands will setup a cpuset
+ named "Charlie", containing just CPUs 2 and 3, and Memory Node 1,
+-and then start a subshell 'sh' in that cpuset:
++and then start a subshell 'sh' in that cpuset::
+ 
+   mount -t cgroup -ocpuset cpuset /sys/fs/cgroup/cpuset
+   cd /sys/fs/cgroup/cpuset
+@@ -693,6 +701,7 @@ and then start a subshell 'sh' in that cpuset:
+   cat /proc/self/cpuset
+ 
+ There are ways to query or modify cpusets:
 +
-    hsync_len = SH2 - SH1
+  - via the cpuset file system directly, using the various cd, mkdir, echo,
+    cat, rmdir commands from the shell, or their equivalent from C.
+  - via the C library libcpuset.
+@@ -722,115 +731,133 @@ Then under /sys/fs/cgroup/cpuset you can find a tree that corresponds to the
+ tree of the cpusets in the system. For instance, /sys/fs/cgroup/cpuset
+ is the cpuset that holds the whole system.
  
- 3) vertical timings:
+-If you want to create a new cpuset under /sys/fs/cgroup/cpuset:
+-# cd /sys/fs/cgroup/cpuset
+-# mkdir my_cpuset
++If you want to create a new cpuset under /sys/fs/cgroup/cpuset::
+ 
+-Now you want to do something with this cpuset.
+-# cd my_cpuset
++  # cd /sys/fs/cgroup/cpuset
++  # mkdir my_cpuset
+ 
+-In this directory you can find several files:
+-# ls
+-cgroup.clone_children  cpuset.memory_pressure
+-cgroup.event_control   cpuset.memory_spread_page
+-cgroup.procs           cpuset.memory_spread_slab
+-cpuset.cpu_exclusive   cpuset.mems
+-cpuset.cpus            cpuset.sched_load_balance
+-cpuset.mem_exclusive   cpuset.sched_relax_domain_level
+-cpuset.mem_hardwall    notify_on_release
+-cpuset.memory_migrate  tasks
++Now you want to do something with this cpuset::
 +
-    upper_margin = VFL - SV2
++  # cd my_cpuset
 +
-    lower_margin = SV1 - VR
++In this directory you can find several files::
 +
-    vsync_len = SV2 - SV1
++  # ls
++  cgroup.clone_children  cpuset.memory_pressure
++  cgroup.event_control   cpuset.memory_spread_page
++  cgroup.procs           cpuset.memory_spread_slab
++  cpuset.cpu_exclusive   cpuset.mems
++  cpuset.cpus            cpuset.sched_load_balance
++  cpuset.mem_exclusive   cpuset.sched_relax_domain_level
++  cpuset.mem_hardwall    notify_on_release
++  cpuset.memory_migrate  tasks
  
- Good examples for VESA timings can be found in the XFree86 source tree,
-@@ -303,9 +313,10 @@ and to the following documentation:
-   - The manual pages for fbset: fbset(8), fb.modes(5)
-   - The manual pages for XFree86: XF68_FBDev(1), XF86Config(4/5)
-   - The mighty kernel sources:
--      o linux/drivers/video/
--      o linux/include/linux/fb.h
--      o linux/include/video/
+ Reading them will give you information about the state of this cpuset:
+ the CPUs and Memory Nodes it can use, the processes that are using
+ it, its properties.  By writing to these files you can manipulate
+ the cpuset.
+ 
+-Set some flags:
+-# /bin/echo 1 > cpuset.cpu_exclusive
++Set some flags::
+ 
+-Add some cpus:
+-# /bin/echo 0-7 > cpuset.cpus
++  # /bin/echo 1 > cpuset.cpu_exclusive
+ 
+-Add some mems:
+-# /bin/echo 0-7 > cpuset.mems
++Add some cpus::
+ 
+-Now attach your shell to this cpuset:
+-# /bin/echo $$ > tasks
++  # /bin/echo 0-7 > cpuset.cpus
 +
-+      - linux/drivers/video/
-+      - linux/include/linux/fb.h
-+      - linux/include/video/
- 
- 
- 
-@@ -330,14 +341,14 @@ and on its mirrors.
- 
- The latest version of fbset can be found at
- 
--    http://www.linux-fbdev.org/ 
-+    http://www.linux-fbdev.org/
++Add some mems::
 +
++  # /bin/echo 0-7 > cpuset.mems
 +
-+10. Credits
-+-----------
- 
--  
--10. Credits                                                       
------------                                                       
--                
- This readme was written by Geert Uytterhoeven, partly based on the original
--`X-framebuffer.README' by Roman Hodek and Martin Schaller. Section 6 was
-+`X-framebuffer.README` by Roman Hodek and Martin Schaller. Section 6 was
- provided by Frank Neumann.
- 
- The frame buffer device abstraction was designed by Martin Schaller.
-diff --git a/Documentation/fb/gxfb.txt b/Documentation/fb/gxfb.rst
-similarity index 60%
-rename from Documentation/fb/gxfb.txt
-rename to Documentation/fb/gxfb.rst
-index 2f640903bbb2..5738709bccbb 100644
---- a/Documentation/fb/gxfb.txt
-+++ b/Documentation/fb/gxfb.rst
-@@ -1,7 +1,8 @@
--[This file is cloned from VesaFB/aty128fb]
--
-+=============
- What is gxfb?
--=================
-+=============
++Now attach your shell to this cpuset::
 +
-+.. [This file is cloned from VesaFB/aty128fb]
++  # /bin/echo $$ > tasks
  
- This is a graphics framebuffer driver for AMD Geode GX2 based processors.
+ You can also create cpusets inside your cpuset by using mkdir in this
+-directory.
+-# mkdir my_sub_cs
++directory::
++
++  # mkdir my_sub_cs
++
++To remove a cpuset, just use rmdir::
++
++  # rmdir my_sub_cs
  
-@@ -23,9 +24,9 @@ How to use it?
- ==============
+-To remove a cpuset, just use rmdir:
+-# rmdir my_sub_cs
+ This will fail if the cpuset is in use (has cpusets inside, or has
+ processes attached).
  
- Switching modes is done using  gxfb.mode_option=<resolution>... boot
--parameter or using `fbset' program.
-+parameter or using `fbset` program.
+ Note that for legacy reasons, the "cpuset" filesystem exists as a
+ wrapper around the cgroup filesystem.
  
--See Documentation/fb/modedb.txt for more information on modedb
-+See Documentation/fb/modedb.rst for more information on modedb
- resolutions.
+-The command
++The command::
+ 
+-mount -t cpuset X /sys/fs/cgroup/cpuset
++  mount -t cpuset X /sys/fs/cgroup/cpuset
+ 
+-is equivalent to
++is equivalent to::
+ 
+-mount -t cgroup -ocpuset,noprefix X /sys/fs/cgroup/cpuset
+-echo "/sbin/cpuset_release_agent" > /sys/fs/cgroup/cpuset/release_agent
++  mount -t cgroup -ocpuset,noprefix X /sys/fs/cgroup/cpuset
++  echo "/sbin/cpuset_release_agent" > /sys/fs/cgroup/cpuset/release_agent
+ 
+ 2.2 Adding/removing cpus
+ ------------------------
+ 
+ This is the syntax to use when writing in the cpus or mems files
+-in cpuset directories:
++in cpuset directories::
+ 
+-# /bin/echo 1-4 > cpuset.cpus		-> set cpus list to cpus 1,2,3,4
+-# /bin/echo 1,2,3,4 > cpuset.cpus	-> set cpus list to cpus 1,2,3,4
++  # /bin/echo 1-4 > cpuset.cpus		-> set cpus list to cpus 1,2,3,4
++  # /bin/echo 1,2,3,4 > cpuset.cpus	-> set cpus list to cpus 1,2,3,4
+ 
+ To add a CPU to a cpuset, write the new list of CPUs including the
+-CPU to be added. To add 6 to the above cpuset:
++CPU to be added. To add 6 to the above cpuset::
+ 
+-# /bin/echo 1-4,6 > cpuset.cpus	-> set cpus list to cpus 1,2,3,4,6
++  # /bin/echo 1-4,6 > cpuset.cpus	-> set cpus list to cpus 1,2,3,4,6
+ 
+ Similarly to remove a CPU from a cpuset, write the new list of CPUs
+ without the CPU to be removed.
+ 
+-To remove all the CPUs:
++To remove all the CPUs::
+ 
+-# /bin/echo "" > cpuset.cpus		-> clear cpus list
++  # /bin/echo "" > cpuset.cpus		-> clear cpus list
+ 
+ 2.3 Setting flags
+ -----------------
+ 
+-The syntax is very simple:
++The syntax is very simple::
+ 
+-# /bin/echo 1 > cpuset.cpu_exclusive 	-> set flag 'cpuset.cpu_exclusive'
+-# /bin/echo 0 > cpuset.cpu_exclusive 	-> unset flag 'cpuset.cpu_exclusive'
++  # /bin/echo 1 > cpuset.cpu_exclusive 	-> set flag 'cpuset.cpu_exclusive'
++  # /bin/echo 0 > cpuset.cpu_exclusive 	-> unset flag 'cpuset.cpu_exclusive'
+ 
+ 2.4 Attaching processes
+ -----------------------
+ 
+-# /bin/echo PID > tasks
++::
++
++  # /bin/echo PID > tasks
+ 
+ Note that it is PID, not PIDs. You can only attach ONE task at a time.
+-If you have several tasks to attach, you have to do it one after another:
++If you have several tasks to attach, you have to do it one after another::
+ 
+-# /bin/echo PID1 > tasks
+-# /bin/echo PID2 > tasks
++  # /bin/echo PID1 > tasks
++  # /bin/echo PID2 > tasks
+ 	...
+-# /bin/echo PIDn > tasks
++  # /bin/echo PIDn > tasks
  
  
-@@ -42,11 +43,12 @@ You can pass kernel command line options to gxfb with gxfb.<option>.
- For example, gxfb.mode_option=800x600@75.
- Accepted options:
+ 3. Questions
+ ============
  
--mode_option	- specify the video mode.  Of the form
--		  <x>x<y>[-<bpp>][@<refresh>]
--vram		- size of video ram (normally auto-detected)
--vt_switch	- enable vt switching during suspend/resume.  The vt
--		  switch is slow, but harmless.
-+================ ==================================================
-+mode_option	 specify the video mode.  Of the form
-+		 <x>x<y>[-<bpp>][@<refresh>]
-+vram		 size of video ram (normally auto-detected)
-+vt_switch	 enable vt switching during suspend/resume.  The vt
-+		 switch is slow, but harmless.
-+================ ==================================================
+-Q: what's up with this '/bin/echo' ?
+-A: bash's builtin 'echo' command does not check calls to write() against
++Q:
++   what's up with this '/bin/echo' ?
++
++A:
++   bash's builtin 'echo' command does not check calls to write() against
+    errors. If you use it in the cpuset file system, you won't be
+    able to tell whether a command succeeded or failed.
  
----
- Andres Salomon <dilinger@debian.org>
-diff --git a/Documentation/fb/index.rst b/Documentation/fb/index.rst
+-Q: When I attach processes, only the first of the line gets really attached !
+-A: We can only return one error code per call to write(). So you should also
++Q:
++   When I attach processes, only the first of the line gets really attached !
++
++A:
++   We can only return one error code per call to write(). So you should also
+    put only ONE pid.
+ 
+ 4. Contact
+diff --git a/Documentation/cgroup-v1/devices.txt b/Documentation/cgroup-v1/devices.rst
+similarity index 88%
+rename from Documentation/cgroup-v1/devices.txt
+rename to Documentation/cgroup-v1/devices.rst
+index 3c1095ca02ea..e1886783961e 100644
+--- a/Documentation/cgroup-v1/devices.txt
++++ b/Documentation/cgroup-v1/devices.rst
+@@ -1,6 +1,9 @@
++===========================
+ Device Whitelist Controller
++===========================
+ 
+-1. Description:
++1. Description
++==============
+ 
+ Implement a cgroup to track and enforce open and mknod restrictions
+ on device files.  A device cgroup associates a device access
+@@ -16,24 +19,26 @@ devices from the whitelist or add new entries.  A child cgroup can
+ never receive a device access which is denied by its parent.
+ 
+ 2. User Interface
++=================
+ 
+ An entry is added using devices.allow, and removed using
+-devices.deny.  For instance
++devices.deny.  For instance::
+ 
+ 	echo 'c 1:3 mr' > /sys/fs/cgroup/1/devices.allow
+ 
+ allows cgroup 1 to read and mknod the device usually known as
+-/dev/null.  Doing
++/dev/null.  Doing::
+ 
+ 	echo a > /sys/fs/cgroup/1/devices.deny
+ 
+-will remove the default 'a *:* rwm' entry. Doing
++will remove the default 'a *:* rwm' entry. Doing::
+ 
+ 	echo a > /sys/fs/cgroup/1/devices.allow
+ 
+ will add the 'a *:* rwm' entry to the whitelist.
+ 
+ 3. Security
++===========
+ 
+ Any task can move itself between cgroups.  This clearly won't
+ suffice, but we can decide the best way to adequately restrict
+@@ -50,6 +55,7 @@ A cgroup may not be granted more permissions than the cgroup's
+ parent has.
+ 
+ 4. Hierarchy
++============
+ 
+ device cgroups maintain hierarchy by making sure a cgroup never has more
+ access permissions than its parent.  Every time an entry is written to
+@@ -58,7 +64,8 @@ from their whitelist and all the locally set whitelist entries will be
+ re-evaluated.  In case one of the locally set whitelist entries would provide
+ more access than the cgroup's parent, it'll be removed from the whitelist.
+ 
+-Example:
++Example::
++
+       A
+      / \
+         B
+@@ -67,10 +74,12 @@ Example:
+     A            allow		"b 8:* rwm", "c 116:1 rw"
+     B            deny		"c 1:3 rwm", "c 116:2 rwm", "b 3:* rwm"
+ 
+-If a device is denied in group A:
++If a device is denied in group A::
++
+ 	# echo "c 116:* r" > A/devices.deny
++
+ it'll propagate down and after revalidating B's entries, the whitelist entry
+-"c 116:2 rwm" will be removed:
++"c 116:2 rwm" will be removed::
+ 
+     group        whitelist entries                        denied devices
+     A            all                                      "b 8:* rwm", "c 116:* rw"
+@@ -79,7 +88,8 @@ it'll propagate down and after revalidating B's entries, the whitelist entry
+ In case parent's exceptions change and local exceptions are not allowed
+ anymore, they'll be deleted.
+ 
+-Notice that new whitelist entries will not be propagated:
++Notice that new whitelist entries will not be propagated::
++
+       A
+      / \
+         B
+@@ -88,24 +98,30 @@ Notice that new whitelist entries will not be propagated:
+     A            "c 1:3 rwm", "c 1:5 r"                   all the rest
+     B            "c 1:3 rwm", "c 1:5 r"                   all the rest
+ 
+-when adding "c *:3 rwm":
++when adding ``c *:3 rwm``::
++
+ 	# echo "c *:3 rwm" >A/devices.allow
+ 
+-the result:
++the result::
++
+     group        whitelist entries                        denied devices
+     A            "c *:3 rwm", "c 1:5 r"                   all the rest
+     B            "c 1:3 rwm", "c 1:5 r"                   all the rest
+ 
+-but now it'll be possible to add new entries to B:
++but now it'll be possible to add new entries to B::
++
+ 	# echo "c 2:3 rwm" >B/devices.allow
+ 	# echo "c 50:3 r" >B/devices.allow
+-or even
++
++or even::
++
+ 	# echo "c *:3 rwm" >B/devices.allow
+ 
+ Allowing or denying all by writing 'a' to devices.allow or devices.deny will
+ not be possible once the device cgroups has children.
+ 
+ 4.1 Hierarchy (internal implementation)
++---------------------------------------
+ 
+ device cgroups is implemented internally using a behavior (ALLOW, DENY) and a
+ list of exceptions.  The internal state is controlled using the same user
+diff --git a/Documentation/cgroup-v1/freezer-subsystem.txt b/Documentation/cgroup-v1/freezer-subsystem.rst
+similarity index 95%
+rename from Documentation/cgroup-v1/freezer-subsystem.txt
+rename to Documentation/cgroup-v1/freezer-subsystem.rst
+index e831cb2b8394..582d3427de3f 100644
+--- a/Documentation/cgroup-v1/freezer-subsystem.txt
++++ b/Documentation/cgroup-v1/freezer-subsystem.rst
+@@ -1,3 +1,7 @@
++==============
++Cgroup Freezer
++==============
++
+ The cgroup freezer is useful to batch job management system which start
+ and stop sets of tasks in order to schedule the resources of a machine
+ according to the desires of a system administrator. This sort of program
+@@ -23,7 +27,7 @@ blocked, or ignored it can be seen by waiting or ptracing parent tasks.
+ SIGCONT is especially unsuitable since it can be caught by the task. Any
+ programs designed to watch for SIGSTOP and SIGCONT could be broken by
+ attempting to use SIGSTOP and SIGCONT to stop and resume tasks. We can
+-demonstrate this problem using nested bash shells:
++demonstrate this problem using nested bash shells::
+ 
+ 	$ echo $$
+ 	16644
+@@ -93,19 +97,19 @@ The following cgroupfs files are created by cgroup freezer.
+ The root cgroup is non-freezable and the above interface files don't
+ exist.
+ 
+-* Examples of usage :
++* Examples of usage::
+ 
+    # mkdir /sys/fs/cgroup/freezer
+    # mount -t cgroup -ofreezer freezer /sys/fs/cgroup/freezer
+    # mkdir /sys/fs/cgroup/freezer/0
+    # echo $some_pid > /sys/fs/cgroup/freezer/0/tasks
+ 
+-to get status of the freezer subsystem :
++to get status of the freezer subsystem::
+ 
+    # cat /sys/fs/cgroup/freezer/0/freezer.state
+    THAWED
+ 
+-to freeze all tasks in the container :
++to freeze all tasks in the container::
+ 
+    # echo FROZEN > /sys/fs/cgroup/freezer/0/freezer.state
+    # cat /sys/fs/cgroup/freezer/0/freezer.state
+@@ -113,7 +117,7 @@ to freeze all tasks in the container :
+    # cat /sys/fs/cgroup/freezer/0/freezer.state
+    FROZEN
+ 
+-to unfreeze all tasks in the container :
++to unfreeze all tasks in the container::
+ 
+    # echo THAWED > /sys/fs/cgroup/freezer/0/freezer.state
+    # cat /sys/fs/cgroup/freezer/0/freezer.state
+diff --git a/Documentation/cgroup-v1/hugetlb.txt b/Documentation/cgroup-v1/hugetlb.rst
+similarity index 70%
+rename from Documentation/cgroup-v1/hugetlb.txt
+rename to Documentation/cgroup-v1/hugetlb.rst
+index 1260e5369b9b..a3902aa253a9 100644
+--- a/Documentation/cgroup-v1/hugetlb.txt
++++ b/Documentation/cgroup-v1/hugetlb.rst
+@@ -1,5 +1,6 @@
++==================
+ HugeTLB Controller
+--------------------
++==================
+ 
+ The HugeTLB controller allows to limit the HugeTLB usage per control group and
+ enforces the controller limit during page fault. Since HugeTLB doesn't
+@@ -16,16 +17,16 @@ With the above step, the initial or the parent HugeTLB group becomes
+ visible at /sys/fs/cgroup. At bootup, this group includes all the tasks in
+ the system. /sys/fs/cgroup/tasks lists the tasks in this cgroup.
+ 
+-New groups can be created under the parent group /sys/fs/cgroup.
++New groups can be created under the parent group /sys/fs/cgroup::
+ 
+-# cd /sys/fs/cgroup
+-# mkdir g1
+-# echo $$ > g1/tasks
++  # cd /sys/fs/cgroup
++  # mkdir g1
++  # echo $$ > g1/tasks
+ 
+ The above steps create a new group g1 and move the current shell
+ process (bash) into it.
+ 
+-Brief summary of control files
++Brief summary of control files::
+ 
+  hugetlb.<hugepagesize>.limit_in_bytes     # set/show limit of "hugepagesize" hugetlb usage
+  hugetlb.<hugepagesize>.max_usage_in_bytes # show max "hugepagesize" hugetlb  usage recorded
+@@ -33,17 +34,17 @@ Brief summary of control files
+  hugetlb.<hugepagesize>.failcnt		   # show the number of allocation failure due to HugeTLB limit
+ 
+ For a system supporting three hugepage sizes (64k, 32M and 1G), the control
+-files include:
++files include::
+ 
+-hugetlb.1GB.limit_in_bytes
+-hugetlb.1GB.max_usage_in_bytes
+-hugetlb.1GB.usage_in_bytes
+-hugetlb.1GB.failcnt
+-hugetlb.64KB.limit_in_bytes
+-hugetlb.64KB.max_usage_in_bytes
+-hugetlb.64KB.usage_in_bytes
+-hugetlb.64KB.failcnt
+-hugetlb.32MB.limit_in_bytes
+-hugetlb.32MB.max_usage_in_bytes
+-hugetlb.32MB.usage_in_bytes
+-hugetlb.32MB.failcnt
++  hugetlb.1GB.limit_in_bytes
++  hugetlb.1GB.max_usage_in_bytes
++  hugetlb.1GB.usage_in_bytes
++  hugetlb.1GB.failcnt
++  hugetlb.64KB.limit_in_bytes
++  hugetlb.64KB.max_usage_in_bytes
++  hugetlb.64KB.usage_in_bytes
++  hugetlb.64KB.failcnt
++  hugetlb.32MB.limit_in_bytes
++  hugetlb.32MB.max_usage_in_bytes
++  hugetlb.32MB.usage_in_bytes
++  hugetlb.32MB.failcnt
+diff --git a/Documentation/cgroup-v1/index.rst b/Documentation/cgroup-v1/index.rst
 new file mode 100644
-index 000000000000..d47313714635
+index 000000000000..fe76d42edc11
 --- /dev/null
-+++ b/Documentation/fb/index.rst
-@@ -0,0 +1,50 @@
++++ b/Documentation/cgroup-v1/index.rst
+@@ -0,0 +1,30 @@
 +:orphan:
 +
-+============
-+Frame Buffer
-+============
++========================
++Control Groups version 1
++========================
 +
 +.. toctree::
 +    :maxdepth: 1
 +
-+    api
-+    arkfb
-+    aty128fb
-+    cirrusfb
-+    cmap_xfbdev
-+    deferred_io
-+    efifb
-+    ep93xx-fb
-+    fbcon
-+    framebuffer
-+    gxfb
-+    intel810
-+    intelfb
-+    internals
-+    lxfb
-+    matroxfb
-+    metronomefb
-+    modedb
-+    pvr2fb
-+    pxafb
-+    s3fb
-+    sa1100fb
-+    sh7760fb
-+    sisfb
-+    sm501
-+    sm712fb
-+    sstfb
-+    tgafb
-+    tridentfb
-+    udlfb
-+    uvesafb
-+    vesafb
-+    viafb
-+    vt8623fb
++    cgroups
++
++    blkio-controller
++    cpuacct
++    cpusets
++    devices
++    freezer-subsystem
++    hugetlb
++    memcg_test
++    memory
++    net_cls
++    net_prio
++    pids
++    rdma
 +
 +.. only::  subproject and html
 +
@@ -1455,3581 +1480,1861 @@ index 000000000000..d47313714635
 +   =======
 +
 +   * :ref:`genindex`
-diff --git a/Documentation/fb/intel810.txt b/Documentation/fb/intel810.rst
-similarity index 83%
-rename from Documentation/fb/intel810.txt
-rename to Documentation/fb/intel810.rst
-index a8e9f5bca6f3..eb86098db91f 100644
---- a/Documentation/fb/intel810.txt
-+++ b/Documentation/fb/intel810.rst
-@@ -1,26 +1,31 @@
-+================================
- Intel 810/815 Framebuffer driver
-- 	Tony Daplas <adaplas@pol.net>
--	http://i810fb.sourceforge.net
-+================================
- 
--	March 17, 2002
-+Tony Daplas <adaplas@pol.net>
- 
--	First Released: July 2001
--	Last Update:    September 12, 2005
--================================================================
-+http://i810fb.sourceforge.net
+diff --git a/Documentation/cgroup-v1/memcg_test.txt b/Documentation/cgroup-v1/memcg_test.rst
+similarity index 62%
+rename from Documentation/cgroup-v1/memcg_test.txt
+rename to Documentation/cgroup-v1/memcg_test.rst
+index 621e29ffb358..91bd18c6a514 100644
+--- a/Documentation/cgroup-v1/memcg_test.txt
++++ b/Documentation/cgroup-v1/memcg_test.rst
+@@ -1,32 +1,43 @@
+-Memory Resource Controller(Memcg)  Implementation Memo.
++=====================================================
++Memory Resource Controller(Memcg) Implementation Memo
++=====================================================
 +
-+March 17, 2002
+ Last Updated: 2010/2
 +
-+First Released: July 2001
-+Last Update:    September 12, 2005
+ Base Kernel Version: based on 2.6.33-rc7-mm(candidate for 34).
  
- A. Introduction
-+===============
+ Because VM is getting complex (one of reasons is memcg...), memcg's behavior
+ is complex. This is a document for memcg's internal behavior.
+ Please note that implementation details can be changed.
  
- 	This is a framebuffer driver for various Intel 810/815 compatible
- 	graphics devices.  These include:
+-(*) Topics on API should be in Documentation/cgroup-v1/memory.txt)
++(*) Topics on API should be in Documentation/cgroup-v1/memory.rst)
  
--	Intel 810
--	Intel 810E
--	Intel 810-DC100
--	Intel 815 Internal graphics only, 100Mhz FSB
--	Intel 815 Internal graphics only
--	Intel 815 Internal graphics and AGP
-+	- Intel 810
-+	- Intel 810E
-+	- Intel 810-DC100
-+	- Intel 815 Internal graphics only, 100Mhz FSB
-+	- Intel 815 Internal graphics only
-+	- Intel 815 Internal graphics and AGP
- 
- B.  Features
-+============
- 
- 	- Choice of using Discrete Video Timings, VESA Generalized Timing
- 	  Formula, or a framebuffer specific database to set the video mode
-@@ -45,10 +50,11 @@ B.  Features
- 	- Can concurrently run with xfree86 running with native i810 drivers
- 
- 	- Hardware Cursor Support
-- 
+ 0. How to record usage ?
++========================
 +
- 	- Supports EDID probing either by DDC/I2C or through the BIOS
+    2 objects are used.
  
- C.  List of available options
-+=============================
+    page_cgroup ....an object per page.
++
+ 	Allocated at boot or memory hotplug. Freed at memory hot removal.
  
-    a. "video=i810fb"
- 	enables the i810 driver
-@@ -158,7 +164,7 @@ C.  List of available options
- 	(default = not set)
+    swap_cgroup ... an entry per swp_entry.
++
+ 	Allocated at swapon(). Freed at swapoff().
  
-    n. "dcolor"
--        Use directcolor visual instead of truecolor for pixel depths greater
-+	Use directcolor visual instead of truecolor for pixel depths greater
- 	than 8 bpp.  Useful for color tuning, such as gamma control.
+    The page_cgroup has USED bit and double count against a page_cgroup never
+    occurs. swap_cgroup is used only when a charged page is swapped-out.
  
- 	Recommendation: do not set
-@@ -167,35 +173,37 @@ C.  List of available options
-    o. <xres>x<yres>[-<bpp>][@<refresh>]
- 	The driver will now accept specification of boot mode option.  If this
- 	is specified, the options 'xres' and 'yres' will be ignored. See
--	Documentation/fb/modedb.txt for usage.
-+	Documentation/fb/modedb.rst for usage.
- 
- D. Kernel booting
-+=================
- 
- Separate each option/option-pair by commas (,) and the option from its value
--with a colon (:) as in the following:
-+with a colon (:) as in the following::
- 
--video=i810fb:option1,option2:value2
-+	video=i810fb:option1,option2:value2
- 
- Sample Usage
- ------------
- 
--In /etc/lilo.conf, add the line:
-+In /etc/lilo.conf, add the line::
- 
--append="video=i810fb:vram:2,xres:1024,yres:768,bpp:8,hsync1:30,hsync2:55, \
--        vsync1:50,vsync2:85,accel,mtrr"
-+  append="video=i810fb:vram:2,xres:1024,yres:768,bpp:8,hsync1:30,hsync2:55, \
-+	  vsync1:50,vsync2:85,accel,mtrr"
- 
- This will initialize the framebuffer to 1024x768 at 8bpp.  The framebuffer
- will use 2 MB of System RAM. MTRR support will be enabled. The refresh rate
- will be computed based on the hsync1/hsync2 and vsync1/vsync2 values.
- 
- IMPORTANT:
--You must include hsync1, hsync2, vsync1 and vsync2 to enable video modes
--better than 640x480 at 60Hz. HOWEVER, if your chipset/display combination
--supports I2C and has an EDID block, you can safely exclude hsync1, hsync2,
--vsync1 and vsync2 parameters.  These parameters will be taken from the EDID
--block.
-+  You must include hsync1, hsync2, vsync1 and vsync2 to enable video modes
-+  better than 640x480 at 60Hz. HOWEVER, if your chipset/display combination
-+  supports I2C and has an EDID block, you can safely exclude hsync1, hsync2,
-+  vsync1 and vsync2 parameters.  These parameters will be taken from the EDID
-+  block.
- 
- E.  Module options
-+==================
- 
- The module parameters are essentially similar to the kernel
- parameters. The main difference is that you need to include a Boolean value
-@@ -206,31 +214,32 @@ Example, to enable MTRR, include "mtrr=1".
- Sample Usage
- ------------
- 
--Using the same setup as described above, load the module like this:
-+Using the same setup as described above, load the module like this::
- 
- 	modprobe i810fb vram=2 xres=1024 bpp=8 hsync1=30 hsync2=55 vsync1=50 \
--	         vsync2=85 accel=1 mtrr=1
-+		 vsync2=85 accel=1 mtrr=1
- 
--Or just add the following to a configuration file in /etc/modprobe.d/
-+Or just add the following to a configuration file in /etc/modprobe.d/::
- 
- 	options i810fb vram=2 xres=1024 bpp=16 hsync1=30 hsync2=55 vsync1=50 \
- 	vsync2=85 accel=1 mtrr=1
- 
--and just do a
-+and just do a::
- 
- 	modprobe i810fb
- 
- 
- F.  Setup
+ 1. Charge
 +=========
  
--	a. Do your usual method of configuring the kernel.
-+	a. Do your usual method of configuring the kernel
+    a page/swp_entry may be charged (usage += PAGE_SIZE) at
  
--	make menuconfig/xconfig/config
-+	   make menuconfig/xconfig/config
+ 	mem_cgroup_try_charge()
  
- 	b. Under "Code maturity level options" enable "Prompt for development
- 	   and/or incomplete code/drivers".
- 
-- 	c. Enable agpgart support for the Intel 810/815 on-board graphics.
-+	c. Enable agpgart support for the Intel 810/815 on-board graphics.
- 	   This is required.  The option is under "Character Devices".
- 
- 	d. Under "Graphics Support", select "Intel 810/815" either statically
-@@ -242,7 +251,7 @@ F.  Setup
- 	   set 'Enable DDC Support' to 'y'. To make this option appear, set
- 	   'use VESA Generalized Timing Formula' to 'y'.
- 
--        f. If you want a framebuffer console, enable it under "Console
-+	f. If you want a framebuffer console, enable it under "Console
- 	   Drivers".
- 
- 	g. Compile your kernel.
-@@ -253,6 +262,7 @@ F.  Setup
- 	    patch to see the chipset in action (or inaction :-).
- 
- G.  Acknowledgment:
-+===================
- 
- 	1.  Geert Uytterhoeven - his excellent howto and the virtual
- 	    framebuffer driver code made this possible.
-@@ -269,10 +279,9 @@ G.  Acknowledgment:
- 	   optimizations possible.
- 
- H.  Home Page:
-+==============
- 
- 	A more complete, and probably updated information is provided at
- 	http://i810fb.sourceforge.net.
- 
--###########################
- Tony
--
-diff --git a/Documentation/fb/intelfb.txt b/Documentation/fb/intelfb.rst
-similarity index 73%
-rename from Documentation/fb/intelfb.txt
-rename to Documentation/fb/intelfb.rst
-index feac4e4d6968..e2d0903f4efb 100644
---- a/Documentation/fb/intelfb.txt
-+++ b/Documentation/fb/intelfb.rst
-@@ -1,24 +1,28 @@
-+=============================================================
- Intel 830M/845G/852GM/855GM/865G/915G/945G Framebuffer driver
--================================================================
-+=============================================================
- 
- A. Introduction
--	This is a framebuffer driver for various Intel 8xx/9xx compatible
-+===============
+ 2. Uncharge
++===========
 +
-+This is a framebuffer driver for various Intel 8xx/9xx compatible
- graphics devices.  These would include:
+   a page/swp_entry may be uncharged (usage -= PAGE_SIZE) by
  
--	Intel 830M
--	Intel 845G
--	Intel 852GM
--	Intel 855GM
--	Intel 865G
--	Intel 915G
--	Intel 915GM
--	Intel 945G
--	Intel 945GM
--	Intel 945GME
--	Intel 965G
--	Intel 965GM
-+	- Intel 830M
-+	- Intel 845G
-+	- Intel 852GM
-+	- Intel 855GM
-+	- Intel 865G
-+	- Intel 915G
-+	- Intel 915GM
-+	- Intel 945G
-+	- Intel 945GM
-+	- Intel 945GME
-+	- Intel 965G
-+	- Intel 965GM
+ 	mem_cgroup_uncharge()
+@@ -37,9 +48,12 @@ Please note that implementation details can be changed.
+ 	  disappears.
  
- B.  List of available options
-+=============================
- 
-    a. "video=intelfb"
- 	enables the intelfb driver
-@@ -39,12 +43,12 @@ B.  List of available options
- 	(default = 4 MB)
- 
-    d. "voffset=<value>"
--        select at what offset in MB of the logical memory to allocate the
-+	select at what offset in MB of the logical memory to allocate the
- 	framebuffer memory.  The intent is to avoid the memory blocks
- 	used by standard graphics applications (XFree86). Depending on your
--        usage, adjust the value up or down, (0 for maximum usage, 63/127 MB
--        for the least amount).  Note, an arbitrary setting may conflict
--        with XFree86.
-+	usage, adjust the value up or down, (0 for maximum usage, 63/127 MB
-+	for the least amount).  Note, an arbitrary setting may conflict
-+	with XFree86.
- 
- 	Recommendation: do not set
- 	(default = 48 MB)
-@@ -80,18 +84,19 @@ B.  List of available options
-    The default parameter (not named) is the mode.
- 
- C. Kernel booting
-+=================
- 
- Separate each option/option-pair by commas (,) and the option from its value
--with an equals sign (=) as in the following:
-+with an equals sign (=) as in the following::
- 
--video=intelfb:option1,option2=value2
-+	video=intelfb:option1,option2=value2
- 
- Sample Usage
- ------------
- 
--In /etc/lilo.conf, add the line:
-+In /etc/lilo.conf, add the line::
- 
--append="video=intelfb:mode=800x600-32@75,accel,hwcursor,vram=8"
-+	append="video=intelfb:mode=800x600-32@75,accel,hwcursor,vram=8"
- 
- This will initialize the framebuffer to 800x600 at 32bpp and 75Hz. The
- framebuffer will use 8 MB of System RAM. hw acceleration of text and cursor
-@@ -106,8 +111,9 @@ in this directory.
- 
- 
- D.  Module options
-+==================
- 
--	The module parameters are essentially similar to the kernel
-+The module parameters are essentially similar to the kernel
- parameters. The main difference is that you need to include a Boolean value
- (1 for TRUE, and 0 for FALSE) for those options which don't need a value.
- 
-@@ -116,23 +122,24 @@ Example, to enable MTRR, include "mtrr=1".
- Sample Usage
- ------------
- 
--Using the same setup as described above, load the module like this:
-+Using the same setup as described above, load the module like this::
- 
- 	modprobe intelfb mode=800x600-32@75 vram=8 accel=1 hwcursor=1
- 
--Or just add the following to a configuration file in /etc/modprobe.d/
-+Or just add the following to a configuration file in /etc/modprobe.d/::
- 
- 	options intelfb mode=800x600-32@75 vram=8 accel=1 hwcursor=1
- 
--and just do a
-+and just do a::
- 
- 	modprobe intelfb
- 
- 
- E.  Acknowledgment:
-+===================
- 
- 	1.  Geert Uytterhoeven - his excellent howto and the virtual
--                                 framebuffer driver code made this possible.
-+	    framebuffer driver code made this possible.
- 
- 	2.  Jeff Hartmann for his agpgart code.
- 
-@@ -145,5 +152,4 @@ E.  Acknowledgment:
- 
- 	6.  Andrew Morton for his kernel patches maintenance.
- 
--###########################
- Sylvain
-diff --git a/Documentation/fb/internals.txt b/Documentation/fb/internals.rst
-similarity index 82%
-rename from Documentation/fb/internals.txt
-rename to Documentation/fb/internals.rst
-index 9b2a2b2f3e57..696b50aa7c24 100644
---- a/Documentation/fb/internals.txt
-+++ b/Documentation/fb/internals.rst
-@@ -1,13 +1,19 @@
-+=============================
-+Frame Buffer device internals
-+=============================
- 
- This is a first start for some documentation about frame buffer device
- internals.
- 
--Geert Uytterhoeven <geert@linux-m68k.org>, 21 July 1998
--James Simmons <jsimmons@user.sf.net>, Nov 26 2002
-+Authors:
+ 3. charge-commit-cancel
++=======================
 +
-+- Geert Uytterhoeven <geert@linux-m68k.org>, 21 July 1998
-+- James Simmons <jsimmons@user.sf.net>, Nov 26 2002
+ 	Memcg pages are charged in two steps:
+-		mem_cgroup_try_charge()
+-		mem_cgroup_commit_charge() or mem_cgroup_cancel_charge()
++
++		- mem_cgroup_try_charge()
++		- mem_cgroup_commit_charge() or mem_cgroup_cancel_charge()
  
- --------------------------------------------------------------------------------
+ 	At try_charge(), there are no flags to say "this page is charged".
+ 	at this point, usage += PAGE_SIZE.
+@@ -51,6 +65,8 @@ Please note that implementation details can be changed.
+ Under below explanation, we assume CONFIG_MEM_RES_CTRL_SWAP=y.
  
--	    ***  STRUCTURES USED BY THE FRAME BUFFER DEVICE API  ***
-+Structures used by the frame buffer device API
-+==============================================
+ 4. Anonymous
++============
++
+ 	Anonymous page is newly allocated at
+ 		  - page fault into MAP_ANONYMOUS mapping.
+ 		  - Copy-On-Write.
+@@ -78,34 +94,45 @@ Under below explanation, we assume CONFIG_MEM_RES_CTRL_SWAP=y.
+ 	(e) zap_pte() is called and swp_entry's refcnt -=1 -> 0.
  
- The following structures play a role in the game of frame buffer devices. They
- are defined in <linux/fb.h>.
-@@ -40,19 +46,18 @@ are defined in <linux/fb.h>.
-     Generic information, API and low level information about a specific frame
-     buffer device instance (slot number, board address, ...).
- 
--  - struct `par'
-+  - struct `par`
- 
-     Device dependent information that uniquely defines the video mode for this
-     particular piece of hardware.
- 
- 
----------------------------------------------------------------------------------
--
--	    ***  VISUALS USED BY THE FRAME BUFFER DEVICE API  ***
-+Visuals used by the frame buffer device API
-+===========================================
- 
- 
- Monochrome (FB_VISUAL_MONO01 and FB_VISUAL_MONO10)
---------------------------------------------------
-+--------------------------------------------------
- Each pixel is either black or white.
- 
- 
-@@ -70,7 +75,7 @@ The pixel value is broken up into red, green, and blue fields.
- 
- Direct color (FB_VISUAL_DIRECTCOLOR)
- ------------------------------------
--The pixel value is broken up into red, green, and blue fields, each of which 
-+The pixel value is broken up into red, green, and blue fields, each of which
- are looked up in separate red, green, and blue lookup tables.
- 
- 
-@@ -79,4 +84,3 @@ Grayscale displays
- Grayscale and static grayscale are special variants of pseudo color and static
- pseudo color, where the red, green and blue components are always equal to
- each other.
--
-diff --git a/Documentation/fb/lxfb.txt b/Documentation/fb/lxfb.rst
-similarity index 60%
-rename from Documentation/fb/lxfb.txt
-rename to Documentation/fb/lxfb.rst
-index 38b3ca6f6ca7..863e6b98fbae 100644
---- a/Documentation/fb/lxfb.txt
-+++ b/Documentation/fb/lxfb.rst
-@@ -1,7 +1,9 @@
--[This file is cloned from VesaFB/aty128fb]
--
-+=============
- What is lxfb?
--=================
+ 5. Page Cache
+-   	Page Cache is charged at
 +=============
 +
-+.. [This file is cloned from VesaFB/aty128fb]
++	Page Cache is charged at
+ 	- add_to_page_cache_locked().
+ 
+ 	The logic is very clear. (About migration, see below)
+-	Note: __remove_from_page_cache() is called by remove_from_page_cache()
+-	and __remove_mapping().
 +
++	Note:
++	  __remove_from_page_cache() is called by remove_from_page_cache()
++	  and __remove_mapping().
  
- This is a graphics framebuffer driver for AMD Geode LX based processors.
+ 6. Shmem(tmpfs) Page Cache
++===========================
++
+ 	The best way to understand shmem's page state transition is to read
+ 	mm/shmem.c.
++
+ 	But brief explanation of the behavior of memcg around shmem will be
+ 	helpful to understand the logic.
  
-@@ -23,9 +25,9 @@ How to use it?
- ==============
+ 	Shmem's page (just leaf page, not direct/indirect block) can be on
++
+ 		- radix-tree of shmem's inode.
+ 		- SwapCache.
+ 		- Both on radix-tree and SwapCache. This happens at swap-in
+ 		  and swap-out,
  
- Switching modes is done using  lxfb.mode_option=<resolution>... boot
--parameter or using `fbset' program.
-+parameter or using `fbset` program.
+ 	It's charged when...
++
+ 	- A new page is added to shmem's radix-tree.
+ 	- A swp page is read. (move a charge from swap_cgroup to page_cgroup)
  
--See Documentation/fb/modedb.txt for more information on modedb
-+See Documentation/fb/modedb.rst for more information on modedb
- resolutions.
- 
- 
-@@ -42,11 +44,12 @@ You can pass kernel command line options to lxfb with lxfb.<option>.
- For example, lxfb.mode_option=800x600@75.
- Accepted options:
- 
--mode_option	- specify the video mode.  Of the form
--		  <x>x<y>[-<bpp>][@<refresh>]
--vram		- size of video ram (normally auto-detected)
--vt_switch	- enable vt switching during suspend/resume.  The vt
--		  switch is slow, but harmless.
-+================ ==================================================
-+mode_option	 specify the video mode.  Of the form
-+		 <x>x<y>[-<bpp>][@<refresh>]
-+vram		 size of video ram (normally auto-detected)
-+vt_switch	 enable vt switching during suspend/resume.  The vt
-+		 switch is slow, but harmless.
-+================ ==================================================
- 
----
- Andres Salomon <dilinger@debian.org>
-diff --git a/Documentation/fb/matroxfb.txt b/Documentation/fb/matroxfb.rst
-similarity index 32%
-rename from Documentation/fb/matroxfb.txt
-rename to Documentation/fb/matroxfb.rst
-index b95f5bb522f2..f1859d98606e 100644
---- a/Documentation/fb/matroxfb.txt
-+++ b/Documentation/fb/matroxfb.rst
-@@ -1,8 +1,10 @@
--[This file is cloned from VesaFB. Thanks go to Gerd Knorr]
--
+ 7. Page Migration
 +=================
- What is matroxfb?
- =================
  
-+.. [This file is cloned from VesaFB. Thanks go to Gerd Knorr]
+ 	mem_cgroup_migrate()
+ 
+ 8. LRU
++======
+         Each memcg has its own private LRU. Now, its handling is under global
+ 	VM's control (means that it's handled under global pgdat->lru_lock).
+ 	Almost all routines around memcg's LRU is called by global LRU's
+@@ -114,163 +141,211 @@ Under below explanation, we assume CONFIG_MEM_RES_CTRL_SWAP=y.
+ 	A special function is mem_cgroup_isolate_pages(). This scans
+ 	memcg's private LRU and call __isolate_lru_page() to extract a page
+ 	from LRU.
 +
-+
- This is a driver for a graphic framebuffer for Matrox devices on
- Alpha, Intel and PPC boxes.
- 
-@@ -23,57 +25,66 @@ How to use it?
- ==============
- 
- Switching modes is done using the video=matroxfb:vesa:... boot parameter
--or using `fbset' program.
-+or using `fbset` program.
- 
- If you want, for example, enable a resolution of 1280x1024x24bpp you should
- pass to the kernel this command line: "video=matroxfb:vesa:0x1BB".
- 
- You should compile in both vgacon (to boot if you remove you Matrox from
- box) and matroxfb (for graphics mode). You should not compile-in vesafb
--unless you have primary display on non-Matrox VBE2.0 device (see 
--Documentation/fb/vesafb.txt for details).
-+unless you have primary display on non-Matrox VBE2.0 device (see
-+Documentation/fb/vesafb.rst for details).
- 
- Currently supported video modes are (through vesa:... interface, PowerMac
- has [as addon] compatibility code):
+ 	(By __isolate_lru_page(), the page is removed from both of global and
+-	 private LRU.)
++	private LRU.)
  
  
--[Graphic modes]
--
--bpp | 640x400  640x480  768x576  800x600  960x720
------+--------------------------------------------
--  4 |            0x12             0x102            
--  8 |  0x100    0x101    0x180    0x103    0x188   
-- 15 |           0x110    0x181    0x113    0x189   
-- 16 |           0x111    0x182    0x114    0x18A   
-- 24 |           0x1B2    0x184    0x1B5    0x18C   
-- 32 |           0x112    0x183    0x115    0x18B   
--
--
--[Graphic modes (continued)]
--
--bpp | 1024x768 1152x864 1280x1024 1408x1056 1600x1200
------+------------------------------------------------
--  4 |   0x104             0x106
--  8 |   0x105    0x190    0x107     0x198     0x11C
-- 15 |   0x116    0x191    0x119     0x199     0x11D
-- 16 |   0x117    0x192    0x11A     0x19A     0x11E
-- 24 |   0x1B8    0x194    0x1BB     0x19C     0x1BF
-- 32 |   0x118    0x193    0x11B     0x19B
--
--
--[Text modes]
--
--text | 640x400  640x480  1056x344  1056x400  1056x480
-------+------------------------------------------------
-- 8x8 |  0x1C0    0x108     0x10A     0x10B     0x10C
--8x16 | 2, 3, 7                       0x109
--
--You can enter these number either hexadecimal (leading `0x') or decimal
-+Graphic modes
-+-------------
-+
-+===  =======  =======  =======  =======  =======
-+bpp  640x400  640x480  768x576  800x600  960x720
-+===  =======  =======  =======  =======  =======
-+  4             0x12             0x102
-+  8   0x100    0x101    0x180    0x103    0x188
-+ 15            0x110    0x181    0x113    0x189
-+ 16            0x111    0x182    0x114    0x18A
-+ 24            0x1B2    0x184    0x1B5    0x18C
-+ 32            0x112    0x183    0x115    0x18B
-+===  =======  =======  =======  =======  =======
-+
-+
-+Graphic modes (continued)
+ 9. Typical Tests.
++=================
+ 
+  Tests for racy cases.
+ 
+- 9.1 Small limit to memcg.
++9.1 Small limit to memcg.
 +-------------------------
 +
-+===  ======== ======== ========= ========= =========
-+bpp  1024x768 1152x864 1280x1024 1408x1056 1600x1200
-+===  ======== ======== ========= ========= =========
-+  4    0x104             0x106
-+  8    0x105    0x190    0x107     0x198     0x11C
-+ 15    0x116    0x191    0x119     0x199     0x11D
-+ 16    0x117    0x192    0x11A     0x19A     0x11E
-+ 24    0x1B8    0x194    0x1BB     0x19C     0x1BF
-+ 32    0x118    0x193    0x11B     0x19B
-+===  ======== ======== ========= ========= =========
+ 	When you do test to do racy case, it's good test to set memcg's limit
+ 	to be very small rather than GB. Many races found in the test under
+ 	xKB or xxMB limits.
 +
+ 	(Memory behavior under GB and Memory behavior under MB shows very
+-	 different situation.)
++	different situation.)
 +
-+Text modes
-+----------
-+
-+==== =======  =======  ========  ========  ========
-+text 640x400  640x480  1056x344  1056x400  1056x480
-+==== =======  =======  ========  ========  ========
-+ 8x8   0x1C0    0x108     0x10A     0x10B     0x10C
-+8x16 2, 3, 7                        0x109
-+==== =======  =======  ========  ========  ========
-+
-+You can enter these number either hexadecimal (leading `0x`) or decimal
- (0x100 = 256). You can also use value + 512 to achieve compatibility
- with your old number passed to vesafb.
- 
- Non-listed number can be achieved by more complicated command-line, for
--example 1600x1200x32bpp can be specified by `video=matroxfb:vesa:0x11C,depth:32'.
-+example 1600x1200x32bpp can be specified by `video=matroxfb:vesa:0x11C,depth:32`.
- 
- 
- X11
-@@ -85,7 +96,7 @@ works fine.
- 
- Running another (accelerated) X-Server like XF86_SVGA works too. But (at least)
- XFree servers have big troubles in multihead configurations (even on first
--head, not even talking about second). Running XFree86 4.x accelerated mga 
-+head, not even talking about second). Running XFree86 4.x accelerated mga
- driver is possible, but you must not enable DRI - if you do, resolution and
- color depth of your X desktop must match resolution and color depths of your
- virtual consoles, otherwise X will corrupt accelerator settings.
-@@ -96,7 +107,7 @@ SVGALib
- 
- Driver contains SVGALib compatibility code. It is turned on by choosing textual
- mode for console. You can do it at boot time by using videomode
--2,3,7,0x108-0x10C or 0x1C0. At runtime, `fbset -depth 0' does this work.
-+2,3,7,0x108-0x10C or 0x1C0. At runtime, `fbset -depth 0` does this work.
- Unfortunately, after SVGALib application exits, screen contents is corrupted.
- Switching to another console and back fixes it. I hope that it is SVGALib's
- problem and not mine, but I'm not sure.
-@@ -106,175 +117,188 @@ Configuration
- =============
- 
- You can pass kernel command line options to matroxfb with
--`video=matroxfb:option1,option2:value2,option3' (multiple options should be 
--separated by comma, values are separated from options by `:'). 
-+`video=matroxfb:option1,option2:value2,option3` (multiple options should be
-+separated by comma, values are separated from options by `:`).
- Accepted options:
- 
--mem:X    - size of memory (X can be in megabytes, kilobytes or bytes)
--           You can only decrease value determined by driver because of
--	   it always probe for memory. Default is to use whole detected
--	   memory usable for on-screen display (i.e. max. 8 MB).
--disabled - do not load driver; you can use also `off', but `disabled'
--           is here too.
--enabled  - load driver, if you have `video=matroxfb:disabled' in LILO
--           configuration, you can override it by this (you cannot override
--	   `off'). It is default.
--noaccel  - do not use acceleration engine. It does not work on Alphas.
--accel    - use acceleration engine. It is default.
--nopan    - create initial consoles with vyres = yres, thus disabling virtual
--           scrolling.
--pan      - create initial consoles as tall as possible (vyres = memory/vxres).
--           It is default.
--nopciretry - disable PCI retries. It is needed for some broken chipsets,
--           it is autodetected for intel's 82437. In this case device does
--	   not comply to PCI 2.1 specs (it will not guarantee that every
--	   transaction terminate with success or retry in 32 PCLK).
--pciretry - enable PCI retries. It is default, except for intel's 82437.
--novga    - disables VGA I/O ports. It is default if BIOS did not enable device.
--           You should not use this option, some boards then do not restart
--	   without power off.
--vga      - preserve state of VGA I/O ports. It is default. Driver does not
--           enable VGA I/O if BIOS did not it (it is not safe to enable it in
--	   most cases).
--nobios   - disables BIOS ROM. It is default if BIOS did not enable BIOS itself.
--           You should not use this option, some boards then do not restart
--	   without power off.
--bios     - preserve state of BIOS ROM. It is default. Driver does not enable
--           BIOS if BIOS was not enabled before.
--noinit   - tells driver, that devices were already initialized. You should use
--           it if you have G100 and/or if driver cannot detect memory, you see
--	   strange pattern on screen and so on. Devices not enabled by BIOS
--	   are still initialized. It is default.
--init     - driver initializes every device it knows about.
--memtype  - specifies memory type, implies 'init'. This is valid only for G200 
--           and G400 and has following meaning:
--             G200: 0 -> 2x128Kx32 chips, 2MB onboard, probably sgram
--                   1 -> 2x128Kx32 chips, 4MB onboard, probably sgram
--                   2 -> 2x256Kx32 chips, 4MB onboard, probably sgram
--                   3 -> 2x256Kx32 chips, 8MB onboard, probably sgram
--                   4 -> 2x512Kx16 chips, 8/16MB onboard, probably sdram only
--                   5 -> same as above
--                   6 -> 4x128Kx32 chips, 4MB onboard, probably sgram
--                   7 -> 4x128Kx32 chips, 8MB onboard, probably sgram
--             G400: 0 -> 2x512Kx16 SDRAM, 16/32MB
--                        2x512Kx32 SGRAM, 16/32MB
--                   1 -> 2x256Kx32 SGRAM, 8/16MB
--                   2 -> 4x128Kx32 SGRAM, 8/16MB
--                   3 -> 4x512Kx32 SDRAM, 32MB
--                   4 -> 4x256Kx32 SGRAM, 16/32MB
--                   5 -> 2x1Mx32 SDRAM, 32MB
--                   6 -> reserved
--                   7 -> reserved
--           You should use sdram or sgram parameter in addition to memtype 
--           parameter.
--nomtrr   - disables write combining on frame buffer. This slows down driver but
--           there is reported minor incompatibility between GUS DMA and XFree
--	   under high loads if write combining is enabled (sound dropouts).
--mtrr     - enables write combining on frame buffer. It speeds up video accesses
--           much. It is default. You must have MTRR support enabled in kernel
--	   and your CPU must have MTRR (f.e. Pentium II have them).
--sgram    - tells to driver that you have Gxx0 with SGRAM memory. It has no
--           effect without `init'.
--sdram    - tells to driver that you have Gxx0 with SDRAM memory.
--           It is a default.
--inv24    - change timings parameters for 24bpp modes on Millennium and
--           Millennium II. Specify this if you see strange color shadows around
--	   characters.
--noinv24  - use standard timings. It is the default.
--inverse  - invert colors on screen (for LCD displays)
--noinverse - show true colors on screen. It is default.
--dev:X    - bind driver to device X. Driver numbers device from 0 up to N,
--           where device 0 is first `known' device found, 1 second and so on.
--	   lspci lists devices in this order.
--	   Default is `every' known device.
--nohwcursor - disables hardware cursor (use software cursor instead).
--hwcursor - enables hardware cursor. It is default. If you are using
--           non-accelerated mode (`noaccel' or `fbset -accel false'), software
--	   cursor is used (except for text mode).
--noblink  - disables cursor blinking. Cursor in text mode always blinks (hw
--           limitation).
--blink    - enables cursor blinking. It is default.
--nofastfont - disables fastfont feature. It is default.
--fastfont:X - enables fastfont feature. X specifies size of memory reserved for
--             font data, it must be >= (fontwidth*fontheight*chars_in_font)/8.
-+============ ===================================================================
-+mem:X        size of memory (X can be in megabytes, kilobytes or bytes)
-+	     You can only decrease value determined by driver because of
-+	     it always probe for memory. Default is to use whole detected
-+	     memory usable for on-screen display (i.e. max. 8 MB).
-+disabled     do not load driver; you can use also `off`, but `disabled`
-+	     is here too.
-+enabled      load driver, if you have `video=matroxfb:disabled` in LILO
-+	     configuration, you can override it by this (you cannot override
-+	     `off`). It is default.
-+noaccel      do not use acceleration engine. It does not work on Alphas.
-+accel        use acceleration engine. It is default.
-+nopan        create initial consoles with vyres = yres, thus disabling virtual
-+	     scrolling.
-+pan          create initial consoles as tall as possible (vyres = memory/vxres).
-+	     It is default.
-+nopciretry   disable PCI retries. It is needed for some broken chipsets,
-+	     it is autodetected for intel's 82437. In this case device does
-+	     not comply to PCI 2.1 specs (it will not guarantee that every
-+	     transaction terminate with success or retry in 32 PCLK).
-+pciretry     enable PCI retries. It is default, except for intel's 82437.
-+novga        disables VGA I/O ports. It is default if BIOS did not enable
-+	     device. You should not use this option, some boards then do not
-+	     restart without power off.
-+vga          preserve state of VGA I/O ports. It is default. Driver does not
-+	     enable VGA I/O if BIOS did not it (it is not safe to enable it in
-+	     most cases).
-+nobios       disables BIOS ROM. It is default if BIOS did not enable BIOS
-+	     itself. You should not use this option, some boards then do not
-+	     restart without power off.
-+bios         preserve state of BIOS ROM. It is default. Driver does not enable
-+	     BIOS if BIOS was not enabled before.
-+noinit       tells driver, that devices were already initialized. You should use
-+	     it if you have G100 and/or if driver cannot detect memory, you see
-+	     strange pattern on screen and so on. Devices not enabled by BIOS
-+	     are still initialized. It is default.
-+init         driver initializes every device it knows about.
-+memtype      specifies memory type, implies 'init'. This is valid only for G200
-+	     and G400 and has following meaning:
-+
-+	       G200:
-+		 -  0 -> 2x128Kx32 chips, 2MB onboard, probably sgram
-+		 -  1 -> 2x128Kx32 chips, 4MB onboard, probably sgram
-+		 -  2 -> 2x256Kx32 chips, 4MB onboard, probably sgram
-+		 -  3 -> 2x256Kx32 chips, 8MB onboard, probably sgram
-+		 -  4 -> 2x512Kx16 chips, 8/16MB onboard, probably sdram only
-+		 -  5 -> same as above
-+		 -  6 -> 4x128Kx32 chips, 4MB onboard, probably sgram
-+		 -  7 -> 4x128Kx32 chips, 8MB onboard, probably sgram
-+	       G400:
-+		 -  0 -> 2x512Kx16 SDRAM, 16/32MB
-+		 -	 2x512Kx32 SGRAM, 16/32MB
-+		 -  1 -> 2x256Kx32 SGRAM, 8/16MB
-+		 -  2 -> 4x128Kx32 SGRAM, 8/16MB
-+		 -  3 -> 4x512Kx32 SDRAM, 32MB
-+		 -  4 -> 4x256Kx32 SGRAM, 16/32MB
-+		 -  5 -> 2x1Mx32 SDRAM, 32MB
-+		 -  6 -> reserved
-+		 -  7 -> reserved
-+
-+	     You should use sdram or sgram parameter in addition to memtype
-+	     parameter.
-+nomtrr       disables write combining on frame buffer. This slows down driver
-+	     but there is reported minor incompatibility between GUS DMA and
-+	     XFree under high loads if write combining is enabled (sound
-+	     dropouts).
-+mtrr         enables write combining on frame buffer. It speeds up video
-+	     accesses much. It is default. You must have MTRR support enabled
-+	     in kernel and your CPU must have MTRR (f.e. Pentium II have them).
-+sgram        tells to driver that you have Gxx0 with SGRAM memory. It has no
-+	     effect without `init`.
-+sdram        tells to driver that you have Gxx0 with SDRAM memory.
-+	     It is a default.
-+inv24        change timings parameters for 24bpp modes on Millennium and
-+	     Millennium II. Specify this if you see strange color shadows
-+	     around  characters.
-+noinv24      use standard timings. It is the default.
-+inverse      invert colors on screen (for LCD displays)
-+noinverse    show true colors on screen. It is default.
-+dev:X        bind driver to device X. Driver numbers device from 0 up to N,
-+	     where device 0 is first `known` device found, 1 second and so on.
-+	     lspci lists devices in this order.
-+	     Default is `every` known device.
-+nohwcursor   disables hardware cursor (use software cursor instead).
-+hwcursor     enables hardware cursor. It is default. If you are using
-+	     non-accelerated mode (`noaccel` or `fbset -accel false`), software
-+	     cursor is used (except for text mode).
-+noblink      disables cursor blinking. Cursor in text mode always blinks (hw
-+	     limitation).
-+blink        enables cursor blinking. It is default.
-+nofastfont   disables fastfont feature. It is default.
-+fastfont:X   enables fastfont feature. X specifies size of memory reserved for
-+	     font data, it must be >= (fontwidth*fontheight*chars_in_font)/8.
- 	     It is faster on Gx00 series, but slower on older cards.
--grayscale - enable grayscale summing. It works in PSEUDOCOLOR modes (text,
--            4bpp, 8bpp). In DIRECTCOLOR modes it is limited to characters
--	    displayed through putc/putcs. Direct accesses to framebuffer
--	    can paint colors.
--nograyscale - disable grayscale summing. It is default.
--cross4MB - enables that pixel line can cross 4MB boundary. It is default for
--           non-Millennium.
--nocross4MB - pixel line must not cross 4MB boundary. It is default for
--             Millennium I or II, because of these devices have hardware
-+grayscale    enable grayscale summing. It works in PSEUDOCOLOR modes (text,
-+	     4bpp, 8bpp). In DIRECTCOLOR modes it is limited to characters
-+	     displayed through putc/putcs. Direct accesses to framebuffer
-+	     can paint colors.
-+nograyscale  disable grayscale summing. It is default.
-+cross4MB     enables that pixel line can cross 4MB boundary. It is default for
-+	     non-Millennium.
-+nocross4MB   pixel line must not cross 4MB boundary. It is default for
-+	     Millennium I or II, because of these devices have hardware
- 	     limitations which do not allow this. But this option is
- 	     incompatible with some (if not all yet released) versions of
- 	     XF86_FBDev.
--dfp      - enables digital flat panel interface. This option is incompatible with
--           secondary (TV) output - if DFP is active, TV output must be
--	   inactive and vice versa. DFP always uses same timing as primary
--	   (monitor) output.
--dfp:X    - use settings X for digital flat panel interface. X is number from
--           0 to 0xFF, and meaning of each individual bit is described in
--	   G400 manual, in description of DAC register 0x1F. For normal operation
--	   you should set all bits to zero, except lowest bit. This lowest bit
--	   selects who is source of display clocks, whether G400, or panel.
--	   Default value is now read back from hardware - so you should specify
--	   this value only if you are also using `init' parameter.
--outputs:XYZ - set mapping between CRTC and outputs. Each letter can have value
--           of 0 (for no CRTC), 1 (CRTC1) or 2 (CRTC2), and first letter corresponds
--	   to primary analog output, second letter to the secondary analog output
--	   and third letter to the DVI output. Default setting is 100 for
--	   cards below G400 or G400 without DFP, 101 for G400 with DFP, and
--	   111 for G450 and G550. You can set mapping only on first card,
--	   use matroxset for setting up other devices.
--vesa:X   - selects startup videomode. X is number from 0 to 0x1FF, see table
--           above for detailed explanation. Default is 640x480x8bpp if driver
--	   has 8bpp support. Otherwise first available of 640x350x4bpp,
--	   640x480x15bpp, 640x480x24bpp, 640x480x32bpp or 80x25 text
--	   (80x25 text is always available).
-+dfp          enables digital flat panel interface. This option is incompatible
-+	     with secondary (TV) output - if DFP is active, TV output must be
-+	     inactive and vice versa. DFP always uses same timing as primary
-+	     (monitor) output.
-+dfp:X        use settings X for digital flat panel interface. X is number from
-+	     0 to 0xFF, and meaning of each individual bit is described in
-+	     G400 manual, in description of DAC register 0x1F. For normal
-+	     operation you should set all bits to zero, except lowest bit. This
-+	     lowest bit selects who is source of display clocks, whether G400,
-+	     or panel. Default value is now read back from hardware - so you
-+	     should specify this value only if you are also using `init`
-+	     parameter.
-+outputs:XYZ  set mapping between CRTC and outputs. Each letter can have value
-+	     of 0 (for no CRTC), 1 (CRTC1) or 2 (CRTC2), and first letter
-+	     corresponds to primary analog output, second letter to the
-+	     secondary analog output and third letter to the DVI output.
-+	     Default setting is 100 for cards below G400 or G400 without DFP,
-+	     101 for G400 with DFP, and 111 for G450 and G550. You can set
-+	     mapping only on first card, use matroxset for setting up other
-+	     devices.
-+vesa:X       selects startup videomode. X is number from 0 to 0x1FF, see table
-+	     above for detailed explanation. Default is 640x480x8bpp if driver
-+	     has 8bpp support. Otherwise first available of 640x350x4bpp,
-+	     640x480x15bpp, 640x480x24bpp, 640x480x32bpp or 80x25 text
-+	     (80x25 text is always available).
-+============ ===================================================================
- 
--If you are not satisfied with videomode selected by `vesa' option, you
-+If you are not satisfied with videomode selected by `vesa` option, you
- can modify it with these options:
- 
--xres:X   - horizontal resolution, in pixels. Default is derived from `vesa'
--           option.
--yres:X   - vertical resolution, in pixel lines. Default is derived from `vesa'
--           option.
--upper:X  - top boundary: lines between end of VSYNC pulse and start of first
--           pixel line of picture. Default is derived from `vesa' option.
--lower:X  - bottom boundary: lines between end of picture and start of VSYNC
--           pulse. Default is derived from `vesa' option.
--vslen:X  - length of VSYNC pulse, in lines. Default is derived from `vesa'
--           option.
--left:X   - left boundary: pixels between end of HSYNC pulse and first pixel.
--           Default is derived from `vesa' option.
--right:X  - right boundary: pixels between end of picture and start of HSYNC
--           pulse. Default is derived from `vesa' option.
--hslen:X  - length of HSYNC pulse, in pixels. Default is derived from `vesa'
--           option.
--pixclock:X - dotclocks, in ps (picoseconds). Default is derived from `vesa'
--             option and from `fh' and `fv' options.
--sync:X   - sync. pulse - bit 0 inverts HSYNC polarity, bit 1 VSYNC polarity.
--           If bit 3 (value 0x08) is set, composite sync instead of HSYNC is
--	   generated. If bit 5 (value 0x20) is set, sync on green is turned on.
--	   Do not forget that if you want sync on green, you also probably
--	   want composite sync.
--	   Default depends on `vesa'.
--depth:X  - Bits per pixel: 0=text, 4,8,15,16,24 or 32. Default depends on
--           `vesa'.
-+============ ===================================================================
-+xres:X       horizontal resolution, in pixels. Default is derived from `vesa`
-+	     option.
-+yres:X       vertical resolution, in pixel lines. Default is derived from `vesa`
-+	     option.
-+upper:X      top boundary: lines between end of VSYNC pulse and start of first
-+	     pixel line of picture. Default is derived from `vesa` option.
-+lower:X      bottom boundary: lines between end of picture and start of VSYNC
-+	     pulse. Default is derived from `vesa` option.
-+vslen:X      length of VSYNC pulse, in lines. Default is derived from `vesa`
-+	     option.
-+left:X       left boundary: pixels between end of HSYNC pulse and first pixel.
-+	     Default is derived from `vesa` option.
-+right:X      right boundary: pixels between end of picture and start of HSYNC
-+	     pulse. Default is derived from `vesa` option.
-+hslen:X      length of HSYNC pulse, in pixels. Default is derived from `vesa`
-+	     option.
-+pixclock:X   dotclocks, in ps (picoseconds). Default is derived from `vesa`
-+	     option and from `fh` and `fv` options.
-+sync:X       sync. pulse - bit 0 inverts HSYNC polarity, bit 1 VSYNC polarity.
-+	     If bit 3 (value 0x08) is set, composite sync instead of HSYNC is
-+	     generated. If bit 5 (value 0x20) is set, sync on green is turned
-+	     on. Do not forget that if you want sync on green, you also probably
-+	     want composite sync.
-+	     Default depends on `vesa`.
-+depth:X      Bits per pixel: 0=text, 4,8,15,16,24 or 32. Default depends on
-+	     `vesa`.
-+============ ===================================================================
- 
- If you know capabilities of your monitor, you can specify some (or all) of
--`maxclk', `fh' and `fv'. In this case, `pixclock' is computed so that
-+`maxclk`, `fh` and `fv`. In this case, `pixclock` is computed so that
- pixclock <= maxclk, real_fh <= fh and real_fv <= fv.
- 
--maxclk:X - maximum dotclock. X can be specified in MHz, kHz or Hz. Default is
--           `don't care'.
--fh:X     - maximum horizontal synchronization frequency. X can be specified
--           in kHz or Hz. Default is `don't care'.
--fv:X     - maximum vertical frequency. X must be specified in Hz. Default is
--           70 for modes derived from `vesa' with yres <= 400, 60Hz for
--	   yres > 400.
-+============ ==================================================================
-+maxclk:X     maximum dotclock. X can be specified in MHz, kHz or Hz. Default is
-+	     `don`t care`.
-+fh:X         maximum horizontal synchronization frequency. X can be specified
-+	     in kHz or Hz. Default is `don't care`.
-+fv:X         maximum vertical frequency. X must be specified in Hz. Default is
-+	     70 for modes derived from `vesa` with yres <= 400, 60Hz for
-+	     yres > 400.
-+============ ==================================================================
- 
- 
- Limitations
-@@ -282,51 +306,58 @@ Limitations
- 
- There are known and unknown bugs, features and misfeatures.
- Currently there are following known bugs:
-- + SVGALib does not restore screen on exit
-- + generic fbcon-cfbX procedures do not work on Alphas. Due to this,
--   `noaccel' (and cfb4 accel) driver does not work on Alpha. So everyone
--   with access to /dev/fb* on Alpha can hang machine (you should restrict
--   access to /dev/fb* - everyone with access to this device can destroy
-+
-+ - SVGALib does not restore screen on exit
-+ - generic fbcon-cfbX procedures do not work on Alphas. Due to this,
-+   `noaccel` (and cfb4 accel) driver does not work on Alpha. So everyone
-+   with access to `/dev/fb*` on Alpha can hang machine (you should restrict
-+   access to `/dev/fb*` - everyone with access to this device can destroy
-    your monitor, believe me...).
-- + 24bpp does not support correctly XF-FBDev on big-endian architectures.
-- + interlaced text mode is not supported; it looks like hardware limitation,
-+ - 24bpp does not support correctly XF-FBDev on big-endian architectures.
-+ - interlaced text mode is not supported; it looks like hardware limitation,
-    but I'm not sure.
-- + Gxx0 SGRAM/SDRAM is not autodetected.
-- + If you are using more than one framebuffer device, you must boot kernel
-+ - Gxx0 SGRAM/SDRAM is not autodetected.
-+ - If you are using more than one framebuffer device, you must boot kernel
-    with 'video=scrollback:0'.
-- + maybe more...
-+ - maybe more...
-+
- And following misfeatures:
-- + SVGALib does not restore screen on exit.
-- + pixclock for text modes is limited by hardware to
--    83 MHz on G200
--    66 MHz on Millennium I
--    60 MHz on Millennium II
-+
-+ - SVGALib does not restore screen on exit.
-+ - pixclock for text modes is limited by hardware to
-+
-+    - 83 MHz on G200
-+    - 66 MHz on Millennium I
-+    - 60 MHz on Millennium II
-+
-    Because I have no access to other devices, I do not know specific
-    frequencies for them. So driver does not check this and allows you to
-    set frequency higher that this. It causes sparks, black holes and other
-    pretty effects on screen. Device was not destroyed during tests. :-)
-- + my Millennium G200 oscillator has frequency range from 35 MHz to 380 MHz
-+ - my Millennium G200 oscillator has frequency range from 35 MHz to 380 MHz
-    (and it works with 8bpp on about 320 MHz dotclocks (and changed mclk)).
-    But Matrox says on product sheet that VCO limit is 50-250 MHz, so I believe
-    them (maybe that chip overheats, but it has a very big cooler (G100 has
-    none), so it should work).
-- + special mixed video/graphics videomodes of Mystique and Gx00 - 2G8V16 and
-+ - special mixed video/graphics videomodes of Mystique and Gx00 - 2G8V16 and
-    G16V16 are not supported
-- + color keying is not supported
-- + feature connector of Mystique and Gx00 is set to VGA mode (it is disabled
-+ - color keying is not supported
-+ - feature connector of Mystique and Gx00 is set to VGA mode (it is disabled
-    by BIOS)
-- + DDC (monitor detection) is supported through dualhead driver
-- + some check for input values are not so strict how it should be (you can
-+ - DDC (monitor detection) is supported through dualhead driver
-+ - some check for input values are not so strict how it should be (you can
-    specify vslen=4000 and so on).
-- + maybe more...
-+ - maybe more...
-+
- And following features:
-- + 4bpp is available only on Millennium I and Millennium II. It is hardware
-+
-+ - 4bpp is available only on Millennium I and Millennium II. It is hardware
-    limitation.
-- + selection between 1:5:5:5 and 5:6:5 16bpp videomode is done by -rgba 
-+ - selection between 1:5:5:5 and 5:6:5 16bpp videomode is done by -rgba
-    option of fbset: "fbset -depth 16 -rgba 5,5,5" selects 1:5:5:5, anything
-    else selects 5:6:5 mode.
-- + text mode uses 6 bit VGA palette instead of 8 bit (one of 262144 colors
--   instead of one of 16M colors). It is due to hardware limitation of 
-+ - text mode uses 6 bit VGA palette instead of 8 bit (one of 262144 colors
-+   instead of one of 16M colors). It is due to hardware limitation of
-    Millennium I/II and SVGALib compatibility.
- 
- 
-@@ -334,42 +365,42 @@ Benchmarks
- ==========
- It is time to redraw whole screen 1000 times in 1024x768, 60Hz. It is
- time for draw 6144000 characters on screen through /dev/vcsa
--(for 32bpp it is about 3GB of data (exactly 3000 MB); for 8x16 font in 
-+(for 32bpp it is about 3GB of data (exactly 3000 MB); for 8x16 font in
- 16 seconds, i.e. 187 MBps).
- Times were obtained from one older version of driver, now they are about 3%
- faster, it is kernel-space only time on P-II/350 MHz, Millennium I in 33 MHz
--PCI slot, G200 in AGP 2x slot. I did not test vgacon.
-+PCI slot, G200 in AGP 2x slot. I did not test vgacon::
- 
--NOACCEL
--        8x16                 12x22
--        Millennium I  G200   Millennium I  G200
--8bpp    16.42         9.54   12.33         9.13
--16bpp   21.00        15.70   19.11        15.02
--24bpp   36.66        36.66   35.00        35.00
--32bpp   35.00        30.00   33.85        28.66
-+  NOACCEL
-+	8x16                 12x22
-+	Millennium I  G200   Millennium I  G200
-+  8bpp    16.42         9.54   12.33         9.13
-+  16bpp   21.00        15.70   19.11        15.02
-+  24bpp   36.66        36.66   35.00        35.00
-+  32bpp   35.00        30.00   33.85        28.66
- 
--ACCEL, nofastfont
--        8x16                 12x22                6x11
-+  ACCEL, nofastfont
-+	8x16                 12x22                6x11
- 	Millennium I  G200   Millennium I  G200   Millennium I  G200
--8bpp     7.79         7.24   13.55         7.78   30.00        21.01
--16bpp    9.13         7.78   16.16         7.78   30.00        21.01
--24bpp   14.17        10.72   18.69        10.24   34.99        21.01
--32bpp   16.15	     16.16   18.73        13.09   34.99        21.01
-+  8bpp     7.79         7.24   13.55         7.78   30.00        21.01
-+  16bpp    9.13         7.78   16.16         7.78   30.00        21.01
-+  24bpp   14.17        10.72   18.69        10.24   34.99        21.01
-+  32bpp   16.15	     16.16   18.73        13.09   34.99        21.01
- 
--ACCEL, fastfont
--        8x16                 12x22                6x11
-+  ACCEL, fastfont
-+	8x16                 12x22                6x11
- 	Millennium I  G200   Millennium I  G200   Millennium I  G200
--8bpp     8.41         6.01    6.54         4.37   16.00        10.51
--16bpp    9.54         9.12    8.76         6.17   17.52        14.01
--24bpp   15.00        12.36   11.67        10.00   22.01        18.32
--32bpp   16.18        18.29*  12.71        12.74   24.44        21.00
-+  8bpp     8.41         6.01    6.54         4.37   16.00        10.51
-+  16bpp    9.54         9.12    8.76         6.17   17.52        14.01
-+  24bpp   15.00        12.36   11.67        10.00   22.01        18.32
-+  32bpp   16.18        18.29*  12.71        12.74   24.44        21.00
- 
--TEXT
--        8x16
-+  TEXT
-+	8x16
- 	Millennium I  G200
--TEXT     3.29         1.50
-+  TEXT     3.29         1.50
- 
--* Yes, it is slower than Millennium I.
-+  * Yes, it is slower than Millennium I.
- 
- 
- Dualhead G400
-@@ -408,6 +439,5 @@ Driver supports dualhead G450 with some limitations:
-  + kernel is not fully multihead ready, so some things are impossible to do.
-  + if you compiled it as module, you must insert matroxfb_g450 and matroxfb_crtc2
-    into kernel.
--	
----
-+
- Petr Vandrovec <vandrove@vc.cvut.cz>
-diff --git a/Documentation/fb/metronomefb.txt b/Documentation/fb/metronomefb.rst
-similarity index 98%
-rename from Documentation/fb/metronomefb.txt
-rename to Documentation/fb/metronomefb.rst
-index 237ca412582d..63e1d31a7e54 100644
---- a/Documentation/fb/metronomefb.txt
-+++ b/Documentation/fb/metronomefb.rst
-@@ -1,6 +1,9 @@
--			Metronomefb
--			-----------
-+===========
-+Metronomefb
-+===========
-+
- Maintained by Jaya Kumar <jayakumar.lkml.gmail.com>
-+
- Last revised: Mar 10, 2008
- 
- Metronomefb is a driver for the Metronome display controller. The controller
-@@ -33,4 +36,3 @@ the physical media.
- Metronomefb uses the deferred IO interface so that it can provide a memory
- mappable frame buffer. It has been tested with tinyx (Xfbdev). It is known
- to work at this time with xeyes, xclock, xloadimage, xpdf.
--
-diff --git a/Documentation/fb/modedb.txt b/Documentation/fb/modedb.rst
-similarity index 87%
-rename from Documentation/fb/modedb.txt
-rename to Documentation/fb/modedb.rst
-index 16aa08453911..3c2397293977 100644
---- a/Documentation/fb/modedb.txt
-+++ b/Documentation/fb/modedb.rst
-@@ -1,6 +1,6 @@
--
--
--			modedb default video mode support
-+=================================
-+modedb default video mode support
-+=================================
- 
- 
- Currently all frame buffer device drivers have their own video mode databases,
-@@ -18,7 +18,7 @@ When a frame buffer device receives a video= option it doesn't know, it should
- consider that to be a video mode option. If no frame buffer device is specified
- in a video= option, fbmem considers that to be a global video mode option.
- 
--Valid mode specifiers (mode_option argument):
-+Valid mode specifiers (mode_option argument)::
- 
-     <xres>x<yres>[M][R][-<bpp>][@<refresh>][i][m][eDd]
-     <name>[-<bpp>][@<refresh>]
-@@ -45,15 +45,18 @@ signals (e.g. HDMI and DVI-I). For other outputs it behaves like 'e'. If 'd'
- is specified the output is disabled.
- 
- You can additionally specify which output the options matches to.
--To force the VGA output to be enabled and drive a specific mode say:
-+To force the VGA output to be enabled and drive a specific mode say::
-+
-     video=VGA-1:1280x1024@60me
- 
--Specifying the option multiple times for different ports is possible, e.g.:
-+Specifying the option multiple times for different ports is possible, e.g.::
-+
-     video=LVDS-1:d video=HDMI-1:D
- 
--***** oOo ***** oOo ***** oOo ***** oOo ***** oOo ***** oOo ***** oOo *****
-+-----------------------------------------------------------------------------
- 
- What is the VESA(TM) Coordinated Video Timings (CVT)?
-+=====================================================
- 
- From the VESA(TM) Website:
- 
-@@ -90,14 +93,14 @@ determined from its EDID. The version 1.3 of the EDID has extra 128-byte
- blocks where additional timing information is placed.  As of this time, there
- is no support yet in the layer to parse this additional blocks.)
- 
--CVT also introduced a new naming convention (should be seen from dmesg output):
-+CVT also introduced a new naming convention (should be seen from dmesg output)::
- 
-     <pix>M<a>[-R]
- 
-     where: pix = total amount of pixels in MB (xres x yres)
--           M   = always present
--           a   = aspect ratio (3 - 4:3; 4 - 5:4; 9 - 15:9, 16:9; A - 16:10)
--          -R   = reduced blanking
-+	   M   = always present
-+	   a   = aspect ratio (3 - 4:3; 4 - 5:4; 9 - 15:9, 16:9; A - 16:10)
-+	  -R   = reduced blanking
- 
- 	  example:  .48M3-R - 800x600 with reduced blanking
- 
-@@ -110,15 +113,15 @@ Note: VESA(TM) has restrictions on what is a standard CVT timing:
- If one of the above are not satisfied, the kernel will print a warning but the
- timings will still be calculated.
- 
--***** oOo ***** oOo ***** oOo ***** oOo ***** oOo ***** oOo ***** oOo *****
-+-----------------------------------------------------------------------------
- 
--To find a suitable video mode, you just call
-+To find a suitable video mode, you just call::
- 
--int __init fb_find_mode(struct fb_var_screeninfo *var,
--                        struct fb_info *info, const char *mode_option,
--                        const struct fb_videomode *db, unsigned int dbsize,
--                        const struct fb_videomode *default_mode,
--                        unsigned int default_bpp)
-+  int __init fb_find_mode(struct fb_var_screeninfo *var,
-+			  struct fb_info *info, const char *mode_option,
-+			  const struct fb_videomode *db, unsigned int dbsize,
-+			  const struct fb_videomode *default_mode,
-+			  unsigned int default_bpp)
- 
- with db/dbsize your non-standard video mode database, or NULL to use the
- standard video mode database.
-@@ -127,12 +130,13 @@ fb_find_mode() first tries the specified video mode (or any mode that matches,
- e.g. there can be multiple 640x480 modes, each of them is tried). If that
- fails, the default mode is tried. If that fails, it walks over all modes.
- 
--To specify a video mode at bootup, use the following boot options:
-+To specify a video mode at bootup, use the following boot options::
-+
-     video=<driver>:<xres>x<yres>[-<bpp>][@refresh]
- 
- where <driver> is a name from the table below.  Valid default modes can be
- found in linux/drivers/video/modedb.c.  Check your driver's documentation.
--There may be more modes.
-+There may be more modes::
- 
-     Drivers that support modedb boot options
-     Boot Name	  Cards Supported
-diff --git a/Documentation/fb/pvr2fb.txt b/Documentation/fb/pvr2fb.rst
-similarity index 36%
-rename from Documentation/fb/pvr2fb.txt
-rename to Documentation/fb/pvr2fb.rst
-index 36bdeff585e2..fcf2c21c8fcf 100644
---- a/Documentation/fb/pvr2fb.txt
-+++ b/Documentation/fb/pvr2fb.rst
-@@ -1,5 +1,4 @@
--$Id: pvr2fb.txt,v 1.1 2001/05/24 05:09:16 mrbrown Exp $
--
-+===============
- What is pvr2fb?
- ===============
- 
-@@ -21,37 +20,40 @@ Configuration
- =============
- 
- You can pass kernel command line options to pvr2fb with
--`video=pvr2fb:option1,option2:value2,option3' (multiple options should be
--separated by comma, values are separated from options by `:').
-+`video=pvr2fb:option1,option2:value2,option3` (multiple options should be
-+separated by comma, values are separated from options by `:`).
-+
- Accepted options:
- 
--font:X    - default font to use. All fonts are supported, including the
--            SUN12x22 font which is very nice at high resolutions.
-+==========  ==================================================================
-+font:X      default font to use. All fonts are supported, including the
-+	    SUN12x22 font which is very nice at high resolutions.
- 
--	    
--mode:X    - default video mode with format [xres]x[yres]-<bpp>@<refresh rate>
--            The following video modes are supported:
--            640x640-16@60, 640x480-24@60, 640x480-32@60. The Dreamcast
--            defaults to 640x480-16@60. At the time of writing the
--            24bpp and 32bpp modes function poorly. Work to fix that is
--            ongoing
- 
--            Note: the 640x240 mode is currently broken, and should not be
--            used for any reason. It is only mentioned here as a reference.
-+mode:X      default video mode with format [xres]x[yres]-<bpp>@<refresh rate>
-+	    The following video modes are supported:
-+	    640x640-16@60, 640x480-24@60, 640x480-32@60. The Dreamcast
-+	    defaults to 640x480-16@60. At the time of writing the
-+	    24bpp and 32bpp modes function poorly. Work to fix that is
-+	    ongoing
- 
--inverse   - invert colors on screen (for LCD displays)
-+	    Note: the 640x240 mode is currently broken, and should not be
-+	    used for any reason. It is only mentioned here as a reference.
- 
--nomtrr    - disables write combining on frame buffer. This slows down driver
--            but there is reported minor incompatibility between GUS DMA and
--            XFree under high loads if write combining is enabled (sound
--            dropouts). MTRR is enabled by default on systems that have it
--            configured and that support it.
-+inverse     invert colors on screen (for LCD displays)
- 
--cable:X   - cable type. This can be any of the following: vga, rgb, and
--            composite. If none is specified, we guess.
-+nomtrr      disables write combining on frame buffer. This slows down driver
-+	    but there is reported minor incompatibility between GUS DMA and
-+	    XFree under high loads if write combining is enabled (sound
-+	    dropouts). MTRR is enabled by default on systems that have it
-+	    configured and that support it.
- 
--output:X  - output type. This can be any of the following: pal, ntsc, and
--            vga. If none is specified, we guess.
-+cable:X     cable type. This can be any of the following: vga, rgb, and
-+	    composite. If none is specified, we guess.
-+
-+output:X    output type. This can be any of the following: pal, ntsc, and
-+	    vga. If none is specified, we guess.
-+==========  ==================================================================
- 
- X11
- ===
-@@ -59,7 +61,6 @@ X11
- XF86_FBDev has been shown to work on the Dreamcast in the past - though not yet
- on any 2.6 series kernel.
- 
----
- Paul Mundt <lethal@linuxdc.org>
-+
- Updated by Adrian McMenamin <adrian@mcmen.demon.co.uk>
--
-diff --git a/Documentation/fb/pxafb.txt b/Documentation/fb/pxafb.rst
-similarity index 78%
-rename from Documentation/fb/pxafb.txt
-rename to Documentation/fb/pxafb.rst
-index d143a0a749f9..90177f5e7e76 100644
---- a/Documentation/fb/pxafb.txt
-+++ b/Documentation/fb/pxafb.rst
-@@ -1,59 +1,82 @@
-+================================
- Driver for PXA25x LCD controller
- ================================
- 
- The driver supports the following options, either via
- options=<OPTIONS> when modular or video=pxafb:<OPTIONS> when built in.
- 
--For example:
-+For example::
-+
- 	modprobe pxafb options=vmem:2M,mode:640x480-8,passive
--or on the kernel command line
-+
-+or on the kernel command line::
-+
- 	video=pxafb:vmem:2M,mode:640x480-8,passive
- 
- vmem: VIDEO_MEM_SIZE
-+
- 	Amount of video memory to allocate (can be suffixed with K or M
- 	for kilobytes or megabytes)
- 
- mode:XRESxYRES[-BPP]
-+
- 	XRES == LCCR1_PPL + 1
-+
- 	YRES == LLCR2_LPP + 1
-+
- 		The resolution of the display in pixels
-+
- 	BPP == The bit depth. Valid values are 1, 2, 4, 8 and 16.
- 
- pixclock:PIXCLOCK
-+
- 	Pixel clock in picoseconds
- 
- left:LEFT == LCCR1_BLW + 1
-+
- right:RIGHT == LCCR1_ELW + 1
-+
- hsynclen:HSYNC == LCCR1_HSW + 1
-+
- upper:UPPER == LCCR2_BFW
-+
- lower:LOWER == LCCR2_EFR
-+
- vsynclen:VSYNC == LCCR2_VSW + 1
-+
- 	Display margins and sync times
- 
- color | mono => LCCR0_CMS
-+
- 	umm...
- 
- active | passive => LCCR0_PAS
-+
- 	Active (TFT) or Passive (STN) display
- 
- single | dual => LCCR0_SDS
-+
- 	Single or dual panel passive display
- 
- 4pix | 8pix => LCCR0_DPD
-+
- 	4 or 8 pixel monochrome single panel data
- 
--hsync:HSYNC
--vsync:VSYNC
-+hsync:HSYNC, vsync:VSYNC
-+
- 	Horizontal and vertical sync. 0 => active low, 1 => active
- 	high.
- 
- dpc:DPC
-+
- 	Double pixel clock. 1=>true, 0=>false
- 
- outputen:POLARITY
-+
- 	Output Enable Polarity. 0 => active low, 1 => active high
- 
- pixclockpol:POLARITY
-+
- 	pixel clock polarity
- 	0 => falling edge, 1 => rising edge
- 
-@@ -76,44 +99,50 @@ Overlay Support for PXA27x and later LCD controllers
-      not for such purpose).
- 
-   2. overlay framebuffer is allocated dynamically according to specified
--     'struct fb_var_screeninfo', the amount is decided by:
-+     'struct fb_var_screeninfo', the amount is decided by::
- 
--        var->xres_virtual * var->yres_virtual * bpp
-+	var->xres_virtual * var->yres_virtual * bpp
- 
-      bpp = 16 -- for RGB565 or RGBT555
--         = 24 -- for YUV444 packed
--         = 24 -- for YUV444 planar
--	 = 16 -- for YUV422 planar (1 pixel = 1 Y + 1/2 Cb + 1/2 Cr)
--	 = 12 -- for YUV420 planar (1 pixel = 1 Y + 1/4 Cb + 1/4 Cr)
-+
-+     bpp = 24 -- for YUV444 packed
-+
-+     bpp = 24 -- for YUV444 planar
-+
-+     bpp = 16 -- for YUV422 planar (1 pixel = 1 Y + 1/2 Cb + 1/2 Cr)
-+
-+     bpp = 12 -- for YUV420 planar (1 pixel = 1 Y + 1/4 Cb + 1/4 Cr)
- 
-      NOTE:
- 
-      a. overlay does not support panning in x-direction, thus
--        var->xres_virtual will always be equal to var->xres
-+	var->xres_virtual will always be equal to var->xres
- 
-      b. line length of overlay(s) must be on a 32-bit word boundary,
--        for YUV planar modes, it is a requirement for the component
-+	for YUV planar modes, it is a requirement for the component
- 	with minimum bits per pixel,  e.g. for YUV420, Cr component
- 	for one pixel is actually 2-bits, it means the line length
- 	should be a multiple of 16-pixels
- 
-      c. starting horizontal position (XPOS) should start on a 32-bit
--        word boundary, otherwise the fb_check_var() will just fail.
-+	word boundary, otherwise the fb_check_var() will just fail.
- 
-      d. the rectangle of the overlay should be within the base plane,
--        otherwise fail
-+	otherwise fail
- 
-      Applications should follow the sequence below to operate an overlay
-      framebuffer:
- 
--         a. open("/dev/fb[1-2]", ...)
-+	 a. open("/dev/fb[1-2]", ...)
- 	 b. ioctl(fd, FBIOGET_VSCREENINFO, ...)
- 	 c. modify 'var' with desired parameters:
-+
- 	    1) var->xres and var->yres
- 	    2) larger var->yres_virtual if more memory is required,
- 	       usually for double-buffering
- 	    3) var->nonstd for starting (x, y) and color format
- 	    4) var->{red, green, blue, transp} if RGB mode is to be used
-+
- 	 d. ioctl(fd, FBIOPUT_VSCREENINFO, ...)
- 	 e. ioctl(fd, FBIOGET_FSCREENINFO, ...)
- 	 f. mmap
-@@ -124,19 +153,21 @@ Overlay Support for PXA27x and later LCD controllers
-      and lengths of each component within the framebuffer.
- 
-   4. var->nonstd is used to pass starting (x, y) position and color format,
--     the detailed bit fields are shown below:
-+     the detailed bit fields are shown below::
- 
--    31                23  20         10          0
--     +-----------------+---+----------+----------+
--     |  ... unused ... |FOR|   XPOS   |   YPOS   |
--     +-----------------+---+----------+----------+
-+      31                23  20         10          0
-+       +-----------------+---+----------+----------+
-+       |  ... unused ... |FOR|   XPOS   |   YPOS   |
-+       +-----------------+---+----------+----------+
- 
-      FOR  - color format, as defined by OVERLAY_FORMAT_* in pxafb.h
--            0 - RGB
--	    1 - YUV444 PACKED
--	    2 - YUV444 PLANAR
--	    3 - YUV422 PLANAR
--	    4 - YUR420 PLANAR
-+
-+	  - 0 - RGB
-+	  - 1 - YUV444 PACKED
-+	  - 2 - YUV444 PLANAR
-+	  - 3 - YUV422 PLANAR
-+	  - 4 - YUR420 PLANAR
- 
-      XPOS - starting horizontal position
-+
-      YPOS - starting vertical position
-diff --git a/Documentation/fb/s3fb.txt b/Documentation/fb/s3fb.rst
-similarity index 94%
-rename from Documentation/fb/s3fb.txt
-rename to Documentation/fb/s3fb.rst
-index 2c97770bdbaa..e809d69c21a7 100644
---- a/Documentation/fb/s3fb.txt
-+++ b/Documentation/fb/s3fb.rst
-@@ -1,6 +1,6 @@
--
--	s3fb - fbdev driver for S3 Trio/Virge chips
--	===========================================
-+===========================================
-+s3fb - fbdev driver for S3 Trio/Virge chips
-+===========================================
- 
- 
- Supported Hardware
-@@ -56,7 +56,7 @@ Missing Features
- (alias TODO list)
- 
- 	* secondary (not initialized by BIOS) device support
--   	* big endian support
-+	* big endian support
- 	* Zorro bus support
- 	* MMIO support
- 	* 24 bpp mode support on more cards
-diff --git a/Documentation/fb/sa1100fb.txt b/Documentation/fb/sa1100fb.rst
-similarity index 64%
-rename from Documentation/fb/sa1100fb.txt
-rename to Documentation/fb/sa1100fb.rst
-index f1b4220464df..67e2650e017d 100644
---- a/Documentation/fb/sa1100fb.txt
-+++ b/Documentation/fb/sa1100fb.rst
-@@ -1,17 +1,19 @@
--[This file is cloned from VesaFB/matroxfb]
--
-+=================
- What is sa1100fb?
- =================
- 
-+.. [This file is cloned from VesaFB/matroxfb]
-+
-+
- This is a driver for a graphic framebuffer for the SA-1100 LCD
- controller.
- 
- Configuration
- ==============
- 
--For most common passive displays, giving the option
-+For most common passive displays, giving the option::
- 
--video=sa1100fb:bpp:<value>,lccr0:<value>,lccr1:<value>,lccr2:<value>,lccr3:<value>
-+  video=sa1100fb:bpp:<value>,lccr0:<value>,lccr1:<value>,lccr2:<value>,lccr3:<value>
- 
- on the kernel command line should be enough to configure the
- controller. The bits per pixel (bpp) value should be 4, 8, 12, or
-@@ -27,13 +29,12 @@ sa1100fb_init_fbinfo(), sa1100fb_activate_var(),
- sa1100fb_disable_lcd_controller(), and sa1100fb_enable_lcd_controller()
- will probably be necessary.
- 
--Accepted options:
-+Accepted options::
- 
--bpp:<value>	Configure for <value> bits per pixel
--lccr0:<value>	Configure LCD control register 0 (11.7.3)
--lccr1:<value>	Configure LCD control register 1 (11.7.4)
--lccr2:<value>	Configure LCD control register 2 (11.7.5)
--lccr3:<value>	Configure LCD control register 3 (11.7.6)
-+	bpp:<value>	Configure for <value> bits per pixel
-+	lccr0:<value>	Configure LCD control register 0 (11.7.3)
-+	lccr1:<value>	Configure LCD control register 1 (11.7.4)
-+	lccr2:<value>	Configure LCD control register 2 (11.7.5)
-+	lccr3:<value>	Configure LCD control register 3 (11.7.6)
- 
----
- Mark Huang <mhuang@livetoy.com>
-diff --git a/Documentation/fb/sh7760fb.txt b/Documentation/fb/sh7760fb.rst
-similarity index 39%
-rename from Documentation/fb/sh7760fb.txt
-rename to Documentation/fb/sh7760fb.rst
-index b994c3b10549..c3266485f810 100644
---- a/Documentation/fb/sh7760fb.txt
-+++ b/Documentation/fb/sh7760fb.rst
-@@ -1,3 +1,4 @@
-+================================================
- SH7760/SH7763 integrated LCDC Framebuffer driver
- ================================================
- 
-@@ -8,6 +9,7 @@ supports (in theory) resolutions ranging from 1x1 to 1024x1024,
- with color depths ranging from 1 to 16 bits, on STN, DSTN and TFT Panels.
- 
- Caveats:
-+
- * Framebuffer memory must be a large chunk allocated at the top
-   of Area3 (HW requirement). Because of this requirement you should NOT
-   make the driver a module since at runtime it may become impossible to
-@@ -23,9 +25,10 @@ Caveats:
- * Rotation works only 90degress clockwise, and only if horizontal
-   resolution is <= 320 pixels.
- 
--files:   drivers/video/sh7760fb.c
--        include/asm-sh/sh7760fb.h
--        Documentation/fb/sh7760fb.txt
-+Files:
-+	- drivers/video/sh7760fb.c
-+	- include/asm-sh/sh7760fb.h
-+	- Documentation/fb/sh7760fb.rst
- 
- 1. Platform setup
- -----------------
-@@ -50,82 +53,78 @@ Suggest you take a closer look at the SH7760 Manual, Section 30.
- (http://documentation.renesas.com/eng/products/mpumcu/e602291_sh7760.pdf)
- 
- The following code illustrates what needs to be done to
--get the framebuffer working on a 640x480 TFT:
-+get the framebuffer working on a 640x480 TFT::
- 
--====================== cut here ======================================
-+  #include <linux/fb.h>
-+  #include <asm/sh7760fb.h>
- 
--#include <linux/fb.h>
--#include <asm/sh7760fb.h>
-+  /*
-+   * NEC NL6440bc26-01 640x480 TFT
-+   * dotclock 25175 kHz
-+   * Xres                640     Yres            480
-+   * Htotal      800     Vtotal          525
-+   * HsynStart   656     VsynStart       490
-+   * HsynLenn    30      VsynLenn        2
-+   *
-+   * The linux framebuffer layer does not use the syncstart/synclen
-+   * values but right/left/upper/lower margin values. The comments
-+   * for the x_margin explain how to calculate those from given
-+   * panel sync timings.
-+   */
-+  static struct fb_videomode nl6448bc26 = {
-+         .name           = "NL6448BC26",
-+         .refresh        = 60,
-+         .xres           = 640,
-+         .yres           = 480,
-+         .pixclock       = 39683,        /* in picoseconds! */
-+         .hsync_len      = 30,
-+         .vsync_len      = 2,
-+         .left_margin    = 114,  /* HTOT - (HSYNSLEN + HSYNSTART) */
-+         .right_margin   = 16,   /* HSYNSTART - XRES */
-+         .upper_margin   = 33,   /* VTOT - (VSYNLEN + VSYNSTART) */
-+         .lower_margin   = 10,   /* VSYNSTART - YRES */
-+         .sync           = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
-+         .vmode          = FB_VMODE_NONINTERLACED,
-+         .flag           = 0,
-+  };
- 
--/*
-- * NEC NL6440bc26-01 640x480 TFT
-- * dotclock 25175 kHz
-- * Xres                640     Yres            480
-- * Htotal      800     Vtotal          525
-- * HsynStart   656     VsynStart       490
-- * HsynLenn    30      VsynLenn        2
-- *
-- * The linux framebuffer layer does not use the syncstart/synclen
-- * values but right/left/upper/lower margin values. The comments
-- * for the x_margin explain how to calculate those from given
-- * panel sync timings.
-- */
--static struct fb_videomode nl6448bc26 = {
--       .name           = "NL6448BC26",
--       .refresh        = 60,
--       .xres           = 640,
--       .yres           = 480,
--       .pixclock       = 39683,        /* in picoseconds! */
--       .hsync_len      = 30,
--       .vsync_len      = 2,
--       .left_margin    = 114,  /* HTOT - (HSYNSLEN + HSYNSTART) */
--       .right_margin   = 16,   /* HSYNSTART - XRES */
--       .upper_margin   = 33,   /* VTOT - (VSYNLEN + VSYNSTART) */
--       .lower_margin   = 10,   /* VSYNSTART - YRES */
--       .sync           = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--       .vmode          = FB_VMODE_NONINTERLACED,
--       .flag           = 0,
--};
-+  static struct sh7760fb_platdata sh7760fb_nl6448 = {
-+         .def_mode       = &nl6448bc26,
-+         .ldmtr          = LDMTR_TFT_COLOR_16,   /* 16bit TFT panel */
-+         .lddfr          = LDDFR_8BPP,           /* we want 8bit output */
-+         .ldpmmr         = 0x0070,
-+         .ldpspr         = 0x0500,
-+         .ldaclnr        = 0,
-+         .ldickr         = LDICKR_CLKSRC(LCDC_CLKSRC_EXTERNAL) |
-+			 LDICKR_CLKDIV(1),
-+         .rotate         = 0,
-+         .novsync        = 1,
-+         .blank          = NULL,
-+  };
- 
--static struct sh7760fb_platdata sh7760fb_nl6448 = {
--       .def_mode       = &nl6448bc26,
--       .ldmtr          = LDMTR_TFT_COLOR_16,   /* 16bit TFT panel */
--       .lddfr          = LDDFR_8BPP,           /* we want 8bit output */
--       .ldpmmr         = 0x0070,
--       .ldpspr         = 0x0500,
--       .ldaclnr        = 0,
--       .ldickr         = LDICKR_CLKSRC(LCDC_CLKSRC_EXTERNAL) |
--                         LDICKR_CLKDIV(1),
--       .rotate         = 0,
--       .novsync        = 1,
--       .blank          = NULL,
--};
-+  /* SH7760:
-+   * 0xFE300800: 256 * 4byte xRGB palette ram
-+   * 0xFE300C00: 42 bytes ctrl registers
-+   */
-+  static struct resource sh7760_lcdc_res[] = {
-+         [0] = {
-+	       .start  = 0xFE300800,
-+	       .end    = 0xFE300CFF,
-+	       .flags  = IORESOURCE_MEM,
-+         },
-+         [1] = {
-+	       .start  = 65,
-+	       .end    = 65,
-+	       .flags  = IORESOURCE_IRQ,
-+         },
-+  };
- 
--/* SH7760:
-- * 0xFE300800: 256 * 4byte xRGB palette ram
-- * 0xFE300C00: 42 bytes ctrl registers
-- */
--static struct resource sh7760_lcdc_res[] = {
--       [0] = {
--               .start  = 0xFE300800,
--               .end    = 0xFE300CFF,
--               .flags  = IORESOURCE_MEM,
--       },
--       [1] = {
--               .start  = 65,
--               .end    = 65,
--               .flags  = IORESOURCE_IRQ,
--       },
--};
--
--static struct platform_device sh7760_lcdc_dev = {
--       .dev    = {
--               .platform_data = &sh7760fb_nl6448,
--       },
--       .name           = "sh7760-lcdc",
--       .id             = -1,
--       .resource       = sh7760_lcdc_res,
--       .num_resources  = ARRAY_SIZE(sh7760_lcdc_res),
--};
--
--====================== cut here ======================================
-+  static struct platform_device sh7760_lcdc_dev = {
-+         .dev    = {
-+	       .platform_data = &sh7760fb_nl6448,
-+         },
-+         .name           = "sh7760-lcdc",
-+         .id             = -1,
-+         .resource       = sh7760_lcdc_res,
-+         .num_resources  = ARRAY_SIZE(sh7760_lcdc_res),
-+  };
-diff --git a/Documentation/fb/sisfb.txt b/Documentation/fb/sisfb.rst
-similarity index 85%
-rename from Documentation/fb/sisfb.txt
-rename to Documentation/fb/sisfb.rst
-index 2e68e503e72f..8f4e502ea12e 100644
---- a/Documentation/fb/sisfb.txt
-+++ b/Documentation/fb/sisfb.rst
-@@ -1,4 +1,4 @@
--
-+==============
- What is sisfb?
- ==============
- 
-@@ -41,11 +41,11 @@ statement to add the parameters to the kernel command line. Please see lilo's
- parameters are given with the modprobe (or insmod) command.
- 
- Example for sisfb as part of the static kernel: Add the following line to your
--lilo.conf:
-+lilo.conf::
- 
-      append="video=sisfb:mode:1024x768x16,mem:12288,rate:75"
- 
--Example for sisfb as a module: Start sisfb by typing
-+Example for sisfb as a module: Start sisfb by typing::
- 
-      modprobe sisfb mode=1024x768x16 rate=75 mem=12288
- 
-@@ -57,7 +57,7 @@ described above or the vesa keyword instead of mode). If compiled as a module,
- the parameter format reads mode=none or mode=1024x768x16 (or whatever mode you
- want to use). Using a "=" for a ":" (and vice versa) is a huge difference!
- Additionally: If you give more than one argument to the in-kernel sisfb, the
--arguments are separated with ",". For example:
-+arguments are separated with ",". For example::
- 
-    video=sisfb:mode:1024x768x16,rate:75,mem:12288
- 
-@@ -73,6 +73,7 @@ supported options including some explanation.
- 
- The desired display mode can be specified using the keyword "mode" with
- a parameter in one of the following formats:
-+
-   - XxYxDepth or
-   - XxY-Depth or
-   - XxY-Depth@Rate or
-@@ -130,29 +131,30 @@ Configuration
- 
- (Some) accepted options:
- 
--off      - Disable sisfb. This option is only understood if sisfb is
--           in-kernel, not a module.
--mem:X    - size of memory for the console, rest will be used for DRI/DRM. X
--           is in kilobytes. On 300 series, the default is 4096, 8192 or
-+=========  ==================================================================
-+off        Disable sisfb. This option is only understood if sisfb is
-+	   in-kernel, not a module.
-+mem:X      size of memory for the console, rest will be used for DRI/DRM. X
-+	   is in kilobytes. On 300 series, the default is 4096, 8192 or
- 	   16384 (each in kilobyte) depending on how much video ram the card
--           has. On 315/330 series, the default is the maximum available ram
-+	   has. On 315/330 series, the default is the maximum available ram
- 	   (since DRI/DRM is not supported for these chipsets).
--noaccel  - do not use 2D acceleration engine. (Default: use acceleration)
--noypan   - disable y-panning and scroll by redrawing the entire screen.
--           This is much slower than y-panning. (Default: use y-panning)
--vesa:X   - selects startup videomode. X is number from 0 to 0x1FF and
--           represents the VESA mode number (can be given in decimal or
-+noaccel    do not use 2D acceleration engine. (Default: use acceleration)
-+noypan     disable y-panning and scroll by redrawing the entire screen.
-+	   This is much slower than y-panning. (Default: use y-panning)
-+vesa:X     selects startup videomode. X is number from 0 to 0x1FF and
-+	   represents the VESA mode number (can be given in decimal or
- 	   hexadecimal form, the latter prefixed with "0x").
--mode:X   - selects startup videomode. Please see above for the format of
--           "X".
-+mode:X     selects startup videomode. Please see above for the format of
-+	   "X".
-+=========  ==================================================================
- 
- Boolean options such as "noaccel" or "noypan" are to be given without a
- parameter if sisfb is in-kernel (for example "video=sisfb:noypan). If
- sisfb is a module, these are to be set to 1 (for example "modprobe sisfb
- noypan=1").
- 
----
-+
- Thomas Winischhofer <thomas@winischhofer.net>
-+
- May 27, 2004
--
--
-diff --git a/Documentation/fb/sm501.txt b/Documentation/fb/sm501.rst
-similarity index 65%
-rename from Documentation/fb/sm501.txt
-rename to Documentation/fb/sm501.rst
-index 187f3b3ccb6c..03e02c8042a7 100644
---- a/Documentation/fb/sm501.txt
-+++ b/Documentation/fb/sm501.rst
-@@ -1,6 +1,11 @@
-+=======
-+sm501fb
-+=======
-+
- Configuration:
- 
--You can pass the following kernel command line options to sm501 videoframebuffer:
-+You can pass the following kernel command line options to sm501
-+videoframebuffer::
- 
- 	sm501fb.bpp=	SM501 Display driver:
- 			Specify bits-per-pixel if not specified by 'mode'
-diff --git a/Documentation/fb/sm712fb.txt b/Documentation/fb/sm712fb.rst
-similarity index 59%
-rename from Documentation/fb/sm712fb.txt
-rename to Documentation/fb/sm712fb.rst
-index c388442edf51..994dad3b0238 100644
---- a/Documentation/fb/sm712fb.txt
-+++ b/Documentation/fb/sm712fb.rst
-@@ -1,5 +1,6 @@
-+================
- What is sm712fb?
--=================
-+================
- 
- This is a graphics framebuffer driver for Silicon Motion SM712 based processors.
- 
-@@ -15,13 +16,16 @@ You should not compile-in vesafb.
- 
- Currently supported video modes are:
- 
--[Graphic modes]
-+Graphic modes
++9.2 Shmem
++---------
+ 
+- 9.2 Shmem
+ 	Historically, memcg's shmem handling was poor and we saw some amount
+ 	of troubles here. This is because shmem is page-cache but can be
+ 	SwapCache. Test with shmem/tmpfs is always good test.
+ 
+- 9.3 Migration
++9.3 Migration
 +-------------
- 
--bpp | 640x480  800x600  1024x768  1280x1024
------+--------------------------------------------
--  8 | 0x301    0x303    0x305    0x307
-- 16 | 0x311    0x314    0x317    0x31A
-- 24 | 0x312    0x315    0x318    0x31B
-+===  =======  =======  ========  =========
-+bpp  640x480  800x600  1024x768  1280x1024
-+===  =======  =======  ========  =========
-+  8  0x301    0x303    0x305     0x307
-+ 16  0x311    0x314    0x317     0x31A
-+ 24  0x312    0x315    0x318     0x31B
-+===  =======  =======  ========  =========
- 
- Missing Features
- ================
-diff --git a/Documentation/fb/sstfb.txt b/Documentation/fb/sstfb.rst
-similarity index 28%
-rename from Documentation/fb/sstfb.txt
-rename to Documentation/fb/sstfb.rst
-index 13db1075e4a5..8e8c1b940359 100644
---- a/Documentation/fb/sstfb.txt
-+++ b/Documentation/fb/sstfb.rst
-@@ -1,93 +1,114 @@
-+=====
-+sstfb
-+=====
- 
- Introduction
-+============
- 
--	  This is a frame buffer device driver for 3dfx' Voodoo Graphics 
--	(aka voodoo 1, aka sst1) and Voodoo² (aka Voodoo 2, aka CVG) based 
--	video boards. It's highly experimental code, but is guaranteed to work
--	on my computer, with my "Maxi Gamer 3D" and "Maxi Gamer 3d²" boards,
--	and with me "between chair and keyboard". Some people tested other
--	combinations and it seems that it works.
--	  The main page is located at <http://sstfb.sourceforge.net>, and if
--	you want the latest version, check out the CVS, as the driver is a work
--	in progress, I feel uncomfortable with releasing tarballs of something
--	not completely working...Don't worry, it's still more than usable
--	(I eat my own dog food)
-+This is a frame buffer device driver for 3dfx' Voodoo Graphics
-+(aka voodoo 1, aka sst1) and Voodoo² (aka Voodoo 2, aka CVG) based
-+video boards. It's highly experimental code, but is guaranteed to work
-+on my computer, with my "Maxi Gamer 3D" and "Maxi Gamer 3d²" boards,
-+and with me "between chair and keyboard". Some people tested other
-+combinations and it seems that it works.
-+The main page is located at <http://sstfb.sourceforge.net>, and if
-+you want the latest version, check out the CVS, as the driver is a work
-+in progress, I feel uncomfortable with releasing tarballs of something
-+not completely working...Don't worry, it's still more than usable
-+(I eat my own dog food)
- 
--	  Please read the Bug section, and report any success or failure to me
--	(Ghozlane Toumi <gtoumi@laposte.net>).
--	  BTW, If you have only one monitor , and you don't feel like playing
--	with the vga passthrou cable, I can only suggest borrowing a screen
--	somewhere... 
-+Please read the Bug section, and report any success or failure to me
-+(Ghozlane Toumi <gtoumi@laposte.net>).
-+BTW, If you have only one monitor , and you don't feel like playing
-+with the vga passthrou cable, I can only suggest borrowing a screen
-+somewhere...
- 
- 
--Installation 
-+Installation
-+============
- 
--	  This driver (should) work on ix86, with "late" 2.2.x kernel (tested
--	with x = 19) and "recent" 2.4.x kernel, as a module or compiled in.
--	  It has been included in mainstream kernel since the infamous 2.4.10.
--	  You can apply the patches found in sstfb/kernel/*-2.{2|4}.x.patch,
--	and copy sstfb.c to linux/drivers/video/, or apply a single patch, 
--	sstfb/patch-2.{2|4}.x-sstfb-yymmdd to your linux source tree.
-+This driver (should) work on ix86, with "late" 2.2.x kernel (tested
-+with x = 19) and "recent" 2.4.x kernel, as a module or compiled in.
-+It has been included in mainstream kernel since the infamous 2.4.10.
-+You can apply the patches found in `sstfb/kernel/*-2.{2|4}.x.patch`,
-+and copy sstfb.c to linux/drivers/video/, or apply a single patch,
-+`sstfb/patch-2.{2|4}.x-sstfb-yymmdd` to your linux source tree.
- 
--	  Then configure your kernel as usual: choose "m" or "y" to 3Dfx Voodoo
--	Graphics in section "console". Compile, install, have fun... and please
--	drop me a report :)
-+Then configure your kernel as usual: choose "m" or "y" to 3Dfx Voodoo
-+Graphics in section "console". Compile, install, have fun... and please
-+drop me a report :)
- 
- 
- Module Usage
--	
--	Warnings.
--	# You should read completely this section before issuing any command.
--	# If you have only one monitor to play with, once you insmod the
-+============
 +
-+.. warning::
-+
-+       #. You should read completely this section before issuing any command.
-+
-+       #. If you have only one monitor to play with, once you insmod the
- 	  module, the 3dfx takes control of the output, so you'll have to
- 	  plug the monitor to the "normal" video board in order to issue
- 	  the commands, or you can blindly use sst_dbg_vgapass
--          in the tools directory (See Tools). The latest solution is pass the
-+	  in the tools directory (See Tools). The latest solution is pass the
- 	  parameter vgapass=1 when insmodding the driver. (See Kernel/Modules
- 	  Options)
+ 	For NUMA, migration is an another special case. To do easy test, cpuset
+-	is useful. Following is a sample script to do migration.
++	is useful. Following is a sample script to do migration::
  
--	Module insertion:
--	# insmod sstfb.o
--	  you should see some strange output from the board: 
-+Module insertion
-+----------------
+-	mount -t cgroup -o cpuset none /opt/cpuset
++		mount -t cgroup -o cpuset none /opt/cpuset
+ 
+-	mkdir /opt/cpuset/01
+-	echo 1 > /opt/cpuset/01/cpuset.cpus
+-	echo 0 > /opt/cpuset/01/cpuset.mems
+-	echo 1 > /opt/cpuset/01/cpuset.memory_migrate
+-	mkdir /opt/cpuset/02
+-	echo 1 > /opt/cpuset/02/cpuset.cpus
+-	echo 1 > /opt/cpuset/02/cpuset.mems
+-	echo 1 > /opt/cpuset/02/cpuset.memory_migrate
++		mkdir /opt/cpuset/01
++		echo 1 > /opt/cpuset/01/cpuset.cpus
++		echo 0 > /opt/cpuset/01/cpuset.mems
++		echo 1 > /opt/cpuset/01/cpuset.memory_migrate
++		mkdir /opt/cpuset/02
++		echo 1 > /opt/cpuset/02/cpuset.cpus
++		echo 1 > /opt/cpuset/02/cpuset.mems
++		echo 1 > /opt/cpuset/02/cpuset.memory_migrate
+ 
+ 	In above set, when you moves a task from 01 to 02, page migration to
+ 	node 0 to node 1 will occur. Following is a script to migrate all
+-	under cpuset.
+-	--
+-	move_task()
+-	{
+-	for pid in $1
+-        do
+-                /bin/echo $pid >$2/tasks 2>/dev/null
+-		echo -n $pid
+-		echo -n " "
+-        done
+-	echo END
+-	}
++	under cpuset.::
 +
-+       #. insmod sstfb.o
++		--
++		move_task()
++		{
++		for pid in $1
++		do
++			/bin/echo $pid >$2/tasks 2>/dev/null
++			echo -n $pid
++			echo -n " "
++		done
++		echo END
++		}
 +
-+	  you should see some strange output from the board:
- 	  a big blue square, a green and a red small squares and a vertical
- 	  white rectangle. why? the function's name is self-explanatory:
- 	  "sstfb_test()"...
- 	  (if you don't have a second monitor, you'll have to plug your monitor
- 	  directly to the 2D videocard to see what you're typing)
--	# con2fb /dev/fbx /dev/ttyx
++		G1_TASK=`cat ${G1}/tasks`
++		G2_TASK=`cat ${G2}/tasks`
++		move_task "${G1_TASK}" ${G2} &
++		--
 +
-+       #. con2fb /dev/fbx /dev/ttyx
++9.4 Memory hotplug
++------------------
+ 
+-	G1_TASK=`cat ${G1}/tasks`
+-	G2_TASK=`cat ${G2}/tasks`
+-	move_task "${G1_TASK}" ${G2} &
+-	--
+- 9.4 Memory hotplug.
+ 	memory hotplug test is one of good test.
+-	to offline memory, do following.
+-	# echo offline > /sys/devices/system/memory/memoryXXX/state
 +
- 	  bind a tty to the new frame buffer. if you already have a frame
--	  buffer driver, the voodoo fb will likely be /dev/fb1. if not, 
--	  the device will be /dev/fb0. You can check this by doing a 
-+	  buffer driver, the voodoo fb will likely be /dev/fb1. if not,
-+	  the device will be /dev/fb0. You can check this by doing a
- 	  cat /proc/fb. You can find a copy of con2fb in tools/ directory.
- 	  if you don't have another fb device, this step is superfluous,
- 	  as the console subsystem automagicaly binds ttys to the fb.
--	# switch to the virtual console you just mapped. "tadaaa" ...
-+       #. switch to the virtual console you just mapped. "tadaaa" ...
++	to offline memory, do following::
 +
-+Module removal
++		# echo offline > /sys/devices/system/memory/memoryXXX/state
++
+ 	(XXX is the place of memory)
++
+ 	This is an easy way to test page migration, too.
+ 
+- 9.5 mkdir/rmdir
++9.5 mkdir/rmdir
++---------------
++
+ 	When using hierarchy, mkdir/rmdir test should be done.
+-	Use tests like the following.
++	Use tests like the following::
+ 
+-	echo 1 >/opt/cgroup/01/memory/use_hierarchy
+-	mkdir /opt/cgroup/01/child_a
+-	mkdir /opt/cgroup/01/child_b
++		echo 1 >/opt/cgroup/01/memory/use_hierarchy
++		mkdir /opt/cgroup/01/child_a
++		mkdir /opt/cgroup/01/child_b
+ 
+-	set limit to 01.
+-	add limit to 01/child_b
+-	run jobs under child_a and child_b
++		set limit to 01.
++		add limit to 01/child_b
++		run jobs under child_a and child_b
+ 
+-	create/delete following groups at random while jobs are running.
+-	/opt/cgroup/01/child_a/child_aa
+-	/opt/cgroup/01/child_b/child_bb
+-	/opt/cgroup/01/child_c
++	create/delete following groups at random while jobs are running::
++
++		/opt/cgroup/01/child_a/child_aa
++		/opt/cgroup/01/child_b/child_bb
++		/opt/cgroup/01/child_c
+ 
+ 	running new jobs in new group is also good.
+ 
+- 9.6 Mount with other subsystems.
++9.6 Mount with other subsystems
++-------------------------------
++
+ 	Mounting with other subsystems is a good test because there is a
+ 	race and lock dependency with other cgroup subsystems.
+ 
+-	example)
+-	# mount -t cgroup none /cgroup -o cpuset,memory,cpu,devices
++	example::
++
++		# mount -t cgroup none /cgroup -o cpuset,memory,cpu,devices
+ 
+ 	and do task move, mkdir, rmdir etc...under this.
+ 
+- 9.7 swapoff.
++9.7 swapoff
++-----------
++
+ 	Besides management of swap is one of complicated parts of memcg,
+ 	call path of swap-in at swapoff is not same as usual swap-in path..
+ 	It's worth to be tested explicitly.
+ 
+-	For example, test like following is good.
+-	(Shell-A)
+-	# mount -t cgroup none /cgroup -o memory
+-	# mkdir /cgroup/test
+-	# echo 40M > /cgroup/test/memory.limit_in_bytes
+-	# echo 0 > /cgroup/test/tasks
++	For example, test like following is good:
++
++	(Shell-A)::
++
++		# mount -t cgroup none /cgroup -o memory
++		# mkdir /cgroup/test
++		# echo 40M > /cgroup/test/memory.limit_in_bytes
++		# echo 0 > /cgroup/test/tasks
++
+ 	Run malloc(100M) program under this. You'll see 60M of swaps.
+-	(Shell-B)
+-	# move all tasks in /cgroup/test to /cgroup
+-	# /sbin/swapoff -a
+-	# rmdir /cgroup/test
+-	# kill malloc task.
++
++	(Shell-B)::
++
++		# move all tasks in /cgroup/test to /cgroup
++		# /sbin/swapoff -a
++		# rmdir /cgroup/test
++		# kill malloc task.
+ 
+ 	Of course, tmpfs v.s. swapoff test should be tested, too.
+ 
+- 9.8 OOM-Killer
++9.8 OOM-Killer
 +--------------
 +
-+       #. con2fb /dev/fbx /dev/ttyx
- 
--	Module removal:
--	# con2fb /dev/fbx /dev/ttyx
- 	  bind the tty to the old frame buffer so the module can be removed.
- 	  (how does it work with vgacon ? short answer : it doesn't work)
--	# rmmod sstfb
+ 	Out-of-memory caused by memcg's limit will kill tasks under
+ 	the memcg. When hierarchy is used, a task under hierarchy
+ 	will be killed by the kernel.
 +
-+       #. rmmod sstfb
+ 	In this case, panic_on_oom shouldn't be invoked and tasks
+ 	in other groups shouldn't be killed.
  
+ 	It's not difficult to cause OOM under memcg as following.
+-	Case A) when you can swapoff
+-	#swapoff -a
+-	#echo 50M > /memory.limit_in_bytes
++
++	Case A) when you can swapoff::
++
++		#swapoff -a
++		#echo 50M > /memory.limit_in_bytes
++
+ 	run 51M of malloc
  
- Kernel/Modules Options
+-	Case B) when you use mem+swap limitation.
+-	#echo 50M > memory.limit_in_bytes
+-	#echo 50M > memory.memsw.limit_in_bytes
++	Case B) when you use mem+swap limitation::
++
++		#echo 50M > memory.limit_in_bytes
++		#echo 50M > memory.memsw.limit_in_bytes
++
+ 	run 51M of malloc
+ 
+- 9.9 Move charges at task migration
++9.9 Move charges at task migration
++----------------------------------
++
+ 	Charges associated with a task can be moved along with task migration.
+ 
+-	(Shell-A)
+-	#mkdir /cgroup/A
+-	#echo $$ >/cgroup/A/tasks
++	(Shell-A)::
++
++		#mkdir /cgroup/A
++		#echo $$ >/cgroup/A/tasks
++
+ 	run some programs which uses some amount of memory in /cgroup/A.
+ 
+-	(Shell-B)
+-	#mkdir /cgroup/B
+-	#echo 1 >/cgroup/B/memory.move_charge_at_immigrate
+-	#echo "pid of the program running in group A" >/cgroup/B/tasks
++	(Shell-B)::
+ 
+-	You can see charges have been moved by reading *.usage_in_bytes or
++		#mkdir /cgroup/B
++		#echo 1 >/cgroup/B/memory.move_charge_at_immigrate
++		#echo "pid of the program running in group A" >/cgroup/B/tasks
++
++	You can see charges have been moved by reading ``*.usage_in_bytes`` or
+ 	memory.stat of both A and B.
+-	See 8.2 of Documentation/cgroup-v1/memory.txt to see what value should be
+-	written to move_charge_at_immigrate.
+ 
+- 9.10 Memory thresholds
++	See 8.2 of Documentation/cgroup-v1/memory.rst to see what value should
++	be written to move_charge_at_immigrate.
++
++9.10 Memory thresholds
 +----------------------
- 
--	You can pass some options to the sstfb module, and via the kernel 
--	command line when the driver is compiled in:
--	for module : insmod sstfb.o option1=value1 option2=value2 ...
--	in kernel :  video=sstfb:option1,option2:value2,option3 ...
--	
--	sstfb supports the following options :
-+You can pass some options to the sstfb module, and via the kernel
-+command line when the driver is compiled in:
-+for module : insmod sstfb.o option1=value1 option2=value2 ...
-+in kernel :  video=sstfb:option1,option2:value2,option3 ...
- 
-+sstfb supports the following options:
 +
-+=============== =============== ===============================================
- Module		Kernel		Description
--
-+=============== =============== ===============================================
- vgapass=0	vganopass	Enable or disable VGA passthrou cable.
- vgapass=1	vgapass		When enabled, the monitor will get the signal
- 				from the VGA board and not from the voodoo.
+ 	Memory controller implements memory thresholds using cgroups notification
+ 	API. You can use tools/cgroup/cgroup_event_listener.c to test it.
+ 
+-	(Shell-A) Create cgroup and run event listener
+-	# mkdir /cgroup/A
+-	# ./cgroup_event_listener /cgroup/A/memory.usage_in_bytes 5M
++	(Shell-A) Create cgroup and run event listener::
+ 
+-	(Shell-B) Add task to cgroup and try to allocate and free memory
+-	# echo $$ >/cgroup/A/tasks
+-	# a="$(dd if=/dev/zero bs=1M count=10)"
+-	# a=
++		# mkdir /cgroup/A
++		# ./cgroup_event_listener /cgroup/A/memory.usage_in_bytes 5M
 +
- 				Default: nopass
- 
- mem=x		mem:x		Force frame buffer memory in MiB
- 				allowed values: 0, 1, 2, 4.
++	(Shell-B) Add task to cgroup and try to allocate and free memory::
 +
- 				Default: 0 (= autodetect)
++		# echo $$ >/cgroup/A/tasks
++		# a="$(dd if=/dev/zero bs=1M count=10)"
++		# a=
  
- inverse=1	inverse		Supposed to enable inverse console.
-@@ -96,79 +117,91 @@ inverse=1	inverse		Supposed to enable inverse console.
- clipping=1	clipping	Enable or disable clipping.
- clipping=0	noclipping	With clipping enabled, all offscreen
- 				reads and writes are discarded.
-+
- 				Default: enable clipping.
- 
- gfxclk=x	gfxclk:x	Force graphic clock frequency (in MHz).
- 				Be careful with this option, it may be
- 				DANGEROUS.
--				Default: auto 
--					50Mhz for Voodoo 1,
--					75MHz for Voodoo 2. 
-+
-+				Default: auto
-+
-+					- 50Mhz for Voodoo 1,
-+					- 75MHz for Voodoo 2.
- 
- slowpci=1	fastpci		Enable or disable fast PCI read/writes.
- slowpci=1	slowpci		Default : fastpci
- 
- dev=x		dev:x		Attach the driver to device number x.
--				0 is the first compatible board (in 
-+				0 is the first compatible board (in
- 				lspci order)
-+=============== =============== ===============================================
- 
- Tools
-+=====
- 
--	These tools are mostly for debugging purposes, but you can 
--	find some of these interesting :
--	 - con2fb , maps a tty to a fbramebuffer .
--		con2fb /dev/fb1 /dev/tty5
--	 - sst_dbg_vgapass , changes vga passthrou. You have to recompile the
--	driver with SST_DEBUG and SST_DEBUG_IOCTL set to 1
--		sst_dbg_vgapass /dev/fb1 1 (enables vga cable)
--		sst_dbg_vgapass /dev/fb1 0 (disables vga cable)
--	 - glide_reset , resets the voodoo using glide
--		use this after rmmoding sstfb, if the module refuses to
--		reinsert .
-+These tools are mostly for debugging purposes, but you can
-+find some of these interesting:
-+
-+- `con2fb`, maps a tty to a fbramebuffer::
-+
-+	con2fb /dev/fb1 /dev/tty5
-+
-+- `sst_dbg_vgapass`, changes vga passthrou. You have to recompile the
-+  driver with SST_DEBUG and SST_DEBUG_IOCTL set to 1::
-+
-+	sst_dbg_vgapass /dev/fb1 1 (enables vga cable)
-+	sst_dbg_vgapass /dev/fb1 0 (disables vga cable)
-+
-+- `glide_reset`, resets the voodoo using glide
-+  use this after rmmoding sstfb, if the module refuses to
-+  reinsert.
- 
- Bugs
-+====
- 
--	- DO NOT use glide while the sstfb module is in, you'll most likely
--	hang your computer.
--	- If you see some artefacts (pixels not cleaning and stuff like that), 
--	try turning off clipping (clipping=0), and/or using slowpci
--	- the driver don't detect the 4Mb frame buffer voodoos, it seems that
--	the 2 last Mbs wrap around. looking into that .
--	- The driver is 16 bpp only, 24/32 won't work.
--	- The driver is not your_favorite_toy-safe. this includes SMP...
--          [Actually from inspection it seems to be safe - Alan]
--	- When using XFree86 FBdev (X over fbdev) you may see strange color
--	patterns at the border of your windows (the pixels lose the lowest
--	byte -> basically the blue component and some of the green). I'm unable
--	to reproduce this with XFree86-3.3, but one of the testers has this
--	problem with XFree86-4. Apparently recent Xfree86-4.x solve this
--	problem.
--	- I didn't really test changing the palette, so you may find some weird
--	things when playing with that.
--	- Sometimes the driver will not recognise the DAC, and the
--        initialisation will fail. This is specifically true for
--	voodoo 2 boards, but it should be solved in recent versions. Please
--	contact me.
--	- The 24/32 is not likely to work anytime soon, knowing that the
--	hardware does ... unusual things in 24/32 bpp.
--	- When used with another video board, current limitations of the linux
--	console subsystem can cause some troubles, specifically, you should
--	disable software scrollback, as it can oops badly ...
-+- DO NOT use glide while the sstfb module is in, you'll most likely
-+  hang your computer.
-+- If you see some artefacts (pixels not cleaning and stuff like that),
-+  try turning off clipping (clipping=0), and/or using slowpci
-+- the driver don't detect the 4Mb frame buffer voodoos, it seems that
-+  the 2 last Mbs wrap around. looking into that .
-+- The driver is 16 bpp only, 24/32 won't work.
-+- The driver is not your_favorite_toy-safe. this includes SMP...
-+
-+	[Actually from inspection it seems to be safe - Alan]
-+
-+- When using XFree86 FBdev (X over fbdev) you may see strange color
-+  patterns at the border of your windows (the pixels lose the lowest
-+  byte -> basically the blue component and some of the green). I'm unable
-+  to reproduce this with XFree86-3.3, but one of the testers has this
-+  problem with XFree86-4. Apparently recent Xfree86-4.x solve this
-+  problem.
-+- I didn't really test changing the palette, so you may find some weird
-+  things when playing with that.
-+- Sometimes the driver will not recognise the DAC, and the
-+  initialisation will fail. This is specifically true for
-+  voodoo 2 boards, but it should be solved in recent versions. Please
-+  contact me.
-+- The 24/32 is not likely to work anytime soon, knowing that the
-+  hardware does ... unusual things in 24/32 bpp.
-+- When used with another video board, current limitations of the linux
-+  console subsystem can cause some troubles, specifically, you should
-+  disable software scrollback, as it can oops badly ...
- 
- Todo
-+====
- 
--	- Get rid of the previous paragraph.
--	- Buy more coffee.
--	- test/port to other arch.
--	- try to add panning using tweeks with front and back buffer .
--	- try to implement accel on voodoo2, this board can actually do a 
--	  lot in 2D even if it was sold as a 3D only board ...
-+- Get rid of the previous paragraph.
-+- Buy more coffee.
-+- test/port to other arch.
-+- try to add panning using tweeks with front and back buffer .
-+- try to implement accel on voodoo2, this board can actually do a
-+  lot in 2D even if it was sold as a 3D only board ...
- 
--ghoz.
--
---- 
- Ghozlane Toumi <gtoumi@laposte.net>
- 
- 
--$Date: 2002/05/09 20:11:45 $
-+Date: 2002/05/09 20:11:45
-+
- http://sstfb.sourceforge.net/README
-diff --git a/Documentation/fb/tgafb.txt b/Documentation/fb/tgafb.rst
+ 	You will see message from cgroup_event_listener every time you cross
+ 	the thresholds.
+diff --git a/Documentation/cgroup-v1/memory.txt b/Documentation/cgroup-v1/memory.rst
 similarity index 71%
-rename from Documentation/fb/tgafb.txt
-rename to Documentation/fb/tgafb.rst
-index 250083ada8fb..0c50d2134aa4 100644
---- a/Documentation/fb/tgafb.txt
-+++ b/Documentation/fb/tgafb.rst
-@@ -1,15 +1,14 @@
--$Id: tgafb.txt,v 1.1.2.2 2000/04/04 06:50:18 mato Exp $
--
-+==============
- What is tgafb?
--===============
-+==============
+rename from Documentation/cgroup-v1/memory.txt
+rename to Documentation/cgroup-v1/memory.rst
+index a33cedf85427..41bdc038dad9 100644
+--- a/Documentation/cgroup-v1/memory.txt
++++ b/Documentation/cgroup-v1/memory.rst
+@@ -1,22 +1,26 @@
++==========================
+ Memory Resource Controller
++==========================
  
- This is a driver for DECChip 21030 based graphics framebuffers, a.k.a. TGA
- cards, which are usually found in older Digital Alpha systems. The
- following models are supported:
+-NOTE: This document is hopelessly outdated and it asks for a complete
++NOTE:
++      This document is hopelessly outdated and it asks for a complete
+       rewrite. It still contains a useful information so we are keeping it
+       here but make sure to check the current code if you need a deeper
+       understanding.
  
--ZLxP-E1 (8bpp, 2 MB VRAM)
--ZLxP-E2 (32bpp, 8 MB VRAM)
--ZLxP-E3 (32bpp, 16 MB VRAM, Zbuffer)
-+- ZLxP-E1 (8bpp, 2 MB VRAM)
-+- ZLxP-E2 (32bpp, 8 MB VRAM)
-+- ZLxP-E3 (32bpp, 16 MB VRAM, Zbuffer)
+-NOTE: The Memory Resource Controller has generically been referred to as the
++NOTE:
++      The Memory Resource Controller has generically been referred to as the
+       memory controller in this document. Do not confuse memory controller
+       used here with the memory controller that is used in hardware.
  
- This version is an almost complete rewrite of the code written by Geert
- Uytterhoeven, which was based on the original TGA console code written by
-@@ -18,7 +17,7 @@ Jay Estabrook.
- Major new features since Linux 2.0.x:
+-(For editors)
+-In this document:
++(For editors) In this document:
+       When we mention a cgroup (cgroupfs's directory) with memory controller,
+       we call it "memory cgroup". When you see git-log and source code, you'll
+       see patch's title and function names tend to use "memcg".
+       In this document, we avoid using it.
  
-  * Support for multiple resolutions
-- * Support for fixed-frequency and other oddball monitors 
-+ * Support for fixed-frequency and other oddball monitors
-    (by allowing the video mode to be set at boot time)
+ Benefits and Purpose of the memory controller
++=============================================
  
- User-visible changes since Linux 2.2.x:
-@@ -36,19 +35,22 @@ Configuration
- =============
+ The memory controller isolates the memory behaviour of a group of tasks
+ from the rest of the system. The article on LWN [12] mentions some probable
+@@ -38,6 +42,7 @@ e. There are several other use cases; find one or use the controller just
+ Current Status: linux-2.6.34-mmotm(development version of 2010/April)
  
- You can pass kernel command line options to tgafb with
--`video=tgafb:option1,option2:value2,option3' (multiple options should be
--separated by comma, values are separated from options by `:').
-+`video=tgafb:option1,option2:value2,option3` (multiple options should be
-+separated by comma, values are separated from options by `:`).
+ Features:
 +
- Accepted options:
+  - accounting anonymous pages, file caches, swap caches usage and limiting them.
+  - pages are linked to per-memcg LRU exclusively, and there is no global LRU.
+  - optionally, memory+swap usage can be accounted and limited.
+@@ -54,41 +59,48 @@ Features:
+ 
+ Brief summary of control files.
+ 
+- tasks				 # attach a task(thread) and show list of threads
+- cgroup.procs			 # show list of processes
+- cgroup.event_control		 # an interface for event_fd()
+- memory.usage_in_bytes		 # show current usage for memory
+-				 (See 5.5 for details)
+- memory.memsw.usage_in_bytes	 # show current usage for memory+Swap
+-				 (See 5.5 for details)
+- memory.limit_in_bytes		 # set/show limit of memory usage
+- memory.memsw.limit_in_bytes	 # set/show limit of memory+Swap usage
+- memory.failcnt			 # show the number of memory usage hits limits
+- memory.memsw.failcnt		 # show the number of memory+Swap hits limits
+- memory.max_usage_in_bytes	 # show max memory usage recorded
+- memory.memsw.max_usage_in_bytes # show max memory+Swap usage recorded
+- memory.soft_limit_in_bytes	 # set/show soft limit of memory usage
+- memory.stat			 # show various statistics
+- memory.use_hierarchy		 # set/show hierarchical account enabled
+- memory.force_empty		 # trigger forced page reclaim
+- memory.pressure_level		 # set memory pressure notifications
+- memory.swappiness		 # set/show swappiness parameter of vmscan
+-				 (See sysctl's vm.swappiness)
+- memory.move_charge_at_immigrate # set/show controls of moving charges
+- memory.oom_control		 # set/show oom controls.
+- memory.numa_stat		 # show the number of memory usage per numa node
++==================================== ==========================================
++ tasks				     attach a task(thread) and show list of
++				     threads
++ cgroup.procs			     show list of processes
++ cgroup.event_control		     an interface for event_fd()
++ memory.usage_in_bytes		     show current usage for memory
++				     (See 5.5 for details)
++ memory.memsw.usage_in_bytes	     show current usage for memory+Swap
++				     (See 5.5 for details)
++ memory.limit_in_bytes		     set/show limit of memory usage
++ memory.memsw.limit_in_bytes	     set/show limit of memory+Swap usage
++ memory.failcnt			     show the number of memory usage hits limits
++ memory.memsw.failcnt		     show the number of memory+Swap hits limits
++ memory.max_usage_in_bytes	     show max memory usage recorded
++ memory.memsw.max_usage_in_bytes     show max memory+Swap usage recorded
++ memory.soft_limit_in_bytes	     set/show soft limit of memory usage
++ memory.stat			     show various statistics
++ memory.use_hierarchy		     set/show hierarchical account enabled
++ memory.force_empty		     trigger forced page reclaim
++ memory.pressure_level		     set memory pressure notifications
++ memory.swappiness		     set/show swappiness parameter of vmscan
++				     (See sysctl's vm.swappiness)
++ memory.move_charge_at_immigrate     set/show controls of moving charges
++ memory.oom_control		     set/show oom controls.
++ memory.numa_stat		     show the number of memory usage per numa
++				     node
+ 
+- memory.kmem.limit_in_bytes      # set/show hard limit for kernel memory
+- memory.kmem.usage_in_bytes      # show current kernel memory allocation
+- memory.kmem.failcnt             # show the number of kernel memory usage hits limits
+- memory.kmem.max_usage_in_bytes  # show max kernel memory usage recorded
++ memory.kmem.limit_in_bytes          set/show hard limit for kernel memory
++ memory.kmem.usage_in_bytes          show current kernel memory allocation
++ memory.kmem.failcnt                 show the number of kernel memory usage
++				     hits limits
++ memory.kmem.max_usage_in_bytes      show max kernel memory usage recorded
+ 
+- memory.kmem.tcp.limit_in_bytes  # set/show hard limit for tcp buf memory
+- memory.kmem.tcp.usage_in_bytes  # show current tcp buf memory allocation
+- memory.kmem.tcp.failcnt            # show the number of tcp buf memory usage hits limits
+- memory.kmem.tcp.max_usage_in_bytes # show max tcp buf memory usage recorded
++ memory.kmem.tcp.limit_in_bytes      set/show hard limit for tcp buf memory
++ memory.kmem.tcp.usage_in_bytes      show current tcp buf memory allocation
++ memory.kmem.tcp.failcnt             show the number of tcp buf memory usage
++				     hits limits
++ memory.kmem.tcp.max_usage_in_bytes  show max tcp buf memory usage recorded
++==================================== ==========================================
+ 
+ 1. History
++==========
+ 
+ The memory controller has a long history. A request for comments for the memory
+ controller was posted by Balbir Singh [1]. At the time the RFC was posted
+@@ -103,6 +115,7 @@ at version 6; it combines both mapped (RSS) and unmapped Page
+ Cache Control [11].
+ 
+ 2. Memory Control
++=================
+ 
+ Memory is a unique resource in the sense that it is present in a limited
+ amount. If a task requires a lot of CPU processing, the task can spread
+@@ -120,6 +133,7 @@ are:
+ The memory controller is the first controller developed.
+ 
+ 2.1. Design
++-----------
+ 
+ The core of the design is a counter called the page_counter. The
+ page_counter tracks the current memory usage and limit of the group of
+@@ -127,6 +141,9 @@ processes associated with the controller. Each cgroup has a memory controller
+ specific data structure (mem_cgroup) associated with it.
  
--font:X    - default font to use. All fonts are supported, including the
--            SUN12x22 font which is very nice at high resolutions.
-+==========  ============================================================
-+font:X      default font to use. All fonts are supported, including the
-+	    SUN12x22 font which is very nice at high resolutions.
- 
--mode:X    - default video mode. The following video modes are supported:
--            640x480-60, 800x600-56, 640x480-72, 800x600-60, 800x600-72, 
-+mode:X      default video mode. The following video modes are supported:
-+	    640x480-60, 800x600-56, 640x480-72, 800x600-60, 800x600-72,
- 	    1024x768-60, 1152x864-60, 1024x768-70, 1024x768-76,
- 	    1152x864-70, 1280x1024-61, 1024x768-85, 1280x1024-70,
- 	    1152x864-84, 1280x1024-76, 1280x1024-85
-- 
-+==========  ============================================================
-+
- 
- Known Issues
- ============
-diff --git a/Documentation/fb/tridentfb.txt b/Documentation/fb/tridentfb.rst
-similarity index 70%
-rename from Documentation/fb/tridentfb.txt
-rename to Documentation/fb/tridentfb.rst
-index 45d9de5b13a3..7921c9dee78c 100644
---- a/Documentation/fb/tridentfb.txt
-+++ b/Documentation/fb/tridentfb.rst
-@@ -1,3 +1,7 @@
-+=========
-+Tridentfb
-+=========
-+
- Tridentfb is a framebuffer driver for some Trident chip based cards.
- 
- The following list of chips is thought to be supported although not all are
-@@ -17,6 +21,7 @@ limited comparing to the range if acceleration is disabled (see list
- of parameters below).
- 
- Known bugs:
-+
- 1. The driver randomly locks up on 3DImage975 chip with acceleration
-    enabled. The same happens in X11 (Xorg).
- 2. The ramdac speeds require some more fine tuning. It is possible to
-@@ -26,28 +31,30 @@ Known bugs:
- How to use it?
- ==============
- 
--When booting you can pass the video parameter.
--video=tridentfb
-+When booting you can pass the video parameter::
- 
--The parameters for tridentfb are concatenated with a ':' as in this example.
-+	video=tridentfb
- 
--video=tridentfb:800x600-16@75,noaccel
-+The parameters for tridentfb are concatenated with a ':' as in this example::
-+
-+	video=tridentfb:800x600-16@75,noaccel
- 
- The second level parameters that tridentfb understands are:
- 
--noaccel - turns off acceleration (when it doesn't work for your card)
-+========  =====================================================================
-+noaccel   turns off acceleration (when it doesn't work for your card)
- 
--fp	- use flat panel related stuff
--crt 	- assume monitor is present instead of fp
-+fp	  use flat panel related stuff
-+crt 	  assume monitor is present instead of fp
- 
--center 	- for flat panels and resolutions smaller than native size center the
-+center 	  for flat panels and resolutions smaller than native size center the
- 	  image, otherwise use
- stretch
- 
--memsize - integer value in KB, use if your card's memory size is misdetected.
-+memsize   integer value in KB, use if your card's memory size is misdetected.
- 	  look at the driver output to see what it says when initializing.
- 
--memdiff - integer value in KB, should be nonzero if your card reports
-+memdiff   integer value in KB, should be nonzero if your card reports
- 	  more memory than it actually has. For instance mine is 192K less than
- 	  detection says in all three BIOS selectable situations 2M, 4M, 8M.
- 	  Only use if your video memory is taken from main memory hence of
-@@ -56,12 +63,13 @@ memdiff - integer value in KB, should be nonzero if your card reports
- 	  at the bottom this might help by not letting change to that mode
- 	  anymore.
- 
--nativex - the width in pixels of the flat panel.If you know it (usually 1024
-+nativex   the width in pixels of the flat panel.If you know it (usually 1024
- 	  800 or 1280) and it is not what the driver seems to detect use it.
- 
--bpp	- bits per pixel (8,16 or 32)
--mode	- a mode name like 800x600-8@75 as described in
--	  Documentation/fb/modedb.txt
-+bpp	  bits per pixel (8,16 or 32)
-+mode	  a mode name like 800x600-8@75 as described in
-+	  Documentation/fb/modedb.rst
-+========  =====================================================================
- 
- Using insane values for the above parameters will probably result in driver
- misbehaviour so take care(for instance memsize=12345678 or memdiff=23784 or
-diff --git a/Documentation/fb/udlfb.txt b/Documentation/fb/udlfb.rst
-similarity index 77%
-rename from Documentation/fb/udlfb.txt
-rename to Documentation/fb/udlfb.rst
-index c985cb65dd06..732b37db3504 100644
---- a/Documentation/fb/udlfb.txt
-+++ b/Documentation/fb/udlfb.rst
-@@ -1,6 +1,6 @@
--
-+==============
- What is udlfb?
--===============
-+==============
- 
- This is a driver for DisplayLink USB 2.0 era graphics chips.
- 
-@@ -100,6 +100,7 @@ options udlfb fb_defio=0 console=1 shadow=1
- 
- Accepted boolean options:
- 
-+=============== ================================================================
- fb_defio	Make use of the fb_defio (CONFIG_FB_DEFERRED_IO) kernel
- 		module to track changed areas of the framebuffer by page faults.
- 		Standard fbdev applications that use mmap but that do not
-@@ -109,7 +110,7 @@ fb_defio	Make use of the fb_defio (CONFIG_FB_DEFERRED_IO) kernel
- 		more stable, and higher performance.
- 		default: fb_defio=1
- 
--console	Allow fbcon to attach to udlfb provided framebuffers.
-+console		Allow fbcon to attach to udlfb provided framebuffers.
- 		Can be disabled if fbcon and other clients
- 		(e.g. X with --shared-vt) are in conflict.
- 		default: console=1
-@@ -119,6 +120,7 @@ shadow		Allocate a 2nd framebuffer to shadow what's currently across
- 		do not transmit. Spends host memory to save USB transfers.
- 		Enabled by default. Only disable on very low memory systems.
- 		default: shadow=1
-+=============== ================================================================
- 
- Sysfs Attributes
- ================
-@@ -126,34 +128,35 @@ Sysfs Attributes
- Udlfb creates several files in /sys/class/graphics/fb?
- Where ? is the sequential framebuffer id of the particular DisplayLink device
- 
--edid	       		If a valid EDID blob is written to this file (typically
--			by a udev rule), then udlfb will use this EDID as a
--			backup in case reading the actual EDID of the monitor
--			attached to the DisplayLink device fails. This is
--			especially useful for fixed panels, etc. that cannot
--			communicate their capabilities via EDID. Reading
--			this file returns the current EDID of the attached
--			monitor (or last backup value written). This is
--			useful to get the EDID of the attached monitor,
--			which can be passed to utilities like parse-edid.
-+======================== ========================================================
-+edid			 If a valid EDID blob is written to this file (typically
-+			 by a udev rule), then udlfb will use this EDID as a
-+			 backup in case reading the actual EDID of the monitor
-+			 attached to the DisplayLink device fails. This is
-+			 especially useful for fixed panels, etc. that cannot
-+			 communicate their capabilities via EDID. Reading
-+			 this file returns the current EDID of the attached
-+			 monitor (or last backup value written). This is
-+			 useful to get the EDID of the attached monitor,
-+			 which can be passed to utilities like parse-edid.
- 
--metrics_bytes_rendered	32-bit count of pixel bytes rendered
-+metrics_bytes_rendered	 32-bit count of pixel bytes rendered
- 
--metrics_bytes_identical 32-bit count of how many of those bytes were found to be
--			unchanged, based on a shadow framebuffer check
-+metrics_bytes_identical  32-bit count of how many of those bytes were found to be
-+			 unchanged, based on a shadow framebuffer check
- 
--metrics_bytes_sent	32-bit count of how many bytes were transferred over
--			USB to communicate the resulting changed pixels to the
--			hardware. Includes compression and protocol overhead
-+metrics_bytes_sent	 32-bit count of how many bytes were transferred over
-+			 USB to communicate the resulting changed pixels to the
-+			 hardware. Includes compression and protocol overhead
- 
- metrics_cpu_kcycles_used 32-bit count of CPU cycles used in processing the
--			above pixels (in thousands of cycles).
-+			 above pixels (in thousands of cycles).
- 
--metrics_reset		Write-only. Any write to this file resets all metrics
--			above to zero.  Note that the 32-bit counters above
--			roll over very quickly. To get reliable results, design
--			performance tests to start and finish in a very short
--			period of time (one minute or less is safe).
-+metrics_reset		 Write-only. Any write to this file resets all metrics
-+			 above to zero.  Note that the 32-bit counters above
-+			 roll over very quickly. To get reliable results, design
-+			 performance tests to start and finish in a very short
-+			 period of time (one minute or less is safe).
-+======================== ========================================================
- 
----
- Bernie Thompson <bernie@plugable.com>
-diff --git a/Documentation/fb/uvesafb.txt b/Documentation/fb/uvesafb.rst
-similarity index 52%
-rename from Documentation/fb/uvesafb.txt
-rename to Documentation/fb/uvesafb.rst
-index aa924196c366..d1c2523fbb33 100644
---- a/Documentation/fb/uvesafb.txt
-+++ b/Documentation/fb/uvesafb.rst
-@@ -1,4 +1,4 @@
--
-+==========================================================
- uvesafb - A Generic Driver for VBE2+ compliant video cards
- ==========================================================
- 
-@@ -49,7 +49,7 @@ The most important limitations are:
- 
- uvesafb can be compiled either as a module, or directly into the kernel.
- In both cases it supports the same set of configuration options, which
--are either given on the kernel command line or as module parameters, e.g.:
-+are either given on the kernel command line or as module parameters, e.g.::
- 
-  video=uvesafb:1024x768-32,mtrr:3,ywrap (compiled into the kernel)
- 
-@@ -57,85 +57,90 @@ are either given on the kernel command line or as module parameters, e.g.:
- 
- Accepted options:
- 
-+======= =========================================================
- ypan    Enable display panning using the VESA protected mode
--        interface.  The visible screen is just a window of the
--        video memory, console scrolling is done by changing the
--        start of the window.  This option is available on x86
--        only and is the default option on that architecture.
-+	interface.  The visible screen is just a window of the
-+	video memory, console scrolling is done by changing the
-+	start of the window.  This option is available on x86
-+	only and is the default option on that architecture.
- 
- ywrap   Same as ypan, but assumes your gfx board can wrap-around
--        the video memory (i.e. starts reading from top if it
--        reaches the end of video memory).  Faster than ypan.
--        Available on x86 only.
-+	the video memory (i.e. starts reading from top if it
-+	reaches the end of video memory).  Faster than ypan.
-+	Available on x86 only.
- 
- redraw  Scroll by redrawing the affected part of the screen, this
--        is the default on non-x86.
-+	is the default on non-x86.
-+======= =========================================================
- 
- (If you're using uvesafb as a module, the above three options are
-- used a parameter of the scroll option, e.g. scroll=ypan.)
-+used a parameter of the scroll option, e.g. scroll=ypan.)
- 
--vgapal  Use the standard VGA registers for palette changes.
-+=========== ====================================================================
-+vgapal      Use the standard VGA registers for palette changes.
- 
--pmipal  Use the protected mode interface for palette changes.
--        This is the default if the protected mode interface is
--        available.  Available on x86 only.
-+pmipal      Use the protected mode interface for palette changes.
-+            This is the default if the protected mode interface is
-+            available.  Available on x86 only.
- 
--mtrr:n  Setup memory type range registers for the framebuffer
--        where n:
--              0 - disabled (equivalent to nomtrr)
--              3 - write-combining (default)
-+mtrr:n      Setup memory type range registers for the framebuffer
-+            where n:
- 
--	Values other than 0 and 3 will result in a warning and will be
--	treated just like 3.
-+                - 0 - disabled (equivalent to nomtrr)
-+                - 3 - write-combining (default)
- 
--nomtrr  Do not use memory type range registers.
-+            Values other than 0 and 3 will result in a warning and will be
-+            treated just like 3.
-+
-+nomtrr      Do not use memory type range registers.
- 
- vremap:n
--        Remap 'n' MiB of video RAM.  If 0 or not specified, remap memory
--        according to video mode.
-+            Remap 'n' MiB of video RAM.  If 0 or not specified, remap memory
-+            according to video mode.
- 
--vtotal:n
--        If the video BIOS of your card incorrectly determines the total
--        amount of video RAM, use this option to override the BIOS (in MiB).
-+vtotal:n    If the video BIOS of your card incorrectly determines the total
-+            amount of video RAM, use this option to override the BIOS (in MiB).
- 
--<mode>  The mode you want to set, in the standard modedb format.  Refer to
--        modedb.txt for a detailed description.  When uvesafb is compiled as
--        a module, the mode string should be provided as a value of the
--        'mode_option' option.
-+<mode>      The mode you want to set, in the standard modedb format.  Refer to
-+            modedb.txt for a detailed description.  When uvesafb is compiled as
-+            a module, the mode string should be provided as a value of the
-+            'mode_option' option.
- 
--vbemode:x
--        Force the use of VBE mode x.  The mode will only be set if it's
--        found in the VBE-provided list of supported modes.
--        NOTE: The mode number 'x' should be specified in VESA mode number
--        notation, not the Linux kernel one (eg. 257 instead of 769).
--        HINT: If you use this option because normal <mode> parameter does
--        not work for you and you use a X server, you'll probably want to
--        set the 'nocrtc' option to ensure that the video mode is properly
--        restored after console <-> X switches.
-+vbemode:x   Force the use of VBE mode x.  The mode will only be set if it's
-+            found in the VBE-provided list of supported modes.
-+            NOTE: The mode number 'x' should be specified in VESA mode number
-+            notation, not the Linux kernel one (eg. 257 instead of 769).
-+            HINT: If you use this option because normal <mode> parameter does
-+            not work for you and you use a X server, you'll probably want to
-+            set the 'nocrtc' option to ensure that the video mode is properly
-+            restored after console <-> X switches.
- 
--nocrtc  Do not use CRTC timings while setting the video mode.  This option
--        has any effect only if the Video BIOS is VBE 3.0 compliant.  Use it
--        if you have problems with modes set the standard way.  Note that
--        using this option implies that any refresh rate adjustments will
--        be ignored and the refresh rate will stay at your BIOS default (60 Hz).
-+nocrtc      Do not use CRTC timings while setting the video mode.  This option
-+            has any effect only if the Video BIOS is VBE 3.0 compliant.  Use it
-+            if you have problems with modes set the standard way.  Note that
-+            using this option implies that any refresh rate adjustments will
-+            be ignored and the refresh rate will stay at your BIOS default
-+            (60 Hz).
- 
--noedid  Do not try to fetch and use EDID-provided modes.
-+noedid      Do not try to fetch and use EDID-provided modes.
- 
--noblank Disable hardware blanking.
-+noblank     Disable hardware blanking.
- 
--v86d:path
--        Set path to the v86d executable. This option is only available as
--        a module parameter, and not as a part of the video= string.  If you
--        need to use it and have uvesafb built into the kernel, use
--        uvesafb.v86d="path".
-+v86d:path   Set path to the v86d executable. This option is only available as
-+            a module parameter, and not as a part of the video= string.  If you
-+            need to use it and have uvesafb built into the kernel, use
-+            uvesafb.v86d="path".
-+=========== ====================================================================
- 
- Additionally, the following parameters may be provided.  They all override the
- EDID-provided values and BIOS defaults.  Refer to your monitor's specs to get
- the correct values for maxhf, maxvf and maxclk for your hardware.
- 
-+=========== ======================================
- maxhf:n     Maximum horizontal frequency (in kHz).
- maxvf:n     Maximum vertical frequency (in Hz).
- maxclk:n    Maximum pixel clock (in MHz).
-+=========== ======================================
- 
- 4. The sysfs interface
- ----------------------
-@@ -146,27 +151,26 @@ additional information.
- Driver attributes:
- 
- /sys/bus/platform/drivers/uvesafb
--  - v86d (default: /sbin/v86d)
-+  v86d
-+    (default: /sbin/v86d)
-+
-     Path to the v86d executable. v86d is started by uvesafb
-     if an instance of the daemon isn't already running.
- 
- Device attributes:
- 
- /sys/bus/platform/drivers/uvesafb/uvesafb.0
--  - nocrtc
-+  nocrtc
-     Use the default refresh rate (60 Hz) if set to 1.
- 
--  - oem_product_name
--  - oem_product_rev
--  - oem_string
--  - oem_vendor
-+  oem_product_name, oem_product_rev, oem_string, oem_vendor
-     Information about the card and its maker.
- 
--  - vbe_modes
-+  vbe_modes
-     A list of video modes supported by the Video BIOS along with their
-     VBE mode numbers in hex.
- 
--  - vbe_version
-+  vbe_version
-     A BCD value indicating the implemented VBE standard.
- 
- 5. Miscellaneous
-@@ -176,9 +180,9 @@ Uvesafb will set a video mode with the default refresh rate and timings
- from the Video BIOS if you set pixclock to 0 in fb_var_screeninfo.
- 
- 
----
-+
-  Michal Januszewski <spock@gentoo.org>
-+
-  Last updated: 2017-10-10
- 
-  Documentation of the uvesafb options is loosely based on vesafb.txt.
--
-diff --git a/Documentation/fb/vesafb.txt b/Documentation/fb/vesafb.rst
-similarity index 57%
-rename from Documentation/fb/vesafb.txt
-rename to Documentation/fb/vesafb.rst
-index 413bb73235be..2ed0dfb661cf 100644
---- a/Documentation/fb/vesafb.txt
-+++ b/Documentation/fb/vesafb.rst
-@@ -1,4 +1,4 @@
--
-+===============
- What is vesafb?
- ===============
- 
-@@ -40,30 +40,35 @@ The graphic modes are NOT in the list which you get if you boot with
- vga=ask and hit return. The mode you wish to use is derived from the
- VESA mode number. Here are those VESA mode numbers:
- 
--    | 640x480  800x600  1024x768 1280x1024
------+-------------------------------------
--256 |  0x101    0x103    0x105    0x107   
--32k |  0x110    0x113    0x116    0x119   
--64k |  0x111    0x114    0x117    0x11A   
--16M |  0x112    0x115    0x118    0x11B   
-+====== =======  =======  ======== =========
-+colors 640x480  800x600  1024x768 1280x1024
-+====== =======  =======  ======== =========
-+256    0x101    0x103    0x105    0x107
-+32k    0x110    0x113    0x116    0x119
-+64k    0x111    0x114    0x117    0x11A
-+16M    0x112    0x115    0x118    0x11B
-+====== =======  =======  ======== =========
-+
- 
- The video mode number of the Linux kernel is the VESA mode number plus
--0x200.
-- 
-+0x200:
-+
-  Linux_kernel_mode_number = VESA_mode_number + 0x200
- 
- So the table for the Kernel mode numbers are:
- 
--    | 640x480  800x600  1024x768 1280x1024
------+-------------------------------------
--256 |  0x301    0x303    0x305    0x307   
--32k |  0x310    0x313    0x316    0x319   
--64k |  0x311    0x314    0x317    0x31A   
--16M |  0x312    0x315    0x318    0x31B   
-+====== =======  =======  ======== =========
-+colors 640x480  800x600  1024x768 1280x1024
-+====== =======  =======  ======== =========
-+256    0x301    0x303    0x305    0x307
-+32k    0x310    0x313    0x316    0x319
-+64k    0x311    0x314    0x317    0x31A
-+16M    0x312    0x315    0x318    0x31B
-+====== =======  =======  ======== =========
- 
- To enable one of those modes you have to specify "vga=ask" in the
- lilo.conf file and rerun LILO. Then you can type in the desired
--mode at the "vga=ask" prompt. For example if you like to use 
-+mode at the "vga=ask" prompt. For example if you like to use
- 1024x768x256 colors you have to say "305" at this prompt.
- 
- If this does not work, this might be because your BIOS does not support
-@@ -72,10 +77,10 @@ Even if your board does, it might be the BIOS which does not.  VESA BIOS
- Extensions v2.0 are required, 1.2 is NOT sufficient.  You will get a
- "bad mode number" message if something goes wrong.
- 
--1. Note: LILO cannot handle hex, for booting directly with 
--         "vga=mode-number" you have to transform the numbers to decimal.
-+1. Note: LILO cannot handle hex, for booting directly with
-+   "vga=mode-number" you have to transform the numbers to decimal.
- 2. Note: Some newer versions of LILO appear to work with those hex values,
--         if you set the 0x in front of the numbers.
-+   if you set the 0x in front of the numbers.
- 
- X11
- ===
-@@ -120,62 +125,68 @@ Accepted options:
- 
- inverse	use inverse color map
- 
--ypan	enable display panning using the VESA protected mode 
--	interface.  The visible screen is just a window of the
--	video memory, console scrolling is done by changing the
--	start of the window.
--	pro:	* scrolling (fullscreen) is fast, because there is
-+========= ======================================================================
-+ypan	  enable display panning using the VESA protected mode
-+          interface.  The visible screen is just a window of the
-+          video memory, console scrolling is done by changing the
-+          start of the window.
-+
-+          pro:
-+
-+                * scrolling (fullscreen) is fast, because there is
- 		  no need to copy around data.
- 		* You'll get scrollback (the Shift-PgUp thing),
- 		  the video memory can be used as scrollback buffer
--	kontra: * scrolling only parts of the screen causes some
-+
-+          kontra:
-+
-+		* scrolling only parts of the screen causes some
- 		  ugly flicker effects (boot logo flickers for
- 		  example).
- 
--ywrap	Same as ypan, but assumes your gfx board can wrap-around 
--	the video memory (i.e. starts reading from top if it
--	reaches the end of video memory).  Faster than ypan.
-+ywrap	  Same as ypan, but assumes your gfx board can wrap-around
-+          the video memory (i.e. starts reading from top if it
-+          reaches the end of video memory).  Faster than ypan.
- 
--redraw	scroll by redrawing the affected part of the screen, this
--	is the safe (and slow) default.
-+redraw	  Scroll by redrawing the affected part of the screen, this
-+          is the safe (and slow) default.
- 
- 
--vgapal	Use the standard vga registers for palette changes.
--	This is the default.
--pmipal	Use the protected mode interface for palette changes.
-+vgapal	  Use the standard vga registers for palette changes.
-+          This is the default.
-+pmipal    Use the protected mode interface for palette changes.
- 
--mtrr:n	setup memory type range registers for the vesafb framebuffer
--	where n:
--	      0 - disabled (equivalent to nomtrr) (default)
--	      1 - uncachable
--	      2 - write-back
--	      3 - write-combining
--	      4 - write-through
-+mtrr:n	  Setup memory type range registers for the vesafb framebuffer
-+          where n:
- 
--	If you see the following in dmesg, choose the type that matches the
--	old one. In this example, use "mtrr:2".
-+              - 0 - disabled (equivalent to nomtrr) (default)
-+              - 1 - uncachable
-+              - 2 - write-back
-+              - 3 - write-combining
-+              - 4 - write-through
-+
-+          If you see the following in dmesg, choose the type that matches the
-+          old one. In this example, use "mtrr:2".
- ...
--mtrr: type mismatch for e0000000,8000000 old: write-back new: write-combining
-+mtrr:     type mismatch for e0000000,8000000 old: write-back new:
-+	  write-combining
- ...
- 
--nomtrr  disable mtrr
-+nomtrr    disable mtrr
- 
- vremap:n
--        remap 'n' MiB of video RAM. If 0 or not specified, remap memory
--	according to video mode. (2.5.66 patch/idea by Antonino Daplas
--	reversed to give override possibility (allocate more fb memory
--	than the kernel would) to 2.4 by tmb@iki.fi)
-+          Remap 'n' MiB of video RAM. If 0 or not specified, remap memory
-+          according to video mode. (2.5.66 patch/idea by Antonino Daplas
-+          reversed to give override possibility (allocate more fb memory
-+          than the kernel would) to 2.4 by tmb@iki.fi)
- 
--vtotal:n
--        if the video BIOS of your card incorrectly determines the total
--        amount of video RAM, use this option to override the BIOS (in MiB).
-+vtotal:n  If the video BIOS of your card incorrectly determines the total
-+          amount of video RAM, use this option to override the BIOS (in MiB).
-+========= ======================================================================
- 
- Have fun!
- 
--  Gerd
--
----
- Gerd Knorr <kraxel@goldbach.in-berlin.de>
- 
--Minor (mostly typo) changes 
-+Minor (mostly typo) changes
- by Nico Schmoigl <schmoigl@rumms.uni-mannheim.de>
-diff --git a/Documentation/fb/viafb.txt b/Documentation/fb/viafb.rst
-similarity index 18%
-rename from Documentation/fb/viafb.txt
-rename to Documentation/fb/viafb.rst
-index 1cb2462a71ce..8eb7a3bb068c 100644
---- a/Documentation/fb/viafb.txt
-+++ b/Documentation/fb/viafb.rst
-@@ -1,165 +1,185 @@
-+=======================================================
-+VIA Integration Graphic Chip Console Framebuffer Driver
-+=======================================================
- 
--        VIA Integration Graphic Chip Console Framebuffer Driver
--
--[Platform]
-------------------------
-+Platform
-+--------
-     The console framebuffer driver is for graphics chips of
--    VIA UniChrome Family(CLE266, PM800 / CN400 / CN300,
--                        P4M800CE / P4M800Pro / CN700 / VN800,
--                        CX700 / VX700, K8M890, P4M890,
--                        CN896 / P4M900, VX800, VX855)
-+    VIA UniChrome Family
-+    (CLE266, PM800 / CN400 / CN300,
-+    P4M800CE / P4M800Pro / CN700 / VN800,
-+    CX700 / VX700, K8M890, P4M890,
-+    CN896 / P4M900, VX800, VX855)
- 
--[Driver features]
--------------------------
-+Driver features
+ 2.2. Accounting
 +---------------
-     Device: CRT, LCD, DVI
- 
--    Support viafb_mode:
--        CRT:
--            640x480(60, 75, 85, 100, 120 Hz), 720x480(60 Hz),
--            720x576(60 Hz), 800x600(60, 75, 85, 100, 120 Hz),
--            848x480(60 Hz), 856x480(60 Hz), 1024x512(60 Hz),
--            1024x768(60, 75, 85, 100 Hz), 1152x864(75 Hz),
--            1280x768(60 Hz), 1280x960(60 Hz), 1280x1024(60, 75, 85 Hz),
--            1440x1050(60 Hz), 1600x1200(60, 75 Hz), 1280x720(60 Hz),
--            1920x1080(60 Hz), 1400x1050(60 Hz), 800x480(60 Hz)
-+    Support viafb_mode::
 +
-+	CRT:
-+	    640x480(60, 75, 85, 100, 120 Hz), 720x480(60 Hz),
-+	    720x576(60 Hz), 800x600(60, 75, 85, 100, 120 Hz),
-+	    848x480(60 Hz), 856x480(60 Hz), 1024x512(60 Hz),
-+	    1024x768(60, 75, 85, 100 Hz), 1152x864(75 Hz),
-+	    1280x768(60 Hz), 1280x960(60 Hz), 1280x1024(60, 75, 85 Hz),
-+	    1440x1050(60 Hz), 1600x1200(60, 75 Hz), 1280x720(60 Hz),
-+	    1920x1080(60 Hz), 1400x1050(60 Hz), 800x480(60 Hz)
++::
  
-     color depth: 8 bpp, 16 bpp, 32 bpp supports.
+ 		+--------------------+
+ 		|  mem_cgroup        |
+@@ -165,6 +182,7 @@ updated. page_cgroup has its own LRU on cgroup.
+ (*) page_cgroup structure is allocated at boot/memory-hotplug time.
  
-     Support 2D hardware accelerator.
+ 2.2.1 Accounting details
++------------------------
  
--[Using the viafb module]
---- -- --------------------
--    Start viafb with default settings:
--        #modprobe viafb
-+Using the viafb module
+ All mapped anon pages (RSS) and cache pages (Page Cache) are accounted.
+ Some pages which are never reclaimable and will not be on the LRU
+@@ -191,6 +209,7 @@ Note: we just account pages-on-LRU because our purpose is to control amount
+ of used pages; not-on-LRU pages tend to be out-of-control from VM view.
+ 
+ 2.3 Shared Page Accounting
++--------------------------
+ 
+ Shared pages are accounted on the basis of the first touch approach. The
+ cgroup that first touches a page is accounted for the page. The principle
+@@ -207,11 +226,13 @@ be backed into memory in force, charges for pages are accounted against the
+ caller of swapoff rather than the users of shmem.
+ 
+ 2.4 Swap Extension (CONFIG_MEMCG_SWAP)
++--------------------------------------
+ 
+ Swap Extension allows you to record charge for swap. A swapped-in page is
+ charged back to original page allocator if possible.
+ 
+ When swap is accounted, following files are added.
++
+  - memory.memsw.usage_in_bytes.
+  - memory.memsw.limit_in_bytes.
+ 
+@@ -224,14 +245,16 @@ In this case, setting memsw.limit_in_bytes=3G will prevent bad use of swap.
+ By using the memsw limit, you can avoid system OOM which can be caused by swap
+ shortage.
+ 
+-* why 'memory+swap' rather than swap.
++**why 'memory+swap' rather than swap**
++
+ The global LRU(kswapd) can swap out arbitrary pages. Swap-out means
+ to move account from memory to swap...there is no change in usage of
+ memory+swap. In other words, when we want to limit the usage of swap without
+ affecting global LRU, memory+swap limit is better than just limiting swap from
+ an OS point of view.
+ 
+-* What happens when a cgroup hits memory.memsw.limit_in_bytes
++**What happens when a cgroup hits memory.memsw.limit_in_bytes**
++
+ When a cgroup hits memory.memsw.limit_in_bytes, it's useless to do swap-out
+ in this cgroup. Then, swap-out will not be done by cgroup routine and file
+ caches are dropped. But as mentioned above, global LRU can do swapout memory
+@@ -239,6 +262,7 @@ from it for sanity of the system's memory management state. You can't forbid
+ it by cgroup.
+ 
+ 2.5 Reclaim
++-----------
+ 
+ Each cgroup maintains a per cgroup LRU which has the same structure as
+ global VM. When a cgroup goes over its limit, we first try
+@@ -251,29 +275,36 @@ The reclaim algorithm has not been modified for cgroups, except that
+ pages that are selected for reclaiming come from the per-cgroup LRU
+ list.
+ 
+-NOTE: Reclaim does not work for the root cgroup, since we cannot set any
+-limits on the root cgroup.
++NOTE:
++  Reclaim does not work for the root cgroup, since we cannot set any
++  limits on the root cgroup.
+ 
+-Note2: When panic_on_oom is set to "2", the whole system will panic.
++Note2:
++  When panic_on_oom is set to "2", the whole system will panic.
+ 
+ When oom event notifier is registered, event will be delivered.
+ (See oom_control section)
+ 
+ 2.6 Locking
++-----------
+ 
+    lock_page_cgroup()/unlock_page_cgroup() should not be called under
+    the i_pages lock.
+ 
+    Other lock order is following:
++
+    PG_locked.
+-   mm->page_table_lock
+-       pgdat->lru_lock
+-	  lock_page_cgroup.
++     mm->page_table_lock
++         pgdat->lru_lock
++	   lock_page_cgroup.
++
+   In many cases, just lock_page_cgroup() is called.
++
+   per-zone-per-cgroup LRU (cgroup's private LRU) is just guarded by
+   pgdat->lru_lock, it has no lock of its own.
+ 
+ 2.7 Kernel Memory Extension (CONFIG_MEMCG_KMEM)
++-----------------------------------------------
+ 
+ With the Kernel memory extension, the Memory Controller is able to limit
+ the amount of kernel memory used by the system. Kernel memory is fundamentally
+@@ -288,6 +319,7 @@ Kernel memory limits are not imposed for the root cgroup. Usage for the root
+ cgroup may or may not be accounted. The memory used is accumulated into
+ memory.kmem.usage_in_bytes, or in a separate counter when it makes sense.
+ (currently only for tcp).
++
+ The main "kmem" counter is fed into the main counter, so kmem charges will
+ also be visible from the user counter.
+ 
+@@ -295,36 +327,42 @@ Currently no soft limit is implemented for kernel memory. It is future work
+ to trigger slab reclaim when those limits are reached.
+ 
+ 2.7.1 Current Kernel Memory resources accounted
++-----------------------------------------------
+ 
+-* stack pages: every process consumes some stack pages. By accounting into
+-kernel memory, we prevent new processes from being created when the kernel
+-memory usage is too high.
++stack pages:
++  every process consumes some stack pages. By accounting into
++  kernel memory, we prevent new processes from being created when the kernel
++  memory usage is too high.
+ 
+-* slab pages: pages allocated by the SLAB or SLUB allocator are tracked. A copy
+-of each kmem_cache is created every time the cache is touched by the first time
+-from inside the memcg. The creation is done lazily, so some objects can still be
+-skipped while the cache is being created. All objects in a slab page should
+-belong to the same memcg. This only fails to hold when a task is migrated to a
+-different memcg during the page allocation by the cache.
++slab pages:
++  pages allocated by the SLAB or SLUB allocator are tracked. A copy
++  of each kmem_cache is created every time the cache is touched by the first time
++  from inside the memcg. The creation is done lazily, so some objects can still be
++  skipped while the cache is being created. All objects in a slab page should
++  belong to the same memcg. This only fails to hold when a task is migrated to a
++  different memcg during the page allocation by the cache.
+ 
+-* sockets memory pressure: some sockets protocols have memory pressure
+-thresholds. The Memory Controller allows them to be controlled individually
+-per cgroup, instead of globally.
++sockets memory pressure:
++  some sockets protocols have memory pressure
++  thresholds. The Memory Controller allows them to be controlled individually
++  per cgroup, instead of globally.
+ 
+-* tcp memory pressure: sockets memory pressure for the tcp protocol.
++tcp memory pressure:
++  sockets memory pressure for the tcp protocol.
+ 
+ 2.7.2 Common use cases
 +----------------------
-+    Start viafb with default settings::
  
--    Start viafb with user options:
--        #modprobe viafb viafb_mode=800x600 viafb_bpp=16 viafb_refresh=60
--                  viafb_active_dev=CRT+DVI viafb_dvi_port=DVP1
--                  viafb_mode1=1024x768 viafb_bpp=16 viafb_refresh1=60
--                  viafb_SAMM_ON=1
-+	#modprobe viafb
+ Because the "kmem" counter is fed to the main user counter, kernel memory can
+ never be limited completely independently of user memory. Say "U" is the user
+ limit, and "K" the kernel limit. There are three possible ways limits can be
+ set:
+ 
+-    U != 0, K = unlimited:
++U != 0, K = unlimited:
+     This is the standard memcg limitation mechanism already present before kmem
+     accounting. Kernel memory is completely ignored.
+ 
+-    U != 0, K < U:
++U != 0, K < U:
+     Kernel memory is a subset of the user memory. This setup is useful in
+     deployments where the total amount of memory per-cgroup is overcommited.
+     Overcommiting kernel memory limits is definitely not recommended, since the
+@@ -332,19 +370,23 @@ set:
+     In this case, the admin could set up K so that the sum of all groups is
+     never greater than the total memory, and freely set U at the cost of his
+     QoS.
+-    WARNING: In the current implementation, memory reclaim will NOT be
 +
-+    Start viafb with user options::
++WARNING:
++    In the current implementation, memory reclaim will NOT be
+     triggered for a cgroup when it hits K while staying below U, which makes
+     this setup impractical.
+ 
+-    U != 0, K >= U:
++U != 0, K >= U:
+     Since kmem charges will also be fed to the user counter and reclaim will be
+     triggered for the cgroup for both kinds of memory. This setup gives the
+     admin a unified view of memory, and it is also useful for people who just
+     want to track kernel memory usage.
+ 
+ 3. User Interface
++=================
+ 
+ 3.0. Configuration
++------------------
+ 
+ a. Enable CONFIG_CGROUPS
+ b. Enable CONFIG_MEMCG
+@@ -352,39 +394,53 @@ c. Enable CONFIG_MEMCG_SWAP (to use swap extension)
+ d. Enable CONFIG_MEMCG_KMEM (to use kmem extension)
+ 
+ 3.1. Prepare the cgroups (see cgroups.txt, Why are cgroups needed?)
+-# mount -t tmpfs none /sys/fs/cgroup
+-# mkdir /sys/fs/cgroup/memory
+-# mount -t cgroup none /sys/fs/cgroup/memory -o memory
++-------------------------------------------------------------------
+ 
+-3.2. Make the new group and move bash into it
+-# mkdir /sys/fs/cgroup/memory/0
+-# echo $$ > /sys/fs/cgroup/memory/0/tasks
++::
+ 
+-Since now we're in the 0 cgroup, we can alter the memory limit:
+-# echo 4M > /sys/fs/cgroup/memory/0/memory.limit_in_bytes
++	# mount -t tmpfs none /sys/fs/cgroup
++	# mkdir /sys/fs/cgroup/memory
++	# mount -t cgroup none /sys/fs/cgroup/memory -o memory
+ 
+-NOTE: We can use a suffix (k, K, m, M, g or G) to indicate values in kilo,
+-mega or gigabytes. (Here, Kilo, Mega, Giga are Kibibytes, Mebibytes, Gibibytes.)
++3.2. Make the new group and move bash into it::
+ 
+-NOTE: We can write "-1" to reset the *.limit_in_bytes(unlimited).
+-NOTE: We cannot set limits on the root cgroup any more.
++	# mkdir /sys/fs/cgroup/memory/0
++	# echo $$ > /sys/fs/cgroup/memory/0/tasks
+ 
+-# cat /sys/fs/cgroup/memory/0/memory.limit_in_bytes
+-4194304
++Since now we're in the 0 cgroup, we can alter the memory limit::
+ 
+-We can check the usage:
+-# cat /sys/fs/cgroup/memory/0/memory.usage_in_bytes
+-1216512
++	# echo 4M > /sys/fs/cgroup/memory/0/memory.limit_in_bytes
 +
-+	#modprobe viafb viafb_mode=800x600 viafb_bpp=16 viafb_refresh=60
-+		  viafb_active_dev=CRT+DVI viafb_dvi_port=DVP1
-+		  viafb_mode1=1024x768 viafb_bpp=16 viafb_refresh1=60
-+		  viafb_SAMM_ON=1
++NOTE:
++  We can use a suffix (k, K, m, M, g or G) to indicate values in kilo,
++  mega or gigabytes. (Here, Kilo, Mega, Giga are Kibibytes, Mebibytes,
++  Gibibytes.)
++
++NOTE:
++  We can write "-1" to reset the ``*.limit_in_bytes(unlimited)``.
++
++NOTE:
++  We cannot set limits on the root cgroup any more.
++
++::
++
++  # cat /sys/fs/cgroup/memory/0/memory.limit_in_bytes
++  4194304
++
++We can check the usage::
++
++  # cat /sys/fs/cgroup/memory/0/memory.usage_in_bytes
++  1216512
  
-     viafb_mode:
--        640x480 (default)
--        720x480
--        800x600
--        1024x768
--        ......
-+	- 640x480 (default)
-+	- 720x480
-+	- 800x600
-+	- 1024x768
+ A successful write to this file does not guarantee a successful setting of
+ this limit to the value written into the file. This can be due to a
+ number of factors, such as rounding up to page boundaries or the total
+ availability of memory on the system. The user is required to re-read
+-this file after a write to guarantee the value committed by the kernel.
++this file after a write to guarantee the value committed by the kernel::
  
-     viafb_bpp:
--        8, 16, 32 (default:32)
-+	- 8, 16, 32 (default:32)
+-# echo 1 > memory.limit_in_bytes
+-# cat memory.limit_in_bytes
+-4096
++  # echo 1 > memory.limit_in_bytes
++  # cat memory.limit_in_bytes
++  4096
  
-     viafb_refresh:
--        60, 75, 85, 100, 120 (default:60)
-+	- 60, 75, 85, 100, 120 (default:60)
+ The memory.failcnt field gives the number of times that the cgroup limit was
+ exceeded.
+@@ -393,6 +449,7 @@ The memory.stat file gives accounting information. Now, the number of
+ caches, RSS and Active pages/Inactive pages are shown.
  
-     viafb_lcd_dsp_method:
--        0 : expansion (default)
--        1 : centering
-+	- 0 : expansion (default)
-+	- 1 : centering
+ 4. Testing
++==========
  
-     viafb_lcd_mode:
--        0 : LCD panel with LSB data format input (default)
--        1 : LCD panel with MSB data format input
-+	0 : LCD panel with LSB data format input (default)
-+	1 : LCD panel with MSB data format input
+ For testing features and implementation, see memcg_test.txt.
  
-     viafb_lcd_panel_id:
--        0 : Resolution: 640x480, Channel: single, Dithering: Enable
--        1 : Resolution: 800x600, Channel: single, Dithering: Enable
--        2 : Resolution: 1024x768, Channel: single, Dithering: Enable (default)
--        3 : Resolution: 1280x768, Channel: single, Dithering: Enable
--        4 : Resolution: 1280x1024, Channel: dual, Dithering: Enable
--        5 : Resolution: 1400x1050, Channel: dual, Dithering: Enable
--        6 : Resolution: 1600x1200, Channel: dual, Dithering: Enable
-+	- 0 : Resolution: 640x480, Channel: single, Dithering: Enable
-+	- 1 : Resolution: 800x600, Channel: single, Dithering: Enable
-+	- 2 : Resolution: 1024x768, Channel: single, Dithering: Enable (default)
-+	- 3 : Resolution: 1280x768, Channel: single, Dithering: Enable
-+	- 4 : Resolution: 1280x1024, Channel: dual, Dithering: Enable
-+	- 5 : Resolution: 1400x1050, Channel: dual, Dithering: Enable
-+	- 6 : Resolution: 1600x1200, Channel: dual, Dithering: Enable
+@@ -408,6 +465,7 @@ But the above two are testing extreme situations.
+ Trying usual test under memory controller is always helpful.
  
--        8 : Resolution: 800x480, Channel: single, Dithering: Enable
--        9 : Resolution: 1024x768, Channel: dual, Dithering: Enable
--        10: Resolution: 1024x768, Channel: single, Dithering: Disable
--        11: Resolution: 1024x768, Channel: dual, Dithering: Disable
--        12: Resolution: 1280x768, Channel: single, Dithering: Disable
--        13: Resolution: 1280x1024, Channel: dual, Dithering: Disable
--        14: Resolution: 1400x1050, Channel: dual, Dithering: Disable
--        15: Resolution: 1600x1200, Channel: dual, Dithering: Disable
--        16: Resolution: 1366x768, Channel: single, Dithering: Disable
--        17: Resolution: 1024x600, Channel: single, Dithering: Enable
--        18: Resolution: 1280x768, Channel: dual, Dithering: Enable
--        19: Resolution: 1280x800, Channel: single, Dithering: Enable
-+	- 8 : Resolution: 800x480, Channel: single, Dithering: Enable
-+	- 9 : Resolution: 1024x768, Channel: dual, Dithering: Enable
-+	- 10: Resolution: 1024x768, Channel: single, Dithering: Disable
-+	- 11: Resolution: 1024x768, Channel: dual, Dithering: Disable
-+	- 12: Resolution: 1280x768, Channel: single, Dithering: Disable
-+	- 13: Resolution: 1280x1024, Channel: dual, Dithering: Disable
-+	- 14: Resolution: 1400x1050, Channel: dual, Dithering: Disable
-+	- 15: Resolution: 1600x1200, Channel: dual, Dithering: Disable
-+	- 16: Resolution: 1366x768, Channel: single, Dithering: Disable
-+	- 17: Resolution: 1024x600, Channel: single, Dithering: Enable
-+	- 18: Resolution: 1280x768, Channel: dual, Dithering: Enable
-+	- 19: Resolution: 1280x800, Channel: single, Dithering: Enable
+ 4.1 Troubleshooting
++-------------------
  
-     viafb_accel:
--        0 : No 2D Hardware Acceleration
--        1 : 2D Hardware Acceleration (default)
-+	- 0 : No 2D Hardware Acceleration
-+	- 1 : 2D Hardware Acceleration (default)
+ Sometimes a user might find that the application under a cgroup is
+ terminated by the OOM killer. There are several causes for this:
+@@ -422,6 +480,7 @@ To know what happens, disabling OOM_Kill as per "10. OOM Control" (below) and
+ seeing what happens will be helpful.
  
-     viafb_SAMM_ON:
--        0 : viafb_SAMM_ON disable (default)
--        1 : viafb_SAMM_ON enable
-+	- 0 : viafb_SAMM_ON disable (default)
-+	- 1 : viafb_SAMM_ON enable
+ 4.2 Task migration
++------------------
  
-     viafb_mode1: (secondary display device)
--        640x480 (default)
--        720x480
--        800x600
--        1024x768
--        ... ...
-+	- 640x480 (default)
-+	- 720x480
-+	- 800x600
-+	- 1024x768
+ When a task migrates from one cgroup to another, its charge is not
+ carried forward by default. The pages allocated from the original cgroup still
+@@ -432,6 +491,7 @@ You can move charges of a task along with task migration.
+ See 8. "Move charges at task migration"
  
-     viafb_bpp1: (secondary display device)
--        8, 16, 32 (default:32)
-+	- 8, 16, 32 (default:32)
+ 4.3 Removing a cgroup
++---------------------
  
-     viafb_refresh1: (secondary display device)
--        60, 75, 85, 100, 120 (default:60)
-+	- 60, 75, 85, 100, 120 (default:60)
+ A cgroup can be removed by rmdir, but as discussed in sections 4.1 and 4.2, a
+ cgroup might have some charge associated with it, even though all
+@@ -448,13 +508,15 @@ will be charged as a new owner of it.
  
-     viafb_active_dev:
--        This option is used to specify active devices.(CRT, DVI, CRT+LCD...)
--        DVI stands for DVI or HDMI, E.g., If you want to enable HDMI,
--        set viafb_active_dev=DVI. In SAMM case, the previous of
--        viafb_active_dev is primary device, and the following is
--        secondary device.
+ About use_hierarchy, see Section 6.
+ 
+-5. Misc. interfaces.
++5. Misc. interfaces
++===================
+ 
+ 5.1 force_empty
++---------------
+   memory.force_empty interface is provided to make cgroup's memory usage empty.
+-  When writing anything to this
++  When writing anything to this::
+ 
+-  # echo 0 > memory.force_empty
++    # echo 0 > memory.force_empty
+ 
+   the cgroup will be reclaimed and as many pages reclaimed as possible.
+ 
+@@ -471,50 +533,61 @@ About use_hierarchy, see Section 6.
+   About use_hierarchy, see Section 6.
+ 
+ 5.2 stat file
++-------------
+ 
+ memory.stat file includes following statistics
+ 
+-# per-memory cgroup local status
+-cache		- # of bytes of page cache memory.
+-rss		- # of bytes of anonymous and swap cache memory (includes
++per-memory cgroup local status
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++=============== ===============================================================
++cache		# of bytes of page cache memory.
++rss		# of bytes of anonymous and swap cache memory (includes
+ 		transparent hugepages).
+-rss_huge	- # of bytes of anonymous transparent hugepages.
+-mapped_file	- # of bytes of mapped file (includes tmpfs/shmem)
+-pgpgin		- # of charging events to the memory cgroup. The charging
++rss_huge	# of bytes of anonymous transparent hugepages.
++mapped_file	# of bytes of mapped file (includes tmpfs/shmem)
++pgpgin		# of charging events to the memory cgroup. The charging
+ 		event happens each time a page is accounted as either mapped
+ 		anon page(RSS) or cache page(Page Cache) to the cgroup.
+-pgpgout		- # of uncharging events to the memory cgroup. The uncharging
++pgpgout		# of uncharging events to the memory cgroup. The uncharging
+ 		event happens each time a page is unaccounted from the cgroup.
+-swap		- # of bytes of swap usage
+-dirty		- # of bytes that are waiting to get written back to the disk.
+-writeback	- # of bytes of file/anon cache that are queued for syncing to
++swap		# of bytes of swap usage
++dirty		# of bytes that are waiting to get written back to the disk.
++writeback	# of bytes of file/anon cache that are queued for syncing to
+ 		disk.
+-inactive_anon	- # of bytes of anonymous and swap cache memory on inactive
++inactive_anon	# of bytes of anonymous and swap cache memory on inactive
+ 		LRU list.
+-active_anon	- # of bytes of anonymous and swap cache memory on active
++active_anon	# of bytes of anonymous and swap cache memory on active
+ 		LRU list.
+-inactive_file	- # of bytes of file-backed memory on inactive LRU list.
+-active_file	- # of bytes of file-backed memory on active LRU list.
+-unevictable	- # of bytes of memory that cannot be reclaimed (mlocked etc).
++inactive_file	# of bytes of file-backed memory on inactive LRU list.
++active_file	# of bytes of file-backed memory on active LRU list.
++unevictable	# of bytes of memory that cannot be reclaimed (mlocked etc).
++=============== ===============================================================
+ 
+-# status considering hierarchy (see memory.use_hierarchy settings)
++status considering hierarchy (see memory.use_hierarchy settings)
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+-hierarchical_memory_limit - # of bytes of memory limit with regard to hierarchy
+-			under which the memory cgroup is
+-hierarchical_memsw_limit - # of bytes of memory+swap limit with regard to
+-			hierarchy under which memory cgroup is.
++========================= ===================================================
++hierarchical_memory_limit # of bytes of memory limit with regard to hierarchy
++			  under which the memory cgroup is
++hierarchical_memsw_limit  # of bytes of memory+swap limit with regard to
++			  hierarchy under which memory cgroup is.
+ 
+-total_<counter>		- # hierarchical version of <counter>, which in
+-			addition to the cgroup's own value includes the
+-			sum of all hierarchical children's values of
+-			<counter>, i.e. total_cache
++total_<counter>		  # hierarchical version of <counter>, which in
++			  addition to the cgroup's own value includes the
++			  sum of all hierarchical children's values of
++			  <counter>, i.e. total_cache
++========================= ===================================================
+ 
+-# The following additional stats are dependent on CONFIG_DEBUG_VM.
++The following additional stats are dependent on CONFIG_DEBUG_VM
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+-recent_rotated_anon	- VM internal parameter. (see mm/vmscan.c)
+-recent_rotated_file	- VM internal parameter. (see mm/vmscan.c)
+-recent_scanned_anon	- VM internal parameter. (see mm/vmscan.c)
+-recent_scanned_file	- VM internal parameter. (see mm/vmscan.c)
++========================= ========================================
++recent_rotated_anon	  VM internal parameter. (see mm/vmscan.c)
++recent_rotated_file	  VM internal parameter. (see mm/vmscan.c)
++recent_scanned_anon	  VM internal parameter. (see mm/vmscan.c)
++recent_scanned_file	  VM internal parameter. (see mm/vmscan.c)
++========================= ========================================
+ 
+ Memo:
+ 	recent_rotated means recent frequency of LRU rotation.
+@@ -525,12 +598,15 @@ Note:
+ 	Only anonymous and swap cache memory is listed as part of 'rss' stat.
+ 	This should not be confused with the true 'resident set size' or the
+ 	amount of physical memory used by the cgroup.
++
+ 	'rss + mapped_file" will give you resident set size of cgroup.
++
+ 	(Note: file and shmem may be shared among other cgroups. In that case,
+-	 mapped_file is accounted only when the memory cgroup is owner of page
+-	 cache.)
++	mapped_file is accounted only when the memory cgroup is owner of page
++	cache.)
+ 
+ 5.3 swappiness
++--------------
+ 
+ Overrides /proc/sys/vm/swappiness for the particular group. The tunable
+ in the root cgroup corresponds to the global swappiness setting.
+@@ -541,16 +617,19 @@ there is a swap storage available. This might lead to memcg OOM killer
+ if there are no file pages to reclaim.
+ 
+ 5.4 failcnt
++-----------
+ 
+ A memory cgroup provides memory.failcnt and memory.memsw.failcnt files.
+ This failcnt(== failure count) shows the number of times that a usage counter
+ hit its limit. When a memory cgroup hits a limit, failcnt increases and
+ memory under it will be reclaimed.
+ 
+-You can reset failcnt by writing 0 to failcnt file.
+-# echo 0 > .../memory.failcnt
++You can reset failcnt by writing 0 to failcnt file::
++
++	# echo 0 > .../memory.failcnt
+ 
+ 5.5 usage_in_bytes
++------------------
+ 
+ For efficiency, as other kernel components, memory cgroup uses some optimization
+ to avoid unnecessary cacheline false sharing. usage_in_bytes is affected by the
+@@ -560,6 +639,7 @@ If you want to know more exact memory usage, you should use RSS+CACHE(+SWAP)
+ value in memory.stat(see 5.2).
+ 
+ 5.6 numa_stat
++-------------
+ 
+ This is similar to numa_maps but operates on a per-memcg basis.  This is
+ useful for providing visibility into the numa locality information within
+@@ -571,22 +651,23 @@ Each memcg's numa_stat file includes "total", "file", "anon" and "unevictable"
+ per-node page counts including "hierarchical_<counter>" which sums up all
+ hierarchical children's values in addition to the memcg's own value.
+ 
+-The output format of memory.numa_stat is:
++The output format of memory.numa_stat is::
+ 
+-total=<total pages> N0=<node 0 pages> N1=<node 1 pages> ...
+-file=<total file pages> N0=<node 0 pages> N1=<node 1 pages> ...
+-anon=<total anon pages> N0=<node 0 pages> N1=<node 1 pages> ...
+-unevictable=<total anon pages> N0=<node 0 pages> N1=<node 1 pages> ...
+-hierarchical_<counter>=<counter pages> N0=<node 0 pages> N1=<node 1 pages> ...
++  total=<total pages> N0=<node 0 pages> N1=<node 1 pages> ...
++  file=<total file pages> N0=<node 0 pages> N1=<node 1 pages> ...
++  anon=<total anon pages> N0=<node 0 pages> N1=<node 1 pages> ...
++  unevictable=<total anon pages> N0=<node 0 pages> N1=<node 1 pages> ...
++  hierarchical_<counter>=<counter pages> N0=<node 0 pages> N1=<node 1 pages> ...
+ 
+ The "total" count is sum of file + anon + unevictable.
+ 
+ 6. Hierarchy support
++====================
+ 
+ The memory controller supports a deep hierarchy and hierarchical accounting.
+ The hierarchy is created by creating the appropriate cgroups in the
+ cgroup filesystem. Consider for example, the following cgroup filesystem
+-hierarchy
++hierarchy::
+ 
+ 	       root
+ 	     /  |   \
+@@ -603,24 +684,28 @@ limit, the reclaim algorithm reclaims from the tasks in the ancestor and the
+ children of the ancestor.
+ 
+ 6.1 Enabling hierarchical accounting and reclaim
++------------------------------------------------
+ 
+ A memory cgroup by default disables the hierarchy feature. Support
+-can be enabled by writing 1 to memory.use_hierarchy file of the root cgroup
++can be enabled by writing 1 to memory.use_hierarchy file of the root cgroup::
+ 
+-# echo 1 > memory.use_hierarchy
++	# echo 1 > memory.use_hierarchy
+ 
+-The feature can be disabled by
++The feature can be disabled by::
+ 
+-# echo 0 > memory.use_hierarchy
++	# echo 0 > memory.use_hierarchy
+ 
+-NOTE1: Enabling/disabling will fail if either the cgroup already has other
++NOTE1:
++       Enabling/disabling will fail if either the cgroup already has other
+        cgroups created below it, or if the parent cgroup has use_hierarchy
+        enabled.
+ 
+-NOTE2: When panic_on_oom is set to "2", the whole system will panic in
++NOTE2:
++       When panic_on_oom is set to "2", the whole system will panic in
+        case of an OOM event in any cgroup.
+ 
+ 7. Soft limits
++==============
+ 
+ Soft limits allow for greater sharing of memory. The idea behind soft limits
+ is to allow control groups to use as much of the memory as needed, provided
+@@ -640,22 +725,26 @@ hints/setup. Currently soft limit based reclaim is set up such that
+ it gets invoked from balance_pgdat (kswapd).
+ 
+ 7.1 Interface
++-------------
+ 
+ Soft limits can be setup by using the following commands (in this example we
+-assume a soft limit of 256 MiB)
++assume a soft limit of 256 MiB)::
+ 
+-# echo 256M > memory.soft_limit_in_bytes
++	# echo 256M > memory.soft_limit_in_bytes
+ 
+-If we want to change this to 1G, we can at any time use
++If we want to change this to 1G, we can at any time use::
+ 
+-# echo 1G > memory.soft_limit_in_bytes
++	# echo 1G > memory.soft_limit_in_bytes
+ 
+-NOTE1: Soft limits take effect over a long period of time, since they involve
++NOTE1:
++       Soft limits take effect over a long period of time, since they involve
+        reclaiming memory for balancing between memory cgroups
+-NOTE2: It is recommended to set the soft limit always below the hard limit,
++NOTE2:
++       It is recommended to set the soft limit always below the hard limit,
+        otherwise the hard limit will take precedence.
+ 
+ 8. Move charges at task migration
++=================================
+ 
+ Users can move charges associated with a task along with task migration, that
+ is, uncharge task's pages from the old cgroup and charge them to the new cgroup.
+@@ -663,60 +752,71 @@ This feature is not supported in !CONFIG_MMU environments because of lack of
+ page tables.
+ 
+ 8.1 Interface
++-------------
+ 
+ This feature is disabled by default. It can be enabled (and disabled again) by
+ writing to memory.move_charge_at_immigrate of the destination cgroup.
+ 
+-If you want to enable it:
++If you want to enable it::
+ 
+-# echo (some positive value) > memory.move_charge_at_immigrate
++	# echo (some positive value) > memory.move_charge_at_immigrate
+ 
+-Note: Each bits of move_charge_at_immigrate has its own meaning about what type
++Note:
++      Each bits of move_charge_at_immigrate has its own meaning about what type
+       of charges should be moved. See 8.2 for details.
+-Note: Charges are moved only when you move mm->owner, in other words,
++Note:
++      Charges are moved only when you move mm->owner, in other words,
+       a leader of a thread group.
+-Note: If we cannot find enough space for the task in the destination cgroup, we
++Note:
++      If we cannot find enough space for the task in the destination cgroup, we
+       try to make space by reclaiming memory. Task migration may fail if we
+       cannot make enough space.
+-Note: It can take several seconds if you move charges much.
++Note:
++      It can take several seconds if you move charges much.
+ 
+-And if you want disable it again:
++And if you want disable it again::
+ 
+-# echo 0 > memory.move_charge_at_immigrate
++	# echo 0 > memory.move_charge_at_immigrate
+ 
+ 8.2 Type of charges which can be moved
++--------------------------------------
+ 
+ Each bit in move_charge_at_immigrate has its own meaning about what type of
+ charges should be moved. But in any case, it must be noted that an account of
+ a page or a swap can be moved only when it is charged to the task's current
+ (old) memory cgroup.
+ 
+-  bit | what type of charges would be moved ?
+- -----+------------------------------------------------------------------------
+-   0  | A charge of an anonymous page (or swap of it) used by the target task.
+-      | You must enable Swap Extension (see 2.4) to enable move of swap charges.
+- -----+------------------------------------------------------------------------
+-   1  | A charge of file pages (normal file, tmpfs file (e.g. ipc shared memory)
+-      | and swaps of tmpfs file) mmapped by the target task. Unlike the case of
+-      | anonymous pages, file pages (and swaps) in the range mmapped by the task
+-      | will be moved even if the task hasn't done page fault, i.e. they might
+-      | not be the task's "RSS", but other task's "RSS" that maps the same file.
+-      | And mapcount of the page is ignored (the page can be moved even if
+-      | page_mapcount(page) > 1). You must enable Swap Extension (see 2.4) to
+-      | enable move of swap charges.
+++---+--------------------------------------------------------------------------+
++|bit| what type of charges would be moved ?                                    |
+++===+==========================================================================+
++| 0 | A charge of an anonymous page (or swap of it) used by the target task.   |
++|   | You must enable Swap Extension (see 2.4) to enable move of swap charges. |
+++---+--------------------------------------------------------------------------+
++| 1 | A charge of file pages (normal file, tmpfs file (e.g. ipc shared memory) |
++|   | and swaps of tmpfs file) mmapped by the target task. Unlike the case of  |
++|   | anonymous pages, file pages (and swaps) in the range mmapped by the task |
++|   | will be moved even if the task hasn't done page fault, i.e. they might   |
++|   | not be the task's "RSS", but other task's "RSS" that maps the same file. |
++|   | And mapcount of the page is ignored (the page can be moved even if       |
++|   | page_mapcount(page) > 1). You must enable Swap Extension (see 2.4) to    |
++|   | enable move of swap charges.                                             |
+++---+--------------------------------------------------------------------------+
+ 
+ 8.3 TODO
++--------
+ 
+ - All of moving charge operations are done under cgroup_mutex. It's not good
+   behavior to hold the mutex too long, so we may need some trick.
+ 
+ 9. Memory thresholds
++====================
+ 
+ Memory cgroup implements memory thresholds using the cgroups notification
+ API (see cgroups.txt). It allows to register multiple memory and memsw
+ thresholds and gets notifications when it crosses.
+ 
+ To register a threshold, an application must:
++
+ - create an eventfd using eventfd(2);
+ - open memory.usage_in_bytes or memory.memsw.usage_in_bytes;
+ - write string like "<event_fd> <fd of memory.usage_in_bytes> <threshold>" to
+@@ -728,6 +828,7 @@ threshold in any direction.
+ It's applicable for root and non-root cgroup.
+ 
+ 10. OOM Control
++===============
+ 
+ memory.oom_control file is for OOM notification and other controls.
+ 
+@@ -736,6 +837,7 @@ API (See cgroups.txt). It allows to register multiple OOM notification
+ delivery and gets notification when OOM happens.
+ 
+ To register a notifier, an application must:
++
+  - create an eventfd using eventfd(2)
+  - open memory.oom_control file
+  - write string like "<event_fd> <fd of memory.oom_control>" to
+@@ -752,8 +854,11 @@ If OOM-killer is disabled, tasks under cgroup will hang/sleep
+ in memory cgroup's OOM-waitqueue when they request accountable memory.
+ 
+ For running them, you have to relax the memory cgroup's OOM status by
++
+ 	* enlarge limit or reduce usage.
++
+ To reduce usage,
++
+ 	* kill some tasks.
+ 	* move some tasks to other group with account migration.
+ 	* remove some files (on tmpfs?)
+@@ -761,11 +866,14 @@ To reduce usage,
+ Then, stopped tasks will work again.
+ 
+ At reading, current status of OOM is shown.
+-	oom_kill_disable 0 or 1 (if 1, oom-killer is disabled)
+-	under_oom	 0 or 1 (if 1, the memory cgroup is under OOM, tasks may
+-				 be stopped.)
++
++	- oom_kill_disable 0 or 1
++	  (if 1, oom-killer is disabled)
++	- under_oom	   0 or 1
++	  (if 1, the memory cgroup is under OOM, tasks may be stopped.)
+ 
+ 11. Memory Pressure
++===================
+ 
+ The pressure level notifications can be used to monitor the memory
+ allocation cost; based on the pressure, applications can implement
+@@ -840,21 +948,22 @@ Test:
+ 
+    Here is a small script example that makes a new cgroup, sets up a
+    memory limit, sets up a notification in the cgroup and then makes child
+-   cgroup experience a critical pressure:
++   cgroup experience a critical pressure::
+ 
+-   # cd /sys/fs/cgroup/memory/
+-   # mkdir foo
+-   # cd foo
+-   # cgroup_event_listener memory.pressure_level low,hierarchy &
+-   # echo 8000000 > memory.limit_in_bytes
+-   # echo 8000000 > memory.memsw.limit_in_bytes
+-   # echo $$ > tasks
+-   # dd if=/dev/zero | read x
++	# cd /sys/fs/cgroup/memory/
++	# mkdir foo
++	# cd foo
++	# cgroup_event_listener memory.pressure_level low,hierarchy &
++	# echo 8000000 > memory.limit_in_bytes
++	# echo 8000000 > memory.memsw.limit_in_bytes
++	# echo $$ > tasks
++	# dd if=/dev/zero | read x
+ 
+    (Expect a bunch of notifications, and eventually, the oom-killer will
+    trigger.)
+ 
+ 12. TODO
++========
+ 
+ 1. Make per-cgroup scanner reclaim not-shared pages first
+ 2. Teach controller to account for shared-pages
+@@ -862,11 +971,13 @@ Test:
+    not yet hit but the usage is getting closer
+ 
+ Summary
++=======
+ 
+ Overall, the memory controller has been a stable controller and has been
+ commented and discussed quite extensively in the community.
+ 
+ References
++==========
+ 
+ 1. Singh, Balbir. RFC: Memory Controller, http://lwn.net/Articles/206697/
+ 2. Singh, Balbir. Memory Controller (RSS Control),
+diff --git a/Documentation/cgroup-v1/net_cls.txt b/Documentation/cgroup-v1/net_cls.rst
+similarity index 50%
+rename from Documentation/cgroup-v1/net_cls.txt
+rename to Documentation/cgroup-v1/net_cls.rst
+index ec182346dea2..a2cf272af7a0 100644
+--- a/Documentation/cgroup-v1/net_cls.txt
++++ b/Documentation/cgroup-v1/net_cls.rst
+@@ -1,5 +1,6 @@
++=========================
+ Network classifier cgroup
+--------------------------
++=========================
+ 
+ The Network classifier cgroup provides an interface to
+ tag network packets with a class identifier (classid).
+@@ -17,23 +18,27 @@ values is 0xAAAABBBB; AAAA is the major handle number and BBBB
+ is the minor handle number.
+ Reading net_cls.classid yields a decimal result.
+ 
+-Example:
+-mkdir /sys/fs/cgroup/net_cls
+-mount -t cgroup -onet_cls net_cls /sys/fs/cgroup/net_cls
+-mkdir /sys/fs/cgroup/net_cls/0
+-echo 0x100001 >  /sys/fs/cgroup/net_cls/0/net_cls.classid
+-	- setting a 10:1 handle.
++Example::
+ 
+-cat /sys/fs/cgroup/net_cls/0/net_cls.classid
+-1048577
++	mkdir /sys/fs/cgroup/net_cls
++	mount -t cgroup -onet_cls net_cls /sys/fs/cgroup/net_cls
++	mkdir /sys/fs/cgroup/net_cls/0
++	echo 0x100001 >  /sys/fs/cgroup/net_cls/0/net_cls.classid
+ 
+-configuring tc:
+-tc qdisc add dev eth0 root handle 10: htb
++- setting a 10:1 handle::
+ 
+-tc class add dev eth0 parent 10: classid 10:1 htb rate 40mbit
+- - creating traffic class 10:1
++	cat /sys/fs/cgroup/net_cls/0/net_cls.classid
++	1048577
+ 
+-tc filter add dev eth0 parent 10: protocol ip prio 10 handle 1: cgroup
++- configuring tc::
+ 
+-configuring iptables, basic example:
+-iptables -A OUTPUT -m cgroup ! --cgroup 0x100001 -j DROP
++	tc qdisc add dev eth0 root handle 10: htb
++	tc class add dev eth0 parent 10: classid 10:1 htb rate 40mbit
++
++- creating traffic class 10:1::
++
++	tc filter add dev eth0 parent 10: protocol ip prio 10 handle 1: cgroup
++
++configuring iptables, basic example::
++
++	iptables -A OUTPUT -m cgroup ! --cgroup 0x100001 -j DROP
+diff --git a/Documentation/cgroup-v1/net_prio.txt b/Documentation/cgroup-v1/net_prio.rst
+similarity index 71%
+rename from Documentation/cgroup-v1/net_prio.txt
+rename to Documentation/cgroup-v1/net_prio.rst
+index a82cbd28ea8a..b40905871c64 100644
+--- a/Documentation/cgroup-v1/net_prio.txt
++++ b/Documentation/cgroup-v1/net_prio.rst
+@@ -1,5 +1,6 @@
++=======================
+ Network priority cgroup
+--------------------------
++=======================
+ 
+ The Network priority cgroup provides an interface to allow an administrator to
+ dynamically set the priority of network traffic generated by various
+@@ -14,9 +15,9 @@ SO_PRIORITY socket option.  This however, is not always possible because:
+ 
+ This cgroup allows an administrator to assign a process to a group which defines
+ the priority of egress traffic on a given interface. Network priority groups can
+-be created by first mounting the cgroup filesystem.
++be created by first mounting the cgroup filesystem::
+ 
+-# mount -t cgroup -onet_prio none /sys/fs/cgroup/net_prio
++	# mount -t cgroup -onet_prio none /sys/fs/cgroup/net_prio
+ 
+ With the above step, the initial group acting as the parent accounting group
+ becomes visible at '/sys/fs/cgroup/net_prio'.  This group includes all tasks in
+@@ -25,17 +26,18 @@ the system. '/sys/fs/cgroup/net_prio/tasks' lists the tasks in this cgroup.
+ Each net_prio cgroup contains two files that are subsystem specific
+ 
+ net_prio.prioidx
+-This file is read-only, and is simply informative.  It contains a unique integer
+-value that the kernel uses as an internal representation of this cgroup.
++  This file is read-only, and is simply informative.  It contains a unique
++  integer value that the kernel uses as an internal representation of this
++  cgroup.
+ 
+ net_prio.ifpriomap
+-This file contains a map of the priorities assigned to traffic originating from
+-processes in this group and egressing the system on various interfaces. It
+-contains a list of tuples in the form <ifname priority>.  Contents of this file
+-can be modified by echoing a string into the file using the same tuple format.
+-for example:
++  This file contains a map of the priorities assigned to traffic originating
++  from processes in this group and egressing the system on various interfaces.
++  It contains a list of tuples in the form <ifname priority>.  Contents of this
++  file can be modified by echoing a string into the file using the same tuple
++  format. For example::
+ 
+-echo "eth0 5" > /sys/fs/cgroups/net_prio/iscsi/net_prio.ifpriomap
++	echo "eth0 5" > /sys/fs/cgroups/net_prio/iscsi/net_prio.ifpriomap
+ 
+ This command would force any traffic originating from processes belonging to the
+ iscsi net_prio cgroup and egressing on interface eth0 to have the priority of
+diff --git a/Documentation/cgroup-v1/pids.txt b/Documentation/cgroup-v1/pids.rst
+similarity index 62%
+rename from Documentation/cgroup-v1/pids.txt
+rename to Documentation/cgroup-v1/pids.rst
+index e105d708ccde..6acebd9e72c8 100644
+--- a/Documentation/cgroup-v1/pids.txt
++++ b/Documentation/cgroup-v1/pids.rst
+@@ -1,5 +1,6 @@
+-						   Process Number Controller
+-						   =========================
++=========================
++Process Number Controller
++=========================
+ 
+ Abstract
+ --------
+@@ -34,55 +35,58 @@ pids.current tracks all child cgroup hierarchies, so parent/pids.current is a
+ superset of parent/child/pids.current.
+ 
+ The pids.events file contains event counters:
++
+   - max: Number of times fork failed because limit was hit.
+ 
+ Example
+ -------
+ 
+-First, we mount the pids controller:
+-# mkdir -p /sys/fs/cgroup/pids
+-# mount -t cgroup -o pids none /sys/fs/cgroup/pids
++First, we mount the pids controller::
+ 
+-Then we create a hierarchy, set limits and attach processes to it:
+-# mkdir -p /sys/fs/cgroup/pids/parent/child
+-# echo 2 > /sys/fs/cgroup/pids/parent/pids.max
+-# echo $$ > /sys/fs/cgroup/pids/parent/cgroup.procs
+-# cat /sys/fs/cgroup/pids/parent/pids.current
+-2
+-#
++	# mkdir -p /sys/fs/cgroup/pids
++	# mount -t cgroup -o pids none /sys/fs/cgroup/pids
++
++Then we create a hierarchy, set limits and attach processes to it::
++
++	# mkdir -p /sys/fs/cgroup/pids/parent/child
++	# echo 2 > /sys/fs/cgroup/pids/parent/pids.max
++	# echo $$ > /sys/fs/cgroup/pids/parent/cgroup.procs
++	# cat /sys/fs/cgroup/pids/parent/pids.current
++	2
++	#
+ 
+ It should be noted that attempts to overcome the set limit (2 in this case) will
+-fail:
++fail::
+ 
+-# cat /sys/fs/cgroup/pids/parent/pids.current
+-2
+-# ( /bin/echo "Here's some processes for you." | cat )
+-sh: fork: Resource temporary unavailable
+-#
++	# cat /sys/fs/cgroup/pids/parent/pids.current
++	2
++	# ( /bin/echo "Here's some processes for you." | cat )
++	sh: fork: Resource temporary unavailable
++	#
+ 
+ Even if we migrate to a child cgroup (which doesn't have a set limit), we will
+ not be able to overcome the most stringent limit in the hierarchy (in this case,
+-parent's):
++parent's)::
+ 
+-# echo $$ > /sys/fs/cgroup/pids/parent/child/cgroup.procs
+-# cat /sys/fs/cgroup/pids/parent/pids.current
+-2
+-# cat /sys/fs/cgroup/pids/parent/child/pids.current
+-2
+-# cat /sys/fs/cgroup/pids/parent/child/pids.max
+-max
+-# ( /bin/echo "Here's some processes for you." | cat )
+-sh: fork: Resource temporary unavailable
+-#
++	# echo $$ > /sys/fs/cgroup/pids/parent/child/cgroup.procs
++	# cat /sys/fs/cgroup/pids/parent/pids.current
++	2
++	# cat /sys/fs/cgroup/pids/parent/child/pids.current
++	2
++	# cat /sys/fs/cgroup/pids/parent/child/pids.max
++	max
++	# ( /bin/echo "Here's some processes for you." | cat )
++	sh: fork: Resource temporary unavailable
++	#
+ 
+ We can set a limit that is smaller than pids.current, which will stop any new
+ processes from being forked at all (note that the shell itself counts towards
+-pids.current):
++pids.current)::
+ 
+-# echo 1 > /sys/fs/cgroup/pids/parent/pids.max
+-# /bin/echo "We can't even spawn a single process now."
+-sh: fork: Resource temporary unavailable
+-# echo 0 > /sys/fs/cgroup/pids/parent/pids.max
+-# /bin/echo "We can't even spawn a single process now."
+-sh: fork: Resource temporary unavailable
+-#
++	# echo 1 > /sys/fs/cgroup/pids/parent/pids.max
++	# /bin/echo "We can't even spawn a single process now."
++	sh: fork: Resource temporary unavailable
++	# echo 0 > /sys/fs/cgroup/pids/parent/pids.max
++	# /bin/echo "We can't even spawn a single process now."
++	sh: fork: Resource temporary unavailable
++	#
+diff --git a/Documentation/cgroup-v1/rdma.txt b/Documentation/cgroup-v1/rdma.rst
+similarity index 79%
+rename from Documentation/cgroup-v1/rdma.txt
+rename to Documentation/cgroup-v1/rdma.rst
+index 9bdb7fd03f83..2fcb0a9bf790 100644
+--- a/Documentation/cgroup-v1/rdma.txt
++++ b/Documentation/cgroup-v1/rdma.rst
+@@ -1,16 +1,17 @@
+-				RDMA Controller
+-				----------------
++===============
++RDMA Controller
++===============
+ 
+-Contents
+---------
++.. Contents
+ 
+-1. Overview
+-  1-1. What is RDMA controller?
+-  1-2. Why RDMA controller needed?
+-  1-3. How is RDMA controller implemented?
+-2. Usage Examples
++   1. Overview
++     1-1. What is RDMA controller?
++     1-2. Why RDMA controller needed?
++     1-3. How is RDMA controller implemented?
++   2. Usage Examples
+ 
+ 1. Overview
++===========
+ 
+ 1-1. What is RDMA controller?
+ -----------------------------
+@@ -83,27 +84,34 @@ what is configured by user for a given cgroup and what is supported by
+ IB device.
+ 
+ Following resources can be accounted by rdma controller.
++
++  ==========    =============================
+   hca_handle	Maximum number of HCA Handles
+   hca_object 	Maximum number of HCA Objects
++  ==========    =============================
+ 
+ 2. Usage Examples
+------------------
 -
--        For example:
--        To enable one device, such as DVI only, we can use:
--            modprobe viafb viafb_active_dev=DVI
--        To enable two devices, such as CRT+DVI:
--            modprobe viafb viafb_active_dev=CRT+DVI;
+-(a) Configure resource limit:
+-echo mlx4_0 hca_handle=2 hca_object=2000 > /sys/fs/cgroup/rdma/1/rdma.max
+-echo ocrdma1 hca_handle=3 > /sys/fs/cgroup/rdma/2/rdma.max
 -
--        For DuoView case, we can use:
--            modprobe viafb viafb_active_dev=CRT+DVI
--            OR
--            modprobe viafb viafb_active_dev=DVI+CRT...
+-(b) Query resource limit:
+-cat /sys/fs/cgroup/rdma/2/rdma.max
+-#Output:
+-mlx4_0 hca_handle=2 hca_object=2000
+-ocrdma1 hca_handle=3 hca_object=max
 -
--        For SAMM case:
--        If CRT is primary and DVI is secondary, we should use:
--            modprobe viafb viafb_active_dev=CRT+DVI viafb_SAMM_ON=1...
--        If DVI is primary and CRT is secondary, we should use:
--            modprobe viafb viafb_active_dev=DVI+CRT viafb_SAMM_ON=1...
-+	This option is used to specify active devices.(CRT, DVI, CRT+LCD...)
-+	DVI stands for DVI or HDMI, E.g., If you want to enable HDMI,
-+	set viafb_active_dev=DVI. In SAMM case, the previous of
-+	viafb_active_dev is primary device, and the following is
-+	secondary device.
-+
-+	For example:
-+
-+	To enable one device, such as DVI only, we can use::
-+
-+	    modprobe viafb viafb_active_dev=DVI
-+
-+	To enable two devices, such as CRT+DVI::
-+
-+	    modprobe viafb viafb_active_dev=CRT+DVI;
-+
-+	For DuoView case, we can use::
-+
-+	    modprobe viafb viafb_active_dev=CRT+DVI
-+
-+	OR::
-+
-+	    modprobe viafb viafb_active_dev=DVI+CRT...
-+
-+	For SAMM case:
-+
-+	If CRT is primary and DVI is secondary, we should use::
-+
-+	    modprobe viafb viafb_active_dev=CRT+DVI viafb_SAMM_ON=1...
-+
-+	If DVI is primary and CRT is secondary, we should use::
-+
-+	    modprobe viafb viafb_active_dev=DVI+CRT viafb_SAMM_ON=1...
- 
-     viafb_display_hardware_layout:
--        This option is used to specify display hardware layout for CX700 chip.
--        1 : LCD only
--        2 : DVI only
--        3 : LCD+DVI (default)
--        4 : LCD1+LCD2 (internal + internal)
--        16: LCD1+ExternalLCD2 (internal + external)
-+	This option is used to specify display hardware layout for CX700 chip.
-+
-+	- 1 : LCD only
-+	- 2 : DVI only
-+	- 3 : LCD+DVI (default)
-+	- 4 : LCD1+LCD2 (internal + internal)
-+	- 16: LCD1+ExternalLCD2 (internal + external)
- 
-     viafb_second_size:
--        This option is used to set second device memory size(MB) in SAMM case.
--        The minimal size is 16.
-+	This option is used to set second device memory size(MB) in SAMM case.
-+	The minimal size is 16.
- 
-     viafb_platform_epia_dvi:
--        This option is used to enable DVI on EPIA - M
--        0 : No DVI on EPIA - M (default)
--        1 : DVI on EPIA - M
-+	This option is used to enable DVI on EPIA - M
-+
-+	- 0 : No DVI on EPIA - M (default)
-+	- 1 : DVI on EPIA - M
- 
-     viafb_bus_width:
--        When using 24 - Bit Bus Width Digital Interface,
--        this option should be set.
--        12: 12-Bit LVDS or 12-Bit TMDS (default)
--        24: 24-Bit LVDS or 24-Bit TMDS
-+	When using 24 - Bit Bus Width Digital Interface,
-+	this option should be set.
-+
-+	- 12: 12-Bit LVDS or 12-Bit TMDS (default)
-+	- 24: 24-Bit LVDS or 24-Bit TMDS
- 
-     viafb_device_lcd_dualedge:
--        When using Dual Edge Panel, this option should be set.
--        0 : No Dual Edge Panel (default)
--        1 : Dual Edge Panel
-+	When using Dual Edge Panel, this option should be set.
-+
-+	- 0 : No Dual Edge Panel (default)
-+	- 1 : Dual Edge Panel
- 
-     viafb_lcd_port:
--        This option is used to specify LCD output port,
--        available values are "DVP0" "DVP1" "DFP_HIGHLOW" "DFP_HIGH" "DFP_LOW".
--        for external LCD + external DVI on CX700(External LCD is on DVP0),
--        we should use:
--            modprobe viafb viafb_lcd_port=DVP0...
-+	This option is used to specify LCD output port,
-+	available values are "DVP0" "DVP1" "DFP_HIGHLOW" "DFP_HIGH" "DFP_LOW".
-+
-+	for external LCD + external DVI on CX700(External LCD is on DVP0),
-+	we should use::
-+
-+	    modprobe viafb viafb_lcd_port=DVP0...
- 
- Notes:
-     1. CRT may not display properly for DuoView CRT & DVI display at
-@@ -176,77 +196,102 @@ Notes:
-        viafb doesn't support multi-head well, or it will cause screen crush.
- 
- 
--[Configure viafb with "fbset" tool]
-------------------------------------
-+Configure viafb with "fbset" tool
-+---------------------------------
-+
-     "fbset" is an inbox utility of Linux.
--    1. Inquire current viafb information, type,
--           # fbset -i
- 
--    2. Set various resolutions and viafb_refresh rates,
--           # fbset <resolution-vertical_sync>
-+    1. Inquire current viafb information, type::
-+
-+	   # fbset -i
-+
-+    2. Set various resolutions and viafb_refresh rates::
-+
-+	   # fbset <resolution-vertical_sync>
-+
-+       example::
-+
-+	   # fbset "1024x768-75"
-+
-+       or::
-+
-+	   # fbset -g 1024 768 1024 768 32
- 
--       example,
--           # fbset "1024x768-75"
--       or
--           # fbset -g 1024 768 1024 768 32
-        Check the file "/etc/fb.modes" to find display modes available.
- 
--    3. Set the color depth,
--           # fbset -depth <value>
-+    3. Set the color depth::
- 
--       example,
--           # fbset -depth 16
-+	   # fbset -depth <value>
- 
-+       example::
- 
--[Configure viafb via /proc]
-----------------------------
-+	   # fbset -depth 16
-+
-+
-+Configure viafb via /proc
-+-------------------------
-     The following files exist in /proc/viafb
- 
-     supported_output_devices
-+	This read-only file contains a full ',' separated list containing all
-+	output devices that could be available on your platform. It is likely
-+	that not all of those have a connector on your hardware but it should
-+	provide a good starting point to figure out which of those names match
-+	a real connector.
-+
-+	Example::
-+
-+		# cat /proc/viafb/supported_output_devices
-+
-+    iga1/output_devices, iga2/output_devices
-+	These two files are readable and writable. iga1 and iga2 are the two
-+	independent units that produce the screen image. Those images can be
-+	forwarded to one or more output devices. Reading those files is a way
-+	to query which output devices are currently used by an iga.
-+
-+	Example::
-+
-+		# cat /proc/viafb/iga1/output_devices
-+
-+	If there are no output devices printed the output of this iga is lost.
-+	This can happen for example if only one (the other) iga is used.
-+	Writing to these files allows adjusting the output devices during
-+	runtime. One can add new devices, remove existing ones or switch
-+	between igas. Essentially you can write a ',' separated list of device
-+	names (or a single one) in the same format as the output to those
-+	files. You can add a '+' or '-' as a prefix allowing simple addition
-+	and removal of devices. So a prefix '+' adds the devices from your list
-+	to the already existing ones, '-' removes the listed devices from the
-+	existing ones and if no prefix is given it replaces all existing ones
-+	with the listed ones. If you remove devices they are expected to turn
-+	off. If you add devices that are already part of the other iga they are
-+	removed there and added to the new one.
-+
-+	Examples:
-+
-+	Add CRT as output device to iga1::
-+
-+		# echo +CRT > /proc/viafb/iga1/output_devices
-+
-+	Remove (turn off) DVP1 and LVDS1 as output devices of iga2::
-+
-+		# echo -DVP1,LVDS1 > /proc/viafb/iga2/output_devices
-+
-+	Replace all iga1 output devices by CRT::
-+
-+		# echo CRT > /proc/viafb/iga1/output_devices
-+
-+
-+Bootup with viafb
-+-----------------
-+
-+Add the following line to your grub.conf::
- 
--        This read-only file contains a full ',' separated list containing all
--        output devices that could be available on your platform. It is likely
--        that not all of those have a connector on your hardware but it should
--        provide a good starting point to figure out which of those names match
--        a real connector.
--        Example:
--        # cat /proc/viafb/supported_output_devices
+-(c) Query current usage:
+-cat /sys/fs/cgroup/rdma/2/rdma.current
+-#Output:
+-mlx4_0 hca_handle=1 hca_object=20
+-ocrdma1 hca_handle=1 hca_object=23
 -
--    iga1/output_devices
--    iga2/output_devices
--
--        These two files are readable and writable. iga1 and iga2 are the two
--        independent units that produce the screen image. Those images can be
--        forwarded to one or more output devices. Reading those files is a way
--        to query which output devices are currently used by an iga.
--        Example:
--        # cat /proc/viafb/iga1/output_devices
--        If there are no output devices printed the output of this iga is lost.
--        This can happen for example if only one (the other) iga is used.
--        Writing to these files allows adjusting the output devices during
--        runtime. One can add new devices, remove existing ones or switch
--        between igas. Essentially you can write a ',' separated list of device
--        names (or a single one) in the same format as the output to those
--        files. You can add a '+' or '-' as a prefix allowing simple addition
--        and removal of devices. So a prefix '+' adds the devices from your list
--        to the already existing ones, '-' removes the listed devices from the
--        existing ones and if no prefix is given it replaces all existing ones
--        with the listed ones. If you remove devices they are expected to turn
--        off. If you add devices that are already part of the other iga they are
--        removed there and added to the new one.
--        Examples:
--        Add CRT as output device to iga1
--        # echo +CRT > /proc/viafb/iga1/output_devices
--
--        Remove (turn off) DVP1 and LVDS1 as output devices of iga2
--        # echo -DVP1,LVDS1 > /proc/viafb/iga2/output_devices
--
--        Replace all iga1 output devices by CRT
--        # echo CRT > /proc/viafb/iga1/output_devices
--
--
--[Bootup with viafb]:
----------------------
--    Add the following line to your grub.conf:
-     append = "video=viafb:viafb_mode=1024x768,viafb_bpp=32,viafb_refresh=85"
- 
+-(d) Delete resource limit:
+-echo echo mlx4_0 hca_handle=max hca_object=max > /sys/fs/cgroup/rdma/1/rdma.max
++=================
 +
-+VIA Framebuffer modes
-+=====================
++(a) Configure resource limit::
 +
-+.. include:: viafb.modes
-+   :literal:
-diff --git a/Documentation/fb/vt8623fb.txt b/Documentation/fb/vt8623fb.rst
-similarity index 85%
-rename from Documentation/fb/vt8623fb.txt
-rename to Documentation/fb/vt8623fb.rst
-index f654576c56b7..ba1730937dd8 100644
---- a/Documentation/fb/vt8623fb.txt
-+++ b/Documentation/fb/vt8623fb.rst
-@@ -1,13 +1,13 @@
--
--	vt8623fb - fbdev driver for graphics core in VIA VT8623 chipset
--	===============================================================
-+===============================================================
-+vt8623fb - fbdev driver for graphics core in VIA VT8623 chipset
-+===============================================================
++	echo mlx4_0 hca_handle=2 hca_object=2000 > /sys/fs/cgroup/rdma/1/rdma.max
++	echo ocrdma1 hca_handle=3 > /sys/fs/cgroup/rdma/2/rdma.max
++
++(b) Query resource limit::
++
++	cat /sys/fs/cgroup/rdma/2/rdma.max
++	#Output:
++	mlx4_0 hca_handle=2 hca_object=2000
++	ocrdma1 hca_handle=3 hca_object=max
++
++(c) Query current usage::
++
++	cat /sys/fs/cgroup/rdma/2/rdma.current
++	#Output:
++	mlx4_0 hca_handle=1 hca_object=20
++	ocrdma1 hca_handle=1 hca_object=23
++
++(d) Delete resource limit::
++
++	echo echo mlx4_0 hca_handle=max hca_object=max > /sys/fs/cgroup/rdma/1/rdma.max
+diff --git a/Documentation/filesystems/tmpfs.txt b/Documentation/filesystems/tmpfs.txt
+index d06e9a59a9f4..cad797a8a39e 100644
+--- a/Documentation/filesystems/tmpfs.txt
++++ b/Documentation/filesystems/tmpfs.txt
+@@ -98,7 +98,7 @@ A memory policy with a valid NodeList will be saved, as specified, for
+ use at file creation time.  When a task allocates a file in the file
+ system, the mount option memory policy will be applied with a NodeList,
+ if any, modified by the calling task's cpuset constraints
+-[See Documentation/cgroup-v1/cpusets.txt] and any optional flags, listed
++[See Documentation/cgroup-v1/cpusets.rst] and any optional flags, listed
+ below.  If the resulting NodeLists is the empty set, the effective memory
+ policy for the file will revert to "default" policy.
  
+diff --git a/Documentation/scheduler/sched-deadline.txt b/Documentation/scheduler/sched-deadline.txt
+index b14e03ff3528..a7514343b660 100644
+--- a/Documentation/scheduler/sched-deadline.txt
++++ b/Documentation/scheduler/sched-deadline.txt
+@@ -652,7 +652,7 @@ CONTENTS
  
- Supported Hardware
- ==================
+  -deadline tasks cannot have an affinity mask smaller that the entire
+  root_domain they are created on. However, affinities can be specified
+- through the cpuset facility (Documentation/cgroup-v1/cpusets.txt).
++ through the cpuset facility (Documentation/cgroup-v1/cpusets.rst).
  
--	VIA VT8623 [CLE266] chipset and	its graphics core
--		(known as CastleRock or Unichrome)
-+VIA VT8623 [CLE266] chipset and	its graphics core
-+(known as CastleRock or Unichrome)
+ 5.1 SCHED_DEADLINE and cpusets HOWTO
+ ------------------------------------
+diff --git a/Documentation/scheduler/sched-design-CFS.txt b/Documentation/scheduler/sched-design-CFS.txt
+index edd861c94c1b..d1328890ef28 100644
+--- a/Documentation/scheduler/sched-design-CFS.txt
++++ b/Documentation/scheduler/sched-design-CFS.txt
+@@ -215,7 +215,7 @@ SCHED_BATCH) tasks.
  
- I tested vt8623fb on VIA EPIA ML-6000
+    These options need CONFIG_CGROUPS to be defined, and let the administrator
+    create arbitrary groups of tasks, using the "cgroup" pseudo filesystem.  See
+-   Documentation/cgroup-v1/cgroups.txt for more information about this filesystem.
++   Documentation/cgroup-v1/cgroups.rst for more information about this filesystem.
  
+ When CONFIG_FAIR_GROUP_SCHED is defined, a "cpu.shares" file is created for each
+ group created using the pseudo filesystem.  See example steps below to create
+diff --git a/Documentation/scheduler/sched-rt-group.txt b/Documentation/scheduler/sched-rt-group.txt
+index d8fce3e78457..c09f7a3fee66 100644
+--- a/Documentation/scheduler/sched-rt-group.txt
++++ b/Documentation/scheduler/sched-rt-group.txt
+@@ -133,7 +133,7 @@ This uses the cgroup virtual file system and "<cgroup>/cpu.rt_runtime_us"
+ to control the CPU time reserved for each control group.
+ 
+ For more information on working with control groups, you should read
+-Documentation/cgroup-v1/cgroups.txt as well.
++Documentation/cgroup-v1/cgroups.rst as well.
+ 
+ Group settings are checked against the following limits in order to keep the
+ configuration schedulable:
+diff --git a/Documentation/vm/numa.rst b/Documentation/vm/numa.rst
+index 5cae13e9a08b..0d830edae8fe 100644
+--- a/Documentation/vm/numa.rst
++++ b/Documentation/vm/numa.rst
+@@ -67,7 +67,7 @@ nodes.  Each emulated node will manage a fraction of the underlying cells'
+ physical memory.  NUMA emluation is useful for testing NUMA kernel and
+ application features on non-NUMA platforms, and as a sort of memory resource
+ management mechanism when used together with cpusets.
+-[see Documentation/cgroup-v1/cpusets.txt]
++[see Documentation/cgroup-v1/cpusets.rst]
+ 
+ For each node with memory, Linux constructs an independent memory management
+ subsystem, complete with its own free page lists, in-use page lists, usage
+@@ -114,7 +114,7 @@ allocation behavior using Linux NUMA memory policy. [see
+ 
+ System administrators can restrict the CPUs and nodes' memories that a non-
+ privileged user can specify in the scheduling or NUMA commands and functions
+-using control groups and CPUsets.  [see Documentation/cgroup-v1/cpusets.txt]
++using control groups and CPUsets.  [see Documentation/cgroup-v1/cpusets.rst]
+ 
+ On architectures that do not hide memoryless nodes, Linux will include only
+ zones [nodes] with memory in the zonelists.  This means that for a memoryless
+diff --git a/Documentation/vm/page_migration.rst b/Documentation/vm/page_migration.rst
+index f68d61335abb..35bba27d5fff 100644
+--- a/Documentation/vm/page_migration.rst
++++ b/Documentation/vm/page_migration.rst
+@@ -41,7 +41,7 @@ locations.
+ Larger installations usually partition the system using cpusets into
+ sections of nodes. Paul Jackson has equipped cpusets with the ability to
+ move pages when a task is moved to another cpuset (See
+-Documentation/cgroup-v1/cpusets.txt).
++Documentation/cgroup-v1/cpusets.rst).
+ Cpusets allows the automation of process locality. If a task is moved to
+ a new cpuset then also all its pages are moved with it so that the
+ performance of the process does not sink dramatically. Also the pages
+diff --git a/Documentation/vm/unevictable-lru.rst b/Documentation/vm/unevictable-lru.rst
+index b8e29f977f2d..c6d94118fbcc 100644
+--- a/Documentation/vm/unevictable-lru.rst
++++ b/Documentation/vm/unevictable-lru.rst
+@@ -98,7 +98,7 @@ Memory Control Group Interaction
+ --------------------------------
+ 
+ The unevictable LRU facility interacts with the memory control group [aka
+-memory controller; see Documentation/cgroup-v1/memory.txt] by extending the
++memory controller; see Documentation/cgroup-v1/memory.rst] by extending the
+ lru_list enum.
+ 
+ The memory controller data structure automatically gets a per-zone unevictable
+diff --git a/Documentation/x86/x86_64/fake-numa-for-cpusets.rst b/Documentation/x86/x86_64/fake-numa-for-cpusets.rst
+index 04df57b9aa3f..30108684ae87 100644
+--- a/Documentation/x86/x86_64/fake-numa-for-cpusets.rst
++++ b/Documentation/x86/x86_64/fake-numa-for-cpusets.rst
+@@ -15,7 +15,7 @@ assign them to cpusets and their attached tasks.  This is a way of limiting the
+ amount of system memory that are available to a certain class of tasks.
+ 
+ For more information on the features of cpusets, see
+-Documentation/cgroup-v1/cpusets.txt.
++Documentation/cgroup-v1/cpusets.rst.
+ There are a number of different configurations you can use for your needs.  For
+ more information on the numa=fake command line option and its various ways of
+ configuring fake nodes, see Documentation/x86/x86_64/boot-options.rst.
+@@ -40,7 +40,7 @@ A machine may be split as follows with "numa=fake=4*512," as reported by dmesg::
+ 	On node 3 totalpages: 131072
+ 
+ Now following the instructions for mounting the cpusets filesystem from
+-Documentation/cgroup-v1/cpusets.txt, you can assign fake nodes (i.e. contiguous memory
++Documentation/cgroup-v1/cpusets.rst, you can assign fake nodes (i.e. contiguous memory
+ address spaces) to individual cpusets::
+ 
+ 	[root@xroads /]# mkdir exampleset
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 8dece99b5502..9f83a79fdfdb 100644
+index fd40fa26f062..8dece99b5502 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4801,7 +4801,7 @@ S:	Maintained
- W:	http://plugable.com/category/projects/udlfb/
- F:	drivers/video/fbdev/udlfb.c
- F:	include/video/udlfb.h
--F:	Documentation/fb/udlfb.txt
-+F:	Documentation/fb/udlfb.rst
- 
- DISTRIBUTED LOCK MANAGER (DLM)
- M:	Christine Caulfield <ccaulfie@redhat.com>
-@@ -7944,7 +7944,7 @@ INTEL FRAMEBUFFER DRIVER (excluding 810 and 815)
- M:	Maik Broemme <mbroemme@libmpq.org>
- L:	linux-fbdev@vger.kernel.org
+@@ -4116,7 +4116,7 @@ W:	http://www.bullopensource.org/cpuset/
+ W:	http://oss.sgi.com/projects/cpusets/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git
  S:	Maintained
--F:	Documentation/fb/intelfb.txt
-+F:	Documentation/fb/intelfb.rst
- F:	drivers/video/fbdev/intelfb/
+-F:	Documentation/cgroup-v1/cpusets.txt
++F:	Documentation/cgroup-v1/cpusets.rst
+ F:	include/linux/cpuset.h
+ F:	kernel/cgroup/cpuset.c
  
- INTEL GPIO DRIVERS
-@@ -14386,7 +14386,7 @@ M:	Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>
- L:	linux-fbdev@vger.kernel.org
- S:	Maintained
- F:	drivers/video/fbdev/sm712*
--F:	Documentation/fb/sm712fb.txt
-+F:	Documentation/fb/sm712fb.rst
+diff --git a/block/Kconfig b/block/Kconfig
+index 1b220101a9cb..78374cb03114 100644
+--- a/block/Kconfig
++++ b/block/Kconfig
+@@ -88,7 +88,7 @@ config BLK_DEV_THROTTLING
+ 	one needs to mount and use blkio cgroup controller for creating
+ 	cgroups and specifying per device IO rate policies.
  
- SIMPLE FIRMWARE INTERFACE (SFI)
- M:	Len Brown <lenb@kernel.org>
-@@ -14456,7 +14456,7 @@ SIS FRAMEBUFFER DRIVER
- M:	Thomas Winischhofer <thomas@winischhofer.net>
- W:	http://www.winischhofer.net/linuxsisvga.shtml
- S:	Maintained
--F:	Documentation/fb/sisfb.txt
-+F:	Documentation/fb/sisfb.rst
- F:	drivers/video/fbdev/sis/
- F:	include/video/sisfb.h
+-	See Documentation/cgroup-v1/blkio-controller.txt for more information.
++	See Documentation/cgroup-v1/blkio-controller.rst for more information.
  
-@@ -16663,7 +16663,7 @@ M:	Michal Januszewski <spock@gentoo.org>
- L:	linux-fbdev@vger.kernel.org
- W:	https://github.com/mjanusz/v86d
- S:	Maintained
--F:	Documentation/fb/uvesafb.txt
-+F:	Documentation/fb/uvesafb.rst
- F:	drivers/video/fbdev/uvesafb.*
+ config BLK_DEV_THROTTLING_LOW
+ 	bool "Block throttling .low limit interface support (EXPERIMENTAL)"
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index b4e766e93f6e..c5311935239d 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -624,7 +624,7 @@ struct cftype {
  
- VF610 NAND DRIVER
-diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
-index 3b1d312bb175..0e3e4dacbc12 100644
---- a/drivers/tty/Kconfig
-+++ b/drivers/tty/Kconfig
-@@ -95,7 +95,7 @@ config VT_HW_CONSOLE_BINDING
- 
- 	 See <file:Documentation/console/console.txt> for more
- 	 information. For framebuffer console users, please refer to
--	 <file:Documentation/fb/fbcon.txt>.
-+	 <file:Documentation/fb/fbcon.rst>.
- 
- config UNIX98_PTYS
- 	bool "Unix98 PTY support" if EXPERT
-diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-index 1b2f5f31fb6f..737b86328c9e 100644
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -31,7 +31,7 @@ menuconfig FB
- 	  in the /dev directory, i.e. /dev/fb*.
- 
- 	  You need an utility program called fbset to make full use of frame
--	  buffer devices. Please read <file:Documentation/fb/framebuffer.txt>
-+	  buffer devices. Please read <file:Documentation/fb/framebuffer.rst>
- 	  and the Framebuffer-HOWTO at
- 	  <http://www.munted.org.uk/programming/Framebuffer-HOWTO-1.3.html> for more
- 	  information.
-@@ -241,7 +241,7 @@ config FB_CIRRUS
- 	  If you have a PCI-based system, this enables support for these
- 	  chips: GD-543x, GD-544x, GD-5480.
- 
--	  Please read the file <file:Documentation/fb/cirrusfb.txt>.
-+	  Please read the file <file:Documentation/fb/cirrusfb.rst>.
- 
- 	  Say N unless you have such a graphics board or plan to get one
- 	  before you next recompile the kernel.
-@@ -614,7 +614,7 @@ config FB_UVESA
- 
- 	  This driver generally provides more features than vesafb but
- 	  requires a userspace helper application called 'v86d'. See
--	  <file:Documentation/fb/uvesafb.txt> for more information.
-+	  <file:Documentation/fb/uvesafb.rst> for more information.
- 
- 	  If unsure, say N.
- 
-@@ -629,7 +629,7 @@ config FB_VESA
- 	  This is the frame buffer device driver for generic VESA 2.0
- 	  compliant graphic cards. The older VESA 1.2 cards are not supported.
- 	  You will get a boot time penguin logo at no additional cost. Please
--	  read <file:Documentation/fb/vesafb.txt>. If unsure, say Y.
-+	  read <file:Documentation/fb/vesafb.rst>. If unsure, say Y.
- 
- config FB_EFI
- 	bool "EFI-based Framebuffer Support"
-@@ -825,7 +825,7 @@ config FB_PVR2
- 	  module load time.  The parameters look like "video=pvr2:XXX", where
- 	  the meaning of XXX can be found at the end of the main source file
- 	  (<file:drivers/video/pvr2fb.c>). Please see the file
--	  <file:Documentation/fb/pvr2fb.txt>.
-+	  <file:Documentation/fb/pvr2fb.rst>.
- 
- config FB_OPENCORES
- 	tristate "OpenCores VGA/LCD core 2.0 framebuffer support"
-@@ -987,7 +987,7 @@ config FB_I810
- 	  module will be called i810fb.
- 
- 	  For more information, please read
--	  <file:Documentation/fb/intel810.txt>
-+	  <file:Documentation/fb/intel810.rst>
- 
- config FB_I810_GTF
- 	bool "use VESA Generalized Timing Formula"
-@@ -1057,7 +1057,7 @@ config FB_INTEL
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called intelfb.
- 
--	  For more information, please read <file:Documentation/fb/intelfb.txt>
-+	  For more information, please read <file:Documentation/fb/intelfb.rst>
- 
- config FB_INTEL_DEBUG
- 	bool "Intel driver Debug Messages"
-@@ -1094,7 +1094,7 @@ config FB_MATROX
- 
- 	  You can pass several parameters to the driver at boot time or at
- 	  module load time. The parameters look like "video=matroxfb:XXX", and
--	  are described in <file:Documentation/fb/matroxfb.txt>.
-+	  are described in <file:Documentation/fb/matroxfb.rst>.
- 
- config FB_MATROX_MILLENIUM
- 	bool "Millennium I/II support"
-@@ -1245,7 +1245,7 @@ config FB_ATY128
- 	help
- 	  This driver supports graphics boards with the ATI Rage128 chips.
- 	  Say Y if you have such a graphics board and read
--	  <file:Documentation/fb/aty128fb.txt>.
-+	  <file:Documentation/fb/aty128fb.rst>.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called aty128fb.
-@@ -1507,7 +1507,7 @@ config FB_VOODOO1
- 
- 	  WARNING: Do not use any application that uses the 3D engine
- 	  (namely glide) while using this driver.
--	  Please read the <file:Documentation/fb/sstfb.txt> for supported
-+	  Please read the <file:Documentation/fb/sstfb.rst> for supported
- 	  options and other important info  support.
- 
- config FB_VT8623
-@@ -1539,7 +1539,7 @@ config FB_TRIDENT
- 	  There are also integrated versions of these chips called CyberXXXX,
- 	  CyberImage or CyberBlade. These chips are mostly found in laptops
- 	  but also on some motherboards including early VIA EPIA motherboards.
--	  For more information, read <file:Documentation/fb/tridentfb.txt>
-+	  For more information, read <file:Documentation/fb/tridentfb.rst>
- 
- 	  Say Y if you have such a graphics board.
- 
-@@ -1778,7 +1778,7 @@ config FB_PXA_PARAMETERS
- 	  single model of flatpanel then you can safely leave this
- 	  option disabled.
- 
--	  <file:Documentation/fb/pxafb.txt> describes the available parameters.
-+	  <file:Documentation/fb/pxafb.rst> describes the available parameters.
- 
- config PXA3XX_GCU
- 	tristate "PXA3xx 2D graphics accelerator driver"
-diff --git a/drivers/video/fbdev/matrox/matroxfb_base.c b/drivers/video/fbdev/matrox/matroxfb_base.c
-index c76bef078c75..1a555f70923a 100644
---- a/drivers/video/fbdev/matrox/matroxfb_base.c
-+++ b/drivers/video/fbdev/matrox/matroxfb_base.c
-@@ -2502,7 +2502,7 @@ MODULE_PARM_DESC(nobios, "Disables ROM BIOS (0 or 1=disabled) (default=do not ch
- module_param(noinit, int, 0);
- MODULE_PARM_DESC(noinit, "Disables W/SG/SD-RAM and bus interface initialization (0 or 1=do not initialize) (default=0)");
- module_param(memtype, int, 0);
--MODULE_PARM_DESC(memtype, "Memory type for G200/G400 (see Documentation/fb/matroxfb.txt for explanation) (default=3 for G200, 0 for G400)");
-+MODULE_PARM_DESC(memtype, "Memory type for G200/G400 (see Documentation/fb/matroxfb.rst for explanation) (default=3 for G200, 0 for G400)");
- module_param(mtrr, int, 0);
- MODULE_PARM_DESC(mtrr, "This speeds up video memory accesses (0=disabled or 1) (default=1)");
- module_param(sgram, int, 0);
-diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
-index d59c8a59f582..4282cb117b92 100644
---- a/drivers/video/fbdev/pxafb.c
-+++ b/drivers/video/fbdev/pxafb.c
-@@ -2068,7 +2068,7 @@ static int __init pxafb_setup_options(void)
- #define pxafb_setup_options()		(0)
- 
- module_param_string(options, g_options, sizeof(g_options), 0);
--MODULE_PARM_DESC(options, "LCD parameters (see Documentation/fb/pxafb.txt)");
-+MODULE_PARM_DESC(options, "LCD parameters (see Documentation/fb/pxafb.rst)");
- #endif
- 
- #else
-diff --git a/drivers/video/fbdev/sh7760fb.c b/drivers/video/fbdev/sh7760fb.c
-index 405715b60ec7..ab8fe838c776 100644
---- a/drivers/video/fbdev/sh7760fb.c
-+++ b/drivers/video/fbdev/sh7760fb.c
-@@ -6,7 +6,7 @@
-  *             Manuel Lauss <mano@roarinelk.homelinux.net>
-  * (c) 2008 Nobuhiro Iwamatsu <iwamatsu.nobuhiro@renesas.com>
+ /*
+  * Control Group subsystem type.
+- * See Documentation/cgroup-v1/cgroups.txt for details
++ * See Documentation/cgroup-v1/cgroups.rst for details
+  */
+ struct cgroup_subsys {
+ 	struct cgroup_subsys_state *(*css_alloc)(struct cgroup_subsys_state *parent_css);
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 7c6aef253173..63a7a5edb546 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -801,7 +801,7 @@ union bpf_attr {
+  * 		based on a user-provided identifier for all traffic coming from
+  * 		the tasks belonging to the related cgroup. See also the related
+  * 		kernel documentation, available from the Linux sources in file
+- * 		*Documentation/cgroup-v1/net_cls.txt*.
++ * 		*Documentation/cgroup-v1/net_cls.rst*.
   *
-- * PLEASE HAVE A LOOK AT Documentation/fb/sh7760fb.txt!
-+ * PLEASE HAVE A LOOK AT Documentation/fb/sh7760fb.rst!
+  * 		The Linux kernel has two versions for cgroups: there are
+  * 		cgroups v1 and cgroups v2. Both are available to users, who can
+diff --git a/init/Kconfig b/init/Kconfig
+index 2f7f52c5efb8..ab41ffa08d79 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -797,7 +797,7 @@ config BLK_CGROUP
+ 	CONFIG_CFQ_GROUP_IOSCHED=y; for enabling throttling policy, set
+ 	CONFIG_BLK_DEV_THROTTLING=y.
+ 
+-	See Documentation/cgroup-v1/blkio-controller.txt for more information.
++	See Documentation/cgroup-v1/blkio-controller.rst for more information.
+ 
+ config DEBUG_BLK_CGROUP
+ 	bool "IO controller debugging"
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index fe90fa1899e6..92c515885f93 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -729,7 +729,7 @@ static inline int nr_cpusets(void)
+  * load balancing domains (sched domains) as specified by that partial
+  * partition.
   *
-  * Thanks to Siegfried Schaefer <s.schaefer at schaefer-edv.de>
-  *     for his original source and testing!
+- * See "What is sched_load_balance" in Documentation/cgroup-v1/cpusets.txt
++ * See "What is sched_load_balance" in Documentation/cgroup-v1/cpusets.rst
+  * for a background explanation of this.
+  *
+  * Does not return errors, on the theory that the callers of this
+diff --git a/security/device_cgroup.c b/security/device_cgroup.c
+index dc28914fa72e..c07196502577 100644
+--- a/security/device_cgroup.c
++++ b/security/device_cgroup.c
+@@ -509,7 +509,7 @@ static inline int may_allow_all(struct dev_cgroup *parent)
+  * This is one of the three key functions for hierarchy implementation.
+  * This function is responsible for re-evaluating all the cgroup's active
+  * exceptions due to a parent's exception change.
+- * Refer to Documentation/cgroup-v1/devices.txt for more details.
++ * Refer to Documentation/cgroup-v1/devices.rst for more details.
+  */
+ static void revalidate_active_exceptions(struct dev_cgroup *devcg)
+ {
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 7c6aef253173..63a7a5edb546 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -801,7 +801,7 @@ union bpf_attr {
+  * 		based on a user-provided identifier for all traffic coming from
+  * 		the tasks belonging to the related cgroup. See also the related
+  * 		kernel documentation, available from the Linux sources in file
+- * 		*Documentation/cgroup-v1/net_cls.txt*.
++ * 		*Documentation/cgroup-v1/net_cls.rst*.
+  *
+  * 		The Linux kernel has two versions for cgroups: there are
+  * 		cgroups v1 and cgroups v2. Both are available to users, who can
 -- 
 2.21.0
 
