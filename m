@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E05C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A85FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9C82083D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D553920868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098727;
-	bh=+ELwdBOFtrzvOaBRNKfhVZazyTXF5oPZNYlHypdAi38=;
+	s=default; t=1560098734;
+	bh=zscYZ7OpHrYkSXLWm/g6hkpoajMFBmOE1MoQzGHx6WU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3TdOiFeX16SZzzzR34lS7OHHn9U0BSA3PvXx67m5EEsv1K9seyX5wpObcxlElKvf
-	 4XVWwd0awNb75iXe+EyUv9V0vuOBH4T8EudDavpQD3l18O8eLIduN74JeBbDvbKbPW
-	 ShYgl8vC7AVMIDVHd5ce9GuGyl5PmN6kNfdKttWY=
+	b=xp7T/5Gte0MUlskB7OPaAEPoSumpSpLDk0dGQh4oEwvVN98iaxa3HbshwQBcyySOR
+	 YGLLIMQcdO7+B3ea8xAzUwdE2BsodS1CRU0Cp2lzmTpVzSR7/6wp5GkoaqaZHP8izo
+	 ho6V9/l23/Nkfy999+TuAvRrxDfkw7BIJghNeuEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfFIQp0 (ORCPT
+        id S1729976AbfFIQpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729819AbfFIQpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:23 -0400
+        id S1729906AbfFIQpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57DC1208C0;
-        Sun,  9 Jun 2019 16:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AD302081C;
+        Sun,  9 Jun 2019 16:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098722;
-        bh=+ELwdBOFtrzvOaBRNKfhVZazyTXF5oPZNYlHypdAi38=;
+        s=default; t=1560098731;
+        bh=zscYZ7OpHrYkSXLWm/g6hkpoajMFBmOE1MoQzGHx6WU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kgBl2MWZEYY0ZHbfODcEi3UWmnvwbRNIN6kuY2drKnupqlFCMoMbu3Q6pFn4C0RTp
-         8KxIm3oMtrTW63lTr/NveXXJBjAi/k/9Axrrl96fl4ZIdvfskWTjVU0Uh7VUziVc6S
-         UGkCzTd5xiC1u7QNBaKo6/CUVnWxH5GEOG1434Ho=
+        b=F+/affbIGcdbQRQj4DD71ojex5R9bQ+WFlPMn/dt46nr9hqMz+bmrw58/6FEhPlB6
+         N2LRiV7WFhkSEhfF2UIysUix8jwMTFR50Qtu3imPlkz04E3qA/sAuW2cIHBiVN3lSh
+         7hn64PLk41QQtR8Xj8K3o26BGtsAnxvVYNKyJMDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 05/70] net: ethernet: ti: cpsw_ethtool: fix ethtool ring param set
-Date:   Sun,  9 Jun 2019 18:41:16 +0200
-Message-Id: <20190609164127.808088328@linuxfoundation.org>
+Subject: [PATCH 5.1 08/70] net: sfp: read eeprom in maximum 16 byte increments
+Date:   Sun,  9 Jun 2019 18:41:19 +0200
+Message-Id: <20190609164127.948003960@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -61,32 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 09faf5a7d7c0bcb07faba072f611937af9dd5788 ]
+[ Upstream commit 28e74a7cfd6403f0d1c0f8b10b45d6fae37b227e ]
 
-Fix ability to set RX descriptor number, the reason - initially
-"tx_max_pending" was set incorrectly, but the issue appears after
-adding sanity check, so fix is for "sanity" patch.
+Some SFP modules do not like reads longer than 16 bytes, so read the
+EEPROM in chunks of 16 bytes at a time.  This behaviour is not specified
+in the SFP MSAs, which specifies:
 
-Fixes: 37e2d99b59c476 ("ethtool: Ensure new ring parameters are within bounds during SRINGPARAM")
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+ "The serial interface uses the 2-wire serial CMOS E2PROM protocol
+  defined for the ATMEL AT24C01A/02/04 family of components."
+
+and
+
+ "As long as the SFP+ receives an acknowledge, it shall serially clock
+  out sequential data words. The sequence is terminated when the host
+  responds with a NACK and a STOP instead of an acknowledge."
+
+We must avoid breaking a read across a 16-bit quantity in the diagnostic
+page, thankfully all 16-bit quantities in that page are naturally
+aligned.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/ti/cpsw.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/sfp.c |   24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -3130,6 +3130,7 @@ static void cpsw_get_ringparam(struct ne
- 	struct cpsw_common *cpsw = priv->cpsw;
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -281,6 +281,7 @@ static int sfp_i2c_read(struct sfp *sfp,
+ {
+ 	struct i2c_msg msgs[2];
+ 	u8 bus_addr = a2 ? 0x51 : 0x50;
++	size_t this_len;
+ 	int ret;
  
- 	/* not supported */
-+	ering->tx_max_pending = descs_pool_size - CPSW_MAX_QUEUES;
- 	ering->tx_max_pending = 0;
- 	ering->tx_pending = cpdma_get_num_tx_descs(cpsw->dma);
- 	ering->rx_max_pending = descs_pool_size - CPSW_MAX_QUEUES;
+ 	msgs[0].addr = bus_addr;
+@@ -292,11 +293,26 @@ static int sfp_i2c_read(struct sfp *sfp,
+ 	msgs[1].len = len;
+ 	msgs[1].buf = buf;
+ 
+-	ret = i2c_transfer(sfp->i2c, msgs, ARRAY_SIZE(msgs));
+-	if (ret < 0)
+-		return ret;
++	while (len) {
++		this_len = len;
++		if (this_len > 16)
++			this_len = 16;
+ 
+-	return ret == ARRAY_SIZE(msgs) ? len : 0;
++		msgs[1].len = this_len;
++
++		ret = i2c_transfer(sfp->i2c, msgs, ARRAY_SIZE(msgs));
++		if (ret < 0)
++			return ret;
++
++		if (ret != ARRAY_SIZE(msgs))
++			break;
++
++		msgs[1].buf += this_len;
++		dev_addr += this_len;
++		len -= this_len;
++	}
++
++	return msgs[1].buf - (u8 *)buf;
+ }
+ 
+ static int sfp_i2c_write(struct sfp *sfp, bool a2, u8 dev_addr, void *buf,
 
 
