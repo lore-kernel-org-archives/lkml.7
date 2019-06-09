@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223D7C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46643C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D5520833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B922206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099295;
-	bh=lAiU1RIanTfQNtNoN4gO/C1h84Mc1DG0kARE30guHgU=;
+	s=default; t=1560099298;
+	bh=bwNRaFD4cBIb82TqxNQk0+q3hsSU/34MkZ2gWox8Ktg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZlbHpZLNHKTaF9bb6xYRgnsNkDjwTwq11zzDqfZ31VAEWTwhorT9jiiGFlM12XLze
-	 xhEcILhfBtCjpI6i8uU/8ZzN5EsfwXJLF/4DystAcONPrVcyni9Xc2n1CLVUWRJPin
-	 E0KS2PVx66lpGKA3eJki7FqL4qzHRoNweZLONYbg=
+	b=s7zJUanwwEjQ5KGr6DXEtey8BJXXkWQo3WsfYED4dPE52L4XLPCsWKFT/FplNzWOR
+	 +8DiZuwhvXRtm171RiCHeNjPG/+koAIlYXxaky2KHNhQAkpmzpr6dgAxEr2yA/0QWA
+	 RUAT5471WNtiDEKN4LZqdOGgKuNB7WPKwq3l0/p8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbfFIQyy (ORCPT
+        id S1732725AbfFIQy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:54:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56706 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732702AbfFIQyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:54:50 -0400
+        id S1732708AbfFIQyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:54:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 189C9204EC;
-        Sun,  9 Jun 2019 16:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26EA5205ED;
+        Sun,  9 Jun 2019 16:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099289;
-        bh=lAiU1RIanTfQNtNoN4gO/C1h84Mc1DG0kARE30guHgU=;
+        s=default; t=1560099292;
+        bh=bwNRaFD4cBIb82TqxNQk0+q3hsSU/34MkZ2gWox8Ktg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fehB3Rf6aY2s5SGEf0lT+RxvO35xrlvGW57VEOjBYMLciWu8Rll4dLnit278QN6xt
-         90fpEraZORNFU4qqtDL7Vq87FUnI4fMdBa2NSzN7Jkldq/tOoKMT6+IWtLLznaD1n0
-         CVKt+UwYthTsqU5gdy9vj07JkhflVxIFw6PmjXyE=
+        b=GQUzgd/g9wIsrTgu7RYhJpXclLIcCLyVkOQ3vkcj8xJuLUMTyyrp+dc0c03eh2tJp
+         ghHdbbzZ6bxSjWQD3PPbn4Set+XUQDaKNXjkRt3OC2xzpneVICNaueNzzDcgOG2IAj
+         AUYSbghN6928hu7wDrAypZgtTTNqmktMfkYWnGRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bhe@redhat.com,
-        bhsharma@redhat.com, bp@alien8.de, eugene@hp.com,
-        evgeny.kalugin@intel.com, jhugo@codeaurora.org,
-        leif.lindholm@linaro.org, linux-efi@vger.kernel.org,
-        mark.rutland@arm.com, roy.franz@cavium.com,
-        rruigrok@codeaurora.org, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 60/83] efi/libstub: Unify command line param parsing
-Date:   Sun,  9 Jun 2019 18:42:30 +0200
-Message-Id: <20190609164132.986580103@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Subject: [PATCH 4.9 78/83] drm/gma500/cdv: Check vbt config bits when detecting lvds panels
+Date:   Sun,  9 Jun 2019 18:42:48 +0200
+Message-Id: <20190609164134.599134597@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -67,170 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
 
-commit 60f38de7a8d4e816100ceafd1b382df52527bd50 upstream.
+commit 7c420636860a719049fae9403e2c87804f53bdde upstream.
 
-Merge the parsing of the command line carried out in arm-stub.c with
-the handling in efi_parse_options(). Note that this also fixes the
-missing handling of CONFIG_CMDLINE_FORCE=y, in which case the builtin
-command line should supersede the one passed by the firmware.
+Some machines have an lvds child device in vbt even though a panel is
+not attached. To make detection more reliable we now also check the lvds
+config bits available in the vbt.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bhe@redhat.com
-Cc: bhsharma@redhat.com
-Cc: bp@alien8.de
-Cc: eugene@hp.com
-Cc: evgeny.kalugin@intel.com
-Cc: jhugo@codeaurora.org
-Cc: leif.lindholm@linaro.org
-Cc: linux-efi@vger.kernel.org
-Cc: mark.rutland@arm.com
-Cc: roy.franz@cavium.com
-Cc: rruigrok@codeaurora.org
-Link: http://lkml.kernel.org/r/20170404160910.28115-1-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[ardb: fix up merge conflicts with 4.9.180]
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1665766
+Cc: stable@vger.kernel.org
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190416114607.1072-1-patrik.r.jakobsson@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/libstub/arm-stub.c        |   23 +++++++----------------
- drivers/firmware/efi/libstub/arm64-stub.c      |    4 +---
- drivers/firmware/efi/libstub/efi-stub-helper.c |   19 +++++++++++--------
- drivers/firmware/efi/libstub/efistub.h         |    2 ++
- include/linux/efi.h                            |    2 +-
- 5 files changed, 22 insertions(+), 28 deletions(-)
+ drivers/gpu/drm/gma500/cdv_intel_lvds.c |    3 +++
+ drivers/gpu/drm/gma500/intel_bios.c     |    3 +++
+ drivers/gpu/drm/gma500/psb_drv.h        |    1 +
+ 3 files changed, 7 insertions(+)
 
---- a/drivers/firmware/efi/libstub/arm-stub.c
-+++ b/drivers/firmware/efi/libstub/arm-stub.c
-@@ -18,7 +18,6 @@
+--- a/drivers/gpu/drm/gma500/cdv_intel_lvds.c
++++ b/drivers/gpu/drm/gma500/cdv_intel_lvds.c
+@@ -609,6 +609,9 @@ void cdv_intel_lvds_init(struct drm_devi
+ 	int pipe;
+ 	u8 pin;
  
- #include "efistub.h"
- 
--bool __nokaslr;
- 
- static int efi_get_secureboot(efi_system_table_t *sys_table_arg)
- {
-@@ -268,18 +267,6 @@ unsigned long efi_entry(void *handle, ef
- 		goto fail;
- 	}
- 
--	/* check whether 'nokaslr' was passed on the command line */
--	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
--		static const u8 default_cmdline[] = CONFIG_CMDLINE;
--		const u8 *str, *cmdline = cmdline_ptr;
--
--		if (IS_ENABLED(CONFIG_CMDLINE_FORCE))
--			cmdline = default_cmdline;
--		str = strstr(cmdline, "nokaslr");
--		if (str == cmdline || (str > cmdline && *(str - 1) == ' '))
--			__nokaslr = true;
--	}
--
- 	si = setup_graphics(sys_table);
- 
- 	status = handle_kernel_image(sys_table, image_addr, &image_size,
-@@ -291,9 +278,13 @@ unsigned long efi_entry(void *handle, ef
- 		goto fail_free_cmdline;
- 	}
- 
--	status = efi_parse_options(cmdline_ptr);
--	if (status != EFI_SUCCESS)
--		pr_efi_err(sys_table, "Failed to parse EFI cmdline options\n");
-+	if (IS_ENABLED(CONFIG_CMDLINE_EXTEND) ||
-+	    IS_ENABLED(CONFIG_CMDLINE_FORCE) ||
-+	    cmdline_size == 0)
-+		efi_parse_options(CONFIG_CMDLINE);
++	if (!dev_priv->lvds_enabled_in_vbt)
++		return;
 +
-+	if (!IS_ENABLED(CONFIG_CMDLINE_FORCE) && cmdline_size > 0)
-+		efi_parse_options(cmdline_ptr);
+ 	pin = GMBUS_PORT_PANEL;
+ 	if (!lvds_is_present_in_vbt(dev, &pin)) {
+ 		DRM_DEBUG_KMS("LVDS is not present in VBT\n");
+--- a/drivers/gpu/drm/gma500/intel_bios.c
++++ b/drivers/gpu/drm/gma500/intel_bios.c
+@@ -436,6 +436,9 @@ parse_driver_features(struct drm_psb_pri
+ 	if (driver->lvds_config == BDB_DRIVER_FEATURE_EDP)
+ 		dev_priv->edp.support = 1;
  
- 	secure_boot = efi_get_secureboot(sys_table);
- 	if (secure_boot > 0)
---- a/drivers/firmware/efi/libstub/arm64-stub.c
-+++ b/drivers/firmware/efi/libstub/arm64-stub.c
-@@ -24,8 +24,6 @@
- 
- #include "efistub.h"
- 
--extern bool __nokaslr;
--
- efi_status_t check_platform_features(efi_system_table_t *sys_table_arg)
- {
- 	u64 tg;
-@@ -60,7 +58,7 @@ efi_status_t handle_kernel_image(efi_sys
- 	u64 phys_seed = 0;
- 
- 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
--		if (!__nokaslr) {
-+		if (!nokaslr()) {
- 			status = efi_get_random_bytes(sys_table_arg,
- 						      sizeof(phys_seed),
- 						      (u8 *)&phys_seed);
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -32,6 +32,13 @@
- 
- static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
- 
-+static int __section(.data) __nokaslr;
++	dev_priv->lvds_enabled_in_vbt = driver->lvds_config != 0;
++	DRM_DEBUG_KMS("LVDS VBT config bits: 0x%x\n", driver->lvds_config);
 +
-+int __pure nokaslr(void)
-+{
-+	return __nokaslr;
-+}
-+
- /*
-  * Allow the platform to override the allocation granularity: this allows
-  * systems that have the capability to run with a larger page size to deal
-@@ -351,17 +358,13 @@ void efi_free(efi_system_table_t *sys_ta
-  * environments, first in the early boot environment of the EFI boot
-  * stub, and subsequently during the kernel boot.
-  */
--efi_status_t efi_parse_options(char *cmdline)
-+efi_status_t efi_parse_options(char const *cmdline)
- {
- 	char *str;
+ 	/* This bit means to use 96Mhz for DPLL_A or not */
+ 	if (driver->primary_lfp_id)
+ 		dev_priv->dplla_96mhz = true;
+--- a/drivers/gpu/drm/gma500/psb_drv.h
++++ b/drivers/gpu/drm/gma500/psb_drv.h
+@@ -538,6 +538,7 @@ struct drm_psb_private {
+ 	int lvds_ssc_freq;
+ 	bool is_lvds_on;
+ 	bool is_mipi_on;
++	bool lvds_enabled_in_vbt;
+ 	u32 mipi_ctrl_display;
  
--	/*
--	 * Currently, the only efi= option we look for is 'nochunk', which
--	 * is intended to work around known issues on certain x86 UEFI
--	 * versions. So ignore for now on other architectures.
--	 */
--	if (!IS_ENABLED(CONFIG_X86))
--		return EFI_SUCCESS;
-+	str = strstr(cmdline, "nokaslr");
-+	if (str == cmdline || (str && str > cmdline && *(str - 1) == ' '))
-+		__nokaslr = 1;
- 
- 	/*
- 	 * If no EFI parameters were specified on the cmdline we've got
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -15,6 +15,8 @@
-  */
- #undef __init
- 
-+extern int __pure nokaslr(void);
-+
- void efi_char16_printk(efi_system_table_t *, efi_char16_t *);
- 
- efi_status_t efi_open_volume(efi_system_table_t *sys_table_arg, void *__image,
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1427,7 +1427,7 @@ efi_status_t handle_cmdline_files(efi_sy
- 				  unsigned long *load_addr,
- 				  unsigned long *load_size);
- 
--efi_status_t efi_parse_options(char *cmdline);
-+efi_status_t efi_parse_options(char const *cmdline);
- 
- efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
- 			   struct screen_info *si, efi_guid_t *proto,
+ 	unsigned int core_freq;
 
 
