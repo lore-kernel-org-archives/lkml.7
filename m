@@ -2,109 +2,103 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1636C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD436C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEB0205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100173;
-	bh=Cc03y/FLkW+XjKbTR0OyOAu1ys85Aey1WV9FRu4aPE4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhbaFuHBqvn9IHaKnSUhIy2xFzNe6i2n9QHUg+k7yMpPGAcuzpfAq+nQoooFgwTE+
-	 8KmJcAdyM0u1nX5PtvT2avBpJoY2l6GfpgWH3OTlB4nyVUVbmypxsurOO10KsGR3um
-	 cDRSXP2PuemJFyOZiDngFYufzzfK4O1d01f+qUzY=
+	by mail.kernel.org (Postfix) with ESMTP id B63C9205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRanUUu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388510AbfFIRDw (ORCPT
+        id S2388990AbfFIRJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388129AbfFIRDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60B8C204EC;
-        Sun,  9 Jun 2019 17:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099828;
-        bh=Cc03y/FLkW+XjKbTR0OyOAu1ys85Aey1WV9FRu4aPE4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6kfO+ZkrBU5CjqyfemoDzJ59tTaJXtuaq+vFs9nFu3mSJdDilsG4Ptb9QHr0HSx4
-         yY3CZt70ayDn2M5YugW/g1BOfuVtD2729d9vXGBOwtrhPg9sdikOCbbrY7npZhFNlD
-         wk1Pmm6LoFYHVbSSiIOUAyyW10i7Pd4pEKrUMjEI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 179/241] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
-Date:   Sun,  9 Jun 2019 18:42:01 +0200
-Message-Id: <20190609164153.010600829@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
-References: <20190609164147.729157653@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sun, 9 Jun 2019 13:09:36 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42273 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388549AbfFIRJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:09:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t28so5793875lje.9
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 10:09:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LznUc87kOzY43gG7GqM3uuB+dRBgbcnhswA/OnlhqSI=;
+        b=iRanUUu1JtHll99gtTKBlOGAMCDt8WvFcIqAZrrJoVIxcg56HvmrRG2hEUVZqosEjY
+         Oo/YhOn8KaZV9XTNdFolb091lW/+VrIJnibQnj14x2yT0UPHDUY9fUAS8dH0V29tW1xf
+         4O7Dxvd4my18SNZvsB/sjKMXcE6cuvl8yNyVGZ7mtOyIm49EjP9YQDirCIdYKf0Np0Pg
+         MAaGRfC/jvONh+OhXxtd+P8/856HGdn3/Rdjn3LcGBLXLtwRnF2kScbn9d0+BeW8603f
+         tWAzG7rkKyEwSwXhJTmaL6qfX27aB65/m9HS9p6eTNEmC4sY6bDEK9zVR+klP5E/Vaq4
+         jPfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LznUc87kOzY43gG7GqM3uuB+dRBgbcnhswA/OnlhqSI=;
+        b=ExMdGjnloVakWolK4B0Redvj2UBzWlm13KuBOBJ0IXoUkt4CBt16rb5C5ViFWreq+d
+         58MFgTIwA7GigLUhd4fbyZGXOugOvCMHSJqiFdz1nrkxm0BjOe+KcIoYt69XHIcmqEmw
+         uhwFZnpImi6ushc+ZuilRnGaYWHwkg8Lgc6UoO23LwPQeOKnSXTnLf40U9Fdzs+goFPQ
+         O8OT5g09OJJ260yBlYN4ekCjPlqEiwrpyyd0OweUp/R26ZaCbYPV7EzMI3njp4wePFd8
+         8txhumayw8ehpidcqT1aqncT0WUpwswzgkEM2x9D+3TYlwa5hsxFD+T8lFBuBR6H41qs
+         Lc4Q==
+X-Gm-Message-State: APjAAAWkoVljjDQObND9+uEbekeapPSJFea7WLSv6JjsPxJM4P3DTx8d
+        zGYdWaVhTHkYnD8IRHojQ+U=
+X-Google-Smtp-Source: APXvYqxBPS20PyWYhWunBvHAxE3Ys+hxIXMtjHYOBfOTkjSdU2FCtQMlvCeRqA75p0u3fD1jWFjOTA==
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr12057526ljg.62.1560100171209;
+        Sun, 09 Jun 2019 10:09:31 -0700 (PDT)
+Received: from esperanza ([176.120.239.149])
+        by smtp.gmail.com with ESMTPSA id u18sm396497ljj.32.2019.06.09.10.09.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Jun 2019 10:09:30 -0700 (PDT)
+Date:   Sun, 9 Jun 2019 20:09:28 +0300
+From:   Vladimir Davydov <vdavydov.dev@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v6 09/10] mm: stop setting page->mem_cgroup pointer for
+ slab pages
+Message-ID: <20190609170928.wetyjpueslcj3qft@esperanza>
+References: <20190605024454.1393507-1-guro@fb.com>
+ <20190605024454.1393507-10-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605024454.1393507-10-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ca5104715cfd14254ea5aecc390ae583b707607 ]
+On Tue, Jun 04, 2019 at 07:44:53PM -0700, Roman Gushchin wrote:
+> Every slab page charged to a non-root memory cgroup has a pointer
+> to the memory cgroup and holds a reference to it, which protects
+> a non-empty memory cgroup from being released. At the same time
+> the page has a pointer to the corresponding kmem_cache, and also
+> hold a reference to the kmem_cache. And kmem_cache by itself
+> holds a reference to the cgroup.
+> 
+> So there is clearly some redundancy, which allows to stop setting
+> the page->mem_cgroup pointer and rely on getting memcg pointer
+> indirectly via kmem_cache. Further it will allow to change this
+> pointer easier, without a need to go over all charged pages.
+> 
+> So let's stop setting page->mem_cgroup pointer for slab pages,
+> and stop using the css refcounter directly for protecting
+> the memory cgroup from going away. Instead rely on kmem_cache
+> as an intermediate object.
+> 
+> Make sure that vmstats and shrinker lists are working as previously,
+> as well as /proc/kpagecgroup interface.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Building with clang shows a variable that is only used by the
-suspend/resume functions but defined outside of their #ifdef block:
-
-sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
-
-We commonly fix these by marking the PM functions as __maybe_unused,
-but here that would grow the davinci_mcasp structure, so instead
-add another #ifdef here.
-
-Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/davinci/davinci-mcasp.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
-index 2ccb8bccc9d4c..512ec25c9ead1 100644
---- a/sound/soc/davinci/davinci-mcasp.c
-+++ b/sound/soc/davinci/davinci-mcasp.c
-@@ -43,6 +43,7 @@
- 
- #define MCASP_MAX_AFIFO_DEPTH	64
- 
-+#ifdef CONFIG_PM
- static u32 context_regs[] = {
- 	DAVINCI_MCASP_TXFMCTL_REG,
- 	DAVINCI_MCASP_RXFMCTL_REG,
-@@ -65,6 +66,7 @@ struct davinci_mcasp_context {
- 	u32	*xrsr_regs; /* for serializer configuration */
- 	bool	pm_state;
- };
-+#endif
- 
- struct davinci_mcasp_ruledata {
- 	struct davinci_mcasp *mcasp;
--- 
-2.20.1
-
-
-
+Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
