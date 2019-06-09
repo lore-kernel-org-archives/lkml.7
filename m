@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4A6C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1359DC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05193206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49332070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098896;
-	bh=QjKTBDFXtqzZ+YF044l7hB5jMgsETESIngSJvWGBCc4=;
+	s=default; t=1560098898;
+	bh=dOthnx208PqzPm0Nfp7X2NJmOglhK4fhh2tFgI/cI8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bB5DsrvXhx764iRYRKC0Ywv5YxbRyQlQO0OshEr2wJ0lDD95Bb6zw1jIBxDxBZ/Lz
-	 IFlwwnpdWVefPtxGh5sy4549LfuMBWVmUj1PUoxeJlmNHyQpOoW3ke5QgERfiITFuF
-	 acK2YEn6g+CkXb7vNEndCTV2E4+2YuauKj5aRtK4=
+	b=WPjimpoi+KqhWNKTADtYkVsp0QYlHzFDSX9A4Gi2VtQKc7nMZ68DxrD2XNpvu798g
+	 ORtXV+fqjCDiwSYfq1ezpEWogha/XVSXKj7+FwBQND/OzzgUTA5h4lkDSFhiC6/R0i
+	 nHn6ct1bHS1AoP/7/biSuN/HTn1TNP+W+GwmV4RE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfFIQsP (ORCPT
+        id S1730366AbfFIQsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731122AbfFIQsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:12 -0400
+        id S1729745AbfFIQsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8305D206C3;
-        Sun,  9 Jun 2019 16:48:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CD9D205ED;
+        Sun,  9 Jun 2019 16:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098892;
-        bh=QjKTBDFXtqzZ+YF044l7hB5jMgsETESIngSJvWGBCc4=;
+        s=default; t=1560098894;
+        bh=dOthnx208PqzPm0Nfp7X2NJmOglhK4fhh2tFgI/cI8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RqRV/sE5SUfkWpmRm4J4q3P8Cd62igic20XsJW1/h0pZpbtvJZ1dtcOiCqHCKnC5B
-         A8bDVTxNErXeB/WZ6Zl5I0XMJo8Wlwkx2O4QkMff8f93YsaUu1GemZnWAfiKUIyjkU
-         JEN+cS7avcpgZaRbjWssPx0oGwQ6Akr4icD0J8X4=
+        b=M9hfpDpJeSn8qo+f2vz7nkqfwk5NUHYEeTXq6rnQ0hhz4uhNY2fZrds9bX/rXPjaO
+         eY11l2QJ8csN8X29/hAhMC4IsClkF2nUNQM7UwM7ZH0/47bk8SsDV790bo/xbWKXqC
+         X4/E0AbXfIvgQfWmQCJcivFUb7UkxakRQy3itrkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Yaro Slav <yaro330@gmail.com>
-Subject: [PATCH 4.19 26/51] pstore/ram: Run without kernel crash dump region
-Date:   Sun,  9 Jun 2019 18:42:07 +0200
-Message-Id: <20190609164128.663731310@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 27/51] x86/power: Fix nosmt vs hibernation triple fault during resume
+Date:   Sun,  9 Jun 2019 18:42:08 +0200
+Message-Id: <20190609164128.760818989@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -59,106 +62,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Jiri Kosina <jkosina@suse.cz>
 
-commit 8880fa32c557600f5f624084152668ed3c2ea51e upstream.
+commit ec527c318036a65a083ef68d8ba95789d2212246 upstream.
 
-The ram pstore backend has always had the crash dumper frontend enabled
-unconditionally. However, it was possible to effectively disable it
-by setting a record_size=0. All the machinery would run (storing dumps
-to the temporary crash buffer), but 0 bytes would ultimately get stored
-due to there being no przs allocated for dumps. Commit 89d328f637b9
-("pstore/ram: Correctly calculate usable PRZ bytes"), however, assumed
-that there would always be at least one allocated dprz for calculating
-the size of the temporary crash buffer. This was, of course, not the
-case when record_size=0, and would lead to a NULL deref trying to find
-the dprz buffer size:
+As explained in
 
-BUG: unable to handle kernel NULL pointer dereference at (null)
-...
-IP: ramoops_probe+0x285/0x37e (fs/pstore/ram.c:808)
+	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
 
-        cxt->pstore.bufsize = cxt->dprzs[0]->buffer_size;
+we always, no matter what, have to bring up x86 HT siblings during boot at
+least once in order to avoid first MCE bringing the system to its knees.
 
-Instead, we need to only enable the frontends based on the success of the
-prz initialization and only take the needed actions when those zones are
-available. (This also fixes a possible error in detecting if the ftrace
-frontend should be enabled.)
+That means that whenever 'nosmt' is supplied on the kernel command-line,
+all the HT siblings are as a result sitting in mwait or cpudile after
+going through the online-offline cycle at least once.
 
-Reported-and-tested-by: Yaro Slav <yaro330@gmail.com>
-Fixes: 89d328f637b9 ("pstore/ram: Correctly calculate usable PRZ bytes")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+This causes a serious issue though when a kernel, which saw 'nosmt' on its
+commandline, is going to perform resume from hibernation: if the resume
+from the hibernated image is successful, cr3 is flipped in order to point
+to the address space of the kernel that is being resumed, which in turn
+means that all the HT siblings are all of a sudden mwaiting on address
+which is no longer valid.
+
+That results in triple fault shortly after cr3 is switched, and machine
+reboots.
+
+Fix this by always waking up all the SMT siblings before initiating the
+'restore from hibernation' process; this guarantees that all the HT
+siblings will be properly carried over to the resumed kernel waiting in
+resume_play_dead(), and acted upon accordingly afterwards, based on the
+target kernel configuration.
+
+Symmetricaly, the resumed kernel has to push the SMT siblings to mwait
+again in case it has SMT disabled; this means it has to online all
+the siblings when resuming (so that they come out of hlt) and offline
+them again to let them reach mwait.
+
+Cc: 4.19+ <stable@vger.kernel.org> # v4.19+
+Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/platform.c |    3 ++-
- fs/pstore/ram.c      |   36 +++++++++++++++++++++++-------------
- 2 files changed, 25 insertions(+), 14 deletions(-)
+ arch/x86/power/cpu.c          |   10 ++++++++++
+ arch/x86/power/hibernate_64.c |   33 +++++++++++++++++++++++++++++++++
+ include/linux/cpu.h           |    4 ++++
+ kernel/cpu.c                  |    4 ++--
+ kernel/power/hibernate.c      |    9 +++++++++
+ 5 files changed, 58 insertions(+), 2 deletions(-)
 
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -583,7 +583,8 @@ int pstore_register(struct pstore_info *
- 		return -EINVAL;
- 	}
- 
--	allocate_buf_for_compression();
-+	if (psi->flags & PSTORE_FLAGS_DMESG)
-+		allocate_buf_for_compression();
- 
- 	if (pstore_is_mounted())
- 		pstore_get_records(0);
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -803,26 +803,36 @@ static int ramoops_probe(struct platform
- 
- 	cxt->pstore.data = cxt;
- 	/*
--	 * Since bufsize is only used for dmesg crash dumps, it
--	 * must match the size of the dprz record (after PRZ header
--	 * and ECC bytes have been accounted for).
-+	 * Prepare frontend flags based on which areas are initialized.
-+	 * For ramoops_init_przs() cases, the "max count" variable tells
-+	 * if there are regions present. For ramoops_init_prz() cases,
-+	 * the single region size is how to check.
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable
+ 	 * address in its instruction pointer may not be possible to resolve
+ 	 * any more at that point (the page tables used by it previously may
+ 	 * have been overwritten by hibernate image data).
++	 *
++	 * First, make sure that we wake up all the potentially disabled SMT
++	 * threads which have been initially brought up and then put into
++	 * mwait/cpuidle sleep.
++	 * Those will be put to proper (not interfering with hibernation
++	 * resume) sleep afterwards, and the resumed kernel will decide itself
++	 * what to do with them.
  	 */
--	cxt->pstore.bufsize = cxt->dprzs[0]->buffer_size;
--	cxt->pstore.buf = kzalloc(cxt->pstore.bufsize, GFP_KERNEL);
--	if (!cxt->pstore.buf) {
--		pr_err("cannot allocate pstore crash dump buffer\n");
--		err = -ENOMEM;
--		goto fail_clear;
--	}
--
--	cxt->pstore.flags = PSTORE_FLAGS_DMESG;
-+	cxt->pstore.flags = 0;
-+	if (cxt->max_dump_cnt)
-+		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
- 	if (cxt->console_size)
- 		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
--	if (cxt->ftrace_size)
-+	if (cxt->max_ftrace_cnt)
- 		cxt->pstore.flags |= PSTORE_FLAGS_FTRACE;
- 	if (cxt->pmsg_size)
- 		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
++	ret = cpuhp_smt_enable();
++	if (ret)
++		return ret;
+ 	smp_ops.play_dead = resume_play_dead;
+ 	ret = disable_nonboot_cpus();
+ 	smp_ops.play_dead = play_dead;
+--- a/arch/x86/power/hibernate_64.c
++++ b/arch/x86/power/hibernate_64.c
+@@ -13,6 +13,7 @@
+ #include <linux/suspend.h>
+ #include <linux/scatterlist.h>
+ #include <linux/kdebug.h>
++#include <linux/cpu.h>
  
-+	/*
-+	 * Since bufsize is only used for dmesg crash dumps, it
-+	 * must match the size of the dprz record (after PRZ header
-+	 * and ECC bytes have been accounted for).
-+	 */
-+	if (cxt->pstore.flags & PSTORE_FLAGS_DMESG) {
-+		cxt->pstore.bufsize = cxt->dprzs[0]->buffer_size;
-+		cxt->pstore.buf = kzalloc(cxt->pstore.bufsize, GFP_KERNEL);
-+		if (!cxt->pstore.buf) {
-+			pr_err("cannot allocate pstore crash dump buffer\n");
-+			err = -ENOMEM;
-+			goto fail_clear;
-+		}
-+	}
+ #include <crypto/hash.h>
+ 
+@@ -363,3 +364,35 @@ int arch_hibernation_header_restore(void
+ 
+ 	return 0;
+ }
 +
- 	err = pstore_register(&cxt->pstore);
- 	if (err) {
- 		pr_err("registering with pstore failed\n");
++int arch_resume_nosmt(void)
++{
++	int ret = 0;
++	/*
++	 * We reached this while coming out of hibernation. This means
++	 * that SMT siblings are sleeping in hlt, as mwait is not safe
++	 * against control transition during resume (see comment in
++	 * hibernate_resume_nonboot_cpu_disable()).
++	 *
++	 * If the resumed kernel has SMT disabled, we have to take all the
++	 * SMT siblings out of hlt, and offline them again so that they
++	 * end up in mwait proper.
++	 *
++	 * Called with hotplug disabled.
++	 */
++	cpu_hotplug_enable();
++	if (cpu_smt_control == CPU_SMT_DISABLED ||
++			cpu_smt_control == CPU_SMT_FORCE_DISABLED) {
++		enum cpuhp_smt_control old = cpu_smt_control;
++
++		ret = cpuhp_smt_enable();
++		if (ret)
++			goto out;
++		ret = cpuhp_smt_disable(old);
++		if (ret)
++			goto out;
++	}
++out:
++	cpu_hotplug_disable();
++	return ret;
++}
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -183,10 +183,14 @@ enum cpuhp_smt_control {
+ extern enum cpuhp_smt_control cpu_smt_control;
+ extern void cpu_smt_disable(bool force);
+ extern void cpu_smt_check_topology(void);
++extern int cpuhp_smt_enable(void);
++extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
+ #else
+ # define cpu_smt_control		(CPU_SMT_ENABLED)
+ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
++static inline int cpuhp_smt_enable(void) { return 0; }
++static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
+ #endif
+ 
+ /*
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2035,7 +2035,7 @@ static void cpuhp_online_cpu_device(unsi
+ 	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+ }
+ 
+-static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
++int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+ {
+ 	int cpu, ret = 0;
+ 
+@@ -2069,7 +2069,7 @@ static int cpuhp_smt_disable(enum cpuhp_
+ 	return ret;
+ }
+ 
+-static int cpuhp_smt_enable(void)
++int cpuhp_smt_enable(void)
+ {
+ 	int cpu, ret = 0;
+ 
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -258,6 +258,11 @@ void swsusp_show_speed(ktime_t start, kt
+ 		(kps % 1000) / 10);
+ }
+ 
++__weak int arch_resume_nosmt(void)
++{
++	return 0;
++}
++
+ /**
+  * create_image - Create a hibernation image.
+  * @platform_mode: Whether or not to use the platform driver.
+@@ -325,6 +330,10 @@ static int create_image(int platform_mod
+  Enable_cpus:
+ 	enable_nonboot_cpus();
+ 
++	/* Allow architectures to do nosmt-specific post-resume dances */
++	if (!in_suspend)
++		error = arch_resume_nosmt();
++
+  Platform_finish:
+ 	platform_finish(platform_mode);
+ 
 
 
