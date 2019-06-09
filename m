@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D450CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49CDC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A795A206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB7B206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099340;
-	bh=Umek+zReS/f4g0dEoVx2yqsN5tNVnTlSCOJnwDepoGg=;
+	s=default; t=1560099345;
+	bh=TUjWsTfMduK7v9gPMGJ65AtAY2GrkaAhifPh/vuGr6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltDFxk2tqA65oeIYlA8/tET4qpCHLYXQA0MSkniB+wiKq/AwemikI/3pe2rkujc3O
-	 qcqopapRM/SbrlcnrzEOZJRQ/aGbKvyHfdDvp2899HmZLh01oT5mATDHnAVV1PELL2
-	 tg4p+xikQFQat6NSIPAUmtjngCeFZxnVwLw2kb6o=
+	b=S1V0LVU2BdwGsvjcgAWy7u88SdjWDdZJ6HZ7v4fmhzsjACP2G44WRC5UwCxAKoas/
+	 O05BxOltxIupdasGXSroP+b0MPBnSE9+YLPwyYMyCtj85GGBLYJykQFEIDjt7/ZfBT
+	 kamn/RIzdubXVk6pOLz9MBD21kyUOqqxhfg2tYQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbfFIQzj (ORCPT
+        id S1732828AbfFIQzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732405AbfFIQzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:55:38 -0400
+        id S1732405AbfFIQzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:55:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C9B7205ED;
-        Sun,  9 Jun 2019 16:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0DEE205ED;
+        Sun,  9 Jun 2019 16:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099337;
-        bh=Umek+zReS/f4g0dEoVx2yqsN5tNVnTlSCOJnwDepoGg=;
+        s=default; t=1560099340;
+        bh=TUjWsTfMduK7v9gPMGJ65AtAY2GrkaAhifPh/vuGr6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0W7LhQz47N2SPYxm0VzXIiJHEj4nzXCQNiEQEhTdcZYcPCNkhM0ef7CT35WlzltDb
-         g9IkD2Q2oJ7cPmqaHaMReClM0jFgfYSUVAesRHwBb9gOzUgdgdTDBCt5STLtKM62k8
-         aTPYGp3Ro7ZzLg6kJEw1N5k6D5gD5WiomhPvpPhI=
+        b=zYcesKZ6mgxXVaqektyRTHMvQvuXVzqM5n8Ty2KPo4qnthnWRxpY28JHw9zJQkNHD
+         kiu3k3rYprg3t0v88dCmgTLYF7cSbB6RxIJtvFt1/j4w264uajDRH5ev9EhBpPhz1O
+         A31a0zeO4ZD7l6S23R1XU9j/e0dxvxkKp/uS00Fc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Matz <olivier.matz@6wind.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 67/83] ipv6: fix EFAULT on sendto with icmpv6 and hdrincl
-Date:   Sun,  9 Jun 2019 18:42:37 +0200
-Message-Id: <20190609164133.500347042@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 58/83] mm: make page ref count overflow check tighter and more explicit
+Date:   Sun,  9 Jun 2019 18:42:28 +0200
+Message-Id: <20190609164132.850661394@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -60,57 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Matz <olivier.matz@6wind.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit b9aa52c4cb457e7416cc0c95f475e72ef4a61336 ]
+commit f958d7b528b1b40c44cfda5eabe2d82760d868c3 upstream.
 
-The following code returns EFAULT (Bad address):
+We have a VM_BUG_ON() to check that the page reference count doesn't
+underflow (or get close to overflow) by checking the sign of the count.
 
-  s = socket(AF_INET6, SOCK_RAW, IPPROTO_ICMPV6);
-  setsockopt(s, SOL_IPV6, IPV6_HDRINCL, 1);
-  sendto(ipv6_icmp6_packet, addr);   /* returns -1, errno = EFAULT */
+That's all fine, but we actually want to allow people to use a "get page
+ref unless it's already very high" helper function, and we want that one
+to use the sign of the page ref (without triggering this VM_BUG_ON).
 
-The IPv4 equivalent code works. A workaround is to use IPPROTO_RAW
-instead of IPPROTO_ICMPV6.
+Change the VM_BUG_ON to only check for small underflows (or _very_ close
+to overflowing), and ignore overflows which have strayed into negative
+territory.
 
-The failure happens because 2 bytes are eaten from the msghdr by
-rawv6_probe_proto_opt() starting from commit 19e3c66b52ca ("ipv6
-equivalent of "ipv4: Avoid reading user iov twice after
-raw_probe_proto_opt""), but at that time it was not a problem because
-IPV6_HDRINCL was not yet introduced.
-
-Only eat these 2 bytes if hdrincl == 0.
-
-Fixes: 715f504b1189 ("ipv6: add IPV6_HDRINCL option for raw sockets")
-Signed-off-by: Olivier Matz <olivier.matz@6wind.com>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Acked-by: Matthew Wilcox <willy@infradead.org>
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/raw.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ include/linux/mm.h |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -880,11 +880,14 @@ static int rawv6_sendmsg(struct sock *sk
- 	opt = ipv6_fixup_options(&opt_space, opt);
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -763,6 +763,10 @@ static inline bool is_zone_device_page(c
+ }
+ #endif
  
- 	fl6.flowi6_proto = proto;
--	rfv.msg = msg;
--	rfv.hlen = 0;
--	err = rawv6_probe_proto_opt(&rfv, &fl6);
--	if (err)
--		goto out;
++/* 127: arbitrary random number, small enough to assemble well */
++#define page_ref_zero_or_close_to_overflow(page) \
++	((unsigned int) page_ref_count(page) + 127u <= 127u)
 +
-+	if (!hdrincl) {
-+		rfv.msg = msg;
-+		rfv.hlen = 0;
-+		err = rawv6_probe_proto_opt(&rfv, &fl6);
-+		if (err)
-+			goto out;
-+	}
+ static inline void get_page(struct page *page)
+ {
+ 	page = compound_head(page);
+@@ -770,7 +774,7 @@ static inline void get_page(struct page
+ 	 * Getting a normal page or the head of a compound page
+ 	 * requires to already have an elevated page->_refcount.
+ 	 */
+-	VM_BUG_ON_PAGE(page_ref_count(page) <= 0, page);
++	VM_BUG_ON_PAGE(page_ref_zero_or_close_to_overflow(page), page);
+ 	page_ref_inc(page);
  
- 	if (!ipv6_addr_any(daddr))
- 		fl6.daddr = *daddr;
+ 	if (unlikely(is_zone_device_page(page)))
 
 
