@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAC3C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9B2C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABE220652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069EF20652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100628;
-	bh=4rr3Cnn4SFuNKgsTWHPpaiWyKHQ01figVV8P6fNppQk=;
+	s=default; t=1560100644;
+	bh=K3HweLCpeokOm366BXIvoHi/dJtHz0DI3sdBKIKEuDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=odiV2t831NP08JOVwgaQ4Z7y4RDNk4QSZsTbhSUetkTuNOvmaohK2Ic1FjyH7JCbC
-	 1CA8ObsrATVcAdsd8NmnBrM/JeOLNzkL5pmXKnm6jKS7wnznzifNfMNK3mvDA+ky+k
-	 a/cuL2DiZ9UcbAls9hFpDc2tM0b6nkXffubYh0GM=
+	b=MEw8kMRANod/8c0han3QHKwqwqXpp273mMyn+Rxk+VRy7Gqakl6o8PCX1IC5LIU/I
+	 yOKwTCQjmFcJyy9v1sgMKk+R3YuB3IuvcFeSed58qvTGiH5DBfmnSb7NW9bD6KYzi5
+	 ntuldiynb58rjBYeVrOS6BfF6k+a4Tw1I1wHReDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732194AbfFIQwX (ORCPT
+        id S1732076AbfFIQv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:52:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53128 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbfFIQwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:52:19 -0400
+        id S1732059AbfFIQvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 352B7205ED;
-        Sun,  9 Jun 2019 16:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B651205ED;
+        Sun,  9 Jun 2019 16:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099138;
-        bh=4rr3Cnn4SFuNKgsTWHPpaiWyKHQ01figVV8P6fNppQk=;
+        s=default; t=1560099114;
+        bh=K3HweLCpeokOm366BXIvoHi/dJtHz0DI3sdBKIKEuDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V77i9t9DJpDB0b6DrR09oiF5/Fc5/S9CE6rAY4vOTrGjVE11rIu2hiCT4qdsPkzjh
-         ay7f1VZSEUlLkCg4g85pZoPPKem7nDzZngqZiivB8x1X/FshUnBFz9sHKcMDicUNpY
-         cx2sNd0u+4FWhXqQJZBS3FezyUDahFFs8gNlnrio=
+        b=kAz6yprGT6JRtrnM7bkoJgJzAAoFrIahNcsu9hl//GEzYx9ndAXSDeDhytk4Oo8mF
+         TmnhiWQdyCJotBuJJOerXuqNvlMgGCzCbG8rHbvd7Pghv9x852sRPTNC5W1nhqN+WB
+         3DAvqKEcjCzCMIiR0BJGu27VFUMEOw8uNXx9XOjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 05/83] net: stmmac: fix reset gpio free missing
-Date:   Sun,  9 Jun 2019 18:41:35 +0200
-Message-Id: <20190609164128.120415987@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 15/83] xen/pciback: Dont disable PCI_COMMAND on PCI device reset.
+Date:   Sun,  9 Jun 2019 18:41:45 +0200
+Message-Id: <20190609164128.850524258@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -60,36 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 
-[ Upstream commit 49ce881c0d4c4a7a35358d9dccd5f26d0e56fc61 ]
+commit 7681f31ec9cdacab4fd10570be924f2cef6669ba upstream.
 
-Commit 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
-removed the reset gpio free, when the driver is unbinded or rmmod,
-we miss the gpio free.
+There is no need for this at all. Worst it means that if
+the guest tries to write to BARs it could lead (on certain
+platforms) to PCI SERR errors.
 
-This patch uses managed API to request the reset gpio, so that the
-gpio could be freed properly.
+Please note that with af6fc858a35b90e89ea7a7ee58e66628c55c776b
+"xen-pciback: limit guest control of command register"
+a guest is still allowed to enable those control bits (safely), but
+is not allowed to disable them and that therefore a well behaved
+frontend which enables things before using them will still
+function correctly.
 
-Fixes: 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is done via an write to the configuration register 0x4 which
+triggers on the backend side:
+command_write
+  \- pci_enable_device
+     \- pci_enable_device_flags
+        \- do_pci_enable_device
+           \- pcibios_enable_device
+              \-pci_enable_resourcess
+                [which enables the PCI_COMMAND_MEMORY|PCI_COMMAND_IO]
+
+However guests (and drivers) which don't do this could cause
+problems, including the security issues which XSA-120 sought
+to address.
+
+Reported-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Reviewed-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -240,7 +240,8 @@ int stmmac_mdio_reset(struct mii_bus *bu
- 			of_property_read_u32_array(np,
- 				"snps,reset-delays-us", data->delays, 3);
+---
+ drivers/xen/xen-pciback/pciback_ops.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+--- a/drivers/xen/xen-pciback/pciback_ops.c
++++ b/drivers/xen/xen-pciback/pciback_ops.c
+@@ -126,8 +126,6 @@ void xen_pcibk_reset_device(struct pci_d
+ 		if (pci_is_enabled(dev))
+ 			pci_disable_device(dev);
  
--			if (gpio_request(data->reset_gpio, "mdio-reset"))
-+			if (devm_gpio_request(priv->device, data->reset_gpio,
-+					      "mdio-reset"))
- 				return 0;
- 		}
- 
+-		pci_write_config_word(dev, PCI_COMMAND, 0);
+-
+ 		dev->is_busmaster = 0;
+ 	} else {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
 
 
