@@ -2,153 +2,111 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E06C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCE2C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D502146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="VyEjVA4p";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="FmZ9MfOb"
+	by mail.kernel.org (Postfix) with ESMTP id BF68B2145D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbfFINYU (ORCPT
+        id S1728659AbfFINfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 09:24:20 -0400
-Received: from mail180-16.suw31.mandrillapp.com ([198.2.180.16]:24813 "EHLO
-        mail180-16.suw31.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728468AbfFINYT (ORCPT
+        Sun, 9 Jun 2019 09:35:19 -0400
+Received: from smtprelay0154.hostedemail.com ([216.40.44.154]:60483 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727382AbfFINfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 09:24:19 -0400
-X-Greylist: delayed 1807 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jun 2019 09:24:17 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=XP9pFjzBhbe06xRPfSZ9T8pBAIGEY0aGVAx16XPCO+0=;
- b=VyEjVA4pZJWzndmR0MMtGce3nPK4Hj4Qjy1Ez2jxCZ+h+pxN4pVABSLPlSnbha7OIMo9DdCvpe5G
-   s3sUEufqhVlr80bVmdzzhg2f09hj38mDpV+et373MfbNmJXEB4iI1oA3CxIhdyAfCBEzO9Uw720P
-   3XmEiu7Xs/hUvYjDfKc=
-Received: from pmta03.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail180-16.suw31.mandrillapp.com id hvk48422sc02 for <linux-kernel@vger.kernel.org>; Sun, 9 Jun 2019 12:39:30 +0000 (envelope-from <bounce-md_31050260.5cfcfe02.v1-041b67f8f3d34c1ab2542274e23daaa1@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560083970; h=From : 
- Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=XP9pFjzBhbe06xRPfSZ9T8pBAIGEY0aGVAx16XPCO+0=; 
- b=FmZ9MfObltRv7oSOlwxQqlAt2rgDJApAuphE0BTjnJ6R/fLN3dvhoD0qlxW5Wx/9rNR7Ct
- TTIN9CVF22pPslZSjRHpKRt4MaY/++q7IPlGwZTDyN51LLOQ7O0qGSCFGwgRYOZ8/0XgIiMt
- RIwNgrxeqwkfXXz0DGzaGPouoinL8=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH 4.14 2/2] fuse: Add FOPEN_STREAM to use stream_open()
-Received: from [87.98.221.171] by mandrillapp.com id 041b67f8f3d34c1ab2542274e23daaa1; Sun, 09 Jun 2019 12:39:30 +0000
-X-Mailer: git-send-email 2.20.1
-To:     <stable@vger.kernel.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kirill Smelkov <kirr@nexedi.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Message-Id: <20190609123831.11489-3-kirr@nexedi.com>
-In-Reply-To: <20190609123831.11489-1-kirr@nexedi.com>
-References: <20190609123831.11489-1-kirr@nexedi.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.041b67f8f3d34c1ab2542274e23daaa1
-X-Mandrill-User: md_31050260
-Date:   Sun, 09 Jun 2019 12:39:30 +0000
+        Sun, 9 Jun 2019 09:35:18 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id D7DFB18029125;
+        Sun,  9 Jun 2019 13:35:16 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pies35_2dd16e86e5d0d
+X-Filterd-Recvd-Size: 3394
+Received: from XPS-9350 (107-134-184-123.lightspeed.renonv.sbcglobal.net [107.134.184.123])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  9 Jun 2019 13:35:14 +0000 (UTC)
+Message-ID: <bd1ef99fc503fed492ad036f781963ca15a8596f.camel@perches.com>
+Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
+From:   Joe Perches <joe@perches.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Sun, 09 Jun 2019 06:35:07 -0700
+In-Reply-To: <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com>
+References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+         <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
+         <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
+         <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+         <20190604134213.GA26263@kroah.com>
+         <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+         <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
+         <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
+         <20190605051040.GA22760@kroah.com>
+         <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
+         <20190605071413.779bd821@coco.lan>
+         <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
+         <CAK7LNARsSFT1ncyRgWi_tga_7KC6ZwZOETXQ2GrO9PfeJgLxyQ@mail.gmail.com>
+         <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
+         <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
+On Sun, 2019-06-09 at 22:08 +0900, Masahiro Yamada wrote:
+> On Sun, Jun 9, 2019 at 8:57 PM Joe Perches <joe@perches.com> wrote:
+> > On Sun, 2019-06-09 at 16:14 +0900, Masahiro Yamada wrote:
+> > > Hi Joe,
+> > > 
+> > > On Thu, Jun 6, 2019 at 2:06 AM Joe Perches <joe@perches.com> wrote:
+> > > > Perhaps a checkpatch change too:
+> > > > 
+> > > > The first block updates unsigned only bitfields
+> > > > The second tests uapi definitions and suggests "__<kernel_types"
+> > > 
+> > > Good.
+> > > 
+> > > In addition,
+> > > 
+> > > "warn if __u8, __u16, __u32, __u64 are used outside of uapi/"
+> > > 
+> > > Lots of kernel-space headers use __u{8,16,32,64} instead of u{8,16,32,64}
+> > > just because developers often miss to understand when to use
+> > > the underscore-prefixed types.
+> > 
+> > The problem there is that checkpatch can't know if the
+> > __<uapi_type> being used is for an actual uapi use or not.
+> > 
+> > coccinelle could be much better at that.
+> 
+> Why?
 
-Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
-POSIX") files opened even via nonseekable_open gate read and write via lock
-and do not allow them to be run simultaneously. This can create read vs
-write deadlock if a filesystem is trying to implement a socket-like file
-which is intended to be simultaneously used for both read and write from
-filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
-stream-like files so that read and write can run simultaneously without
-deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
-on writes to /proc/xen/xenbus") for a similar deadlock example on
-/proc/xen/xenbus.
 
-To avoid such deadlock it was tempting to adjust fuse_finish_open to use
-stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
-but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
-and in particular GVFS which actually uses offset in its read and write
-handlers
+Perhaps it's (somewhat) bad form to have a __uapi type in a
+structure, include that structure in a driver for something
+like a copy_to/from_user, and map the __<uapi_type> to a non
+underscore prefixed <kernel_type>
 
-	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+For instance
 
-so if we would do such a change it will break a real user.
+struct flat_binder_object in drivers/android/binder.c
 
-Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
-opened handler is having stream-like semantics; does not use file position
-and thus the kernel is free to issue simultaneous read and write request on
-opened file handle.
+How is checkpatch supposed to know that __u32 flags is
+inappropriate?
 
-This patch together with stream_open() should be added to stable kernels
-starting from v3.14+. This will allow to patch OSSPD and other FUSE
-filesystems that provide stream-like files to return FOPEN_STREAM |
-FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
-kernel versions. This should work because fuse_finish_open ignores unknown
-open flags returned from a filesystem and so passing FOPEN_STREAM to a
-kernel that is not aware of this flag cannot hurt. In turn the kernel that
-is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
-is sufficient to implement streams without read vs write deadlock.
 
-Cc: stable@vger.kernel.org # v3.14+
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
- fs/fuse/file.c            | 4 +++-
- include/uapi/linux/fuse.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 7882fc34113c..94088b804f1f 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -178,7 +178,9 @@ void fuse_finish_open(struct inode *inode, struct file *file)
- 		file->f_op = &fuse_direct_io_file_operations;
- 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
- 		invalidate_inode_pages2(inode->i_mapping);
--	if (ff->open_flags & FOPEN_NONSEEKABLE)
-+	if (ff->open_flags & FOPEN_STREAM)
-+		stream_open(inode, file);
-+	else if (ff->open_flags & FOPEN_NONSEEKABLE)
- 		nonseekable_open(inode, file);
- 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
- 		struct fuse_inode *fi = get_fuse_inode(inode);
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index 4b5001c57f46..daac48210b2c 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -216,10 +216,12 @@ struct fuse_file_lock {
-  * FOPEN_DIRECT_IO: bypass page cache for this open file
-  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
-  * FOPEN_NONSEEKABLE: the file is not seekable
-+ * FOPEN_STREAM: the file is stream-like (no file position at all)
-  */
- #define FOPEN_DIRECT_IO		(1 << 0)
- #define FOPEN_KEEP_CACHE	(1 << 1)
- #define FOPEN_NONSEEKABLE	(1 << 2)
-+#define FOPEN_STREAM		(1 << 4)
- 
- /**
-  * INIT request/reply flags
--- 
-2.20.1
