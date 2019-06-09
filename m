@@ -2,276 +2,118 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D50C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95850C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE92F2146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560085232;
-	bh=L0yNfd1FSvmAPkTQHTncEd561Zv88fasReuSNoRcSdw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=KIO+Uu5sILG76f2fG1znp5jTvr2VeumMSWithKIAI+qyiq7/iz6B/jjLULdM3O7a9
-	 VFA68iR/N1SuZZbU+Jbwn5ohLbt8BB/b+kRowui3Z1n0vl2+t+3JNRPs6cyhi/5EC4
-	 s0tAn+hc1DKNCmCd7ai0Xr0TX/94MALa00JtmYRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 634FC212F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bml5OGrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbfFINAb (ORCPT
+        id S1728628AbfFINJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 09:00:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728422AbfFINAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 09:00:31 -0400
-Received: from vulcan (047-135-017-034.res.spectrum.com [47.135.17.34])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FCDF20868;
-        Sun,  9 Jun 2019 13:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560085229;
-        bh=L0yNfd1FSvmAPkTQHTncEd561Zv88fasReuSNoRcSdw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lvFMTFuVGn0xl1kfRqKAez4aHevZIYYINphCjUN2Y3kNxo7awfqz8Id4dnn3IO+F7
-         WH0wPcq4HaJWuCD2v9oC8sDF2z/9TRL7O8VR5rzCGVdWP7vtIYJILJDWGT+7uOAvIq
-         25x4b+dR6F/ecGxQ5APky5IMNsDLyOjVHNrAph1E=
-Message-ID: <4e5eb31a41b91a28fbc83c65195a2c75a59cfa24.camel@kernel.org>
-Subject: Re: [PATCH RFC 02/10] fs/locks: Export F_LAYOUT lease to user space
-From:   Jeff Layton <jlayton@kernel.org>
-To:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>,
-        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
-        Dave Chinner <david@fromorbit.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Date:   Sun, 09 Jun 2019 09:00:24 -0400
-In-Reply-To: <20190606014544.8339-3-ira.weiny@intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
-         <20190606014544.8339-3-ira.weiny@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Sun, 9 Jun 2019 09:09:15 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:31087 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728468AbfFINJP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 09:09:15 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x59D9AP2031817;
+        Sun, 9 Jun 2019 22:09:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x59D9AP2031817
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560085751;
+        bh=urjxFy2NEO4IWkWWBxKr5z0yKlOgm41OIQHm50hlY30=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bml5OGrd3jqBJvFoAisXFI7WMZzzdQbhDh0PKg2+B73PLIhW7o9K/4eAuaMhYRQF+
+         QAKakDzS+W3mMarIxYuRoI4o4B9TK3eoG33Dk+X0b/z8KitpqjeQgd0Mh4PK1NWLL5
+         ppHBKT6kZXjYOByep1HeUpTmeFjw+qGKhMDPkMmGZRMUW1Rt/SCeVaiVcTPV6mHtAh
+         sk1lO51mRIj38G0mOQqM3j6u1WL9NhJ3/zJpjG4DnyDTrb0BysjM4hHablUNQqFQSy
+         mj5T6CUn7L3gR+5FZIXuDzOahtbmjMDhDAIrkZxto/P4FRwe9LaEj3vmY0WB0g9PCq
+         Z18qEuTyi1u5w==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id v6so3806647vsq.4;
+        Sun, 09 Jun 2019 06:09:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAX0wtlc4TdJnACaEAt4vZKEjvGICQAi6LlgAfSHUbZc9VfUzdjG
+        2BY1Znk/Ud5WBwXa54m/HjORuetFDln0u0iNhF0=
+X-Google-Smtp-Source: APXvYqwzI4jRgQUipIfGjoYys5mBe1p4nX33Nb9rDgiw7jQV1ff71Cn9De0lDApp3gBKTt3c4SpMBpGIX6vmWnnA+2A=
+X-Received: by 2002:a67:7fcc:: with SMTP id a195mr13075826vsd.181.1560085749841;
+ Sun, 09 Jun 2019 06:09:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+ <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
+ <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
+ <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+ <20190604134213.GA26263@kroah.com> <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+ <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
+ <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
+ <20190605051040.GA22760@kroah.com> <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
+ <20190605071413.779bd821@coco.lan> <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
+ <CAK7LNARsSFT1ncyRgWi_tga_7KC6ZwZOETXQ2GrO9PfeJgLxyQ@mail.gmail.com> <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
+In-Reply-To: <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 9 Jun 2019 22:08:33 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com>
+Message-ID: <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com>
+Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
+To:     Joe Perches <joe@perches.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-05 at 18:45 -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> GUP longterm pins of non-pagecache file system pages (eg FS DAX) are
-> currently disallowed because they are unsafe.
-> 
-> The danger for pinning these pages comes from the fact that hole punch
-> and/or truncate of those files results in the pages being mapped and
-> pinned by a user space process while DAX has potentially allocated those
-> pages to other processes.
-> 
-> Most (All) users who are mapping FS DAX pages for long term pin purposes
-> (such as RDMA) are not going to want to deallocate these pages while
-> those pages are in use.  To do so would mean the application would lose
-> data.  So the use case for allowing truncate operations of such pages
-> is limited.
-> 
-> However, the kernel must protect itself and users from potential
-> mistakes and/or malicious user space code.  Rather than disabling long
-> term pins as is done now.   Allow for users who know they are going to
-> be pinning this memory to alert the file system of this intention.
-> Furthermore, allow users to be alerted such that they can react if a
-> truncate operation occurs for some reason.
-> 
-> Example user space pseudocode for a user using RDMA and wanting to allow
-> a truncate would look like this:
-> 
-> lease_break_sigio_handler() {
-> ...
-> 	if (sigio.fd == rdma_fd) {
-> 		complete_rdma_operations(...);
-> 		ibv_dereg_mr(mr);
-> 		close(rdma_fd);
-> 		fcntl(rdma_fd, F_SETLEASE, F_UNLCK);
-> 	}
-> }
-> 
-> setup_rdma_to_dax_file() {
-> ...
-> 	rdma_fd = open(...)
-> 	fcntl(rdma_fd, F_SETLEASE, F_LAYOUT);
+On Sun, Jun 9, 2019 at 8:57 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Sun, 2019-06-09 at 16:14 +0900, Masahiro Yamada wrote:
+> > Hi Joe,
+> >
+> > On Thu, Jun 6, 2019 at 2:06 AM Joe Perches <joe@perches.com> wrote:
+> > > Perhaps a checkpatch change too:
+> > >
+> > > The first block updates unsigned only bitfields
+> > > The second tests uapi definitions and suggests "__<kernel_types"
+> >
+> > Good.
+> >
+> > In addition,
+> >
+> > "warn if __u8, __u16, __u32, __u64 are used outside of uapi/"
+> >
+> > Lots of kernel-space headers use __u{8,16,32,64} instead of u{8,16,32,64}
+> > just because developers often miss to understand when to use
+> > the underscore-prefixed types.
+>
+> The problem there is that checkpatch can't know if the
+> __<uapi_type> being used is for an actual uapi use or not.
+>
+> coccinelle could be much better at that.
 
-I'm not crazy about this interface. F_LAYOUT doesn't seem to be in the
-same category as F_RDLCK/F_WRLCK/F_UNLCK.
+Why?
 
-Maybe instead of F_SETLEASE, this should use new
-F_SETLAYOUT/F_GETLAYOUT cmd values? There is nothing that would prevent
-you from setting both a lease and a layout on a file, and indeed knfsd
-can set both.
+u{8,16,32,64} are _exactly_ the same as __u{8,16,32,64}.
+See  include/asm-generic/int-ll64.h
 
-This interface seems to conflate the two.
+We just use __u{8,16,32,64} for user-space
+to avoid identifier name conflict,
+but we do not have reason to do so for kernel-space.
 
-> 	sigaction(SIGIO, ...  lease_break ...);
-> 	ptr = mmap(rdma_fd, ...);
-> 	mr = ibv_reg_mr(ptr, ...);
-> 	do_rdma_stuff(...);
-> }
-> 
-> Follow on patches implement the notification of the lease holder on
-> truncate as well as failing the truncate if the GUP pin is not released.
-> 
-> This first patch exports the F_LAYOUT lease type and allows the user to set
-> and get it.
-> 
-> After the complete series:
-> 
-> 1) Failure to obtain a F_LAYOUT lease on an open FS DAX file will result
->    in a failure to GUP pin any pages in that file.  An example of a call
->    which results in GUP pin is ibv_reg_mr().
-> 2) While the GUP pin is in place (eg MR is in use) truncates of the
->    affected pages will fail.
-> 3) If the user registers a sigaction they will be notified of the
->    truncate so they can react.  Failure to react will result in the
->    lease being revoked after <sysfs>/lease-break-time seconds.  After
->    this time new GUP pins will fail without a new lease being taken.
-> 4) A truncate will work if the pages being truncated are not actively
->    pinned at the time of truncate.  Attempts to pin these pages after
->    will result in a failure.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  fs/locks.c                       | 36 +++++++++++++++++++++++++++-----
->  include/linux/fs.h               |  2 +-
->  include/uapi/asm-generic/fcntl.h |  3 +++
->  3 files changed, 35 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 0cc2b9f30e22..de9761c068de 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -191,6 +191,8 @@ static int target_leasetype(struct file_lock *fl)
->  		return F_UNLCK;
->  	if (fl->fl_flags & FL_DOWNGRADE_PENDING)
->  		return F_RDLCK;
-> +	if (fl->fl_flags & FL_LAYOUT)
-> +		return F_LAYOUT;
->  	return fl->fl_type;
->  }
->  
-> @@ -611,7 +613,8 @@ static const struct lock_manager_operations lease_manager_ops = {
->  /*
->   * Initialize a lease, use the default lock manager operations
->   */
-> -static int lease_init(struct file *filp, long type, struct file_lock *fl)
-> +static int lease_init(struct file *filp, long type, unsigned int flags,
-> +		      struct file_lock *fl)
->  {
->  	if (assign_type(fl, type) != 0)
->  		return -EINVAL;
-> @@ -621,6 +624,8 @@ static int lease_init(struct file *filp, long type, struct file_lock *fl)
->  
->  	fl->fl_file = filp;
->  	fl->fl_flags = FL_LEASE;
-> +	if (flags & FL_LAYOUT)
-> +		fl->fl_flags |= FL_LAYOUT;
->  	fl->fl_start = 0;
->  	fl->fl_end = OFFSET_MAX;
->  	fl->fl_ops = NULL;
-> @@ -629,7 +634,8 @@ static int lease_init(struct file *filp, long type, struct file_lock *fl)
->  }
->  
->  /* Allocate a file_lock initialised to this type of lease */
-> -static struct file_lock *lease_alloc(struct file *filp, long type)
-> +static struct file_lock *lease_alloc(struct file *filp, long type,
-> +				     unsigned int flags)
->  {
->  	struct file_lock *fl = locks_alloc_lock();
->  	int error = -ENOMEM;
-> @@ -637,7 +643,7 @@ static struct file_lock *lease_alloc(struct file *filp, long type)
->  	if (fl == NULL)
->  		return ERR_PTR(error);
->  
-> -	error = lease_init(filp, type, fl);
-> +	error = lease_init(filp, type, flags, fl);
->  	if (error) {
->  		locks_free_lock(fl);
->  		return ERR_PTR(error);
-> @@ -1588,7 +1594,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
->  	int want_write = (mode & O_ACCMODE) != O_RDONLY;
->  	LIST_HEAD(dispose);
->  
-> -	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK);
-> +	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK, 0);
->  	if (IS_ERR(new_fl))
->  		return PTR_ERR(new_fl);
->  	new_fl->fl_flags = type;
-> @@ -1725,6 +1731,8 @@ EXPORT_SYMBOL(lease_get_mtime);
->   *
->   *	%F_UNLCK to indicate no lease is held.
->   *
-> + *	%F_LAYOUT to indicate a layout lease is held.
-> + *
->   *	(if a lease break is pending):
->   *
->   *	%F_RDLCK to indicate an exclusive lease needs to be
-> @@ -2015,8 +2023,26 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
->  	struct file_lock *fl;
->  	struct fasync_struct *new;
->  	int error;
-> +	unsigned int flags = 0;
-> +
-> +	/*
-> +	 * NOTE on F_LAYOUT lease
-> +	 *
-> +	 * LAYOUT lease types are taken on files which the user knows that
-> +	 * they will be pinning in memory for some indeterminate amount of
-> +	 * time.  Such as for use with RDMA.  While we don't know what user
-> +	 * space is going to do with the file we still use a F_RDLOCK level of
-> +	 * lease.  This ensures that there are no conflicts between
-> +	 * 2 users.  The conflict should only come from the File system wanting
-> +	 * to revoke the lease in break_layout()  And this is done by using
-> +	 * F_WRLCK in the break code.
-> +	 */
-> +	if (arg == F_LAYOUT) {
-> +		arg = F_RDLCK;
-> +		flags = FL_LAYOUT;
-> +	}
->  
-> -	fl = lease_alloc(filp, arg);
-> +	fl = lease_alloc(filp, arg, flags);
->  	if (IS_ERR(fl))
->  		return PTR_ERR(fl);
->  
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index f7fdfe93e25d..9e9d8d35ee93 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -998,7 +998,7 @@ static inline struct file *get_file(struct file *f)
->  #define FL_DOWNGRADE_PENDING	256 /* Lease is being downgraded */
->  #define FL_UNLOCK_PENDING	512 /* Lease is being broken */
->  #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
-> -#define FL_LAYOUT	2048	/* outstanding pNFS layout */
-> +#define FL_LAYOUT	2048	/* outstanding pNFS layout or user held pin */
->  
->  #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
->  
-> diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-> index 9dc0bf0c5a6e..baddd54f3031 100644
-> --- a/include/uapi/asm-generic/fcntl.h
-> +++ b/include/uapi/asm-generic/fcntl.h
-> @@ -174,6 +174,9 @@ struct f_owner_ex {
->  #define F_SHLCK		8	/* or 4 */
->  #endif
->  
-> +#define F_LAYOUT	16      /* layout lease to allow longterm pins such as
-> +				   RDMA */
-> +
->  /* operations for bsd flock(), also used by the kernel implementation */
->  #define LOCK_SH		1	/* shared lock */
->  #define LOCK_EX		2	/* exclusive lock */
 
+
+
+--
+Best Regards
+Masahiro Yamada
