@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71FFC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B17C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBDCA20840
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F0C2081C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098961;
-	bh=gDN3Royv62WSTTTpPYuCAZqOoHLWjI5lA2MMTSlDF8o=;
+	s=default; t=1560098966;
+	bh=S74SuA89s3V4anDQnukivwqwDzCaQwnGacnKXxfMN4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tkC5a+hd8bCDXjZR8AsujxKUQZKThdQxEKPmlfWI6l7R7/K/s6SqU6wrMefAsAEFK
-	 bcFgvQE0Hbq5QJOMLceyVLKYREd5K4f24zh2SlfFaXI9+dNs8BFe/MCGO4JiuSJEMH
-	 E4MJlbwluhm2ZUF1ka/V7o47hZWrsZhKSie/rrkY=
+	b=EfXZzPylLCbAlJf3U976TGGZXXe0llBZha23UJdvRLyRT5ugovneDVMrOW+ILfHn6
+	 eoEwg0xoEn3EKm9Rfg4oaFYKQ/bcIcnijVaPiy4bAHFnbJ3mbeWMjvwXTNQAIqKaJl
+	 OVncryMqSDSN2JEtdW07aOJ7D8Xe9lPUnWBeyb7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbfFIQtV (ORCPT
+        id S1729529AbfFIQtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:49:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731412AbfFIQtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:49:11 -0400
+        id S1731428AbfFIQtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:49:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7127206DF;
-        Sun,  9 Jun 2019 16:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4490D206C3;
+        Sun,  9 Jun 2019 16:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098951;
-        bh=gDN3Royv62WSTTTpPYuCAZqOoHLWjI5lA2MMTSlDF8o=;
+        s=default; t=1560098956;
+        bh=S74SuA89s3V4anDQnukivwqwDzCaQwnGacnKXxfMN4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0VodXEDqY1Eoies2fsFmQxqByhQEfQiqn+t+G82FAX7xEu9H18NkVrkYG4C0Nm8M
-         YLPX1M/6LXQdzyCcKHBizvm5XZ6WgBxEJCSncZ9FRzbkfwi/gr9Mk+lO4w1sgeLWD0
-         gFtRVtjzrnqQhRuPY5iMoKkPQenaDoevm3RPn4VM=
+        b=HEaSYtE3qo/egGjgMRulBJG3eWH4lHhRKLytCTNlkThJG0lT2gMZo7Z6cCnsniOHx
+         eRlVWjhFc1nNwIFsyve34Losh9v5yevqU/uH+k11kGRoage+cnYdKNiwjlxEo9hzq+
+         WMS0mh4Ft8oJGujo3sjSFqLa61jut5j9d/BzWalw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 4.19 48/51] drm/i915: Maintain consistent documentation subsection ordering
-Date:   Sun,  9 Jun 2019 18:42:29 +0200
-Message-Id: <20190609164130.697342252@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Tina Zhang <tina.zhang@intel.com>
+Subject: [PATCH 4.19 50/51] drm/i915/gvt: Initialize intel_gvt_gtt_entry in stack
+Date:   Sun,  9 Jun 2019 18:42:31 +0200
+Message-Id: <20190609164130.939106753@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -59,86 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Corbet <corbet@lwn.net>
+From: Tina Zhang <tina.zhang@intel.com>
 
-commit 551bd3368a7b3cfef01edaade8970948d178d40a upstream.
+commit 387a4c2b55291b37e245c840813bd8a8bd06ed49 upstream.
 
-With Sphinx 2.0 (or prior versions with the deprecation warnings fixed) the
-docs build fails with:
+Stack struct intel_gvt_gtt_entry value needs to be initialized before
+being used, as the fields may contain garbage values.
 
-  Documentation/gpu/i915.rst:403: WARNING: Title level inconsistent:
+W/o this patch, set_ggtt_entry prints:
+-------------------------------------
+274.046840: set_ggtt_entry: vgpu1:set ggtt entry 0x9bed8000ffffe900
+274.046846: set_ggtt_entry: vgpu1:set ggtt entry 0xe55df001
+274.046852: set_ggtt_entry: vgpu1:set ggtt entry 0x9bed8000ffffe900
 
-  Global GTT Fence Handling
-  ~~~~~~~~~~~~~~~~~~~~~~~~~
+0x9bed8000 is the stack grabage.
 
-  reST markup error:
-  Documentation/gpu/i915.rst:403: (SEVERE/4) Title level inconsistent:
+W/ this patch, set_ggtt_entry prints:
+------------------------------------
+274.046840: set_ggtt_entry: vgpu1:set ggtt entry 0xffffe900
+274.046846: set_ggtt_entry: vgpu1:set ggtt entry 0xe55df001
+274.046852: set_ggtt_entry: vgpu1:set ggtt entry 0xffffe900
 
-I "fixed" it by changing the subsections in i915.rst, but that didn't seem
-like the correct change.  It turns out that a couple of i915 files create
-their own subsections in kerneldoc comments using apostrophes as the
-heading marker:
+v2:
+- Initialize during declaration. (Zhenyu)
 
-  Layout
-  ''''''
-
-That breaks the normal subsection marker ordering, and newer Sphinx is
-rather more strict about enforcing that ordering.  So fix the offending
-comments to make Sphinx happy.
-
-(This is unfortunate, in that kerneldoc comments shouldn't need to be aware
-of where they might be included in the heading hierarchy, but I don't see
-a better way around it).
-
-Cc: stable@vger.kernel.org  # v4.14+
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+Fixes: 7598e8700e9a ("drm/i915/gvt: Missed to cancel dma map for ggtt entries")
+Cc: stable@vger.kernel.org # v4.20+
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_reg.h          |    6 +++---
- drivers/gpu/drm/i915/intel_workarounds.c |    2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/i915/gvt/gtt.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_reg.h
-+++ b/drivers/gpu/drm/i915/i915_reg.h
-@@ -32,7 +32,7 @@
-  * macros. Do **not** mass change existing definitions just to update the style.
-  *
-  * Layout
-- * ''''''
-+ * ~~~~~~
-  *
-  * Keep helper macros near the top. For example, _PIPE() and friends.
-  *
-@@ -78,7 +78,7 @@
-  * style. Use lower case in hexadecimal values.
-  *
-  * Naming
-- * ''''''
-+ * ~~~~~~
-  *
-  * Try to name registers according to the specs. If the register name changes in
-  * the specs from platform to another, stick to the original name.
-@@ -96,7 +96,7 @@
-  * suffix to the name. For example, ``_SKL`` or ``_GEN8``.
-  *
-  * Examples
-- * ''''''''
-+ * ~~~~~~~~
-  *
-  * (Note that the values in the example are indented using spaces instead of
-  * TABs to avoid misalignment in generated documentation. Use TABs in the
---- a/drivers/gpu/drm/i915/intel_workarounds.c
-+++ b/drivers/gpu/drm/i915/intel_workarounds.c
-@@ -37,7 +37,7 @@
-  *    costly and simplifies things. We can revisit this in the future.
-  *
-  * Layout
-- * ''''''
-+ * ~~~~~~
-  *
-  * Keep things in this file ordered by WA type, as per the above (context, GT,
-  * display, register whitelist, batchbuffer). Then, inside each type, keep the
+--- a/drivers/gpu/drm/i915/gvt/gtt.c
++++ b/drivers/gpu/drm/i915/gvt/gtt.c
+@@ -2161,7 +2161,8 @@ static int emulate_ggtt_mmio_write(struc
+ 	struct intel_gvt_gtt_pte_ops *ops = gvt->gtt.pte_ops;
+ 	unsigned long g_gtt_index = off >> info->gtt_entry_size_shift;
+ 	unsigned long gma, gfn;
+-	struct intel_gvt_gtt_entry e, m;
++	struct intel_gvt_gtt_entry e = {.val64 = 0, .type = GTT_TYPE_GGTT_PTE};
++	struct intel_gvt_gtt_entry m = {.val64 = 0, .type = GTT_TYPE_GGTT_PTE};
+ 	dma_addr_t dma_addr;
+ 	int ret;
+ 
+@@ -2237,7 +2238,8 @@ static int emulate_ggtt_mmio_write(struc
+ 
+ 	if (ops->test_present(&e)) {
+ 		gfn = ops->get_pfn(&e);
+-		m = e;
++		m.val64 = e.val64;
++		m.type = e.type;
+ 
+ 		/* one PTE update may be issued in multiple writes and the
+ 		 * first write may not construct a valid gfn
 
 
