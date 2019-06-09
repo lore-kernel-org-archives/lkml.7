@@ -2,260 +2,733 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D23BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81BFC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD972208E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5F6208E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IxafZuLD"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="hsG40JLJ";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="pnc3h38e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbfFINz2 (ORCPT
+        id S1728859AbfFIN4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 09:55:28 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:43010 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728534AbfFINz2 (ORCPT
+        Sun, 9 Jun 2019 09:56:55 -0400
+Received: from mail177-30.suw61.mandrillapp.com ([198.2.177.30]:27120 "EHLO
+        mail177-30.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728591AbfFIN4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 09:55:28 -0400
-Received: by mail-wr1-f43.google.com with SMTP id r18so6523899wrm.10
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 06:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=D8Gq6RkvKnje3OaNdNLglZuoNIMD3Yqhw5B6pJRQYg4=;
-        b=IxafZuLDZ0wlbhCCk92zqQfl24SvJsJbl+kSci0phkai450DP0Es7+3lWrHvSxjsF6
-         7pjY3WSeXb59tHriKskllRfo7BDiiUS9cnVncP+7sImCjEcntbQ5hmwgEiWnyDfVeRyX
-         ZNUyX/GVizUKLHPu2iDAfAmgOLwfQqlZxnxS1Im9x96WSApXEti6EQhxykAqGSLvKPWw
-         UqtPYurJyqGqPpuRWsCfIy4uRtzmAsO/59d+Vr+TVkEDE+l34A9A+v6CQy3QFgU4gbvD
-         L3pC/0yy99WOx8NTgMf5uJDtEwyrjUp3He4UZnIS1ZHXJmVv9oiQXZg858+lUPCqnrdB
-         ZVkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=D8Gq6RkvKnje3OaNdNLglZuoNIMD3Yqhw5B6pJRQYg4=;
-        b=BlQmYztyvRCmvQdI/dvE/0KIIDDgoqk4zQDTwshxBoo1/xzl7B6o7nDjF27cOTovG6
-         6uxDnDEg+qaXSG1CxSMrabyn5meq01Y3HLbtfZmGhYyp/sLB5DoAsW6+AGyyvoZCjqNH
-         edhntK33QlzSYQS3wdQ66vBVpFHjwxk6i7coyURVAXzfs629WctbCVcmEb09xCPHqFkd
-         0Kpt5QUVaTWyNvTStMkzdYLb/dyiP4ejX/yPuBpjWseo9cEy7bzjJwFLvf4HlFMaTNSI
-         L2/1/WAaxge4HiFFkOffocNAkzZdiw4X71X4cMWiU3uzdDdb50jDG+5mD/4HVBR1NcHP
-         drNw==
-X-Gm-Message-State: APjAAAVh9zpCX0lhGsrXDjZEEiIrfoA07+PkLiZIxpnpZtj559lRmAtG
-        okG37Hb8gcXnANwTQzp7ltanhw==
-X-Google-Smtp-Source: APXvYqyi7WUcUYdLfo7GERFafTz8bug8c9O30zjJLm3jBHyxZsAJgQ/+mEzoYCDvZUbib08yy9z17g==
-X-Received: by 2002:adf:baca:: with SMTP id w10mr31888337wrg.230.1560088526020;
-        Sun, 09 Jun 2019 06:55:26 -0700 (PDT)
-Received: from [192.168.0.41] (149.71.129.77.rev.sfr.net. [77.129.71.149])
-        by smtp.googlemail.com with ESMTPSA id h90sm18183538wrh.15.2019.06.09.06.55.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 06:55:25 -0700 (PDT)
-Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
- speed, thermal related?
-To:     Pavel Machek <pavel@ucw.cz>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, rui.zhang@intel.com, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org
-References: <20190609111732.GA2885@amd> <20190609112340.GA9966@amd>
- <20190609121212.GA4520@amd>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <22d57953-b032-6090-8efb-4e1d2add1b69@linaro.org>
-Date:   Sun, 9 Jun 2019 15:55:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sun, 9 Jun 2019 09:56:55 -0400
+X-Greylist: delayed 913 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jun 2019 09:56:51 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=ySr4Nrr+89DHcvxITmE7xFf/aeGkap9445ywRZ8FnQs=;
+ b=hsG40JLJ3u2re6cQucij0JMvy9TGH2IY2i48JtiH14hFteuvf/9aOUZuRhqs/UIFGVTK70/jMdF+
+   apFixXv3DAg1J8n+LVKZhE5OYtu3y3Em0auHe7+VM4YbbhgY0UmFlHaD0kaURHywoozEteJGVHND
+   6itsQlgYzZ9JOHyXBVk=
+Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id hvk82622rtk4 for <linux-kernel@vger.kernel.org>; Sun, 9 Jun 2019 13:39:09 +0000 (envelope-from <bounce-md_31050260.5cfd0bfd.v1-a2a3da36bfd74133abef0034ead623e5@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560087549; h=From : 
+ Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=ySr4Nrr+89DHcvxITmE7xFf/aeGkap9445ywRZ8FnQs=; 
+ b=pnc3h38eGLrPjCVXjL6tJX9ZjaiVN2HcFDMXehcg0+A19zrLNwS1p04r/zHNGdtTpvPkA8
+ THTHFGC07oeVcbSfFi3iTv3acw4ku4oUDqVO/GJuYpHDtr19DbtH/a+MUNJyGClkhCDzWK5b
+ FtFBpkGsQaj7uWeQrHQLah0TZcvGM=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH 4.4 1/2] fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+Received: from [87.98.221.171] by mandrillapp.com id a2a3da36bfd74133abef0034ead623e5; Sun, 09 Jun 2019 13:39:09 +0000
+X-Mailer: git-send-email 2.20.1
+To:     <stable@vger.kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yongzhi Pan <panyongzhi@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Juergen Gross <jgross@suse.com>, Tejun Heo <tj@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Nikolaus Rath <Nikolaus@rath.org>,
+        Han-Wen Nienhuys <hanwen@google.com>
+Message-Id: <20190609132443.9420-2-kirr@nexedi.com>
+In-Reply-To: <20190609132443.9420-1-kirr@nexedi.com>
+References: <20190609132443.9420-1-kirr@nexedi.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.a2a3da36bfd74133abef0034ead623e5
+X-Mandrill-User: md_31050260
+Date:   Sun, 09 Jun 2019 13:39:09 +0000
 MIME-Version: 1.0
-In-Reply-To: <20190609121212.GA4520@amd>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="794WAxFRhf8xkHQTT2UXTfeQTnVbfhpY3"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---794WAxFRhf8xkHQTT2UXTfeQTnVbfhpY3
-Content-Type: multipart/mixed; boundary="COZGpQjNCMAL20GInMGKgxRHTw820uY9V";
- protected-headers="v1"
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Pavel Machek <pavel@ucw.cz>, kernel list <linux-kernel@vger.kernel.org>,
- linux-acpi@vger.kernel.org, rui.zhang@intel.com, rjw@rjwysocki.net,
- viresh.kumar@linaro.org, linux-pm@vger.kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
-Message-ID: <22d57953-b032-6090-8efb-4e1d2add1b69@linaro.org>
-Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
- speed, thermal related?
-References: <20190609111732.GA2885@amd> <20190609112340.GA9966@amd>
- <20190609121212.GA4520@amd>
-In-Reply-To: <20190609121212.GA4520@amd>
+[ commit 10dce8af34226d90fa56746a934f8da5dcdba3df upstream.
 
---COZGpQjNCMAL20GInMGKgxRHTw820uY9V
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+  while porting to 4.4 xenbus conflict was trivially resolved in a way
+  that actually fixes /proc/xen/xenbus deadlock introduced in 3.14,
+  because original upstream commit 581d21a2d02a to fix xenbus deadlock
+  was not included into 4.4 . ]
 
-On 09/06/2019 14:12, Pavel Machek wrote:
-> Hi!
->=20
->>> When I start flightgear, I get framerates around 20 fps and cpu at
->>> 3GHz:
->>>
->>> pavel@duo:~/bt$ cat /proc/cpuinfo  | grep MHz
->>> cpu MHz		    : 3027.471
->>> cpu MHz		      : 2981.863
->>> cpu MHz		      	: 2958.352
->>> cpu MHz			  : 2864.001
->>> pavel@duo:~/bt$
->>>
->>> (Ok, fgfs is really only running at single core, so why do both cores=
+Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") added
+locking for file.f_pos access and in particular made concurrent read and
+write not possible - now both those functions take f_pos lock for the
+whole run, and so if e.g. a read is blocked waiting for data, write will
+deadlock waiting for that read to complete.
 
->>> run at 3GHz?)
->>>
->>> But temperatures get quite high:
->>>
->>> pavel@duo:~/bt$ sensors
->>> thinkpad-isa-0000
->>> Adapter: ISA adapter
->>> fan1:        4485 RPM
->>>
->>> coretemp-isa-0000
->>> Adapter: ISA adapter
->>> Package id 0:  +98.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=
-=B0C)
->>> Core 0:        +98.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=
-=B0C)
->>> Core 1:        +91.0=C2=B0C  (high =3D +86.0=C2=B0C, crit =3D +100.0=C2=
-=B0C)
->>>
->>> And soon cpu goes to 1.5GHz range, with framerates going down to
->>> 12fps. That's a bit low.
->>>
->>> Room temperature is 26Celsius.
->>>
->>> The CPU is Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz . I guess it mean=
-s
->>> it should be able to sustain both cores running at 2.5GHz?
->>>
->>> Any ideas? Were there any recent changes in that area?
->>
->> I tried kernel compile. It keeps both cores at 3GHz, temperature goes
->> up over 95C, and then cpus start going down to 2.3GHz... and then down=
+This caused regression for stream-like files where previously read and
+write could run simultaneously, but after that patch could not do so
+anymore. See e.g. commit 581d21a2d02a ("xenbus: fix deadlock on writes
+to /proc/xen/xenbus") which fixes such regression for particular case of
+/proc/xen/xenbus.
 
->> to 2GHz... and down to 1.9GHz.
->>
->> watch bash -c 'sensors;  cat /proc/cpuinfo | grep MHz'
->=20
-> Situation is very different with v4.6 distro based kernel.
->=20
-> CPU MHz is only getting values round to 100MHz. It does not go above
-> 2.5GHz, but it does not go below 2.5GHz under the load, either.
->=20
-> ACPI adapter appears in sensors output.
->=20
-> Now I tried going to 5.2-rc4. It behaves the same as 5.2-rc2. Goes up
-> to 3GHz briefly but then down to 2.0GHz and below under load.
->=20
-> Ideas welcome.
+The patch that added f_pos lock in 2014 did so to guarantee POSIX thread
+safety for read/write/lseek and added the locking to file descriptors of
+all regular files. In 2014 that thread-safety problem was not new as it
+was already discussed earlier in 2006.
 
-What is the cpufreq governor for v4.6 and v5.2-rc4?
+However even though 2006'th version of Linus's patch was adding f_pos
+locking "only for files that are marked seekable with FMODE_LSEEK (thus
+avoiding the stream-like objects like pipes and sockets)", the 2014
+version - the one that actually made it into the tree as 9c225f2655e3 -
+is doing so irregardless of whether a file is seekable or not.
 
+See
 
+    https://lore.kernel.org/lkml/53022DB1.4070805@gmail.com/
+    https://lwn.net/Articles/180387
+    https://lwn.net/Articles/180396
 
---=20
- <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
+for historic context.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+The reason that it did so is, probably, that there are many files that
+are marked non-seekable, but e.g. their read implementation actually
+depends on knowing current position to correctly handle the read. Some
+examples:
 
+	kernel/power/user.c		snapshot_read
+	fs/debugfs/file.c		u32_array_read
+	fs/fuse/control.c		fuse_conn_waiting_read + ...
+	drivers/hwmon/asus_atk0110.c	atk_debugfs_ggrp_read
+	arch/s390/hypfs/inode.c		hypfs_read_iter
+	...
 
+Despite that, many nonseekable_open users implement read and write with
+pure stream semantics - they don't depend on passed ppos at all. And for
+those cases where read could wait for something inside, it creates a
+situation similar to xenbus - the write could be never made to go until
+read is done, and read is waiting for some, potentially external, event,
+for potentially unbounded time -> deadlock.
 
---COZGpQjNCMAL20GInMGKgxRHTw820uY9V--
+Besides xenbus, there are 14 such places in the kernel that I've found
+with semantic patch (see below):
 
---794WAxFRhf8xkHQTT2UXTfeQTnVbfhpY3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+	drivers/xen/evtchn.c:667:8-24: ERROR: evtchn_fops: .read() can deadlock .write()
+	drivers/isdn/capi/capi.c:963:8-24: ERROR: capi_fops: .read() can deadlock .write()
+	drivers/input/evdev.c:527:1-17: ERROR: evdev_fops: .read() can deadlock .write()
+	drivers/char/pcmcia/cm4000_cs.c:1685:7-23: ERROR: cm4000_fops: .read() can deadlock .write()
+	net/rfkill/core.c:1146:8-24: ERROR: rfkill_fops: .read() can deadlock .write()
+	drivers/s390/char/fs3270.c:488:1-17: ERROR: fs3270_fops: .read() can deadlock .write()
+	drivers/usb/misc/ldusb.c:310:1-17: ERROR: ld_usb_fops: .read() can deadlock .write()
+	drivers/hid/uhid.c:635:1-17: ERROR: uhid_fops: .read() can deadlock .write()
+	net/batman-adv/icmp_socket.c:80:1-17: ERROR: batadv_fops: .read() can deadlock .write()
+	drivers/media/rc/lirc_dev.c:198:1-17: ERROR: lirc_fops: .read() can deadlock .write()
+	drivers/leds/uleds.c:77:1-17: ERROR: uleds_fops: .read() can deadlock .write()
+	drivers/input/misc/uinput.c:400:1-17: ERROR: uinput_fops: .read() can deadlock .write()
+	drivers/infiniband/core/user_mad.c:985:7-23: ERROR: umad_fops: .read() can deadlock .write()
+	drivers/gnss/core.c:45:1-17: ERROR: gnss_fops: .read() can deadlock .write()
 
------BEGIN PGP SIGNATURE-----
+In addition to the cases above another regression caused by f_pos
+locking is that now FUSE filesystems that implement open with
+FOPEN_NONSEEKABLE flag, can no longer implement bidirectional
+stream-like files - for the same reason as above e.g. read can deadlock
+write locking on file.f_pos in the kernel.
 
-iQEzBAEBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlz9D8kACgkQqDIjiipP
-6E/LYwgAqrTwxtZaBPNSoTB3pNaosqY79Pptt/v/E1Au21npx6sTQe0DwWbFFB/m
-cFtNEOWI53EbX+NS+a0O2JtCta8xsu26JAbALMxI/qIUkGA6mUUR7/LzfyA0RylC
-UsZ7++D7kFlofpu6S6usgch1PSVKdujACytjvgjxUD51qGJ/gLcxt0MdlVXi4Kmk
-NsRVH9iAecGJeP6MQfwWLewgYg8cKQu6HFT+ARQ+33rEwh/42ch4DDX+5M8OQN8G
-2Wp7TOKT6pNap0aK9qRwohp/NzBRluEFR0dbe+V+ZThT/7zZtnwsXdX6AB9PN6Un
-dXY537drTfAAjmEiSF32t79aAw9Ytg==
-=9QNq
------END PGP SIGNATURE-----
+FUSE's FOPEN_NONSEEKABLE was added in 2008 in a7c1b990f715 ("fuse:
+implement nonseekable open") to support OSSPD. OSSPD implements /dev/dsp
+in userspace with FOPEN_NONSEEKABLE flag, with corresponding read and
+write routines not depending on current position at all, and with both
+read and write being potentially blocking operations:
 
---794WAxFRhf8xkHQTT2UXTfeQTnVbfhpY3--
+See
+
+    https://github.com/libfuse/osspd
+    https://lwn.net/Articles/308445
+
+    https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1406
+    https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1438-L1477
+    https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1479-L1510
+
+Corresponding libfuse example/test also describes FOPEN_NONSEEKABLE as
+"somewhat pipe-like files ..." with read handler not using offset.
+However that test implements only read without write and cannot exercise
+the deadlock scenario:
+
+    https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L124-L131
+    https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L146-L163
+    https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L209-L216
+
+I've actually hit the read vs write deadlock for real while implementing
+my FUSE filesystem where there is /head/watch file, for which open
+creates separate bidirectional socket-like stream in between filesystem
+and its user with both read and write being later performed
+simultaneously. And there it is semantically not easy to split the
+stream into two separate read-only and write-only channels:
+
+    https://lab.nexedi.com/kirr/wendelin.core/blob/f13aa600/wcfs/wcfs.go#L88-169
+
+Let's fix this regression. The plan is:
+
+1. We can't change nonseekable_open to include &~FMODE_ATOMIC_POS -
+   doing so would break many in-kernel nonseekable_open users which
+   actually use ppos in read/write handlers.
+
+2. Add stream_open() to kernel to open stream-like non-seekable file
+   descriptors. Read and write on such file descriptors would never use
+   nor change ppos. And with that property on stream-like files read and
+   write will be running without taking f_pos lock - i.e. read and write
+   could be running simultaneously.
+
+3. With semantic patch search and convert to stream_open all in-kernel
+   nonseekable_open users for which read and write actually do not
+   depend on ppos and where there is no other methods in file_operations
+   which assume @offset access.
+
+4. Add FOPEN_STREAM to fs/fuse/ and open in-kernel file-descriptors via
+   steam_open if that bit is present in filesystem open reply.
+
+   It was tempting to change fs/fuse/ open handler to use stream_open
+   instead of nonseekable_open on just FOPEN_NONSEEKABLE flags, but
+   grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
+   and in particular GVFS which actually uses offset in its read and
+   write handlers
+
+	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+
+   so if we would do such a change it will break a real user.
+
+5. Add stream_open and FOPEN_STREAM handling to stable kernels starting
+   from v3.14+ (the kernel where 9c225f2655 first appeared).
+
+   This will allow to patch OSSPD and other FUSE filesystems that
+   provide stream-like files to return FOPEN_STREAM | FOPEN_NONSEEKABLE
+   in their open handler and this way avoid the deadlock on all kernel
+   versions. This should work because fs/fuse/ ignores unknown open
+   flags returned from a filesystem and so passing FOPEN_STREAM to a
+   kernel that is not aware of this flag cannot hurt. In turn the kernel
+   that is not aware of FOPEN_STREAM will be < v3.14 where just
+   FOPEN_NONSEEKABLE is sufficient to implement streams without read vs
+   write deadlock.
+
+This patch adds stream_open, converts /proc/xen/xenbus to it and adds
+semantic patch to automatically locate in-kernel places that are either
+required to be converted due to read vs write deadlock, or that are just
+safe to be converted because read and write do not use ppos and there
+are no other funky methods in file_operations.
+
+Regarding semantic patch I've verified each generated change manually -
+that it is correct to convert - and each other nonseekable_open instance
+left - that it is either not correct to convert there, or that it is not
+converted due to current stream_open.cocci limitations.
+
+The script also does not convert files that should be valid to convert,
+but that currently have .llseek = noop_llseek or generic_file_llseek for
+unknown reason despite file being opened with nonseekable_open (e.g.
+drivers/input/mousedev.c)
+
+Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+Cc: Yongzhi Pan <panyongzhi@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: David Vrabel <david.vrabel@citrix.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: Nikolaus Rath <Nikolaus@rath.org>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[ backport to 4.4: actually fixed deadlock on /proc/xen/xenbus as 581d21a2d02a was not backported to 4.4 ]
+---
+ drivers/xen/xenbus/xenbus_dev_frontend.c |   2 +-
+ fs/open.c                                |  18 ++
+ fs/read_write.c                          |   5 +-
+ include/linux/fs.h                       |   4 +
+ scripts/coccinelle/api/stream_open.cocci | 363 +++++++++++++++++++++++
+ 5 files changed, 389 insertions(+), 3 deletions(-)
+ create mode 100644 scripts/coccinelle/api/stream_open.cocci
+
+diff --git a/drivers/xen/xenbus/xenbus_dev_frontend.c b/drivers/xen/xenbus/xenbus_dev_frontend.c
+index 816a0e08ef10..d7591efa7775 100644
+--- a/drivers/xen/xenbus/xenbus_dev_frontend.c
++++ b/drivers/xen/xenbus/xenbus_dev_frontend.c
+@@ -536,7 +536,7 @@ static int xenbus_file_open(struct inode *inode, struct file *filp)
+ 	if (xen_store_evtchn == 0)
+ 		return -ENOENT;
+ 
+-	nonseekable_open(inode, filp);
++	stream_open(inode, filp);
+ 
+ 	u = kzalloc(sizeof(*u), GFP_KERNEL);
+ 	if (u == NULL)
+diff --git a/fs/open.c b/fs/open.c
+index fbc5c7b230b3..6cf516156111 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1152,3 +1152,21 @@ int nonseekable_open(struct inode *inode, struct file *filp)
+ }
+ 
+ EXPORT_SYMBOL(nonseekable_open);
++
++/*
++ * stream_open is used by subsystems that want stream-like file descriptors.
++ * Such file descriptors are not seekable and don't have notion of position
++ * (file.f_pos is always 0). Contrary to file descriptors of other regular
++ * files, .read() and .write() can run simultaneously.
++ *
++ * stream_open never fails and is marked to return int so that it could be
++ * directly used as file_operations.open .
++ */
++int stream_open(struct inode *inode, struct file *filp)
++{
++	filp->f_mode &= ~(FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE | FMODE_ATOMIC_POS);
++	filp->f_mode |= FMODE_STREAM;
++	return 0;
++}
++
++EXPORT_SYMBOL(stream_open);
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 16e554ba885d..7b175b9134ec 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -553,12 +553,13 @@ EXPORT_SYMBOL(vfs_write);
+ 
+ static inline loff_t file_pos_read(struct file *file)
+ {
+-	return file->f_pos;
++	return file->f_mode & FMODE_STREAM ? 0 : file->f_pos;
+ }
+ 
+ static inline void file_pos_write(struct file *file, loff_t pos)
+ {
+-	file->f_pos = pos;
++	if ((file->f_mode & FMODE_STREAM) == 0)
++		file->f_pos = pos;
+ }
+ 
+ SYSCALL_DEFINE3(read, unsigned int, fd, char __user *, buf, size_t, count)
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 13277d2715df..26c4bf47cc99 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -140,6 +140,9 @@ typedef void (dax_iodone_t)(struct buffer_head *bh_map, int uptodate);
+ /* Has write method(s) */
+ #define FMODE_CAN_WRITE         ((__force fmode_t)0x40000)
+ 
++/* File is stream-like */
++#define FMODE_STREAM		((__force fmode_t)0x200000)
++
+ /* File was opened by fanotify and shouldn't generate fanotify events */
+ #define FMODE_NONOTIFY		((__force fmode_t)0x4000000)
+ 
+@@ -2706,6 +2709,7 @@ extern loff_t fixed_size_llseek(struct file *file, loff_t offset,
+ 		int whence, loff_t size);
+ extern int generic_file_open(struct inode * inode, struct file * filp);
+ extern int nonseekable_open(struct inode * inode, struct file * filp);
++extern int stream_open(struct inode * inode, struct file * filp);
+ 
+ #ifdef CONFIG_BLOCK
+ typedef void (dio_submit_t)(int rw, struct bio *bio, struct inode *inode,
+diff --git a/scripts/coccinelle/api/stream_open.cocci b/scripts/coccinelle/api/stream_open.cocci
+new file mode 100644
+index 000000000000..350145da7669
+--- /dev/null
++++ b/scripts/coccinelle/api/stream_open.cocci
+@@ -0,0 +1,363 @@
++// SPDX-License-Identifier: GPL-2.0
++// Author: Kirill Smelkov (kirr@nexedi.com)
++//
++// Search for stream-like files that are using nonseekable_open and convert
++// them to stream_open. A stream-like file is a file that does not use ppos in
++// its read and write. Rationale for the conversion is to avoid deadlock in
++// between read and write.
++
++virtual report
++virtual patch
++virtual explain  // explain decisions in the patch (SPFLAGS="-D explain")
++
++// stream-like reader & writer - ones that do not depend on f_pos.
++@ stream_reader @
++identifier readstream, ppos;
++identifier f, buf, len;
++type loff_t;
++@@
++  ssize_t readstream(struct file *f, char *buf, size_t len, loff_t *ppos)
++  {
++    ... when != ppos
++  }
++
++@ stream_writer @
++identifier writestream, ppos;
++identifier f, buf, len;
++type loff_t;
++@@
++  ssize_t writestream(struct file *f, const char *buf, size_t len, loff_t *ppos)
++  {
++    ... when != ppos
++  }
++
++
++// a function that blocks
++@ blocks @
++identifier block_f;
++identifier wait_event =~ "^wait_event_.*";
++@@
++  block_f(...) {
++    ... when exists
++    wait_event(...)
++    ... when exists
++  }
++
++// stream_reader that can block inside.
++//
++// XXX wait_* can be called not directly from current function (e.g. func -> f -> g -> wait())
++// XXX currently reader_blocks supports only direct and 1-level indirect cases.
++@ reader_blocks_direct @
++identifier stream_reader.readstream;
++identifier wait_event =~ "^wait_event_.*";
++@@
++  readstream(...)
++  {
++    ... when exists
++    wait_event(...)
++    ... when exists
++  }
++
++@ reader_blocks_1 @
++identifier stream_reader.readstream;
++identifier blocks.block_f;
++@@
++  readstream(...)
++  {
++    ... when exists
++    block_f(...)
++    ... when exists
++  }
++
++@ reader_blocks depends on reader_blocks_direct || reader_blocks_1 @
++identifier stream_reader.readstream;
++@@
++  readstream(...) {
++    ...
++  }
++
++
++// file_operations + whether they have _any_ .read, .write, .llseek ... at all.
++//
++// XXX add support for file_operations xxx[N] = ...	(sound/core/pcm_native.c)
++@ fops0 @
++identifier fops;
++@@
++  struct file_operations fops = {
++    ...
++  };
++
++@ has_read @
++identifier fops0.fops;
++identifier read_f;
++@@
++  struct file_operations fops = {
++    .read = read_f,
++  };
++
++@ has_read_iter @
++identifier fops0.fops;
++identifier read_iter_f;
++@@
++  struct file_operations fops = {
++    .read_iter = read_iter_f,
++  };
++
++@ has_write @
++identifier fops0.fops;
++identifier write_f;
++@@
++  struct file_operations fops = {
++    .write = write_f,
++  };
++
++@ has_write_iter @
++identifier fops0.fops;
++identifier write_iter_f;
++@@
++  struct file_operations fops = {
++    .write_iter = write_iter_f,
++  };
++
++@ has_llseek @
++identifier fops0.fops;
++identifier llseek_f;
++@@
++  struct file_operations fops = {
++    .llseek = llseek_f,
++  };
++
++@ has_no_llseek @
++identifier fops0.fops;
++@@
++  struct file_operations fops = {
++    .llseek = no_llseek,
++  };
++
++@ has_mmap @
++identifier fops0.fops;
++identifier mmap_f;
++@@
++  struct file_operations fops = {
++    .mmap = mmap_f,
++  };
++
++@ has_copy_file_range @
++identifier fops0.fops;
++identifier copy_file_range_f;
++@@
++  struct file_operations fops = {
++    .copy_file_range = copy_file_range_f,
++  };
++
++@ has_remap_file_range @
++identifier fops0.fops;
++identifier remap_file_range_f;
++@@
++  struct file_operations fops = {
++    .remap_file_range = remap_file_range_f,
++  };
++
++@ has_splice_read @
++identifier fops0.fops;
++identifier splice_read_f;
++@@
++  struct file_operations fops = {
++    .splice_read = splice_read_f,
++  };
++
++@ has_splice_write @
++identifier fops0.fops;
++identifier splice_write_f;
++@@
++  struct file_operations fops = {
++    .splice_write = splice_write_f,
++  };
++
++
++// file_operations that is candidate for stream_open conversion - it does not
++// use mmap and other methods that assume @offset access to file.
++//
++// XXX for simplicity require no .{read/write}_iter and no .splice_{read/write} for now.
++// XXX maybe_steam.fops cannot be used in other rules - it gives "bad rule maybe_stream or bad variable fops".
++@ maybe_stream depends on (!has_llseek || has_no_llseek) && !has_mmap && !has_copy_file_range && !has_remap_file_range && !has_read_iter && !has_write_iter && !has_splice_read && !has_splice_write @
++identifier fops0.fops;
++@@
++  struct file_operations fops = {
++  };
++
++
++// ---- conversions ----
++
++// XXX .open = nonseekable_open -> .open = stream_open
++// XXX .open = func -> openfunc -> nonseekable_open
++
++// read & write
++//
++// if both are used in the same file_operations together with an opener -
++// under that conditions we can use stream_open instead of nonseekable_open.
++@ fops_rw depends on maybe_stream @
++identifier fops0.fops, openfunc;
++identifier stream_reader.readstream;
++identifier stream_writer.writestream;
++@@
++  struct file_operations fops = {
++      .open  = openfunc,
++      .read  = readstream,
++      .write = writestream,
++  };
++
++@ report_rw depends on report @
++identifier fops_rw.openfunc;
++position p1;
++@@
++  openfunc(...) {
++    <...
++     nonseekable_open@p1
++    ...>
++  }
++
++@ script:python depends on report && reader_blocks @
++fops << fops0.fops;
++p << report_rw.p1;
++@@
++coccilib.report.print_report(p[0],
++  "ERROR: %s: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix." % (fops,))
++
++@ script:python depends on report && !reader_blocks @
++fops << fops0.fops;
++p << report_rw.p1;
++@@
++coccilib.report.print_report(p[0],
++  "WARNING: %s: .read() and .write() have stream semantic; safe to change nonseekable_open -> stream_open." % (fops,))
++
++
++@ explain_rw_deadlocked depends on explain && reader_blocks @
++identifier fops_rw.openfunc;
++@@
++  openfunc(...) {
++    <...
++-    nonseekable_open
+++    nonseekable_open /* read & write (was deadlock) */
++    ...>
++  }
++
++
++@ explain_rw_nodeadlock depends on explain && !reader_blocks @
++identifier fops_rw.openfunc;
++@@
++  openfunc(...) {
++    <...
++-    nonseekable_open
+++    nonseekable_open /* read & write (no direct deadlock) */
++    ...>
++  }
++
++@ patch_rw depends on patch @
++identifier fops_rw.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   stream_open
++    ...>
++  }
++
++
++// read, but not write
++@ fops_r depends on maybe_stream && !has_write @
++identifier fops0.fops, openfunc;
++identifier stream_reader.readstream;
++@@
++  struct file_operations fops = {
++      .open  = openfunc,
++      .read  = readstream,
++  };
++
++@ report_r depends on report @
++identifier fops_r.openfunc;
++position p1;
++@@
++  openfunc(...) {
++    <...
++    nonseekable_open@p1
++    ...>
++  }
++
++@ script:python depends on report @
++fops << fops0.fops;
++p << report_r.p1;
++@@
++coccilib.report.print_report(p[0],
++  "WARNING: %s: .read() has stream semantic; safe to change nonseekable_open -> stream_open." % (fops,))
++
++@ explain_r depends on explain @
++identifier fops_r.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   nonseekable_open /* read only */
++    ...>
++  }
++
++@ patch_r depends on patch @
++identifier fops_r.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   stream_open
++    ...>
++  }
++
++
++// write, but not read
++@ fops_w depends on maybe_stream && !has_read @
++identifier fops0.fops, openfunc;
++identifier stream_writer.writestream;
++@@
++  struct file_operations fops = {
++      .open  = openfunc,
++      .write = writestream,
++  };
++
++@ report_w depends on report @
++identifier fops_w.openfunc;
++position p1;
++@@
++  openfunc(...) {
++    <...
++    nonseekable_open@p1
++    ...>
++  }
++
++@ script:python depends on report @
++fops << fops0.fops;
++p << report_w.p1;
++@@
++coccilib.report.print_report(p[0],
++  "WARNING: %s: .write() has stream semantic; safe to change nonseekable_open -> stream_open." % (fops,))
++
++@ explain_w depends on explain @
++identifier fops_w.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   nonseekable_open /* write only */
++    ...>
++  }
++
++@ patch_w depends on patch @
++identifier fops_w.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   stream_open
++    ...>
++  }
++
++
++// no read, no write - don't change anything
+-- 
+2.20.1
