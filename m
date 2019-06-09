@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6838DC468BC
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC4FC468BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B526216C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4FA2171F
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047428;
-	bh=jW69EN2FkxFeEtWysFt6KgzApYef2kAbA8KyVRwr3IU=;
+	s=default; t=1560047429;
+	bh=9/JkjTvXZx5gWGKF/G5xrSvQwza9SJzJNLPqRFZ4Ct8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePxEJm9YYoyvE0No859xGI3zvjDgtrAQFF0rb2STLwi1MR9CgqiMRGtich7+AMdVY
-	 fHWi+6eMa7C5U3NRKhS37yUH2nkle4kqfazzKtrTieBVx9LrUKzd0UqyBJ7edK9nyq
-	 mjMJl2tUqlVzAwdjJ6Q7fXQq5gzDQ+2gvsnM4A3w=
+	b=AFrvycHw/wUPj9TziwDi8uU6sa986BRn0MvlX7j4CuLpiziTEhYvSNidRQbttyR1J
+	 K7ekkjkeiqMgsyor6DAshHwb0FQ/RyVxHvKo0lx0+o2fFDWETCiybF8GhPtQS2Ll8g
+	 wBCYl0cYzqcGpiUFwa+cBmqfJGaG/KTjJEmBQaoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFICa1 (ORCPT
+        id S1728345AbfFICa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:30:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55556 "EHLO
+        Sat, 8 Jun 2019 22:30:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55560 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbfFIC1a (ORCPT
+        with ESMTP id S1727604AbfFIC1a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Jun 2019 22:27:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,27 +34,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=muUeH0qSiPs93hB+5K+jC1fsJtuqBjZ9628QruMrh+E=; b=S90t6OD8NbAYCtOBY9DUoxXAun
-        lTLPrxeWwZYwDryJXUeJlmg0ENShgT0nzG1DHBupRt92frJ8sjCeXw/ZsYZpLvR0Pu9On4pkB9OkX
-        kVndC1HPJ4jiN8R4Jo9BjlgHG7RyB2HpZjG+FC5Tnd2+oWPU96SaM64FppRftxOj0QGpKrf56a4zT
-        Yfs70nTXbZgMAECQaFVAmD7JkbsBu0PNw5sj3Y+qrvSfG9o8z5Zyz5gyLq9t5tP6TUU2bQTzPZWR3
-        JZ46/JXP6wYt75uuYmFw/JzTr2la5SpMoC7YhvG61H5EVH07lsFmNpWfxlyf+yxgooWmUtXrUCbcW
-        zI9SV8Zw==;
+        bh=SDR7qUoUW3OOydWD3PxnnYybyVsU8Py0MMCE2+ZCvAU=; b=tjbvaMeZ/NxWuNKsHblZvDlUlW
+        biTNDISX6sh0Dg9QeZk9M3viyfUT+95UQsrN3c3UtKLUvmFB5LuyJYdlyB/xqPE+4dSPOoo+ZvAO1
+        A8y5ozdOOkdqzo5rHnikQRwrUSobCv2ZTPUuMWViF8i2wNc482EbG8sg9mqi4bJ1VqRE0R6nCGr7q
+        fbLElzavWqqhR1b5BExRuXx5nSiOFqJd7NPcq6dwTXThcE7M+8opWKZ02FQmzTBDTzJjb/9KyCR9+
+        MSznhV+298DugTcyjAMHOHhM+0vDzKBZ02vuqbZ2HdqbaCspQQJ3H4G+9FNYApl3F1RCsruKp0d/b
+        PRNBoaYQ==;
 Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZnYO-0001mw-1S; Sun, 09 Jun 2019 02:27:28 +0000
+        id 1hZnYO-0001mo-1t; Sun, 09 Jun 2019 02:27:28 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZnYL-0000Jd-Ao; Sat, 08 Jun 2019 23:27:25 -0300
+        id 1hZnYL-0000Ir-2j; Sat, 08 Jun 2019 23:27:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-Subject: [PATCH v3 19/33] docs: pcmcia: convert docs to ReST and rename to *.rst
-Date:   Sat,  8 Jun 2019 23:27:09 -0300
-Message-Id: <d1b05720154bdbc4b75f5583cd4d1740e58b4cde.1560045490.git.mchehab+samsung@kernel.org>
+        Wu Hao <hao.wu@intel.com>, Alan Tull <atull@kernel.org>,
+        Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org
+Subject: [PATCH v3 11/33] docs: fpga: convert docs to ReST and rename to *.rst
+Date:   Sat,  8 Jun 2019 23:27:01 -0300
+Message-Id: <e8073245ef832f21223ba335192e785d69b8b1cf.1560045490.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560045490.git.mchehab+samsung@kernel.org>
 References: <cover.1560045490.git.mchehab+samsung@kernel.org>
@@ -65,8 +66,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the pcmcia docs to ReST format. Most of the changes here
-are trivial.
+The dfl.txt file is almost there. It needs just a few
+adjustments to be properly parsed.
 
 The conversion is actually:
   - add blank lines and identation in order to identify paragraphs;
@@ -80,189 +81,162 @@ the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{devicetable.txt => devicetable.rst}      |  4 ++
- ...{driver-changes.txt => driver-changes.rst} | 35 +++++++++++------
- .../pcmcia/{driver.txt => driver.rst}         | 18 ++++-----
- Documentation/pcmcia/index.rst                | 20 ++++++++++
- .../pcmcia/{locking.txt => locking.rst}       | 39 +++++++++++++------
- drivers/pcmcia/ds.c                           |  2 +-
- include/pcmcia/ds.h                           |  2 +-
- include/pcmcia/ss.h                           |  2 +-
- 8 files changed, 86 insertions(+), 36 deletions(-)
- rename Documentation/pcmcia/{devicetable.txt => devicetable.rst} (97%)
- rename Documentation/pcmcia/{driver-changes.txt => driver-changes.rst} (90%)
- rename Documentation/pcmcia/{driver.txt => driver.rst} (66%)
- create mode 100644 Documentation/pcmcia/index.rst
- rename Documentation/pcmcia/{locking.txt => locking.rst} (81%)
+ Documentation/fpga/{dfl.txt => dfl.rst} | 58 ++++++++++++++-----------
+ Documentation/fpga/index.rst            | 17 ++++++++
+ MAINTAINERS                             |  2 +-
+ 3 files changed, 50 insertions(+), 27 deletions(-)
+ rename Documentation/fpga/{dfl.txt => dfl.rst} (89%)
+ create mode 100644 Documentation/fpga/index.rst
 
-diff --git a/Documentation/pcmcia/devicetable.txt b/Documentation/pcmcia/devicetable.rst
-similarity index 97%
-rename from Documentation/pcmcia/devicetable.txt
-rename to Documentation/pcmcia/devicetable.rst
-index 5f3e00ab54c4..fd1d60d12ca1 100644
---- a/Documentation/pcmcia/devicetable.txt
-+++ b/Documentation/pcmcia/devicetable.rst
-@@ -1,3 +1,7 @@
-+============
-+Device table
-+============
+diff --git a/Documentation/fpga/dfl.txt b/Documentation/fpga/dfl.rst
+similarity index 89%
+rename from Documentation/fpga/dfl.txt
+rename to Documentation/fpga/dfl.rst
+index 6df4621c3f2a..2f125abd777f 100644
+--- a/Documentation/fpga/dfl.txt
++++ b/Documentation/fpga/dfl.rst
+@@ -1,9 +1,12 @@
+-===============================================================================
+-              FPGA Device Feature List (DFL) Framework Overview
+--------------------------------------------------------------------------------
+-                Enno Luebbers <enno.luebbers@intel.com>
+-                Xiao Guangrong <guangrong.xiao@linux.intel.com>
+-                Wu Hao <hao.wu@intel.com>
++=================================================
++FPGA Device Feature List (DFL) Framework Overview
++=================================================
 +
- Matching of PCMCIA devices to drivers is done using one or more of the
- following criteria:
- 
-diff --git a/Documentation/pcmcia/driver-changes.txt b/Documentation/pcmcia/driver-changes.rst
-similarity index 90%
-rename from Documentation/pcmcia/driver-changes.txt
-rename to Documentation/pcmcia/driver-changes.rst
-index 78355c4c268a..33fe9ebec049 100644
---- a/Documentation/pcmcia/driver-changes.txt
-+++ b/Documentation/pcmcia/driver-changes.rst
-@@ -1,15 +1,21 @@
-+==============
-+Driver changes
-+==============
++Authors:
 +
- This file details changes in 2.6 which affect PCMCIA card driver authors:
++- Enno Luebbers <enno.luebbers@intel.com>
++- Xiao Guangrong <guangrong.xiao@linux.intel.com>
++- Wu Hao <hao.wu@intel.com>
+ 
+ The Device Feature List (DFL) FPGA framework (and drivers according to this
+ this framework) hides the very details of low layer hardwares and provides
+@@ -19,7 +22,7 @@ Device Feature List (DFL) defines a linked list of feature headers within the
+ device MMIO space to provide an extensible way of adding features. Software can
+ walk through these predefined data structures to enumerate FPGA features:
+ FPGA Interface Unit (FIU), Accelerated Function Unit (AFU) and Private Features,
+-as illustrated below:
++as illustrated below::
+ 
+     Header            Header            Header            Header
+  +----------+  +-->+----------+  +-->+----------+  +-->+----------+
+@@ -81,9 +84,9 @@ and release it using close().
+ 
+ The following functions are exposed through ioctls:
+ 
+- Get driver API version (DFL_FPGA_GET_API_VERSION)
+- Check for extensions (DFL_FPGA_CHECK_EXTENSION)
+- Program bitstream (DFL_FPGA_FME_PORT_PR)
++- Get driver API version (DFL_FPGA_GET_API_VERSION)
++- Check for extensions (DFL_FPGA_CHECK_EXTENSION)
++- Program bitstream (DFL_FPGA_FME_PORT_PR)
+ 
+ More functions are exposed through sysfs
+ (/sys/class/fpga_region/regionX/dfl-fme.n/):
+@@ -118,18 +121,19 @@ port by using open() on the port device node and release it using close().
+ 
+ The following functions are exposed through ioctls:
+ 
+- Get driver API version (DFL_FPGA_GET_API_VERSION)
+- Check for extensions (DFL_FPGA_CHECK_EXTENSION)
+- Get port info (DFL_FPGA_PORT_GET_INFO)
+- Get MMIO region info (DFL_FPGA_PORT_GET_REGION_INFO)
+- Map DMA buffer (DFL_FPGA_PORT_DMA_MAP)
+- Unmap DMA buffer (DFL_FPGA_PORT_DMA_UNMAP)
+- Reset AFU (*DFL_FPGA_PORT_RESET)
++- Get driver API version (DFL_FPGA_GET_API_VERSION)
++- Check for extensions (DFL_FPGA_CHECK_EXTENSION)
++- Get port info (DFL_FPGA_PORT_GET_INFO)
++- Get MMIO region info (DFL_FPGA_PORT_GET_REGION_INFO)
++- Map DMA buffer (DFL_FPGA_PORT_DMA_MAP)
++- Unmap DMA buffer (DFL_FPGA_PORT_DMA_UNMAP)
++- Reset AFU (DFL_FPGA_PORT_RESET)
+ 
+-*DFL_FPGA_PORT_RESET: reset the FPGA Port and its AFU. Userspace can do Port
+-reset at any time, e.g. during DMA or Partial Reconfiguration. But it should
+-never cause any system level issue, only functional failure (e.g. DMA or PR
+-operation failure) and be recoverable from the failure.
++DFL_FPGA_PORT_RESET:
++  reset the FPGA Port and its AFU. Userspace can do Port
++  reset at any time, e.g. during DMA or Partial Reconfiguration. But it should
++  never cause any system level issue, only functional failure (e.g. DMA or PR
++  operation failure) and be recoverable from the failure.
+ 
+ User-space applications can also mmap() accelerator MMIO regions.
+ 
+@@ -143,6 +147,8 @@ More functions are exposed through sysfs:
+ DFL Framework Overview
+ ======================
+ 
++::
 +
- * pcmcia_loop_config() and autoconfiguration (as of 2.6.36)
--   If struct pcmcia_device *p_dev->config_flags is set accordingly,
-+   If `struct pcmcia_device *p_dev->config_flags` is set accordingly,
-    pcmcia_loop_config() now sets up certain configuration values
-    automatically, though the driver may still override the settings
-    in the callback function. The following autoconfiguration options
-    are provided at the moment:
--	CONF_AUTO_CHECK_VCC : check for matching Vcc
--	CONF_AUTO_SET_VPP   : set Vpp
--	CONF_AUTO_AUDIO     : auto-enable audio line, if required
--	CONF_AUTO_SET_IO    : set ioport resources (->resource[0,1])
--	CONF_AUTO_SET_IOMEM : set first iomem resource (->resource[2])
-+
-+	- CONF_AUTO_CHECK_VCC : check for matching Vcc
-+	- CONF_AUTO_SET_VPP   : set Vpp
-+	- CONF_AUTO_AUDIO     : auto-enable audio line, if required
-+	- CONF_AUTO_SET_IO    : set ioport resources (->resource[0,1])
-+	- CONF_AUTO_SET_IOMEM : set first iomem resource (->resource[2])
+          +----------+    +--------+ +--------+ +--------+
+          |   FME    |    |  AFU   | |  AFU   | |  AFU   |
+          |  Module  |    | Module | | Module | | Module |
+@@ -151,7 +157,7 @@ DFL Framework Overview
+                  | FPGA Container Device |    Device Feature List
+                  |  (FPGA Base Region)   |         Framework
+                  +-----------------------+
+---------------------------------------------------------------------
++  ------------------------------------------------------------------
+                +----------------------------+
+                |   FPGA DFL Device Module   |
+                | (e.g. PCIE/Platform Device)|
+@@ -220,7 +226,7 @@ the sysfs hierarchy under /sys/class/fpga_region.
+ In the example below, two DFL based FPGA devices are installed in the host. Each
+ fpga device has one FME and two ports (AFUs).
  
- * pcmcia_request_configuration -> pcmcia_enable_device (as of 2.6.36)
-    pcmcia_request_configuration() got renamed to pcmcia_enable_device(),
-@@ -19,14 +25,14 @@ This file details changes in 2.6 which affect PCMCIA card driver authors:
+-FPGA regions are created under /sys/class/fpga_region/
++FPGA regions are created under /sys/class/fpga_region/::
  
- * pcmcia_request_window changes (as of 2.6.36)
-    Instead of win_req_t, drivers are now requested to fill out
--   struct pcmcia_device *p_dev->resource[2,3,4,5] for up to four ioport
-+   `struct pcmcia_device *p_dev->resource[2,3,4,5]` for up to four ioport
-    ranges. After a call to pcmcia_request_window(), the regions found there
-    are reserved and may be used immediately -- until pcmcia_release_window()
-    is called.
+ 	/sys/class/fpga_region/region0
+ 	/sys/class/fpga_region/region1
+@@ -231,7 +237,7 @@ Application needs to search each regionX folder, if feature device is found,
+ (e.g. "dfl-port.n" or "dfl-fme.m" is found), then it's the base
+ fpga region which represents the FPGA device.
  
- * pcmcia_request_io changes (as of 2.6.36)
-    Instead of io_req_t, drivers are now requested to fill out
--   struct pcmcia_device *p_dev->resource[0,1] for up to two ioport
-+   `struct pcmcia_device *p_dev->resource[0,1]` for up to two ioport
-    ranges. After a call to pcmcia_request_io(), the ports found there
-    are reserved, after calling pcmcia_request_configuration(), they may
-    be used.
-@@ -42,7 +48,8 @@ This file details changes in 2.6 which affect PCMCIA card driver authors:
- * New IRQ request rules (as of 2.6.35)
-    Instead of the old pcmcia_request_irq() interface, drivers may now
-    choose between:
--   - calling request_irq/free_irq directly. Use the IRQ from *p_dev->irq.
-+
-+   - calling request_irq/free_irq directly. Use the IRQ from `*p_dev->irq`.
-    - use pcmcia_request_irq(p_dev, handler_t); the PCMCIA core will
-      clean up automatically on calls to pcmcia_disable_device() or
-      device ejection.
-@@ -72,13 +79,16 @@ This file details changes in 2.6 which affect PCMCIA card driver authors:
-    exports for them were removed.
+-Each base region has one FME and two ports (AFUs) as child devices:
++Each base region has one FME and two ports (AFUs) as child devices::
  
- * Unify detach and REMOVAL event code, as well as attach and INSERTION
--  code (as of 2.6.16)
-+  code (as of 2.6.16)::
-+
-        void (*remove)          (struct pcmcia_device *dev);
-        int (*probe)            (struct pcmcia_device *dev);
+ 	/sys/class/fpga_region/region0/dfl-fme.0
+ 	/sys/class/fpga_region/region0/dfl-port.0
+@@ -243,7 +249,7 @@ Each base region has one FME and two ports (AFUs) as child devices:
+ 	/sys/class/fpga_region/region3/dfl-port.3
+ 	...
  
--* Move suspend, resume and reset out of event handler (as of 2.6.16)
-+* Move suspend, resume and reset out of event handler (as of 2.6.16)::
-+
-        int (*suspend)          (struct pcmcia_device *dev);
-        int (*resume)           (struct pcmcia_device *dev);
-+
-   should be initialized in struct pcmcia_driver, and handle
-   (SUSPEND == RESET_PHYSICAL) and (RESUME == CARD_RESET) events
+-In general, the FME/AFU sysfs interfaces are named as follows:
++In general, the FME/AFU sysfs interfaces are named as follows::
  
-@@ -117,7 +127,8 @@ This file details changes in 2.6 which affect PCMCIA card driver authors:
- * core functions no longer available (as of 2.6.11)
-    The following functions have been removed from the kernel source
-    because they are unused by all in-kernel drivers, and no external
--   driver was reported to rely on them:
-+   driver was reported to rely on them::
-+
- 	pcmcia_get_first_region()
- 	pcmcia_get_next_region()
- 	pcmcia_modify_window()
-diff --git a/Documentation/pcmcia/driver.txt b/Documentation/pcmcia/driver.rst
-similarity index 66%
-rename from Documentation/pcmcia/driver.txt
-rename to Documentation/pcmcia/driver.rst
-index 0ac167920778..5c4fe84d51c1 100644
---- a/Documentation/pcmcia/driver.txt
-+++ b/Documentation/pcmcia/driver.rst
-@@ -1,16 +1,16 @@
-+=============
- PCMCIA Driver
---------------
--
-+=============
+ 	/sys/class/fpga_region/<regionX>/<dfl-fme.n>/
+ 	/sys/class/fpga_region/<regionX>/<dfl-port.m>/
+@@ -251,7 +257,7 @@ In general, the FME/AFU sysfs interfaces are named as follows:
+ with 'n' consecutively numbering all FMEs and 'm' consecutively numbering all
+ ports.
  
- sysfs
- -----
+-The device nodes used for ioctl() or mmap() can be referenced through:
++The device nodes used for ioctl() or mmap() can be referenced through::
  
- New PCMCIA IDs may be added to a device driver pcmcia_device_id table at
--runtime as shown below:
-+runtime as shown below::
- 
--echo "match_flags manf_id card_id func_id function device_no \
--prod_id_hash[0] prod_id_hash[1] prod_id_hash[2] prod_id_hash[3]" > \
--/sys/bus/pcmcia/drivers/{driver}/new_id
-+  echo "match_flags manf_id card_id func_id function device_no \
-+  prod_id_hash[0] prod_id_hash[1] prod_id_hash[2] prod_id_hash[3]" > \
-+  /sys/bus/pcmcia/drivers/{driver}/new_id
- 
- All fields are passed in as hexadecimal values (no leading 0x).
- The meaning is described in the PCMCIA specification, the match_flags is
-@@ -22,9 +22,9 @@ PCMCIA device listed in its (newly updated) pcmcia_device_id list.
- 
- A common use-case is to add a new device according to the manufacturer ID
- and the card ID (form the manf_id and card_id file in the device tree).
--For this, just use:
-+For this, just use::
- 
--echo "0x3 manf_id card_id 0 0 0 0 0 0 0" > \
--        /sys/bus/pcmcia/drivers/{driver}/new_id
-+  echo "0x3 manf_id card_id 0 0 0 0 0 0 0" > \
-+    /sys/bus/pcmcia/drivers/{driver}/new_id
- 
- after loading the driver.
-diff --git a/Documentation/pcmcia/index.rst b/Documentation/pcmcia/index.rst
+ 	/sys/class/fpga_region/<regionX>/<dfl-fme.n>/dev
+ 	/sys/class/fpga_region/<regionX>/<dfl-port.n>/dev
+diff --git a/Documentation/fpga/index.rst b/Documentation/fpga/index.rst
 new file mode 100644
-index 000000000000..779c8527109e
+index 000000000000..2c87d1ea084f
 --- /dev/null
-+++ b/Documentation/pcmcia/index.rst
-@@ -0,0 +1,20 @@
++++ b/Documentation/fpga/index.rst
+@@ -0,0 +1,17 @@
 +:orphan:
 +
-+======
-+pcmcia
-+======
++====
++fpga
++====
 +
 +.. toctree::
 +    :maxdepth: 1
 +
-+    driver
-+    devicetable
-+    locking
-+    driver-changes
++    dfl
 +
 +.. only::  subproject and html
 +
@@ -270,151 +244,18 @@ index 000000000000..779c8527109e
 +   =======
 +
 +   * :ref:`genindex`
-diff --git a/Documentation/pcmcia/locking.txt b/Documentation/pcmcia/locking.rst
-similarity index 81%
-rename from Documentation/pcmcia/locking.txt
-rename to Documentation/pcmcia/locking.rst
-index b2c9b478906b..e35257139c89 100644
---- a/Documentation/pcmcia/locking.txt
-+++ b/Documentation/pcmcia/locking.rst
-@@ -1,3 +1,7 @@
-+=======
-+Locking
-+=======
-+
- This file explains the locking and exclusion scheme used in the PCCARD
- and PCMCIA subsystems.
- 
-@@ -5,16 +9,21 @@ and PCMCIA subsystems.
- A) Overview, Locking Hierarchy:
- ===============================
- 
--pcmcia_socket_list_rwsem	- protects only the list of sockets
--- skt_mutex			- serializes card insert / ejection
--  - ops_mutex			- serializes socket operation
-+pcmcia_socket_list_rwsem
-+	- protects only the list of sockets
-+
-+- skt_mutex
-+	- serializes card insert / ejection
-+
-+  - ops_mutex
-+	- serializes socket operation
- 
- 
- B) Exclusion
- ============
- 
- The following functions and callbacks to struct pcmcia_socket must
--be called with "skt_mutex" held:
-+be called with "skt_mutex" held::
- 
- 	socket_detect_change()
- 	send_event()
-@@ -31,7 +40,7 @@ be called with "skt_mutex" held:
- 	struct pcmcia_callback	*callback
- 
- The following functions and callbacks to struct pcmcia_socket must
--be called with "ops_mutex" held:
-+be called with "ops_mutex" held::
- 
- 	socket_reset()
- 	socket_setup()
-@@ -39,7 +48,7 @@ be called with "ops_mutex" held:
- 	struct pccard_operations	*ops
- 	struct pccard_resource_ops	*resource_ops;
- 
--Note that send_event() and struct pcmcia_callback *callback must not be
-+Note that send_event() and `struct pcmcia_callback *callback` must not be
- called with "ops_mutex" held.
- 
- 
-@@ -60,19 +69,23 @@ The resource_ops and their data are protected by ops_mutex.
- The "main" struct pcmcia_socket is protected as follows (read-only fields
- or single-use fields not mentioned):
- 
--- by pcmcia_socket_list_rwsem:
-+- by pcmcia_socket_list_rwsem::
-+
- 	struct list_head	socket_list;
- 
--- by thread_lock:
-+- by thread_lock::
-+
- 	unsigned int		thread_events;
- 
--- by skt_mutex:
-+- by skt_mutex::
-+
- 	u_int			suspended_state;
- 	void			(*tune_bridge);
- 	struct pcmcia_callback	*callback;
- 	int			resume_status;
- 
--- by ops_mutex:
-+- by ops_mutex::
-+
- 	socket_state_t		socket;
- 	u_int			state;
- 	u_short			lock_count;
-@@ -100,7 +113,8 @@ The "main" struct pcmcia_device is protected as follows (read-only fields
- or single-use fields not mentioned):
- 
- 
--- by pcmcia_socket->ops_mutex:
-+- by pcmcia_socket->ops_mutex::
-+
- 	struct list_head	socket_device_list;
- 	struct config_t		*function_config;
- 	u16			_irq:1;
-@@ -111,7 +125,8 @@ or single-use fields not mentioned):
- 	u16			suspended:1;
- 	u16			_removed:1;
- 
--- by the PCMCIA driver:
-+- by the PCMCIA driver::
-+
- 	io_req_t		io;
- 	irq_req_t		irq;
- 	config_req_t		conf;
-diff --git a/drivers/pcmcia/ds.c b/drivers/pcmcia/ds.c
-index a9258f641cee..5230e284bb20 100644
---- a/drivers/pcmcia/ds.c
-+++ b/drivers/pcmcia/ds.c
-@@ -67,7 +67,7 @@ static void pcmcia_check_driver(struct pcmcia_driver *p_drv)
- 			       "be 0x%x\n", p_drv->name, did->prod_id[i],
- 			       did->prod_id_hash[i], hash);
- 			printk(KERN_DEBUG "pcmcia: see "
--				"Documentation/pcmcia/devicetable.txt for "
-+				"Documentation/pcmcia/devicetable.rst for "
- 				"details\n");
- 		}
- 		did++;
-diff --git a/include/pcmcia/ds.h b/include/pcmcia/ds.h
-index 3037157855f0..4e58c20dabcb 100644
---- a/include/pcmcia/ds.h
-+++ b/include/pcmcia/ds.h
-@@ -39,7 +39,7 @@ struct config_t;
- struct net_device;
- 
- /* dynamic device IDs for PCMCIA device drivers. See
-- * Documentation/pcmcia/driver.txt for details.
-+ * Documentation/pcmcia/driver.rst for details.
- */
- struct pcmcia_dynids {
- 	struct mutex		lock;
-diff --git a/include/pcmcia/ss.h b/include/pcmcia/ss.h
-index 731cde010f42..89629ee57840 100644
---- a/include/pcmcia/ss.h
-+++ b/include/pcmcia/ss.h
-@@ -190,7 +190,7 @@ struct pcmcia_socket {
- 	unsigned int			sysfs_events;
- 
- 	/* For the non-trivial interaction between these locks,
--	 * see Documentation/pcmcia/locking.txt */
-+	 * see Documentation/pcmcia/locking.rst */
- 	struct mutex			skt_mutex;
- 	struct mutex			ops_mutex;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9f83a79fdfdb..cc11aea722c8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6270,7 +6270,7 @@ FPGA DFL DRIVERS
+ M:	Wu Hao <hao.wu@intel.com>
+ L:	linux-fpga@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/fpga/dfl.txt
++F:	Documentation/fpga/dfl.rst
+ F:	include/uapi/linux/fpga-dfl.h
+ F:	drivers/fpga/dfl*
  
 -- 
 2.21.0
