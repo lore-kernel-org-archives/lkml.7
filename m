@@ -2,167 +2,247 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C3FC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE331C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E8F20652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GZ0tzeWl"
+	by mail.kernel.org (Postfix) with ESMTP id 7AF4820693
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560100845;
+	bh=+DdyUJJARkx/BvERWHEtustyPlb2PjQGw2nsot5s5Uc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0mHqgaamzdTPuNFcXOKC0PbitLPKJ4f7rNLLZ4XdnTCZfIxWu4tPAxGCBesUZrLUc
+	 DNAVFKubGtR8mqzliixxia0To0O2H3zdsDN5AXoId2AHFf3l+zTkngNhHgSby5sbEP
+	 VsbNzWadlAGL/Ybmv0++WZSrPn22gi0D0uuuOYyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbfFIRUj (ORCPT
+        id S1732128AbfFIRUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:20:39 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:20540 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730139AbfFIRUg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:20:36 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x59HKQ00009606;
-        Mon, 10 Jun 2019 02:20:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x59HKQ00009606
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560100827;
-        bh=1ySK9wzh5EoMbwrJ8cJodwxCbTXiTLYsNbdKaL1fqtI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GZ0tzeWlAtCiiyKxspCt0mUF0VDxbXBDzbXup66dIyNRwF29xHu6y3v0d8yGc7Vga
-         BiKpv0OmeIeE0Y66CjkuCM+0BAPuHv1VpltpWJ4TF2i5DXqa1Pe+p7jpFy8qe6vWrH
-         qBKhpSVH6QPz0zbLAxA1LLigJy1pWtotzKV1RzrmcBb7aDdctBwTyz4mnj31ujvRA1
-         boAROXP/k2UEiz83ZrBY9a5jhxoBe8lagGWMj1GA2PXUweoWWtBmC9iCaWNUWsIsGk
-         qq/MlfQvpU/KtLxzhFdbF+0aQq3JMcHX5lESVHkQegw3Bsmay3vomR7TkWbL8a/zpl
-         M5zJ8+cvafWLg==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id q64so4012902vsd.1;
-        Sun, 09 Jun 2019 10:20:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAWd/57RmiEDymoUbAULTiOP+z18XgVSkE+NoyC2mDkH8V8D7OvI
-        MMB7n8q/BCIbDLMW9NoM/M5tAN+KMD/oQpARyF0=
-X-Google-Smtp-Source: APXvYqyVekfcVCyZGa1ldLjCcfToCDvlg8U4tDLhnKcPBhGAs7CzTNxomvXqVEzZuvlWy2C4qxXT+i4Fa5So7679jEA=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr14566333vsl.155.1560100825584;
- Sun, 09 Jun 2019 10:20:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
- <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
- <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
- <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
- <20190604134213.GA26263@kroah.com> <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
- <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
- <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
- <20190605051040.GA22760@kroah.com> <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
- <20190605071413.779bd821@coco.lan> <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
- <CAK7LNARsSFT1ncyRgWi_tga_7KC6ZwZOETXQ2GrO9PfeJgLxyQ@mail.gmail.com>
- <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
- <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com> <bd1ef99fc503fed492ad036f781963ca15a8596f.camel@perches.com>
-In-Reply-To: <bd1ef99fc503fed492ad036f781963ca15a8596f.camel@perches.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 10 Jun 2019 02:19:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT3iKOX=0GxrB__m9haM=0L+MZQRq_OvFhW5N3iaaBAPA@mail.gmail.com>
-Message-ID: <CAK7LNAT3iKOX=0GxrB__m9haM=0L+MZQRq_OvFhW5N3iaaBAPA@mail.gmail.com>
-Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
-To:     Joe Perches <joe@perches.com>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Sun, 9 Jun 2019 13:20:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729678AbfFIQq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:46:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F5C720833;
+        Sun,  9 Jun 2019 16:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560098818;
+        bh=+DdyUJJARkx/BvERWHEtustyPlb2PjQGw2nsot5s5Uc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FZQAB4lOvZRExp0DvX0PvrpxfvwKwYMQL6ezzrWIHRcVcQ7xBsCb2yd/q+RhTErxa
+         gBou9PDTIQIg7cMWArRzpBKbYsCdcAsbc07BRvbQCT5Rv7ypm3GI+IeCI4KjvaGHzs
+         0xfZVsOs2thr87Bd2rVtQZW8n3r6sOxo5ROKNFHI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        Pavel Machek <pavel@ucw.cz>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.1 39/70] x86/power: Fix nosmt vs hibernation triple fault during resume
+Date:   Sun,  9 Jun 2019 18:41:50 +0200
+Message-Id: <20190609164130.488111346@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
+References: <20190609164127.541128197@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 10:40 PM Joe Perches <joe@perches.com> wrote:
->
-> On Sun, 2019-06-09 at 22:08 +0900, Masahiro Yamada wrote:
-> > On Sun, Jun 9, 2019 at 8:57 PM Joe Perches <joe@perches.com> wrote:
-> > > On Sun, 2019-06-09 at 16:14 +0900, Masahiro Yamada wrote:
-> > > > Hi Joe,
-> > > >
-> > > > On Thu, Jun 6, 2019 at 2:06 AM Joe Perches <joe@perches.com> wrote:
-> > > > > Perhaps a checkpatch change too:
-> > > > >
-> > > > > The first block updates unsigned only bitfields
-> > > > > The second tests uapi definitions and suggests "__<kernel_types"
-> > > >
-> > > > Good.
-> > > >
-> > > > In addition,
-> > > >
-> > > > "warn if __u8, __u16, __u32, __u64 are used outside of uapi/"
-> > > >
-> > > > Lots of kernel-space headers use __u{8,16,32,64} instead of u{8,16,32,64}
-> > > > just because developers often miss to understand when to use
-> > > > the underscore-prefixed types.
-> > >
-> > > The problem there is that checkpatch can't know if the
-> > > __<uapi_type> being used is for an actual uapi use or not.
-> > >
-> > > coccinelle could be much better at that.
-> >
-> > Why?
->
->
-> Perhaps it's (somewhat) bad form to have a __uapi type in a
-> structure, include that structure in a driver for something
-> like a copy_to/from_user, and map the __<uapi_type> to a non
-> underscore prefixed <kernel_type>
+From: Jiri Kosina <jkosina@suse.cz>
 
-Linus Torvalds wrote 'sparse' to check this.
+commit ec527c318036a65a083ef68d8ba95789d2212246 upstream.
 
-Any attempt to distinguish the address-space
-by the presence of double-underscore-prefixes is pointless.
-This is already checked by __kernel / __user.
+As explained in
 
-It is absolutely correct to assign __u32 to u32, and vice versa.
+	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
 
-If you think the following patch is wrong, please tell me why:
+we always, no matter what, have to bring up x86 HT siblings during boot at
+least once in order to avoid first MCE bringing the system to its knees.
 
+That means that whenever 'nosmt' is supplied on the kernel command-line,
+all the HT siblings are as a result sitting in mwait or cpudile after
+going through the online-offline cycle at least once.
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 748ac489ef7e..24c1b73d9fbd 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -1132,7 +1132,7 @@ static struct binder_node *binder_init_node_ilocked(
-        struct binder_node *node;
-        binder_uintptr_t ptr = fp ? fp->binder : 0;
-        binder_uintptr_t cookie = fp ? fp->cookie : 0;
--       __u32 flags = fp ? fp->flags : 0;
-+       u32 flags = fp ? fp->flags : 0;
+This causes a serious issue though when a kernel, which saw 'nosmt' on its
+commandline, is going to perform resume from hibernation: if the resume
+from the hibernated image is successful, cr3 is flipped in order to point
+to the address space of the kernel that is being resumed, which in turn
+means that all the HT siblings are all of a sudden mwaiting on address
+which is no longer valid.
 
-        assert_spin_locked(&proc->inner_lock);
+That results in triple fault shortly after cr3 is switched, and machine
+reboots.
 
-@@ -4918,7 +4918,7 @@ static int
-binder_ioctl_get_node_info_for_ref(struct binder_proc *proc,
+Fix this by always waking up all the SMT siblings before initiating the
+'restore from hibernation' process; this guarantees that all the HT
+siblings will be properly carried over to the resumed kernel waiting in
+resume_play_dead(), and acted upon accordingly afterwards, based on the
+target kernel configuration.
+
+Symmetricaly, the resumed kernel has to push the SMT siblings to mwait
+again in case it has SMT disabled; this means it has to online all
+the siblings when resuming (so that they come out of hlt) and offline
+them again to let them reach mwait.
+
+Cc: 4.19+ <stable@vger.kernel.org> # v4.19+
+Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/power/cpu.c       |   10 ++++++++++
+ arch/x86/power/hibernate.c |   33 +++++++++++++++++++++++++++++++++
+ include/linux/cpu.h        |    4 ++++
+ kernel/cpu.c               |    4 ++--
+ kernel/power/hibernate.c   |    9 +++++++++
+ 5 files changed, 58 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable
+ 	 * address in its instruction pointer may not be possible to resolve
+ 	 * any more at that point (the page tables used by it previously may
+ 	 * have been overwritten by hibernate image data).
++	 *
++	 * First, make sure that we wake up all the potentially disabled SMT
++	 * threads which have been initially brought up and then put into
++	 * mwait/cpuidle sleep.
++	 * Those will be put to proper (not interfering with hibernation
++	 * resume) sleep afterwards, and the resumed kernel will decide itself
++	 * what to do with them.
+ 	 */
++	ret = cpuhp_smt_enable();
++	if (ret)
++		return ret;
+ 	smp_ops.play_dead = resume_play_dead;
+ 	ret = disable_nonboot_cpus();
+ 	smp_ops.play_dead = play_dead;
+--- a/arch/x86/power/hibernate.c
++++ b/arch/x86/power/hibernate.c
+@@ -11,6 +11,7 @@
+ #include <linux/suspend.h>
+ #include <linux/scatterlist.h>
+ #include <linux/kdebug.h>
++#include <linux/cpu.h>
+ 
+ #include <crypto/hash.h>
+ 
+@@ -246,3 +247,35 @@ out:
+ 	__flush_tlb_all();
+ 	return 0;
+ }
++
++int arch_resume_nosmt(void)
++{
++	int ret = 0;
++	/*
++	 * We reached this while coming out of hibernation. This means
++	 * that SMT siblings are sleeping in hlt, as mwait is not safe
++	 * against control transition during resume (see comment in
++	 * hibernate_resume_nonboot_cpu_disable()).
++	 *
++	 * If the resumed kernel has SMT disabled, we have to take all the
++	 * SMT siblings out of hlt, and offline them again so that they
++	 * end up in mwait proper.
++	 *
++	 * Called with hotplug disabled.
++	 */
++	cpu_hotplug_enable();
++	if (cpu_smt_control == CPU_SMT_DISABLED ||
++			cpu_smt_control == CPU_SMT_FORCE_DISABLED) {
++		enum cpuhp_smt_control old = cpu_smt_control;
++
++		ret = cpuhp_smt_enable();
++		if (ret)
++			goto out;
++		ret = cpuhp_smt_disable(old);
++		if (ret)
++			goto out;
++	}
++out:
++	cpu_hotplug_disable();
++	return ret;
++}
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -183,10 +183,14 @@ enum cpuhp_smt_control {
+ extern enum cpuhp_smt_control cpu_smt_control;
+ extern void cpu_smt_disable(bool force);
+ extern void cpu_smt_check_topology(void);
++extern int cpuhp_smt_enable(void);
++extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
+ #else
+ # define cpu_smt_control		(CPU_SMT_ENABLED)
+ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
++static inline int cpuhp_smt_enable(void) { return 0; }
++static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
+ #endif
+ 
+ /*
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2064,7 +2064,7 @@ static void cpuhp_online_cpu_device(unsi
+ 	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+ }
+ 
+-static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
++int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
  {
-        struct binder_node *node;
-        struct binder_context *context = proc->context;
--       __u32 handle = info->handle;
-+       u32 handle = info->handle;
+ 	int cpu, ret = 0;
+ 
+@@ -2096,7 +2096,7 @@ static int cpuhp_smt_disable(enum cpuhp_
+ 	return ret;
+ }
+ 
+-static int cpuhp_smt_enable(void)
++int cpuhp_smt_enable(void)
+ {
+ 	int cpu, ret = 0;
+ 
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -258,6 +258,11 @@ void swsusp_show_speed(ktime_t start, kt
+ 		(kps % 1000) / 10);
+ }
+ 
++__weak int arch_resume_nosmt(void)
++{
++	return 0;
++}
++
+ /**
+  * create_image - Create a hibernation image.
+  * @platform_mode: Whether or not to use the platform driver.
+@@ -325,6 +330,10 @@ static int create_image(int platform_mod
+  Enable_cpus:
+ 	enable_nonboot_cpus();
+ 
++	/* Allow architectures to do nosmt-specific post-resume dances */
++	if (!in_suspend)
++		error = arch_resume_nosmt();
++
+  Platform_finish:
+ 	platform_finish(platform_mode);
+ 
 
-        if (info->strong_count || info->weak_count || info->reserved1 ||
-            info->reserved2 || info->reserved3) {
 
-
-
-
->
-> For instance
->
-> struct flat_binder_object in drivers/android/binder.c
->
-> How is checkpatch supposed to know that __u32 flags is
-> inappropriate?
->
->
-
-
--- 
-Best Regards
-Masahiro Yamada
