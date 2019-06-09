@@ -2,112 +2,75 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B43C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8391C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5F3208E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DE4208E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:55:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UIYvSatr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfFIHyo (ORCPT
+        id S1727983AbfFIHzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 03:54:44 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44321 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfFIHyo (ORCPT
+        Sun, 9 Jun 2019 03:55:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51368 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfFIHzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 03:54:44 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so4500821lfm.11;
-        Sun, 09 Jun 2019 00:54:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/Qx4/qdUcALjIorcXjs7AxmiMGoinkmfGOdHptpmwpU=;
-        b=VnzhNd6w7mHyqWKZiqP7zGC4ONUcth8yhbe0Lo90zLDFCwzJhrLUZo05SR4S44EuWy
-         wlABAZfEcB+gwGXPPGaVpP/Yrv6+3l7c2DqoQTeqFmGPs+gdOJZ93sNzROR8cSmWoJo+
-         5IIzrQHR8M5tj9D2fJAPYiT0N90UZike0AHTHYDoEHRsqREudfpy/V7mctr/tnI93R/T
-         esG2bVjT5/dzfokupaehnxuO+ePdfcW8MMuoyuDJg5NKnD36yk+tDCM4CRrG9wx6nCqV
-         ZpPSBiQdbcuSQplQO1KVJ14Tgzq5lwj5avVhIbKN8A71EAPPIhauw2ML8pjSFMLYknZk
-         j65w==
-X-Gm-Message-State: APjAAAWkWw6Ab6aDE7UnNc2a/HEzGa5HmTnHkPe84Xpu0F0t4FhgEYMr
-        QZszusJh8ovp0mZZFM+cHbSm4Vstcc0KsOoa0V0=
-X-Google-Smtp-Source: APXvYqwAkUTnyc4orITPqql8Dcq/2FZxVHDXSWXEX68+M70BfTiu1lPz3E0qFz5+GRtrzFsL1+dJET1c4NH3BB9tQiI=
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr7954978lfn.23.1560066881888;
- Sun, 09 Jun 2019 00:54:41 -0700 (PDT)
+        Sun, 9 Jun 2019 03:55:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NId33FVrnX6RKCmv9wXhMZxhV5RvbqvL9ybuo1GNDqA=; b=UIYvSatrLxTeJ1V2KMwKFXvvH
+        C2y6CtDdT7KQ7qeI/fGT8EH0QBuoEOVr/Vd5UhBUveptZB+sPn0ZUV7VNM95DwZM6tpnn52+xp86E
+        To/r3jcvd13NBUMsrRi37OFS1TVLiOCI+4VbdFwCH2THbR4lM/K+f9pLYgw44qwfcxaEn6JIix4uk
+        9qvRoptOZeUBi5OPRfs8Eko/VkvTwP50NQfSTuTi1gJQV2Ea/MD87EqSnyK/OBvas7xRwI5IbBoAq
+        y6YoEjsSWtnhDD5B/V0+uXi80Fg0OmFUOyNENC4so2q2fxgjsXbupKdrWCAeZ38UAMc/I1g+y+BEp
+        KVhqMWOBg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZsg4-0001S9-Ta; Sun, 09 Jun 2019 07:55:44 +0000
+Date:   Sun, 9 Jun 2019 00:55:44 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Loys Ollivier <lollivier@baylibre.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] RISC-V: defconfig: enable clocks, serial console
+Message-ID: <20190609075544.GA32207@infradead.org>
+References: <20190605175042.13719-1-khilman@baylibre.com>
+ <alpine.DEB.2.21.9999.1906081848410.720@viisi.sifive.com>
 MIME-Version: 1.0
-References: <cover.1560045490.git.mchehab+samsung@kernel.org> <f7f9c692a870f836e5657b8a763d751b6ac0e86e.1560045490.git.mchehab+samsung@kernel.org>
-In-Reply-To: <f7f9c692a870f836e5657b8a763d751b6ac0e86e.1560045490.git.mchehab+samsung@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 9 Jun 2019 09:54:29 +0200
-Message-ID: <CAMuHMdUyvZ89=P4GOY-BkyS45cj66STgZe9gN3q0L+sj-Wc+wg@mail.gmail.com>
-Subject: Re: [PATCH v3 10/33] docs: fb: convert docs to ReST and rename to *.rst
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Maik Broemme <mbroemme@libmpq.org>,
-        Thomas Winischhofer <thomas@winischhofer.net>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bernie Thompson <bernie@plugable.com>,
-        Michal Januszewski <spock@gentoo.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1906081848410.720@viisi.sifive.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+On Sat, Jun 08, 2019 at 06:49:09PM -0700, Paul Walmsley wrote:
+> On Wed, 5 Jun 2019, Kevin Hilman wrote:
+> 
+> > Enable PRCI clock driver and serial console by default, so the default
+> > upstream defconfig is bootable to a serial console.
+> > 
+> > Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> 
+> Thanks, queued for v5.2-rc with Christoph's Reviewed-by:.
 
-On Sun, Jun 9, 2019 at 4:29 AM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
-> The conversion is actually:
->   - add blank lines and identation in order to identify paragraphs;
->   - fix tables markups;
->   - add some lists markups;
->   - mark literal blocks;
->   - adjust title markups.
->
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-Thanks!
-
-> --- a/Documentation/fb/framebuffer.txt
-> +++ b/Documentation/fb/framebuffer.rst
-> @@ -1,5 +1,6 @@
-> -                       The Frame Buffer Device
-> -                       -----------------------
-> +=======================
-> +The Frame Buffer Device
-> +=======================
->
->  Maintained by Geert Uytterhoeven <geert@linux-m68k.org>
-
-I'm happy to see this line dropped ;-)
-
->  Last revised: May 10, 2001
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To repeat myself:  where do you apply it to?  And could we please just
+have a shared maintainer tree on infradead.org or kernel.org so that
+people don't have to chase multiple trees to base their patches on?
