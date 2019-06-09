@@ -2,55 +2,56 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242B2C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C31C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E467C206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63CD205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100073;
-	bh=xlFmQq+AZtxH/og1wCLgXSUQ84KotkSU+fB9U5AvT10=;
+	s=default; t=1560100078;
+	bh=CfTl+fpW6LjVBvYMIX4vzX8rNYYe/sXxr5dMJWGW3Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QIxV5CJuzDY5e7+P/0euDnihGhJVRD5aXRG/VFq3VvvI+7ukUxv+urfasFclrR4rw
-	 zhnETbD77lo4uumkMB9is//30TcWh5uTyWXwotthNx98bCifJ3Vs4l1Kj62HSsZSxE
-	 55FN/0A6iAF0ef3rPxmkobDxKwBlceDVyWGsburs=
+	b=sR3BZgPt33TIvSPC2yg6h54VjWC1SR4BRJxAUoJ5LXUcC3u5ndNi63uqN9GFtTbI4
+	 LYqi6ajEebA4Z1P0FBs+fiqcges83b+lr1gV1gYpmH0P3aVGIy4j99JH0Dt2EmLDVq
+	 iYECsXzThOR249QmClneBDi1/9PdG2KrSYV9IQ70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbfFIRHw (ORCPT
+        id S2388833AbfFIRHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48054 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388751AbfFIRHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:07:49 -0400
+        id S2388931AbfFIRF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B0720652;
-        Sun,  9 Jun 2019 17:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB783206C3;
+        Sun,  9 Jun 2019 17:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560100069;
-        bh=xlFmQq+AZtxH/og1wCLgXSUQ84KotkSU+fB9U5AvT10=;
+        s=default; t=1560099958;
+        bh=CfTl+fpW6LjVBvYMIX4vzX8rNYYe/sXxr5dMJWGW3Ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uU1GINUBx1zR/UODcwDFgWckoGVHUNdc9zq2L5zXEdazjAXhLJOr4VtlkwuslGP3E
-         +smxC0UhGj98n0TgN7h2jaR+ERFXzlHw8/CJQ8u4F1wJCTWCvUSK+0esTmAnOXVECj
-         RfwduO95eX938FFBqvXDyWKxfX78kiWreoDjLrbQ=
+        b=bX18AZYACaBhJ1c/IwSneT2i6mTAeaJmAoHIHudGMzJ7ru9abD1kY8QjTSFtLc8bs
+         hVBJLgoYJxco3fXmxAI0ucK1gwBBQv09kn0jP9RvJ7jqMqz/4YZ7feC7T1ZZIyhGX3
+         sq+RdXxIcUNbTTZ+AVROQNgPKyN5d+ITvImpisSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 121/241] media: ov2659: make S_FMT succeed even if requested format doesnt match
-Date:   Sun,  9 Jun 2019 18:41:03 +0200
-Message-Id: <20190609164151.293676306@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alec Ari <neotheuser@gmail.com>, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 225/241] Revert "x86/build: Move _etext to actual end of .text"
+Date:   Sun,  9 Jun 2019 18:42:47 +0200
+Message-Id: <20190609164155.196404269@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -63,50 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bccb89cf9cd07a0690d519696a00c00a973b3fe4 ]
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This driver returns an error if unsupported media bus pixel code is
-requested by VIDIOC_SUBDEV_S_FMT.
+This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
 
-But according to Documentation/media/uapi/v4l/vidioc-subdev-g-fmt.rst,
+It seems to cause lots of problems when using the gold linker, and no
+one really needs this at the moment, so just revert it from the stable
+trees.
 
-Drivers must not return an error solely because the requested format
-doesn't match the device capabilities. They must instead modify the
-format to match what the hardware can provide.
-
-So select default format code and return success in that case.
-
-This is detected by v4l2-compliance.
-
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Reported-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: Alec Ari <neotheuser@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/i2c/ov2659.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 49109f4f5bb4a..fadec1d705829 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1117,8 +1117,10 @@ static int ov2659_set_fmt(struct v4l2_subdev *sd,
- 		if (ov2659_formats[index].code == mf->code)
- 			break;
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -110,10 +110,10 @@ SECTIONS
+ 		*(.text.__x86.indirect_thunk)
+ 		__indirect_thunk_end = .;
+ #endif
+-	} :text = 0x9090
  
--	if (index < 0)
--		return -EINVAL;
-+	if (index < 0) {
-+		index = 0;
-+		mf->code = ov2659_formats[index].code;
-+	}
+-	/* End of text section */
+-	_etext = .;
++		/* End of text section */
++		_etext = .;
++	} :text = 0x9090
  
- 	mf->colorspace = V4L2_COLORSPACE_SRGB;
- 	mf->code = ov2659_formats[index].code;
--- 
-2.20.1
-
+ 	NOTES :text :note
+ 
 
 
