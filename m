@@ -2,149 +2,128 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CFAC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B6CC468BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2AA2070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:10:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRmn0YNw"
+	by mail.kernel.org (Postfix) with ESMTP id 45285214DA
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfFIMK5 (ORCPT
+        id S1728468AbfFIMMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 08:10:57 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37663 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbfFIMK5 (ORCPT
+        Sun, 9 Jun 2019 08:12:15 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55928 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728397AbfFIMMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 08:10:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 131so5466208ljf.4
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 05:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MGnWlXcEZlsDllQ1p+dLiYMxOQG545jMz4NgSBC9Y94=;
-        b=nRmn0YNw8W+QR/WXpFQLQvxWieu7tL/WNi0q3+UMLXv1nXW9gwzTkCv8SY1aRpJeat
-         ilJLCQYmFDEiyA3lldq0wUtt9f85fPZGz+jdQ/hHsk01cnqc6AUXcRN1GNDaWLJV14jX
-         ngoF5Y2eJ4ywcfSSrZxnYcfyh8zCFxI53rHruVBiZnb1KSQtkRgLJIGZ6DOctY72Hm8S
-         5TbducFcWoCXLn2GTEd21oqtCp0N4r2+WEB+zmjhox+Yi53x81DvSYRbVf4NWSZqbe/P
-         0aiDUGPE3KavdxykFJkQrksAtAEmmw5rxLRm30FYIRBidXHsQ1OR0t18qhaGuetsxAZY
-         TQNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MGnWlXcEZlsDllQ1p+dLiYMxOQG545jMz4NgSBC9Y94=;
-        b=drz2dYTJX/XoMr0xFxwQ2T21XmTnPlf6wqbQFpl7svaIhyrhq6brw1gjxnGMU7imgc
-         HLThBODfAzH/Ibll7sGn4J90ge4BpeXVbQ1FHLz8SyrVb/y+oZjP9I2AtKiGMibw0SHk
-         Rfrbh9HyXnufalQNhOZoJfETsKyScZobjqwsN7Cjykkum2GcyI6Lmrbf1kN5yGfqN8DI
-         UqrwPFk2AbhgbfiyE9gKfsTmLhGPXodK0UHf4ywZX2hmeOVi+5qgnYuG7CLZABfhgZKc
-         RYnsM51Nf3HHE21PBAW/Lo08wQoTqnABGD1ujizRS4xcGthMjAVIOE/BaEFwiQfeyzK7
-         iykw==
-X-Gm-Message-State: APjAAAVYRn4vJIozbzsB9JEOG+XTAytCppg4pGfOChda/J68PkX03eSn
-        0k/Wg+p0sFs/qlUS08+e9T4=
-X-Google-Smtp-Source: APXvYqyrmwbev/kM38jFwPiKr2yUx7kn6QEzpscG18zuD1wOeoyI47i1pIxOyWt6Uu8NLD0OnZFBrg==
-X-Received: by 2002:a2e:9692:: with SMTP id q18mr34382352lji.89.1560082255174;
-        Sun, 09 Jun 2019 05:10:55 -0700 (PDT)
-Received: from esperanza ([176.120.239.149])
-        by smtp.gmail.com with ESMTPSA id t3sm1423097lfk.59.2019.06.09.05.10.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Jun 2019 05:10:54 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 15:10:52 +0300
-From:   Vladimir Davydov <vdavydov.dev@gmail.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v6 01/10] mm: add missing smp read barrier on getting
- memcg kmem_cache pointer
-Message-ID: <20190609121052.kge3w3hv3t5u5bb3@esperanza>
-References: <20190605024454.1393507-1-guro@fb.com>
- <20190605024454.1393507-2-guro@fb.com>
+        Sun, 9 Jun 2019 08:12:15 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 325A0802A3; Sun,  9 Jun 2019 14:12:02 +0200 (CEST)
+Date:   Sun, 9 Jun 2019 14:12:12 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, rui.zhang@intel.com, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org
+Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
+ speed, thermal related?
+Message-ID: <20190609121212.GA4520@amd>
+References: <20190609111732.GA2885@amd>
+ <20190609112340.GA9966@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
 Content-Disposition: inline
-In-Reply-To: <20190605024454.1393507-2-guro@fb.com>
+In-Reply-To: <20190609112340.GA9966@amd>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 07:44:45PM -0700, Roman Gushchin wrote:
-> Johannes noticed that reading the memcg kmem_cache pointer in
-> cache_from_memcg_idx() is performed using READ_ONCE() macro,
-> which doesn't implement a SMP barrier, which is required
-> by the logic.
-> 
-> Add a proper smp_rmb() to be paired with smp_wmb() in
-> memcg_create_kmem_cache().
-> 
-> The same applies to memcg_create_kmem_cache() itself,
-> which reads the same value without barriers and READ_ONCE().
-> 
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  mm/slab.h        | 1 +
->  mm/slab_common.c | 3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 739099af6cbb..1176b61bb8fc 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -260,6 +260,7 @@ cache_from_memcg_idx(struct kmem_cache *s, int idx)
->  	 * memcg_caches issues a write barrier to match this (see
->  	 * memcg_create_kmem_cache()).
->  	 */
-> +	smp_rmb();
->  	cachep = READ_ONCE(arr->entries[idx]);
 
-Hmm, we used to have lockless_dereference() here, but it was replaced
-with READ_ONCE some time ago. The commit message claims that READ_ONCE
-has an implicit read barrier in it.
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-commit 506458efaf153c1ea480591c5602a5a3ba5a3b76
-Author: Will Deacon <will.deacon@arm.com>
-Date:   Tue Oct 24 11:22:48 2017 +0100
+Hi!
 
-    locking/barriers: Convert users of lockless_dereference() to READ_ONCE()
+> > When I start flightgear, I get framerates around 20 fps and cpu at
+> > 3GHz:
+> >=20
+> > pavel@duo:~/bt$ cat /proc/cpuinfo  | grep MHz
+> > cpu MHz		    : 3027.471
+> > cpu MHz		      : 2981.863
+> > cpu MHz		      	: 2958.352
+> > cpu MHz			  : 2864.001
+> > pavel@duo:~/bt$
+> >=20
+> > (Ok, fgfs is really only running at single core, so why do both cores
+> > run at 3GHz?)
+> >=20
+> > But temperatures get quite high:
+> >=20
+> > pavel@duo:~/bt$ sensors
+> > thinkpad-isa-0000
+> > Adapter: ISA adapter
+> > fan1:        4485 RPM
+> >=20
+> > coretemp-isa-0000
+> > Adapter: ISA adapter
+> > Package id 0:  +98.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+> > Core 0:        +98.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+> > Core 1:        +91.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+> >=20
+> > And soon cpu goes to 1.5GHz range, with framerates going down to
+> > 12fps. That's a bit low.
+> >=20
+> > Room temperature is 26Celsius.
+> >=20
+> > The CPU is Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz . I guess it means
+> > it should be able to sustain both cores running at 2.5GHz?
+> >=20
+> > Any ideas? Were there any recent changes in that area?
+>=20
+> I tried kernel compile. It keeps both cores at 3GHz, temperature goes
+> up over 95C, and then cpus start going down to 2.3GHz... and then down
+> to 2GHz... and down to 1.9GHz.
+>=20
+> watch bash -c 'sensors;  cat /proc/cpuinfo | grep MHz'
 
-    READ_ONCE() now has an implicit smp_read_barrier_depends() call, so it
-    can be used instead of lockless_dereference() without any change in
-    semantics.
+Situation is very different with v4.6 distro based kernel.
 
-    Signed-off-by: Will Deacon <will.deacon@arm.com>
-    Cc: Linus Torvalds <torvalds@linux-foundation.org>
-    Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Thomas Gleixner <tglx@linutronix.de>
-    Link: http://lkml.kernel.org/r/1508840570-22169-4-git-send-email-will.deacon@arm.com
-    Signed-off-by: Ingo Molnar <mingo@kernel.org>
+CPU MHz is only getting values round to 100MHz. It does not go above
+2.5GHz, but it does not go below 2.5GHz under the load, either.
 
-commit 76ebbe78f7390aee075a7f3768af197ded1bdfbb
-Author: Will Deacon <will.deacon@arm.com>
-Date:   Tue Oct 24 11:22:47 2017 +0100
+ACPI adapter appears in sensors output.
 
-    locking/barriers: Add implicit smp_read_barrier_depends() to READ_ONCE()
+Now I tried going to 5.2-rc4. It behaves the same as 5.2-rc2. Goes up
+to 3GHz briefly but then down to 2.0GHz and below under load.
 
-    In preparation for the removal of lockless_dereference(), which is the
-    same as READ_ONCE() on all architectures other than Alpha, add an
-    implicit smp_read_barrier_depends() to READ_ONCE() so that it can be
-    used to head dependency chains on all architectures.
+Ideas welcome.
 
-    Signed-off-by: Will Deacon <will.deacon@arm.com>
-    Cc: Linus Torvalds <torvalds@linux-foundation.org>
-    Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Thomas Gleixner <tglx@linutronix.de>
-    Link: http://lkml.kernel.org/r/1508840570-22169-3-git-send-email-will.deacon@arm.com
-    Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlz895sACgkQMOfwapXb+vLzQACfaNgtBUgelwIUG6aapimpv8KT
+y3MAnRSWm/0YigHw60pFSpoR3HDkRs8L
+=oO9i
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
