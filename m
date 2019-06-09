@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA13C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78C2C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0785A207E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFEF2067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100711;
-	bh=TCF4iOKzqxIevE/NV8uMl5PmPulEYK8lW6EYnBVeMdg=;
+	s=default; t=1560100714;
+	bh=k8CGv8f5XE7Kbg6pDU4ISW3mz33GDZH/BES2sdt2JlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1VgoCmrk/XbXcZnySpA+SSvYOvzyY634k25DKWvy4g5PijM3RRW7RzJeqfADbD8tI
-	 KM2mArwmxEdbFd6UglIwFn1Wyo+RTSdmp8glvmLfHIkyGG7UHqVW8W5gz5sV66DMHm
-	 mn+uQ2IcpC6sZKfuxx/QQ6T8Ukgl16AXJ9HT8S5g=
+	b=ejc340M9xbWtKnLpgMI6J0aORBKG+ImAbf+yj+PkQ7EZY68hGlXEb31X+OykA0ZVo
+	 /K3vwGKjMQVIcmnKUmxWbtl+u6Yf3jFBabyPM69v3zmHLg+hydtKYxP4nqroXU0QYI
+	 axXEXVyomzN3UWYClmDLbsIQ7lYzVT3fKWFGwwP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbfFIRSZ (ORCPT
+        id S1730626AbfFIQuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:18:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50136 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731690AbfFIQuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:19 -0400
+        id S1731623AbfFIQuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:50:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DC142070B;
-        Sun,  9 Jun 2019 16:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CBCD205ED;
+        Sun,  9 Jun 2019 16:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099018;
-        bh=TCF4iOKzqxIevE/NV8uMl5PmPulEYK8lW6EYnBVeMdg=;
+        s=default; t=1560099007;
+        bh=k8CGv8f5XE7Kbg6pDU4ISW3mz33GDZH/BES2sdt2JlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wA1IwhbvtoMWds8Pinq1oa0zdz89UpDTog2I6VZ9uNiK0yQrkfj6yR7FLYbGW9o5C
-         Wfj+thaNXANlfjr8e5593Swk/BjKo77ymv0wqUVbvcUo4mj8L+MbEsIzb96VUx/sMF
-         76NaO9LBAOsb4viFbfQBNj5C9dOK7pYi8d8C+9Yo=
+        b=FQxFxDgY5PMbulX+XgpW4mWNuDn/wpc9fUGxb6zXEDMqXq1aTEXi8FG3rtsWgnaPs
+         pYVqr/PpQsl41ejvDAo6UQhJm8UzoU00BFplCgje2wcghUufmZLpKs+PhofdHgw/iW
+         Id+N4gosh742+Owv92TSgSqjwH9CHDM7WwKFqxGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Matz <olivier.matz@6wind.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 07/35] ipv6: fix EFAULT on sendto with icmpv6 and hdrincl
-Date:   Sun,  9 Jun 2019 18:42:13 +0200
-Message-Id: <20190609164125.944252126@linuxfoundation.org>
+Subject: [PATCH 4.14 03/35] neighbor: Call __ipv4_neigh_lookup_noref in neigh_xmit
+Date:   Sun,  9 Jun 2019 18:42:09 +0200
+Message-Id: <20190609164125.756810906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -60,57 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Matz <olivier.matz@6wind.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit b9aa52c4cb457e7416cc0c95f475e72ef4a61336 ]
+[ Upstream commit 4b2a2bfeb3f056461a90bd621e8bd7d03fa47f60 ]
 
-The following code returns EFAULT (Bad address):
+Commit cd9ff4de0107 changed the key for IFF_POINTOPOINT devices to
+INADDR_ANY but neigh_xmit which is used for MPLS encapsulations was not
+updated to use the altered key. The result is that every packet Tx does
+a lookup on the gateway address which does not find an entry, a new one
+is created only to find the existing one in the table right before the
+insert since arp_constructor was updated to reset the primary key. This
+is seen in the allocs and destroys counters:
+    ip -s -4 ntable show | head -10 | grep alloc
 
-  s = socket(AF_INET6, SOCK_RAW, IPPROTO_ICMPV6);
-  setsockopt(s, SOL_IPV6, IPV6_HDRINCL, 1);
-  sendto(ipv6_icmp6_packet, addr);   /* returns -1, errno = EFAULT */
+which increase for each packet showing the unnecessary overhread.
 
-The IPv4 equivalent code works. A workaround is to use IPPROTO_RAW
-instead of IPPROTO_ICMPV6.
+Fix by having neigh_xmit use __ipv4_neigh_lookup_noref for NEIGH_ARP_TABLE.
 
-The failure happens because 2 bytes are eaten from the msghdr by
-rawv6_probe_proto_opt() starting from commit 19e3c66b52ca ("ipv6
-equivalent of "ipv4: Avoid reading user iov twice after
-raw_probe_proto_opt""), but at that time it was not a problem because
-IPV6_HDRINCL was not yet introduced.
-
-Only eat these 2 bytes if hdrincl == 0.
-
-Fixes: 715f504b1189 ("ipv6: add IPV6_HDRINCL option for raw sockets")
-Signed-off-by: Olivier Matz <olivier.matz@6wind.com>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Fixes: cd9ff4de0107 ("ipv4: Make neigh lookup keys for loopback/point-to-point devices be INADDR_ANY")
+Reported-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Tested-by: Alan Maguire <alan.maguire@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/raw.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ net/core/neighbour.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -889,11 +889,14 @@ static int rawv6_sendmsg(struct sock *sk
- 	opt = ipv6_fixup_options(&opt_space, opt);
- 
- 	fl6.flowi6_proto = proto;
--	rfv.msg = msg;
--	rfv.hlen = 0;
--	err = rawv6_probe_proto_opt(&rfv, &fl6);
--	if (err)
--		goto out;
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -30,6 +30,7 @@
+ #include <linux/times.h>
+ #include <net/net_namespace.h>
+ #include <net/neighbour.h>
++#include <net/arp.h>
+ #include <net/dst.h>
+ #include <net/sock.h>
+ #include <net/netevent.h>
+@@ -2528,7 +2529,13 @@ int neigh_xmit(int index, struct net_dev
+ 		if (!tbl)
+ 			goto out;
+ 		rcu_read_lock_bh();
+-		neigh = __neigh_lookup_noref(tbl, addr, dev);
++		if (index == NEIGH_ARP_TABLE) {
++			u32 key = *((u32 *)addr);
 +
-+	if (!hdrincl) {
-+		rfv.msg = msg;
-+		rfv.hlen = 0;
-+		err = rawv6_probe_proto_opt(&rfv, &fl6);
-+		if (err)
-+			goto out;
-+	}
- 
- 	if (!ipv6_addr_any(daddr))
- 		fl6.daddr = *daddr;
++			neigh = __ipv4_neigh_lookup_noref(dev, key);
++		} else {
++			neigh = __neigh_lookup_noref(tbl, addr, dev);
++		}
+ 		if (!neigh)
+ 			neigh = __neigh_create(tbl, addr, dev, false);
+ 		err = PTR_ERR(neigh);
 
 
