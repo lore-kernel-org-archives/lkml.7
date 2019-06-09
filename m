@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DE8C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0AC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C1120843
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B701B20843
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099203;
-	bh=MpYDlxEzM89J10j2FWR/9KD66j1za1YxxQWzRSi1PHU=;
+	s=default; t=1560099210;
+	bh=2c8aXEmfdOficMgeHQ9sugJX/+g4av4j23I9qZXa3nI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SMIS1D9Uf9uUR+Riw8nZhVUb04KdeoE69Oar1f3IV4wQR0vCWnf/tcxPq252ry++r
-	 v8X3qkODgI0skkjHOGVT+QwKRsYbPyYUbeiKCMQ+vhEbGjAPMZ9fpsIkIcHMSDZz3A
-	 2sjOcrMUn/2O1dMkTTu0jnUwusFNCt2KJkd1FtZ4=
+	b=VXdUiE9IH0ZIZel/MeOKwwhm3E5qGnXXiq+ZsL00C7mxiZ2FuHMfoe24HWQ3KK+Nr
+	 1HrbxLYFKI3ZDPsURR2EnLSIBbs85zGu+G0LssnbWSVJmIhX+2aHdCAamu+GUHW8c6
+	 ZWvYt1p0kQTAxX4dx5IEWSFZ5yZj/Au5Sjlgjyo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732382AbfFIQxV (ORCPT
+        id S1732420AbfFIQxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732369AbfFIQxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:17 -0400
+        id S1732369AbfFIQxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95E212081C;
-        Sun,  9 Jun 2019 16:53:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5805A2081C;
+        Sun,  9 Jun 2019 16:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099197;
-        bh=MpYDlxEzM89J10j2FWR/9KD66j1za1YxxQWzRSi1PHU=;
+        s=default; t=1560099202;
+        bh=2c8aXEmfdOficMgeHQ9sugJX/+g4av4j23I9qZXa3nI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w98sDvUm8sPPYHBt+O8XVEXsOZ8u0ovh/VgyaIEkdRcqVW5EcPhI4LvuRiNIiGjEp
-         R/qG6lz/zfqrKkKhh0BVtcKvhyaXyXU61PGePCz/Ah16KLDGcFMmirgH44PhPlyxD+
-         H7po4SQfvCQRAYQO6guL6v6sX/TLuT78TnxUUWfA=
+        b=u0/PZNPS7HcD1S9nZloMAE+zeydboLWciUV92hJaYTurEIMZ6u384AQZr+oMBOBLu
+         Zd1HFDX0pvuf2AuhB5ERC0zGUeGjMhxUdlERds4hidPJGVLFQ3Ck0CKeph3qc52NWz
+         A4epikxZMjqzVCurbrxptD4mEyUerdDTIOI5Rm2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 4.9 44/83] docs: Fix conf.py for Sphinx 2.0
-Date:   Sun,  9 Jun 2019 18:42:14 +0200
-Message-Id: <20190609164131.661407633@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.9 46/83] CIFS: cifs_read_allocate_pages: dont iterate through whole page array on ENOMEM
+Date:   Sun,  9 Jun 2019 18:42:16 +0200
+Message-Id: <20190609164131.857689875@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -58,32 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Corbet <corbet@lwn.net>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-commit 3bc8088464712fdcb078eefb68837ccfcc413c88 upstream.
+commit 31fad7d41e73731f05b8053d17078638cf850fa6 upstream.
 
-Our version check in Documentation/conf.py never envisioned a world where
-Sphinx moved beyond 1.x.  Now that the unthinkable has happened, fix our
-version check to handle higher version numbers correctly.
+ In cifs_read_allocate_pages, in case of ENOMEM, we go through
+whole rdata->pages array but we have failed the allocation before
+nr_pages, therefore we may end up calling put_page with NULL
+pointer, causing oops
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/conf.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/file.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -37,7 +37,7 @@ from load_config import loadConfig
- extensions = ['kernel-doc', 'rstFlatTable', 'kernel_include', 'cdomain']
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -2892,7 +2892,9 @@ cifs_read_allocate_pages(struct cifs_rea
+ 	}
  
- # The name of the math extension changed on Sphinx 1.4
--if major == 1 and minor > 3:
-+if (major == 1 and minor > 3) or (major > 1):
-     extensions.append("sphinx.ext.imgmath")
- else:
-     extensions.append("sphinx.ext.pngmath")
+ 	if (rc) {
+-		for (i = 0; i < nr_pages; i++) {
++		unsigned int nr_page_failed = i;
++
++		for (i = 0; i < nr_page_failed; i++) {
+ 			put_page(rdata->pages[i]);
+ 			rdata->pages[i] = NULL;
+ 		}
 
 
