@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53B2C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3457FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85288205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E6B205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100350;
-	bh=80qvU2A6W1cvNMjQy9ODmjDz8WoL5gRikq7V+gJgsDI=;
+	s=default; t=1560100357;
+	bh=svDd/nC/RkLLGUi5S3VTHPL4VQXsSGyBKf6Wg/yqtpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RLzQKzjQJmC3lmHZpFfgiGCjZQpEQON4dbmP59ay3JkY6cAHUPh9o6efSyWzotWPt
-	 EWTtWZVGzPugMqhyQOHeRW495IT0I2rZxSCL0Zxf17Hs5qE+YrfAhImNfHTWPpJU8w
-	 YsyBUYat2OwwXpHK9QOZMPWLOeswo+MxFw4VyIAw=
+	b=QY01/HcX6ap153IxfxNGVDkhAnHcZwpDhONcAnkXHYw6bGDcb1QfCvhDUGAkzIkQE
+	 CRrA7aUYPr8+4+9UaTeHeKz+VA44yaQsXEz02URapsR1+UTEe+6Y8aTV83L18oE40t
+	 /SYgPCQtyB/3RvBIc+KWznGndr6MwlzgppvTlFf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733249AbfFIQ7p (ORCPT
+        id S2388393AbfFIRMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387705AbfFIQ7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:59:41 -0400
+        id S1733091AbfFIQ7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:59:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB24E206C3;
-        Sun,  9 Jun 2019 16:59:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC8E206C3;
+        Sun,  9 Jun 2019 16:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099580;
-        bh=80qvU2A6W1cvNMjQy9ODmjDz8WoL5gRikq7V+gJgsDI=;
+        s=default; t=1560099574;
+        bh=svDd/nC/RkLLGUi5S3VTHPL4VQXsSGyBKf6Wg/yqtpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fByBxWwBABvGve50w3Fjk9cPjLh0/baERPvWEGkHdFltwRK4Oa53QeRyXaLpj8oEF
-         RHCRphfjKNBqLlWesNEBSZSUnXKh1tn8Z6a9w/bGG+KMKGbG/N0oKBcESPpl4/Xrfx
-         MDFeCkRa3MLcJTLwd+VQydviNMrJ25bCrnitfmdU=
+        b=kcBWIrtCRfLzHJjlsEEBLCCjUgZ8LwmUlV6I9ZnTZ1GUK3CmY2XB30EoFz7nZmCPD
+         o0BuefjFzlobFJCJXUrScYIFZHTuemSc6UegAA28vF1UjSWOa927tR3F9wJbnxr1tD
+         rh4z1HKXLN+DskL2AJKvF3AX9BIWZ1wK/wiR7VII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
         YueHaibing <yuehaibing@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 089/241] ssb: Fix possible NULL pointer dereference in ssb_host_pcmcia_exit
-Date:   Sun,  9 Jun 2019 18:40:31 +0200
-Message-Id: <20190609164150.343956299@linuxfoundation.org>
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.4 087/241] media: cpia2: Fix use-after-free in cpia2_exit
+Date:   Sun,  9 Jun 2019 18:40:29 +0200
+Message-Id: <20190609164150.283715876@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -62,34 +63,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-commit b2c01aab9646ed8ffb7c549afe55d5349c482425 upstream.
+commit dea37a97265588da604c6ba80160a287b72c7bfd upstream.
 
 Syzkaller report this:
 
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 4492 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
+Read of size 8 at addr ffff8881f59a6b70 by task syz-executor.0/8363
+
+CPU: 0 PID: 8363 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:sysfs_remove_file_ns+0x27/0x70 fs/sysfs/file.c:468
-Code: 00 00 00 41 54 55 48 89 fd 53 49 89 d4 48 89 f3 e8 ee 76 9c ff 48 8d 7d 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 2d 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 8b 6d
-RSP: 0018:ffff8881e9d9fc00 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffffff900367e0 RCX: ffffffff81a95952
-RDX: 0000000000000006 RSI: ffffc90001405000 RDI: 0000000000000030
-RBP: 0000000000000000 R08: fffffbfff1fa22ed R09: fffffbfff1fa22ed
-R10: 0000000000000001 R11: fffffbfff1fa22ec R12: 0000000000000000
-R13: ffffffffc1abdac0 R14: 1ffff1103d3b3f8b R15: 0000000000000000
-FS:  00007fe409dc1700(0000) GS:ffff8881f1200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2d721000 CR3: 00000001e98b6005 CR4: 00000000007606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
 Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
  sysfs_remove_file include/linux/sysfs.h:519 [inline]
  driver_remove_file+0x40/0x50 drivers/base/driver.c:122
- pcmcia_remove_newid_file drivers/pcmcia/ds.c:163 [inline]
- pcmcia_unregister_driver+0x7d/0x2b0 drivers/pcmcia/ds.c:209
- ssb_modexit+0xa/0x1b [ssb]
+ usb_remove_newid_files drivers/usb/core/driver.c:212 [inline]
+ usb_deregister+0x12a/0x3b0 drivers/usb/core/driver.c:1005
+ cpia2_exit+0xa/0x16 [cpia2]
  __do_sys_delete_module kernel/module.c:1018 [inline]
  __se_sys_delete_module kernel/module.c:961 [inline]
  __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
@@ -97,57 +90,95 @@ Call Trace:
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 RIP: 0033:0x462e99
 Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe409dc0c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RSP: 002b:00007f86f3754c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
 RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200000c0
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000300
 RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fe409dc16bc
-R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
-Modules linked in: ssb(-) 3c59x nvme_core macvlan tap pata_hpt3x3 rt2x00pci null_blk tsc40 pm_notifier_error_inject notifier_error_inject mdio cdc_wdm nf_reject_ipv4 ath9k_common ath9k_hw ath pppox ppp_generic slhc ehci_platform wl12xx wlcore tps6507x_ts ioc4 nf_synproxy_core ide_gd_mod ax25 can_dev iwlwifi can_raw atm tm2_touchkey can_gw can sundance adp5588_keys rt2800mmio rt2800lib rt2x00mmio rt2x00lib eeprom_93cx6 pn533 lru_cache elants_i2c ip_set nfnetlink gameport tipc hampshire nhc_ipv6 nhc_hop nhc_udp nhc_fragment nhc_routing nhc_mobility nhc_dest 6lowpan silead brcmutil nfc mt76_usb mt76 mac80211 iptable_security iptable_raw iptable_mangle iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_gre sit hsr veth vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon vcan bridge stp llc ip6_gre ip6_tunnel tunnel6 tun joydev mousedev serio_raw ide_pci_generic piix floppy ide_core sch_fq_codel ip_tables x_tables ipv6
- [last unloaded: 3c59x]
-Dumping ftrace buffer:
-   (ftrace buffer empty)
----[ end trace 3913cbf8011e1c05 ]---
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f86f37556bc
+R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
 
-In ssb_modinit, it does not fail SSB init when ssb_host_pcmcia_init failed,
-however in ssb_modexit, ssb_host_pcmcia_exit calls pcmcia_unregister_driver
-unconditionally, which may tigger a NULL pointer dereference issue as above.
+Allocated by task 8363:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
+ driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
+ usb_register_driver+0x267/0x520 drivers/usb/core/driver.c:965
+ 0xffffffffc1b4817c
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8363:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
+ slab_free_hook mm/slub.c:1430 [inline]
+ slab_free_freelist_hook mm/slub.c:1457 [inline]
+ slab_free mm/slub.c:3005 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3957
+ kobject_cleanup lib/kobject.c:662 [inline]
+ kobject_release lib/kobject.c:691 [inline]
+ kref_put include/linux/kref.h:67 [inline]
+ kobject_put+0x146/0x240 lib/kobject.c:708
+ bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
+ driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
+ usb_register_driver+0x341/0x520 drivers/usb/core/driver.c:980
+ 0xffffffffc1b4817c
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881f59a6b40
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 48 bytes inside of
+ 256-byte region [ffff8881f59a6b40, ffff8881f59a6c40)
+The buggy address belongs to the page:
+page:ffffea0007d66980 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6c02e00
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881f59a6a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff8881f59a6a80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+>ffff8881f59a6b00: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+                                                             ^
+ ffff8881f59a6b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881f59a6c00: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+
+cpia2_init does not check return value of cpia2_init, if it failed
+in usb_register_driver, there is already cleanup using driver_unregister.
+No need call cpia2_usb_cleanup on module exit.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 399500da18f7 ("ssb: pick PCMCIA host code support from b43 driver")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ssb/bridge_pcmcia_80211.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/media/usb/cpia2/cpia2_v4l.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/ssb/bridge_pcmcia_80211.c
-+++ b/drivers/ssb/bridge_pcmcia_80211.c
-@@ -113,16 +113,21 @@ static struct pcmcia_driver ssb_host_pcm
- 	.resume		= ssb_host_pcmcia_resume,
- };
- 
-+static int pcmcia_init_failed;
-+
- /*
-  * These are not module init/exit functions!
-  * The module_pcmcia_driver() helper cannot be used here.
-  */
- int ssb_host_pcmcia_init(void)
- {
--	return pcmcia_register_driver(&ssb_host_pcmcia_driver);
-+	pcmcia_init_failed = pcmcia_register_driver(&ssb_host_pcmcia_driver);
-+
-+	return pcmcia_init_failed;
+--- a/drivers/media/usb/cpia2/cpia2_v4l.c
++++ b/drivers/media/usb/cpia2/cpia2_v4l.c
+@@ -1248,8 +1248,7 @@ static int __init cpia2_init(void)
+ 	LOG("%s v%s\n",
+ 	    ABOUT, CPIA_VERSION);
+ 	check_parameters();
+-	cpia2_usb_init();
+-	return 0;
++	return cpia2_usb_init();
  }
  
- void ssb_host_pcmcia_exit(void)
- {
--	pcmcia_unregister_driver(&ssb_host_pcmcia_driver);
-+	if (!pcmcia_init_failed)
-+		pcmcia_unregister_driver(&ssb_host_pcmcia_driver);
- }
+ 
 
 
