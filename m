@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A55C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A98DC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6086220652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABC5206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100066;
-	bh=UrUdY3htt2uLO4vYCHCd8aGmfEbM3Tw+iyZJf2diBbY=;
+	s=default; t=1560100070;
+	bh=23axblYHinbgnmdYaUFFt2A1buYUfE62lykn/XH6DWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMNFzguoE5VKo8E/3/DpNUTBTdYwgapajVwpQPuxDTT0gihfBmvHiAZ/Jn3JzO3e9
-	 p+Pb3N3NFb27exTqB66IzrxwrbcDjHmQQAfhX9a8FSmZvWH1AIo+nv3OTNRdvQW0Yg
-	 9ois+QvZf1zhmEsj6PDqT/h7YlGP52A5UlL7fXb0=
+	b=wTSormq1iF/0ZW36COzG9wOxDocRfFXILMlbkI6wf5YHvSB6c0Dj+YrlpqglLXd5/
+	 FcgwjJZ6iMAsl30bk5IrYygqjI+itNridt1Mx6dyCL82m3XKOCI+ZdhUZMQE50tq3m
+	 f1PJFDKjT5/L28hqazybNH4LD7vq52CF/SVpG4wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388933AbfFIRF6 (ORCPT
+        id S2389156AbfFIRHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:05:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45358 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:07:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388881AbfFIRF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:05:56 -0400
+        id S2388751AbfFIRHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:07:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A806A207E0;
-        Sun,  9 Jun 2019 17:05:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4821205F4;
+        Sun,  9 Jun 2019 17:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099955;
-        bh=UrUdY3htt2uLO4vYCHCd8aGmfEbM3Tw+iyZJf2diBbY=;
+        s=default; t=1560100066;
+        bh=23axblYHinbgnmdYaUFFt2A1buYUfE62lykn/XH6DWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GqGQ6UP8aUawLzOaBA4z6wMnAP+jvvJUEGi9R8Ee8KZmm8A1GxgL5XtFD8Jb2+6Rd
-         nUmM1N4dX9y0/Wrzlh4HPTnhN6xBsb16Tp/mk4oiErZIimP5VAEWJJM+10kNVrxVTT
-         04Io3ldj1+R+kdN+0FKdCZGrtGnBEnUWhqrvMFbk=
+        b=eS2+KAZqXr8xwTEpsOFJQm0vEa0/cDzT4LzhZxEd/TRaGFNxzf1WxFviyJsPmIeJD
+         p3M0n9rrRSOtaPwspd09Fw4tF+/Up+kBJfVBgzLQFF4alWqrddzDRk1oO52UBe2Oh7
+         RhNFwZmF4JWNOhAKLnnLgClngGtT8Sp3LCTo47kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 224/241] userfaultfd: dont pin the user memory in userfaultfd_file_create()
-Date:   Sun,  9 Jun 2019 18:42:46 +0200
-Message-Id: <20190609164155.163544955@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Harris, James R" <james.r.harris@intel.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>
+Subject: [PATCH 5.1 43/70] nvme-rdma: fix queue mapping when queue count is limited
+Date:   Sun,  9 Jun 2019 18:41:54 +0200
+Message-Id: <20190609164130.922394717@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
-References: <20190609164147.729157653@linuxfoundation.org>
+In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
+References: <20190609164127.541128197@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,177 +61,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-commit d2005e3f41d4f9299e2df6a967c8beb5086967a9 upstream.
+commit 5651cd3c43368873d0787b52acb2e0e08f3c5da4 upstream.
 
-userfaultfd_file_create() increments mm->mm_users; this means that the
-memory won't be unmapped/freed if mm owner exits/execs, and UFFDIO_COPY
-after that can populate the orphaned mm more.
+When the controller supports less queues than requested, we
+should make sure that queue mapping does the right thing and
+not assume that all queues are available. This fixes a crash
+when the controller supports less queues than requested.
 
-Change userfaultfd_file_create() and userfaultfd_ctx_put() to use
-mm->mm_count to pin mm_struct.  This means that
-atomic_inc_not_zero(mm->mm_users) is needed when we are going to
-actually play with this memory.  Except handle_userfault() path doesn't
-need this, the caller must already have a reference.
+The rules are:
+1. if no write/poll queues are requested, we assign the available queues
+   to the default queue map. The default and read queue maps share the
+   existing queues.
+2. if write queues are requested:
+  - first make sure that read queue map gets the requested
+    nr_io_queues count
+  - then grant the default queue map the minimum between the requested
+    nr_write_queues and the remaining queues. If there are no available
+    queues to dedicate to the default queue map, fallback to (1) and
+    share all the queues in the existing queue map.
+3. if poll queues are requested:
+  - map the remaining queues to the poll queue map.
 
-The patch adds the new trivial helper, mmget_not_zero(), it can have
-more users.
+Also, provide a log indication on how we constructed the different
+queue maps.
 
-Link: http://lkml.kernel.org/r/20160516172254.GA8595@redhat.com
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Reported-by: Harris, James R <james.r.harris@intel.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Tested-by: Jim Harris <james.r.harris@intel.com>
+Cc: <stable@vger.kernel.org> # v5.0+
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/userfaultfd.c      |   41 ++++++++++++++++++++++++++++-------------
- include/linux/sched.h |    7 ++++++-
- 2 files changed, 34 insertions(+), 14 deletions(-)
 
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -137,7 +137,7 @@ static void userfaultfd_ctx_put(struct u
- 		VM_BUG_ON(waitqueue_active(&ctx->fault_wqh));
- 		VM_BUG_ON(spin_is_locked(&ctx->fd_wqh.lock));
- 		VM_BUG_ON(waitqueue_active(&ctx->fd_wqh));
--		mmput(ctx->mm);
-+		mmdrop(ctx->mm);
- 		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
- 	}
- }
-@@ -434,6 +434,9 @@ static int userfaultfd_release(struct in
- 
- 	ACCESS_ONCE(ctx->released) = true;
- 
-+	if (!mmget_not_zero(mm))
-+		goto wakeup;
-+
- 	/*
- 	 * Flush page faults out of all CPUs. NOTE: all page faults
- 	 * must be retried without returning VM_FAULT_SIGBUS if
-@@ -466,7 +469,8 @@ static int userfaultfd_release(struct in
- 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
- 	}
- 	up_write(&mm->mmap_sem);
--
-+	mmput(mm);
-+wakeup:
- 	/*
- 	 * After no new page faults can wait on this fault_*wqh, flush
- 	 * the last page faults that may have been already waiting on
-@@ -760,10 +764,12 @@ static int userfaultfd_register(struct u
- 	start = uffdio_register.range.start;
- 	end = start + uffdio_register.range.len;
- 
-+	ret = -ENOMEM;
-+	if (!mmget_not_zero(mm))
-+		goto out;
-+
- 	down_write(&mm->mmap_sem);
- 	vma = find_vma_prev(mm, start, &prev);
--
--	ret = -ENOMEM;
- 	if (!vma)
- 		goto out_unlock;
- 
-@@ -864,6 +870,7 @@ static int userfaultfd_register(struct u
- 	} while (vma && vma->vm_start < end);
- out_unlock:
- 	up_write(&mm->mmap_sem);
-+	mmput(mm);
- 	if (!ret) {
- 		/*
- 		 * Now that we scanned all vmas we can already tell
-@@ -902,10 +909,12 @@ static int userfaultfd_unregister(struct
- 	start = uffdio_unregister.start;
- 	end = start + uffdio_unregister.len;
- 
-+	ret = -ENOMEM;
-+	if (!mmget_not_zero(mm))
-+		goto out;
-+
- 	down_write(&mm->mmap_sem);
- 	vma = find_vma_prev(mm, start, &prev);
--
--	ret = -ENOMEM;
- 	if (!vma)
- 		goto out_unlock;
- 
-@@ -998,6 +1007,7 @@ static int userfaultfd_unregister(struct
- 	} while (vma && vma->vm_start < end);
- out_unlock:
- 	up_write(&mm->mmap_sem);
-+	mmput(mm);
- out:
- 	return ret;
- }
-@@ -1067,9 +1077,11 @@ static int userfaultfd_copy(struct userf
- 		goto out;
- 	if (uffdio_copy.mode & ~UFFDIO_COPY_MODE_DONTWAKE)
- 		goto out;
--
--	ret = mcopy_atomic(ctx->mm, uffdio_copy.dst, uffdio_copy.src,
--			   uffdio_copy.len);
-+	if (mmget_not_zero(ctx->mm)) {
-+		ret = mcopy_atomic(ctx->mm, uffdio_copy.dst, uffdio_copy.src,
-+				   uffdio_copy.len);
-+		mmput(ctx->mm);
-+	}
- 	if (unlikely(put_user(ret, &user_uffdio_copy->copy)))
- 		return -EFAULT;
- 	if (ret < 0)
-@@ -1110,8 +1122,11 @@ static int userfaultfd_zeropage(struct u
- 	if (uffdio_zeropage.mode & ~UFFDIO_ZEROPAGE_MODE_DONTWAKE)
- 		goto out;
- 
--	ret = mfill_zeropage(ctx->mm, uffdio_zeropage.range.start,
--			     uffdio_zeropage.range.len);
-+	if (mmget_not_zero(ctx->mm)) {
-+		ret = mfill_zeropage(ctx->mm, uffdio_zeropage.range.start,
-+				     uffdio_zeropage.range.len);
-+		mmput(ctx->mm);
-+	}
- 	if (unlikely(put_user(ret, &user_uffdio_zeropage->zeropage)))
- 		return -EFAULT;
- 	if (ret < 0)
-@@ -1289,12 +1304,12 @@ static struct file *userfaultfd_file_cre
- 	ctx->released = false;
- 	ctx->mm = current->mm;
- 	/* prevent the mm struct to be freed */
--	atomic_inc(&ctx->mm->mm_users);
-+	atomic_inc(&ctx->mm->mm_count);
- 
- 	file = anon_inode_getfile("[userfaultfd]", &userfaultfd_fops, ctx,
- 				  O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS));
- 	if (IS_ERR(file)) {
--		mmput(ctx->mm);
-+		mmdrop(ctx->mm);
- 		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
- 	}
- out:
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -2614,12 +2614,17 @@ extern struct mm_struct * mm_alloc(void)
- 
- /* mmdrop drops the mm and the page tables */
- extern void __mmdrop(struct mm_struct *);
--static inline void mmdrop(struct mm_struct * mm)
-+static inline void mmdrop(struct mm_struct *mm)
+---
+ drivers/nvme/host/rdma.c |   99 ++++++++++++++++++++++++++++-------------------
+ 1 file changed, 61 insertions(+), 38 deletions(-)
+
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -641,34 +641,16 @@ static int nvme_rdma_alloc_io_queues(str
  {
- 	if (unlikely(atomic_dec_and_test(&mm->mm_count)))
- 		__mmdrop(mm);
+ 	struct nvmf_ctrl_options *opts = ctrl->ctrl.opts;
+ 	struct ib_device *ibdev = ctrl->device->dev;
+-	unsigned int nr_io_queues;
++	unsigned int nr_io_queues, nr_default_queues;
++	unsigned int nr_read_queues, nr_poll_queues;
+ 	int i, ret;
+ 
+-	nr_io_queues = min(opts->nr_io_queues, num_online_cpus());
+-
+-	/*
+-	 * we map queues according to the device irq vectors for
+-	 * optimal locality so we don't need more queues than
+-	 * completion vectors.
+-	 */
+-	nr_io_queues = min_t(unsigned int, nr_io_queues,
+-				ibdev->num_comp_vectors);
+-
+-	if (opts->nr_write_queues) {
+-		ctrl->io_queues[HCTX_TYPE_DEFAULT] =
+-				min(opts->nr_write_queues, nr_io_queues);
+-		nr_io_queues += ctrl->io_queues[HCTX_TYPE_DEFAULT];
+-	} else {
+-		ctrl->io_queues[HCTX_TYPE_DEFAULT] = nr_io_queues;
+-	}
+-
+-	ctrl->io_queues[HCTX_TYPE_READ] = nr_io_queues;
+-
+-	if (opts->nr_poll_queues) {
+-		ctrl->io_queues[HCTX_TYPE_POLL] =
+-			min(opts->nr_poll_queues, num_online_cpus());
+-		nr_io_queues += ctrl->io_queues[HCTX_TYPE_POLL];
+-	}
++	nr_read_queues = min_t(unsigned int, ibdev->num_comp_vectors,
++				min(opts->nr_io_queues, num_online_cpus()));
++	nr_default_queues =  min_t(unsigned int, ibdev->num_comp_vectors,
++				min(opts->nr_write_queues, num_online_cpus()));
++	nr_poll_queues = min(opts->nr_poll_queues, num_online_cpus());
++	nr_io_queues = nr_read_queues + nr_default_queues + nr_poll_queues;
+ 
+ 	ret = nvme_set_queue_count(&ctrl->ctrl, &nr_io_queues);
+ 	if (ret)
+@@ -681,6 +663,34 @@ static int nvme_rdma_alloc_io_queues(str
+ 	dev_info(ctrl->ctrl.device,
+ 		"creating %d I/O queues.\n", nr_io_queues);
+ 
++	if (opts->nr_write_queues && nr_read_queues < nr_io_queues) {
++		/*
++		 * separate read/write queues
++		 * hand out dedicated default queues only after we have
++		 * sufficient read queues.
++		 */
++		ctrl->io_queues[HCTX_TYPE_READ] = nr_read_queues;
++		nr_io_queues -= ctrl->io_queues[HCTX_TYPE_READ];
++		ctrl->io_queues[HCTX_TYPE_DEFAULT] =
++			min(nr_default_queues, nr_io_queues);
++		nr_io_queues -= ctrl->io_queues[HCTX_TYPE_DEFAULT];
++	} else {
++		/*
++		 * shared read/write queues
++		 * either no write queues were requested, or we don't have
++		 * sufficient queue count to have dedicated default queues.
++		 */
++		ctrl->io_queues[HCTX_TYPE_DEFAULT] =
++			min(nr_read_queues, nr_io_queues);
++		nr_io_queues -= ctrl->io_queues[HCTX_TYPE_DEFAULT];
++	}
++
++	if (opts->nr_poll_queues && nr_io_queues) {
++		/* map dedicated poll queues only if we have queues left */
++		ctrl->io_queues[HCTX_TYPE_POLL] =
++			min(nr_poll_queues, nr_io_queues);
++	}
++
+ 	for (i = 1; i < ctrl->ctrl.queue_count; i++) {
+ 		ret = nvme_rdma_alloc_queue(ctrl, i,
+ 				ctrl->ctrl.sqsize + 1);
+@@ -1787,17 +1797,24 @@ static void nvme_rdma_complete_rq(struct
+ static int nvme_rdma_map_queues(struct blk_mq_tag_set *set)
+ {
+ 	struct nvme_rdma_ctrl *ctrl = set->driver_data;
++	struct nvmf_ctrl_options *opts = ctrl->ctrl.opts;
+ 
+-	set->map[HCTX_TYPE_DEFAULT].queue_offset = 0;
+-	set->map[HCTX_TYPE_DEFAULT].nr_queues =
+-			ctrl->io_queues[HCTX_TYPE_DEFAULT];
+-	set->map[HCTX_TYPE_READ].nr_queues = ctrl->io_queues[HCTX_TYPE_READ];
+-	if (ctrl->ctrl.opts->nr_write_queues) {
++	if (opts->nr_write_queues && ctrl->io_queues[HCTX_TYPE_READ]) {
+ 		/* separate read/write queues */
++		set->map[HCTX_TYPE_DEFAULT].nr_queues =
++			ctrl->io_queues[HCTX_TYPE_DEFAULT];
++		set->map[HCTX_TYPE_DEFAULT].queue_offset = 0;
++		set->map[HCTX_TYPE_READ].nr_queues =
++			ctrl->io_queues[HCTX_TYPE_READ];
+ 		set->map[HCTX_TYPE_READ].queue_offset =
+-				ctrl->io_queues[HCTX_TYPE_DEFAULT];
++			ctrl->io_queues[HCTX_TYPE_DEFAULT];
+ 	} else {
+-		/* mixed read/write queues */
++		/* shared read/write queues */
++		set->map[HCTX_TYPE_DEFAULT].nr_queues =
++			ctrl->io_queues[HCTX_TYPE_DEFAULT];
++		set->map[HCTX_TYPE_DEFAULT].queue_offset = 0;
++		set->map[HCTX_TYPE_READ].nr_queues =
++			ctrl->io_queues[HCTX_TYPE_DEFAULT];
+ 		set->map[HCTX_TYPE_READ].queue_offset = 0;
+ 	}
+ 	blk_mq_rdma_map_queues(&set->map[HCTX_TYPE_DEFAULT],
+@@ -1805,16 +1822,22 @@ static int nvme_rdma_map_queues(struct b
+ 	blk_mq_rdma_map_queues(&set->map[HCTX_TYPE_READ],
+ 			ctrl->device->dev, 0);
+ 
+-	if (ctrl->ctrl.opts->nr_poll_queues) {
++	if (opts->nr_poll_queues && ctrl->io_queues[HCTX_TYPE_POLL]) {
++		/* map dedicated poll queues only if we have queues left */
+ 		set->map[HCTX_TYPE_POLL].nr_queues =
+ 				ctrl->io_queues[HCTX_TYPE_POLL];
+ 		set->map[HCTX_TYPE_POLL].queue_offset =
+-				ctrl->io_queues[HCTX_TYPE_DEFAULT];
+-		if (ctrl->ctrl.opts->nr_write_queues)
+-			set->map[HCTX_TYPE_POLL].queue_offset +=
+-				ctrl->io_queues[HCTX_TYPE_READ];
++			ctrl->io_queues[HCTX_TYPE_DEFAULT] +
++			ctrl->io_queues[HCTX_TYPE_READ];
+ 		blk_mq_map_queues(&set->map[HCTX_TYPE_POLL]);
+ 	}
++
++	dev_info(ctrl->ctrl.device,
++		"mapped %d/%d/%d default/read/poll queues.\n",
++		ctrl->io_queues[HCTX_TYPE_DEFAULT],
++		ctrl->io_queues[HCTX_TYPE_READ],
++		ctrl->io_queues[HCTX_TYPE_POLL]);
++
+ 	return 0;
  }
  
-+static inline bool mmget_not_zero(struct mm_struct *mm)
-+{
-+	return atomic_inc_not_zero(&mm->mm_users);
-+}
-+
- /* mmput gets rid of the mappings and all user-space */
- extern void mmput(struct mm_struct *);
- /* Grab a reference to a task's mm, if it is not already going away */
 
 
