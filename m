@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED90C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC21C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4A620684
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A0B20684
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100034;
-	bh=lelvo0io8nkp8qWK8JdAYNl7dl/qXAIZPC9tzGmuaNI=;
+	s=default; t=1560100042;
+	bh=WzLCNiPrpfQvIu3vfBv4IJIVJwJF/jXNDpCx9ByVCyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aI2/EEGXdcp68C+/vnOnfOO2vl4bEyXSSQlJaiwd+tph+9ObWrlNUc1hZ12ISnOLr
-	 tWYTsOu3FMmAT9gYm7cuFLgl7Ry4xliWZoaw36ssm4fIGzuukzhJtzgMxlRZO0fswI
-	 pbB6HIZwJ5DGn4iExT2gx/tsI3abMHgZHENh/1/o=
+	b=DFkef/6eHgNhjBkjjMxdjq4JHTCIvT0VH4YYALfDjTa7j0jVXjp3FIWYmz1zX8Mij
+	 /Chz+7wG/yNomwV1Uj2veU+o5mHd5e2P9BP3ygAp9mTu6pJuSVhlKXgWrLhf3smyPt
+	 1AENTmc8B2Q1oY3mXGGcWdXjLcVr0T83AY/mi9ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389148AbfFIRHN (ORCPT
+        id S2388770AbfFIRHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46904 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:07:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387771AbfFIRGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:06:55 -0400
+        id S2389049AbfFIRGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:06:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27D9C204EC;
-        Sun,  9 Jun 2019 17:06:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A7C2204EC;
+        Sun,  9 Jun 2019 17:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560100014;
-        bh=lelvo0io8nkp8qWK8JdAYNl7dl/qXAIZPC9tzGmuaNI=;
+        s=default; t=1560099997;
+        bh=WzLCNiPrpfQvIu3vfBv4IJIVJwJF/jXNDpCx9ByVCyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JfXgpSu9cGylMQgvqLV2Hhz7TR99egM18L2wONkL84LNdGQao49QvrDLWEk0qrCLh
-         ey6HIG1WG0ajZ4MUtm/cHvsRrx+l0aFcBULNh8PsO7p4NHWA4iLMbMSA9onwr65ick
-         e2QbbEwh2Mckj2CzSEDG+QerHpG+ZeOBYhKFQe3A=
+        b=O4poMB60B8p+j3VmeEQMQaYTDU1oiKNCMFOFzKu5iboRj84KQCF8fJLi8bJ8f6sWL
+         6mUyEJgPbMLomyPpH9XSV9TKMvSpJwsaVDORjM+wa+iXQyn9Av2R7b8f1DFr4faKBb
+         27xtiZQXx0MrJM37I911WLuBGjQQf6kFGbrWUJsQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John David Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.4 235/241] parisc: Use implicit space register selection for loading the coherence index of I/O pdirs
-Date:   Sun,  9 Jun 2019 18:42:57 +0200
-Message-Id: <20190609164155.546256729@linuxfoundation.org>
+        stable@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 229/241] ethtool: fix potential userspace buffer overflow
+Date:   Sun,  9 Jun 2019 18:42:51 +0200
+Message-Id: <20190609164155.332907050@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,58 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John David Anglin <dave.anglin@bell.net>
+From: Vivien Didelot <vivien.didelot@gmail.com>
 
-commit 63923d2c3800919774f5c651d503d1dd2adaddd5 upstream.
+[ Upstream commit 0ee4e76937d69128a6a66861ba393ebdc2ffc8a2 ]
 
-We only support I/O to kernel space. Using %sr1 to load the coherence
-index may be racy unless interrupts are disabled. This patch changes the
-code used to load the coherence index to use implicit space register
-selection. This saves one instruction and eliminates the race.
+ethtool_get_regs() allocates a buffer of size ops->get_regs_len(),
+and pass it to the kernel driver via ops->get_regs() for filling.
 
-Tested on rp3440, c8000 and c3750.
+There is no restriction about what the kernel drivers can or cannot do
+with the open ethtool_regs structure. They usually set regs->version
+and ignore regs->len or set it to the same size as ops->get_regs_len().
 
-Signed-off-by: John David Anglin <dave.anglin@bell.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Helge Deller <deller@gmx.de>
+But if userspace allocates a smaller buffer for the registers dump,
+we would cause a userspace buffer overflow in the final copy_to_user()
+call, which uses the regs.len value potentially reset by the driver.
+
+To fix this, make this case obvious and store regs.len before calling
+ops->get_regs(), to only copy as much data as requested by userspace,
+up to the value returned by ops->get_regs_len().
+
+While at it, remove the redundant check for non-null regbuf.
+
+Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/parisc/ccio-dma.c  |    4 +---
- drivers/parisc/sba_iommu.c |    3 +--
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ net/core/ethtool.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/parisc/ccio-dma.c
-+++ b/drivers/parisc/ccio-dma.c
-@@ -563,8 +563,6 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
- 	/* We currently only support kernel addresses */
- 	BUG_ON(sid != KERNEL_SPACE);
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -893,13 +893,16 @@ static int ethtool_get_regs(struct net_d
+ 			return -ENOMEM;
+ 	}
  
--	mtsp(sid,1);
--
- 	/*
- 	** WORD 1 - low order word
- 	** "hints" parm includes the VALID bit!
-@@ -595,7 +593,7 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
- 	** Grab virtual index [0:11]
- 	** Deposit virt_idx bits into I/O PDIR word
- 	*/
--	asm volatile ("lci %%r0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
-+	asm volatile ("lci %%r0(%1), %0" : "=r" (ci) : "r" (vba));
- 	asm volatile ("extru %1,19,12,%0" : "+r" (ci) : "r" (ci));
- 	asm volatile ("depw  %1,15,12,%0" : "+r" (pa) : "r" (ci));
++	if (regs.len < reglen)
++		reglen = regs.len;
++
+ 	ops->get_regs(dev, &regs, regbuf);
  
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -573,8 +573,7 @@ sba_io_pdir_entry(u64 *pdir_ptr, space_t
- 	pa = virt_to_phys(vba);
- 	pa &= IOVP_MASK;
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &regs, sizeof(regs)))
+ 		goto out;
+ 	useraddr += offsetof(struct ethtool_regs, data);
+-	if (regbuf && copy_to_user(useraddr, regbuf, regs.len))
++	if (copy_to_user(useraddr, regbuf, reglen))
+ 		goto out;
+ 	ret = 0;
  
--	mtsp(sid,1);
--	asm("lci 0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
-+	asm("lci 0(%1), %0" : "=r" (ci) : "r" (vba));
- 	pa |= (ci >> PAGE_SHIFT) & 0xff;  /* move CI (8 bits) into lowest byte */
- 
- 	pa |= SBA_PDIR_VALID_BIT;	/* set "valid" bit */
 
 
