@@ -2,55 +2,64 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCEEC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B9AC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A562070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061DD206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099037;
-	bh=+6Rdq5w3wp1P6tGkrvd3YaT2CBY7QDquzepJZLwu7c4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCRARKLY4c+tcuhjI0AozH4azOgjAGfTfNvsyMCCiCep4ooMcFI+37/Sj3pXrfrA8
-	 NYkmzYU0nEWzDsthTugHP+FYBXdzatrYbHZB8m/w0yBsrJ/IjS2LZQexqmkikIYaaf
-	 rvZoM5rg+agLLIHEIozQqgomgp1TYsmJPyThAxCo=
+	s=default; t=1560099040;
+	bh=ED1oQD/YlJcQm1XzYl9Yofbq5IoCITmJ0vngBJjFEXg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SzS/+H5YlyjtJOsY6lmcB6V3s2D4zTBYaO300K9/2CZS1pVz25ZJkIkGkwvJG4qCv
+	 8HtON1AEy2stbnW02cjqotIbL8w7QhEnmE6Kp9y+K/QPVNIRg1XI0CB5GB0wb4XrVX
+	 m+mG4bo0Kck0C/xrGz7Zd0E5BpLQ7e7wMznkiYfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbfFIQug (ORCPT
+        id S1731741AbfFIQue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50524 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:50:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731200AbfFIQud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:33 -0400
+        id S1731723AbfFIQu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:50:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB082070B;
-        Sun,  9 Jun 2019 16:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F5F205ED;
+        Sun,  9 Jun 2019 16:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099033;
-        bh=+6Rdq5w3wp1P6tGkrvd3YaT2CBY7QDquzepJZLwu7c4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=net8a0qawjRJf7FVwrJTj2AAv7NeLmevpbrylOaZ08A3sT5YMAHhJkcQjtSEi47hn
-         QtzO0F4OMS/zsFfyyrhdCctBE8pdJ6BZvoZ59mihm0Db8ydWv4xVtZCJgkCe9szgmy
-         k8XGxGmmHqqNWaeAqJa1aqQPe4bstlJKt976Si+A=
+        s=default; t=1560099027;
+        bh=ED1oQD/YlJcQm1XzYl9Yofbq5IoCITmJ0vngBJjFEXg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FbDUKGEG6YS/WhXlM5D780kCjX4Sszo5id4HR9PuBw+OcNzYpHrimy3VFCoLThn1C
+         2iHwqBEuuNOlEWlqgwuuGSMRFRclne9EaEVvQVlAR9n3jd0iBeLiOzZAT+ySamfxqT
+         bliBrlXhV4zCOfWHNVbDEQXfEaV7OqrvS6whHccs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.14 25/35] test_firmware: Use correct snprintf() limit
-Date:   Sun,  9 Jun 2019 18:42:31 +0200
-Message-Id: <20190609164127.010750878@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/35] 4.14.125-stable review
+Date:   Sun,  9 Jun 2019 18:42:06 +0200
+Message-Id: <20190609164125.377368385@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
-References: <20190609164125.377368385@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.125-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.125-rc1
+X-KernelTest-Deadline: 2019-06-11T16:41+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,68 +67,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+This is the start of the stable review cycle for the 4.14.125 release.
+There are 35 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit bd17cc5a20ae9aaa3ed775f360b75ff93cd66a1d upstream.
+Responses should be made by Tue 11 Jun 2019 04:40:01 PM UTC.
+Anything received after that time might be too late.
 
-The limit here is supposed to be how much of the page is left, but it's
-just using PAGE_SIZE as the limit.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.125-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-The other thing to remember is that snprintf() returns the number of
-bytes which would have been copied if we had had enough room.  So that
-means that if we run out of space then this code would end up passing a
-negative value as the limit and the kernel would print an error message.
-I have change the code to use scnprintf() which returns the number of
-bytes that were successfully printed (not counting the NUL terminator).
+thanks,
 
-Fixes: c92316bf8e94 ("test_firmware: add batched firmware tests")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+greg k-h
 
----
- lib/test_firmware.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+-------------
+Pseudo-Shortlog of commits:
 
---- a/lib/test_firmware.c
-+++ b/lib/test_firmware.c
-@@ -222,30 +222,30 @@ static ssize_t config_show(struct device
- 
- 	mutex_lock(&test_fw_mutex);
- 
--	len += snprintf(buf, PAGE_SIZE,
-+	len += scnprintf(buf, PAGE_SIZE - len,
- 			"Custom trigger configuration for: %s\n",
- 			dev_name(dev));
- 
- 	if (test_fw_config->name)
--		len += snprintf(buf+len, PAGE_SIZE,
-+		len += scnprintf(buf+len, PAGE_SIZE - len,
- 				"name:\t%s\n",
- 				test_fw_config->name);
- 	else
--		len += snprintf(buf+len, PAGE_SIZE,
-+		len += scnprintf(buf+len, PAGE_SIZE - len,
- 				"name:\tEMTPY\n");
- 
--	len += snprintf(buf+len, PAGE_SIZE,
-+	len += scnprintf(buf+len, PAGE_SIZE - len,
- 			"num_requests:\t%u\n", test_fw_config->num_requests);
- 
--	len += snprintf(buf+len, PAGE_SIZE,
-+	len += scnprintf(buf+len, PAGE_SIZE - len,
- 			"send_uevent:\t\t%s\n",
- 			test_fw_config->send_uevent ?
- 			"FW_ACTION_HOTPLUG" :
- 			"FW_ACTION_NOHOTPLUG");
--	len += snprintf(buf+len, PAGE_SIZE,
-+	len += scnprintf(buf+len, PAGE_SIZE - len,
- 			"sync_direct:\t\t%s\n",
- 			test_fw_config->sync_direct ? "true" : "false");
--	len += snprintf(buf+len, PAGE_SIZE,
-+	len += scnprintf(buf+len, PAGE_SIZE - len,
- 			"read_fw_idx:\t%u\n", test_fw_config->read_fw_idx);
- 
- 	mutex_unlock(&test_fw_mutex);
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.125-rc1
+
+Kirill Smelkov <kirr@nexedi.com>
+    fuse: Add FOPEN_STREAM to use stream_open()
+
+Kirill Smelkov <kirr@nexedi.com>
+    fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+
+Kristian Evensen <kristian.evensen@gmail.com>
+    qmi_wwan: Add quirk for Quectel dynamic config
+
+Jiri Slaby <jslaby@suse.cz>
+    TTY: serial_core, add ->install
+
+Daniel Drake <drake@endlessm.com>
+    drm/i915/fbc: disable framebuffer compression on GeminiLake
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    drm/i915: Fix I915_EXEC_RING_MASK
+
+Christian König <christian.koenig@amd.com>
+    drm/radeon: prefer lower reference dividers
+
+Alex Deucher <alexander.deucher@amd.com>
+    drm/amdgpu/psp: move psp version specific function pointers to early_init
+
+Dave Airlie <airlied@redhat.com>
+    drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)
+
+Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+    drm/gma500/cdv: Check vbt config bits when detecting lvds panels
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    test_firmware: Use correct snprintf() limit
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    genwqe: Prevent an integer overflow in the ioctl
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "MIPS: perf: ath79: Fix perfcount IRQ assignment"
+
+Paul Burton <paul.burton@mips.com>
+    MIPS: pistachio: Build uImage.gz by default
+
+Paul Burton <paul.burton@mips.com>
+    MIPS: Bounds check virt_addr_valid
+
+Robert Hancock <hancock@sedsystems.ca>
+    i2c: xiic: Add max_read_len quirk
+
+Jiri Kosina <jkosina@suse.cz>
+    x86/power: Fix 'nosmt' vs hibernation triple fault during resume
+
+Kees Cook <keescook@chromium.org>
+    pstore/ram: Run without kernel crash dump region
+
+Kees Cook <keescook@chromium.org>
+    pstore: Convert buf_lock to semaphore
+
+Kees Cook <keescook@chromium.org>
+    pstore: Remove needless lock during console writes
+
+Miklos Szeredi <mszeredi@redhat.com>
+    fuse: fallocate: fix return with locked inode
+
+John David Anglin <dave.anglin@bell.net>
+    parisc: Use implicit space register selection for loading the coherence index of I/O pdirs
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    rcu: locking and unlocking need to always be at least barriers
+
+Hangbin Liu <liuhangbin@gmail.com>
+    Revert "fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied"
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "fib_rules: fix error in backport of e9919a24d302 ("fib_rules: return 0...")"
+
+Xin Long <lucien.xin@gmail.com>
+    ipv6: fix the check before getting the cookie in rt6_get_cookie
+
+Russell King <rmk+kernel@armlinux.org.uk>
+    net: sfp: read eeprom in maximum 16 byte increments
+
+Olivier Matz <olivier.matz@6wind.com>
+    ipv6: use READ_ONCE() for inet->hdrincl as in ipv4
+
+Olivier Matz <olivier.matz@6wind.com>
+    ipv6: fix EFAULT on sendto with icmpv6 and hdrincl
+
+Paolo Abeni <pabeni@redhat.com>
+    pktgen: do not sleep with the thread lock held.
+
+Zhu Yanjun <yanjun.zhu@oracle.com>
+    net: rds: fix memory leak in rds_ib_flush_mr_pool
+
+Erez Alfasi <ereza@mellanox.com>
+    net/mlx4_en: ethtool, Remove unsupported SFP EEPROM high pages query
+
+David Ahern <dsahern@gmail.com>
+    neighbor: Call __ipv4_neigh_lookup_noref in neigh_xmit
+
+Neil Horman <nhorman@tuxdriver.com>
+    Fix memory leak in sctp_process_init
+
+Vivien Didelot <vivien.didelot@gmail.com>
+    ethtool: fix potential userspace buffer overflow
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                        |   4 +-
+ arch/mips/ath79/setup.c                         |   6 +
+ arch/mips/mm/mmap.c                             |   5 +
+ arch/mips/pistachio/Platform                    |   1 +
+ arch/powerpc/kernel/nvram_64.c                  |   2 -
+ arch/x86/power/cpu.c                            |  10 +
+ arch/x86/power/hibernate_64.c                   |  33 +++
+ drivers/acpi/apei/erst.c                        |   1 -
+ drivers/firmware/efi/efi-pstore.c               |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c         |  19 +-
+ drivers/gpu/drm/gma500/cdv_intel_lvds.c         |   3 +
+ drivers/gpu/drm/gma500/intel_bios.c             |   3 +
+ drivers/gpu/drm/gma500/psb_drv.h                |   1 +
+ drivers/gpu/drm/i915/intel_fbc.c                |   4 +
+ drivers/gpu/drm/nouveau/Kconfig                 |  13 +-
+ drivers/gpu/drm/nouveau/nouveau_drm.c           |   7 +-
+ drivers/gpu/drm/radeon/radeon_display.c         |   4 +-
+ drivers/i2c/busses/i2c-xiic.c                   |   5 +
+ drivers/irqchip/irq-ath79-misc.c                |  11 -
+ drivers/misc/genwqe/card_dev.c                  |   2 +
+ drivers/misc/genwqe/card_utils.c                |   4 +
+ drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |   4 +-
+ drivers/net/ethernet/mellanox/mlx4/port.c       |   5 -
+ drivers/net/phy/sfp.c                           |  24 +-
+ drivers/net/usb/qmi_wwan.c                      |  39 ++-
+ drivers/parisc/ccio-dma.c                       |   4 +-
+ drivers/parisc/sba_iommu.c                      |   3 +-
+ drivers/tty/serial/serial_core.c                |  24 +-
+ drivers/xen/xenbus/xenbus_dev_frontend.c        |   4 +-
+ fs/fuse/file.c                                  |   6 +-
+ fs/open.c                                       |  18 ++
+ fs/pstore/platform.c                            |  76 ++---
+ fs/pstore/ram.c                                 |  37 ++-
+ fs/read_write.c                                 |   5 +-
+ include/linux/cpu.h                             |   4 +
+ include/linux/fs.h                              |   4 +
+ include/linux/pstore.h                          |   7 +-
+ include/linux/rcupdate.h                        |   6 +-
+ include/net/ip6_fib.h                           |   3 +-
+ include/uapi/drm/i915_drm.h                     |   2 +-
+ include/uapi/linux/fuse.h                       |   2 +
+ kernel/cpu.c                                    |   4 +-
+ kernel/power/hibernate.c                        |   9 +
+ lib/test_firmware.c                             |  14 +-
+ net/core/ethtool.c                              |   5 +-
+ net/core/fib_rules.c                            |   7 +-
+ net/core/neighbour.c                            |   9 +-
+ net/core/pktgen.c                               |  11 +
+ net/ipv6/raw.c                                  |  25 +-
+ net/rds/ib_rdma.c                               |  10 +-
+ net/sctp/sm_make_chunk.c                        |  13 +-
+ net/sctp/sm_sideeffect.c                        |   5 +
+ scripts/coccinelle/api/stream_open.cocci        | 363 ++++++++++++++++++++++++
+ 53 files changed, 720 insertions(+), 174 deletions(-)
 
 
