@@ -2,89 +2,112 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F586C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093BFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E0F214AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A49214C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="huqAGmgR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WCEo9J5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfFIBtS (ORCPT
+        id S1727994AbfFIBzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 21:49:18 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:52682 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbfFIBtR (ORCPT
+        Sat, 8 Jun 2019 21:55:18 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:38958 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfFIBzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 21:49:17 -0400
-Received: by mail-it1-f195.google.com with SMTP id l21so8356132ita.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 18:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=gezvdrCCB1eFoVy4rTrBVmFiPugXcg77UnQ5Qbf7MCs=;
-        b=huqAGmgRp/IMJ6IItXSuWcUGce0kAPYhAgld1VYkhBCxbq9jYWtGHv0VVxR4mtjtFj
-         Pje56U+SCbwv7t17169G02j548woO0ZfGQhzG3gFA0ctipdR407PB1HbX595NdmtloBP
-         uU1Cf+ilslY90HYbeyGdAFvZfdfgU+NjJ+99xeriSV0dZbLcnlRLfvmyGV+2unAaes07
-         BGle8Q+qJmtuEsXdFbTUSGMxqIAYI82nXg6cVxO/EGEeX7NoPvzmyYIMUzILYCqz0bVR
-         j2jncswh1KptTGcPwlSwss4HqKSKGUTXZ6jIUaYz6uajNDzHlisY5tHYugVJBid2NlWQ
-         6EUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=gezvdrCCB1eFoVy4rTrBVmFiPugXcg77UnQ5Qbf7MCs=;
-        b=m6e3HfWiwu+HEyYMXhhilPZ1wMl1aR5ECO5BRBpW0otHqIzO3f2OQuAsIt41nwZok6
-         ZYfxg7Lks1BeV76uehQG4w6fP6AK32PBivQCPbmLawyH9E+mprPl+HhSBelh7yhQWpAu
-         Drg8Q1Xk12AmeVdIgQuw+b+nK1n4bi1LEGoMfwK/+OaNiDAZ0HvbELYVmg02Szlf3joY
-         fxaT4Ysz8ASE0ej+/Je2mRv5lsbKwXOjBMiEpyym9/Sped5KyzTHrfd6LYiFvszhpf5q
-         TRB6RI8oynKACwHM2Zi09Tf4G1Qp5y8CRN6eN19PM9zNKyreE/K3dIfv1fArRwBmcSBn
-         ZTbw==
-X-Gm-Message-State: APjAAAVt94Gy+4f0Aq+sqqr2c/JYTNIE3cRa6MH0kekjaDc7Odn6sR1t
-        EeqKYMS5K9Q3v4iBZvOMfoWF0w==
-X-Google-Smtp-Source: APXvYqzhnLgdvut8Sw31mC+3id4EyC0GRJRfrCSBlSx1/cpNZwMxjofbGkBFHK4zP7Mf+HeG3Pnhfg==
-X-Received: by 2002:a24:dc05:: with SMTP id q5mr9924544itg.123.1560044957125;
-        Sat, 08 Jun 2019 18:49:17 -0700 (PDT)
-Received: from localhost (219.sub-174-221-130.myvzw.com. [174.221.130.219])
-        by smtp.gmail.com with ESMTPSA id j9sm2929924itk.23.2019.06.08.18.49.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 18:49:16 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 18:49:09 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Kevin Hilman <khilman@baylibre.com>
-cc:     linux-riscv@lists.infradead.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Loys Ollivier <lollivier@baylibre.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RISC-V: defconfig: enable clocks, serial console
-In-Reply-To: <20190605175042.13719-1-khilman@baylibre.com>
-Message-ID: <alpine.DEB.2.21.9999.1906081848410.720@viisi.sifive.com>
-References: <20190605175042.13719-1-khilman@baylibre.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 8 Jun 2019 21:55:17 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x591sWog046594;
+        Sun, 9 Jun 2019 01:54:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=twmTY486w6zmLVqDXQq5pqHb47ZM2OA1CcI/8SOEK6Y=;
+ b=WCEo9J5tO/oBUY87L0LOhfFNTxLsE0VWPWYA82ox2BZVOfJBgMPLxBONpS0NjZAIrnyi
+ XsnINlODL8W23ZFIOAstI0E7SccOLQoGbS7HgTtVi0FWqjDc0RtGR6P7iUSrMQVVqhjR
+ n/FuW9yO+FbUUM5JxrbFEmMpBhvo56n7U7XAvpfvh6bCi5Vhw/0mxFjMPMaPTKhs+qpG
+ r0B2sjZI4+KrtLQ/tjKVSkIU4nJv2/0EpGZoS+sHmp9BU4Sgj6wWiOHc4z+uU0nqo8Ho
+ vRlb6n+22UtDi7Hvv7RYO3i8gMZCn9BgSbaV5knfmTjbqQt2kZOLJbQCp1lWcGaYA157 rQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2t02hea9wm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 09 Jun 2019 01:54:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x591sfdp108962;
+        Sun, 9 Jun 2019 01:54:44 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2t04bku22r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 09 Jun 2019 01:54:44 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x591sfNQ030456;
+        Sun, 9 Jun 2019 01:54:41 GMT
+Received: from smazumda-Precision-T1600.us.oracle.com (/10.132.91.175)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 08 Jun 2019 18:54:40 -0700
+From:   subhra mazumdar <subhra.mazumdar@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, steven.sistare@oracle.com,
+        dhaval.giani@oracle.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
+        tim.c.chen@linux.intel.com, mgorman@techsingularity.net
+Subject: [PATCH v3 5/7] sched: SIS_CORE to disable idle core search
+Date:   Sat,  8 Jun 2019 18:49:52 -0700
+Message-Id: <20190609014954.1033-6-subhra.mazumdar@oracle.com>
+X-Mailer: git-send-email 2.9.3
+In-Reply-To: <20190609014954.1033-1-subhra.mazumdar@oracle.com>
+References: <20190609014954.1033-1-subhra.mazumdar@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9282 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=650
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906090012
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9282 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=688 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906090013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019, Kevin Hilman wrote:
+Use SIS_CORE to disable idle core search. For some workloads
+select_idle_core becomes a scalability bottleneck, removing it improves
+throughput. Also there are workloads where disabling it can hurt latency,
+so need to have an option.
 
-> Enable PRCI clock driver and serial console by default, so the default
-> upstream defconfig is bootable to a serial console.
-> 
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
+---
+ kernel/sched/fair.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Thanks, queued for v5.2-rc with Christoph's Reviewed-by:.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c1ca88e..6a74808 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6280,9 +6280,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 	if (!sd)
+ 		return target;
+ 
+-	i = select_idle_core(p, sd, target);
+-	if ((unsigned)i < nr_cpumask_bits)
+-		return i;
++	if (sched_feat(SIS_CORE)) {
++		i = select_idle_core(p, sd, target);
++		if ((unsigned)i < nr_cpumask_bits)
++			return i;
++	}
+ 
+ 	i = select_idle_cpu(p, sd, target);
+ 	if ((unsigned)i < nr_cpumask_bits)
+-- 
+2.9.3
 
-
-- Paul
