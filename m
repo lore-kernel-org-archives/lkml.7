@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4310AC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEC2C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB4E2081C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37EBF206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099494;
-	bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
+	s=default; t=1560099498;
+	bh=9oY+pI8ykV1BKLM3bhcwgDCHMon/QrsSj3NZSK0i6N4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FbCS+YecPGwaQ+CxRxSPht8selBHRpeNGwIhnpd+BzajtSmZ+GxwpIIN6PQbeqN/A
-	 H4aPACXB3+CPuqenyC3GVNILZoHJ9BAS0HTIP3DRk/DL4StSnpu6O9WqNlO5owo/Qw
-	 wemLNygdGCtPsHNRYCoZQA4PU8f+fjfEBfp+nDR4=
+	b=NpqFHbbb1CnPX9jlTwFiumxe9qgLp0ceR9NtP315dr5twzY/1Y8xCvDwKFEnsNxvw
+	 XL5ccSRKvgBv3SvaaiqRfHyzrpHXjcmJ9lD25xQXbl4Xq8yY68TKwoMMRwcCi45QMq
+	 vbkV3O+h7KZmowMwKBIBAfO97vxOfZkCUgNkv8S4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbfFIQ6N (ORCPT
+        id S1732953AbfFIQ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:58:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33234 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387409AbfFIQ6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:58:09 -0400
+        id S1731967AbfFIQ6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:58:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DDA1207E0;
-        Sun,  9 Jun 2019 16:58:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E5B207E0;
+        Sun,  9 Jun 2019 16:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099488;
-        bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
+        s=default; t=1560099494;
+        bh=9oY+pI8ykV1BKLM3bhcwgDCHMon/QrsSj3NZSK0i6N4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E2P7/CxbvtP+nqvcyzRXKaQblVPE7GJY6EoPpqFtaBHErAed/KOdwOg0/nK5yH3zY
-         URT/MNx0SEaVHtRUs9Kc+Ba9DFOw/wuK8Cs0Z24NhBRedxSNCVGzD7j9JqmdCGA9P6
-         b0xH26GRfmL50RGGOEuishTJLKBIsXQD7WT5Ew/s=
+        b=F503pmNL/4BkbOQhGmhxzN0FsjGBQZA8kcvvbho/FPPtSmncQtVwSSwm0/5AIU1Do
+         AZjVWJuHrORZzokMuQRrJLEcM0cqN+GqJP06meLR3F+ilx1PfcoZX2DIZsCKTTkyli
+         HtmmnQ/mURKt+/0rVF1Al8Io6ZkKxE8GQPE6xk/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Teddy Wang <teddy.wang@siliconmotion.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.4 059/241] fbdev: sm712fb: fix support for 1024x768-16 mode
-Date:   Sun,  9 Jun 2019 18:40:01 +0200
-Message-Id: <20190609164149.477704955@linuxfoundation.org>
+Subject: [PATCH 4.4 061/241] fbdev: sm712fb: fix crashes and garbled display during DPMS modesetting
+Date:   Sun,  9 Jun 2019 18:40:03 +0200
+Message-Id: <20190609164149.546841137@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -63,14 +63,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yifeng Li <tomli@tomli.me>
 
-commit 6053d3a4793e5bde6299ac5388e76a3bf679ff65 upstream.
+commit f627caf55b8e735dcec8fa6538e9668632b55276 upstream.
 
-In order to support the 1024x600 panel on Yeeloong Loongson MIPS
-laptop, the original 1024x768-16 table was modified to 1024x600-16,
-without leaving the original. It causes problem on x86 laptop as
-the 1024x768-16 support was still claimed but not working.
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), blanking the display
+or starting the X server will crash and freeze the system, or garble the
+display.
 
-Fix it by introducing the 1024x768-16 mode.
+Experiments showed this problem can mostly be solved by adjusting the
+order of register writes. Also, sm712fb failed to consider the difference
+of clock frequency when unblanking the display, and programs the clock for
+SM712 to SM720.
+
+Fix them by adjusting the order of register writes, and adding an
+additional check for SM720 for programming the clock frequency.
 
 Signed-off-by: Yifeng Li <tomli@tomli.me>
 Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
@@ -80,76 +85,116 @@ Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |   59 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ drivers/video/fbdev/sm712fb.c |   64 ++++++++++++++++++++++++------------------
+ 1 file changed, 38 insertions(+), 26 deletions(-)
 
 --- a/drivers/video/fbdev/sm712fb.c
 +++ b/drivers/video/fbdev/sm712fb.c
-@@ -530,6 +530,65 @@ static const struct modeinit vgamode[] =
- 			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
- 		},
- 	},
-+	{	/*  1024 x 768  16Bpp  60Hz */
-+		1024, 768, 16, 60,
-+		/*  Init_MISC */
-+		0xEB,
-+		{	/*  Init_SR0_SR4 */
-+			0x03, 0x01, 0x0F, 0x03, 0x0E,
-+		},
-+		{	/*  Init_SR10_SR24 */
-+			0xF3, 0xB6, 0xC0, 0xDD, 0x00, 0x0E, 0x17, 0x2C,
-+			0x99, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0xC4, 0x30, 0x02, 0x01, 0x01,
-+		},
-+		{	/*  Init_SR30_SR75 */
-+			0x38, 0x03, 0x20, 0x09, 0xC0, 0x3A, 0x3A, 0x3A,
-+			0x3A, 0x3A, 0x3A, 0x3A, 0x00, 0x00, 0x03, 0xFF,
-+			0x00, 0xFC, 0x00, 0x00, 0x20, 0x18, 0x00, 0xFC,
-+			0x20, 0x0C, 0x44, 0x20, 0x00, 0x00, 0x00, 0x3A,
-+			0x06, 0x68, 0xA7, 0x7F, 0x83, 0x24, 0xFF, 0x03,
-+			0x0F, 0x60, 0x59, 0x3A, 0x3A, 0x00, 0x00, 0x3A,
-+			0x01, 0x80, 0x7E, 0x1A, 0x1A, 0x00, 0x00, 0x00,
-+			0x50, 0x03, 0x74, 0x14, 0x3B, 0x0D, 0x09, 0x02,
-+			0x04, 0x45, 0x30, 0x30, 0x40, 0x20,
-+		},
-+		{	/*  Init_SR80_SR93 */
-+			0xFF, 0x07, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x3A,
-+			0xF7, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x3A, 0x3A,
-+			0x00, 0x00, 0x00, 0x00,
-+		},
-+		{	/*  Init_SRA0_SRAF */
-+			0x00, 0xFB, 0x9F, 0x01, 0x00, 0xED, 0xED, 0xED,
-+			0x7B, 0xFB, 0xFF, 0xFF, 0x97, 0xEF, 0xBF, 0xDF,
-+		},
-+		{	/*  Init_GR00_GR08 */
-+			0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x05, 0x0F,
-+			0xFF,
-+		},
-+		{	/*  Init_AR00_AR14 */
-+			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-+			0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-+			0x41, 0x00, 0x0F, 0x00, 0x00,
-+		},
-+		{	/*  Init_CR00_CR18 */
-+			0xA3, 0x7F, 0x7F, 0x00, 0x85, 0x16, 0x24, 0xF5,
-+			0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0x03, 0x09, 0xFF, 0x80, 0x40, 0xFF, 0x00, 0xE3,
-+			0xFF,
-+		},
-+		{	/*  Init_CR30_CR4D */
-+			0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x20,
-+			0x00, 0x00, 0x00, 0x40, 0x00, 0xFF, 0xBF, 0xFF,
-+			0xA3, 0x7F, 0x00, 0x86, 0x15, 0x24, 0xFF, 0x00,
-+			0x01, 0x07, 0xE5, 0x20, 0x7F, 0xFF,
-+		},
-+		{	/*  Init_CR90_CRA7 */
-+			0x55, 0xD9, 0x5D, 0xE1, 0x86, 0x1B, 0x8E, 0x26,
-+			0xDA, 0x8D, 0xDE, 0x94, 0x00, 0x00, 0x18, 0x00,
-+			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
-+		},
-+	},
- 	{	/*  mode#5: 1024 x 768  24Bpp  60Hz */
- 		1024, 768, 24, 60,
- 		/*  Init_MISC */
+@@ -886,67 +886,79 @@ static inline unsigned int chan_to_field
+ 
+ static int smtc_blank(int blank_mode, struct fb_info *info)
+ {
++	struct smtcfb_info *sfb = info->par;
++
+ 	/* clear DPMS setting */
+ 	switch (blank_mode) {
+ 	case FB_BLANK_UNBLANK:
+ 		/* Screen On: HSync: On, VSync : On */
++
++		switch (sfb->chip_id) {
++		case 0x710:
++		case 0x712:
++			smtc_seqw(0x6a, 0x16);
++			smtc_seqw(0x6b, 0x02);
++		case 0x720:
++			smtc_seqw(0x6a, 0x0d);
++			smtc_seqw(0x6b, 0x02);
++			break;
++		}
++
++		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
+-		smtc_seqw(0x6a, 0x16);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) & 0x77));
+ 		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+-		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+ 		smtc_seqw(0x31, (smtc_seqr(0x31) | 0x03));
++		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+ 		break;
+ 	case FB_BLANK_NORMAL:
+ 		/* Screen Off: HSync: On, VSync : On   Soft blank */
++		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
++		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+ 		smtc_seqw(0x6a, 0x16);
+ 		smtc_seqw(0x6b, 0x02);
+-		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+-		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		break;
+ 	case FB_BLANK_VSYNC_SUSPEND:
+ 		/* Screen On: HSync: On, VSync : Off */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x20));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	case FB_BLANK_HSYNC_SUSPEND:
+ 		/* Screen On: HSync: Off, VSync : On */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x10));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	case FB_BLANK_POWERDOWN:
+ 		/* Screen On: HSync: Off, VSync : Off */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x30));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	default:
+ 		return -EINVAL;
 
 
