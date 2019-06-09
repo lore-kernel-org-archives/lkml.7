@@ -2,242 +2,208 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DC0C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF507C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582D020645
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8F420665
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0Y28na4"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="NK5y+jYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbfFISoo (ORCPT
+        id S1730300AbfFIStR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 14:44:44 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41602 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729134AbfFISoo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 14:44:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so6925262wrm.8;
-        Sun, 09 Jun 2019 11:44:42 -0700 (PDT)
+        Sun, 9 Jun 2019 14:49:17 -0400
+Received: from mail-eopbgr800084.outbound.protection.outlook.com ([40.107.80.84]:19563
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729082AbfFIStR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 14:49:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Da88wBTs9LOEdvHpH2F2PYZaKc1cITGuLPz23cQj6Ag=;
-        b=h0Y28na4yaGSKJOIZYvb5yRmSHL+BSW5/OYxulXPUMGZozJHavvZTrcnT1OPF4U8Xb
-         umOrC40tx/FkQ6BIWEoIW6cFcCuHFt8S5Io+8JXpkpr6Qr1PyQIoEcGLovmDDvzNymE9
-         CNJ9L362LGrwzUBET0Ik8cvX+ULEqYFLBQ7lSKemj7wP8tejb8ylyOJxHrS49xgzKeEV
-         UmFV0yhmm8j12+2kw/9EfsjhK6BPxEHAuuzov9g3kRMZ5f1FdQizLBPv4NQaY6WioHOz
-         IENoLihYeZqjY7CvsE8ixOZrEwptSvpxzXUlSP+Kv+xVMr8uqxOENokQaQKPuWFoclei
-         WeGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Da88wBTs9LOEdvHpH2F2PYZaKc1cITGuLPz23cQj6Ag=;
-        b=qYO1FKsExnHoWcuJAAUEGodAehTnudQ1FAXqvBzjadYL45jyAw5KnFR2qVe/k5yYFo
-         H8t5r7UZUokoPNuFKYGJPU9c8NWVe13j1NUp1wBnQk4ukSHIMH9VXOav8ZpXtpsYrdJ9
-         FUQacixyGD+yYwL0JZXf0g4VV2VhsUqdDk/EaTgKmQtFm84yeZ1ZDmivnMApq0xSULWg
-         T1e+1EDYXRmigqAlvY6JYl1J1DEYbRvNzkF7tcUfwz9Thg8p5EmaYy/ZJ09l7LBluY05
-         DXSibKP1epNE4C+SAAgDqYcsJgeXezXBh/dIOcDTn6z4Od/yo2DYB8zRjN8AlIT7AzPJ
-         AUaQ==
-X-Gm-Message-State: APjAAAVNe7waNj9xO6PNOtM48Z6kzPJZuAxzDztu2N2K67mYCpqaimgS
-        daIrrOO/Jx8hJbp/km0Ku2R+Za7Ub71Z9zsUXoXgFdDI
-X-Google-Smtp-Source: APXvYqwp9fw8BNZ8G6/ahEMiAGVzOVt0NDgzKLcIgA+sQlsmmP6spzQBpRXteWAuZFWqs8Nl83+DjDIokSPKvT0A4h4=
-X-Received: by 2002:adf:fb81:: with SMTP id a1mr2702407wrr.329.1560105881662;
- Sun, 09 Jun 2019 11:44:41 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=skKOfJuohvJiRQK1q1GVO1UjuZcV+2PQZv2YVOpjbLA=;
+ b=NK5y+jYj1hTAVbC0aeezBs+3i3Xk8jCo1JO4GYEEn+6gS9oIRWZTZndT9Fel6Dz5kmAzu8p7UcvYkAyXAPTGnH7rI46jMNtAMlWWSQyypVlIIdigpKyohRWn94euU9Wcoar55QTAyV5bPVbdumlDjOVgjcQg+rY4VsoUtwdxC0s=
+Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.231.93) by
+ CH2PR02MB6328.namprd02.prod.outlook.com (52.132.231.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Sun, 9 Jun 2019 18:48:32 +0000
+Received: from CH2PR02MB6359.namprd02.prod.outlook.com
+ ([fe80::b9dd:11e0:7fca:ba55]) by CH2PR02MB6359.namprd02.prod.outlook.com
+ ([fe80::b9dd:11e0:7fca:ba55%5]) with mapi id 15.20.1965.017; Sun, 9 Jun 2019
+ 18:48:31 +0000
+From:   Dragan Cvetic <draganc@xilinx.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: RE: [PATCH V5 02/11] misc: xilinx-sdfec: add core driver
+Thread-Topic: [PATCH V5 02/11] misc: xilinx-sdfec: add core driver
+Thread-Index: AQHVHlbrpEJ1Sg1DIU6G1r6HwZ+3LaaTLpiAgAB7DEA=
+Date:   Sun, 9 Jun 2019 18:48:31 +0000
+Message-ID: <CH2PR02MB6359778016A4BDCBD29EA275CB120@CH2PR02MB6359.namprd02.prod.outlook.com>
+References: <1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1560038656-380620-3-git-send-email-dragan.cvetic@xilinx.com>
+ <20190609112235.GA16574@kroah.com>
+In-Reply-To: <20190609112235.GA16574@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=draganc@xilinx.com; 
+x-originating-ip: [149.199.80.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4c6acf9f-f461-46ac-3bc9-08d6ed0b11dd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6328;
+x-ms-traffictypediagnostic: CH2PR02MB6328:
+x-microsoft-antispam-prvs: <CH2PR02MB6328BB35D73EEFBF7DBE93FDCB120@CH2PR02MB6328.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 006339698F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(376002)(136003)(366004)(39850400004)(396003)(346002)(199004)(189003)(13464003)(4326008)(8936002)(446003)(6246003)(478600001)(25786009)(8676002)(86362001)(52536014)(14454004)(7736002)(305945005)(81166006)(81156014)(107886003)(5660300002)(71200400001)(71190400001)(53936002)(33656002)(2906002)(9686003)(6116002)(476003)(486006)(3846002)(11346002)(66556008)(229853002)(66066001)(55016002)(64756008)(76116006)(76176011)(7696005)(6506007)(66476007)(68736007)(53546011)(6436002)(66946007)(66446008)(73956011)(316002)(54906003)(6916009)(99286004)(256004)(26005)(186003)(74316002)(14444005)(102836004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6328;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: A/01PPhdJ8cPz4lanm+byAwNwhm/jJrbPqTg7l+IRYjPX6Bpiw/+i81X5umgG9I09q4rSluqEXwz68ghsI38fFSVKr+mqjxKWcqHBdboiWq22BHpuB+WPSVq4DcyW/ffYa4XMpv/eNZcdbxZ2M7/WT71f0gbcA4+lImtJyBE46l6X+Bpw2mITgV849+mbMG4PyxJ/col/1hKzWQmsf+NAyIbhQEd+UDLJERNufWdhj63S90P+Z6vUJeXTzHBXVhs+XkCwhoGotNOxrcCg5YYSzSM/MldkcSqzpV9AE71G65UjagZ0HpM7KK8uw17l+SRQLFFe70jaj9qQupdbftCollergfJyw5uLv9nh3l2Mq9SMSN0o+hsB3CYuDFP3jpIIew9eihBQvPWFK06tHUl5FmEX8JHhqpXkcEYSH1V1bY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <000000000000000c060589a8bc66@google.com>
-In-Reply-To: <000000000000000c060589a8bc66@google.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Mon, 10 Jun 2019 02:44:30 +0800
-Message-ID: <CADvbK_cMohjd3U=8H8ECT74rK85Tjy1FZYAXQQ_CsWgFq3c5gA@mail.gmail.com>
-Subject: Re: memory leak in tipc_buf_acquire
-To:     syzbot <syzbot+78fbe679c8ca8d264a8d@syzkaller.appspotmail.com>
-Cc:     davem <davem@davemloft.net>, Jon Maloy <jon.maloy@ericsson.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        tipc-discussion@lists.sourceforge.net,
-        Ying Xue <ying.xue@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c6acf9f-f461-46ac-3bc9-08d6ed0b11dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2019 18:48:31.8039
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: draganc@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6328
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 5:18 AM syzbot
-<syzbot+78fbe679c8ca8d264a8d@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    4dde821e Merge tag 'xfs-5.2-fixes-1' of git://git.kernel.o..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=107db73aa00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=78fbe679c8ca8d264a8d
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162bd84ca00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=160c605ca00000
->
-Looks we need to purge each member's deferredq list in tipc_group_delete():
-diff --git a/net/tipc/group.c b/net/tipc/group.c
-index 992be61..23823eb 100644
---- a/net/tipc/group.c
-+++ b/net/tipc/group.c
-@@ -218,6 +218,7 @@ void tipc_group_delete(struct net *net, struct
-tipc_group *grp)
 
-  rbtree_postorder_for_each_entry_safe(m, tmp, tree, tree_node) {
-  tipc_group_proto_xmit(grp, m, GRP_LEAVE_MSG, &xmitq);
-+ __skb_queue_purge(&m->deferredq);
-  list_del(&m->list);
-  kfree(m);
-  }
 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+78fbe679c8ca8d264a8d@syzkaller.appspotmail.com
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> Sent: Sunday 9 June 2019 12:23
+> To: Dragan Cvetic <draganc@xilinx.com>
+> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
+sts.infradead.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
+l.org; Derek Kiernan <dkiernan@xilinx.com>
+> Subject: Re: [PATCH V5 02/11] misc: xilinx-sdfec: add core driver
+>=20
+> On Sun, Jun 09, 2019 at 01:04:07AM +0100, Dragan Cvetic wrote:
+> > Implement a platform driver that matches with xlnx,
+> > sd-fec-1.1 device tree node and registers as a character
+> > device, including:
+> > - SD-FEC driver binds to sdfec DT node.
+> > - creates and initialise an initial driver dev structure.
+> > - add the driver in Linux build and Kconfig.
+> >
+> > Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> > Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+> > Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> > ---
+> >  drivers/misc/Kconfig        |  12 +++++
+> >  drivers/misc/Makefile       |   1 +
+> >  drivers/misc/xilinx_sdfec.c | 118 ++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 131 insertions(+)
+> >  create mode 100644 drivers/misc/xilinx_sdfec.c
+> >
+> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> > index 6b0417b..319a6bf 100644
+> > --- a/drivers/misc/Kconfig
+> > +++ b/drivers/misc/Kconfig
+> > @@ -471,6 +471,18 @@ config PCI_ENDPOINT_TEST
+> >             Enable this configuration option to enable the host side te=
+st driver
+> >             for PCI Endpoint.
+> >
+> > +config XILINX_SDFEC
+> > +	tristate "Xilinx SDFEC 16"
+> > +	help
+> > +	  This option enables support for the Xilinx SDFEC (Soft Decision
+> > +	  Forward Error Correction) driver. This enables a char driver
+> > +	  for the SDFEC.
+> > +
+> > +	  You may select this driver if your design instantiates the
+> > +	  SDFEC(16nm) hardened block. To compile this as a module choose M.
+> > +
+> > +	  If unsure, say N.
+> > +
+> >  config MISC_RTSX
+> >  	tristate
+> >  	default MISC_RTSX_PCI || MISC_RTSX_USB
+> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> > index b9affcd..0cb3546 100644
+> > --- a/drivers/misc/Makefile
+> > +++ b/drivers/misc/Makefile
+> > @@ -59,3 +59,4 @@ obj-$(CONFIG_OCXL)		+=3D ocxl/
+> >  obj-y				+=3D cardreader/
+> >  obj-$(CONFIG_PVPANIC)   	+=3D pvpanic.o
+> >  obj-$(CONFIG_HABANA_AI)		+=3D habanalabs/
+> > +obj-$(CONFIG_XILINX_SDFEC)	+=3D xilinx_sdfec.o
+> > diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+> > new file mode 100644
+> > index 0000000..75cc980
+> > --- /dev/null
+> > +++ b/drivers/misc/xilinx_sdfec.c
+> > @@ -0,0 +1,118 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Xilinx SDFEC
+> > + *
+> > + * Copyright (C) 2019 Xilinx, Inc.
+> > + *
+> > + * Description:
+> > + * This driver is developed for SDFEC16 (Soft Decision FEC 16nm)
+> > + * IP. It exposes a char device which supports file operations
+> > + * like  open(), close() and ioctl().
+> > + */
+> > +
+> > +#include <linux/miscdevice.h>
+> > +#include <linux/io.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/poll.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/clk.h>
+> > +
+> > +static int xsdfec_ndevs;
+>=20
+> You should use an idr for this, not just a number you bump up and down.
+> This will not work properly at all.
+>=20
+> Think about this situation:
+> 	probe device 0
+> 	xsdfec_ndevs =3D 1
+> 	probe device 1
+> 	xsdfec_ndevs =3D 2
+> 	remove device 0
+> 	xsdfec_ndevs =3D 0
+> 	probe another device
+> 	misc device fails due to duplicate name.
 >
-> type=1400 audit(1558701681.775:36): avc:  denied  { map } for  pid=7128
-> comm="syz-executor987" path="/root/syz-executor987656147" dev="sda1"
-> ino=15900 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023
-> tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
-> executing program
-> executing program
-> executing program
-> executing program
-> BUG: memory leak
-> unreferenced object 0xffff88810df83c00 (size 512):
->    comm "softirq", pid 0, jiffies 4294942354 (age 19.830s)
->    hex dump (first 32 bytes):
->      38 1a 0d 0f 81 88 ff ff 38 1a 0d 0f 81 88 ff ff  8.......8.......
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->    backtrace:
->      [<000000009375ee42>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:55 [inline]
->      [<000000009375ee42>] slab_post_alloc_hook mm/slab.h:439 [inline]
->      [<000000009375ee42>] slab_alloc_node mm/slab.c:3269 [inline]
->      [<000000009375ee42>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
->      [<000000004c563922>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
->      [<00000000ec87bfa1>] alloc_skb_fclone include/linux/skbuff.h:1107
-> [inline]
->      [<00000000ec87bfa1>] tipc_buf_acquire+0x2f/0x80 net/tipc/msg.c:66
->      [<00000000d151ef84>] tipc_msg_create+0x37/0xe0 net/tipc/msg.c:98
->      [<000000008bb437b0>] tipc_group_create_event+0xb3/0x1b0
-> net/tipc/group.c:679
->      [<00000000947b1d0f>] tipc_group_proto_rcv+0x569/0x640
-> net/tipc/group.c:781
->      [<00000000b75ab039>] tipc_sk_proto_rcv net/tipc/socket.c:1996 [inline]
->      [<00000000b75ab039>] tipc_sk_filter_rcv+0x9ac/0xf20
-> net/tipc/socket.c:2163
->      [<000000000dab7a6c>] tipc_sk_enqueue net/tipc/socket.c:2255 [inline]
->      [<000000000dab7a6c>] tipc_sk_rcv+0x494/0x8a0 net/tipc/socket.c:2306
->      [<00000000023a7ddd>] tipc_node_xmit+0x196/0x1f0 net/tipc/node.c:1442
->      [<00000000337dd9eb>] tipc_node_xmit_skb net/tipc/node.c:1491 [inline]
->      [<00000000337dd9eb>] tipc_node_distr_xmit+0x7d/0x120
-> net/tipc/node.c:1506
->      [<00000000b6375182>] tipc_group_delete+0xe6/0x130 net/tipc/group.c:224
->      [<000000000361ba2b>] tipc_sk_leave+0x57/0xb0 net/tipc/socket.c:2925
->      [<000000009df90505>] tipc_release+0x7b/0x5e0 net/tipc/socket.c:584
->      [<000000009f3189da>] __sock_release+0x4b/0xe0 net/socket.c:607
->      [<00000000d3568ee0>] sock_close+0x1b/0x30 net/socket.c:1279
->      [<00000000266a6215>] __fput+0xed/0x300 fs/file_table.c:280
->
-> BUG: memory leak
-> unreferenced object 0xffff888111895400 (size 1024):
->    comm "softirq", pid 0, jiffies 4294942354 (age 19.830s)
->    hex dump (first 32 bytes):
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->    backtrace:
->      [<00000000e2e2855e>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:55 [inline]
->      [<00000000e2e2855e>] slab_post_alloc_hook mm/slab.h:439 [inline]
->      [<00000000e2e2855e>] slab_alloc_node mm/slab.c:3269 [inline]
->      [<00000000e2e2855e>] kmem_cache_alloc_node_trace+0x15b/0x2a0
-> mm/slab.c:3597
->      [<00000000a5030ce7>] __do_kmalloc_node mm/slab.c:3619 [inline]
->      [<00000000a5030ce7>] __kmalloc_node_track_caller+0x38/0x50
-> mm/slab.c:3634
->      [<0000000039212451>] __kmalloc_reserve.isra.0+0x40/0xb0
-> net/core/skbuff.c:142
->      [<00000000307cb4cf>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:210
->      [<00000000ec87bfa1>] alloc_skb_fclone include/linux/skbuff.h:1107
-> [inline]
->      [<00000000ec87bfa1>] tipc_buf_acquire+0x2f/0x80 net/tipc/msg.c:66
->      [<00000000d151ef84>] tipc_msg_create+0x37/0xe0 net/tipc/msg.c:98
->      [<000000008bb437b0>] tipc_group_create_event+0xb3/0x1b0
-> net/tipc/group.c:679
->      [<00000000947b1d0f>] tipc_group_proto_rcv+0x569/0x640
-> net/tipc/group.c:781
->      [<00000000b75ab039>] tipc_sk_proto_rcv net/tipc/socket.c:1996 [inline]
->      [<00000000b75ab039>] tipc_sk_filter_rcv+0x9ac/0xf20
-> net/tipc/socket.c:2163
->      [<000000000dab7a6c>] tipc_sk_enqueue net/tipc/socket.c:2255 [inline]
->      [<000000000dab7a6c>] tipc_sk_rcv+0x494/0x8a0 net/tipc/socket.c:2306
->      [<00000000023a7ddd>] tipc_node_xmit+0x196/0x1f0 net/tipc/node.c:1442
->      [<00000000337dd9eb>] tipc_node_xmit_skb net/tipc/node.c:1491 [inline]
->      [<00000000337dd9eb>] tipc_node_distr_xmit+0x7d/0x120
-> net/tipc/node.c:1506
->      [<00000000b6375182>] tipc_group_delete+0xe6/0x130 net/tipc/group.c:224
->      [<000000000361ba2b>] tipc_sk_leave+0x57/0xb0 net/tipc/socket.c:2925
->      [<000000009df90505>] tipc_release+0x7b/0x5e0 net/tipc/socket.c:584
->      [<000000009f3189da>] __sock_release+0x4b/0xe0 net/socket.c:607
->
-> BUG: memory leak
-> unreferenced object 0xffff88810e63de00 (size 512):
->    comm "softirq", pid 0, jiffies 4294943548 (age 7.890s)
->    hex dump (first 32 bytes):
->      38 10 0d 0f 81 88 ff ff 38 10 0d 0f 81 88 ff ff  8.......8.......
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->    backtrace:
->      [<000000009375ee42>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:55 [inline]
->      [<000000009375ee42>] slab_post_alloc_hook mm/slab.h:439 [inline]
->      [<000000009375ee42>] slab_alloc_node mm/slab.c:3269 [inline]
->      [<000000009375ee42>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
->      [<000000004c563922>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
->      [<00000000ec87bfa1>] alloc_skb_fclone include/linux/skbuff.h:1107
-> [inline]
->      [<00000000ec87bfa1>] tipc_buf_acquire+0x2f/0x80 net/tipc/msg.c:66
->      [<00000000d151ef84>] tipc_msg_create+0x37/0xe0 net/tipc/msg.c:98
->      [<000000008bb437b0>] tipc_group_create_event+0xb3/0x1b0
-> net/tipc/group.c:679
->      [<00000000947b1d0f>] tipc_group_proto_rcv+0x569/0x640
-> net/tipc/group.c:781
->      [<00000000b75ab039>] tipc_sk_proto_rcv net/tipc/socket.c:1996 [inline]
->      [<00000000b75ab039>] tipc_sk_filter_rcv+0x9ac/0xf20
-> net/tipc/socket.c:2163
->      [<000000000dab7a6c>] tipc_sk_enqueue net/tipc/socket.c:2255 [inline]
->      [<000000000dab7a6c>] tipc_sk_rcv+0x494/0x8a0 net/tipc/socket.c:2306
->      [<00000000023a7ddd>] tipc_node_xmit+0x196/0x1f0 net/tipc/node.c:1442
->      [<00000000337dd9eb>] tipc_node_xmit_skb net/tipc/node.c:1491 [inline]
->      [<00000000337dd9eb>] tipc_node_distr_xmit+0x7d/0x120
-> net/tipc/node.c:1506
->      [<00000000b6375182>] tipc_group_delete+0xe6/0x130 net/tipc/group.c:224
->      [<000000000361ba2b>] tipc_sk_leave+0x57/0xb0 net/tipc/socket.c:2925
->      [<000000009df90505>] tipc_release+0x7b/0x5e0 net/tipc/socket.c:584
->      [<000000009f3189da>] __sock_release+0x4b/0xe0 net/socket.c:607
->      [<00000000d3568ee0>] sock_close+0x1b/0x30 net/socket.c:1279
->      [<00000000266a6215>] __fput+0xed/0x300 fs/file_table.c:280
->
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+
+My bad.
+I can use idr, but couldn't be better optimized code if use simple mutex to=
+ protect the variable.
+
+> thanks,
+>=20
+> greg k-h
