@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D10C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E4C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBA6205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5222C2081C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098913;
-	bh=h4DRqV1hZBCbesC0KVb+8vcMks8nL2rorqRaFUE/zSI=;
+	s=default; t=1560098917;
+	bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rzdlQlU1EUKyMlGPRH5cLvpQW/61TzgDd0H/oPWq1bSUL7QrLXYJNYrmE95/aAhNb
-	 I9o7W8Jtud0zgiBVhyR2wXh8O4/bHs4KUuiseUWJupVopDHcGhRku35EolWlw9mMUt
-	 lTXe7+96I4XpOTAZXqd2R32rDgIw3L4aOci5Cbuo=
+	b=VWtWSxyE+V285xmn8cw9fdaSmzMBZXbeVoRSkGKckveoXHwXI8NmFy8X6ATScEgmE
+	 /c3M6oOHzoTukmtTEnceI4yVmXg958ReZIrl8X3f63zcn1GZd7dSsR5wByFFC85ibe
+	 yEsY/RtznRtaIEivR27YUZ/HdlDhQyFS+qhh3cm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbfFIQsc (ORCPT
+        id S1731239AbfFIQsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731207AbfFIQs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:29 -0400
+        id S1731216AbfFIQsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7509E20868;
-        Sun,  9 Jun 2019 16:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BD88205ED;
+        Sun,  9 Jun 2019 16:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098909;
-        bh=h4DRqV1hZBCbesC0KVb+8vcMks8nL2rorqRaFUE/zSI=;
+        s=default; t=1560098911;
+        bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCEl0VVRVBOJmgq79zpjkoz9l8/GVQJG/TK19D1YNmGsClNXftxdmhvAQbwhIQ09U
-         kaNZuH1R0zqwcGebmhvS6P89YfCugHGs+hS4g7VP9PZSl2iM94HujOXqqbPxkfK/lD
-         eh8cIPltuKLaXI/IMwuwgrkZ/gjszwFF4MVpvh4I=
+        b=qC1j/oDVF/GMDJDp31oXBmbDvrxB2eoJlwFK99j5NHekhJCih1Hrh/xT1aDzsnp/S
+         5i35xgx8mT4BxpRKa6ipSCI6l9f4xOKsf8rm/rM6mV6DGn3IKp6p/KghFYi0YazI1L
+         NWMRTsMxDcc36R5YOBj+uryVLbW/jHAoPCi9iJ7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 05/51] neighbor: Call __ipv4_neigh_lookup_noref in neigh_xmit
-Date:   Sun,  9 Jun 2019 18:41:46 +0200
-Message-Id: <20190609164127.431979915@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Julien Cristau <jcristau@debian.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        YunQiang Su <ysu@wavecomp.com>, linux-mips@vger.kernel.org
+Subject: [PATCH 4.19 32/51] MIPS: Bounds check virt_addr_valid
+Date:   Sun,  9 Jun 2019 18:42:13 +0200
+Message-Id: <20190609164129.141484622@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,57 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Paul Burton <paul.burton@mips.com>
 
-[ Upstream commit 4b2a2bfeb3f056461a90bd621e8bd7d03fa47f60 ]
+commit 074a1e1167afd82c26f6d03a9a8b997d564bb241 upstream.
 
-Commit cd9ff4de0107 changed the key for IFF_POINTOPOINT devices to
-INADDR_ANY but neigh_xmit which is used for MPLS encapsulations was not
-updated to use the altered key. The result is that every packet Tx does
-a lookup on the gateway address which does not find an entry, a new one
-is created only to find the existing one in the table right before the
-insert since arp_constructor was updated to reset the primary key. This
-is seen in the allocs and destroys counters:
-    ip -s -4 ntable show | head -10 | grep alloc
+The virt_addr_valid() function is meant to return true iff
+virt_to_page() will return a valid struct page reference. This is true
+iff the address provided is found within the unmapped address range
+between PAGE_OFFSET & MAP_BASE, but we don't currently check for that
+condition. Instead we simply mask the address to obtain what will be a
+physical address if the virtual address is indeed in the desired range,
+shift it to form a PFN & then call pfn_valid(). This can incorrectly
+return true if called with a virtual address which, after masking,
+happens to form a physical address corresponding to a valid PFN.
 
-which increase for each packet showing the unnecessary overhread.
+For example we may vmalloc an address in the kernel mapped region
+starting a MAP_BASE & obtain the virtual address:
 
-Fix by having neigh_xmit use __ipv4_neigh_lookup_noref for NEIGH_ARP_TABLE.
+  addr = 0xc000000000002000
 
-Fixes: cd9ff4de0107 ("ipv4: Make neigh lookup keys for loopback/point-to-point devices be INADDR_ANY")
-Reported-by: Alan Maguire <alan.maguire@oracle.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Tested-by: Alan Maguire <alan.maguire@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When masked by virt_to_phys(), which uses __pa() & in turn CPHYSADDR(),
+we obtain the following (bogus) physical address:
+
+  addr = 0x2000
+
+In a common system with PHYS_OFFSET=0 this will correspond to a valid
+struct page which should really be accessed by virtual address
+PAGE_OFFSET+0x2000, causing virt_addr_valid() to incorrectly return 1
+indicating that the original address corresponds to a struct page.
+
+This is equivalent to the ARM64 change made in commit ca219452c6b8
+("arm64: Correctly bounds check virt_addr_valid").
+
+This fixes fallout when hardened usercopy is enabled caused by the
+related commit 517e1fbeb65f ("mm/usercopy: Drop extra
+is_vmalloc_or_module() check") which removed a check for the vmalloc
+range that was present from the introduction of the hardened usercopy
+feature.
+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Reported-by: Julien Cristau <jcristau@debian.org>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Tested-by: YunQiang Su <ysu@wavecomp.com>
+URL: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=929366
+Cc: stable@vger.kernel.org # v4.12+
+Cc: linux-mips@vger.kernel.org
+Cc: Yunqiang Su <ysu@wavecomp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/neighbour.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -30,6 +30,7 @@
- #include <linux/times.h>
- #include <net/net_namespace.h>
- #include <net/neighbour.h>
-+#include <net/arp.h>
- #include <net/dst.h>
- #include <net/sock.h>
- #include <net/netevent.h>
-@@ -2536,7 +2537,13 @@ int neigh_xmit(int index, struct net_dev
- 		if (!tbl)
- 			goto out;
- 		rcu_read_lock_bh();
--		neigh = __neigh_lookup_noref(tbl, addr, dev);
-+		if (index == NEIGH_ARP_TABLE) {
-+			u32 key = *((u32 *)addr);
+---
+ arch/mips/mm/mmap.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/arch/mips/mm/mmap.c
++++ b/arch/mips/mm/mmap.c
+@@ -203,6 +203,11 @@ unsigned long arch_randomize_brk(struct
+ 
+ int __virt_addr_valid(const volatile void *kaddr)
+ {
++	unsigned long vaddr = (unsigned long)vaddr;
 +
-+			neigh = __ipv4_neigh_lookup_noref(dev, key);
-+		} else {
-+			neigh = __neigh_lookup_noref(tbl, addr, dev);
-+		}
- 		if (!neigh)
- 			neigh = __neigh_create(tbl, addr, dev, false);
- 		err = PTR_ERR(neigh);
++	if ((vaddr < PAGE_OFFSET) || (vaddr >= MAP_BASE))
++		return 0;
++
+ 	return pfn_valid(PFN_DOWN(virt_to_phys(kaddr)));
+ }
+ EXPORT_SYMBOL_GPL(__virt_addr_valid);
 
 
