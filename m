@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442D2C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6ECC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E7720833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB2520833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099080;
-	bh=X2s9JHcJ1W0JyaE0VhdQykJrt+FC1MxF3eyLR/M2EH0=;
+	s=default; t=1560099082;
+	bh=kwYixsYv6zqcqnlCCQoHK2rpx8TEQROh61glclf8xX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T/RicQi5vXNixfKC0s8zjoCVbNO7JC7gvOmeG+oGNf9etMe0kpY+WBCSkhsxN2Ogc
-	 dcr/M+eOqnVuaNvWIoN/sEuX8TJwy546ncwsx9sg+YCxKLxgpZ9Nlh9N7i1160KakH
-	 YUIfl9nBWpjZBo1QtF8K56eEJlac2Qo4WfkcFakc=
+	b=sqrf2szXI/WzIJwKpuDE3v9Wwhs1Y9L7Y84R1FmOL/4GT6Rof8sti6lPAhbNG6XUa
+	 UtZILAsFxB/v6Mh5pgioypUGDRezd812I+KLTI9S/Eu/zrmVbWJkriSLCId4U2ZAZJ
+	 1PBtiY5XIDagL4kx8PTSJfHupqU1P9QVUjA8qvT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731908AbfFIQvT (ORCPT
+        id S1728000AbfFIQvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:51:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51284 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730616AbfFIQvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:51:08 -0400
+        id S1729034AbfFIQvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98DCA208C0;
-        Sun,  9 Jun 2019 16:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C79D205ED;
+        Sun,  9 Jun 2019 16:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099067;
-        bh=X2s9JHcJ1W0JyaE0VhdQykJrt+FC1MxF3eyLR/M2EH0=;
+        s=default; t=1560099077;
+        bh=kwYixsYv6zqcqnlCCQoHK2rpx8TEQROh61glclf8xX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gMJxnUGN6wgwqp2ND2AcRnXyx2U82qcUjK1Vs3KbCT/vL1lX3vaEq+3pslOZpGgx4
-         BIeqYpCcBCj5JebQNtIuY94WGb3SAebe87D5NYfY0rqxvbgHR7IJV8pGaUEk1aWGmT
-         zhxguzqkPpVZepaHs/goA6aDqXi/aYUfFxATOeoc=
+        b=hyyXRHFxCHwgrDcivY3E4Yu5hSsTZhT8Hsitsu/UiPMN1aZUgl7DXxSCaJfPGLn8T
+         UqYjDism4n+tiEzPc4qQVuO8yDHs0/sx2Wrk7yUOJC4S9ljSk/SMZXdfj67qdU+XYW
+         WHpJ9sCPLpSuvIEZV+APle12eIIIVoYPXffKNBqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.14 35/35] fuse: Add FOPEN_STREAM to use stream_open()
-Date:   Sun,  9 Jun 2019 18:42:41 +0200
-Message-Id: <20190609164127.532009984@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 19/35] x86/power: Fix nosmt vs hibernation triple fault during resume
+Date:   Sun,  9 Jun 2019 18:42:25 +0200
+Message-Id: <20190609164126.626235096@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -59,87 +62,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Smelkov <kirr@nexedi.com>
+From: Jiri Kosina <jkosina@suse.cz>
 
-commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
+commit ec527c318036a65a083ef68d8ba95789d2212246 upstream.
 
-Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
-POSIX") files opened even via nonseekable_open gate read and write via lock
-and do not allow them to be run simultaneously. This can create read vs
-write deadlock if a filesystem is trying to implement a socket-like file
-which is intended to be simultaneously used for both read and write from
-filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
-stream-like files so that read and write can run simultaneously without
-deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
-on writes to /proc/xen/xenbus") for a similar deadlock example on
-/proc/xen/xenbus.
+As explained in
 
-To avoid such deadlock it was tempting to adjust fuse_finish_open to use
-stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
-but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
-and in particular GVFS which actually uses offset in its read and write
-handlers
+	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
 
-	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+we always, no matter what, have to bring up x86 HT siblings during boot at
+least once in order to avoid first MCE bringing the system to its knees.
 
-so if we would do such a change it will break a real user.
+That means that whenever 'nosmt' is supplied on the kernel command-line,
+all the HT siblings are as a result sitting in mwait or cpudile after
+going through the online-offline cycle at least once.
 
-Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
-opened handler is having stream-like semantics; does not use file position
-and thus the kernel is free to issue simultaneous read and write request on
-opened file handle.
+This causes a serious issue though when a kernel, which saw 'nosmt' on its
+commandline, is going to perform resume from hibernation: if the resume
+from the hibernated image is successful, cr3 is flipped in order to point
+to the address space of the kernel that is being resumed, which in turn
+means that all the HT siblings are all of a sudden mwaiting on address
+which is no longer valid.
 
-This patch together with stream_open() should be added to stable kernels
-starting from v3.14+. This will allow to patch OSSPD and other FUSE
-filesystems that provide stream-like files to return FOPEN_STREAM |
-FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
-kernel versions. This should work because fuse_finish_open ignores unknown
-open flags returned from a filesystem and so passing FOPEN_STREAM to a
-kernel that is not aware of this flag cannot hurt. In turn the kernel that
-is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
-is sufficient to implement streams without read vs write deadlock.
+That results in triple fault shortly after cr3 is switched, and machine
+reboots.
 
-Cc: stable@vger.kernel.org # v3.14+
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fix this by always waking up all the SMT siblings before initiating the
+'restore from hibernation' process; this guarantees that all the HT
+siblings will be properly carried over to the resumed kernel waiting in
+resume_play_dead(), and acted upon accordingly afterwards, based on the
+target kernel configuration.
+
+Symmetricaly, the resumed kernel has to push the SMT siblings to mwait
+again in case it has SMT disabled; this means it has to online all
+the siblings when resuming (so that they come out of hlt) and offline
+them again to let them reach mwait.
+
+Cc: 4.19+ <stable@vger.kernel.org> # v4.19+
+Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/fuse/file.c            |    4 +++-
- include/uapi/linux/fuse.h |    2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/power/cpu.c          |   10 ++++++++++
+ arch/x86/power/hibernate_64.c |   33 +++++++++++++++++++++++++++++++++
+ include/linux/cpu.h           |    4 ++++
+ kernel/cpu.c                  |    4 ++--
+ kernel/power/hibernate.c      |    9 +++++++++
+ 5 files changed, 58 insertions(+), 2 deletions(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -178,7 +178,9 @@ void fuse_finish_open(struct inode *inod
- 		file->f_op = &fuse_direct_io_file_operations;
- 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
- 		invalidate_inode_pages2(inode->i_mapping);
--	if (ff->open_flags & FOPEN_NONSEEKABLE)
-+	if (ff->open_flags & FOPEN_STREAM)
-+		stream_open(inode, file);
-+	else if (ff->open_flags & FOPEN_NONSEEKABLE)
- 		nonseekable_open(inode, file);
- 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
- 		struct fuse_inode *fi = get_fuse_inode(inode);
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -216,10 +216,12 @@ struct fuse_file_lock {
-  * FOPEN_DIRECT_IO: bypass page cache for this open file
-  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
-  * FOPEN_NONSEEKABLE: the file is not seekable
-+ * FOPEN_STREAM: the file is stream-like (no file position at all)
-  */
- #define FOPEN_DIRECT_IO		(1 << 0)
- #define FOPEN_KEEP_CACHE	(1 << 1)
- #define FOPEN_NONSEEKABLE	(1 << 2)
-+#define FOPEN_STREAM		(1 << 4)
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable
+ 	 * address in its instruction pointer may not be possible to resolve
+ 	 * any more at that point (the page tables used by it previously may
+ 	 * have been overwritten by hibernate image data).
++	 *
++	 * First, make sure that we wake up all the potentially disabled SMT
++	 * threads which have been initially brought up and then put into
++	 * mwait/cpuidle sleep.
++	 * Those will be put to proper (not interfering with hibernation
++	 * resume) sleep afterwards, and the resumed kernel will decide itself
++	 * what to do with them.
+ 	 */
++	ret = cpuhp_smt_enable();
++	if (ret)
++		return ret;
+ 	smp_ops.play_dead = resume_play_dead;
+ 	ret = disable_nonboot_cpus();
+ 	smp_ops.play_dead = play_dead;
+--- a/arch/x86/power/hibernate_64.c
++++ b/arch/x86/power/hibernate_64.c
+@@ -13,6 +13,7 @@
+ #include <linux/suspend.h>
+ #include <linux/scatterlist.h>
+ #include <linux/kdebug.h>
++#include <linux/cpu.h>
  
+ #include <crypto/hash.h>
+ 
+@@ -347,3 +348,35 @@ int arch_hibernation_header_restore(void
+ 
+ 	return 0;
+ }
++
++int arch_resume_nosmt(void)
++{
++	int ret = 0;
++	/*
++	 * We reached this while coming out of hibernation. This means
++	 * that SMT siblings are sleeping in hlt, as mwait is not safe
++	 * against control transition during resume (see comment in
++	 * hibernate_resume_nonboot_cpu_disable()).
++	 *
++	 * If the resumed kernel has SMT disabled, we have to take all the
++	 * SMT siblings out of hlt, and offline them again so that they
++	 * end up in mwait proper.
++	 *
++	 * Called with hotplug disabled.
++	 */
++	cpu_hotplug_enable();
++	if (cpu_smt_control == CPU_SMT_DISABLED ||
++			cpu_smt_control == CPU_SMT_FORCE_DISABLED) {
++		enum cpuhp_smt_control old = cpu_smt_control;
++
++		ret = cpuhp_smt_enable();
++		if (ret)
++			goto out;
++		ret = cpuhp_smt_disable(old);
++		if (ret)
++			goto out;
++	}
++out:
++	cpu_hotplug_disable();
++	return ret;
++}
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -191,10 +191,14 @@ enum cpuhp_smt_control {
+ extern enum cpuhp_smt_control cpu_smt_control;
+ extern void cpu_smt_disable(bool force);
+ extern void cpu_smt_check_topology(void);
++extern int cpuhp_smt_enable(void);
++extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
+ #else
+ # define cpu_smt_control		(CPU_SMT_ENABLED)
+ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
++static inline int cpuhp_smt_enable(void) { return 0; }
++static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
+ #endif
+ 
+ /*
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2054,7 +2054,7 @@ static void cpuhp_online_cpu_device(unsi
+ 	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+ }
+ 
+-static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
++int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+ {
+ 	int cpu, ret = 0;
+ 
+@@ -2088,7 +2088,7 @@ static int cpuhp_smt_disable(enum cpuhp_
+ 	return ret;
+ }
+ 
+-static int cpuhp_smt_enable(void)
++int cpuhp_smt_enable(void)
+ {
+ 	int cpu, ret = 0;
+ 
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -258,6 +258,11 @@ void swsusp_show_speed(ktime_t start, kt
+ 		(kps % 1000) / 10);
+ }
+ 
++__weak int arch_resume_nosmt(void)
++{
++	return 0;
++}
++
  /**
-  * INIT request/reply flags
+  * create_image - Create a hibernation image.
+  * @platform_mode: Whether or not to use the platform driver.
+@@ -322,6 +327,10 @@ static int create_image(int platform_mod
+  Enable_cpus:
+ 	enable_nonboot_cpus();
+ 
++	/* Allow architectures to do nosmt-specific post-resume dances */
++	if (!in_suspend)
++		error = arch_resume_nosmt();
++
+  Platform_finish:
+ 	platform_finish(platform_mode);
+ 
 
 
