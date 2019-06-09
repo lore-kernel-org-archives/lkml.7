@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6EDC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A49C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959C420840
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D2A206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099820;
-	bh=TZN9iRhipWXcbbEe+RiuGRmbFeYdckX4c8MXkXvOds0=;
+	s=default; t=1560099824;
+	bh=5ixMBIq1+roRVC3r4/nZrw1E/YkRIL6fVkkxoQk5dnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VfVWp+vBk/RIpl66Jo/5XdASk0ElOj1wKZ7Jd2ULz716ZKah66pPe+4VNJeR3edA7
-	 HmIrlFCe4h+l06cSO8YE3hA2rZrQM6AmrkFxXX0RsSW8XQsv2ZxyYn7YM4NtcchO4D
-	 TlpjOGdD0YyDTg0UrrRm9waTOU6d7TrVn+n6lEBk=
+	b=gto+orp0z5eDriwB+aYyAnqWkPidtXsCSn1E7BuZjwfZlMAOLCYprwDyk1BOrnL3u
+	 6BQBtfg0HwZ4VxYtv5enMweNG9tXgdDwAmZBKZV+21Mbq1hHtybtaKjhjoQKyKo+4P
+	 m8xaaU5gE7wIGRT0DTOTZSELCc4rVWOpKJueromw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388456AbfFIRDj (ORCPT
+        id S2388475AbfFIRDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42044 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:03:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388064AbfFIRDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:36 -0400
+        id S2388448AbfFIRDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:03:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48177204EC;
-        Sun,  9 Jun 2019 17:03:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF6D6206C3;
+        Sun,  9 Jun 2019 17:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099815;
-        bh=TZN9iRhipWXcbbEe+RiuGRmbFeYdckX4c8MXkXvOds0=;
+        s=default; t=1560099818;
+        bh=5ixMBIq1+roRVC3r4/nZrw1E/YkRIL6fVkkxoQk5dnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WxA0SuoCse7zlRdIU+zRBmi4J1JjLDVkQK8GA1FE4Z/yNQxHtoVw2QxtIk/sfAOT1
-         NojfT0PQdXUQLuGYU0HqLCVW+0WkC3UGGezjBEkttwAZIfQE/NAuCv8+j1E8I57qqV
-         /Ik9FFIUvUtw2t9MBvyC3EPXgtT+NS46lH45O2kY=
+        b=VtrS1lzn1lwjCDs6R2Lr/R9b4Hzu7R0Q77qKA6mr8JzSvOfFnFf4goDgSnXaRcZBG
+         zQ0NFwEcgXDXF9TbUDTaowsWFMDNCcwvLw5d0iBK8Bku5N+GpyO8gpdl2GZt4X7rSy
+         8XOf3UTa4ewztKonv7aRlThO7kS80SvxVr/CKzDc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 175/241] scsi: lpfc: Fix SLI3 commands being issued on SLI4 devices
-Date:   Sun,  9 Jun 2019 18:41:57 +0200
-Message-Id: <20190609164152.865584477@linuxfoundation.org>
+Subject: [PATCH 4.4 140/241] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
+Date:   Sun,  9 Jun 2019 18:41:22 +0200
+Message-Id: <20190609164151.828510409@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,58 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c95a3b4b0fb8d351e2329a96f87c4fc96a149505 ]
+[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
 
-During debug, it was seen that the driver is issuing commands specific to
-SLI3 on SLI4 devices. Although the adapter correctly rejected the command,
-this should not be done.
+eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
+reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
+and 0xC(2^25 SD clock). The data timeout counter can count from
+2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
+counter counts for only 2^13 SD clocks.
+A-008358: The data timeout counter value loaded into the timeout
+counter is less than expected and can result into early timeout
+error in case of eSDHC data transactions. The table below shows
+the expected vs actual timeout period for different values of
+SYSCTL[DTOCV]:
+these two erratum has the same quirk to control it, and set
+SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
 
-Revise the code to stop sending these commands on a SLI4 adapter.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_hbadisc.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index 4131addfb8729..a67950908db17 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -902,7 +902,11 @@ lpfc_linkdown(struct lpfc_hba *phba)
- 			lpfc_linkdown_port(vports[i]);
- 		}
- 	lpfc_destroy_vport_work_array(phba, vports);
--	/* Clean up any firmware default rpi's */
-+
-+	/* Clean up any SLI3 firmware default rpi's */
-+	if (phba->sli_rev > LPFC_SLI_REV3)
-+		goto skip_unreg_did;
-+
- 	mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 	if (mb) {
- 		lpfc_unreg_did(phba, 0xffff, LPFC_UNREG_ALL_DFLT_RPIS, mb);
-@@ -914,6 +918,7 @@ lpfc_linkdown(struct lpfc_hba *phba)
- 		}
- 	}
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index a5a11e7ab53b4..356b294c93c9e 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -624,8 +624,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
+ 	if (esdhc->vendor_ver > VENDOR_V_22)
+ 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
  
-+ skip_unreg_did:
- 	/* Setup myDID for link up if we are in pt2pt mode */
- 	if (phba->pport->fc_flag & FC_PT2PT) {
- 		phba->pport->fc_myDID = 0;
-@@ -4647,6 +4652,10 @@ lpfc_unreg_default_rpis(struct lpfc_vport *vport)
- 	LPFC_MBOXQ_t     *mbox;
- 	int rc;
+-	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
++	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
+ 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
++		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
++	}
  
-+	/* Unreg DID is an SLI3 operation. */
-+	if (phba->sli_rev > LPFC_SLI_REV3)
-+		return;
-+
- 	mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 	if (mbox) {
- 		lpfc_unreg_did(phba, vport->vpi, LPFC_UNREG_ALL_DFLT_RPIS,
+ 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
+ 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
 -- 
 2.20.1
 
