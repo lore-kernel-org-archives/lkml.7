@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591A6C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8BEC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1B5206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7E7206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098865;
-	bh=dsuY3ika3pM2TpW6IhoPArLRbVaGg/raG5jngM0Jwrw=;
+	s=default; t=1560098869;
+	bh=OqvP9woF8ECqBdVZ3k7mXpqfVs5nkqmEytl5NQhJctU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PFDxHawof9OCVlexsRlkXqC+p0iwA2Rv5JuMOOyYPVkqSSg4wOatGmQ4QFwC6QkX5
-	 lrbQhIbe4WQzIbDQ2WxCCYPdp/Q7YfipQmIC8zfdOHQ2AhXvkry7zMLNiZosYyZZyP
-	 vOvfYPge16nEE0B66j6lvMNlYHCT+oynKEJPupGw=
+	b=ZV0knjE8AVsiUy6GtJXAt1T5wzZqThqZZRuRDqN9GYRkLS4QYRsDhBymRNwTXndRU
+	 DHE/2FyqpO6IVjMZDcwXpXGshS+z5qEFb8xTCHeC9FbsFH56jTUpEEIMeFTzWvTzR/
+	 ODxPPGiDhpSGnE03jw6jyELv1msZrGXQb8dOORdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730955AbfFIQro (ORCPT
+        id S1730992AbfFIQrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:47:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46338 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730891AbfFIQrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:37 -0400
+        id S1730939AbfFIQrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:47:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1765C206DF;
-        Sun,  9 Jun 2019 16:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 721EE205ED;
+        Sun,  9 Jun 2019 16:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098856;
-        bh=dsuY3ika3pM2TpW6IhoPArLRbVaGg/raG5jngM0Jwrw=;
+        s=default; t=1560098862;
+        bh=OqvP9woF8ECqBdVZ3k7mXpqfVs5nkqmEytl5NQhJctU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwGKyYHU1CQPhpP21tq4/HdVEEK2TlUqyyQKPUta56z7DzVSnZfFSjtmm3N2ujVUR
-         G3XbFHSorEIPU9UpOSVgDmjk2foxCmIRvnWBwpOsKWQ4zOsNEmuAhVLxa5ujJ0FGuJ
-         D88h79LgXSPRiKnR51vAteOB6FyMCxxP6zaj0h5A=
+        b=EDPCT5kG2nhsb7iYLuJ2IGHF26r34fIDG8PDS8R60xrrs3rYjwyqQ83rVQuwrH/2I
+         fRMALUYfFzmfNhTfYcdFA/XT7Fydi/3zYnQDYq3bxVE4kd0Eec09rXt3Z/2+qpKWoU
+         B51/hlmncSGfHorlOxi0HIK/brsvBt+OjpDy4LsQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Yaro Slav <yaro330@gmail.com>,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
+        stable@vger.kernel.org, Olivier Matz <olivier.matz@6wind.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 14/51] Revert "fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied"
-Date:   Sun,  9 Jun 2019 18:41:55 +0200
-Message-Id: <20190609164127.924633657@linuxfoundation.org>
+Subject: [PATCH 4.19 16/51] ipv6: fix EFAULT on sendto with icmpv6 and hdrincl
+Date:   Sun,  9 Jun 2019 18:41:57 +0200
+Message-Id: <20190609164128.016820208@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -63,45 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Olivier Matz <olivier.matz@6wind.com>
 
-[ Upstream commit 4970b42d5c362bf873982db7d93245c5281e58f4 ]
+[ Upstream commit b9aa52c4cb457e7416cc0c95f475e72ef4a61336 ]
 
-This reverts commit e9919a24d3022f72bcadc407e73a6ef17093a849.
+The following code returns EFAULT (Bad address):
 
-Nathan reported the new behaviour breaks Android, as Android just add
-new rules and delete old ones.
+  s = socket(AF_INET6, SOCK_RAW, IPPROTO_ICMPV6);
+  setsockopt(s, SOL_IPV6, IPV6_HDRINCL, 1);
+  sendto(ipv6_icmp6_packet, addr);   /* returns -1, errno = EFAULT */
 
-If we return 0 without adding dup rules, Android will remove the new
-added rules and causing system to soft-reboot.
+The IPv4 equivalent code works. A workaround is to use IPPROTO_RAW
+instead of IPPROTO_ICMPV6.
 
-Fixes: e9919a24d302 ("fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Yaro Slav <yaro330@gmail.com>
-Reported-by: Maciej Żenczykowski <zenczykowski@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+The failure happens because 2 bytes are eaten from the msghdr by
+rawv6_probe_proto_opt() starting from commit 19e3c66b52ca ("ipv6
+equivalent of "ipv4: Avoid reading user iov twice after
+raw_probe_proto_opt""), but at that time it was not a problem because
+IPV6_HDRINCL was not yet introduced.
+
+Only eat these 2 bytes if hdrincl == 0.
+
+Fixes: 715f504b1189 ("ipv6: add IPV6_HDRINCL option for raw sockets")
+Signed-off-by: Olivier Matz <olivier.matz@6wind.com>
+Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/fib_rules.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/ipv6/raw.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -756,9 +756,9 @@ int fib_nl_newrule(struct sk_buff *skb,
- 	if (err)
- 		goto errout;
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -894,11 +894,14 @@ static int rawv6_sendmsg(struct sock *sk
+ 	opt = ipv6_fixup_options(&opt_space, opt);
  
--	if (rule_exists(ops, frh, tb, rule)) {
--		if (nlh->nlmsg_flags & NLM_F_EXCL)
--			err = -EEXIST;
-+	if ((nlh->nlmsg_flags & NLM_F_EXCL) &&
-+	    rule_exists(ops, frh, tb, rule)) {
-+		err = -EEXIST;
- 		goto errout_free;
- 	}
+ 	fl6.flowi6_proto = proto;
+-	rfv.msg = msg;
+-	rfv.hlen = 0;
+-	err = rawv6_probe_proto_opt(&rfv, &fl6);
+-	if (err)
+-		goto out;
++
++	if (!hdrincl) {
++		rfv.msg = msg;
++		rfv.hlen = 0;
++		err = rawv6_probe_proto_opt(&rfv, &fl6);
++		if (err)
++			goto out;
++	}
  
+ 	if (!ipv6_addr_any(daddr))
+ 		fl6.daddr = *daddr;
 
 
