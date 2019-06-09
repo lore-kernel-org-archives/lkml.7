@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB53C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBD5C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D7320840
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7B52084A
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098688;
-	bh=Ogzjc3C2xWfFhaXTGfD5u07gvhsn1/HdRtF5KCmyYXU=;
+	s=default; t=1560098691;
+	bh=M7LJnhvvvtA9Zwb4nMxS0ANRE6HLPg0e+nHjz18Pyjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKsjzbeMhtVeyteFoz8rBjigaFR/oCKl3qgP7n2P5mdAywcmFQZmANemSOJj54H8S
-	 Yc4V5GeSveY7D6orEgL9d8aF8Wd8iPWoXsxEL5hK8PKhpE7ONk/ZwYBi1ZDE6+9qGM
-	 9OAe7iSCRrQV4JDWrJfr3Nj3Kx/L5D1URqDCW+80=
+	b=zMNuJ+CV2ZqDYkKLjUL4N/ZuUBhqwprBUJxR2VB13Lue1jcqmnCKLx7GaNN4/Qa6u
+	 hrmV4LSkk14/CEFhPp0cKnQcYYHGad0lvX7+cn35MQnUX51Nh62R7pbQYBozhsom4z
+	 awNobnr3j8ZLalxIoTShLaJhskY+U1ZMlfw9n/lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbfFIQor (ORCPT
+        id S1729501AbfFIQov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42024 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:44:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729451AbfFIQop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:44:45 -0400
+        id S1729457AbfFIQor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:44:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46CDE20840;
-        Sun,  9 Jun 2019 16:44:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D63DC2084A;
+        Sun,  9 Jun 2019 16:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098683;
-        bh=Ogzjc3C2xWfFhaXTGfD5u07gvhsn1/HdRtF5KCmyYXU=;
+        s=default; t=1560098686;
+        bh=M7LJnhvvvtA9Zwb4nMxS0ANRE6HLPg0e+nHjz18Pyjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i34JSH9IULshw/jPOoWPYaJyNLYJIam5IevcOJNqkmu6faQtZhnyjJgk2SujuaqvA
-         XWVFSq/gNUzcgLkqdEtLArb1OGMWRRgNjZCWylkoNmYwuwwWQ6s2zTg3ioFIV/cYyf
-         C/cb7rMtl2otBDEL3yF/Q/gDiybZS2fjHfgxcjYA=
+        b=NcrjyGruYyseEeGl8glnWqeFBbuFDNDlOksq3CHtgFZ7VuX1uzwnLzEyssTjOHpd3
+         uIYuSSZM3hzKAwyTD6CqmWAt2btO44yuTySTiFhinXTxwuiRPmKV/rrjC/QiK9U66B
+         KQcKXT1LHK9yeSl8sFxDH+YVkfsRQYBYfaXVUr+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>
-Subject: [PATCH 5.1 23/70] habanalabs: fix debugfs code
-Date:   Sun,  9 Jun 2019 18:41:34 +0200
-Message-Id: <20190609164128.965284718@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 5.1 24/70] ARC: mm: SIGSEGV userspace trying to access kernel virtual memory
+Date:   Sun,  9 Jun 2019 18:41:35 +0200
+Message-Id: <20190609164129.046993468@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -59,160 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-commit 8438846cce61e284a22316c13aa4b63772963070 upstream.
+commit a8c715b4dd73c26a81a9cc8dc792aa715d8b4bb2 upstream.
 
-This fixes multiple things in the habanalabs debugfs code, in particular:
+As of today if userspace process tries to access a kernel virtual addres
+(0x7000_0000 to 0x7ffff_ffff) such that a legit kernel mapping already
+exists, that process hangs instead of being killed with SIGSEGV
 
- - mmu_write() was unnecessarily verbose, copying around between multiple
-   buffers
- - mmu_write() could write a user-specified, unbounded amount of userspace
-   memory into a kernel buffer (out-of-bounds write)
- - multiple debugfs read handlers ignored the user-supplied count,
-   potentially corrupting out-of-bounds userspace data
- - hl_device_read() was unnecessarily verbose
- - hl_device_write() could read uninitialized stack memory
- - multiple debugfs read handlers copied terminating null characters to
-   userspace
+Fix that by ensuring that do_page_fault() handles kenrel vaddr only if
+in kernel mode.
 
-Signed-off-by: Jann Horn <jannh@google.com>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Cc: stable@vger.kernel.org
+And given this, we can also simplify the code a bit. Now a vmalloc fault
+implies kernel mode so its failure (for some reason) can reuse the
+@no_context label and we can remove @bad_area_nosemaphore.
+
+Reproduce user test for original problem:
+
+------------------------>8-----------------
+ #include <stdlib.h>
+ #include <stdint.h>
+
+ int main(int argc, char *argv[])
+ {
+ 	volatile uint32_t temp;
+
+ 	temp = *(uint32_t *)(0x70000000);
+ }
+------------------------>8-----------------
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/habanalabs/debugfs.c |   60 +++++++++++---------------------------
- 1 file changed, 18 insertions(+), 42 deletions(-)
+ arch/arc/mm/fault.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/drivers/misc/habanalabs/debugfs.c
-+++ b/drivers/misc/habanalabs/debugfs.c
-@@ -459,41 +459,31 @@ static ssize_t mmu_write(struct file *fi
- 	struct hl_debugfs_entry *entry = s->private;
- 	struct hl_dbg_device_entry *dev_entry = entry->dev_entry;
- 	struct hl_device *hdev = dev_entry->hdev;
--	char kbuf[MMU_KBUF_SIZE], asid_kbuf[MMU_ASID_BUF_SIZE],
--		addr_kbuf[MMU_ADDR_BUF_SIZE];
-+	char kbuf[MMU_KBUF_SIZE];
- 	char *c;
- 	ssize_t rc;
- 
- 	if (!hdev->mmu_enable)
- 		return count;
- 
--	memset(kbuf, 0, sizeof(kbuf));
--	memset(asid_kbuf, 0, sizeof(asid_kbuf));
--	memset(addr_kbuf, 0, sizeof(addr_kbuf));
--
-+	if (count > sizeof(kbuf) - 1)
-+		goto err;
- 	if (copy_from_user(kbuf, buf, count))
- 		goto err;
--
--	kbuf[MMU_KBUF_SIZE - 1] = 0;
-+	kbuf[count] = 0;
- 
- 	c = strchr(kbuf, ' ');
- 	if (!c)
- 		goto err;
-+	*c = '\0';
- 
--	memcpy(asid_kbuf, kbuf, c - kbuf);
--
--	rc = kstrtouint(asid_kbuf, 10, &dev_entry->mmu_asid);
-+	rc = kstrtouint(kbuf, 10, &dev_entry->mmu_asid);
- 	if (rc)
- 		goto err;
- 
--	c = strstr(kbuf, " 0x");
--	if (!c)
-+	if (strncmp(c+1, "0x", 2))
- 		goto err;
--
--	c += 3;
--	memcpy(addr_kbuf, c, (kbuf + count) - c);
--
--	rc = kstrtoull(addr_kbuf, 16, &dev_entry->mmu_addr);
-+	rc = kstrtoull(c+3, 16, &dev_entry->mmu_addr);
- 	if (rc)
- 		goto err;
- 
-@@ -525,10 +515,8 @@ static ssize_t hl_data_read32(struct fil
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -66,7 +66,7 @@ void do_page_fault(unsigned long address
+ 	struct vm_area_struct *vma = NULL;
+ 	struct task_struct *tsk = current;
+ 	struct mm_struct *mm = tsk->mm;
+-	int si_code = 0;
++	int si_code = SEGV_MAPERR;
+ 	int ret;
+ 	vm_fault_t fault;
+ 	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
+@@ -81,16 +81,14 @@ void do_page_fault(unsigned long address
+ 	 * only copy the information from the master page table,
+ 	 * nothing more.
+ 	 */
+-	if (address >= VMALLOC_START) {
++	if (address >= VMALLOC_START && !user_mode(regs)) {
+ 		ret = handle_kernel_vaddr_fault(address);
+ 		if (unlikely(ret))
+-			goto bad_area_nosemaphore;
++			goto no_context;
+ 		else
+ 			return;
  	}
  
- 	sprintf(tmp_buf, "0x%08x\n", val);
--	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
--			strlen(tmp_buf) + 1);
+-	si_code = SEGV_MAPERR;
 -
--	return rc;
-+	return simple_read_from_buffer(buf, count, ppos, tmp_buf,
-+			strlen(tmp_buf));
- }
+ 	/*
+ 	 * If we're in an interrupt or have no user
+ 	 * context, we must not take the fault..
+@@ -198,7 +196,6 @@ good_area:
+ bad_area:
+ 	up_read(&mm->mmap_sem);
  
- static ssize_t hl_data_write32(struct file *f, const char __user *buf,
-@@ -559,7 +547,6 @@ static ssize_t hl_get_power_state(struct
- 	struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
- 	struct hl_device *hdev = entry->hdev;
- 	char tmp_buf[200];
--	ssize_t rc;
- 	int i;
- 
- 	if (*ppos)
-@@ -574,10 +561,8 @@ static ssize_t hl_get_power_state(struct
- 
- 	sprintf(tmp_buf,
- 		"current power state: %d\n1 - D0\n2 - D3hot\n3 - Unknown\n", i);
--	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
--			strlen(tmp_buf) + 1);
--
--	return rc;
-+	return simple_read_from_buffer(buf, count, ppos, tmp_buf,
-+			strlen(tmp_buf));
- }
- 
- static ssize_t hl_set_power_state(struct file *f, const char __user *buf,
-@@ -630,8 +615,8 @@ static ssize_t hl_i2c_data_read(struct f
- 	}
- 
- 	sprintf(tmp_buf, "0x%02x\n", val);
--	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
--			strlen(tmp_buf) + 1);
-+	rc = simple_read_from_buffer(buf, count, ppos, tmp_buf,
-+			strlen(tmp_buf));
- 
- 	return rc;
- }
-@@ -720,18 +705,9 @@ static ssize_t hl_led2_write(struct file
- static ssize_t hl_device_read(struct file *f, char __user *buf,
- 					size_t count, loff_t *ppos)
- {
--	char tmp_buf[200];
--	ssize_t rc;
--
--	if (*ppos)
--		return 0;
--
--	sprintf(tmp_buf,
--		"Valid values: disable, enable, suspend, resume, cpu_timeout\n");
--	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
--			strlen(tmp_buf) + 1);
--
--	return rc;
-+	static const char *help =
-+		"Valid values: disable, enable, suspend, resume, cpu_timeout\n";
-+	return simple_read_from_buffer(buf, count, ppos, help, strlen(help));
- }
- 
- static ssize_t hl_device_write(struct file *f, const char __user *buf,
-@@ -739,7 +715,7 @@ static ssize_t hl_device_write(struct fi
- {
- 	struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
- 	struct hl_device *hdev = entry->hdev;
--	char data[30];
-+	char data[30] = {0};
- 
- 	/* don't allow partial writes */
- 	if (*ppos != 0)
+-bad_area_nosemaphore:
+ 	/* User mode accesses just cause a SIGSEGV */
+ 	if (user_mode(regs)) {
+ 		tsk->thread.fault_address = address;
 
 
