@@ -2,135 +2,84 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5405CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9701C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22023208E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31B320840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560077975;
+	bh=cSnrY0iwjVJXZwlEA+2n8J0j0S3Bx09YY45oP76Myok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yUqB8zWtG2m5MR1vAEDTkz702Y2Ou+54KifOPRtWuBBkD+jMprlaB/x6hWh56b/Z6
+	 2Ttj79KrSQaZXrgnypJKBwVNjmTSfsY86bscP+DAZSGiWxJhiepuxSHj/vivajNDzR
+	 Sn6sqi7KP/YFOu0LdvDFNcnIUlFgiB01A1CJtqlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfFIK4X (ORCPT
+        id S1728263AbfFIK7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 06:56:23 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:58439 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbfFIK4X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 06:56:23 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Sun, 9 Jun 2019 06:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728029AbfFIK7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 06:59:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 4FB662002C;
-        Sun,  9 Jun 2019 12:56:18 +0200 (CEST)
-Date:   Sun, 9 Jun 2019 12:56:17 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa.cheng@mediatek.com,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [1/2] dt-bindings: display: panel: add AUO kd101n80-45na panel
- bindings
-Message-ID: <20190609105617.GC28935@ravnborg.org>
-References: <20190608112342.64416-1-jitao.shi@mediatek.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EAB02083D;
+        Sun,  9 Jun 2019 10:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560077974;
+        bh=cSnrY0iwjVJXZwlEA+2n8J0j0S3Bx09YY45oP76Myok=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VCJF76xSiUB32mel7TvguvVDFQqBgoIcn2OFACK2R2d0l4IIjNsxL6nGAj7hPDzgb
+         Y+SGYsTo6jAbm6PI/tOljchkwivb0T3coyV6q86U/c97BodWtH+mzuFIADssf8sQ3+
+         7k3NvE84Vc9sFPeUEw37b1ZKKFwPBRyyUPO630Ss=
+Date:   Sun, 9 Jun 2019 12:59:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Valerio Genovese <valerio.click@gmail.com>
+Cc:     isdn@linux-pingi.de, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: isdn: hysdn: fix symbol 'hysdn_proc_entry' was
+ not declared.
+Message-ID: <20190609105931.GB30671@kroah.com>
+References: <20190605135349.6840-1-valerio.click@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190608112342.64416-1-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=mpaa-ttXAAAA:8 a=e5mUnYsNAAAA:8 a=GOHkJZeNjhEJBjOU3QsA:9
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=6heAxKwa5pAsJatQ0mat:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20190605135349.6840-1-valerio.click@gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
-
-Binding doc for this panel looks good.
-
-With added description for avdd + avee it is:
-
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-
-On Sat, Jun 08, 2019 at 07:23:41PM +0800, Jitao Shi wrote:
-> Add documentation for auo kd101n80-45na panel.
+On Wed, Jun 05, 2019 at 03:53:49PM +0200, Valerio Genovese wrote:
+> This was reported by sparse:
+> drivers/staging/isdn/hysdn/hysdn_procconf.c:352:23: warning: symbol 'hysdn_proc_entry' was not declared. Should it be static?
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Signed-off-by: Valerio Genovese <valerio.click@gmail.com>
 > ---
->  .../display/panel/auo,kd101n80-45na.txt       | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
+>  drivers/staging/isdn/hysdn/hysdn_defs.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt b/Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
-> new file mode 100644
-> index 000000000000..7715cf703431
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
-> @@ -0,0 +1,34 @@
-> +AUO Corporation 10.1" WUXGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "auo,kd101n80-45na"
-> +- reg: the virtual channel number of a DSI peripheral
-> +- enable-gpios: a GPIO spec for the enable pin
-> +- pp1800-supply: core voltage supply
-> +- avdd-supply: 
-> +- avee-supply: 
-Descriptions are missing for the 2 x supply.
+> diff --git a/drivers/staging/isdn/hysdn/hysdn_defs.h b/drivers/staging/isdn/hysdn/hysdn_defs.h
+> index cdac46a21692..a651686b1787 100644
+> --- a/drivers/staging/isdn/hysdn/hysdn_defs.h
+> +++ b/drivers/staging/isdn/hysdn/hysdn_defs.h
+> @@ -221,7 +221,7 @@ typedef struct hycapictrl_info hycapictrl_info;
+>  /* exported vars */
+>  /*****************/
+>  extern hysdn_card *card_root;	/* pointer to first card */
+> -
+> +extern struct proc_dir_entry *hysdn_proc_entry; /* hysdn subdir in /proc/net
 
-> +- backlight: phandle of the backlight device attached to the panel
-> +
-> +The device node can contain one 'port' child node with one child
-> +'endpoint' node, according to the bindings defined in
-> +media/video-interfaces.txt. This node should describe panel's video bus.
-> +
-> +Example:
-> +&dsi {
-> +	...
-> +	panel@0 {
-> +		compatible = "auo,kd101n80-45na";
-> +		reg = <0>;
-> +		enable-gpios = <&pio 45 0>;
-> +		avdd-supply = <&ppvarn_lcd>;
-> +		avee-supply = <&ppvarp_lcd>;
-> +		pp1800-supply = <&pp1800_lcd>;
-> +		backlight = <&backlight_lcd0>;
-> +		status = "okay";
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&dsi_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.21.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I can not take drivers/staging/isdn patches until 5.3-rc1.
+
+thanks,
+
+greg k-h
