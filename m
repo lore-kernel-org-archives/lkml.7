@@ -2,152 +2,110 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFECEC468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B6DC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DD6206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651D7206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="eWNdQH0F"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SOfnaOis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfFIVZm (ORCPT
+        id S1729693AbfFIV3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 17:25:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40330 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728868AbfFIVZm (ORCPT
+        Sun, 9 Jun 2019 17:29:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42285 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729242AbfFIV3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 17:25:42 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so775704pfp.7
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 14:25:41 -0700 (PDT)
+        Sun, 9 Jun 2019 17:29:17 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t28so6103901lje.9
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 14:29:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CZFUTqogdoT9h52wNWXCdK3qKHElU8kAeC/PqrX8CSU=;
-        b=eWNdQH0FRGKWNdUUTKwvNWa1xs5abEBDHUhhFwZudS2hOlkrHFwd32LnksW/fmqJ2q
-         JPJhN4YzgptkqTRrYgcu4I0g925rb2cBUUgZu2xLQhE3AYjaXRev1BEMDBq1Giad0obC
-         zhXZLDc2n63XsLaO9qmrXsK1+PYYCapla3Yrw=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KlrRIE/V5p97wscV0kE0tjEI2tlj1dGG4/jhRhsQRG0=;
+        b=SOfnaOissSEz9PzQM9mMat56H+3dTOhDdmHyybdevIOxcr2JCQbgWnlzcNKHngS1ar
+         6lN1VKkdZ7yRsOEp3hxL2mmnVB3bx7Bt3fbe68ItUxhUV/h8lH5jvN09txUIAd9HBDLE
+         yOOfbglZUGy7zp+pLIy/Ti6rWwE+usRIvmnTmud3sfwtqzQKUHMYKqjtVmg24PXE3Mzm
+         Pn8DnWXEw80qJN5Q6DxN+u/Wp9UeLNygpfrvD8EfJ4LhF+F6T8+6uT45UEmVss0EEoUa
+         W/2popw6Ssix8aXzr8GK94RxD4Jtw8n9CeKclonaMsYy5s2V9HHbVhzr9bM+3qkt66Qj
+         Iwng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CZFUTqogdoT9h52wNWXCdK3qKHElU8kAeC/PqrX8CSU=;
-        b=I0fGMO5QAZ1QvYoHJQ5oBL3ziPad4cvkskuFBe4CS7zgFIqA/qaq9JMfv+qi4n2/ZT
-         UpeFqTQu0ngdKpsx8K746B9hP6kPbQSGA2fm3GYznfAdaVkhyTmHfovoHjXnPdQZVEpr
-         zyGN7kDLVtXu3aWM8a6S3SDT1buI+3xLO7ZYGeZrrMkiksyOKWaHgVZbPgzYOeqhIVc1
-         cH7xEaDz+hOYddIKTwN7FWuizZPH7nJe3RxNNRQO6gD5yKqbtQiifnWIjpqzgNWSUdbE
-         CzUOs421M6FDMP3bMZ6rxqTIMM21uBpSkXVUwaWn1OJnDOxGIFn/jFau/8zxrDh45Z7Y
-         0aFw==
-X-Gm-Message-State: APjAAAW9Xf6QjEeFjE9lgOVKJDOn3npGb/CevGHqfE26Psb+YTk/PFnN
-        2zTnFP1pYyYPR2Yf2JOGyAMsLQ==
-X-Google-Smtp-Source: APXvYqxD7pAyV4mkv2ht5HtKjXQfP74V9gowrefzShjJHP0ma4F0WQfba/f1efuUZzZlpsbYFchv3A==
-X-Received: by 2002:a17:90a:20e7:: with SMTP id f94mr17378962pjg.68.1560115540913;
-        Sun, 09 Jun 2019 14:25:40 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 24sm7990056pgn.32.2019.06.09.14.25.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 09 Jun 2019 14:25:40 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 17:25:32 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Eric Dumazet <edumazet@google.com>, rcu <rcu@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Question about cacheline bounching with percpu-rwsem and rcu-sync
-Message-ID: <20190609210216.GD84498@google.com>
-References: <CAEXW_YTzUsT8xCD=vkSR=mT+L7ot7tCESTWYVqNt_3SQeVDUEA@mail.gmail.com>
- <20190531135051.GL28207@linux.ibm.com>
- <CAEXW_YReo2juN8A3CF+CKv8PcN_cH23gYWkLfkOJQqignyx85g@mail.gmail.com>
- <CAEXW_YT93U4OAVUggkR7E3KV2m7pdVwG-r+x6zjtrGzortvc4w@mail.gmail.com>
- <20190609122226.GU28207@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KlrRIE/V5p97wscV0kE0tjEI2tlj1dGG4/jhRhsQRG0=;
+        b=CtltwxASCerC7fHjK6OU9UD4+MHbvvsKKYNSFvIMDRr7zSg3d76lWOSZGaZn88S90I
+         tdoe/SWsCFcyvHS0XlPNMFcDYdDCmgVokUjrgP2GAjTiXPy77SCd83uO4UOM7JTggm8U
+         f6/qTEAE7XKv/8SA1vxhzXCG04qX+YfJMPENnDaQfNXyRl7BXjjrgKGwU8ijSniL6zrT
+         pbFCxjrUkcJk/WlY9lhtWOCV1d7jCVvpajRxDD9fJR+6pqOfFJDzyAFMY0/UlVMpt69w
+         vPFwPeE0MQq8Evd/ZrrBh6o+rZ89PPaCc4SEX6ILYutRcEF4gyZR4ZhFoBj1KxhtfuI8
+         hDKA==
+X-Gm-Message-State: APjAAAXWsXb/3Ua2huzhbRBCmQho7XnVAnD77N0sgP+AYFfo4iaNKANN
+        OB5/j6LCAi1vsET4rdYSwQJ4R3CgIcT2zvn6bWWJ7A==
+X-Google-Smtp-Source: APXvYqwD8jFnBTiQeRvhyH1OObx2r8DdreQqyuGuLnn7YPW7qYYuahnntAMr1MNIp51bnR6Kfl+SJrOrjoX25IWmQoQ=
+X-Received: by 2002:a2e:8902:: with SMTP id d2mr34580225lji.94.1560115755209;
+ Sun, 09 Jun 2019 14:29:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190609122226.GU28207@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+ <20190609180621.7607-3-martin.blumenstingl@googlemail.com>
+ <20190609203828.GA8247@lunn.ch> <CAFBinCA1xp5+77DhYMFjX31D3DsaU7d9EqFkWbn+UFFx5LSqEw@mail.gmail.com>
+In-Reply-To: <CAFBinCA1xp5+77DhYMFjX31D3DsaU7d9EqFkWbn+UFFx5LSqEw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 9 Jun 2019 23:29:08 +0200
+Message-ID: <CACRpkdZ4n+nCip-uoqbDvQeT0ZpJUfHVnp-D8qCSKfgJEapM7w@mail.gmail.com>
+Subject: Re: [RFC next v1 2/5] gpio: of: parse stmmac PHY reset line specific
+ active-low property
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Giuseppe CAVALLARO <peppe.cavallaro@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 05:22:26AM -0700, Paul E. McKenney wrote:
-> On Sat, Jun 08, 2019 at 08:24:36PM -0400, Joel Fernandes wrote:
-> > On Fri, May 31, 2019 at 10:43 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > [snip]
-> > > >
-> > > > Either way, it would be good for you to just try it.  Create a kernel
-> > > > module or similar than hammers on percpu_down_read() and percpu_up_read(),
-> > > > and empirically check the scalability on a largish system.  Then compare
-> > > > this to down_read() and up_read()
-> > >
-> > > Will do! thanks.
-> > 
-> > I created a test for this and the results are quite amazing just
-> > stressed read lock/unlock for rwsem vs percpu-rwsem.
-> > The test is conducted on a dual socket Intel x86_64 machine with 14
-> > cores each socket.
-> > 
-> > Test runs 10,000,000 loops of rwsem vs percpu-rwsem:
-> > https://github.com/joelagnel/linux-kernel/commit/8fe968116bd887592301179a53b7b3200db84424
-> 
-> Interesting location, but looks functional.  ;-)
-> 
-> > Graphs/Results here:
-> > https://docs.google.com/spreadsheets/d/1cbVLNK8tzTZNTr-EDGDC0T0cnFCdFK3wg2Foj5-Ll9s/edit?usp=sharing
-> > 
-> > The completion time of the test goes up somewhat exponentially with
-> > the number of threads, for the rwsem case, where as for percpu-rwsem
-> > it is the same. I could add this data to some of the documentation as
-> > well.
-> 
-> Actually, the completion time looks to be pretty close to linear in the
-> number of CPUs.  Which is still really bad, don't get me wrong.
+On Sun, Jun 9, 2019 at 11:21 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 
-Sure, yes on second thought it is more linear than exponential :)
+> my understanding that of_gpio_flags_quirks (which I'm touching with
+> this patch) is supposed to manage similar quirks to what we have in
+> stmmac (it also contains some regulator and MMC quirks too).
+> however, that's exactly the reason why I decided to mark this as RFC -
+> so I'm eager to hear Linus comments on this
 
-> Thank you for doing this, and it might be good to have some documentation
-> on this.  In perfbook, I use counters to make this point, and perhaps
-> I need to emphasize more that it also applies to other algorithms,
-> including locking.  Me, I learned this lesson from a logic analyzer
-> back in the very early 1990s.  This was back in the days before on-CPU
-> caches when a logic analyzer could actually tell you something about
-> the detailed execution.  ;-)
-> 
-> The key point is that you can often closely approximate the performance
-> of synchronization algorithms by counting the number of cache misses and
-> the number of CPUs competing for each cache line.
+The idea with the quirks in gpiolib-of.c is to make device drivers simpler,
+and phase them over to ignoring quirks for mistakes done in the early
+days of DT standardization. This feature of the gpiolib API is supposed
+to make it "narrow and deep": make the generic case simple
+and handle any hardware description languages (DT or ACPI or
+board files) and quirks (mostly historical) under the hood. Especially
+drivers should not need to worry about polarity inversion instead just
+grab a GPIO descriptor and play away with it, asserting it as
+1 and deasserting it as 0 whether that is the right polarity or not,
+the gpiolib should keep track of polarity no matter how that is described,
+even with historical weird bools like "snps,active-low" etc.
 
-Cool, thanks for that insight. It has been some years since I used a logic
-analyzer for some bus protocol debugging, but those are fun!
+So I think you are probably doing the right thing here.
+This patch is:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> If you want to get the microbenchmark test code itself upstream,
-> one approach might be to have a kernel/locking/lockperf.c similar to
-> kernel/rcu/rcuperf.c.
-> Thoughts?
-
-That sounds great to me, there's no other locking performance tests in the
-kernel. There's locking api selftests at boot (DEBUG_LOCKING_API_SELFTESTS)
-which just tests whether lockdep catches locking issues, and there's
-locktorture, but I believe none of these test for lock performance.
-
-I think a lockperf.c could also test other things about locking mechanisms,
-such as how they perform if the owner of the lock is currently running vs
-sleeping, while another thread is trying to acquire etc. What do you think? I
-can add this to my list to do. Right now I'm working on the list-RCU lockdep
-checking I started to work on [1] and want to post another series soon.
-
-Thanks a lot,
-
-- Joel
-
-[1] https://lkml.org/lkml/2019/6/1/495
-    https://lore.kernel.org/patchwork/patch/1082846/
-> 
-> 							Thanx, Paul
-> 
+Yours,
+Linus Walleij
