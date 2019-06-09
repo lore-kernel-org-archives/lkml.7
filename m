@@ -7,761 +7,1017 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7074C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3FDC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9384F214AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D50214AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047396;
-	bh=bk1KaD2YV9ynlzA1oRY4whIrVLyUkEjJPtEg1eKDp3s=;
+	s=default; t=1560047402;
+	bh=ldrSwdh6uivC8b//p7B7Nz6xIwiMB9HJHOfepvb6wmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pB5thXtjEZhoE3hr9cWYNPdji2Mt3l6xx8WrlkR0EBw7E8n+wi5mAg5BfgrbWCUyt
-	 NhVxBJUPqzMbBp9yFLtRlPL82eSYntXburPIjPceg7sb9TYMHIlFCv14k76Pf0y5aZ
-	 bh2059vXkMyMXCFJ1gTexA+AxIpXkL1m0LM5jqBY=
+	b=UzNnOhRI+DdhvUhczuTsL6JijAw9p/soPO1hZ1uCwOFuCckq19J9+JTSNKwXsbWk8
+	 DUGALCD77KcIu5qU56mXPNZ0iDyvkk5eec2gVKTinyhI1Ps4431t/6IptcRBqfnBVR
+	 7/ZjGTcSmhhsyaICZdUd903j3TO1qPFE/FaM19v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfFIC1c (ORCPT
+        id S1728799AbfFICaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:27:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55574 "EHLO
+        Sat, 8 Jun 2019 22:30:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55618 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbfFIC1b (ORCPT
+        with ESMTP id S1727771AbfFIC1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:27:31 -0400
+        Sat, 8 Jun 2019 22:27:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BCV8KXeM7o7hLjXiKVomBp2FcB1GvIsVqbEY0KYw+QY=; b=L5UpeoWjVZ6rFL4yLXAMquVwrh
-        i2LwdsC1nI6rE5M7VrKjc/fHLVxxlE0dVfCgXxNYJ1PaePuZiUiofmv+XbGDHTaPB4vx6e4dSIiav
-        5C6b5A5HoByzmezZaH/N5nntUfdjj4Egm2kUI9uEwABUw6AoGZG3Wcb85wcVTZMD0O2pxcckRISeW
-        PTt+gSe/U6Cj3Avb4AOT+tCkV1Y2EB3px4FqR486KUC4w3GbqMrgBskuWLVKZlcYwMUa2VaG8MlJ1
-        /iWpq0RpP7jgwpcEcC0eXYqvG/jMjSBm24Ao2jV02ZldhvQWukO9+o3lf9vbr9zSplD8AvI+NmrCa
-        UBMMMMqw==;
+        bh=+CVB+nZIeP9AAj716+OJK3qxsVdmhNkJNeEUnRiAb0I=; b=uHlcXgqF4APHmdh93SdRVUgv7G
+        3SxsHN811sOwwXU+98IkDRboyByWzxZARyNwb5+vDXtswASleMedbFzxzNmHJnIKxanlPQfHgwQ5Y
+        i96u6puO2tP3MIWRs4d2Lcg+Vt9pw7orxiHqILwYMWTUKQJ2sdRq32YV6wXSCF3On62kbqq8RMCWf
+        fp/jRYeyyTpjbwT5XCyAAxqucj2lgzN8n3U/Cvo74o50xphOmcDqRVSUWC74j9NLODTVTqBs+cjSo
+        g1+rAVF8PUsdd8Iai2Rc0lGUw9cEvvRNeOeso8KRuHI3w+vjs3ieB2sxshuGn9iQP/pg9MWxag4gz
+        uv8seH1Q==;
 Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZnYO-0001mr-18; Sun, 09 Jun 2019 02:27:28 +0000
+        id 1hZnYO-0001mj-0o; Sun, 09 Jun 2019 02:27:28 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZnYL-0000J3-4X; Sat, 08 Jun 2019 23:27:25 -0300
+        id 1hZnYK-0000IY-V7; Sat, 08 Jun 2019 23:27:24 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
-Subject: [PATCH v3 13/33] docs: infiniband: convert docs to ReST and rename to *.rst
-Date:   Sat,  8 Jun 2019 23:27:03 -0300
-Message-Id: <09036fdb89c4bec94cb92d25398c026afdb134e7.1560045490.git.mchehab+samsung@kernel.org>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v3 07/33] docs: cpu-freq: convert docs to ReST and rename to *.rst
+Date:   Sat,  8 Jun 2019 23:26:57 -0300
+Message-Id: <e8cb6d826e691a34996b6812851461b6000442e8.1560045490.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560045490.git.mchehab+samsung@kernel.org>
 References: <cover.1560045490.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The InfiniBand docs are plain text with no markups.
-So, all we needed to do were to add the title markups and
-some markup sequences in order to properly parse tables,
-lists and literal blocks.
+The conversion is actually:
+  - add blank lines and identation in order to identify paragraphs;
+  - fix tables markups;
+  - add some lists markups;
+  - mark literal blocks;
+  - adjust title markups.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{core_locking.txt => core_locking.rst}    |  64 ++++++-----
- Documentation/infiniband/index.rst            |  23 ++++
- .../infiniband/{ipoib.txt => ipoib.rst}       |  24 ++--
- .../infiniband/{opa_vnic.txt => opa_vnic.rst} | 108 +++++++++---------
- .../infiniband/{sysfs.txt => sysfs.rst}       |   4 +-
- .../{tag_matching.txt => tag_matching.rst}    |   5 +
- .../infiniband/{user_mad.txt => user_mad.rst} |  33 ++++--
- .../{user_verbs.txt => user_verbs.rst}        |  12 +-
- drivers/infiniband/core/user_mad.c            |   2 +-
- drivers/infiniband/ulp/ipoib/Kconfig          |   2 +-
- 10 files changed, 174 insertions(+), 103 deletions(-)
- rename Documentation/infiniband/{core_locking.txt => core_locking.rst} (78%)
- create mode 100644 Documentation/infiniband/index.rst
- rename Documentation/infiniband/{ipoib.txt => ipoib.rst} (90%)
- rename Documentation/infiniband/{opa_vnic.txt => opa_vnic.rst} (63%)
- rename Documentation/infiniband/{sysfs.txt => sysfs.rst} (69%)
- rename Documentation/infiniband/{tag_matching.txt => tag_matching.rst} (98%)
- rename Documentation/infiniband/{user_mad.txt => user_mad.rst} (90%)
- rename Documentation/infiniband/{user_verbs.txt => user_verbs.rst} (93%)
+ .../{amd-powernow.txt => amd-powernow.rst}    |  11 +-
+ Documentation/cpu-freq/{core.txt => core.rst} |  66 +++---
+ .../{cpu-drivers.txt => cpu-drivers.rst}      | 217 +++++++++---------
+ ...pufreq-nforce2.txt => cpufreq-nforce2.rst} |  12 +-
+ .../{cpufreq-stats.txt => cpufreq-stats.rst}  | 141 ++++++------
+ .../cpu-freq/{index.txt => index.rst}         |  44 ++--
+ .../{pcc-cpufreq.txt => pcc-cpufreq.rst}      | 102 ++++----
+ drivers/cpufreq/Kconfig.x86                   |   2 +-
+ 8 files changed, 302 insertions(+), 293 deletions(-)
+ rename Documentation/cpu-freq/{amd-powernow.txt => amd-powernow.rst} (91%)
+ rename Documentation/cpu-freq/{core.txt => core.rst} (67%)
+ rename Documentation/cpu-freq/{cpu-drivers.txt => cpu-drivers.rst} (57%)
+ rename Documentation/cpu-freq/{cpufreq-nforce2.txt => cpufreq-nforce2.rst} (65%)
+ rename Documentation/cpu-freq/{cpufreq-stats.txt => cpufreq-stats.rst} (31%)
+ rename Documentation/cpu-freq/{index.txt => index.rst} (37%)
+ rename Documentation/cpu-freq/{pcc-cpufreq.txt => pcc-cpufreq.rst} (80%)
 
-diff --git a/Documentation/infiniband/core_locking.txt b/Documentation/infiniband/core_locking.rst
-similarity index 78%
-rename from Documentation/infiniband/core_locking.txt
-rename to Documentation/infiniband/core_locking.rst
-index 4b1f36b6ada0..f34669beb4fe 100644
---- a/Documentation/infiniband/core_locking.txt
-+++ b/Documentation/infiniband/core_locking.rst
-@@ -1,4 +1,6 @@
--INFINIBAND MIDLAYER LOCKING
-+===========================
-+InfiniBand Midlayer Locking
-+===========================
- 
-   This guide is an attempt to make explicit the locking assumptions
-   made by the InfiniBand midlayer.  It describes the requirements on
-@@ -6,45 +8,47 @@ INFINIBAND MIDLAYER LOCKING
-   protocols that use the midlayer.
- 
- Sleeping and interrupt context
-+==============================
- 
-   With the following exceptions, a low-level driver implementation of
-   all of the methods in struct ib_device may sleep.  The exceptions
-   are any methods from the list:
- 
--    create_ah
--    modify_ah
--    query_ah
--    destroy_ah
--    post_send
--    post_recv
--    poll_cq
--    req_notify_cq
--    map_phys_fmr
-+    - create_ah
-+    - modify_ah
-+    - query_ah
-+    - destroy_ah
-+    - post_send
-+    - post_recv
-+    - poll_cq
-+    - req_notify_cq
-+    - map_phys_fmr
- 
-   which may not sleep and must be callable from any context.
- 
-   The corresponding functions exported to upper level protocol
-   consumers:
- 
--    ib_create_ah
--    ib_modify_ah
--    ib_query_ah
--    ib_destroy_ah
--    ib_post_send
--    ib_post_recv
--    ib_req_notify_cq
--    ib_map_phys_fmr
-+    - ib_create_ah
-+    - ib_modify_ah
-+    - ib_query_ah
-+    - ib_destroy_ah
-+    - ib_post_send
-+    - ib_post_recv
-+    - ib_req_notify_cq
-+    - ib_map_phys_fmr
- 
-   are therefore safe to call from any context.
- 
-   In addition, the function
- 
--    ib_dispatch_event
-+    - ib_dispatch_event
- 
-   used by low-level drivers to dispatch asynchronous events through
-   the midlayer is also safe to call from any context.
- 
- Reentrancy
-+----------
- 
-   All of the methods in struct ib_device exported by a low-level
-   driver must be fully reentrant.  The low-level driver is required to
-@@ -62,6 +66,7 @@ Reentrancy
-   information between different calls of ib_poll_cq() is not defined.
- 
- Callbacks
-+---------
- 
-   A low-level driver must not perform a callback directly from the
-   same callchain as an ib_device method call.  For example, it is not
-@@ -74,18 +79,18 @@ Callbacks
-   completion event handlers for the same CQ are not called
-   simultaneously.  The driver must guarantee that only one CQ event
-   handler for a given CQ is running at a time.  In other words, the
--  following situation is not allowed:
-+  following situation is not allowed::
- 
--        CPU1                                    CPU2
-+          CPU1                                    CPU2
- 
--  low-level driver ->
--    consumer CQ event callback:
--      /* ... */
--      ib_req_notify_cq(cq, ...);
--                                        low-level driver ->
--      /* ... */                           consumer CQ event callback:
--                                            /* ... */
--      return from CQ event handler
-+    low-level driver ->
-+      consumer CQ event callback:
-+        /* ... */
-+        ib_req_notify_cq(cq, ...);
-+                                          low-level driver ->
-+        /* ... */                           consumer CQ event callback:
-+                                              /* ... */
-+        return from CQ event handler
- 
-   The context in which completion event and asynchronous event
-   callbacks run is not defined.  Depending on the low-level driver, it
-@@ -93,6 +98,7 @@ Callbacks
-   Upper level protocol consumers may not sleep in a callback.
- 
- Hot-plug
-+--------
- 
-   A low-level driver announces that a device is ready for use by
-   consumers when it calls ib_register_device(), all initialization
-diff --git a/Documentation/infiniband/index.rst b/Documentation/infiniband/index.rst
-new file mode 100644
-index 000000000000..22eea64de722
---- /dev/null
-+++ b/Documentation/infiniband/index.rst
-@@ -0,0 +1,23 @@
-+:orphan:
-+
-+==========
-+InfiniBand
-+==========
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   core_locking
-+   ipoib
-+   opa_vnic
-+   sysfs
-+   tag_matching
-+   user_mad
-+   user_verbs
-+
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/infiniband/ipoib.txt b/Documentation/infiniband/ipoib.rst
-similarity index 90%
-rename from Documentation/infiniband/ipoib.txt
-rename to Documentation/infiniband/ipoib.rst
-index 47c1dd9818f2..0dd36154c0c9 100644
---- a/Documentation/infiniband/ipoib.txt
-+++ b/Documentation/infiniband/ipoib.rst
-@@ -1,4 +1,6 @@
--IP OVER INFINIBAND
-+==================
-+IP over InfiniBand
-+==================
- 
-   The ib_ipoib driver is an implementation of the IP over InfiniBand
-   protocol as specified by RFC 4391 and 4392, issued by the IETF ipoib
-@@ -8,16 +10,17 @@ IP OVER INFINIBAND
-   masqueraded to the kernel as ethernet interfaces).
- 
- Partitions and P_Keys
-+=====================
- 
-   When the IPoIB driver is loaded, it creates one interface for each
-   port using the P_Key at index 0.  To create an interface with a
-   different P_Key, write the desired P_Key into the main interface's
--  /sys/class/net/<intf name>/create_child file.  For example:
-+  /sys/class/net/<intf name>/create_child file.  For example::
- 
-     echo 0x8001 > /sys/class/net/ib0/create_child
- 
-   This will create an interface named ib0.8001 with P_Key 0x8001.  To
--  remove a subinterface, use the "delete_child" file:
-+  remove a subinterface, use the "delete_child" file::
- 
-     echo 0x8001 > /sys/class/net/ib0/delete_child
- 
-@@ -28,6 +31,7 @@ Partitions and P_Keys
-   rtnl_link_ops, where children created using either way behave the same.
- 
- Datagram vs Connected modes
-+===========================
- 
-   The IPoIB driver supports two modes of operation: datagram and
-   connected.  The mode is set and read through an interface's
-@@ -51,6 +55,7 @@ Datagram vs Connected modes
-   networking stack to use the smaller UD MTU for these neighbours.
- 
- Stateless offloads
-+==================
- 
-   If the IB HW supports IPoIB stateless offloads, IPoIB advertises
-   TCP/IP checksum and/or Large Send (LSO) offloading capability to the
-@@ -60,9 +65,10 @@ Stateless offloads
-   on/off using ethtool calls.  Currently LRO is supported only for
-   checksum offload capable devices.
- 
--  Stateless offloads are supported only in datagram mode.  
-+  Stateless offloads are supported only in datagram mode.
- 
- Interrupt moderation
-+====================
- 
-   If the underlying IB device supports CQ event moderation, one can
-   use ethtool to set interrupt mitigation parameters and thus reduce
-@@ -71,6 +77,7 @@ Interrupt moderation
-   moderation is supported.
- 
- Debugging Information
-+=====================
- 
-   By compiling the IPoIB driver with CONFIG_INFINIBAND_IPOIB_DEBUG set
-   to 'y', tracing messages are compiled into the driver.  They are
-@@ -79,7 +86,7 @@ Debugging Information
-   runtime through files in /sys/module/ib_ipoib/.
- 
-   CONFIG_INFINIBAND_IPOIB_DEBUG also enables files in the debugfs
--  virtual filesystem.  By mounting this filesystem, for example with
-+  virtual filesystem.  By mounting this filesystem, for example with::
- 
-     mount -t debugfs none /sys/kernel/debug
- 
-@@ -96,10 +103,13 @@ Debugging Information
-   performance, because it adds tests to the fast path.
- 
- References
-+==========
- 
-   Transmission of IP over InfiniBand (IPoIB) (RFC 4391)
--    http://ietf.org/rfc/rfc4391.txt 
-+    http://ietf.org/rfc/rfc4391.txt
-+
-   IP over InfiniBand (IPoIB) Architecture (RFC 4392)
--    http://ietf.org/rfc/rfc4392.txt 
-+    http://ietf.org/rfc/rfc4392.txt
-+
-   IP over InfiniBand: Connected Mode (RFC 4755)
-     http://ietf.org/rfc/rfc4755.txt
-diff --git a/Documentation/infiniband/opa_vnic.txt b/Documentation/infiniband/opa_vnic.rst
-similarity index 63%
-rename from Documentation/infiniband/opa_vnic.txt
-rename to Documentation/infiniband/opa_vnic.rst
-index 282e17be798a..2f888d9ffec0 100644
---- a/Documentation/infiniband/opa_vnic.txt
-+++ b/Documentation/infiniband/opa_vnic.rst
+diff --git a/Documentation/cpu-freq/amd-powernow.txt b/Documentation/cpu-freq/amd-powernow.rst
+similarity index 91%
+rename from Documentation/cpu-freq/amd-powernow.txt
+rename to Documentation/cpu-freq/amd-powernow.rst
+index 254da155fa47..50b2c45c3a2c 100644
+--- a/Documentation/cpu-freq/amd-powernow.txt
++++ b/Documentation/cpu-freq/amd-powernow.rst
 @@ -1,3 +1,7 @@
-+=================================================================
-+Intel Omni-Path (OPA) Virtual Network Interface Controller (VNIC)
-+=================================================================
++=============================
++AMD powernow driver specifics
++=============================
 +
- Intel Omni-Path (OPA) Virtual Network Interface Controller (VNIC) feature
- supports Ethernet functionality over Omni-Path fabric by encapsulating
- the Ethernet packets between HFI nodes.
-@@ -17,70 +21,72 @@ an independent Ethernet network. The configuration is performed by an
- Ethernet Manager (EM) which is part of the trusted Fabric Manager (FM)
- application. HFI nodes can have multiple VNICs each connected to a
- different virtual Ethernet switch. The below diagram presents a case
--of two virtual Ethernet switches with two HFI nodes.
-+of two virtual Ethernet switches with two HFI nodes::
  
--                             +-------------------+
--                             |      Subnet/      |
--                             |     Ethernet      |
--                             |      Manager      |
--                             +-------------------+
--                                /          /
--                              /           /
--                            /            /
--                          /             /
--+-----------------------------+  +------------------------------+
--|  Virtual Ethernet Switch    |  |  Virtual Ethernet Switch     |
--|  +---------+    +---------+ |  | +---------+    +---------+   |
--|  | VPORT   |    |  VPORT  | |  | |  VPORT  |    |  VPORT  |   |
--+--+---------+----+---------+-+  +-+---------+----+---------+---+
--         |                 \        /                 |
--         |                   \    /                   |
--         |                     \/                     |
--         |                    /  \                    |
--         |                  /      \                  |
--     +-----------+------------+  +-----------+------------+
--     |   VNIC    |    VNIC    |  |    VNIC   |    VNIC    |
--     +-----------+------------+  +-----------+------------+
--     |          HFI           |  |          HFI           |
--     +------------------------+  +------------------------+
-+                               +-------------------+
-+                               |      Subnet/      |
-+                               |     Ethernet      |
-+                               |      Manager      |
-+                               +-------------------+
-+                                  /          /
-+                                /           /
-+                              /            /
-+                            /             /
-+  +-----------------------------+  +------------------------------+
-+  |  Virtual Ethernet Switch    |  |  Virtual Ethernet Switch     |
-+  |  +---------+    +---------+ |  | +---------+    +---------+   |
-+  |  | VPORT   |    |  VPORT  | |  | |  VPORT  |    |  VPORT  |   |
-+  +--+---------+----+---------+-+  +-+---------+----+---------+---+
-+           |                 \        /                 |
-+           |                   \    /                   |
-+           |                     \/                     |
-+           |                    /  \                    |
-+           |                  /      \                  |
-+       +-----------+------------+  +-----------+------------+
-+       |   VNIC    |    VNIC    |  |    VNIC   |    VNIC    |
-+       +-----------+------------+  +-----------+------------+
-+       |          HFI           |  |          HFI           |
-+       +------------------------+  +------------------------+
+ PowerNow! and Cool'n'Quiet are AMD names for frequency
+ management capabilities in AMD processors. As the hardware
+@@ -23,16 +27,19 @@ not supply these tables.
+ 7th Generation: powernow-k7: Athlon, Duron, Geode.
  
- 
- The Omni-Path encapsulated Ethernet packet format is as described below.
- 
--Bits          Field
--------------------------------------
-+==================== ================================
-+Bits                 Field
-+==================== ================================
- Quad Word 0:
--0-19      SLID (lower 20 bits)
--20-30     Length (in Quad Words)
--31        BECN bit
--32-51     DLID (lower 20 bits)
--52-56     SC (Service Class)
--57-59     RC (Routing Control)
--60        FECN bit
--61-62     L2 (=10, 16B format)
--63        LT (=1, Link Transfer Head Flit)
-+0-19                 SLID (lower 20 bits)
-+20-30                Length (in Quad Words)
-+31                   BECN bit
-+32-51                DLID (lower 20 bits)
-+52-56                SC (Service Class)
-+57-59                RC (Routing Control)
-+60                   FECN bit
-+61-62                L2 (=10, 16B format)
-+63                   LT (=1, Link Transfer Head Flit)
- 
- Quad Word 1:
--0-7       L4 type (=0x78 ETHERNET)
--8-11      SLID[23:20]
--12-15     DLID[23:20]
--16-31     PKEY
--32-47     Entropy
--48-63     Reserved
-+0-7                  L4 type (=0x78 ETHERNET)
-+8-11                 SLID[23:20]
-+12-15                DLID[23:20]
-+16-31                PKEY
-+32-47                Entropy
-+48-63                Reserved
- 
- Quad Word 2:
--0-15      Reserved
--16-31     L4 header
--32-63     Ethernet Packet
-+0-15                 Reserved
-+16-31                L4 header
-+32-63                Ethernet Packet
- 
- Quad Words 3 to N-1:
--0-63      Ethernet packet (pad extended)
-+0-63                 Ethernet packet (pad extended)
- 
- Quad Word N (last):
--0-23      Ethernet packet (pad extended)
--24-55     ICRC
--56-61     Tail
--62-63     LT (=01, Link Transfer Tail Flit)
-+0-23                 Ethernet packet (pad extended)
-+24-55                ICRC
-+56-61                Tail
-+62-63                LT (=01, Link Transfer Tail Flit)
-+==================== ================================
- 
- Ethernet packet is padded on the transmit side to ensure that the VNIC OPA
- packet is quad word aligned. The 'Tail' field contains the number of bytes
-@@ -123,7 +129,7 @@ operation. It also handles the encapsulation of Ethernet packets with an
- Omni-Path header in the transmit path. For each VNIC interface, the
- information required for encapsulation is configured by the EM via VEMA MAD
- interface. It also passes any control information to the HW dependent driver
--by invoking the RDMA netdev control operations.
-+by invoking the RDMA netdev control operations::
- 
-         +-------------------+ +----------------------+
-         |                   | |       Linux          |
-diff --git a/Documentation/infiniband/sysfs.txt b/Documentation/infiniband/sysfs.rst
-similarity index 69%
-rename from Documentation/infiniband/sysfs.txt
-rename to Documentation/infiniband/sysfs.rst
-index 9fab5062f84b..f0abd6fa48f4 100644
---- a/Documentation/infiniband/sysfs.txt
-+++ b/Documentation/infiniband/sysfs.rst
-@@ -1,4 +1,6 @@
--SYSFS FILES
-+===========
-+Sysfs files
-+===========
- 
- The sysfs interface has moved to
- Documentation/ABI/stable/sysfs-class-infiniband.
-diff --git a/Documentation/infiniband/tag_matching.txt b/Documentation/infiniband/tag_matching.rst
-similarity index 98%
-rename from Documentation/infiniband/tag_matching.txt
-rename to Documentation/infiniband/tag_matching.rst
-index d2a3bf819226..ef56ea585f92 100644
---- a/Documentation/infiniband/tag_matching.txt
-+++ b/Documentation/infiniband/tag_matching.rst
-@@ -1,12 +1,16 @@
-+==================
- Tag matching logic
-+==================
- 
- The MPI standard defines a set of rules, known as tag-matching, for matching
- source send operations to destination receives.  The following parameters must
- match the following source and destination parameters:
+ 8th Generation: powernow-k8: Athlon, Athlon 64, Opteron, Sempron.
 +
- *	Communicator
- *	User tag - wild card may be specified by the receiver
- *	Source rank – wild car may be specified by the receiver
- *	Destination rank – wild
+ Documentation on this functionality in 8th generation processors
+ is available in the "BIOS and Kernel Developer's Guide", publication
+-26094, in chapter 9, available for download from www.amd.com. 
++26094, in chapter 9, available for download from www.amd.com.
+ 
+ BIOS supplied data, for powernow-k7 and for powernow-k8, may be
+ from either the PSB table or from ACPI objects. The ACPI support
+ is only available if the kernel config sets CONFIG_ACPI_PROCESSOR.
 +
- The ordering rules require that when more than one pair of send and receive
- message envelopes may match, the pair that includes the earliest posted-send
- and the earliest posted-receive is the pair that must be used to satisfy the
-@@ -35,6 +39,7 @@ the header to initiate an RDMA READ operation directly to the matching buffer.
- A fin message needs to be received in order for the buffer to be reused.
- 
- Tag matching implementation
-+===========================
- 
- There are two types of matching objects used, the posted receive list and the
- unexpected message list. The application posts receive buffers through calls
-diff --git a/Documentation/infiniband/user_mad.txt b/Documentation/infiniband/user_mad.rst
-similarity index 90%
-rename from Documentation/infiniband/user_mad.txt
-rename to Documentation/infiniband/user_mad.rst
-index 7aca13a54a3a..d88abfc0e370 100644
---- a/Documentation/infiniband/user_mad.txt
-+++ b/Documentation/infiniband/user_mad.rst
-@@ -1,6 +1,9 @@
--USERSPACE MAD ACCESS
-+====================
-+Userspace MAD access
-+====================
- 
- Device files
-+============
- 
-   Each port of each InfiniBand device has a "umad" device and an
-   "issm" device attached.  For example, a two-port HCA will have two
-@@ -8,12 +11,13 @@ Device files
-   device of each type (for switch port 0).
- 
- Creating MAD agents
-+===================
- 
-   A MAD agent can be created by filling in a struct ib_user_mad_reg_req
-   and then calling the IB_USER_MAD_REGISTER_AGENT ioctl on a file
-   descriptor for the appropriate device file.  If the registration
-   request succeeds, a 32-bit id will be returned in the structure.
--  For example:
-+  For example::
- 
- 	struct ib_user_mad_reg_req req = { /* ... */ };
- 	ret = ioctl(fd, IB_USER_MAD_REGISTER_AGENT, (char *) &req);
-@@ -26,12 +30,14 @@ Creating MAD agents
-   ioctl.  Also, all agents registered through a file descriptor will
-   be unregistered when the descriptor is closed.
- 
--  2014 -- a new registration ioctl is now provided which allows additional
-+  2014
-+       a new registration ioctl is now provided which allows additional
-        fields to be provided during registration.
-        Users of this registration call are implicitly setting the use of
-        pkey_index (see below).
- 
- Receiving MADs
-+==============
- 
-   MADs are received using read().  The receive side now supports
-   RMPP. The buffer passed to read() must be at least one
-@@ -41,7 +47,8 @@ Receiving MADs
-   MAD (RMPP), the errno is set to ENOSPC and the length of the
-   buffer needed is set in mad.length.
- 
--  Example for normal MAD (non RMPP) reads:
-+  Example for normal MAD (non RMPP) reads::
+ The powernow-k8 driver will attempt to use ACPI if so configured,
+ and fall back to PST if that fails.
 +
- 	struct ib_user_mad *mad;
- 	mad = malloc(sizeof *mad + 256);
- 	ret = read(fd, mad, sizeof *mad + 256);
-@@ -50,7 +57,8 @@ Receiving MADs
- 		free(mad);
- 	}
+ The powernow-k7 driver will try to use the PSB support first, and
+ fall back to ACPI if the PSB support fails. A module parameter,
+-acpi_force, is provided to force ACPI support to be used instead 
++acpi_force, is provided to force ACPI support to be used instead
+ of PSB support.
+diff --git a/Documentation/cpu-freq/core.txt b/Documentation/cpu-freq/core.rst
+similarity index 67%
+rename from Documentation/cpu-freq/core.txt
+rename to Documentation/cpu-freq/core.rst
+index 073f128af5a7..c719e3cb700c 100644
+--- a/Documentation/cpu-freq/core.txt
++++ b/Documentation/cpu-freq/core.rst
+@@ -1,31 +1,22 @@
+-     CPU frequency and voltage scaling code in the Linux(TM) kernel
++================================================================
++General description of the CPUFreq core and of CPUFreq notifiers
++================================================================
  
--  Example for RMPP reads:
-+  Example for RMPP reads::
++Authors:
++  - Dominik Brodowski  <linux@brodo.de>
++  - David Kimdon <dwhedon@debian.org>
++  - Rafael J. Wysocki <rafael.j.wysocki@intel.com>
++  - Viresh Kumar <viresh.kumar@linaro.org>
+ 
+-		         L i n u x    C P U F r e q
+ 
+-			  C P U F r e q    C o r e
++.. Contents:
+ 
+-
+-		    Dominik Brodowski  <linux@brodo.de>
+-		     David Kimdon <dwhedon@debian.org>
+-		Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+-		   Viresh Kumar <viresh.kumar@linaro.org>
+-
+-
+-
+-   Clock scaling allows you to change the clock speed of the CPUs on the
+-    fly. This is a nice method to save battery power, because the lower
+-            the clock speed, the less power the CPU consumes.
+-
+-
+-Contents:
+----------
+-1.  CPUFreq core and interfaces
+-2.  CPUFreq notifiers
+-3.  CPUFreq Table Generation with Operating Performance Point (OPP)
++  1.  CPUFreq core and interfaces
++  2.  CPUFreq notifiers
++  3.  CPUFreq Table Generation with Operating Performance Point (OPP)
+ 
+ 1. General Information
+-=======================
++======================
+ 
+ The CPUFreq core code is located in drivers/cpufreq/cpufreq.c. This
+ cpufreq code offers a standardized interface for the CPUFreq
+@@ -60,18 +51,18 @@ transition notifiers.
+ These are notified when a new policy is intended to be set. Each
+ CPUFreq policy notifier is called twice for a policy transition:
+ 
+-1.) During CPUFREQ_ADJUST all CPUFreq notifiers may change the limit if
+-    they see a need for this - may it be thermal considerations or
+-    hardware limitations.
++1) During CPUFREQ_ADJUST all CPUFreq notifiers may change the limit if
++   they see a need for this - may it be thermal considerations or
++   hardware limitations.
+ 
+-2.) And during CPUFREQ_NOTIFY all notifiers are informed of the new policy
+-   - if two hardware drivers failed to agree on a new policy before this
++2) And during CPUFREQ_NOTIFY all notifiers are informed of the new policy -
++   if two hardware drivers failed to agree on a new policy before this
+    stage, the incompatible hardware shall be shut down, and the user
+    informed of this.
+ 
+ The phase is specified in the second argument to the notifier.
+ 
+-The third argument, a void *pointer, points to a struct cpufreq_policy
++The third argument, a `void *` pointer, points to a struct cpufreq_policy
+ consisting of several values, including min, max (the lower and upper
+ frequencies (in kHz) of the new policy).
+ 
+@@ -88,23 +79,27 @@ CPUFREQ_POSTCHANGE.
+ 
+ The third argument is a struct cpufreq_freqs with the following
+ values:
+-cpu	- number of the affected CPU
+-old	- old frequency
+-new	- new frequency
+-flags	- flags of the cpufreq driver
 +
- 	struct ib_user_mad *mad;
- 	mad = malloc(sizeof *mad + 256);
- 	ret = read(fd, mad, sizeof *mad + 256);
-@@ -76,11 +84,12 @@ Receiving MADs
-   poll()/select() may be used to wait until a MAD can be read.
++======= ===========================
++cpu	number of the affected CPU
++old	old frequency
++new	new frequency
++flags	flags of the cpufreq driver
++======= ===========================
  
- Sending MADs
-+============
+ 3. CPUFreq Table Generation with Operating Performance Point (OPP)
+ ==================================================================
+ For details about OPP, see Documentation/power/opp.txt
  
-   MADs are sent using write().  The agent ID for sending should be
-   filled into the id field of the MAD, the destination LID should be
-   filled into the lid field, and so on.  The send side does support
--  RMPP so arbitrary length MAD can be sent. For example:
-+  RMPP so arbitrary length MAD can be sent. For example::
+-dev_pm_opp_init_cpufreq_table -
++dev_pm_opp_init_cpufreq_table
+ 	This function provides a ready to use conversion routine to translate
+ 	the OPP layer's internal information about the available frequencies
+ 	into a format readily providable to cpufreq.
  
- 	struct ib_user_mad *mad;
+ 	WARNING: Do not use this function in interrupt context.
  
-@@ -97,6 +106,7 @@ Sending MADs
- 		perror("write");
+-	Example:
++	Example::
++
+ 	 soc_pm_init()
+ 	 {
+ 		/* Do things */
+@@ -117,4 +112,5 @@ dev_pm_opp_init_cpufreq_table -
+ 	NOTE: This function is available only if CONFIG_CPU_FREQ is enabled in
+ 	addition to CONFIG_PM_OPP.
  
- Transaction IDs
+-dev_pm_opp_free_cpufreq_table - Free up the table allocated by dev_pm_opp_init_cpufreq_table
++dev_pm_opp_free_cpufreq_table
++	Free up the table allocated by dev_pm_opp_init_cpufreq_table
+diff --git a/Documentation/cpu-freq/cpu-drivers.txt b/Documentation/cpu-freq/cpu-drivers.rst
+similarity index 57%
+rename from Documentation/cpu-freq/cpu-drivers.txt
+rename to Documentation/cpu-freq/cpu-drivers.rst
+index 6e353d00cdc6..9cc2559bc34b 100644
+--- a/Documentation/cpu-freq/cpu-drivers.txt
++++ b/Documentation/cpu-freq/cpu-drivers.rst
+@@ -1,35 +1,25 @@
+-     CPU frequency and voltage scaling code in the Linux(TM) kernel
+-
+-
+-		         L i n u x    C P U F r e q
+-
+-			   C P U   D r i v e r s 
+-
+-		       - information for developers -
+-
+-
+-		    Dominik Brodowski  <linux@brodo.de>
+-		Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+-		   Viresh Kumar <viresh.kumar@linaro.org>
+-
+-
+-
+-   Clock scaling allows you to change the clock speed of the CPUs on the
+-    fly. This is a nice method to save battery power, because the lower
+-            the clock speed, the less power the CPU consumes.
+-
+-
+-Contents:
+----------
+-1.   What To Do?
+-1.1  Initialization
+-1.2  Per-CPU Initialization
+-1.3  verify
+-1.4  target/target_index or setpolicy?
+-1.5  target/target_index
+-1.6  setpolicy
+-1.7  get_intermediate and target_intermediate
+-2.   Frequency Table Helpers
++===============================================
++How to implement a new cpufreq processor driver
++===============================================
++
++.. information for developers
++
++Authors:
++  - Dominik Brodowski  <linux@brodo.de>
++  - Rafael J. Wysocki <rafael.j.wysocki@intel.com>
++  - Viresh Kumar <viresh.kumar@linaro.org>
++
++.. Contents:
++
++   1.   What To Do?
++   1.1  Initialization
++   1.2  Per-CPU Initialization
++   1.3  verify
++   1.4  target/target_index or setpolicy?
++   1.5  target/target_index
++   1.6  setpolicy
++   1.7  get_intermediate and target_intermediate
++   2.   Frequency Table Helpers
+ 
+ 
+ 
+@@ -46,59 +36,73 @@ on what is necessary:
+ 
+ First of all, in an __initcall level 7 (module_init()) or later
+ function check whether this kernel runs on the right CPU and the right
+-chipset. If so, register a struct cpufreq_driver with the CPUfreq core
+-using cpufreq_register_driver()
++chipset. If so, register a `struct cpufreq_driver` with the CPUfreq core
++using `cpufreq_register_driver()`
+ 
+-What shall this struct cpufreq_driver contain? 
++What shall this `struct cpufreq_driver` contain?
+ 
+- .name - The name of this driver.
++.name
++  The name of this driver.
+ 
+- .init - A pointer to the per-policy initialization function.
++.init
++  A pointer to the per-policy initialization function.
+ 
+- .verify - A pointer to a "verification" function.
++.verify
++  A pointer to a "verification" function.
+ 
+- .setpolicy _or_ .fast_switch _or_ .target _or_ .target_index - See
+- below on the differences.
++.setpolicy **or** .fast_switch **or** .target **or** .target_index
++  See below on the differences.
+ 
+ And optionally
+ 
+- .flags - Hints for the cpufreq core.
++.flags
++  Hints for the cpufreq core.
+ 
+- .driver_data - cpufreq driver specific data.
++.driver_data
++  cpufreq driver specific data.
+ 
+- .resolve_freq - Returns the most appropriate frequency for a target
+- frequency. Doesn't change the frequency though.
++.resolve_freq
++  Returns the most appropriate frequency for a target
++  frequency. Doesn't change the frequency though.
+ 
+- .get_intermediate and target_intermediate - Used to switch to stable
+- frequency while changing CPU frequency.
++.get_intermediate and target_intermediate
++  Used to switch to stable frequency while changing CPU frequency.
+ 
+- .get - Returns current frequency of the CPU.
++.get
++  Returns current frequency of the CPU.
+ 
+- .bios_limit - Returns HW/BIOS max frequency limitations for the CPU.
++.bios_limit
++  Returns HW/BIOS max frequency limitations for the CPU.
+ 
+- .exit - A pointer to a per-policy cleanup function called during
+- CPU_POST_DEAD phase of cpu hotplug process.
++.exit
++  A pointer to a per-policy cleanup function called during
++  CPU_POST_DEAD phase of cpu hotplug process.
+ 
+- .stop_cpu - A pointer to a per-policy stop function called during
+- CPU_DOWN_PREPARE phase of cpu hotplug process.
++.stop_cpu
++  A pointer to a per-policy stop function called during
++  CPU_DOWN_PREPARE phase of cpu hotplug process.
+ 
+- .suspend - A pointer to a per-policy suspend function which is called
+- with interrupts disabled and _after_ the governor is stopped for the
+- policy.
++.suspend
++  A pointer to a per-policy suspend function which is called with
++  interrupts disabled and **after** the governor is stopped for the policy.
+ 
+- .resume - A pointer to a per-policy resume function which is called
+- with interrupts disabled and _before_ the governor is started again.
++.resume
++  A pointer to a per-policy resume function which is called
++  with interrupts disabled and **before** the governor is started again.
+ 
+- .ready - A pointer to a per-policy ready function which is called after
+- the policy is fully initialized.
++.ready
++  A pointer to a per-policy ready function which is called after
++  the policy is fully initialized.
+ 
+- .attr - A pointer to a NULL-terminated list of "struct freq_attr" which
+- allow to export values to sysfs.
++.attr
++  A pointer to a NULL-terminated list of `struct freq_attr` which
++  allow to export values to sysfs.
+ 
+- .boost_enabled - If set, boost frequencies are enabled.
++.boost_enabled
++  If set, boost frequencies are enabled.
+ 
+- .set_boost - A pointer to a per-policy function to enable/disable boost
+- frequencies.
++.set_boost
++  A pointer to a per-policy function to enable/disable boost frequencies.
+ 
+ 
+ 1.2 Per-CPU Initialization
+@@ -108,37 +112,42 @@ Whenever a new CPU is registered with the device model, or after the
+ cpufreq driver registers itself, the per-policy initialization function
+ cpufreq_driver.init is called if no cpufreq policy existed for the CPU.
+ Note that the .init() and .exit() routines are called only once for the
+-policy and not for each CPU managed by the policy. It takes a struct
+-cpufreq_policy *policy as argument. What to do now?
++policy and not for each CPU managed by the policy. It takes a `struct
++cpufreq_policy *policy` as argument. What to do now?
+ 
+ If necessary, activate the CPUfreq support on your CPU.
+ 
+ Then, the driver must fill in the following values:
+ 
+-policy->cpuinfo.min_freq _and_
+-policy->cpuinfo.max_freq -	the minimum and maximum frequency 
+-				(in kHz) which is supported by 
+-				this CPU
+-policy->cpuinfo.transition_latency   the time it takes on this CPU to
+-				switch between two frequencies in
+-				nanoseconds (if appropriate, else
+-				specify CPUFREQ_ETERNAL)
+-
+-policy->cur			The current operating frequency of
+-				this CPU (if appropriate)
+-policy->min, 
+-policy->max, 
+-policy->policy and, if necessary,
+-policy->governor		must contain the "default policy" for
+-				this CPU. A few moments later,
+-				cpufreq_driver.verify and either
+-				cpufreq_driver.setpolicy or
+-				cpufreq_driver.target/target_index is called
+-				with these values.
+-policy->cpus			Update this with the masks of the
+-				(online + offline) CPUs that do DVFS
+-				along with this CPU (i.e.  that share
+-				clock/voltage rails with it).
+++---------------------------------------+--------------------------------------+
++| policy->cpuinfo.min_freq **and**	|				       |
++| policy->cpuinfo.max_freq		| the minimum and maximum frequency    |
++| 					| (in kHz) which is supported by       |
++| 					| this CPU			       |
+++---------------------------------------+--------------------------------------+
++| policy->cpuinfo.transition_latency	| the time it takes on this CPU to     |
++| 					| switch between two frequencies in    |
++| 					| nanoseconds (if appropriate, else    |
++| 					| specify CPUFREQ_ETERNAL)	       |
+++---------------------------------------+--------------------------------------+
++| policy->cur				| The current operating frequency of   |
++| 					| this CPU (if appropriate)	       |
+++---------------------------------------+--------------------------------------+
++| policy->min,				|				       |
++| policy->max,				|				       |
++| policy->policy and, if necessary,	|				       |
++| policy->governor			| must contain the "default policy"    |
++| 					| for this CPU. A few moments later,   |
++| 					| cpufreq_driver.verify and either     |
++| 					| cpufreq_driver.setpolicy or	       |
++| 					| cpufreq_driver.target/target_index   |
++| 					| is called with these values.	       |
+++---------------------------------------+--------------------------------------+
++| policy->cpus				| Update this with the masks of the    |
++| 					| (online + offline) CPUs that do DVFS |
++| 					| along with this CPU (i.e. that share |
++| 					| clock/voltage rails with it).	       |
+++---------------------------------------+--------------------------------------+
+ 
+ For setting some of these values (cpuinfo.min[max]_freq, policy->min[max]), the
+ frequency table helpers might be helpful. See the section 2 for more information
+@@ -151,8 +160,8 @@ on them.
+ When the user decides a new policy (consisting of
+ "policy,governor,min,max") shall be set, this policy must be validated
+ so that incompatible values can be corrected. For verifying these
+-values cpufreq_verify_within_limits(struct cpufreq_policy *policy,
+-unsigned int min_freq, unsigned int max_freq) function might be helpful.
++values `cpufreq_verify_within_limits(struct cpufreq_policy *policy,
++unsigned int min_freq, unsigned int max_freq)` function might be helpful.
+ See section 2 for details on frequency table helpers.
+ 
+ You need to make sure that at least one valid frequency (or operating
+@@ -163,7 +172,7 @@ policy->max first, and only if this is no solution, decrease policy->min.
+ 1.4 target or target_index or setpolicy or fast_switch?
+ -------------------------------------------------------
+ 
+-Most cpufreq drivers or even most cpu frequency scaling algorithms 
++Most cpufreq drivers or even most cpu frequency scaling algorithms
+ only allow the CPU frequency to be set to predefined fixed values. For
+ these, you use the ->target(), ->target_index() or ->fast_switch()
+ callbacks.
+@@ -175,8 +184,8 @@ limits on their own. These shall use the ->setpolicy() callback.
+ 1.5. target/target_index
+ ------------------------
+ 
+-The target_index call has two arguments: struct cpufreq_policy *policy,
+-and unsigned int index (into the exposed frequency table).
++The target_index call has two arguments: `struct cpufreq_policy *policy`,
++and `unsigned int index` (into the exposed frequency table).
+ 
+ The CPUfreq driver must set the new frequency when called here. The
+ actual frequency must be determined by freq_table[index].frequency.
+@@ -184,10 +193,10 @@ actual frequency must be determined by freq_table[index].frequency.
+ It should always restore to earlier frequency (i.e. policy->restore_freq) in
+ case of errors, even if we switched to intermediate frequency earlier.
+ 
+-Deprecated:
++Deprecated
+ ----------
+-The target call has three arguments: struct cpufreq_policy *policy,
+-unsigned int target_frequency, unsigned int relation.
++The target call has three arguments: `struct cpufreq_policy *policy`,
++`unsigned int target_frequency`, `unsigned int relation`.
+ 
+ The CPUfreq driver must set the new frequency when called here. The
+ actual frequency must be determined using the following rules:
+@@ -210,14 +219,14 @@ Not all drivers are expected to implement it, as sleeping from within
+ this callback isn't allowed. This callback must be highly optimized to
+ do switching as fast as possible.
+ 
+-This function has two arguments: struct cpufreq_policy *policy and
+-unsigned int target_frequency.
++This function has two arguments: `struct cpufreq_policy *policy` and
++`unsigned int target_frequency`.
+ 
+ 
+ 1.7 setpolicy
+ -------------
+ 
+-The setpolicy call only takes a struct cpufreq_policy *policy as
++The setpolicy call only takes a `struct cpufreq_policy *policy` as
+ argument. You need to set the lower limit of the in-processor or
+ in-chipset dynamic frequency switching to policy->min, the upper limit
+ to policy->max, and -if supported- select a performance-oriented
+@@ -278,10 +287,10 @@ table.
+ 
+ cpufreq_for_each_valid_entry(pos, table) - iterates over all entries,
+ excluding CPUFREQ_ENTRY_INVALID frequencies.
+-Use arguments "pos" - a cpufreq_frequency_table * as a loop cursor and
+-"table" - the cpufreq_frequency_table * you want to iterate over.
++Use arguments "pos" - a `cpufreq_frequency_table *` as a loop cursor and
++"table" - the `cpufreq_frequency_table *` you want to iterate over.
+ 
+-For example:
++For example::
+ 
+ 	struct cpufreq_frequency_table *pos, *driver_freq_table;
+ 
+diff --git a/Documentation/cpu-freq/cpufreq-nforce2.txt b/Documentation/cpu-freq/cpufreq-nforce2.rst
+similarity index 65%
+rename from Documentation/cpu-freq/cpufreq-nforce2.txt
+rename to Documentation/cpu-freq/cpufreq-nforce2.rst
+index babce1315026..d40700bd5083 100644
+--- a/Documentation/cpu-freq/cpufreq-nforce2.txt
++++ b/Documentation/cpu-freq/cpufreq-nforce2.rst
+@@ -1,3 +1,6 @@
++=================================
++nVidia nForce2 platform specifics
++=================================
+ 
+ The cpufreq-nforce2 driver changes the FSB on nVidia nForce2 platforms.
+ 
+@@ -6,14 +9,15 @@ can be controlled independently from the PCI/AGP clock.
+ 
+ The module has two options:
+ 
++        ======== ======================================
+ 	fid: 	 multiplier * 10 (for example 8.5 = 85)
+ 	min_fsb: minimum FSB
++        ======== ======================================
+ 
+ If not set, fid is calculated from the current CPU speed and the FSB.
+ min_fsb defaults to FSB at boot time - 50 MHz.
+ 
+-IMPORTANT: The available range is limited downwards!
+-           Also the minimum available FSB can differ, for systems 
++IMPORTANT:
++           The available range is limited downwards!
++           Also the minimum available FSB can differ, for systems
+            booting with 200 MHz, 150 should always work.
+-
+-
+diff --git a/Documentation/cpu-freq/cpufreq-stats.txt b/Documentation/cpu-freq/cpufreq-stats.rst
+similarity index 31%
+rename from Documentation/cpu-freq/cpufreq-stats.txt
+rename to Documentation/cpu-freq/cpufreq-stats.rst
+index 14378cecb172..3e33712b496e 100644
+--- a/Documentation/cpu-freq/cpufreq-stats.txt
++++ b/Documentation/cpu-freq/cpufreq-stats.rst
+@@ -1,21 +1,20 @@
++==========================================
++General description of sysfs cpufreq stats
++==========================================
+ 
+-     CPU frequency and voltage scaling statistics in the Linux(TM) kernel
++.. information for users
+ 
+ 
+-             L i n u x    c p u f r e q - s t a t s   d r i v e r
++Author: Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
+ 
+-                       - information for users -
+-
+-
+-             Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
+-
+-Contents
+-1. Introduction
+-2. Statistics Provided (with example)
+-3. Configuring cpufreq-stats
++.. Contents
++   1. Introduction
++   2. Statistics Provided (with example)
++   3. Configuring cpufreq-stats
+ 
+ 
+ 1. Introduction
 +===============
  
-   Users of the umad devices can use the lower 32 bits of the
-   transaction ID field (that is, the least significant half of the
-@@ -105,6 +115,7 @@ Transaction IDs
-   the kernel and will be overwritten before a MAD is sent.
+ cpufreq-stats is a driver that provides CPU frequency statistics for each CPU.
+ These statistics are provided in /sysfs as a bunch of read_only interfaces. This
+@@ -28,6 +27,7 @@ that may be running on your CPU. So, it will work with any cpufreq_driver.
  
- P_Key Index Handling
-+====================
  
-   The old ib_umad interface did not allow setting the P_Key index for
-   MADs that are sent and did not provide a way for obtaining the P_Key
-@@ -119,6 +130,7 @@ P_Key Index Handling
-   default, and the IB_USER_MAD_ENABLE_PKEY ioctl will be removed.
+ 2. Statistics Provided (with example)
++=====================================
  
- Setting IsSM Capability Bit
-+===========================
+ cpufreq stats provides following statistics (explained in detail below).
+ -  time_in_state
+@@ -39,78 +39,79 @@ All the statistics will be from the time the stats driver has been inserted
+ statistic is done. Obviously, stats driver will not have any information
+ about the frequency transitions before the stats driver insertion.
  
-   To set the IsSM capability bit for a port, simply open the
-   corresponding issm device file.  If the IsSM bit is already set,
-@@ -129,25 +141,26 @@ Setting IsSM Capability Bit
-   the issm file.
+---------------------------------------------------------------------------------
+-<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # ls -l
+-total 0
+-drwxr-xr-x  2 root root    0 May 14 16:06 .
+-drwxr-xr-x  3 root root    0 May 14 15:58 ..
+---w-------  1 root root 4096 May 14 16:06 reset
+--r--r--r--  1 root root 4096 May 14 16:06 time_in_state
+--r--r--r--  1 root root 4096 May 14 16:06 total_trans
+--r--r--r--  1 root root 4096 May 14 16:06 trans_table
+---------------------------------------------------------------------------------
++::
  
- /dev files
-+==========
+--  reset
+-Write-only attribute that can be used to reset the stat counters. This can be
+-useful for evaluating system behaviour under different governors without the
+-need for a reboot.
++    <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # ls -l
++    total 0
++    drwxr-xr-x  2 root root    0 May 14 16:06 .
++    drwxr-xr-x  3 root root    0 May 14 15:58 ..
++    --w-------  1 root root 4096 May 14 16:06 reset
++    -r--r--r--  1 root root 4096 May 14 16:06 time_in_state
++    -r--r--r--  1 root root 4096 May 14 16:06 total_trans
++    -r--r--r--  1 root root 4096 May 14 16:06 trans_table
  
-   To create the appropriate character device files automatically with
--  udev, a rule like
-+  udev, a rule like::
+--  time_in_state
+-This gives the amount of time spent in each of the frequencies supported by
+-this CPU. The cat output will have "<frequency> <time>" pair in each line, which
+-will mean this CPU spent <time> usertime units of time at <frequency>. Output
+-will have one line for each of the supported frequencies. usertime units here 
+-is 10mS (similar to other time exported in /proc).
++reset
++  Write-only attribute that can be used to reset the stat counters. This can be
++  useful for evaluating system behaviour under different governors without the
++  need for a reboot.
  
-     KERNEL=="umad*", NAME="infiniband/%k"
-     KERNEL=="issm*", NAME="infiniband/%k"
+---------------------------------------------------------------------------------
+-<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat time_in_state 
+-3600000 2089
+-3400000 136
+-3200000 34
+-3000000 67
+-2800000 172488
+---------------------------------------------------------------------------------
++time_in_state
++  This gives the amount of time spent in each of the frequencies supported by
++  this CPU. The cat output will have "<frequency> <time>" pair in each line,
++  which will mean this CPU spent <time> usertime units of time at <frequency>.
++  Output will have one line for each of the supported frequencies. usertime
++  units here is 10mS (similar to other time exported in /proc).
  
--  can be used.  This will create device nodes named
-+  can be used.  This will create device nodes named::
++::
  
-     /dev/infiniband/umad0
-     /dev/infiniband/issm0
+--  total_trans
+-This gives the total number of frequency transitions on this CPU. The cat 
+-output will have a single count which is the total number of frequency
+-transitions.
++  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat time_in_state
++  3600000 2089
++  3400000 136
++  3200000 34
++  3000000 67
++  2800000 172488
  
-   for the first port, and so on.  The InfiniBand device and port
--  associated with these devices can be determined from the files
-+  associated with these devices can be determined from the files::
+---------------------------------------------------------------------------------
+-<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat total_trans
+-20
+---------------------------------------------------------------------------------
  
-     /sys/class/infiniband_mad/umad0/ibdev
-     /sys/class/infiniband_mad/umad0/port
+--  trans_table
+-This will give a fine grained information about all the CPU frequency
+-transitions. The cat output here is a two dimensional matrix, where an entry
+-<i,j> (row i, column j) represents the count of number of transitions from 
+-Freq_i to Freq_j. Freq_i rows and Freq_j columns follow the sorting order in
+-which the driver has provided the frequency table initially to the cpufreq core
+-and so can be sorted (ascending or descending) or unsorted.  The output here
+-also contains the actual freq values for each row and column for better
+-readability.
++total_trans
++  This gives the total number of frequency transitions on this CPU. The cat
++  output will have a single count which is the total number of frequency
++  transitions.
  
--  and
-+  and::
+-If the transition table is bigger than PAGE_SIZE, reading this will
+-return an -EFBIG error.
++::
  
-     /sys/class/infiniband_mad/issm0/ibdev
-     /sys/class/infiniband_mad/issm0/port
-diff --git a/Documentation/infiniband/user_verbs.txt b/Documentation/infiniband/user_verbs.rst
-similarity index 93%
-rename from Documentation/infiniband/user_verbs.txt
-rename to Documentation/infiniband/user_verbs.rst
-index 47ebf2f80b2b..8ddc4b1cfef2 100644
---- a/Documentation/infiniband/user_verbs.txt
-+++ b/Documentation/infiniband/user_verbs.rst
-@@ -1,4 +1,6 @@
--USERSPACE VERBS ACCESS
-+======================
-+Userspace verbs access
-+======================
+---------------------------------------------------------------------------------
+-<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat trans_table
+-   From  :    To
+-         :   3600000   3400000   3200000   3000000   2800000 
+-  3600000:         0         5         0         0         0 
+-  3400000:         4         0         2         0         0 
+-  3200000:         0         1         0         2         0 
+-  3000000:         0         0         1         0         3 
+-  2800000:         0         0         0         2         0 
+---------------------------------------------------------------------------------
++  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat total_trans
++  20
  
-   The ib_uverbs module, built by enabling CONFIG_INFINIBAND_USER_VERBS,
-   enables direct userspace access to IB hardware via "verbs," as
-@@ -13,6 +15,7 @@ USERSPACE VERBS ACCESS
-   libmthca userspace driver be installed.
++trans_table
++  This will give a fine grained information about all the CPU frequency
++  transitions. The cat output here is a two dimensional matrix, where an entry
++  <i,j> (row i, column j) represents the count of number of transitions from
++  Freq_i to Freq_j. Freq_i rows and Freq_j columns follow the sorting order in
++  which the driver has provided the frequency table initially to the cpufreq
++  core and so can be sorted (ascending or descending) or unsorted.  The output
++  here also contains the actual freq values for each row and column for better
++  readability.
++
++  If the transition table is bigger than PAGE_SIZE, reading this will
++  return an -EFBIG error.
++
++::
++
++  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat trans_table
++     From  :    To
++           :   3600000   3400000   3200000   3000000   2800000
++    3600000:         0         5         0         0         0
++    3400000:         4         0         2         0         0
++    3200000:         0         1         0         2         0
++    3000000:         0         0         1         0         3
++    2800000:         0         0         0         2         0
  
- User-kernel communication
-+=========================
+ 3. Configuring cpufreq-stats
++============================
  
-   Userspace communicates with the kernel for slow path, resource
-   management operations via the /dev/infiniband/uverbsN character
-@@ -28,6 +31,7 @@ User-kernel communication
-   system call.
+-To configure cpufreq-stats in your kernel
+-Config Main Menu
++To configure cpufreq-stats in your kernel::
++
++   Config Main Menu
+ 	Power management options (ACPI, APM)  --->
+ 		CPU Frequency scaling  --->
+ 			[*] CPU Frequency scaling
+diff --git a/Documentation/cpu-freq/index.txt b/Documentation/cpu-freq/index.rst
+similarity index 37%
+rename from Documentation/cpu-freq/index.txt
+rename to Documentation/cpu-freq/index.rst
+index c15e75386a05..10e6c05f60f6 100644
+--- a/Documentation/cpu-freq/index.txt
++++ b/Documentation/cpu-freq/index.rst
+@@ -1,39 +1,35 @@
+-     CPU frequency and voltage scaling code in the Linux(TM) kernel
++:orphan:
  
- Resource management
-+===================
++==============================================================
++CPU frequency and voltage scaling code in the Linux(TM) kernel
++==============================================================
  
-   Since creation and destruction of all IB resources is done by
-   commands passed through a file descriptor, the kernel can keep track
-@@ -41,6 +45,7 @@ Resource management
-   prevent one process from touching another process's resources.
+-		         L i n u x    C P U F r e q
  
- Memory pinning
-+==============
++Author: Dominik Brodowski  <linux@brodo.de>
  
-   Direct userspace I/O requires that memory regions that are potential
-   I/O targets be kept resident at the same physical address.  The
-@@ -54,13 +59,14 @@ Memory pinning
-   number of pages pinned by a process.
  
- /dev files
-+==========
++Clock scaling allows you to change the clock speed of the CPUs on the
++fly. This is a nice method to save battery power, because the lower
++the clock speed, the less power the CPU consumes.
  
-   To create the appropriate character device files automatically with
--  udev, a rule like
-+  udev, a rule like::
+-		    Dominik Brodowski  <linux@brodo.de>
  
-     KERNEL=="uverbs*", NAME="infiniband/%k"
++.. toctree::
++    :maxdepth: 1
  
--  can be used.  This will create device nodes named
-+  can be used.  This will create device nodes named::
++    core
++    cpufreq-stats
++    cpu-drivers
  
-     /dev/infiniband/uverbs0
+-   Clock scaling allows you to change the clock speed of the CPUs on the
+-    fly. This is a nice method to save battery power, because the lower
+-            the clock speed, the less power the CPU consumes.
++    amd-powernow
++    cpufreq-nforce2
++    pcc-cpufreq
  
-diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
-index 671f07ba1fad..5ecd370e018b 100644
---- a/drivers/infiniband/core/user_mad.c
-+++ b/drivers/infiniband/core/user_mad.c
-@@ -744,7 +744,7 @@ static int ib_umad_reg_agent(struct ib_umad_file *file, void __user *arg,
- 				"process %s did not enable P_Key index support.\n",
- 				current->comm);
- 			dev_warn(&file->port->dev,
--				"   Documentation/infiniband/user_mad.txt has info on the new ABI.\n");
-+				"   Documentation/infiniband/user_mad.rst has info on the new ABI.\n");
- 		}
- 	}
++.. only::  subproject and html
  
-diff --git a/drivers/infiniband/ulp/ipoib/Kconfig b/drivers/infiniband/ulp/ipoib/Kconfig
-index 4760ce465d89..7af68604af77 100644
---- a/drivers/infiniband/ulp/ipoib/Kconfig
-+++ b/drivers/infiniband/ulp/ipoib/Kconfig
-@@ -7,7 +7,7 @@ config INFINIBAND_IPOIB
- 	  transports IP packets over InfiniBand so you can use your IB
- 	  device as a fancy NIC.
++   Indices
++   =======
  
--	  See Documentation/infiniband/ipoib.txt for more information
-+	  See Documentation/infiniband/ipoib.rst for more information
+-Documents in this directory:
+-----------------------------
+-
+-amd-powernow.txt -	AMD powernow driver specific file.
+-
+-core.txt	-	General description of the CPUFreq core and
+-			of CPUFreq notifiers.
+-
+-cpu-drivers.txt -	How to implement a new cpufreq processor driver.
+-
+-cpufreq-nforce2.txt -	nVidia nForce2 platform specific file.
+-
+-cpufreq-stats.txt -	General description of sysfs cpufreq stats.
+-
+-index.txt	-	File index, Mailing list and Links (this document)
+-
+-pcc-cpufreq.txt -	PCC cpufreq driver specific file.
+-
++   * :ref:`genindex`
  
- config INFINIBAND_IPOIB_CM
- 	bool "IP-over-InfiniBand Connected Mode support"
+ Mailing List
+ ------------
+diff --git a/Documentation/cpu-freq/pcc-cpufreq.txt b/Documentation/cpu-freq/pcc-cpufreq.rst
+similarity index 80%
+rename from Documentation/cpu-freq/pcc-cpufreq.txt
+rename to Documentation/cpu-freq/pcc-cpufreq.rst
+index 9e3c3b33514c..d846a36536e4 100644
+--- a/Documentation/cpu-freq/pcc-cpufreq.txt
++++ b/Documentation/cpu-freq/pcc-cpufreq.rst
+@@ -1,45 +1,38 @@
+-/*
+- *  pcc-cpufreq.txt - PCC interface documentation
+- *
+- *  Copyright (C) 2009 Red Hat, Matthew Garrett <mjg@redhat.com>
+- *  Copyright (C) 2009 Hewlett-Packard Development Company, L.P.
+- *      Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
+- *
+- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; version 2 of the License.
+- *
+- *  This program is distributed in the hope that it will be useful, but
+- *  WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or NON
+- *  INFRINGEMENT. See the GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License along
+- *  with this program; if not, write to the Free Software Foundation, Inc.,
+- *  675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- */
+-
+-
+-			Processor Clocking Control Driver
+-			---------------------------------
+-
+-Contents:
+----------
+-1.	Introduction
+-1.1	PCC interface
+-1.1.1   Get Average Frequency
+-1.1.2	Set Desired Frequency
+-1.2	Platforms affected
+-2.	Driver and /sys details
+-2.1	scaling_available_frequencies
+-2.2	cpuinfo_transition_latency
+-2.3	cpuinfo_cur_freq
+-2.4	related_cpus
+-3.	Caveats
++==========================================================
++Processor Clocking Control Driver cpufreq driver specifics
++==========================================================
++
++
++.. pcc-cpufreq.txt - PCC interface documentation
++
++    Copyright (C) 2009 Red Hat, Matthew Garrett <mjg@redhat.com>
++    Copyright (C) 2009 Hewlett-Packard Development Company, L.P.
++        Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
++
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++    This program is free software; you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation; version 2 of the License.
++
++    This program is distributed in the hope that it will be useful, but
++    WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or NON
++    INFRINGEMENT. See the GNU General Public License for more details.
++
++
++.. Contents:
++   1.	Introduction
++   1.1	PCC interface
++   1.1.1  Get Average Frequency
++   1.1.2  Set Desired Frequency
++   1.2	Platforms affected
++   2.	Driver and /sys details
++   2.1	scaling_available_frequencies
++   2.2	cpuinfo_transition_latency
++   2.3	cpuinfo_cur_freq
++   2.4	related_cpus
++   3.	Caveats
+ 
+ 1. Introduction:
+ ----------------
+@@ -72,6 +65,7 @@ memory region. The shared memory region header contains the "command" and
+ doorbell.
+ 
+ The following commands are supported by the PCC interface:
++
+ * Get Average Frequency
+ * Set Desired Frequency
+ 
+@@ -140,7 +134,9 @@ Internally, there is no need for the driver to convert the "target" frequency
+ to a corresponding P-state.
+ 
+ The VERSION number for the driver will be of the format v.xy.ab.
+-eg: 1.00.02
++eg::
++
++   1.00.02
+    ----- --
+     |    |
+     |    -- this will increase with bug fixes/enhancements to the driver
+@@ -168,21 +164,21 @@ A) Often cpuinfo_cur_freq will show a value different than what is declared
+ in the scaling_available_frequencies or scaling_cur_freq, or scaling_max_freq.
+ This is due to "turbo boost" available on recent Intel processors. If certain
+ conditions are met the BIOS can achieve a slightly higher speed than requested
+-by OSPM. An example:
++by OSPM. An example::
+ 
+-scaling_cur_freq	: 2933000
+-cpuinfo_cur_freq	: 3196000
++	scaling_cur_freq	: 2933000
++	cpuinfo_cur_freq	: 3196000
+ 
+ B) There is a round-off error associated with the cpuinfo_cur_freq value.
+ Since the driver obtains the current frequency as a "percentage" (%) of the
+ nominal frequency from the BIOS, sometimes, the values displayed by
+-scaling_cur_freq and cpuinfo_cur_freq may not match. An example:
++scaling_cur_freq and cpuinfo_cur_freq may not match. An example::
+ 
+-scaling_cur_freq	: 1600000
+-cpuinfo_cur_freq	: 1583000
++	scaling_cur_freq	: 1600000
++	cpuinfo_cur_freq	: 1583000
+ 
+ In this example, the nominal frequency is 2933 MHz. The driver obtains the
+-current frequency, cpuinfo_cur_freq, as 54% of the nominal frequency:
++current frequency, cpuinfo_cur_freq, as 54% of the nominal frequency::
+ 
+ 	54% of 2933 MHz = 1583 MHz
+ 
+@@ -191,10 +187,10 @@ corresponds to the frequency of the P0 P-state.
+ 
+ 2.4 related_cpus:
+ -----------------
+-The related_cpus field is identical to affected_cpus.
++The related_cpus field is identical to affected_cpus:
+ 
+-affected_cpus	: 4
+-related_cpus	: 4
++	affected_cpus	: 4
++	related_cpus	: 4
+ 
+ Currently, the PCC driver does not evaluate _PSD. The platforms that support
+ PCC do not implement SW_ALL. So OSPM doesn't need to perform any coordination
+diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
+index dfa6457deaf6..336a295fac4c 100644
+--- a/drivers/cpufreq/Kconfig.x86
++++ b/drivers/cpufreq/Kconfig.x86
+@@ -25,7 +25,7 @@ config X86_PCC_CPUFREQ
+ 	  This driver adds support for the PCC interface.
+ 
+ 	  For details, take a look at:
+-	  <file:Documentation/cpu-freq/pcc-cpufreq.txt>.
++	  <file:Documentation/cpu-freq/pcc-cpufreq.rst>.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called pcc-cpufreq.
 -- 
 2.21.0
 
