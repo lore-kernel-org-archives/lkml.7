@@ -2,236 +2,98 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800BBC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9C3C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56152216C8
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064B6214C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfFICpt (ORCPT
+        id S1727720AbfFICuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:45:49 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21699 "EHLO mga01.intel.com"
+        Sat, 8 Jun 2019 22:50:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:7114 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728017AbfFICpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:45:39 -0400
+        id S1727552AbfFICuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 22:50:46 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2019 19:45:39 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2019 19:50:46 -0700
 X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Jun 2019 19:45:38 -0700
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga004.jf.intel.com with ESMTP; 08 Jun 2019 19:50:43 -0700
+Cc:     baolu.lu@linux.intel.com, James Sewart <jamessewart@arista.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Subject: Re: "iommu/vt-d: Delegate DMA domain to generic iommu" series breaks
+ megaraid_sas
+To:     Qian Cai <cai@lca.pw>
+References: <1559941717.6132.63.camel@lca.pw>
 From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        sai.praneeth.prakhya@intel.com, cai@lca.pw,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 6/6] iommu/vt-d: Consolidate domain_init() to avoid duplication
-Date:   Sun,  9 Jun 2019 10:38:03 +0800
-Message-Id: <20190609023803.23832-7-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190609023803.23832-1-baolu.lu@linux.intel.com>
-References: <20190609023803.23832-1-baolu.lu@linux.intel.com>
+Message-ID: <1e4f0642-e4e1-7602-3f50-37edc84ced50@linux.intel.com>
+Date:   Sun, 9 Jun 2019 10:43:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1559941717.6132.63.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The domain_init() and md_domain_init() do almost the same job.
-Consolidate them to avoid duplication.
+Hi Qian,
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-iommu.c | 123 +++++++++++-------------------------
- 1 file changed, 36 insertions(+), 87 deletions(-)
+I just posted some fix patches. I cc'ed them in your email inbox as
+well. Can you please check whether they happen to fix your issue?
+If not, do you mind posting more debug messages?
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index d60cf0fd9500..a4f68585941e 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1825,63 +1825,6 @@ static inline int guestwidth_to_adjustwidth(int gaw)
- 	return agaw;
- }
- 
--static int domain_init(struct dmar_domain *domain, struct intel_iommu *iommu,
--		       int guest_width)
--{
--	int adjust_width, agaw;
--	unsigned long sagaw;
--	int err;
--
--	init_iova_domain(&domain->iovad, VTD_PAGE_SIZE, IOVA_START_PFN);
--
--	err = init_iova_flush_queue(&domain->iovad,
--				    iommu_flush_iova, iova_entry_free);
--	if (err)
--		return err;
--
--	domain_reserve_special_ranges(domain);
--
--	/* calculate AGAW */
--	if (guest_width > cap_mgaw(iommu->cap))
--		guest_width = cap_mgaw(iommu->cap);
--	domain->gaw = guest_width;
--	adjust_width = guestwidth_to_adjustwidth(guest_width);
--	agaw = width_to_agaw(adjust_width);
--	sagaw = cap_sagaw(iommu->cap);
--	if (!test_bit(agaw, &sagaw)) {
--		/* hardware doesn't support it, choose a bigger one */
--		pr_debug("Hardware doesn't support agaw %d\n", agaw);
--		agaw = find_next_bit(&sagaw, 5, agaw);
--		if (agaw >= 5)
--			return -ENODEV;
--	}
--	domain->agaw = agaw;
--
--	if (ecap_coherent(iommu->ecap))
--		domain->iommu_coherency = 1;
--	else
--		domain->iommu_coherency = 0;
--
--	if (ecap_sc_support(iommu->ecap))
--		domain->iommu_snooping = 1;
--	else
--		domain->iommu_snooping = 0;
--
--	if (intel_iommu_superpage)
--		domain->iommu_superpage = fls(cap_super_page_val(iommu->cap));
--	else
--		domain->iommu_superpage = 0;
--
--	domain->nid = iommu->node;
--
--	/* always allocate the top pgd */
--	domain->pgd = (struct dma_pte *)alloc_pgtable_page(domain->nid);
--	if (!domain->pgd)
--		return -ENOMEM;
--	__iommu_flush_cache(iommu, domain->pgd, PAGE_SIZE);
--	return 0;
--}
--
- static void domain_exit(struct dmar_domain *domain)
- {
- 	struct page *freelist;
-@@ -2563,6 +2506,31 @@ static int get_last_alias(struct pci_dev *pdev, u16 alias, void *opaque)
- 	return 0;
- }
- 
-+static int domain_init(struct dmar_domain *domain, int guest_width)
-+{
-+	int adjust_width;
-+
-+	init_iova_domain(&domain->iovad, VTD_PAGE_SIZE, IOVA_START_PFN);
-+	domain_reserve_special_ranges(domain);
-+
-+	/* calculate AGAW */
-+	domain->gaw = guest_width;
-+	adjust_width = guestwidth_to_adjustwidth(guest_width);
-+	domain->agaw = width_to_agaw(adjust_width);
-+
-+	domain->iommu_coherency = 0;
-+	domain->iommu_snooping = 0;
-+	domain->iommu_superpage = 0;
-+	domain->max_addr = 0;
-+
-+	/* always allocate the top pgd */
-+	domain->pgd = (struct dma_pte *)alloc_pgtable_page(domain->nid);
-+	if (!domain->pgd)
-+		return -ENOMEM;
-+	domain_flush_cache(domain, domain->pgd, PAGE_SIZE);
-+	return 0;
-+}
-+
- static struct dmar_domain *find_or_alloc_domain(struct device *dev, int gaw)
- {
- 	struct device_domain_info *info;
-@@ -2600,11 +2568,19 @@ static struct dmar_domain *find_or_alloc_domain(struct device *dev, int gaw)
- 	domain = alloc_domain(0);
- 	if (!domain)
- 		return NULL;
--	if (domain_init(domain, iommu, gaw)) {
-+
-+	if (domain_init(domain, gaw)) {
- 		domain_exit(domain);
- 		return NULL;
- 	}
- 
-+	if (init_iova_flush_queue(&domain->iovad,
-+				  iommu_flush_iova,
-+				  iova_entry_free)) {
-+		pr_warn("iova flush queue initialization failed\n");
-+		intel_iommu_strict = 1;
-+	}
-+
- out:
- 	return domain;
- }
-@@ -2709,8 +2685,6 @@ static int domain_prepare_identity_map(struct device *dev,
- 	return iommu_domain_identity_map(domain, start, end);
- }
- 
--static int md_domain_init(struct dmar_domain *domain, int guest_width);
--
- static int __init si_domain_init(int hw)
- {
- 	struct dmar_rmrr_unit *rmrr;
-@@ -2721,7 +2695,7 @@ static int __init si_domain_init(int hw)
- 	if (!si_domain)
- 		return -EFAULT;
- 
--	if (md_domain_init(si_domain, DEFAULT_DOMAIN_ADDRESS_WIDTH)) {
-+	if (domain_init(si_domain, DEFAULT_DOMAIN_ADDRESS_WIDTH)) {
- 		domain_exit(si_domain);
- 		return -EFAULT;
- 	}
-@@ -4836,31 +4810,6 @@ static void dmar_remove_one_dev_info(struct device *dev)
- 	spin_unlock_irqrestore(&device_domain_lock, flags);
- }
- 
--static int md_domain_init(struct dmar_domain *domain, int guest_width)
--{
--	int adjust_width;
--
--	init_iova_domain(&domain->iovad, VTD_PAGE_SIZE, IOVA_START_PFN);
--	domain_reserve_special_ranges(domain);
--
--	/* calculate AGAW */
--	domain->gaw = guest_width;
--	adjust_width = guestwidth_to_adjustwidth(guest_width);
--	domain->agaw = width_to_agaw(adjust_width);
--
--	domain->iommu_coherency = 0;
--	domain->iommu_snooping = 0;
--	domain->iommu_superpage = 0;
--	domain->max_addr = 0;
--
--	/* always allocate the top pgd */
--	domain->pgd = (struct dma_pte *)alloc_pgtable_page(domain->nid);
--	if (!domain->pgd)
--		return -ENOMEM;
--	domain_flush_cache(domain, domain->pgd, PAGE_SIZE);
--	return 0;
--}
--
- static struct iommu_domain *intel_iommu_domain_alloc(unsigned type)
- {
- 	struct dmar_domain *dmar_domain;
-@@ -4875,7 +4824,7 @@ static struct iommu_domain *intel_iommu_domain_alloc(unsigned type)
- 			pr_err("Can't allocate dmar_domain\n");
- 			return NULL;
- 		}
--		if (md_domain_init(dmar_domain, DEFAULT_DOMAIN_ADDRESS_WIDTH)) {
-+		if (domain_init(dmar_domain, DEFAULT_DOMAIN_ADDRESS_WIDTH)) {
- 			pr_err("Domain initialization failed\n");
- 			domain_exit(dmar_domain);
- 			return NULL;
--- 
-2.17.1
+Best regards,
+Baolu
 
+
+On 6/8/19 5:08 AM, Qian Cai wrote:
+> The linux-next series "iommu/vt-d: Delegate DMA domain to generic iommu" [1]
+> causes a system with the rootfs on megaraid_sas card unable to boot.
+> 
+> Reverted the whole series on the top of linux-next (next-20190607) fixed the
+> issue.
+> 
+> The information regards this storage card is,
+> 
+> [  116.466810][  T324] megaraid_sas 0000:06:00.0: FW provided supportMaxExtLDs:
+> 0	max_lds: 32
+> [  116.476052][  T324] megaraid_sas 0000:06:00.0: controller type	:
+> iMR(0MB)
+> [  116.483646][  T324] megaraid_sas 0000:06:00.0: Online Controller Reset(OCR)	
+> : Enabled
+> [  116.492403][  T324] megaraid_sas 0000:06:00.0: Secure JBOD support	:
+> Yes
+> [  116.499887][  T324] megaraid_sas 0000:06:00.0: NVMe passthru support	:
+> No
+> [  116.507480][  T324] megaraid_sas 0000:06:00.0: FW provided
+> [  116.612523][  T324] megaraid_sas 0000:06:00.0: NVME page size	: (0)
+> [  116.629991][  T324] megaraid_sas 0000:06:00.0: INIT adapter done
+> [  116.714789][  T324] megaraid_sas 0000:06:00.0: pci id		:
+> (0x1000)/(0x0017)/(0x1d49)/(0x0500)
+> [  116.724228][  T324] megaraid_sas 0000:06:00.0: unevenspan support	: no
+> [  116.731518][  T324] megaraid_sas 0000:06:00.0: firmware crash dump	:
+> no
+> [  116.738981][  T324] megaraid_sas 0000:06:00.0: jbod sync map		:
+> yes
+> [  116.787433][  T324] scsi host0: Avago SAS based MegaRAID driver
+> [  117.081088][  T324] scsi 0:0:0:0: Direct-
+> Access     LENOVO   ST900MM0168      L587 PQ: 0 ANSI: 6
+> 
+> [1] https://lore.kernel.org/patchwork/cover/1078960/
+> 
