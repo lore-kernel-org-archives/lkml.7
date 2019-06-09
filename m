@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B500C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055DCC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532E42081C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05E32081C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098767;
-	bh=E+KnZknXoK5kyDN6MFIC8hm5B3cCu9oRBgsImIgDYvU=;
+	s=default; t=1560098772;
+	bh=IIB1uD1rdodZdpT8IqlfcD9qd8G39FVgYrZnHSY96PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qz3kW5kudKzAHK+eHR81d1kk+g9XPhXroMk8TaZznEBvTgwMcCJsQwG2TMOvr3xR+
-	 5uK6qznJz7QMoIPIrEaZylrvzaDQHwNJumgKmpRuozuxgbe6hhoaOraAayQqFKoIYd
-	 4y14sWB9BQ1pNNtBo+1cyIv5mTpq4WO/wKZKQqT4=
+	b=ZOoPtV1UNFId5iuWClHSwNycLxmGqzH9CjWLeOZWNSLKEGUvPskaxDtDe11bJ/FYF
+	 c0uzlZItrNXo1dvhTBdQ4yvAewWDmTN2x0VutwllgGv9PS4AHYeHgRVyZNAXTe/kG3
+	 X+ncQT/nhFBsM6s3/wawxvqAFRE0QkUR2S/1bTt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbfFIQqG (ORCPT
+        id S1730333AbfFIQqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:46:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44084 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbfFIQqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:46:03 -0400
+        id S1730287AbfFIQqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:46:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98CEE2081C;
-        Sun,  9 Jun 2019 16:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1238D2081C;
+        Sun,  9 Jun 2019 16:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098763;
-        bh=E+KnZknXoK5kyDN6MFIC8hm5B3cCu9oRBgsImIgDYvU=;
+        s=default; t=1560098768;
+        bh=IIB1uD1rdodZdpT8IqlfcD9qd8G39FVgYrZnHSY96PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CVt1/ceUiefM2gT+gwMPkcuK/9GPQNoTrRw29JG7pZcfxQxXaNOaVQy/TtScU7Du3
-         oZCJgvnEtK9DYNxHvkBVY4+W+KrMzyDLzge+J69FhoZcZtQ2ETCHZLhW48IFf/ECdC
-         7jtaSa3HNOeqmJ+iL7xnBM5vJYgR+eWoCqIEpwW8=
+        b=uPa1MMtC8ClkoeggHJyqAvbVH9gJ3WVG4mPFi5Pdp23C9YLbYdcwbVHHzJSzytxlZ
+         I/GMeusvxbQMRgyBeZv4oKzGzMrB8mG6L+K9ebS7R4gUSL2ZhPhf/JTae+6uW2uEsj
+         +f8NCk4rpHMXVLNgfxCTRb1/ynhi/zPgPs8e7yEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 5.1 53/70] drm: add non-desktop quirk for Valve HMDs
-Date:   Sun,  9 Jun 2019 18:42:04 +0200
-Message-Id: <20190609164131.900714509@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Takeshi Saito <takeshi.saito.xv@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.1 37/70] mmc: tmio: fix SCC error handling to avoid false positive CRC error
+Date:   Sun,  9 Jun 2019 18:41:48 +0200
+Message-Id: <20190609164130.287939631@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -59,50 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andres Rodriguez <andresx7@gmail.com>
+From: Takeshi Saito <takeshi.saito.xv@renesas.com>
 
-commit 30d62d4453e49f85dd17b2ba60bbb68b6593dba0 upstream.
+commit 51b72656bb39fdcb8f3174f4007bcc83ad1d275f upstream.
 
-Add vendor/product pairs for the Valve Index HMDs.
+If an SCC error occurs during a read/write command execution, a false
+positive CRC error message is output.
 
-Signed-off-by: Andres Rodriguez <andresx7@gmail.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: <stable@vger.kernel.org> # v4.15
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190502193157.15692-1-andresx7@gmail.com
+mmcblk0: response CRC error sending r/w cmd command, card status 0x900
+
+check_scc_error() checks SCC_RVSREQ.RVSERR bit. RVSERR detects a
+correction error in the next (up or down) delay tap position. However,
+since the command is successful, only retuning needs to be executed.
+This has been confirmed by HW engineers.
+
+Thus, on SCC error, set retuning flag instead of setting an error code.
+
+Fixes: b85fb0a1c8ae ("mmc: tmio: Fix SCC error detection")
+Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
+[wsa: updated comment and commit message, removed some braces]
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/mmc/host/tmio_mmc_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -172,6 +172,25 @@ static const struct edid_quirk {
- 	/* Rotel RSX-1058 forwards sink's EDID but only does HDMI 1.1*/
- 	{ "ETR", 13896, EDID_QUIRK_FORCE_8BPC },
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -842,8 +842,9 @@ static void tmio_mmc_finish_request(stru
+ 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
+ 		tmio_mmc_abort_dma(host);
  
-+	/* Valve Index Headset */
-+	{ "VLV", 0x91a8, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b0, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b1, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b2, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b3, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b4, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b5, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b6, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b7, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b8, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91b9, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91ba, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91bb, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91bc, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91bd, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91be, EDID_QUIRK_NON_DESKTOP },
-+	{ "VLV", 0x91bf, EDID_QUIRK_NON_DESKTOP },
-+
- 	/* HTC Vive and Vive Pro VR Headsets */
- 	{ "HVR", 0xaa01, EDID_QUIRK_NON_DESKTOP },
- 	{ "HVR", 0xaa02, EDID_QUIRK_NON_DESKTOP },
++	/* SCC error means retune, but executed command was still successful */
+ 	if (host->check_scc_error && host->check_scc_error(host))
+-		mrq->cmd->error = -EILSEQ;
++		mmc_retune_needed(host->mmc);
+ 
+ 	/* If SET_BLOCK_COUNT, continue with main command */
+ 	if (host->mrq && !mrq->cmd->error) {
 
 
