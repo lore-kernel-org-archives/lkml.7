@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46643C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CD1C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B922206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281C5206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099298;
-	bh=bwNRaFD4cBIb82TqxNQk0+q3hsSU/34MkZ2gWox8Ktg=;
+	s=default; t=1560099300;
+	bh=4FML/o2EtP3soLK1Ab0p0Ho+ha22Df+p/94QuNrxILI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s7zJUanwwEjQ5KGr6DXEtey8BJXXkWQo3WsfYED4dPE52L4XLPCsWKFT/FplNzWOR
-	 +8DiZuwhvXRtm171RiCHeNjPG/+koAIlYXxaky2KHNhQAkpmzpr6dgAxEr2yA/0QWA
-	 RUAT5471WNtiDEKN4LZqdOGgKuNB7WPKwq3l0/p8=
+	b=LC7J1YORvNCqCNWWl3yYPZRUKQsBvTv5M2kxUXKWVTghJTE3qNsTt9XfXrkfyef17
+	 nQ6+tWHLB1z6nJ/FiseHzmdMrXMWpIejVKJo/zXayeQ6GfKuxxZF3r6uKCuLEa/Cdm
+	 LQmJJJd1mnkF3S8BJVP8kEbVAWcaGfm0SmQ7PpoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732725AbfFIQy4 (ORCPT
+        id S1732735AbfFIQy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56800 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:54:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732708AbfFIQyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:54:53 -0400
+        id S1732720AbfFIQy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:54:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26EA5205ED;
-        Sun,  9 Jun 2019 16:54:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D093E206BB;
+        Sun,  9 Jun 2019 16:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099292;
-        bh=bwNRaFD4cBIb82TqxNQk0+q3hsSU/34MkZ2gWox8Ktg=;
+        s=default; t=1560099295;
+        bh=4FML/o2EtP3soLK1Ab0p0Ho+ha22Df+p/94QuNrxILI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GQUzgd/g9wIsrTgu7RYhJpXclLIcCLyVkOQ3vkcj8xJuLUMTyyrp+dc0c03eh2tJp
-         ghHdbbzZ6bxSjWQD3PPbn4Set+XUQDaKNXjkRt3OC2xzpneVICNaueNzzDcgOG2IAj
-         AUYSbghN6928hu7wDrAypZgtTTNqmktMfkYWnGRg=
+        b=d2Ru52nmAMsl1IkCn/PxR2PjogHA6KjZZL+JaTc9vCaQQTzGTv5FjtGFIXBLflRBc
+         JWYQFlstMTk5KWRtY2NOsc3XQIxvz2opzXWy9qWimrkJfJYoRFoeLxvfrXPX3qjy7W
+         iKyJZWQPsVmskw4UdYGUnInHzihAl/+SGQXDXcQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Subject: [PATCH 4.9 78/83] drm/gma500/cdv: Check vbt config bits when detecting lvds panels
-Date:   Sun,  9 Jun 2019 18:42:48 +0200
-Message-Id: <20190609164134.599134597@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Dufresne <dufresnep@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.9 79/83] drm/radeon: prefer lower reference dividers
+Date:   Sun,  9 Jun 2019 18:42:49 +0200
+Message-Id: <20190609164134.682755401@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,60 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+From: Christian König <christian.koenig@amd.com>
 
-commit 7c420636860a719049fae9403e2c87804f53bdde upstream.
+commit 2e26ccb119bde03584be53406bbd22e711b0d6e6 upstream.
 
-Some machines have an lvds child device in vbt even though a panel is
-not attached. To make detection more reliable we now also check the lvds
-config bits available in the vbt.
+Instead of the closest reference divider prefer the lowest,
+this fixes flickering issues on HP Compaq nx9420.
 
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1665766
+Bugs: https://bugs.freedesktop.org/show_bug.cgi?id=108514
+Suggested-by: Paul Dufresne <dufresnep@gmail.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190416114607.1072-1-patrik.r.jakobsson@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/gma500/cdv_intel_lvds.c |    3 +++
- drivers/gpu/drm/gma500/intel_bios.c     |    3 +++
- drivers/gpu/drm/gma500/psb_drv.h        |    1 +
- 3 files changed, 7 insertions(+)
+ drivers/gpu/drm/radeon/radeon_display.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-+++ b/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-@@ -609,6 +609,9 @@ void cdv_intel_lvds_init(struct drm_devi
- 	int pipe;
- 	u8 pin;
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -935,12 +935,12 @@ static void avivo_get_fb_ref_div(unsigne
+ 	ref_div_max = max(min(100 / post_div, ref_div_max), 1u);
  
-+	if (!dev_priv->lvds_enabled_in_vbt)
-+		return;
-+
- 	pin = GMBUS_PORT_PANEL;
- 	if (!lvds_is_present_in_vbt(dev, &pin)) {
- 		DRM_DEBUG_KMS("LVDS is not present in VBT\n");
---- a/drivers/gpu/drm/gma500/intel_bios.c
-+++ b/drivers/gpu/drm/gma500/intel_bios.c
-@@ -436,6 +436,9 @@ parse_driver_features(struct drm_psb_pri
- 	if (driver->lvds_config == BDB_DRIVER_FEATURE_EDP)
- 		dev_priv->edp.support = 1;
+ 	/* get matching reference and feedback divider */
+-	*ref_div = min(max(DIV_ROUND_CLOSEST(den, post_div), 1u), ref_div_max);
++	*ref_div = min(max(den/post_div, 1u), ref_div_max);
+ 	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
  
-+	dev_priv->lvds_enabled_in_vbt = driver->lvds_config != 0;
-+	DRM_DEBUG_KMS("LVDS VBT config bits: 0x%x\n", driver->lvds_config);
-+
- 	/* This bit means to use 96Mhz for DPLL_A or not */
- 	if (driver->primary_lfp_id)
- 		dev_priv->dplla_96mhz = true;
---- a/drivers/gpu/drm/gma500/psb_drv.h
-+++ b/drivers/gpu/drm/gma500/psb_drv.h
-@@ -538,6 +538,7 @@ struct drm_psb_private {
- 	int lvds_ssc_freq;
- 	bool is_lvds_on;
- 	bool is_mipi_on;
-+	bool lvds_enabled_in_vbt;
- 	u32 mipi_ctrl_display;
- 
- 	unsigned int core_freq;
+ 	/* limit fb divider to its maximum */
+ 	if (*fb_div > fb_div_max) {
+-		*ref_div = DIV_ROUND_CLOSEST(*ref_div * fb_div_max, *fb_div);
++		*ref_div = (*ref_div * fb_div_max)/(*fb_div);
+ 		*fb_div = fb_div_max;
+ 	}
+ }
 
 
