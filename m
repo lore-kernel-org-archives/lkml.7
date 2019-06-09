@@ -2,118 +2,110 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95850C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A21FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634FC212F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bml5OGrd"
+	by mail.kernel.org (Postfix) with ESMTP id 48898208E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfFINJP (ORCPT
+        id S1728664AbfFINKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 09:09:15 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:31087 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbfFINJP (ORCPT
+        Sun, 9 Jun 2019 09:10:50 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:46032 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728516AbfFINKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 09:09:15 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x59D9AP2031817;
-        Sun, 9 Jun 2019 22:09:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x59D9AP2031817
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560085751;
-        bh=urjxFy2NEO4IWkWWBxKr5z0yKlOgm41OIQHm50hlY30=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bml5OGrd3jqBJvFoAisXFI7WMZzzdQbhDh0PKg2+B73PLIhW7o9K/4eAuaMhYRQF+
-         QAKakDzS+W3mMarIxYuRoI4o4B9TK3eoG33Dk+X0b/z8KitpqjeQgd0Mh4PK1NWLL5
-         ppHBKT6kZXjYOByep1HeUpTmeFjw+qGKhMDPkMmGZRMUW1Rt/SCeVaiVcTPV6mHtAh
-         sk1lO51mRIj38G0mOQqM3j6u1WL9NhJ3/zJpjG4DnyDTrb0BysjM4hHablUNQqFQSy
-         mj5T6CUn7L3gR+5FZIXuDzOahtbmjMDhDAIrkZxto/P4FRwe9LaEj3vmY0WB0g9PCq
-         Z18qEuTyi1u5w==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id v6so3806647vsq.4;
-        Sun, 09 Jun 2019 06:09:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAX0wtlc4TdJnACaEAt4vZKEjvGICQAi6LlgAfSHUbZc9VfUzdjG
-        2BY1Znk/Ud5WBwXa54m/HjORuetFDln0u0iNhF0=
-X-Google-Smtp-Source: APXvYqwzI4jRgQUipIfGjoYys5mBe1p4nX33Nb9rDgiw7jQV1ff71Cn9De0lDApp3gBKTt3c4SpMBpGIX6vmWnnA+2A=
-X-Received: by 2002:a67:7fcc:: with SMTP id a195mr13075826vsd.181.1560085749841;
- Sun, 09 Jun 2019 06:09:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
- <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
- <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
- <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
- <20190604134213.GA26263@kroah.com> <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
- <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
- <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
- <20190605051040.GA22760@kroah.com> <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
- <20190605071413.779bd821@coco.lan> <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
- <CAK7LNARsSFT1ncyRgWi_tga_7KC6ZwZOETXQ2GrO9PfeJgLxyQ@mail.gmail.com> <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
-In-Reply-To: <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 9 Jun 2019 22:08:33 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com>
-Message-ID: <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com>
-Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
-To:     Joe Perches <joe@perches.com>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sun, 9 Jun 2019 09:10:50 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TTm7q0i_1560085846;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TTm7q0i_1560085846)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 09 Jun 2019 21:10:46 +0800
+Subject: Re: [bug report][stable] kernel tried to execute NX-protected page -
+ exploit attempt? (uid: 0)
+To:     Nadav Amit <namit@vmware.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Caspar Zhang <caspar@linux.alibaba.com>,
+        jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>
+References: <5817eaac-29cc-6331-af3b-b9d85a7c1cd7@linux.alibaba.com>
+ <bde5bf17-35d2-45d8-1d1d-59d0f027b9c0@linux.alibaba.com>
+ <D0F0870A-B396-4390-B5F1-164B68E13C73@vmware.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <c2411bbb-d0e7-59b2-3418-63650b354544@linux.alibaba.com>
+Date:   Sun, 9 Jun 2019 21:10:45 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <D0F0870A-B396-4390-B5F1-164B68E13C73@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 8:57 PM Joe Perches <joe@perches.com> wrote:
->
-> On Sun, 2019-06-09 at 16:14 +0900, Masahiro Yamada wrote:
-> > Hi Joe,
-> >
-> > On Thu, Jun 6, 2019 at 2:06 AM Joe Perches <joe@perches.com> wrote:
-> > > Perhaps a checkpatch change too:
-> > >
-> > > The first block updates unsigned only bitfields
-> > > The second tests uapi definitions and suggests "__<kernel_types"
-> >
-> > Good.
-> >
-> > In addition,
-> >
-> > "warn if __u8, __u16, __u32, __u64 are used outside of uapi/"
-> >
-> > Lots of kernel-space headers use __u{8,16,32,64} instead of u{8,16,32,64}
-> > just because developers often miss to understand when to use
-> > the underscore-prefixed types.
->
-> The problem there is that checkpatch can't know if the
-> __<uapi_type> being used is for an actual uapi use or not.
->
-> coccinelle could be much better at that.
+Hi Nadav,
+Thanks for the comments.
+I'll test the 3 patches in the mentioned thread.
 
-Why?
+Thanks,
+Joseph
 
-u{8,16,32,64} are _exactly_ the same as __u{8,16,32,64}.
-See  include/asm-generic/int-ll64.h
-
-We just use __u{8,16,32,64} for user-space
-to avoid identifier name conflict,
-but we do not have reason to do so for kernel-space.
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+On 19/6/8 00:38, Nadav Amit wrote:
+>> On Jun 7, 2019, at 3:24 AM, Joseph Qi <joseph.qi@linux.alibaba.com> wrote:
+>>
+>> Hi all,
+>> Any idea on this regression? 
+> 
+> Sorry for the late response (I assumed, for some reason, that you also follow 
+> the second thread about this issue).
+> 
+> Anyhow, it should be fixed by backporting some patches which were mistakenly
+> missed.
+> 
+> See https://lore.kernel.org/stable/20190606131558.GJ29739@sasha-vm/
+> 
+> Regards,
+> Nadav
+> 
+> 
+>> Thanks,
+>> Joseph
+>>
+>> On 19/6/5 18:23, Joseph Qi wrote:
+>>> Hi,
+>>>
+>>> I have encountered a kernel BUG when running ltp ftrace-stress-test
+>>> on 4.19.48.
+>>>
+>>> [  209.704855] LTP: starting ftrace-stress-test (ftrace_stress_test.sh 90)
+>>> [  209.739412] Scheduler tracepoints stat_sleep, stat_iowait, stat_blocked and stat_runtime require the kernel parameter schedstats=enable or kernel.sched_schedstats=1
+>>> [  212.054506] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+>>> [  212.055595] BUG: unable to handle kernel paging request at ffffffffc0349000
+>>> [  212.056589] PGD d00c067 P4D d00c067 PUD d00e067 PMD 23673e067 PTE 800000023457f061
+>>> [  212.057759] Oops: 0011 [#1] SMP PTI
+>>> [  212.058303] CPU: 0 PID: 0 Comm: swapper/0 Kdump: loaded Not tainted 4.19.48 #112
+>>>
+>>> After some investigation I have found that it is introduced by commit
+>>> 8715ce033eb3 ("x86/modules: Avoid breaking W^X while loading modules"),
+>>> and then revert this commit the issue is gone.
+>>>
+>>> I have also tested the same case on 5.2-rc3 as well as right at
+>>> upstream commit f2c65fb3221a ("x86/modules: Avoid breaking W^X while
+>>> loading modules"), which has been merged in 5.2-rc1, it doesn't
+>>> happen.
+>>>
+>>> So I don't know why only stable has this issue while upstream doesn't.
+>>>
+>>> Thanks,
+>>> Joseph
+> 
