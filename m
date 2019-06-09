@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830B3C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF59CC468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1B0205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F59205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100613;
-	bh=W4xXiCNpUlaK05IXKCxUYEQDrxsvb0sVGBlb/OnFcPs=;
+	s=default; t=1560100616;
+	bh=9pQV96GQ5yaR3ppCHishu8Pql1cXDN8GY/jBzvaDq3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mk6vOdWnSbBmP77gZzPuLZZgWkyQXuxb/3S4GaBaNGVzA1JGFQxK/IV6SSXuS24Y2
-	 h+jaxIazqJMQe2ZPljJywXkdW6TKW3qQLAeeA3POQXXojn/6uWwd+n7Dds1QF8WZYm
-	 b3D+jR8b56sbb/Ps8WDl/Dmqqz+B7np3XySf60M0=
+	b=YRmTx1AFVovbQzBVAWA8qRT4vD7QZUhshdnoypIPM6WtA4IKjjffFlyHqzXd8gWpb
+	 QXfUwJ63QQrrkZ0QCZQzOnWFhT/fREekEOIpI3x+3kg9jvj6Ukxmz08P/rl5YhwaVC
+	 ZI/QUCtMEaWqYBai+GJCBfpXC+PhySlrZQfaFEPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbfFIQwp (ORCPT
+        id S1732257AbfFIQwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:52:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731715AbfFIQwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:52:43 -0400
+        id S1731420AbfFIQwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:52:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B20AC205ED;
-        Sun,  9 Jun 2019 16:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 081CD205ED;
+        Sun,  9 Jun 2019 16:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099163;
-        bh=W4xXiCNpUlaK05IXKCxUYEQDrxsvb0sVGBlb/OnFcPs=;
+        s=default; t=1560099157;
+        bh=9pQV96GQ5yaR3ppCHishu8Pql1cXDN8GY/jBzvaDq3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CFbiZMHYhQ7Zs6A1QjizPXF6fPbrbxQwCj18eOiX9r5eCjK5cpbYFwc7xPDJEqhhr
-         rFsJdSV89SaC3chcUUqYoDiiBgmZjAP44E1pCiuOUSgHYx9GQYB429PWjiBZT1h/b0
-         QCtQllcpZlXrAPLxUkOlnFF1k4c/PHcGkbZqnKsY=
+        b=B8UzKRs9BrZEvuTQ56O33WvpOAGDey2D1jSysYTxvCUUdvSGhLoduc96LUamGarMw
+         Fpg62sEmH8Kj40yVej594YBuXS7XatlW6W8EJMPZ5ynlXt0xSXHnfqps7mNB5mjd0q
+         rXMrdailXoXGe5RaF30r7O//dJ9jSGVIzBaHVZsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.9 33/83] media: smsusb: better handle optional alignment
-Date:   Sun,  9 Jun 2019 18:42:03 +0200
-Message-Id: <20190609164130.527247035@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 31/83] media: usb: siano: Fix general protection fault in smsusb
+Date:   Sun,  9 Jun 2019 18:42:01 +0200
+Message-Id: <20190609164130.323240519@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,72 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit a47686636d84eaec5c9c6e84bd5f96bed34d526d upstream.
+commit 31e0456de5be379b10fea0fa94a681057114a96e upstream.
 
-Most Siano devices require an alignment for the response.
+The syzkaller USB fuzzer found a general-protection-fault bug in the
+smsusb part of the Siano DVB driver.  The fault occurs during probe
+because the driver assumes without checking that the device has both
+IN and OUT endpoints and the IN endpoint is ep1.
 
-Changeset f3be52b0056a ("media: usb: siano: Fix general protection fault in smsusb")
-changed the logic with gets such aligment, but it now produces a
-sparce warning:
+By slightly rearranging the driver's initialization code, we can make
+the appropriate checks early on and thus avoid the problem.  If the
+expected endpoints aren't present, the new code safely returns -ENODEV
+from the probe routine.
 
-drivers/media/usb/siano/smsusb.c: In function 'smsusb_init_device':
-drivers/media/usb/siano/smsusb.c:447:37: warning: 'in_maxp' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  447 |   dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
-      |                             ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The sparse message itself is bogus, but a broken (or fake) USB
-eeprom could produce a negative value for response_alignment.
-
-So, change the code in order to check if the result is not
-negative.
-
-Fixes: 31e0456de5be ("media: usb: siano: Fix general protection fault in smsusb")
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
 CC: <stable@vger.kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reviewed-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/siano/smsusb.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/media/usb/siano/smsusb.c |   33 ++++++++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 13 deletions(-)
 
 --- a/drivers/media/usb/siano/smsusb.c
 +++ b/drivers/media/usb/siano/smsusb.c
-@@ -402,7 +402,7 @@ static int smsusb_init_device(struct usb
+@@ -402,6 +402,7 @@ static int smsusb_init_device(struct usb
  	struct smsusb_device_t *dev;
  	void *mdev;
  	int i, rc;
--	int in_maxp = 0;
-+	int align = 0;
++	int in_maxp;
  
  	/* create device object */
  	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
-@@ -420,14 +420,14 @@ static int smsusb_init_device(struct usb
+@@ -413,6 +414,24 @@ static int smsusb_init_device(struct usb
+ 	dev->udev = interface_to_usbdev(intf);
+ 	dev->state = SMSUSB_DISCONNECTED;
  
- 		if (desc->bEndpointAddress & USB_DIR_IN) {
- 			dev->in_ep = desc->bEndpointAddress;
--			in_maxp = usb_endpoint_maxp(desc);
-+			align = usb_endpoint_maxp(desc) - sizeof(struct sms_msg_hdr);
- 		} else {
- 			dev->out_ep = desc->bEndpointAddress;
- 		}
- 	}
++	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
++		struct usb_endpoint_descriptor *desc =
++				&intf->cur_altsetting->endpoint[i].desc;
++
++		if (desc->bEndpointAddress & USB_DIR_IN) {
++			dev->in_ep = desc->bEndpointAddress;
++			in_maxp = usb_endpoint_maxp(desc);
++		} else {
++			dev->out_ep = desc->bEndpointAddress;
++		}
++	}
++
++	pr_debug("in_ep = %02x, out_ep = %02x\n", dev->in_ep, dev->out_ep);
++	if (!dev->in_ep || !dev->out_ep) {	/* Missing endpoints? */
++		smsusb_term_device(intf);
++		return -ENODEV;
++	}
++
+ 	params.device_type = sms_get_board(board_id)->type;
  
- 	pr_debug("in_ep = %02x, out_ep = %02x\n", dev->in_ep, dev->out_ep);
--	if (!dev->in_ep || !dev->out_ep) {	/* Missing endpoints? */
-+	if (!dev->in_ep || !dev->out_ep || align < 0) {  /* Missing endpoints? */
- 		smsusb_term_device(intf);
- 		return -ENODEV;
- 	}
-@@ -446,7 +446,7 @@ static int smsusb_init_device(struct usb
+ 	switch (params.device_type) {
+@@ -427,24 +446,12 @@ static int smsusb_init_device(struct usb
  		/* fall-thru */
  	default:
  		dev->buffer_size = USB2_BUFFER_SIZE;
--		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
-+		dev->response_alignment = align;
+-		dev->response_alignment =
+-		    le16_to_cpu(dev->udev->ep_in[1]->desc.wMaxPacketSize) -
+-		    sizeof(struct sms_msg_hdr);
++		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
  
  		params.flags |= SMS_DEVICE_FAMILY2;
  		break;
+ 	}
+ 
+-	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
+-		if (intf->cur_altsetting->endpoint[i].desc. bEndpointAddress & USB_DIR_IN)
+-			dev->in_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
+-		else
+-			dev->out_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
+-	}
+-
+-	pr_debug("in_ep = %02x, out_ep = %02x\n",
+-		dev->in_ep, dev->out_ep);
+-
+ 	params.device = &dev->udev->dev;
+ 	params.buffer_size = dev->buffer_size;
+ 	params.num_buffers = MAX_BUFFERS;
 
 
