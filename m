@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53038C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D850C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A089205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02393205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100112;
-	bh=kL1q/lU+/bRizIv45MNQUtcNYGhXhofDOHIwussB6Dg=;
+	s=default; t=1560100117;
+	bh=ufoUUvz40p+JRfFWrFlIUNPByU6JsfaNP2u3RKqSqDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zFMWBqONuJf7RsQ7+8yrmPXEpsC1YkAZuIK1LvJecDQK6GxufQOPcN5MXUaHPfWgn
-	 Wz7k+M0JuEceAJBSdeiCvozDe1wKuYc2D4WXLjbGalRz/qNr0fygkfhY3Q7J3gcRIC
-	 p7fjkfm+bqw1RuVaWzYgiKAQqzoXvJ1AxZFwbl4s=
+	b=vh4+E9xwNLNnbjczEsoYNU5Vzbna/h/0J/9BSe7ob5X1nekXfoUyKTSrusgEvg8S3
+	 RA0n7OiVoM36f4qmLgcg2xo6lZZEtY5BWfNAoUfZUdGXBgTEgnq0lC5TSK9XcNWDY0
+	 WSbm09A8Fh6Luu8bdQsj4qxWElSP0OyrxR00Jvwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388834AbfFIRIb (ORCPT
+        id S2388774AbfFIRFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:08:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388792AbfFIRFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:05:21 -0400
+        id S1732669AbfFIRFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9805620840;
-        Sun,  9 Jun 2019 17:05:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E2C204EC;
+        Sun,  9 Jun 2019 17:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099921;
-        bh=kL1q/lU+/bRizIv45MNQUtcNYGhXhofDOHIwussB6Dg=;
+        s=default; t=1560099907;
+        bh=ufoUUvz40p+JRfFWrFlIUNPByU6JsfaNP2u3RKqSqDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJjwmkd4NBNZQDkMa/HLaiEWtfR53ByeeG8DPdjI2PS4fr4cGJP8rdohBQTp03iNy
-         Rq8x5RuypDnbl9t2HzuKF6lub8XPJid8m6NylAaOEPcwpGqzCjfm9EfZXOkXKPpCaX
-         74Vgrh4lNK1dDCHsHvV7GLMxUobPUpbskstsnYK0=
+        b=OD03GMSNcRQ36QT4QERQlzWRrFaLS1oHlSCg88BnLXO6cKALTb2e0Ov6KPdM3Fcpb
+         YUwbwBo7MakeHCnRaWtrLx0ypus1qAMewfq+l3bYILUINhK8ia4k/c5ZFlmtz3krsw
+         mSUyTjm2d3LNdu6hplMohOiD1h8+a7fWvw1/DZe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 187/241] net: mvpp2: fix bad MVPP2_TXQ_SCHED_TOKEN_CNTR_REG queue value
-Date:   Sun,  9 Jun 2019 18:42:09 +0200
-Message-Id: <20190609164153.295518859@linuxfoundation.org>
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH 4.4 209/241] tty: serial: msm_serial: Fix XON/XOFF
+Date:   Sun,  9 Jun 2019 18:42:31 +0200
+Message-Id: <20190609164154.690351299@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,57 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-[ Upstream commit 21808437214637952b61beaba6034d97880fbeb3 ]
+commit 61c0e37950b88bad590056286c1d766b1f167f4e upstream.
 
-MVPP2_TXQ_SCHED_TOKEN_CNTR_REG() expects the logical queue id but
-the current code is passing the global tx queue offset, so it ends
-up writing to unknown registers (between 0x8280 and 0x82fc, which
-seemed to be unused by the hardware). This fixes the issue by using
-the logical queue id instead.
+When the tty layer requests the uart to throttle, the current code
+executing in msm_serial will trigger "Bad mode in Error Handler" and
+generate an invalid stack frame in pstore before rebooting (that is if
+pstore is indeed configured: otherwise the user shall just notice a
+reboot with no further information dumped to the console).
 
-Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch replaces the PIO byte accessor with the word accessor
+already used in PIO mode.
+
+Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/marvell/mvpp2.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvpp2.c
-+++ b/drivers/net/ethernet/marvell/mvpp2.c
-@@ -3940,7 +3940,7 @@ static inline void mvpp2_gmac_max_rx_siz
- /* Set defaults to the MVPP2 port */
- static void mvpp2_defaults_set(struct mvpp2_port *port)
- {
--	int tx_port_num, val, queue, ptxq, lrxq;
-+	int tx_port_num, val, queue, lrxq;
+---
+ drivers/tty/serial/msm_serial.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -703,6 +703,7 @@ static void msm_handle_tx(struct uart_po
+ 	struct circ_buf *xmit = &msm_port->uart.state->xmit;
+ 	struct msm_dma *dma = &msm_port->tx_dma;
+ 	unsigned int pio_count, dma_count, dma_min;
++	char buf[4] = { 0 };
+ 	void __iomem *tf;
+ 	int err = 0;
  
- 	/* Configure port to loopback if needed */
- 	if (port->flags & MVPP2_F_LOOPBACK)
-@@ -3960,11 +3960,9 @@ static void mvpp2_defaults_set(struct mv
- 	mvpp2_write(port->priv, MVPP2_TXP_SCHED_CMD_1_REG, 0);
+@@ -712,10 +713,12 @@ static void msm_handle_tx(struct uart_po
+ 		else
+ 			tf = port->membase + UART_TF;
  
- 	/* Close bandwidth for all queues */
--	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++) {
--		ptxq = mvpp2_txq_phys(port->id, queue);
-+	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++)
- 		mvpp2_write(port->priv,
--			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(ptxq), 0);
--	}
-+			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(queue), 0);
++		buf[0] = port->x_char;
++
+ 		if (msm_port->is_uartdm)
+ 			msm_reset_dm_count(port, 1);
  
- 	/* Set refill period to 1 usec, refill tokens
- 	 * and bucket size to maximum
-@@ -4722,7 +4720,7 @@ static void mvpp2_txq_deinit(struct mvpp
- 	txq->descs_phys        = 0;
- 
- 	/* Set minimum bandwidth for disabled TXQs */
--	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->id), 0);
-+	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->log_id), 0);
- 
- 	/* Set Tx descriptors queue starting address and size */
- 	mvpp2_write(port->priv, MVPP2_TXQ_NUM_REG, txq->id);
+-		iowrite8_rep(tf, &port->x_char, 1);
++		iowrite32_rep(tf, buf, 1);
+ 		port->icount.tx++;
+ 		port->x_char = 0;
+ 		return;
 
 
