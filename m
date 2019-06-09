@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B87C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7A8C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6110920833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA57B20833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098797;
-	bh=LDAErhTgldvVUzf3wXt11d1c2wKcCbcc1Y/hoi6y5E8=;
+	s=default; t=1560098799;
+	bh=rNPXyLNan5o0Ie9yTiEsm4WoLpPvO2aECItEdubWtIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xKqEYIWs+dZOu4q3/uSKCuoD40XbpMbectjOxjiK6VyyGtN8myMs9rn9yhSY+iiGM
-	 Tc9y/eIrpNtcxuHI447lSkPuyaL36Z8SndL63dDXWSFkfM8WAFTc66AGX2y0pE4Q6m
-	 2l+TO7ZYOoqhPfW6W+GMdrwrCbIk0amnmJjbbYbE=
+	b=t5Pplhv1vGOzHkdC1CV+Aw4cx9vrfLi/IyTRoY9yVg4sdGHNRseXU0Dk0yAnB/ZuA
+	 +1mU9kbN/8RLRxZNuFJcbjgkSB4Bm+eddY5Fc+sdR0Fc8RGAlT4T+eQ0OMNOxPt7qb
+	 5I91oSfDFR7DdSYQJfvFhCOKhBPToL10rT5zuafo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfFIQqg (ORCPT
+        id S1730567AbfFIQqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:46:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730508AbfFIQqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:46:33 -0400
+        id S1730530AbfFIQqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:46:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACD8D2081C;
-        Sun,  9 Jun 2019 16:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF4C12081C;
+        Sun,  9 Jun 2019 16:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098793;
-        bh=LDAErhTgldvVUzf3wXt11d1c2wKcCbcc1Y/hoi6y5E8=;
+        s=default; t=1560098796;
+        bh=rNPXyLNan5o0Ie9yTiEsm4WoLpPvO2aECItEdubWtIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ANk61pUxfvdUvPOeEsXNKFI/qBZW8ro8cx2KO9rJX0KGKzXCh8c6XHXXa56DuCjGP
-         zL1mbSORt+yy9B3iCVKsM/4ghKBv6OdTRLilFt7TIctLiagoTVeWGrLHtFpwOBGU88
-         iw2N2CLByuR4O5P9+zksQYg984lmcAF2JcAdG6Zk=
+        b=oY9YtOopIEaGBzFZC0i8yMFTwlfKCkCgIVsr8JO0dNGByMC3kpxqTbOQ2qPLt30IB
+         svmNHqhh+a3ttl5eKGhDqZmecJep/1t0usyk0QJSZHN1Pl9s4i5J1JM0h2LQ1OhSO8
+         OMaUPE4ey0+xNqg0NkQr6O6Idy1P1E3o83BTyh0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Louis Li <Ching-shih.Li@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.1 63/70] drm/amdgpu: fix ring test failure issue during s3 in vce 3.0 (V2)
-Date:   Sun,  9 Jun 2019 18:42:14 +0200
-Message-Id: <20190609164132.727504869@linuxfoundation.org>
+        stable@vger.kernel.org, Paulo Zanoni <paulo.r.zanoni@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Subject: [PATCH 5.1 64/70] drm/i915/fbc: disable framebuffer compression on GeminiLake
+Date:   Sun,  9 Jun 2019 18:42:15 +0200
+Message-Id: <20190609164132.805336281@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,57 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Li <Ching-shih.Li@amd.com>
+From: Daniel Drake <drake@endlessm.com>
 
-commit ce0e22f5d886d1b56c7ab4347c45b9ac5fcc058d upstream.
+commit 396dd8143bdd94bd1c358a228a631c8c895a1126 upstream.
 
-[What]
-vce ring test fails consistently during resume in s3 cycle, due to
-mismatch read & write pointers.
-On debug/analysis its found that rptr to be compared is not being
-correctly updated/read, which leads to this failure.
-Below is the failure signature:
-	[drm:amdgpu_vce_ring_test_ring] *ERROR* amdgpu: ring 12 test failed
-	[drm:amdgpu_device_ip_resume_phase2] *ERROR* resume of IP block <vce_v3_0> failed -110
-	[drm:amdgpu_device_resume] *ERROR* amdgpu_device_ip_resume failed (-110).
+On many (all?) the Gemini Lake systems we work with, there is frequent
+momentary graphical corruption at the top of the screen, and it seems
+that disabling framebuffer compression can avoid this.
 
-[How]
-fetch rptr appropriately, meaning move its read location further down
-in the code flow.
-With this patch applied the s3 failure is no more seen for >5k s3 cycles,
-which otherwise is pretty consistent.
+The ticket was reported 6 months ago and has already affected a
+multitude of users, without any real progress being made. So, lets
+disable framebuffer compression on GeminiLake until a solution is found.
 
-V2: remove reduntant fetch of rptr
-
-Signed-off-by: Louis Li <Ching-shih.Li@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108085
+Fixes: fd7d6c5c8f3e ("drm/i915: enable FBC on gen9+ too")
+Cc: Paulo Zanoni <paulo.r.zanoni@intel.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v4.11+
+Reviewed-by: Paulo Zanoni <paulo.r.zanoni@intel.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190423092810.28359-1-jian-hong@endlessm.com
+(cherry picked from commit 1d25724b41fad7eeb2c3058a5c8190d6ece73e08)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/intel_fbc.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
-@@ -1072,7 +1072,7 @@ void amdgpu_vce_ring_emit_fence(struct a
- int amdgpu_vce_ring_test_ring(struct amdgpu_ring *ring)
- {
- 	struct amdgpu_device *adev = ring->adev;
--	uint32_t rptr = amdgpu_ring_get_rptr(ring);
-+	uint32_t rptr;
- 	unsigned i;
- 	int r, timeout = adev->usec_timeout;
+--- a/drivers/gpu/drm/i915/intel_fbc.c
++++ b/drivers/gpu/drm/i915/intel_fbc.c
+@@ -1278,6 +1278,10 @@ static int intel_sanitize_fbc_option(str
+ 	if (!HAS_FBC(dev_priv))
+ 		return 0;
  
-@@ -1084,6 +1084,8 @@ int amdgpu_vce_ring_test_ring(struct amd
- 	if (r)
- 		return r;
- 
-+	rptr = amdgpu_ring_get_rptr(ring);
++	/* https://bugs.freedesktop.org/show_bug.cgi?id=108085 */
++	if (IS_GEMINILAKE(dev_priv))
++		return 0;
 +
- 	amdgpu_ring_write(ring, VCE_CMD_END);
- 	amdgpu_ring_commit(ring);
+ 	if (IS_BROADWELL(dev_priv) || INTEL_GEN(dev_priv) >= 9)
+ 		return 1;
  
 
 
