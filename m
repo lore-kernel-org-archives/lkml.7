@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E81CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7127CC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B55A20833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E6B20840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099885;
-	bh=89GpvrFgzcN4Wj9MAnyH0h18e4NiL3Ko+h4Lw6xvsNU=;
+	s=default; t=1560099887;
+	bh=xx4eZjBUdw6PcUvBiq0Uqq2vHSsIT6uxOLvPY8gm5yE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8h1d6U873hlUmt9uznsNOQFmV21n1fpRJzLPsQkcIeCvQFs6AolDv22p/tqMDewC
-	 dUppcKvhroUs9neZ/hgXw/s/30nTqtanc3VY4beDInHnFbf6cWTFvtQomOi7jSuO3S
-	 Eba/7BalclKoisEAjsAdm7sJNoDbdJlGpWtyk5hE=
+	b=yWrfbwd4QEZqE9GXG2Zm6nC42/XuvXu93Z36GLTMo9ZReRFkoHunBCoPmh7DQmzXr
+	 SvDUnhwR45o6bETyl/zANltJya/SvxY2dE/s4u7dZTWG0StEJFVvet89hQFHK8MzHa
+	 Ge2N3D49+zT5W1vEiwZzigM5rbfGDvgU3EF+zEiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388672AbfFIREo (ORCPT
+        id S2388697AbfFIREq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:04:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43532 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388661AbfFIREj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:04:39 -0400
+        id S2388270AbfFIREn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:04:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9465620833;
-        Sun,  9 Jun 2019 17:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A1D120833;
+        Sun,  9 Jun 2019 17:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099879;
-        bh=89GpvrFgzcN4Wj9MAnyH0h18e4NiL3Ko+h4Lw6xvsNU=;
+        s=default; t=1560099881;
+        bh=xx4eZjBUdw6PcUvBiq0Uqq2vHSsIT6uxOLvPY8gm5yE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fNL0YeslhEmfNrffrxoiFbC0p+631X3DHahaTvpqPGwdFUl9JV9Hc+BqtcR4KdnDF
-         H7BwnvlkeUhrSfP0vSiW+V8Xfa9p39XkmkDkIY3rvmA7qN9VWenCgTVGRaLZcUnOzu
-         Si/1GpVHu9rWs6KJoluN9skseHvjW7B8AQDFbY9Q=
+        b=KTVZVvSzhoePcCFHWPCGYRx1gHnw3lQ0S3MSVu6ubwlur0znaTa0LYGhLqIMtrtgw
+         ne3PrC5cHHWBZkxBY3pouIFO//+wTvqmJMkn33nxtkv7iF1MgR53UxVS8UC8CumCC+
+         Jvp7oejQFyj9BeCPglI0ylgW+AT020XwytlO21cE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.4 200/241] USB: rio500: fix memory leak in close after disconnect
-Date:   Sun,  9 Jun 2019 18:42:22 +0200
-Message-Id: <20190609164153.779532334@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 201/241] media: usb: siano: Fix general protection fault in smsusb
+Date:   Sun,  9 Jun 2019 18:42:23 +0200
+Message-Id: <20190609164153.946110228@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -58,47 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit e0feb73428b69322dd5caae90b0207de369b5575 upstream.
+commit 31e0456de5be379b10fea0fa94a681057114a96e upstream.
 
-If a disconnected device is closed, rio_close() must free
-the buffers.
+The syzkaller USB fuzzer found a general-protection-fault bug in the
+smsusb part of the Siano DVB driver.  The fault occurs during probe
+because the driver assumes without checking that the device has both
+IN and OUT endpoints and the IN endpoint is ep1.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
+By slightly rearranging the driver's initialization code, we can make
+the appropriate checks early on and thus avoid the problem.  If the
+expected endpoints aren't present, the new code safely returns -ENODEV
+from the probe routine.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
+Reviewed-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/rio500.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/media/usb/siano/smsusb.c |   33 ++++++++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 13 deletions(-)
 
---- a/drivers/usb/misc/rio500.c
-+++ b/drivers/usb/misc/rio500.c
-@@ -103,9 +103,22 @@ static int close_rio(struct inode *inode
- {
- 	struct rio_usb_data *rio = &rio_instance;
+--- a/drivers/media/usb/siano/smsusb.c
++++ b/drivers/media/usb/siano/smsusb.c
+@@ -391,6 +391,7 @@ static int smsusb_init_device(struct usb
+ 	struct smsusb_device_t *dev;
+ 	void *mdev;
+ 	int i, rc;
++	int in_maxp;
  
--	rio->isopen = 0;
-+	/* against disconnect() */
-+	mutex_lock(&rio500_mutex);
-+	mutex_lock(&(rio->lock));
+ 	/* create device object */
+ 	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+@@ -402,6 +403,24 @@ static int smsusb_init_device(struct usb
+ 	dev->udev = interface_to_usbdev(intf);
+ 	dev->state = SMSUSB_DISCONNECTED;
  
--	dev_info(&rio->rio_dev->dev, "Rio closed.\n");
-+	rio->isopen = 0;
-+	if (!rio->present) {
-+		/* cleanup has been delayed */
-+		kfree(rio->ibuf);
-+		kfree(rio->obuf);
-+		rio->ibuf = NULL;
-+		rio->obuf = NULL;
-+	} else {
-+		dev_info(&rio->rio_dev->dev, "Rio closed.\n");
++	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
++		struct usb_endpoint_descriptor *desc =
++				&intf->cur_altsetting->endpoint[i].desc;
++
++		if (desc->bEndpointAddress & USB_DIR_IN) {
++			dev->in_ep = desc->bEndpointAddress;
++			in_maxp = usb_endpoint_maxp(desc);
++		} else {
++			dev->out_ep = desc->bEndpointAddress;
++		}
 +	}
-+	mutex_unlock(&(rio->lock));
-+	mutex_unlock(&rio500_mutex);
- 	return 0;
- }
++
++	pr_debug("in_ep = %02x, out_ep = %02x\n", dev->in_ep, dev->out_ep);
++	if (!dev->in_ep || !dev->out_ep) {	/* Missing endpoints? */
++		smsusb_term_device(intf);
++		return -ENODEV;
++	}
++
+ 	params.device_type = sms_get_board(board_id)->type;
  
+ 	switch (params.device_type) {
+@@ -416,24 +435,12 @@ static int smsusb_init_device(struct usb
+ 		/* fall-thru */
+ 	default:
+ 		dev->buffer_size = USB2_BUFFER_SIZE;
+-		dev->response_alignment =
+-		    le16_to_cpu(dev->udev->ep_in[1]->desc.wMaxPacketSize) -
+-		    sizeof(struct sms_msg_hdr);
++		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
+ 
+ 		params.flags |= SMS_DEVICE_FAMILY2;
+ 		break;
+ 	}
+ 
+-	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
+-		if (intf->cur_altsetting->endpoint[i].desc. bEndpointAddress & USB_DIR_IN)
+-			dev->in_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
+-		else
+-			dev->out_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
+-	}
+-
+-	pr_debug("in_ep = %02x, out_ep = %02x\n",
+-		dev->in_ep, dev->out_ep);
+-
+ 	params.device = &dev->udev->dev;
+ 	params.buffer_size = dev->buffer_size;
+ 	params.num_buffers = MAX_BUFFERS;
 
 
