@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8D7C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B98C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6D320868
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BE0207E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099560;
-	bh=w5VgwM7rZfhCRKwWQy5d3tZcoubBYlFs0mrr95QMj1g=;
+	s=default; t=1560099565;
+	bh=cdyIRM3x/svyww37C6tdtQMMEPvU/u4nbt84BvYnhxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WdpcmF0dDHFjGRPaTGaqJWZP4+McGyHQa9pCBrFPnZsf7cIpRrCs+Y3QZYPP0tQJc
-	 3kL5wbC+s7V2X+zwMaz3s4TiyCC+kXak8K270xw40qkyJlwJbItEZr6EUrBVRQejOV
-	 lI2uoJDsUnmRzI8QVS14IAHROnwe1KDo4FT/nY78=
+	b=F8lrK5w/o2HKMwmIaIoYJ9pZQxx4kYBwTQimZHh4MLSuVrfTzyOBwwuj+WpktQFUs
+	 9GvGm0K8ewPNuaU0J7QlwRdOO7ATaygwCiUkjoPoTMaM2lsYFQZlV+4XNKBSZWWQTa
+	 DAElQimOL+YezvaX31CzWZfWuiLb9d1Rf1b52be4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387647AbfFIQ7T (ORCPT
+        id S2387659AbfFIQ7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:59:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387628AbfFIQ7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:59:12 -0400
+        id S1733142AbfFIQ7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:59:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA569207E0;
-        Sun,  9 Jun 2019 16:59:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48FA6204EC;
+        Sun,  9 Jun 2019 16:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099552;
-        bh=w5VgwM7rZfhCRKwWQy5d3tZcoubBYlFs0mrr95QMj1g=;
+        s=default; t=1560099557;
+        bh=cdyIRM3x/svyww37C6tdtQMMEPvU/u4nbt84BvYnhxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLqIk/xwRYaQN/FcyWdl8ofBF8B1sUfXzSjyXAaaj7+6xQnrE1zYfCZFA4cAHEyOV
-         Nd25nfSoudvTFHkK8HGoeeEjdftNGpX8It0zmjxi2Y+GzSjQ5InByHEn9MuRlUil2H
-         jqPD75KBgotXexrJxir/VL6YNh8u4iS6LvOpO0SA=
+        b=hnOZLBAQeZ2D2YUSmGhAoJ7sxYLqr1ATwuF5zTerwSA0RSjnX77sshlP3IgAgxjku
+         HPFSAknvCF/CW7yVCG+ZGteaCrTEQIT7HHGFCzs7RVjfI9p9q9W7miME5unrFs40qA
+         r1/ILAP/ANB0ch+zCQpbJt+t8Lip4p8yD/BGPCuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.4 080/241] crypto: vmx - CTR: always increment IV as quadword
-Date:   Sun,  9 Jun 2019 18:40:22 +0200
-Message-Id: <20190609164150.081536665@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Bo <bo.liu@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.4 046/241] fuse: honor RLIMIT_FSIZE in fuse_file_fallocate
+Date:   Sun,  9 Jun 2019 18:39:48 +0200
+Message-Id: <20190609164149.100367661@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,57 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Liu Bo <bo.liu@linux.alibaba.com>
 
-commit 009b30ac7444c17fae34c4f435ebce8e8e2b3250 upstream.
+commit 0cbade024ba501313da3b7e5dd2a188a6bc491b5 upstream.
 
-The kernel self-tests picked up an issue with CTR mode:
-alg: skcipher: p8_aes_ctr encryption test failed (wrong result) on test vector 3, cfg="uneven misaligned splits, may sleep"
+fstests generic/228 reported this failure that fuse fallocate does not
+honor what 'ulimit -f' has set.
 
-Test vector 3 has an IV of FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD, so
-after 3 increments it should wrap around to 0.
+This adds the necessary inode_newsize_ok() check.
 
-In the aesp8-ppc code from OpenSSL, there are two paths that
-increment IVs: the bulk (8 at a time) path, and the individual
-path which is used when there are fewer than 8 AES blocks to
-process.
-
-In the bulk path, the IV is incremented with vadduqm: "Vector
-Add Unsigned Quadword Modulo", which does 128-bit addition.
-
-In the individual path, however, the IV is incremented with
-vadduwm: "Vector Add Unsigned Word Modulo", which instead
-does 4 32-bit additions. Thus the IV would instead become
-FFFFFFFFFFFFFFFFFFFFFFFF00000000, throwing off the result.
-
-Use vadduqm.
-
-This was probably a typo originally, what with q and w being
-adjacent. It is a pretty narrow edge case: I am really
-impressed by the quality of the kernel self-tests!
-
-Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Acked-by: Nayna Jain <nayna@linux.ibm.com>
-Tested-by: Nayna Jain <nayna@linux.ibm.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+Fixes: 05ba1f082300 ("fuse: add FALLOCATE operation")
+Cc: <stable@vger.kernel.org> # v3.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/vmx/aesp8-ppc.pl |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/file.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/crypto/vmx/aesp8-ppc.pl
-+++ b/drivers/crypto/vmx/aesp8-ppc.pl
-@@ -1298,7 +1298,7 @@ Loop_ctr32_enc:
- 	addi		$idx,$idx,16
- 	bdnz		Loop_ctr32_enc
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2947,6 +2947,13 @@ static long fuse_file_fallocate(struct f
+ 		}
+ 	}
  
--	vadduwm		$ivec,$ivec,$one
-+	vadduqm		$ivec,$ivec,$one
- 	 vmr		$dat,$inptail
- 	 lvx		$inptail,0,$inp
- 	 addi		$inp,$inp,16
++	if (!(mode & FALLOC_FL_KEEP_SIZE) &&
++	    offset + length > i_size_read(inode)) {
++		err = inode_newsize_ok(inode, offset + length);
++		if (err)
++			return err;
++	}
++
+ 	if (!(mode & FALLOC_FL_KEEP_SIZE))
+ 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
+ 
 
 
