@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6213AC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50313C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF81205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206AF205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100566;
-	bh=IPche2w6uVzmKXxIKJD2vc7ZE/sQ83wLFNs7hisWOL8=;
+	s=default; t=1560100571;
+	bh=A8xkqdpR4tPykWeXqBfTyv/djCndgNj/nZYpSbk3Edw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+8LEPhUz+8XlNOrJLCNfstpKkaf9dZdiA0MOmxG17sZcBtF471Mkdw0CBNXsCnxg
-	 RmQ0LTLxLam1U1TzaKjybvHamEhr2Uf0EabgE4/Zgiy3RiTGM9dw96BvcK5NR8LUm2
-	 O9RKF780olxGTrcdFZTnVp5N1Tkeo2OdQ73u+quw=
+	b=FkVj6UqcMqeejr174h0symGZSoabWh2nKhSE+kgv49MfHUo5mo4+LW037Nx8nRn8P
+	 p6Jxz9T3fdraQuMIYBODp7UzDQZGFL810SzN3OQwQjnJ69X7+0unwVvT8rtNfcy/80
+	 4lIsxpFTgwkQFH3ocxC6mu/Kz3RYHEsLACQ2JYk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732464AbfFIQxo (ORCPT
+        id S1732443AbfFIQxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732448AbfFIQxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:40 -0400
+        id S1732421AbfFIQxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 141F5204EC;
-        Sun,  9 Jun 2019 16:53:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B58C2084A;
+        Sun,  9 Jun 2019 16:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099219;
-        bh=IPche2w6uVzmKXxIKJD2vc7ZE/sQ83wLFNs7hisWOL8=;
+        s=default; t=1560099214;
+        bh=A8xkqdpR4tPykWeXqBfTyv/djCndgNj/nZYpSbk3Edw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x5TgBfaP+ufuF7EP4saAvtg0kovDwrS5Llflq0toFRS93Iu6IiGpgtzVu64DU8hQK
-         ovV7VIetTnlWfMiGyqTa3x+ksj4/2vgyiJKV5kXludvAjCDSp3hUZj1BinHWkWAEQ/
-         C7zoeStyqBQFbw2Y87DdYv14Xv1wUtmSqzaUun20=
+        b=Wjc8OHZIhyjUDg3tUy6WoN0k9xWOflo9MfadsfXkaFkqY0llcncEtd8EWJsblNqKi
+         Zc0jaCdVGeQJSCIZodbVexZpd1YC4mxJZc/HYOFe9L4hwW4SphXsA6WmI2OEU2i50o
+         1sDNbfW6PMjaJkZA1BmU4wpXNFerkAil08SbQnDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arend van Spriel <arend.vanspriel@broadcom.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 51/83] brcmfmac: add subtype check for event handling in data path
-Date:   Sun,  9 Jun 2019 18:42:21 +0200
-Message-Id: <20190609164132.295328705@linuxfoundation.org>
+Subject: [PATCH 4.9 50/83] brcmfmac: assure SSID length from firmware is limited
+Date:   Sun,  9 Jun 2019 18:42:20 +0200
+Message-Id: <20190609164132.220496606@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -66,100 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-commit a4176ec356c73a46c07c181c6d04039fafa34a9f upstream.
+commit 1b5e2423164b3670e8bc9174e4762d297990deff upstream.
 
-For USB there is no separate channel being used to pass events
-from firmware to the host driver and as such are passed over the
-data path. In order to detect mock event messages an additional
-check is needed on event subtype. This check is added conditionally
-using unlikely() keyword.
+The SSID length as received from firmware should not exceed
+IEEE80211_MAX_SSID_LEN as that would result in heap overflow.
 
 Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
 Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
 Reviewed-by: Franky Lin <franky.lin@broadcom.com>
 Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 4.9: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c   |    5 ++--
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h   |   16 ++++++++++----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c |    2 -
- 3 files changed, 16 insertions(+), 7 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-@@ -339,7 +339,8 @@ void brcmf_rx_frame(struct device *dev,
- 	} else {
- 		/* Process special event packets */
- 		if (handle_event)
--			brcmf_fweh_process_skb(ifp->drvr, skb);
-+			brcmf_fweh_process_skb(ifp->drvr, skb,
-+					       BCMILCP_SUBTYPE_VENDOR_LONG);
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -3579,6 +3579,8 @@ brcmf_wowl_nd_results(struct brcmf_if *i
  
- 		brcmf_netif_rx(ifp, skb);
- 	}
-@@ -356,7 +357,7 @@ void brcmf_rx_event(struct device *dev,
- 	if (brcmf_rx_hdrpull(drvr, skb, &ifp))
- 		return;
- 
--	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
- 	brcmu_pkt_buf_free_skb(skb);
- }
- 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
-@@ -181,7 +181,7 @@ enum brcmf_fweh_event_code {
-  */
- #define BRCM_OUI				"\x00\x10\x18"
- #define BCMILCP_BCM_SUBTYPE_EVENT		1
--
-+#define BCMILCP_SUBTYPE_VENDOR_LONG		32769
- 
- /**
-  * struct brcm_ethhdr - broadcom specific ether header.
-@@ -302,10 +302,10 @@ void brcmf_fweh_process_event(struct brc
- void brcmf_fweh_p2pdev_setup(struct brcmf_if *ifp, bool ongoing);
- 
- static inline void brcmf_fweh_process_skb(struct brcmf_pub *drvr,
--					  struct sk_buff *skb)
-+					  struct sk_buff *skb, u16 stype)
- {
- 	struct brcmf_event *event_packet;
--	u16 usr_stype;
-+	u16 subtype, usr_stype;
- 
- 	/* only process events when protocol matches */
- 	if (skb->protocol != cpu_to_be16(ETH_P_LINK_CTL))
-@@ -314,8 +314,16 @@ static inline void brcmf_fweh_process_sk
- 	if ((skb->len + ETH_HLEN) < sizeof(*event_packet))
- 		return;
- 
--	/* check for BRCM oui match */
- 	event_packet = (struct brcmf_event *)skb_mac_header(skb);
-+
-+	/* check subtype if needed */
-+	if (unlikely(stype)) {
-+		subtype = get_unaligned_be16(&event_packet->hdr.subtype);
-+		if (subtype != stype)
-+			return;
-+	}
-+
-+	/* check for BRCM oui match */
- 	if (memcmp(BRCM_OUI, &event_packet->hdr.oui[0],
- 		   sizeof(event_packet->hdr.oui)))
- 		return;
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
-@@ -1114,7 +1114,7 @@ static void brcmf_msgbuf_process_event(s
- 
- 	skb->protocol = eth_type_trans(skb, ifp->ndev);
- 
--	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
- 
- exit:
- 	brcmu_pkt_buf_free_skb(skb);
+ 	data += sizeof(struct brcmf_pno_scanresults_le);
+ 	netinfo = (struct brcmf_pno_net_info_le *)data;
++	if (netinfo->SSID_len > IEEE80211_MAX_SSID_LEN)
++		netinfo->SSID_len = IEEE80211_MAX_SSID_LEN;
+ 	memcpy(cfg->wowl.nd->ssid.ssid, netinfo->SSID, netinfo->SSID_len);
+ 	cfg->wowl.nd->ssid.ssid_len = netinfo->SSID_len;
+ 	cfg->wowl.nd->n_channels = 1;
 
 
