@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1550CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA3C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33B7208E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BEC20833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098822;
-	bh=Eis6heOs73XTHxMj9u1B8PECl107rlwe7UWYK2RSzCw=;
+	s=default; t=1560098828;
+	bh=djcMLwIfe/22lcru6QrlwMZ98x837/yYlP/0xOJ48ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VhCiLw6voLY1s0m+A7tHNQd/LPxj5SpawnYqPw7P5pEktIp+9k2Ob+UW8yGyH/zbL
-	 au5m70YeAeuVWmzrt4TkcY3pSeBW8ZC7nPXOoWjzXLramuwqu5cjY/XoXQZVW0jACf
-	 QtQ81X9mSJW8CMkjSRDgbVp4NuFl8P9mvNxM5eX4=
+	b=XXBPF/0XvHaB73zInuixyDsbef/gSOhvQDwj9K2t2rOE3T1kIOc6Hdyc4dLoo8GlJ
+	 bLRTOApran6EFuoWYkVormruafPWDiufO0t+Mc2OByoKVeZuiPm2LQtWDtOdpjpqta
+	 UbcYZUlJMk+wPEngVdlyTt98pRdT3o497QFxyr4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730721AbfFIQrB (ORCPT
+        id S1730764AbfFIQrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:47:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730686AbfFIQq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:46:57 -0400
+        id S1730735AbfFIQrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:47:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65E5F2081C;
-        Sun,  9 Jun 2019 16:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C22208E3;
+        Sun,  9 Jun 2019 16:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098815;
-        bh=Eis6heOs73XTHxMj9u1B8PECl107rlwe7UWYK2RSzCw=;
+        s=default; t=1560098824;
+        bh=djcMLwIfe/22lcru6QrlwMZ98x837/yYlP/0xOJ48ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1fWQihOfw0fNfN6Az6zVBAE7ajTazVDFSOGS3f8eJnSVH7xf4lFBPUGJydyo5Pdb
-         cOX4XELyDiMb3SZYNTtGN4TEC06P17oY0upOMw8Cdnw5cNHM9f18nqMrkcsy0sQKfl
-         kQ78H09R5Qw6+Q9LrQx1O6V6JvM5rIIXk1S4G3cQ=
+        b=LgaWbpPpe34bq96A61o1XHKMe08SuGd/BwMp5FrZ1K+ckBRRX4Mno5/dweNjhOJqs
+         aEm6BSet/dLC5j1eBdubwTYHzmyFbA4T4SPyH0HbVsGqC7rP3uAEy/PjjqgzoJWMsg
+         jeU+Allul09M3l8b99S+GxBP1lPwhlXBnFaYOMIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Li RongQing <lirongqing@baidu.com>,
-        Wang Li <wangli39@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
-Subject: [PATCH 5.1 70/70] TTY: serial_core, add ->install
-Date:   Sun,  9 Jun 2019 18:42:21 +0200
-Message-Id: <20190609164133.249548765@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
+Subject: [PATCH 5.1 41/70] i2c: xiic: Add max_read_len quirk
+Date:   Sun,  9 Jun 2019 18:41:52 +0200
+Message-Id: <20190609164130.702915045@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,131 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Robert Hancock <hancock@sedsystems.ca>
 
-commit 4cdd17ba1dff20ffc99fdbd2e6f0201fc7fe67df upstream.
+commit 49b809586730a77b57ce620b2f9689de765d790b upstream.
 
-We need to compute the uart state only on the first open. This is
-usually what is done in the ->install hook. serial_core used to do this
-in ->open on every open. So move it to ->install.
+This driver does not support reading more than 255 bytes at once because
+the register for storing the number of bytes to read is only 8 bits. Add
+a max_read_len quirk to enforce this.
 
-As a side effect, it ensures the state is set properly in the window
-after tty_init_dev is called, but before uart_open. This fixes a bunch
-of races between tty_open and flush_to_ldisc we were dealing with
-recently.
+This was found when using this driver with the SFP driver, which was
+previously reading all 256 bytes in the SFP EEPROM in one transaction.
+This caused a bunch of hard-to-debug errors in the xiic driver since the
+driver/logic was treating the number of bytes to read as zero.
+Rejecting transactions that aren't supported at least allows the problem
+to be diagnosed more easily.
 
-One of such bugs was attempted to fix in commit fedb5760648a (serial:
-fix race between flush_to_ldisc and tty_open), but it only took care of
-a couple of functions (uart_start and uart_unthrottle).  I was able to
-reproduce the crash on a SLE system, but in uart_write_room which is
-also called from flush_to_ldisc via process_echoes. I was *unable* to
-reproduce the bug locally. It is due to having this patch in my queue
-since 2012!
-
- general protection fault: 0000 [#1] SMP KASAN PTI
- CPU: 1 PID: 5 Comm: kworker/u4:0 Tainted: G             L 4.12.14-396-default #1 SLE15-SP1 (unreleased)
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c89-prebuilt.qemu.org 04/01/2014
- Workqueue: events_unbound flush_to_ldisc
- task: ffff8800427d8040 task.stack: ffff8800427f0000
- RIP: 0010:uart_write_room+0xc4/0x590
- RSP: 0018:ffff8800427f7088 EFLAGS: 00010202
- RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
- RDX: 000000000000002f RSI: 00000000000000ee RDI: ffff88003888bd90
- RBP: ffffffffb9545850 R08: 0000000000000001 R09: 0000000000000400
- R10: ffff8800427d825c R11: 000000000000006e R12: 1ffff100084fee12
- R13: ffffc900004c5000 R14: ffff88003888bb28 R15: 0000000000000178
- FS:  0000000000000000(0000) GS:ffff880043300000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000561da0794148 CR3: 000000000ebf4000 CR4: 00000000000006e0
- Call Trace:
-  tty_write_room+0x6d/0xc0
-  __process_echoes+0x55/0x870
-  n_tty_receive_buf_common+0x105e/0x26d0
-  tty_ldisc_receive_buf+0xb7/0x1c0
-  tty_port_default_receive_buf+0x107/0x180
-  flush_to_ldisc+0x35d/0x5c0
-...
-
-0 in rbx means tty->driver_data is NULL in uart_write_room. 0x178 is
-tried to be dereferenced (0x178 >> 3 is 0x2f in rdx) at
-uart_write_room+0xc4. 0x178 is exactly (struct uart_state *)NULL->refcount
-used in uart_port_lock from uart_write_room.
-
-So revert the upstream commit here as my local patch should fix the
-whole family.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Li RongQing <lirongqing@baidu.com>
-Cc: Wang Li <wangli39@baidu.com>
-Cc: Zhang Yu <zhangyu31@baidu.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/serial_core.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/i2c/busses/i2c-xiic.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -130,9 +130,6 @@ static void uart_start(struct tty_struct
- 	struct uart_port *port;
- 	unsigned long flags;
+--- a/drivers/i2c/busses/i2c-xiic.c
++++ b/drivers/i2c/busses/i2c-xiic.c
+@@ -718,11 +718,16 @@ static const struct i2c_algorithm xiic_a
+ 	.functionality = xiic_func,
+ };
  
--	if (!state)
--		return;
--
- 	port = uart_port_lock(state, flags);
- 	__uart_start(tty);
- 	uart_port_unlock(port, flags);
-@@ -730,9 +727,6 @@ static void uart_unthrottle(struct tty_s
- 	upstat_t mask = UPSTAT_SYNC_FIFO;
- 	struct uart_port *port;
- 
--	if (!state)
--		return;
--
- 	port = uart_port_ref(state);
- 	if (!port)
- 		return;
-@@ -1747,6 +1741,16 @@ static void uart_dtr_rts(struct tty_port
- 	uart_port_deref(uport);
- }
- 
-+static int uart_install(struct tty_driver *driver, struct tty_struct *tty)
-+{
-+	struct uart_driver *drv = driver->driver_state;
-+	struct uart_state *state = drv->state + tty->index;
++static const struct i2c_adapter_quirks xiic_quirks = {
++	.max_read_len = 255,
++};
 +
-+	tty->driver_data = state;
-+
-+	return tty_standard_install(driver, tty);
-+}
-+
- /*
-  * Calls to uart_open are serialised by the tty_lock in
-  *   drivers/tty/tty_io.c:tty_open()
-@@ -1759,11 +1763,8 @@ static void uart_dtr_rts(struct tty_port
-  */
- static int uart_open(struct tty_struct *tty, struct file *filp)
- {
--	struct uart_driver *drv = tty->driver->driver_state;
--	int retval, line = tty->index;
--	struct uart_state *state = drv->state + line;
--
--	tty->driver_data = state;
-+	struct uart_state *state = tty->driver_data;
-+	int retval;
+ static const struct i2c_adapter xiic_adapter = {
+ 	.owner = THIS_MODULE,
+ 	.name = DRIVER_NAME,
+ 	.class = I2C_CLASS_DEPRECATED,
+ 	.algo = &xiic_algorithm,
++	.quirks = &xiic_quirks,
+ };
  
- 	retval = tty_port_open(&state->port, tty, filp);
- 	if (retval > 0)
-@@ -2448,6 +2449,7 @@ static void uart_poll_put_char(struct tt
- #endif
  
- static const struct tty_operations uart_ops = {
-+	.install	= uart_install,
- 	.open		= uart_open,
- 	.close		= uart_close,
- 	.write		= uart_write,
 
 
