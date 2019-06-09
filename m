@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4973C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF52C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8A520693
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156ED214AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:09:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="JRKbcrjI"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="pqKvjzXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfFIKI6 (ORCPT
+        id S1728183AbfFIKJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 06:08:58 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:46626 "EHLO
+        Sun, 9 Jun 2019 06:09:00 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:46672 "EHLO
         forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728110AbfFIKIz (ORCPT
+        by vger.kernel.org with ESMTP id S1728111AbfFIKI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 06:08:55 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 1AFF12E087D;
-        Sun,  9 Jun 2019 13:08:53 +0300 (MSK)
-Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
-        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 13LYxQ2B9j-8pliI2hm;
-        Sun, 09 Jun 2019 13:08:53 +0300
+        Sun, 9 Jun 2019 06:08:58 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 461142E0AC3;
+        Sun,  9 Jun 2019 13:08:55 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id ZSzqn1Ame6-8so4F2el;
+        Sun, 09 Jun 2019 13:08:55 +0300
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1560074933; bh=vE25/fE3GbSUmEmrdF2LzH942xvuS41f5y8rGOLXdnQ=;
+        t=1560074935; bh=Osy1W1UXrB10pyCypodBWxUh9CNrVdsLdAgKLqVDe8Q=;
         h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
-        b=JRKbcrjIO3Qau84WEWIcAh/pGsYAjU0pBAE0iOqS7wdR0k5OSt+AWz7uKQJI4mJg6
-         8827ndi69XToznkB0q2AePqeqDvA/uq02G6iPx4++PVKEp0BXjJpvgdvNRgAY29Sw6
-         RRh4rf2ePf7A9V7TIg/fu2WM1HrJJvQgXF2H2b2Q=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+        b=pqKvjzXtUBzAVSiDKLbZCOSS0t9ehWEZtZgDrRcDhRw3G6lZWgub6Zjydb5S4yDbp
+         Y87xvNUR9I4izI0As/UKXeINdYRzMYShRSbiWoSq5onG4qSdj8aplmkyAH+PrEzyrS
+         Bldyua8BJ063+uyN4eyxD7D8yN7XWfiVpmf6hmEg=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
 Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d25:9e27:4f75:a150])
-        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 2fhLdaNKBQ-8pYaK4tB;
-        Sun, 09 Jun 2019 13:08:51 +0300
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id eNXLUmhNGx-8sga6Q9F;
+        Sun, 09 Jun 2019 13:08:54 +0300
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (Client certificate not present)
-Subject: [PATCH v2 1/6] proc: use down_read_killable mmap_sem for
- /proc/pid/maps
+Subject: [PATCH v2 2/6] proc: use down_read_killable mmap_sem for
+ /proc/pid/smaps_rollup
 From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org
@@ -53,8 +53,8 @@ Cc:     Oleg Nesterov <oleg@redhat.com>,
         Kirill Tkhai <ktkhai@virtuozzo.com>,
         Michal =?utf-8?q?Koutn=C3=BD?= <mkoutny@suse.com>,
         Al Viro <viro@zeniv.linux.org.uk>, Roman Gushchin <guro@fb.com>
-Date:   Sun, 09 Jun 2019 13:08:51 +0300
-Message-ID: <156007493160.3335.14447544314127417266.stgit@buzz>
+Date:   Sun, 09 Jun 2019 13:08:54 +0300
+Message-ID: <156007493429.3335.14666825072272692455.stgit@buzz>
 In-Reply-To: <156007465229.3335.10259979070641486905.stgit@buzz>
 References: <156007465229.3335.10259979070641486905.stgit@buzz>
 User-Agent: StGit/0.17.1-dirty
@@ -69,50 +69,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Do not stuck forever if something wrong.
 Killable lock allows to cleanup stuck tasks and simplifies investigation.
 
-This function also used for /proc/pid/smaps.
-
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Reviewed-by: Roman Gushchin <guro@fb.com>
 Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
 Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 Acked-by: Michal Hocko <mhocko@suse.com>
 ---
- fs/proc/task_mmu.c   |    6 +++++-
- fs/proc/task_nommu.c |    6 +++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ fs/proc/task_mmu.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 01d4eb0e6bd1..2bf210229daf 100644
+index 2bf210229daf..781879a91e3b 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
-@@ -166,7 +166,11 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
- 	if (!mm || !mmget_not_zero(mm))
- 		return NULL;
+@@ -832,7 +832,10 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
+ 
+ 	memset(&mss, 0, sizeof(mss));
  
 -	down_read(&mm->mmap_sem);
-+	if (down_read_killable(&mm->mmap_sem)) {
-+		mmput(mm);
-+		return ERR_PTR(-EINTR);
-+	}
++	ret = down_read_killable(&mm->mmap_sem);
++	if (ret)
++		goto out_put_mm;
 +
  	hold_task_mempolicy(priv);
- 	priv->tail_vma = get_gate_vma(mm);
  
-diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index 36bf0f2e102e..7907e6419e57 100644
---- a/fs/proc/task_nommu.c
-+++ b/fs/proc/task_nommu.c
-@@ -211,7 +211,11 @@ static void *m_start(struct seq_file *m, loff_t *pos)
- 	if (!mm || !mmget_not_zero(mm))
- 		return NULL;
+ 	for (vma = priv->mm->mmap; vma; vma = vma->vm_next) {
+@@ -849,8 +852,9 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
  
--	down_read(&mm->mmap_sem);
-+	if (down_read_killable(&mm->mmap_sem)) {
-+		mmput(mm);
-+		return ERR_PTR(-EINTR);
-+	}
-+
- 	/* start from the Nth VMA */
- 	for (p = rb_first(&mm->mm_rb); p; p = rb_next(p))
- 		if (n-- == 0)
+ 	release_task_mempolicy(priv);
+ 	up_read(&mm->mmap_sem);
+-	mmput(mm);
+ 
++out_put_mm:
++	mmput(mm);
+ out_put_task:
+ 	put_task_struct(priv->task);
+ 	priv->task = NULL;
 
