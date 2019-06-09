@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ACCC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE98C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219DE20652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A8420652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100905;
-	bh=g75Sm/xoGHFxBj4nYNq3+J9XqVcsXYBwcfM3Lm26yAg=;
+	s=default; t=1560100907;
+	bh=anG7b5l8TUD3kc7RKq39S5Thv10tZu2qz38hQsN+Xyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7D/wnurZL8dbP6JtO7H26xCikgDe4QQ0VH61mFyTS58feStnambR9t0dRdGNvequ
-	 efeSSx+AI+dWBIZJ8In+MKCJ8Su5zRN9JxufQ50jpar4xRFTigZ8sYSsXE+5rcPgLG
-	 fM0A6Xusz8y12rOsdJXJkKWFPHBe/Qtw4HDmCfZQ=
+	b=bZpArdGcOwIubWI1lrxR8YFDGcNabcaxrT6pqtZ6N+OEtDNDo+0UFur9mqPXaLiwy
+	 3Q4ay/lLxkE9bZZLd4CrVTeNtl2Qquah8v6mgFuFvLjt7EIVakXH6wxnK55vKx6HYb
+	 kf1YYCsdE6NJ7RmzeJwNGLGLbHKVHFcjuOniexD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729928AbfFIQpc (ORCPT
+        id S1729887AbfFIQpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:45:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43246 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729030AbfFIQp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:29 -0400
+        id S1729831AbfFIQpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02EED2083D;
-        Sun,  9 Jun 2019 16:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E46FA2081C;
+        Sun,  9 Jun 2019 16:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098728;
-        bh=g75Sm/xoGHFxBj4nYNq3+J9XqVcsXYBwcfM3Lm26yAg=;
+        s=default; t=1560098725;
+        bh=anG7b5l8TUD3kc7RKq39S5Thv10tZu2qz38hQsN+Xyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xn+u2qJX2eW8xz3bXOij+h4GUimj2u/748z8kMVKFIocBpI9WHpPxK/m0Y+e3eOJ8
-         oJRjM2TmS5kI38MJYg/t/t16VnMHmSCWZPegSdbujZPRlULYPF/gdxwFFes1kMUHjE
-         UhSwRQqApkgsquPoTJTmXBkPiWmC7GvUq1KCLj0A=
+        b=q4+URRzdRt/NTI1+au331yjx72PgeAAjQvoGX8sdMj9bKq41JUbhz/JtVk4QuWL86
+         W49q2IEUG9Q7AliNqpcswfqlQHVu0OQONLCobTpfHGWrWWA1skTv/hoJ9zcq/foGRx
+         0kVB4ntHHvPLq/az/5NCY/DsVZw8osM0XoMh1lmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        stable@vger.kernel.org,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 07/70] net: rds: fix memory leak in rds_ib_flush_mr_pool
-Date:   Sun,  9 Jun 2019 18:41:18 +0200
-Message-Id: <20190609164127.885921304@linuxfoundation.org>
+Subject: [PATCH 5.1 06/70] net: mvpp2: Use strscpy to handle stat strings
+Date:   Sun,  9 Jun 2019 18:41:17 +0200
+Message-Id: <20190609164127.850991830@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,90 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-[ Upstream commit 85cb928787eab6a2f4ca9d2a798b6f3bed53ced1 ]
+[ Upstream commit d37acd5aa99c57505b64913e0e2624ec3daed8c5 ]
 
-When the following tests last for several hours, the problem will occur.
+Use a safe strscpy call to copy the ethtool stat strings into the
+relevant buffers, instead of a memcpy that will be accessing
+out-of-bound data.
 
-Server:
-    rds-stress -r 1.1.1.16 -D 1M
-Client:
-    rds-stress -r 1.1.1.14 -s 1.1.1.16 -D 1M -T 30
-
-The following will occur.
-
-"
-Starting up....
-tsks   tx/s   rx/s  tx+rx K/s    mbi K/s    mbo K/s tx us/c   rtt us cpu
-%
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-"
->From vmcore, we can find that clean_list is NULL.
-
->From the source code, rds_mr_flushd calls rds_ib_mr_pool_flush_worker.
-Then rds_ib_mr_pool_flush_worker calls
-"
- rds_ib_flush_mr_pool(pool, 0, NULL);
-"
-Then in function
-"
-int rds_ib_flush_mr_pool(struct rds_ib_mr_pool *pool,
-                         int free_all, struct rds_ib_mr **ibmr_ret)
-"
-ibmr_ret is NULL.
-
-In the source code,
-"
-...
-list_to_llist_nodes(pool, &unmap_list, &clean_nodes, &clean_tail);
-if (ibmr_ret)
-        *ibmr_ret = llist_entry(clean_nodes, struct rds_ib_mr, llnode);
-
-/* more than one entry in llist nodes */
-if (clean_nodes->next)
-        llist_add_batch(clean_nodes->next, clean_tail, &pool->clean_list);
-...
-"
-When ibmr_ret is NULL, llist_entry is not executed. clean_nodes->next
-instead of clean_nodes is added in clean_list.
-So clean_nodes is discarded. It can not be used again.
-The workqueue is executed periodically. So more and more clean_nodes are
-discarded. Finally the clean_list is NULL.
-Then this problem will occur.
-
-Fixes: 1bc144b62524 ("net, rds, Replace xlist in net/rds/xlist.h with llist")
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Fixes: 118d6298f6f0 ("net: mvpp2: add ethtool GOP statistics")
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/ib_rdma.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/rds/ib_rdma.c
-+++ b/net/rds/ib_rdma.c
-@@ -428,12 +428,14 @@ int rds_ib_flush_mr_pool(struct rds_ib_m
- 		wait_clean_list_grace();
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1304,8 +1304,8 @@ static void mvpp2_ethtool_get_strings(st
+ 		int i;
  
- 		list_to_llist_nodes(pool, &unmap_list, &clean_nodes, &clean_tail);
--		if (ibmr_ret)
-+		if (ibmr_ret) {
- 			*ibmr_ret = llist_entry(clean_nodes, struct rds_ib_mr, llnode);
--
-+			clean_nodes = clean_nodes->next;
-+		}
- 		/* more than one entry in llist nodes */
--		if (clean_nodes->next)
--			llist_add_batch(clean_nodes->next, clean_tail, &pool->clean_list);
-+		if (clean_nodes)
-+			llist_add_batch(clean_nodes, clean_tail,
-+					&pool->clean_list);
- 
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_regs); i++)
+-			memcpy(data + i * ETH_GSTRING_LEN,
+-			       &mvpp2_ethtool_regs[i].string, ETH_GSTRING_LEN);
++			strscpy(data + i * ETH_GSTRING_LEN,
++			        mvpp2_ethtool_regs[i].string, ETH_GSTRING_LEN);
  	}
+ }
  
 
 
