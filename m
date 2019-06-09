@@ -2,75 +2,98 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8391C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C93FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 08:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DE4208E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8702089E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 08:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UIYvSatr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYho7So9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfFIHzq (ORCPT
+        id S1727936AbfFIIIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 03:55:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51368 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfFIHzq (ORCPT
+        Sun, 9 Jun 2019 04:08:09 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42360 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfFIIIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 03:55:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NId33FVrnX6RKCmv9wXhMZxhV5RvbqvL9ybuo1GNDqA=; b=UIYvSatrLxTeJ1V2KMwKFXvvH
-        C2y6CtDdT7KQ7qeI/fGT8EH0QBuoEOVr/Vd5UhBUveptZB+sPn0ZUV7VNM95DwZM6tpnn52+xp86E
-        To/r3jcvd13NBUMsrRi37OFS1TVLiOCI+4VbdFwCH2THbR4lM/K+f9pLYgw44qwfcxaEn6JIix4uk
-        9qvRoptOZeUBi5OPRfs8Eko/VkvTwP50NQfSTuTi1gJQV2Ea/MD87EqSnyK/OBvas7xRwI5IbBoAq
-        y6YoEjsSWtnhDD5B/V0+uXi80Fg0OmFUOyNENC4so2q2fxgjsXbupKdrWCAeZ38UAMc/I1g+y+BEp
-        KVhqMWOBg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZsg4-0001S9-Ta; Sun, 09 Jun 2019 07:55:44 +0000
-Date:   Sun, 9 Jun 2019 00:55:44 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Loys Ollivier <lollivier@baylibre.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] RISC-V: defconfig: enable clocks, serial console
-Message-ID: <20190609075544.GA32207@infradead.org>
-References: <20190605175042.13719-1-khilman@baylibre.com>
- <alpine.DEB.2.21.9999.1906081848410.720@viisi.sifive.com>
+        Sun, 9 Jun 2019 04:08:09 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l19so773730pgh.9;
+        Sun, 09 Jun 2019 01:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-description
+         :content-disposition:user-agent;
+        bh=IojbENL8XN+NI9qFu6Ly3yajllnRzK7oNQnSNp6xNQg=;
+        b=ZYho7So9bgZDRHi1ryq8+7iDr9AFpBi7NzAsJNmxm/jcw5S1a+VhlIzlhefrN1ZsKG
+         lfS6qAT2VSD0EADybP6DQbyQwQ/BGixTuAHHrQYJHhTF686PqLVnAQ0BjxoivY4dEucv
+         aH3amRLMWomsbLQ+cKy2La6sEzL8F4gyFeGQDI4p4OrzHeleoVDN+31S1qwYw7kStk7u
+         Nq8tLY41AmHRtT36dirtHF+1f4uHdCdgEGjGnO4pM+XLvmFylXWbWLUN0JBL1UVwtYMi
+         uuPP8vZ3yoPzovBAKLHCjTnNmf0qEb5pJdYTkQTNo+XwQz7t1KQMfxJunqy9tJ9ui8uu
+         HbTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-description:content-disposition:user-agent;
+        bh=IojbENL8XN+NI9qFu6Ly3yajllnRzK7oNQnSNp6xNQg=;
+        b=lO8Z1X8kObGd5/mgA+PKyF/i/Hmv+Xh8tCSRQWl/ZTLG/C4ni9FQPlTQNK6lq1G5Dk
+         TVso6KByOa2vxXhrWx3jlz+u6QWMHQ95DcJUpd5d9RcoE3eQYfcTSS6UBEDI0isel+pD
+         Ckv5iqvKPuLH1IO5VNo9EeoDGsY8+KQBxZgXJdDSZ3GeBBIp/isk775U5s3GeMUei9s9
+         t7fSJl4dJrcAV/NkLtJbjS3JWSarUqr19ZSHvJ4ss6PQiFW2BL7abx2D1stlVyt6uWDQ
+         sMjd3KfoCBx8qixTrXhaEDkAeqk80/Q+wjrbxBleR/w5y1qwcOhn/jWglSSbF0VGC804
+         +iYg==
+X-Gm-Message-State: APjAAAU7awzUo3TQV0lI10MksVEm5dreFgpNHJNtuU3JWQAASEuVvS4l
+        wve6WT8XHAUvCVtOdjWWMUk=
+X-Google-Smtp-Source: APXvYqx85K4bYEpmAgjECy+zZy5TlMfi0v6GND7kOy2dXU/bj7aI9EiFv5w1eiYyvw7n92316IgH6A==
+X-Received: by 2002:a65:620d:: with SMTP id d13mr10806665pgv.109.1560067688122;
+        Sun, 09 Jun 2019 01:08:08 -0700 (PDT)
+Received: from saurav ([203.187.233.29])
+        by smtp.gmail.com with ESMTPSA id b6sm4466183pgd.5.2019.06.09.01.08.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 09 Jun 2019 01:08:07 -0700 (PDT)
+Date:   Sun, 9 Jun 2019 13:38:02 +0530
+From:   Saurav-Girepunje <saurav.girepunje@gmail.com>
+To:     b-liu@ti.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] Updated the function description for musb_stage0_irq
+ Signed-off-by: Saurav-Girepunje <saurav.girepunje@gmail.com>
+Message-ID: <20190609080753.GA7735@saurav>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Description: Updated the function description of musb_stage0_irq
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1906081848410.720@viisi.sifive.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 06:49:09PM -0700, Paul Walmsley wrote:
-> On Wed, 5 Jun 2019, Kevin Hilman wrote:
-> 
-> > Enable PRCI clock driver and serial console by default, so the default
-> > upstream defconfig is bootable to a serial console.
-> > 
-> > Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-> 
-> Thanks, queued for v5.2-rc with Christoph's Reviewed-by:.
+---
+ drivers/usb/musb/musb_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-To repeat myself:  where do you apply it to?  And could we please just
-have a shared maintainer tree on infradead.org or kernel.org so that
-people don't have to chase multiple trees to base their patches on?
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 9f5a4819a744..2451e0ee2d01 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -909,7 +909,6 @@ static void musb_handle_intr_reset(struct musb *musb)
+  * @param musb instance pointer
+  * @param int_usb register contents
+  * @param devctl
+- * @param power
+  */
+ 
+ static irqreturn_t musb_stage0_irq(struct musb *musb, u8 int_usb,
+-- 
+2.20.1
+
+Updated the function description of musb_stage0_irq.
+
+a.
