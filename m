@@ -2,124 +2,129 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C2CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB01C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31A5216C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548CB2166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbfFIB1T (ORCPT
+        id S1728218AbfFIB2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 21:27:19 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:59934 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbfFIB0o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 21:26:44 -0400
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id B1D6327868; Sat,  8 Jun 2019 21:26:42 -0400 (EDT)
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "Michael Schmitz" <schmitzmic@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Message-Id: <61f0c0f6aaf8fa96bf3dade5475615b2cfbc8846.1560043151.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1560043151.git.fthain@telegraphics.com.au>
-References: <cover.1560043151.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH v2 2/7] scsi: NCR5380: Always re-enable reselection interrupt
-Date:   Sun, 09 Jun 2019 11:19:11 +1000
+        Sat, 8 Jun 2019 21:28:18 -0400
+Received: from mga03.intel.com ([134.134.136.65]:55288 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727577AbfFIB2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 21:28:18 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2019 18:28:17 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga008.fm.intel.com with ESMTP; 08 Jun 2019 18:28:16 -0700
+Date:   Sat, 8 Jun 2019 18:29:32 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190609012931.GA19825@iweiny-DESK2.sc.intel.com>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608001036.GF14308@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reselection interrupt gets disabled during selection and must be
-re-enabled when hostdata->connected becomes NULL. If it isn't re-enabled
-a disconnected command may time-out or the target may wedge the bus while
-trying to reselect the host. This can happen after a command is aborted.
+On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
+> On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
+> > On Fri, Jun 07, 2019 at 01:04:26PM +0200, Jan Kara wrote:
+> > > On Thu 06-06-19 15:03:30, Ira Weiny wrote:
+> > > > On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
+> > > > > On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
+> > > > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > > 
+> > > > > So I'd like to actually mandate that you *must* hold the file lease until
+> > > > > you unpin all pages in the given range (not just that you have an option to
+> > > > > hold a lease). And I believe the kernel should actually enforce this. That
+> > > > > way we maintain a sane state that if someone uses a physical location of
+> > > > > logical file offset on disk, he has a layout lease. Also once this is done,
+> > > > > sysadmin has a reasonably easy way to discover run-away RDMA application
+> > > > > and kill it if he wishes so.
+> > > > 
+> > > > Fair enough.
+> > > > 
+> > > > I was kind of heading that direction but had not thought this far forward.  I
+> > > > was exploring how to have a lease remain on the file even after a "lease
+> > > > break".  But that is incompatible with the current semantics of a "layout"
+> > > > lease (as currently defined in the kernel).  [In the end I wanted to get an RFC
+> > > > out to see what people think of this idea so I did not look at keeping the
+> > > > lease.]
+> > > > 
+> > > > Also hitch is that currently a lease is forcefully broken after
+> > > > <sysfs>/lease-break-time.  To do what you suggest I think we would need a new
+> > > > lease type with the semantics you describe.
+> > > 
+> > > I'd do what Dave suggested - add flag to mark lease as unbreakable by
+> > > truncate and teach file locking core to handle that. There actually is
+> > > support for locks that are not broken after given timeout so there
+> > > shouldn't be too many changes need.
+> > >  
+> > > > Previously I had thought this would be a good idea (for other reasons).  But
+> > > > what does everyone think about using a "longterm lease" similar to [1] which
+> > > > has the semantics you proppose?  In [1] I was not sure "longterm" was a good
+> > > > name but with your proposal I think it makes more sense.
+> > > 
+> > > As I wrote elsewhere in this thread I think FL_LAYOUT name still makes
+> > > sense and I'd add there FL_UNBREAKABLE to mark unusal behavior with
+> > > truncate.
+> > 
+> > Ok I want to make sure I understand what you and Dave are suggesting.
+> > 
+> > Are you suggesting that we have something like this from user space?
+> > 
+> > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
+> 
+> Rather than "unbreakable", perhaps a clearer description of the
+> policy it entails is "exclusive"?
+> 
+> i.e. what we are talking about here is an exclusive lease that
+> prevents other processes from changing the layout. i.e. the
+> mechanism used to guarantee a lease is exclusive is that the layout
+> becomes "unbreakable" at the filesystem level, but the policy we are
+> actually presenting to uses is "exclusive access"...
 
-Fix this by enabling the reselection interrupt in NCR5380_main() after
-calls to NCR5380_select() and NCR5380_information_transfer() return.
+That sounds good.
 
-Cc: Michael Schmitz <schmitzmic@gmail.com>
-Cc: stable@vger.kernel.org # v4.9+
-Fixes: 8b00c3d5d40d ("ncr5380: Implement new eh_abort_handler")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
----
- drivers/scsi/NCR5380.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+Ira
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index fe0535affc14..08e3ea8159b3 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -709,6 +709,8 @@ static void NCR5380_main(struct work_struct *work)
- 			NCR5380_information_transfer(instance);
- 			done = 0;
- 		}
-+		if (!hostdata->connected)
-+			NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
- 		spin_unlock_irq(&hostdata->lock);
- 		if (!done)
- 			cond_resched();
-@@ -1110,8 +1112,6 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
- 		spin_lock_irq(&hostdata->lock);
- 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
- 		NCR5380_reselect(instance);
--		if (!hostdata->connected)
--			NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
- 		shost_printk(KERN_ERR, instance, "reselection after won arbitration?\n");
- 		goto out;
- 	}
-@@ -1119,7 +1119,6 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
- 	if (err < 0) {
- 		spin_lock_irq(&hostdata->lock);
- 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
--		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
- 
- 		/* Can't touch cmd if it has been reclaimed by the scsi ML */
- 		if (!hostdata->selecting)
-@@ -1157,7 +1156,6 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
- 	if (err < 0) {
- 		shost_printk(KERN_ERR, instance, "select: REQ timeout\n");
- 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
--		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
- 		goto out;
- 	}
- 	if (!hostdata->selecting) {
-@@ -1826,9 +1824,6 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
- 					 */
- 					NCR5380_write(TARGET_COMMAND_REG, 0);
- 
--					/* Enable reselect interrupts */
--					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
--
- 					maybe_release_dma_irq(instance);
- 					return;
- 				case MESSAGE_REJECT:
-@@ -1860,8 +1855,6 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
- 					 */
- 					NCR5380_write(TARGET_COMMAND_REG, 0);
- 
--					/* Enable reselect interrupts */
--					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
- #ifdef SUN3_SCSI_VME
- 					dregs->csr |= CSR_DMA_ENABLE;
- #endif
-@@ -1964,7 +1957,6 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
- 					cmd->result = DID_ERROR << 16;
- 					complete_cmd(instance, cmd);
- 					maybe_release_dma_irq(instance);
--					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
- 					return;
- 				}
- 				msgout = NOP;
--- 
-2.21.0
-
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
