@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5E9C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591A6C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956C3206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1B5206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098862;
-	bh=9lxHmmF1tLB8UR7q4NKCCLTiVUByphdknOQMJDU8YxQ=;
+	s=default; t=1560098865;
+	bh=dsuY3ika3pM2TpW6IhoPArLRbVaGg/raG5jngM0Jwrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QrdQdN4ev0gI+cGKg2o7uzq1GnsWpsdvFC8axbW1wMYCz01dM7vhq0puT3kVa7zUf
-	 9Zh/k/trEhPcXlw2SLQiuK3VYO1dPGLmWW/aNRNPyohZn43SafPe3q0G3UkcfEwCBU
-	 Abqr2aSHcANun9rR5FpTaO3Iu2s8C8M2OkSKgQMI=
+	b=PFDxHawof9OCVlexsRlkXqC+p0iwA2Rv5JuMOOyYPVkqSSg4wOatGmQ4QFwC6QkX5
+	 lrbQhIbe4WQzIbDQ2WxCCYPdp/Q7YfipQmIC8zfdOHQ2AhXvkry7zMLNiZosYyZZyP
+	 vOvfYPge16nEE0B66j6lvMNlYHCT+oynKEJPupGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbfFIQrl (ORCPT
+        id S1730955AbfFIQro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46276 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730881AbfFIQrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:35 -0400
+        id S1730891AbfFIQrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:47:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A3D42145D;
-        Sun,  9 Jun 2019 16:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1765C206DF;
+        Sun,  9 Jun 2019 16:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098854;
-        bh=9lxHmmF1tLB8UR7q4NKCCLTiVUByphdknOQMJDU8YxQ=;
+        s=default; t=1560098856;
+        bh=dsuY3ika3pM2TpW6IhoPArLRbVaGg/raG5jngM0Jwrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6tlbs39f/BDkiB9NPD4Z5GRO5wK59337+l9ZW+m//5TuSKghPbbyTcWrtsapM2PO
-         25oqDIFI7jZU5yP8AX5KiWBSfz/FzOOpwEhKfcYFIcNCDWBKegL7G0QIdMaKe8k2/Z
-         9ldmNiBpGdgOCFAucSMzgFXxIvgtKBMvjtvUM1PA=
+        b=pwGKyYHU1CQPhpP21tq4/HdVEEK2TlUqyyQKPUta56z7DzVSnZfFSjtmm3N2ujVUR
+         G3XbFHSorEIPU9UpOSVgDmjk2foxCmIRvnWBwpOsKWQ4zOsNEmuAhVLxa5ujJ0FGuJ
+         D88h79LgXSPRiKnR51vAteOB6FyMCxxP6zaj0h5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matteo Croce <mcroce@redhat.com>
-Subject: [PATCH 4.19 13/51] pktgen: do not sleep with the thread lock held.
-Date:   Sun,  9 Jun 2019 18:41:54 +0200
-Message-Id: <20190609164127.874060734@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Yaro Slav <yaro330@gmail.com>,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 14/51] Revert "fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied"
+Date:   Sun,  9 Jun 2019 18:41:55 +0200
+Message-Id: <20190609164127.924633657@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,96 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 720f1de4021f09898b8c8443f3b3e995991b6e3a ]
+[ Upstream commit 4970b42d5c362bf873982db7d93245c5281e58f4 ]
 
-Currently, the process issuing a "start" command on the pktgen procfs
-interface, acquires the pktgen thread lock and never release it, until
-all pktgen threads are completed. The above can blocks indefinitely any
-other pktgen command and any (even unrelated) netdevice removal - as
-the pktgen netdev notifier acquires the same lock.
+This reverts commit e9919a24d3022f72bcadc407e73a6ef17093a849.
 
-The issue is demonstrated by the following script, reported by Matteo:
+Nathan reported the new behaviour breaks Android, as Android just add
+new rules and delete old ones.
 
-ip -b - <<'EOF'
-	link add type dummy
-	link add type veth
-	link set dummy0 up
-EOF
-modprobe pktgen
-echo reset >/proc/net/pktgen/pgctrl
-{
-	echo rem_device_all
-	echo add_device dummy0
-} >/proc/net/pktgen/kpktgend_0
-echo count 0 >/proc/net/pktgen/dummy0
-echo start >/proc/net/pktgen/pgctrl &
-sleep 1
-rmmod veth
+If we return 0 without adding dup rules, Android will remove the new
+added rules and causing system to soft-reboot.
 
-Fix the above releasing the thread lock around the sleep call.
-
-Additionally we must prevent racing with forcefull rmmod - as the
-thread lock no more protects from them. Instead, acquire a self-reference
-before waiting for any thread. As a side effect, running
-
-rmmod pktgen
-
-while some thread is running now fails with "module in use" error,
-before this patch such command hanged indefinitely.
-
-Note: the issue predates the commit reported in the fixes tag, but
-this fix can't be applied before the mentioned commit.
-
-v1 -> v2:
- - no need to check for thread existence after flipping the lock,
-   pktgen threads are freed only at net exit time
- -
-
-Fixes: 6146e6a43b35 ("[PKTGEN]: Removes thread_{un,}lock() macros.")
-Reported-and-tested-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: e9919a24d302 ("fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Yaro Slav <yaro330@gmail.com>
+Reported-by: Maciej Żenczykowski <zenczykowski@gmail.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/pktgen.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ net/core/fib_rules.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -3065,7 +3065,13 @@ static int pktgen_wait_thread_run(struct
- {
- 	while (thread_is_running(t)) {
+--- a/net/core/fib_rules.c
++++ b/net/core/fib_rules.c
+@@ -756,9 +756,9 @@ int fib_nl_newrule(struct sk_buff *skb,
+ 	if (err)
+ 		goto errout;
  
-+		/* note: 't' will still be around even after the unlock/lock
-+		 * cycle because pktgen_thread threads are only cleared at
-+		 * net exit
-+		 */
-+		mutex_unlock(&pktgen_thread_lock);
- 		msleep_interruptible(100);
-+		mutex_lock(&pktgen_thread_lock);
- 
- 		if (signal_pending(current))
- 			goto signal;
-@@ -3080,6 +3086,10 @@ static int pktgen_wait_all_threads_run(s
- 	struct pktgen_thread *t;
- 	int sig = 1;
- 
-+	/* prevent from racing with rmmod */
-+	if (!try_module_get(THIS_MODULE))
-+		return sig;
-+
- 	mutex_lock(&pktgen_thread_lock);
- 
- 	list_for_each_entry(t, &pn->pktgen_threads, th_list) {
-@@ -3093,6 +3103,7 @@ static int pktgen_wait_all_threads_run(s
- 			t->control |= (T_STOP);
- 
- 	mutex_unlock(&pktgen_thread_lock);
-+	module_put(THIS_MODULE);
- 	return sig;
- }
+-	if (rule_exists(ops, frh, tb, rule)) {
+-		if (nlh->nlmsg_flags & NLM_F_EXCL)
+-			err = -EEXIST;
++	if ((nlh->nlmsg_flags & NLM_F_EXCL) &&
++	    rule_exists(ops, frh, tb, rule)) {
++		err = -EEXIST;
+ 		goto errout_free;
+ 	}
  
 
 
