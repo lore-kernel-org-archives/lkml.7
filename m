@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F5C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA39C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D8E206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CD020843
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098940;
-	bh=Bnd+mMgOBX1KeCWE8jI4UST0VG/GhJDpOYXXzZEG3TI=;
+	s=default; t=1560098945;
+	bh=Cp2uECuwOeGPDjVMSYrZzAlare/2fg5aOUeUdcM2Uv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mb9F2xX5Fi0iAd3J0ajy6zQa742fe9TvkI3Dx4sYDH5N140jDZJPqLCvh+tB0x8hm
-	 565+YCKSVMe6SJAdqOxsH6kvM3HqlDJokdrpw/YXrQg8UOhCaqALVxkISme0ol55ox
-	 9OJ5iU+B8JEFc6Q9Z6aUn52b5PfO0abbXiVuSf5g=
+	b=L277LAuRWR9n65ehkatU+IhqOI33F6vIbesRrviRiUic+GWNHhfxT5ryWjRX9V2+o
+	 8yBEn5s+qh8cD/LIed0mDCmWIOtkGmz+BAH4sH+schSJ02/b+arXxs2ADVbG7DLnd7
+	 oWsZlbb5oicumL9is1fo8T230YuXu+ltvlOEuRnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731363AbfFIQs7 (ORCPT
+        id S1730659AbfFIQtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48218 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:49:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730621AbfFIQs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:58 -0400
+        id S1730166AbfFIQtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:49:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1E60206DF;
-        Sun,  9 Jun 2019 16:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 467CE205ED;
+        Sun,  9 Jun 2019 16:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098937;
-        bh=Bnd+mMgOBX1KeCWE8jI4UST0VG/GhJDpOYXXzZEG3TI=;
+        s=default; t=1560098939;
+        bh=Cp2uECuwOeGPDjVMSYrZzAlare/2fg5aOUeUdcM2Uv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBuHRB+82Jd3GFLpE3prrEyIPy54r0FLbR++heGQTrdN3gQs18m+L/0OdZRMrGF5r
-         SQ8n7/GAksNtc00mPOLNhPJLW8WE4+ioVZ7K6Vw0Q3pFnbgE7HXu8YkxRL74qjKhXW
-         az8mLDiGM2cBPLA/pPCOMKjznrdk5bRh6FQ4nIeU=
+        b=rDbJvmtca6V8KZLJz3fAP68AEvoptkhQ1guCWhL55UXcTB78yrgjO0qM5q1Af6SwI
+         Dzp1Fh1GSaH7LcKKz8OyBMEmvPOW0cmGMsKAvOr6LsfUDg1Lq+odH3E8dUO2KI0Rdp
+         SI1rvKSnOb44NEG+hGG3RJvkMJsy8ZxVTqFZuUd0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 11/51] net/tls: replace the sleeping lock around RX resync with a bit lock
-Date:   Sun,  9 Jun 2019 18:41:52 +0200
-Message-Id: <20190609164127.781645551@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
+        syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH 4.19 02/51] Fix memory leak in sctp_process_init
+Date:   Sun,  9 Jun 2019 18:41:43 +0200
+Message-Id: <20190609164127.262205526@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,96 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Neil Horman <nhorman@tuxdriver.com>
 
-[ Upstream commit e52972c11d6b1262964db96d65934196db621685 ]
+[ Upstream commit 0a8dd9f67cd0da7dc284f48b032ce00db1a68791 ]
 
-Commit 38030d7cb779 ("net/tls: avoid NULL-deref on resync during device removal")
-tried to fix a potential NULL-dereference by taking the
-context rwsem.  Unfortunately the RX resync may get called
-from soft IRQ, so we can't use the rwsem to protect from
-the device disappearing.  Because we are guaranteed there
-can be only one resync at a time (it's called from strparser)
-use a bit to indicate resync is busy and make device
-removal wait for the bit to get cleared.
+syzbot found the following leak in sctp_process_init
+BUG: memory leak
+unreferenced object 0xffff88810ef68400 (size 1024):
+  comm "syz-executor273", pid 7046, jiffies 4294945598 (age 28.770s)
+  hex dump (first 32 bytes):
+    1d de 28 8d de 0b 1b e3 b5 c2 f9 68 fd 1a 97 25  ..(........h...%
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000a02cebbd>] kmemleak_alloc_recursive include/linux/kmemleak.h:55
+[inline]
+    [<00000000a02cebbd>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<00000000a02cebbd>] slab_alloc mm/slab.c:3326 [inline]
+    [<00000000a02cebbd>] __do_kmalloc mm/slab.c:3658 [inline]
+    [<00000000a02cebbd>] __kmalloc_track_caller+0x15d/0x2c0 mm/slab.c:3675
+    [<000000009e6245e6>] kmemdup+0x27/0x60 mm/util.c:119
+    [<00000000dfdc5d2d>] kmemdup include/linux/string.h:432 [inline]
+    [<00000000dfdc5d2d>] sctp_process_init+0xa7e/0xc20
+net/sctp/sm_make_chunk.c:2437
+    [<00000000b58b62f8>] sctp_cmd_process_init net/sctp/sm_sideeffect.c:682
+[inline]
+    [<00000000b58b62f8>] sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1384
+[inline]
+    [<00000000b58b62f8>] sctp_side_effects net/sctp/sm_sideeffect.c:1194
+[inline]
+    [<00000000b58b62f8>] sctp_do_sm+0xbdc/0x1d60 net/sctp/sm_sideeffect.c:1165
+    [<0000000044e11f96>] sctp_assoc_bh_rcv+0x13c/0x200
+net/sctp/associola.c:1074
+    [<00000000ec43804d>] sctp_inq_push+0x7f/0xb0 net/sctp/inqueue.c:95
+    [<00000000726aa954>] sctp_backlog_rcv+0x5e/0x2a0 net/sctp/input.c:354
+    [<00000000d9e249a8>] sk_backlog_rcv include/net/sock.h:950 [inline]
+    [<00000000d9e249a8>] __release_sock+0xab/0x110 net/core/sock.c:2418
+    [<00000000acae44fa>] release_sock+0x37/0xd0 net/core/sock.c:2934
+    [<00000000963cc9ae>] sctp_sendmsg+0x2c0/0x990 net/sctp/socket.c:2122
+    [<00000000a7fc7565>] inet_sendmsg+0x64/0x120 net/ipv4/af_inet.c:802
+    [<00000000b732cbd3>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<00000000b732cbd3>] sock_sendmsg+0x54/0x70 net/socket.c:671
+    [<00000000274c57ab>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2292
+    [<000000008252aedb>] __sys_sendmsg+0x80/0xf0 net/socket.c:2330
+    [<00000000f7bf23d1>] __do_sys_sendmsg net/socket.c:2339 [inline]
+    [<00000000f7bf23d1>] __se_sys_sendmsg net/socket.c:2337 [inline]
+    [<00000000f7bf23d1>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2337
+    [<00000000a8b4131f>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:3
 
-Note that there is a leftover "flags" field in struct
-tls_context already.
+The problem was that the peer.cookie value points to an skb allocated
+area on the first pass through this function, at which point it is
+overwritten with a heap allocated value, but in certain cases, where a
+COOKIE_ECHO chunk is included in the packet, a second pass through
+sctp_process_init is made, where the cookie value is re-allocated,
+leaking the first allocation.
 
-Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fix is to always allocate the cookie value, and free it when we are done
+using it.
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+Reported-by: syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com
+CC: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tls.h    |    4 ++++
- net/tls/tls_device.c |   27 +++++++++++++++++++++------
- 2 files changed, 25 insertions(+), 6 deletions(-)
+ net/sctp/sm_make_chunk.c |   13 +++----------
+ net/sctp/sm_sideeffect.c |    5 +++++
+ 2 files changed, 8 insertions(+), 10 deletions(-)
 
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -161,6 +161,10 @@ enum {
- 	TLS_PENDING_CLOSED_RECORD
- };
+--- a/net/sctp/sm_make_chunk.c
++++ b/net/sctp/sm_make_chunk.c
+@@ -2329,7 +2329,6 @@ int sctp_process_init(struct sctp_associ
+ 	union sctp_addr addr;
+ 	struct sctp_af *af;
+ 	int src_match = 0;
+-	char *cookie;
  
-+enum tls_context_flags {
-+	TLS_RX_SYNC_RUNNING = 0,
-+};
-+
- struct cipher_context {
- 	u16 prepend_size;
- 	u16 tag_size;
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -545,10 +545,22 @@ static int tls_device_push_pending_recor
- 	return tls_push_data(sk, &msg_iter, 0, flags, TLS_RECORD_TYPE_DATA);
- }
+ 	/* We must include the address that the INIT packet came from.
+ 	 * This is the only address that matters for an INIT packet.
+@@ -2433,14 +2432,6 @@ int sctp_process_init(struct sctp_associ
+ 	/* Peer Rwnd   : Current calculated value of the peer's rwnd.  */
+ 	asoc->peer.rwnd = asoc->peer.i.a_rwnd;
  
-+static void tls_device_resync_rx(struct tls_context *tls_ctx,
-+				 struct sock *sk, u32 seq, u64 rcd_sn)
-+{
-+	struct net_device *netdev;
-+
-+	if (WARN_ON(test_and_set_bit(TLS_RX_SYNC_RUNNING, &tls_ctx->flags)))
-+		return;
-+	netdev = READ_ONCE(tls_ctx->netdev);
-+	if (netdev)
-+		netdev->tlsdev_ops->tls_dev_resync_rx(netdev, sk, seq, rcd_sn);
-+	clear_bit_unlock(TLS_RX_SYNC_RUNNING, &tls_ctx->flags);
-+}
-+
- void handle_device_resync(struct sock *sk, u32 seq, u64 rcd_sn)
- {
- 	struct tls_context *tls_ctx = tls_get_ctx(sk);
--	struct net_device *netdev = tls_ctx->netdev;
- 	struct tls_offload_context_rx *rx_ctx;
- 	u32 is_req_pending;
- 	s64 resync_req;
-@@ -563,10 +575,10 @@ void handle_device_resync(struct sock *s
- 	is_req_pending = resync_req;
+-	/* Copy cookie in case we need to resend COOKIE-ECHO. */
+-	cookie = asoc->peer.cookie;
+-	if (cookie) {
+-		asoc->peer.cookie = kmemdup(cookie, asoc->peer.cookie_len, gfp);
+-		if (!asoc->peer.cookie)
+-			goto clean_up;
+-	}
+-
+ 	/* RFC 2960 7.2.1 The initial value of ssthresh MAY be arbitrarily
+ 	 * high (for example, implementations MAY use the size of the receiver
+ 	 * advertised window).
+@@ -2609,7 +2600,9 @@ do_addr_param:
+ 	case SCTP_PARAM_STATE_COOKIE:
+ 		asoc->peer.cookie_len =
+ 			ntohs(param.p->length) - sizeof(struct sctp_paramhdr);
+-		asoc->peer.cookie = param.cookie->body;
++		asoc->peer.cookie = kmemdup(param.cookie->body, asoc->peer.cookie_len, gfp);
++		if (!asoc->peer.cookie)
++			retval = 0;
+ 		break;
  
- 	if (unlikely(is_req_pending) && req_seq == seq &&
--	    atomic64_try_cmpxchg(&rx_ctx->resync_req, &resync_req, 0))
--		netdev->tlsdev_ops->tls_dev_resync_rx(netdev, sk,
--						      seq + TLS_HEADER_SIZE - 1,
--						      rcd_sn);
-+	    atomic64_try_cmpxchg(&rx_ctx->resync_req, &resync_req, 0)) {
-+		seq += TLS_HEADER_SIZE - 1;
-+		tls_device_resync_rx(tls_ctx, sk, seq, rcd_sn);
+ 	case SCTP_PARAM_HEARTBEAT_INFO:
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -898,6 +898,11 @@ static void sctp_cmd_new_state(struct sc
+ 						asoc->rto_initial;
+ 	}
+ 
++	if (sctp_state(asoc, ESTABLISHED)) {
++		kfree(asoc->peer.cookie);
++		asoc->peer.cookie = NULL;
 +	}
- }
- 
- static int tls_device_reencrypt(struct sock *sk, struct sk_buff *skb)
-@@ -954,7 +966,10 @@ static int tls_device_down(struct net_de
- 		if (ctx->rx_conf == TLS_HW)
- 			netdev->tlsdev_ops->tls_dev_del(netdev, ctx,
- 							TLS_OFFLOAD_CTX_DIR_RX);
--		ctx->netdev = NULL;
-+		WRITE_ONCE(ctx->netdev, NULL);
-+		smp_mb__before_atomic(); /* pairs with test_and_set_bit() */
-+		while (test_bit(TLS_RX_SYNC_RUNNING, &ctx->flags))
-+			usleep_range(10, 200);
- 		dev_put(netdev);
- 		list_del_init(&ctx->list);
- 
++
+ 	if (sctp_state(asoc, ESTABLISHED) ||
+ 	    sctp_state(asoc, CLOSED) ||
+ 	    sctp_state(asoc, SHUTDOWN_RECEIVED)) {
 
 
