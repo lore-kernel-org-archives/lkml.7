@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A116DC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F5C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C12205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D8E206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098937;
-	bh=E2Rdlv7uSDPtJzLGVT8UvHslPJ1nncPg72gVgMTpO0Q=;
+	s=default; t=1560098940;
+	bh=Bnd+mMgOBX1KeCWE8jI4UST0VG/GhJDpOYXXzZEG3TI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZaXou4hx4ODAtNtn0y2BnMZPMMQTLplSoCV5Zzeu+oeGjoJlwhjnb++PvBC4GPbDw
-	 jgpxJfgO5RAyxebkDUzw6U7iCFeQpJISxgL1GKhBp10TyTXt2ROWdciJmIt9mfFh8/
-	 ZnSuwQ8NCXGWyDroPuAJt4jaDh+fhb+0EXOX0R38=
+	b=Mb9F2xX5Fi0iAd3J0ajy6zQa742fe9TvkI3Dx4sYDH5N140jDZJPqLCvh+tB0x8hm
+	 565+YCKSVMe6SJAdqOxsH6kvM3HqlDJokdrpw/YXrQg8UOhCaqALVxkISme0ol55ox
+	 9OJ5iU+B8JEFc6Q9Z6aUn52b5PfO0abbXiVuSf5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731348AbfFIQs4 (ORCPT
+        id S1731363AbfFIQs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48142 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731334AbfFIQsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:54 -0400
+        id S1730621AbfFIQs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE86205ED;
-        Sun,  9 Jun 2019 16:48:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1E60206DF;
+        Sun,  9 Jun 2019 16:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098934;
-        bh=E2Rdlv7uSDPtJzLGVT8UvHslPJ1nncPg72gVgMTpO0Q=;
+        s=default; t=1560098937;
+        bh=Bnd+mMgOBX1KeCWE8jI4UST0VG/GhJDpOYXXzZEG3TI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2r/Uu9ZbbJX0xUdcGx0556HGECzYPMO6a0cRBi6lQUAnKxr1ckybgkZeXoJ9GQjU
-         uvtU/iqyY3RLOCboULMwcIHkY9qAiBrwg+7qIqK8BWBonxzbflP4ZOyo8U7Sphb1Oq
-         0Ga8JKIjqnCLRRSrT4XDr0W6HN+c3guC3OMVxiRM=
+        b=OBuHRB+82Jd3GFLpE3prrEyIPy54r0FLbR++heGQTrdN3gQs18m+L/0OdZRMrGF5r
+         SQ8n7/GAksNtc00mPOLNhPJLW8WE4+ioVZ7K6Vw0Q3pFnbgE7HXu8YkxRL74qjKhXW
+         az8mLDiGM2cBPLA/pPCOMKjznrdk5bRh6FQ4nIeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 10/51] net: sfp: read eeprom in maximum 16 byte increments
-Date:   Sun,  9 Jun 2019 18:41:51 +0200
-Message-Id: <20190609164127.735353425@linuxfoundation.org>
+Subject: [PATCH 4.19 11/51] net/tls: replace the sleeping lock around RX resync with a bit lock
+Date:   Sun,  9 Jun 2019 18:41:52 +0200
+Message-Id: <20190609164127.781645551@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,75 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 28e74a7cfd6403f0d1c0f8b10b45d6fae37b227e ]
+[ Upstream commit e52972c11d6b1262964db96d65934196db621685 ]
 
-Some SFP modules do not like reads longer than 16 bytes, so read the
-EEPROM in chunks of 16 bytes at a time.  This behaviour is not specified
-in the SFP MSAs, which specifies:
+Commit 38030d7cb779 ("net/tls: avoid NULL-deref on resync during device removal")
+tried to fix a potential NULL-dereference by taking the
+context rwsem.  Unfortunately the RX resync may get called
+from soft IRQ, so we can't use the rwsem to protect from
+the device disappearing.  Because we are guaranteed there
+can be only one resync at a time (it's called from strparser)
+use a bit to indicate resync is busy and make device
+removal wait for the bit to get cleared.
 
- "The serial interface uses the 2-wire serial CMOS E2PROM protocol
-  defined for the ATMEL AT24C01A/02/04 family of components."
+Note that there is a leftover "flags" field in struct
+tls_context already.
 
-and
-
- "As long as the SFP+ receives an acknowledge, it shall serially clock
-  out sequential data words. The sequence is terminated when the host
-  responds with a NACK and a STOP instead of an acknowledge."
-
-We must avoid breaking a read across a 16-bit quantity in the diagnostic
-page, thankfully all 16-bit quantities in that page are naturally
-aligned.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/sfp.c |   24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ include/net/tls.h    |    4 ++++
+ net/tls/tls_device.c |   27 +++++++++++++++++++++------
+ 2 files changed, 25 insertions(+), 6 deletions(-)
 
---- a/drivers/net/phy/sfp.c
-+++ b/drivers/net/phy/sfp.c
-@@ -280,6 +280,7 @@ static int sfp_i2c_read(struct sfp *sfp,
- {
- 	struct i2c_msg msgs[2];
- 	u8 bus_addr = a2 ? 0x51 : 0x50;
-+	size_t this_len;
- 	int ret;
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -161,6 +161,10 @@ enum {
+ 	TLS_PENDING_CLOSED_RECORD
+ };
  
- 	msgs[0].addr = bus_addr;
-@@ -291,11 +292,26 @@ static int sfp_i2c_read(struct sfp *sfp,
- 	msgs[1].len = len;
- 	msgs[1].buf = buf;
- 
--	ret = i2c_transfer(sfp->i2c, msgs, ARRAY_SIZE(msgs));
--	if (ret < 0)
--		return ret;
-+	while (len) {
-+		this_len = len;
-+		if (this_len > 16)
-+			this_len = 16;
- 
--	return ret == ARRAY_SIZE(msgs) ? len : 0;
-+		msgs[1].len = this_len;
++enum tls_context_flags {
++	TLS_RX_SYNC_RUNNING = 0,
++};
 +
-+		ret = i2c_transfer(sfp->i2c, msgs, ARRAY_SIZE(msgs));
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ret != ARRAY_SIZE(msgs))
-+			break;
-+
-+		msgs[1].buf += this_len;
-+		dev_addr += this_len;
-+		len -= this_len;
-+	}
-+
-+	return msgs[1].buf - (u8 *)buf;
+ struct cipher_context {
+ 	u16 prepend_size;
+ 	u16 tag_size;
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -545,10 +545,22 @@ static int tls_device_push_pending_recor
+ 	return tls_push_data(sk, &msg_iter, 0, flags, TLS_RECORD_TYPE_DATA);
  }
  
- static int sfp_i2c_write(struct sfp *sfp, bool a2, u8 dev_addr, void *buf,
++static void tls_device_resync_rx(struct tls_context *tls_ctx,
++				 struct sock *sk, u32 seq, u64 rcd_sn)
++{
++	struct net_device *netdev;
++
++	if (WARN_ON(test_and_set_bit(TLS_RX_SYNC_RUNNING, &tls_ctx->flags)))
++		return;
++	netdev = READ_ONCE(tls_ctx->netdev);
++	if (netdev)
++		netdev->tlsdev_ops->tls_dev_resync_rx(netdev, sk, seq, rcd_sn);
++	clear_bit_unlock(TLS_RX_SYNC_RUNNING, &tls_ctx->flags);
++}
++
+ void handle_device_resync(struct sock *sk, u32 seq, u64 rcd_sn)
+ {
+ 	struct tls_context *tls_ctx = tls_get_ctx(sk);
+-	struct net_device *netdev = tls_ctx->netdev;
+ 	struct tls_offload_context_rx *rx_ctx;
+ 	u32 is_req_pending;
+ 	s64 resync_req;
+@@ -563,10 +575,10 @@ void handle_device_resync(struct sock *s
+ 	is_req_pending = resync_req;
+ 
+ 	if (unlikely(is_req_pending) && req_seq == seq &&
+-	    atomic64_try_cmpxchg(&rx_ctx->resync_req, &resync_req, 0))
+-		netdev->tlsdev_ops->tls_dev_resync_rx(netdev, sk,
+-						      seq + TLS_HEADER_SIZE - 1,
+-						      rcd_sn);
++	    atomic64_try_cmpxchg(&rx_ctx->resync_req, &resync_req, 0)) {
++		seq += TLS_HEADER_SIZE - 1;
++		tls_device_resync_rx(tls_ctx, sk, seq, rcd_sn);
++	}
+ }
+ 
+ static int tls_device_reencrypt(struct sock *sk, struct sk_buff *skb)
+@@ -954,7 +966,10 @@ static int tls_device_down(struct net_de
+ 		if (ctx->rx_conf == TLS_HW)
+ 			netdev->tlsdev_ops->tls_dev_del(netdev, ctx,
+ 							TLS_OFFLOAD_CTX_DIR_RX);
+-		ctx->netdev = NULL;
++		WRITE_ONCE(ctx->netdev, NULL);
++		smp_mb__before_atomic(); /* pairs with test_and_set_bit() */
++		while (test_bit(TLS_RX_SYNC_RUNNING, &ctx->flags))
++			usleep_range(10, 200);
+ 		dev_put(netdev);
+ 		list_del_init(&ctx->list);
+ 
 
 
