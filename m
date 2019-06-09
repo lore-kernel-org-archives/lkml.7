@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F565C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575E7C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8FDA206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CBC207E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099743;
-	bh=8o0HZvafFvhtjemZHfbP7nYffBuPv9Hvw7P3949kkrs=;
+	s=default; t=1560099747;
+	bh=IvgwJ6XGSDbU3rqlReAi6HLKslIfUouTVN+aS7Y6QcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HSJHS/oIE1thjs8RPENGADbEk4tzwdy2ABVAE3WUBgEMkGQ6tBqctBsvFMXHV+xgR
-	 O27nksRRVh4asgaeUFpRUp9FN38UEOM6AV+D9eL3f8YvWnINwHhjZ8w14Tk+k5Evot
-	 lnbAPWAMsEJi38nN5fb/EBeuFRqLi6W49eYsbBrk=
+	b=0d24C3KAZasOE880xdXUfNXzO2QL2JqkESSpcAbReAAxV4dQb9w0oCl1PKU1DIdee
+	 FhmKPRGzB7LFfxPDse4k01SFRv/LYaogz7K8AEIsEyZ2sK9yLLQJcWOtWdQVq2p8my
+	 xKCT3W6wHsD5nODfCgpqq55SHHUd4mySRAwBU7rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387674AbfFIRCW (ORCPT
+        id S2388236AbfFIRCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40108 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729641AbfFIRCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:02:19 -0400
+        id S2388218AbfFIRCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:02:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B14CA20840;
-        Sun,  9 Jun 2019 17:02:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FB63206DF;
+        Sun,  9 Jun 2019 17:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099738;
-        bh=8o0HZvafFvhtjemZHfbP7nYffBuPv9Hvw7P3949kkrs=;
+        s=default; t=1560099735;
+        bh=IvgwJ6XGSDbU3rqlReAi6HLKslIfUouTVN+aS7Y6QcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iWRpdUPTgF7vTqjgyFm9XkECpyAbPih6MLJC1aJDxm4d3P96idoXAFr1myoduxo7G
-         +OcYdxUz6ToYNz1+YqQtwdVmwclrYmTqcRdX9KO66CWFdBjQ9rrhi2T3iGEzb83cib
-         a45fejXl9UEIO74xeLgknd4iNP/B4OTtjOji+Kus=
+        b=mEnzDim+OHn7maHn/8//98NsdrTySOuee17tyF4A7aPlWiYg85vPJtTR81PlrWDM8
+         gT1ufdSlulxfzlq9EJxX+nRyOummzlqsk8jttYqHtoVGy4xQ8xKMGNEbjD1nW+i4Sv
+         twU8/urS6EZpnDRHtoAW2+8s5/2GwWP0EEjqEMHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <Alexandru.Ardelean@analog.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 149/241] iio: hmc5843: fix potential NULL pointer dereferences
-Date:   Sun,  9 Jun 2019 18:41:31 +0200
-Message-Id: <20190609164152.077753798@linuxfoundation.org>
+Subject: [PATCH 4.4 148/241] iio: ad_sigma_delta: Properly handle SPI bus locking vs CS assertion
+Date:   Sun,  9 Jun 2019 18:41:30 +0200
+Message-Id: <20190609164152.050412849@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,63 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 536cc27deade8f1ec3c1beefa60d5fbe0f6fcb28 ]
+[ Upstream commit df1d80aee963480c5c2938c64ec0ac3e4a0df2e0 ]
 
-devm_regmap_init_i2c may fail and return NULL. The fix returns
-the error when it fails.
+For devices from the SigmaDelta family we need to keep CS low when doing a
+conversion, since the device will use the MISO line as a interrupt to
+indicate that the conversion is complete.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+This is why the driver locks the SPI bus and when the SPI bus is locked
+keeps as long as a conversion is going on. The current implementation gets
+one small detail wrong though. CS is only de-asserted after the SPI bus is
+unlocked. This means it is possible for a different SPI device on the same
+bus to send a message which would be wrongfully be addressed to the
+SigmaDelta device as well. Make sure that the last SPI transfer that is
+done while holding the SPI bus lock de-asserts the CS signal.
+
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <Alexandru.Ardelean@analog.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/magnetometer/hmc5843_i2c.c | 7 ++++++-
- drivers/staging/iio/magnetometer/hmc5843_spi.c | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/iio/adc/ad_sigma_delta.c       | 16 +++++++++++-----
+ include/linux/iio/adc/ad_sigma_delta.h |  1 +
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/iio/magnetometer/hmc5843_i2c.c b/drivers/staging/iio/magnetometer/hmc5843_i2c.c
-index 3e06ceb320596..676a8e329eeb6 100644
---- a/drivers/staging/iio/magnetometer/hmc5843_i2c.c
-+++ b/drivers/staging/iio/magnetometer/hmc5843_i2c.c
-@@ -59,8 +59,13 @@ static const struct regmap_config hmc5843_i2c_regmap_config = {
- static int hmc5843_i2c_probe(struct i2c_client *cli,
- 			     const struct i2c_device_id *id)
- {
-+	struct regmap *regmap = devm_regmap_init_i2c(cli,
-+			&hmc5843_i2c_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	return hmc5843_common_probe(&cli->dev,
--			devm_regmap_init_i2c(cli, &hmc5843_i2c_regmap_config),
-+			regmap,
- 			id->driver_data, id->name);
- }
- 
-diff --git a/drivers/staging/iio/magnetometer/hmc5843_spi.c b/drivers/staging/iio/magnetometer/hmc5843_spi.c
-index 8be198058ea20..fded442a3c1d1 100644
---- a/drivers/staging/iio/magnetometer/hmc5843_spi.c
-+++ b/drivers/staging/iio/magnetometer/hmc5843_spi.c
-@@ -59,6 +59,7 @@ static const struct regmap_config hmc5843_spi_regmap_config = {
- static int hmc5843_spi_probe(struct spi_device *spi)
- {
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index a1d072ecb7171..30f200ad6b978 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -62,7 +62,7 @@ int ad_sd_write_reg(struct ad_sigma_delta *sigma_delta, unsigned int reg,
+ 	struct spi_transfer t = {
+ 		.tx_buf		= data,
+ 		.len		= size + 1,
+-		.cs_change	= sigma_delta->bus_locked,
++		.cs_change	= sigma_delta->keep_cs_asserted,
+ 	};
+ 	struct spi_message m;
  	int ret;
-+	struct regmap *regmap;
- 	const struct spi_device_id *id = spi_get_device_id(spi);
+@@ -217,6 +217,7 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
  
- 	spi->mode = SPI_MODE_3;
-@@ -68,8 +69,12 @@ static int hmc5843_spi_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
+ 	reinit_completion(&sigma_delta->completion);
  
-+	regmap = devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	return hmc5843_common_probe(&spi->dev,
--			devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config),
-+			regmap,
- 			id->driver_data, id->name);
+ 	ret = ad_sigma_delta_set_mode(sigma_delta, mode);
+@@ -234,9 +235,10 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+ 		ret = 0;
+ 	}
+ out:
++	sigma_delta->keep_cs_asserted = false;
++	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 	sigma_delta->bus_locked = false;
+ 	spi_bus_unlock(sigma_delta->spi->master);
+-	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 
+ 	return ret;
  }
+@@ -288,6 +290,7 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
+ 	reinit_completion(&sigma_delta->completion);
+ 
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_SINGLE);
+@@ -297,9 +300,6 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 	ret = wait_for_completion_interruptible_timeout(
+ 			&sigma_delta->completion, HZ);
+ 
+-	sigma_delta->bus_locked = false;
+-	spi_bus_unlock(sigma_delta->spi->master);
+-
+ 	if (ret == 0)
+ 		ret = -EIO;
+ 	if (ret < 0)
+@@ -315,7 +315,10 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 		sigma_delta->irq_dis = true;
+ 	}
+ 
++	sigma_delta->keep_cs_asserted = false;
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
++	sigma_delta->bus_locked = false;
++	spi_bus_unlock(sigma_delta->spi->master);
+ 	mutex_unlock(&indio_dev->mlock);
+ 
+ 	if (ret)
+@@ -352,6 +355,8 @@ static int ad_sd_buffer_postenable(struct iio_dev *indio_dev)
+ 
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
++
+ 	ret = ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_CONTINUOUS);
+ 	if (ret)
+ 		goto err_unlock;
+@@ -380,6 +385,7 @@ static int ad_sd_buffer_postdisable(struct iio_dev *indio_dev)
+ 		sigma_delta->irq_dis = true;
+ 	}
+ 
++	sigma_delta->keep_cs_asserted = false;
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 
+ 	sigma_delta->bus_locked = false;
+diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+index 6cc48ac55fd2a..40b14736c73de 100644
+--- a/include/linux/iio/adc/ad_sigma_delta.h
++++ b/include/linux/iio/adc/ad_sigma_delta.h
+@@ -66,6 +66,7 @@ struct ad_sigma_delta {
+ 	bool			irq_dis;
+ 
+ 	bool			bus_locked;
++	bool			keep_cs_asserted;
+ 
+ 	uint8_t			comm;
  
 -- 
 2.20.1
