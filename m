@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0776FC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A38C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5660208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D1120840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099783;
-	bh=7HI6N91vbKXJrX1wN4OS7tsYTq/hOQxF0ZkTbp8oJ14=;
+	s=default; t=1560099789;
+	bh=v8jViTz1Qm/qg5OtQF+8F/At7QLvjzJgBcP9xOl6joc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+pZIjS4fA9SZkmt1HrlmQCCjFVSwQmi6KR5c89zbZSxnqFG6X/vY3Np5u7cXMKXc
-	 v4L8UUYiRkRy3pgP2Mjak9Yas9ZyXfFi8oK/ZSCd9UQT1yE/9XnaJ5asXjxMtI4yEP
-	 /4YnR24T5ELJp6grwcMCTPGOIL5q5BLgNfZTw0Vc=
+	b=PIXjr988UbPCRdHILziynD8zxAw/TID7y7LBm2UHorw1cA8pPGCV1J1agl0HtXbuy
+	 pPwMTQdGpvmNFVsb2nP9H1o9m7JBSuOyn0DCMkdihn3XrpmQt4MIsc9CMxwlH0ckE+
+	 LnAaYw+XsaEbpOk5NnaTG1OkFzlILjaSgyR9Z28s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388352AbfFIRDC (ORCPT
+        id S2388361AbfFIRDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41254 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:03:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388328AbfFIRDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:00 -0400
+        id S1732837AbfFIRDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:03:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E9AD206DF;
-        Sun,  9 Jun 2019 17:02:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A836220843;
+        Sun,  9 Jun 2019 17:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099780;
-        bh=7HI6N91vbKXJrX1wN4OS7tsYTq/hOQxF0ZkTbp8oJ14=;
+        s=default; t=1560099783;
+        bh=v8jViTz1Qm/qg5OtQF+8F/At7QLvjzJgBcP9xOl6joc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x161tVJRBTfpEDOCDUs0HOmh43kCEmmqCBqpt/i/RIt19IQYo816+460CO/p4uNUa
-         HMypRMkQDH1f5raiDqgpbj5ghV0OfWCSXw5dEevbP97DxJzZtrfvKaC56ZtGmDHYmb
-         eSFTHpnRdBX2CmEjUXD0ei06D6Yy2nKf2OSJZflk=
+        b=jche9IaP6For1VhF8Wgz3KT/TDyCPUqymMMMQC9177ffj3tM1lCl1KULJUay2CECC
+         aBRRQaGi36uW5hhqnhOoGgPPpq6/4R6Xj6QohCrvDGB3Ab3DEj61ntuNn5ejGJCdbm
+         szsb5p4vD60sMBaAUQXlGFojl/Y4pOgU4TXpMxAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 163/241] ASoC: fsl_utils: fix a leaked reference by adding missing of_node_put
-Date:   Sun,  9 Jun 2019 18:41:45 +0200
-Message-Id: <20190609164152.477243008@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 164/241] cxgb3/l2t: Fix undefined behaviour
+Date:   Sun,  9 Jun 2019 18:41:46 +0200
+Message-Id: <20190609164152.508267997@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -67,45 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c705247136a523488eac806bd357c3e5d79a7acd ]
+[ Upstream commit 76497732932f15e7323dc805e8ea8dc11bb587cf ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+The use of zero-sized array causes undefined behaviour when it is not
+the last member in a structure. As it happens to be in this case.
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/fsl_utils.c:74:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 38, but without a corresponding     object release within this function.
+Also, the current code makes use of a language extension to the C90
+standard, but the preferred mechanism to declare variable-length
+types such as this one is a flexible array member, introduced in
+C99:
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last. Which is beneficial
+to cultivate a high-quality code.
+
+Fixes: e48f129c2f20 ("[SCSI] cxgb3i: convert cdev->l2opt to use rcu to prevent NULL dereference")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_utils.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl_utils.c b/sound/soc/fsl/fsl_utils.c
-index b9e42b503a377..4f8bdb7650e84 100644
---- a/sound/soc/fsl/fsl_utils.c
-+++ b/sound/soc/fsl/fsl_utils.c
-@@ -75,6 +75,7 @@ int fsl_asoc_get_dma_channel(struct device_node *ssi_np,
- 	iprop = of_get_property(dma_np, "cell-index", NULL);
- 	if (!iprop) {
- 		of_node_put(dma_np);
-+		of_node_put(dma_channel_np);
- 		return -EINVAL;
- 	}
- 	*dma_id = be32_to_cpup(iprop);
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+index 8cffcdfd56782..38b5858c335a9 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
++++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+@@ -75,8 +75,8 @@ struct l2t_data {
+ 	struct l2t_entry *rover;	/* starting point for next allocation */
+ 	atomic_t nfree;		/* number of free entries */
+ 	rwlock_t lock;
+-	struct l2t_entry l2tab[0];
+ 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
++	struct l2t_entry l2tab[];
+ };
+ 
+ typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
 -- 
 2.20.1
 
