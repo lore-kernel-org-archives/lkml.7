@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B8EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82ABC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFED8206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2274205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099140;
-	bh=uA1XUY8Y9JhDRjVcaTRxjH3VmToFHsV8hi0Ve44fnq4=;
+	s=default; t=1560099144;
+	bh=xdKuHtEdgOtXnqy696Mjl/sxuqxIpPskq/UNR3meSYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHpEJPXdnbLjK+yRfBGxIy+rDevUxYXRTWcG31J3WDPMJubYvHZ0/GFZacNvoy5x6
-	 ZjIrX8PD1hv/MPkSlFv481oYfVPOiCu/nuDPEzb9nvTsyQs+QBK99KoAItOOntO/Nk
-	 bsqF1VmdOmYnAVuaeRv0S0U2uNJVYGHYx+Y+Fd0A=
+	b=p+orTVx4Y8Hqui1+9XW4ixgjZNftX8vK+3ozKVx8r1CeYAKjmQ4RpFfDq43jxRgvQ
+	 IajptMAWYUJVi9k7FE8F6z0amlDF6YbRfocllIKNki6cwpbBbcWqLSmTEqpkxtvW26
+	 g4tcxzcVmP/EzUILpNQ87cLFrsM+hIH8ACoxXkK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732181AbfFIQwT (ORCPT
+        id S1732206AbfFIQwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:52:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732154AbfFIQwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:52:16 -0400
+        id S1732188AbfFIQwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:52:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96AF3206BB;
-        Sun,  9 Jun 2019 16:52:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFFB3205ED;
+        Sun,  9 Jun 2019 16:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099136;
-        bh=uA1XUY8Y9JhDRjVcaTRxjH3VmToFHsV8hi0Ve44fnq4=;
+        s=default; t=1560099141;
+        bh=xdKuHtEdgOtXnqy696Mjl/sxuqxIpPskq/UNR3meSYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jqGvNbrzxUip7dqQ0xT8vr7RuO5igPsQbDRb6InlQYMuZeSmiiW7BwtPRl/Ja1j1R
-         Z6/+NO6qnEmeOZBQ4fywRIXyy5GMUClz9jA6B4m8AKOcBvMVSnj263lypzaWBC/frW
-         gW7xcMWiFwhw8hpLfMjhfFmAa9BX3yduWPTcx0Ag=
+        b=zERnYDuC9CpXLTkYg23Uwl7AMF93l/LNjgthU/rK2UaQ7C+GmEZm+bhc7e4o+8WUu
+         rTi/b+8Kng9dLrhPIL0Qz6vbIODD5pXDo9YRsgzz1vVl0yi4kIRNhdBvVUTpMeqiRk
+         qpcoaGfe8Nq14zg10LWs4Ard3raqVNB5YlyaI1Jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jan=20Kl=C3=B6tzke?= <Jan.Kloetzke@preh.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 04/83] net-gro: fix use-after-free read in napi_gro_frags()
-Date:   Sun,  9 Jun 2019 18:41:34 +0200
-Message-Id: <20190609164128.066835650@linuxfoundation.org>
+Subject: [PATCH 4.9 06/83] usbnet: fix kernel crash after disconnect
+Date:   Sun,  9 Jun 2019 18:41:36 +0200
+Message-Id: <20190609164128.185283909@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -60,69 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Kloetzke Jan <Jan.Kloetzke@preh.de>
 
-[ Upstream commit a4270d6795b0580287453ea55974d948393e66ef ]
+[ Upstream commit ad70411a978d1e6e97b1e341a7bde9a79af0c93d ]
 
-If a network driver provides to napi_gro_frags() an
-skb with a page fragment of exactly 14 bytes, the call
-to gro_pull_from_frag0() will 'consume' the fragment
-by calling skb_frag_unref(skb, 0), and the page might
-be freed and reused.
+When disconnecting cdc_ncm the kernel sporadically crashes shortly
+after the disconnect:
 
-Reading eth->h_proto at the end of napi_frags_skb() might
-read mangled data, or crash under specific debugging features.
+  [   57.868812] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+  ...
+  [   58.006653] PC is at 0x0
+  [   58.009202] LR is at call_timer_fn+0xec/0x1b4
+  [   58.013567] pc : [<0000000000000000>] lr : [<ffffff80080f5130>] pstate: 00000145
+  [   58.020976] sp : ffffff8008003da0
+  [   58.024295] x29: ffffff8008003da0 x28: 0000000000000001
+  [   58.029618] x27: 000000000000000a x26: 0000000000000100
+  [   58.034941] x25: 0000000000000000 x24: ffffff8008003e68
+  [   58.040263] x23: 0000000000000000 x22: 0000000000000000
+  [   58.045587] x21: 0000000000000000 x20: ffffffc68fac1808
+  [   58.050910] x19: 0000000000000100 x18: 0000000000000000
+  [   58.056232] x17: 0000007f885aff8c x16: 0000007f883a9f10
+  [   58.061556] x15: 0000000000000001 x14: 000000000000006e
+  [   58.066878] x13: 0000000000000000 x12: 00000000000000ba
+  [   58.072201] x11: ffffffc69ff1db30 x10: 0000000000000020
+  [   58.077524] x9 : 8000100008001000 x8 : 0000000000000001
+  [   58.082847] x7 : 0000000000000800 x6 : ffffff8008003e70
+  [   58.088169] x5 : ffffffc69ff17a28 x4 : 00000000ffff138b
+  [   58.093492] x3 : 0000000000000000 x2 : 0000000000000000
+  [   58.098814] x1 : 0000000000000000 x0 : 0000000000000000
+  ...
+  [   58.205800] [<          (null)>]           (null)
+  [   58.210521] [<ffffff80080f5298>] expire_timers+0xa0/0x14c
+  [   58.215937] [<ffffff80080f542c>] run_timer_softirq+0xe8/0x128
+  [   58.221702] [<ffffff8008081120>] __do_softirq+0x298/0x348
+  [   58.227118] [<ffffff80080a6304>] irq_exit+0x74/0xbc
+  [   58.232009] [<ffffff80080e17dc>] __handle_domain_irq+0x78/0xac
+  [   58.237857] [<ffffff8008080cf4>] gic_handle_irq+0x80/0xac
+  ...
 
-BUG: KASAN: use-after-free in napi_frags_skb net/core/dev.c:5833 [inline]
-BUG: KASAN: use-after-free in napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
-Read of size 2 at addr ffff88809366840c by task syz-executor599/8957
+The crash happens roughly 125..130ms after the disconnect. This
+correlates with the 'delay' timer that is started on certain USB tx/rx
+errors in the URB completion handler.
 
-CPU: 1 PID: 8957 Comm: syz-executor599 Not tainted 5.2.0-rc1+ #32
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
- __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- kasan_report+0x12/0x20 mm/kasan/common.c:614
- __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
- napi_frags_skb net/core/dev.c:5833 [inline]
- napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
- tun_get_user+0x2f3c/0x3ff0 drivers/net/tun.c:1991
- tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
- call_write_iter include/linux/fs.h:1872 [inline]
- do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
- do_iter_write fs/read_write.c:970 [inline]
- do_iter_write+0x184/0x610 fs/read_write.c:951
- vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
- do_writev+0x15b/0x330 fs/read_write.c:1058
+The problem is a race of usbnet_stop() with usbnet_start_xmit(). In
+usbnet_stop() we call usbnet_terminate_urbs() to cancel all URBs in
+flight. This only makes sense if no new URBs are submitted
+concurrently, though. But the usbnet_start_xmit() can run at the same
+time on another CPU which almost unconditionally submits an URB. The
+error callback of the new URB will then schedule the timer after it was
+already stopped.
 
-Fixes: a50e233c50db ("net-gro: restore frag0 optimization")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+The fix adds a check if the tx queue is stopped after the tx list lock
+has been taken. This should reliably prevent the submission of new URBs
+while usbnet_terminate_urbs() does its job. The same thing is done on
+the rx side even though it might be safe due to other flags that are
+checked there.
+
+Signed-off-by: Jan Klötzke <Jan.Kloetzke@preh.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/usbnet.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4828,7 +4828,6 @@ static struct sk_buff *napi_frags_skb(st
- 	skb_reset_mac_header(skb);
- 	skb_gro_reset_offset(skb);
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -508,6 +508,7 @@ static int rx_submit (struct usbnet *dev
  
--	eth = skb_gro_header_fast(skb, 0);
- 	if (unlikely(skb_gro_header_hard(skb, hlen))) {
- 		eth = skb_gro_header_slow(skb, hlen, 0);
- 		if (unlikely(!eth)) {
-@@ -4838,6 +4837,7 @@ static struct sk_buff *napi_frags_skb(st
- 			return NULL;
- 		}
- 	} else {
-+		eth = (const struct ethhdr *)skb->data;
- 		gro_pull_from_frag0(skb, hlen);
- 		NAPI_GRO_CB(skb)->frag0 += hlen;
- 		NAPI_GRO_CB(skb)->frag0_len -= hlen;
+ 	if (netif_running (dev->net) &&
+ 	    netif_device_present (dev->net) &&
++	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
+ 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
+ 	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
+ 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
+@@ -1394,6 +1395,11 @@ netdev_tx_t usbnet_start_xmit (struct sk
+ 		spin_unlock_irqrestore(&dev->txq.lock, flags);
+ 		goto drop;
+ 	}
++	if (netif_queue_stopped(net)) {
++		usb_autopm_put_interface_async(dev->intf);
++		spin_unlock_irqrestore(&dev->txq.lock, flags);
++		goto drop;
++	}
+ 
+ #ifdef CONFIG_PM
+ 	/* if this triggers the device is still a sleep */
 
 
