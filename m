@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E271FC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B0CC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC44A207E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDFC2207E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100017;
-	bh=PPDd01SnKCTX+qaPrXkqMKAY1LtNfCiWQRkPUp2Nom0=;
+	s=default; t=1560100020;
+	bh=4R8I0anYL8C+6celks3uMq5Egv2NRBLlrT7oH8hkW/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c74oKfc8TyDvVxiDnvSDFQ5BU85wXIFrx8Q6MMFZNRWBpYXzQd06s2VT0PEDiSCUY
-	 tt16bYNmYgyQb2q3xFQzKguxKDBd1mPAWSNlYsLbOXekOo8QeTSKQHU/RibKFB3sgF
-	 DuxGoFbD5gKz//IhuZPP7Ux17ZIJh2bYQF9f8nz4=
+	b=I+buoasEZR2BIwqAZO6YPXHzxgsiI4OAwMhNych8eSNhJvA8E7vJ9KN+EGW9/6dpV
+	 fCiHRmhT4ivkzOt+B6/5ki1x2Lrr9yvBeImGudhf0d30qpsmxbLO1diyyEHzndgU3l
+	 gpLwwDByg701/PzqWPJylUycUDIhgC0oEzJS4vFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389106AbfFIRG4 (ORCPT
+        id S2389117AbfFIRG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:06:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46840 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388593AbfFIRGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:06:52 -0400
+        id S2388593AbfFIRG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:06:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 049AB204EC;
-        Sun,  9 Jun 2019 17:06:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA44B204EC;
+        Sun,  9 Jun 2019 17:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560100011;
-        bh=PPDd01SnKCTX+qaPrXkqMKAY1LtNfCiWQRkPUp2Nom0=;
+        s=default; t=1560100017;
+        bh=4R8I0anYL8C+6celks3uMq5Egv2NRBLlrT7oH8hkW/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02s0jGg6livpjCUKqCzCjmHW4QYaMmi9/6+ZVOEcQE1rMPbsTWa+qZ17i36+YWdyK
-         9X+Hi9pimro1wkuU6ViazxqbkyXXB4ZSXZpcYSTuckmVuAqd61xWOSAUSljNsY989K
-         /ssW0dalrWXWvNU8QdvgZdQi92PU1RWu2EkEVlg8=
+        b=2nRSwVZSrAzc16/7tWSq6m0VZsaQe0v0rt2ZWD1/liWSYDItMAT5LKsvgKKPN6Zx+
+         8XXvA0BOc7RBTKxo8ixS0ENujEb6QimbkGrIsprgWW0RHqTfVE1CpMscDj4prMCufx
+         kOw2RYqwH0NSVtCjvVYVLofLL3N/ezHozbLxT8ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        stable@kernel.org, Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 234/241] rcu: locking and unlocking need to always be at least barriers
-Date:   Sun,  9 Jun 2019 18:42:56 +0200
-Message-Id: <20190609164155.511875733@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.4 236/241] fuse: fallocate: fix return with locked inode
+Date:   Sun,  9 Jun 2019 18:42:58 +0200
+Message-Id: <20190609164155.580504874@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,67 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 66be4e66a7f422128748e3c3ef6ee72b20a6197b upstream.
+commit 35d6fcbb7c3e296a52136347346a698a35af3fda upstream.
 
-Herbert Xu pointed out that commit bb73c52bad36 ("rcu: Don't disable
-preemption for Tiny and Tree RCU readers") was incorrect in making the
-preempt_disable/enable() be conditional on CONFIG_PREEMPT_COUNT.
+Do the proper cleanup in case the size check fails.
 
-If CONFIG_PREEMPT_COUNT isn't enabled, the preemption enable/disable is
-a no-op, but still is a compiler barrier.
+Tested with xfstests:generic/228
 
-And RCU locking still _needs_ that compiler barrier.
-
-It is simply fundamentally not true that RCU locking would be a complete
-no-op: we still need to guarantee (for example) that things that can
-trap and cause preemption cannot migrate into the RCU locked region.
-
-The way we do that is by making it a barrier.
-
-See for example commit 386afc91144b ("spinlocks and preemption points
-need to be at least compiler barriers") from back in 2013 that had
-similar issues with spinlocks that become no-ops on UP: they must still
-constrain the compiler from moving other operations into the critical
-region.
-
-Now, it is true that a lot of RCU operations already use READ_ONCE() and
-WRITE_ONCE() (which in practice likely would never be re-ordered wrt
-anything remotely interesting), but it is also true that that is not
-globally the case, and that it's not even necessarily always possible
-(ie bitfields etc).
-
-Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-Fixes: bb73c52bad36 ("rcu: Don't disable preemption for Tiny and Tree RCU readers")
-Cc: stable@kernel.org
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 0cbade024ba5 ("fuse: honor RLIMIT_FSIZE in fuse_file_fallocate")
+Cc: Liu Bo <bo.liu@linux.alibaba.com>
+Cc: <stable@vger.kernel.org> # v3.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/rcupdate.h |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/fuse/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -297,14 +297,12 @@ void synchronize_rcu(void);
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2951,7 +2951,7 @@ static long fuse_file_fallocate(struct f
+ 	    offset + length > i_size_read(inode)) {
+ 		err = inode_newsize_ok(inode, offset + length);
+ 		if (err)
+-			return err;
++			goto out;
+ 	}
  
- static inline void __rcu_read_lock(void)
- {
--	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
--		preempt_disable();
-+	preempt_disable();
- }
- 
- static inline void __rcu_read_unlock(void)
- {
--	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
--		preempt_enable();
-+	preempt_enable();
- }
- 
- static inline void synchronize_rcu(void)
+ 	if (!(mode & FALLOC_FL_KEEP_SIZE))
 
 
