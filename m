@@ -2,51 +2,56 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5808C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC6C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF523208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE4820833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099633;
-	bh=DT/Z1nB2H+ExUpjs59kVCrqSG9O7n5z4+2mg3fVoeKE=;
+	s=default; t=1560099635;
+	bh=G80n0F+Jub0Dma2VG5Z03qSubqqOxsxpa/eWRIWiUCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdE7Zd1zrgdnrB1gJvyU1wsslsgmTINEhkDi5wQZPFAtQObBUtfvTLNuJWMw/jQls
-	 bQSXkDTVrX6Yj9KBIzZGDfJQfrTyoRAQV1Yo2S/VlHs5Zo/KOTzq8gqfU5+mCgko/1
-	 fbiKvpNghDMKst12p0xkVb0fxneAHRppS1QsXq6c=
+	b=FA8JlwFbrEbwheLtYM4EGXcgjZa0VRJs+VrC4fJCMh8r30s+OFbzukuXvvsRUmF96
+	 Dlg/VEB98qM2AYDayn9PGxRi6YD7jtK3Tl8WD1JgzcEt1JpoVFG+2Xl9T71A/2ozbT
+	 lTgMXIfd+QdmG/c6vk2a39PFl3x5+24ga4WsOQI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbfFIRAc (ORCPT
+        id S2387883AbfFIRAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36972 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387855AbfFIRA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:00:29 -0400
+        id S2387863AbfFIRAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:00:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F0E206DF;
-        Sun,  9 Jun 2019 17:00:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD201206C3;
+        Sun,  9 Jun 2019 17:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099628;
-        bh=DT/Z1nB2H+ExUpjs59kVCrqSG9O7n5z4+2mg3fVoeKE=;
+        s=default; t=1560099631;
+        bh=G80n0F+Jub0Dma2VG5Z03qSubqqOxsxpa/eWRIWiUCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MusAi7kucqzGSyI60OwHYzsLCdXYfwh9q1kzveceaSmVEKnGn+sCCOClfP4DUNDTe
-         7ZU7Xd0j3OGqYudhwmcdkydKkChkiS5cYnwRCVVUjcR+wYhfuWtS3vLGsmSteJFYWX
-         opUKX815nZviEAZvkwv40OM56hSdtv8Iyt0mzonI=
+        b=YB5G3BQPps30ni1tZqi3PRCzlLkuOjsVa9J8a3D7PQHwN/af7RvKtI4H5J+/qph/m
+         6R/16KLlEGLExGoud5kE9mhVEGxZx6eprm0sMvRRPvTDPauobWZHV5Ksoojhbw92/y
+         sv7CeFUg9uLMmi69Xe1BkKYNjC55+lA85SDIsncQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 109/241] bcache: add failure check to run_cache_set() for journal replay
-Date:   Sun,  9 Jun 2019 18:40:51 +0200
-Message-Id: <20190609164150.942468950@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 092/241] tools include: Adopt linux/bits.h
+Date:   Sun,  9 Jun 2019 18:40:34 +0200
+Message-Id: <20190609164150.446129635@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,91 +64,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ce3e4cfb59cb382f8e5ce359238aa580d4ae7778 ]
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Currently run_cache_set() has no return value, if there is failure in
-bch_journal_replay(), the caller of run_cache_set() has no idea about
-such failure and just continue to execute following code after
-run_cache_set().  The internal failure is triggered inside
-bch_journal_replay() and being handled in async way. This behavior is
-inefficient, while failure handling inside bch_journal_replay(), cache
-register code is still running to start the cache set. Registering and
-unregistering code running as same time may introduce some rare race
-condition, and make the code to be more hard to be understood.
+commit ba4aa02b417f08a0bee5e7b8ed70cac788a7c854 upstream.
 
-This patch adds return value to run_cache_set(), and returns -EIO if
-bch_journal_rreplay() fails. Then caller of run_cache_set() may detect
-such failure and stop registering code flow immedidately inside
-register_cache_set().
+So that we reduce the difference of tools/include/linux/bitops.h to the
+original kernel file, include/linux/bitops.h, trying to remove the need
+to define BITS_PER_LONG, to avoid clashes with asm/bitsperlong.h.
 
-If journal replay fails, run_cache_set() can report error immediately
-to register_cache_set(). This patch makes the failure handling for
-bch_journal_replay() be in synchronized way, easier to understand and
-debug, and avoid poetential race condition for register-and-unregister
-in same time.
+And the things removed from tools/include/linux/bitops.h are really in
+linux/bits.h, so that we can have a copy and then
+tools/perf/check_headers.sh will tell us when new stuff gets added to
+linux/bits.h so that we can check if it is useful and if any adjustment
+needs to be done to the tools/{include,arch}/ copies.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-y1sqyydvfzo0bjjoj4zsl562@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[bwh: Backported to 4.4 as dependency of "x86/msr-index: Cleanup bit defines":
+ - Drop change in check-headers.sh
+ - Adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/md/bcache/super.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ tools/include/linux/bitops.h |    7 ++-----
+ tools/include/linux/bits.h   |   26 ++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 5 deletions(-)
+ create mode 100644 tools/include/linux/bits.h
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 2140c5b48b511..02757b90e4029 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1558,7 +1558,7 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
- 	return NULL;
- }
+--- a/tools/include/linux/bitops.h
++++ b/tools/include/linux/bitops.h
+@@ -3,17 +3,14 @@
  
--static void run_cache_set(struct cache_set *c)
-+static int run_cache_set(struct cache_set *c)
- {
- 	const char *err = "cannot allocate memory";
- 	struct cached_dev *dc, *t;
-@@ -1650,7 +1650,9 @@ static void run_cache_set(struct cache_set *c)
- 		if (j->version < BCACHE_JSET_VERSION_UUID)
- 			__uuid_write(c);
+ #include <asm/types.h>
+ #include <linux/kernel.h>
+-#include <linux/compiler.h>
+-
+ #ifndef __WORDSIZE
+ #define __WORDSIZE (__SIZEOF_LONG__ * 8)
+ #endif
  
--		bch_journal_replay(c, &journal);
-+		err = "bcache: replay journal failed";
-+		if (bch_journal_replay(c, &journal))
-+			goto err;
- 	} else {
- 		pr_notice("invalidating existing data");
+ #define BITS_PER_LONG __WORDSIZE
++#include <linux/bits.h>
++#include <linux/compiler.h>
  
-@@ -1718,11 +1720,13 @@ static void run_cache_set(struct cache_set *c)
- 	flash_devs_run(c);
- 
- 	set_bit(CACHE_SET_RUNNING, &c->flags);
--	return;
-+	return 0;
- err:
- 	closure_sync(&cl);
- 	/* XXX: test this, it's broken */
- 	bch_cache_set_error(c, "%s", err);
+-#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
+-#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
+-#define BITS_PER_BYTE		8
+ #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
+ #define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u64))
+ #define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
+--- /dev/null
++++ b/tools/include/linux/bits.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_BITS_H
++#define __LINUX_BITS_H
++#include <asm/bitsperlong.h>
 +
-+	return -EIO;
- }
- 
- static bool can_attach_cache(struct cache *ca, struct cache_set *c)
-@@ -1786,8 +1790,11 @@ static const char *register_cache_set(struct cache *ca)
- 	ca->set->cache[ca->sb.nr_this_dev] = ca;
- 	c->cache_by_alloc[c->caches_loaded++] = ca;
- 
--	if (c->caches_loaded == c->sb.nr_in_set)
--		run_cache_set(c);
-+	if (c->caches_loaded == c->sb.nr_in_set) {
-+		err = "failed to run cache set";
-+		if (run_cache_set(c) < 0)
-+			goto err;
-+	}
- 
- 	return NULL;
- err:
--- 
-2.20.1
-
++#define BIT(nr)			(1UL << (nr))
++#define BIT_ULL(nr)		(1ULL << (nr))
++#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
++#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
++#define BIT_ULL_MASK(nr)	(1ULL << ((nr) % BITS_PER_LONG_LONG))
++#define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
++#define BITS_PER_BYTE		8
++
++/*
++ * Create a contiguous bitmask starting at bit position @l and ending at
++ * position @h. For example
++ * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
++ */
++#define GENMASK(h, l) \
++	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
++
++#define GENMASK_ULL(h, l) \
++	(((~0ULL) - (1ULL << (l)) + 1) & \
++	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
++
++#endif	/* __LINUX_BITS_H */
 
 
