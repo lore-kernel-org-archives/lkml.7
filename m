@@ -2,141 +2,111 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E6CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA56C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8705D208E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BB2212F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:23:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CR31kyMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbfFIMW3 (ORCPT
+        id S1728556AbfFIMXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 08:22:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726874AbfFIMW2 (ORCPT
+        Sun, 9 Jun 2019 08:23:40 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36600 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfFIMXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 08:22:28 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x59CHLPA026875
-        for <linux-kernel@vger.kernel.org>; Sun, 9 Jun 2019 08:22:27 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t0t06kd2u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 08:22:27 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sun, 9 Jun 2019 13:22:26 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 9 Jun 2019 13:22:24 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x59CMNwY33489366
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 9 Jun 2019 12:22:23 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 344B1B2067;
-        Sun,  9 Jun 2019 12:22:23 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25F7CB2066;
-        Sun,  9 Jun 2019 12:22:23 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.156.65])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun,  9 Jun 2019 12:22:23 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9402D16C5D98; Sun,  9 Jun 2019 05:22:26 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 05:22:26 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Eric Dumazet <edumazet@google.com>, rcu <rcu@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Question about cacheline bounching with percpu-rwsem and rcu-sync
-Reply-To: paulmck@linux.ibm.com
-References: <CAEXW_YTzUsT8xCD=vkSR=mT+L7ot7tCESTWYVqNt_3SQeVDUEA@mail.gmail.com>
- <20190531135051.GL28207@linux.ibm.com>
- <CAEXW_YReo2juN8A3CF+CKv8PcN_cH23gYWkLfkOJQqignyx85g@mail.gmail.com>
- <CAEXW_YT93U4OAVUggkR7E3KV2m7pdVwG-r+x6zjtrGzortvc4w@mail.gmail.com>
+        Sun, 9 Jun 2019 08:23:40 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i21so5477006ljj.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 05:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iFbsAteAWCOB8EYWVkTmBCNQWQgWWukwnbyxrLkrB0g=;
+        b=CR31kyMKqJssQbVi1JNiJC/mpUqUbB9GeHhEnWXxUYEm/NFvtyAwx+ibkWn73vB8s1
+         ijmN8IVbIB6z7z2Xw7lOxf+6NAJ94vILodRFkmRNak6nbqnti1w7Vec83AbVODQti+Kg
+         7iZr/mfEAgiffcNh//LPD7cgzTHZYJwM9cu/zGu5dgHfwIT/9Yo8YMZFtBELx50wYa0F
+         rbPp54YHrqXeg1OAS9y5SI2EhI+hVbTYKJJdL1LP54ucpmGb/21rizHKTKR6QAjKJzsX
+         SYmGj1j3ACblLdnWniEQFA6KCwJKI0YxvpBvj6O7nu3fu2xWUvqQV5NL2r+mOCMSZlEB
+         WSNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iFbsAteAWCOB8EYWVkTmBCNQWQgWWukwnbyxrLkrB0g=;
+        b=TycUlR1sTWcyCPeQ760BTIWYntYTlmKsKclrW/1ukoIxCrtgJPfHK8nr+FqOBpatet
+         DruIvcfHFA4iveuGH7Jt795/Nslen0sd24n5OJQR+bCq+EMvARlN17Lec70t5iKWni9P
+         T0AqusoGeBkjKAh5rbmA7VfYsjmwUMfksYqiKyTOy6/JMPhnplSBIxorRiCqjKmqg/3h
+         nopFqLWd6Kf/POlpa3vleZhhJ55pDenemDIz3wvevFG7mCpxTRWZJjVfVbk3EMWPjHsU
+         l+bKO4KDxpYXA6yAVT39c6oGqWxITshQkhtG1o0Lvu22WisZaoxkXmUU20kTGHhqU0gW
+         s11Q==
+X-Gm-Message-State: APjAAAV4FJs2FgsYRLrZeCu3mBWt3Px+gTOA2o2kmnXShRtB3QzUc7Ds
+        oAoiQ4BreDRMijJZoQCMfpQ=
+X-Google-Smtp-Source: APXvYqy8PsCjFxIJXLZEqVIOqouGGmLPoWA0WKXKYrav3RxdCeb2sgrOXhs44ORw1QLgIMf7oUBMtA==
+X-Received: by 2002:a2e:b0d0:: with SMTP id g16mr21038731ljl.161.1560083018160;
+        Sun, 09 Jun 2019 05:23:38 -0700 (PDT)
+Received: from esperanza ([176.120.239.149])
+        by smtp.gmail.com with ESMTPSA id c8sm1354240ljk.77.2019.06.09.05.23.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Jun 2019 05:23:37 -0700 (PDT)
+Date:   Sun, 9 Jun 2019 15:23:35 +0300
+From:   Vladimir Davydov <vdavydov.dev@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v6 04/10] mm: generalize postponed non-root kmem_cache
+ deactivation
+Message-ID: <20190609122334.6jbpiwgrdzs4xill@esperanza>
+References: <20190605024454.1393507-1-guro@fb.com>
+ <20190605024454.1393507-5-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEXW_YT93U4OAVUggkR7E3KV2m7pdVwG-r+x6zjtrGzortvc4w@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060912-0064-0000-0000-000003EBC724
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011238; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01215471; UDB=6.00639004; IPR=6.00996561;
- MB=3.00027243; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-09 12:22:25
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060912-0065-0000-0000-00003DD1BA62
-Message-Id: <20190609122226.GU28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-09_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906090092
+In-Reply-To: <20190605024454.1393507-5-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 08:24:36PM -0400, Joel Fernandes wrote:
-> On Fri, May 31, 2019 at 10:43 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> [snip]
-> > >
-> > > Either way, it would be good for you to just try it.  Create a kernel
-> > > module or similar than hammers on percpu_down_read() and percpu_up_read(),
-> > > and empirically check the scalability on a largish system.  Then compare
-> > > this to down_read() and up_read()
-> >
-> > Will do! thanks.
+On Tue, Jun 04, 2019 at 07:44:48PM -0700, Roman Gushchin wrote:
+> Currently SLUB uses a work scheduled after an RCU grace period
+> to deactivate a non-root kmem_cache. This mechanism can be reused
+> for kmem_caches release, but requires generalization for SLAB
+> case.
 > 
-> I created a test for this and the results are quite amazing just
-> stressed read lock/unlock for rwsem vs percpu-rwsem.
-> The test is conducted on a dual socket Intel x86_64 machine with 14
-> cores each socket.
+> Introduce kmemcg_cache_deactivate() function, which calls
+> allocator-specific __kmem_cache_deactivate() and schedules
+> execution of __kmem_cache_deactivate_after_rcu() with all
+> necessary locks in a worker context after an rcu grace period.
 > 
-> Test runs 10,000,000 loops of rwsem vs percpu-rwsem:
-> https://github.com/joelagnel/linux-kernel/commit/8fe968116bd887592301179a53b7b3200db84424
-
-Interesting location, but looks functional.  ;-)
-
-> Graphs/Results here:
-> https://docs.google.com/spreadsheets/d/1cbVLNK8tzTZNTr-EDGDC0T0cnFCdFK3wg2Foj5-Ll9s/edit?usp=sharing
+> Here is the new calling scheme:
+>   kmemcg_cache_deactivate()
+>     __kmemcg_cache_deactivate()                  SLAB/SLUB-specific
+>     kmemcg_rcufn()                               rcu
+>       kmemcg_workfn()                            work
+>         __kmemcg_cache_deactivate_after_rcu()    SLAB/SLUB-specific
 > 
-> The completion time of the test goes up somewhat exponentially with
-> the number of threads, for the rwsem case, where as for percpu-rwsem
-> it is the same. I could add this data to some of the documentation as
-> well.
+> instead of:
+>   __kmemcg_cache_deactivate()                    SLAB/SLUB-specific
+>     slab_deactivate_memcg_cache_rcu_sched()      SLUB-only
+>       kmemcg_rcufn()                             rcu
+>         kmemcg_workfn()                          work
+>           kmemcg_cache_deact_after_rcu()         SLUB-only
+> 
+> For consistency, all allocator-specific functions start with "__".
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Actually, the completion time looks to be pretty close to linear in the
-number of CPUs.  Which is still really bad, don't get me wrong.
+Much easier to review after extracting renaming, thanks.
 
-Thank you for doing this, and it might be good to have some documentation
-on this.  In perfbook, I use counters to make this point, and perhaps
-I need to emphasize more that it also applies to other algorithms,
-including locking.  Me, I learned this lesson from a logic analyzer
-back in the very early 1990s.  This was back in the days before on-CPU
-caches when a logic analyzer could actually tell you something about
-the detailed execution.  ;-)
-
-The key point is that you can often closely approximate the performance
-of synchronization algorithms by counting the number of cache misses and
-the number of CPUs competing for each cache line.
-
-If you want to get the microbenchmark test code itself upstream,
-one approach might be to have a kernel/locking/lockperf.c similar to
-kernel/rcu/rcuperf.c.
-
-Thoughts?
-
-							Thanx, Paul
-
+Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
