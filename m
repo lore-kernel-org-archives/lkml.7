@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A38C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39853C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D1120840
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D4820840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099789;
-	bh=v8jViTz1Qm/qg5OtQF+8F/At7QLvjzJgBcP9xOl6joc=;
+	s=default; t=1560099792;
+	bh=Lh9Dkd6Y3/+2LvDhB4b1Vd+pgnkf/pcUUr63DEubOSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIXjr988UbPCRdHILziynD8zxAw/TID7y7LBm2UHorw1cA8pPGCV1J1agl0HtXbuy
-	 pPwMTQdGpvmNFVsb2nP9H1o9m7JBSuOyn0DCMkdihn3XrpmQt4MIsc9CMxwlH0ckE+
-	 LnAaYw+XsaEbpOk5NnaTG1OkFzlILjaSgyR9Z28s=
+	b=2qke+Sx9eAi/oaFjCZlbYNq0895svuY6Hl0ssR3wdR72KnKQLeHvrWq9I1VF2CmUt
+	 tsXu2jVOmJ2Beime1N1n3ZIxPqckOYq/tBbA0Mlnicrtt/PNExdDrpG3uILQH1AtLw
+	 xYXrDKlHig08jBgDBq6FmGgK8QfmrEuGgqx7lsp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388361AbfFIRDI (ORCPT
+        id S2388366AbfFIRDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732837AbfFIRDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:03 -0400
+        id S1732837AbfFIRDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:03:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A836220843;
-        Sun,  9 Jun 2019 17:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D065208C0;
+        Sun,  9 Jun 2019 17:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099783;
-        bh=v8jViTz1Qm/qg5OtQF+8F/At7QLvjzJgBcP9xOl6joc=;
+        s=default; t=1560099788;
+        bh=Lh9Dkd6Y3/+2LvDhB4b1Vd+pgnkf/pcUUr63DEubOSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jche9IaP6For1VhF8Wgz3KT/TDyCPUqymMMMQC9177ffj3tM1lCl1KULJUay2CECC
-         aBRRQaGi36uW5hhqnhOoGgPPpq6/4R6Xj6QohCrvDGB3Ab3DEj61ntuNn5ejGJCdbm
-         szsb5p4vD60sMBaAUQXlGFojl/Y4pOgU4TXpMxAo=
+        b=x5ZGq5giKDLh34cp07DEuOOy0O1q4mgF1TUl3fy849EVhsZa39gbOAqZQM15KSdkl
+         oyb/gglu/vftGdSMHVFhhgii9pQ6nNDIHQBP6KiB73OjUcRu3TsGr4hbZ2YBciDJvA
+         n6/C42STw7ATO7y8sAGHhX1kw273p3OR+mJu9Fxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 164/241] cxgb3/l2t: Fix undefined behaviour
-Date:   Sun,  9 Jun 2019 18:41:46 +0200
-Message-Id: <20190609164152.508267997@linuxfoundation.org>
+Subject: [PATCH 4.4 139/241] mmc: sdhci-of-esdhc: add erratum eSDHC5 support
+Date:   Sun,  9 Jun 2019 18:41:21 +0200
+Message-Id: <20190609164151.800823151@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,47 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 76497732932f15e7323dc805e8ea8dc11bb587cf ]
+[ Upstream commit a46e42712596b51874f04c73f1cdf1017f88df52 ]
 
-The use of zero-sized array causes undefined behaviour when it is not
-the last member in a structure. As it happens to be in this case.
+Software writing to the Transfer Type configuration register
+(system clock domain) can cause a setup/hold violation in the
+CRC flops (card clock domain), which can cause write accesses
+to be sent with corrupt CRC values. This issue occurs only for
+write preceded by read. this erratum is to fix this issue.
 
-Also, the current code makes use of a language extension to the C90
-standard, but the preferred mechanism to declare variable-length
-types such as this one is a flexible array member, introduced in
-C99:
-
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last. Which is beneficial
-to cultivate a high-quality code.
-
-Fixes: e48f129c2f20 ("[SCSI] cxgb3i: convert cdev->l2opt to use rcu to prevent NULL dereference")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-of-esdhc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-index 8cffcdfd56782..38b5858c335a9 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-+++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-@@ -75,8 +75,8 @@ struct l2t_data {
- 	struct l2t_entry *rover;	/* starting point for next allocation */
- 	atomic_t nfree;		/* number of free entries */
- 	rwlock_t lock;
--	struct l2t_entry l2tab[0];
- 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
-+	struct l2t_entry l2tab[];
- };
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index ac66c61d9433c..a5a11e7ab53b4 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -624,6 +624,9 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
+ 	if (esdhc->vendor_ver > VENDOR_V_22)
+ 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
  
- typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
++	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
++		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
++
+ 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
+ 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
+ 	    of_device_is_compatible(np, "fsl,p4080-esdhc") ||
 -- 
 2.20.1
 
