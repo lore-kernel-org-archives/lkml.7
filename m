@@ -2,119 +2,139 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B94C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 09:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7FAC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 09:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A8920840
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 09:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="0jVhzKzl"
+	by mail.kernel.org (Postfix) with ESMTP id 79F9920868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 09:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfFIJHl (ORCPT
+        id S1728068AbfFIJJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 05:07:41 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:35218 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726686AbfFIJHk (ORCPT
+        Sun, 9 Jun 2019 05:09:29 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27831 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726686AbfFIJJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 05:07:40 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 521032E124D;
-        Sun,  9 Jun 2019 12:07:37 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id BaPFd0wpux-7aOmKXh4;
-        Sun, 09 Jun 2019 12:07:37 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1560071257; bh=41wRH7O1RjuIycZL3bPObSY6mj/mQBPhNsOrunGAB0I=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=0jVhzKzlm7ekF4gqCcSRHE3zB0d1+MmxgUtbU/fZQ52gJg7IzdFK1aIjhwNxQnUux
-         2sha+8LU3Ip2YddsJOh0RTALXTtaKQBSjaxzbtoQgwIS/qk8wb600Nuaghzruo9WfZ
-         WuH8FrXwUzjYH8knG4DqeBrfK+Z8L2zfxeb1lA2Y=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d25:9e27:4f75:a150])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id F3GBYaKJYR-7aemMl4x;
-        Sun, 09 Jun 2019 12:07:36 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 2/5] proc: use down_read_killable for
- /proc/pid/smaps_rollup
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <155790967258.1319.11531787078240675602.stgit@buzz>
- <155790967469.1319.14744588086607025680.stgit@buzz>
- <20190517124555.GB1825@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <bda80d9c-7594-94c9-db2c-37b8bc3b58c8@yandex-team.ru>
-Date:   Sun, 9 Jun 2019 12:07:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sun, 9 Jun 2019 05:09:29 -0400
+X-UUID: a0186053efee4110bba9dd38feabe007-20190609
+X-UUID: a0186053efee4110bba9dd38feabe007-20190609
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1120937258; Sun, 09 Jun 2019 17:09:14 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 9 Jun 2019 17:09:12 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 9 Jun 2019 17:09:12 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Chih-Min Chen <chih-min.Chen@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH] mt76: mt7615: add support for per-chain signal strength reporting
+Date:   Sun, 9 Jun 2019 17:09:09 +0800
+Message-ID: <3912a2863e858f3623ced61737836e42c7b19149.1560071167.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190517124555.GB1825@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: DB8247693516C4362ADACC260C0932459B29918DD6EF956B1C4C564524ED25A62000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fill in RX status->chain_signal to avoid empty value.
 
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ .../net/wireless/mediatek/mt76/mt7615/mac.c   | 30 ++++++++++++++++++-
+ .../net/wireless/mediatek/mt76/mt7615/mac.h   |  5 ++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
 
-On 17.05.2019 15:45, Michal Hocko wrote:
-> On Wed 15-05-19 11:41:14, Konstantin Khlebnikov wrote:
->> Ditto.
-> 
-> Proper changelog or simply squash those patches into a single patch if
-> you do not feel like copy&paste is fun
-> 
->>
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->> ---
->>   fs/proc/task_mmu.c |    8 ++++++--
->>   1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
->> index 2bf210229daf..781879a91e3b 100644
->> --- a/fs/proc/task_mmu.c
->> +++ b/fs/proc/task_mmu.c
->> @@ -832,7 +832,10 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
->>   
->>   	memset(&mss, 0, sizeof(mss));
->>   
->> -	down_read(&mm->mmap_sem);
->> +	ret = down_read_killable(&mm->mmap_sem);
->> +	if (ret)
->> +		goto out_put_mm;
-> 
-> Why not ret = -EINTR. The seq_file code seems to be handling all errors
-> AFAICS.
-> 
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+index b60d42b5923d..9ee83ea11b8c
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+@@ -13,6 +13,11 @@
+ #include "../dma.h"
+ #include "mac.h"
+ 
++static inline s8 to_rssi(u32 field, u32 rxv)
++{
++	return (FIELD_GET(field, rxv) - 220) / 2;
++}
++
+ static struct mt76_wcid *mt7615_rx_get_wcid(struct mt7615_dev *dev,
+ 					    u8 idx, bool unicast)
+ {
+@@ -120,6 +125,7 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
+ 	if (rxd0 & MT_RXD0_NORMAL_GROUP_3) {
+ 		u32 rxdg0 = le32_to_cpu(rxd[0]);
+ 		u32 rxdg1 = le32_to_cpu(rxd[1]);
++		u32 rxdg3 = le32_to_cpu(rxd[3]);
+ 		u8 stbc = FIELD_GET(MT_RXV1_HT_STBC, rxdg0);
+ 		bool cck = false;
+ 
+@@ -169,7 +175,29 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
+ 
+ 		status->enc_flags |= RX_ENC_FLAG_STBC_MASK * stbc;
+ 
+-		/* TODO: RSSI */
++		status->chains = dev->mt76.antenna_mask;
++		status->chain_signal[0] = to_rssi(MT_RXV4_RCPI0, rxdg3);
++		status->signal = status->chain_signal[0];
++
++		switch (status->chains) {
++		case 0x3:
++			status->chain_signal[1] = to_rssi(MT_RXV4_RCPI1, rxdg3);
++			status->signal = max(status->signal,
++					     status->chain_signal[1]);
++			break;
++		case 0x7:
++			status->chain_signal[2] = to_rssi(MT_RXV4_RCPI2, rxdg3);
++			status->signal = max(status->signal,
++					     status->chain_signal[2]);
++			break;
++		case 0xf:
++			status->chain_signal[3] = to_rssi(MT_RXV4_RCPI3, rxdg3);
++			status->signal = max(status->signal,
++					     status->chain_signal[3]);
++			break;
++		default:
++			break;
++		}
+ 		rxd += 6;
+ 		if ((u8 *)rxd - skb->data >= skb->len)
+ 			return -EINVAL;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
+index 18ad4b8a3807..b00ce8db58e9
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
+@@ -98,6 +98,11 @@ enum rx_pkt_type {
+ #define MT_RXV2_GROUP_ID		GENMASK(26, 21)
+ #define MT_RXV2_LENGTH			GENMASK(20, 0)
+ 
++#define MT_RXV4_RCPI3			GENMASK(31, 24)
++#define MT_RXV4_RCPI2			GENMASK(23, 16)
++#define MT_RXV4_RCPI1			GENMASK(15, 8)
++#define MT_RXV4_RCPI0			GENMASK(7, 0)
++
+ enum tx_header_format {
+ 	MT_HDR_FORMAT_802_3,
+ 	MT_HDR_FORMAT_CMD,
+-- 
+2.18.0
 
-I've missed your comment. Sorry.
-
-down_read_killable returns 0 for success and exactly -EINTR for failure.
-
->> +
->>   	hold_task_mempolicy(priv);
->>   
->>   	for (vma = priv->mm->mmap; vma; vma = vma->vm_next) {
->> @@ -849,8 +852,9 @@ static int show_smaps_rollup(struct seq_file *m, void *v)
->>   
->>   	release_task_mempolicy(priv);
->>   	up_read(&mm->mmap_sem);
->> -	mmput(mm);
->>   
->> +out_put_mm:
->> +	mmput(mm);
->>   out_put_task:
->>   	put_task_struct(priv->task);
->>   	priv->task = NULL;
-> 
