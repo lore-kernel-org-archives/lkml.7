@@ -2,52 +2,51 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,TVD_SUBJ_WIPE_DEBT,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5818EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE35C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AC320833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4974720868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098785;
-	bh=fIxqYThSnapEoKSJ2Ap6NB2shYUwrrsqk9BnSRTnqb4=;
+	s=default; t=1560098787;
+	bh=DOB7Gu/i1IrhgR/2HX0dobI4dpLhFxiR70LS3rymbao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IRnZjIx/2aTLZRZBIEru9Xv226eIDZlJJebcvmtVTFVpCsuMntck2X3zEkp1diQy+
-	 mvtYEUDDLobFmZwLBb78QdGGprefi3HpM0pVcvjHpJa9XEWjdsIptwc2jeN+pEwIsk
-	 LjdQOf0hz93aF/epRC9CLZO0HUA2MrAgNHwIzu3w=
+	b=pOurBwjds7dovx7sCa2G8yJU9e5NA09pPeeZ1dVmLJF5rpTPN+mfixiHqti7ezNmZ
+	 9s6mQLKEEepF+2ptivL2PkkZQb+hkWanUKzWX0JWrcUR6D9C8ume6av8KdTniC1C1Q
+	 PRawe52YsOkhnosp2+2ufmAGEymycpqBAr77NPYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbfFIQqY (ORCPT
+        id S1730444AbfFIQq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:46:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44462 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730378AbfFIQqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:46:20 -0400
+        id S1730408AbfFIQqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:46:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BDBE2081C;
-        Sun,  9 Jun 2019 16:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 960672081C;
+        Sun,  9 Jun 2019 16:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098779;
-        bh=fIxqYThSnapEoKSJ2Ap6NB2shYUwrrsqk9BnSRTnqb4=;
+        s=default; t=1560098782;
+        bh=DOB7Gu/i1IrhgR/2HX0dobI4dpLhFxiR70LS3rymbao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AxK99zTGyQXxiUca3b6219HjIyaN1gi8ATBLdRxYExKOxYBAQnoz/MtKMZH1uVv3E
-         DEqyk2kRwwghK39kL7afNFZQWoP5ImkKfn/JtbfLmGP/zv6Pe5bsw+15ClZ9EyoZn4
-         3qj7ekQiliVKvm1X+ABaMYsK8WQLH2XpYUL+5G5I=
+        b=kw/DqYX4Ch9BORFYAb2/c5K1nmyFxnE+Q2hlNFJaJeTusKzHj668vBtU5rNjY/cnD
+         99nxBVPRuJ8iO6lgRhVk1aSeLPc2vycK3ALVr9zwbmcHyDogSOVwQ1Up0fjig9bHiw
+         CtOhziFkSQx8Y0M3NJz1jlL3CXACMNNSdf6Tq1Ls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Dufresne <dufresnep@gmail.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Aaron Liu <aaron.liu@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.1 58/70] drm/radeon: prefer lower reference dividers
-Date:   Sun,  9 Jun 2019 18:42:09 +0200
-Message-Id: <20190609164132.337762193@linuxfoundation.org>
+Subject: [PATCH 5.1 59/70] drm/amdgpu: remove ATPX_DGPU_REQ_POWER_FOR_DISPLAYS check when hotplug-in
+Date:   Sun,  9 Jun 2019 18:42:10 +0200
+Message-Id: <20190609164132.419056084@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,41 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Aaron Liu <aaron.liu@amd.com>
 
-commit 2e26ccb119bde03584be53406bbd22e711b0d6e6 upstream.
+commit bdb1ccb080dafc1b4224873a5b759ff85a7d1c10 upstream.
 
-Instead of the closest reference divider prefer the lowest,
-this fixes flickering issues on HP Compaq nx9420.
+In amdgpu_atif_handler, when hotplug event received, remove
+ATPX_DGPU_REQ_POWER_FOR_DISPLAYS check. This bit's check will cause missing
+system resume.
 
-Bugs: https://bugs.freedesktop.org/show_bug.cgi?id=108514
-Suggested-by: Paul Dufresne <dufresnep@gmail.com>
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Aaron Liu <aaron.liu@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/radeon/radeon_display.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -922,12 +922,12 @@ static void avivo_get_fb_ref_div(unsigne
- 	ref_div_max = max(min(100 / post_div, ref_div_max), 1u);
- 
- 	/* get matching reference and feedback divider */
--	*ref_div = min(max(DIV_ROUND_CLOSEST(den, post_div), 1u), ref_div_max);
-+	*ref_div = min(max(den/post_div, 1u), ref_div_max);
- 	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
- 
- 	/* limit fb divider to its maximum */
- 	if (*fb_div > fb_div_max) {
--		*ref_div = DIV_ROUND_CLOSEST(*ref_div * fb_div_max, *fb_div);
-+		*ref_div = (*ref_div * fb_div_max)/(*fb_div);
- 		*fb_div = fb_div_max;
- 	}
- }
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
+@@ -464,8 +464,7 @@ static int amdgpu_atif_handler(struct am
+ 			}
+ 		}
+ 		if (req.pending & ATIF_DGPU_DISPLAY_EVENT) {
+-			if ((adev->flags & AMD_IS_PX) &&
+-			    amdgpu_atpx_dgpu_req_power_for_displays()) {
++			if (adev->flags & AMD_IS_PX) {
+ 				pm_runtime_get_sync(adev->ddev->dev);
+ 				/* Just fire off a uevent and let userspace tell us what to do */
+ 				drm_helper_hpd_irq_event(adev->ddev);
 
 
