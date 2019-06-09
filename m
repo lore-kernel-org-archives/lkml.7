@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1B8C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724C0C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C47205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48FC120652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100578;
-	bh=9c6gTPPLhc//uMtT9TCigZWOvEZ7xOphkK8zOKNZCGQ=;
+	s=default; t=1560100580;
+	bh=4dRqwOCNbDrUOH84RUkkjW9jPHaTGW3Y2CIITnQ3V0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vtxKwR0gTlam9Mlgt7Y2s2N9hinrMF8l2GMlh4LXeJ+CbRpZfr+/fnwM2gn/3bIs1
-	 KTz+U+X/iX0E+NFISn7ZJ0ssnKOvdkfyhhIQR2+mxdDzkLmB1AX6Se1o5FqxX27Xtk
-	 dELe9oSkt8IErBw4Rg9THcHPyOIbENDQz3lchpPk=
+	b=fRDLlkM0UK6lrfHX99F28BrfBCxfxZn0PBtF+rNWxg+zwBEuoG30nNV9EJSQnKH5b
+	 gBk0iZQ+jT8DidcwiYRbUa/RPsJa6X7CJ9bheTy18SD6Fzo7sLSo75Sfn8+DkQMrrO
+	 jYc8RBEGSU8SdgyOgf1G5VvGo5zjY2Wv1MQjJ14s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732398AbfFIQx1 (ORCPT
+        id S2387481AbfFIRQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731713AbfFIQxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:20 -0400
+        id S1732404AbfFIQx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 398612081C;
-        Sun,  9 Jun 2019 16:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE43A206DF;
+        Sun,  9 Jun 2019 16:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099199;
-        bh=9c6gTPPLhc//uMtT9TCigZWOvEZ7xOphkK8zOKNZCGQ=;
+        s=default; t=1560099208;
+        bh=4dRqwOCNbDrUOH84RUkkjW9jPHaTGW3Y2CIITnQ3V0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5xS3yOOBzbaiLWiBX4i2bIJVGKw39gktNbKncMw7JGOjCP0CDHN5+SytLlRsoKRH
-         5GBqDsQfLmw8bPMUNu/lLFMzqxHfOf5PjPkv5jA9VRO7GLUBtC4ghfkymR1BWfuxSx
-         uNzRxLHtzBEwts/EmbGmxySWcYj7LHeW34ZvE+9s=
+        b=S806TS6Kqe8r13/Vx+1j42apCkm/UB4Qcs7g9c/QxhUGUbRUFKF9k9WNnHuphgf19
+         7oyyLDOFV4SBpdHrg4SI2AW8EE8iGx/zo6lRnBvxSbISvbzKL9b1p8R/2CO4nFcEoT
+         ZbPBUE22H+DFeREwnsz2UHNTuyI/pEektOFjUDr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.9 45/83] staging: vc04_services: prevent integer overflow in create_pagelist()
-Date:   Sun,  9 Jun 2019 18:42:15 +0200
-Message-Id: <20190609164131.760341489@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Hellstrom <thellstrom@vmware.com>,
+        Deepak Rawat <drawat@vmware.com>
+Subject: [PATCH 4.9 48/83] drm/vmwgfx: Dont send drm sysfs hotplug events on initial master set
+Date:   Sun,  9 Jun 2019 18:42:18 +0200
+Message-Id: <20190609164132.030491942@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -58,56 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-commit ca641bae6da977d638458e78cd1487b6160a2718 upstream.
+commit 63cb44441826e842b7285575b96db631cc9f2505 upstream.
 
-The create_pagelist() "count" parameter comes from the user in
-vchiq_ioctl() and it could overflow.  If you look at how create_page()
-is called in vchiq_prepare_bulk_data(), then the "size" variable is an
-int so it doesn't make sense to allow negatives or larger than INT_MAX.
+This may confuse user-space clients like plymouth that opens a drm
+file descriptor as a result of a hotplug event and then generates a
+new event...
 
-I don't know this code terribly well, but I believe that typical values
-of "count" are typically quite low and I don't think this check will
-affect normal valid uses at all.
-
-The "pagelist_size" calculation can also overflow on 32 bit systems, but
-not on 64 bit systems.  I have added an integer overflow check for that
-as well.
-
-The Raspberry PI doesn't offer the same level of memory protection that
-x86 does so these sorts of bugs are probably not super critical to fix.
-
-Fixes: 71bad7f08641 ("staging: add bcm2708 vchiq driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <stable@vger.kernel.org>
+Fixes: 5ea1734827bb ("drm/vmwgfx: Send a hotplug event at master_set")
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -381,9 +381,18 @@ create_pagelist(char __user *buf, size_t
- 	int run, addridx, actual_pages;
-         unsigned long *need_release;
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+@@ -1245,7 +1245,13 @@ static int vmw_master_set(struct drm_dev
+ 	}
  
-+	if (count >= INT_MAX - PAGE_SIZE)
-+		return NULL;
+ 	dev_priv->active_master = vmaster;
+-	drm_sysfs_hotplug_event(dev);
 +
- 	offset = (unsigned int)buf & (PAGE_SIZE - 1);
- 	num_pages = (count + offset + PAGE_SIZE - 1) / PAGE_SIZE;
++	/*
++	 * Inform a new master that the layout may have changed while
++	 * it was gone.
++	 */
++	if (!from_open)
++		drm_sysfs_hotplug_event(dev);
  
-+	if (num_pages > (SIZE_MAX - sizeof(PAGELIST_T) -
-+			 sizeof(struct vchiq_pagelist_info)) /
-+			(sizeof(u32) + sizeof(pages[0]) +
-+			 sizeof(struct scatterlist)))
-+		return NULL;
-+
- 	*ppagelist = NULL;
- 
- 	/* Allocate enough storage to hold the page pointers and the page
+ 	return 0;
+ }
 
 
