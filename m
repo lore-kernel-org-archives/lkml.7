@@ -6,60 +6,70 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8436C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B43C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2AC2070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5F3208E3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfFIHug (ORCPT
+        id S1727916AbfFIHyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 03:50:36 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42430 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727432AbfFIHug (ORCPT
+        Sun, 9 Jun 2019 03:54:44 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44321 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfFIHyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 03:50:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t28so5148388lje.9;
-        Sun, 09 Jun 2019 00:50:34 -0700 (PDT)
+        Sun, 9 Jun 2019 03:54:44 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r15so4500821lfm.11;
+        Sun, 09 Jun 2019 00:54:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WSX7llxKdi9V6Dhe2O0h1mDrjGuwY5+038rCGBEDJQI=;
-        b=CtbGsD+8PhS2T0/dcB2hQsFRnbmoMphfNUT3Gopj4E1inxQ0s3CE5Nv0BfgC5TCPPX
-         jmsWiCUWEeaDkCCGmByED+aVi5UNDWrXW7BoYWz9EbpdP4zJREhzdBRCseNUg+ZtdBWD
-         60as8Yb+utzScN6rTNAwbAEreZF4c9sYt3lYb5Ejothljmshs3QSHI5InVofQXflUKsY
-         gRWVwC1navXSgdJK2MywnBuHFNj1ATyTFuig/6I7Fzwf9h7rsz+ktnhTrUlg8BX0YWLB
-         UqYRux5hs0HlCiDvkCq+fanlGa3aR/wwqKs2PC8xQADuO3tBwyLe6ToidfFC/wLmNMV8
-         1rsA==
-X-Gm-Message-State: APjAAAUftzO41o+XH6lQ9i3of5sL/oUh/3bOKeFwv4oosFs9g6IUnxIx
-        /xwntbsOfK1JIjKW0U4K6hdvFttid8LZJsZw9TM=
-X-Google-Smtp-Source: APXvYqzjDEboHFvODgKNMZuwSZdEyAu0DsAlCQEVkihn9muiB0rp40QvtYDUKeudIzc6SifXEuymRS6kh4s+DB9xirg=
-X-Received: by 2002:a2e:91c5:: with SMTP id u5mr21611820ljg.65.1560066633700;
- Sun, 09 Jun 2019 00:50:33 -0700 (PDT)
+        bh=/Qx4/qdUcALjIorcXjs7AxmiMGoinkmfGOdHptpmwpU=;
+        b=VnzhNd6w7mHyqWKZiqP7zGC4ONUcth8yhbe0Lo90zLDFCwzJhrLUZo05SR4S44EuWy
+         wlABAZfEcB+gwGXPPGaVpP/Yrv6+3l7c2DqoQTeqFmGPs+gdOJZ93sNzROR8cSmWoJo+
+         5IIzrQHR8M5tj9D2fJAPYiT0N90UZike0AHTHYDoEHRsqREudfpy/V7mctr/tnI93R/T
+         esG2bVjT5/dzfokupaehnxuO+ePdfcW8MMuoyuDJg5NKnD36yk+tDCM4CRrG9wx6nCqV
+         ZpPSBiQdbcuSQplQO1KVJ14Tgzq5lwj5avVhIbKN8A71EAPPIhauw2ML8pjSFMLYknZk
+         j65w==
+X-Gm-Message-State: APjAAAWkWw6Ab6aDE7UnNc2a/HEzGa5HmTnHkPe84Xpu0F0t4FhgEYMr
+        QZszusJh8ovp0mZZFM+cHbSm4Vstcc0KsOoa0V0=
+X-Google-Smtp-Source: APXvYqwAkUTnyc4orITPqql8Dcq/2FZxVHDXSWXEX68+M70BfTiu1lPz3E0qFz5+GRtrzFsL1+dJET1c4NH3BB9tQiI=
+X-Received: by 2002:ac2:5467:: with SMTP id e7mr7954978lfn.23.1560066881888;
+ Sun, 09 Jun 2019 00:54:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1560045490.git.mchehab+samsung@kernel.org> <472757a7481a8645837092f0f257f37996af6299.1560045490.git.mchehab+samsung@kernel.org>
-In-Reply-To: <472757a7481a8645837092f0f257f37996af6299.1560045490.git.mchehab+samsung@kernel.org>
+References: <cover.1560045490.git.mchehab+samsung@kernel.org> <f7f9c692a870f836e5657b8a763d751b6ac0e86e.1560045490.git.mchehab+samsung@kernel.org>
+In-Reply-To: <f7f9c692a870f836e5657b8a763d751b6ac0e86e.1560045490.git.mchehab+samsung@kernel.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 9 Jun 2019 09:50:21 +0200
-Message-ID: <CAMuHMdV9Xy7MKAY9tU4WTe=tvuLpnXQE5GMNmtEXgCj6YNhRYg@mail.gmail.com>
-Subject: Re: [PATCH v3 12/33] docs: ide: convert docs to ReST and rename to *.rst
+Date:   Sun, 9 Jun 2019 09:54:29 +0200
+Message-ID: <CAMuHMdUyvZ89=P4GOY-BkyS45cj66STgZe9gN3q0L+sj-Wc+wg@mail.gmail.com>
+Subject: Re: [PATCH v3 10/33] docs: fb: convert docs to ReST and rename to *.rst
 To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
-        Borislav Petkov <bp@alien8.de>, Jens Axboe <axboe@kernel.dk>,
-        "David S. Miller" <davem@davemloft.net>, linux-ide@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Maik Broemme <mbroemme@libmpq.org>,
+        Thomas Winischhofer <thomas@winischhofer.net>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bernie Thompson <bernie@plugable.com>,
+        Michal Januszewski <spock@gentoo.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 4:27 AM Mauro Carvalho Chehab
+Hi Mauro,
+
+On Sun, Jun 9, 2019 at 4:29 AM Mauro Carvalho Chehab
 <mchehab+samsung@kernel.org> wrote:
 > The conversion is actually:
 >   - add blank lines and identation in order to identify paragraphs;
@@ -73,9 +83,23 @@ On Sun, Jun 9, 2019 at 4:27 AM Mauro Carvalho Chehab
 >
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
->  arch/m68k/q40/README                          |   2 +-
+Thanks!
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> --- a/Documentation/fb/framebuffer.txt
+> +++ b/Documentation/fb/framebuffer.rst
+> @@ -1,5 +1,6 @@
+> -                       The Frame Buffer Device
+> -                       -----------------------
+> +=======================
+> +The Frame Buffer Device
+> +=======================
+>
+>  Maintained by Geert Uytterhoeven <geert@linux-m68k.org>
+
+I'm happy to see this line dropped ;-)
+
+>  Last revised: May 10, 2001
+
 
 Gr{oetje,eeting}s,
 
