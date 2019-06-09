@@ -2,53 +2,50 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4DDC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C40C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D69206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC675205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099240;
-	bh=7Z2eSdjGURg30XUUYIo4u7JEH8kXWqo29Oy1NRh4YyU=;
+	s=default; t=1560099243;
+	bh=YLT6PZzhz5CbO5aRKc8oe50qorQ6mekAjquFK2H4gNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0syrztXirNE95tBBZl/8dxZdJzl2g79JaVoKowKJlWVsZ52v4uUzM95iTTQNeAJOK
-	 WgfNhh1EW9QP/Eox150mO13T/LqbqOhCUEnAO+4anEaU/wioscjg5ozqziMYRoUzEs
-	 X9t7DGGDgHnQ9hNw3B+J4ik9inLNvx//oaXwzLek=
+	b=oWIYdOSPI4QcFyzw/77T/Mf5oR+fbwEtluK/idlRDutdK/ZWRWff6gqO9qQisoK7I
+	 8ZlAF/OCXIdEC9RYLrZ6LxPFAbugKEeex8DQo+V/NeJQJiM2Lw4HmrKW73ISHBKk1z
+	 x2smaHN8mpbp3/xh/tRqyggvvVAWXffU+2oLudjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731931AbfFIQx7 (ORCPT
+        id S1732526AbfFIQyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732505AbfFIQx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:57 -0400
+        id S1732513AbfFIQx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DACB62081C;
-        Sun,  9 Jun 2019 16:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A065206C3;
+        Sun,  9 Jun 2019 16:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099236;
-        bh=7Z2eSdjGURg30XUUYIo4u7JEH8kXWqo29Oy1NRh4YyU=;
+        s=default; t=1560099239;
+        bh=YLT6PZzhz5CbO5aRKc8oe50qorQ6mekAjquFK2H4gNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y2rQg2NUttk6u4rmIDBGCNtmYLaLUNT/RNcB4YzvGxvLuwT19HPmMYTAIZ9Akrp4H
-         XKCQpp5+tKyvJP0PoTR4ZLac/ojElJL2D0UmhiUiD5RedQ2OrJrab7ulVNbNxOs05w
-         SSU5FeAR3W4DP3xKnHbfEY8hYKInqPhnqO3BYPDg=
+        b=YypB5Bmj0m6nglgMSOFdu8BWl0o2z2IZo2OyUJqiIXAdnuWyH3xa8hYvIazMTH940
+         fU8VcPojO+h/wBp4CDSZpc+OPgQsHWXHe9RXZ/b/TAUfGYlR87fL7i381D0yrVZ+WA
+         DsF1B5S1LtqNO4fZ6WmxCVuTVrj3dDKYtmYwkq4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 57/83] mm: prevent get_user_pages() from overflowing page refcount
-Date:   Sun,  9 Jun 2019 18:42:27 +0200
-Message-Id: <20190609164132.774263938@linuxfoundation.org>
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 4.9 25/83] usbip: usbip_host: fix stub_dev lock context imbalance regression
+Date:   Sun,  9 Jun 2019 18:41:55 +0200
+Message-Id: <20190609164129.699822253@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -61,172 +58,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-commit 8fde12ca79aff9b5ba951fce1a2641901b8d8e64 upstream.
+commit 3ea3091f1bd8586125848c62be295910e9802af0 upstream.
 
-If the page refcount wraps around past zero, it will be freed while
-there are still four billion references to it.  One of the possible
-avenues for an attacker to try to make this happen is by doing direct IO
-on a page multiple times.  This patch makes get_user_pages() refuse to
-take a new page reference if there are already more than two billion
-references to the page.
+Fix the following sparse context imbalance regression introduced in
+a patch that fixed sleeping function called from invalid context bug.
 
-Reported-by: Jann Horn <jannh@google.com>
-Acked-by: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[bwh: Backported to 4.9:
- - Add the "err" variable in follow_hugetlb_page()
- - Adjust context]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+kbuild test robot reported on:
+
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git  usb-linus
+
+Regressions in current branch:
+
+drivers/usb/usbip/stub_dev.c:399:9: sparse: sparse: context imbalance in 'stub_probe' - different lock contexts for basic block
+drivers/usb/usbip/stub_dev.c:418:13: sparse: sparse: context imbalance in 'stub_disconnect' - different lock contexts for basic block
+drivers/usb/usbip/stub_dev.c:464:1-10: second lock on line 476
+
+Error ids grouped by kconfigs:
+
+recent_errors
+├── i386-allmodconfig
+│   └── drivers-usb-usbip-stub_dev.c:second-lock-on-line
+├── x86_64-allmodconfig
+│   ├── drivers-usb-usbip-stub_dev.c:sparse:sparse:context-imbalance-in-stub_disconnect-different-lock-contexts-for-basic-block
+│   └── drivers-usb-usbip-stub_dev.c:sparse:sparse:context-imbalance-in-stub_probe-different-lock-contexts-for-basic-block
+└── x86_64-allyesconfig
+    └── drivers-usb-usbip-stub_dev.c:second-lock-on-line
+
+This is a real problem in an error leg where spin_lock() is called on an
+already held lock.
+
+Fix the imbalance in stub_probe() and stub_disconnect().
+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 0c9e8b3cad65 ("usbip: usbip_host: fix BUG: sleeping function called from invalid context")
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- mm/gup.c     |   45 ++++++++++++++++++++++++++++++++++-----------
- mm/hugetlb.c |   16 +++++++++++++++-
- 2 files changed, 49 insertions(+), 12 deletions(-)
 
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -153,7 +153,10 @@ retry:
- 	}
- 
- 	if (flags & FOLL_GET) {
--		get_page(page);
-+		if (unlikely(!try_get_page(page))) {
-+			page = ERR_PTR(-ENOMEM);
-+			goto out;
-+		}
- 
- 		/* drop the pgmap reference now that we hold the page */
- 		if (pgmap) {
-@@ -292,7 +295,10 @@ struct page *follow_page_mask(struct vm_
- 			if (pmd_trans_unstable(pmd))
- 				ret = -EBUSY;
- 		} else {
--			get_page(page);
-+			if (unlikely(!try_get_page(page))) {
-+				spin_unlock(ptl);
-+				return ERR_PTR(-ENOMEM);
-+			}
- 			spin_unlock(ptl);
- 			lock_page(page);
- 			ret = split_huge_page(page);
-@@ -348,7 +354,10 @@ static int get_gate_page(struct mm_struc
- 			goto unmap;
- 		*page = pte_page(*pte);
- 	}
--	get_page(*page);
-+	if (unlikely(!try_get_page(*page))) {
-+		ret = -ENOMEM;
-+		goto unmap;
-+	}
- out:
- 	ret = 0;
- unmap:
-@@ -1231,6 +1240,20 @@ struct page *get_dump_page(unsigned long
-  */
- #ifdef CONFIG_HAVE_GENERIC_RCU_GUP
- 
-+/*
-+ * Return the compund head page with ref appropriately incremented,
-+ * or NULL if that failed.
-+ */
-+static inline struct page *try_get_compound_head(struct page *page, int refs)
-+{
-+	struct page *head = compound_head(page);
-+	if (WARN_ON_ONCE(page_ref_count(head) < 0))
-+		return NULL;
-+	if (unlikely(!page_cache_add_speculative(head, refs)))
-+		return NULL;
-+	return head;
-+}
+---
+ drivers/usb/usbip/stub_dev.c |   36 +++++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
+
+--- a/drivers/usb/usbip/stub_dev.c
++++ b/drivers/usb/usbip/stub_dev.c
+@@ -340,14 +340,17 @@ static int stub_probe(struct usb_device
+ 		 * See driver_probe_device() in driver/base/dd.c
+ 		 */
+ 		rc = -ENODEV;
+-		goto sdev_free;
++		if (!busid_priv)
++			goto sdev_free;
 +
- #ifdef __HAVE_ARCH_PTE_SPECIAL
- static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- 			 int write, struct page **pages, int *nr)
-@@ -1263,9 +1286,9 @@ static int gup_pte_range(pmd_t pmd, unsi
- 
- 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
- 		page = pte_page(pte);
--		head = compound_head(page);
- 
--		if (!page_cache_get_speculative(head))
-+		head = try_get_compound_head(page, 1);
-+		if (!head)
- 			goto pte_unmap;
- 
- 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-@@ -1321,8 +1344,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
- 
--	head = compound_head(pmd_page(orig));
--	if (!page_cache_add_speculative(head, refs)) {
-+	head = try_get_compound_head(pmd_page(orig), refs);
-+	if (!head) {
- 		*nr -= refs;
- 		return 0;
++		goto call_put_busid_priv;
  	}
-@@ -1355,8 +1378,8 @@ static int gup_huge_pud(pud_t orig, pud_
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
  
--	head = compound_head(pud_page(orig));
--	if (!page_cache_add_speculative(head, refs)) {
-+	head = try_get_compound_head(pud_page(orig), refs);
-+	if (!head) {
- 		*nr -= refs;
- 		return 0;
+ 	if (udev->descriptor.bDeviceClass == USB_CLASS_HUB) {
+ 		dev_dbg(&udev->dev, "%s is a usb hub device... skip!\n",
+ 			 udev_busid);
+ 		rc = -ENODEV;
+-		goto sdev_free;
++		goto call_put_busid_priv;
  	}
-@@ -1390,8 +1413,8 @@ static int gup_huge_pgd(pgd_t orig, pgd_
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
  
--	head = compound_head(pgd_page(orig));
--	if (!page_cache_add_speculative(head, refs)) {
-+	head = try_get_compound_head(pgd_page(orig), refs);
-+	if (!head) {
- 		*nr -= refs;
- 		return 0;
+ 	if (!strcmp(udev->bus->bus_name, "vhci_hcd")) {
+@@ -356,7 +359,7 @@ static int stub_probe(struct usb_device
+ 			udev_busid);
+ 
+ 		rc = -ENODEV;
+-		goto sdev_free;
++		goto call_put_busid_priv;
  	}
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3984,6 +3984,7 @@ long follow_hugetlb_page(struct mm_struc
- 	unsigned long vaddr = *position;
- 	unsigned long remainder = *nr_pages;
- 	struct hstate *h = hstate_vma(vma);
-+	int err = -EFAULT;
  
- 	while (vaddr < vma->vm_end && remainder) {
- 		pte_t *pte;
-@@ -4055,6 +4056,19 @@ long follow_hugetlb_page(struct mm_struc
  
- 		pfn_offset = (vaddr & ~huge_page_mask(h)) >> PAGE_SHIFT;
- 		page = pte_page(huge_ptep_get(pte));
+@@ -375,6 +378,9 @@ static int stub_probe(struct usb_device
+ 	save_status = busid_priv->status;
+ 	busid_priv->status = STUB_BUSID_ALLOC;
+ 
++	/* release the busid_lock */
++	put_busid_priv(busid_priv);
 +
-+		/*
-+		 * Instead of doing 'try_get_page()' below in the same_page
-+		 * loop, just check the count once here.
-+		 */
-+		if (unlikely(page_count(page) <= 0)) {
-+			if (pages) {
-+				spin_unlock(ptl);
-+				remainder = 0;
-+				err = -ENOMEM;
-+				break;
-+			}
-+		}
- same_page:
- 		if (pages) {
- 			pages[i] = mem_map_offset(page, pfn_offset);
-@@ -4081,7 +4095,7 @@ same_page:
- 	*nr_pages = remainder;
- 	*position = vaddr;
+ 	/*
+ 	 * Claim this hub port.
+ 	 * It doesn't matter what value we pass as owner
+@@ -387,9 +393,6 @@ static int stub_probe(struct usb_device
+ 		goto err_port;
+ 	}
  
--	return i ? i : -EFAULT;
-+	return i ? i : err;
+-	/* release the busid_lock */
+-	put_busid_priv(busid_priv);
+-
+ 	rc = stub_add_files(&udev->dev);
+ 	if (rc) {
+ 		dev_err(&udev->dev, "stub_add_files for %s\n", udev_busid);
+@@ -409,11 +412,17 @@ err_port:
+ 	spin_lock(&busid_priv->busid_lock);
+ 	busid_priv->sdev = NULL;
+ 	busid_priv->status = save_status;
+-sdev_free:
+-	stub_device_free(sdev);
++	spin_unlock(&busid_priv->busid_lock);
++	/* lock is released - go to free */
++	goto sdev_free;
++
++call_put_busid_priv:
+ 	/* release the busid_lock */
+ 	put_busid_priv(busid_priv);
+ 
++sdev_free:
++	stub_device_free(sdev);
++
+ 	return rc;
  }
  
- #ifndef __HAVE_ARCH_FLUSH_HUGETLB_TLB_RANGE
+@@ -449,7 +458,9 @@ static void stub_disconnect(struct usb_d
+ 	/* get stub_device */
+ 	if (!sdev) {
+ 		dev_err(&udev->dev, "could not get device");
+-		goto call_put_busid_priv;
++		/* release busid_lock */
++		put_busid_priv(busid_priv);
++		return;
+ 	}
+ 
+ 	dev_set_drvdata(&udev->dev, NULL);
+@@ -479,7 +490,7 @@ static void stub_disconnect(struct usb_d
+ 	if (!busid_priv->shutdown_busid)
+ 		busid_priv->shutdown_busid = 1;
+ 	/* release busid_lock */
+-	put_busid_priv(busid_priv);
++	spin_unlock(&busid_priv->busid_lock);
+ 
+ 	/* shutdown the current connection */
+ 	shutdown_busid(busid_priv);
+@@ -494,10 +505,9 @@ static void stub_disconnect(struct usb_d
+ 
+ 	if (busid_priv->status == STUB_BUSID_ALLOC)
+ 		busid_priv->status = STUB_BUSID_ADDED;
+-
+-call_put_busid_priv:
+ 	/* release busid_lock */
+-	put_busid_priv(busid_priv);
++	spin_unlock(&busid_priv->busid_lock);
++	return;
+ }
+ 
+ #ifdef CONFIG_PM
 
 
