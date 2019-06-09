@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FFAC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7262FC468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0025205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6D020652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100595;
-	bh=mbF+KuK+ApjVYtSxZYdGvM0Yw3p8xtLnmmhXydfoIWM=;
+	s=default; t=1560100606;
+	bh=uKTfa6R6jqALUJK7DVdLFLmpqOvs9h8n51zlZNuQ5r4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P6P5Z8fGlNSlcEjop6iUReexzKA0dQ8hzVMTVYYLb+95Dlz/9SCJrarg6841P01Co
-	 pNxuf4DicdEWknNpNCdtqWUPImkv/h70vuU5GEIDuIkkaf8npx8/iQDZebSNGEjLLR
-	 03ya3lbbsSBQ4khoeUwy7vIegnd8Sold21KiJS8Q=
+	b=tGUzySgRJQjLGN4MiqpwLo9zZt9yxv79E6seCisH6VToQEw/IlVlxQN6/zgOYumSw
+	 acxMagDAyAuNf/ePWxdFoQopJgdlAPJlH/2pdY2EEuo7SxvL48v2lG0+CNT/cOLGdd
+	 xrZkl9Y1Zq9ELUJrw9sZZbZIUnn6Ex4cxp0SOXcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387446AbfFIRQd (ORCPT
+        id S2387402AbfFIRQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54336 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732361AbfFIQxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:12 -0400
+        id S1731609AbfFIQwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:52:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0698204EC;
-        Sun,  9 Jun 2019 16:53:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A19206BB;
+        Sun,  9 Jun 2019 16:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099191;
-        bh=mbF+KuK+ApjVYtSxZYdGvM0Yw3p8xtLnmmhXydfoIWM=;
+        s=default; t=1560099174;
+        bh=uKTfa6R6jqALUJK7DVdLFLmpqOvs9h8n51zlZNuQ5r4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KqnzJp6XK4qz9gn7YlRpq79ngN5jDEYEnXznj/D2evcC/hL8SNN+O2q+senddS9p9
-         E3Vz4kTO89pYssNZZjAeDuZDtoVzEbkSIrqrHUqaOoLjoTbIlUJS27W9+YVolJfkHD
-         Ty8MW2cvloe6dQ8GmZc/JUvLtxZ4YkV8Dfubxxoc=
+        b=02L7KotOYJ6qL/MhaUGQ/M87pUX1Zgkj5HJx+QNLJpvRcrHAHi00T4cWMUnsDSwUf
+         fGz/rKCTd8HNrcEylylg7Fy2iD8lMfu/FeV1DUetWmogAESUkrUWQHVkn154R//UTo
+         izz6AI4LRdf/90ydmnjPBaQCGLaO/ZUOjgjhzHJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 42/83] memcg: make it work on sparse non-0-node systems
-Date:   Sun,  9 Jun 2019 18:42:12 +0200
-Message-Id: <20190609164131.478973899@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.9 37/83] powerpc/perf: Fix MMCRA corruption by bhrb_filter
+Date:   Sun,  9 Jun 2019 18:42:07 +0200
+Message-Id: <20190609164130.962220286@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -65,97 +61,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-commit 3e8589963773a5c23e2f1fe4bcad0e9a90b7f471 upstream.
+commit 3202e35ec1c8fc19cea24253ff83edf702a60a02 upstream.
 
-We have a single node system with node 0 disabled:
-  Scanning NUMA topology in Northbridge 24
-  Number of physical nodes 2
-  Skipping disabled node 0
-  Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
-  NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
+Consider a scenario where user creates two events:
 
-This causes crashes in memcg when system boots:
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-  #PF error: [normal kernel read fault]
-...
-  RIP: 0010:list_lru_add+0x94/0x170
-...
-  Call Trace:
-   d_lru_add+0x44/0x50
-   dput.part.34+0xfc/0x110
-   __fput+0x108/0x230
-   task_work_run+0x9f/0xc0
-   exit_to_usermode_loop+0xf5/0x100
+  1st event:
+    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+    attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
+    fd = perf_event_open(attr, 0, 1, -1, 0);
 
-It is reproducible as far as 4.12.  I did not try older kernels.  You have
-to have a new enough systemd, e.g.  241 (the reason is unknown -- was not
-investigated).  Cannot be reproduced with systemd 234.
+  This sets cpuhw->bhrb_filter to 0 and returns valid fd.
 
-The system crashes because the size of lru array is never updated in
-memcg_update_all_list_lrus and the reads are past the zero-sized array,
-causing dereferences of random memory.
+  2nd event:
+    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+    attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
+    fd = perf_event_open(attr, 0, 1, -1, 0);
 
-The root cause are list_lru_memcg_aware checks in the list_lru code.  The
-test in list_lru_memcg_aware is broken: it assumes node 0 is always
-present, but it is not true on some systems as can be seen above.
+  It overrides cpuhw->bhrb_filter to -1 and returns with error.
 
-So fix this by avoiding checks on node 0.  Remember the memcg-awareness by
-a bool flag in struct list_lru.
+Now if power_pmu_enable() gets called by any path other than
+power_pmu_add(), ppmu->config_bhrb(-1) will set MMCRA to -1.
 
-Link: http://lkml.kernel.org/r/20190522091940.3615-1-jslaby@suse.cz
-Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3925f46bb590 ("powerpc/perf: Enable branch stack sampling framework")
+Cc: stable@vger.kernel.org # v3.10+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/list_lru.h |    1 +
- mm/list_lru.c            |    8 +++-----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ arch/powerpc/perf/core-book3s.c |    6 ++++--
+ arch/powerpc/perf/power8-pmu.c  |    3 +++
+ arch/powerpc/perf/power9-pmu.c  |    3 +++
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
---- a/include/linux/list_lru.h
-+++ b/include/linux/list_lru.h
-@@ -51,6 +51,7 @@ struct list_lru {
- 	struct list_lru_node	*node;
- #if defined(CONFIG_MEMCG) && !defined(CONFIG_SLOB)
- 	struct list_head	list;
-+	bool			memcg_aware;
- #endif
- };
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -1800,6 +1800,7 @@ static int power_pmu_event_init(struct p
+ 	int n;
+ 	int err;
+ 	struct cpu_hw_events *cpuhw;
++	u64 bhrb_filter;
  
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -42,11 +42,7 @@ static void list_lru_unregister(struct l
- #if defined(CONFIG_MEMCG) && !defined(CONFIG_SLOB)
- static inline bool list_lru_memcg_aware(struct list_lru *lru)
+ 	if (!ppmu)
+ 		return -ENOENT;
+@@ -1896,13 +1897,14 @@ static int power_pmu_event_init(struct p
+ 	err = power_check_constraints(cpuhw, events, cflags, n + 1);
+ 
+ 	if (has_branch_stack(event)) {
+-		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
++		bhrb_filter = ppmu->bhrb_filter_map(
+ 					event->attr.branch_sample_type);
+ 
+-		if (cpuhw->bhrb_filter == -1) {
++		if (bhrb_filter == -1) {
+ 			put_cpu_var(cpu_hw_events);
+ 			return -EOPNOTSUPP;
+ 		}
++		cpuhw->bhrb_filter = bhrb_filter;
+ 	}
+ 
+ 	put_cpu_var(cpu_hw_events);
+--- a/arch/powerpc/perf/power8-pmu.c
++++ b/arch/powerpc/perf/power8-pmu.c
+@@ -29,6 +29,7 @@ enum {
+ #define	POWER8_MMCRA_IFM1		0x0000000040000000UL
+ #define	POWER8_MMCRA_IFM2		0x0000000080000000UL
+ #define	POWER8_MMCRA_IFM3		0x00000000C0000000UL
++#define	POWER8_MMCRA_BHRB_MASK		0x00000000C0000000UL
+ 
+ /* Table of alternatives, sorted by column 0 */
+ static const unsigned int event_alternatives[][MAX_ALT] = {
+@@ -262,6 +263,8 @@ static u64 power8_bhrb_filter_map(u64 br
+ 
+ static void power8_config_bhrb(u64 pmu_bhrb_filter)
  {
--	/*
--	 * This needs node 0 to be always present, even
--	 * in the systems supporting sparse numa ids.
--	 */
--	return !!lru->node[0].memcg_lrus;
-+	return lru->memcg_aware;
- }
- 
- static inline struct list_lru_one *
-@@ -389,6 +385,8 @@ static int memcg_init_list_lru(struct li
- {
- 	int i;
- 
-+	lru->memcg_aware = memcg_aware;
++	pmu_bhrb_filter &= POWER8_MMCRA_BHRB_MASK;
 +
- 	if (!memcg_aware)
- 		return 0;
+ 	/* Enable BHRB filter in PMU */
+ 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
+ }
+--- a/arch/powerpc/perf/power9-pmu.c
++++ b/arch/powerpc/perf/power9-pmu.c
+@@ -30,6 +30,7 @@ enum {
+ #define POWER9_MMCRA_IFM1		0x0000000040000000UL
+ #define POWER9_MMCRA_IFM2		0x0000000080000000UL
+ #define POWER9_MMCRA_IFM3		0x00000000C0000000UL
++#define POWER9_MMCRA_BHRB_MASK		0x00000000C0000000UL
  
+ GENERIC_EVENT_ATTR(cpu-cycles,			PM_CYC);
+ GENERIC_EVENT_ATTR(stalled-cycles-frontend,	PM_ICT_NOSLOT_CYC);
+@@ -177,6 +178,8 @@ static u64 power9_bhrb_filter_map(u64 br
+ 
+ static void power9_config_bhrb(u64 pmu_bhrb_filter)
+ {
++	pmu_bhrb_filter &= POWER9_MMCRA_BHRB_MASK;
++
+ 	/* Enable BHRB filter in PMU */
+ 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
+ }
 
 
