@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C31C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DECC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63CD205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8F82067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100078;
-	bh=CfTl+fpW6LjVBvYMIX4vzX8rNYYe/sXxr5dMJWGW3Ko=;
+	s=default; t=1560100084;
+	bh=O0bCKYpH+BVzEgsvH+gaU+Kaa6oGj5jTz6m4w1pO4O0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sR3BZgPt33TIvSPC2yg6h54VjWC1SR4BRJxAUoJ5LXUcC3u5ndNi63uqN9GFtTbI4
-	 LYqi6ajEebA4Z1P0FBs+fiqcges83b+lr1gV1gYpmH0P3aVGIy4j99JH0Dt2EmLDVq
-	 iYECsXzThOR249QmClneBDi1/9PdG2KrSYV9IQ70=
+	b=bKxgNMAsBDAjzbyb+DT0N/mVfs0i4WkngntbDZnf+YIRRw8M4qmHs9JFO5jhaqMk6
+	 8C8fFDfUtHGso8FZ3exSuqXwYW4hG2aeo04kz0llYx4bIgbI/8Na6OpRaaLDjOdWrY
+	 pGgFjQjpYvFAAzHyqMsyc1dFaLHFVl61XYVj9q5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388833AbfFIRHs (ORCPT
+        id S2388898AbfFIRFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:07:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45446 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388931AbfFIRF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:05:58 -0400
+        id S2388874AbfFIRFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB783206C3;
-        Sun,  9 Jun 2019 17:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B4D1204EC;
+        Sun,  9 Jun 2019 17:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099958;
-        bh=CfTl+fpW6LjVBvYMIX4vzX8rNYYe/sXxr5dMJWGW3Ko=;
+        s=default; t=1560099941;
+        bh=O0bCKYpH+BVzEgsvH+gaU+Kaa6oGj5jTz6m4w1pO4O0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bX18AZYACaBhJ1c/IwSneT2i6mTAeaJmAoHIHudGMzJ7ru9abD1kY8QjTSFtLc8bs
-         hVBJLgoYJxco3fXmxAI0ucK1gwBBQv09kn0jP9RvJ7jqMqz/4YZ7feC7T1ZZIyhGX3
-         sq+RdXxIcUNbTTZ+AVROQNgPKyN5d+ITvImpisSo=
+        b=rbMQ60tU0kNhfj5DEjteChv0FxlkXT1Ug78Y+CzMYoFsql9MRHNkzZMKIuHMBsAB5
+         Zs0To5G5neuR+9cqNbX121lQzggbo4P+VSc/wgQ+EySZuV5hVbRe22Wotttt0l2nim
+         v/yppkkVuCldtgXi+7RTOTfpl1+3on9IPuRgghPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alec Ari <neotheuser@gmail.com>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 225/241] Revert "x86/build: Move _etext to actual end of .text"
-Date:   Sun,  9 Jun 2019 18:42:47 +0200
-Message-Id: <20190609164155.196404269@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Arend van Spriel <arend@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.4 220/241] brcmfmac: revise handling events in receive path
+Date:   Sun,  9 Jun 2019 18:42:42 +0200
+Message-Id: <20190609164155.032219304@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -64,42 +64,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Arend van Spriel <arend@broadcom.com>
 
-This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
+commit 9c349892ccc90c6de2baaa69cc78449f58082273 upstream.
 
-It seems to cause lots of problems when using the gold linker, and no
-one really needs this at the moment, so just revert it from the stable
-trees.
+Move event handling out of brcmf_netif_rx() avoiding the need
+to pass a flag. This flag is only ever true for USB hosts as
+other interface use separate brcmf_rx_event() function.
 
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Reported-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: Alec Ari <neotheuser@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
+Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
+Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Arend van Spriel <arend@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 4.4 as dependency of commit a4176ec356c7
+ "brcmfmac: add subtype check for event handling in data path"
+ - Adjust filenames, context]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/vmlinux.lds.S |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/brcm80211/brcmfmac/bus.h    |    2 -
+ drivers/net/wireless/brcm80211/brcmfmac/core.c   |   32 +++++++++++------------
+ drivers/net/wireless/brcm80211/brcmfmac/core.h   |    3 --
+ drivers/net/wireless/brcm80211/brcmfmac/msgbuf.c |    2 -
+ 4 files changed, 19 insertions(+), 20 deletions(-)
 
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -110,10 +110,10 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--	} :text = 0x9090
+--- a/drivers/net/wireless/brcm80211/brcmfmac/bus.h
++++ b/drivers/net/wireless/brcm80211/brcmfmac/bus.h
+@@ -214,7 +214,7 @@ bool brcmf_c_prec_enq(struct device *dev
+ 		      int prec);
  
--	/* End of text section */
--	_etext = .;
-+		/* End of text section */
-+		_etext = .;
-+	} :text = 0x9090
+ /* Receive frame for delivery to OS.  Callee disposes of rxp. */
+-void brcmf_rx_frame(struct device *dev, struct sk_buff *rxp, bool handle_evnt);
++void brcmf_rx_frame(struct device *dev, struct sk_buff *rxp, bool handle_event);
+ /* Receive async event packet from firmware. Callee disposes of rxp. */
+ void brcmf_rx_event(struct device *dev, struct sk_buff *rxp);
  
- 	NOTES :text :note
+--- a/drivers/net/wireless/brcm80211/brcmfmac/core.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/core.c
+@@ -301,18 +301,11 @@ void brcmf_txflowblock(struct device *de
+ 	brcmf_fws_bus_blocked(drvr, state);
+ }
+ 
+-void brcmf_netif_rx(struct brcmf_if *ifp, struct sk_buff *skb,
+-		    bool handle_event)
++void brcmf_netif_rx(struct brcmf_if *ifp, struct sk_buff *skb)
+ {
+-	skb->protocol = eth_type_trans(skb, ifp->ndev);
+-
+ 	if (skb->pkt_type == PACKET_MULTICAST)
+ 		ifp->stats.multicast++;
+ 
+-	/* Process special event packets */
+-	if (handle_event)
+-		brcmf_fweh_process_skb(ifp->drvr, skb);
+-
+ 	if (!(ifp->ndev->flags & IFF_UP)) {
+ 		brcmu_pkt_buf_free_skb(skb);
+ 		return;
+@@ -372,7 +365,7 @@ static void brcmf_rxreorder_process_info
+ 	/* validate flags and flow id */
+ 	if (flags == 0xFF) {
+ 		brcmf_err("invalid flags...so ignore this packet\n");
+-		brcmf_netif_rx(ifp, pkt, false);
++		brcmf_netif_rx(ifp, pkt);
+ 		return;
+ 	}
+ 
+@@ -384,7 +377,7 @@ static void brcmf_rxreorder_process_info
+ 		if (rfi == NULL) {
+ 			brcmf_dbg(INFO, "received flags to cleanup, but no flow (%d) yet\n",
+ 				  flow_id);
+-			brcmf_netif_rx(ifp, pkt, false);
++			brcmf_netif_rx(ifp, pkt);
+ 			return;
+ 		}
+ 
+@@ -409,7 +402,7 @@ static void brcmf_rxreorder_process_info
+ 		rfi = kzalloc(buf_size, GFP_ATOMIC);
+ 		if (rfi == NULL) {
+ 			brcmf_err("failed to alloc buffer\n");
+-			brcmf_netif_rx(ifp, pkt, false);
++			brcmf_netif_rx(ifp, pkt);
+ 			return;
+ 		}
+ 
+@@ -523,11 +516,11 @@ static void brcmf_rxreorder_process_info
+ netif_rx:
+ 	skb_queue_walk_safe(&reorder_list, pkt, pnext) {
+ 		__skb_unlink(pkt, &reorder_list);
+-		brcmf_netif_rx(ifp, pkt, false);
++		brcmf_netif_rx(ifp, pkt);
+ 	}
+ }
+ 
+-void brcmf_rx_frame(struct device *dev, struct sk_buff *skb, bool handle_evnt)
++void brcmf_rx_frame(struct device *dev, struct sk_buff *skb, bool handle_event)
+ {
+ 	struct brcmf_if *ifp;
+ 	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
+@@ -547,11 +540,18 @@ void brcmf_rx_frame(struct device *dev,
+ 		return;
+ 	}
+ 
++	skb->protocol = eth_type_trans(skb, ifp->ndev);
++
+ 	rd = (struct brcmf_skb_reorder_data *)skb->cb;
+-	if (rd->reorder)
++	if (rd->reorder) {
+ 		brcmf_rxreorder_process_info(ifp, rd->reorder, skb);
+-	else
+-		brcmf_netif_rx(ifp, skb, handle_evnt);
++	} else {
++		/* Process special event packets */
++		if (handle_event)
++			brcmf_fweh_process_skb(ifp->drvr, skb);
++
++		brcmf_netif_rx(ifp, skb);
++	}
+ }
+ 
+ void brcmf_rx_event(struct device *dev, struct sk_buff *skb)
+--- a/drivers/net/wireless/brcm80211/brcmfmac/core.h
++++ b/drivers/net/wireless/brcm80211/brcmfmac/core.h
+@@ -215,8 +215,7 @@ int brcmf_get_next_free_bsscfgidx(struct
+ void brcmf_txflowblock_if(struct brcmf_if *ifp,
+ 			  enum brcmf_netif_stop_reason reason, bool state);
+ void brcmf_txfinalize(struct brcmf_if *ifp, struct sk_buff *txp, bool success);
+-void brcmf_netif_rx(struct brcmf_if *ifp, struct sk_buff *skb,
+-		    bool handle_event);
++void brcmf_netif_rx(struct brcmf_if *ifp, struct sk_buff *skb);
+ void brcmf_net_setcarrier(struct brcmf_if *ifp, bool on);
+ 
+ #endif /* BRCMFMAC_CORE_H */
+--- a/drivers/net/wireless/brcm80211/brcmfmac/msgbuf.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/msgbuf.c
+@@ -1155,7 +1155,7 @@ brcmf_msgbuf_process_rx_complete(struct
+ 		brcmu_pkt_buf_free_skb(skb);
+ 		return;
+ 	}
+-	brcmf_netif_rx(ifp, skb, false);
++	brcmf_netif_rx(ifp, skb);
+ }
+ 
  
 
 
