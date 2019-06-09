@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86161C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890A1C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D025206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6312B206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099426;
-	bh=E8Fez+UjFAXlTw7Yz7IfL44Gcey0YmhWjuPBqO4+gB0=;
+	s=default; t=1560099430;
+	bh=Y8oJCHiy9npagKhzo9B/f4LmystzcxN77rUJ468IJ08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lxLS+1WRa0/yN6N/qRN0MjrzCSe61quC/JGaAqFJyCHrmCFa37yoMAt3lT7diA1mW
-	 2eBtBjuRvo8eKhT5nqeyPOkwU2qsZmVsh8TKq3AT/+BeGu4YMw42X7+TrBu26L2f2W
-	 zAZoDZte8mUT3wAE7GCWdDgNHVtQVpcwkaaORgYk=
+	b=F2KKG2K0HkArNW2DKZXO6Fuz3xr7E2j3ae3q7lfqMsI4Pw6/kuo+3NPhIlQgl68wO
+	 RoQcu6PiTW2QMkfVBvG7LMC9T6YaiHG/dgvDG+dwNI89IVJ4ucSB7nyBG5FItkcu7I
+	 duslC7xvRdi4P2VJxS36SYx68JkJK9xgizyVZ8vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733101AbfFIQ5F (ORCPT
+        id S1733112AbfFIQ5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733081AbfFIQ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:57:03 -0400
+        id S1733099AbfFIQ5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:57:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9A4A204EC;
-        Sun,  9 Jun 2019 16:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91204205ED;
+        Sun,  9 Jun 2019 16:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099422;
-        bh=E8Fez+UjFAXlTw7Yz7IfL44Gcey0YmhWjuPBqO4+gB0=;
+        s=default; t=1560099425;
+        bh=Y8oJCHiy9npagKhzo9B/f4LmystzcxN77rUJ468IJ08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXQNZBjTFiNNrroqD8g4tfe4RS8jLirNx6PQ0JHSv/Iw/z+YC/jpGQnOthvHqsWhi
-         9ywlYq2iDV5zJJCNx8x8x0t7GDBuXZ5hhbCe3G3qeQj+vSpBJzp2Eqk2ST1UnA+2BI
-         3urSRYSY/xOSPxfurtU5OsF1VBNrhB8I1FM3QjFw=
+        b=Na+mAeF8ZzYIN3fSzhkXE1tW8f70sbn58g/jb7RXE6UDYfT7tT8qTBRsx8gibSJtY
+         5eo5H3o/llKOSelAbEmYQn8NTg2XeI7P+geAhyc5wujH/1kPy9hW2bqu34UbazGcr3
+         pVyqhhBER3ZMe+0mxQ1qon8kVRFM06xLMdaCletY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 034/241] ppp: deflate: Fix possible crash in deflate_init
-Date:   Sun,  9 Jun 2019 18:39:36 +0200
-Message-Id: <20190609164148.762066137@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 008/241] ALSA: hda/hdmi - Consider eld_valid when reporting jack event
+Date:   Sun,  9 Jun 2019 18:39:10 +0200
+Message-Id: <20190609164148.028253491@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,86 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 3ebe1bca58c85325c97a22d4fc3f5b5420752e6f ]
+commit 7f641e26a6df9269cb25dd7a4b0a91d6586ed441 upstream.
 
-BUG: unable to handle kernel paging request at ffffffffa018f000
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 2307eb067 PTE 0
-Oops: 0000 [#1] PREEMPT SMP
-CPU: 0 PID: 4138 Comm: modprobe Not tainted 5.1.0-rc7+ #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:ppp_register_compressor+0x3e/0xd0 [ppp_generic]
-Code: 98 4a 3f e2 48 8b 15 c1 67 00 00 41 8b 0c 24 48 81 fa 40 f0 19 a0
-75 0e eb 35 48 8b 12 48 81 fa 40 f0 19 a0 74
-RSP: 0018:ffffc90000d93c68 EFLAGS: 00010287
-RAX: ffffffffa018f000 RBX: ffffffffa01a3000 RCX: 000000000000001a
-RDX: ffff888230c750a0 RSI: 0000000000000000 RDI: ffffffffa019f000
-RBP: ffffc90000d93c80 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa0194080
-R13: ffff88822ee1a700 R14: 0000000000000000 R15: ffffc90000d93e78
-FS:  00007f2339557540(0000) GS:ffff888237a00000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa018f000 CR3: 000000022bde4000 CR4: 00000000000006f0
-Call Trace:
- ? 0xffffffffa01a3000
- deflate_init+0x11/0x1000 [ppp_deflate]
- ? 0xffffffffa01a3000
- do_one_initcall+0x6c/0x3cc
- ? kmem_cache_alloc_trace+0x248/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+On the machines with AMD GPU or Nvidia GPU, we often meet this issue:
+after s3, there are 4 HDMI/DP audio devices in the gnome-sound-setting
+even there is no any monitors plugged.
 
-If ppp_deflate fails to register in deflate_init,
-module initialization failed out, however
-ppp_deflate_draft may has been regiestred and not
-unregistered before return.
-Then the seconed modprobe will trigger crash like this.
+When this problem happens, we check the /proc/asound/cardX/eld#N.M, we
+will find the monitor_present=1, eld_valid=0.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The root cause is BIOS or GPU driver makes the PRESENCE valid even no
+monitor plugged, and of course the driver will not get the valid
+eld_data subsequently.
+
+In this situation, we should not report the jack_plugged event, to do
+so, let us change the function hdmi_present_sense_via_verbs(). In this
+function, it reads the pin_sense via snd_hda_pin_sense(), after
+calling this function, the jack_dirty is 0, and before exiting
+via_verbs(), we change the shadow pin_sense according to both
+monitor_present and eld_valid, then in the snd_hda_jack_report_sync(),
+since the jack_dirty is still 0, it will report jack event according
+to this modified shadow pin_sense.
+
+After this change, the driver will not report Jack_is_plugged event
+through hdmi_present_sense_via_verbs() if monitor_present is 1 and
+eld_valid is 0.
+
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ppp/ppp_deflate.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ppp/ppp_deflate.c
-+++ b/drivers/net/ppp/ppp_deflate.c
-@@ -610,12 +610,20 @@ static struct compressor ppp_deflate_dra
+---
+ sound/pci/hda/patch_hdmi.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1636,9 +1636,11 @@ static bool hdmi_present_sense(struct hd
+ 	ret = !repoll || !pin_eld->monitor_present || pin_eld->eld_valid;
  
- static int __init deflate_init(void)
- {
--        int answer = ppp_register_compressor(&ppp_deflate);
--        if (answer == 0)
--                printk(KERN_INFO
--		       "PPP Deflate Compression module registered\n");
--	ppp_register_compressor(&ppp_deflate_draft);
--        return answer;
-+	int rc;
-+
-+	rc = ppp_register_compressor(&ppp_deflate);
-+	if (rc)
-+		return rc;
-+
-+	rc = ppp_register_compressor(&ppp_deflate_draft);
-+	if (rc) {
-+		ppp_unregister_compressor(&ppp_deflate);
-+		return rc;
+ 	jack = snd_hda_jack_tbl_get(codec, pin_nid);
+-	if (jack)
++	if (jack) {
+ 		jack->block_report = !ret;
+-
++		jack->pin_sense = (eld->monitor_present && eld->eld_valid) ?
++			AC_PINSENSE_PRESENCE : 0;
 +	}
-+
-+	pr_info("PPP Deflate Compression module registered\n");
-+	return 0;
- }
- 
- static void __exit deflate_cleanup(void)
+ 	mutex_unlock(&per_pin->lock);
+ 	snd_hda_power_down_pm(codec);
+ 	return ret;
 
 
