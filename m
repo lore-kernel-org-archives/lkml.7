@@ -2,60 +2,61 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0743FC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E173C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD373206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6AD206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="omjgj0A/"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eEMGV64K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfFISGj (ORCPT
+        id S1729898AbfFISGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 14:06:39 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:33374 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728678AbfFISGj (ORCPT
+        Sun, 9 Jun 2019 14:06:44 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:33379 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729540AbfFISGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 14:06:39 -0400
-Received: by mail-wr1-f49.google.com with SMTP id n9so6928972wru.0;
-        Sun, 09 Jun 2019 11:06:37 -0700 (PDT)
+        Sun, 9 Jun 2019 14:06:43 -0400
+Received: by mail-wr1-f51.google.com with SMTP id n9so6929047wru.0;
+        Sun, 09 Jun 2019 11:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ano8Vhtn94lHxYeXYf8C2liDhnRtj0RyswD7iYRMvtE=;
-        b=omjgj0A/dXurFQujeU9x3OaA4una8zKFS92v5PE9/JYTnJWa6oc/E9pXSgNTjW+cfQ
-         +AQqXFl17iW48FBo6FJXBY9sBgMQM1QROsg5PJUPTKiGdw6tbyN4d/yxNqw1b+hatMMh
-         QSBYSGYulFDDJk/CW3DBKMjWyx2QewK8pVAx9imma1xZe8DgMyHSBdBl2pKFuOpONEf9
-         6pVrGECfuLHXS0/pU7Oign+LkPvvcCjoxMMLk2MNmNftTn6GLhOF+QwuwGdXf/Vpnx3k
-         Gc3tFKqDvuPgFlhxke2trXxsfU0pljBqm6UpyMqFw7wGOaxjiP20Q6NkhcnCLmD8v9Iq
-         Wi8Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JK2PulRNGQmFo+RP5Op3ozfnTDQeRnONpdvKX0IfeL0=;
+        b=eEMGV64K6Dkp3fWw3ioIkBFOiKweVwTU9WGCM5duGAqykGKN3LM2KtArW0Pcqsihni
+         RbvbNv4Xah8lbvMgyLiLVabwbAp+b6WSEyBGlI6gzOmepc4mLHMKyjlrUk3YEfiFPDAr
+         eW5X3IBGH1BFS6befrawNPAoFYfaUIKiATlEUiB2B3e15NmEMSRe+GOr+1yXhDtw1+of
+         Bqc4aoX1zwxiG0jash5n+hSk7AkWEJXXL896PlcDaftDYIVA18qmWAMG4xwyYkboXO/N
+         G5ZW3oobBaxoIWKHbIpaJJtVXl+AG4EsSbbM303lMrpyueFWrPx93mHsDDv7c2axUtNo
+         E+eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ano8Vhtn94lHxYeXYf8C2liDhnRtj0RyswD7iYRMvtE=;
-        b=LPWfDo5KMFGz5nB0LU5YwLHogn0ZIE2Yj1VvrefeUSuQvdURRmNcqQsikp7rIgph4/
-         hdPnuIdSOq4dXECkXjQbijg+zUDiHnSYNcdr76t444wVfBzWjZMWEVz9yC/iW3bOUcY2
-         caMCsB7Wfv5l3Gb8tyBLt1slgeSx09odkOJHzd208vAO4kQOgdSXPnTScdXOCGPmJbfE
-         AGFQjdhFFWCwos3y6oEYwLlQ442EzEn6oT0VELkRBx/g2EVsVF5nOlpKRiptn0AGV1Hh
-         2MRoKmW4+z+a/hvfzPepSeyPHcoVzQa0rH+6Wl7VGhbD8sF9O3AzI2+1Bphu9uU4ArMX
-         BC9g==
-X-Gm-Message-State: APjAAAVcyldBzW0bUct6CQ3MWhMWjynYr31WUHtOboO6atYrI6e3hfoD
-        AYEll3cI484cQdWt9RhdZCmTrTQ2
-X-Google-Smtp-Source: APXvYqzMsHnTza3f8EEGCKkomYS21dQSyTH6qbpkHUxB3C0jHRwfrV9JvjmS1SqIWP57n6N7utEh7w==
-X-Received: by 2002:adf:ee4a:: with SMTP id w10mr30497619wro.311.1560103596369;
-        Sun, 09 Jun 2019 11:06:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JK2PulRNGQmFo+RP5Op3ozfnTDQeRnONpdvKX0IfeL0=;
+        b=XIeOLs3IcOOEcfZCL5lQGXqRttgUIdS9SmMZywr+vFdiZ0rNBosB8CjyohQ86BIEdN
+         fzFrN2GxgjuO1XjONAFVpQycOdiPtMfF6Nj2w0aUusqqIHltzfyzO2XTnv2DiUj1f987
+         I5ix3caOrWAekRy15xB5nifJoPLXa7oMjBLk0siGt6blReLrUUh5APJzBUSesMuLics+
+         bD0qntI2kzPdMr37uUfk0Z/hz8ji/Uz0HDYnhrXM9S5ni9pedxu0Hy+XyW2J9+aiKMdw
+         Czqt78JbRtL/GMmZDemIZm6jLJsvTYfSXIfXZLivHiJbiZv7NIzTiB68pcn/9g0xp3r2
+         vr+Q==
+X-Gm-Message-State: APjAAAWy/qLtDxcmKH7EAdGzIOmnvQFkDKqqJtA4BCs+gGvKQx0k6cj+
+        q4Oj31iLWXVEc3UwE4D4zo4UUQj1
+X-Google-Smtp-Source: APXvYqwR6AUeRy3jJYBszo8W1YC0z7PSrhbXvMQ6iABRsfpGm6KCOpQTGRtKGcOmO7GX0cLUzDix3A==
+X-Received: by 2002:a5d:5510:: with SMTP id b16mr7107494wrv.267.1560103600015;
+        Sun, 09 Jun 2019 11:06:40 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400B42D8EB9D711C35E.dip0.t-ipconnect.de. [2003:f1:33dd:a400:b42d:8eb9:d711:c35e])
-        by smtp.googlemail.com with ESMTPSA id h14sm2007731wrs.66.2019.06.09.11.06.34
+        by smtp.googlemail.com with ESMTPSA id h14sm2007731wrs.66.2019.06.09.11.06.38
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 09 Jun 2019 11:06:35 -0700 (PDT)
+        Sun, 09 Jun 2019 11:06:39 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linus.walleij@linaro.org,
@@ -65,10 +66,12 @@ Cc:     devicetree@vger.kernel.org, davem@davemloft.net,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         khilman@baylibre.com, narmstrong@baylibre.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
-Date:   Sun,  9 Jun 2019 20:06:16 +0200
-Message-Id: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+Subject: [RFC next v1 3/5] net: stmmac: use GPIO descriptors in stmmac_mdio_reset
+Date:   Sun,  9 Jun 2019 20:06:19 +0200
+Message-Id: <20190609180621.7607-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,74 +79,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent Amlogic SoCs (G12A which includes S905X2 and S905D2 as well as
-G12B which includes S922X) use GPIOZ_14 or GPIOZ_15 for the PHY reset
-line. These GPIOs are special because they are marked as "3.3V input
-tolerant open drain (OD) pins" which means they can only drive the pin
-output LOW (to reset the PHY) or to switch to input mode (to take the
-PHY out of reset).
-The GPIO subsystem already supports this with the GPIO_OPEN_DRAIN and
-GPIO_OPEN_SOURCE flags in the devicetree bindings.
+Switch stmmac_mdio_reset to use GPIO descriptors. GPIO core handles the
+"snps,reset-gpio" for GPIO descriptors so we don't need to take care of
+it inside the driver anymore.
 
-The goal of this series to add support for these special GPIOs in
-stmmac.
+The advantage of this is that we now preserve the GPIO flags which are
+passed via devicetree. This is required on some newer Amlogic boards
+which use an Open Drain pin for the reset GPIO. This pin can only output
+a LOW signal or switch to input mode but it cannot output a HIGH signal.
+There are already devicetree bindings for these special cases and GPIO
+core already takes care of them but only if we use GPIO descriptors
+instead of GPIO numbers.
 
-Patch #2 prepares gpiolib-of for the switch from (legacy) GPIO numbers
-to GPIO descriptors in stmmac. This requires the gpiolib-of to take
-care of the "snps,reset-active-low" property.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_mdio.c | 27 +++++++++----------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-Patch #3 switches stmmac from (legacy) GPIO numbers to GPIO descriptors
-because this enables tracking of the GPIO flags which are passed via
-devicetree. In other words: GPIO_OPEN_DRAIN and GPIO_OPEN_SOURCE are
-now honored correctly, which is exactly what is needed for these
-Amlogic platforms.
-
-Patch #1 and #4 are minor cleanups which follow the boyscout rule:
-"Always leave the campground cleaner than you found it."
-
-Patch #5 is included here to show how this new functionality is used.
-
-My test-cases were:
-- X96 Max: snps,reset-gpio = <&gpio GPIOZ_15 0> with and without
-           snps,reset-active-low before these patches. The PHY was
-           not detected.
-- X96 Max: snps,reset-gpio = <&gpio GPIOZ_15 GPIO_OPEN_SOURCE>. The
-           PHY is now detected correctly
-- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 0> with
-                 snps,reset-active-low. Before and after these
-                 patches the PHY is detected correctly.
-- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 0> without
-                 snps,reset-active-low. Before and after these
-                 patches the PHY is not detected (this is expected
-                 because we need to set the output LOW to take the
-                 PHY out of reset).
-- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 GPIO_ACTIVE_LOW>
-                 but without snps,reset-active-low. Before these
-                 patches the PHY was not detected. With these patches
-                 the PHY is now detected correctly.
-
-I am sending this as RFC because I'm not very familiar with the GPIO
-subsystem. What I came up with seems fine to me, but I'm not sure so
-I don't want this to be applied before Linus W. is happy with it. I
-am also looking for suggestions how to handle these cross-tree changes
-(patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
-go through the net-next tree. I will re-send patch #5 separately as
-this should go through Kevin's linux-amlogic tree).
-
-
-Martin Blumenstingl (5):
-  net: stmmac: drop redundant check in stmmac_mdio_reset
-  gpio: of: parse stmmac PHY reset line specific active-low property
-  net: stmmac: use GPIO descriptors in stmmac_mdio_reset
-  net: stmmac: use device_property_read_u32_array to read the reset
-    delays
-  arm64: dts: meson: g12a: x96-max: fix the Ethernet PHY reset line
-
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  3 +-
- drivers/gpio/gpiolib-of.c                     |  6 +++
- .../net/ethernet/stmicro/stmmac/stmmac_mdio.c | 43 ++++++++-----------
- 3 files changed, 26 insertions(+), 26 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index cb9aad090cc9..21bbe3ba3e8e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -20,11 +20,11 @@
+   Maintainer: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+ *******************************************************************************/
+ 
++#include <linux/gpio/consumer.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/mii.h>
+ #include <linux/of.h>
+-#include <linux/of_gpio.h>
+ #include <linux/of_mdio.h>
+ #include <linux/phy.h>
+ #include <linux/slab.h>
+@@ -251,34 +251,33 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+ 
+ #ifdef CONFIG_OF
+ 	if (priv->device->of_node) {
++		struct gpio_desc *reset_gpio;
++
+ 		if (data->reset_gpio < 0) {
+ 			struct device_node *np = priv->device->of_node;
+ 
+-			data->reset_gpio = of_get_named_gpio(np,
+-						"snps,reset-gpio", 0);
+-			if (data->reset_gpio < 0)
+-				return 0;
++			reset_gpio = devm_gpiod_get_optional(priv->device,
++							     "snps,reset",
++							     GPIOD_OUT_LOW);
++			if (IS_ERR(reset_gpio))
++				return PTR_ERR(reset_gpio);
+ 
+-			data->active_low = of_property_read_bool(np,
+-						"snps,reset-active-low");
+ 			of_property_read_u32_array(np,
+ 				"snps,reset-delays-us", data->delays, 3);
++		} else {
++			reset_gpio = gpio_to_desc(data->reset_gpio);
+ 
+-			if (devm_gpio_request(priv->device, data->reset_gpio,
+-					      "mdio-reset"))
+-				return 0;
++			gpiod_direction_output(reset_gpio, 0);
+ 		}
+ 
+-		gpio_direction_output(data->reset_gpio,
+-				      data->active_low ? 1 : 0);
+ 		if (data->delays[0])
+ 			msleep(DIV_ROUND_UP(data->delays[0], 1000));
+ 
+-		gpio_set_value(data->reset_gpio, data->active_low ? 0 : 1);
++		gpiod_set_value_cansleep(reset_gpio, 1);
+ 		if (data->delays[1])
+ 			msleep(DIV_ROUND_UP(data->delays[1], 1000));
+ 
+-		gpio_set_value(data->reset_gpio, data->active_low ? 1 : 0);
++		gpiod_set_value_cansleep(reset_gpio, 0);
+ 		if (data->delays[2])
+ 			msleep(DIV_ROUND_UP(data->delays[2], 1000));
+ 	}
 -- 
 2.21.0
 
