@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C71C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D9CC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69092081C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0CC206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099547;
-	bh=mG9WWvmiafGM1Jp5WLEKcKC1+c4dOrfZesDiegjzvaA=;
+	s=default; t=1560099553;
+	bh=NRvK615v25GoOdRPL360NWzr60LSRHxx997j8H+H/mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OV4notavE0a5NNagqIRdzbIqFuJ/RXndPlaIGaf/WOBNLluZbfjdZE5g5Hi1D7FBX
-	 ue81VVRplf1QSuNMZG7QlXlpBT7ZCt/y3/VI9rtU763974f2ClZLKXKHqKaRU0DCGR
-	 1bddxfOf2zJEyKGvsMyHu3d9Wg0jP2JehHrK8vbk=
+	b=D6JFyIOcMUrahnYmTfY3uzDtC2eftFXcOMtMjl4tNDg1wG/bJbdUedho1T8/p2GjX
+	 K49oxtUR3xrYrTlE8OxB+31JbCmmidUS8a0XH8elys43X6EGiket+gA+Kh00Re8eii
+	 F/Tpiw35/aNawVsAq3ptDiBJW/AsVJSZgan0OQhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387613AbfFIQ7G (ORCPT
+        id S2387627AbfFIQ7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732775AbfFIQ7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:59:04 -0400
+        id S1732775AbfFIQ7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:59:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D441204EC;
-        Sun,  9 Jun 2019 16:59:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14804206C3;
+        Sun,  9 Jun 2019 16:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099543;
-        bh=mG9WWvmiafGM1Jp5WLEKcKC1+c4dOrfZesDiegjzvaA=;
+        s=default; t=1560099546;
+        bh=NRvK615v25GoOdRPL360NWzr60LSRHxx997j8H+H/mo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJvrmaxG0QOl2g/HcY1hoBFRT4IHQs/v6W8E2+SY1wsGVaIhr/Q4VtTDFzFlCRlaP
-         34pLB3TIAWWQ1VeyqiGc87k+2Ecc4AIxLFPxv5xf+mY1umih8pWTEuZxbCPPmCZXQT
-         KoyGiz5LQhnwI9HfxMpUWZ/mHgTuuahta2Zr5xMc=
+        b=KRHxLhAvXIUOIxJ+/leHOGmXSxQOdvS+lpPIPlphjzGgH1IGoFgyUCUQJR7uR+5jT
+         mfAsRAqc1j8vGqGOniWPb03Of9QT3gD1fvf1+a9+Lw1fa6JE76y3lYEJYGA+9+pWSn
+         wxPdTa5vc3W0SFOBTzhSFxTl+C9VYNz0LbUydbvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 077/241] KVM: x86: fix return value for reserved EFER
-Date:   Sun,  9 Jun 2019 18:40:19 +0200
-Message-Id: <20190609164149.995300080@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org
+Subject: [PATCH 4.4 078/241] bio: fix improper use of smp_mb__before_atomic()
+Date:   Sun,  9 Jun 2019 18:40:20 +0200
+Message-Id: <20190609164150.022547203@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,36 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Andrea Parri <andrea.parri@amarulasolutions.com>
 
-commit 66f61c92889ff3ca365161fb29dd36d6354682ba upstream.
+commit f381c6a4bd0ae0fde2d6340f1b9bb0f58d915de6 upstream.
 
-Commit 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for
-host-initiated writes", 2019-04-02) introduced a "return false" in a
-function returning int, and anyway set_efer has a "nonzero on error"
-conventon so it should be returning 1.
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic_set() primitive.
 
-Reported-by: Pavel Machek <pavel@denx.de>
-Fixes: 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes")
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Replace the barrier with an smp_mb().
+
+Fixes: dac56212e8127 ("bio: skip atomic inc/dec of ->bi_cnt for most use cases")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
+ include/linux/bio.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1026,7 +1026,7 @@ static int set_efer(struct kvm_vcpu *vcp
- 	u64 efer = msr_info->data;
- 
- 	if (efer & efer_reserved_bits)
--		return false;
-+		return 1;
- 
- 	if (!msr_info->host_initiated) {
- 		if (!__kvm_valid_efer(vcpu, efer))
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -290,7 +290,7 @@ static inline void bio_cnt_set(struct bi
+ {
+ 	if (count != 1) {
+ 		bio->bi_flags |= (1 << BIO_REFFED);
+-		smp_mb__before_atomic();
++		smp_mb();
+ 	}
+ 	atomic_set(&bio->__bi_cnt, count);
+ }
 
 
