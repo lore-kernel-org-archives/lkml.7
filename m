@@ -2,128 +2,102 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B6CC468BE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24309C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45285214DA
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F118F20840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:13:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pMj0t7O5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfFIMMP (ORCPT
+        id S1728489AbfFIMNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 08:12:15 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55928 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbfFIMMP (ORCPT
+        Sun, 9 Jun 2019 08:13:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39186 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbfFIMNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 08:12:15 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 325A0802A3; Sun,  9 Jun 2019 14:12:02 +0200 (CEST)
-Date:   Sun, 9 Jun 2019 14:12:12 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, rui.zhang@intel.com, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org
-Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
- speed, thermal related?
-Message-ID: <20190609121212.GA4520@amd>
-References: <20190609111732.GA2885@amd>
- <20190609112340.GA9966@amd>
+        Sun, 9 Jun 2019 08:13:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so5455753ljh.6
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 05:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dSKWqv48YjvTpHMzJ6cEr/B8IpdYkbZ87Fgmm26rJBw=;
+        b=pMj0t7O5EHRJlyEPeUXPVlEG+b9z/hIeBC5taQwe/qsd6JhvdJUyNGAyqEywm28mwV
+         FSyOR5XxKyOL9TfhhQgPIXUu0xpjNy41S0bda15ykJzaAbBRAobLofPaf3yti3xoi8ih
+         DIbHxtN4r85xSSPukC+eEDm7hzuauH7nnxUP57Ujcta5b+Ha1u/7saPIJroEdVJtxKqq
+         h2Ry9LQ6OcBuTv+XdrUpYPdi+LGB5MgSvOhMkuudsx/c4qQGQ6L7wu/6ZJQOmHNmiWgF
+         KqkvkML11VzMonJCNns7Xu2wp9XkhQCK3/crnjdKAtvXyEXOTZcI4oD2wVlifWZ/FnQq
+         YtIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dSKWqv48YjvTpHMzJ6cEr/B8IpdYkbZ87Fgmm26rJBw=;
+        b=J93CPnejXF7pn2wbPFvsgA8Id03EEIfdOzQ+dLDAZMgsO+N2th5zDRi+xRrxwYvZcI
+         qTGgQzjYdK+zQdLOQaX1GZfAsDDIFEFJfY15CopQvTmenR5PtLxuLyqHWYHrd1bgxjgI
+         W3nrbTDJzcUTb5BRK111p5LBnZjDw/kA84QP5lh7Ev/3QwZcYqX45+4y/62ar3QztG7m
+         1JwlCL7Ud319NGL+zlXLR5icCiC+DjsCmlXofjvK2uZXkJdTCQsMHMH9ARd9XF15E7BE
+         GTzRnzFeW9Q+hgB4EbIclhn1BzNWh0DKT4OOjUZg9d0Y+wTQ9qMdaiT+v4wp0hxiNULX
+         Y7/Q==
+X-Gm-Message-State: APjAAAVtooy7bfyPhOeEcmwOwFi6IJqxw6ex9DYNSTXGi5umJedQCUZG
+        sdhjTdMxNjpSPSvTwFBV8A0=
+X-Google-Smtp-Source: APXvYqxYVrtnkOtcvtFEQ4emA5XTieW5HptukAIlK1bqxcK9dnvnWv3PlSpIjg8LSFhV9jh6AL+PIQ==
+X-Received: by 2002:a2e:2411:: with SMTP id k17mr4072256ljk.136.1560082411340;
+        Sun, 09 Jun 2019 05:13:31 -0700 (PDT)
+Received: from esperanza ([176.120.239.149])
+        by smtp.gmail.com with ESMTPSA id p15sm1359619lji.80.2019.06.09.05.13.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Jun 2019 05:13:30 -0700 (PDT)
+Date:   Sun, 9 Jun 2019 15:13:28 +0300
+From:   Vladimir Davydov <vdavydov.dev@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v6 03/10] mm: rename slab delayed deactivation functions
+ and fields
+Message-ID: <20190609121328.xaumeyhu7an6qpru@esperanza>
+References: <20190605024454.1393507-1-guro@fb.com>
+ <20190605024454.1393507-4-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190609112340.GA9966@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190605024454.1393507-4-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 04, 2019 at 07:44:47PM -0700, Roman Gushchin wrote:
+> The delayed work/rcu deactivation infrastructure of non-root
+> kmem_caches can be also used for asynchronous release of these
+> objects. Let's get rid of the word "deactivation" in corresponding
+> names to make the code look better after generalization.
+> 
+> It's easier to make the renaming first, so that the generalized
+> code will look consistent from scratch.
+> 
+> Let's rename struct memcg_cache_params fields:
+>   deact_fn -> work_fn
+>   deact_rcu_head -> rcu_head
+>   deact_work -> work
+> 
+> And RCU/delayed work callbacks in slab common code:
+>   kmemcg_deactivate_rcufn -> kmemcg_rcufn
+>   kmemcg_deactivate_workfn -> kmemcg_workfn
+> 
+> This patch contains no functional changes, only renamings.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > When I start flightgear, I get framerates around 20 fps and cpu at
-> > 3GHz:
-> >=20
-> > pavel@duo:~/bt$ cat /proc/cpuinfo  | grep MHz
-> > cpu MHz		    : 3027.471
-> > cpu MHz		      : 2981.863
-> > cpu MHz		      	: 2958.352
-> > cpu MHz			  : 2864.001
-> > pavel@duo:~/bt$
-> >=20
-> > (Ok, fgfs is really only running at single core, so why do both cores
-> > run at 3GHz?)
-> >=20
-> > But temperatures get quite high:
-> >=20
-> > pavel@duo:~/bt$ sensors
-> > thinkpad-isa-0000
-> > Adapter: ISA adapter
-> > fan1:        4485 RPM
-> >=20
-> > coretemp-isa-0000
-> > Adapter: ISA adapter
-> > Package id 0:  +98.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
-> > Core 0:        +98.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
-> > Core 1:        +91.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
-> >=20
-> > And soon cpu goes to 1.5GHz range, with framerates going down to
-> > 12fps. That's a bit low.
-> >=20
-> > Room temperature is 26Celsius.
-> >=20
-> > The CPU is Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz . I guess it means
-> > it should be able to sustain both cores running at 2.5GHz?
-> >=20
-> > Any ideas? Were there any recent changes in that area?
->=20
-> I tried kernel compile. It keeps both cores at 3GHz, temperature goes
-> up over 95C, and then cpus start going down to 2.3GHz... and then down
-> to 2GHz... and down to 1.9GHz.
->=20
-> watch bash -c 'sensors;  cat /proc/cpuinfo | grep MHz'
-
-Situation is very different with v4.6 distro based kernel.
-
-CPU MHz is only getting values round to 100MHz. It does not go above
-2.5GHz, but it does not go below 2.5GHz under the load, either.
-
-ACPI adapter appears in sensors output.
-
-Now I tried going to 5.2-rc4. It behaves the same as 5.2-rc2. Goes up
-to 3GHz briefly but then down to 2.0GHz and below under load.
-
-Ideas welcome.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlz895sACgkQMOfwapXb+vLzQACfaNgtBUgelwIUG6aapimpv8KT
-y3MAnRSWm/0YigHw60pFSpoR3HDkRs8L
-=oO9i
------END PGP SIGNATURE-----
-
---J2SCkAp4GZ/dPZZf--
+Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
