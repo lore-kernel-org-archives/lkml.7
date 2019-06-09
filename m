@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F82C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FC0C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933C4205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34A120652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100472;
-	bh=SJ3bvGNHGX5MTf8QAP45iUrPWgiuSOwtd791qLhdx14=;
+	s=default; t=1560100475;
+	bh=gVTEveb/aumh0iU0IEwtM0Zuf7f6w6/4SFOhMCJm8lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lZW6VxwrcQQZLKJvNaiy34tCEEi8JN06uPcPiig2QleVlEVLxMAlHah89QXg9qHa5
-	 77WHAYl9K5uexXB9y6nuCRknaB9ghyUF29Q97CeR1cbZR7YGZrtlwV6e60Z4DgqYGW
-	 iyhS4m1mVWMMelvnD1pxyVKQv8ss8so5TR9QlFB8=
+	b=oo2rpa2AdPmaeOUjve3cnBcl4+yQXmc010EtwrNS864dGfuesISNa1ZD0zeS0ZoXV
+	 4XT55Be9g6S2NKotXNdD8jReziju03zQ+4fKXHtx9rsHpsHpuEPyzdxrbmRZTpoZ/v
+	 WRJd0zN3mXwysG48Th7QockxprEwg1YQ9MEcZA4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733013AbfFIQ4f (ORCPT
+        id S1733001AbfFIQ4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:56:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59096 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732614AbfFIQ4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:56:32 -0400
+        id S1732987AbfFIQ43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:56:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8E86206C3;
-        Sun,  9 Jun 2019 16:56:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2978C206DF;
+        Sun,  9 Jun 2019 16:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099391;
-        bh=SJ3bvGNHGX5MTf8QAP45iUrPWgiuSOwtd791qLhdx14=;
+        s=default; t=1560099388;
+        bh=gVTEveb/aumh0iU0IEwtM0Zuf7f6w6/4SFOhMCJm8lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXFJ+79LUTqht0y4qHv4KZl8nmDyXBfYaYI+zM+ogXbMjRiPvs+NfKH9C1k8MERsP
-         zErDyQ1ekx9SGU6ohlArHi3KjlN0vrcWlJNjP7LAMkT49nsKzE8v8sN8Q68YagPf36
-         FSysoM1F9YhdAVjh+z4KSjr12+c6SWAwxnCGyncU=
+        b=gN1JOwo4WBSvDVfRspXbtA+8HEA3/t/bdZlPOA7GvwjAJTQJk62nFO9GCFLEbPxmx
+         cvCAXLuHO75O0jrqI+BfPazEjZoXJhKlKbPIUQoEixNqjGJqwt6Q5T1yWIjzNcQpPx
+         Unr7lm/g/fnX9SyzgaE3jC6RqneGcec2lQThkeig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.4 025/241] crypto: salsa20 - dont access already-freed walk.iv
-Date:   Sun,  9 Jun 2019 18:39:27 +0200
-Message-Id: <20190609164148.506134155@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 007/241] ALSA: usb-audio: Fix a memory leak bug
+Date:   Sun,  9 Jun 2019 18:39:09 +0200
+Message-Id: <20190609164147.999654229@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,45 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Wenwen Wang <wang6495@umn.edu>
 
-commit edaf28e996af69222b2cb40455dbb5459c2b875a upstream.
+commit cb5173594d50c72b7bfa14113dfc5084b4d2f726 upstream.
 
-If the user-provided IV needs to be aligned to the algorithm's
-alignmask, then skcipher_walk_virt() copies the IV into a new aligned
-buffer walk.iv.  But skcipher_walk_virt() can fail afterwards, and then
-if the caller unconditionally accesses walk.iv, it's a use-after-free.
+In parse_audio_selector_unit(), the string array 'namelist' is allocated
+through kmalloc_array(), and each string pointer in this array, i.e.,
+'namelist[]', is allocated through kmalloc() in the following for loop.
+Then, a control instance 'kctl' is created by invoking snd_ctl_new1(). If
+an error occurs during the creation process, the string array 'namelist',
+including all string pointers in the array 'namelist[]', should be freed,
+before the error code ENOMEM is returned. However, the current code does
+not free 'namelist[]', resulting in memory leaks.
 
-salsa20-generic doesn't set an alignmask, so currently it isn't affected
-by this despite unconditionally accessing walk.iv.  However this is more
-subtle than desired, and it was actually broken prior to the alignmask
-being removed by commit b62b3db76f73 ("crypto: salsa20-generic - cleanup
-and convert to skcipher API").
+To fix the above issue, free all string pointers 'namelist[]' in a loop.
 
-Since salsa20-generic does not update the IV and does not need any IV
-alignment, update it to use req->iv instead of walk.iv.
-
-Fixes: 2407d60872dd ("[CRYPTO] salsa20: Salsa20 stream cipher")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- crypto/salsa20_generic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/crypto/salsa20_generic.c
-+++ b/crypto/salsa20_generic.c
-@@ -186,7 +186,7 @@ static int encrypt(struct blkcipher_desc
- 	blkcipher_walk_init(&walk, dst, src, nbytes);
- 	err = blkcipher_walk_virt_block(desc, &walk, 64);
- 
--	salsa20_ivsetup(ctx, walk.iv);
-+	salsa20_ivsetup(ctx, desc->info);
- 
- 	while (walk.nbytes >= 64) {
- 		salsa20_encrypt_bytes(ctx, walk.dst.virt.addr,
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2112,6 +2112,8 @@ static int parse_audio_selector_unit(str
+ 	kctl = snd_ctl_new1(&mixer_selectunit_ctl, cval);
+ 	if (! kctl) {
+ 		usb_audio_err(state->chip, "cannot malloc kcontrol\n");
++		for (i = 0; i < desc->bNrInPins; i++)
++			kfree(namelist[i]);
+ 		kfree(namelist);
+ 		kfree(cval);
+ 		return -ENOMEM;
 
 
