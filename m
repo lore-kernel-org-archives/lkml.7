@@ -2,53 +2,56 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92EEC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571E1C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82FD5208E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDFA20840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099523;
-	bh=cCB94XJ3cBsMYw6K/lU75LksC7xsWOQfhvGcdV/EpIc=;
+	s=default; t=1560099527;
+	bh=WoBSbLfDe3EUJR0RC3Q0R1f/4z4P6U+ScdlPh35tQkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbCu+0DYJX0BdvyPPurrDiv8+qjXj5JYNPK7O9mbXZkddmQPmOiO8X2OOeEL/v6A9
-	 DuU7WGHCTEIY0tOGoH963gjuLL+LlYanrtV6xUqkD0QE/13KihecW2EmeQwiX8aM42
-	 En4BOtQ0DuJv/0IH6ulxzB8Lt8IoYRZeVUojiwg0=
+	b=QVQDaMGUpGrJxpF5+zZLIa2TV9Q3c5iJ8NfRvoiPZ+hVkwLpYqao+ceK71iwyJzWu
+	 +Vyi6hucEkC/e0byrdbNZfvx3TeWWnwDVIC/vsxp4Mm4m2vVNh8h0erQDlJJSfmnIO
+	 OvqMg93zDho1mb9d8CSnxnkrXhoPFnZdYLzikXdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387519AbfFIQ6m (ORCPT
+        id S2387529AbfFIQ6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:58:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33994 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387506AbfFIQ6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:58:39 -0400
+        id S1732797AbfFIQ6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:58:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1FD7204EC;
-        Sun,  9 Jun 2019 16:58:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78B1020868;
+        Sun,  9 Jun 2019 16:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099518;
-        bh=cCB94XJ3cBsMYw6K/lU75LksC7xsWOQfhvGcdV/EpIc=;
+        s=default; t=1560099524;
+        bh=WoBSbLfDe3EUJR0RC3Q0R1f/4z4P6U+ScdlPh35tQkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYUyEMPX7ZyYzUV3G9+CymWH2YVJU/YDVrA3QKcnmAP4pTXNZbAHtJnel4sbHmKb7
-         MV1gYUNrafOMXVCu37KaceYim+MNH2afxNX7g/mHIVIp0D8dx/mimcsirrItN0n1Ku
-         SudwxfzG6McePZr1PnhJeaDFTHPok2+Pf/7iS6Io=
+        b=vAbeFd3KBMTqZ/IaCpprTyVYRbnYaBdebJfHBKgU3EDs4Mo3FtJ0qbMnJgd7bQ01p
+         nG4Wfm0OsX3S6cNEB2LUUEZaX2Z5tTYwbvq83Vgk/Epud3MrcJZhPrsb/BkitX+UN0
+         UnExLpSXM/EuQdmmCwB1ffMr/Shvo4U1+cEJDoc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>, linux-pm@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-snps-arc@lists.infradead.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 069/241] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
-Date:   Sun,  9 Jun 2019 18:40:11 +0200
-Message-Id: <20190609164149.765849285@linuxfoundation.org>
+Subject: [PATCH 4.4 071/241] perf bench numa: Add define for RUSAGE_THREAD if not present
+Date:   Sun,  9 Jun 2019 18:40:13 +0200
+Message-Id: <20190609164149.820819274@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,65 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 349ced9984ff540ce74ca8a0b2e9b03dc434b9dd ]
+[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
 
-Fix a similar endless event loop as was done in commit
-8dcf32175b4e ("i2c: prevent endless uevent loop with
-CONFIG_I2C_DEBUG_CORE"):
+While cross building perf to the ARC architecture on a fedora 30 host,
+we were failing with:
 
-  The culprit is the dev_dbg printk in the i2c uevent handler. If
-  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
-  in an endless loop with systemd-journald.
+      CC       /tmp/build/perf/bench/numa.o
+  bench/numa.c: In function ‘worker_thread’:
+  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
+    getrusage(RUSAGE_THREAD, &rusage);
+              ^~~~~~~~~~~~~
+              SIGEV_THREAD
+  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
 
-  This happens if user-space scans the system log and reads the uevent
-  file to get information about a newly created device, which seems
-  fair use to me. Unfortunately reading the "uevent" file uses the
-  same function that runs for creating the uevent for a new device,
-  generating the next syslog entry
+[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
+arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
+[perfbuilder@60d5802468f6 perf]$
 
-Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
-in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
-seems to have been fixed. Drop debug prints as it was done in I2C
-subsystem to resolve the issue.
+Trying to reproduce a report by Vineet, I noticed that, with just
+cross-built zlib and numactl libraries, I ended up with the above
+failure.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+So, since RUSAGE_THREAD is available as a define, check for that and
+numactl libraries, I ended up with the above failure.
+
+So, since RUSAGE_THREAD is available as a define in the system headers,
+check if it is defined in the 'perf bench numa' sources and define it if
+not.
+
+Now it builds and I have to figure out if the problem reported by Vineet
+only takes place if we have libelf or some other library available.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/power_supply_sysfs.c | 6 ------
- 1 file changed, 6 deletions(-)
+ tools/perf/bench/numa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/power/power_supply_sysfs.c b/drivers/power/power_supply_sysfs.c
-index ed2d7fd0c734d..488dd7eb0aeb7 100644
---- a/drivers/power/power_supply_sysfs.c
-+++ b/drivers/power/power_supply_sysfs.c
-@@ -277,15 +277,11 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	char *prop_buf;
- 	char *attrname;
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index 73d192f57dc34..df41deed0320e 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -32,6 +32,10 @@
+ #include <numa.h>
+ #include <numaif.h>
  
--	dev_dbg(dev, "uevent\n");
--
- 	if (!psy || !psy->desc) {
- 		dev_dbg(dev, "No power supply yet\n");
- 		return ret;
- 	}
- 
--	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
--
- 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
- 	if (ret)
- 		return ret;
-@@ -321,8 +317,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 			goto out;
- 		}
- 
--		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
--
- 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
- 		kfree(attrname);
- 		if (ret)
++#ifndef RUSAGE_THREAD
++# define RUSAGE_THREAD 1
++#endif
++
+ /*
+  * Regular printout to the terminal, supressed if -q is specified:
+  */
 -- 
 2.20.1
 
