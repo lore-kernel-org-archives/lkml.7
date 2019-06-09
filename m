@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70604C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB1AC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F5F205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54762205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098999;
-	bh=F+TYIcTfTft0dTVhJH50C6ngOyIF8PgxqwBW+hKQiak=;
+	s=default; t=1560099004;
+	bh=dM1jV9RXHFxkmlsmc7CL6SGnB+Hs2a6Uc6Z8zwyXHnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kqACepB7w1B4gAS0b9HWnpaLFAom8RIpodKfc7/dszl5HcZQYUnGnTGYeNC6addEH
-	 FOKuu7JGfTOt3ocCjLwJb9AmjE74TgG8fNAuZ4br8Vv9je38xyb3YiMTnzZDnKpndx
-	 fdYFImM6ql/EhbLV/+KhXNUKVL6ODuApLH3eUExs=
+	b=Ush4YaqF2euepAupPjIC+tgbBQPHnn3sq0cw3TAF2Gq7UWFmaiPCVq2RqnaQ8Un1T
+	 T+MMxHR6nPPpLZ4li2Kb80ZCcidb4TJlJL8rA4uOKnwvx9DxDlzdWayDv7tBn+TGtj
+	 kaMB5D3fI/KLjcvoWvAIJwpAPGILYLwFskl3QXlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731619AbfFIQt6 (ORCPT
+        id S1731633AbfFIQuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:49:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:50:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731593AbfFIQty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:49:54 -0400
+        id S1731593AbfFIQt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:49:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ED45205ED;
-        Sun,  9 Jun 2019 16:49:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C726E2070B;
+        Sun,  9 Jun 2019 16:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098993;
-        bh=F+TYIcTfTft0dTVhJH50C6ngOyIF8PgxqwBW+hKQiak=;
+        s=default; t=1560098999;
+        bh=dM1jV9RXHFxkmlsmc7CL6SGnB+Hs2a6Uc6Z8zwyXHnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uNU9eY49CzvXFfdGRe06O7oRTR40igNjPolTlv4c2u6RxEz9Lfxh9pLhkltkvbX0C
-         Dhurm77nhSjuoJNxR1aiqZPeV4onklsBkXWH5Bso/KcV3Fbcd4IrmAHOAz32reY7Jb
-         yXSrGUmG+HFWVKxRhldumBB9fhxFatZrBwWWCd9w=
+        b=Tw4gMOqWnE7EQoRbfHrJfCDW8XijW1rwuNRt16PNLYK06jo3KjAKdFsyaYNW4oD5G
+         6+EM8xdIL2wsRorpJC4rGkNeAtzuOsUjfWce+HnHcMhkqCopqeWe7NORHy+MdrT6OI
+         cbqyLF1SUpaUWYTw/vap9TfxprWpLQJ5Dc6VjmZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 11/35] Revert "fib_rules: fix error in backport of e9919a24d302 ("fib_rules: return 0...")"
-Date:   Sun,  9 Jun 2019 18:42:17 +0200
-Message-Id: <20190609164126.153138797@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 13/35] rcu: locking and unlocking need to always be at least barriers
+Date:   Sun,  9 Jun 2019 18:42:19 +0200
+Message-Id: <20190609164126.264742013@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -58,25 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-This reverts commit 691306ebd18f945e44b4552a4bfcca3475e5d957 as the
-patch that this "fixes" is about to be reverted...
+commit 66be4e66a7f422128748e3c3ef6ee72b20a6197b upstream.
 
+Herbert Xu pointed out that commit bb73c52bad36 ("rcu: Don't disable
+preemption for Tiny and Tree RCU readers") was incorrect in making the
+preempt_disable/enable() be conditional on CONFIG_PREEMPT_COUNT.
+
+If CONFIG_PREEMPT_COUNT isn't enabled, the preemption enable/disable is
+a no-op, but still is a compiler barrier.
+
+And RCU locking still _needs_ that compiler barrier.
+
+It is simply fundamentally not true that RCU locking would be a complete
+no-op: we still need to guarantee (for example) that things that can
+trap and cause preemption cannot migrate into the RCU locked region.
+
+The way we do that is by making it a barrier.
+
+See for example commit 386afc91144b ("spinlocks and preemption points
+need to be at least compiler barriers") from back in 2013 that had
+similar issues with spinlocks that become no-ops on UP: they must still
+constrain the compiler from moving other operations into the critical
+region.
+
+Now, it is true that a lot of RCU operations already use READ_ONCE() and
+WRITE_ONCE() (which in practice likely would never be re-ordered wrt
+anything remotely interesting), but it is also true that that is not
+globally the case, and that it's not even necessarily always possible
+(ie bitfields etc).
+
+Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: bb73c52bad36 ("rcu: Don't disable preemption for Tiny and Tree RCU readers")
+Cc: stable@kernel.org
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/fib_rules.c |    1 -
- 1 file changed, 1 deletion(-)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -564,7 +564,6 @@ int fib_nl_newrule(struct sk_buff *skb,
- 	}
+---
+ include/linux/rcupdate.h |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -79,14 +79,12 @@ void synchronize_rcu(void);
  
- 	if (rule_exists(ops, frh, tb, rule)) {
--		err = 0;
- 		if (nlh->nlmsg_flags & NLM_F_EXCL)
- 			err = -EEXIST;
- 		goto errout_free;
+ static inline void __rcu_read_lock(void)
+ {
+-	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
+-		preempt_disable();
++	preempt_disable();
+ }
+ 
+ static inline void __rcu_read_unlock(void)
+ {
+-	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
+-		preempt_enable();
++	preempt_enable();
+ }
+ 
+ static inline void synchronize_rcu(void)
 
 
