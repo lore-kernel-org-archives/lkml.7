@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7359CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69666C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41021205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437F3205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099276;
-	bh=lelvo0io8nkp8qWK8JdAYNl7dl/qXAIZPC9tzGmuaNI=;
+	s=default; t=1560099279;
+	bh=Ee28B0B1dxQ6ftjg6U3AFKpV1aRh4NcHuxr+RLw+vOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EW0pcEVqyulfy9gk7BTXvHnbsdvwzqRl1Lf8mOIaWSoCXUrduJEr5MitmnAaYye2a
-	 9fwXGJjLH468Kmf4Qd9zbXs/y2Ill7qwozun9rhMno0jCqT3vDUS89XF7BKa358kG5
-	 iHyRCKuYVoftmAS0uDr/mhnbdepZcc4s7x6AX69s=
+	b=M6Ny/9ZWRoP/Kr6m2BetYjGvUEhfCsKGjmh7OibT66gYCKcn42kbhrIKwUKq0HkDk
+	 +2uLawy3qCFRIF5exQBoaX3gRAm/2E7aHj9vTxqMlaIGzzAp71ZahH2ZHFJ50rTX3z
+	 sjZ05z6v4gtRo02ShpsbhtOa25RaMwYgv/6apl8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732642AbfFIQyf (ORCPT
+        id S1732648AbfFIQyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:54:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56278 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:54:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732624AbfFIQye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:54:34 -0400
+        id S1732232AbfFIQyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:54:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08989206BB;
-        Sun,  9 Jun 2019 16:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8930204EC;
+        Sun,  9 Jun 2019 16:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099273;
-        bh=lelvo0io8nkp8qWK8JdAYNl7dl/qXAIZPC9tzGmuaNI=;
+        s=default; t=1560099276;
+        bh=Ee28B0B1dxQ6ftjg6U3AFKpV1aRh4NcHuxr+RLw+vOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cQUyxEqgzJYe2QrdJXddM0e/WzNF7Xb5oueKAlPYxJCqCAw6fzIXxnnGM8KgFTPzo
-         PRXqLPFwv34PquN4oOawsqzg8YZWagEQ9Mhf4XXrA2iIbyIJ76GPNTVJfNU5bbFrcB
-         51iTmNgD3TI4k0D4qhVg4j1mHofCwuRXBkBlRWE0=
+        b=j15kWa4SIM8JOXnMngvAWUWgVNBLIMlyRDXzAnX7+DFjJqoYtoRGjgicKC7wjJxtA
+         okmTJYYS09b/hj9EGQ0KVZrunPBsw57DtbSbPGpuVbHSol2Cs3cVhyIWCloowF/Tgj
+         UlKUQWw97c2ISuhLzLlO21M0K/stNW8PMtiKfomg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John David Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.9 72/83] parisc: Use implicit space register selection for loading the coherence index of I/O pdirs
-Date:   Sun,  9 Jun 2019 18:42:42 +0200
-Message-Id: <20190609164133.991775459@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.9 73/83] fuse: fallocate: fix return with locked inode
+Date:   Sun,  9 Jun 2019 18:42:43 +0200
+Message-Id: <20190609164134.091451997@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,58 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John David Anglin <dave.anglin@bell.net>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 63923d2c3800919774f5c651d503d1dd2adaddd5 upstream.
+commit 35d6fcbb7c3e296a52136347346a698a35af3fda upstream.
 
-We only support I/O to kernel space. Using %sr1 to load the coherence
-index may be racy unless interrupts are disabled. This patch changes the
-code used to load the coherence index to use implicit space register
-selection. This saves one instruction and eliminates the race.
+Do the proper cleanup in case the size check fails.
 
-Tested on rp3440, c8000 and c3750.
+Tested with xfstests:generic/228
 
-Signed-off-by: John David Anglin <dave.anglin@bell.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Helge Deller <deller@gmx.de>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 0cbade024ba5 ("fuse: honor RLIMIT_FSIZE in fuse_file_fallocate")
+Cc: Liu Bo <bo.liu@linux.alibaba.com>
+Cc: <stable@vger.kernel.org> # v3.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/parisc/ccio-dma.c  |    4 +---
- drivers/parisc/sba_iommu.c |    3 +--
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ fs/fuse/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/parisc/ccio-dma.c
-+++ b/drivers/parisc/ccio-dma.c
-@@ -563,8 +563,6 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
- 	/* We currently only support kernel addresses */
- 	BUG_ON(sid != KERNEL_SPACE);
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2965,7 +2965,7 @@ static long fuse_file_fallocate(struct f
+ 	    offset + length > i_size_read(inode)) {
+ 		err = inode_newsize_ok(inode, offset + length);
+ 		if (err)
+-			return err;
++			goto out;
+ 	}
  
--	mtsp(sid,1);
--
- 	/*
- 	** WORD 1 - low order word
- 	** "hints" parm includes the VALID bit!
-@@ -595,7 +593,7 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
- 	** Grab virtual index [0:11]
- 	** Deposit virt_idx bits into I/O PDIR word
- 	*/
--	asm volatile ("lci %%r0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
-+	asm volatile ("lci %%r0(%1), %0" : "=r" (ci) : "r" (vba));
- 	asm volatile ("extru %1,19,12,%0" : "+r" (ci) : "r" (ci));
- 	asm volatile ("depw  %1,15,12,%0" : "+r" (pa) : "r" (ci));
- 
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -573,8 +573,7 @@ sba_io_pdir_entry(u64 *pdir_ptr, space_t
- 	pa = virt_to_phys(vba);
- 	pa &= IOVP_MASK;
- 
--	mtsp(sid,1);
--	asm("lci 0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
-+	asm("lci 0(%1), %0" : "=r" (ci) : "r" (vba));
- 	pa |= (ci >> PAGE_SHIFT) & 0xff;  /* move CI (8 bits) into lowest byte */
- 
- 	pa |= SBA_PDIR_VALID_BIT;	/* set "valid" bit */
+ 	if (!(mode & FALLOC_FL_KEEP_SIZE))
 
 
