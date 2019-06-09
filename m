@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A120C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE6BC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41002204EC
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32232206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099838;
-	bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
+	s=default; t=1560099844;
+	bh=qgu/3aYKPH8ns+tk3Bx1JV3VWJ2iRA0rJI1PZ7GHb0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJG/XRzymTFCCDbB4uY/XS29ZTFZ0zJqaG6jVew9Al5jaRT/ObAhMzhTjAzsU3WpJ
-	 LaITJtAyVFbIHnmpFtHxT8iK3rh+/MqyrUDhY+n+APpSgAwkOMBm0+eSQ6HvYbgSn2
-	 JLBA8WZYZWW53VVlM4d4jENjAQcJV/D3HK3I6ef4=
+	b=SI9AVVimJVcsF0Pf+QTwUe7mwarbm1qsdZUD/nHNC4xLLdLc2aWHX8bK94AqEETOj
+	 a1BcWuiGxj1mK3hieCmGpfw5X9cdEcXAYYS1TNCv5iiwTYN2OHs13yiBNcWykZ8/VB
+	 O2u8pCwRi2xH1Yidooi5GchxkOsYy6kyf1JN8zQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388529AbfFIRD5 (ORCPT
+        id S2388114AbfFIRED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42426 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388521AbfFIRDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:55 -0400
+        id S2388534AbfFIREA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:04:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A977B204EC;
-        Sun,  9 Jun 2019 17:03:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A1E9204EC;
+        Sun,  9 Jun 2019 17:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099834;
-        bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
+        s=default; t=1560099839;
+        bh=qgu/3aYKPH8ns+tk3Bx1JV3VWJ2iRA0rJI1PZ7GHb0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XLRRiiN4cvx4s5xEuItuuGdRMMwVH1Z6AjYUF/xwIl5eLAnvdKOWaZG5mAGSfzw0M
-         zmUPggv56TNxjr/E49zjp5gCCbV1aC3HEL6c70bWHfqzzKBcTl2EmNhKWfRERWqOTp
-         7qsl8M4KtR1PZ7ku/Lw+wUCn+jK/1arr1lwafbXo=
+        b=tyxHNsnx6gW3C0QTcMVsAXNwNTkInjhchKO8AfIbjr1MDnXcpdUtCoZ20s86scaIx
+         u4v7xG3GJOwuHMcC1glAAoOG3HEKRyIuGNGELow96BMtxZHu81D375RplrQf6BAN3d
+         viNtwYeTuNlSUis6lEBsO9FNnkBlGg7xHDVABxrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 181/241] llc: fix skb leak in llc_build_and_send_ui_pkt()
-Date:   Sun,  9 Jun 2019 18:42:03 +0200
-Message-Id: <20190609164153.081815382@linuxfoundation.org>
+Subject: [PATCH 4.4 183/241] net: stmmac: fix reset gpio free missing
+Date:   Sun,  9 Jun 2019 18:42:05 +0200
+Message-Id: <20190609164153.154197923@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,84 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit 8fb44d60d4142cd2a440620cd291d346e23c131e ]
+[ Upstream commit 49ce881c0d4c4a7a35358d9dccd5f26d0e56fc61 ]
 
-If llc_mac_hdr_init() returns an error, we must drop the skb
-since no llc_build_and_send_ui_pkt() caller will take care of this.
+Commit 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
+removed the reset gpio free, when the driver is unbinded or rmmod,
+we miss the gpio free.
 
-BUG: memory leak
-unreferenced object 0xffff8881202b6800 (size 2048):
-  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.590s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    1a 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-  backtrace:
-    [<00000000e25b5abe>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<00000000e25b5abe>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<00000000e25b5abe>] slab_alloc mm/slab.c:3326 [inline]
-    [<00000000e25b5abe>] __do_kmalloc mm/slab.c:3658 [inline]
-    [<00000000e25b5abe>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-    [<00000000a1ae188a>] kmalloc include/linux/slab.h:552 [inline]
-    [<00000000a1ae188a>] sk_prot_alloc+0xd6/0x170 net/core/sock.c:1608
-    [<00000000ded25bbe>] sk_alloc+0x35/0x2f0 net/core/sock.c:1662
-    [<000000002ecae075>] llc_sk_alloc+0x35/0x170 net/llc/llc_conn.c:950
-    [<00000000551f7c47>] llc_ui_create+0x7b/0x140 net/llc/af_llc.c:173
-    [<0000000029027f0e>] __sock_create+0x164/0x250 net/socket.c:1430
-    [<000000008bdec225>] sock_create net/socket.c:1481 [inline]
-    [<000000008bdec225>] __sys_socket+0x69/0x110 net/socket.c:1523
-    [<00000000b6439228>] __do_sys_socket net/socket.c:1532 [inline]
-    [<00000000b6439228>] __se_sys_socket net/socket.c:1530 [inline]
-    [<00000000b6439228>] __x64_sys_socket+0x1e/0x30 net/socket.c:1530
-    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+This patch uses managed API to request the reset gpio, so that the
+gpio could be freed properly.
 
-BUG: memory leak
-unreferenced object 0xffff88811d750d00 (size 224):
-  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.600s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 f0 0c 24 81 88 ff ff 00 68 2b 20 81 88 ff ff  ...$.....h+ ....
-  backtrace:
-    [<0000000053026172>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<0000000053026172>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<0000000053026172>] slab_alloc_node mm/slab.c:3269 [inline]
-    [<0000000053026172>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-    [<00000000fa8f3c30>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-    [<00000000d96fdafb>] alloc_skb include/linux/skbuff.h:1058 [inline]
-    [<00000000d96fdafb>] alloc_skb_with_frags+0x5f/0x250 net/core/skbuff.c:5327
-    [<000000000a34a2e7>] sock_alloc_send_pskb+0x269/0x2a0 net/core/sock.c:2225
-    [<00000000ee39999b>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-    [<00000000e034d810>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-    [<00000000c0bc8445>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<00000000c0bc8445>] sock_sendmsg+0x54/0x70 net/socket.c:671
-    [<000000003b687167>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-    [<00000000922d78d9>] __do_sys_sendto net/socket.c:1976 [inline]
-    [<00000000922d78d9>] __se_sys_sendto net/socket.c:1972 [inline]
-    [<00000000922d78d9>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
-    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/llc/llc_output.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/llc/llc_output.c
-+++ b/net/llc/llc_output.c
-@@ -72,6 +72,8 @@ int llc_build_and_send_ui_pkt(struct llc
- 	rc = llc_mac_hdr_init(skb, skb->dev->dev_addr, dmac);
- 	if (likely(!rc))
- 		rc = dev_queue_xmit(skb);
-+	else
-+		kfree_skb(skb);
- 	return rc;
- }
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -154,7 +154,8 @@ int stmmac_mdio_reset(struct mii_bus *bu
+ 			of_property_read_u32_array(np,
+ 				"snps,reset-delays-us", data->delays, 3);
+ 
+-			if (gpio_request(data->reset_gpio, "mdio-reset"))
++			if (devm_gpio_request(priv->device, data->reset_gpio,
++					      "mdio-reset"))
+ 				return 0;
+ 		}
  
 
 
