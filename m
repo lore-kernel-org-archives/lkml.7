@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEC2C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149F5C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EBF206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A6B206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099498;
-	bh=9oY+pI8ykV1BKLM3bhcwgDCHMon/QrsSj3NZSK0i6N4=;
+	s=default; t=1560099501;
+	bh=S8bpiVtb9z6UdZz6cxSZ/8tAMh48FXDlCzAw1CCRdVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpqFHbbb1CnPX9jlTwFiumxe9qgLp0ceR9NtP315dr5twzY/1Y8xCvDwKFEnsNxvw
-	 XL5ccSRKvgBv3SvaaiqRfHyzrpHXjcmJ9lD25xQXbl4Xq8yY68TKwoMMRwcCi45QMq
-	 vbkV3O+h7KZmowMwKBIBAfO97vxOfZkCUgNkv8S4=
+	b=N2AAhjjKMK+4BlKbM2xbcf46NRL8bfeQbpPsUj7sjy5Nx15a13CYWmn/ZunpGkoJz
+	 xFzOxZoOSWLhh0izKo6zvGeFNNbxrQeET05fFx9ZUUVI/Migp1iVRgwjQ9h14UX8/j
+	 d2R77Zv55r/8BAsO6r8KVQ/r0H1OoX5L9HLsfmeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732953AbfFIQ6R (ORCPT
+        id S2387444AbfFIQ6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33376 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:58:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731967AbfFIQ6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:58:15 -0400
+        id S2387427AbfFIQ6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:58:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78E5B207E0;
-        Sun,  9 Jun 2019 16:58:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 160D8206C3;
+        Sun,  9 Jun 2019 16:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099494;
-        bh=9oY+pI8ykV1BKLM3bhcwgDCHMon/QrsSj3NZSK0i6N4=;
+        s=default; t=1560099496;
+        bh=S8bpiVtb9z6UdZz6cxSZ/8tAMh48FXDlCzAw1CCRdVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F503pmNL/4BkbOQhGmhxzN0FsjGBQZA8kcvvbho/FPPtSmncQtVwSSwm0/5AIU1Do
-         AZjVWJuHrORZzokMuQRrJLEcM0cqN+GqJP06meLR3F+ilx1PfcoZX2DIZsCKTTkyli
-         HtmmnQ/mURKt+/0rVF1Al8Io6ZkKxE8GQPE6xk/Y=
+        b=PGF+8Z+DJui0PcfZCR6XEZdZ/kQ42ZOx8aAhvCGxUfAdCvLTEEzi3n61PzB6d43hA
+         nNUJDdK5kFAmNcEqyVWA45tzhyiKQCY8Ms3xf+UmtbRuDzdCOJVpyPSuj9vIU1I8P1
+         n6RupTi1SaQeYZB9kPSvqh2/dwaenLrQZHly7P+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.4 061/241] fbdev: sm712fb: fix crashes and garbled display during DPMS modesetting
-Date:   Sun,  9 Jun 2019 18:40:03 +0200
-Message-Id: <20190609164149.546841137@linuxfoundation.org>
+        stable@vger.kernel.org, Steev Klimaszewski <steev@kali.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 4.4 044/241] clk: tegra: Fix PLLM programming on Tegra124+ when PMC overrides divider
+Date:   Sun,  9 Jun 2019 18:39:46 +0200
+Message-Id: <20190609164149.046238718@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,140 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit f627caf55b8e735dcec8fa6538e9668632b55276 upstream.
+commit 40db569d6769ffa3864fd1b89616b1a7323568a8 upstream.
 
-On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), blanking the display
-or starting the X server will crash and freeze the system, or garble the
-display.
+There are wrongly set parenthesis in the code that are resulting in a
+wrong configuration being programmed for PLLM. The original fix was made
+by Danny Huang in the downstream kernel. The patch was tested on Nyan Big
+Tegra124 chromebook, PLLM rate changing works correctly now and system
+doesn't lock up after changing the PLLM rate due to EMC scaling.
 
-Experiments showed this problem can mostly be solved by adjusting the
-order of register writes. Also, sm712fb failed to consider the difference
-of clock frequency when unblanking the display, and programs the clock for
-SM712 to SM720.
-
-Fix them by adjusting the order of register writes, and adding an
-additional check for SM720 for programming the clock frequency.
-
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: <stable@vger.kernel.org>  # v4.4+
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: <stable@vger.kernel.org>
+Tested-by: Steev Klimaszewski <steev@kali.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |   64 ++++++++++++++++++++++++------------------
- 1 file changed, 38 insertions(+), 26 deletions(-)
+ drivers/clk/tegra/clk-pll.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -886,67 +886,79 @@ static inline unsigned int chan_to_field
+--- a/drivers/clk/tegra/clk-pll.c
++++ b/drivers/clk/tegra/clk-pll.c
+@@ -492,8 +492,8 @@ static void _update_pll_mnp(struct tegra
+ 		pll_override_writel(val, params->pmc_divp_reg, pll);
  
- static int smtc_blank(int blank_mode, struct fb_info *info)
- {
-+	struct smtcfb_info *sfb = info->par;
-+
- 	/* clear DPMS setting */
- 	switch (blank_mode) {
- 	case FB_BLANK_UNBLANK:
- 		/* Screen On: HSync: On, VSync : On */
-+
-+		switch (sfb->chip_id) {
-+		case 0x710:
-+		case 0x712:
-+			smtc_seqw(0x6a, 0x16);
-+			smtc_seqw(0x6b, 0x02);
-+		case 0x720:
-+			smtc_seqw(0x6a, 0x0d);
-+			smtc_seqw(0x6b, 0x02);
-+			break;
-+		}
-+
-+		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
--		smtc_seqw(0x6a, 0x16);
--		smtc_seqw(0x6b, 0x02);
- 		smtc_seqw(0x21, (smtc_seqr(0x21) & 0x77));
- 		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
--		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
--		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
- 		smtc_seqw(0x31, (smtc_seqr(0x31) | 0x03));
-+		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
- 		break;
- 	case FB_BLANK_NORMAL:
- 		/* Screen Off: HSync: On, VSync : On   Soft blank */
-+		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
-+		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
-+		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
-+		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
- 		smtc_seqw(0x6a, 0x16);
- 		smtc_seqw(0x6b, 0x02);
--		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
--		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
--		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
--		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
- 		break;
- 	case FB_BLANK_VSYNC_SUSPEND:
- 		/* Screen On: HSync: On, VSync : Off */
-+		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
-+		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
-+		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
--		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
--		smtc_seqw(0x6a, 0x0c);
--		smtc_seqw(0x6b, 0x02);
- 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
-+		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
- 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x20));
--		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
--		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
--		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
- 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
-+		smtc_seqw(0x6a, 0x0c);
-+		smtc_seqw(0x6b, 0x02);
- 		break;
- 	case FB_BLANK_HSYNC_SUSPEND:
- 		/* Screen On: HSync: Off, VSync : On */
-+		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
-+		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
-+		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
--		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
--		smtc_seqw(0x6a, 0x0c);
--		smtc_seqw(0x6b, 0x02);
- 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
-+		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
- 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x10));
--		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
--		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
--		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
- 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
-+		smtc_seqw(0x6a, 0x0c);
-+		smtc_seqw(0x6b, 0x02);
- 		break;
- 	case FB_BLANK_POWERDOWN:
- 		/* Screen On: HSync: Off, VSync : Off */
-+		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
-+		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
-+		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
- 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
--		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
--		smtc_seqw(0x6a, 0x0c);
--		smtc_seqw(0x6b, 0x02);
- 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
-+		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
- 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x30));
--		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
--		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
--		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
- 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
-+		smtc_seqw(0x6a, 0x0c);
-+		smtc_seqw(0x6b, 0x02);
- 		break;
- 	default:
- 		return -EINVAL;
+ 		val = pll_override_readl(params->pmc_divnm_reg, pll);
+-		val &= ~(divm_mask(pll) << div_nmp->override_divm_shift) |
+-			~(divn_mask(pll) << div_nmp->override_divn_shift);
++		val &= ~((divm_mask(pll) << div_nmp->override_divm_shift) |
++			(divn_mask(pll) << div_nmp->override_divn_shift));
+ 		val |= (cfg->m << div_nmp->override_divm_shift) |
+ 			(cfg->n << div_nmp->override_divn_shift);
+ 		pll_override_writel(val, params->pmc_divnm_reg, pll);
 
 
