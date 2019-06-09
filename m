@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223ECC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E6C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAFB720652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A333920652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100769;
-	bh=pzVPEGB29rxDVyY7UFKBEsxqkSSuIe3pdooEKe9VtJU=;
+	s=default; t=1560100776;
+	bh=aI2xmFamXF/0UTAWDGIGWTN9D41YnsbOcTzuDUadPCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1reCzioJW+om3bEuK5CyVWaU1tajcShphzxsxtDdH4g5Uv9IoUBOh50VjKAeyvbAf
-	 GgGkYR5YzohPbMbPTyknmHL3o5BVADkmeUuMbEdjfGBtRYYAePEP9btaAa3EXgGVlI
-	 1M693LRx4WfLygPdJ/QkSYVPLgni1LLHHY0ldYIQ=
+	b=KKlIHbv8NncJze4+309dcbN+p6/ajDvYJNXhIm/9qxXTMgq/4PBcyxGjOfNJtI9Zk
+	 1H7WDhzkgg9Jw+K9gMEbb0RKJDVycwCMzz/OM4beY/slCrKhHPx0/7aH+GqrmSiTfy
+	 li4ighy0q7aMA/lNP49LIZjcet+7mrw3/2zVgEG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731308AbfFIQst (ORCPT
+        id S1731942AbfFIRTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:19:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731294AbfFIQsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:46 -0400
+        id S1730482AbfFIQsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 623A9205ED;
-        Sun,  9 Jun 2019 16:48:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A62205ED;
+        Sun,  9 Jun 2019 16:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098925;
-        bh=pzVPEGB29rxDVyY7UFKBEsxqkSSuIe3pdooEKe9VtJU=;
+        s=default; t=1560098917;
+        bh=aI2xmFamXF/0UTAWDGIGWTN9D41YnsbOcTzuDUadPCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XEtD40CH7vNbRNNlGUfsdc0R3BvZZS+tvUjevgYFCNxV1krK4bZVMdKcc3ambyAug
-         tAHd0qLmsKybFaWHMVOKRnbmgv4SXv9FtZ8qNaUGz4859A/pQ0wIKmOgGwF05bxKVd
-         /EyEdOLniAdmMI1LvSP7/N6POx7XFY04ZxxXKd9s=
+        b=vDjDBr17F7D3Bw/qD/AhDkZURV04HfPVC/NbpJg6dHdKkDloYLSzUzeyZo2Kpr44z
+         nNM0ITJefsnJEm8o1AQosHZWhzeQ+JEuWt+wmMj3cFtoHYoaArFftxI3T0XpCCVtAP
+         D/lNn8SzwdYsyG9Km9oK7znT+vtRSBZPhGRMmQAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/51] net/mlx4_en: ethtool, Remove unsupported SFP EEPROM high pages query
-Date:   Sun,  9 Jun 2019 18:41:48 +0200
-Message-Id: <20190609164127.544618985@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Kevin ldir Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        John Crispin <john@phrozen.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 34/51] Revert "MIPS: perf: ath79: Fix perfcount IRQ assignment"
+Date:   Sun,  9 Jun 2019 18:42:15 +0200
+Message-Id: <20190609164129.317004440@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,60 +68,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erez Alfasi <ereza@mellanox.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 135dd9594f127c8a82d141c3c8430e9e2143216a ]
+This reverts commit ca8648816e3dcc8dadba0e79a034f61c85eb206d which is
+commit a1e8783db8e0d58891681bc1e6d9ada66eae8e20 upstream.
 
-Querying EEPROM high pages data for SFP module is currently
-not supported by our driver but is still tried, resulting in
-invalid FW queries.
+Petr writes:
+	Karl has reported to me today, that he's experiencing weird
+	reboot hang on his devices with 4.9.180 kernel and that he has
+	bisected it down to my backported patch.
 
-Set the EEPROM ethtool data length to 256 for SFP module to
-limit the reading for page 0 only and prevent invalid FW queries.
+	I would like to kindly ask you for removal of this patch.  This
+	patch should be reverted from all stable kernels up to 5.1,
+	because perf counters were not broken on those kernels, and this
+	patch won't work on the ath79 legacy IRQ code anyway, it needs
+	new irqchip driver which was enabled on ath79 with commit
+	51fa4f8912c0 ("MIPS: ath79: drop legacy IRQ code").
 
-Fixes: 7202da8b7f71 ("ethtool, net/mlx4_en: Cable info, get_module_info/eeprom ethtool support")
-Signed-off-by: Erez Alfasi <ereza@mellanox.com>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Petr Štetiar <ynezz@true.cz>
+Cc: Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Cc: John Crispin <john@phrozen.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |    4 +++-
- drivers/net/ethernet/mellanox/mlx4/port.c       |    5 -----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ arch/mips/ath79/setup.c          |    6 ++++++
+ drivers/irqchip/irq-ath79-misc.c |   11 -----------
+ 2 files changed, 6 insertions(+), 11 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
-@@ -2010,6 +2010,8 @@ static int mlx4_en_set_tunable(struct ne
- 	return ret;
+--- a/arch/mips/ath79/setup.c
++++ b/arch/mips/ath79/setup.c
+@@ -211,6 +211,12 @@ const char *get_system_type(void)
+ 	return ath79_sys_type;
  }
  
-+#define MLX4_EEPROM_PAGE_LEN 256
++int get_c0_perfcount_int(void)
++{
++	return ATH79_MISC_IRQ(5);
++}
++EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
 +
- static int mlx4_en_get_module_info(struct net_device *dev,
- 				   struct ethtool_modinfo *modinfo)
+ unsigned int get_c0_compare_int(void)
  {
-@@ -2044,7 +2046,7 @@ static int mlx4_en_get_module_info(struc
- 		break;
- 	case MLX4_MODULE_ID_SFP:
- 		modinfo->type = ETH_MODULE_SFF_8472;
--		modinfo->eeprom_len = ETH_MODULE_SFF_8472_LEN;
-+		modinfo->eeprom_len = MLX4_EEPROM_PAGE_LEN;
- 		break;
- 	default:
- 		return -EINVAL;
---- a/drivers/net/ethernet/mellanox/mlx4/port.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/port.c
-@@ -2077,11 +2077,6 @@ int mlx4_get_module_info(struct mlx4_dev
- 		size -= offset + size - I2C_PAGE_SIZE;
+ 	return CP0_LEGACY_COMPARE_IRQ;
+--- a/drivers/irqchip/irq-ath79-misc.c
++++ b/drivers/irqchip/irq-ath79-misc.c
+@@ -22,15 +22,6 @@
+ #define AR71XX_RESET_REG_MISC_INT_ENABLE	4
  
- 	i2c_addr = I2C_ADDR_LOW;
--	if (offset >= I2C_PAGE_SIZE) {
--		/* Reset offset to high page */
--		i2c_addr = I2C_ADDR_HIGH;
--		offset -= I2C_PAGE_SIZE;
--	}
+ #define ATH79_MISC_IRQ_COUNT			32
+-#define ATH79_MISC_PERF_IRQ			5
+-
+-static int ath79_perfcount_irq;
+-
+-int get_c0_perfcount_int(void)
+-{
+-	return ath79_perfcount_irq;
+-}
+-EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
  
- 	cable_info = (struct mlx4_cable_info *)inmad->data;
- 	cable_info->dev_mem_address = cpu_to_be16(offset);
+ static void ath79_misc_irq_handler(struct irq_desc *desc)
+ {
+@@ -122,8 +113,6 @@ static void __init ath79_misc_intc_domai
+ {
+ 	void __iomem *base = domain->host_data;
+ 
+-	ath79_perfcount_irq = irq_create_mapping(domain, ATH79_MISC_PERF_IRQ);
+-
+ 	/* Disable and clear all interrupts */
+ 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
+ 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
 
 
