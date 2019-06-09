@@ -2,52 +2,53 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE6BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA0EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32232206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D660206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099844;
-	bh=qgu/3aYKPH8ns+tk3Bx1JV3VWJ2iRA0rJI1PZ7GHb0Y=;
+	s=default; t=1560099848;
+	bh=/RQoB0Mb3evmr+5bBnjH8AXnfnI9O9MRVe/mPA/pi6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SI9AVVimJVcsF0Pf+QTwUe7mwarbm1qsdZUD/nHNC4xLLdLc2aWHX8bK94AqEETOj
-	 a1BcWuiGxj1mK3hieCmGpfw5X9cdEcXAYYS1TNCv5iiwTYN2OHs13yiBNcWykZ8/VB
-	 O2u8pCwRi2xH1Yidooi5GchxkOsYy6kyf1JN8zQw=
+	b=uMd4fRSYpt1qEO3mqGWsJLFBMqJDcXkzrtv2hA4TNUyoo1M3tDkB9fcYNVOi3GcST
+	 RqVjjor9KyvHpiy+DhKMwhosp1pZAx2xwpB1rEzVYBlXPTS6JG1Ag34iv44F7lcBbJ
+	 GESuwoxLFb8SnDfLc3CPYaTkSnyTe9jTJ6Mx5wEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388114AbfFIRED (ORCPT
+        id S2388557AbfFIREH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42602 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:04:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388534AbfFIREA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:04:00 -0400
+        id S2388543AbfFIREC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:04:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A1E9204EC;
-        Sun,  9 Jun 2019 17:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C69C9204EC;
+        Sun,  9 Jun 2019 17:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099839;
-        bh=qgu/3aYKPH8ns+tk3Bx1JV3VWJ2iRA0rJI1PZ7GHb0Y=;
+        s=default; t=1560099842;
+        bh=/RQoB0Mb3evmr+5bBnjH8AXnfnI9O9MRVe/mPA/pi6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tyxHNsnx6gW3C0QTcMVsAXNwNTkInjhchKO8AfIbjr1MDnXcpdUtCoZ20s86scaIx
-         u4v7xG3GJOwuHMcC1glAAoOG3HEKRyIuGNGELow96BMtxZHu81D375RplrQf6BAN3d
-         viNtwYeTuNlSUis6lEBsO9FNnkBlGg7xHDVABxrk=
+        b=WTcNycwceKIiRfWqanY1gyFfuzyQj1/6XCz3toym5hhnuEZO64WuoA3YVl504qIVW
+         L6zdWvIRzNreGAbdi7bmKlGtpfXZlmmzqN4M03I4AuaGQKMQUZenvOOSyYLB/nt5xo
+         d8fjWgEUe9yBIcqwcp21/uV6X03FEPObZ8pTIVSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 183/241] net: stmmac: fix reset gpio free missing
-Date:   Sun,  9 Jun 2019 18:42:05 +0200
-Message-Id: <20190609164153.154197923@linuxfoundation.org>
+        stable@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 141/241] PM / core: Propagate dev->power.wakeup_path when no callbacks
+Date:   Sun,  9 Jun 2019 18:41:23 +0200
+Message-Id: <20190609164151.857030674@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,36 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+[ Upstream commit dc351d4c5f4fe4d0f274d6d660227be0c3a03317 ]
 
-[ Upstream commit 49ce881c0d4c4a7a35358d9dccd5f26d0e56fc61 ]
+The dev->power.direct_complete flag may become set in device_prepare() in
+case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
+set). This leads to a broken behaviour, when there is child having wakeup
+enabled and relies on its parent to be used in the wakeup path.
 
-Commit 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
-removed the reset gpio free, when the driver is unbinded or rmmod,
-we miss the gpio free.
+More precisely, when the direct complete path becomes selected for the
+child in __device_suspend(), the propagation of the dev->power.wakeup_path
+becomes skipped as well.
 
-This patch uses managed API to request the reset gpio, so that the
-gpio could be freed properly.
+Let's address this problem, by checking if the device is a part the wakeup
+path or has wakeup enabled, then prevent the direct complete path from
+being used.
 
-Fixes: 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Loic Pallardy <loic.pallardy@st.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+[ rjw: Comment cleanup ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/base/power/main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -154,7 +154,8 @@ int stmmac_mdio_reset(struct mii_bus *bu
- 			of_property_read_u32_array(np,
- 				"snps,reset-delays-us", data->delays, 3);
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index 05409141ec077..8efdb823826c8 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1378,6 +1378,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
+ 	if (dev->power.syscore)
+ 		goto Complete;
  
--			if (gpio_request(data->reset_gpio, "mdio-reset"))
-+			if (devm_gpio_request(priv->device, data->reset_gpio,
-+					      "mdio-reset"))
- 				return 0;
- 		}
- 
++	/* Avoid direct_complete to let wakeup_path propagate. */
++	if (device_may_wakeup(dev) || dev->power.wakeup_path)
++		dev->power.direct_complete = false;
++
+ 	if (dev->power.direct_complete) {
+ 		if (pm_runtime_status_suspended(dev)) {
+ 			pm_runtime_disable(dev);
+-- 
+2.20.1
+
 
 
