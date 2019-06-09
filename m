@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D850C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E843BC468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02393205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A4B205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100117;
-	bh=ufoUUvz40p+JRfFWrFlIUNPByU6JsfaNP2u3RKqSqDo=;
+	s=default; t=1560100118;
+	bh=0CDsZGJsbvenEgYhZqeAPddmeN3X4HrfnFrWCK1XvY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vh4+E9xwNLNnbjczEsoYNU5Vzbna/h/0J/9BSe7ob5X1nekXfoUyKTSrusgEvg8S3
-	 RA0n7OiVoM36f4qmLgcg2xo6lZZEtY5BWfNAoUfZUdGXBgTEgnq0lC5TSK9XcNWDY0
-	 WSbm09A8Fh6Luu8bdQsj4qxWElSP0OyrxR00Jvwk=
+	b=2iVvCHm8l8Bh6nbaoqe4Q7rxW80+BL9v0mCwDcmZZ2CKTsIApfqeDhoO7/9yUnb1K
+	 WF5pJyVrUnK1GCspZx5nEQ6xFHr830cW7tMLIGEmtKo4TniqHSNY2iOi2sMP4I7u+2
+	 ZmCOxJCcvi/vk04XN3zV2icEPU/qYIm/St+1PU08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388774AbfFIRFP (ORCPT
+        id S1729814AbfFIRFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44222 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:05:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732669AbfFIRFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:05:07 -0400
+        id S2387698AbfFIRFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4E2C204EC;
-        Sun,  9 Jun 2019 17:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39510204EC;
+        Sun,  9 Jun 2019 17:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099907;
-        bh=ufoUUvz40p+JRfFWrFlIUNPByU6JsfaNP2u3RKqSqDo=;
+        s=default; t=1560099901;
+        bh=0CDsZGJsbvenEgYhZqeAPddmeN3X4HrfnFrWCK1XvY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OD03GMSNcRQ36QT4QERQlzWRrFaLS1oHlSCg88BnLXO6cKALTb2e0Ov6KPdM3Fcpb
-         YUwbwBo7MakeHCnRaWtrLx0ypus1qAMewfq+l3bYILUINhK8ia4k/c5ZFlmtz3krsw
-         mSUyTjm2d3LNdu6hplMohOiD1h8+a7fWvw1/DZe0=
+        b=gj/ygOtb7m9KpzhETuPUSnLI7ZJjBZdiXl5HQEtnX+MTZbmt7iwAMiB9BIls9QU3/
+         QoEl9AKv84MdB+FWbg1w4DYMR0DemLKS7JikEEtvSKDAHG0R4vC9746cMiliIcGa9z
+         ceK/XPSx4xRyUiRubjjzjKfot8WvNUNCZNim6u8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 4.4 209/241] tty: serial: msm_serial: Fix XON/XOFF
-Date:   Sun,  9 Jun 2019 18:42:31 +0200
-Message-Id: <20190609164154.690351299@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 207/241] ALSA: hda/realtek - Set default power save node to 0
+Date:   Sun,  9 Jun 2019 18:42:29 +0200
+Message-Id: <20190609164154.623282378@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,53 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: Kailang Yang <kailang@realtek.com>
 
-commit 61c0e37950b88bad590056286c1d766b1f167f4e upstream.
+commit 317d9313925cd8388304286c0d3c8dda7f060a2d upstream.
 
-When the tty layer requests the uart to throttle, the current code
-executing in msm_serial will trigger "Bad mode in Error Handler" and
-generate an invalid stack frame in pstore before rebooting (that is if
-pstore is indeed configured: otherwise the user shall just notice a
-reboot with no further information dumped to the console).
+I measured power consumption between power_save_node=1 and power_save_node=0.
+It's almost the same.
+Codec will enter to runtime suspend and suspend.
+That pin also will enter to D3. Don't need to enter to D3 by single pin.
+So, Disable power_save_node as default. It will avoid more issues.
+Windows Driver also has not this option at runtime PM.
 
-This patch replaces the PIO byte accessor with the word accessor
-already used in PIO mode.
-
-Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/msm_serial.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -703,6 +703,7 @@ static void msm_handle_tx(struct uart_po
- 	struct circ_buf *xmit = &msm_port->uart.state->xmit;
- 	struct msm_dma *dma = &msm_port->tx_dma;
- 	unsigned int pio_count, dma_count, dma_min;
-+	char buf[4] = { 0 };
- 	void __iomem *tf;
- 	int err = 0;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6236,7 +6236,7 @@ static int patch_alc269(struct hda_codec
  
-@@ -712,10 +713,12 @@ static void msm_handle_tx(struct uart_po
- 		else
- 			tf = port->membase + UART_TF;
+ 	spec = codec->spec;
+ 	spec->gen.shared_mic_vref_pin = 0x18;
+-	codec->power_save_node = 1;
++	codec->power_save_node = 0;
  
-+		buf[0] = port->x_char;
-+
- 		if (msm_port->is_uartdm)
- 			msm_reset_dm_count(port, 1);
- 
--		iowrite8_rep(tf, &port->x_char, 1);
-+		iowrite32_rep(tf, buf, 1);
- 		port->icount.tx++;
- 		port->x_char = 0;
- 		return;
+ #ifdef CONFIG_PM
+ 	codec->patch_ops.suspend = alc269_suspend;
 
 
