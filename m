@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF32C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE313C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA1A2081C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A3420840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098695;
-	bh=g+hd2iLdmdvsV99V+ur7k869hgf102FOOHf4hvs7/pY=;
+	s=default; t=1560098697;
+	bh=9UUGcHoVFBJb1hC5DKU9fRP3Za3xd6vxQoLCV0oxCkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VA/mjwjwkuRaoD0/P192DDx+caeggpy3pjJAS6S9v1XHntjCFZ1MiSdfFgLMyK4OD
-	 D1wOkCD5d5BTAyeKAr+S8Rj1B9pOsSMjOAOumBmkjNvB6XKJctKYO+aGG1cEVdZAeU
-	 qw0qgvAPKknyJk0deT2JxxT3dyxDzrBfH7T68cVk=
+	b=TQ28XN+aFWTavQkzvbR27IwGgLxrGINbSxkNap2kcuqOQ3OhkKaAFt0QoEqcrkNJT
+	 iH1A5OTsccveQ4L2zF9Ve8+laFYYC6/uhu575mowQdT6uw/h1mnRVVC3Npx/xBwEOe
+	 cDRCHHEt3uXUIq2WCq1eh2LboHnS+GcFqArl4atI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfFIQox (ORCPT
+        id S1729559AbfFIQo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42160 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:44:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729451AbfFIQot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:44:49 -0400
+        id S1729514AbfFIQow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:44:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBDAA2084A;
-        Sun,  9 Jun 2019 16:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F1120840;
+        Sun,  9 Jun 2019 16:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098689;
-        bh=g+hd2iLdmdvsV99V+ur7k869hgf102FOOHf4hvs7/pY=;
+        s=default; t=1560098691;
+        bh=9UUGcHoVFBJb1hC5DKU9fRP3Za3xd6vxQoLCV0oxCkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hL7qzB+0U0H95ofJ0HW4QQXPGoRbW8B/QthSEunhJTNP6iCQD0l0Mb3l2jy/Jrizb
-         Ethc9vvMq5a+wruxk++GphsQOLIW5qktBd1z2m/1JcYvA0LY1ubTsKbwf6OAbWt5kW
-         QN6wOUcZncn3k25AR2mHLU7mInKiZ9504b0gGx4k=
+        b=f3tjcrN+VYLI69vLLRdh4fNVNnXaGFIWlrdJuQ4B4PefsbDbNtKcFdO318lQp8bSy
+         VtCYtaSvlVL8dzqwsXjJ4ABI7hmLF+c1gUxucdHhMT1pSubojH3sJaeSETtbuRv1qI
+         wn5ViX9bSSBxkloATzs5H/h7z97KAc//ggdznJOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John David Anglin <dave.anglin@bell.net>,
+        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
+        Carlo Pisani <carlojpisani@gmail.com>,
         Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.1 25/70] parisc: Use implicit space register selection for loading the coherence index of I/O pdirs
-Date:   Sun,  9 Jun 2019 18:41:36 +0200
-Message-Id: <20190609164129.119219324@linuxfoundation.org>
+Subject: [PATCH 5.1 26/70] parisc: Fix crash due alternative coding for NP iopdir_fdc bit
+Date:   Sun,  9 Jun 2019 18:41:37 +0200
+Message-Id: <20190609164129.205408449@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -59,58 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John David Anglin <dave.anglin@bell.net>
+From: Helge Deller <deller@gmx.de>
 
-commit 63923d2c3800919774f5c651d503d1dd2adaddd5 upstream.
+commit 527a1d1ede98479bf90c31a64822107ac7e6d276 upstream.
 
-We only support I/O to kernel space. Using %sr1 to load the coherence
-index may be racy unless interrupts are disabled. This patch changes the
-code used to load the coherence index to use implicit space register
-selection. This saves one instruction and eliminates the race.
+According to the found documentation, data cache flushes and sync
+instructions are needed on the PCX-U+ (PA8200, e.g. C200/C240)
+platforms, while PCX-W (PA8500, e.g. C360) platforms aparently don't
+need those flushes when changing the IO PDIR data structures.
 
-Tested on rp3440, c8000 and c3750.
+We have no documentation for PCX-W+ (PA8600) and PCX-W2 (PA8700) CPUs,
+but Carlo Pisani reported that his C3600 machine (PA8600, PCX-W+) fails
+when the fdc instructions were removed. His firmware didn't set the NIOP
+bit, so one may assume it's a firmware bug since other C3750 machines
+had the bit set.
 
-Signed-off-by: John David Anglin <dave.anglin@bell.net>
-Cc: stable@vger.kernel.org
+Even if documentation (as mentioned above) states that PCX-W (PA8500,
+e.g.  J5000) does not need fdc flushes, Sven could show that an Adaptec
+29320A PCI-X SCSI controller reliably failed on a dd command during the
+first five minutes in his J5000 when fdc flushes were missing.
+
+Going forward, we will now NOT replace the fdc and sync assembler
+instructions by NOPS if:
+a) the NP iopdir_fdc bit was set by firmware, or
+b) we find a CPU up to and including a PCX-W+ (PA8600).
+
+This fixes the HPMC crashes on a C240 and C36XX machines. For other
+machines we rely on the firmware to set the bit when needed.
+
+In case one finds HPMC issues, people could try to boot their machines
+with the "no-alternatives" kernel option to turn off any alternative
+patching.
+
+Reported-by: Sven Schnelle <svens@stackframe.org>
+Reported-by: Carlo Pisani <carlojpisani@gmail.com>
+Tested-by: Sven Schnelle <svens@stackframe.org>
+Fixes: 3847dab77421 ("parisc: Add alternative coding infrastructure")
 Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: stable@vger.kernel.org # 5.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/parisc/ccio-dma.c  |    4 +---
- drivers/parisc/sba_iommu.c |    3 +--
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ arch/parisc/kernel/alternative.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/parisc/ccio-dma.c
-+++ b/drivers/parisc/ccio-dma.c
-@@ -565,8 +565,6 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
- 	/* We currently only support kernel addresses */
- 	BUG_ON(sid != KERNEL_SPACE);
+--- a/arch/parisc/kernel/alternative.c
++++ b/arch/parisc/kernel/alternative.c
+@@ -56,7 +56,8 @@ void __init_or_module apply_alternatives
+ 		 * time IO-PDIR is changed in Ike/Astro.
+ 		 */
+ 		if ((cond & ALT_COND_NO_IOC_FDC) &&
+-			(boot_cpu_data.pdc.capabilities & PDC_MODEL_IOPDIR_FDC))
++			((boot_cpu_data.cpu_type <= pcxw_) ||
++			 (boot_cpu_data.pdc.capabilities & PDC_MODEL_IOPDIR_FDC)))
+ 			continue;
  
--	mtsp(sid,1);
--
- 	/*
- 	** WORD 1 - low order word
- 	** "hints" parm includes the VALID bit!
-@@ -597,7 +595,7 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
- 	** Grab virtual index [0:11]
- 	** Deposit virt_idx bits into I/O PDIR word
- 	*/
--	asm volatile ("lci %%r0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
-+	asm volatile ("lci %%r0(%1), %0" : "=r" (ci) : "r" (vba));
- 	asm volatile ("extru %1,19,12,%0" : "+r" (ci) : "r" (ci));
- 	asm volatile ("depw  %1,15,12,%0" : "+r" (pa) : "r" (ci));
- 
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -575,8 +575,7 @@ sba_io_pdir_entry(u64 *pdir_ptr, space_t
- 	pa = virt_to_phys(vba);
- 	pa &= IOVP_MASK;
- 
--	mtsp(sid,1);
--	asm("lci 0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
-+	asm("lci 0(%1), %0" : "=r" (ci) : "r" (vba));
- 	pa |= (ci >> PAGE_SHIFT) & 0xff;  /* move CI (8 bits) into lowest byte */
- 
- 	pa |= SBA_PDIR_VALID_BIT;	/* set "valid" bit */
+ 		/* Want to replace pdtlb by a pdtlb,l instruction? */
 
 
