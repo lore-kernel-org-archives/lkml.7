@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4285C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288D0C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAE3207E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23D0205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099325;
-	bh=/ek4AUce4ipkcqRnQIfzGZ375DYFAzQTb61jjPHljYk=;
+	s=default; t=1560099328;
+	bh=5DAdWmU4+rn2k8pRq7sq3fuN1ox/Q3VzobqIHTsLe5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=brNGg/+GlkXzs69hNCM80GnLTMVnwHQTYdq1sf9eOFxnjala0uoi5Z0D/pZ85mKxI
-	 kfh5yrqtqm+NpocKKOwp7G+iq4jtAbRW3UuS/aodn5m2M9lMhhgmL943NsulWnwMiO
-	 bDRx4jxkbxnOUFXSqWnvZMZMdTpSox0NECK29UAI=
+	b=LyZMkhoOKvtMmEccZDjNdv2Zeid4nwFLaUaZ5BiwY6105OUPrK1K3zEOVJ0NbG+XN
+	 i67dHxyLMjNIriKLsu4nT1M6vPTiWf6xAl67JMSBCXHLGr2SeC62IM/JVDkKbtSOyS
+	 pwflffZYhYGBxdTM+XCiI7egYyRcD09SeKZGAnvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732174AbfFIQzY (ORCPT
+        id S1732794AbfFIQz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:55:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57450 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732773AbfFIQzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:55:22 -0400
+        id S1732773AbfFIQzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:55:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39585204EC;
-        Sun,  9 Jun 2019 16:55:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B94205ED;
+        Sun,  9 Jun 2019 16:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099321;
-        bh=/ek4AUce4ipkcqRnQIfzGZ375DYFAzQTb61jjPHljYk=;
+        s=default; t=1560099324;
+        bh=5DAdWmU4+rn2k8pRq7sq3fuN1ox/Q3VzobqIHTsLe5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dkfmb8fiMOr2NfUi2BodHruR2gDZFaYqdPaTdDugvPveu3kGeGp3TdcwUIKYRhQNu
-         ZpQ+l7OT6ypaUzMzrni23Zmh/ydpg42BbLlXmzlYmXXc0zwEoL577sRNJoSHrKmBNM
-         LkwuQlYSFzlEqrr3tn8I9W7L862fdHXwii+v9kdo=
+        b=f3oCGWnp9FyacGViekqc4DRyn9QtkAISfw0VmCAH75pIJrdiC2KgFLKLOrfQs70QT
+         /Cok2vRcejkTKnnQPg9Uv12aGbG4eb8JZ0eW9jin6YSAWqRuY1pV5ZHk4rrjQehBNX
+         ttG0+m5geX0iSqdf1Baq0LGyFH0poJWX9SqJwtg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 63/83] neighbor: Call __ipv4_neigh_lookup_noref in neigh_xmit
-Date:   Sun,  9 Jun 2019 18:42:33 +0200
-Message-Id: <20190609164133.192575221@linuxfoundation.org>
+Subject: [PATCH 4.9 64/83] net/mlx4_en: ethtool, Remove unsupported SFP EEPROM high pages query
+Date:   Sun,  9 Jun 2019 18:42:34 +0200
+Message-Id: <20190609164133.262881400@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -60,57 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Erez Alfasi <ereza@mellanox.com>
 
-[ Upstream commit 4b2a2bfeb3f056461a90bd621e8bd7d03fa47f60 ]
+[ Upstream commit 135dd9594f127c8a82d141c3c8430e9e2143216a ]
 
-Commit cd9ff4de0107 changed the key for IFF_POINTOPOINT devices to
-INADDR_ANY but neigh_xmit which is used for MPLS encapsulations was not
-updated to use the altered key. The result is that every packet Tx does
-a lookup on the gateway address which does not find an entry, a new one
-is created only to find the existing one in the table right before the
-insert since arp_constructor was updated to reset the primary key. This
-is seen in the allocs and destroys counters:
-    ip -s -4 ntable show | head -10 | grep alloc
+Querying EEPROM high pages data for SFP module is currently
+not supported by our driver but is still tried, resulting in
+invalid FW queries.
 
-which increase for each packet showing the unnecessary overhread.
+Set the EEPROM ethtool data length to 256 for SFP module to
+limit the reading for page 0 only and prevent invalid FW queries.
 
-Fix by having neigh_xmit use __ipv4_neigh_lookup_noref for NEIGH_ARP_TABLE.
-
-Fixes: cd9ff4de0107 ("ipv4: Make neigh lookup keys for loopback/point-to-point devices be INADDR_ANY")
-Reported-by: Alan Maguire <alan.maguire@oracle.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Tested-by: Alan Maguire <alan.maguire@oracle.com>
+Fixes: 7202da8b7f71 ("ethtool, net/mlx4_en: Cable info, get_module_info/eeprom ethtool support")
+Signed-off-by: Erez Alfasi <ereza@mellanox.com>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/neighbour.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/en_ethtool.c |    4 +++-
+ drivers/net/ethernet/mellanox/mlx4/port.c       |    5 -----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -30,6 +30,7 @@
- #include <linux/times.h>
- #include <net/net_namespace.h>
- #include <net/neighbour.h>
-+#include <net/arp.h>
- #include <net/dst.h>
- #include <net/sock.h>
- #include <net/netevent.h>
-@@ -2489,7 +2490,13 @@ int neigh_xmit(int index, struct net_dev
- 		if (!tbl)
- 			goto out;
- 		rcu_read_lock_bh();
--		neigh = __neigh_lookup_noref(tbl, addr, dev);
-+		if (index == NEIGH_ARP_TABLE) {
-+			u32 key = *((u32 *)addr);
+--- a/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_ethtool.c
+@@ -1930,6 +1930,8 @@ static int mlx4_en_set_tunable(struct ne
+ 	return ret;
+ }
+ 
++#define MLX4_EEPROM_PAGE_LEN 256
 +
-+			neigh = __ipv4_neigh_lookup_noref(dev, key);
-+		} else {
-+			neigh = __neigh_lookup_noref(tbl, addr, dev);
-+		}
- 		if (!neigh)
- 			neigh = __neigh_create(tbl, addr, dev, false);
- 		err = PTR_ERR(neigh);
+ static int mlx4_en_get_module_info(struct net_device *dev,
+ 				   struct ethtool_modinfo *modinfo)
+ {
+@@ -1964,7 +1966,7 @@ static int mlx4_en_get_module_info(struc
+ 		break;
+ 	case MLX4_MODULE_ID_SFP:
+ 		modinfo->type = ETH_MODULE_SFF_8472;
+-		modinfo->eeprom_len = ETH_MODULE_SFF_8472_LEN;
++		modinfo->eeprom_len = MLX4_EEPROM_PAGE_LEN;
+ 		break;
+ 	default:
+ 		return -ENOSYS;
+--- a/drivers/net/ethernet/mellanox/mlx4/port.c
++++ b/drivers/net/ethernet/mellanox/mlx4/port.c
+@@ -1960,11 +1960,6 @@ int mlx4_get_module_info(struct mlx4_dev
+ 		size -= offset + size - I2C_PAGE_SIZE;
+ 
+ 	i2c_addr = I2C_ADDR_LOW;
+-	if (offset >= I2C_PAGE_SIZE) {
+-		/* Reset offset to high page */
+-		i2c_addr = I2C_ADDR_HIGH;
+-		offset -= I2C_PAGE_SIZE;
+-	}
+ 
+ 	cable_info = (struct mlx4_cable_info *)inmad->data;
+ 	cable_info->dev_mem_address = cpu_to_be16(offset);
 
 
