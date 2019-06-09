@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCA4C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF4EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BDFB2083D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE8920833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098753;
-	bh=RraCkwXdzglEq/7vdS33A/72ye87OZQO/agCNTF+Lok=;
+	s=default; t=1560098756;
+	bh=ywlPNhe9q6s7xmSEoV4kIeU8IFY4qdBlUrpk7UcgrWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GkyZlTYYXs3oMLnoAuOp4rKWNOgj+0wKfBsN+rIxC0AfxelH8B921NHztYYexjA1W
-	 U+cRk34CwmFvmM0ScYWhKiWEURGu8FofwX+Z/Af4xclFQHJTh465OuB2uQ++Ih0DAy
-	 qHQPbX2cSEhQkfbrKu1s7lNNpIDOhCFIxKdgyYak=
+	b=yPXdeN8FUjsjrWy5YMKKwOE9inkJ0q/UvJHyv+jICJUNKn7Mg/1tZZq3yy5TIKhBi
+	 b/Vw/zvVIy302HywGvGVtaMw3iX+tGZE2XBie8g/LBWCuHiLkB+Hdo0FF8276xUDPe
+	 R+99puV+gacnsHVlfYjP1+v1ppQXOXzIozHrmTfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbfFIQpx (ORCPT
+        id S1730164AbfFIQpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730067AbfFIQpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:45 -0400
+        id S1730099AbfFIQpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C5E420833;
-        Sun,  9 Jun 2019 16:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CB0E2084A;
+        Sun,  9 Jun 2019 16:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098744;
-        bh=RraCkwXdzglEq/7vdS33A/72ye87OZQO/agCNTF+Lok=;
+        s=default; t=1560098749;
+        bh=ywlPNhe9q6s7xmSEoV4kIeU8IFY4qdBlUrpk7UcgrWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mp4dQCYs54Rq1SQU5rqgb+Yj6VQoAW7JdIKwW42h1JPm3XC6EYLt86X7sRPyre9OJ
-         56fHvmGLXpCFt0URSACnUBKeRRZLRebH+SItshPOXOK9h+iZOsQljegc/Vu0h/W15W
-         YwQh4CqKMK0p4xIyb2JPvZjUsR6MnThlnwozaZTc=
+        b=icyR9eC/vzE9xTDMPcHQOB93M89DzMSjml7+AaxRwILFlCMAPPGpqRRpi4j/+CFYh
+         gtMsCjPJpovC5GOK5uDIo227lW3QOmHBUc94IKBNn5LxhnN213J+LPjXD+D/tMmtUL
+         t5Wn+xu0TlYHiNovWCNEcuoEudT20g6WnuQIV98U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Kevin Hilman <khilman@baylibre.com>, linux-mips@vger.kernel.org
-Subject: [PATCH 5.1 46/70] MIPS: pistachio: Build uImage.gz by default
-Date:   Sun,  9 Jun 2019 18:41:57 +0200
-Message-Id: <20190609164131.226499200@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.1 48/70] test_firmware: Use correct snprintf() limit
+Date:   Sun,  9 Jun 2019 18:41:59 +0200
+Message-Id: <20190609164131.447092337@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,44 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit e4f2d1af7163becb181419af9dece9206001e0a6 upstream.
+commit bd17cc5a20ae9aaa3ed775f360b75ff93cd66a1d upstream.
 
-The pistachio platform uses the U-Boot bootloader & generally boots a
-kernel in the uImage format. As such it's useful to build one when
-building the kernel, but to do so currently requires the user to
-manually specify a uImage target on the make command line.
+The limit here is supposed to be how much of the page is left, but it's
+just using PAGE_SIZE as the limit.
 
-Make uImage.gz the pistachio platform's default build target, so that
-the default is to build a kernel image that we can actually boot on a
-board such as the MIPS Creator Ci40.
+The other thing to remember is that snprintf() returns the number of
+bytes which would have been copied if we had had enough room.  So that
+means that if we run out of space then this code would end up passing a
+negative value as the limit and the kernel would print an error message.
+I have change the code to use scnprintf() which returns the number of
+bytes that were successfully printed (not counting the NUL terminator).
 
-Marked for stable backport as far as v4.1 where pistachio support was
-introduced. This is primarily useful for CI systems such as kernelci.org
-which will benefit from us building a suitable image which can then be
-booted as part of automated testing, extending our test coverage to the
-affected stable branches.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-URL: https://groups.io/g/kernelci/message/388
-Cc: stable@vger.kernel.org # v4.1+
-Cc: linux-mips@vger.kernel.org
+Fixes: c92316bf8e94 ("test_firmware: add batched firmware tests")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/pistachio/Platform |    1 +
- 1 file changed, 1 insertion(+)
+ lib/test_firmware.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/arch/mips/pistachio/Platform
-+++ b/arch/mips/pistachio/Platform
-@@ -6,3 +6,4 @@ cflags-$(CONFIG_MACH_PISTACHIO)		+=				\
- 		-I$(srctree)/arch/mips/include/asm/mach-pistachio
- load-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff80400000
- zload-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff81000000
-+all-$(CONFIG_MACH_PISTACHIO)		:= uImage.gz
+--- a/lib/test_firmware.c
++++ b/lib/test_firmware.c
+@@ -223,30 +223,30 @@ static ssize_t config_show(struct device
+ 
+ 	mutex_lock(&test_fw_mutex);
+ 
+-	len += snprintf(buf, PAGE_SIZE,
++	len += scnprintf(buf, PAGE_SIZE - len,
+ 			"Custom trigger configuration for: %s\n",
+ 			dev_name(dev));
+ 
+ 	if (test_fw_config->name)
+-		len += snprintf(buf+len, PAGE_SIZE,
++		len += scnprintf(buf+len, PAGE_SIZE - len,
+ 				"name:\t%s\n",
+ 				test_fw_config->name);
+ 	else
+-		len += snprintf(buf+len, PAGE_SIZE,
++		len += scnprintf(buf+len, PAGE_SIZE - len,
+ 				"name:\tEMTPY\n");
+ 
+-	len += snprintf(buf+len, PAGE_SIZE,
++	len += scnprintf(buf+len, PAGE_SIZE - len,
+ 			"num_requests:\t%u\n", test_fw_config->num_requests);
+ 
+-	len += snprintf(buf+len, PAGE_SIZE,
++	len += scnprintf(buf+len, PAGE_SIZE - len,
+ 			"send_uevent:\t\t%s\n",
+ 			test_fw_config->send_uevent ?
+ 			"FW_ACTION_HOTPLUG" :
+ 			"FW_ACTION_NOHOTPLUG");
+-	len += snprintf(buf+len, PAGE_SIZE,
++	len += scnprintf(buf+len, PAGE_SIZE - len,
+ 			"sync_direct:\t\t%s\n",
+ 			test_fw_config->sync_direct ? "true" : "false");
+-	len += snprintf(buf+len, PAGE_SIZE,
++	len += scnprintf(buf+len, PAGE_SIZE - len,
+ 			"read_fw_idx:\t%u\n", test_fw_config->read_fw_idx);
+ 
+ 	mutex_unlock(&test_fw_mutex);
 
 
