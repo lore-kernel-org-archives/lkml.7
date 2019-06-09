@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6EDC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE1B204EC
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959C420840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099814;
-	bh=+kIEXJMeTP1KdmW/tnGqQswG8llJuLBkzgOSww3SMcs=;
+	s=default; t=1560099820;
+	bh=TZN9iRhipWXcbbEe+RiuGRmbFeYdckX4c8MXkXvOds0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eSRB5bUKPGnFxyQ65vRqlw0+RIZNEgTF1huhzJv4ytbvzII5vApy4+ee7MylEtXXX
-	 temAD1S4UEEiNzfJEFo8B2Wz4YX/knhe76K7qF18p85ELkpW5XGrXK3NyK1TsUIy/I
-	 lfCKgvtfAAbgaGe1zLqAaAyS6ZckKRyHWBebezkc=
+	b=VfVWp+vBk/RIpl66Jo/5XdASk0ElOj1wKZ7Jd2ULz716ZKah66pPe+4VNJeR3edA7
+	 HmIrlFCe4h+l06cSO8YE3hA2rZrQM6AmrkFxXX0RsSW8XQsv2ZxyYn7YM4NtcchO4D
+	 TlpjOGdD0YyDTg0UrrRm9waTOU6d7TrVn+n6lEBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388443AbfFIRDd (ORCPT
+        id S2388456AbfFIRDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41902 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:03:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388429AbfFIRDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:31 -0400
+        id S2388064AbfFIRDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:03:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D79A204EC;
-        Sun,  9 Jun 2019 17:03:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48177204EC;
+        Sun,  9 Jun 2019 17:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099810;
-        bh=+kIEXJMeTP1KdmW/tnGqQswG8llJuLBkzgOSww3SMcs=;
+        s=default; t=1560099815;
+        bh=TZN9iRhipWXcbbEe+RiuGRmbFeYdckX4c8MXkXvOds0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kCXrPfawbIxKx7U8aGzUcJbU28eRugLfh6RiilpkcrsLLPGSzXlUzx9NDnFHzfC28
-         /lv5BxRE7zSkI67mbMwzonB3H9LV3e1wCMIawxE9JLn0GcFhqbKiTJ7x5lZdQVlRvn
-         f29OJK1NlTdP9UMtY9PmW/D3NiS3tLNHGgbSI+0s=
+        b=WxA0SuoCse7zlRdIU+zRBmi4J1JjLDVkQK8GA1FE4Z/yNQxHtoVw2QxtIk/sfAOT1
+         NojfT0PQdXUQLuGYU0HqLCVW+0WkC3UGGezjBEkttwAZIfQE/NAuCv8+j1E8I57qqV
+         /Ik9FFIUvUtw2t9MBvyC3EPXgtT+NS46lH45O2kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 173/241] media: go7007: avoid clang frame overflow warning with KASAN
-Date:   Sun,  9 Jun 2019 18:41:55 +0200
-Message-Id: <20190609164152.790981313@linuxfoundation.org>
+Subject: [PATCH 4.4 175/241] scsi: lpfc: Fix SLI3 commands being issued on SLI4 devices
+Date:   Sun,  9 Jun 2019 18:41:57 +0200
+Message-Id: <20190609164152.865584477@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,43 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ed713a4a1367aca5c0f2f329579465db00c17995 ]
+[ Upstream commit c95a3b4b0fb8d351e2329a96f87c4fc96a149505 ]
 
-clang-8 warns about one function here when KASAN is enabled, even
-without the 'asan-stack' option:
+During debug, it was seen that the driver is issuing commands specific to
+SLI3 on SLI4 devices. Although the adapter correctly rejected the command,
+this should not be done.
 
-drivers/media/usb/go7007/go7007-fw.c:1551:5: warning: stack frame size of 2656 bytes in function
+Revise the code to stop sending these commands on a SLI4 adapter.
 
-I have reported this issue in the llvm bugzilla, but to make
-it work with the clang-8 release, a small annotation is still
-needed.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=38809
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: fix checkpatch warning]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/go7007/go7007-fw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/go7007/go7007-fw.c b/drivers/media/usb/go7007/go7007-fw.c
-index 60bf5f0644d11..a5efcd4f7b4f5 100644
---- a/drivers/media/usb/go7007/go7007-fw.c
-+++ b/drivers/media/usb/go7007/go7007-fw.c
-@@ -1499,8 +1499,8 @@ static int modet_to_package(struct go7007 *go, __le16 *code, int space)
- 	return cnt;
- }
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 4131addfb8729..a67950908db17 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -902,7 +902,11 @@ lpfc_linkdown(struct lpfc_hba *phba)
+ 			lpfc_linkdown_port(vports[i]);
+ 		}
+ 	lpfc_destroy_vport_work_array(phba, vports);
+-	/* Clean up any firmware default rpi's */
++
++	/* Clean up any SLI3 firmware default rpi's */
++	if (phba->sli_rev > LPFC_SLI_REV3)
++		goto skip_unreg_did;
++
+ 	mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (mb) {
+ 		lpfc_unreg_did(phba, 0xffff, LPFC_UNREG_ALL_DFLT_RPIS, mb);
+@@ -914,6 +918,7 @@ lpfc_linkdown(struct lpfc_hba *phba)
+ 		}
+ 	}
  
--static int do_special(struct go7007 *go, u16 type, __le16 *code, int space,
--			int *framelen)
-+static noinline_for_stack int do_special(struct go7007 *go, u16 type,
-+					 __le16 *code, int space, int *framelen)
- {
- 	switch (type) {
- 	case SPECIAL_FRM_HEAD:
++ skip_unreg_did:
+ 	/* Setup myDID for link up if we are in pt2pt mode */
+ 	if (phba->pport->fc_flag & FC_PT2PT) {
+ 		phba->pport->fc_myDID = 0;
+@@ -4647,6 +4652,10 @@ lpfc_unreg_default_rpis(struct lpfc_vport *vport)
+ 	LPFC_MBOXQ_t     *mbox;
+ 	int rc;
+ 
++	/* Unreg DID is an SLI3 operation. */
++	if (phba->sli_rev > LPFC_SLI_REV3)
++		return;
++
+ 	mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (mbox) {
+ 		lpfc_unreg_did(phba, vport->vpi, LPFC_UNREG_ALL_DFLT_RPIS,
 -- 
 2.20.1
 
