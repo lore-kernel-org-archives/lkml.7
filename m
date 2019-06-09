@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC36C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7359CC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FE0207E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41021205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099273;
-	bh=wYee2MizF4FGI303blNlFR0jzsgsGPDXdDm4XMppkpM=;
+	s=default; t=1560099276;
+	bh=lelvo0io8nkp8qWK8JdAYNl7dl/qXAIZPC9tzGmuaNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xit60bgoBvQyE65Sm/D2adgt/8Gb9AqEb9RHFupPMvoqwcA2Rh+zOqOuqucD1My+4
-	 tSZ+0dYo5mYS2tHfIHgbZNuuhllpvOb18HxzjSYMJ3oVNWbku/O+fCZzP7TVHyJXSo
-	 Q3siFoileHkCWhbJtQvKc0GJ4OWPt+Xk4o85+Q5Y=
+	b=EW0pcEVqyulfy9gk7BTXvHnbsdvwzqRl1Lf8mOIaWSoCXUrduJEr5MitmnAaYye2a
+	 9fwXGJjLH468Kmf4Qd9zbXs/y2Ill7qwozun9rhMno0jCqT3vDUS89XF7BKa358kG5
+	 iHyRCKuYVoftmAS0uDr/mhnbdepZcc4s7x6AX69s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732621AbfFIQyc (ORCPT
+        id S1732642AbfFIQyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:54:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732596AbfFIQy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:54:28 -0400
+        id S1732624AbfFIQye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:54:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9AB204EC;
-        Sun,  9 Jun 2019 16:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08989206BB;
+        Sun,  9 Jun 2019 16:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099267;
-        bh=wYee2MizF4FGI303blNlFR0jzsgsGPDXdDm4XMppkpM=;
+        s=default; t=1560099273;
+        bh=lelvo0io8nkp8qWK8JdAYNl7dl/qXAIZPC9tzGmuaNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tt4DGf7+qQVBIxw155z+af28Z+iXXElypRG9FISDse9aWyFDWS28GvgDQVfXj1a2x
-         BuZJmHn8Im+KZcciKb+Bu+f92NzVYn1hMH56QfQnAZyUlYY37AeZ20wPu699YxttD+
-         6pMxyBNgkV/tY+PfTpj/lrfE5Guks+dcJZ7F7Z5E=
+        b=cQUyxEqgzJYe2QrdJXddM0e/WzNF7Xb5oueKAlPYxJCqCAw6fzIXxnnGM8KgFTPzo
+         PRXqLPFwv34PquN4oOawsqzg8YZWagEQ9Mhf4XXrA2iIbyIJ76GPNTVJfNU5bbFrcB
+         51iTmNgD3TI4k0D4qhVg4j1mHofCwuRXBkBlRWE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Yaro Slav <yaro330@gmail.com>,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 70/83] Revert "fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied"
-Date:   Sun,  9 Jun 2019 18:42:40 +0200
-Message-Id: <20190609164133.781456697@linuxfoundation.org>
+        stable@vger.kernel.org, John David Anglin <dave.anglin@bell.net>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.9 72/83] parisc: Use implicit space register selection for loading the coherence index of I/O pdirs
+Date:   Sun,  9 Jun 2019 18:42:42 +0200
+Message-Id: <20190609164133.991775459@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -63,45 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: John David Anglin <dave.anglin@bell.net>
 
-[ Upstream commit 4970b42d5c362bf873982db7d93245c5281e58f4 ]
+commit 63923d2c3800919774f5c651d503d1dd2adaddd5 upstream.
 
-This reverts commit e9919a24d3022f72bcadc407e73a6ef17093a849.
+We only support I/O to kernel space. Using %sr1 to load the coherence
+index may be racy unless interrupts are disabled. This patch changes the
+code used to load the coherence index to use implicit space register
+selection. This saves one instruction and eliminates the race.
 
-Nathan reported the new behaviour breaks Android, as Android just add
-new rules and delete old ones.
+Tested on rp3440, c8000 and c3750.
 
-If we return 0 without adding dup rules, Android will remove the new
-added rules and causing system to soft-reboot.
-
-Fixes: e9919a24d302 ("fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Yaro Slav <yaro330@gmail.com>
-Reported-by: Maciej Żenczykowski <zenczykowski@gmail.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: John David Anglin <dave.anglin@bell.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/fib_rules.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -429,9 +429,9 @@ int fib_nl_newrule(struct sk_buff *skb,
- 	if (rule->l3mdev && rule->table)
- 		goto errout_free;
+---
+ drivers/parisc/ccio-dma.c  |    4 +---
+ drivers/parisc/sba_iommu.c |    3 +--
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+--- a/drivers/parisc/ccio-dma.c
++++ b/drivers/parisc/ccio-dma.c
+@@ -563,8 +563,6 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
+ 	/* We currently only support kernel addresses */
+ 	BUG_ON(sid != KERNEL_SPACE);
  
--	if (rule_exists(ops, frh, tb, rule)) {
--		if (nlh->nlmsg_flags & NLM_F_EXCL)
--			err = -EEXIST;
-+	if ((nlh->nlmsg_flags & NLM_F_EXCL) &&
-+	    rule_exists(ops, frh, tb, rule)) {
-+		err = -EEXIST;
- 		goto errout_free;
- 	}
+-	mtsp(sid,1);
+-
+ 	/*
+ 	** WORD 1 - low order word
+ 	** "hints" parm includes the VALID bit!
+@@ -595,7 +593,7 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
+ 	** Grab virtual index [0:11]
+ 	** Deposit virt_idx bits into I/O PDIR word
+ 	*/
+-	asm volatile ("lci %%r0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
++	asm volatile ("lci %%r0(%1), %0" : "=r" (ci) : "r" (vba));
+ 	asm volatile ("extru %1,19,12,%0" : "+r" (ci) : "r" (ci));
+ 	asm volatile ("depw  %1,15,12,%0" : "+r" (pa) : "r" (ci));
  
+--- a/drivers/parisc/sba_iommu.c
++++ b/drivers/parisc/sba_iommu.c
+@@ -573,8 +573,7 @@ sba_io_pdir_entry(u64 *pdir_ptr, space_t
+ 	pa = virt_to_phys(vba);
+ 	pa &= IOVP_MASK;
+ 
+-	mtsp(sid,1);
+-	asm("lci 0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
++	asm("lci 0(%1), %0" : "=r" (ci) : "r" (vba));
+ 	pa |= (ci >> PAGE_SHIFT) & 0xff;  /* move CI (8 bits) into lowest byte */
+ 
+ 	pa |= SBA_PDIR_VALID_BIT;	/* set "valid" bit */
 
 
