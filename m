@@ -2,76 +2,189 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30F8C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 14:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71414C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 14:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9513E2070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 14:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3169C2070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 14:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=newmedia-net.de header.i=@newmedia-net.de header.b="A3KbMpqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfFIOei convert rfc822-to-8bit (ORCPT
+        id S1728859AbfFIOhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 10:34:38 -0400
-Received: from hilbert2.alphasky.net ([178.63.16.112]:55879 "EHLO
-        hilbert2.alphasky.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbfFIOeh (ORCPT
+        Sun, 9 Jun 2019 10:37:05 -0400
+Received: from webmail.newmedia-net.de ([185.84.6.166]:38267 "EHLO
+        webmail.newmedia-net.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfFIOhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 10:34:37 -0400
-X-Greylist: delayed 384 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jun 2019 10:34:37 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by hilbert.alphasky.net (Postfix) with ESMTP id AB36BE011C7
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2019 16:28:11 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at hilbert.alphasky.net
-Received: from hilbert2.alphasky.net ([127.0.0.1])
-        by localhost (hilbert.alphasky.net [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id DfGMcWPVf8nv for <linux-kernel@vger.kernel.org>;
-        Sun,  9 Jun 2019 16:28:10 +0200 (CEST)
-Received: from tau.familiekling.de (tau.familiekling.de [10.99.0.1])
-        by delta.familiekling.de (Postfix) with ESMTPS id 0C51312A10FB
-        for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2019 16:28:10 +0200 (CEST)
-Received: from tau.familiekling.de (10.99.0.1) by tau.familiekling.de
- (10.99.0.1) with Microsoft SMTP Server (TLS) id 15.0.847.32; Sun, 9 Jun 2019
- 16:28:03 +0200
-Received: from tau.familiekling.de ([fe80::5c8e:2c3e:e113:32f7]) by
- tau.familiekling.de ([fe80::5c8e:2c3e:e113:32f7%12]) with mapi id
- 15.00.0847.040; Sun, 9 Jun 2019 16:28:03 +0200
-From:   Christoph Kling <christoph@kling.org>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL net-next, resend] isdn: deprecate non-mISDN drivers
-Thread-Topic: Re: [GIT PULL net-next, resend] isdn: deprecate non-mISDN
- drivers
-Thread-Index: AdUezS0NeVLicA74QvuShSLnam5txw==
-Date:   Sun, 9 Jun 2019 14:28:03 +0000
-Message-ID: <7076fa0e275247bf9caabfb630204a2e@tau.familiekling.de>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.0.20]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sun, 9 Jun 2019 10:37:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=newmedia-net.de; s=mikd;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=2B/RIjGHUT/vsYG/v5Zt/3JaknSAy9TmyLhmt7XtUBg=;
+        b=A3KbMpqYfU3xcPjB0rJvhgtG6Cj9B2adg6gtwbH/1LQ/jWsNyAh3DaoJBEw6l+BPmfOCjr9eWLxXROyymbXFjPhW6FrD2rubaxFrn1BtgYP1WCOLmW4+NCaktC3H9P+VqXDnihypMN8hGJBZydjjVbNnJJEJ+ItA4Fgq2FX4FUY=;
+Subject: Re: [PATCH v3 1/2] mt76: mt7615: enable support for mesh
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Chih-Min Chen <chih-min.Chen@mediatek.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
+ <ade7ef01-8b06-ec7d-4caf-e581f4033819@newmedia-net.de>
+ <CAJ0CqmVBogQrqf4Gckr5gQ6tCrdZG=p60ZiC+-WW-yxt93+40Q@mail.gmail.com>
+From:   Sebastian Gottschall <s.gottschall@newmedia-net.de>
+Message-ID: <0eea6d21-1de2-abc3-93f4-70ed04dac3df@newmedia-net.de>
+Date:   Sun, 9 Jun 2019 16:36:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAJ0CqmVBogQrqf4Gckr5gQ6tCrdZG=p60ZiC+-WW-yxt93+40Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Received:  from [2003:c9:3f05:3a00:f095:7be4:6d09:fd49]
+        by webmail.newmedia-net.de with esmtpsa (TLSv1:AES128-SHA:128)
+        (Exim 4.72)
+        (envelope-from <s.gottschall@newmedia-net.de>)
+        id 1hZywV-0005Wr-8f; Sun, 09 Jun 2019 16:37:07 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+by the way. this big fat kernel warning exists in all operation modes 
+unless anything else but aes-128 ccmp is used. since the chipset is 
+capable of doing gcmp etc. as well
+it would be nice if this issue can be fixed. otherwise encryption 
+support can be defined as "broken" for mt7615
 
-I'm a long time ISDN user and I cannot fully agree to the assessment of current ISDN usage. It is of course true that ISDN is no longer a main protocol for telephone connections and therefore the number of users has dropped. But still there are people with public ISDN telephone links, e.g. in Germany. Not everything has been converted into voice over ip. 
-
-More importantly however, there are still many *private* ISDN networks. The simple reason is that beyond the public networks, there are still a lot of people who have ISDN telephone installations in their buildings. 
-
-Those installations date from the time when many public telephone connections used ISDN. Those private ISDN telephone installations have a *very* long lifetime (> 20 years), as many people, especially individuals shy at the cost and effort to get a new internal telephone installation. A reliable indicator for that is that one of the most widespread wifi router products in Germany and beyond, AVM Fritz!Box still supports ISDN even in its most recent version (7590). 
-
-Speaking for myself, I still use the capi based b1pci driver for active AVM cards in several installations.
-
-Please do not base your assessment of ISDN usage on the size and number of public ISDN networks and please do not remove capi and isdn4linux support from the kernel.
-
-Thank you for commitment to the kernel development!
-
-Kind regards,
-Christoph Kling 
+Am 06.06.2019 um 18:19 schrieb Lorenzo Bianconi:
+>> i tested your patch against a qca 9984 chipset using SAE and without
+>> encryption. both did not work. the devices are connecting, but no data
+>> connection is possible
+> Hi Sebastian,
+>
+> I tested Ryder's patch using mt76x2 as mesh peer and it works fine for me.
+> Could you please provide some more info?
+>
+> Regards,
+> Lorenzo
+>
+>>
+>> Sebastian
+>>
+>> Am 03.06.2019 um 08:08 schrieb Ryder Lee:
+>>> Enable NL80211_IFTYPE_MESH_POINT and update its path.
+>>>
+>>> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+>>> ---
+>>> Changes since v3 - fix a wrong expression
+>>> Changes since v2 - remove unused definitions
+>>> ---
+>>>    drivers/net/wireless/mediatek/mt76/mt7615/init.c | 6 ++++++
+>>>    drivers/net/wireless/mediatek/mt76/mt7615/main.c | 1 +
+>>>    drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 4 +++-
+>>>    drivers/net/wireless/mediatek/mt76/mt7615/mcu.h  | 6 ------
+>>>    4 files changed, 10 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+>>> index 59f604f3161f..f860af6a42da 100644
+>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+>>> @@ -133,6 +133,9 @@ static const struct ieee80211_iface_limit if_limits[] = {
+>>>        {
+>>>                .max = MT7615_MAX_INTERFACES,
+>>>                .types = BIT(NL80211_IFTYPE_AP) |
+>>> +#ifdef CONFIG_MAC80211_MESH
+>>> +                      BIT(NL80211_IFTYPE_MESH_POINT) |
+>>> +#endif
+>>>                         BIT(NL80211_IFTYPE_STATION)
+>>>        }
+>>>    };
+>>> @@ -195,6 +198,9 @@ int mt7615_register_device(struct mt7615_dev *dev)
+>>>        dev->mt76.antenna_mask = 0xf;
+>>>
+>>>        wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+>>> +#ifdef CONFIG_MAC80211_MESH
+>>> +                              BIT(NL80211_IFTYPE_MESH_POINT) |
+>>> +#endif
+>>>                                 BIT(NL80211_IFTYPE_AP);
+>>>
+>>>        ret = mt76_register_device(&dev->mt76, true, mt7615_rates,
+>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>>> index b0bb7cc12385..585e67fa2728 100644
+>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>>> @@ -37,6 +37,7 @@ static int get_omac_idx(enum nl80211_iftype type, u32 mask)
+>>>
+>>>        switch (type) {
+>>>        case NL80211_IFTYPE_AP:
+>>> +     case NL80211_IFTYPE_MESH_POINT:
+>>>                /* ap use hw bssid 0 and ext bssid */
+>>>                if (~mask & BIT(HW_BSSID_0))
+>>>                        return HW_BSSID_0;
+>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+>>> index 43f70195244c..e82297048449 100644
+>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+>>> @@ -754,6 +754,7 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+>>>
+>>>        switch (vif->type) {
+>>>        case NL80211_IFTYPE_AP:
+>>> +     case NL80211_IFTYPE_MESH_POINT:
+>>>                tx_wlan_idx = mvif->sta.wcid.idx;
+>>>                conn_type = CONNECTION_INFRA_AP;
+>>>                break;
+>>> @@ -968,7 +969,7 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, struct ieee80211_vif *vif,
+>>>                .rx_wtbl = {
+>>>                        .tag = cpu_to_le16(WTBL_RX),
+>>>                        .len = cpu_to_le16(sizeof(struct wtbl_rx)),
+>>> -                     .rca1 = vif->type != NL80211_IFTYPE_AP,
+>>> +                     .rca1 = vif->type == NL80211_IFTYPE_STATION,
+>>>                        .rca2 = 1,
+>>>                        .rv = 1,
+>>>                },
+>>> @@ -1042,6 +1043,7 @@ static void sta_rec_convert_vif_type(enum nl80211_iftype type, u32 *conn_type)
+>>>    {
+>>>        switch (type) {
+>>>        case NL80211_IFTYPE_AP:
+>>> +     case NL80211_IFTYPE_MESH_POINT:
+>>>                if (conn_type)
+>>>                        *conn_type = CONNECTION_INFRA_STA;
+>>>                break;
+>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
+>>> index e96efb13fa4d..0915cb735699 100644
+>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
+>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
+>>> @@ -105,25 +105,19 @@ enum {
+>>>    #define STA_TYPE_STA                BIT(0)
+>>>    #define STA_TYPE_AP         BIT(1)
+>>>    #define STA_TYPE_ADHOC              BIT(2)
+>>> -#define STA_TYPE_TDLS                BIT(3)
+>>>    #define STA_TYPE_WDS                BIT(4)
+>>>    #define STA_TYPE_BC         BIT(5)
+>>>
+>>>    #define NETWORK_INFRA               BIT(16)
+>>>    #define NETWORK_P2P         BIT(17)
+>>>    #define NETWORK_IBSS                BIT(18)
+>>> -#define NETWORK_MESH         BIT(19)
+>>> -#define NETWORK_BOW          BIT(20)
+>>>    #define NETWORK_WDS         BIT(21)
+>>>
+>>>    #define CONNECTION_INFRA_STA        (STA_TYPE_STA | NETWORK_INFRA)
+>>>    #define CONNECTION_INFRA_AP (STA_TYPE_AP | NETWORK_INFRA)
+>>>    #define CONNECTION_P2P_GC   (STA_TYPE_STA | NETWORK_P2P)
+>>>    #define CONNECTION_P2P_GO   (STA_TYPE_AP | NETWORK_P2P)
+>>> -#define CONNECTION_MESH_STA  (STA_TYPE_STA | NETWORK_MESH)
+>>> -#define CONNECTION_MESH_AP   (STA_TYPE_AP | NETWORK_MESH)
+>>>    #define CONNECTION_IBSS_ADHOC       (STA_TYPE_ADHOC | NETWORK_IBSS)
+>>> -#define CONNECTION_TDLS              (STA_TYPE_STA | NETWORK_INFRA | STA_TYPE_TDLS)
+>>>    #define CONNECTION_WDS              (STA_TYPE_WDS | NETWORK_WDS)
+>>>    #define CONNECTION_INFRA_BC (STA_TYPE_BC | NETWORK_INFRA)
+>>>
