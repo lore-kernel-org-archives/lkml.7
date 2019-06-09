@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53840C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ED2C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298012067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143432067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100692;
-	bh=lVvONsK8aHnJphzCHw+ySLVGodwHhULxSw4z2hudIUY=;
+	s=default; t=1560100694;
+	bh=D97dp07vttzcT0zf2mnUVwJdjWopWxsQ2RzFPrziyTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=df0bDswHkP/mSe1Kjemr4WmUjenJH2ZgY6YXvzJ4j6DKt3SxIh2XeA9+KCGDRGygq
-	 H/QKbZpjy0I7Wjj2ozApz9JAUS5MbmoLGCwu+aKJW5G7Bujmoh1YRq71c7JoiRtGU5
-	 Pq+GcFhpWlcJdMg8uzKrAqGFJP0Kkq88JNLcr1iw=
+	b=SjcxIcdJqVtEQNEMDK93aV/+gm6w6urMcNTyduidjyJIxCoiafOB4zOxKIpWuodZC
+	 hyL/Ep3F6mocMBKyfj81oGRJ7qp3drJ+evwRRMokq3TNWLKULKOifLwYnEV+5/e5m6
+	 FuDSzhaLQEF9TD6sxzvTohKrKDQOmAt31KLfQMD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731779AbfFIQuq (ORCPT
+        id S1731806AbfFIRSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50650 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730880AbfFIQul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:41 -0400
+        id S1731780AbfFIQuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:50:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AB132070B;
-        Sun,  9 Jun 2019 16:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8344A206DF;
+        Sun,  9 Jun 2019 16:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099040;
-        bh=lVvONsK8aHnJphzCHw+ySLVGodwHhULxSw4z2hudIUY=;
+        s=default; t=1560099046;
+        bh=D97dp07vttzcT0zf2mnUVwJdjWopWxsQ2RzFPrziyTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOz0FJt5zckews9OQewuRo3HLjEABrKhiC5RiVucb64evcYg8BXBrKbmlEhZ/Esrb
-         Eh0es2silPL2zcqertrim91E6nZxLQENRE/rLvhHb0o0Uvfcp5V/g2K+eFH11hJJZr
-         Fj/GyxO1laKB6xUqvTEhuq16uNhbyYs+OnTVI98Y=
+        b=qGcdeAQ+OWWAZrlhUXYnnGHMi4qzKKfToh7wjPJFxODMeWJ+YizSROaDc2SQWCnqK
+         yXJM7p6ufwr7HaIrPSibGX62kI3dtmMotPe7sI+XFSvZgHofhjKh6FVAI/F6mBSiNu
+         h5wSMFRpdRMCrqcz5GIHrEHP034uRw6rGR4IeOXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Subject: [PATCH 4.14 26/35] drm/gma500/cdv: Check vbt config bits when detecting lvds panels
-Date:   Sun,  9 Jun 2019 18:42:32 +0200
-Message-Id: <20190609164127.057316714@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.14 28/35] drm/amdgpu/psp: move psp version specific function pointers to early_init
+Date:   Sun,  9 Jun 2019 18:42:34 +0200
+Message-Id: <20190609164127.152712044@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -59,60 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 7c420636860a719049fae9403e2c87804f53bdde upstream.
+commit 9d6fea5744d6798353f37ac42a8a653a2607ca69 upstream.
 
-Some machines have an lvds child device in vbt even though a panel is
-not attached. To make detection more reliable we now also check the lvds
-config bits available in the vbt.
+In case we need to use them for GPU reset prior initializing the
+asic.  Fixes a crash if the driver attempts to reset the GPU at driver
+load time.
 
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1665766
+Acked-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190416114607.1072-1-patrik.r.jakobsson@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/gma500/cdv_intel_lvds.c |    3 +++
- drivers/gpu/drm/gma500/intel_bios.c     |    3 +++
- drivers/gpu/drm/gma500/psb_drv.h        |    1 +
- 3 files changed, 7 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
---- a/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-+++ b/drivers/gpu/drm/gma500/cdv_intel_lvds.c
-@@ -594,6 +594,9 @@ void cdv_intel_lvds_init(struct drm_devi
- 	int pipe;
- 	u8 pin;
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+@@ -37,18 +37,10 @@ static void psp_set_funcs(struct amdgpu_
+ static int psp_early_init(void *handle)
+ {
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
++	struct psp_context *psp = &adev->psp;
  
-+	if (!dev_priv->lvds_enabled_in_vbt)
-+		return;
+ 	psp_set_funcs(adev);
+ 
+-	return 0;
+-}
+-
+-static int psp_sw_init(void *handle)
+-{
+-	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+-	struct psp_context *psp = &adev->psp;
+-	int ret;
+-
+ 	switch (adev->asic_type) {
+ 	case CHIP_VEGA10:
+ 		psp->init_microcode = psp_v3_1_init_microcode;
+@@ -79,6 +71,15 @@ static int psp_sw_init(void *handle)
+ 
+ 	psp->adev = adev;
+ 
++	return 0;
++}
 +
- 	pin = GMBUS_PORT_PANEL;
- 	if (!lvds_is_present_in_vbt(dev, &pin)) {
- 		DRM_DEBUG_KMS("LVDS is not present in VBT\n");
---- a/drivers/gpu/drm/gma500/intel_bios.c
-+++ b/drivers/gpu/drm/gma500/intel_bios.c
-@@ -436,6 +436,9 @@ parse_driver_features(struct drm_psb_pri
- 	if (driver->lvds_config == BDB_DRIVER_FEATURE_EDP)
- 		dev_priv->edp.support = 1;
- 
-+	dev_priv->lvds_enabled_in_vbt = driver->lvds_config != 0;
-+	DRM_DEBUG_KMS("LVDS VBT config bits: 0x%x\n", driver->lvds_config);
++static int psp_sw_init(void *handle)
++{
++	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
++	struct psp_context *psp = &adev->psp;
++	int ret;
 +
- 	/* This bit means to use 96Mhz for DPLL_A or not */
- 	if (driver->primary_lfp_id)
- 		dev_priv->dplla_96mhz = true;
---- a/drivers/gpu/drm/gma500/psb_drv.h
-+++ b/drivers/gpu/drm/gma500/psb_drv.h
-@@ -538,6 +538,7 @@ struct drm_psb_private {
- 	int lvds_ssc_freq;
- 	bool is_lvds_on;
- 	bool is_mipi_on;
-+	bool lvds_enabled_in_vbt;
- 	u32 mipi_ctrl_display;
- 
- 	unsigned int core_freq;
+ 	ret = psp_init_microcode(psp);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to load psp firmware!\n");
 
 
