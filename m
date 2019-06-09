@@ -2,167 +2,153 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E554CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 15:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4BFC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 15:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C8220665
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 15:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CC9206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 15:56:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="EXmd3v5o"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="MDYNAKLk";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="OX+JyBrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfFIPoX (ORCPT
+        id S1729017AbfFIP4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 11:44:23 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39502 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbfFIPoX (ORCPT
+        Sun, 9 Jun 2019 11:56:00 -0400
+Received: from mail180-16.suw31.mandrillapp.com ([198.2.180.16]:23597 "EHLO
+        mail180-16.suw31.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728703AbfFIP4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 11:44:23 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m10so10396100edv.6
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 08:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pMFPZMSiGklfaZyfuFOGH+2W0X1p8u7TpG+RYN4ZXnY=;
-        b=EXmd3v5obVkBPoKbED/ljCt8sh5huVmTgTEujveNN6i39S4CCp7O401AeWJlt0MXPL
-         rjFmwoNnZKuzleSsdaYCDsRFm3MJSvJhIoGBbY+vsjEZIyMlYCz+QfYmBRuYOK46zxIA
-         q8MV3LVdz/l8m8L/tAFdKEnQ0k2GVoHT05JxNQ370QxtZSKN0m7n4DrpN0aYmkazGElI
-         eoD9qXhK3Z8kR6OD930EKB89POnoOJWbwleOlz6TPHsJkmpoAoex22apfAlQai2Bz8rO
-         hJUGi5hIw43EirJpBm1j7e/lHQA+3kVb2DREdowJbOi9feiwF/xdfk1WivCifhXFI25k
-         Yr2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pMFPZMSiGklfaZyfuFOGH+2W0X1p8u7TpG+RYN4ZXnY=;
-        b=tnPJ/OQlCPZPeDUo32x1EaJMbxehUDQOtmmOwzX7H/McsfYkWBJPuL1nYH0hcYZYRc
-         WdDfSuaOA0qxd3uSgdx0eZmm6x4+ctGJUKuq0xq5EqpGV08fxJawp9NgCAQIPe/UzYd9
-         /3f12Uaycwro5jGltugkiHzlN0wgLPn5xlAsojlsZy0CyMH8BryhzdtpJiV3qrdh0W3n
-         pxfwBmt1g6zyrN5k3WPvxWB5Eefwfm7Ruk8N6Rv3PFBBZ/jOBNKlK8v4hSr/eu+vgOI6
-         9hXWoyHVsd5ga4ubAMb1cBIcR8w+1oeUcUxIdz0Bb+83kkWWY3s6C9co4hETWwCIQQt2
-         fZUw==
-X-Gm-Message-State: APjAAAWuRKZAiInGIw+dtYkgQ2Xt5MMlo8HEId7qVvF3FSsPS+jjcn9F
-        o5N0Mwl01cO5F8Perxbg8l7qIw==
-X-Google-Smtp-Source: APXvYqxbc2xDk7pO55cfSqSdryDdStSJH1Te+y+n+bvtTiprqPiFfuOTHM1iD6YH02QCzObZygTxkQ==
-X-Received: by 2002:a17:906:4f87:: with SMTP id o7mr55245469eju.281.1560095060514;
-        Sun, 09 Jun 2019 08:44:20 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:9cc0:6dac:cd8f:f6e9:1b84:bbb1])
-        by smtp.gmail.com with ESMTPSA id z3sm2102247edh.71.2019.06.09.08.44.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 09 Jun 2019 08:44:19 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 17:44:16 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, tyhicks@canonical.com,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, linux-kernel@vger.kernel.org,
-        richardrose@google.com, vapier@chromium.org, bhthompson@google.com,
-        smbarber@chromium.org, joelhockey@chromium.org,
-        ueberall@themenzentrisch.de
-Subject: Re: [PATCH RESEND net-next 1/2] br_netfilter: add struct netns_brnf
-Message-ID: <20190609154415.kkzmzl2jp5esoczu@brauner.io>
-References: <20190606114142.15972-1-christian@brauner.io>
- <20190606114142.15972-2-christian@brauner.io>
- <20190606081440.61ea1c62@hermes.lan>
- <20190606151937.mdpalfk7urvv74ub@brauner.io>
- <20190606163035.x7rvqdwubxiai5t6@salvia>
- <20190607132516.q3zwmzrynvqo7mzn@brauner.io>
- <20190607142858.vgkljqohn34rxhe2@salvia>
- <20190607144343.nzdlnuo4csllcy7q@salvia>
+        Sun, 9 Jun 2019 11:56:00 -0400
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jun 2019 11:55:59 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=EE5+ORCUb2ERsiXcdNYUqmpQ6CfNaBYc2tDctGYYkkw=;
+ b=MDYNAKLk9y09PWZJIgRtqwv57F++l2xwHv8W5wwgvbKnjFm9MIzQnFm1uIXBLUZxpVgGm7hIPEOY
+   AJZrRn8RyvPDF8HyK7Jr2SSUGl+a6phP7/WKql5GTxFfi7WCogGsCxW1AVyNccbDkgmPtarVhFfb
+   d5fD3/A4wbASvvpG1xs=
+Received: from pmta03.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail180-16.suw31.mandrillapp.com id hvkm0u22sc02 for <linux-kernel@vger.kernel.org>; Sun, 9 Jun 2019 15:40:56 +0000 (envelope-from <bounce-md_31050260.5cfd2888.v1-2ad6e9940aa7412eb4f23a490cd2b95b@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560094856; h=From : 
+ Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=EE5+ORCUb2ERsiXcdNYUqmpQ6CfNaBYc2tDctGYYkkw=; 
+ b=OX+JyBrxLXqlHsJVTvg/052TFpkYlxJMWmgsytYX5z1bbq4kHidCe3I2knkU8ol5XgWStC
+ bj+drd1R/jHJg2tfnwruer9WwmtSZk+LOMZV8Z9Ogk2FVlMQREZHUZrr5RxRL28JglKweEnz
+ IkBibxRcKbF0hdHBkdPBVIfNrY6Jo=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH 4.9 2/2] fuse: Add FOPEN_STREAM to use stream_open()
+Received: from [87.98.221.171] by mandrillapp.com id 2ad6e9940aa7412eb4f23a490cd2b95b; Sun, 09 Jun 2019 15:40:56 +0000
+X-Mailer: git-send-email 2.20.1
+To:     <stable@vger.kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Message-Id: <20190609131113.2347-3-kirr@nexedi.com>
+In-Reply-To: <20190609131113.2347-1-kirr@nexedi.com>
+References: <20190609131113.2347-1-kirr@nexedi.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.2ad6e9940aa7412eb4f23a490cd2b95b
+X-Mandrill-User: md_31050260
+Date:   Sun, 09 Jun 2019 15:40:56 +0000
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190607144343.nzdlnuo4csllcy7q@salvia>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 04:43:43PM +0200, Pablo Neira Ayuso wrote:
-> On Fri, Jun 07, 2019 at 04:28:58PM +0200, Pablo Neira Ayuso wrote:
-> > On Fri, Jun 07, 2019 at 03:25:16PM +0200, Christian Brauner wrote:
-> > > On Thu, Jun 06, 2019 at 06:30:35PM +0200, Pablo Neira Ayuso wrote:
-> > > > On Thu, Jun 06, 2019 at 05:19:39PM +0200, Christian Brauner wrote:
-> > > > > On Thu, Jun 06, 2019 at 08:14:40AM -0700, Stephen Hemminger wrote:
-> > > > > > On Thu,  6 Jun 2019 13:41:41 +0200
-> > > > > > Christian Brauner <christian@brauner.io> wrote:
-> > > > > > 
-> > > > > > > +struct netns_brnf {
-> > > > > > > +#ifdef CONFIG_SYSCTL
-> > > > > > > +	struct ctl_table_header *ctl_hdr;
-> > > > > > > +#endif
-> > > > > > > +
-> > > > > > > +	/* default value is 1 */
-> > > > > > > +	int call_iptables;
-> > > > > > > +	int call_ip6tables;
-> > > > > > > +	int call_arptables;
-> > > > > > > +
-> > > > > > > +	/* default value is 0 */
-> > > > > > > +	int filter_vlan_tagged;
-> > > > > > > +	int filter_pppoe_tagged;
-> > > > > > > +	int pass_vlan_indev;
-> > > > > > > +};
-> > > > > > 
-> > > > > > Do you really need to waste four bytes for each
-> > > > > > flag value. If you use a u8 that would work just as well.
-> > > > > 
-> > > > > I think we had discussed something like this but the problem why we
-> > > > > can't do this stems from how the sysctl-table stuff is implemented.
-> > > > > I distinctly remember that it couldn't be done with a flag due to that.
-> > > > 
-> > > > Could you define a pernet_operations object? I mean, define the id and size
-> > > > fields, then pass it to register_pernet_subsys() for registration.
-> > > > Similar to what we do in net/ipv4/netfilter/ipt_CLUSTER.c, see
-> > > > clusterip_net_ops and clusterip_pernet() for instance.
-> > > 
-> > > Hm, I don't think that would work. The sysctls for br_netfilter are
-> > > located in /proc/sys/net/bridge under /proc/sys/net which is tightly
-> > > integrated with the sysctls infrastructure for all of net/ and all the
-> > > folder underneath it including "core", "ipv4" and "ipv6".
-> > > I don't think creating and managing files manually in /proc/sys/net is
-> > > going to fly. It also doesn't seem very wise from a consistency and
-> > > complexity pov. I'm also not sure if this would work at all wrt to file
-> > > creation and reference counting if there are two different ways of
-> > > managing them in the same subfolder...
-> > > (clusterip creates files manually underneath /proc/net which probably is
-> > > the reason why it gets away with it.)
-> > 
-> > br_netfilter is now a module, and br_netfilter_hooks.c is part of it
-> > IIRC, this file registers these sysctl entries from the module __init
-> > path.
-> > 
-> > It would be a matter of adding a new .init callback to the existing
-> > brnf_net_ops object in br_netfilter_hooks.c. Then, call
-> > register_net_sysctl() from this .init callback to register the sysctl
-> > entries per netns.
-> 
-> Actually, this is what you patch is doing...
-> 
-> > There is already a brnf_net area that you can reuse for this purpose,
-> > to place these pernetns flags...
-> > 
-> > struct brnf_net {
-> >         bool enabled;
-> > };
-> > 
-> > which is going to be glad to have more fields (under the #ifdef
-> > CONFIG_SYSCTL) there.
-> 
-> ... except that struct brnf_net is not used to store the ctl_table.
-> 
-> So what I'm propose should be result in a small update to your patch 2/2.
+commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
 
-Actually not, I think. I had to rework it substantially but I think the
-outcome is quite nice. :) I'll send a new version now/today. :)
+Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
+POSIX") files opened even via nonseekable_open gate read and write via lock
+and do not allow them to be run simultaneously. This can create read vs
+write deadlock if a filesystem is trying to implement a socket-like file
+which is intended to be simultaneously used for both read and write from
+filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
+stream-like files so that read and write can run simultaneously without
+deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
+on writes to /proc/xen/xenbus") for a similar deadlock example on
+/proc/xen/xenbus.
 
-Thanks!
-Christian
+To avoid such deadlock it was tempting to adjust fuse_finish_open to use
+stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
+but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
+and in particular GVFS which actually uses offset in its read and write
+handlers
+
+	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+
+so if we would do such a change it will break a real user.
+
+Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
+opened handler is having stream-like semantics; does not use file position
+and thus the kernel is free to issue simultaneous read and write request on
+opened file handle.
+
+This patch together with stream_open() should be added to stable kernels
+starting from v3.14+. This will allow to patch OSSPD and other FUSE
+filesystems that provide stream-like files to return FOPEN_STREAM |
+FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
+kernel versions. This should work because fuse_finish_open ignores unknown
+open flags returned from a filesystem and so passing FOPEN_STREAM to a
+kernel that is not aware of this flag cannot hurt. In turn the kernel that
+is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
+is sufficient to implement streams without read vs write deadlock.
+
+Cc: stable@vger.kernel.org # v3.14+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+---
+ fs/fuse/file.c            | 4 +++-
+ include/uapi/linux/fuse.h | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 037990342321..157af5033a9f 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -178,7 +178,9 @@ void fuse_finish_open(struct inode *inode, struct file *file)
+ 		file->f_op = &fuse_direct_io_file_operations;
+ 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
+ 		invalidate_inode_pages2(inode->i_mapping);
+-	if (ff->open_flags & FOPEN_NONSEEKABLE)
++	if (ff->open_flags & FOPEN_STREAM)
++		stream_open(inode, file);
++	else if (ff->open_flags & FOPEN_NONSEEKABLE)
+ 		nonseekable_open(inode, file);
+ 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
+ 		struct fuse_inode *fi = get_fuse_inode(inode);
+diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+index 42fa977e3b14..8ca749a109d5 100644
+--- a/include/uapi/linux/fuse.h
++++ b/include/uapi/linux/fuse.h
+@@ -215,10 +215,12 @@ struct fuse_file_lock {
+  * FOPEN_DIRECT_IO: bypass page cache for this open file
+  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
+  * FOPEN_NONSEEKABLE: the file is not seekable
++ * FOPEN_STREAM: the file is stream-like (no file position at all)
+  */
+ #define FOPEN_DIRECT_IO		(1 << 0)
+ #define FOPEN_KEEP_CACHE	(1 << 1)
+ #define FOPEN_NONSEEKABLE	(1 << 2)
++#define FOPEN_STREAM		(1 << 4)
+ 
+ /**
+  * INIT request/reply flags
+-- 
+2.20.1
