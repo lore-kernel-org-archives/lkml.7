@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3909FC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB3EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0401420652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF4F20652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100735;
-	bh=4kymL7ZV3nowkkvEaZZqhY+EJloa8d/XCIBUPXRKQIA=;
+	s=default; t=1560100742;
+	bh=E+KnZknXoK5kyDN6MFIC8hm5B3cCu9oRBgsImIgDYvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wef9k0VQO39DeSwTDvuNAuRBDoWarX1UKGoHZ5m+AKzA0XFSxg7Yv4gOftLiDAQrX
-	 xhVtlpfXX9x0cPfaCPiyIpV9BHQWKn6wMmubxXFmqPdXXivWv3KW7V+5XnLod+ZKto
-	 CSpUrGOXzFA0430mpRoFtwjX/RcESUul2K4Hb0Lc=
+	b=SHgQ95fBoNDV+doUMcnkvvJSCXXpqeHsRAPqZypAG31U9IaoQE07P+yWSGZ2551q2
+	 D50ZSfpNHSGs296F5ovAobsM/CQFwvx4hUa2mPg3jTZ6CZkzK0Iry/qAoNPa5lxOt7
+	 rV5LHdOpYnMzKmVHKyVaPN5Z8kQde2TJOxSPXhXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbfFIQth (ORCPT
+        id S1732271AbfFIRTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49118 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:19:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731510AbfFIQte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:49:34 -0400
+        id S1731475AbfFIQtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:49:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4292420833;
-        Sun,  9 Jun 2019 16:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3390207E0;
+        Sun,  9 Jun 2019 16:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098973;
-        bh=4kymL7ZV3nowkkvEaZZqhY+EJloa8d/XCIBUPXRKQIA=;
+        s=default; t=1560098965;
+        bh=E+KnZknXoK5kyDN6MFIC8hm5B3cCu9oRBgsImIgDYvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OmFoqRbDx3SKQBrC07QqPiCmK5nWFemx68h9/dFHfnzHtZPx2vNeZ95LI1iTPeuf0
-         OoLz8I75gJVPmvVjX/Ev9I91xvQcsF8yZy6oOBahVNNPNKQxIXsYmvaFa3iQ3+bfmb
-         5rNjdGbqT6aO3RuZ373fluos4++pS6KemW+DO2OU=
+        b=qn1Ed64TWsGjdIZv9TAF6m/2FuIPzqfSN8XSJ9H79SCANpR5Xp1EEAQoH8SMF5Dnf
+         Xqz5g25AWgMfABPOOw0tAHEoiIve9AuvDPplJJTKusD3smHX5WxJrQoo8PJBf4z/f3
+         JZxL2jkm1bZ5rKmDfHoRE1/ArvnWQGlap23w2Ndw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.19 42/51] drm/amdgpu/psp: move psp version specific function pointers to early_init
-Date:   Sun,  9 Jun 2019 18:42:23 +0200
-Message-Id: <20190609164130.084287201@linuxfoundation.org>
+        stable@vger.kernel.org, Andres Rodriguez <andresx7@gmail.com>,
+        Dave Airlie <airlied@redhat.com>
+Subject: [PATCH 4.19 39/51] drm: add non-desktop quirk for Valve HMDs
+Date:   Sun,  9 Jun 2019 18:42:20 +0200
+Message-Id: <20190609164129.785862542@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,60 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Andres Rodriguez <andresx7@gmail.com>
 
-commit 9d6fea5744d6798353f37ac42a8a653a2607ca69 upstream.
+commit 30d62d4453e49f85dd17b2ba60bbb68b6593dba0 upstream.
 
-In case we need to use them for GPU reset prior initializing the
-asic.  Fixes a crash if the driver attempts to reset the GPU at driver
-load time.
+Add vendor/product pairs for the Valve Index HMDs.
 
-Acked-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Andres Rodriguez <andresx7@gmail.com>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: <stable@vger.kernel.org> # v4.15
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190502193157.15692-1-andresx7@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/drm_edid.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-@@ -37,18 +37,10 @@ static void psp_set_funcs(struct amdgpu_
- static int psp_early_init(void *handle)
- {
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
-+	struct psp_context *psp = &adev->psp;
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -172,6 +172,25 @@ static const struct edid_quirk {
+ 	/* Rotel RSX-1058 forwards sink's EDID but only does HDMI 1.1*/
+ 	{ "ETR", 13896, EDID_QUIRK_FORCE_8BPC },
  
- 	psp_set_funcs(adev);
- 
--	return 0;
--}
--
--static int psp_sw_init(void *handle)
--{
--	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
--	struct psp_context *psp = &adev->psp;
--	int ret;
--
- 	switch (adev->asic_type) {
- 	case CHIP_VEGA10:
- 	case CHIP_VEGA12:
-@@ -67,6 +59,15 @@ static int psp_sw_init(void *handle)
- 	if (adev->firmware.load_type != AMDGPU_FW_LOAD_PSP)
- 		return 0;
- 
-+	return 0;
-+}
++	/* Valve Index Headset */
++	{ "VLV", 0x91a8, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b0, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b1, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b2, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b3, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b4, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b5, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b6, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b7, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b8, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91b9, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91ba, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91bb, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91bc, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91bd, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91be, EDID_QUIRK_NON_DESKTOP },
++	{ "VLV", 0x91bf, EDID_QUIRK_NON_DESKTOP },
 +
-+static int psp_sw_init(void *handle)
-+{
-+	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
-+	struct psp_context *psp = &adev->psp;
-+	int ret;
-+
- 	ret = psp_init_microcode(psp);
- 	if (ret) {
- 		DRM_ERROR("Failed to load psp firmware!\n");
+ 	/* HTC Vive and Vive Pro VR Headsets */
+ 	{ "HVR", 0xaa01, EDID_QUIRK_NON_DESKTOP },
+ 	{ "HVR", 0xaa02, EDID_QUIRK_NON_DESKTOP },
 
 
