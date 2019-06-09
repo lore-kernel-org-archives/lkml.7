@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DCAC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D34BC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3BD3206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B284206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:07:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SdWX2T5S"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="A3czi1Dd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbfFISGr (ORCPT
+        id S1729774AbfFISGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 14:06:47 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38531 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729869AbfFISGo (ORCPT
+        Sun, 9 Jun 2019 14:06:43 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45327 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729352AbfFISGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 14:06:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d18so6885730wrs.5;
-        Sun, 09 Jun 2019 11:06:43 -0700 (PDT)
+        Sun, 9 Jun 2019 14:06:40 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so6868619wre.12;
+        Sun, 09 Jun 2019 11:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o6l+94PYyR5Sk//+/Av+qY/UlCTL0ZemTkfdZsKsuI8=;
-        b=SdWX2T5SmsidfZY0juvRr2RV/3P4zrsZFer61k+iFahxhK3NUrLNV7vJqaiiediw4R
-         rcD5gjK4F36aGP9zl93OjqUlTqKa+yOuFb1zRg53a0+wk8GFvnBaH8M8tYUWFnkcMhES
-         z6g3IjTPw7r0iQvIRiH4U10mEqwsFgh48Epr6t8L1JT2H0LP+CQmVdEwJdC9x/2+GFfe
-         ovcWvCt7k9lSwAFW8Ms2DOuzngbf6sdjnjZzkBh4CFHgf+kYTWgHWQ8Lg8qcWOqPJ8R/
-         CDsDEoFU29qpw66hFva8GSiCmvLelz82KUglM9YxxtwJTYRITd8hm+1Gx2C1LtklqYtl
-         dWIA==
+        bh=v1cIgIB/50o1TbuP4h7H+LIZ4pZcg3N52gZnolC5tNY=;
+        b=A3czi1Dd8xVadhyrRlkBaDwSqjW0C9T7e2gfiqTTqXBWnEx1kL4TX8qXuj3Xy3qfM0
+         5iny+h6uiPG/9QeP7zkvWcBhsfeCKwy8CGTIMEvub+SmrvjgDCwUoDfQaHzyiyIDEa+k
+         tWDKdLgoefImiuL1ZqWnHWTvo5c59Wq6zCHt/Vv6ZRmsU02qdpxTsPPS/lTTUNkBCGtz
+         vdCrDYoSvMO9YuyBmmRGpts6a17UQjzMJAyeAXOZdnpNrhhAGAKW+FZXIi562prgpzQ+
+         1QDEdy6DOYRCzaSLxU2HiUEllLqYYxBMD9Ivg3yXp8csBGAoHjwsyF5E/2bbPrtPWCnF
+         +pVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o6l+94PYyR5Sk//+/Av+qY/UlCTL0ZemTkfdZsKsuI8=;
-        b=Oqo+yiyiaJuMcTrU6yY8aRC2r+10l3A50pKylkmDTeqG7paKFRVaXEsNlkONuY0a13
-         Ih3O0XakNB3c5/1Ynf/2OOklvFRIH5gR4Q3/P4zGzCqnTrqakxOLRAPgK17L9xhOAm+X
-         GDQHe2gnaFTKBGa4gTXElU/h92WAbQHerQ1h/Uh4bZp7DAq3N8i6JZFg763XKqJ79WOm
-         7MAdoXgNA4cILjbdeL3x7jMwadFdg74xex9yXWnfAO4Gj4Kpesguy+G6lKzRrTpOoWyK
-         yn6ZmwM9TxnftgyY9TYj2hPhvSmZo+pUxEINh0uRZX2w0IAAY1Xlqb6STPFwD+McolFF
-         7QSw==
-X-Gm-Message-State: APjAAAUxWEg0y7ThASdF5JogpkrV27LJ1NsFuzvfFnXyIA9s31LeAx2r
-        jh4ZhLMlyOm01M7DJ14DEAzeiqd+
-X-Google-Smtp-Source: APXvYqwvHItbEUzIdxb67KT8Bn7m2rjiaeTPe7nvO5ksWV2HWlyxwGJBfFo9q42FP5gCm25H0bJ3Yg==
-X-Received: by 2002:adf:fd8d:: with SMTP id d13mr7811983wrr.8.1560103602460;
-        Sun, 09 Jun 2019 11:06:42 -0700 (PDT)
+        bh=v1cIgIB/50o1TbuP4h7H+LIZ4pZcg3N52gZnolC5tNY=;
+        b=hrQlDiY94V2vJ3Vu/1D3asM/DIluqVYnV0bc5bmv2TiH7QWgm0FrtxhBp9wtqoG4c8
+         ROxQvv5ngjikSOeiYnDKg4lfn0c52NGOeYu9xVsFeSa2lVm4RkpQKHnBXJWO8t7t++AX
+         1WkoQICOHi1jeuA0hi6AXsvhA8X2t2xmLe6e/BGiE14KXuMfR/Tw/hHfC3ttPhVYT9Py
+         Zb+yARcQv/zeSLqKxlqDX8c2wYXaRpZb3/lrliNwmFP4zswmI177QmjO5IRqDsgJd/mm
+         bSmdW9ocxGj2lGD4YQjWiD9Fh8FvVrg8tuEqG5S/N+jxWt0rU8aYBYozXGqQRMTlxEaq
+         UI0w==
+X-Gm-Message-State: APjAAAU5ebvMTnBIRnx2IAYmpGNxmnboAicnj8SqPlXKhLnsqQSkOtTj
+        5KixoUCZRVm3hLacg8VCll6ZbQ9p
+X-Google-Smtp-Source: APXvYqy7+SScjAXQjSTLA2olnCPdQUH0aM8+Jocv0daXnj4LKMXvOjzcZLeXAUQkW+23xSiMaGdOPw==
+X-Received: by 2002:a5d:4311:: with SMTP id h17mr43160091wrq.9.1560103597686;
+        Sun, 09 Jun 2019 11:06:37 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400B42D8EB9D711C35E.dip0.t-ipconnect.de. [2003:f1:33dd:a400:b42d:8eb9:d711:c35e])
-        by smtp.googlemail.com with ESMTPSA id h14sm2007731wrs.66.2019.06.09.11.06.41
+        by smtp.googlemail.com with ESMTPSA id h14sm2007731wrs.66.2019.06.09.11.06.36
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 09 Jun 2019 11:06:41 -0700 (PDT)
+        Sun, 09 Jun 2019 11:06:37 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linus.walleij@linaro.org,
@@ -66,9 +66,9 @@ Cc:     devicetree@vger.kernel.org, davem@davemloft.net,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         khilman@baylibre.com, narmstrong@baylibre.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC next v1 5/5] arm64: dts: meson: g12a: x96-max: fix the Ethernet PHY reset line
-Date:   Sun,  9 Jun 2019 20:06:21 +0200
-Message-Id: <20190609180621.7607-6-martin.blumenstingl@googlemail.com>
+Subject: [RFC next v1 1/5] net: stmmac: drop redundant check in stmmac_mdio_reset
+Date:   Sun,  9 Jun 2019 20:06:17 +0200
+Message-Id: <20190609180621.7607-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
 References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
@@ -79,45 +79,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PHY reset line and interrupt line are swapped on the X96 Max
-compared to the Odroid-N2 schematics. This means:
-- GPIOZ_14 is the interrupt line (on the Odroid-N2 it's the reset line)
-- GPIOZ_15 is the reset line (on the Odroid-N2 it's the interrupt line)
+A simplified version of the existing code looks like this:
+  if (priv->device->of_node) {
+      struct device_node *np = priv->device->of_node;
+      if (!np)
+          return 0;
 
-Also the GPIOZ_14 and GPIOZ_15 pins are special. The datasheet describes
-that they are "3.3V input tolerant open drain (OD) output pins". This
-means the GPIO controller can drive the output LOW to reset the PHY. To
-release the reset it can only switch the pin to input mode. The output
-cannot be driven HIGH for these pins.
-This requires configuring the reset line as GPIO_OPEN_SOURCE because
-otherwise the PHY will be stuck in "reset" state (because driving the
-pin HIGH seeems to result in the same signal as driving it LOW).
+The second "if" never evaluates to true because the first "if" checks
+for exactly the opposite.
+Drop the redundant check and early return to make the code easier to
+understand.
 
-Switch to GPIOZ_15 for the reset GPIO with the correct flags and drop
-the "snps,reset-active-low" property as this is now encoded in the
-GPIO_OPEN_SOURCE flag.
+No functional changes intended.
 
-Fixes: 51d116557b2044 ("arm64: dts: meson-g12a-x96-max: Add Gigabit Ethernet Support")
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index 98bc56e650a0..c93b639679c0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -186,9 +186,8 @@
- 	phy-mode = "rgmii";
- 	phy-handle = <&external_phy>;
- 	amlogic,tx-delay-ns = <2>;
--	snps,reset-gpio = <&gpio GPIOZ_14 0>;
-+	snps,reset-gpio = <&gpio GPIOZ_15 GPIO_OPEN_SOURCE>;
- 	snps,reset-delays-us = <0 10000 1000000>;
--	snps,reset-active-low;
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index 093a223fe408..cb9aad090cc9 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -254,9 +254,6 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+ 		if (data->reset_gpio < 0) {
+ 			struct device_node *np = priv->device->of_node;
  
- &pwm_ef {
+-			if (!np)
+-				return 0;
+-
+ 			data->reset_gpio = of_get_named_gpio(np,
+ 						"snps,reset-gpio", 0);
+ 			if (data->reset_gpio < 0)
 -- 
 2.21.0
 
