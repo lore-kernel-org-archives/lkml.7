@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987BDC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD15C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED6B206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71D4208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099715;
-	bh=UT5ptIzvBWmArzRHvLDDWZswCaWyxEW9/R4B4KcsSDk=;
+	s=default; t=1560099719;
+	bh=a3g4h8A74fnv9x3m8dxQZdK4OuTAv7pO/Ar1rTVYKs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oCyys6Z3LqXEbhumGWFlxK3itwkiLRavD0tvdEVqv0VyFq8t9s+gXLKInnEnHjOPK
-	 nR+EIQFQoHY7cuNhR7n4STd00t75GJ6uSqFCMAtdO3JwE+T/NjZOEBqqc+7md8ANDz
-	 cJi37jBaV4mPG3tFQ0YGskXw9Cdt0wiHsXqGzWKk=
+	b=vvVizy8Yc7VD6I1eMebGy9AwBpHv4Bm2zXFQsUYfV/hxXu1omJThOyYXYQMZdoUhT
+	 sbiCWErwEj9JUQ8SzxEsYff0PoV/yRQbfYMQKYP87XbOPnqld6mI9zBZj2YdkM9f1I
+	 xeUu8oytBHvLDy9P7TKVd46b0d2Giz7V9on83ewg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732800AbfFIRBy (ORCPT
+        id S2388168AbfFIRB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39454 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:01:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388131AbfFIRBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:01:53 -0400
+        id S1733242AbfFIRB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E0CD208C0;
-        Sun,  9 Jun 2019 17:01:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 293AD2084A;
+        Sun,  9 Jun 2019 17:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099712;
-        bh=UT5ptIzvBWmArzRHvLDDWZswCaWyxEW9/R4B4KcsSDk=;
+        s=default; t=1560099715;
+        bh=a3g4h8A74fnv9x3m8dxQZdK4OuTAv7pO/Ar1rTVYKs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fcwdO+4ohZGs154fSE2S+pSbIC8I2mVM/FXh+Q84/yhTA4uBBKsqB9PtcD/WfOzdi
-         /DBMe2wI3hkhq8i9Y/Fs+6SzTk1YpvJTfw+V+tC07Ip2CBH21GIK3U584QVq+A1/KT
-         KoJqFyPWA5p/PwdDcKXOmDb98lH1uCQPwzq/9KWM=
+        b=eoqDB0iDDFHvrOPv73TWNiUgZuezNhpXc/djOuGbwD60i1Mkz5e/+2IZJ1m/MaIOm
+         JKp6isLc9CeKTqtnzlt/lav2E6NeHEOKBQ4q9eegp7z4vMj0UvVs9Jxf1/LMxfP3rh
+         0G8rxblvqFrq0tYk2Sw9VG1RQIzebwjEolJr1c7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bo YU <tsu.yubo@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 096/241] powerpc/boot: Fix missing check of lseek() return value
-Date:   Sun,  9 Jun 2019 18:40:38 +0200
-Message-Id: <20190609164150.565716531@linuxfoundation.org>
+Subject: [PATCH 4.4 097/241] ASoC: imx: fix fiq dependencies
+Date:   Sun,  9 Jun 2019 18:40:39 +0200
+Message-Id: <20190609164150.594626161@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,34 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
+[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
 
-This is detected by Coverity scan: CID: 1440481
+During randconfig builds, I occasionally run into an invalid configuration
+of the freescale FIQ sound support:
 
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
+  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
+  Selected by [y]:
+  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
+
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
+imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
+imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
+
+The Kconfig warning is a result of the symbol being defined inside of
+the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
+is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
+imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
+time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
+which then causes a link failure from imx-ssi.
+
+The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
+one of its potential users is built-in.
+
+Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/addnote.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/soc/fsl/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
-index 9d9f6f334d3cc..3da3e2b1b51bc 100644
---- a/arch/powerpc/boot/addnote.c
-+++ b/arch/powerpc/boot/addnote.c
-@@ -223,7 +223,11 @@ main(int ac, char **av)
- 	PUT_16(E_PHNUM, np + 2);
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 3066e068aae5c..d420995ed45bf 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -171,16 +171,17 @@ config SND_MPC52xx_SOC_EFIKA
  
- 	/* write back */
--	lseek(fd, (long) 0, SEEK_SET);
-+	i = lseek(fd, (long) 0, SEEK_SET);
-+	if (i < 0) {
-+		perror("lseek");
-+		exit(1);
-+	}
- 	i = write(fd, buf, n);
- 	if (i < 0) {
- 		perror("write");
+ endif # SND_POWERPC_SOC
+ 
++config SND_SOC_IMX_PCM_FIQ
++	tristate
++	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
++	select FIQ
++
+ if SND_IMX_SOC
+ 
+ config SND_SOC_IMX_SSI
+ 	tristate
+ 	select SND_SOC_FSL_UTILS
+ 
+-config SND_SOC_IMX_PCM_FIQ
+-	tristate
+-	select FIQ
+-
+ comment "SoC Audio support for Freescale i.MX boards:"
+ 
+ config SND_MXC_SOC_WM1133_EV1
 -- 
 2.20.1
 
