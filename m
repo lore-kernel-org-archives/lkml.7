@@ -7,60 +7,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3FDC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7424EC468BC
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D50214AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D48216C4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047402;
-	bh=ldrSwdh6uivC8b//p7B7Nz6xIwiMB9HJHOfepvb6wmQ=;
+	s=default; t=1560047406;
+	bh=42JmPFBxGl/xHTtItIqN8EUdcVNPZ4YqgT+IcciN77U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UzNnOhRI+DdhvUhczuTsL6JijAw9p/soPO1hZ1uCwOFuCckq19J9+JTSNKwXsbWk8
-	 DUGALCD77KcIu5qU56mXPNZ0iDyvkk5eec2gVKTinyhI1Ps4431t/6IptcRBqfnBVR
-	 7/ZjGTcSmhhsyaICZdUd903j3TO1qPFE/FaM19v0=
+	b=L4mDsfwThYxjDg2n5A4ZltijbNZ1BnAQL7rDhE7jVXOuKIxYfAc4NXURJGccxx6Ov
+	 9uOj4onyL1VTAql+6/FJqZpEZaqxuBchSrMuQMxmkQ52HNn0MNKYCCHuixttDyBgKo
+	 LGsQCkT9RTkpk4Hb2GkaYwYsePRVyAofFAFFDuzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfFICaA (ORCPT
+        id S1728831AbfFICaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:30:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55618 "EHLO
+        Sat, 8 Jun 2019 22:30:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55614 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbfFIC1c (ORCPT
+        with ESMTP id S1727750AbfFIC1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Jun 2019 22:27:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+CVB+nZIeP9AAj716+OJK3qxsVdmhNkJNeEUnRiAb0I=; b=uHlcXgqF4APHmdh93SdRVUgv7G
-        3SxsHN811sOwwXU+98IkDRboyByWzxZARyNwb5+vDXtswASleMedbFzxzNmHJnIKxanlPQfHgwQ5Y
-        i96u6puO2tP3MIWRs4d2Lcg+Vt9pw7orxiHqILwYMWTUKQJ2sdRq32YV6wXSCF3On62kbqq8RMCWf
-        fp/jRYeyyTpjbwT5XCyAAxqucj2lgzN8n3U/Cvo74o50xphOmcDqRVSUWC74j9NLODTVTqBs+cjSo
-        g1+rAVF8PUsdd8Iai2Rc0lGUw9cEvvRNeOeso8KRuHI3w+vjs3ieB2sxshuGn9iQP/pg9MWxag4gz
-        uv8seH1Q==;
+        bh=fEBloR9OTG75rzYbqefBDPurRQQ+p3d4DZRq71jBjVA=; b=esHtpAk2AP4LlWwunzUZPdVeHT
+        REf7Nl/3C00r1GGOL4KIueSV6HeO8/M6ii3akuV6OOBrs7ONZv2cHZgF5zX2f9LotHCz2c8R0qv47
+        kfONZsXu5KF08lEzDvhHbUGD9/YZGz2hDCY56Z25jsOLAiEVxtfDNlON8Pd+ALpWQYZCGlY2CartX
+        2WqrN/C6aaKeWa5Mq3/oBrlZTtV2rDosTSKp3Z5scxk8JQbkZ0rb5EpjUIFfV2K4tBy+GqIEi407X
+        EXN+ALY7CX/pSsqPG2GsslDBGNRKyIC87XWuDNwlz3OIytEXw99vh6QqcBltf/fAsraa/9NyuR4eI
+        J1kgEEoQ==;
 Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZnYO-0001mj-0o; Sun, 09 Jun 2019 02:27:28 +0000
+        id 1hZnYO-0001mm-1f; Sun, 09 Jun 2019 02:27:28 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZnYK-0000IY-V7; Sat, 08 Jun 2019 23:27:24 -0300
+        id 1hZnYL-0000Ig-0l; Sat, 08 Jun 2019 23:27:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v3 07/33] docs: cpu-freq: convert docs to ReST and rename to *.rst
-Date:   Sat,  8 Jun 2019 23:26:57 -0300
-Message-Id: <e8cb6d826e691a34996b6812851461b6000442e8.1560045490.git.mchehab+samsung@kernel.org>
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v3 09/33] docs: fault-injection: convert docs to ReST and rename to *.rst
+Date:   Sat,  8 Jun 2019 23:26:59 -0300
+Message-Id: <5bbdd14f23a8fa66164ac38d84662091b90adddc.1560045490.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560045490.git.mchehab+samsung@kernel.org>
 References: <cover.1560045490.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,945 +84,965 @@ the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{amd-powernow.txt => amd-powernow.rst}    |  11 +-
- Documentation/cpu-freq/{core.txt => core.rst} |  66 +++---
- .../{cpu-drivers.txt => cpu-drivers.rst}      | 217 +++++++++---------
- ...pufreq-nforce2.txt => cpufreq-nforce2.rst} |  12 +-
- .../{cpufreq-stats.txt => cpufreq-stats.rst}  | 141 ++++++------
- .../cpu-freq/{index.txt => index.rst}         |  44 ++--
- .../{pcc-cpufreq.txt => pcc-cpufreq.rst}      | 102 ++++----
- drivers/cpufreq/Kconfig.x86                   |   2 +-
- 8 files changed, 302 insertions(+), 293 deletions(-)
- rename Documentation/cpu-freq/{amd-powernow.txt => amd-powernow.rst} (91%)
- rename Documentation/cpu-freq/{core.txt => core.rst} (67%)
- rename Documentation/cpu-freq/{cpu-drivers.txt => cpu-drivers.rst} (57%)
- rename Documentation/cpu-freq/{cpufreq-nforce2.txt => cpufreq-nforce2.rst} (65%)
- rename Documentation/cpu-freq/{cpufreq-stats.txt => cpufreq-stats.rst} (31%)
- rename Documentation/cpu-freq/{index.txt => index.rst} (37%)
- rename Documentation/cpu-freq/{pcc-cpufreq.txt => pcc-cpufreq.rst} (80%)
+ ...ault-injection.txt => fault-injection.rst} | 265 +++++++++---------
+ Documentation/fault-injection/index.rst       |  20 ++
+ ...r-inject.txt => notifier-error-inject.rst} |  18 +-
+ ...injection.txt => nvme-fault-injection.rst} | 174 ++++++------
+ ...rovoke-crashes.txt => provoke-crashes.rst} |  40 ++-
+ Documentation/process/4.Coding.rst            |   2 +-
+ .../translations/it_IT/process/4.Coding.rst   |   2 +-
+ .../translations/zh_CN/process/4.Coding.rst   |   2 +-
+ drivers/misc/lkdtm/core.c                     |   2 +-
+ include/linux/fault-inject.h                  |   2 +-
+ lib/Kconfig.debug                             |   2 +-
+ tools/testing/fault-injection/failcmd.sh      |   2 +-
+ 12 files changed, 290 insertions(+), 241 deletions(-)
+ rename Documentation/fault-injection/{fault-injection.txt => fault-injection.rst} (68%)
+ create mode 100644 Documentation/fault-injection/index.rst
+ rename Documentation/fault-injection/{notifier-error-inject.txt => notifier-error-inject.rst} (83%)
+ rename Documentation/fault-injection/{nvme-fault-injection.txt => nvme-fault-injection.rst} (19%)
+ rename Documentation/fault-injection/{provoke-crashes.txt => provoke-crashes.rst} (45%)
 
-diff --git a/Documentation/cpu-freq/amd-powernow.txt b/Documentation/cpu-freq/amd-powernow.rst
-similarity index 91%
-rename from Documentation/cpu-freq/amd-powernow.txt
-rename to Documentation/cpu-freq/amd-powernow.rst
-index 254da155fa47..50b2c45c3a2c 100644
---- a/Documentation/cpu-freq/amd-powernow.txt
-+++ b/Documentation/cpu-freq/amd-powernow.rst
-@@ -1,3 +1,7 @@
-+=============================
-+AMD powernow driver specifics
-+=============================
+diff --git a/Documentation/fault-injection/fault-injection.txt b/Documentation/fault-injection/fault-injection.rst
+similarity index 68%
+rename from Documentation/fault-injection/fault-injection.txt
+rename to Documentation/fault-injection/fault-injection.rst
+index a17517a083c3..f51bb21d20e4 100644
+--- a/Documentation/fault-injection/fault-injection.txt
++++ b/Documentation/fault-injection/fault-injection.rst
+@@ -1,3 +1,4 @@
++===========================================
+ Fault injection capabilities infrastructure
+ ===========================================
+ 
+@@ -7,36 +8,36 @@ See also drivers/md/md-faulty.c and "every_nth" module option for scsi_debug.
+ Available fault injection capabilities
+ --------------------------------------
+ 
+-o failslab
++- failslab
+ 
+   injects slab allocation failures. (kmalloc(), kmem_cache_alloc(), ...)
+ 
+-o fail_page_alloc
++- fail_page_alloc
+ 
+   injects page allocation failures. (alloc_pages(), get_free_pages(), ...)
+ 
+-o fail_futex
++- fail_futex
+ 
+   injects futex deadlock and uaddr fault errors.
+ 
+-o fail_make_request
++- fail_make_request
+ 
+   injects disk IO errors on devices permitted by setting
+   /sys/block/<device>/make-it-fail or
+   /sys/block/<device>/<partition>/make-it-fail. (generic_make_request())
+ 
+-o fail_mmc_request
++- fail_mmc_request
+ 
+   injects MMC data errors on devices permitted by setting
+   debugfs entries under /sys/kernel/debug/mmc0/fail_mmc_request
+ 
+-o fail_function
++- fail_function
+ 
+   injects error return on specific functions, which are marked by
+   ALLOW_ERROR_INJECTION() macro, by setting debugfs entries
+   under /sys/kernel/debug/fail_function. No boot option supported.
+ 
+-o NVMe fault injection
++- NVMe fault injection
+ 
+   inject NVMe status code and retry flag on devices permitted by setting
+   debugfs entries under /sys/kernel/debug/nvme*/fault_inject. The default
+@@ -47,7 +48,8 @@ o NVMe fault injection
+ Configure fault-injection capabilities behavior
+ -----------------------------------------------
+ 
+-o debugfs entries
++debugfs entries
++^^^^^^^^^^^^^^^
+ 
+ fault-inject-debugfs kernel module provides some debugfs entries for runtime
+ configuration of fault-injection capabilities.
+@@ -55,6 +57,7 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail*/probability:
+ 
+ 	likelihood of failure injection, in percent.
 +
+ 	Format: <percent>
  
- PowerNow! and Cool'n'Quiet are AMD names for frequency
- management capabilities in AMD processors. As the hardware
-@@ -23,16 +27,19 @@ not supply these tables.
- 7th Generation: powernow-k7: Athlon, Duron, Geode.
+ 	Note that one-failure-per-hundred is a very high error rate
+@@ -83,6 +86,7 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail*/verbose
  
- 8th Generation: powernow-k8: Athlon, Athlon 64, Opteron, Sempron.
+ 	Format: { 0 | 1 | 2 }
 +
- Documentation on this functionality in 8th generation processors
- is available in the "BIOS and Kernel Developer's Guide", publication
--26094, in chapter 9, available for download from www.amd.com. 
-+26094, in chapter 9, available for download from www.amd.com.
+ 	specifies the verbosity of the messages when failure is
+ 	injected.  '0' means no messages; '1' will print only a single
+ 	log line per failure; '2' will print a call trace too -- useful
+@@ -91,14 +95,15 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail*/task-filter:
  
- BIOS supplied data, for powernow-k7 and for powernow-k8, may be
- from either the PSB table or from ACPI objects. The ACPI support
- is only available if the kernel config sets CONFIG_ACPI_PROCESSOR.
+ 	Format: { 'Y' | 'N' }
 +
- The powernow-k8 driver will attempt to use ACPI if so configured,
- and fall back to PST if that fails.
+ 	A value of 'N' disables filtering by process (default).
+ 	Any positive value limits failures to only processes indicated by
+ 	/proc/<pid>/make-it-fail==1.
+ 
+-- /sys/kernel/debug/fail*/require-start:
+-- /sys/kernel/debug/fail*/require-end:
+-- /sys/kernel/debug/fail*/reject-start:
+-- /sys/kernel/debug/fail*/reject-end:
++- /sys/kernel/debug/fail*/require-start,
++  /sys/kernel/debug/fail*/require-end,
++  /sys/kernel/debug/fail*/reject-start,
++  /sys/kernel/debug/fail*/reject-end:
+ 
+ 	specifies the range of virtual addresses tested during
+ 	stacktrace walking.  Failure is injected only if some caller
+@@ -116,6 +121,7 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail_page_alloc/ignore-gfp-highmem:
+ 
+ 	Format: { 'Y' | 'N' }
 +
- The powernow-k7 driver will try to use the PSB support first, and
- fall back to ACPI if the PSB support fails. A module parameter,
--acpi_force, is provided to force ACPI support to be used instead 
-+acpi_force, is provided to force ACPI support to be used instead
- of PSB support.
-diff --git a/Documentation/cpu-freq/core.txt b/Documentation/cpu-freq/core.rst
-similarity index 67%
-rename from Documentation/cpu-freq/core.txt
-rename to Documentation/cpu-freq/core.rst
-index 073f128af5a7..c719e3cb700c 100644
---- a/Documentation/cpu-freq/core.txt
-+++ b/Documentation/cpu-freq/core.rst
-@@ -1,31 +1,22 @@
--     CPU frequency and voltage scaling code in the Linux(TM) kernel
-+================================================================
-+General description of the CPUFreq core and of CPUFreq notifiers
-+================================================================
+ 	default is 'N', setting it to 'Y' won't inject failures into
+ 	highmem/user allocations.
  
-+Authors:
-+  - Dominik Brodowski  <linux@brodo.de>
-+  - David Kimdon <dwhedon@debian.org>
-+  - Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-+  - Viresh Kumar <viresh.kumar@linaro.org>
+@@ -123,6 +129,7 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail_page_alloc/ignore-gfp-wait:
  
--		         L i n u x    C P U F r e q
- 
--			  C P U F r e q    C o r e
-+.. Contents:
- 
--
--		    Dominik Brodowski  <linux@brodo.de>
--		     David Kimdon <dwhedon@debian.org>
--		Rafael J. Wysocki <rafael.j.wysocki@intel.com>
--		   Viresh Kumar <viresh.kumar@linaro.org>
--
--
--
--   Clock scaling allows you to change the clock speed of the CPUs on the
--    fly. This is a nice method to save battery power, because the lower
--            the clock speed, the less power the CPU consumes.
--
--
--Contents:
-----------
--1.  CPUFreq core and interfaces
--2.  CPUFreq notifiers
--3.  CPUFreq Table Generation with Operating Performance Point (OPP)
-+  1.  CPUFreq core and interfaces
-+  2.  CPUFreq notifiers
-+  3.  CPUFreq Table Generation with Operating Performance Point (OPP)
- 
- 1. General Information
--=======================
-+======================
- 
- The CPUFreq core code is located in drivers/cpufreq/cpufreq.c. This
- cpufreq code offers a standardized interface for the CPUFreq
-@@ -60,18 +51,18 @@ transition notifiers.
- These are notified when a new policy is intended to be set. Each
- CPUFreq policy notifier is called twice for a policy transition:
- 
--1.) During CPUFREQ_ADJUST all CPUFreq notifiers may change the limit if
--    they see a need for this - may it be thermal considerations or
--    hardware limitations.
-+1) During CPUFREQ_ADJUST all CPUFreq notifiers may change the limit if
-+   they see a need for this - may it be thermal considerations or
-+   hardware limitations.
- 
--2.) And during CPUFREQ_NOTIFY all notifiers are informed of the new policy
--   - if two hardware drivers failed to agree on a new policy before this
-+2) And during CPUFREQ_NOTIFY all notifiers are informed of the new policy -
-+   if two hardware drivers failed to agree on a new policy before this
-    stage, the incompatible hardware shall be shut down, and the user
-    informed of this.
- 
- The phase is specified in the second argument to the notifier.
- 
--The third argument, a void *pointer, points to a struct cpufreq_policy
-+The third argument, a `void *` pointer, points to a struct cpufreq_policy
- consisting of several values, including min, max (the lower and upper
- frequencies (in kHz) of the new policy).
- 
-@@ -88,23 +79,27 @@ CPUFREQ_POSTCHANGE.
- 
- The third argument is a struct cpufreq_freqs with the following
- values:
--cpu	- number of the affected CPU
--old	- old frequency
--new	- new frequency
--flags	- flags of the cpufreq driver
+ 	Format: { 'Y' | 'N' }
 +
-+======= ===========================
-+cpu	number of the affected CPU
-+old	old frequency
-+new	new frequency
-+flags	flags of the cpufreq driver
-+======= ===========================
+ 	default is 'N', setting it to 'Y' will inject failures
+ 	only into non-sleep allocations (GFP_ATOMIC allocations).
  
- 3. CPUFreq Table Generation with Operating Performance Point (OPP)
- ==================================================================
- For details about OPP, see Documentation/power/opp.txt
+@@ -134,12 +141,14 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail_futex/ignore-private:
  
--dev_pm_opp_init_cpufreq_table -
-+dev_pm_opp_init_cpufreq_table
- 	This function provides a ready to use conversion routine to translate
- 	the OPP layer's internal information about the available frequencies
- 	into a format readily providable to cpufreq.
- 
- 	WARNING: Do not use this function in interrupt context.
- 
--	Example:
-+	Example::
+ 	Format: { 'Y' | 'N' }
 +
- 	 soc_pm_init()
- 	 {
- 		/* Do things */
-@@ -117,4 +112,5 @@ dev_pm_opp_init_cpufreq_table -
- 	NOTE: This function is available only if CONFIG_CPU_FREQ is enabled in
- 	addition to CONFIG_PM_OPP.
+ 	default is 'N', setting it to 'Y' will disable failure injections
+ 	when dealing with private (address space) futexes.
  
--dev_pm_opp_free_cpufreq_table - Free up the table allocated by dev_pm_opp_init_cpufreq_table
-+dev_pm_opp_free_cpufreq_table
-+	Free up the table allocated by dev_pm_opp_init_cpufreq_table
-diff --git a/Documentation/cpu-freq/cpu-drivers.txt b/Documentation/cpu-freq/cpu-drivers.rst
-similarity index 57%
-rename from Documentation/cpu-freq/cpu-drivers.txt
-rename to Documentation/cpu-freq/cpu-drivers.rst
-index 6e353d00cdc6..9cc2559bc34b 100644
---- a/Documentation/cpu-freq/cpu-drivers.txt
-+++ b/Documentation/cpu-freq/cpu-drivers.rst
-@@ -1,35 +1,25 @@
--     CPU frequency and voltage scaling code in the Linux(TM) kernel
--
--
--		         L i n u x    C P U F r e q
--
--			   C P U   D r i v e r s 
--
--		       - information for developers -
--
--
--		    Dominik Brodowski  <linux@brodo.de>
--		Rafael J. Wysocki <rafael.j.wysocki@intel.com>
--		   Viresh Kumar <viresh.kumar@linaro.org>
--
--
--
--   Clock scaling allows you to change the clock speed of the CPUs on the
--    fly. This is a nice method to save battery power, because the lower
--            the clock speed, the less power the CPU consumes.
--
--
--Contents:
-----------
--1.   What To Do?
--1.1  Initialization
--1.2  Per-CPU Initialization
--1.3  verify
--1.4  target/target_index or setpolicy?
--1.5  target/target_index
--1.6  setpolicy
--1.7  get_intermediate and target_intermediate
--2.   Frequency Table Helpers
-+===============================================
-+How to implement a new cpufreq processor driver
-+===============================================
+ - /sys/kernel/debug/fail_function/inject:
+ 
+ 	Format: { 'function-name' | '!function-name' | '' }
 +
-+.. information for developers
-+
-+Authors:
-+  - Dominik Brodowski  <linux@brodo.de>
-+  - Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-+  - Viresh Kumar <viresh.kumar@linaro.org>
-+
-+.. Contents:
-+
-+   1.   What To Do?
-+   1.1  Initialization
-+   1.2  Per-CPU Initialization
-+   1.3  verify
-+   1.4  target/target_index or setpolicy?
-+   1.5  target/target_index
-+   1.6  setpolicy
-+   1.7  get_intermediate and target_intermediate
-+   2.   Frequency Table Helpers
- 
- 
- 
-@@ -46,59 +36,73 @@ on what is necessary:
- 
- First of all, in an __initcall level 7 (module_init()) or later
- function check whether this kernel runs on the right CPU and the right
--chipset. If so, register a struct cpufreq_driver with the CPUfreq core
--using cpufreq_register_driver()
-+chipset. If so, register a `struct cpufreq_driver` with the CPUfreq core
-+using `cpufreq_register_driver()`
- 
--What shall this struct cpufreq_driver contain? 
-+What shall this `struct cpufreq_driver` contain?
- 
-- .name - The name of this driver.
-+.name
-+  The name of this driver.
- 
-- .init - A pointer to the per-policy initialization function.
-+.init
-+  A pointer to the per-policy initialization function.
- 
-- .verify - A pointer to a "verification" function.
-+.verify
-+  A pointer to a "verification" function.
- 
-- .setpolicy _or_ .fast_switch _or_ .target _or_ .target_index - See
-- below on the differences.
-+.setpolicy **or** .fast_switch **or** .target **or** .target_index
-+  See below on the differences.
- 
- And optionally
- 
-- .flags - Hints for the cpufreq core.
-+.flags
-+  Hints for the cpufreq core.
- 
-- .driver_data - cpufreq driver specific data.
-+.driver_data
-+  cpufreq driver specific data.
- 
-- .resolve_freq - Returns the most appropriate frequency for a target
-- frequency. Doesn't change the frequency though.
-+.resolve_freq
-+  Returns the most appropriate frequency for a target
-+  frequency. Doesn't change the frequency though.
- 
-- .get_intermediate and target_intermediate - Used to switch to stable
-- frequency while changing CPU frequency.
-+.get_intermediate and target_intermediate
-+  Used to switch to stable frequency while changing CPU frequency.
- 
-- .get - Returns current frequency of the CPU.
-+.get
-+  Returns current frequency of the CPU.
- 
-- .bios_limit - Returns HW/BIOS max frequency limitations for the CPU.
-+.bios_limit
-+  Returns HW/BIOS max frequency limitations for the CPU.
- 
-- .exit - A pointer to a per-policy cleanup function called during
-- CPU_POST_DEAD phase of cpu hotplug process.
-+.exit
-+  A pointer to a per-policy cleanup function called during
-+  CPU_POST_DEAD phase of cpu hotplug process.
- 
-- .stop_cpu - A pointer to a per-policy stop function called during
-- CPU_DOWN_PREPARE phase of cpu hotplug process.
-+.stop_cpu
-+  A pointer to a per-policy stop function called during
-+  CPU_DOWN_PREPARE phase of cpu hotplug process.
- 
-- .suspend - A pointer to a per-policy suspend function which is called
-- with interrupts disabled and _after_ the governor is stopped for the
-- policy.
-+.suspend
-+  A pointer to a per-policy suspend function which is called with
-+  interrupts disabled and **after** the governor is stopped for the policy.
- 
-- .resume - A pointer to a per-policy resume function which is called
-- with interrupts disabled and _before_ the governor is started again.
-+.resume
-+  A pointer to a per-policy resume function which is called
-+  with interrupts disabled and **before** the governor is started again.
- 
-- .ready - A pointer to a per-policy ready function which is called after
-- the policy is fully initialized.
-+.ready
-+  A pointer to a per-policy ready function which is called after
-+  the policy is fully initialized.
- 
-- .attr - A pointer to a NULL-terminated list of "struct freq_attr" which
-- allow to export values to sysfs.
-+.attr
-+  A pointer to a NULL-terminated list of `struct freq_attr` which
-+  allow to export values to sysfs.
- 
-- .boost_enabled - If set, boost frequencies are enabled.
-+.boost_enabled
-+  If set, boost frequencies are enabled.
- 
-- .set_boost - A pointer to a per-policy function to enable/disable boost
-- frequencies.
-+.set_boost
-+  A pointer to a per-policy function to enable/disable boost frequencies.
- 
- 
- 1.2 Per-CPU Initialization
-@@ -108,37 +112,42 @@ Whenever a new CPU is registered with the device model, or after the
- cpufreq driver registers itself, the per-policy initialization function
- cpufreq_driver.init is called if no cpufreq policy existed for the CPU.
- Note that the .init() and .exit() routines are called only once for the
--policy and not for each CPU managed by the policy. It takes a struct
--cpufreq_policy *policy as argument. What to do now?
-+policy and not for each CPU managed by the policy. It takes a `struct
-+cpufreq_policy *policy` as argument. What to do now?
- 
- If necessary, activate the CPUfreq support on your CPU.
- 
- Then, the driver must fill in the following values:
- 
--policy->cpuinfo.min_freq _and_
--policy->cpuinfo.max_freq -	the minimum and maximum frequency 
--				(in kHz) which is supported by 
--				this CPU
--policy->cpuinfo.transition_latency   the time it takes on this CPU to
--				switch between two frequencies in
--				nanoseconds (if appropriate, else
--				specify CPUFREQ_ETERNAL)
--
--policy->cur			The current operating frequency of
--				this CPU (if appropriate)
--policy->min, 
--policy->max, 
--policy->policy and, if necessary,
--policy->governor		must contain the "default policy" for
--				this CPU. A few moments later,
--				cpufreq_driver.verify and either
--				cpufreq_driver.setpolicy or
--				cpufreq_driver.target/target_index is called
--				with these values.
--policy->cpus			Update this with the masks of the
--				(online + offline) CPUs that do DVFS
--				along with this CPU (i.e.  that share
--				clock/voltage rails with it).
-++---------------------------------------+--------------------------------------+
-+| policy->cpuinfo.min_freq **and**	|				       |
-+| policy->cpuinfo.max_freq		| the minimum and maximum frequency    |
-+| 					| (in kHz) which is supported by       |
-+| 					| this CPU			       |
-++---------------------------------------+--------------------------------------+
-+| policy->cpuinfo.transition_latency	| the time it takes on this CPU to     |
-+| 					| switch between two frequencies in    |
-+| 					| nanoseconds (if appropriate, else    |
-+| 					| specify CPUFREQ_ETERNAL)	       |
-++---------------------------------------+--------------------------------------+
-+| policy->cur				| The current operating frequency of   |
-+| 					| this CPU (if appropriate)	       |
-++---------------------------------------+--------------------------------------+
-+| policy->min,				|				       |
-+| policy->max,				|				       |
-+| policy->policy and, if necessary,	|				       |
-+| policy->governor			| must contain the "default policy"    |
-+| 					| for this CPU. A few moments later,   |
-+| 					| cpufreq_driver.verify and either     |
-+| 					| cpufreq_driver.setpolicy or	       |
-+| 					| cpufreq_driver.target/target_index   |
-+| 					| is called with these values.	       |
-++---------------------------------------+--------------------------------------+
-+| policy->cpus				| Update this with the masks of the    |
-+| 					| (online + offline) CPUs that do DVFS |
-+| 					| along with this CPU (i.e. that share |
-+| 					| clock/voltage rails with it).	       |
-++---------------------------------------+--------------------------------------+
- 
- For setting some of these values (cpuinfo.min[max]_freq, policy->min[max]), the
- frequency table helpers might be helpful. See the section 2 for more information
-@@ -151,8 +160,8 @@ on them.
- When the user decides a new policy (consisting of
- "policy,governor,min,max") shall be set, this policy must be validated
- so that incompatible values can be corrected. For verifying these
--values cpufreq_verify_within_limits(struct cpufreq_policy *policy,
--unsigned int min_freq, unsigned int max_freq) function might be helpful.
-+values `cpufreq_verify_within_limits(struct cpufreq_policy *policy,
-+unsigned int min_freq, unsigned int max_freq)` function might be helpful.
- See section 2 for details on frequency table helpers.
- 
- You need to make sure that at least one valid frequency (or operating
-@@ -163,7 +172,7 @@ policy->max first, and only if this is no solution, decrease policy->min.
- 1.4 target or target_index or setpolicy or fast_switch?
- -------------------------------------------------------
- 
--Most cpufreq drivers or even most cpu frequency scaling algorithms 
-+Most cpufreq drivers or even most cpu frequency scaling algorithms
- only allow the CPU frequency to be set to predefined fixed values. For
- these, you use the ->target(), ->target_index() or ->fast_switch()
- callbacks.
-@@ -175,8 +184,8 @@ limits on their own. These shall use the ->setpolicy() callback.
- 1.5. target/target_index
- ------------------------
- 
--The target_index call has two arguments: struct cpufreq_policy *policy,
--and unsigned int index (into the exposed frequency table).
-+The target_index call has two arguments: `struct cpufreq_policy *policy`,
-+and `unsigned int index` (into the exposed frequency table).
- 
- The CPUfreq driver must set the new frequency when called here. The
- actual frequency must be determined by freq_table[index].frequency.
-@@ -184,10 +193,10 @@ actual frequency must be determined by freq_table[index].frequency.
- It should always restore to earlier frequency (i.e. policy->restore_freq) in
- case of errors, even if we switched to intermediate frequency earlier.
- 
--Deprecated:
-+Deprecated
- ----------
--The target call has three arguments: struct cpufreq_policy *policy,
--unsigned int target_frequency, unsigned int relation.
-+The target call has three arguments: `struct cpufreq_policy *policy`,
-+`unsigned int target_frequency`, `unsigned int relation`.
- 
- The CPUfreq driver must set the new frequency when called here. The
- actual frequency must be determined using the following rules:
-@@ -210,14 +219,14 @@ Not all drivers are expected to implement it, as sleeping from within
- this callback isn't allowed. This callback must be highly optimized to
- do switching as fast as possible.
- 
--This function has two arguments: struct cpufreq_policy *policy and
--unsigned int target_frequency.
-+This function has two arguments: `struct cpufreq_policy *policy` and
-+`unsigned int target_frequency`.
- 
- 
- 1.7 setpolicy
- -------------
- 
--The setpolicy call only takes a struct cpufreq_policy *policy as
-+The setpolicy call only takes a `struct cpufreq_policy *policy` as
- argument. You need to set the lower limit of the in-processor or
- in-chipset dynamic frequency switching to policy->min, the upper limit
- to policy->max, and -if supported- select a performance-oriented
-@@ -278,10 +287,10 @@ table.
- 
- cpufreq_for_each_valid_entry(pos, table) - iterates over all entries,
- excluding CPUFREQ_ENTRY_INVALID frequencies.
--Use arguments "pos" - a cpufreq_frequency_table * as a loop cursor and
--"table" - the cpufreq_frequency_table * you want to iterate over.
-+Use arguments "pos" - a `cpufreq_frequency_table *` as a loop cursor and
-+"table" - the `cpufreq_frequency_table *` you want to iterate over.
- 
--For example:
-+For example::
- 
- 	struct cpufreq_frequency_table *pos, *driver_freq_table;
- 
-diff --git a/Documentation/cpu-freq/cpufreq-nforce2.txt b/Documentation/cpu-freq/cpufreq-nforce2.rst
-similarity index 65%
-rename from Documentation/cpu-freq/cpufreq-nforce2.txt
-rename to Documentation/cpu-freq/cpufreq-nforce2.rst
-index babce1315026..d40700bd5083 100644
---- a/Documentation/cpu-freq/cpufreq-nforce2.txt
-+++ b/Documentation/cpu-freq/cpufreq-nforce2.rst
-@@ -1,3 +1,6 @@
-+=================================
-+nVidia nForce2 platform specifics
-+=================================
- 
- The cpufreq-nforce2 driver changes the FSB on nVidia nForce2 platforms.
- 
-@@ -6,14 +9,15 @@ can be controlled independently from the PCI/AGP clock.
- 
- The module has two options:
- 
-+        ======== ======================================
- 	fid: 	 multiplier * 10 (for example 8.5 = 85)
- 	min_fsb: minimum FSB
-+        ======== ======================================
- 
- If not set, fid is calculated from the current CPU speed and the FSB.
- min_fsb defaults to FSB at boot time - 50 MHz.
- 
--IMPORTANT: The available range is limited downwards!
--           Also the minimum available FSB can differ, for systems 
-+IMPORTANT:
-+           The available range is limited downwards!
-+           Also the minimum available FSB can differ, for systems
-            booting with 200 MHz, 150 should always work.
--
--
-diff --git a/Documentation/cpu-freq/cpufreq-stats.txt b/Documentation/cpu-freq/cpufreq-stats.rst
-similarity index 31%
-rename from Documentation/cpu-freq/cpufreq-stats.txt
-rename to Documentation/cpu-freq/cpufreq-stats.rst
-index 14378cecb172..3e33712b496e 100644
---- a/Documentation/cpu-freq/cpufreq-stats.txt
-+++ b/Documentation/cpu-freq/cpufreq-stats.rst
-@@ -1,21 +1,20 @@
-+==========================================
-+General description of sysfs cpufreq stats
-+==========================================
- 
--     CPU frequency and voltage scaling statistics in the Linux(TM) kernel
-+.. information for users
- 
- 
--             L i n u x    c p u f r e q - s t a t s   d r i v e r
-+Author: Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
- 
--                       - information for users -
--
--
--             Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
--
--Contents
--1. Introduction
--2. Statistics Provided (with example)
--3. Configuring cpufreq-stats
-+.. Contents
-+   1. Introduction
-+   2. Statistics Provided (with example)
-+   3. Configuring cpufreq-stats
- 
- 
- 1. Introduction
-+===============
- 
- cpufreq-stats is a driver that provides CPU frequency statistics for each CPU.
- These statistics are provided in /sysfs as a bunch of read_only interfaces. This
-@@ -28,6 +27,7 @@ that may be running on your CPU. So, it will work with any cpufreq_driver.
- 
- 
- 2. Statistics Provided (with example)
-+=====================================
- 
- cpufreq stats provides following statistics (explained in detail below).
- -  time_in_state
-@@ -39,78 +39,79 @@ All the statistics will be from the time the stats driver has been inserted
- statistic is done. Obviously, stats driver will not have any information
- about the frequency transitions before the stats driver insertion.
- 
----------------------------------------------------------------------------------
--<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # ls -l
--total 0
--drwxr-xr-x  2 root root    0 May 14 16:06 .
--drwxr-xr-x  3 root root    0 May 14 15:58 ..
----w-------  1 root root 4096 May 14 16:06 reset
---r--r--r--  1 root root 4096 May 14 16:06 time_in_state
---r--r--r--  1 root root 4096 May 14 16:06 total_trans
---r--r--r--  1 root root 4096 May 14 16:06 trans_table
----------------------------------------------------------------------------------
-+::
- 
---  reset
--Write-only attribute that can be used to reset the stat counters. This can be
--useful for evaluating system behaviour under different governors without the
--need for a reboot.
-+    <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # ls -l
-+    total 0
-+    drwxr-xr-x  2 root root    0 May 14 16:06 .
-+    drwxr-xr-x  3 root root    0 May 14 15:58 ..
-+    --w-------  1 root root 4096 May 14 16:06 reset
-+    -r--r--r--  1 root root 4096 May 14 16:06 time_in_state
-+    -r--r--r--  1 root root 4096 May 14 16:06 total_trans
-+    -r--r--r--  1 root root 4096 May 14 16:06 trans_table
- 
---  time_in_state
--This gives the amount of time spent in each of the frequencies supported by
--this CPU. The cat output will have "<frequency> <time>" pair in each line, which
--will mean this CPU spent <time> usertime units of time at <frequency>. Output
--will have one line for each of the supported frequencies. usertime units here 
--is 10mS (similar to other time exported in /proc).
-+reset
-+  Write-only attribute that can be used to reset the stat counters. This can be
-+  useful for evaluating system behaviour under different governors without the
-+  need for a reboot.
- 
----------------------------------------------------------------------------------
--<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat time_in_state 
--3600000 2089
--3400000 136
--3200000 34
--3000000 67
--2800000 172488
----------------------------------------------------------------------------------
-+time_in_state
-+  This gives the amount of time spent in each of the frequencies supported by
-+  this CPU. The cat output will have "<frequency> <time>" pair in each line,
-+  which will mean this CPU spent <time> usertime units of time at <frequency>.
-+  Output will have one line for each of the supported frequencies. usertime
-+  units here is 10mS (similar to other time exported in /proc).
- 
-+::
- 
---  total_trans
--This gives the total number of frequency transitions on this CPU. The cat 
--output will have a single count which is the total number of frequency
--transitions.
-+  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat time_in_state
-+  3600000 2089
-+  3400000 136
-+  3200000 34
-+  3000000 67
-+  2800000 172488
- 
----------------------------------------------------------------------------------
--<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat total_trans
--20
----------------------------------------------------------------------------------
- 
---  trans_table
--This will give a fine grained information about all the CPU frequency
--transitions. The cat output here is a two dimensional matrix, where an entry
--<i,j> (row i, column j) represents the count of number of transitions from 
--Freq_i to Freq_j. Freq_i rows and Freq_j columns follow the sorting order in
--which the driver has provided the frequency table initially to the cpufreq core
--and so can be sorted (ascending or descending) or unsorted.  The output here
--also contains the actual freq values for each row and column for better
--readability.
-+total_trans
-+  This gives the total number of frequency transitions on this CPU. The cat
-+  output will have a single count which is the total number of frequency
-+  transitions.
- 
--If the transition table is bigger than PAGE_SIZE, reading this will
--return an -EFBIG error.
-+::
- 
----------------------------------------------------------------------------------
--<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat trans_table
--   From  :    To
--         :   3600000   3400000   3200000   3000000   2800000 
--  3600000:         0         5         0         0         0 
--  3400000:         4         0         2         0         0 
--  3200000:         0         1         0         2         0 
--  3000000:         0         0         1         0         3 
--  2800000:         0         0         0         2         0 
----------------------------------------------------------------------------------
-+  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat total_trans
-+  20
- 
-+trans_table
-+  This will give a fine grained information about all the CPU frequency
-+  transitions. The cat output here is a two dimensional matrix, where an entry
-+  <i,j> (row i, column j) represents the count of number of transitions from
-+  Freq_i to Freq_j. Freq_i rows and Freq_j columns follow the sorting order in
-+  which the driver has provided the frequency table initially to the cpufreq
-+  core and so can be sorted (ascending or descending) or unsorted.  The output
-+  here also contains the actual freq values for each row and column for better
-+  readability.
-+
-+  If the transition table is bigger than PAGE_SIZE, reading this will
-+  return an -EFBIG error.
-+
-+::
-+
-+  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat trans_table
-+     From  :    To
-+           :   3600000   3400000   3200000   3000000   2800000
-+    3600000:         0         5         0         0         0
-+    3400000:         4         0         2         0         0
-+    3200000:         0         1         0         2         0
-+    3000000:         0         0         1         0         3
-+    2800000:         0         0         0         2         0
- 
- 3. Configuring cpufreq-stats
-+============================
- 
--To configure cpufreq-stats in your kernel
--Config Main Menu
-+To configure cpufreq-stats in your kernel::
-+
-+   Config Main Menu
- 	Power management options (ACPI, APM)  --->
- 		CPU Frequency scaling  --->
- 			[*] CPU Frequency scaling
-diff --git a/Documentation/cpu-freq/index.txt b/Documentation/cpu-freq/index.rst
-similarity index 37%
-rename from Documentation/cpu-freq/index.txt
-rename to Documentation/cpu-freq/index.rst
-index c15e75386a05..10e6c05f60f6 100644
---- a/Documentation/cpu-freq/index.txt
-+++ b/Documentation/cpu-freq/index.rst
-@@ -1,39 +1,35 @@
--     CPU frequency and voltage scaling code in the Linux(TM) kernel
+ 	specifies the target function of error injection by name.
+ 	If the function name leads '!' prefix, given function is
+ 	removed from injection list. If nothing specified ('')
+@@ -160,10 +169,11 @@ configuration of fault-injection capabilities.
+ 	function for given function. This will be created when
+ 	user specifies new injection entry.
+ 
+-o Boot option
++Boot option
++^^^^^^^^^^^
+ 
+ In order to inject faults while debugfs is not available (early boot time),
+-use the boot option:
++use the boot option::
+ 
+ 	failslab=
+ 	fail_page_alloc=
+@@ -171,10 +181,11 @@ use the boot option:
+ 	fail_futex=
+ 	mmc_core.fail_request=<interval>,<probability>,<space>,<times>
+ 
+-o proc entries
++proc entries
++^^^^^^^^^^^^
+ 
+-- /proc/<pid>/fail-nth:
+-- /proc/self/task/<tid>/fail-nth:
++- /proc/<pid>/fail-nth,
++  /proc/self/task/<tid>/fail-nth:
+ 
+ 	Write to this file of integer N makes N-th call in the task fail.
+ 	Read from this file returns a integer value. A value of '0' indicates
+@@ -191,16 +202,16 @@ o proc entries
+ How to add new fault injection capability
+ -----------------------------------------
+ 
+-o #include <linux/fault-inject.h>
++- #include <linux/fault-inject.h>
+ 
+-o define the fault attributes
++- define the fault attributes
+ 
+   DECLARE_FAULT_ATTR(name);
+ 
+   Please see the definition of struct fault_attr in fault-inject.h
+   for details.
+ 
+-o provide a way to configure fault attributes
++- provide a way to configure fault attributes
+ 
+ - boot option
+ 
+@@ -222,126 +233,126 @@ o provide a way to configure fault attributes
+   single kernel module, it is better to provide module parameters to
+   configure the fault attributes.
+ 
+-o add a hook to insert failures
++- add a hook to insert failures
+ 
+-  Upon should_fail() returning true, client code should inject a failure.
++  Upon should_fail() returning true, client code should inject a failure:
+ 
+ 	should_fail(attr, size);
+ 
+ Application Examples
+ --------------------
+ 
+-o Inject slab allocation failures into module init/exit code
++- Inject slab allocation failures into module init/exit code::
+ 
+-#!/bin/bash
++    #!/bin/bash
+ 
+-FAILTYPE=failslab
+-echo Y > /sys/kernel/debug/$FAILTYPE/task-filter
+-echo 10 > /sys/kernel/debug/$FAILTYPE/probability
+-echo 100 > /sys/kernel/debug/$FAILTYPE/interval
+-echo -1 > /sys/kernel/debug/$FAILTYPE/times
+-echo 0 > /sys/kernel/debug/$FAILTYPE/space
+-echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
+-echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
++    FAILTYPE=failslab
++    echo Y > /sys/kernel/debug/$FAILTYPE/task-filter
++    echo 10 > /sys/kernel/debug/$FAILTYPE/probability
++    echo 100 > /sys/kernel/debug/$FAILTYPE/interval
++    echo -1 > /sys/kernel/debug/$FAILTYPE/times
++    echo 0 > /sys/kernel/debug/$FAILTYPE/space
++    echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
++    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
+ 
+-faulty_system()
+-{
++    faulty_system()
++    {
+ 	bash -c "echo 1 > /proc/self/make-it-fail && exec $*"
+-}
++    }
+ 
+-if [ $# -eq 0 ]
+-then
++    if [ $# -eq 0 ]
++    then
+ 	echo "Usage: $0 modulename [ modulename ... ]"
+ 	exit 1
+-fi
++    fi
+ 
+-for m in $*
+-do
++    for m in $*
++    do
+ 	echo inserting $m...
+ 	faulty_system modprobe $m
+ 
+ 	echo removing $m...
+ 	faulty_system modprobe -r $m
+-done
++    done
+ 
+ ------------------------------------------------------------------------------
+ 
+-o Inject page allocation failures only for a specific module
++- Inject page allocation failures only for a specific module::
+ 
+-#!/bin/bash
++    #!/bin/bash
+ 
+-FAILTYPE=fail_page_alloc
+-module=$1
++    FAILTYPE=fail_page_alloc
++    module=$1
+ 
+-if [ -z $module ]
+-then
++    if [ -z $module ]
++    then
+ 	echo "Usage: $0 <modulename>"
+ 	exit 1
+-fi
++    fi
+ 
+-modprobe $module
++    modprobe $module
+ 
+-if [ ! -d /sys/module/$module/sections ]
+-then
++    if [ ! -d /sys/module/$module/sections ]
++    then
+ 	echo Module $module is not loaded
+ 	exit 1
+-fi
++    fi
+ 
+-cat /sys/module/$module/sections/.text > /sys/kernel/debug/$FAILTYPE/require-start
+-cat /sys/module/$module/sections/.data > /sys/kernel/debug/$FAILTYPE/require-end
++    cat /sys/module/$module/sections/.text > /sys/kernel/debug/$FAILTYPE/require-start
++    cat /sys/module/$module/sections/.data > /sys/kernel/debug/$FAILTYPE/require-end
+ 
+-echo N > /sys/kernel/debug/$FAILTYPE/task-filter
+-echo 10 > /sys/kernel/debug/$FAILTYPE/probability
+-echo 100 > /sys/kernel/debug/$FAILTYPE/interval
+-echo -1 > /sys/kernel/debug/$FAILTYPE/times
+-echo 0 > /sys/kernel/debug/$FAILTYPE/space
+-echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
+-echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
+-echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-highmem
+-echo 10 > /sys/kernel/debug/$FAILTYPE/stacktrace-depth
++    echo N > /sys/kernel/debug/$FAILTYPE/task-filter
++    echo 10 > /sys/kernel/debug/$FAILTYPE/probability
++    echo 100 > /sys/kernel/debug/$FAILTYPE/interval
++    echo -1 > /sys/kernel/debug/$FAILTYPE/times
++    echo 0 > /sys/kernel/debug/$FAILTYPE/space
++    echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
++    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
++    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-highmem
++    echo 10 > /sys/kernel/debug/$FAILTYPE/stacktrace-depth
+ 
+-trap "echo 0 > /sys/kernel/debug/$FAILTYPE/probability" SIGINT SIGTERM EXIT
++    trap "echo 0 > /sys/kernel/debug/$FAILTYPE/probability" SIGINT SIGTERM EXIT
+ 
+-echo "Injecting errors into the module $module... (interrupt to stop)"
+-sleep 1000000
++    echo "Injecting errors into the module $module... (interrupt to stop)"
++    sleep 1000000
+ 
+ ------------------------------------------------------------------------------
+ 
+-o Inject open_ctree error while btrfs mount
++- Inject open_ctree error while btrfs mount::
+ 
+-#!/bin/bash
++    #!/bin/bash
+ 
+-rm -f testfile.img
+-dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
+-DEVICE=$(losetup --show -f testfile.img)
+-mkfs.btrfs -f $DEVICE
+-mkdir -p tmpmnt
++    rm -f testfile.img
++    dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
++    DEVICE=$(losetup --show -f testfile.img)
++    mkfs.btrfs -f $DEVICE
++    mkdir -p tmpmnt
+ 
+-FAILTYPE=fail_function
+-FAILFUNC=open_ctree
+-echo $FAILFUNC > /sys/kernel/debug/$FAILTYPE/inject
+-echo -12 > /sys/kernel/debug/$FAILTYPE/$FAILFUNC/retval
+-echo N > /sys/kernel/debug/$FAILTYPE/task-filter
+-echo 100 > /sys/kernel/debug/$FAILTYPE/probability
+-echo 0 > /sys/kernel/debug/$FAILTYPE/interval
+-echo -1 > /sys/kernel/debug/$FAILTYPE/times
+-echo 0 > /sys/kernel/debug/$FAILTYPE/space
+-echo 1 > /sys/kernel/debug/$FAILTYPE/verbose
++    FAILTYPE=fail_function
++    FAILFUNC=open_ctree
++    echo $FAILFUNC > /sys/kernel/debug/$FAILTYPE/inject
++    echo -12 > /sys/kernel/debug/$FAILTYPE/$FAILFUNC/retval
++    echo N > /sys/kernel/debug/$FAILTYPE/task-filter
++    echo 100 > /sys/kernel/debug/$FAILTYPE/probability
++    echo 0 > /sys/kernel/debug/$FAILTYPE/interval
++    echo -1 > /sys/kernel/debug/$FAILTYPE/times
++    echo 0 > /sys/kernel/debug/$FAILTYPE/space
++    echo 1 > /sys/kernel/debug/$FAILTYPE/verbose
+ 
+-mount -t btrfs $DEVICE tmpmnt
+-if [ $? -ne 0 ]
+-then
++    mount -t btrfs $DEVICE tmpmnt
++    if [ $? -ne 0 ]
++    then
+ 	echo "SUCCESS!"
+-else
++    else
+ 	echo "FAILED!"
+ 	umount tmpmnt
+-fi
++    fi
+ 
+-echo > /sys/kernel/debug/$FAILTYPE/inject
++    echo > /sys/kernel/debug/$FAILTYPE/inject
+ 
+-rmdir tmpmnt
+-losetup -d $DEVICE
+-rm testfile.img
++    rmdir tmpmnt
++    losetup -d $DEVICE
++    rm testfile.img
+ 
+ 
+ Tool to run command with failslab or fail_page_alloc
+@@ -354,43 +365,43 @@ see the following examples.
+ Examples:
+ 
+ Run a command "make -C tools/testing/selftests/ run_tests" with injecting slab
+-allocation failure.
++allocation failure::
+ 
+ 	# ./tools/testing/fault-injection/failcmd.sh \
+ 		-- make -C tools/testing/selftests/ run_tests
+ 
+ Same as above except to specify 100 times failures at most instead of one time
+-at most by default.
++at most by default::
+ 
+ 	# ./tools/testing/fault-injection/failcmd.sh --times=100 \
+ 		-- make -C tools/testing/selftests/ run_tests
+ 
+ Same as above except to inject page allocation failure instead of slab
+-allocation failure.
++allocation failure::
+ 
+ 	# env FAILCMD_TYPE=fail_page_alloc \
+ 		./tools/testing/fault-injection/failcmd.sh --times=100 \
+-                -- make -C tools/testing/selftests/ run_tests
++		-- make -C tools/testing/selftests/ run_tests
+ 
+ Systematic faults using fail-nth
+ ---------------------------------
+ 
+ The following code systematically faults 0-th, 1-st, 2-nd and so on
+-capabilities in the socketpair() system call.
++capabilities in the socketpair() system call::
+ 
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <sys/socket.h>
+-#include <sys/syscall.h>
+-#include <fcntl.h>
+-#include <unistd.h>
+-#include <string.h>
+-#include <stdlib.h>
+-#include <stdio.h>
+-#include <errno.h>
++  #include <sys/types.h>
++  #include <sys/stat.h>
++  #include <sys/socket.h>
++  #include <sys/syscall.h>
++  #include <fcntl.h>
++  #include <unistd.h>
++  #include <string.h>
++  #include <stdlib.h>
++  #include <stdio.h>
++  #include <errno.h>
+ 
+-int main()
+-{
++  int main()
++  {
+ 	int i, err, res, fail_nth, fds[2];
+ 	char buf[128];
+ 
+@@ -413,23 +424,23 @@ int main()
+ 			break;
+ 	}
+ 	return 0;
+-}
++  }
+ 
+-An example output:
++An example output::
+ 
+-1-th fault Y: res=-1/23
+-2-th fault Y: res=-1/23
+-3-th fault Y: res=-1/12
+-4-th fault Y: res=-1/12
+-5-th fault Y: res=-1/23
+-6-th fault Y: res=-1/23
+-7-th fault Y: res=-1/23
+-8-th fault Y: res=-1/12
+-9-th fault Y: res=-1/12
+-10-th fault Y: res=-1/12
+-11-th fault Y: res=-1/12
+-12-th fault Y: res=-1/12
+-13-th fault Y: res=-1/12
+-14-th fault Y: res=-1/12
+-15-th fault Y: res=-1/12
+-16-th fault N: res=0/12
++	1-th fault Y: res=-1/23
++	2-th fault Y: res=-1/23
++	3-th fault Y: res=-1/12
++	4-th fault Y: res=-1/12
++	5-th fault Y: res=-1/23
++	6-th fault Y: res=-1/23
++	7-th fault Y: res=-1/23
++	8-th fault Y: res=-1/12
++	9-th fault Y: res=-1/12
++	10-th fault Y: res=-1/12
++	11-th fault Y: res=-1/12
++	12-th fault Y: res=-1/12
++	13-th fault Y: res=-1/12
++	14-th fault Y: res=-1/12
++	15-th fault Y: res=-1/12
++	16-th fault N: res=0/12
+diff --git a/Documentation/fault-injection/index.rst b/Documentation/fault-injection/index.rst
+new file mode 100644
+index 000000000000..92b5639ed07a
+--- /dev/null
++++ b/Documentation/fault-injection/index.rst
+@@ -0,0 +1,20 @@
 +:orphan:
- 
-+==============================================================
-+CPU frequency and voltage scaling code in the Linux(TM) kernel
-+==============================================================
- 
--		         L i n u x    C P U F r e q
- 
-+Author: Dominik Brodowski  <linux@brodo.de>
- 
- 
-+Clock scaling allows you to change the clock speed of the CPUs on the
-+fly. This is a nice method to save battery power, because the lower
-+the clock speed, the less power the CPU consumes.
- 
--		    Dominik Brodowski  <linux@brodo.de>
- 
++
++===============
++fault-injection
++===============
++
 +.. toctree::
 +    :maxdepth: 1
- 
-+    core
-+    cpufreq-stats
-+    cpu-drivers
- 
--   Clock scaling allows you to change the clock speed of the CPUs on the
--    fly. This is a nice method to save battery power, because the lower
--            the clock speed, the less power the CPU consumes.
-+    amd-powernow
-+    cpufreq-nforce2
-+    pcc-cpufreq
- 
++
++    fault-injection
++    notifier-error-inject
++    nvme-fault-injection
++    provoke-crashes
++
 +.. only::  subproject and html
- 
++
 +   Indices
 +   =======
- 
--Documents in this directory:
------------------------------
--
--amd-powernow.txt -	AMD powernow driver specific file.
--
--core.txt	-	General description of the CPUFreq core and
--			of CPUFreq notifiers.
--
--cpu-drivers.txt -	How to implement a new cpufreq processor driver.
--
--cpufreq-nforce2.txt -	nVidia nForce2 platform specific file.
--
--cpufreq-stats.txt -	General description of sysfs cpufreq stats.
--
--index.txt	-	File index, Mailing list and Links (this document)
--
--pcc-cpufreq.txt -	PCC cpufreq driver specific file.
--
++
 +   * :ref:`genindex`
- 
- Mailing List
- ------------
-diff --git a/Documentation/cpu-freq/pcc-cpufreq.txt b/Documentation/cpu-freq/pcc-cpufreq.rst
-similarity index 80%
-rename from Documentation/cpu-freq/pcc-cpufreq.txt
-rename to Documentation/cpu-freq/pcc-cpufreq.rst
-index 9e3c3b33514c..d846a36536e4 100644
---- a/Documentation/cpu-freq/pcc-cpufreq.txt
-+++ b/Documentation/cpu-freq/pcc-cpufreq.rst
-@@ -1,45 +1,38 @@
--/*
-- *  pcc-cpufreq.txt - PCC interface documentation
-- *
-- *  Copyright (C) 2009 Red Hat, Matthew Garrett <mjg@redhat.com>
-- *  Copyright (C) 2009 Hewlett-Packard Development Company, L.P.
-- *      Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; version 2 of the License.
-- *
-- *  This program is distributed in the hope that it will be useful, but
-- *  WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or NON
-- *  INFRINGEMENT. See the GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License along
-- *  with this program; if not, write to the Free Software Foundation, Inc.,
-- *  675 Mass Ave, Cambridge, MA 02139, USA.
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- */
--
--
--			Processor Clocking Control Driver
--			---------------------------------
--
--Contents:
-----------
--1.	Introduction
--1.1	PCC interface
--1.1.1   Get Average Frequency
--1.1.2	Set Desired Frequency
--1.2	Platforms affected
--2.	Driver and /sys details
--2.1	scaling_available_frequencies
--2.2	cpuinfo_transition_latency
--2.3	cpuinfo_cur_freq
--2.4	related_cpus
--3.	Caveats
-+==========================================================
-+Processor Clocking Control Driver cpufreq driver specifics
-+==========================================================
+diff --git a/Documentation/fault-injection/notifier-error-inject.txt b/Documentation/fault-injection/notifier-error-inject.rst
+similarity index 83%
+rename from Documentation/fault-injection/notifier-error-inject.txt
+rename to Documentation/fault-injection/notifier-error-inject.rst
+index e861d761de24..1668b6e48d3a 100644
+--- a/Documentation/fault-injection/notifier-error-inject.txt
++++ b/Documentation/fault-injection/notifier-error-inject.rst
+@@ -14,7 +14,8 @@ modules that can be used to test the following notifiers.
+ PM notifier error injection module
+ ----------------------------------
+ This feature is controlled through debugfs interface
+-/sys/kernel/debug/notifier-error-inject/pm/actions/<notifier event>/error
 +
++  /sys/kernel/debug/notifier-error-inject/pm/actions/<notifier event>/error
+ 
+ Possible PM notifier events to be failed are:
+ 
+@@ -22,7 +23,7 @@ Possible PM notifier events to be failed are:
+  * PM_SUSPEND_PREPARE
+  * PM_RESTORE_PREPARE
+ 
+-Example: Inject PM suspend error (-12 = -ENOMEM)
++Example: Inject PM suspend error (-12 = -ENOMEM)::
+ 
+ 	# cd /sys/kernel/debug/notifier-error-inject/pm/
+ 	# echo -12 > actions/PM_SUSPEND_PREPARE/error
+@@ -32,14 +33,15 @@ Example: Inject PM suspend error (-12 = -ENOMEM)
+ Memory hotplug notifier error injection module
+ ----------------------------------------------
+ This feature is controlled through debugfs interface
+-/sys/kernel/debug/notifier-error-inject/memory/actions/<notifier event>/error
 +
-+.. pcc-cpufreq.txt - PCC interface documentation
++  /sys/kernel/debug/notifier-error-inject/memory/actions/<notifier event>/error
+ 
+ Possible memory notifier events to be failed are:
+ 
+  * MEM_GOING_ONLINE
+  * MEM_GOING_OFFLINE
+ 
+-Example: Inject memory hotplug offline error (-12 == -ENOMEM)
++Example: Inject memory hotplug offline error (-12 == -ENOMEM)::
+ 
+ 	# cd /sys/kernel/debug/notifier-error-inject/memory
+ 	# echo -12 > actions/MEM_GOING_OFFLINE/error
+@@ -49,7 +51,8 @@ Example: Inject memory hotplug offline error (-12 == -ENOMEM)
+ powerpc pSeries reconfig notifier error injection module
+ --------------------------------------------------------
+ This feature is controlled through debugfs interface
+-/sys/kernel/debug/notifier-error-inject/pSeries-reconfig/actions/<notifier event>/error
 +
-+    Copyright (C) 2009 Red Hat, Matthew Garrett <mjg@redhat.com>
-+    Copyright (C) 2009 Hewlett-Packard Development Company, L.P.
-+        Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
++  /sys/kernel/debug/notifier-error-inject/pSeries-reconfig/actions/<notifier event>/error
+ 
+ Possible pSeries reconfig notifier events to be failed are:
+ 
+@@ -61,7 +64,8 @@ Possible pSeries reconfig notifier events to be failed are:
+ Netdevice notifier error injection module
+ ----------------------------------------------
+ This feature is controlled through debugfs interface
+-/sys/kernel/debug/notifier-error-inject/netdev/actions/<notifier event>/error
 +
-+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++  /sys/kernel/debug/notifier-error-inject/netdev/actions/<notifier event>/error
+ 
+ Netdevice notifier events which can be failed are:
+ 
+@@ -75,7 +79,7 @@ Netdevice notifier events which can be failed are:
+  * NETDEV_PRECHANGEUPPER
+  * NETDEV_CHANGEUPPER
+ 
+-Example: Inject netdevice mtu change error (-22 == -EINVAL)
++Example: Inject netdevice mtu change error (-22 == -EINVAL)::
+ 
+ 	# cd /sys/kernel/debug/notifier-error-inject/netdev
+ 	# echo -22 > actions/NETDEV_CHANGEMTU/error
+diff --git a/Documentation/fault-injection/nvme-fault-injection.txt b/Documentation/fault-injection/nvme-fault-injection.rst
+similarity index 19%
+rename from Documentation/fault-injection/nvme-fault-injection.txt
+rename to Documentation/fault-injection/nvme-fault-injection.rst
+index 8fbf3bf60b62..bbb1bf3e8650 100644
+--- a/Documentation/fault-injection/nvme-fault-injection.txt
++++ b/Documentation/fault-injection/nvme-fault-injection.rst
+@@ -16,101 +16,105 @@ following.
+ Example 1: Inject default status code with no retry
+ ---------------------------------------------------
+ 
+-mount /dev/nvme0n1 /mnt
+-echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
+-echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
+-cp a.file /mnt
++::
+ 
+-Expected Result:
++  mount /dev/nvme0n1 /mnt
++  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
++  echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
++  cp a.file /mnt
+ 
+-cp: cannot stat ‘/mnt/a.file’: Input/output error
++Expected Result::
+ 
+-Message from dmesg:
++  cp: cannot stat ‘/mnt/a.file’: Input/output error
+ 
+-FAULT_INJECTION: forcing a failure.
+-name fault_inject, interval 1, probability 100, space 0, times 1
+-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc8+ #2
+-Hardware name: innotek GmbH VirtualBox/VirtualBox,
+-BIOS VirtualBox 12/01/2006
+-Call Trace:
+-  <IRQ>
+-  dump_stack+0x5c/0x7d
+-  should_fail+0x148/0x170
+-  nvme_should_fail+0x2f/0x50 [nvme_core]
+-  nvme_process_cq+0xe7/0x1d0 [nvme]
+-  nvme_irq+0x1e/0x40 [nvme]
+-  __handle_irq_event_percpu+0x3a/0x190
+-  handle_irq_event_percpu+0x30/0x70
+-  handle_irq_event+0x36/0x60
+-  handle_fasteoi_irq+0x78/0x120
+-  handle_irq+0xa7/0x130
+-  ? tick_irq_enter+0xa8/0xc0
+-  do_IRQ+0x43/0xc0
+-  common_interrupt+0xa2/0xa2
+-  </IRQ>
+-RIP: 0010:native_safe_halt+0x2/0x10
+-RSP: 0018:ffffffff82003e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
+-RAX: ffffffff817a10c0 RBX: ffffffff82012480 RCX: 0000000000000000
+-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+-RBP: 0000000000000000 R08: 000000008e38ce64 R09: 0000000000000000
+-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82012480
+-R13: ffffffff82012480 R14: 0000000000000000 R15: 0000000000000000
+-  ? __sched_text_end+0x4/0x4
+-  default_idle+0x18/0xf0
+-  do_idle+0x150/0x1d0
+-  cpu_startup_entry+0x6f/0x80
+-  start_kernel+0x4c4/0x4e4
+-  ? set_init_arg+0x55/0x55
+-  secondary_startup_64+0xa5/0xb0
+-  print_req_error: I/O error, dev nvme0n1, sector 9240
+-EXT4-fs error (device nvme0n1): ext4_find_entry:1436:
+-inode #2: comm cp: reading directory lblock 0
++Message from dmesg::
 +
-+    This program is free software; you can redistribute it and/or modify
-+    it under the terms of the GNU General Public License as published by
-+    the Free Software Foundation; version 2 of the License.
++  FAULT_INJECTION: forcing a failure.
++  name fault_inject, interval 1, probability 100, space 0, times 1
++  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc8+ #2
++  Hardware name: innotek GmbH VirtualBox/VirtualBox,
++  BIOS VirtualBox 12/01/2006
++  Call Trace:
++    <IRQ>
++    dump_stack+0x5c/0x7d
++    should_fail+0x148/0x170
++    nvme_should_fail+0x2f/0x50 [nvme_core]
++    nvme_process_cq+0xe7/0x1d0 [nvme]
++    nvme_irq+0x1e/0x40 [nvme]
++    __handle_irq_event_percpu+0x3a/0x190
++    handle_irq_event_percpu+0x30/0x70
++    handle_irq_event+0x36/0x60
++    handle_fasteoi_irq+0x78/0x120
++    handle_irq+0xa7/0x130
++    ? tick_irq_enter+0xa8/0xc0
++    do_IRQ+0x43/0xc0
++    common_interrupt+0xa2/0xa2
++    </IRQ>
++  RIP: 0010:native_safe_halt+0x2/0x10
++  RSP: 0018:ffffffff82003e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
++  RAX: ffffffff817a10c0 RBX: ffffffff82012480 RCX: 0000000000000000
++  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
++  RBP: 0000000000000000 R08: 000000008e38ce64 R09: 0000000000000000
++  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82012480
++  R13: ffffffff82012480 R14: 0000000000000000 R15: 0000000000000000
++    ? __sched_text_end+0x4/0x4
++    default_idle+0x18/0xf0
++    do_idle+0x150/0x1d0
++    cpu_startup_entry+0x6f/0x80
++    start_kernel+0x4c4/0x4e4
++    ? set_init_arg+0x55/0x55
++    secondary_startup_64+0xa5/0xb0
++    print_req_error: I/O error, dev nvme0n1, sector 9240
++  EXT4-fs error (device nvme0n1): ext4_find_entry:1436:
++  inode #2: comm cp: reading directory lblock 0
+ 
+ Example 2: Inject default status code with retry
+ ------------------------------------------------
+ 
+-mount /dev/nvme0n1 /mnt
+-echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
+-echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
+-echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/status
+-echo 0 > /sys/kernel/debug/nvme0n1/fault_inject/dont_retry
++::
+ 
+-cp a.file /mnt
++  mount /dev/nvme0n1 /mnt
++  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
++  echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
++  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/status
++  echo 0 > /sys/kernel/debug/nvme0n1/fault_inject/dont_retry
+ 
+-Expected Result:
++  cp a.file /mnt
+ 
+-command success without error
++Expected Result::
+ 
+-Message from dmesg:
++  command success without error
+ 
+-FAULT_INJECTION: forcing a failure.
+-name fault_inject, interval 1, probability 100, space 0, times 1
+-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.15.0-rc8+ #4
+-Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+-Call Trace:
+-  <IRQ>
+-  dump_stack+0x5c/0x7d
+-  should_fail+0x148/0x170
+-  nvme_should_fail+0x30/0x60 [nvme_core]
+-  nvme_loop_queue_response+0x84/0x110 [nvme_loop]
+-  nvmet_req_complete+0x11/0x40 [nvmet]
+-  nvmet_bio_done+0x28/0x40 [nvmet]
+-  blk_update_request+0xb0/0x310
+-  blk_mq_end_request+0x18/0x60
+-  flush_smp_call_function_queue+0x3d/0xf0
+-  smp_call_function_single_interrupt+0x2c/0xc0
+-  call_function_single_interrupt+0xa2/0xb0
+-  </IRQ>
+-RIP: 0010:native_safe_halt+0x2/0x10
+-RSP: 0018:ffffc9000068bec0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff04
+-RAX: ffffffff817a10c0 RBX: ffff88011a3c9680 RCX: 0000000000000000
+-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+-RBP: 0000000000000001 R08: 000000008e38c131 R09: 0000000000000000
+-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88011a3c9680
+-R13: ffff88011a3c9680 R14: 0000000000000000 R15: 0000000000000000
+-  ? __sched_text_end+0x4/0x4
+-  default_idle+0x18/0xf0
+-  do_idle+0x150/0x1d0
+-  cpu_startup_entry+0x6f/0x80
+-  start_secondary+0x187/0x1e0
+-  secondary_startup_64+0xa5/0xb0
++Message from dmesg::
 +
-+    This program is distributed in the hope that it will be useful, but
-+    WITHOUT ANY WARRANTY; without even the implied warranty of
-+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or NON
-+    INFRINGEMENT. See the GNU General Public License for more details.
++  FAULT_INJECTION: forcing a failure.
++  name fault_inject, interval 1, probability 100, space 0, times 1
++  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.15.0-rc8+ #4
++  Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
++  Call Trace:
++    <IRQ>
++    dump_stack+0x5c/0x7d
++    should_fail+0x148/0x170
++    nvme_should_fail+0x30/0x60 [nvme_core]
++    nvme_loop_queue_response+0x84/0x110 [nvme_loop]
++    nvmet_req_complete+0x11/0x40 [nvmet]
++    nvmet_bio_done+0x28/0x40 [nvmet]
++    blk_update_request+0xb0/0x310
++    blk_mq_end_request+0x18/0x60
++    flush_smp_call_function_queue+0x3d/0xf0
++    smp_call_function_single_interrupt+0x2c/0xc0
++    call_function_single_interrupt+0xa2/0xb0
++    </IRQ>
++  RIP: 0010:native_safe_halt+0x2/0x10
++  RSP: 0018:ffffc9000068bec0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff04
++  RAX: ffffffff817a10c0 RBX: ffff88011a3c9680 RCX: 0000000000000000
++  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
++  RBP: 0000000000000001 R08: 000000008e38c131 R09: 0000000000000000
++  R10: 0000000000000000 R11: 0000000000000000 R12: ffff88011a3c9680
++  R13: ffff88011a3c9680 R14: 0000000000000000 R15: 0000000000000000
++    ? __sched_text_end+0x4/0x4
++    default_idle+0x18/0xf0
++    do_idle+0x150/0x1d0
++    cpu_startup_entry+0x6f/0x80
++    start_secondary+0x187/0x1e0
++    secondary_startup_64+0xa5/0xb0
+diff --git a/Documentation/fault-injection/provoke-crashes.txt b/Documentation/fault-injection/provoke-crashes.rst
+similarity index 45%
+rename from Documentation/fault-injection/provoke-crashes.txt
+rename to Documentation/fault-injection/provoke-crashes.rst
+index 7a9d3d81525b..9279a3e12278 100644
+--- a/Documentation/fault-injection/provoke-crashes.txt
++++ b/Documentation/fault-injection/provoke-crashes.rst
+@@ -1,3 +1,7 @@
++===============
++Provoke crashes
++===============
 +
+ The lkdtm module provides an interface to crash or injure the kernel at
+ predefined crashpoints to evaluate the reliability of crash dumps obtained
+ using different dumping solutions. The module uses KPROBEs to instrument
+@@ -8,31 +12,37 @@ support.
+ You can provide the way either through module arguments when inserting
+ the module, or through a debugfs interface.
+ 
+-Usage: insmod lkdtm.ko [recur_count={>0}] cpoint_name=<> cpoint_type=<>
+-				[cpoint_count={>0}]
++Usage::
+ 
+-  recur_count : Recursion level for the stack overflow test. Default is 10.
++	insmod lkdtm.ko [recur_count={>0}] cpoint_name=<> cpoint_type=<>
++			[cpoint_count={>0}]
+ 
+-  cpoint_name : Crash point where the kernel is to be crashed. It can be
+-	 one of INT_HARDWARE_ENTRY, INT_HW_IRQ_EN, INT_TASKLET_ENTRY,
+-	 FS_DEVRW, MEM_SWAPOUT, TIMERADD, SCSI_DISPATCH_CMD,
+-	 IDE_CORE_CP, DIRECT
++recur_count
++	Recursion level for the stack overflow test. Default is 10.
+ 
+-  cpoint_type : Indicates the action to be taken on hitting the crash point.
+-     It can be one of PANIC, BUG, EXCEPTION, LOOP, OVERFLOW,
+-     CORRUPT_STACK, UNALIGNED_LOAD_STORE_WRITE, OVERWRITE_ALLOCATION,
+-     WRITE_AFTER_FREE,
++cpoint_name
++	Crash point where the kernel is to be crashed. It can be
++	one of INT_HARDWARE_ENTRY, INT_HW_IRQ_EN, INT_TASKLET_ENTRY,
++	FS_DEVRW, MEM_SWAPOUT, TIMERADD, SCSI_DISPATCH_CMD,
++	IDE_CORE_CP, DIRECT
+ 
+-  cpoint_count : Indicates the number of times the crash point is to be hit
+-    to trigger an action. The default is 10.
++cpoint_type
++	Indicates the action to be taken on hitting the crash point.
++	It can be one of PANIC, BUG, EXCEPTION, LOOP, OVERFLOW,
++	CORRUPT_STACK, UNALIGNED_LOAD_STORE_WRITE, OVERWRITE_ALLOCATION,
++	WRITE_AFTER_FREE,
 +
-+.. Contents:
-+   1.	Introduction
-+   1.1	PCC interface
-+   1.1.1  Get Average Frequency
-+   1.1.2  Set Desired Frequency
-+   1.2	Platforms affected
-+   2.	Driver and /sys details
-+   2.1	scaling_available_frequencies
-+   2.2	cpuinfo_transition_latency
-+   2.3	cpuinfo_cur_freq
-+   2.4	related_cpus
-+   3.	Caveats
++cpoint_count
++	Indicates the number of times the crash point is to be hit
++	to trigger an action. The default is 10.
  
- 1. Introduction:
- ----------------
-@@ -72,6 +65,7 @@ memory region. The shared memory region header contains the "command" and
- doorbell.
+ You can also induce failures by mounting debugfs and writing the type to
+-<mountpoint>/provoke-crash/<crashpoint>. E.g.,
++<mountpoint>/provoke-crash/<crashpoint>. E.g.::
  
- The following commands are supported by the PCC interface:
-+
- * Get Average Frequency
- * Set Desired Frequency
+   mount -t debugfs debugfs /mnt
+   echo EXCEPTION > /mnt/provoke-crash/INT_HARDWARE_ENTRY
  
-@@ -140,7 +134,9 @@ Internally, there is no need for the driver to convert the "target" frequency
- to a corresponding P-state.
  
- The VERSION number for the driver will be of the format v.xy.ab.
--eg: 1.00.02
-+eg::
-+
-+   1.00.02
-    ----- --
-     |    |
-     |    -- this will increase with bug fixes/enhancements to the driver
-@@ -168,21 +164,21 @@ A) Often cpuinfo_cur_freq will show a value different than what is declared
- in the scaling_available_frequencies or scaling_cur_freq, or scaling_max_freq.
- This is due to "turbo boost" available on recent Intel processors. If certain
- conditions are met the BIOS can achieve a slightly higher speed than requested
--by OSPM. An example:
-+by OSPM. An example::
+-A special file is `DIRECT' which will induce the crash directly without
++A special file is `DIRECT` which will induce the crash directly without
+ KPROBE instrumentation. This mode is the only one available when the module
+ is built on a kernel without KPROBEs support.
+diff --git a/Documentation/process/4.Coding.rst b/Documentation/process/4.Coding.rst
+index 4b7a5ab3cec1..13dd893c9f88 100644
+--- a/Documentation/process/4.Coding.rst
++++ b/Documentation/process/4.Coding.rst
+@@ -298,7 +298,7 @@ enabled, a configurable percentage of memory allocations will be made to
+ fail; these failures can be restricted to a specific range of code.
+ Running with fault injection enabled allows the programmer to see how the
+ code responds when things go badly.  See
+-Documentation/fault-injection/fault-injection.txt for more information on
++Documentation/fault-injection/fault-injection.rst for more information on
+ how to use this facility.
  
--scaling_cur_freq	: 2933000
--cpuinfo_cur_freq	: 3196000
-+	scaling_cur_freq	: 2933000
-+	cpuinfo_cur_freq	: 3196000
+ Other kinds of errors can be found with the "sparse" static analysis tool.
+diff --git a/Documentation/translations/it_IT/process/4.Coding.rst b/Documentation/translations/it_IT/process/4.Coding.rst
+index c05b89e616dd..a5e36aa60448 100644
+--- a/Documentation/translations/it_IT/process/4.Coding.rst
++++ b/Documentation/translations/it_IT/process/4.Coding.rst
+@@ -314,7 +314,7 @@ di allocazione di memoria sarà destinata al fallimento; questi fallimenti
+ possono essere ridotti ad uno specifico pezzo di codice.  Procedere con
+ l'inserimento dei fallimenti attivo permette al programmatore di verificare
+ come il codice risponde quando le cose vanno male.  Consultate:
+-Documentation/fault-injection/fault-injection.txt per avere maggiori
++Documentation/fault-injection/fault-injection.rst per avere maggiori
+ informazioni su come utilizzare questo strumento.
  
- B) There is a round-off error associated with the cpuinfo_cur_freq value.
- Since the driver obtains the current frequency as a "percentage" (%) of the
- nominal frequency from the BIOS, sometimes, the values displayed by
--scaling_cur_freq and cpuinfo_cur_freq may not match. An example:
-+scaling_cur_freq and cpuinfo_cur_freq may not match. An example::
+ Altre tipologie di errori possono essere riscontrati con lo strumento di
+diff --git a/Documentation/translations/zh_CN/process/4.Coding.rst b/Documentation/translations/zh_CN/process/4.Coding.rst
+index 8bb777941394..b82b1dde3122 100644
+--- a/Documentation/translations/zh_CN/process/4.Coding.rst
++++ b/Documentation/translations/zh_CN/process/4.Coding.rst
+@@ -205,7 +205,7 @@ Linus对这个问题给出了最佳答案:
+ 启用故障注入后，内存分配的可配置百分比将失败；这些失败可以限制在特定的代码
+ 范围内。在启用了故障注入的情况下运行，程序员可以看到当情况恶化时代码如何响
+ 应。有关如何使用此工具的详细信息，请参阅
+-Documentation/fault-injection/fault-injection.txt。
++Documentation/fault-injection/fault-injection.rst。
  
--scaling_cur_freq	: 1600000
--cpuinfo_cur_freq	: 1583000
-+	scaling_cur_freq	: 1600000
-+	cpuinfo_cur_freq	: 1583000
+ 使用“sparse”静态分析工具可以发现其他类型的错误。对于sparse，可以警告程序员
+ 用户空间和内核空间地址之间的混淆、big endian和small endian数量的混合、在需
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index df9429e3fd3a..c7a507482051 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -15,7 +15,7 @@
+  *
+  * Debugfs support added by Simon Kagstrom <simon.kagstrom@netinsight.net>
+  *
+- * See Documentation/fault-injection/provoke-crashes.txt for instructions
++ * See Documentation/fault-injection/provoke-crashes.rst for instructions
+  */
+ #include "lkdtm.h"
+ #include <linux/fs.h>
+diff --git a/include/linux/fault-inject.h b/include/linux/fault-inject.h
+index 7e6c77740413..e525f6957c49 100644
+--- a/include/linux/fault-inject.h
++++ b/include/linux/fault-inject.h
+@@ -11,7 +11,7 @@
  
- In this example, the nominal frequency is 2933 MHz. The driver obtains the
--current frequency, cpuinfo_cur_freq, as 54% of the nominal frequency:
-+current frequency, cpuinfo_cur_freq, as 54% of the nominal frequency::
+ /*
+  * For explanation of the elements of this struct, see
+- * Documentation/fault-injection/fault-injection.txt
++ * Documentation/fault-injection/fault-injection.rst
+  */
+ struct fault_attr {
+ 	unsigned long probability;
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index d08f5848958e..3a3554e8ca0f 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1701,7 +1701,7 @@ config LKDTM
+ 	called lkdtm.
  
- 	54% of 2933 MHz = 1583 MHz
+ 	Documentation on how to use the module can be found in
+-	Documentation/fault-injection/provoke-crashes.txt
++	Documentation/fault-injection/provoke-crashes.rst
  
-@@ -191,10 +187,10 @@ corresponds to the frequency of the P0 P-state.
+ config TEST_LIST_SORT
+ 	tristate "Linked list sorting test"
+diff --git a/tools/testing/fault-injection/failcmd.sh b/tools/testing/fault-injection/failcmd.sh
+index 29a6c63c5a15..78dac34264be 100644
+--- a/tools/testing/fault-injection/failcmd.sh
++++ b/tools/testing/fault-injection/failcmd.sh
+@@ -42,7 +42,7 @@ OPTIONS
+ 	--interval=value, --space=value, --verbose=value, --task-filter=value,
+ 	--stacktrace-depth=value, --require-start=value, --require-end=value,
+ 	--reject-start=value, --reject-end=value, --ignore-gfp-wait=value
+-		See Documentation/fault-injection/fault-injection.txt for more
++		See Documentation/fault-injection/fault-injection.rst for more
+ 		information
  
- 2.4 related_cpus:
- -----------------
--The related_cpus field is identical to affected_cpus.
-+The related_cpus field is identical to affected_cpus:
- 
--affected_cpus	: 4
--related_cpus	: 4
-+	affected_cpus	: 4
-+	related_cpus	: 4
- 
- Currently, the PCC driver does not evaluate _PSD. The platforms that support
- PCC do not implement SW_ALL. So OSPM doesn't need to perform any coordination
-diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
-index dfa6457deaf6..336a295fac4c 100644
---- a/drivers/cpufreq/Kconfig.x86
-+++ b/drivers/cpufreq/Kconfig.x86
-@@ -25,7 +25,7 @@ config X86_PCC_CPUFREQ
- 	  This driver adds support for the PCC interface.
- 
- 	  For details, take a look at:
--	  <file:Documentation/cpu-freq/pcc-cpufreq.txt>.
-+	  <file:Documentation/cpu-freq/pcc-cpufreq.rst>.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called pcc-cpufreq.
+ 	failslab options:
 -- 
 2.21.0
 
