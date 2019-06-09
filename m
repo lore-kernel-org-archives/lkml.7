@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47137C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE18C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2122081C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74E22081C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099195;
-	bh=uyIkaYx4Do60DeM1Fok7P3O2zNsV3shDL6HrAbissfE=;
+	s=default; t=1560099199;
+	bh=+SaQOnpuc3KYK1Uzlk7Tb/UZnbTi3fsoVUAx8VBchwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z8WyaLkPc1E4clROYgx9z6kqg8cmkqcbWsxNt9cpedJO3yoVRp+PlmNo7Bmhp4fG7
-	 nHFrb3GOqxrm9cAgSZ+4TG82TcDw0TK9Uz2+959vURM1pOk3zQYQQdWwO0wuXyKDhz
-	 HnJZbrep+AFNtHNp1/n5NIq4SnRMmlFUDRC2rdMI=
+	b=2OMAS71VsQP60fCCK38ODTR8BE1qw/2wHQ0vSLmQrX5GEKbK9l/ffnWD/wzGnLToy
+	 VjdbbFhzCjx6ap/yLieFfNzG76qZh2LLrJUGmpWttW6UliPE8ppEw+WTEnn455xEM0
+	 l2G47FKcTiDxrEAOejyQF6Z5kLjkqKe2Cn6WCc2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732365AbfFIQxN (ORCPT
+        id S1732373AbfFIQxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54292 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732351AbfFIQxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:08 -0400
+        id S1732366AbfFIQxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0F42204EC;
-        Sun,  9 Jun 2019 16:53:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77CE3206BB;
+        Sun,  9 Jun 2019 16:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099188;
-        bh=uyIkaYx4Do60DeM1Fok7P3O2zNsV3shDL6HrAbissfE=;
+        s=default; t=1560099194;
+        bh=+SaQOnpuc3KYK1Uzlk7Tb/UZnbTi3fsoVUAx8VBchwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YxognPBUsw4mwLVo9q2nj0vHhvZ3QQN76XE/YyyJMBILH/saAdDWxA/ZnycfswhGn
-         fdjPuULwTz1xBVtGD1DiuaitB3QbSAfF+DueSQtTnm/QjILI0ao9FK+1rPwa1u80fp
-         7L/8ys60gJAbd5gEcMUvY0WXGYKYTW90odN8qKkU=
+        b=RcHwUWYIGHLlN4JlcNrOPsuCzJdFTCDH+/mPwdg03mKcffA5G6cKjw7ohdXbDSmbU
+         WljSsqwpbKXqG3g0U87bMsUAdfwU/eG0zCDtPF91jVon7aoplncS7+WTxDo7kWAAYW
+         B5hFPx0phB22C040U8bRy4BmgFRQ4b+G9NjmXN3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Joe Burmeister <joe.burmeister@devtank.co.uk>
-Subject: [PATCH 4.9 41/83] tty: max310x: Fix external crystal register setup
-Date:   Sun,  9 Jun 2019 18:42:11 +0200
-Message-Id: <20190609164131.392566346@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenliang Wei <weizhenliang@huawei.com>,
+        Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ivan Delalande <colona@arista.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 43/83] kernel/signal.c: trace_signal_deliver when signal_group_exit
+Date:   Sun,  9 Jun 2019 18:42:13 +0200
+Message-Id: <20190609164131.563594039@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,42 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Burmeister <joe.burmeister@devtank.co.uk>
+From: Zhenliang Wei <weizhenliang@huawei.com>
 
-commit 5d24f455c182d5116dd5db8e1dc501115ecc9c2c upstream.
+commit 98af37d624ed8c83f1953b1b6b2f6866011fc064 upstream.
 
-The datasheet states:
+In the fixes commit, removing SIGKILL from each thread signal mask and
+executing "goto fatal" directly will skip the call to
+"trace_signal_deliver".  At this point, the delivery tracking of the
+SIGKILL signal will be inaccurate.
 
-  Bit 4: ClockEnSet the ClockEn bit high to enable an external clocking
-(crystal or clock generator at XIN). Set the ClockEn bit to 0 to disable
-clocking
-  Bit 1: CrystalEnSet the CrystalEn bit high to enable the crystal
-oscillator. When using an external clock source at XIN, CrystalEn must
-be set low.
+Therefore, we need to add trace_signal_deliver before "goto fatal" after
+executing sigdelset.
 
-The bit 4, MAX310X_CLKSRC_EXTCLK_BIT, should be set and was not.
+Note: SEND_SIG_NOINFO matches the fact that SIGKILL doesn't have any info.
 
-This was required to make the MAX3107 with an external crystal on our
-board able to send or receive data.
-
-Signed-off-by: Joe Burmeister <joe.burmeister@devtank.co.uk>
-Cc: stable <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20190425025812.91424-1-weizhenliang@huawei.com
+Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
+Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
+Reviewed-by: Christian Brauner <christian@brauner.io>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Ivan Delalande <colona@arista.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/max310x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/signal.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -579,7 +579,7 @@ static int max310x_set_ref_clk(struct ma
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2244,6 +2244,8 @@ relock:
+ 	if (signal_group_exit(signal)) {
+ 		ksig->info.si_signo = signr = SIGKILL;
+ 		sigdelset(&current->pending.signal, SIGKILL);
++		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
++				&sighand->action[SIGKILL - 1]);
+ 		recalc_sigpending();
+ 		goto fatal;
  	}
- 
- 	/* Configure clock source */
--	clksrc = xtal ? MAX310X_CLKSRC_CRYST_BIT : MAX310X_CLKSRC_EXTCLK_BIT;
-+	clksrc = MAX310X_CLKSRC_EXTCLK_BIT | (xtal ? MAX310X_CLKSRC_CRYST_BIT : 0);
- 
- 	/* Configure PLL */
- 	if (pllcfg) {
 
 
