@@ -8,62 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC79C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AD9C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A422070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430562070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ru9y+jYK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwzGRTDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfFITJG (ORCPT
+        id S1730630AbfFITJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 15:09:06 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45013 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730607AbfFITJD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 9 Jun 2019 15:09:03 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b17so6958433wrq.11;
-        Sun, 09 Jun 2019 12:09:02 -0700 (PDT)
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33272 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730367AbfFITI7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 15:08:59 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so7018764wru.0;
+        Sun, 09 Jun 2019 12:08:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QdHNc4an0f/5FwrYZYHKmxbdNbnGMTXLO6NDwG9nRak=;
-        b=ru9y+jYKa45z5SOlOduxdkrQ45nd9lnFvj4Hsr8m7A63Y8PnfAeX4VvqhNPawFoeB/
-         uJEwVnzLOa5wjIFfm8QF27u5J3upvzKAW3Wx9g9J8Vwqyv6cqJv+A4fobWbX71Z/le1k
-         JAgwpLkZ/BTCHVWBN/94zN3D+7/MJz4sq6E3EmeMB5r8KzwcSsYn7+pEmcN9K+5gQ8VK
-         HHn8pm1a3dOJ9HH0V8lrmw0OI6r0V4aSvlL9IZx07rl0wI13OTWM3w3Szykp4dPJRa5u
-         7OvIyb96VqPEn7IuH+KzgZl9HgrTT0tH46mSXnjbixv44wv+ZzWyLZbJrJRX24wgx9h7
-         NLcA==
+        bh=Z2eH+3/86F7l26OXjPtVzBX++Fh8MEXdrET9Il+DCLQ=;
+        b=GwzGRTDWLjhPT3moaYmOv2coVV9+ArjxYA9Jg8jMKpt0uIc4hUu8kKhfoXCk7b8jhl
+         vsLU3Y/36mNP+rj1dJa62ufqhrildmBDjIMGx2sdfSJzsXioxLGctGyvTXRDMqpba2/h
+         thMd7ULOWwRFG46GEHYjsQKSFeLgHBjdVMR5lrTtLpKCa3DK0cstrEAw5GrZ6kVLl61w
+         6B9BBG1aSV5sVRW93S3CDkjM9Xnq/Cb0NnqPeNT4ExU2lbILx5KaVObUf1nbzYbWul5T
+         lMORAoQYh+UAV2TVr0nJdqByWaR2Jvmgg73TuCQKdGh/QJ3biqkTXR6es+qwEzOH1Lsd
+         N9YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=QdHNc4an0f/5FwrYZYHKmxbdNbnGMTXLO6NDwG9nRak=;
-        b=HehUm9u0HUeXj097lFlaDVOcTeVj5BigIzd3GKskHiNzUlAfwwOv6UNQM3/HfefA4u
-         uw+PL3B2Mx5nNdAmA6tZjJmoHPxmqnnKtGxDCFzBq7qbEfmYOlt495n6kYh++yGma2nE
-         ZjQmmdhn7Sqpkc6sbiXvE8dyfQmSTO21oIrQIFZ9wMlBkTTPJ9R6yVsCUjzEbK//3WEU
-         KZJssQxS7Sh++dJgJirNJkfxVv1LC7m8pMNU4KJ8lpTDN14hGmlY55gBtEVEJ9NrjGQi
-         UrXA0CvzMJCV9MqD97GiCUOLq5D9zAZiRMYH0fhVd38CFWvVPy006KZ2oG5t/Jp7BjgV
-         qgDA==
-X-Gm-Message-State: APjAAAUfNp3G5vpz8Dtvb0/OJerhF/1mNFo0N/7nfpSbg0yz89omweHj
-        dRdmjYsDsBSk93xGgNAL8uR1evUp
-X-Google-Smtp-Source: APXvYqxDbYSFK93qoeBNf1Y6bP0ZIhjR6fVtQs2kAQz8ZWrfchyBnsOVKuP5zdjHqx3oOBB587CTvA==
-X-Received: by 2002:adf:fd8d:: with SMTP id d13mr7964379wrr.8.1560107341345;
-        Sun, 09 Jun 2019 12:09:01 -0700 (PDT)
+        bh=Z2eH+3/86F7l26OXjPtVzBX++Fh8MEXdrET9Il+DCLQ=;
+        b=Dwa9VUYUyvj0vLqpwbKQMCFlUqUUYfcB49SfNDfTGUfSzHDyF5+KQA4nN3yZgyQfdW
+         ComHd7ijZbweWR9D4nzvMv8N7VuH2BBmfPhPZXENcNzjVo8iuEV3dGMr5JGwJ8+CLPJS
+         Y6jsSfhgn5rFmB2tPOs0I0MjfTOXuDmIotT9+2XWugfj7Qu42ZQYDppyy4DWNPSQw23+
+         kil+c62+48pwmOHvj+o0oFh5aEQXpBHcuOR8N3X/ijY4BLLfvyGddu7OFvV6+CkbzgNt
+         QEGrpFjEhI0t732duTS1fdwmj2n7KyR7XkPOe1S3iAXNG98KoHlEROxYXjM0c/4YEKok
+         1zvQ==
+X-Gm-Message-State: APjAAAUMMNYyjt8GdlZVMJJfLWJdhhsILbXHD3EOCvBuGAUjTlOZzvAU
+        f2hxap4g1mziLoUpUEymDlVzEBX1
+X-Google-Smtp-Source: APXvYqwIknc6FYFCm0U+sVb6eRFWTG5vGcqGjB3rgxsr+kwYonwshCjeWqQ6xR1OJRAqjxDB6T/7uw==
+X-Received: by 2002:a5d:4cc3:: with SMTP id c3mr15668352wrt.259.1560107336873;
+        Sun, 09 Jun 2019 12:08:56 -0700 (PDT)
 Received: from myhost.home (ckm12.neoplus.adsl.tpnet.pl. [83.31.88.12])
-        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.08.59
+        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.08.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 12:09:00 -0700 (PDT)
+        Sun, 09 Jun 2019 12:08:56 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
-        dmurphy@ti.com, jacek.anaszewski@gmail.com
-Subject: [PATCH v5 19/26] leds: aat1290: Use generic support for composing LED names
-Date:   Sun,  9 Jun 2019 21:07:56 +0200
-Message-Id: <20190609190803.14815-20-jacek.anaszewski@gmail.com>
+        dmurphy@ti.com, jacek.anaszewski@gmail.com,
+        Oleh Kravchenko <oleg@kaa.org.ua>
+Subject: [PATCH v5 17/26] leds: cr0014114: Use generic support for composing LED names
+Date:   Sun,  9 Jun 2019 21:07:54 +0200
+Message-Id: <20190609190803.14815-18-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
 References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
@@ -75,85 +76,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Switch to using generic LED support for composing LED class
 device name.
 
-After switching to new led_classdev_register_ext() the validity
-of struct led_classdev's name property is no longer guaranteed,
-and therefore rely on struct device's kobj.name instead.
+At this occassion remove initialization of struct led_classdev's
+dev->of_node property in the driver, since now it will be taken from
+fwnode assigned to struct led_init_data and passed to the new
+devm_led_classdev_register_ext() API.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Oleh Kravchenko <oleg@kaa.org.ua>
 Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- drivers/leds/leds-aat1290.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/leds/leds-cr0014114.c | 32 +++++++++++---------------------
+ 1 file changed, 11 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/leds/leds-aat1290.c b/drivers/leds/leds-aat1290.c
-index 43bd8a43f36c..d892a96fd1bd 100644
---- a/drivers/leds/leds-aat1290.c
-+++ b/drivers/leds/leds-aat1290.c
-@@ -45,6 +45,8 @@
- #define AAT1290_FLASH_TM_NUM_LEVELS	16
- #define AAT1290_MM_CURRENT_SCALE_SIZE	15
+diff --git a/drivers/leds/leds-cr0014114.c b/drivers/leds/leds-cr0014114.c
+index 1c82152764d2..2da448ae718e 100644
+--- a/drivers/leds/leds-cr0014114.c
++++ b/drivers/leds/leds-cr0014114.c
+@@ -8,7 +8,6 @@
+ #include <linux/of_device.h>
+ #include <linux/spi/spi.h>
+ #include <linux/workqueue.h>
+-#include <uapi/linux/uleds.h>
  
-+#define AAT1290_NAME			"aat1290"
+ /*
+  *  CR0014114 SPI protocol descrtiption:
+@@ -40,8 +39,9 @@
+ #define CR_FW_DELAY_MSEC	10
+ #define CR_RECOUNT_DELAY	(HZ * 3600)
+ 
++#define CR_DEV_NAME		"cr0014114"
 +
+ struct cr0014114_led {
+-	char			name[LED_MAX_NAME_SIZE];
+ 	struct cr0014114	*priv;
+ 	struct led_classdev	ldev;
+ 	u8			brightness;
+@@ -167,8 +167,7 @@ static int cr0014114_set_sync(struct led_classdev *ldev,
+ 						    struct cr0014114_led,
+ 						    ldev);
  
- struct aat1290_led_config_data {
- 	/* maximum LED current in movie mode */
-@@ -78,7 +80,6 @@ struct aat1290_led {
- 	int *mm_current_scale;
- 	/* device mode */
- 	bool movie_mode;
+-	dev_dbg(led->priv->dev, "Set brightness of %s to %d\n",
+-		led->name, brightness);
++	dev_dbg(led->priv->dev, "Set brightness to %d\n", brightness);
+ 
+ 	mutex_lock(&led->priv->lock);
+ 	led->brightness = (u8)brightness;
+@@ -183,41 +182,32 @@ static int cr0014114_probe_dt(struct cr0014114 *priv)
+ 	size_t			i = 0;
+ 	struct cr0014114_led	*led;
+ 	struct fwnode_handle	*child;
+-	struct device_node	*np;
++	struct led_init_data	init_data = {};
+ 	int			ret;
+-	const char		*str;
+ 
+ 	device_for_each_child_node(priv->dev, child) {
+-		np = to_of_node(child);
+ 		led = &priv->leds[i];
+ 
+-		ret = fwnode_property_read_string(child, "label", &str);
+-		if (ret)
+-			snprintf(led->name, sizeof(led->name),
+-				 "cr0014114::");
+-		else
+-			snprintf(led->name, sizeof(led->name),
+-				 "cr0014114:%s", str);
 -
- 	/* brightness cache */
- 	unsigned int torch_brightness;
- };
-@@ -218,7 +219,6 @@ static int aat1290_led_parse_dt(struct aat1290_led *led,
- 			struct aat1290_led_config_data *cfg,
- 			struct device_node **sub_node)
- {
--	struct led_classdev *led_cdev = &led->fled_cdev.led_cdev;
- 	struct device *dev = &led->pdev->dev;
- 	struct device_node *child_node;
- #if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-@@ -257,9 +257,6 @@ static int aat1290_led_parse_dt(struct aat1290_led *led,
- 		return -EINVAL;
+ 		fwnode_property_read_string(child, "linux,default-trigger",
+ 					    &led->ldev.default_trigger);
+ 
+ 		led->priv			  = priv;
+-		led->ldev.name			  = led->name;
+ 		led->ldev.max_brightness	  = CR_MAX_BRIGHTNESS;
+ 		led->ldev.brightness_set_blocking = cr0014114_set_sync;
+ 
+-		ret = devm_led_classdev_register(priv->dev, &led->ldev);
++		init_data.fwnode = child;
++		init_data.devicename = CR_DEV_NAME;
++		init_data.default_label = ":";
++
++		ret = devm_led_classdev_register_ext(priv->dev, &led->ldev,
++						     &init_data);
+ 		if (ret) {
+ 			dev_err(priv->dev,
+-				"failed to register LED device %s, err %d",
+-				led->name, ret);
++				"failed to register LED device, err %d", ret);
+ 			fwnode_handle_put(child);
+ 			return ret;
+ 		}
+ 
+-		led->ldev.dev->of_node = np;
+-
+ 		i++;
  	}
- 
--	led_cdev->name = of_get_property(child_node, "label", NULL) ? :
--						child_node->name;
--
- 	ret = of_property_read_u32(child_node, "led-max-microamp",
- 				&cfg->max_mm_current);
- 	/*
-@@ -431,7 +428,7 @@ static void aat1290_init_v4l2_flash_config(struct aat1290_led *led,
- 	struct led_classdev *led_cdev = &led->fled_cdev.led_cdev;
- 	struct led_flash_setting *s;
- 
--	strlcpy(v4l2_sd_cfg->dev_name, led_cdev->name,
-+	strlcpy(v4l2_sd_cfg->dev_name, led_cdev->dev->kobj.name,
- 		sizeof(v4l2_sd_cfg->dev_name));
- 
- 	s = &v4l2_sd_cfg->intensity;
-@@ -469,6 +466,7 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 	struct aat1290_led *led;
- 	struct led_classdev *led_cdev;
- 	struct led_classdev_flash *fled_cdev;
-+	struct led_init_data init_data = {};
- 	struct aat1290_led_config_data led_cfg = {};
- 	struct v4l2_flash_config v4l2_sd_cfg = {};
- 	int ret;
-@@ -497,8 +495,12 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 
- 	aat1290_init_flash_timeout(led, &led_cfg);
- 
-+	init_data.fwnode = of_fwnode_handle(sub_node);
-+	init_data.devicename = AAT1290_NAME;
-+
- 	/* Register LED Flash class device */
--	ret = led_classdev_flash_register(&pdev->dev, fled_cdev);
-+	ret = led_classdev_flash_register_ext(&pdev->dev, fled_cdev,
-+					      &init_data);
- 	if (ret < 0)
- 		goto err_flash_register;
  
 -- 
 2.11.0
