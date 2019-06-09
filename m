@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29570C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4824C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DD42084A
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC80207E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098955;
-	bh=QCqvO5K1yok0S3RV5/Q5vyE2p0EZLifLOGIWOa9loGI=;
+	s=default; t=1560098958;
+	bh=gcCgrMDtogtv9S02H5nZ1BGnkLNi/H29ZWVzYhJvc4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTYm5ZJlxiMa3cTl/qSTU/R3mWCtgCSevp1TVkj5pJwZGpoYYwEtzuBuR5B7E1keM
-	 42M9AjL2t7e10wjLrAEATTN6yptGs6JbPtkpCyQjloDAFSNtMLvuPwCucrrZqHub2k
-	 N4efDwe6GJ+SXGjbDsplHy6KrBtbiDqzCtD6ZfsQ=
+	b=FwfonL2i+jR4apWuIdM6KoGRiduJOMh6+pZRS1jD+hdb7boOqPOML+QXr7l11JnqY
+	 54cEuvSfM3Y0myMoMa6JFnVHDRvIzHF7t3cLOPC5ijhvoSRxLykQFwhQehadvC+MZR
+	 J8QqkODm6fLqxOx8kZ2DtW3oMkMapjuL8OtxbNtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbfFIQtO (ORCPT
+        id S1731441AbfFIQtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:49:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731390AbfFIQtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:49:05 -0400
+        id S1731390AbfFIQtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:49:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3C802070B;
-        Sun,  9 Jun 2019 16:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99346206DF;
+        Sun,  9 Jun 2019 16:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098945;
-        bh=QCqvO5K1yok0S3RV5/Q5vyE2p0EZLifLOGIWOa9loGI=;
+        s=default; t=1560098954;
+        bh=gcCgrMDtogtv9S02H5nZ1BGnkLNi/H29ZWVzYhJvc4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XiJZOAJ8nbtNg80/ggmxBS0XlEPes4uDbxfzGKhTQnFvW2ZECw9p0x1GKj9k6y+6e
-         BRm2+SPKXHKtswP+Tw+PjDwkc1JxaTNWRZGOiYxZ286KnADk2byxGBDANnfOWZOdd4
-         Ez7WGIGzxGkM63tYUf6/Ul9uv6LaAGBqROkYz1sI=
+        b=tu+33DG9jMIcuBceM49/1tysMdDK4Dl+6O3xBlY2KPOtl1hrp6bZSR8TLTP8S/ypJ
+         Cihxv1eclND3UPOqrIQtrP7glQSkSRVnqvVxvT/o06R5K3bH4ORyhWl9WeGMGXEjtf
+         /FSyuZt0zv07mc0tYXqEIhSPIkDZtu8SQ5GYTsF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amber Lin <Amber.Lin@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.19 46/51] drm/amdgpu/soc15: skip reset on init
-Date:   Sun,  9 Jun 2019 18:42:27 +0200
-Message-Id: <20190609164130.489004849@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Subject: [PATCH 4.19 49/51] drm: dont block fb changes for async plane updates
+Date:   Sun,  9 Jun 2019 18:42:30 +0200
+Message-Id: <20190609164130.817119906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -59,34 +61,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Helen Koike <helen.koike@collabora.com>
 
-commit 5887a59961e2295c5b02f39dbc0ecf9212709b7b upstream.
+commit 89a4aac0ab0e6f5eea10d7bf4869dd15c3de2cd4 upstream.
 
-Not necessary on soc15 and breaks driver reload on server cards.
+In the case of a normal sync update, the preparation of framebuffers (be
+it calling drm_atomic_helper_prepare_planes() or doing setups with
+drm_framebuffer_get()) are performed in the new_state and the respective
+cleanups are performed in the old_state.
 
-Acked-by: Amber Lin <Amber.Lin@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+In the case of async updates, the preparation is also done in the
+new_state but the cleanups are done in the new_state (because updates
+are performed in place, i.e. in the current state).
+
+The current code blocks async udpates when the fb is changed, turning
+async updates into sync updates, slowing down cursor updates and
+introducing regressions in igt tests with errors of type:
+
+"CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+expect to complete approximately 15360 updates, with the threshold set
+at 7680"
+
+Fb changes in async updates were prevented to avoid the following scenario:
+
+- Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
+- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
+- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
+Where we have a single call to prepare fb2 but double cleanup call to fb2.
+
+To solve the above problems, instead of blocking async fb changes, we
+place the old framebuffer in the new_state object, so when the code
+performs cleanups in the new_state it will cleanup the old_fb and we
+will have the following scenario instead:
+
+- Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
+- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
+- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
+
+Where calls to prepare/cleanup are balanced.
+
+Cc: <stable@vger.kernel.org> # v4.14+
+Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
+Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190603165610.24614-6-helen.koike@collabora.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/soc15.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/drm_atomic_helper.c      |   22 ++++++++++++----------
+ include/drm/drm_modeset_helper_vtables.h |    8 ++++++++
+ 2 files changed, 20 insertions(+), 10 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -495,6 +495,11 @@ int soc15_set_ip_blocks(struct amdgpu_de
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1573,15 +1573,6 @@ int drm_atomic_helper_async_check(struct
+ 	if (old_plane_state->fb != new_plane_state->fb)
  		return -EINVAL;
- 	}
  
-+	/* Just return false for soc15 GPUs.  Reset does not seem to
-+	 * be necessary.
-+	 */
-+	return false;
+-	/*
+-	 * FIXME: Since prepare_fb and cleanup_fb are always called on
+-	 * the new_plane_state for async updates we need to block framebuffer
+-	 * changes. This prevents use of a fb that's been cleaned up and
+-	 * double cleanups from occuring.
+-	 */
+-	if (old_plane_state->fb != new_plane_state->fb)
+-		return -EINVAL;
+-
+ 	funcs = plane->helper_private;
+ 	if (!funcs->atomic_async_update)
+ 		return -EINVAL;
+@@ -1612,6 +1603,8 @@ EXPORT_SYMBOL(drm_atomic_helper_async_ch
+  * drm_atomic_async_check() succeeds. Async commits are not supposed to swap
+  * the states like normal sync commits, but just do in-place changes on the
+  * current state.
++ *
++ * TODO: Implement full swap instead of doing in-place changes.
+  */
+ void drm_atomic_helper_async_commit(struct drm_device *dev,
+ 				    struct drm_atomic_state *state)
+@@ -1622,6 +1615,9 @@ void drm_atomic_helper_async_commit(stru
+ 	int i;
+ 
+ 	for_each_new_plane_in_state(state, plane, plane_state, i) {
++		struct drm_framebuffer *new_fb = plane_state->fb;
++		struct drm_framebuffer *old_fb = plane->state->fb;
 +
- 	if (adev->flags & AMD_IS_APU)
- 		adev->nbio_funcs = &nbio_v7_0_funcs;
- 	else if (adev->asic_type == CHIP_VEGA20)
+ 		funcs = plane->helper_private;
+ 		funcs->atomic_async_update(plane, plane_state);
+ 
+@@ -1630,11 +1626,17 @@ void drm_atomic_helper_async_commit(stru
+ 		 * plane->state in-place, make sure at least common
+ 		 * properties have been properly updated.
+ 		 */
+-		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
++		WARN_ON_ONCE(plane->state->fb != new_fb);
+ 		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
+ 		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
+ 		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
+ 		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
++
++		/*
++		 * Make sure the FBs have been swapped so that cleanups in the
++		 * new_state performs a cleanup in the old FB.
++		 */
++		WARN_ON_ONCE(plane_state->fb != old_fb);
+ 	}
+ }
+ EXPORT_SYMBOL(drm_atomic_helper_async_commit);
+--- a/include/drm/drm_modeset_helper_vtables.h
++++ b/include/drm/drm_modeset_helper_vtables.h
+@@ -1174,6 +1174,14 @@ struct drm_plane_helper_funcs {
+ 	 * current one with the new plane configurations in the new
+ 	 * plane_state.
+ 	 *
++	 * Drivers should also swap the framebuffers between current plane
++	 * state (&drm_plane.state) and new_state.
++	 * This is required since cleanup for async commits is performed on
++	 * the new state, rather than old state like for traditional commits.
++	 * Since we want to give up the reference on the current (old) fb
++	 * instead of our brand new one, swap them in the driver during the
++	 * async commit.
++	 *
+ 	 * FIXME:
+ 	 *  - It only works for single plane updates
+ 	 *  - Async Pageflips are not supported yet
 
 
