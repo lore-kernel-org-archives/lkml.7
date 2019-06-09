@@ -2,104 +2,102 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5204AC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826E5C468BE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F42A206E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5291B2070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XTxQbKpL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tBIo3gOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbfFIWdE (ORCPT
+        id S1729765AbfFIWhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 18:33:04 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35954 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729304AbfFIWdE (ORCPT
+        Sun, 9 Jun 2019 18:37:39 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35320 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729304AbfFIWhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 18:33:04 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w7so4969115oic.3;
-        Sun, 09 Jun 2019 15:33:03 -0700 (PDT)
+        Sun, 9 Jun 2019 18:37:39 -0400
+Received: by mail-oi1-f196.google.com with SMTP id y6so4974112oix.2;
+        Sun, 09 Jun 2019 15:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zQ6OXqNlqQEo6o5SfdnUHG+Qbo6dDyANNmGJ9zTJBy4=;
-        b=XTxQbKpLzQ9x7Lmv1HiWlTTLcazVga8prIV+POououfauSrpy2rz1T/twEaGYpD6IJ
-         34PV1g5fl4LsumDhAJRAnA2WYCrABePeD/FfLnaSJoHK3zqoo1ySkA7okZeef5a+JFb4
-         1Q56ts203Vbq9hlkOLxfCQOm3K+smc1hNcHZh6JZAXFLB8KbmTTOI7F0Ob/T4DU3ISPZ
-         B90RQHVmo1KmOuE8scNqc+o3bXLrqX0+KuzDV4zbTFyPUQdlE/oH6zNrkH5RfsZSovnM
-         SKpAIYSU1/+GJzc07PM3JO7M5dIeXpnXTmy2OAi7AclW8DTb/cutOg2vqgUYQMS8z21y
-         lefw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BkhyCm75Rb1MkcKMg3McqQXpRUNbixA7dTtK2Tolxzg=;
+        b=tBIo3gOwa/FNPIMAtL1BcIk+oAc/qfTRMt2HsHpuRTHGwIsR0hTBx/Xlb/CJ8nlgFy
+         o2sUVMx5U9hBZmwaFqyokKyxFQCeuJYQN2KFn8Z5ucn6ko98YdCqr8+p0zAxr5YvkcKp
+         nt8pzVy42Ha/CxfWfuArn54/s5zpNZnYPIJ09gWwjeyB/MFek1e5Lkl2klg5Tf0I4FrB
+         pspRqcaakruXGohXNAHjnp30EOzgkfjWYEBtPATfoqqbpDvV/2orj3215AaMSxsYLo4k
+         H3zc1D50RbOS+2w9EChRMYf8b9ZR8yCJp8dnD+vRK5uZQSa9CjbX7ToIF5HC16AIYCD5
+         odgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zQ6OXqNlqQEo6o5SfdnUHG+Qbo6dDyANNmGJ9zTJBy4=;
-        b=caLUdPt+4OuEZtd8PGoCLQf0V/2MxQMCoZclKAfPBzRMwoVfBCtZ5hTcdpbLQ4HwJ+
-         Y5cDYmEtyZLSKaoXN+fvdSgvt28N8/hcGvItJCU06A4XDz9lLi5jzW9sXl8tHxiRk2DK
-         XE4YXYPWR25TpQh8dV6nElyV4WXH98xk72eIZmrK+La2qstgtbdi0rFIiQ6fBJ+ja0hW
-         Zicx6fElwVLHkInhHkbQ3Y7jtbygeL+FYuv6Cvc/6bn3tUXSqNKAoHKAm1lwWsBx9Zuy
-         9OZs48EPaPiwogDIwQQvvdfa6L7On2tHiE2yynxeDa/pOr51YppfrUCa66xhFS95pEkX
-         XqcQ==
-X-Gm-Message-State: APjAAAWiJWMbGWTm7BcP8bg7gT+2JGBPVAwoE+xjwYAogw6dqNnCUl6B
-        WaMXn/GImNxeMvqf+WdMHKY2jYS39PDmQ+robSQ=
-X-Google-Smtp-Source: APXvYqyXfo8/VGaQnyvN3uUtUHo2ZPZdhQIigQnxCO0sgva0FRuMUYSkKUNsX1joxCo2ygNdPLmPelw9KQW+AJnJEQc=
-X-Received: by 2002:aca:51cf:: with SMTP id f198mr8511263oib.140.1560119583220;
- Sun, 09 Jun 2019 15:33:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BkhyCm75Rb1MkcKMg3McqQXpRUNbixA7dTtK2Tolxzg=;
+        b=lBCgUol4DEPqv2ufRO5zeZ0cxRBpob1bJmHDfDNIfGXuhCwBTt6Eyec9lo8q5iBpQ+
+         XuSWmbVorTe+ht5S2nETAemONp8FynXwb0J+0g9I+9M/x0F3B48msLdf2ZmuETXuZYIM
+         a45/lk9kqRSSyfmpWGFu/KieXTnX7eKynAgAWFZTKvPbU0zqk4FOIK6hlVwtz3YEbRTG
+         JxmpYS/4t/GdBLVSM2AZlEwt/OXvl2xO5u1OZSoXPQ8f6HAg0+OOgyfvKFqCG5iUyGpw
+         G1q9TxFsQh54QjlpNDyXh/8HeQchGQ26wYQsXnC6HpHTabaVtW+c8hyAZSjv9gGOoLcD
+         lJpQ==
+X-Gm-Message-State: APjAAAXZTA2NLathrVvT0VwZnfVdfVBsqNcHcOt1lYoaZPsDZB6xhZA6
+        5YPcnCK3KKg03oVL2VWRinQ=
+X-Google-Smtp-Source: APXvYqxRooxhVNRS6VDb/NLznkW1MoQM8eump2EsO7YBLAjMQj0JkYBghUv2U3P+eqzuWca5+lEAyQ==
+X-Received: by 2002:aca:c584:: with SMTP id v126mr9318875oif.60.1560119858474;
+        Sun, 09 Jun 2019 15:37:38 -0700 (PDT)
+Received: from rYz3n ([2600:1700:210:3790::40])
+        by smtp.gmail.com with ESMTPSA id s4sm3231514otp.3.2019.06.09.15.37.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 09 Jun 2019 15:37:38 -0700 (PDT)
+Date:   Sun, 9 Jun 2019 17:37:37 -0500
+From:   Jiunn Chang <c0d1n61at3@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
+Message-ID: <20190609223737.2gaz62e3q2yp2ruy@rYz3n>
+References: <20190609164127.541128197@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com> <20190609204510.GB8247@lunn.ch>
-In-Reply-To: <20190609204510.GB8247@lunn.ch>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 10 Jun 2019 00:32:52 +0200
-Message-ID: <CAFBinCB3SLoVOt_jy6-OW=2=5671o+bXQwMn006u56gHLTOpBw@mail.gmail.com>
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com,
-        devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Sun, Jun 09, 2019 at 06:41:11PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.9 release.
+> There are 70 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.9-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
 
-On Sun, Jun 9, 2019 at 10:45 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
-> > "Always leave the campground cleaner than you found it."
->
-> > I
-> > am also looking for suggestions how to handle these cross-tree changes
-> > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
-> > go through the net-next tree. I will re-send patch #5 separately as
-> > this should go through Kevin's linux-amlogic tree).
->
-> Hi Martin
->
-> Patches 1 and 4 don't seem to have and dependencies. So i would
-> suggest splitting them out and submitting them to netdev for merging
-> independent of the rest.
-OK, I will do that but after the GPIO changes are applied because only
-then I can get rid of that "np" variable
+Compiled and booted.  No regressions on x86_64.
 
-> Linus can probably create a stable branch with the GPIO changes, which
-> David can pull into net-next, and then apply the stmmac changes on
-> top.
-let's go this way since Linus is happy with that route also.
-I'll re-spin v2 tomorrow
-
-
-Martin
+THX
