@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C3DC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5E9C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76EEA205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956C3206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098860;
-	bh=CTjBzB+KJIVMPus7iBajhkmtdUk36gXw7ErqSCDYUOs=;
+	s=default; t=1560098862;
+	bh=9lxHmmF1tLB8UR7q4NKCCLTiVUByphdknOQMJDU8YxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NCFhyRKoeCMpzR7MBVeW/IIhRJOcIx9Yu5oYkC4S85B4fqYyco+SIvk/m6iQ6atS3
-	 lvdFIRBE3hdnDwGW9SF1tb2Ee+nvF7p0yFuE4D6TqT4D5QGUexeY8PkibykmSSeIum
-	 CN1QmHrvwEFMMgcZmltcyEY6xL6f/mW9cMp4W1ao=
+	b=QrdQdN4ev0gI+cGKg2o7uzq1GnsWpsdvFC8axbW1wMYCz01dM7vhq0puT3kVa7zUf
+	 9Zh/k/trEhPcXlw2SLQiuK3VYO1dPGLmWW/aNRNPyohZn43SafPe3q0G3UkcfEwCBU
+	 Abqr2aSHcANun9rR5FpTaO3Iu2s8C8M2OkSKgQMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbfFIQrj (ORCPT
+        id S1730935AbfFIQrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46104 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:47:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbfFIQr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:26 -0400
+        id S1730881AbfFIQrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C95205ED;
-        Sun,  9 Jun 2019 16:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A3D42145D;
+        Sun,  9 Jun 2019 16:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098845;
-        bh=CTjBzB+KJIVMPus7iBajhkmtdUk36gXw7ErqSCDYUOs=;
+        s=default; t=1560098854;
+        bh=9lxHmmF1tLB8UR7q4NKCCLTiVUByphdknOQMJDU8YxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m+iR1uO2yQm0uVQupat/I07OuGlrMxYDrBa8vcioljaVXQMkbaPDYj2MRn+LifvIA
-         ucCLILMVwtzz/5RBbAEsR+fkIPqGeM6WRv6SbLC3XpAoJNF/zAnldqf+fVVTyq57L6
-         Ea8Y1yRG8Fa88RGf+M0VBAOwM1Yp82DsYe72IJjc=
+        b=b6tlbs39f/BDkiB9NPD4Z5GRO5wK59337+l9ZW+m//5TuSKghPbbyTcWrtsapM2PO
+         25oqDIFI7jZU5yP8AX5KiWBSfz/FzOOpwEhKfcYFIcNCDWBKegL7G0QIdMaKe8k2/Z
+         9ldmNiBpGdgOCFAucSMzgFXxIvgtKBMvjtvUM1PA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: [PATCH 4.19 12/51] packet: unconditionally free po->rollover
-Date:   Sun,  9 Jun 2019 18:41:53 +0200
-Message-Id: <20190609164127.826684331@linuxfoundation.org>
+        Matteo Croce <mcroce@redhat.com>
+Subject: [PATCH 4.19 13/51] pktgen: do not sleep with the thread lock held.
+Date:   Sun,  9 Jun 2019 18:41:54 +0200
+Message-Id: <20190609164127.874060734@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -61,41 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit afa0925c6fcc6a8f610e996ca09bc3215048033c ]
+[ Upstream commit 720f1de4021f09898b8c8443f3b3e995991b6e3a ]
 
-Rollover used to use a complex RCU mechanism for assignment, which had
-a race condition. The below patch fixed the bug and greatly simplified
-the logic.
+Currently, the process issuing a "start" command on the pktgen procfs
+interface, acquires the pktgen thread lock and never release it, until
+all pktgen threads are completed. The above can blocks indefinitely any
+other pktgen command and any (even unrelated) netdevice removal - as
+the pktgen netdev notifier acquires the same lock.
 
-The feature depends on fanout, but the state is private to the socket.
-Fanout_release returns f only when the last member leaves and the
-fanout struct is to be freed.
+The issue is demonstrated by the following script, reported by Matteo:
 
-Destroy rollover unconditionally, regardless of fanout state.
+ip -b - <<'EOF'
+	link add type dummy
+	link add type veth
+	link set dummy0 up
+EOF
+modprobe pktgen
+echo reset >/proc/net/pktgen/pgctrl
+{
+	echo rem_device_all
+	echo add_device dummy0
+} >/proc/net/pktgen/kpktgend_0
+echo count 0 >/proc/net/pktgen/dummy0
+echo start >/proc/net/pktgen/pgctrl &
+sleep 1
+rmmod veth
 
-Fixes: 57f015f5eccf2 ("packet: fix crash in fanout_demux_rollover()")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Diagnosed-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
+Fix the above releasing the thread lock around the sleep call.
+
+Additionally we must prevent racing with forcefull rmmod - as the
+thread lock no more protects from them. Instead, acquire a self-reference
+before waiting for any thread. As a side effect, running
+
+rmmod pktgen
+
+while some thread is running now fails with "module in use" error,
+before this patch such command hanged indefinitely.
+
+Note: the issue predates the commit reported in the fixes tag, but
+this fix can't be applied before the mentioned commit.
+
+v1 -> v2:
+ - no need to check for thread existence after flipping the lock,
+   pktgen threads are freed only at net exit time
+ -
+
+Fixes: 6146e6a43b35 ("[PKTGEN]: Removes thread_{un,}lock() macros.")
+Reported-and-tested-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/pktgen.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -3017,8 +3017,8 @@ static int packet_release(struct socket
+--- a/net/core/pktgen.c
++++ b/net/core/pktgen.c
+@@ -3065,7 +3065,13 @@ static int pktgen_wait_thread_run(struct
+ {
+ 	while (thread_is_running(t)) {
  
- 	synchronize_net();
++		/* note: 't' will still be around even after the unlock/lock
++		 * cycle because pktgen_thread threads are only cleared at
++		 * net exit
++		 */
++		mutex_unlock(&pktgen_thread_lock);
+ 		msleep_interruptible(100);
++		mutex_lock(&pktgen_thread_lock);
  
-+	kfree(po->rollover);
- 	if (f) {
--		kfree(po->rollover);
- 		fanout_release_data(f);
- 		kfree(f);
- 	}
+ 		if (signal_pending(current))
+ 			goto signal;
+@@ -3080,6 +3086,10 @@ static int pktgen_wait_all_threads_run(s
+ 	struct pktgen_thread *t;
+ 	int sig = 1;
+ 
++	/* prevent from racing with rmmod */
++	if (!try_module_get(THIS_MODULE))
++		return sig;
++
+ 	mutex_lock(&pktgen_thread_lock);
+ 
+ 	list_for_each_entry(t, &pn->pktgen_threads, th_list) {
+@@ -3093,6 +3103,7 @@ static int pktgen_wait_all_threads_run(s
+ 			t->control |= (T_STOP);
+ 
+ 	mutex_unlock(&pktgen_thread_lock);
++	module_put(THIS_MODULE);
+ 	return sig;
+ }
+ 
 
 
