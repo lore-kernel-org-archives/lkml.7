@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60767C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16838C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E702070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45CE205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099129;
-	bh=R8lQFzWlAkZ387wz3zYUifFE6enK0KS4EOgu+W2M+Ho=;
+	s=default; t=1560099132;
+	bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YLuKKxKcPMGwGzbTa4hrKmTCjJ4s+SYjG/K0RemQxmfXkvxVS1gt6Llb3Jr5wk+wJ
-	 3dcnUv3eA/wWxtm+oXbKmHJDGV+5kFJ2qsJ8qMxzr7wMKhNWwKwiFy0CvCTFvq2RCV
-	 6589GtbA7skZJqfJXgOKAUwYSEKfTc72tPcav9pM=
+	b=OzoEhXMzCZtnZ4Lied1FR7MEfEE5Gf7MqKZHN4xQUPUL6GjYRqPkkqrlpo+nnOD2E
+	 qE7b3V5tudI5HnQ9IMdrzo0Sk7sgZu2PGCWjAgHFG2dRpaFDr126593Wd5PvfbC6Ud
+	 3lf24UyGQVWRgEsouBN4PzuCYcEQ8s+PJFLx9CWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732126AbfFIQwI (ORCPT
+        id S1732140AbfFIQwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52694 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732109AbfFIQwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:52:06 -0400
+        id S1732124AbfFIQwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:52:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 181FD20868;
-        Sun,  9 Jun 2019 16:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B13DE205ED;
+        Sun,  9 Jun 2019 16:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099125;
-        bh=R8lQFzWlAkZ387wz3zYUifFE6enK0KS4EOgu+W2M+Ho=;
+        s=default; t=1560099128;
+        bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EubtK022djcrS2SVeNfFZDQUSIEucSn5Vx9CWSLvXX5PactLBN2aEetUKuPEgPWkE
-         j+C31HIl3raOKCGfa27gsKo76NE8HrEdrtM9WbiMPXdNSE/sK8062PbF1Y4vs5JStW
-         sO2DpsmpqqOoZboh7q+meDNPLh8zRf8sNvjU4WgA=
+        b=kIHi33y6dZToJfcv0rsq55e2HMSV15kCyoFlmFSFJ2KzFGCayvnL1NlRVrEXZkRMb
+         sY+46U84rr9uLtJMkJgOk4s+Y6Msr7ZNSSGwQ40BGE+3HwxB27qhtzPuKBwvwaYnvQ
+         /Vv7pvBItDJc/C2Lky3mDlwilVDGx7QjwjN6lz90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 4.9 19/83] include/linux/bitops.h: sanitize rotate primitives
-Date:   Sun,  9 Jun 2019 18:41:49 +0200
-Message-Id: <20190609164129.126354143@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 02/83] llc: fix skb leak in llc_build_and_send_ui_pkt()
+Date:   Sun,  9 Jun 2019 18:41:32 +0200
+Message-Id: <20190609164127.950373368@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -68,133 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Eric Dumazet <edumazet@google.com>
 
-commit ef4d6f6b275c498f8e5626c99dbeefdc5027f843 upstream.
+[ Upstream commit 8fb44d60d4142cd2a440620cd291d346e23c131e ]
 
-The ror32 implementation (word >> shift) | (word << (32 - shift) has
-undefined behaviour if shift is outside the [1, 31] range.  Similarly
-for the 64 bit variants.  Most callers pass a compile-time constant
-(naturally in that range), but there's an UBSAN report that these may
-actually be called with a shift count of 0.
+If llc_mac_hdr_init() returns an error, we must drop the skb
+since no llc_build_and_send_ui_pkt() caller will take care of this.
 
-Instead of special-casing that, we can make them DTRT for all values of
-shift while also avoiding UB.  For some reason, this was already partly
-done for rol32 (which was well-defined for [0, 31]).  gcc 8 recognizes
-these patterns as rotates, so for example
+BUG: memory leak
+unreferenced object 0xffff8881202b6800 (size 2048):
+  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.590s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    1a 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+  backtrace:
+    [<00000000e25b5abe>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+    [<00000000e25b5abe>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<00000000e25b5abe>] slab_alloc mm/slab.c:3326 [inline]
+    [<00000000e25b5abe>] __do_kmalloc mm/slab.c:3658 [inline]
+    [<00000000e25b5abe>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+    [<00000000a1ae188a>] kmalloc include/linux/slab.h:552 [inline]
+    [<00000000a1ae188a>] sk_prot_alloc+0xd6/0x170 net/core/sock.c:1608
+    [<00000000ded25bbe>] sk_alloc+0x35/0x2f0 net/core/sock.c:1662
+    [<000000002ecae075>] llc_sk_alloc+0x35/0x170 net/llc/llc_conn.c:950
+    [<00000000551f7c47>] llc_ui_create+0x7b/0x140 net/llc/af_llc.c:173
+    [<0000000029027f0e>] __sock_create+0x164/0x250 net/socket.c:1430
+    [<000000008bdec225>] sock_create net/socket.c:1481 [inline]
+    [<000000008bdec225>] __sys_socket+0x69/0x110 net/socket.c:1523
+    [<00000000b6439228>] __do_sys_socket net/socket.c:1532 [inline]
+    [<00000000b6439228>] __se_sys_socket net/socket.c:1530 [inline]
+    [<00000000b6439228>] __x64_sys_socket+0x1e/0x30 net/socket.c:1530
+    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  __u32 rol32(__u32 word, unsigned int shift)
-  {
-	return (word << (shift & 31)) | (word >> ((-shift) & 31));
-  }
+BUG: memory leak
+unreferenced object 0xffff88811d750d00 (size 224):
+  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.600s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 f0 0c 24 81 88 ff ff 00 68 2b 20 81 88 ff ff  ...$.....h+ ....
+  backtrace:
+    [<0000000053026172>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+    [<0000000053026172>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<0000000053026172>] slab_alloc_node mm/slab.c:3269 [inline]
+    [<0000000053026172>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+    [<00000000fa8f3c30>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+    [<00000000d96fdafb>] alloc_skb include/linux/skbuff.h:1058 [inline]
+    [<00000000d96fdafb>] alloc_skb_with_frags+0x5f/0x250 net/core/skbuff.c:5327
+    [<000000000a34a2e7>] sock_alloc_send_pskb+0x269/0x2a0 net/core/sock.c:2225
+    [<00000000ee39999b>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+    [<00000000e034d810>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+    [<00000000c0bc8445>] sock_sendmsg_nosec net/socket.c:652 [inline]
+    [<00000000c0bc8445>] sock_sendmsg+0x54/0x70 net/socket.c:671
+    [<000000003b687167>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+    [<00000000922d78d9>] __do_sys_sendto net/socket.c:1976 [inline]
+    [<00000000922d78d9>] __se_sys_sendto net/socket.c:1972 [inline]
+    [<00000000922d78d9>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
+    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-compiles to
-
-0000000000000020 <rol32>:
-  20:   89 f8                   mov    %edi,%eax
-  22:   89 f1                   mov    %esi,%ecx
-  24:   d3 c0                   rol    %cl,%eax
-  26:   c3                      retq
-
-Older compilers unfortunately do not do as well, but this only affects
-the small minority of users that don't pass constants.
-
-Due to integer promotions, ro[lr]8 were already well-defined for shifts
-in [0, 8], and ro[lr]16 were mostly well-defined for shifts in [0, 16]
-(only mostly - u16 gets promoted to _signed_ int, so if bit 15 is set,
-word << 16 is undefined).  For consistency, update those as well.
-
-Link: http://lkml.kernel.org/r/20190410211906.2190-1-linux@rasmusvillemoes.dk
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reported-by: Ido Schimmel <idosch@mellanox.com>
-Tested-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Will Deacon <will.deacon@arm.com>
-Cc: Vadim Pasternak <vadimp@mellanox.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/linux/bitops.h |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ net/llc/llc_output.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -58,7 +58,7 @@ static __always_inline unsigned long hwe
-  */
- static inline __u64 rol64(__u64 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (64 - shift));
-+	return (word << (shift & 63)) | (word >> ((-shift) & 63));
+--- a/net/llc/llc_output.c
++++ b/net/llc/llc_output.c
+@@ -72,6 +72,8 @@ int llc_build_and_send_ui_pkt(struct llc
+ 	rc = llc_mac_hdr_init(skb, skb->dev->dev_addr, dmac);
+ 	if (likely(!rc))
+ 		rc = dev_queue_xmit(skb);
++	else
++		kfree_skb(skb);
+ 	return rc;
  }
  
- /**
-@@ -68,7 +68,7 @@ static inline __u64 rol64(__u64 word, un
-  */
- static inline __u64 ror64(__u64 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (64 - shift));
-+	return (word >> (shift & 63)) | (word << ((-shift) & 63));
- }
- 
- /**
-@@ -78,7 +78,7 @@ static inline __u64 ror64(__u64 word, un
-  */
- static inline __u32 rol32(__u32 word, unsigned int shift)
- {
--	return (word << shift) | (word >> ((-shift) & 31));
-+	return (word << (shift & 31)) | (word >> ((-shift) & 31));
- }
- 
- /**
-@@ -88,7 +88,7 @@ static inline __u32 rol32(__u32 word, un
-  */
- static inline __u32 ror32(__u32 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (32 - shift));
-+	return (word >> (shift & 31)) | (word << ((-shift) & 31));
- }
- 
- /**
-@@ -98,7 +98,7 @@ static inline __u32 ror32(__u32 word, un
-  */
- static inline __u16 rol16(__u16 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (16 - shift));
-+	return (word << (shift & 15)) | (word >> ((-shift) & 15));
- }
- 
- /**
-@@ -108,7 +108,7 @@ static inline __u16 rol16(__u16 word, un
-  */
- static inline __u16 ror16(__u16 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (16 - shift));
-+	return (word >> (shift & 15)) | (word << ((-shift) & 15));
- }
- 
- /**
-@@ -118,7 +118,7 @@ static inline __u16 ror16(__u16 word, un
-  */
- static inline __u8 rol8(__u8 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (8 - shift));
-+	return (word << (shift & 7)) | (word >> ((-shift) & 7));
- }
- 
- /**
-@@ -128,7 +128,7 @@ static inline __u8 rol8(__u8 word, unsig
-  */
- static inline __u8 ror8(__u8 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (8 - shift));
-+	return (word >> (shift & 7)) | (word << ((-shift) & 7));
- }
- 
- /**
 
 
