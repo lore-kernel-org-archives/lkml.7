@@ -2,239 +2,489 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5E7C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858BAC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681BC208E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:48:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aqaWaokA"
+	by mail.kernel.org (Postfix) with ESMTP id 43770212F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbfFILsQ (ORCPT
+        id S1728431AbfFILvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 07:48:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45023 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728161AbfFILsQ (ORCPT
+        Sun, 9 Jun 2019 07:51:14 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:59958 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728161AbfFILvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 07:48:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b17so6344449wrq.11
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 04:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FvD92B+Ndby0ykEG5/HzkmJy1kaxK2b4kxErMOiHsbE=;
-        b=aqaWaokA5RkmOS1xflD3IlkhPraAXJGTRlr36UZuESYdH8j7jjeALPm5Rsgsu81487
-         SDK0a/ELcob4MkYnSVhwcLGHvvRiwPnraQVJONpsG/zSLiK6aFpykfVv5zJ/3fkBkION
-         4iQZiPY5DR+UeIjBSNJRiXTrtfjSGvtn5DlpzFXz2+zdanupgN5sZ2VQlA9+vkaGC1rw
-         fz2sbUerbH2yeV7ENBmh7/Rkb0EbEnXlCQaeTWK45mSPXZoyJyvpOJ+B9wa4jti/POCr
-         nvFfpZdlXMQOZ+jhoVQO5OgityXjHBSifcpjTbeuaYkBxyaOyJEcGgIz9+BT3ry9XhpI
-         tgKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FvD92B+Ndby0ykEG5/HzkmJy1kaxK2b4kxErMOiHsbE=;
-        b=MziKwubIrhirite/JXYHGENayfs/oADbROQMvV2Xqs6/htrxneu4AN3sR2QTpYspH8
-         igT1byCExNkJrVk0ivxJjFjdeM0EFk4q7OgFqafHlTZSFETKbe2iLgqFRF6ttklK5Oc6
-         wZvNxSO/1YINradwdGJx1/fWOR28wQoEksvio5BJlSzDlN0PleKmo/hYypkB8lYx9faj
-         GUX0tpsIZEW+Jaqa0MF5GteYwBMA1SC18bUBxHFW4L99PlbXF1BZ4Zk6Y3GuiQeM2vhB
-         1OCDQP28okj59tpOJDY1EkA4iaDgLXVN5/lSbhYQXEcWViThCVNI1zZyILfB1ZqEyQIc
-         x7BA==
-X-Gm-Message-State: APjAAAUQVN6LO5ctF8HYxDP1YkRRDfeU94qdFTr1SUvlhCvt62tf6Z+o
-        YmL1UuDRLawx9VO8Rg07LDx/bSjjn3M=
-X-Google-Smtp-Source: APXvYqwQbzuLSQJBPIasLqKEoMgN90WLs20aq8YVXANgY07IPC2vbCWZ0diJq+CGW1vvIiuMuNaRrg==
-X-Received: by 2002:adf:f246:: with SMTP id b6mr16789236wrp.92.1560080894068;
-        Sun, 09 Jun 2019 04:48:14 -0700 (PDT)
-Received: from localhost.localdomain (catv-89-135-96-219.catv.broadband.hu. [89.135.96.219])
-        by smtp.gmail.com with ESMTPSA id o15sm9413921wrw.42.2019.06.09.04.48.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 09 Jun 2019 04:48:13 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH] regulator: max8952: Convert to use GPIO descriptors
-Date:   Sun,  9 Jun 2019 13:48:12 +0200
-Message-Id: <20190609114812.28375-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Sun, 9 Jun 2019 07:51:14 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 1658F20030;
+        Sun,  9 Jun 2019 13:51:07 +0200 (CEST)
+Date:   Sun, 9 Jun 2019 13:51:05 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
+        dri-devel@lists.freedesktop.org,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        cawa.cheng@mediatek.com,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        linux-arm-kernel@lists.infradead.org,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: [2/2] drm/panel: support for AUO kd101n80-45na wuxga dsi video
+ mode panel
+Message-ID: <20190609115105.GA31079@ravnborg.org>
+References: <20190608112342.64416-1-jitao.shi@mediatek.com>
+ <20190608112342.64416-2-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608112342.64416-2-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
+        a=e5mUnYsNAAAA:8 a=3arX_EwEDu8COwomX1QA:9 a=CjuIK1q_8ugA:10
+        a=6heAxKwa5pAsJatQ0mat:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This finalizes the descriptor conversion of the MAX8952 driver
-by letting the VID0 and VID1 GPIOs be fetched from descriptors.
+Hi Jitao.
 
-Both VID0 and VID1 must be supplied for the VID selection to work,
-I add some code to preserve the semantics that if only one of
-the two VID gpios is supplied, it will be initialized to low.
-This might be a bit overzealous, but I want to preserve any
-implicit semantics.
+Thanks for another panel driver.
 
-This is currently only used by device tree in-kernel but it is
-still also possible to supply the same GPIOs using a machine
-descriptor table if a board file is used.
+The comments for the panel-boe-tv101wum-nl6 diver to extent
+applies to this driver too.
+Please address these and I will do a proper review of the next version.
 
-Ideally this should be phased over to using gpio-regulator.c
-that does the same thing, but it might require some refactoring
-and needs testing on real hardware.
+I notice that error handlign is a little bit less in this driver.
+consier what approch to use and see if you can align between these
+drivers, and if in doubt use panel-simple as your role model.
 
-Cc: Tomasz Figa <tfiga@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/regulator/max8952.c       | 62 ++++++++++++++-----------------
- include/linux/regulator/max8952.h |  3 --
- 2 files changed, 28 insertions(+), 37 deletions(-)
+	Sam
 
-diff --git a/drivers/regulator/max8952.c b/drivers/regulator/max8952.c
-index cf2a2912cb1b..7056cb93715b 100644
---- a/drivers/regulator/max8952.c
-+++ b/drivers/regulator/max8952.c
-@@ -26,11 +26,9 @@
- #include <linux/platform_device.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/max8952.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/slab.h>
- 
-@@ -50,7 +48,8 @@ enum {
- struct max8952_data {
- 	struct i2c_client	*client;
- 	struct max8952_platform_data *pdata;
--
-+	struct gpio_desc *vid0_gpiod;
-+	struct gpio_desc *vid1_gpiod;
- 	bool vid0;
- 	bool vid1;
- };
-@@ -100,16 +99,15 @@ static int max8952_set_voltage_sel(struct regulator_dev *rdev,
- {
- 	struct max8952_data *max8952 = rdev_get_drvdata(rdev);
- 
--	if (!gpio_is_valid(max8952->pdata->gpio_vid0) ||
--			!gpio_is_valid(max8952->pdata->gpio_vid1)) {
-+	if (!max8952->vid0_gpiod || !max8952->vid1_gpiod) {
- 		/* DVS not supported */
- 		return -EPERM;
- 	}
- 
- 	max8952->vid0 = selector & 0x1;
- 	max8952->vid1 = (selector >> 1) & 0x1;
--	gpio_set_value(max8952->pdata->gpio_vid0, max8952->vid0);
--	gpio_set_value(max8952->pdata->gpio_vid1, max8952->vid1);
-+	gpiod_set_value(max8952->vid0_gpiod, max8952->vid0);
-+	gpiod_set_value(max8952->vid1_gpiod, max8952->vid1);
- 
- 	return 0;
- }
-@@ -147,9 +145,6 @@ static struct max8952_platform_data *max8952_parse_dt(struct device *dev)
- 	if (!pd)
- 		return NULL;
- 
--	pd->gpio_vid0 = of_get_named_gpio(np, "max8952,vid-gpios", 0);
--	pd->gpio_vid1 = of_get_named_gpio(np, "max8952,vid-gpios", 1);
--
- 	if (of_property_read_u32(np, "max8952,default-mode", &pd->default_mode))
- 		dev_warn(dev, "Default mode not specified, assuming 0\n");
- 
-@@ -200,7 +195,7 @@ static int max8952_pmic_probe(struct i2c_client *client,
- 	struct gpio_desc *gpiod;
- 	enum gpiod_flags gflags;
- 
--	int ret = 0, err = 0;
-+	int ret = 0;
- 
- 	if (client->dev.of_node)
- 		pdata = max8952_parse_dt(&client->dev);
-@@ -253,32 +248,31 @@ static int max8952_pmic_probe(struct i2c_client *client,
- 	max8952->vid0 = pdata->default_mode & 0x1;
- 	max8952->vid1 = (pdata->default_mode >> 1) & 0x1;
- 
--	if (gpio_is_valid(pdata->gpio_vid0) &&
--			gpio_is_valid(pdata->gpio_vid1)) {
--		unsigned long gpio_flags;
--
--		gpio_flags = max8952->vid0 ?
--			     GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW;
--		if (devm_gpio_request_one(&client->dev, pdata->gpio_vid0,
--					  gpio_flags, "MAX8952 VID0"))
--			err = 1;
--
--		gpio_flags = max8952->vid1 ?
--			     GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW;
--		if (devm_gpio_request_one(&client->dev, pdata->gpio_vid1,
--					  gpio_flags, "MAX8952 VID1"))
--			err = 2;
--	} else
--		err = 3;
--
--	if (err) {
-+	/* Fetch vid0 and vid1 GPIOs if available */
-+	gflags = max8952->vid0 ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
-+	max8952->vid0_gpiod = devm_gpiod_get_index_optional(&client->dev,
-+							    "max8952,vid",
-+							    0, gflags);
-+	if (IS_ERR(max8952->vid0_gpiod))
-+		return PTR_ERR(max8952->vid0_gpiod);
-+	gflags = max8952->vid1 ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
-+	max8952->vid1_gpiod = devm_gpiod_get_index_optional(&client->dev,
-+							    "max8952,vid",
-+							    1, gflags);
-+	if (IS_ERR(max8952->vid1_gpiod))
-+		return PTR_ERR(max8952->vid1_gpiod);
-+
-+	/* If either VID GPIO is missing just disable this */
-+	if (!max8952->vid0_gpiod || !max8952->vid1_gpiod) {
- 		dev_warn(&client->dev, "VID0/1 gpio invalid: "
--				"DVS not available.\n");
-+			 "DVS not available.\n");
- 		max8952->vid0 = 0;
- 		max8952->vid1 = 0;
--		/* Mark invalid */
--		pdata->gpio_vid0 = -1;
--		pdata->gpio_vid1 = -1;
-+		/* Make sure if we have any descriptors they get set to low */
-+		if (max8952->vid0_gpiod)
-+			gpiod_set_value(max8952->vid0_gpiod, 0);
-+		if (max8952->vid1_gpiod)
-+			gpiod_set_value(max8952->vid1_gpiod, 0);
- 
- 		/* Disable Pulldown of EN only */
- 		max8952_write_reg(max8952, MAX8952_REG_CONTROL, 0x60);
-diff --git a/include/linux/regulator/max8952.h b/include/linux/regulator/max8952.h
-index 686c42c041b5..33b6e2c09c05 100644
---- a/include/linux/regulator/max8952.h
-+++ b/include/linux/regulator/max8952.h
-@@ -118,9 +118,6 @@ enum {
- #define MAX8952_NUM_DVS_MODE	4
- 
- struct max8952_platform_data {
--	int gpio_vid0;
--	int gpio_vid1;
--
- 	u32 default_mode;
- 	u32 dvs_mode[MAX8952_NUM_DVS_MODE]; /* MAX8952_DVS_MODEx_XXXXmV */
- 
--- 
-2.20.1
-
+On Sat, Jun 08, 2019 at 07:23:42PM +0800, Jitao Shi wrote:
+> Add driver for AUO kd101n80-45na panel.
+> This panel supports the resolution 1200x1920, dsi video mode
+> and 4 lanes.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/panel/Kconfig                 |  10 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  .../gpu/drm/panel/panel-auo-kd101n80-45na.c   | 352 ++++++++++++++++++
+>  3 files changed, 363 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-auo-kd101n80-45na.c
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index e36dbb4df867..f5cd5af9ce42 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -272,4 +272,14 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
+>  	help
+>  	  Say Y here if you want to enable support for Truly NT35597 WQXGA Dual DSI
+>  	  Video Mode panel
+> +
+> +config DRM_PANEL_AUO_KD101N80_45NA
+> +	tristate "AUO KD101N80_45NA 1200x1920 panel"
+> +	depends on OF
+> +	depends on DRM_MIPI_DSI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  Say Y here if you want to support for AUO KD101N80_45NA WUXGA PANEL
+> +	  DSI Video Mode panel
+> +
+>  endmenu
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index 78e3dc376bdd..1056933bdf2e 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -28,3 +28,4 @@ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) += panel-sitronix-st7701.o
+>  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
+>  obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
+>  obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
+> +obj-$(CONFIG_DRM_PANEL_AUO_KD101N80_45NA) += panel-auo-kd101n80-45na.o
+> diff --git a/drivers/gpu/drm/panel/panel-auo-kd101n80-45na.c b/drivers/gpu/drm/panel/panel-auo-kd101n80-45na.c
+> new file mode 100644
+> index 000000000000..ab7bfc059e8a
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-auo-kd101n80-45na.c
+> @@ -0,0 +1,352 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018 MediaTek Inc.
+> + * Author: Jitao Shi <jitao.shi@mediatek.com>
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <drm/drmP.h>
+> +#include <drm/drm_crtc.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_panel.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +struct auo_panel {
+> +	struct drm_panel base;
+> +	struct mipi_dsi_device *dsi;
+> +
+> +	struct backlight_device *backlight;
+> +	struct regulator *pp1800;
+> +	struct regulator *avee;
+> +	struct regulator *avdd;
+> +	struct gpio_desc *enable_gpio;
+> +
+> +	bool prepared;
+> +	bool enabled;
+> +
+> +	const struct drm_display_mode *mode;
+> +};
+> +
+> +static inline struct auo_panel *to_auo_panel(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct auo_panel, base);
+> +}
+> +
+> +static int auo_panel_init(struct auo_panel *auo)
+> +{
+> +	struct drm_panel *panel = &auo->base;
+> +	int err;
+> +
+> +	err = mipi_dsi_dcs_exit_sleep_mode(auo->dsi);
+> +	if (err < 0) {
+> +		DRM_DEV_ERROR(panel->dev, "failed to exit sleep mode: %d\n",
+> +			      err);
+> +		return err;
+> +	}
+> +
+> +	/* T3.1*/
+> +	msleep(120);
+> +
+> +	err = mipi_dsi_dcs_set_display_on(auo->dsi);
+> +	if (err < 0) {
+> +		DRM_DEV_ERROR(panel->dev, "failed to set display on: %d\n",
+> +			      err);
+> +	}
+> +	/* T3.1 + T3.2: > 200ms */
+> +	msleep(120);
+> +
+> +	return err;
+> +}
+> +
+> +static int auo_panel_off(struct auo_panel *auo)
+> +{
+> +	struct mipi_dsi_device *dsi = auo->dsi;
+> +	int ret;
+> +
+> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+> +
+> +	ret = mipi_dsi_dcs_set_display_off(dsi);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int auo_panel_disable(struct drm_panel *panel)
+> +{
+> +	struct auo_panel *auo = to_auo_panel(panel);
+> +
+> +	if (!auo->enabled)
+> +		return 0;
+> +
+> +	backlight_disable(auo->backlight);
+> +
+> +	auo->enabled = false;
+> +
+> +	return 0;
+> +}
+> +
+> +static int auo_panel_unprepare(struct drm_panel *panel)
+> +{
+> +	struct auo_panel *auo = to_auo_panel(panel);
+> +	int ret;
+> +
+> +	if (!auo->prepared)
+> +		return 0;
+> +
+> +	ret = auo_panel_off(auo);
+> +	if (ret < 0) {
+> +		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	msleep(150);
+> +	regulator_disable(auo->avee);
+> +	regulator_disable(auo->avdd);
+> +	usleep_range(5000, 7000);
+> +	regulator_disable(auo->pp1800);
+> +	if (auo->enable_gpio)
+> +		gpiod_set_value(auo->enable_gpio, 0);
+> +
+> +	auo->prepared = false;
+> +
+> +	return 0;
+> +}
+> +
+> +static int auo_panel_prepare(struct drm_panel *panel)
+> +{
+> +	struct auo_panel *auo = to_auo_panel(panel);
+> +	int ret;
+> +
+> +	if (auo->prepared)
+> +		return 0;
+> +
+> +	if (auo->enable_gpio) {
+> +		gpiod_set_value(auo->enable_gpio, 0);
+> +		usleep_range(1000, 1500);
+> +	}
+> +
+> +	ret = regulator_enable(auo->pp1800);
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = regulator_enable(auo->avdd);
+> +	if (ret < 0)
+> +		goto poweroff1v8;
+> +	ret = regulator_enable(auo->avee);
+> +	if (ret < 0)
+> +		goto poweroffavdd;
+> +
+> +	if (auo->enable_gpio) {
+> +		gpiod_set_value(auo->enable_gpio, 1);
+> +		usleep_range(10000, 12000);
+> +	}
+> +
+> +	ret = auo_panel_init(auo);
+> +	if (ret < 0) {
+> +		dev_err(panel->dev, "failed to init panel: %d\n", ret);
+> +		goto poweroff;
+> +	}
+> +
+> +	auo->prepared = true;
+> +
+> +	return 0;
+> +
+> +poweroff:
+> +	regulator_disable(auo->avee);
+> +poweroffavdd:
+> +	regulator_disable(auo->avdd);
+> +poweroff1v8:
+> +	usleep_range(5000, 7000);
+> +	regulator_disable(auo->pp1800);
+> +	if (auo->enable_gpio)
+> +		gpiod_set_value(auo->enable_gpio, 0);
+> +	return ret;
+> +}
+> +
+> +static int auo_panel_enable(struct drm_panel *panel)
+> +{
+> +	struct auo_panel *auo = to_auo_panel(panel);
+> +	int ret;
+> +
+> +	if (auo->enabled)
+> +		return 0;
+> +
+> +	ret = backlight_enable(auo->backlight);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(panel->drm->dev,
+> +			      "Failed to enable backlight %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	auo->enabled = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_display_mode default_mode = {
+> +	.clock = 157000,
+> +	.hdisplay = 1200,
+> +	.hsync_start = 1200 + 80,
+> +	.hsync_end = 1200 + 80 + 24,
+> +	.htotal = 1200 + 80 + 24 + 36,
+> +	.vdisplay = 1920,
+> +	.vsync_start = 1920 + 16,
+> +	.vsync_end = 1920 + 16 + 4,
+> +	.vtotal = 1920 + 16 + 4 + 16,
+> +	.vrefresh = 60,
+> +};
+> +
+> +static int auo_panel_get_modes(struct drm_panel *panel)
+> +{
+> +	struct drm_display_mode *mode;
+> +
+> +	mode = drm_mode_duplicate(panel->drm, &default_mode);
+> +	if (!mode) {
+> +		dev_err(panel->drm->dev, "failed to add mode %ux%ux@%u\n",
+> +			default_mode.hdisplay, default_mode.vdisplay,
+> +			default_mode.vrefresh);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	drm_mode_set_name(mode);
+> +
+> +	drm_mode_probed_add(panel->connector, mode);
+> +
+> +	panel->connector->display_info.width_mm = 135;
+> +	panel->connector->display_info.height_mm = 216;
+> +	panel->connector->display_info.bpc = 8;
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs auo_panel_funcs = {
+> +	.disable = auo_panel_disable,
+> +	.unprepare = auo_panel_unprepare,
+> +	.prepare = auo_panel_prepare,
+> +	.enable = auo_panel_enable,
+> +	.get_modes = auo_panel_get_modes,
+> +};
+> +
+> +static int auo_panel_add(struct auo_panel *auo)
+> +{
+> +	struct device *dev = &auo->dsi->dev;
+> +
+> +	auo->avdd = devm_regulator_get(dev, "avdd");
+> +	if (IS_ERR(auo->avdd))
+> +		return PTR_ERR(auo->avdd);
+> +
+> +	auo->avee = devm_regulator_get(dev, "avee");
+> +	if (IS_ERR(auo->avee))
+> +		return PTR_ERR(auo->avee);
+> +
+> +	auo->pp1800 = devm_regulator_get(dev, "pp1800");
+> +	if (IS_ERR(auo->pp1800))
+> +		return PTR_ERR(auo->pp1800);
+> +
+> +	auo->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
+> +	if (IS_ERR(auo->enable_gpio)) {
+> +		dev_err(dev, "cannot get reset-gpios %ld\n",
+> +			PTR_ERR(auo->enable_gpio));
+> +		auo->enable_gpio = NULL;
+> +	} else {
+> +		gpiod_set_value(auo->enable_gpio, 0);
+> +	}
+> +
+> +	auo->backlight = devm_of_find_backlight(dev);
+> +	if (IS_ERR(auo->backlight))
+> +		return PTR_ERR(auo->backlight);
+> +
+> +	drm_panel_init(&auo->base);
+> +	auo->base.funcs = &auo_panel_funcs;
+> +	auo->base.dev = &auo->dsi->dev;
+> +
+> +	return drm_panel_add(&auo->base);
+> +}
+> +
+> +static void auo_panel_del(struct auo_panel *auo)
+> +{
+> +	if (auo->base.dev)
+> +		drm_panel_remove(&auo->base);
+> +}
+> +
+> +static int auo_panel_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct auo_panel *auo;
+> +	int ret;
+> +
+> +	dsi->lanes = 4;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+> +		 MIPI_DSI_MODE_LPM;
+> +
+> +	auo = devm_kzalloc(&dsi->dev, sizeof(*auo), GFP_KERNEL);
+> +	if (!auo)
+> +		return -ENOMEM;
+> +
+> +	mipi_dsi_set_drvdata(dsi, auo);
+> +
+> +	auo->dsi = dsi;
+> +
+> +	ret = auo_panel_add(auo);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return mipi_dsi_attach(dsi);
+> +}
+> +
+> +static int auo_panel_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct auo_panel *auo = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = auo_panel_disable(&auo->base);
+> +	if (ret < 0)
+> +		dev_err(&dsi->dev, "failed to disable panel: %d\n", ret);
+> +
+> +	ret = mipi_dsi_detach(dsi);
+> +	if (ret < 0)
+> +		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
+> +
+> +	auo_panel_del(auo);
+> +
+> +	return 0;
+> +}
+> +
+> +static void auo_panel_shutdown(struct mipi_dsi_device *dsi)
+> +{
+> +	struct auo_panel *auo = mipi_dsi_get_drvdata(dsi);
+> +
+> +	auo_panel_disable(&auo->base);
+> +}
+> +
+> +static const struct of_device_id auo_of_match[] = {
+> +	{ .compatible = "auo,kd101n80-45na", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, auo_of_match);
+> +
+> +static struct mipi_dsi_driver auo_panel_driver = {
+> +	.driver = {
+> +		.name = "panel-auo-kd101n80-45na",
+> +		.of_match_table = auo_of_match,
+> +	},
+> +	.probe = auo_panel_probe,
+> +	.remove = auo_panel_remove,
+> +	.shutdown = auo_panel_shutdown,
+> +};
+> +module_mipi_dsi_driver(auo_panel_driver);
+> +
+> +MODULE_AUTHOR("Jitao Shi <jitao.shi@mediatek.com>");
+> +MODULE_DESCRIPTION("AUO kd101n80-45na wuxga (1200x1920) video mode panel driver");
+> +MODULE_LICENSE("GPL v2");
+> +
+> -- 
+> 2.21.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
