@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6ECC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADFAC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB2520833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40B3205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099082;
-	bh=kwYixsYv6zqcqnlCCQoHK2rpx8TEQROh61glclf8xX0=;
+	s=default; t=1560099087;
+	bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqrf2szXI/WzIJwKpuDE3v9Wwhs1Y9L7Y84R1FmOL/4GT6Rof8sti6lPAhbNG6XUa
-	 UtZILAsFxB/v6Mh5pgioypUGDRezd812I+KLTI9S/Eu/zrmVbWJkriSLCId4U2ZAZJ
-	 1PBtiY5XIDagL4kx8PTSJfHupqU1P9QVUjA8qvT0=
+	b=o5wrYSPjhDg89vvQfEwqOfh5y+qi3f7CJdiF1FTHKlQ8DF7RzgdyuO0RcAUdYPzdn
+	 gDh09WRaKfz3LfrtWvYo7FrnUbwNu3RNDqpUCz2hifLSRfUBiejRe3scCipZbwJZkx
+	 xPSMA239B1t+D3hWwnhEuL0vsSHPjvI5uG01pn48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfFIQvW (ORCPT
+        id S1731940AbfFIQv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:51:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbfFIQvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:51:19 -0400
+        id S1728512AbfFIQvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C79D205ED;
-        Sun,  9 Jun 2019 16:51:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 170D42070B;
+        Sun,  9 Jun 2019 16:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099077;
-        bh=kwYixsYv6zqcqnlCCQoHK2rpx8TEQROh61glclf8xX0=;
+        s=default; t=1560099083;
+        bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hyyXRHFxCHwgrDcivY3E4Yu5hSsTZhT8Hsitsu/UiPMN1aZUgl7DXxSCaJfPGLn8T
-         UqYjDism4n+tiEzPc4qQVuO8yDHs0/sx2Wrk7yUOJC4S9ljSk/SMZXdfj67qdU+XYW
-         WHpJ9sCPLpSuvIEZV+APle12eIIIVoYPXffKNBqE=
+        b=GOMz/sFk3z1bS9koZ9U2xuxboNBDvCdj5WxvkpEKvAfBHLXwKGUOmfxx3J64fU41Y
+         Kz4KoRS4xfX9XUrGInOfo1iGaI4dL3h3X+wZp1myOblpQ+F0GpuBWS+i3tWAK4PvaO
+         eaH6VS07PScMTz0Uf61gFFrnKw+eDTgmwXe02K1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
-        Pavel Machek <pavel@ucw.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 19/35] x86/power: Fix nosmt vs hibernation triple fault during resume
-Date:   Sun,  9 Jun 2019 18:42:25 +0200
-Message-Id: <20190609164126.626235096@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Julien Cristau <jcristau@debian.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        YunQiang Su <ysu@wavecomp.com>, linux-mips@vger.kernel.org
+Subject: [PATCH 4.14 21/35] MIPS: Bounds check virt_addr_valid
+Date:   Sun,  9 Jun 2019 18:42:27 +0200
+Message-Id: <20190609164126.752755650@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -62,187 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Paul Burton <paul.burton@mips.com>
 
-commit ec527c318036a65a083ef68d8ba95789d2212246 upstream.
+commit 074a1e1167afd82c26f6d03a9a8b997d564bb241 upstream.
 
-As explained in
+The virt_addr_valid() function is meant to return true iff
+virt_to_page() will return a valid struct page reference. This is true
+iff the address provided is found within the unmapped address range
+between PAGE_OFFSET & MAP_BASE, but we don't currently check for that
+condition. Instead we simply mask the address to obtain what will be a
+physical address if the virtual address is indeed in the desired range,
+shift it to form a PFN & then call pfn_valid(). This can incorrectly
+return true if called with a virtual address which, after masking,
+happens to form a physical address corresponding to a valid PFN.
 
-	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+For example we may vmalloc an address in the kernel mapped region
+starting a MAP_BASE & obtain the virtual address:
 
-we always, no matter what, have to bring up x86 HT siblings during boot at
-least once in order to avoid first MCE bringing the system to its knees.
+  addr = 0xc000000000002000
 
-That means that whenever 'nosmt' is supplied on the kernel command-line,
-all the HT siblings are as a result sitting in mwait or cpudile after
-going through the online-offline cycle at least once.
+When masked by virt_to_phys(), which uses __pa() & in turn CPHYSADDR(),
+we obtain the following (bogus) physical address:
 
-This causes a serious issue though when a kernel, which saw 'nosmt' on its
-commandline, is going to perform resume from hibernation: if the resume
-from the hibernated image is successful, cr3 is flipped in order to point
-to the address space of the kernel that is being resumed, which in turn
-means that all the HT siblings are all of a sudden mwaiting on address
-which is no longer valid.
+  addr = 0x2000
 
-That results in triple fault shortly after cr3 is switched, and machine
-reboots.
+In a common system with PHYS_OFFSET=0 this will correspond to a valid
+struct page which should really be accessed by virtual address
+PAGE_OFFSET+0x2000, causing virt_addr_valid() to incorrectly return 1
+indicating that the original address corresponds to a struct page.
 
-Fix this by always waking up all the SMT siblings before initiating the
-'restore from hibernation' process; this guarantees that all the HT
-siblings will be properly carried over to the resumed kernel waiting in
-resume_play_dead(), and acted upon accordingly afterwards, based on the
-target kernel configuration.
+This is equivalent to the ARM64 change made in commit ca219452c6b8
+("arm64: Correctly bounds check virt_addr_valid").
 
-Symmetricaly, the resumed kernel has to push the SMT siblings to mwait
-again in case it has SMT disabled; this means it has to online all
-the siblings when resuming (so that they come out of hlt) and offline
-them again to let them reach mwait.
+This fixes fallout when hardened usercopy is enabled caused by the
+related commit 517e1fbeb65f ("mm/usercopy: Drop extra
+is_vmalloc_or_module() check") which removed a check for the vmalloc
+range that was present from the introduction of the hardened usercopy
+feature.
 
-Cc: 4.19+ <stable@vger.kernel.org> # v4.19+
-Debugged-by: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Reported-by: Julien Cristau <jcristau@debian.org>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Tested-by: YunQiang Su <ysu@wavecomp.com>
+URL: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=929366
+Cc: stable@vger.kernel.org # v4.12+
+Cc: linux-mips@vger.kernel.org
+Cc: Yunqiang Su <ysu@wavecomp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/power/cpu.c          |   10 ++++++++++
- arch/x86/power/hibernate_64.c |   33 +++++++++++++++++++++++++++++++++
- include/linux/cpu.h           |    4 ++++
- kernel/cpu.c                  |    4 ++--
- kernel/power/hibernate.c      |    9 +++++++++
- 5 files changed, 58 insertions(+), 2 deletions(-)
+ arch/mips/mm/mmap.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable
- 	 * address in its instruction pointer may not be possible to resolve
- 	 * any more at that point (the page tables used by it previously may
- 	 * have been overwritten by hibernate image data).
-+	 *
-+	 * First, make sure that we wake up all the potentially disabled SMT
-+	 * threads which have been initially brought up and then put into
-+	 * mwait/cpuidle sleep.
-+	 * Those will be put to proper (not interfering with hibernation
-+	 * resume) sleep afterwards, and the resumed kernel will decide itself
-+	 * what to do with them.
- 	 */
-+	ret = cpuhp_smt_enable();
-+	if (ret)
-+		return ret;
- 	smp_ops.play_dead = resume_play_dead;
- 	ret = disable_nonboot_cpus();
- 	smp_ops.play_dead = play_dead;
---- a/arch/x86/power/hibernate_64.c
-+++ b/arch/x86/power/hibernate_64.c
-@@ -13,6 +13,7 @@
- #include <linux/suspend.h>
- #include <linux/scatterlist.h>
- #include <linux/kdebug.h>
-+#include <linux/cpu.h>
+--- a/arch/mips/mm/mmap.c
++++ b/arch/mips/mm/mmap.c
+@@ -203,6 +203,11 @@ unsigned long arch_randomize_brk(struct
  
- #include <crypto/hash.h>
- 
-@@ -347,3 +348,35 @@ int arch_hibernation_header_restore(void
- 
- 	return 0;
- }
-+
-+int arch_resume_nosmt(void)
-+{
-+	int ret = 0;
-+	/*
-+	 * We reached this while coming out of hibernation. This means
-+	 * that SMT siblings are sleeping in hlt, as mwait is not safe
-+	 * against control transition during resume (see comment in
-+	 * hibernate_resume_nonboot_cpu_disable()).
-+	 *
-+	 * If the resumed kernel has SMT disabled, we have to take all the
-+	 * SMT siblings out of hlt, and offline them again so that they
-+	 * end up in mwait proper.
-+	 *
-+	 * Called with hotplug disabled.
-+	 */
-+	cpu_hotplug_enable();
-+	if (cpu_smt_control == CPU_SMT_DISABLED ||
-+			cpu_smt_control == CPU_SMT_FORCE_DISABLED) {
-+		enum cpuhp_smt_control old = cpu_smt_control;
-+
-+		ret = cpuhp_smt_enable();
-+		if (ret)
-+			goto out;
-+		ret = cpuhp_smt_disable(old);
-+		if (ret)
-+			goto out;
-+	}
-+out:
-+	cpu_hotplug_disable();
-+	return ret;
-+}
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -191,10 +191,14 @@ enum cpuhp_smt_control {
- extern enum cpuhp_smt_control cpu_smt_control;
- extern void cpu_smt_disable(bool force);
- extern void cpu_smt_check_topology(void);
-+extern int cpuhp_smt_enable(void);
-+extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
- #else
- # define cpu_smt_control		(CPU_SMT_ENABLED)
- static inline void cpu_smt_disable(bool force) { }
- static inline void cpu_smt_check_topology(void) { }
-+static inline int cpuhp_smt_enable(void) { return 0; }
-+static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
- #endif
- 
- /*
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2054,7 +2054,7 @@ static void cpuhp_online_cpu_device(unsi
- 	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
- }
- 
--static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
-+int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+ int __virt_addr_valid(const volatile void *kaddr)
  {
- 	int cpu, ret = 0;
- 
-@@ -2088,7 +2088,7 @@ static int cpuhp_smt_disable(enum cpuhp_
- 	return ret;
- }
- 
--static int cpuhp_smt_enable(void)
-+int cpuhp_smt_enable(void)
- {
- 	int cpu, ret = 0;
- 
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -258,6 +258,11 @@ void swsusp_show_speed(ktime_t start, kt
- 		(kps % 1000) / 10);
- }
- 
-+__weak int arch_resume_nosmt(void)
-+{
-+	return 0;
-+}
++	unsigned long vaddr = (unsigned long)vaddr;
 +
- /**
-  * create_image - Create a hibernation image.
-  * @platform_mode: Whether or not to use the platform driver.
-@@ -322,6 +327,10 @@ static int create_image(int platform_mod
-  Enable_cpus:
- 	enable_nonboot_cpus();
- 
-+	/* Allow architectures to do nosmt-specific post-resume dances */
-+	if (!in_suspend)
-+		error = arch_resume_nosmt();
++	if ((vaddr < PAGE_OFFSET) || (vaddr >= MAP_BASE))
++		return 0;
 +
-  Platform_finish:
- 	platform_finish(platform_mode);
- 
+ 	return pfn_valid(PFN_DOWN(virt_to_phys(kaddr)));
+ }
+ EXPORT_SYMBOL_GPL(__virt_addr_valid);
 
 
