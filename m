@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD39EC4321D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2C8C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D972085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D408206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6EcEqJt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTH0LYCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389417AbfFJTPG (ORCPT
+        id S2389264AbfFJTOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:15:06 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:36362 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389332AbfFJTOn (ORCPT
+        Mon, 10 Jun 2019 15:14:38 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45023 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389167AbfFJTOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:14:43 -0400
-Received: by mail-ua1-f68.google.com with SMTP id 94so3530246uam.3;
-        Mon, 10 Jun 2019 12:14:42 -0700 (PDT)
+        Mon, 10 Jun 2019 15:14:33 -0400
+Received: by mail-vs1-f68.google.com with SMTP id v129so6191889vsb.11;
+        Mon, 10 Jun 2019 12:14:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=txhvfUmx1NdKNULzWGRGEFnmNXgK3e8wqkbEtNoWTMc=;
-        b=V6EcEqJtpqy371tJvh/wPOwK5W2ArSQ3IqmU9jsv9ThYsmRZchJ3fN6ZV5etD/hc1Y
-         OwGJn2LmzUkdDK+pSFR3djL98iNsFYzPRmFUA5L8bnQOke3cCP++uU9s7rxp4qFzMUPV
-         fbvdViaBXnQITGDktAD/OOjJZ0l3ScSlsrNt1FVzlBNoIY2DhmV7D4Uft6JqQcrazB+e
-         GBg99lqBY5lSxm2EtbFAlPatXaHWYUimD1ehWkFrr6Apw7D8GQutKgPeR3kpN1DQeGNN
-         K2sn0Lw78OkPpXqCb1zze+wyFj/iB7PtDQDt0Ky+NTGOt+3ev5/cudkk49xfOSNqPyBr
-         DqZw==
+        bh=qVPQA1G03TZXmMhT1ReNlX8Dqt4hVw5sMuV447dMS9w=;
+        b=BTH0LYCBiNfV2iYfhZtj+8EvTN2VZXZ9ofvyVlCb/xe8hZ60b75zs24bbUQx3dlxgo
+         ldFA0kuEVfLr/SgpdkcJWGWH4zkEaJy1y0wB1lJECLqgrzO6t/5fJiMHzulB8cJBxJ0n
+         O2fc534HbAhSmMLHS9/Uik8Uily6fOY9e+hP+Qhe9dqH96Ap80897eB67shJDQF8AKCQ
+         Qav+fWUnKs92o6G9DoqJFDdOPy5pZ2DANGHnKad+r5+TH418hLTZ2WzsAm56IosibY+S
+         OD+ttL58RuVwpTxNn5e6JxlvmRjGWsX7hKyGnDFQZaXTjPkFHjCeDImHeW5aLYf3K/wo
+         lbPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=txhvfUmx1NdKNULzWGRGEFnmNXgK3e8wqkbEtNoWTMc=;
-        b=Hd4fUM87amgU57/r2uUqYMi0iiKIfgVw1jVes+kj0zuY7h/NtADtIyr163q5AwfYzs
-         XVva52fQjbsXk7slJzu8YTcAe7ouP/vp1TVhllPMDhC9lW4dJpJxM7M5/b8Ei231L+DX
-         6YtVhXzhMBh1tGjsuKx+qEzbRbvETlPNs8cE1IntLifrGwqaZhtrKgzuCTzsURJpGcd/
-         nf6ZzG9368h4lcANPD9il9E9R+3lFYUDnF+GFP80Y23wmSVD/zC5SrHU3IPbbEUEGcHi
-         kKM0YYjHnfTwZ59NmxImV+MdsaygP4UeOM2WnIaNIlyCt0QqkHzVHoIeoH6iq8kbtKSa
-         WcQg==
-X-Gm-Message-State: APjAAAVZyzUdVh4et7tb9srtY8GwaOzs8fIIZDI5X0zLsqt7DBo6cTKf
-        Q9ST0leU2qiPpHgHs9w+5DY20j2zKg==
-X-Google-Smtp-Source: APXvYqylvfZ2f3SkuXYiaiG4oxbaoTGDsuGyK1Ash3Bs0XFgObtOIBB/DLf/WlpBS3yKqmjOqGyfkw==
-X-Received: by 2002:ab0:a1:: with SMTP id 30mr15306587uaj.29.1560194081899;
-        Mon, 10 Jun 2019 12:14:41 -0700 (PDT)
+        bh=qVPQA1G03TZXmMhT1ReNlX8Dqt4hVw5sMuV447dMS9w=;
+        b=Hmn+zY84J9SmWJIwf3gCle2mbsxud0Bpzui7QmKaItE217UrTnpb4NY89g9Nbm9U+b
+         zZR48m6d00xPUeEDgxf7XMgHuxpdp8LlNTWN2WcSxaY4rMZ5EMJpM/+DGaNQkMzf4ekn
+         0J2Y6IgYDUc+/HJimwOBTDR4X1MpZ9PyIHi/VQCz49jymi/jMV51OJI+m5zIUDEazRis
+         PJPB6iuE7y/B2wmWiuU8vmxjuxnsCCITd7PUQkH2cV50Q8VSAvyIl3ejTCvQ69wJAPDE
+         Cl3pP7fBFnzMA5j3pC1AjAv/hyi++W22ifiXAXxB+LKJ469aYBuZHQVD5fnNFRubIdNh
+         6reg==
+X-Gm-Message-State: APjAAAWqP1Z6zYsPCpuRAr4PrTOPX/TBZ4tKT5MwJPUP6otfTGA+pJUl
+        QT2d9TH5I7AvpAn1gpavNEWhwix3fw==
+X-Google-Smtp-Source: APXvYqzUnGf9oPJeyunuLj6dNdswq27mhvEh0TasLZVBTzt24Ki+McvPeFyUsUWw5Rr9p3dYjhJepQ==
+X-Received: by 2002:a67:7cd0:: with SMTP id x199mr28882627vsc.233.1560194071634;
+        Mon, 10 Jun 2019 12:14:31 -0700 (PDT)
 Received: from kmo-pixel.hsd1.vt.comcast.net (c-71-234-172-214.hsd1.vt.comcast.net. [71.234.172.214])
-        by smtp.gmail.com with ESMTPSA id t20sm4834014vkd.53.2019.06.10.12.14.40
+        by smtp.gmail.com with ESMTPSA id t20sm4834014vkd.53.2019.06.10.12.14.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 12:14:40 -0700 (PDT)
+        Mon, 10 Jun 2019 12:14:30 -0700 (PDT)
 From:   Kent Overstreet <kent.overstreet@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-bcache@vger.kernel.org
 Cc:     Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH 10/12] bcache: move closures to lib/
-Date:   Mon, 10 Jun 2019 15:14:18 -0400
-Message-Id: <20190610191420.27007-11-kent.overstreet@gmail.com>
+Subject: [PATCH 03/12] mm: pagecache add lock
+Date:   Mon, 10 Jun 2019 15:14:11 -0400
+Message-Id: <20190610191420.27007-4-kent.overstreet@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190610191420.27007-1-kent.overstreet@gmail.com>
 References: <20190610191420.27007-1-kent.overstreet@gmail.com>
@@ -74,323 +74,223 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prep work for bcachefs - being a fork of bcache it also uses closures
+Add a per address space lock around adding pages to the pagecache - making it
+possible for fallocate INSERT_RANGE/COLLAPSE_RANGE to work correctly, and also
+hopefully making truncate and dio a bit saner.
 
 Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
 ---
- drivers/md/bcache/Kconfig                     | 10 +------
- drivers/md/bcache/Makefile                    |  6 ++--
- drivers/md/bcache/bcache.h                    |  2 +-
- drivers/md/bcache/super.c                     |  1 -
- drivers/md/bcache/util.h                      |  3 +-
- .../md/bcache => include/linux}/closure.h     | 17 ++++++-----
- lib/Kconfig                                   |  3 ++
- lib/Kconfig.debug                             |  9 ++++++
- lib/Makefile                                  |  2 ++
- {drivers/md/bcache => lib}/closure.c          | 28 ++++++-------------
- 10 files changed, 37 insertions(+), 44 deletions(-)
- rename {drivers/md/bcache => include/linux}/closure.h (97%)
- rename {drivers/md/bcache => lib}/closure.c (89%)
+ fs/inode.c            |  1 +
+ include/linux/fs.h    | 24 +++++++++++++
+ include/linux/sched.h |  4 +++
+ init/init_task.c      |  1 +
+ mm/filemap.c          | 81 +++++++++++++++++++++++++++++++++++++++++--
+ 5 files changed, 108 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/bcache/Kconfig b/drivers/md/bcache/Kconfig
-index f6e0a8b3a6..3dd1d48987 100644
---- a/drivers/md/bcache/Kconfig
-+++ b/drivers/md/bcache/Kconfig
-@@ -2,6 +2,7 @@
- config BCACHE
- 	tristate "Block device as cache"
- 	select CRC64
-+	select CLOSURES
- 	help
- 	Allows a block device to be used as cache for other devices; uses
- 	a btree for indexing and the layout is optimized for SSDs.
-@@ -16,12 +17,3 @@ config BCACHE_DEBUG
- 
- 	Enables extra debugging tools, allows expensive runtime checks to be
- 	turned on.
--
--config BCACHE_CLOSURES_DEBUG
--	bool "Debug closures"
--	depends on BCACHE
--	select DEBUG_FS
--	help
--	Keeps all active closures in a linked list and provides a debugfs
--	interface to list them, which makes it possible to see asynchronous
--	operations that get stuck.
-diff --git a/drivers/md/bcache/Makefile b/drivers/md/bcache/Makefile
-index d26b351958..2b790fb813 100644
---- a/drivers/md/bcache/Makefile
-+++ b/drivers/md/bcache/Makefile
-@@ -2,8 +2,8 @@
- 
- obj-$(CONFIG_BCACHE)	+= bcache.o
- 
--bcache-y		:= alloc.o bset.o btree.o closure.o debug.o extents.o\
--	io.o journal.o movinggc.o request.o stats.o super.o sysfs.o trace.o\
--	util.o writeback.o
-+bcache-y		:= alloc.o bset.o btree.o debug.o extents.o io.o\
-+	journal.o movinggc.o request.o stats.o super.o sysfs.o trace.o util.o\
-+	writeback.o
- 
- CFLAGS_request.o	+= -Iblock
-diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-index fdf75352e1..ced9f1526c 100644
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -180,6 +180,7 @@
- 
- #include <linux/bcache.h>
- #include <linux/bio.h>
-+#include <linux/closure.h>
- #include <linux/kobject.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
-@@ -192,7 +193,6 @@
- 
- #include "bset.h"
- #include "util.h"
--#include "closure.h"
- 
- struct bucket {
- 	atomic_t	pin;
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index a697a3a923..da6803f280 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -2487,7 +2487,6 @@ static int __init bcache_init(void)
- 		goto err;
- 
- 	bch_debug_init();
--	closure_debug_init();
- 
- 	return 0;
- err:
-diff --git a/drivers/md/bcache/util.h b/drivers/md/bcache/util.h
-index 00aab6abcf..8a75100c0b 100644
---- a/drivers/md/bcache/util.h
-+++ b/drivers/md/bcache/util.h
-@@ -4,6 +4,7 @@
- #define _BCACHE_UTIL_H
- 
- #include <linux/blkdev.h>
-+#include <linux/closure.h>
- #include <linux/errno.h>
- #include <linux/kernel.h>
- #include <linux/sched/clock.h>
-@@ -13,8 +14,6 @@
- #include <linux/workqueue.h>
- #include <linux/crc64.h>
- 
--#include "closure.h"
--
- #define PAGE_SECTORS		(PAGE_SIZE / 512)
- 
- struct closure;
-diff --git a/drivers/md/bcache/closure.h b/include/linux/closure.h
-similarity index 97%
-rename from drivers/md/bcache/closure.h
-rename to include/linux/closure.h
-index 376c5e659c..308e38028c 100644
---- a/drivers/md/bcache/closure.h
-+++ b/include/linux/closure.h
-@@ -155,7 +155,7 @@ struct closure {
- 
- 	atomic_t		remaining;
- 
--#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-+#ifdef CONFIG_DEBUG_CLOSURES
- #define CLOSURE_MAGIC_DEAD	0xc054dead
- #define CLOSURE_MAGIC_ALIVE	0xc054a11e
- 
-@@ -184,15 +184,13 @@ static inline void closure_sync(struct closure *cl)
- 		__closure_sync(cl);
- }
- 
--#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-+#ifdef CONFIG_DEBUG_CLOSURES
- 
--void closure_debug_init(void);
- void closure_debug_create(struct closure *cl);
- void closure_debug_destroy(struct closure *cl);
- 
- #else
- 
--static inline void closure_debug_init(void) {}
- static inline void closure_debug_create(struct closure *cl) {}
- static inline void closure_debug_destroy(struct closure *cl) {}
- 
-@@ -200,21 +198,21 @@ static inline void closure_debug_destroy(struct closure *cl) {}
- 
- static inline void closure_set_ip(struct closure *cl)
+diff --git a/fs/inode.c b/fs/inode.c
+index 9a453f3637..8881dc551f 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -350,6 +350,7 @@ EXPORT_SYMBOL(inc_nlink);
+ static void __address_space_init_once(struct address_space *mapping)
  {
--#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-+#ifdef CONFIG_DEBUG_CLOSURES
- 	cl->ip = _THIS_IP_;
+ 	xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ);
++	pagecache_lock_init(&mapping->add_lock);
+ 	init_rwsem(&mapping->i_mmap_rwsem);
+ 	INIT_LIST_HEAD(&mapping->private_list);
+ 	spin_lock_init(&mapping->private_lock);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index dd28e76790..a88d994751 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -418,6 +418,28 @@ int pagecache_write_end(struct file *, struct address_space *mapping,
+ 				loff_t pos, unsigned len, unsigned copied,
+ 				struct page *page, void *fsdata);
+ 
++/*
++ * Two-state lock - can be taken for add or block - both states are shared,
++ * like read side of rwsem, but conflict with other state:
++ */
++struct pagecache_lock {
++	atomic_long_t		v;
++	wait_queue_head_t	wait;
++};
++
++static inline void pagecache_lock_init(struct pagecache_lock *lock)
++{
++	atomic_long_set(&lock->v, 0);
++	init_waitqueue_head(&lock->wait);
++}
++
++void pagecache_add_put(struct pagecache_lock *);
++void pagecache_add_get(struct pagecache_lock *);
++void __pagecache_block_put(struct pagecache_lock *);
++void __pagecache_block_get(struct pagecache_lock *);
++void pagecache_block_put(struct pagecache_lock *);
++void pagecache_block_get(struct pagecache_lock *);
++
+ /**
+  * struct address_space - Contents of a cacheable, mappable object.
+  * @host: Owner, either the inode or the block_device.
+@@ -452,6 +474,8 @@ struct address_space {
+ 	spinlock_t		private_lock;
+ 	struct list_head	private_list;
+ 	void			*private_data;
++	struct pagecache_lock	add_lock
++		____cacheline_aligned_in_smp;	/* protects adding new pages */
+ } __attribute__((aligned(sizeof(long)))) __randomize_layout;
+ 	/*
+ 	 * On most architectures that alignment is already the case; but
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 1549584a15..a46baade99 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -43,6 +43,7 @@ struct io_context;
+ struct mempolicy;
+ struct nameidata;
+ struct nsproxy;
++struct pagecache_lock;
+ struct perf_event_context;
+ struct pid_namespace;
+ struct pipe_inode_info;
+@@ -935,6 +936,9 @@ struct task_struct {
+ 	unsigned int			in_ubsan;
  #endif
- }
  
- static inline void closure_set_ret_ip(struct closure *cl)
- {
--#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-+#ifdef CONFIG_DEBUG_CLOSURES
- 	cl->ip = _RET_IP_;
- #endif
- }
- 
- static inline void closure_set_waiting(struct closure *cl, unsigned long f)
- {
--#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-+#ifdef CONFIG_DEBUG_CLOSURES
- 	cl->waiting_on = f;
- #endif
- }
-@@ -243,6 +241,7 @@ static inline void closure_queue(struct closure *cl)
- 	 */
- 	BUILD_BUG_ON(offsetof(struct closure, fn)
- 		     != offsetof(struct work_struct, func));
++	/* currently held lock, for avoiding recursing in fault path: */
++	struct pagecache_lock *pagecache_lock;
 +
- 	if (wq) {
- 		INIT_WORK(&cl->work, cl->work.func);
- 		queue_work(wq, &cl->work);
-@@ -255,7 +254,7 @@ static inline void closure_queue(struct closure *cl)
-  */
- static inline void closure_get(struct closure *cl)
- {
--#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-+#ifdef CONFIG_DEBUG_CLOSURES
- 	BUG_ON((atomic_inc_return(&cl->remaining) &
- 		CLOSURE_REMAINING_MASK) <= 1);
- #else
-@@ -271,7 +270,7 @@ static inline void closure_get(struct closure *cl)
-  */
- static inline void closure_init(struct closure *cl, struct closure *parent)
- {
--	memset(cl, 0, sizeof(struct closure));
-+	cl->fn = NULL;
- 	cl->parent = parent;
- 	if (parent)
- 		closure_get(parent);
-diff --git a/lib/Kconfig b/lib/Kconfig
-index a9e56539bd..09a25af0d0 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -427,6 +427,9 @@ config ASSOCIATIVE_ARRAY
+ 	/* Journalling filesystem info: */
+ 	void				*journal_info;
  
- 	  for more information.
- 
-+config CLOSURES
-+	bool
-+
- config HAS_IOMEM
- 	bool
- 	depends on !NO_IOMEM
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d5a4a4036d..6d97985e7e 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1397,6 +1397,15 @@ config DEBUG_CREDENTIALS
- 
- source "kernel/rcu/Kconfig.debug"
- 
-+config DEBUG_CLOSURES
-+	bool "Debug closures (bcache async widgits)"
-+	depends on CLOSURES
-+	select DEBUG_FS
-+	help
-+	Keeps all active closures in a linked list and provides a debugfs
-+	interface to list them, which makes it possible to see asynchronous
-+	operations that get stuck.
-+
- config DEBUG_WQ_FORCE_RR_CPU
- 	bool "Force round-robin CPU selection for unbound work items"
- 	depends on DEBUG_KERNEL
-diff --git a/lib/Makefile b/lib/Makefile
-index 18c2be516a..2003eda127 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -193,6 +193,8 @@ obj-$(CONFIG_ATOMIC64_SELFTEST) += atomic64_test.o
- 
- obj-$(CONFIG_CPU_RMAP) += cpu_rmap.o
- 
-+obj-$(CONFIG_CLOSURES) += closure.o
-+
- obj-$(CONFIG_CORDIC) += cordic.o
- 
- obj-$(CONFIG_DQL) += dynamic_queue_limits.o
-diff --git a/drivers/md/bcache/closure.c b/lib/closure.c
-similarity index 89%
-rename from drivers/md/bcache/closure.c
-rename to lib/closure.c
-index 73f5319295..46cfe4c382 100644
---- a/drivers/md/bcache/closure.c
-+++ b/lib/closure.c
-@@ -6,13 +6,12 @@
-  * Copyright 2012 Google, Inc.
+diff --git a/init/init_task.c b/init/init_task.c
+index c70ef656d0..92bbb6e909 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -115,6 +115,7 @@ struct task_struct init_task
+ 	},
+ 	.blocked	= {{0}},
+ 	.alloc_lock	= __SPIN_LOCK_UNLOCKED(init_task.alloc_lock),
++	.pagecache_lock = NULL,
+ 	.journal_info	= NULL,
+ 	INIT_CPU_TIMERS(init_task)
+ 	.pi_lock	= __RAW_SPIN_LOCK_UNLOCKED(init_task.pi_lock),
+diff --git a/mm/filemap.c b/mm/filemap.c
+index d78f577bae..93d7e0e686 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -113,6 +113,73 @@
+  *   ->tasklist_lock            (memory_failure, collect_procs_ao)
   */
  
-+#include <linux/closure.h>
- #include <linux/debugfs.h>
--#include <linux/module.h>
-+#include <linux/export.h>
- #include <linux/seq_file.h>
- #include <linux/sched/debug.h>
- 
--#include "closure.h"
--
- static inline void closure_put_after_sub(struct closure *cl, int flags)
++static void __pagecache_lock_put(struct pagecache_lock *lock, long i)
++{
++	BUG_ON(atomic_long_read(&lock->v) == 0);
++
++	if (atomic_long_sub_return_release(i, &lock->v) == 0)
++		wake_up_all(&lock->wait);
++}
++
++static bool __pagecache_lock_tryget(struct pagecache_lock *lock, long i)
++{
++	long v = atomic_long_read(&lock->v), old;
++
++	do {
++		old = v;
++
++		if (i > 0 ? v < 0 : v > 0)
++			return false;
++	} while ((v = atomic_long_cmpxchg_acquire(&lock->v,
++					old, old + i)) != old);
++	return true;
++}
++
++static void __pagecache_lock_get(struct pagecache_lock *lock, long i)
++{
++	wait_event(lock->wait, __pagecache_lock_tryget(lock, i));
++}
++
++void pagecache_add_put(struct pagecache_lock *lock)
++{
++	__pagecache_lock_put(lock, 1);
++}
++EXPORT_SYMBOL(pagecache_add_put);
++
++void pagecache_add_get(struct pagecache_lock *lock)
++{
++	__pagecache_lock_get(lock, 1);
++}
++EXPORT_SYMBOL(pagecache_add_get);
++
++void __pagecache_block_put(struct pagecache_lock *lock)
++{
++	__pagecache_lock_put(lock, -1);
++}
++EXPORT_SYMBOL(__pagecache_block_put);
++
++void __pagecache_block_get(struct pagecache_lock *lock)
++{
++	__pagecache_lock_get(lock, -1);
++}
++EXPORT_SYMBOL(__pagecache_block_get);
++
++void pagecache_block_put(struct pagecache_lock *lock)
++{
++	BUG_ON(current->pagecache_lock != lock);
++	current->pagecache_lock = NULL;
++	__pagecache_lock_put(lock, -1);
++}
++EXPORT_SYMBOL(pagecache_block_put);
++
++void pagecache_block_get(struct pagecache_lock *lock)
++{
++	__pagecache_lock_get(lock, -1);
++	BUG_ON(current->pagecache_lock);
++	current->pagecache_lock = lock;
++}
++EXPORT_SYMBOL(pagecache_block_get);
++
+ static void page_cache_delete(struct address_space *mapping,
+ 				   struct page *page, void *shadow)
  {
- 	int r = flags & CLOSURE_REMAINING_MASK;
-@@ -127,7 +126,7 @@ void __sched __closure_sync(struct closure *cl)
- }
- EXPORT_SYMBOL(__closure_sync);
+@@ -829,11 +896,14 @@ static int __add_to_page_cache_locked(struct page *page,
+ 	VM_BUG_ON_PAGE(PageSwapBacked(page), page);
+ 	mapping_set_update(&xas, mapping);
  
--#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-+#ifdef CONFIG_DEBUG_CLOSURES
- 
- static LIST_HEAD(closure_list);
- static DEFINE_SPINLOCK(closure_list_lock);
-@@ -158,8 +157,6 @@ void closure_debug_destroy(struct closure *cl)
- }
- EXPORT_SYMBOL(closure_debug_destroy);
- 
--static struct dentry *closure_debug;
--
- static int debug_seq_show(struct seq_file *f, void *data)
- {
- 	struct closure *cl;
-@@ -182,7 +179,7 @@ static int debug_seq_show(struct seq_file *f, void *data)
- 			seq_printf(f, " W %pS\n",
- 				   (void *) cl->waiting_on);
- 
--		seq_printf(f, "\n");
-+		seq_puts(f, "\n");
++	if (current->pagecache_lock != &mapping->add_lock)
++		pagecache_add_get(&mapping->add_lock);
++
+ 	if (!huge) {
+ 		error = mem_cgroup_try_charge(page, current->mm,
+ 					      gfp_mask, &memcg, false);
+ 		if (error)
+-			return error;
++			goto out;
  	}
  
- 	spin_unlock_irq(&closure_list_lock);
-@@ -201,18 +198,11 @@ static const struct file_operations debug_ops = {
- 	.release	= single_release
- };
- 
--void  __init closure_debug_init(void)
-+static int __init closure_debug_init(void)
- {
--	if (!IS_ERR_OR_NULL(bcache_debug))
--		/*
--		 * it is unnecessary to check return value of
--		 * debugfs_create_file(), we should not care
--		 * about this.
--		 */
--		closure_debug = debugfs_create_file(
--			"closures", 0400, bcache_debug, NULL, &debug_ops);
-+	debugfs_create_file("closures", 0400, NULL, NULL, &debug_ops);
-+	return 0;
+ 	get_page(page);
+@@ -869,14 +939,19 @@ static int __add_to_page_cache_locked(struct page *page,
+ 	if (!huge)
+ 		mem_cgroup_commit_charge(page, memcg, false, false);
+ 	trace_mm_filemap_add_to_page_cache(page);
+-	return 0;
++	error = 0;
++out:
++	if (current->pagecache_lock != &mapping->add_lock)
++		pagecache_add_put(&mapping->add_lock);
++	return error;
+ error:
+ 	page->mapping = NULL;
+ 	/* Leave page->index set: truncation relies upon it */
+ 	if (!huge)
+ 		mem_cgroup_cancel_charge(page, memcg, false);
+ 	put_page(page);
+-	return xas_error(&xas);
++	error = xas_error(&xas);
++	goto out;
  }
--#endif
-+late_initcall(closure_debug_init)
  
--MODULE_AUTHOR("Kent Overstreet <koverstreet@google.com>");
--MODULE_LICENSE("GPL");
-+#endif
+ /**
 -- 
 2.20.1
 
