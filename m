@@ -2,72 +2,70 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DF5C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFC1C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273D5206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A122C2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:35:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YF/qqa7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391223AbfFJPan (ORCPT
+        id S2390564AbfFJPfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:30:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:40690 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391204AbfFJPak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:30:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 08:30:39 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by FMSMGA003.fm.intel.com with ESMTP; 10 Jun 2019 08:30:39 -0700
-Message-ID: <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Mon, 10 Jun 2019 08:22:33 -0700
-In-Reply-To: <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
-         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
-         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
-         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
-         <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
+        Mon, 10 Jun 2019 11:35:54 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:37771 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390415AbfFJPfy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:35:54 -0400
+Received: by mail-ua1-f68.google.com with SMTP id z13so2929327uaa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 08:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8uh6CdMohZorEgVN9vXbSY/UeOknex/E8iFCG0M5wD8=;
+        b=YF/qqa7RPVilOMXhPggTQ2tpP/u5TBkNMkf0tWkNDuY71XiWzKl9NLQvhH3Yc9YH26
+         VUKd1InO3NfUJHMKYkTx5o+qwWpdkk/hXfKrXve3eDM/0L4UKXbC8gw8CgPDQPZjt+I5
+         eSAHC5TD/9yiJ0Zg2UzHjyeSga9rve4ZZNGF8RnOjZBy9eTLyiIV4AEeNtXMcO4zrvIy
+         vYIf0XEmyd6tEuSgEH8yuYT2nTVOCICSlZXbE2Nhf615F+EqfYJFAWd1ZWD1Q62pqVdO
+         Q4jI4iwBEBNfvr2+p2FesRQtB57J+Jt/Y/O2qK4THXTbXH5xok4FtX3G7a81IggvA9ZG
+         QGpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8uh6CdMohZorEgVN9vXbSY/UeOknex/E8iFCG0M5wD8=;
+        b=rHurR7rLFr/4Ewb+n+pNq1tTkEzjhGaSg7GSa9YwVdH317J99Fqgn3rPHarcNWPAyH
+         wePaKWIiqQWXGJ5h7Z09+2z9i01RrB8oa0qKW7vUvw93i/DSljnFlPqmQWbIH6IJl1mP
+         bRH7FP/NftFUPmmG6yuyh1tD74kyakztcNdOD51b2kGbevrDTVyRP8MTC+l8CCEAsI/y
+         WQxLMoyrR9BM2vEwZLNTDZpFyYkhbmZWvOJLWUDlbIGYq7Cocnb8phRsg7l3niiSTnEJ
+         49qjOst5OmMhJ3N9dUPvGHAFk9DSAfHGbDzpa8JXne9k2psYdCBiT7Nt9MvNrsjtcvR2
+         36+w==
+X-Gm-Message-State: APjAAAVt4cuZztDIqWP0wyQF10e74YOp7geSzgcPy1GDHCxPh542AQx4
+        hZKJ/tGy3tLsdutOG2C+7xhZnQ==
+X-Google-Smtp-Source: APXvYqyW9RNpBmY0FT2Gai4VoQlPQfeHqIXLI3ebTPQFn1eeym5qId9EdeBiL1wmZFiH0a1CNyFiNw==
+X-Received: by 2002:ab0:6896:: with SMTP id t22mr25091588uar.127.1560180953301;
+        Mon, 10 Jun 2019 08:35:53 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id z21sm2809391vsk.30.2019.06.10.08.35.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 08:35:52 -0700 (PDT)
+Message-ID: <1560180947.6132.67.camel@lca.pw>
+Subject: Re: [PATCH] locking/lockdep: Fix lock IRQ usage initialization bug
+From:   Qian Cai <cai@lca.pw>
+To:     Yuyang Du <duyuyang@gmail.com>, peterz@infradead.org,
+        will.deacon@arm.com, mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Mon, 10 Jun 2019 11:35:47 -0400
+In-Reply-To: <20190610055258.6424-1-duyuyang@gmail.com>
+References: <20190610055258.6424-1-duyuyang@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,79 +73,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 13:43 -0700, Andy Lutomirski wrote:
-> > On Jun 7, 2019, at 12:49 PM, Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
-> > 
-> > On Fri, 2019-06-07 at 11:29 -0700, Andy Lutomirski wrote:
-> > > > On Jun 7, 2019, at 10:59 AM, Dave Hansen <dave.hansen@intel.com> wrote:
-> > > > 
-> > > > > On 6/7/19 10:43 AM, Peter Zijlstra wrote:
-> > > > > I've no idea what the kernel should do; since you failed to answer the
-> > > > > question what happens when you point this to garbage.
-> > > > > 
-> > > > > Does it then fault or what?
-> > > > 
-> > > > Yeah, I think you'll fault with a rather mysterious CR2 value since
-> > > > you'll go look at the instruction that faulted and not see any
-> > > > references to the CR2 value.
-> > > > 
-> > > > I think this new MSR probably needs to get included in oops output when
-> > > > CET is enabled.
-> > > 
-> > > This shouldn’t be able to OOPS because it only happens at CPL 3,
-> > > right?  We
-> > > should put it into core dumps, though.
-> > > 
-> > > > 
-> > > > Why don't we require that a VMA be in place for the entire bitmap?
-> > > > Don't we need a "get" prctl function too in case something like a JIT is
-> > > > running and needs to find the location of this bitmap to set bits
-> > > > itself?
-> > > > 
-> > > > Or, do we just go whole-hog and have the kernel manage the bitmap
-> > > > itself. Our interface here could be:
-> > > > 
-> > > >   prctl(PR_MARK_CODE_AS_LEGACY, start, size);
-> > > > 
-> > > > and then have the kernel allocate and set the bitmap for those code
-> > > > locations.
-> > > 
-> > > Given that the format depends on the VA size, this might be a good
-> > > idea.  I
-> > > bet we can reuse the special mapping infrastructure for this — the VMA
-> > > could
-> > > be a MAP_PRIVATE special mapping named [cet_legacy_bitmap] or similar, and
-> > > we
-> > > can even make special rules to core dump it intelligently if needed.  And
-> > > we
-> > > can make mremap() on it work correctly if anyone (CRIU?) cares.
-> > > 
-> > > Hmm.  Can we be creative and skip populating it with zeros?  The CPU
-> > > should
-> > > only ever touch a page if we miss an ENDBR on it, so, in normal operation,
-> > > we
-> > > don’t need anything to be there.  We could try to prevent anyone from
-> > > *reading* it outside of ENDBR tracking if we want to avoid people
-> > > accidentally
-> > > wasting lots of memory by forcing it to be fully populated when the read
-> > > it.
-> > > 
-> > > The one downside is this forces it to be per-mm, but that seems like a
-> > > generally reasonable model anyway.
-> > > 
-> > > This also gives us an excellent opportunity to make it read-only as seen
-> > > from
-> > > userspace to prevent exploits from just poking it full of ones before
-> > > redirecting execution.
-> > 
-> > GLIBC sets bits only for legacy code, and then makes the bitmap read-
-> > only.  That
-> > avoids most issues:
+On Mon, 2019-06-10 at 13:52 +0800, Yuyang Du wrote:
+> The commit:
 > 
-> How does glibc know the linear address space size?  We don’t want LA64 to
-> break old binaries because the address calculation changed.
+>   091806515124b20 ("locking/lockdep: Consolidate lock usage bit
+> initialization")
+> 
+> misses marking LOCK_USED flag at IRQ usage initialization when
+> CONFIG_TRACE_IRQFLAGS
+> or CONFIG_PROVE_LOCKING is not defined. Fix it.
+> 
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 
-When an application starts, its highest stack address is determined.
-It uses that as the maximum the bitmap needs to cover.
-
-Yu-cheng
+It works fine.
