@@ -2,193 +2,149 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CD5C28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B61C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A85120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kJwSbhsw"
+	by mail.kernel.org (Postfix) with ESMTP id EE94C2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560171527;
+	bh=ori1GFesj1z5JPxLlfpKYaJLocajgiy9syaphmuaIwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LZGe584PNnvz7ltvQk69Jw97qXLmSzFRfoH9MFP7ZWsN2CAubChQmFaBovVHN/vT7
+	 jLAELKfpNYjMMkjUx0ok2sC4WudE+51CcbrFlDMVz0DQ/0TthDuUFWFdf8mbk+Q4Lo
+	 Jg25+KUG3bGQNCHPMwt4e2RQEQpAWwXiehq4gRmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390197AbfFJM6d (ORCPT
+        id S2390208AbfFJM6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 08:58:33 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41233 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389309AbfFJM6c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 08:58:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 136so6550874lfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 05:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7DLFQ8by/jV1+O/LDvQ3huJEjoQ4sVNIYrRFls+hbxg=;
-        b=kJwSbhswbKbQHzM85JPdk5WWpRJM3BNteN454cZjnKRT4+2cK1IwcgVbguNeugjWKU
-         anfYSptxIdmrRV7MDJsWRwyVls6QGDNJe5RT+rmXTGCG/V7I4ey08t14jgw3CqDZdqaM
-         4iETn+6dLcyFpjEoplS3FYXNzJi3sRorfA74TrLC+x6NxDVEIZqzxw7UcdmfBUQRlhlD
-         XI6GJjZNM0hgCsW6GDaj6cyDatbRJLDB/QZwR6Hjgxqcihk9ghBmHeWACTK2zvqac68v
-         dsnJZUC75L3rxuEyKrjXMpty88ykkZ7ebW3xpLMPpt/RQC6Pk3NpgulvKjx1FFOGfJXq
-         0hQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7DLFQ8by/jV1+O/LDvQ3huJEjoQ4sVNIYrRFls+hbxg=;
-        b=f81xaamiHdxEstUKwN6TdVoJ97fZsJZFf7s6IYt1o7915zMoM1RrunfAVMI/NPh7uy
-         qBjj/VB28I8aOS5TwEZxDmBntGGWtzwx23BQmq1Z36h2RmGYOUiYGbxfXjftuzmMw+IZ
-         cEWzzOwY3bQmaeFz9GkbB2b3/kC4Tif1qg7Y9kbQL6z9C6kADUTo/tSkVYMyPHzxRqZE
-         KX68OCL+JxOYXqpUJlIIe7hVdRd9mLE17t8yhm+T7IsDBO7ZMMZcJGByWXxEic2HKFAW
-         tT98z1S1LkfmfqvNBKw/87HYq3uCQfKorvsyxfncXEwUR7SaAyXrzBKXHWTZ52eVMcpL
-         XBkQ==
-X-Gm-Message-State: APjAAAURHSxcMSCr1aXmt9OqOhn71uPOwarbC7nm6nghHHE8VcvqLO0C
-        njHKGiwodu16sgIuEjs18/D/5kkSUK3f+i5A2Iuoxw==
-X-Google-Smtp-Source: APXvYqw+d2TzVaMlkIN2DtQbw9EMUt0fHjzFymluDcPEIw5oOSKylqjj5JhidkPvvSMbBAUtXjailq7IiV0LAj261QA=
-X-Received: by 2002:ac2:4d17:: with SMTP id r23mr28592327lfi.130.1560171510009;
- Mon, 10 Jun 2019 05:58:30 -0700 (PDT)
+        Mon, 10 Jun 2019 08:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389309AbfFJM6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 08:58:45 -0400
+Received: from localhost (unknown [122.167.93.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E91820859;
+        Mon, 10 Jun 2019 12:58:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560171524;
+        bh=ori1GFesj1z5JPxLlfpKYaJLocajgiy9syaphmuaIwM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GnWLKFhA5w0ZZr8qk8930e1Mxl1MClV2NU90ZUGw1xN1H1olHZ1Zuds0d/1CcT0sU
+         uKoklkGofDHQKG9rXaEggUhFaLjU90713fBXOcPyevwLPc7pgNOq0FiDDJJzPeRsiS
+         38x557aSB/KmmgqA1uJHj15FMIsdHkMZoIhKlDt8=
+Date:   Mon, 10 Jun 2019 18:25:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     yibin.gong@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
+        festevam@gmail.com, dan.j.williams@intel.com,
+        u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com,
+        l.stach@pengutronix.de, will.deacon@arm.com,
+        linux-spi@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 15/15] dmaengine: imx-sdma: add uart rom script
+Message-ID: <20190610125534.GQ9160@vkoul-mobl.Dlink>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+ <20190610081753.11422-16-yibin.gong@nxp.com>
 MIME-Version: 1.0
-References: <20190606094657.23612-1-anders.roxell@linaro.org> <20190606071052.412a766d@coco.lan>
-In-Reply-To: <20190606071052.412a766d@coco.lan>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Mon, 10 Jun 2019 14:58:18 +0200
-Message-ID: <CADYN=9K0k30U5Uov3RHuSQAe2hfdVCWayWHmVdzQ9umD8Mpi-A@mail.gmail.com>
-Subject: Re: [PATCH 0/8] fix warnings for same module names
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        marex@denx.de, stefan@agner.ch, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, b.zolnierkie@samsung.com,
-        a.hajda@samsung.com, p.zabel@pengutronix.de, hkallweit1@gmail.com,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fbdev@vger.kernel.org, linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610081753.11422-16-yibin.gong@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Jun 2019 at 12:11, Mauro Carvalho Chehab <mchehab@kernel.org> wrote:
->
-> Em Thu,  6 Jun 2019 11:46:57 +0200
-> Anders Roxell <anders.roxell@linaro.org> escreveu:
->
-> > Hi,
-> >
-> > This patch set addresses warnings that module names are named the
-> > same, this may lead to a problem that wrong module gets loaded or if one
-> > of the two same-name modules exports a symbol, this can confuse the
-> > dependency resolution. and the build may fail.
-> >
-> >
-> > Patch "drivers: net: dsa: realtek: fix warning same module names" and
-> > "drivers: net: phy: realtek: fix warning same module names" resolves the
-> > name clatch realtek.ko.
-> >
-> > warning: same module names found:
-> >   drivers/net/phy/realtek.ko
-> >   drivers/net/dsa/realtek.ko
-> >
-> >
-> > Patch  "drivers: (video|gpu): fix warning same module names" resolves
-> > the name clatch mxsfb.ko.
-> >
-> > warning: same module names found:
-> >   drivers/video/fbdev/mxsfb.ko
-> >   drivers/gpu/drm/mxsfb/mxsfb.ko
-> >
-> > Patch "drivers: media: i2c: fix warning same module names" resolves the
-> > name clatch adv7511.ko however, it seams to refer to the same device
-> > name in i2c_device_id, does anyone have any guidance how that should be
-> > solved?
-> >
-> > warning: same module names found:
-> >   drivers/gpu/drm/bridge/adv7511/adv7511.ko
-> >   drivers/media/i2c/adv7511.ko
-> >
-> >
-> > Patch "drivers: media: coda: fix warning same module names" resolves the
-> > name clatch coda.ko.
-> >
-> > warning: same module names found:
-> >   fs/coda/coda.ko
-> >   drivers/media/platform/coda/coda.ko
->
-> Media change look ok, and probably the other patches too, but the
-> problem here is: who will apply it and when.
->
-> The way you grouped the changes makes harder for subsystem maintainers
-> to pick, as the same patch touches multiple subsystems.
->
-> On the other hand, if this gets picked by someone else, it has the
-> potential to cause conflicts between linux-next and the maintainer's
-> tree.
->
-> So, the best would be if you re-arrange this series to submit one
-> patch per subsystem.
+On 10-06-19, 16:17, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> For the compatibility of NXP internal legacy kernel before 4.19 which
+> is based on uart ram script and upstreaming kernel based on uart rom
+> script, add both uart ram/rom script in latest sdma firmware. By default
+> uart rom script used.
+> Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
+> back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
+> 
+> rom script:
+> 	uart_2_mcu_addr
+> 	uartsh_2_mcu_addr /* through spba bus */
+> ram script:
+> 	uart_2_mcu_ram_addr
+> 	uartsh_2_mcu_ram_addr /* through spba bus */
+> 
+> Please get latest sdma firmware from the below and put them into the path
+> (/lib/firmware/imx/sdma/):
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+> /tree/imx/sdma
 
-I will send it per subsystem.
+How does this work with folks have older firmware?
 
-Cheers,
-Anders
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  drivers/dma/imx-sdma.c                     |  4 ++--
+>  include/linux/platform_data/dma-imx-sdma.h | 10 ++++++++--
+>  2 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index f7c150d..deea9aa 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -1733,8 +1733,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
+>  
+>  #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
+>  #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
+> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
+> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
+>  
+>  static void sdma_add_scripts(struct sdma_engine *sdma,
+>  		const struct sdma_script_start_addrs *addr)
+> diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+> index f794fee..e12d2e8 100644
+> --- a/include/linux/platform_data/dma-imx-sdma.h
+> +++ b/include/linux/platform_data/dma-imx-sdma.h
+> @@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
+>  	s32 per_2_firi_addr;
+>  	s32 mcu_2_firi_addr;
+>  	s32 uart_2_per_addr;
+> -	s32 uart_2_mcu_addr;
+> +	s32 uart_2_mcu_ram_addr;
+>  	s32 per_2_app_addr;
+>  	s32 mcu_2_app_addr;
+>  	s32 per_2_per_addr;
+>  	s32 uartsh_2_per_addr;
+> -	s32 uartsh_2_mcu_addr;
+> +	s32 uartsh_2_mcu_ram_addr;
+>  	s32 per_2_shp_addr;
+>  	s32 mcu_2_shp_addr;
+>  	s32 ata_2_mcu_addr;
+> @@ -52,7 +52,13 @@ struct sdma_script_start_addrs {
+>  	s32 zcanfd_2_mcu_addr;
+>  	s32 zqspi_2_mcu_addr;
+>  	s32 mcu_2_ecspi_addr;
+> +	s32 mcu_2_sai_addr;
+> +	s32 sai_2_mcu_addr;
+> +	s32 uart_2_mcu_addr;
+> +	s32 uartsh_2_mcu_addr;
+>  	/* End of v3 array */
+> +	s32 mcu_2_zqspi_addr;
+> +	/* End of v4 array */
+>  };
+>  
+>  /**
+> -- 
+> 2.7.4
 
->
->
-> >
-> >
-> > Patch "drivers: net: phy: fix warning same module names" resolves the
-> > name clatch asix.ko.
-> >
-> > warning: same module names found:
-> >   drivers/net/phy/asix.ko
-> >   drivers/net/usb/asix.ko
-> >
-> > Patch "drivers: mfd: 88pm800: fix warning same module names" and
-> > "drivers: regulator: 88pm800: fix warning same module names" resolves
-> > the name clatch 88pm800.ko.
-> >
-> > warning: same module names found:
-> >   drivers/regulator/88pm800.ko
-> >   drivers/mfd/88pm800.ko
-> >
-> >
-> > Cheers,
-> > Anders
-> >
-> > Anders Roxell (8):
-> >   drivers: net: dsa: realtek: fix warning same module names
-> >   drivers: net: phy: realtek: fix warning same module names
-> >   drivers: (video|gpu): fix warning same module names
-> >   drivers: media: i2c: fix warning same module names
-> >   drivers: media: coda: fix warning same module names
-> >   drivers: net: phy: fix warning same module names
-> >   drivers: mfd: 88pm800: fix warning same module names
-> >   drivers: regulator: 88pm800: fix warning same module names
-> >
-> >  drivers/gpu/drm/bridge/adv7511/Makefile | 10 +++++-----
-> >  drivers/gpu/drm/mxsfb/Makefile          |  4 ++--
-> >  drivers/media/i2c/Makefile              |  3 ++-
-> >  drivers/media/platform/coda/Makefile    |  4 ++--
-> >  drivers/mfd/Makefile                    |  7 +++++--
-> >  drivers/net/dsa/Makefile                |  4 ++--
-> >  drivers/net/phy/Makefile                |  6 ++++--
-> >  drivers/regulator/Makefile              |  3 ++-
-> >  drivers/video/fbdev/Makefile            |  3 ++-
-> >  9 files changed, 26 insertions(+), 18 deletions(-)
-> >
->
->
->
-> Thanks,
-> Mauro
+-- 
+~Vinod
