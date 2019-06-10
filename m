@@ -2,128 +2,263 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADC9C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBDAC28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07EAF20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3D320859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390565AbfFJNvT (ORCPT
+        id S2390573AbfFJNv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 09:51:19 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:43071 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390306AbfFJNvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:51:18 -0400
-X-Originating-IP: 90.88.159.246
-Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 22AD7E0004;
-        Mon, 10 Jun 2019 13:51:09 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 15:51:09 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset
- GPIO
-Message-ID: <20190610135109.7alkvruvw2jbtwph@flea>
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609204510.GB8247@lunn.ch>
- <20190610114700.tymqzzax334ahtz4@flea>
- <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
+        Mon, 10 Jun 2019 09:51:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:43428 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390306AbfFJNv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 09:51:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0F17344;
+        Mon, 10 Jun 2019 06:51:56 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5A8D3F557;
+        Mon, 10 Jun 2019 06:51:51 -0700 (PDT)
+Subject: Re: [RFC 1/2] irqchip: irq-imx-gpcv2: Add workaround for i.MX8MQ
+ ERR11171
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Abel Vesa <abelvesa@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Carlo Caione <ccaione@baylibre.com>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <20190610121346.15779-2-abel.vesa@nxp.com>
+ <7d8a537d-7883-196a-bcb3-7ee36117074a@arm.com>
+ <20190610133830.iruld46dgb2gvnx5@fsr-ub1664-175>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <44ce3775-29d2-8f17-9410-1896d6385e4d@arm.com>
+Date:   Mon, 10 Jun 2019 14:51:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hlwqgl7jkkjm4sqs"
-Content-Disposition: inline
-In-Reply-To: <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190610133830.iruld46dgb2gvnx5@fsr-ub1664-175>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/06/2019 14:38, Abel Vesa wrote:
+> On 19-06-10 14:24:11, Marc Zyngier wrote:
+>> Abel,
+>>
+>> On 10/06/2019 13:13, Abel Vesa wrote:
+>>> i.MX8MQ is missing the wake_request signals from GIC to GPCv2. This indirectly
+>>> breaks cpuidle support due to inability to wake target cores on IPIs.
+>>>
+>>> Here is the link to the errata (see e11171):
+>>>
+>>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX8MDQLQ_0N14W.pdf&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Ce23f69dbe37c4e83d7ab08d6eda6f062%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C636957698629664098&amp;sdata=tAFuqTJBWiSbeoUv8gqA9vQfeWAklCv3t4qk0RLJQKM%3D&amp;reserved=0
+>>>
+>>> Now, in order to fix this, we can trigger IRQ 32 (hwirq 0) to all the cores by
+>>> setting 12th bit in IOMUX_GPR1 register. In order to control the target cores
+>>> only, that is, not waking up all the cores every time, we can unmask/mask the
+>>> IRQ 32 in the first GPC IMR register. So basically we can leave the IOMUX_GPR1
+>>> 12th bit always set and just play with the masking and unmasking the IRO 32 for
+>>> each independent core.
+>>>
+>>> Since EL3 is the one that deals with powering down/up the cores, and since the
+>>> cores wake up in EL3, EL3 should be the one to control the IMRs in this case.
+>>> This implies we need to get into EL3 on every IPI to do the unmasking, leaving
+>>> the masking to be done on the power-up sequence by the core itself.
+>>>
+>>> In order to be able to get into EL3 on each IPI, we 'hijack' the registered smp
+>>> cross call handler, in this case the gic_raise_softirq which is registered by
+>>> the irq-gic-v3 driver and register our own handler instead. This new handler is
+>>> basically a wrapper over the hijacked handler plus the call into EL3.
+>>>
+>>> To get into EL3, we use a custom vendor SIP id added just for this purpose.
+>>>
+>>> All of this is conditional for i.MX8MQ only.
+>>>
+>>> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+>>> ---
+>>>  drivers/irqchip/irq-imx-gpcv2.c | 42 +++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 42 insertions(+)
+>>>
+>>> diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
+>>> index 66501ea..b921105 100644
+>>> --- a/drivers/irqchip/irq-imx-gpcv2.c
+>>> +++ b/drivers/irqchip/irq-imx-gpcv2.c
+>>> @@ -6,11 +6,19 @@
+>>>   * published by the Free Software Foundation.
+>>>   */
+>>>  
+>>> +#include <linux/arm-smccc.h>
+>>> +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+>>> +#include <linux/mfd/syscon.h>
+>>>  #include <linux/of_address.h>
+>>>  #include <linux/of_irq.h>
+>>> +#include <linux/regmap.h>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/irqchip.h>
+>>>  #include <linux/syscore_ops.h>
+>>> +#include <linux/smp.h>
+>>> +
+>>> +#define IMX_SIP_GPC		0xC2000004
+>>> +#define IMX_SIP_GPC_CORE_WAKE	0x00
+>>>  
+>>>  #define IMR_NUM			4
+>>>  #define GPC_MAX_IRQS            (IMR_NUM * 32)
+>>> @@ -73,6 +81,37 @@ static struct syscore_ops imx_gpcv2_syscore_ops = {
+>>>  	.resume		= gpcv2_wakeup_source_restore,
+>>>  };
+>>>  
+>>> +static void (*__gic_v3_smp_cross_call)(const struct cpumask *, unsigned int);
+>>> +
+>>> +static void imx_gpcv2_raise_softirq(const struct cpumask *mask,
+>>> +					  unsigned int irq)
+>>> +{
+>>> +	struct arm_smccc_res res;
+>>> +
+>>> +	/* call the hijacked smp cross call handler */
+>>> +	__gic_v3_smp_cross_call(mask, irq);
+>>
+>> I'm feeling a bit sick... :-(
+>>
+>>> +
+>>> +	/* now call into EL3 and take care of the wakeup */
+>>> +	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_GPC_CORE_WAKE,
+>>> +			*cpumask_bits(mask), 0, 0, 0, 0, 0, &res);
+>>
+>> There is a number of things that look wrong here:
+>>
+>> - What guarantees that this SMC call actually exists? The DT itself just
+>> says that this is broken, and not much about EL3.
+> 
+> OK, that's easy to fix.
 
---hlwqgl7jkkjm4sqs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sure. How?
 
-Hi Martin,
+> 
+>>
+>> - What guarantees that the cpumask matches the physical layout? I could
+>> have booted via kexec, and logical CPU0 is now physical CPU3.
+>>
+> 
+> Fair point. I didn't think of that. Will have to put some thought into it.
+> 
+>> - What if you have more than 64 CPUs? Probably not a big deal for this
+>> particular instance, but I fully expect people to get it wrong again on
+>> the next iteration if we "fix" it for them.
+> 
+> That will never be the case. This is done in the irq-imx-gpcv2, so it
+> won't be used by any other platform. It's just a workaround for the 
+> gpcv2.
 
-On Mon, Jun 10, 2019 at 02:31:17PM +0200, Martin Blumenstingl wrote:
-> On Mon, Jun 10, 2019 at 1:47 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > Hi Andrew,
-> >
-> > On Sun, Jun 09, 2019 at 10:45:10PM +0200, Andrew Lunn wrote:
-> > > > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
-> > > > "Always leave the campground cleaner than you found it."
-> > >
-> > > > I
-> > > > am also looking for suggestions how to handle these cross-tree changes
-> > > > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
-> > > > go through the net-next tree. I will re-send patch #5 separately as
-> > > > this should go through Kevin's linux-amlogic tree).
-> > >
-> > > Patches 1 and 4 don't seem to have and dependencies. So i would
-> > > suggest splitting them out and submitting them to netdev for merging
-> > > independent of the rest.
-> >
-> > Jumping on the occasion of that series. These properties have been
-> > defined to deal with phy reset, while it seems that the PHY core can
-> > now handle that pretty easily through generic properties.
-> >
-> > Wouldn't it make more sense to just move to that generic properties
-> > that already deals with the flags properly?
-> thank you for bringing this up!
-> if anyone else (just like me) doesn't know about it, there are generic
-> bindings defined here: [0]
->
-> I just tested this on my X96 Max by defining the following properties
-> inside the PHY node:
->   reset-delay-us = <10000>;
->   reset-assert-us = <10000>;
->   reset-deassert-us = <10000>;
->   reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
->
-> that means I don't need any stmmac patches which seems nice.
+"never"? That's a pretty strong statement. Given that the same IP has
+been carried across a number of implementations, I fully expect imx9 (or
+whatever the next generation is labeled) to use the same stuff.
 
-I'm glad it works for you :)
+> 
+>>
+>> - How does it work on a 32bit kernel, when firmware advertises a SMC64 call?
+>>
+> 
+> This is also easy to fix.
+> 
+>> And also:
+>>
+>> - IMX_SIP_GMC doesn't strike me as a very distinctive name. It certainly
+>> doesn't say *which* SiP is responsible for this wonderful thing. I
+>> understand that they would like to stay anonymous, but still...
+>>
+> 
+> Fair point. The idea is to have a class of SIPs just for the GPC needed actions.
 
-> instead I can submit a patch to mark the snps,reset-gpio properties in
-> the dt-bindings deprecated (and refer to the generic bindings instead)
-> what do you think?
+I don't know what meaning you give to the "SIP" acronym, but the SMCCC
+documentation clearly has a different definition:
 
-I already did as part of the binding reworks I did earlier today:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2019-June/658427.html
+"SiP	: Silicon Partner. In this document, the silicon manufacturer."
 
-Maxime
+What I'm asking for is that the silicon vendor's name to be clearly
+spoken out.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> One thing that will come in the near future is the move of all the IMR 
+> (Interrupt Mask Register) control (which is part of the GPC) to TF-A.
+> This IMX_SIP_GPC will be extended then to every action required by the IMR
+> and so on. Remember, GPC is more than a power controller. It's an irqchip
+> too.
+> 
+>> - It isn't clear what you gain from relying on the kernel to send the
+>> SGI, while you could do the whole thing at EL3.
+> 
+> OK, how would you suggest to wake a core on an IPI from EL3 ?
 
---hlwqgl7jkkjm4sqs
-Content-Type: application/pgp-signature; name="signature.asc"
+Erm... By writing to the ICC_SGI1R_EL1 system register, directly from
+EL3, just before you apply your workaround?
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP5gTQAKCRDj7w1vZxhR
-xTX2AQDErQs37AlgMjoegkuBtrfya5ARL23dKC2yJPk5bFAPIQEA8brM32gT3g4u
-5bbyMYmku0KJTlZo2bHr8P+VKtd70A0=
-=Jc07
------END PGP SIGNATURE-----
-
---hlwqgl7jkkjm4sqs--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
