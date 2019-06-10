@@ -2,117 +2,82 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5E6C468BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 03:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1966AC468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 03:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B49420820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 03:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F2D20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 03:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387560AbfFJDpO (ORCPT
+        id S2387604AbfFJDu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 23:45:14 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:24926 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387457AbfFJDpN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 23:45:13 -0400
-X-UUID: b2bb53f8932f442ca9a3f478ae319eea-20190610
-X-UUID: b2bb53f8932f442ca9a3f478ae319eea-20190610
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 740195698; Mon, 10 Jun 2019 11:44:56 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 10 Jun 2019 11:44:54 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 10 Jun 2019 11:44:55 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, <stable@vger.kernel.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Biao Huang <biao.huang@mediatek.com>
-Subject: [RFC v1] clk: core: support clocks that need to be enabled during re-parent
-Date:   Mon, 10 Jun 2019 11:44:53 +0800
-Message-ID: <1560138293-4163-1-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Sun, 9 Jun 2019 23:50:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54932 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387457AbfFJDu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 23:50:58 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D9A5D3082B15;
+        Mon, 10 Jun 2019 03:50:57 +0000 (UTC)
+Received: from [10.72.12.206] (ovpn-12-206.pek2.redhat.com [10.72.12.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1AB5660BEC;
+        Mon, 10 Jun 2019 03:50:46 +0000 (UTC)
+Subject: Re: [PATCH net-next 0/6] vhost: accelerate metadata access
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, James.Bottomley@hansenpartnership.com,
+        hch@infradead.org, davem@davemloft.net, jglisse@redhat.com,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-parisc@vger.kernel.org, christophe.de.dinechin@gmail.com,
+        jrdr.linux@gmail.com
+References: <20190524081218.2502-1-jasowang@redhat.com>
+ <20190605162631-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <c233324c-cb66-c0ab-45c4-6e6e0499bb22@redhat.com>
+Date:   Mon, 10 Jun 2019 11:50:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20190605162631-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 10 Jun 2019 03:50:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using property assigned-clock-parents to assign parent clocks,
-core clocks might still be disabled during re-parent.
-Add flag 'CLK_OPS_CORE_ENABLE' for those clocks must be enabled
-during re-parent.
 
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
----
- drivers/clk/clk.c            | 9 +++++++++
- include/linux/clk-provider.h | 1 +
- 2 files changed, 10 insertions(+)
+On 2019/6/6 上午4:27, Michael S. Tsirkin wrote:
+> On Fri, May 24, 2019 at 04:12:12AM -0400, Jason Wang wrote:
+>> Hi:
+>>
+>> This series tries to access virtqueue metadata through kernel virtual
+>> address instead of copy_user() friends since they had too much
+>> overheads like checks, spec barriers or even hardware feature
+>> toggling like SMAP. This is done through setup kernel address through
+>> direct mapping and co-opreate VM management with MMU notifiers.
+>>
+>> Test shows about 23% improvement on TX PPS. TCP_STREAM doesn't see
+>> obvious improvement.
+>>
+>> Thanks
+> Thanks this is queued for next.
+>
+> Did you want to rebase and repost packed ring support on top?
+> IIUC it's on par with split ring with these patches.
+>
+>
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 443711f..b2e6fe3 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -1717,6 +1717,10 @@ static struct clk_core *__clk_set_parent_before(struct clk_core *core,
- 		clk_core_prepare_enable(parent);
- 	}
- 
-+	/* enable core if CLK_OPS_CORE_ENABLE is set */
-+	if (core->flags & CLK_OPS_CORE_ENABLE)
-+		clk_core_prepare_enable(core);
-+
- 	/* migrate prepare count if > 0 */
- 	if (core->prepare_count) {
- 		clk_core_prepare_enable(parent);
-@@ -1744,6 +1748,10 @@ static void __clk_set_parent_after(struct clk_core *core,
- 		clk_core_disable_unprepare(old_parent);
- 	}
- 
-+	/* re-balance ref counting if CLK_OPS_CORE_ENABLE is set */
-+	if (core->flags & CLK_OPS_CORE_ENABLE)
-+		clk_core_disable_unprepare(core);
-+
- 	/* re-balance ref counting if CLK_OPS_PARENT_ENABLE is set */
- 	if (core->flags & CLK_OPS_PARENT_ENABLE) {
- 		clk_core_disable_unprepare(parent);
-@@ -2973,6 +2981,7 @@ static int clk_dump_show(struct seq_file *s, void *data)
- 	ENTRY(CLK_IS_CRITICAL),
- 	ENTRY(CLK_OPS_PARENT_ENABLE),
- 	ENTRY(CLK_DUTY_CYCLE_PARENT),
-+	ENTRY(CLK_OPS_CORE_ENABLE),
- #undef ENTRY
- };
- 
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index bb6118f..39a1fed 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -34,6 +34,7 @@
- #define CLK_OPS_PARENT_ENABLE	BIT(12)
- /* duty cycle call may be forwarded to the parent clock */
- #define CLK_DUTY_CYCLE_PARENT	BIT(13)
-+#define CLK_OPS_CORE_ENABLE	BIT(14)	/* core need enable during re-parent */
- 
- struct clk;
- struct clk_hw;
--- 
-1.8.1.1.dirty
+Yes, it's on the way.
+
+Thanks
 
