@@ -2,87 +2,116 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96D8C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34E8C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F8B208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560204104;
-	bh=cM+J0IxraqOeDKfno/APqmDwhBPo2pavmzkaa99k+58=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=RYxAWkJ7mATIEtrJYeJ7OELV5+UXAFqM6ZcILwJ/XNfu8ZX562PYe5HrseCN3WuPo
-	 wkDf57ZVIdcAei91YOzlyXV1pd5dCIEwtIR4s61hWvAyf1Mq0KhfnpP9BQ8INa+a7z
-	 4kKZ6xSYskz122tpyzq/2Bp14OU45T/goQLX2hzs=
+	by mail.kernel.org (Postfix) with ESMTP id 96BF22086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kc5jwzAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbfFJWBo (ORCPT
+        id S1728827AbfFJWBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 18:01:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbfFJWBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 18:01:43 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8253C20820;
-        Mon, 10 Jun 2019 22:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560204103;
-        bh=cM+J0IxraqOeDKfno/APqmDwhBPo2pavmzkaa99k+58=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=c6p0cUJm7UDjFfELpCJlvq0G2GfwthOD/h6HzSyQtUL9LL2tEU8a33DS+9HACnZep
-         KhKv2rgB/G3Zq2h9Aw46GtbkbJnzIz9HO+LqjjvIeKnL5q5qM1iLYqyKRgFJuA4gFe
-         Icd16UNU2Jt6gZullLis5wp0UmS8JeSUCv6I+mb8=
-Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190609164127.541128197@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <6708fcff-8a84-5756-bc68-0de47397ab91@kernel.org>
-Date:   Mon, 10 Jun 2019 16:01:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 18:01:47 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43827 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728453AbfFJWBq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 18:01:46 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so5726794pgv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 15:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LW8NlLySeRobf2Ci7HrTXkKdA8X2Rlykte27NhFtAPM=;
+        b=Kc5jwzAtTkGRKlstomNioaLlQ8J9mk8zkp5jLofb9ds2NEOxowbB/Yj9N9oCRokEGi
+         kjyG9XuTfOcfr3i9YzvY3g4TV22KQjxGIT4JxrRc3lGLcmlciBmsEqG5Bwaqhc3zyGpU
+         uAN/pDTYnp07GWZaAk1DT3YROR6eL/qD1kD8w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LW8NlLySeRobf2Ci7HrTXkKdA8X2Rlykte27NhFtAPM=;
+        b=IXd8MzLwqsWaT1hUBLY9PiFje7nCWeiNK/sfM4dpWcyS6PnWNPQDkOXSRyzo6xIO/X
+         fibrDwjykiXEwczgM/W+iGjr+QN6uNWpllW96p08GRWyxJ3I24eTINEYDhLiQ0dCT57v
+         yI6yJmlGkyxob2c0rvt1hkarR9L/epw3nyhPKCww1stqkdyCGFnLCppsRLYkJyHy6plJ
+         gE5BZIONanLHhVBYmPW8i3vyEJBC27U5ZfE3HtMBH+fRGNJ4A+mD7e+VsCwL7ep1+FL2
+         3/StppCOpkG90al8E4HGrf0Tmd0BtRMxUenuhwjYBK4v5dHJ7ajG1KMMwBa2828gjlSs
+         tDtw==
+X-Gm-Message-State: APjAAAXPZa5LzRVcvD85tmF29rQK8RCr0LpDQVT0+pc1E2kvG3hGPhAb
+        9rH1JnjFARFfqfCRKJzUwsD8XKdXGcM=
+X-Google-Smtp-Source: APXvYqxUuLi8u3xAFJfZU+6XKRwyLqRF6/SeEB3k4EL3uemfhDVPFi1PaYsXAtwRciV4o1p3pnpfxA==
+X-Received: by 2002:a62:d0:: with SMTP id 199mr45569170pfa.253.1560204106256;
+        Mon, 10 Jun 2019 15:01:46 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id s5sm403489pji.9.2019.06.10.15.01.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 15:01:45 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>
+Cc:     groeck@chromium.org, Vadim Sukhomlinov <sukhomlinov@google.com>,
+        apronin@chromium.org, mka@chromium.org, swboyd@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org
+Subject: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+Date:   Mon, 10 Jun 2019 15:01:18 -0700
+Message-Id: <20190610220118.5530-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 MIME-Version: 1.0
-In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/19 10:41 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.9 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.9-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+From: Vadim Sukhomlinov <sukhomlinov@google.com>
 
-Compiled and booted on my test system. No dmesg regressions.
+TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+future TPM operations. TPM 1.2 behavior was different, future TPM
+operations weren't disabled, causing rare issues. This patch ensures
+that future TPM operations are disabled.
 
-thanks,
--- Shuah
+Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+[dianders: resolved merge conflicts with mainline]
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/char/tpm/tpm-chip.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 8804c9e916fd..f566fa8bf704 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -294,15 +294,15 @@ static int tpm_class_shutdown(struct device *dev)
+ {
+ 	struct tpm_chip *chip = container_of(dev, struct tpm_chip, dev);
+ 
++	down_write(&chip->ops_sem);
+ 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+-		down_write(&chip->ops_sem);
+ 		if (!tpm_chip_start(chip)) {
+ 			tpm2_shutdown(chip, TPM2_SU_CLEAR);
+ 			tpm_chip_stop(chip);
+ 		}
+-		chip->ops = NULL;
+-		up_write(&chip->ops_sem);
+ 	}
++	chip->ops = NULL;
++	up_write(&chip->ops_sem);
+ 
+ 	return 0;
+ }
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
 
