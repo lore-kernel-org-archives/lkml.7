@@ -2,120 +2,123 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72D7C468C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AFFC28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA00120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC764206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389390AbfFJLC5 (ORCPT
+        id S2389424AbfFJLHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 07:02:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:40672 "EHLO foss.arm.com"
+        Mon, 10 Jun 2019 07:07:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:40736 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388982AbfFJLC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 07:02:56 -0400
+        id S2388373AbfFJLHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 07:07:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC8F6337;
-        Mon, 10 Jun 2019 04:02:55 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB2553F557;
-        Mon, 10 Jun 2019 04:04:34 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 12:02:50 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C949C337;
+        Mon, 10 Jun 2019 04:07:48 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D22E3F557;
+        Mon, 10 Jun 2019 04:09:28 -0700 (PDT)
+Subject: Re: [PATCH v6 01/19] kernel: Standardize vdso_datapage
+To:     Huw Davies <huw@codeweavers.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 15/18] drivers: firmware: psci: Support CPU hotplug for
- the hierarchical model
-Message-ID: <20190610110250.GD26602@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-16-ulf.hansson@linaro.org>
- <20190607153114.GI15577@e107155-lin>
- <CAPDyKFqooMww0B6vGL56BnG-L=13C3oWeDFx4v1cO9=W9QPwVQ@mail.gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-2-vincenzo.frascino@arm.com>
+ <20190610092751.GA11076@merlot.physics.ox.ac.uk>
+ <58cedde2-0d54-7d2d-f519-77cb71f543fd@arm.com>
+ <20190610103151.GD11076@merlot.physics.ox.ac.uk>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <83ab2758-0e8c-35d5-906a-0338bcee3310@arm.com>
+Date:   Mon, 10 Jun 2019 12:07:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqooMww0B6vGL56BnG-L=13C3oWeDFx4v1cO9=W9QPwVQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190610103151.GD11076@merlot.physics.ox.ac.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 12:21:47PM +0200, Ulf Hansson wrote:
-> On Fri, 7 Jun 2019 at 17:31, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Mon, May 13, 2019 at 09:22:57PM +0200, Ulf Hansson wrote:
-> > > When the hierarchical CPU topology is used and when a CPU has been put
-> > > offline (hotplug), that same CPU prevents its PM domain and thus also
-> > > potential master PM domains, from being powered off. This is because genpd
-> > > observes the CPU's attached device as being active from a runtime PM point
-> > > of view.
-> > >
-> > > To deal with this, let's decrease the runtime PM usage count by calling
-> > > pm_runtime_put_sync_suspend() of the attached struct device when putting
-> > > the CPU offline. Consequentially, we must then increase the runtime PM
-> > > usage count, while putting the CPU online again.
-> > >
-> >
-> > Why is this firmware/driver specific ? Why can't this be dealt in core
-> > pm-domain ? I am concerned that if any other architectures or firmware
-> > method decides to use this feature, this need to be duplicated there.
->
-> What is the core pm-domain? Do you refer to the generic PM domain (genpd), no?
->
+Hi Huw,
 
-Sorry for my bad choice of names. I just wrote names as I understand
-rather than looking for exact match. But yes, I meant generic place
-where such ref-counting is done currently for other things.
+On 10/06/2019 11:31, Huw Davies wrote:
+> On Mon, Jun 10, 2019 at 11:17:48AM +0100, Vincenzo Frascino wrote:
+>> On 10/06/2019 10:27, Huw Davies wrote:
+>>> On Thu, May 30, 2019 at 03:15:13PM +0100, Vincenzo Frascino wrote:
+>>>> --- /dev/null
+>>>> +++ b/include/vdso/datapage.h
+>>>> @@ -0,0 +1,91 @@
+>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>> +#ifndef __VDSO_DATAPAGE_H
+>>>> +#define __VDSO_DATAPAGE_H
+>>>> +
+>>>> +#ifdef __KERNEL__
+>>>> +
+>>>> +#ifndef __ASSEMBLY__
+>>>> +
+>>>> +#include <linux/bits.h>
+>>>> +#include <linux/time.h>
+>>>> +#include <linux/types.h>
+>>>> +
+>>>> +#define VDSO_BASES	(CLOCK_TAI + 1)
+>>>> +#define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
+>>>> +			 BIT(CLOCK_MONOTONIC)		| \
+>>>> +			 BIT(CLOCK_BOOTTIME)		| \
+>>>> +			 BIT(CLOCK_TAI))
+>>>> +#define VDSO_COARSE	(BIT(CLOCK_REALTIME_COARSE)	| \
+>>>> +			 BIT(CLOCK_MONOTONIC_COARSE))
+>>>> +#define VDSO_RAW	(BIT(CLOCK_MONOTONIC_RAW))
+>>>> +
+>>>> +#define CS_HRES_COARSE	0
+>>>> +#define CS_RAW		1
+>>>
+>>> CS_HRES_COARSE seems like a confusing name choice to me.  What you
+>>> really mean is not RAW.
+>>>
+>>> How about CS_ADJ to indicate that its updated by adjtime?
+>>> CS_XTIME might be another option.
+>>>
+>>
+>> I divided the timers in 3 sets (HRES, COARSE, RAW), CS_HRES_COARSE refers to the
+>> first two and CS_RAW to the third. I will ad a comment to explain the logic in
+>> the next iteration.
+> 
+> I'm thinking ahead about a possible CLOCK_MONOTONIC_RAW_COARSE (which
+> would be useful at least for Wine).  In that case you'd have four clock
+> types non-raw and raw, each with either hres or coarse.
+> 
 
-> In such case, this is not the job of genpd, but rather the opposite
-> (to *monitor* the reference count).
->
+Thanks for this, I was not aware of CLOCK_MONOTONIC_RAW_COARSE.
+I tried to find, though, some details, but I could not find any. Could you
+please provide some reference?
 
-OK, I need to understand that then.
+> Huw.
+> 
 
-> >
-> > The way I see this is pure reference counting and is hardware/firmware/
-> > driver agnostic and can be made generic.
->
-> As stated in the another reply, I would rather start with having more
-> things driver specific rather than generic. Later on we can always
-> consider to move/split things, when there are more users.
->
-> In this particular case, the runtime PM reference counting is done on
-> the struct device*, that genpd returned via
-> dev_pm_domain_attach_by_name(). And because
-> dev_pm_domain_attach_by_name() is called from PSCI code, I decided to
-> keep this struct device* internal to PSCI.
-
-Sure, I understand your intent. I have just mentioned my thoughts/comments
-as I reviewed.
-
---
+-- 
 Regards,
-Sudeep
+Vincenzo
