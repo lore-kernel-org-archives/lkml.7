@@ -2,84 +2,111 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8271C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FEEC468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02AA207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49ADD20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfFJEOJ (ORCPT
+        id S1730081AbfFJEWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 00:14:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:52558 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbfFJEOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 00:14:09 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jun 2019 21:14:08 -0700
-X-ExtLoop1: 1
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga006.jf.intel.com with ESMTP; 09 Jun 2019 21:14:08 -0700
-Date:   Sun, 9 Jun 2019 21:04:49 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v4 3/5] x86/umwait: Add sysfs interface to control umwait
- C0.2 state
-Message-ID: <20190610040449.GB162238@romley-ivt3.sc.intel.com>
-References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
- <1559944837-149589-4-git-send-email-fenghua.yu@intel.com>
- <CALCETrWi+uM5Rch6vaXOwHsHas928CDY5VJoBYaudD+3VFTrNw@mail.gmail.com>
+        Mon, 10 Jun 2019 00:22:42 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:20318 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726070AbfFJEWm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 00:22:42 -0400
+X-UUID: 9d2390c1bdd04e9e982503720ff051eb-20190610
+X-UUID: 9d2390c1bdd04e9e982503720ff051eb-20190610
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 732374127; Mon, 10 Jun 2019 12:22:28 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 10 Jun 2019 12:22:21 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 10 Jun 2019 12:22:21 +0800
+Message-ID: <1560140541.5606.12.camel@mtkswgap22>
+Subject: Re: [PATCH] mt76: mt7615: add support for per-chain signal strength
+ reporting
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Sebastian Gottschall <s.gottschall@newmedia-net.de>
+CC:     Sean Wang <sean.wang@mediatek.com>,
+        Chih-Min Chen <chih-min.Chen@mediatek.com>,
+        YF Luo <yf.luo@mediatek.com>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>, Roy Luo <royluo@google.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        "Felix Fietkau" <nbd@nbd.name>
+Date:   Mon, 10 Jun 2019 12:22:21 +0800
+In-Reply-To: <1560132590.28258.5.camel@mtkswgap22>
+References: <3912a2863e858f3623ced61737836e42c7b19149.1560071167.git.ryder.lee@mediatek.com>
+         <d6cfd2e9-4b2b-36ac-6cae-a34f74204801@newmedia-net.de>
+         <1560132590.28258.5.camel@mtkswgap22>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWi+uM5Rch6vaXOwHsHas928CDY5VJoBYaudD+3VFTrNw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 03:52:03PM -0700, Andy Lutomirski wrote:
-> On Fri, Jun 7, 2019 at 3:10 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
-> >
-> > C0.2 state in umwait and tpause instructions can be enabled or disabled
-> > on a processor through IA32_UMWAIT_CONTROL MSR register.
-> >
+On Mon, 2019-06-10 at 10:09 +0800, Ryder Lee wrote:
+> On Sun, 2019-06-09 at 16:44 +0200, Sebastian Gottschall wrote:
+> > according to my findings
+> > 
+> > MT_RXV4_RCPI1 is part of rx descriptor 4 and not 3
+> > so it must be rxdg4 = rxd[4] etc.
 > 
-> > +static u32 get_umwait_control_c02(void)
-> > +{
-> > +       return umwait_control_cached & MSR_IA32_UMWAIT_CONTROL_C02;
-> > +}
-> > +
-> > +static u32 get_umwait_control_max_time(void)
-> > +{
-> > +       return umwait_control_cached & MSR_IA32_UMWAIT_CONTROL_MAX_TIME;
-> > +}
-> > +
+> RXV start from 1 in the code.
 > 
-> I'm not convinced that these helpers make the code any more readable.
+> That is: RXV1 <-> rxdg0, RXV2 <-> rxdg1 ...so RXV4 <-> rxdg3
+> 
+> > however rxdg3 contains MT_RXV3_IB_RSSIRX which can be used for signal calculation.
+> > i already wrote a similar code for this driver which i sended to felix a long time ago.
+> > my variant looks like
+> >                  status->signal = (FIELD_GET(MT_RXV3_IB_RSSIRX, rxdg3) - 220) / 2;
+> >                  status->chain_signal[0] = (FIELD_GET(MT_RXV4_RCPI0, rxdg4) - 220) / 2;
+> >                  status->chain_signal[1] = (FIELD_GET(MT_RXV4_RCPI1, rxdg4) - 220) / 2;
+> >                  status->chain_signal[2] = (FIELD_GET(MT_RXV4_RCPI2, rxdg4) - 220) / 2;
+> >                  status->chain_signal[3] = (FIELD_GET(MT_RXV4_RCPI3, rxdg4) - 220) / 2;
 
-The helpers reduce length of statements that call them. Otherwise, all of
-the statements would be easily over 80 characters.
+mt7615 actually doesn't use in-band RSSI for signal calculation, but it
+occurs to me that i should modify the code to compare per-chain's
+signal. Something like this:
 
-Plus, each of the helpers is called multiple places in #0003 and #0004.
-So the helpers make the patches smaller and cleaner.
+		status->chain_signal[0] = to_rssi(MT_RXV4_RCPI0, rxdg3);
+		status->chain_signal[1] = to_rssi(MT_RXV4_RCPI1, rxdg3);
+		status->chain_signal[2] = to_rssi(MT_RXV4_RCPI2, rxdg3);
+		status->chain_signal[3] = to_rssi(MT_RXV4_RCPI3, rxdg3);
+		status->signal = status->chain_signal[0];
 
-So is it still OK to keep the helpers?
+		switch (status->chains) {
+		case 0xf:
+			status->signal = max(status->signal,
+					     status->chain_signal[3]);
+		case 0x7:
+			status->signal = max(status->signal,
+					     status->chain_signal[2]);
+		case 0x3:
+			status->signal = max(status->signal,
+					     status->chain_signal[1]);
+			break;
+		default:
+			break;
+		}
 
-Thanks.
 
--Fenghua
+I could send a v2 or you can take care of that.
+
+Ryder
+
