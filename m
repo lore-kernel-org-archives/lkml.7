@@ -1,145 +1,138 @@
 Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68292C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638C6C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4190B20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560161578;
-	bh=qlsZvMtt4cBHEEFNgOuRWuRUO/DTFRqE+N8jSXnbmw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j7JyLdF2aP4CIvb9l7qBLDSTLm/5FoB9dlV26drT4S2ZyBLbUhSErcNd3AEvDGgwc
-	 5hy03fTnNQt5/r9+783psqBBu5xDM/aaAmk0OOwCXPXdcSqp7swNPtX/bRCdWy38z+
-	 rY7NQoA0hwG5ri/EkLzmFv1zOrIbof85UPSvoksU=
+	by mail.kernel.org (Postfix) with ESMTP id 2E23E20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="V4nZ6bgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389153AbfFJKM5 (ORCPT
+        id S2389200AbfFJKPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:12:57 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36205 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388489AbfFJKM5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:12:57 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a3so4794530pgb.3;
-        Mon, 10 Jun 2019 03:12:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UpQZyxDAIZssxN7CCNuXeFikhiebMI4lHnTfzcrIiyQ=;
-        b=oT3Tgck9UOkWtTtrfEsTEc4PpMFYNC/1A+9ozR6V61Qzvmi8PU2PjmGz4nMCuGml3v
-         H+nRmhJEBftdYa/jqjOOUDmFd3EIVk3K904sggw8sHSKT+izqm8D6xXryQtEqRIQwnYd
-         kU6ue4gFnzw7c/7zfEq/nYUufkOUwE5mNFwKPN0SwyZ0Bbo4EwOKD09zGiKkw9lzRU0r
-         8oiPkxnTLIkCVg18tdGUfuEWKg8MvK4yGM9BSlB9tZo15gQMiOojbos6lEuAFQ2aqnVh
-         0TER9J8ovskikTwRLLABwQfJ8LIMQIbDXfzkiMaWGpOOhtsIYly64d/JTpyUpvwp9twe
-         /YWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UpQZyxDAIZssxN7CCNuXeFikhiebMI4lHnTfzcrIiyQ=;
-        b=BB4nb2lS3T8WBIyotovYNh6IQSZSyekD63yC/MsYPovDEM/DsgAmlsn6KX0nRyJmEc
-         rXFe8S8orQxNLzqTH5X5RHTfTHslTna6yREnJb6/vk2hZb7Ad3WC6JSCF+U4+Amtlcna
-         MI+rYqbamCqMNAAqcuUTXpuuBX0l3JO57Yo24ikl/LuGFBTxVZi7MaaxmVou32B9egzj
-         Fe+eT1XY7FDbypS86lv/N0bWrvvB42wZ7VaauZlDSe8SdOn9HuXcwfY791GN6E1lbC3f
-         3FNaigwglhJk1faJ6SayrmxG2MoSrL7J28u2VFzsEAgPmiD7QWxLrSVGJgISxVxyAmqO
-         NCPQ==
-X-Gm-Message-State: APjAAAWYN+Ri+MNlz7V/qttOt5/9Q3uXbLvQcvibwP26CD/pBICKiGlx
-        hM3I3ICf4qBj2ModOzEWiKs=
-X-Google-Smtp-Source: APXvYqzJUiyDWi8zaR4iqoYas4PnR+FTZYDwdV0l9Fr4aNPkQh14eZq3enRj6HzBCVUi/S2a/0C2XQ==
-X-Received: by 2002:a17:90a:3787:: with SMTP id v7mr10962360pjb.33.1560161576370;
-        Mon, 10 Jun 2019 03:12:56 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id l38sm9533673pje.12.2019.06.10.03.12.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 03:12:54 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 19:12:48 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, hdanton@sina.com
-Subject: Re: [RFCv2 4/6] mm: factor out madvise's core functionality
-Message-ID: <20190610101248.GD55602@google.com>
-References: <20190531064313.193437-1-minchan@kernel.org>
- <20190531064313.193437-5-minchan@kernel.org>
- <20190531070420.m7sxybbzzayig44o@butterfly.localdomain>
- <20190531131226.GA195463@google.com>
- <20190531143545.jwmgzaigd4rbw2wy@butterfly.localdomain>
- <20190531232959.GC248371@google.com>
- <20190605132728.mihzzw7galqjf5uz@butterfly.localdomain>
+        Mon, 10 Jun 2019 06:15:54 -0400
+Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:41879
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388734AbfFJKPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:15:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bAl7DjD2PKrxucr7PykQE96DtPiGvt4RIskZTqhJ4qA=;
+ b=V4nZ6bgClRFilG2ZqcU4DYA4k1HKUXWMfvgvQxnpa1AUAo2OrzRPcGga0329KhlS+G8bFUkg2aaQOrFD1gzEXnIwqQytoLuzFQtM6Ie5R9EW8bdys71zDpj5nwFzQN4q5Hobd1NEyE/YR55qLR+NKBNHnNAzDWRK1c3aolvalSM=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4975.eurprd08.prod.outlook.com (10.255.158.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.13; Mon, 10 Jun 2019 10:15:49 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1943.026; Mon, 10 Jun 2019
+ 10:15:49 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH v2 0/3] drm/komeda: Add layer split support
+Thread-Topic: [PATCH v2 0/3] drm/komeda: Add layer split support
+Thread-Index: AQHVH3V5MpmoS19BK0+4wpZnVdW8Dg==
+Date:   Mon, 10 Jun 2019 10:15:49 +0000
+Message-ID: <20190610101528.25942-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR02CA0140.apcprd02.prod.outlook.com
+ (2603:1096:202:16::24) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ecf33004-061c-4004-abf2-08d6ed8c9c17
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4975;
+x-ms-traffictypediagnostic: VE1PR08MB4975:
+x-ms-exchange-purlcount: 2
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB49757334C17D80EDFD5DB6ECB3130@VE1PR08MB4975.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(366004)(376002)(346002)(199004)(189003)(3846002)(8676002)(81156014)(316002)(110136005)(103116003)(53936002)(186003)(26005)(81166006)(6436002)(71200400001)(55236004)(68736007)(2501003)(4326008)(6306002)(66946007)(2906002)(478600001)(8936002)(99286004)(25786009)(50226002)(966005)(6512007)(66066001)(305945005)(6506007)(386003)(486006)(5660300002)(54906003)(2201001)(66476007)(66446008)(102836004)(66556008)(64756008)(6116002)(52116002)(7736002)(476003)(6486002)(36756003)(2616005)(86362001)(73956011)(256004)(1076003)(14454004)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4975;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4Qihnmqckd7TuLVuWIc/fCD3FIaZ9SNMowHU5ODfyANnWj07mAyPG93iGRgRcFLIPYxR4GHvvHzLjomqsh4+he1szs680kplIkVZG5UKhvV4c1TJF6H6WPhukfipFhuiE29onEXQpI1Ho14iWWXArr0Vp69PSQObsn2R9vMFZD1cXl7snOru82wkUonwOb976m91RWaVNm+HOV7QoQqdGvid71QHu9aD4DwOE+BSR6qbHMx49EQq2Ryb03WZcmwyuug2h2mHA+JTV4y5bgt71DM81bfPN2xhEUjYFUHJBXvtG//rMk48Qx0jsUMqc7wARU8jZLFqVOgTSbxjsj7z83xehN0Qgakf4v5Y2kcsUUGvKvL6aVMusfmCb7z4WaSeS+4C3MtUQ5RycIRnQGLkq/h/8mIC5QK67Nv0GO5q5D0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605132728.mihzzw7galqjf5uz@butterfly.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecf33004-061c-4004-abf2-08d6ed8c9c17
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 10:15:49.3333
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4975
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksandr,
-
-On Wed, Jun 05, 2019 at 03:27:28PM +0200, Oleksandr Natalenko wrote:
-< snip >
-> > > > > >  	write = madvise_need_mmap_write(behavior);
-> > > > > >  	if (write) {
-> > > > > > -		if (down_write_killable(&current->mm->mmap_sem))
-> > > > > > +		if (down_write_killable(&mm->mmap_sem))
-> > > > > >  			return -EINTR;
-> > > > > 
-> > > > > Do you still need that trick with mmget_still_valid() here?
-> > > > > Something like:
-> > > > 
-> > > > Since MADV_COLD|PAGEOUT doesn't change address space layout or
-> > > > vma->vm_flags, technically, we don't need it if I understand
-> > > > correctly. Right?
-> > > 
-> > > I'd expect so, yes. But.
-> > > 
-> > > Since we want this interface to be universal and to be able to cover
-> > > various needs, and since my initial intention with working in this
-> > > direction involved KSM, I'd ask you to enable KSM hints too, and once
-> > > (and if) that happens, the work there is done under write lock, and
-> > > you'll need this trick to be applied.
-> > > 
-> > > Of course, I can do that myself later in a subsequent patch series once
-> > > (and, again, if) your series is merged, but, maybe, we can cover this
-> > > already especially given the fact that KSM hinting is a relatively easy
-> > > task in this pile. I did some preliminary tests with it, and so far no
-> > > dragons have started to roar.
-> > 
-> > Then, do you mind sending a patch based upon this series to expose
-> > MADV_MERGEABLE to process_madvise? It will have the right description
-> > why you want to have such feature which I couldn't provide since I don't
-> > have enough material to write the motivation. And the patch also could
-> > include the logic to prevent coredump race, which is more proper since
-> > finally we need to hold mmap_sem write-side lock, finally.
-> > I will pick it up and will rebase since then.
-> 
-> Sure, I can. Would you really like to have it being based on this exact
-> revision, or I should wait till you deal with MADV_COLD & Co and re-iterate
-> this part again?
-
-I'm okay you to send your patch against this revision. I'm happy to
-include it when I start a new thread for process_madvise discussion
-after resolving MADV_COLD|PAGEOUT.
-
-Thanks.
+VGhpcyBwYXRjaCBzZXJpZXMgYWRkIGxheWUgc3BsaXQgc3VwcG9ydCBmb3Iga29tZWRhLg0KDQpG
+b3IgbGF5ZXIgc3BsaXQsIGEgcGxhbmUgc3RhdGUgd2lsbCBiZSBzcGxpdCB0byB0d28gZGF0YSBm
+bG93cyBhbmQgaGFuZGxlZA0KYnkgdHdvIHNlcGFyYXRlZCBrb21lZGEgbGF5ZXIgaW5wdXQgcGlw
+ZWxpbmVzLiBrb21lZGEgc3VwcG9ydHMgdHdvIHR5cGVzIG9mDQpsYXllciBzcGxpdDoNCg0KLSBu
+b25lLXNjYWxpbmcgc3BsaXQ6DQogICAgICAgICAgICAgLyBsYXllci1sZWZ0IC0+IFwNCiAgcGxh
+bmVfc3RhdGUgICAgICAgICAgICAgICAgICBjb21waXotPiAuLi4NCiAgICAgICAgICAgICBcIGxh
+eWVyLXJpZ2h0LT4gLw0KDQotIHNjYWxpbmcgc3BsaXQ6DQogICAgICAgICAgICAgLyBsYXllci1s
+ZWZ0IC0+IHNjYWxlci0+XA0KIHBsYW5lX3N0YXRlICAgICAgICAgICAgICAgICAgICAgICAgICBt
+ZXJnZXIgLT4gY29tcGl6LT4gLi4uDQogICAgICAgICAgICAgXCBsYXllci1yaWdodC0+IHNjYWxl
+ci0+Lw0KDQpTaW5jZSBtZXJnZXIgb25seSBzdXBwb3J0cyBzY2FsZXIgYXMgaW5wdXQsIHNvIGZv
+ciBub25lLXNjYWxpbmcgc3BsaXQsIHR3bw0KbGF5ZXIgZGF0YSBmbG93cyB3aWxsIGJlIG91dHB1
+dCB0byBjb21waXogZGlyZWN0bHkuIGZvciBzY2FsaW5nX3NwbGl0LCB0d28NCmRhdGEgZmxvd3Mg
+d2lsbCBiZSBtZXJnZWQgYnkgbWVyZ2VyIGZpcnN0bHksIHRoZW4gbWVyZ2VyIG91dHB1dHMgb25l
+IG1lcmdlZA0KZGF0YSBmbG93IHRvIGNvbXBpei4NCg0KVGhpcyBwYXRjaCBzZXJpZXMgZGVwZW5k
+cyBvbjoNCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy82MDc2Ny8N
+Ci0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy82MDgzOC8NCg0KdjI6
+IFJlYmFzZSBhbmQgYWRkcmVzc2VkIExpdml1J3MgY29tbWVudHMNCg0KamFtZXMgcWlhbiB3YW5n
+IChBcm0gVGVjaG5vbG9neSBDaGluYSkgKDMpOg0KICBkcm0va29tZWRhOiBBZGQgY29tcG9uZW50
+IGtvbWVkYV9tZXJnZXINCiAgZHJtL2tvbWVkYTogQWRkIHNwbGl0IHN1cHBvcnQgZm9yIHNjYWxl
+cg0KICBkcm0va29tZWRhOiBBZGQgbGF5ZXIgc3BsaXQgc3VwcG9ydA0KDQogLi4uL2FybS9kaXNw
+bGF5L2tvbWVkYS9kNzEvZDcxX2NvbXBvbmVudC5jICAgIHwgMTIxICsrKysrKy0NCiAuLi4vZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ttcy5jICAgfCAgIDggKw0KIC4uLi9ncHUv
+ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmggICB8ICAyMiArLQ0KIC4uLi9kcm0v
+YXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5jICB8ICAyNiArLQ0KIC4uLi9kcm0v
+YXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5oICB8ICA0OSArKy0NCiAuLi4vZGlz
+cGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0YXRlLmMgICAgfCAzMTggKysrKysrKysrKysr
+KysrKystDQogLi4uL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9wbGFuZS5jIHwg
+IDMzICstDQogLi4uL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcHJpdmF0ZV9vYmouYyAgIHwg
+IDQ5ICsrKw0KIC4uLi9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3diX2Nvbm5lY3Rvci5jICB8
+ICAgMiArLQ0KIDkgZmlsZXMgY2hhbmdlZCwgNjAwIGluc2VydGlvbnMoKyksIDI4IGRlbGV0aW9u
+cygtKQ0KDQotLQ0KMi4xNy4xDQo=
