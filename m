@@ -2,134 +2,154 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0C1C28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EB3C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39F020859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0000E20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zxke5XTX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGOZzIJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389302AbfFJKTX (ORCPT
+        id S2389348AbfFJKUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:19:23 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40285 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389291AbfFJKTV (ORCPT
+        Mon, 10 Jun 2019 06:20:45 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:50598 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389214AbfFJKUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:19:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so1744339pfp.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:19:21 -0700 (PDT)
+        Mon, 10 Jun 2019 06:20:44 -0400
+Received: by mail-it1-f194.google.com with SMTP id j194so5408160ite.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Xl6v5F/D3VxC6oJtpVMTcWPj1WSUBStBszKQqnRd45o=;
-        b=Zxke5XTXYzZ1WpIKENuUCvQiJugmF6xmPmbVa+fQbXPRt5NLXE3XHZUNoUGyv8aLFk
-         0rjG9L8UqFlU/U4gpMjRlgJ8X3nE6ri7wGy68f6iQ0YzmFvk4qUWjWrM+LidoPGkcYmC
-         PQ9xxtOgJlxOvxLQsHD98QnhH9k+vQEifhuGZEw6YF5JG7SxcgV9Yrm+JHUTnexYbwAF
-         kXuHYrgJkBfViN9xWMijKskkhxv4JJjHTYC543USXdVVRRCXXHLpuHefM1TguMusR2yy
-         vc20X6vM3jkm2bt3gBKV0pla8vMhrOsmoUlAB2tkbEgoAhTb/u7PiuuxS5EVmWSF1W4W
-         /vug==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TD9nldu+Dkg66DtJL22FIFPPAtJrtLwLTy4JIGvUcQ0=;
+        b=xGOZzIJLwgDnCGn+KlPHKMf5rhw1h6HPB+95GrnYpcFyME3d6inxxLyUdmnkUq34J+
+         zIomGN+MLBR/oBWOe0ulrBE7Z4E32pfkipA+UvLZ1HSdKDy8GC6l8Mp9wJ803ogYGbAJ
+         XkKTMgVLsEwE6FpWaaDwbvNxWnbiruke6qUOyB0ejNsZuBRBi3b43yVy4fvDCb91ewO2
+         Zjef6VagFWfnsI0m34DKo41NNnLdVP9/Dyh1VbdA8PowiwZdyPE/WzmPhq03ic8Wi1/B
+         bsA1uFFW4PNjaH9sgcjjZ0hpbNNQwDPdUAJ2P909ro09PZSJ1gys4wpgtKshS4+ctbrH
+         zTDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xl6v5F/D3VxC6oJtpVMTcWPj1WSUBStBszKQqnRd45o=;
-        b=fn+IOG2EmGN1ux/cvfD8sVgd8iOLSrwCVAvkuiJ30JE+WV0/lVL5vNLaPv5ZudDSZK
-         Umt82yQwHG0IkRzYNkECbA7Xr20CtlOUE+d7O38cWTMdbIAHydRUQK+5qphObAnwZzx7
-         nqIFpkKWQgkzHieFJRix9/d6x0oW4W6zwvMDq8qoApmkJ4Fut8YDoV/E+o10spA22VdK
-         r05XIwhhpgihJq0KwV/Zt87WzjWJx6ZXFF9XYnQMVQuizRIJAwtLpRhvdmaSoCGaluQk
-         r3CzvGZlz8VSePr+DWSkZGL4xtLOC5tD0cVGfTPufwrFy8FEO7KKolBoPzZmuNjCrDit
-         KffQ==
-X-Gm-Message-State: APjAAAW5rOwcWdo8cfBSVngrGvUZgHdPqte8Au1dUl0G4mptIsLvh50A
-        VUKidixSnq1FlU0FBEaRECe/CA==
-X-Google-Smtp-Source: APXvYqz3SI+6kD/ZaeTpbKZtNgBi0rdKkLPqyJFXIcZSqv4cqHNVPe2yimUvsPw0UUlmdDCXEymP1A==
-X-Received: by 2002:a65:6495:: with SMTP id e21mr993356pgv.383.1560161960609;
-        Mon, 10 Jun 2019 03:19:20 -0700 (PDT)
-Received: from localhost ([122.172.66.84])
-        by smtp.gmail.com with ESMTPSA id f186sm13630525pfb.5.2019.06.10.03.19.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 03:19:19 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 15:49:18 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     Christian Neubert <christian.neubert.86@gmail.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
- cpu clocks
-Message-ID: <20190610101918.sypafywc6fn4jsbo@vireshk-i7>
-References: <20190314134428.GA24768@apalos>
- <874l85v8p6.fsf@FE-laptop>
- <20190318112844.GA1708@apalos>
- <87h8c0s955.fsf@FE-laptop>
- <20190318122113.GA4834@apalos>
- <20190424093015.rcr5auamfccxf6ei@vireshk-i7>
- <20190425123303.GA12659@apalos>
- <20190520112042.mpamnabxpwciih5m@vireshk-i7>
- <20190522070341.GA32613@apalos>
- <20190522070614.jhpo7nqrxinmlbcs@vireshk-i7>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TD9nldu+Dkg66DtJL22FIFPPAtJrtLwLTy4JIGvUcQ0=;
+        b=iwmTXN49+lSBAtNJS8f3xmys9qrMCJUDIEusRkE6uWaTWDrsAYtOUefWirTEifq1Rz
+         Wwb4VFOixo/toT3MkZ1Om9aiY8ihVk0qcgLsrsVx7xe25FSTge62OoCNqWqrK5DWKBZr
+         WdTohm+XO6hvEgmXfDVeCbDoZdWm9dcwKXX1Xj6idLpllc2PBQ1jmcq8bq3qYGvJ1Yun
+         HimYA+/a3BXQWkxFKle0Lwai/mk/7NmVxGJ/HkKpm2NYMaDmferwErkq3bTQVKlalAIQ
+         e6/M1e0qKJpH+RQgg4AL1cdaw4hVlhG/Wt2uFh3pnoZb5XaJdUSpjkbsLMaEKRjHhLfF
+         uB1g==
+X-Gm-Message-State: APjAAAWR2pGzxsD4ZHnXQvDKt7v3vlzleZg6nXpT/QF9oHRaOcGjL8Mv
+        ca//58iqxTk1M/ddNfoO72LClC3W7tYqw4fOQGVB3vzg8yk=
+X-Google-Smtp-Source: APXvYqz8+9gsk4GZjuP3WNO3dIJxKVqLA91XwEqoIRkCKyS++7skP/Y8F+BITEkNQ+1mKDd2q8VehsdTmYGSs98dr0s=
+X-Received: by 2002:a05:660c:44a:: with SMTP id d10mr12222840itl.153.1560162043688;
+ Mon, 10 Jun 2019 03:20:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522070614.jhpo7nqrxinmlbcs@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20190610084213.1052-1-lee.jones@linaro.org> <20190610084213.1052-4-lee.jones@linaro.org>
+ <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
+ <20190610085542.GL4797@dell> <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
+ <20190610092245.GN4797@dell>
+In-Reply-To: <20190610092245.GN4797@dell>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 10 Jun 2019 12:20:30 +0200
+Message-ID: <CAKv+Gu94ES4_SjkmAMaAgwCtsx_YmOn0=yaeM9GFjPCCxrANoQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        wsa+renesas@sang-engineering.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-05-19, 12:36, Viresh Kumar wrote:
-> On 22-05-19, 10:03, Ilias Apalodimas wrote:
-> > Hi Viresh, Gregory
-> > On Mon, May 20, 2019 at 04:50:42PM +0530, Viresh Kumar wrote:
-> > > On 25-04-19, 15:33, Ilias Apalodimas wrote:
-> > > > Hi Viresh,
-> > > > 
-> > > > > > > Also, during this week-end, Christian suggested that the issue might
-> > > > > > > come from the AVS support.
-> > > > > > > 
-> > > > > > > Could you disable it and check you still have the issue?
-> > > > > > > 
-> > > > > > > For this, you just have to remove the avs node in
-> > > > > > > arch/arm64/boot/dts/marvell/armada-37xx.dtsi and rebuild the dtb.
-> > > > > > Sure. You'll have to wait for a week though. Currently on a trip. I'll run that
-> > > > > >  once i return
-> > > > > 
-> > > > > @Ilias: Can you please try this now and confirm to Gregory ?
-> > > > I am more overloaded than usual and totally forgot about this. Apologies.
-> > > > I'll try finding some time and do this.
-> > > 
-> > > Ping Ilias.
-> > Sorry for the huge delay. 
-> > Applying this patch and removing tha 'avs' node from
-> > arch/arm64/boot/dts/marvell/armada-37xx.dtsi seems to work.
-> > Changing between governors does not freeze the board any more. I haven't checked
-> > the actual impact on the CPU speed but the values on 
-> > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor are correct
-> 
-> Thanks for testing it out. Lets see what Gregory has to say now.
+On Mon, 10 Jun 2019 at 11:22, Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
+>
+> > On Mon, 10 Jun 2019 at 10:55, Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
+> > >
+> > > > On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
+> > > > >
+> > > > > This patch provides basic support for booting with ACPI instead
+> > > > > of the currently supported Device Tree.  When doing so there are a
+> > > > > couple of differences which we need to taken into consideration.
+> > > > >
+> > > > > Firstly, the SDM850 ACPI tables omit information pertaining to the
+> > > > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> > > > > initialise any of these lines, the firmware will restart the
+> > > > > platform.
+> > > > >
+> > > > > Secondly, when booting with ACPI, it is expected that the firmware
+> > > > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> > > > > their ideal configuration.  Thus, the possible Pin Functions
+> > > > > available to this platform are not advertised when providing the
+> > > > > higher GPIOD/Pinctrl APIs with pin information.
+> > > > >
+> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > >
+> > > > For the ACPI probing boilerplate:
+> > > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > >
+> > > > *However*, I really don't like hardcoding reserved GPIOs like this.
+> > > > What guarantee do we have that each and every ACPI system
+> > > > incorporating the QCOM0217 device has the exact same list of reserved
+> > > > GPIOs?
+> > >
+> > > This is SDM845 specific, so the chances are reduced.
+> >
+> > You don't know that.
+>
+> All the evidence I have to hand tells me that this is the case.  Even
+> on very closely related variants Qualcomm uses different H/W blocks
+> for GPIO.
+>
+> > > However, if another SDM845 variant does crop up, also lacking the
+> > > "gpios" property, we will have to find another differentiating factor
+> > > between them and conduct some matching.  What else can you do with
+> > > platforms supporting non-complete/non-forthcoming ACPI tables?
+> > >
+> >
+> > Either we don't touch any pins at all if they are not referenced
+> > explicitly anywhere
+>
+> I guess this would require an API change, which is out of scope of
+> this patch-set.  Happy to change this implementation later if the
+> subsystem allows for it though.
+>
+> > or we parse the PEP tables, which seem to cover
+> > some of this information (if Bjorn's analysis is correct)
+>
+> Maybe someone can conduct some further work on this when we start to
+> enable or write a driver for the PEP (Windows-compatible System Power
+> Management Controller).  The tables for the PEP look pretty complex,
+> so this task would be extremely difficult if not impossible without
+> Qualcomm's help.  I wouldn't even know how to extrapolate this
+> information from the tables.
+>
+> > (if Bjorn's analysis is correct)
+>
+> Bjorn is about to provide his Reviewed-by for this implementation.
+>
 
-@Gregory: Do you have any further advice for Ilias ?
-
--- 
-viresh
+If Bjorn can live with it, then so can I.
