@@ -2,95 +2,122 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA24C064E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4A3C064E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEDD2145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8201320859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560176776;
-	bh=6NiCHKye5atumPBvboN3xElDSadPH9wlMcA9SVn5rNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hEWmxMt/1Spo13UkAHikDkLJKhzy1JtZckZnjyBoylurr1ckOuuOIFaPJD2qZDV6s
-	 nbDTY2pc1VP2Hqpd2EDuzLRP9Hdw7RlgxOS10ulC5f/W3xeqQyZWQwAqou0Ng1lmWp
-	 Wka7UPEQz1NiqpEVT2ESquKBUFhSAbS1alaP/wuo=
+	s=default; t=1560176812;
+	bh=bVaEWwX2rEJHZMmiFv85CvpKw+M+6tXyj1liHoFQeRI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=rvVqWFoRwcFoPZzcWTmxTQ4AULjsC7oBEMX9fGvlrhGGYJ9qylBaewgK/6Z9OZgYD
+	 vqZN129bpXRjDp49f2jLN+CIxS3lRqRqPbO1Y/IfpzDOsx4DICvvrkdrAxJPFe06FZ
+	 aqlqLXgpz5M18srsOatyKxbZf54C7hnI0dMxIYxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390800AbfFJO0P (ORCPT
+        id S2390807AbfFJO0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:26:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389402AbfFJO0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:26:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F8A2207E0;
-        Mon, 10 Jun 2019 14:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560176774;
-        bh=6NiCHKye5atumPBvboN3xElDSadPH9wlMcA9SVn5rNM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PS73eHrJ5BAkWVCVfUBIazkMtKNSbcM95CK4IIZNQAL+k10UI7Vubyam1X8F2f/Jw
-         eipNKLgu6/uDrywRoiKR3CRLHqmdn523FJek4ry7bgFyJukCcJwRCDDPtnJVuF5gyB
-         7MMPQM4NEn9Xkq1HR/cb/3GifAuAW45maChKP59s=
-Date:   Mon, 10 Jun 2019 16:26:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
-Message-ID: <20190610142612.GF5937@kroah.com>
-References: <20190609164127.541128197@linuxfoundation.org>
- <CA+G9fYuxGDX0pX0BROB7mJqJuCPYRshzae+cTnb_xQXEtBpgXA@mail.gmail.com>
+        Mon, 10 Jun 2019 10:26:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47908 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388936AbfFJO0v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:26:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=w7gFGP/pm4Hi9glOBcXMYzWxwWWedAusuMfX2g2W4Ew=; b=SML5uyMHHW5MmXWWqP8/oUcTR
+        bz5uNebXLz0slpqYb/6Db9NNEhdD/sXD+ZzqTqTCz8KVTaGJFtkg8Mfow53irEQu7Qf5GgRvSnqCt
+        98L8JF0qhOK2iwXntL6z8P9NXED2elDbhtih+tb9xgW/yCWHNCYjKLAoZqSxVZukmhiSA=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1haLG5-0005tm-Ta; Mon, 10 Jun 2019 14:26:49 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id BAF45440046; Mon, 10 Jun 2019 15:26:48 +0100 (BST)
+Date:   Mon, 10 Jun 2019 15:26:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] spi fixes for v5.2
+Message-ID: <20190610142648.GB5316@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5I6of5zJg18YgZEa"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuxGDX0pX0BROB7mJqJuCPYRshzae+cTnb_xQXEtBpgXA@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 11:33:43AM +0530, Naresh Kamboju wrote:
-> On Sun, 9 Jun 2019 at 22:15, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.1.9 release.
-> > There are 70 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.9-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
 
-Thanks for testing all of these and letting me know.
+--5I6of5zJg18YgZEa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-greg k-h
+The following changes since commit d61ad23cb3be09ff4956e9b9794134456522817f:
+
+  spi: Clear SPI_CS_HIGH flag from bad_bits for GPIO chip-select (2019-05-02 10:38:00 +0900)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v5.2-rc4
+
+for you to fetch changes up to f3440d9a0da292dc4998d9393162fcfb996fd671:
+
+  spi: abort spi_sync if failed to prepare_transfer_hardware (2019-05-23 14:36:13 +0100)
+
+----------------------------------------------------------------
+spi: Fixes for v5.2
+
+A small set of fixes here, one core fix for error handling when we fail
+to set up the hardware before initiating a transfer and another one
+reverting a change in the core which broke Raspberry Pi in common use
+cases as part of some optimization work.  There's also a couple of
+driver specific fixes.
+
+----------------------------------------------------------------
+Christophe Leroy (1):
+      spi: spi-fsl-spi: call spi_finalize_current_message() at the end
+
+Mark Brown (1):
+      spi: Fix Raspberry Pi breakage
+
+Super Liu (1):
+      spi: abort spi_sync if failed to prepare_transfer_hardware
+
+YueHaibing (1):
+      spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
+
+ drivers/spi/spi-bitbang.c |  2 +-
+ drivers/spi/spi-fsl-spi.c |  2 +-
+ drivers/spi/spi.c         | 11 ++++++++---
+ 3 files changed, 10 insertions(+), 5 deletions(-)
+
+--5I6of5zJg18YgZEa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz+aKcACgkQJNaLcl1U
+h9CIFAf/ROOT3trWHzotcI7wHH8gQPZdZ9Ojm2mjxC6XGbhafTvd+XgLv9dDiT88
+B70DVcuR7VUBtJSDSirKXeOuDQ+vG9/xKtRQMLjIojmkJ2+yO6MzmZLCX3xRZZ9K
+xIgj8U+A5Mbed48XvwD9kHRd57SpUvjaUwp4GBypxHVp6cqJnFDoEcLkN15MNgOQ
+6t2hReLFATJdEPMVRfADLkr6ksVc25pIfmXgpeedT7NXiErkDNez5AtVY0gukLqK
+YM4TSwidRhp8gnXD6wZtBZtniiI881zw25YbCGpIyNJBfL2PykskDGDARB4Gl1t7
+uaEtGcGKR23bSzjQQ2+s9cDmwpADZA==
+=XCGZ
+-----END PGP SIGNATURE-----
+
+--5I6of5zJg18YgZEa--
