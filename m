@@ -2,65 +2,64 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB0C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB70C28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE45F20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7486B2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s9BQ9KsF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kOl0u/Rh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389384AbfFJKWT (ORCPT
+        id S2389397AbfFJKWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:22:19 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38034 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388937AbfFJKWS (ORCPT
+        Mon, 10 Jun 2019 06:22:24 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35000 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388937AbfFJKWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:22:18 -0400
-Received: by mail-ua1-f67.google.com with SMTP id j2so2814754uaq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:22:18 -0700 (PDT)
+        Mon, 10 Jun 2019 06:22:24 -0400
+Received: by mail-vs1-f67.google.com with SMTP id u124so4979176vsu.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:22:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=15Mv27CpOqcY/QGlaDdYOaxwUvkGE7VrIq+6M5Rz0FU=;
-        b=s9BQ9KsFHX7r67adKcBwj8x+BIiC1XiicdzH46J+YsO3WPlHQMjCJ/t2E24Bq3kiKD
-         +Bg3PsRj14xJfdhcC+LOuy4BR9Xkwfz3SPO2dsCcygvloePKw5wrInVKtfDBKW57eQm9
-         4UkH+z4+9Ck49Km3+5u06HRJY5h5q7+K/DOCqolnYmquXsQ7ocAyECXW2l+0L+byHT3j
-         PKXJa36XaZ+BpR4tBZNYB2mFSC6H69CAkdArGNOYIrWO7vAgTXCznGvw42YfFzh5cnaz
-         gTJTXwymRKiZ9jf6nd1DkSHEdQQwuslE5sDsGDvN8V7pkWRln0K33K9p++EaAFmskLD5
-         rXdg==
+        bh=pFMIIVsyJBl8LZ+WUnN+JflDTkBBRBPq/m9+UsHc1js=;
+        b=kOl0u/Rhe57ubEv7N22/9aZ//K3tjzZfW3Py8ox3gbRPJ6UjiUgoBGpilHmu/nCgmF
+         Ll1a6TJ7+gn0FAn103tRUjuk892mvZfOsB00cLYygk5yPXdQvJrPnZIpzYG3zXELtLMJ
+         NLCtkLm8RZc0kCi5TJQfbd9CP/i/0rIJmiJvP1UXVlh0gR4m02y3koKodB6L+b382pE0
+         M3zkVPlISPXoI3B7+3H/4zEB5JxriVTdDltIcyAUw50l/asQ0SrKbfQjTlnP9OKVTAjE
+         njP6gb75FZQe1lldrnZ7yn8rRe+wgtVpTZ0/WmG3SePMX0wfqy+bDDbLj459+WuP2TPZ
+         aefQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=15Mv27CpOqcY/QGlaDdYOaxwUvkGE7VrIq+6M5Rz0FU=;
-        b=J7v9r9lPmZl6xORtZgmEYrC4ZMkLc45gHG7SNwy7D41J3ON/8ul1P+q+1N47+BrBKe
-         j2X1oZ7KSJ8QGlU/1/XnAkCtKoYvL0fEuojgXYdHBo7uY3XbIAW16P2hD08Icu8fqMhX
-         lqp+MN3HpZmOaye4Wvnz42AmM46rmPTUYACxyDo+kYDPbnvkoy6PR6uBLTKHan0l9n72
-         M6p7S1GhMxVLafaii/nYEScOfrlUm3zOYIA+HwBvKIAq2eJabd3UwJRbUbVRtE6fMi43
-         aVU4lWWE42L5i3Dw+g60ciW2C9kGloXvtkq26Z6p7uU/gYynvZHsqrZRTz0uwnngCry1
-         8g0Q==
-X-Gm-Message-State: APjAAAVQV+nuRhZWK2OY5+F/lw5/X/UCpr41gOI11ZjNj6EOia9yT/Mg
-        22M4PxB3e8B743oBXSsepxhaENJU248qZTJdD2KGqg==
-X-Google-Smtp-Source: APXvYqzsDubn8C/uZ4YbyQpXtJ3AHSgnXkBYLL2nEvxRnxsGCAl3OTHTeHkcpSedWHXhXx7UFiOxD441yVY/xNRMflE=
-X-Received: by 2002:a9f:31a2:: with SMTP id v31mr8218485uad.15.1560162137549;
- Mon, 10 Jun 2019 03:22:17 -0700 (PDT)
+        bh=pFMIIVsyJBl8LZ+WUnN+JflDTkBBRBPq/m9+UsHc1js=;
+        b=GrMESPKt9BlQHWMLe3hp78ZmZA+TNaMXlYsBnjFPe+g4rdUgIOUpBfKzUT0/+kwc/l
+         syQEEWKln4vT2rvWPfpc8N287YJm+e+kbcRocjf5oWqtUto/VETWeIsvnL9mdW5n58ZA
+         qC8VFMWdZTMK6ftNl7cuuKfNqUnQd5mTRo265BaJkO3sAKSNKpUP9FNxEPPKm92E3JlF
+         Hs6FtbvRQPLLAH+WdrbWGkOz25kpTP2iDPD9HlRuynxS2wOHDvDlSRNNMJgVB3mIOqQv
+         8GbBfyp9v7RUeavjz1Eu+9aelBOutPILMJBCKj1p7BmziZpBh2kbFEZqrl3b93QAWF+s
+         CPtQ==
+X-Gm-Message-State: APjAAAUOvCSONrgBO0cZvRfgyRID8+cbf56mDupkvlaXfOVfvAKMEbb+
+        vxuy39iPcE4RdGP6X0oFBHEFkbYYuR/mihCF/AX9vA==
+X-Google-Smtp-Source: APXvYqxDX2qJsmmcFSXEA/D7lgBIhL5BcM//GZ2Awrb+ANPG1PdpnIRRbG98Nj437OF6HC5C/S/rLx9BEVMrPwv/lGw=
+X-Received: by 2002:a67:ebc5:: with SMTP id y5mr24379568vso.34.1560162143163;
+ Mon, 10 Jun 2019 03:22:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190513192300.653-1-ulf.hansson@linaro.org> <20190513192300.653-10-ulf.hansson@linaro.org>
- <20190607152751.GH15577@e107155-lin>
-In-Reply-To: <20190607152751.GH15577@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org> <20190513192300.653-16-ulf.hansson@linaro.org>
+ <20190607153114.GI15577@e107155-lin>
+In-Reply-To: <20190607153114.GI15577@e107155-lin>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 10 Jun 2019 12:21:41 +0200
-Message-ID: <CAPDyKFq3FFZEAEKrPfvBPUpAGKaTo05zS0-5sfgBjGFhRZ0b=w@mail.gmail.com>
-Subject: Re: [PATCH 09/18] drivers: firmware: psci: Add support for PM domains
- using genpd
+Date:   Mon, 10 Jun 2019 12:21:47 +0200
+Message-ID: <CAPDyKFqooMww0B6vGL56BnG-L=13C3oWeDFx4v1cO9=W9QPwVQ@mail.gmail.com>
+Subject: Re: [PATCH 15/18] drivers: firmware: psci: Support CPU hotplug for
+ the hierarchical model
 To:     Sudeep Holla <sudeep.holla@arm.com>
 Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -81,241 +80,50 @@ Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
         Souvik Chakravarty <souvik.chakravarty@arm.com>,
         Linux PM <linux-pm@vger.kernel.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lina Iyer <lina.iyer@linaro.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 17:27, Sudeep Holla <sudeep.holla@arm.com> wrote:
+On Fri, 7 Jun 2019 at 17:31, Sudeep Holla <sudeep.holla@arm.com> wrote:
 >
-> On Mon, May 13, 2019 at 09:22:51PM +0200, Ulf Hansson wrote:
-> > When the hierarchical CPU topology layout is used in DT, we need to setup
-> > the corresponding PM domain data structures, as to allow a CPU and a group
-> > of CPUs to be power managed accordingly. Let's enable this by deploying
-> > support through the genpd interface.
+> On Mon, May 13, 2019 at 09:22:57PM +0200, Ulf Hansson wrote:
+> > When the hierarchical CPU topology is used and when a CPU has been put
+> > offline (hotplug), that same CPU prevents its PM domain and thus also
+> > potential master PM domains, from being powered off. This is because genpd
+> > observes the CPU's attached device as being active from a runtime PM point
+> > of view.
 > >
-> > Additionally, when the OS initiated mode is supported by the PSCI FW, let's
-> > also parse the domain idle states DT bindings as to make genpd responsible
-> > for the state selection, when the states are compatible with
-> > "domain-idle-state". Otherwise, when only Platform Coordinated mode is
-> > supported, we rely solely on the state selection to be managed through the
-> > regular cpuidle framework.
+> > To deal with this, let's decrease the runtime PM usage count by calling
+> > pm_runtime_put_sync_suspend() of the attached struct device when putting
+> > the CPU offline. Consequentially, we must then increase the runtime PM
+> > usage count, while putting the CPU online again.
 > >
-> > If the initialization of the PM domain data structures succeeds and the OS
-> > initiated mode is supported, we try to switch to it. In case it fails,
-> > let's fall back into a degraded mode, rather than bailing out and returning
-> > an error code.
-> >
-> > Due to that the OS initiated mode may become enabled, we need to adjust to
-> > maintain backwards compatibility for a kernel started through a kexec call.
-> > Do this by explicitly switch to Platform Coordinated mode during boot.
-> >
-> > Finally, the actual initialization of the PM domain data structures, is
-> > done via calling the new shared function, psci_dt_init_pm_domains().
-> > However, this is implemented by subsequent changes.
-> >
-> > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > ---
-> >
-> > Changes:
-> >       - Simplify code setting domain_state at power off.
-> >       - Use the genpd ->free_state() callback to manage freeing of states.
-> >       - Fixup a bogus while loop.
-> >
-> > ---
-> >  drivers/firmware/psci/Makefile         |   2 +-
-> >  drivers/firmware/psci/psci.c           |   7 +-
-> >  drivers/firmware/psci/psci.h           |   5 +
-> >  drivers/firmware/psci/psci_pm_domain.c | 268 +++++++++++++++++++++++++
-> >  4 files changed, 280 insertions(+), 2 deletions(-)
-> >  create mode 100644 drivers/firmware/psci/psci_pm_domain.c
-> >
-> > diff --git a/drivers/firmware/psci/Makefile b/drivers/firmware/psci/Makefile
-> > index 1956b882470f..ff300f1fec86 100644
-> > --- a/drivers/firmware/psci/Makefile
-> > +++ b/drivers/firmware/psci/Makefile
-> > @@ -1,4 +1,4 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  #
-> > -obj-$(CONFIG_ARM_PSCI_FW)    += psci.o
-> > +obj-$(CONFIG_ARM_PSCI_FW)    += psci.o psci_pm_domain.o
-> >  obj-$(CONFIG_ARM_PSCI_CHECKER)       += psci_checker.o
-> > diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> > index 0e91d864e346..bfef300b7ebe 100644
-> > --- a/drivers/firmware/psci/psci.c
-> > +++ b/drivers/firmware/psci/psci.c
-> > @@ -721,9 +721,14 @@ static int __init psci_1_0_init(struct device_node *np)
-> >       if (err)
-> >               return err;
-> >
-> > -     if (psci_has_osi_support())
-> > +     if (psci_has_osi_support()) {
-> >               pr_info("OSI mode supported.\n");
-> >
-> > +             /* Make sure we default to PC mode. */
-> > +             invoke_psci_fn(PSCI_1_0_FN_SET_SUSPEND_MODE,
-> > +                            PSCI_1_0_SUSPEND_MODE_PC, 0, 0);
-> > +     }
-> > +
 >
-> This can go on it's own, any issues with that ?
+> Why is this firmware/driver specific ? Why can't this be dealt in core
+> pm-domain ? I am concerned that if any other architectures or firmware
+> method decides to use this feature, this need to be duplicated there.
 
-Sure, I can move that out to a separate patch.
+What is the core pm-domain? Do you refer to the generic PM domain (genpd), no?
+
+In such case, this is not the job of genpd, but rather the opposite
+(to *monitor* the reference count).
 
 >
-> >       return 0;
-> >  }
-> >
-> > diff --git a/drivers/firmware/psci/psci.h b/drivers/firmware/psci/psci.h
-> > index f2277c3ad405..00d2e3dcef49 100644
-> > --- a/drivers/firmware/psci/psci.h
-> > +++ b/drivers/firmware/psci/psci.h
-> > @@ -11,6 +11,11 @@ bool psci_has_osi_support(void);
-> >  #ifdef CONFIG_CPU_IDLE
-> >  void psci_set_domain_state(u32 state);
-> >  int psci_dt_parse_state_node(struct device_node *np, u32 *state);
-> > +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
-> > +int psci_dt_init_pm_domains(struct device_node *np);
-> > +#else
-> > +static inline int psci_dt_init_pm_domains(struct device_node *np) { return 0; }
-> > +#endif
-> >  #endif
-> >
-> >  #endif /* __PSCI_H */
-> > diff --git a/drivers/firmware/psci/psci_pm_domain.c b/drivers/firmware/psci/psci_pm_domain.c
-> > new file mode 100644
-> > index 000000000000..3c6ca846caf4
-> > --- /dev/null
-> > +++ b/drivers/firmware/psci/psci_pm_domain.c
-> > @@ -0,0 +1,268 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * PM domains for CPUs via genpd - managed by PSCI.
-> > + *
-> > + * Copyright (C) 2019 Linaro Ltd.
-> > + * Author: Ulf Hansson <ulf.hansson@linaro.org>
-> > + *
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "psci: " fmt
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/pm_domain.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> > +
-> > +#include "psci.h"
-> > +
-> > +#if defined(CONFIG_CPU_IDLE) && defined(CONFIG_PM_GENERIC_DOMAINS_OF)
-> > +
-> > +struct psci_pd_provider {
-> > +     struct list_head link;
-> > +     struct device_node *node;
-> > +};
-> > +
-> > +static LIST_HEAD(psci_pd_providers);
-> > +static bool osi_mode_enabled;
-> > +
-> > +static int psci_pd_power_off(struct generic_pm_domain *pd)
-> > +{
-> > +     struct genpd_power_state *state = &pd->states[pd->state_idx];
-> > +     u32 *pd_state;
-> > +
-> > +     /* If we have failed to enable OSI mode, then abort power off. */
-> > +     if (psci_has_osi_support() && !osi_mode_enabled)
-> > +             return -EBUSY;
-> > +
-> > +     if (!state->data)
-> > +             return 0;
-> > +
-> > +     /* When OSI mode is enabled, set the corresponding domain state. */
-> > +     pd_state = state->data;
-> > +     psci_set_domain_state(*pd_state);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int psci_pd_parse_state_nodes(struct genpd_power_state *states,
-> > +                             int state_count)
-> > +{
-> > +     int i, ret;
-> > +     u32 psci_state, *psci_state_buf;
-> > +
-> > +     for (i = 0; i < state_count; i++) {
-> > +             ret = psci_dt_parse_state_node(to_of_node(states[i].fwnode),
-> > +                                     &psci_state);
-> > +             if (ret)
-> > +                     goto free_state;
-> > +
-> > +             psci_state_buf = kmalloc(sizeof(u32), GFP_KERNEL);
-> > +             if (!psci_state_buf) {
-> > +                     ret = -ENOMEM;
-> > +                     goto free_state;
-> > +             }
-> > +             *psci_state_buf = psci_state;
-> > +             states[i].data = psci_state_buf;
-> > +     }
-> > +
-> > +     return 0;
-> > +
-> > +free_state:
-> > +     i--;
-> > +     for (; i >= 0; i--)
-> > +             kfree(states[i].data);
-> > +     return ret;
-> > +}
-> > +
-> > +static int psci_pd_parse_states(struct device_node *np,
-> > +                     struct genpd_power_state **states, int *state_count)
-> > +{
-> > +     int ret;
-> > +
-> > +     /* Parse the domain idle states. */
-> > +     ret = of_genpd_parse_idle_states(np, states, state_count);
-> > +     if (ret)
-> > +             return ret;
-> > +
->
->
-> Lots of things here in this file are not psci specific. They can be
-> moved as generic CPU PM domain support.
+> The way I see this is pure reference counting and is hardware/firmware/
+> driver agnostic and can be made generic.
 
-What exactly do you mean by CPU PM domain support?
+As stated in the another reply, I would rather start with having more
+things driver specific rather than generic. Later on we can always
+consider to move/split things, when there are more users.
 
-The current split is based upon how the generic PM domain (genpd)
-supports CPU devices (see GENPD_FLAG_CPU_DOMAIN), which is already
-available.
-
-I agree that finding the right balance between what can be made
-generic and driver specific is not always obvious. Often it's better
-to start with having more things in the driver code, then move things
-into a common framework, later on, when that turns out to make sense.
-
->
-> > +     /* Fill out the PSCI specifics for each found state. */
-> > +     ret = psci_pd_parse_state_nodes(*states, *state_count);
-> > +     if (ret)
-> > +             kfree(*states);
-> > +
->
-> Things like above are PSCI.
->
-> I am trying to see if we can do something to achieve partitions like we
-> have today: psci.c just has PSCI specific stuff and dt_idle_states.c
-> deals with generic idle stuff.
-
-I am open to any suggestions. Although, I am not sure I understand
-your comment and nor the reason to why you want me to change.
-
-So, what is the problem with having the code that you refer to, inside
-drivers/firmware/psci/psci_pm_domain.c? Can't we just start with that
-and see how it plays?
+In this particular case, the runtime PM reference counting is done on
+the struct device*, that genpd returned via
+dev_pm_domain_attach_by_name(). And because
+dev_pm_domain_attach_by_name() is called from PSCI code, I decided to
+keep this struct device* internal to PSCI.
 
 Kind regards
 Uffe
