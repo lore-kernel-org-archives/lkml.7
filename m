@@ -2,182 +2,247 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66552C28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51414C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B642082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2113C2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:59:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nbzrkE02"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388978AbfFJK7J (ORCPT
+        id S2389091AbfFJK7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 10 Jun 2019 06:59:13 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37095 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388912AbfFJK7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 06:59:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:40554 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388100AbfFJK7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:59:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04AE8337;
-        Mon, 10 Jun 2019 03:59:08 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18E233F557;
-        Mon, 10 Jun 2019 04:00:46 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 11:59:03 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH 09/18] drivers: firmware: psci: Add support for PM
- domains using genpd
-Message-ID: <20190610105903.GC26602@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-10-ulf.hansson@linaro.org>
- <20190607152751.GH15577@e107155-lin>
- <CAPDyKFq3FFZEAEKrPfvBPUpAGKaTo05zS0-5sfgBjGFhRZ0b=w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFq3FFZEAEKrPfvBPUpAGKaTo05zS0-5sfgBjGFhRZ0b=w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190610105907euoutp018862148ba186a1d3e702b073ff2dcfa9~m0TVNgn0R2551425514euoutp01U;
+        Mon, 10 Jun 2019 10:59:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190610105907euoutp018862148ba186a1d3e702b073ff2dcfa9~m0TVNgn0R2551425514euoutp01U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560164347;
+        bh=SZN1jAvGLhSZcXrWgUQqJNUghsrz3iYdLa7AMt7GaZ8=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=nbzrkE02SyOaI+WP67e1NFC7wa4JCkLz0GFId5/WtAGLDvathQiWs/9KMAwbRM93R
+         GogCfqlPZGQiqd4+kcAjmDq0rzjeuiKQ94qMCPsDpSBCK5uFZQJyigOtS7l7sBBteo
+         QQF4go2VmAxYZevr90J+/Vjp1e1mVN2vJfsOL/dg=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190610105907eucas1p13961f94895443a2e8db6d91a8e37c7ce~m0TU0U0-60492804928eucas1p1d;
+        Mon, 10 Jun 2019 10:59:07 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 78.82.04325.BF73EFC5; Mon, 10
+        Jun 2019 11:59:07 +0100 (BST)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190610105906eucas1p1a1e124ea55dd97bc7400b5504002e41c~m0TUFVDDX2573325733eucas1p1i;
+        Mon, 10 Jun 2019 10:59:06 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-ce-5cfe37fb69d8
+Received: from eusync3.samsung.com ( [203.254.199.213]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id F8.CB.04146.AF73EFC5; Mon, 10
+        Jun 2019 11:59:06 +0100 (BST)
+Received: from amdc2143.DIGITAL.local ([106.120.51.59]) by
+        eusync3.samsung.com (Oracle Communications Messaging Server 7.0.5.31.0 64bit
+        (built May  5 2014)) with ESMTPA id <0PSV00JQDQIFQV10@eusync3.samsung.com>;
+        Mon, 10 Jun 2019 11:59:06 +0100 (BST)
+From:   Lukasz Pawelczyk <l.pawelczyk@samsung.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lukasz Pawelczyk <havner@gmail.com>,
+        Lukasz Pawelczyk <l.pawelczyk@samsung.com>
+Subject: [PATCH v5] extensions: libxt_owner: Add supplementary groups option
+Date:   Mon, 10 Jun 2019 12:58:56 +0200
+Message-id: <20190610105856.31754-1-l.pawelczyk@samsung.com>
+X-Mailer: git-send-email 2.20.1
+MIME-version: 1.0
+Content-transfer-encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsWy7djPc7q/zf/FGOzewGrxd2c7s8Wc8y0s
+        Ftt6VzNa/H+tY3G5bxqzxZlJC5ksLu+aw2ZxbIGYxYR1p1gspr+5yuzA5XG6aSOLx5aVN5k8
+        ds66y+7x9vcJJo++LasYPQ59X8Dq8XmTXAB7FJdNSmpOZllqkb5dAlfG0083WAsOaVXMe/CK
+        pYFxplIXIyeHhICJxPmWmUxdjFwcQgIrGCXu/HjJCuF8ZpR48v8SM0zVjKtTmCESyxglljxt
+        ZQNJCAn8Z5RoWmkKYrMJGEh8v7AXrEhEYDqTxJqGV4wgCWaBUIlzj9aDTRIW8JE4tWcHmM0i
+        oCrxrOkwSxcjBwevgI1E74JEiGXyEud717GD2LwCghI/Jt9jgRgjL3HwynMWkPkSAhvYJPbt
+        6mODaHCR+Lj1PJQtI9HZcZAJZKaEQLXEyTMVEPUdjBIbX8xmhKixlvg8aQszxFA+iUnbpjND
+        1PNKdLQJQZgeEn1XIiFejJX43b6cdQKj5CwkF81CctECRqZVjOKppcW56anFxnmp5XrFibnF
+        pXnpesn5uZsYgZF9+t/xrzsY9/1JOsQowMGoxMN7wP5vjBBrYllxZe4hRgkOZiUR3hVS/2KE
+        eFMSK6tSi/Lji0pzUosPMUpzsCiJ81YzPIgWEkhPLEnNTk0tSC2CyTJxcEo1MF5xOZT2bUqx
+        lZRDwtKYvcmuspMvR/HedlpwyOrGxBvXv6tUfLec6zDlN1P9+wUbE4MzGC8Zc3/Mn/3ce3po
+        x9uvr6e2RfeX3Lhi4T1jQXPFrjnVR1nToyedkLOJSWeNlvWrfD3N/FV98JeTxXfDHmiX/NiS
+        yjjXRP291u0NEXXXzk/LyrIQbVRiKc5INNRiLipOBACgrmeh6AIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsVy+t/xq7q/zP/FGBx7Jmvxd2c7s8Wc8y0s
+        Ftt6VzNa/H+tY3G5bxqzxZlJC5ksLu+aw2ZxbIGYxYR1p1gspr+5yuzA5XG6aSOLx5aVN5k8
+        ds66y+7x9vcJJo++LasYPQ59X8Dq8XmTXAB7FJdNSmpOZllqkb5dAlfG0083WAsOaVXMe/CK
+        pYFxplIXIyeHhICJxIyrU5i7GLk4hASWMEq0XZ3GBOE0MklMnv+eBaSKTcBA4vuFvcwgtojA
+        dCaJP7OEQWxmgVCJazOmg8WFBXwkTu3ZAWazCKhKPGs6DNTLwcErYCPRuyARYpm8xPnedewg
+        Nq+AoMSPyfdYIMbISxy88pxlAiPPLCSpWUhSCxiZVjGKpJYW56bnFhvqFSfmFpfmpesl5+du
+        YgQG5rZjPzfvYLy0MfgQowAHoxIP7wH7vzFCrIllxZW5hxglOJiVRHhXSP2LEeJNSaysSi3K
+        jy8qzUktPsQozcGiJM7bIXAwRkggPbEkNTs1tSC1CCbLxMEp1cDYeUD8Vv3Eu2Js0mlbSjxn
+        THA4Yud4y782aUf3Do5wdodVH3/MNTB3k5qVsbxYbMrKL/kP63I87r5j+arMzGy3V3O3k5DJ
+        TUvdQ6tzDIpnzGY0Oh5wUFfvbr/AHDvfqclrP+1u2l//PGxX9dGKhD0bD91csHbrRvX2e+Us
+        yUIcu60vb2k5wbZaiaU4I9FQi7moOBEAX1LTR0gCAAA=
+X-CMS-MailID: 20190610105906eucas1p1a1e124ea55dd97bc7400b5504002e41c
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190610105906eucas1p1a1e124ea55dd97bc7400b5504002e41c
+References: <CGME20190610105906eucas1p1a1e124ea55dd97bc7400b5504002e41c@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 12:21:41PM +0200, Ulf Hansson wrote:
-> On Fri, 7 Jun 2019 at 17:27, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Mon, May 13, 2019 at 09:22:51PM +0200, Ulf Hansson wrote:
-> > > When the hierarchical CPU topology layout is used in DT, we need to setup
-> > > the corresponding PM domain data structures, as to allow a CPU and a group
-> > > of CPUs to be power managed accordingly. Let's enable this by deploying
-> > > support through the genpd interface.
-> > >
-> > > Additionally, when the OS initiated mode is supported by the PSCI FW, let's
-> > > also parse the domain idle states DT bindings as to make genpd responsible
-> > > for the state selection, when the states are compatible with
-> > > "domain-idle-state". Otherwise, when only Platform Coordinated mode is
-> > > supported, we rely solely on the state selection to be managed through the
-> > > regular cpuidle framework.
-> > >
-> > > If the initialization of the PM domain data structures succeeds and the OS
-> > > initiated mode is supported, we try to switch to it. In case it fails,
-> > > let's fall back into a degraded mode, rather than bailing out and returning
-> > > an error code.
-> > >
-> > > Due to that the OS initiated mode may become enabled, we need to adjust to
-> > > maintain backwards compatibility for a kernel started through a kexec call.
-> > > Do this by explicitly switch to Platform Coordinated mode during boot.
-> > >
-> > > Finally, the actual initialization of the PM domain data structures, is
-> > > done via calling the new shared function, psci_dt_init_pm_domains().
-> > > However, this is implemented by subsequent changes.
-> > >
-> > > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> > > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > ---
-> > >
-> > > Changes:
-> > >       - Simplify code setting domain_state at power off.
-> > >       - Use the genpd ->free_state() callback to manage freeing of states.
-> > >       - Fixup a bogus while loop.
-> > >
-> > > ---
-> > >  drivers/firmware/psci/Makefile         |   2 +-
-> > >  drivers/firmware/psci/psci.c           |   7 +-
-> > >  drivers/firmware/psci/psci.h           |   5 +
-> > >  drivers/firmware/psci/psci_pm_domain.c | 268 +++++++++++++++++++++++++
-> > >  4 files changed, 280 insertions(+), 2 deletions(-)
-> > >  create mode 100644 drivers/firmware/psci/psci_pm_domain.c
-> > >
+The --suppl-groups option causes GIDs specified with --gid-owner to be
+also checked in the supplementary groups of a process.
 
-[...]
+Signed-off-by: Lukasz Pawelczyk <l.pawelczyk@samsung.com>
+---
 
-> > > +
-> > > +static int psci_pd_parse_states(struct device_node *np,
-> > > +                     struct genpd_power_state **states, int *state_count)
-> > > +{
-> > > +     int ret;
-> > > +
-> > > +     /* Parse the domain idle states. */
-> > > +     ret = of_genpd_parse_idle_states(np, states, state_count);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> >
-> >
-> > Lots of things here in this file are not psci specific. They can be
-> > moved as generic CPU PM domain support.
->
-> What exactly do you mean by CPU PM domain support?
->
-> The current split is based upon how the generic PM domain (genpd)
-> supports CPU devices (see GENPD_FLAG_CPU_DOMAIN), which is already
-> available.
->
-> I agree that finding the right balance between what can be made
-> generic and driver specific is not always obvious. Often it's better
-> to start with having more things in the driver code, then move things
-> into a common framework, later on, when that turns out to make sense.
->
+Changes from v4:
+ - unit tests added
+    
+Changes from v3:
+ - removed XTOPT_INVERT from O_SUPPL_GROUPS,
+   it wasn't meant to be invertable
+    
+Changes from v2:
+ - XT_SUPPL_GROUPS -> XT_OWNER_SUPPL_GROUPS
+    
+Changes from v1:
+ - complementary -> supplementary
+ - manual (iptables-extensions)
 
-Indeed, I agree. But when reviewing this time I thought it should be
-possible to push generic stuff into existing dt_idle_driver. I must
-admit that I haven't thought much in details, just thought of expressing
-the idea and see. But yes it's difficult to find the balance but at the
-same time we need reasons to have these in psci :)
+extensions/libxt_owner.c           | 24 +++++++++++++++++-------
+ extensions/libxt_owner.man         |  4 ++++
+ extensions/libxt_owner.t           |  4 ++++
+ include/linux/netfilter/xt_owner.h |  7 ++++---
+ 4 files changed, 29 insertions(+), 10 deletions(-)
 
+diff --git a/extensions/libxt_owner.c b/extensions/libxt_owner.c
+index 87e4df31..1702b478 100644
+--- a/extensions/libxt_owner.c
++++ b/extensions/libxt_owner.c
+@@ -56,6 +56,7 @@ enum {
+ 	O_PROCESS,
+ 	O_SESSION,
+ 	O_COMM,
++	O_SUPPL_GROUPS,
+ };
+ 
+ static void owner_mt_help_v0(void)
+@@ -87,7 +88,8 @@ static void owner_mt_help(void)
+ "owner match options:\n"
+ "[!] --uid-owner userid[-userid]      Match local UID\n"
+ "[!] --gid-owner groupid[-groupid]    Match local GID\n"
+-"[!] --socket-exists                  Match if socket exists\n");
++"[!] --socket-exists                  Match if socket exists\n"
++"    --suppl-groups                   Also match supplementary groups set with --gid-owner\n");
+ }
+ 
+ #define s struct ipt_owner_info
+@@ -131,6 +133,7 @@ static const struct xt_option_entry owner_mt_opts[] = {
+ 	 .flags = XTOPT_INVERT},
+ 	{.name = "socket-exists", .id = O_SOCK_EXISTS, .type = XTTYPE_NONE,
+ 	 .flags = XTOPT_INVERT},
++	{.name = "suppl-groups", .id = O_SUPPL_GROUPS, .type = XTTYPE_NONE},
+ 	XTOPT_TABLEEND,
+ };
+ 
+@@ -275,6 +278,11 @@ static void owner_mt_parse(struct xt_option_call *cb)
+ 			info->invert |= XT_OWNER_SOCKET;
+ 		info->match |= XT_OWNER_SOCKET;
+ 		break;
++	case O_SUPPL_GROUPS:
++		if (!(info->match & XT_OWNER_GID))
++			xtables_param_act(XTF_BAD_VALUE, "owner", "--suppl-groups", "you need to use --gid-owner first");
++		info->match |= XT_OWNER_SUPPL_GROUPS;
++		break;
+ 	}
+ }
+ 
+@@ -455,9 +463,10 @@ static void owner_mt_print(const void *ip, const struct xt_entry_match *match,
+ {
+ 	const struct xt_owner_match_info *info = (void *)match->data;
+ 
+-	owner_mt_print_item(info, "owner socket exists", XT_OWNER_SOCKET, numeric);
+-	owner_mt_print_item(info, "owner UID match",     XT_OWNER_UID,    numeric);
+-	owner_mt_print_item(info, "owner GID match",     XT_OWNER_GID,    numeric);
++	owner_mt_print_item(info, "owner socket exists", XT_OWNER_SOCKET,       numeric);
++	owner_mt_print_item(info, "owner UID match",     XT_OWNER_UID,          numeric);
++	owner_mt_print_item(info, "owner GID match",     XT_OWNER_GID,          numeric);
++	owner_mt_print_item(info, "incl. suppl. groups", XT_OWNER_SUPPL_GROUPS, numeric);
+ }
+ 
+ static void
+@@ -487,9 +496,10 @@ static void owner_mt_save(const void *ip, const struct xt_entry_match *match)
+ {
+ 	const struct xt_owner_match_info *info = (void *)match->data;
+ 
+-	owner_mt_print_item(info, "--socket-exists",  XT_OWNER_SOCKET, true);
+-	owner_mt_print_item(info, "--uid-owner",      XT_OWNER_UID,    true);
+-	owner_mt_print_item(info, "--gid-owner",      XT_OWNER_GID,    true);
++	owner_mt_print_item(info, "--socket-exists",  XT_OWNER_SOCKET,       true);
++	owner_mt_print_item(info, "--uid-owner",      XT_OWNER_UID,          true);
++	owner_mt_print_item(info, "--gid-owner",      XT_OWNER_GID,          true);
++	owner_mt_print_item(info, "--suppl-groups",   XT_OWNER_SUPPL_GROUPS, true);
+ }
+ 
+ static int
+diff --git a/extensions/libxt_owner.man b/extensions/libxt_owner.man
+index 49b58cee..e2479865 100644
+--- a/extensions/libxt_owner.man
++++ b/extensions/libxt_owner.man
+@@ -15,5 +15,9 @@ given user. You may also specify a numerical UID, or an UID range.
+ Matches if the packet socket's file structure is owned by the given group.
+ You may also specify a numerical GID, or a GID range.
+ .TP
++\fB\-\-suppl\-groups\fP
++Causes group(s) specified with \fB\-\-gid-owner\fP to be also checked in the
++supplementary groups of a process.
++.TP
+ [\fB!\fP] \fB\-\-socket\-exists\fP
+ Matches if the packet is associated with a socket.
+diff --git a/extensions/libxt_owner.t b/extensions/libxt_owner.t
+index aec30b65..2779e5c1 100644
+--- a/extensions/libxt_owner.t
++++ b/extensions/libxt_owner.t
+@@ -8,5 +8,9 @@
+ -m owner --uid-owner 0-10 --gid-owner 0-10;=;OK
+ -m owner ! --uid-owner root;-m owner ! --uid-owner 0;OK
+ -m owner --socket-exists;=;OK
++-m owner --gid-owner 0-10 --suppl-groups;=;OK
++-m owner --suppl-groups --gid-owner 0-10;;FAIL
++-m owner --gid-owner 0-10 ! --suppl-groups;;FAIL
++-m owner --suppl-groups;;FAIL
+ :INPUT
+ -m owner --uid-owner root;;FAIL
+diff --git a/include/linux/netfilter/xt_owner.h b/include/linux/netfilter/xt_owner.h
+index 20817617..e7731dcc 100644
+--- a/include/linux/netfilter/xt_owner.h
++++ b/include/linux/netfilter/xt_owner.h
+@@ -4,9 +4,10 @@
+ #include <linux/types.h>
+ 
+ enum {
+-	XT_OWNER_UID    = 1 << 0,
+-	XT_OWNER_GID    = 1 << 1,
+-	XT_OWNER_SOCKET = 1 << 2,
++	XT_OWNER_UID          = 1 << 0,
++	XT_OWNER_GID          = 1 << 1,
++	XT_OWNER_SOCKET       = 1 << 2,
++	XT_OWNER_SUPPL_GROUPS = 1 << 3,
+ };
+ 
+ struct xt_owner_match_info {
+-- 
+2.20.1
 
-> >
-> > > +     /* Fill out the PSCI specifics for each found state. */
-> > > +     ret = psci_pd_parse_state_nodes(*states, *state_count);
-> > > +     if (ret)
-> > > +             kfree(*states);
-> > > +
-> >
-> > Things like above are PSCI.
-> >
-> > I am trying to see if we can do something to achieve partitions like we
-> > have today: psci.c just has PSCI specific stuff and dt_idle_states.c
-> > deals with generic idle stuff.
-> 
-> I am open to any suggestions. Although, I am not sure I understand
-> your comment and nor the reason to why you want me to change.
-> 
-> So, what is the problem with having the code that you refer to, inside
-> drivers/firmware/psci/psci_pm_domain.c? Can't we just start with that
-> and see how it plays?
-> 
-
-I need to think how to partition this well. I don't have suggestions
-right away, but I need to get convinced what we have here is best we
-can do or come up with a better solution. I didn't like it as is at
-this time.
-
---
-Regards,
-Sudeep
