@@ -2,81 +2,134 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF4DC28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0C1C28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636A520859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39F020859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zxke5XTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389289AbfFJKTT (ORCPT
+        id S2389302AbfFJKTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:19:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:39830 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389195AbfFJKTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:19:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A65B4337;
-        Mon, 10 Jun 2019 03:19:18 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 350C03F557;
-        Mon, 10 Jun 2019 03:20:58 -0700 (PDT)
-Subject: Re: [PATCH v6 03/19] kernel: Unify update_vsyscall implementation
-To:     Huw Davies <huw@codeweavers.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-4-vincenzo.frascino@arm.com>
- <20190610093447.GC11076@merlot.physics.ox.ac.uk>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <90329b94-6cac-63dd-acad-a04c0d283a83@arm.com>
-Date:   Mon, 10 Jun 2019 11:19:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 10 Jun 2019 06:19:23 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40285 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389291AbfFJKTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:19:21 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p184so1744339pfp.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xl6v5F/D3VxC6oJtpVMTcWPj1WSUBStBszKQqnRd45o=;
+        b=Zxke5XTXYzZ1WpIKENuUCvQiJugmF6xmPmbVa+fQbXPRt5NLXE3XHZUNoUGyv8aLFk
+         0rjG9L8UqFlU/U4gpMjRlgJ8X3nE6ri7wGy68f6iQ0YzmFvk4qUWjWrM+LidoPGkcYmC
+         PQ9xxtOgJlxOvxLQsHD98QnhH9k+vQEifhuGZEw6YF5JG7SxcgV9Yrm+JHUTnexYbwAF
+         kXuHYrgJkBfViN9xWMijKskkhxv4JJjHTYC543USXdVVRRCXXHLpuHefM1TguMusR2yy
+         vc20X6vM3jkm2bt3gBKV0pla8vMhrOsmoUlAB2tkbEgoAhTb/u7PiuuxS5EVmWSF1W4W
+         /vug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xl6v5F/D3VxC6oJtpVMTcWPj1WSUBStBszKQqnRd45o=;
+        b=fn+IOG2EmGN1ux/cvfD8sVgd8iOLSrwCVAvkuiJ30JE+WV0/lVL5vNLaPv5ZudDSZK
+         Umt82yQwHG0IkRzYNkECbA7Xr20CtlOUE+d7O38cWTMdbIAHydRUQK+5qphObAnwZzx7
+         nqIFpkKWQgkzHieFJRix9/d6x0oW4W6zwvMDq8qoApmkJ4Fut8YDoV/E+o10spA22VdK
+         r05XIwhhpgihJq0KwV/Zt87WzjWJx6ZXFF9XYnQMVQuizRIJAwtLpRhvdmaSoCGaluQk
+         r3CzvGZlz8VSePr+DWSkZGL4xtLOC5tD0cVGfTPufwrFy8FEO7KKolBoPzZmuNjCrDit
+         KffQ==
+X-Gm-Message-State: APjAAAW5rOwcWdo8cfBSVngrGvUZgHdPqte8Au1dUl0G4mptIsLvh50A
+        VUKidixSnq1FlU0FBEaRECe/CA==
+X-Google-Smtp-Source: APXvYqz3SI+6kD/ZaeTpbKZtNgBi0rdKkLPqyJFXIcZSqv4cqHNVPe2yimUvsPw0UUlmdDCXEymP1A==
+X-Received: by 2002:a65:6495:: with SMTP id e21mr993356pgv.383.1560161960609;
+        Mon, 10 Jun 2019 03:19:20 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id f186sm13630525pfb.5.2019.06.10.03.19.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 03:19:19 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 15:49:18 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Christian Neubert <christian.neubert.86@gmail.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
+ cpu clocks
+Message-ID: <20190610101918.sypafywc6fn4jsbo@vireshk-i7>
+References: <20190314134428.GA24768@apalos>
+ <874l85v8p6.fsf@FE-laptop>
+ <20190318112844.GA1708@apalos>
+ <87h8c0s955.fsf@FE-laptop>
+ <20190318122113.GA4834@apalos>
+ <20190424093015.rcr5auamfccxf6ei@vireshk-i7>
+ <20190425123303.GA12659@apalos>
+ <20190520112042.mpamnabxpwciih5m@vireshk-i7>
+ <20190522070341.GA32613@apalos>
+ <20190522070614.jhpo7nqrxinmlbcs@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <20190610093447.GC11076@merlot.physics.ox.ac.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522070614.jhpo7nqrxinmlbcs@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/06/2019 10:34, Huw Davies wrote:
-> On Thu, May 30, 2019 at 03:15:15PM +0100, Vincenzo Frascino wrote:
->> With the definition of the unified vDSO library the implementations of
->> update_vsyscall and update_vsyscall_tz became quite similar across
->> architectures.
->>
->> Define a unified implementation of this two functions in kernel/vdso and
+On 22-05-19, 12:36, Viresh Kumar wrote:
+> On 22-05-19, 10:03, Ilias Apalodimas wrote:
+> > Hi Viresh, Gregory
+> > On Mon, May 20, 2019 at 04:50:42PM +0530, Viresh Kumar wrote:
+> > > On 25-04-19, 15:33, Ilias Apalodimas wrote:
+> > > > Hi Viresh,
+> > > > 
+> > > > > > > Also, during this week-end, Christian suggested that the issue might
+> > > > > > > come from the AVS support.
+> > > > > > > 
+> > > > > > > Could you disable it and check you still have the issue?
+> > > > > > > 
+> > > > > > > For this, you just have to remove the avs node in
+> > > > > > > arch/arm64/boot/dts/marvell/armada-37xx.dtsi and rebuild the dtb.
+> > > > > > Sure. You'll have to wait for a week though. Currently on a trip. I'll run that
+> > > > > >  once i return
+> > > > > 
+> > > > > @Ilias: Can you please try this now and confirm to Gregory ?
+> > > > I am more overloaded than usual and totally forgot about this. Apologies.
+> > > > I'll try finding some time and do this.
+> > > 
+> > > Ping Ilias.
+> > Sorry for the huge delay. 
+> > Applying this patch and removing tha 'avs' node from
+> > arch/arm64/boot/dts/marvell/armada-37xx.dtsi seems to work.
+> > Changing between governors does not freeze the board any more. I haven't checked
+> > the actual impact on the CPU speed but the values on 
+> > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor are correct
 > 
-> ... of these two functions ...
+> Thanks for testing it out. Lets see what Gregory has to say now.
 
-Thanks for this, I will fix in v7.
-
-> 
->> provide the bindings that can be implemented by every architecture that
->> takes advantage of the unified vDSO library.
+@Gregory: Do you have any further advice for Ilias ?
 
 -- 
-Regards,
-Vincenzo
+viresh
