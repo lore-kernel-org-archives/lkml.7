@@ -2,103 +2,82 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB37C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7C9C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301DB20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbFGRQUK"
+	by mail.kernel.org (Postfix) with ESMTP id 645A020645
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390916AbfFJOmm (ORCPT
+        id S2390926AbfFJOmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:42:42 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39701 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389178AbfFJOmk (ORCPT
+        Mon, 10 Jun 2019 10:42:47 -0400
+Received: from mx2.yrkesakademin.fi ([85.134.45.195]:9580 "EHLO
+        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389178AbfFJOmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:42:40 -0400
-Received: by mail-lf1-f66.google.com with SMTP id p24so6832292lfo.6;
-        Mon, 10 Jun 2019 07:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SFLtzn7p454HGGXIQlkjvG2CLSCPWdMp9Paqkm4rM+k=;
-        b=tbFGRQUKd+khQV9eVwEStu+IxlVOTskxdCU7u3s3t9S8zzYm3MQdycUje21pVH/Uxl
-         L9o/kjt+XnvRXrLp99GVzzEJ8Y8a7Xv0tZR6Hvlc/6O8wCyGMLdz672oU3QkAwtcRFBA
-         r9hLL1QEpvn7JuNRyuAZ/f2Ljpns3AvRv+m2+j6mspw0X16YsYpOH+B7rpU1m8OL6HHA
-         F6FElcSS4PUi36scC6+Ckhjj9ykDTXIZEbLNGMW3aAW7olNGwXYobx68NfFFRYSH5fOW
-         3nc1JSwOgkcbopKE7Oq239q9gZnGApijkge8jPa5+Dj98Da+3cDYz3GOW7xrxmqeJYNV
-         rAlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SFLtzn7p454HGGXIQlkjvG2CLSCPWdMp9Paqkm4rM+k=;
-        b=qq9zO3pTJ/ZXMLlvrn6vtrge06pr0po+aHhozmhjH4mK6VvMTpSTznxmZTd/2icje2
-         EzDs+be+gs0I8pAPvvSOP22cDuDh7/yAcsyeIe/ekFU4heS3+ck3J5nNwRQwk4GkHim8
-         Vb8UsRIadR9fbbJSD9waRLAIhaSYCgzuWFJcEEJ/+cnglyoNE+emSQYZ7UoeGhUNSX1l
-         O1IslxWD1fJvBNU+VbMZwge5Rmj//mmBNRZJAx+RQW5yd58LgfA/J5NAL9o9zOgWwx/5
-         x2Htgo3AfVwAF9JXkHGo+st9Mxvuiko3Q2P/ddnz0mzuY4wCvKrujVFmNSn/0eKNC1+c
-         KAjg==
-X-Gm-Message-State: APjAAAUiU3eEuMNT4jNI6K/K9UFUAklV/aJi+ZfUwJQ9OoLi6emCoW+z
-        pzvLTCTOPk6HZN3wz6jLrTKne+ChcBaC7nhuq2Q=
-X-Google-Smtp-Source: APXvYqzS2XUDhCf3s3+GEUEe55OtH9zPXFNBU/AxsMsFncMeihyVsCqMSF54jEMyMDjEA5jze5a/E2+M3HJYdcKePeI=
-X-Received: by 2002:ac2:46d5:: with SMTP id p21mr1068566lfo.133.1560177758821;
- Mon, 10 Jun 2019 07:42:38 -0700 (PDT)
+        Mon, 10 Jun 2019 10:42:46 -0400
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Jun 2019 10:42:45 EDT
+Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of AutoReporter
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     Jiri Slaby <jslaby@suse.cz>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20190607153849.101321647@linuxfoundation.org>
+ <20190607153855.717899507@linuxfoundation.org>
+ <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
+ <20190610073119.GB20470@kroah.com>
+ <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
+ <20190610074840.GB24746@kroah.com> <20190610063340.051ee13b@lwn.net>
+ <20190610140528.GA18627@kroah.com>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <f53d2786-a857-d69c-2ead-6e4c19708d6c@mageia.org>
+Date:   Mon, 10 Jun 2019 17:27:39 +0300
 MIME-Version: 1.0
-References: <20190517073813.GB2589@hirez.programming.kicks-ass.net>
- <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
- <20190517085126.GA3249@kroah.com> <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
- <20190517152200.GI8945@kernel.org> <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
- <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org> <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
- <20190610074510.GA24746@kroah.com> <CALrw=nEp=hUUaKtuU3Q1c_zKO3zYC3uP_s_Dyz_zhkxW7K+4mQ@mail.gmail.com>
- <20190610142145.GC5937@kroah.com>
-In-Reply-To: <20190610142145.GC5937@kroah.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Mon, 10 Jun 2019 16:42:27 +0200
-Message-ID: <CANiq72kxyKV1z+dGmMtuq=gUWOYS=Y0EsNFqLKoFXWx6+n=J1g@mail.gmail.com>
-Subject: Re: Linux 4.19 and GCC 9
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Ignat Korchagin <ignat@cloudflare.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190610140528.GA18627@kroah.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-WatchGuard-Spam-ID: str=0001.0A0C020A.5CFE6C66.0018,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.195
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 4:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> > I also checked that 4.19.49 compiles fine with GCC 9, although with a
-> > lot of warnings, mostly from objtool, like "warning: objtool:
-> > sock_register()+0xd: sibling call from callable instruction with
-> > modified stack frame". But it's a start.
+Den 10-06-2019 kl. 17:05, skrev Greg Kroah-Hartman:
+> On Mon, Jun 10, 2019 at 06:33:40AM -0600, Jonathan Corbet wrote:
+>> On Mon, 10 Jun 2019 09:48:40 +0200
+>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>>
+>>> Hm, 2.1 here:
+>>> 	Running Sphinx v2.1.0
+>>> perhaps Tumbleweed needs to update?  :)
+>>
+>> Heh...trying 2.1 is still on my list of things to do ... :)
+>>
+>>> Anyway, this should not be breaking, if Jon doesn't have any ideas, I'll
+>>> just drop these changes.
+>>
+>> The fix for that is 551bd3368a7b (drm/i915: Maintain consistent
+>> documentation subsection ordering) which was also marked for stable.  Jiri,
+>> do you somehow not have that one?
+> 
+> It's part of this series, which is probably why it works for me.  Don't
+> know why it doesn't work for Jiri, unless he is cherry-picking things?
+> 
 
-I think Josh Poimboeuf added support for a few related things in GCC 8
-(e.g. 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")).
+Actualliy it is not.
 
-> I'll look into these after the next round of kernels are released.  I
-> guess I'll go find a distro that has gcc9 on it to actually test
-> things...
+This patch Jiri responded to / points out to break stuff is part of 
+5.1.8, but the fix in in review queue for 5.1.9 :
 
-I typically compile a bare-bones GCC for those things, it is quite quick.
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/diff/queue-5.1/drm-i915-maintain-consistent-documentation-subsection-ordering.patch?id=29167bff7a1c0d79dda104c44c262b0bc4cd6644
 
-Cheers,
-Miguel
+--
+Thomas
