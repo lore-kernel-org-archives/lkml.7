@@ -2,114 +2,114 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE1AC4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35067C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC952089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127F620859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:06:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389829AbfFJVGL (ORCPT
+        id S2389869AbfFJVGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:06:11 -0400
-Received: from mga04.intel.com ([192.55.52.120]:38294 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388342AbfFJVGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:06:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 14:06:10 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga002.jf.intel.com with ESMTP; 10 Jun 2019 14:06:08 -0700
-Message-ID: <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Mon, 10 Jun 2019 13:58:01 -0700
-In-Reply-To: <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
-         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
-         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
-         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
-         <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
-         <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
-         <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
-         <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
-         <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
-         <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
-         <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Jun 2019 17:06:36 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.129]:28313 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388311AbfFJVGf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 17:06:35 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id B17EAD64F
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:06:34 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id aRUwhcEecYTGMaRUwhZQNy; Mon, 10 Jun 2019 16:06:34 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.75.107] (port=48826 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1haRUd-003eSZ-CB; Mon, 10 Jun 2019 16:06:33 -0500
+Date:   Mon, 10 Jun 2019 16:06:13 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
+Message-ID: <20190610210613.GA21989@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.75.107
+X-Source-L: No
+X-Exim-ID: 1haRUd-003eSZ-CB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.75.107]:48826
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-10 at 13:43 -0700, Dave Hansen wrote:
-> On 6/10/19 1:27 PM, Yu-cheng Yu wrote:
-> > > > If the loader cannot allocate a big bitmap to cover all 5-level
-> > > > address space (the bitmap will be large), it can put all legacy lib's
-> > > > at lower address.  We cannot do these easily in the kernel.
-> > > 
-> > > This is actually an argument to do it in the kernel.  The kernel can
-> > > always allocate the virtual space however it wants, no matter how large.
-> > >  If we hide the bitmap behind a kernel API then we can put it at high
-> > > 5-level user addresses because we also don't have to worry about the
-> > > high bits confusing userspace.
-> > 
-> > We actually tried this.  The kernel needs to reserve the bitmap space in the
-> > beginning for every CET-enabled app, regardless of actual needs. 
-> 
-> I don't think this is a problem.  In fact, I think reserving the space
-> is actually the only sane behavior.  If you don't reserve it, you
-> fundamentally limit where future legacy instructions can go.
-> 
-> One idea is that we always size the bitmap for the 48-bit addressing
-> systems.  Legacy code probably doesn't _need_ to go in the new address
-> space, and if we do this we don't have to worry about the gigantic
-> 57-bit address space bitmap.
-> 
-> > On each memory request, the kernel then must consider a percentage of
-> > allocated space in its calculation, and on systems with less memory
-> > this quickly becomes a problem.
-> 
-> I'm not sure what you're referring to here?  Are you referring to our
-> overcommit limits?
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Yes.
+struct nd_region {
+	...
+        struct nd_mapping mapping[0];
+};
+
+instance = kzalloc(sizeof(struct nd_region) + sizeof(struct nd_mapping) *
+                          count, GFP_KERNEL);
+
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+instance = kzalloc(struct_size(instance, mapping, count), GFP_KERNEL);
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/nvdimm/region_devs.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index b4ef7d9ff22e..88becc87e234 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -1027,10 +1027,9 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
+ 		}
+ 		region_buf = ndbr;
+ 	} else {
+-		nd_region = kzalloc(sizeof(struct nd_region)
+-				+ sizeof(struct nd_mapping)
+-				* ndr_desc->num_mappings,
+-				GFP_KERNEL);
++		nd_region = kzalloc(struct_size(nd_region, mapping,
++						ndr_desc->num_mappings),
++				    GFP_KERNEL);
+ 		region_buf = nd_region;
+ 	}
+ 
+-- 
+2.21.0
+
