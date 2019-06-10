@@ -2,109 +2,141 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC62C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3439DC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F7F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09DE8207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="akcYbJG+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="nSxgBY6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388700AbfFJIpA (ORCPT
+        id S2388711AbfFJIpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:45:00 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37882 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388571AbfFJIo4 (ORCPT
+        Mon, 10 Jun 2019 04:45:06 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36556 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388571AbfFJIpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:44:56 -0400
-Received: by mail-lf1-f66.google.com with SMTP id m15so6033194lfh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:44:54 -0700 (PDT)
+        Mon, 10 Jun 2019 04:45:04 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u8so7305552wmm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:45:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XlBqqPFxo7cPYwn+Uda7t8bSPWi1Ym5xI4tmKez88oU=;
-        b=akcYbJG+EMEHuyktHUZxehludAWVvbXzug3nXiPrAg6KkyhcJDGTSMK8syNlanvUgN
-         f/hfNQcmgW6qzY125P4en91PIDaTMtIUChSkMpsfTfbuHD26y+Tlzx1zTOues0HL8r/9
-         4LkroMb8B38ifuJCocFP4HZcQLqMvQ8RDnARiRWkDYOT+dlgTACmx7RimR+Mcs2Y7gCU
-         EZjlG6CP25NNf60EQLQkPY2t3n/WVIVgDAcaeV2wAkMh+9yOHjeckw4fjpoMy2tD1VmS
-         9U0ziQ9CiTYqdSBjabaySXJ4kzP2qFeHdV+42ZnqTWgkjzak7bLIDtjQDK786qYhAPnr
-         WXSQ==
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=qNwGVD0v2tDJVOma8Me2tLXYHNv3uP9ayQAL5Zl5p8M=;
+        b=nSxgBY6UD0ogbvDpleZuxipRQtaVHmWNbd3+eNF78yabI2JIsfMO39rdkJuMbNNNEe
+         uIru4cBb1MmPcYWj/kOLluu1HIst5DczKJbRnNe3C7chIny78xJnJTbDtp/bTTC1rJ9A
+         CmsykBhDqPh7Zez/O5wtjuOyEWDN1wnP4Jnzw4pIcLWrTRNn2YEDYEE0JRNkS8JYgE/M
+         AjOs8MemHx6dr4ab2ob+j1UcCcxRGLyhd5CdXX244kUkBitDNEIpROnrP/ooYoi31a1c
+         SkWZtppIKK3rhjmELkQWW0VubtKtcsVIwBvkvM4IJPb/n+25vEnNmktuAdmvI1nxggCR
+         X/sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XlBqqPFxo7cPYwn+Uda7t8bSPWi1Ym5xI4tmKez88oU=;
-        b=C6MidSo+NAOAIh7Qi4MiijJwnF+N03zadPjdlyLxw1A9YIDzz44VKpymeFDd3FtYuG
-         mneYBF2ApmcxvPFgTFoAtRixX9/Y9nGzaU9cDjdpsJyrWjxVzBC4se++pao9I0wrxfF8
-         H8VN2ZHN/jTn9JRV4LdnDrgTlgXWfrup4HKJ0N0LlmRa/o3Lclw2T+FVm9JydAmvV5kI
-         d612z7jHlK1l5Vj4unKV8QVeQdk6wgf92MhHq7AgOSW1soQYanuCAkF8xukXn8oVpn33
-         +X1KGnz5uPeQjCYTdYNXL9s/Vx/MaUqZDn1ZGEuEJGTleFGkQW+oy0QNSkq0WRgJ+/JF
-         WMEQ==
-X-Gm-Message-State: APjAAAXnuyIvvh6L8R5L9wy3phpWR4kRX1z9ZzPutfo7ANFJgEL/Iapy
-        miKejpkL6geyRuVZ2kuK/HHTGQ==
-X-Google-Smtp-Source: APXvYqzr5fBdboTIMnsXpzQOs0AcoKbfsF0S4KG0fFF4gArjf2efwlStUrgW/uitQQjcm5KQeUstiA==
-X-Received: by 2002:ac2:455a:: with SMTP id j26mr22568179lfm.18.1560156294028;
-        Mon, 10 Jun 2019 01:44:54 -0700 (PDT)
-Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
-        by smtp.gmail.com with ESMTPSA id e26sm1826486ljl.33.2019.06.10.01.44.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 01:44:53 -0700 (PDT)
-From:   =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
-To:     gregkh@linuxfoundation.org
-Cc:     =simon@nikanor.nu, jeremy@azazel.net, dan.carpenter@oracle.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
-Subject: [PATCH 5/5] staging: kpc2000: remove unnecessary debug prints in kpc_dma_driver.c
-Date:   Mon, 10 Jun 2019 10:44:32 +0200
-Message-Id: <20190610084432.12597-6-simon@nikanor.nu>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190610084432.12597-1-simon@nikanor.nu>
-References: <20190610084432.12597-1-simon@nikanor.nu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=qNwGVD0v2tDJVOma8Me2tLXYHNv3uP9ayQAL5Zl5p8M=;
+        b=jhDq5ClEyA5mWuhEV6CBFOkWJlHYeW55jOHJeWJkcPnqLu7oCCSUGHhIfk7CUQN/oh
+         5ihT3o8dVEdm7eBRoepklro2XyWvEJfrnJaExbsy1PsB25hyA6t6484OIpynvh60VHCH
+         +68HABbU4Ae4/MeHkGBcntHx2SDAy5HLZb/pnX8Oppfuv+WB7x5c6nbAN48WfDnHNRSU
+         mTptvHmT1elpPgA/LWXX4fwWaERPlcBa94quRrVa2l11I13epazPkoqhTHtgb/IHMnpd
+         3vkWv6mHldzkkE/ADMHWsP66JvukVY1m6U8jahit4iugHHKdViljzamfROVo6O49/opP
+         PGuw==
+X-Gm-Message-State: APjAAAVU21AZI/5GZkjVbNmpFx22lazpWJ3UjomAJj7NzsVBlEuU2IwP
+        CI1GgCBAbtxmE8ILhJen0wQz7Sg0GHMNWw==
+X-Google-Smtp-Source: APXvYqzqd62YGTXD2QtIldC59KTmIjNitmODkstbY2lZa1eC733LOO1gBiQtxJ40qqkDdHCG3xx5MQ==
+X-Received: by 2002:a1c:750d:: with SMTP id o13mr12156907wmc.35.1560156301810;
+        Mon, 10 Jun 2019 01:45:01 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id j132sm17445435wmj.21.2019.06.10.01.45.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 01:45:01 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, johan@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     Nava kishore Manne <nava.manne@xilinx.com>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] serial: xilinx_uartps: Fix warnings in the driver
+Date:   Mon, 10 Jun 2019 10:44:55 +0200
+Message-Id: <c6753260caf8b20cc002b15fcbf22b759c91d760.1560156294.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debug prints that are used only to inform about function entry or exit
-can be removed as ftrace can be used to get this information.
+From: Nava kishore Manne <nava.manne@xilinx.com>
 
-Signed-off-by: Simon Sandström <simon@nikanor.nu>
+This patch fixes the below warning
+
+        -->Symbolic permissions 'S_IRUGO' are not preferred.
+           Consider using octal permissions '0444'.
+        -->macros should not use a trailing semicolon.
+        -->line over 80 characters.
+        -->void function return statements are not generally useful.
+        -->Prefer 'unsigned int' to bare use of 'unsigned'.
+
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c | 4 ----
- 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-index 9acf1eafa024..4b854027e60a 100644
---- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-+++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-@@ -106,8 +106,6 @@ int  kpc_dma_probe(struct platform_device *pldev)
- 		goto err_rv;
- 	}
+Happy to split it if needed.
+---
+ drivers/tty/serial/xilinx_uartps.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index 605354fd60b1..6af2886f5ba7 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -35,12 +35,12 @@
  
--	dev_dbg(&pldev->dev, "%s(pldev = [%p]) ldev = [%p]\n", __func__, pldev, ldev);
+ /* Rx Trigger level */
+ static int rx_trigger_level = 56;
+-module_param(rx_trigger_level, uint, S_IRUGO);
++module_param(rx_trigger_level, uint, 0444);
+ MODULE_PARM_DESC(rx_trigger_level, "Rx trigger level, 1-63 bytes");
+ 
+ /* Rx Timeout */
+ static int rx_timeout = 10;
+-module_param(rx_timeout, uint, S_IRUGO);
++module_param(rx_timeout, uint, 0444);
+ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255");
+ 
+ /* Register offsets for the UART. */
+@@ -199,7 +199,7 @@ struct cdns_platform_data {
+ 	u32 quirks;
+ };
+ #define to_cdns_uart(_nb) container_of(_nb, struct cdns_uart, \
+-		clk_rate_change_nb);
++		clk_rate_change_nb)
+ 
+ /**
+  * cdns_uart_handle_rx - Handle the received bytes along with Rx errors.
+@@ -312,7 +312,8 @@ static void cdns_uart_handle_tx(void *dev_id)
+ 	} else {
+ 		numbytes = port->fifosize;
+ 		while (numbytes && !uart_circ_empty(&port->state->xmit) &&
+-		       !(readl(port->membase + CDNS_UART_SR) & CDNS_UART_SR_TXFULL)) {
++		       !(readl(port->membase + CDNS_UART_SR) &
++						CDNS_UART_SR_TXFULL)) {
+ 			/*
+ 			 * Get the data from the UART circular buffer
+ 			 * and write it to the cdns_uart's TX_FIFO
+@@ -1073,8 +1074,6 @@ static void cdns_uart_poll_put_char(struct uart_port *port, unsigned char c)
+ 		cpu_relax();
+ 
+ 	spin_unlock_irqrestore(&port->lock, flags);
 -
- 	INIT_LIST_HEAD(&ldev->list);
+-	return;
+ }
+ #endif
  
- 	ldev->pldev = pldev;
-@@ -183,8 +181,6 @@ int  kpc_dma_remove(struct platform_device *pldev)
- 	if (!ldev)
- 		return -ENXIO;
- 
--	dev_dbg(&ldev->pldev->dev, "%s(pldev = [%p]) ldev = [%p]\n", __func__, pldev, ldev);
--
- 	lock_engine(ldev);
- 	sysfs_remove_files(&(ldev->pldev->dev.kobj), ndd_attr_list);
- 	destroy_dma_engine(ldev);
 -- 
-2.20.1
+2.17.1
 
