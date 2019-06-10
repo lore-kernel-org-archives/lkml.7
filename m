@@ -2,96 +2,100 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5BBC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1849AC31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7AC2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E4D2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560188743;
+	bh=iTsWKW80NMdI1sl6GMRAqcWlRjLeTmiHmWnxx8Wra+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oUWuPlAtyvm+Aud6iUFlgmEa7US6apZ170bH88flkwVJPnC9U2ONVeq1sRhhQMYEv
+	 DK85/y2QRzjuJOEDK5aHwl8I7gIgswKgtRIrI4q5U/oixEXD9hGRISWvd0us/uE2BW
+	 bjzrFCCFkpVwS3vqH8DPVcoRc/PcJuUPmAqh8+cI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388445AbfFJRp2 (ORCPT
+        id S2388487AbfFJRpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:45:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:38816 "EHLO mga06.intel.com"
+        Mon, 10 Jun 2019 13:45:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388342AbfFJRp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:45:27 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 10:45:26 -0700
-X-ExtLoop1: 1
-Received: from cmargarx-wtg.ger.corp.intel.com (HELO localhost) ([10.249.34.77])
-  by orsmga007.jf.intel.com with ESMTP; 10 Jun 2019 10:45:13 -0700
-Date:   Mon, 10 Jun 2019 20:45:06 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v2 2/5] x86/sgx: Require userspace to define enclave
- pages' protection bits
-Message-ID: <20190610174506.GB13732@linux.intel.com>
-References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
- <20190606021145.12604-3-sean.j.christopherson@intel.com>
- <20190610152717.GB3752@linux.intel.com>
- <20190610161532.GC15995@linux.intel.com>
+        id S2388215AbfFJRpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:45:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCBC02082E;
+        Mon, 10 Jun 2019 17:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560188741;
+        bh=iTsWKW80NMdI1sl6GMRAqcWlRjLeTmiHmWnxx8Wra+0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jshzf/WLHSR49+gRi5JpHR8ieW0RCb7o3tL2s/Qtl8SNwd93d76Ww07lTUifUmWMP
+         2oa5YYaeIpCJ3H5lIEz+b0GmssK9fz3eY/ZajgFag0xkGGHlfKXkJXfpZMrap17awl
+         Wtv6URezgXYyVBTp7CFtpf6UyajJ1hxL/jILpYpg=
+Date:   Mon, 10 Jun 2019 19:45:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] kobject: return -ENOSPC when add_uevent_var() fails
+Message-ID: <20190610174538.GA10617@kroah.com>
+References: <20190604174412.13324-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610161532.GC15995@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190604174412.13324-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 09:15:33AM -0700, Sean Christopherson wrote:
-> > 'flags' should would renamed as 'secinfo_flags_mask' even if the name is
-> > longish. It would use the same values as the SECINFO flags. The field in
-> > struct sgx_encl_page should have the same name. That would express
-> > exactly relation between SECINFO and the new field. I would have never
-> > asked on last iteration why SECINFO is not enough with a better naming.
+On Wed, Jun 05, 2019 at 02:44:12AM +0900, Masahiro Yamada wrote:
+> This function never attempts to allocate memory, so returning -ENOMEM
+> looks weird to me. The reason of the failure is there is no more space
+> in the given kobj_uevent_env structure.
 > 
-> No, these flags do not impact the EPCM protections in any way.  Userspace
-> can extend the EPCM protections without going through the kernel.  The
-> protection flags for an enclave page impact VMA/PTE protection bits.
+> No caller of this function relies on this functing returning a specific
+> error code, so just change it to return -ENOSPC. The intended change,
+> if any, is the error number displayed in log messages.
 > 
-> IMO, it is best to treat the EPCM as being completely separate from the
-> kernel's EPC management.
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  lib/kobject_uevent.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+> index 7998affa45d4..5ffd44bf4aad 100644
+> --- a/lib/kobject_uevent.c
+> +++ b/lib/kobject_uevent.c
+> @@ -647,7 +647,7 @@ EXPORT_SYMBOL_GPL(kobject_uevent);
+>   * @env: environment buffer structure
+>   * @format: printf format for the key=value pair
+>   *
+> - * Returns 0 if environment variable was added successfully or -ENOMEM
+> + * Returns 0 if environment variable was added successfully or -ENOSPC
+>   * if no space was available.
+>   */
+>  int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
+> @@ -657,7 +657,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
+>  
+>  	if (env->envp_idx >= ARRAY_SIZE(env->envp)) {
+>  		WARN(1, KERN_ERR "add_uevent_var: too many keys\n");
+> -		return -ENOMEM;
+> +		return -ENOSPC;
 
-It is a clumsy API if permissions are not taken in the same format for
-everything. There is no reason not to do it. The way mprotect() callback
-just interprets the field is as VMA permissions.
+As Rafael says, changing this for no good reason is not a good idea,
+sorry.  Let's live with it as-is unless you can show some place where
+this specific error value is causing problems.
 
-It would also be more future-proof just to have a mask covering all bits
-of the SECINFO flags field.
+thanks,
 
-/Jarkko
+greg k-h
