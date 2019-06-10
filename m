@@ -2,135 +2,177 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D0FC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43503C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DA6208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1949A208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:21:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TZJSapzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390370AbfFJVVF (ORCPT
+        id S2390395AbfFJVVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:21:05 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:38333 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390317AbfFJVVA (ORCPT
+        Mon, 10 Jun 2019 17:21:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38774 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390184AbfFJVUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:21:00 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1haRiq-0001JP-E1; Mon, 10 Jun 2019 15:20:56 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1haRip-0005zq-I5; Mon, 10 Jun 2019 15:20:56 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        linux-kernel@vger.kernel.org, arnd@arndb.de, dbueso@suse.de,
-        axboe@kernel.dk, dave@stgolabs.net, e@80x24.org, jbaron@akamai.com,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        omar.kilani@gmail.com, tglx@linutronix.de,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        linux-arch@vger.kernel.org
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
-        <20190529161157.GA27659@redhat.com>
-        <20190604134117.GA29963@redhat.com>
-        <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
-        <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
-Date:   Mon, 10 Jun 2019 16:20:33 -0500
-In-Reply-To: <20190610162244.GB8127@redhat.com> (Oleg Nesterov's message of
-        "Mon, 10 Jun 2019 18:22:45 +0200")
-Message-ID: <87lfy96sta.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Mon, 10 Jun 2019 17:20:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=IfIvobHhliD7MEqdCKHlxMFprSvdnhezPdaASrVUoiA=; b=TZJSapzBw06TNQ4xs5DbJla2hU
+        +cKo6J9E6Bz8PsAduKmvq7yvziGEydc0eWhfFWF7Cv+F4pZhxeuNOoGlnQ5juEJQYuSGQ/oBMRmts
+        qTwijAzWQ3XGKiEPn2gENofBOwR9k1KtrINV8WXspsGcLJ/Jzkxr64pK3W0SuJhEjkJpC6wOWuA4s
+        2RY2Ypj/TyMwCZHF5oQHzNWZ2otu+X5KbEy39aq7uESdv12ErZIvYnh7NemzknnRKPkdRxX/8sh5p
+        vlq4flIQDxvUPbdr9feyljIzrzLZlOdCLwJ0KtRTWSgHYqF7e8Wd3pOPF9u5KZlDYJaaAkDj3ldbW
+        0sVSeXtw==;
+Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1haRik-0000k2-Fb; Mon, 10 Jun 2019 21:20:51 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     Michal Simek <monstr@monstr.eu>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 12/15] binfmt_flat: remove the persistent argument from flat_get_addr_from_rp
+Date:   Mon, 10 Jun 2019 23:20:12 +0200
+Message-Id: <20190610212015.9157-13-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190610212015.9157-1-hch@lst.de>
+References: <20190610212015.9157-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1haRip-0005zq-I5;;;mid=<87lfy96sta.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19JMwWsnvGkbEiV8+1643ZDVFGDCR8cZgc=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oleg Nesterov <oleg@redhat.com> writes:
+The argument is never used.
 
-> On 06/07, Eric W. Biederman wrote:
->>
->> +static int set_sigmask(sigset_t *kmask)
->> +{
->> +	set_restore_sigmask();
->> +	current->saved_sigmask = current->blocked;
->> +	set_current_blocked(kmask);
->> +
->> +	return 0;
->> +}
->
-> I was going to do the same change except my version returns void ;)
->
-> So ACK.
->
->
-> As for 2-5, sorry I can't read them today, will do tomorrow.
->
-> But at first glance... yes, we can remove TIF_RESTORE_SIGMASK.
->
-> As for "remove saved_sigmask" I have some concerns... At least this
-> means a user-visible change iiuc. Say, pselect unblocks a fatal signal.
-> Say, SIGINT without a handler. Suppose SIGINT comes after set_sigmask().
->
-> Before this change the process will be killed.
->
-> After this change it will be killed or not. It won't be killed if
-> do_select() finds an already ready fd without blocking, or it finds a
-> ready fd right after SIGINT interrupts poll_schedule_timeout().
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/c6x/include/asm/flat.h        | 2 +-
+ arch/h8300/include/asm/flat.h      | 2 +-
+ arch/microblaze/include/asm/flat.h | 2 +-
+ arch/sh/include/asm/flat.h         | 2 +-
+ arch/xtensa/include/asm/flat.h     | 2 +-
+ fs/binfmt_flat.c                   | 4 +---
+ include/asm-generic/flat.h         | 2 +-
+ 7 files changed, 7 insertions(+), 9 deletions(-)
 
-Yes.  Because having the signal set in real_blocked disables the
-immediate kill optimization, and the signal has to be delivered before
-we decide to kill the process.  Which matters because as you say if
-nothing checks signal_pending() when the signals are unblocked we might
-not attempt to deliver the signal.
+diff --git a/arch/c6x/include/asm/flat.h b/arch/c6x/include/asm/flat.h
+index 2d57a9204d21..9e6544b51386 100644
+--- a/arch/c6x/include/asm/flat.h
++++ b/arch/c6x/include/asm/flat.h
+@@ -5,7 +5,7 @@
+ #include <asm/unaligned.h>
+ 
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+-					u32 *addr, u32 *persistent)
++					u32 *addr)
+ {
+ 	*addr = get_unaligned((__force u32 *)rp);
+ 	return 0;
+diff --git a/arch/h8300/include/asm/flat.h b/arch/h8300/include/asm/flat.h
+index 4683146f0e9e..78070f924177 100644
+--- a/arch/h8300/include/asm/flat.h
++++ b/arch/h8300/include/asm/flat.h
+@@ -17,7 +17,7 @@
+ 
+ #define	flat_get_relocate_addr(rel)		(rel & ~0x00000001)
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+-					u32 *addr, u32 *persistent)
++					u32 *addr)
+ {
+ 	u32 val = get_unaligned((__force u32 *)rp);
+ 	if (!(flags & FLAT_FLAG_GOTPIC))
+diff --git a/arch/microblaze/include/asm/flat.h b/arch/microblaze/include/asm/flat.h
+index 9e3d8e01d294..1ab86770eaee 100644
+--- a/arch/microblaze/include/asm/flat.h
++++ b/arch/microblaze/include/asm/flat.h
+@@ -28,7 +28,7 @@
+  */
+ 
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+-					u32 *addr, u32 *persistent)
++					u32 *addr)
+ {
+ 	u32 *p = (__force u32 *)rp;
+ 
+diff --git a/arch/sh/include/asm/flat.h b/arch/sh/include/asm/flat.h
+index 1002343dd84a..fee4f25555cb 100644
+--- a/arch/sh/include/asm/flat.h
++++ b/arch/sh/include/asm/flat.h
+@@ -12,7 +12,7 @@
+ #include <asm/unaligned.h>
+ 
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+-					u32 *addr, u32 *persistent)
++					u32 *addr)
+ {
+ 	*addr = get_unaligned((__force u32 *)rp);
+ 	return 0;
+diff --git a/arch/xtensa/include/asm/flat.h b/arch/xtensa/include/asm/flat.h
+index 3d357371b28b..ed5870c779f9 100644
+--- a/arch/xtensa/include/asm/flat.h
++++ b/arch/xtensa/include/asm/flat.h
+@@ -5,7 +5,7 @@
+ #include <asm/unaligned.h>
+ 
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+-					u32 *addr, u32 *persistent)
++					u32 *addr)
+ {
+ 	*addr = get_unaligned((__force u32 *)rp);
+ 	return 0;
+diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+index ed7d969593d2..114ea225c5a5 100644
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -794,7 +794,6 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 	 * __start to address 4 so that is okay).
+ 	 */
+ 	if (rev > OLD_FLAT_VERSION) {
+-		u32 __maybe_unused persistent = 0;
+ 		for (i = 0; i < relocs; i++) {
+ 			u32 addr, relval;
+ 			__be32 tmp;
+@@ -815,8 +814,7 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 			}
+ 
+ 			/* Get the pointer's value.  */
+-			ret = flat_get_addr_from_rp(rp, relval, flags,
+-							&addr, &persistent);
++			ret = flat_get_addr_from_rp(rp, relval, flags, &addr);
+ 			if (unlikely(ret))
+ 				goto err;
+ 
+diff --git a/include/asm-generic/flat.h b/include/asm-generic/flat.h
+index fcd2b45c0735..1928a3596938 100644
+--- a/include/asm-generic/flat.h
++++ b/include/asm-generic/flat.h
+@@ -5,7 +5,7 @@
+ #include <linux/uaccess.h>
+ 
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+-		u32 *addr, u32 *persistent)
++		u32 *addr)
+ {
+ #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	return copy_from_user(addr, rp, 4) ? -EFAULT : 0;
+-- 
+2.20.1
 
-So it is a matter of timing.
-
-If we have both a signal and a file descriptor become ready
-at the same time I would call that a race.  Either could
-wake up the process and depending on the exact time we could
-return either one.
-
-So it is possible that today if the signal came just after the file
-descriptor ,the code might have made it to restore_saved_sigmask_unless,
-before __send_signal runs.
-
-I see the concern.  I think in a matter like this we try it.  Make
-the patches clean so people can bisect the problem.  Then if someone
-runs into this problem we revert the offending patches.
-
-If it looks like bisection won't cleanly reveal the potential problem
-please let me know.
-
-Personally I don't think anyone sane would intentionally depend on this
-and I don't think there is a sufficiently reliable way to depend on this
-by accident that people would actually be depending on it.
-
-> And _to me_ the new behaviour makes more sense. But when it comes to
-> user-visible changes you can never know if it breaks something or not.
-
-True.
-
-The set of applications is larger than any developer can reasonably test.
-
-Eric
