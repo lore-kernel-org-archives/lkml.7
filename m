@@ -2,145 +2,168 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BA9C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E8FC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4F520859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D274520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:05:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ILTcYwTE"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sH/4LAkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388345AbfFJIDF (ORCPT
+        id S2388360AbfFJIFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:03:05 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39496 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388235AbfFJIDD (ORCPT
+        Mon, 10 Jun 2019 04:05:48 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37449 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388114AbfFJIFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:03:03 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z23so7160328wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=u82TTwb8ixlFfrNUJnFoGiqW7vUPbpvM9WdQFkW0Sgo=;
-        b=ILTcYwTEN0sqsAHKFcmwrFWMuSfyNM1NchlalYVj8bFmYmVu6fm/AHxWHvy+r5vmfm
-         0D/FGWCMsEkO/oOofk0C0YtrlvwLhDhYC6an9C7JRnbAARt2r2tBQZXsQqDKGziDxVjc
-         Z/aZhho0FcHYIrxyszQIHhvUw5nWnk2+Epw+hO8WzVSlHagZmy+fE4XxMeN0HLfY1fQa
-         YcPAqgiPJxAsz78MsL6jn7fb3aAuGThiJ1jBNR2QdIz2RihvMb2NwDFsB9DqgMnDwIB3
-         ZzJ3nTCgumg+ALD2kzR59+lC7LqoxXgFTJvASWAsgttbe5X+Qgz1Nff8floBpqRHbNKG
-         jVQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=u82TTwb8ixlFfrNUJnFoGiqW7vUPbpvM9WdQFkW0Sgo=;
-        b=KwvsBVfuAOQ5c4sQAsU4C0lca8j4J9aOOog/5LceUTTwQs9xz1BtbEg8J3LfBW5+d9
-         DnCU7dbTqmva8XF/jQbtqWlGy2XExfW10pUG+0CZ4O08srOqH7P5jaE+6iPcXTO93ypB
-         Y027lksLm2tPaL9W0mp8onWsr9tby1ZPx3/CUPPYcoSqknGExByMt03x5vBaEEc3aCTv
-         1EX81NzveuPn8R4IQppMGXk1JxWqF9OfGnM8vm45UkFUE3j4OqQx+FzoMA/VzM5505s4
-         p8DFewCGs52gr1l/lhJh5q1/hd8XMz159f4INKwv6ktl/xGX/DHUNF2ziwiOLtjAEiui
-         p2NA==
-X-Gm-Message-State: APjAAAXP8LfCvN6jewx9W/Lj3+V2bbIyQn4yFRxnIHAf0CkBisAB2Wl6
-        4nWmiofn3f+xs5SEP0TwEr6V0w==
-X-Google-Smtp-Source: APXvYqz65id5SFfU8rn9yGZIaRt4Ct2BsHn+rIV/wkq2ik8juXBU/IcNLZAF70j8d/PFOU51TXB9nQ==
-X-Received: by 2002:a1c:8a:: with SMTP id 132mr9007662wma.44.1560153780728;
-        Mon, 10 Jun 2019 01:03:00 -0700 (PDT)
-Received: from dell ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id s8sm16879674wra.55.2019.06.10.01.02.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 01:03:00 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 09:02:58 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
-        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
-        linus.walleij@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, jlhugo@gmail.com,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-Message-ID: <20190610080258.GI4797@dell>
-References: <20190605114302.22509-1-lee.jones@linaro.org>
- <20190605114302.22509-3-lee.jones@linaro.org>
- <20190608040610.GJ24059@builder>
+        Mon, 10 Jun 2019 04:05:47 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190610080545euoutp01a42c15853c9f2c19f0568857850ff6ba~mx79Mi6cP3174731747euoutp01D
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 08:05:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190610080545euoutp01a42c15853c9f2c19f0568857850ff6ba~mx79Mi6cP3174731747euoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560153945;
+        bh=Iydzu+34xMOqZUeL4a5kLloyjoWo0xPAO3gew+uxnu8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=sH/4LAkHLx5LaovrpNwy12MpT8CJXv7/xkiwiDpXtHPdZ7fQDMTcWf7X+sL6btgr9
+         rkPl7nPCboz85OMHt+8Kl8OUle3NIX7UCfzqEiCaKtdAeiJvXnHPeqLMd78IyHkgaR
+         hEED+yxS8Ue2nSnWuUFHF64XBzqns9f4FunbBPjs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190610080544eucas1p22efd8450d445146257a36b83adde084a~mx78aOjzV0238302383eucas1p2l;
+        Mon, 10 Jun 2019 08:05:44 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 12.DD.04325.85F0EFC5; Mon, 10
+        Jun 2019 09:05:44 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190610080543eucas1p1925be58eed3fadb6df90b58541e87cbb~mx77lHQId2351823518eucas1p1A;
+        Mon, 10 Jun 2019 08:05:43 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190610080543eusmtrp1f50cfc06142c71af65eb2953a6d6aff2~mx77VWRmP3063330633eusmtrp1G;
+        Mon, 10 Jun 2019 08:05:43 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-b1-5cfe0f5899b8
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 35.D7.04146.75F0EFC5; Mon, 10
+        Jun 2019 09:05:43 +0100 (BST)
+Received: from [106.109.129.180] (unknown [106.109.129.180]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190610080542eusmtip23f447e2d8dc20e3cf266844fb3998a84~mx76qbxxV0105901059eusmtip2V;
+        Mon, 10 Jun 2019 08:05:42 +0000 (GMT)
+Subject: Re: [PATCH bpf v2] xdp: fix hang while unregistering device bound
+ to xdp socket
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>
+From:   Ilya Maximets <i.maximets@samsung.com>
+Message-ID: <d8b2bc92-3b7e-dfe7-35ee-61a68d46ff02@samsung.com>
+Date:   Mon, 10 Jun 2019 11:05:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190608040610.GJ24059@builder>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190607163156.12cd3418@cakuba.netronome.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djP87oR/P9iDM618ln8advAaPH5yHE2
+        iznnW1gsrrT/ZLc49qKFzWLXupnMFpd3zWGzWHHoBFBsgZjF9v59jA5cHltW3mTy2DnrLrvH
+        4j0vmTymdz9k9ujbsorR4/MmuQC2KC6blNSczLLUIn27BK6MWfdeMha846648voZSwPjJs4u
+        Rg4OCQETiS+Tg7oYuTiEBFYwSnz9vZIZwvnCKHGvsYsVwvnMKHGy9z9QhhOs4+W/FjaIxHJG
+        iQ8t36BaPjJKfJv/DqxKWCBK4tu/p0wgtoiAocSvG1PARjELrGWSuPRnIgtIgk1AR+LU6iOM
+        IDavgJ1E/+6F7CA2i4CqxJwZJ8AGiQpESHzZuQmqRlDi5MwnYL2cAtYS7cvvsILYzALiEk1f
+        VkLZ8hLb384Bu0hC4By7RFvndyaIu10k5t+YxAJhC0u8Or6FHcKWkTg9uQcqXi9xv+UlI0Rz
+        B6PE9EP/oJrtJba8PscOCjJmAU2J9bv0IcKOEt8vtbNDQpJP4sZbQYgb+CQmbZvODBHmleho
+        E4KoVpH4fXA5NBSlJG6++8w+gVFpFpLPZiH5ZhaSb2Yh7F3AyLKKUTy1tDg3PbXYOC+1XK84
+        Mbe4NC9dLzk/dxMjMFWd/nf86w7GfX+SDjEKcDAq8fAesP8bI8SaWFZcmXuIUYKDWUmE9+3R
+        PzFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeasZHkQLCaQnlqRmp6YWpBbBZJk4OKUaGJUVXn2w
+        V0//Nfeqks7Br83XPzv03w5hCKmSKthteEOc2fSu1Tex7NZp/7KNPsd+DdY+dOGXl6Dn+TUq
+        H66J3etXPcZZvLLANGlOZeJ26TVLJXOVU07uejl5h1Rr59y/eb8Sr/6+/iRlchrj7LeTNxpU
+        ZXP2R26WP1r8/um9/4HvEpYq8dxXFFNiKc5INNRiLipOBADigeVQUQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsVy+t/xe7rh/P9iDGad5Lf407aB0eLzkeNs
+        FnPOt7BYXGn/yW5x7EULm8WudTOZLS7vmsNmseLQCaDYAjGL7f37GB24PLasvMnksXPWXXaP
+        xXteMnlM737I7NG3ZRWjx+dNcgFsUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFW
+        RqZK+nY2Kak5mWWpRfp2CXoZs+69ZCx4x11x5fUzlgbGTZxdjJwcEgImEi//tbB1MXJxCAks
+        ZZT4ef4XI0RCSuLHrwusELawxJ9rXVBF7xklHv06xASSEBaIkrj0+DgziC0iYCjx68YUVpAi
+        ZoG1TBK7VjczQXTsZ5TYeuopWAebgI7EqdVHwFbwCthJ9O9eyA5iswioSsyZcQJskqhAhMTs
+        XQ0sEDWCEidnPgGzOQWsJdqX3wE7iVlAXeLPvEvMELa4RNOXlVBxeYntb+cwT2AUmoWkfRaS
+        lllIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMD63Hfu5eQfjpY3BhxgFOBiV
+        eHgP2P+NEWJNLCuuzD3EKMHBrCTC+/bonxgh3pTEyqrUovz4otKc1OJDjKZAz01klhJNzgem
+        jrySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYy6Equ6i9YVXTOJ
+        7+mo3zd5xWnLz3cvX4t+IDRDvNdugv2hM91zfy9o+3ijq/Vcv5OSTt85lorF1yuWcCtM7N8Q
+        l3/1kvelhVazLL2FszlfrgnbuiWJzf6/c1fWyu+1Pm1f2V4Ue89a219xM7DsgPJtq+d/7i/M
+        WC9mua1PesVqm+rfS9ZlMy5VYinOSDTUYi4qTgQAAmzqW+UCAAA=
+X-CMS-MailID: 20190610080543eucas1p1925be58eed3fadb6df90b58541e87cbb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e
+References: <CGME20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e@eucas1p1.samsung.com>
+        <20190607173143.4919-1-i.maximets@samsung.com>
+        <20190607163156.12cd3418@cakuba.netronome.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 07 Jun 2019, Bjorn Andersson wrote:
-
-> On Wed 05 Jun 04:42 PDT 2019, Lee Jones wrote:
+On 08.06.2019 2:31, Jakub Kicinski wrote:
+> On Fri,  7 Jun 2019 20:31:43 +0300, Ilya Maximets wrote:
+>> +static int xsk_notifier(struct notifier_block *this,
+>> +			unsigned long msg, void *ptr)
+>> +{
+>> +	struct sock *sk;
+>> +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+>> +	struct net *net = dev_net(dev);
+>> +	int i, unregister_count = 0;
 > 
-> > When booting MSM based platforms with Device Tree or some ACPI
-> > implementations, it is possible to provide a list of reserved pins
-> > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> > However some ACPI tables are not populated with this information,
-> > thus it has to come from a knowledgable device driver instead.
-> > 
-> > Here we provide the MSM common driver with additional support to
-> > parse this informtion and correctly populate the widely used
-> > 'valid_mask'.
-> > 
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/pinctrl/qcom/pinctrl-msm.c | 18 ++++++++++++++++++
-> >  drivers/pinctrl/qcom/pinctrl-msm.h |  1 +
-> >  2 files changed, 19 insertions(+)
-> > 
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > index ee8119879c4c..3ac740b36508 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > @@ -607,8 +607,23 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip)
-> >  	int ret;
-> >  	unsigned int len, i;
-> >  	unsigned int max_gpios = pctrl->soc->ngpios;
-> > +	const int *reserved = pctrl->soc->reserved_gpios;
-> >  	u16 *tmp;
-> >  
-> > +	/* Driver provided reserved list overrides DT and ACPI */
-> > +	if (reserved) {
-> > +		bitmap_fill(chip->valid_mask, max_gpios);
-> > +		for (i = 0; reserved[i] >= 0; i++) {
-> > +			if (i >= max_gpios || reserved[i] >= max_gpios) {
+> Please order the var declaration lines longest to shortest.
+> (reverse christmas tree)
+
+Hi.
+I'm not a fan of mixing 'struct's with bare types in the declarations.
+Moving the 'sk' to the third place will make a hole like this:
+
+	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+	struct net *net = dev_net(dev);
+	struct sock *sk;
+	int i, unregister_count = 0;
+
+Which is not looking good.
+Moving to the 4th place:
+
+	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+	struct net *net = dev_net(dev);
+	int i, unregister_count = 0;
+	struct sock *sk;
+
+This variant doesn't look good for me because of mixing 'struct's with
+bare integers.
+
+Do you think I need to use one of above variants?
+
 > 
-> reserved is a list of GPIOs to reserve, I don't see a reason to check
-> if that list is longer than the number of GPIOs (i.e. the first half of
-> the condition).
+>> +	mutex_lock(&net->xdp.lock);
+>> +	sk_for_each(sk, &net->xdp.list) {
+>> +		struct xdp_sock *xs = xdp_sk(sk);
+>> +
+>> +		mutex_lock(&xs->mutex);
+>> +		switch (msg) {
+>> +		case NETDEV_UNREGISTER:
 > 
-> It wouldn't make sense to be, but there's no logical issue with it and I
-> had to read the conditional a few extra times to be sure what was going
-> on.
+> You should probably check the msg type earlier and not take all the
+> locks and iterate for other types..
 
-If nothing else, it's an early hard stop in case someone forgot to
-terminate the reserved array.
+Yeah. I thought about it too. Will fix in the next version.
 
-> Apart from that you have my
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Thanks Bjorn.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards, Ilya Maximets.
