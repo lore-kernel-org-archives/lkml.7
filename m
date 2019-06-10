@@ -2,195 +2,110 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EBFC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22726C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F9620820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4CD208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="clRIYTQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389879AbfFJMTf (ORCPT
+        id S2389890AbfFJMTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 08:19:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:8655 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388952AbfFJMTf (ORCPT
+        Mon, 10 Jun 2019 08:19:42 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40272 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388952AbfFJMTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 08:19:35 -0400
-X-UUID: ad889bcc9b5e4336a01236376cd3f9d8-20190610
-X-UUID: ad889bcc9b5e4336a01236376cd3f9d8-20190610
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1384090959; Mon, 10 Jun 2019 20:19:30 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 10 Jun 2019 20:19:29 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 10 Jun 2019 20:19:28 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Mon, 10 Jun 2019 08:19:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5ACJYvj051757;
+        Mon, 10 Jun 2019 07:19:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560169175;
+        bh=HRczlLLLa8fNcM5JaVoEwlEJRwamvX4hQ+KRQb/Fon8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=clRIYTQvxertq25F+Zqgjl+8PyIO0ND2jEZjKoYcU8Mn6OD+umX8Ti7bX9wO5Ak0v
+         +CnBk0v4nZRQ/MK6dzy/h/1yt93KX71Yexc5heunvy/+PfcAYzL0JIzRlReMtF4Agy
+         SXtCOX7X159pZzGAo+9swxcupT2mDJBLvaZUKSBQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5ACJYUs089592
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Jun 2019 07:19:34 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
+ Jun 2019 07:19:29 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 10 Jun 2019 07:19:29 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5ACJQGV122170;
+        Mon, 10 Jun 2019 07:19:27 -0500
+Subject: Re: [PATCH] firmware: ti_sci: Add support for processor control
+To:     <santosh.shilimkar@oracle.com>, Suman Anna <s-anna@ti.com>,
+        Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v7 05/21] iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and iopte_to_paddr helpers
-Date:   Mon, 10 Jun 2019 20:17:44 +0800
-Message-ID: <1560169080-27134-6-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+        <linux-kernel@vger.kernel.org>
+References: <20190605223334.30428-1-s-anna@ti.com>
+ <4302c224-9e50-6320-2585-60bfe0aa2a32@oracle.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <2174bc51-9e28-e519-b936-9e101e2a2a4e@ti.com>
+Date:   Mon, 10 Jun 2019 15:19:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <4302c224-9e50-6320-2585-60bfe0aa2a32@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add two helper functions: paddr_to_iopte and iopte_to_paddr.
+On 08/06/2019 00:35, santosh.shilimkar@oracle.com wrote:
+> On 6/5/19 3:33 PM, Suman Anna wrote:
+>> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
+>> is used in Texas Instrument's System on Chip (SoC) such as those
+>> in K3 family AM654 SoC to communicate between various compute
+>> processors with a central system controller entity.
+>>
+>> The system controller provides various services including the control
+>> of other compute processors within the SoC. Extend the TI-SCI protocol
+>> support to add various TI-SCI commands to invoke services associated
+>> with power and reset control, and boot vector management of the
+>> various compute processors from the Linux kernel.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> Hi Santosh, Nishanth, Tero,
+>>
+>> Appreciate it if this patch can be picked up for the 5.3 merge window.
+>> This is a dependency patch for my various remoteproc drivers on TI K3
+>> SoCs. Patch is on top of v5.2-rc1.
+>>
+> I will pick this up for 5.3.
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Evan Green <evgreen@chromium.org>
----
- drivers/iommu/io-pgtable-arm-v7s.c | 45 ++++++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 12 deletions(-)
+Santosh,
 
-diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-index 9a8a887..94c38db 100644
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -180,18 +180,38 @@ struct arm_v7s_io_pgtable {
- 	spinlock_t		split_lock;
- };
- 
-+static bool arm_v7s_pte_is_cont(arm_v7s_iopte pte, int lvl);
-+
- static dma_addr_t __arm_v7s_dma_addr(void *pages)
- {
- 	return (dma_addr_t)virt_to_phys(pages);
- }
- 
--static arm_v7s_iopte *iopte_deref(arm_v7s_iopte pte, int lvl)
-+static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
-+				    struct io_pgtable_cfg *cfg)
- {
-+	return paddr & ARM_V7S_LVL_MASK(lvl);
-+}
-+
-+static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
-+				  struct io_pgtable_cfg *cfg)
-+{
-+	arm_v7s_iopte mask;
-+
- 	if (ARM_V7S_PTE_IS_TABLE(pte, lvl))
--		pte &= ARM_V7S_TABLE_MASK;
-+		mask = ARM_V7S_TABLE_MASK;
-+	else if (arm_v7s_pte_is_cont(pte, lvl))
-+		mask = ARM_V7S_LVL_MASK(lvl) * ARM_V7S_CONT_PAGES;
- 	else
--		pte &= ARM_V7S_LVL_MASK(lvl);
--	return phys_to_virt(pte);
-+		mask = ARM_V7S_LVL_MASK(lvl);
-+
-+	return pte & mask;
-+}
-+
-+static arm_v7s_iopte *iopte_deref(arm_v7s_iopte pte, int lvl,
-+				  struct arm_v7s_io_pgtable *data)
-+{
-+	return phys_to_virt(iopte_to_paddr(pte, lvl, &data->iop.cfg));
- }
- 
- static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
-@@ -407,7 +427,7 @@ static int arm_v7s_init_pte(struct arm_v7s_io_pgtable *data,
- 	if (num_entries > 1)
- 		pte = arm_v7s_pte_to_cont(pte, lvl);
- 
--	pte |= paddr & ARM_V7S_LVL_MASK(lvl);
-+	pte |= paddr_to_iopte(paddr, lvl, cfg);
- 
- 	__arm_v7s_set_pte(ptep, pte, num_entries, cfg);
- 	return 0;
-@@ -473,7 +493,7 @@ static int __arm_v7s_map(struct arm_v7s_io_pgtable *data, unsigned long iova,
- 	}
- 
- 	if (ARM_V7S_PTE_IS_TABLE(pte, lvl)) {
--		cptep = iopte_deref(pte, lvl);
-+		cptep = iopte_deref(pte, lvl, data);
- 	} else if (pte) {
- 		/* We require an unmap first */
- 		WARN_ON(!selftest_running);
-@@ -523,7 +543,8 @@ static void arm_v7s_free_pgtable(struct io_pgtable *iop)
- 		arm_v7s_iopte pte = data->pgd[i];
- 
- 		if (ARM_V7S_PTE_IS_TABLE(pte, 1))
--			__arm_v7s_free_table(iopte_deref(pte, 1), 2, data);
-+			__arm_v7s_free_table(iopte_deref(pte, 1, data),
-+					     2, data);
- 	}
- 	__arm_v7s_free_table(data->pgd, 1, data);
- 	kmem_cache_destroy(data->l2_tables);
-@@ -593,7 +614,7 @@ static size_t arm_v7s_split_blk_unmap(struct arm_v7s_io_pgtable *data,
- 		if (!ARM_V7S_PTE_IS_TABLE(pte, 1))
- 			return 0;
- 
--		tablep = iopte_deref(pte, 1);
-+		tablep = iopte_deref(pte, 1, data);
- 		return __arm_v7s_unmap(data, iova, size, 2, tablep);
- 	}
- 
-@@ -652,7 +673,7 @@ static size_t __arm_v7s_unmap(struct arm_v7s_io_pgtable *data,
- 				io_pgtable_tlb_add_flush(iop, iova, blk_size,
- 					ARM_V7S_BLOCK_SIZE(lvl + 1), false);
- 				io_pgtable_tlb_sync(iop);
--				ptep = iopte_deref(pte[i], lvl);
-+				ptep = iopte_deref(pte[i], lvl, data);
- 				__arm_v7s_free_table(ptep, lvl + 1, data);
- 			} else if (iop->cfg.quirks & IO_PGTABLE_QUIRK_NON_STRICT) {
- 				/*
-@@ -677,7 +698,7 @@ static size_t __arm_v7s_unmap(struct arm_v7s_io_pgtable *data,
- 	}
- 
- 	/* Keep on walkin' */
--	ptep = iopte_deref(pte[0], lvl);
-+	ptep = iopte_deref(pte[0], lvl, data);
- 	return __arm_v7s_unmap(data, iova, size, lvl + 1, ptep);
- }
- 
-@@ -703,7 +724,7 @@ static phys_addr_t arm_v7s_iova_to_phys(struct io_pgtable_ops *ops,
- 	do {
- 		ptep += ARM_V7S_LVL_IDX(iova, ++lvl);
- 		pte = READ_ONCE(*ptep);
--		ptep = iopte_deref(pte, lvl);
-+		ptep = iopte_deref(pte, lvl, data);
- 	} while (ARM_V7S_PTE_IS_TABLE(pte, lvl));
- 
- 	if (!ARM_V7S_PTE_IS_VALID(pte))
-@@ -712,7 +733,7 @@ static phys_addr_t arm_v7s_iova_to_phys(struct io_pgtable_ops *ops,
- 	mask = ARM_V7S_LVL_MASK(lvl);
- 	if (arm_v7s_pte_is_cont(pte, lvl))
- 		mask *= ARM_V7S_CONT_PAGES;
--	return (pte & mask) | (iova & ~mask);
-+	return iopte_to_paddr(pte, lvl, &data->iop.cfg) | (iova & ~mask);
- }
- 
- static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
--- 
-1.9.1
+There is a pile of drivers/firmware changes for ti-sci, which have cross 
+dependencies, and will cause merge conflicts also as they touch same file.
 
+Do you mind if I setup a pull-request for these all and send it to you? 
+They are going to be on top of the keystone clock pull-request I just 
+sent today though, otherwise it won't compile (the 32bit clock support 
+has dependency towards the clock driver.)
+
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
