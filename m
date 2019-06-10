@@ -2,113 +2,92 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24CAC31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1025C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8820920820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GR8KXJRK"
+	by mail.kernel.org (Postfix) with ESMTP id B24D2207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:15:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387903AbfFJRN3 (ORCPT
+        id S2387741AbfFJRPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:13:29 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57916 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbfFJRNU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:13:20 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHD9vn057230;
-        Mon, 10 Jun 2019 12:13:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560186789;
-        bh=65y0Cnd2F217f0FjndQy2sPV2LzXGcSYmUp9Flgkgvs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=GR8KXJRKBvhp2lPNPS8xTmEhlBQuiy4e3Loyz7HTGdIJ7ybj46XcFQjkmQIzvyrhv
-         nN3yjQZiPuu4UqRHuq56Gn78a6s15Iw1aOMYFwzkncexdyaLpou+3qwiV8MuZhZqmR
-         QljzPb5a9l2WL9kTMmMz5RGMtlLhqBIGAjW5/k9s=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHD9bu014309
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Jun 2019 12:13:09 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
- Jun 2019 12:13:09 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 10 Jun 2019 12:13:08 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHD8UR052649;
-        Mon, 10 Jun 2019 12:13:08 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Russell King <rmk@arm.linux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH-next 19/20] gpio: gpio-omap: irq_startup() must not return error codes
-Date:   Mon, 10 Jun 2019 20:11:02 +0300
-Message-ID: <20190610171103.30903-20-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190610171103.30903-1-grygorii.strashko@ti.com>
-References: <20190610171103.30903-1-grygorii.strashko@ti.com>
+        Mon, 10 Jun 2019 13:15:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36696 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725270AbfFJRPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:15:53 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6DF71C057E37;
+        Mon, 10 Jun 2019 17:15:48 +0000 (UTC)
+Received: from prarit.khw1.lab.eng.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DA905C1B4;
+        Mon, 10 Jun 2019 17:15:46 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [PATCH] x86/resctrl: Fix panic on systems that do not enable local MBM
+Date:   Mon, 10 Jun 2019 13:15:44 -0400
+Message-Id: <20190610171544.13474-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 10 Jun 2019 17:15:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+Booting with kernel parameter "rdt=cmt,mbmtotal,memlocal,l3cat,mba" and
+executing "mount -t resctrl resctrl -o mba_MBps /sys/fs/resctrl"
+results in a panic on systems without local MBM support enabled in
+firmware.
 
-The irq_startup() method returns an unsigned int, but in __irq_startup()
-it is assigned to an int.  However, nothing checks for errors, so any
-error that is returned is ignored.
+BUG: kernel NULL pointer dereference, address: 0000000000000020
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+CPU: 0 PID: 722 Comm: kworker/0:3 Not tainted 5.2.0-0.rc3.git0.1.el7_UNSUPPORTED.x86_64 #2
+Hardware name: Dell Inc. PowerEdge R740/0923K0, BIOS 2.1.8 04/30/2019
+Workqueue: events mbm_handle_overflow
+RIP: 0010:mbm_handle_overflow+0x150/0x2b0
 
-Remove the check for GPIO-input mode and the error return.
+Only call the bandwith update loop if the system has local MBM enabled.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
 ---
- drivers/gpio/gpio-omap.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/x86/kernel/cpu/resctrl/monitor.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 61e32c7e6670..94b10dfbff3f 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -635,8 +635,6 @@ static unsigned int omap_gpio_irq_startup(struct irq_data *d)
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 7ee93125a211..397206f23d14 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -360,6 +360,9 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
+ 	struct list_head *head;
+ 	struct rdtgroup *entry;
  
- 	if (!LINE_USED(bank->mod_usage, offset))
- 		omap_set_gpio_direction(bank, offset, 1);
--	else if (!omap_gpio_is_input(bank, offset))
--		goto err;
- 	omap_enable_gpio_module(bank, offset);
- 	bank->irq_usage |= BIT(offset);
- 
-@@ -644,9 +642,6 @@ static unsigned int omap_gpio_irq_startup(struct irq_data *d)
- 	omap_gpio_unmask_irq(d);
- 
- 	return 0;
--err:
--	raw_spin_unlock_irqrestore(&bank->lock, flags);
--	return -EINVAL;
- }
- 
- static void omap_gpio_irq_shutdown(struct irq_data *d)
++	if (!is_mbm_local_enabled())
++		return;
++
+ 	r_mba = &rdt_resources_all[RDT_RESOURCE_MBA];
+ 	closid = rgrp->closid;
+ 	rmid = rgrp->mon.rmid;
 -- 
-2.17.1
+2.21.0
 
