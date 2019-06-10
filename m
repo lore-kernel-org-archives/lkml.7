@@ -2,113 +2,150 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63700C468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161E9C468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F82620833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E013320833
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ue19iE+N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ss5p1Lwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbfFJEbs (ORCPT
+        id S1728367AbfFJEce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 00:31:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:32826 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728092AbfFJEbs (ORCPT
+        Mon, 10 Jun 2019 00:32:34 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42439 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728090AbfFJEcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 00:31:48 -0400
-Received: by mail-ot1-f65.google.com with SMTP id p4so3882794oti.0;
-        Sun, 09 Jun 2019 21:31:47 -0700 (PDT)
+        Mon, 10 Jun 2019 00:32:33 -0400
+Received: by mail-pl1-f196.google.com with SMTP id go2so3099878plb.9
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 21:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zqVRtfIXSfL2glUOZ/rPqcfEx5EYpKNLA4Zoyt8Pnhg=;
-        b=ue19iE+NTrIsYbDZPeAukExr8wKcPe3hVLkZ8so/3GUG6HTktivL9uGMTedOf1PCI0
-         fvcY9kOdGV6WXSPD+IAqLBo2582Zue8weJb5nZLIbJOkfvTsQSQ2pNXOiTMhstQorQhJ
-         uKdrZRKAUtHShrEd4QqNOfs0dZ6yYZFh4kRZeKmw2bd518fzFUBrSXwODkyMo0KDcSm0
-         kqm5CuQA2zKTcKhqsPZd2oihR2U7gvIpVoLDfwZftgPym/QUKBZWxtsuQ7Y4zoMvScWD
-         +acz2Crjwitx205NOxJEQajagGT0hpESOAamcm2YwSqJyiNBW5iZ2NWbHEeh+HDV7Eg7
-         jMig==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xHPzuC4R5KkZBw6vFRw90KpfbbD11GlApZT+SmWKwe4=;
+        b=Ss5p1Lwy68hqtdh3br0uV9egK7a/GcBg6EEsyJeGu3+IIamR5xkByvx2tCZ3y7Pg1w
+         4AK9N2fAAHodTXOMEkPMOly1SMDOxOTdYTyhHevVoNx6X36PPgiWxsifLf7/zsSiA+4k
+         mg2fPTy6ll0dYm6QUjXkHGHXlEg7AOA+hyZluTdR8NVIWGiLy0L1Jvm2noL1EU5zHBHC
+         uwTI0rS8FMVQZzi1pxjYgZ8FMZTMK3T8bFbPSuFTDGd49mQFGYZZ/x/hjA/v8rs2wWBj
+         ZoZFmr4M6gsuWs0fI7llM7xLgY4a3gRQAjEvZ+g52+ZcjGDCzi7bpRtbc9BNB0HwPCdE
+         G0Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zqVRtfIXSfL2glUOZ/rPqcfEx5EYpKNLA4Zoyt8Pnhg=;
-        b=AZwDpDdiTkaqUDFBXEpIzoMtBbhQNJeAz3zYxQEpCnexnMhDOyhoirMQGpzMZQlQkd
-         7vfncgvOZ9hLzcBDn3Dt202ZggB8LrlPQ6QjhjSBmyRbBPzo5Y2f8Sq3LSYEb37ycxYY
-         RX8DlRmo7PJ0zLltYWt0MSBi5HJdTd9GJ1ovbmc94lL+2UcHry4OnOA+gj39Yl5GcQsC
-         A2lbuOL0/bRnm6V3Vmc8tKkoNLsmdp0epXSXIIW7EvIz5gE/urcKeETsk2Tv0uKXL2tV
-         +JjduViIyXaJnzqYEEepcaWGyG9TjuQeZVfmCqjC38G/MRi+xeaYYpVVi/AY0+lKdmzN
-         bpDw==
-X-Gm-Message-State: APjAAAX8wwdYfTchQEfAjBwazL0OnQ0vSF1Us+UTWE1Pr/EslvhMI18z
-        4utZ/2zYbgGHqN/iVlZl2qlNgEkj9cgYGgrrEAFG66P0
-X-Google-Smtp-Source: APXvYqz4AmIrXv9HXM51uFtgYFsZXZOkVbKmfDs32qPNJWsP58722hw+glnxhaRn/TS6A4hgm62/k2MbjKBbd/DYP8U=
-X-Received: by 2002:a9d:6312:: with SMTP id q18mr27167731otk.45.1560141107273;
- Sun, 09 Jun 2019 21:31:47 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xHPzuC4R5KkZBw6vFRw90KpfbbD11GlApZT+SmWKwe4=;
+        b=Q80i9HoqfwLdKq25mS7/PeUCWETC5sgRYUfyoOprnVM/OfcR2VnwjV1UtO7iSsrfDf
+         j9BUTvb8Fqci0U8z0FgY3BZx0+s1F26/K2B5OBVjzjkL+6UGd/GuVXkxZoaQrLmy5fsv
+         jTGEaLRuRrYQC8kZRMFYPmDOHA3R9ZbWI1gpQw/LlTCctywfmOgn9qr917hPw3U2OEyO
+         T4kjwJ9v+AcVyzkO1ON58h63mKSVNz8YbDz8EnbDKBHKkpquevB2sStgGBRD+FPQQ7ys
+         aXNK232clRAtkeGyKIEvRCmHlZ0LbowGlAb34kC4Iw3k3dt/Xl3zuTlXqkkecYdAx3uw
+         YfqA==
+X-Gm-Message-State: APjAAAV0Q/NLgvuRTfnwe9N4FUuabuW6qElqnVm+KEiaOEPX17AdIzSZ
+        /bwYxxBfVBdTxQFIbtyyAgs=
+X-Google-Smtp-Source: APXvYqzpCQBfxr7tCmPsXXFKsBCVmnhsOxlS5W/E2s+08qDC23SjwQwMkTJAH20Cb2JhL1mczbwGjQ==
+X-Received: by 2002:a17:902:968b:: with SMTP id n11mr32173861plp.120.1560141153272;
+        Sun, 09 Jun 2019 21:32:33 -0700 (PDT)
+Received: from [10.0.2.15] ([171.79.92.225])
+        by smtp.gmail.com with ESMTPSA id m20sm9102784pjn.16.2019.06.09.21.32.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Jun 2019 21:32:32 -0700 (PDT)
+Subject: Re: [PATCH 1/2] staging: rtl8712: r8712_setdatarate_cmd(): Change
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, straube.linux@gmail.com,
+        larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        colin.king@canonical.com, valdis.kletnieks@vt.edu,
+        tiny.windzz@gmail.com
+References: <20190607140658.11932-1-nishkadg.linux@gmail.com>
+ <20190607141548.GP31203@kadam>
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+Message-ID: <98b587c9-df5b-0905-ab8f-69a4bae296b0@gmail.com>
+Date:   Mon, 10 Jun 2019 10:02:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1559799086-13912-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1559799086-13912-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 10 Jun 2019 12:32:33 +0800
-Message-ID: <CANRm+CwUyX_7FafiWPCr4JgFetfOkttw2P0xS6yjOzKs-X3f9A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] KVM: LAPIC: Implement Exitless Timer
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190607141548.GP31203@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Jun 2019 at 13:31, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> Dedicated instances are currently disturbed by unnecessary jitter due
-> to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> There is no hardware virtual timer on Intel for guest like ARM. Both
-> programming timer in guest and the emulated timer fires incur vmexits.
-> This patchset tries to avoid vmexit which is incurred by the emulated
-> timer fires in dedicated instance scenario.
->
-> When nohz_full is enabled in dedicated instances scenario, the unpinned
-> timer will be moved to the nearest busy housekeepers after commit 444969223c8
-> ("sched/nohz: Fix affine unpinned timers mess"). However, KVM always makes
-> lapic timer pinned to the pCPU which vCPU residents, the reason is explained
-> by commit 61abdbe0 (kvm: x86: make lapic hrtimer pinned). Actually, these
-> emulated timers can be offload to the housekeeping cpus since APICv
-> is really common in recent years. The guest timer interrupt is injected by
-> posted-interrupt which is delivered by housekeeping cpu once the emulated
-> timer fires.
->
-> The host admin should fine tuned, e.g. dedicated instances scenario w/
-> nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
-> for housekeeping, disable mwait/hlt/pause vmexits to occupy the pCPUs,
-> fortunately preemption timer is disabled after mwait is exposed to
-> guest which makes emulated timer offload can be possible.
-> 3%~5% redis performance benefit can be observed on Skylake server.
+On 07/06/19 7:45 PM, Dan Carpenter wrote:
+> Probably you sent this patch unintentionally.  The subject doesn't make
+> any sort of sense.  :P
 
-w/o patchset:
+So the problem with the subject line is that git send-email and vim (as 
+configured on my laptop) tend to line-wrap even the subject line. Since 
+I have two patches that do the same thing for different functions, I 
+felt I should have the driver and the function name in the subject line 
+(to avoid confusion between the patches and to allow for easy searching 
+later). But that doesn't leave enough space in the subject line for 
+"Change return values/type" or any other descriptive message. What 
+should I do?
 
-                             VM-EXIT    Samples  Samples%     Time%
-Min Time    Max Time         Avg time
 
-  EXTERNAL_INTERRUPT      42916    49.43%    39.30%      0.47us
-106.09us      0.71us ( +-   1.09% )
+> On Fri, Jun 07, 2019 at 07:36:57PM +0530, Nishka Dasgupta wrote:
+>> Change the return values of function r8712_setdatarate_cmd from _SUCCESS
+>> and _FAIL to 0 and -ENOMEM respectively.
+>> Change the return type of the function from u8 to int to reflect this.
+>> Change the call site of the function to check for 0 instead of _SUCCESS.
+>> (Checking that the return value != 0 is not necessary; the return value
+>    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> itself can simply be passed into the conditional.)
+>    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-w/ patchset:
 
-                             VM-EXIT    Samples  Samples%     Time%
-Min Time    Max Time         Avg time
 
-  EXTERNAL_INTERRUPT       6871     9.29%     2.96%      0.44us
-57.88us      0.72us ( +-   4.02% )
+> This is obvious.  No need to mention it in the commit message.
 
-Regards,
-Wanpeng Li
+Okay, I'll amend that.
+
+>> diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+>> index b424b8436fcf..761e2ba68a42 100644
+>> --- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+>> +++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+>> @@ -1367,7 +1367,7 @@ static int r8711_wx_set_rate(struct net_device *dev,
+>>   			datarates[i] = 0xff;
+>>   		}
+>>   	}
+>> -	if (r8712_setdatarate_cmd(padapter, datarates) != _SUCCESS)
+>> +	if (r8712_setdatarate_cmd(padapter, datarates))
+>>   		ret = -ENOMEM;
+>>
+>>   	return ret;
+> 
+> 
+> It would be better to write this like so:
+> 
+> 	ret = r8712_setdatarate_cmd(padapter, datarates);
+> 	if (ret)
+> 		return ret;
+> 
+> 	return 0;
+> 
+> Or you could write it like:
+> 
+> 	return r8712_setdatarate_cmd(padapter, datarates);
+
+Okay, since this is the only point at which a return happens in this 
+function, I can do this.
+
+> Which ever one you prefer is fine
+Thanking you,
+Nishka
+
+> regards,
+> dan carpenter
+> 
+
