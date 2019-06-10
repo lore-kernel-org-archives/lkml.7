@@ -2,107 +2,116 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BDBC468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2989C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE5220859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="H4Ujai3N"
+	by mail.kernel.org (Postfix) with ESMTP id 9D56120859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390450AbfFJNuF (ORCPT
+        id S2390477AbfFJNue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 09:50:05 -0400
-Received: from mail-eopbgr1410132.outbound.protection.outlook.com ([40.107.141.132]:52789
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390270AbfFJNuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:50:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QxppUPlUEXWyoigWYTJMTn2anvqfGBzKG9bAwWvFSbI=;
- b=H4Ujai3NS2uvtTlnPIW20oi09K5DANtaW49lGgPQMGzW96vUCtxzQmuC8FlvC6s+0tpfaLKmWS8KzzWIjED/Sm66K3EMQ+E9ST7K9Xe5XaLhoHQuAkZcOBwDYU3dNpdJME2MEboum12RI2DY8O/hHU3OXgeSFE53K1MlWaSpam0=
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
- TY1PR01MB1514.jpnprd01.prod.outlook.com (52.133.161.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Mon, 10 Jun 2019 13:50:02 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::21b5:2af4:8004:9f99]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::21b5:2af4:8004:9f99%3]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
- 13:50:02 +0000
-From:   Chris Brandt <Chris.Brandt@renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>
-CC:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "uclinux-h8-devel@lists.sourceforge.jp" 
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] irqchip: Enable compile-testing for Renesas drivers
-Thread-Topic: [PATCH] irqchip: Enable compile-testing for Renesas drivers
-Thread-Index: AQHVHRZ9qzcWohEWrUukD5+xq0eglaaU63Zg
-Date:   Mon, 10 Jun 2019 13:50:01 +0000
-Message-ID: <TY1PR01MB156202FA9531D576608908738A130@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20190607095036.9466-1-geert+renesas@glider.be>
-In-Reply-To: <20190607095036.9466-1-geert+renesas@glider.be>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctYTNkYjY1NGMtOGI4Ni0xMWU5LThkOTgtNWNjNWQ0NjFlNzI0XGFtZS10ZXN0XGEzZGI2NTRlLThiODYtMTFlOS04ZDk4LTVjYzVkNDYxZTcyNGJvZHkudHh0IiBzej0iNDg4IiB0PSIxMzIwNDY0ODIwMTM0NDQ1NDQiIGg9Inc2dEZvTGVoU3FSWEt0TTdhS0t1eWpqUDBHOD0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Brandt@renesas.com; 
-x-originating-ip: [75.60.247.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 64a3e412-7333-44ee-52e4-08d6edaa8930
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1514;
-x-ms-traffictypediagnostic: TY1PR01MB1514:
-x-microsoft-antispam-prvs: <TY1PR01MB1514A55E8478FD651CF7FC1E8A130@TY1PR01MB1514.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(346002)(366004)(136003)(39860400002)(396003)(376002)(189003)(199004)(81156014)(8676002)(81166006)(8936002)(14454004)(72206003)(71200400001)(66476007)(66556008)(64756008)(71190400001)(76116006)(66946007)(6436002)(2906002)(86362001)(9686003)(6116002)(3846002)(305945005)(7736002)(55016002)(478600001)(4326008)(5660300002)(52536014)(73956011)(66446008)(4744005)(6246003)(25786009)(186003)(26005)(53936002)(99286004)(476003)(11346002)(446003)(316002)(7696005)(110136005)(256004)(229853002)(486006)(68736007)(33656002)(54906003)(74316002)(102836004)(76176011)(66066001)(6506007)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1514;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Qa6TEb2iFFD1Vir9vXFGQ3loVajTXBs0TN3ddWU2dupr/51BAUGVXxTa/FchOiYphSkEeaGwiCoKs7bGSNnYiRgmOLEa6snvgV1MNJY7pr586p8wy5rHX6aSLHlloltXsRs821IWu9uuHN5tSIw2TnklxoZ50aHL8Cb8fpdqBLjJ6UO0tvEX+NC1K4Cs2czzJlSJfQTYb9u80H2QvFf85zgRMEXVprNJB6v2K8sorMlc9/4ZTa3rwr8KYyPSFiP41KQya1czcfRoxKsIhxXY+LUQrlebQgBbOy6CRNwuaAQphi07H9CBECCl1WIIpiY2x6DTLuXTkgWsPTFuvkmgThzAKJCD2eNDSY+WO4WBRUNLA3fFU0nY+RHXjQIljCSrYZ1cqxWQPl0safWbjZez0zb2v2zIcmDUvzN84xdn/ms=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 10 Jun 2019 09:50:34 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:45579 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390324AbfFJNue (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 09:50:34 -0400
+X-Originating-IP: 90.88.159.246
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id C700BE0002;
+        Mon, 10 Jun 2019 13:50:23 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
+        mw@semihalf.com, Yuri Chipchev <yuric@marvell.com>
+Subject: [PATCH net 1/2] net: mvpp2: prs: Fix parser range for VID filtering
+Date:   Mon, 10 Jun 2019 15:50:07 +0200
+Message-Id: <20190610135008.8077-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64a3e412-7333-44ee-52e4-08d6edaa8930
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 13:50:01.9663
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Chris.Brandt@renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1514
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019, Geert Uytterhoeven wrote:
->  config RENESAS_RZA1_IRQC
-> -	bool
-> +	bool "Renesas RZ/A1 IRQC support" if COMPILE_TEST
->  	select IRQ_DOMAIN_HIERARCHY
-> +	help
-> +	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
-> +	  to 8 external interrupts with configurable sense select.
+VID filtering is implemented in the Header Parser, with one range of 11
+vids being assigned for each no-loopback port.
 
+Make sure we use the per-port range when looking for existing entries in
+the Parser.
 
-Appreciated=1B$B!]=1B(Bby: Chris Brandt <chris.brandt@renesas.com>
+Since we used a global range instead of a per-port one, this causes VIDs
+to be removed from the whitelist from all ports of the same PPv2
+instance.
 
-:)
+Fixes: 56beda3db602 ("net: mvpp2: Add hardware offloading for VLAN filtering")
+Suggested-by: Yuri Chipchev <yuric@marvell.com>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
+index 392fd895f278..e0da4db3bf56 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
+@@ -1905,8 +1905,7 @@ static int mvpp2_prs_ip6_init(struct mvpp2 *priv)
+ }
+ 
+ /* Find tcam entry with matched pair <vid,port> */
+-static int mvpp2_prs_vid_range_find(struct mvpp2 *priv, int pmap, u16 vid,
+-				    u16 mask)
++static int mvpp2_prs_vid_range_find(struct mvpp2_port *port, u16 vid, u16 mask)
+ {
+ 	unsigned char byte[2], enable[2];
+ 	struct mvpp2_prs_entry pe;
+@@ -1914,13 +1913,13 @@ static int mvpp2_prs_vid_range_find(struct mvpp2 *priv, int pmap, u16 vid,
+ 	int tid;
+ 
+ 	/* Go through the all entries with MVPP2_PRS_LU_VID */
+-	for (tid = MVPP2_PE_VID_FILT_RANGE_START;
+-	     tid <= MVPP2_PE_VID_FILT_RANGE_END; tid++) {
+-		if (!priv->prs_shadow[tid].valid ||
+-		    priv->prs_shadow[tid].lu != MVPP2_PRS_LU_VID)
++	for (tid = MVPP2_PRS_VID_PORT_FIRST(port->id);
++	     tid <= MVPP2_PRS_VID_PORT_LAST(port->id); tid++) {
++		if (!port->priv->prs_shadow[tid].valid ||
++		    port->priv->prs_shadow[tid].lu != MVPP2_PRS_LU_VID)
+ 			continue;
+ 
+-		mvpp2_prs_init_from_hw(priv, &pe, tid);
++		mvpp2_prs_init_from_hw(port->priv, &pe, tid);
+ 
+ 		mvpp2_prs_tcam_data_byte_get(&pe, 2, &byte[0], &enable[0]);
+ 		mvpp2_prs_tcam_data_byte_get(&pe, 3, &byte[1], &enable[1]);
+@@ -1950,7 +1949,7 @@ int mvpp2_prs_vid_entry_add(struct mvpp2_port *port, u16 vid)
+ 	memset(&pe, 0, sizeof(pe));
+ 
+ 	/* Scan TCAM and see if entry with this <vid,port> already exist */
+-	tid = mvpp2_prs_vid_range_find(priv, (1 << port->id), vid, mask);
++	tid = mvpp2_prs_vid_range_find(port, vid, mask);
+ 
+ 	reg_val = mvpp2_read(priv, MVPP2_MH_REG(port->id));
+ 	if (reg_val & MVPP2_DSA_EXTENDED)
+@@ -2008,7 +2007,7 @@ void mvpp2_prs_vid_entry_remove(struct mvpp2_port *port, u16 vid)
+ 	int tid;
+ 
+ 	/* Scan TCAM and see if entry with this <vid,port> already exist */
+-	tid = mvpp2_prs_vid_range_find(priv, (1 << port->id), vid, 0xfff);
++	tid = mvpp2_prs_vid_range_find(port, vid, 0xfff);
+ 
+ 	/* No such entry */
+ 	if (tid < 0)
+-- 
+2.20.1
 
