@@ -2,136 +2,102 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D24C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2109C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A55220820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B332E20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOr0KjsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389160AbfFJT2t (ORCPT
+        id S2389127AbfFJTb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:28:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51628 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfFJT2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:28:48 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D9FFB120D7;
-        Mon, 10 Jun 2019 19:28:23 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A734160C47;
-        Mon, 10 Jun 2019 19:28:04 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 15:28:03 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
-        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
-        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
-        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
-        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
-        david@redhat.com, david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        yuval.shaia@oracle.com, kilobyte@angband.pl, jstaron@google.com,
-        rdunlap@infradead.org
-Subject: Re: [PATCH v11 4/7] dm: enable synchronous dax
-Message-ID: <20190610192803.GA29002@redhat.com>
-References: <20190610090730.8589-1-pagupta@redhat.com>
- <20190610090730.8589-5-pagupta@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610090730.8589-5-pagupta@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 10 Jun 2019 19:28:48 +0000 (UTC)
+        Mon, 10 Jun 2019 15:31:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45616 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbfFJTb5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 15:31:57 -0400
+Received: by mail-pf1-f193.google.com with SMTP id s11so5852221pfm.12;
+        Mon, 10 Jun 2019 12:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eUPzmPUFDWkI7Q7rSFifM1MJ4oIJgugGIlrWCoNmq3Q=;
+        b=HOr0KjsXy4RvLxgagrmOUQpJlnirP4L3ubMpzwf7mujRoVTQQ6oquZ/HmC0RcCTHdZ
+         IXP6CcqOWCTJ2RFIUFNJ/YWPEm6/AYmxNqH745cv/A3GZZ6xV9qgps3PelinTlWlIWjd
+         zcOKz1hTmtDSqWjjOO8cRJ/gyaGrIWugbpXwYn2ya6Eec6zPfwpk4dkZZd4WmRC1r0I/
+         pRCWHd9kbC6MjH+6BSj865Mj9F0zUh2y20DDMhMcRoyjs5y2lkoiDvb21UNRhuq2XgM2
+         SWpnv960bgYcdztPlcRqLHwCuObRsxo+tjGvhOLmTHL0+HbAlO9uftzuuMQOod5HG1N0
+         37GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eUPzmPUFDWkI7Q7rSFifM1MJ4oIJgugGIlrWCoNmq3Q=;
+        b=bVuVSSGsV6VGD0KBHjuakcnIyz7kFGnY/G8nWMjzYsFe3H0J33xruI9kNSE/2bUPrK
+         f66jXAYti/xLvhPRNOGWdmsTbqUN8YaHNSVpBHwSCACAp2AodZrdBki8gR/PpKB1o0SD
+         cpB9Vn+YT6XpUt3ZOcUTmVHt6La61vP3d83Z3xj/nqfFpVgtIbtDDM1AqMPgwSOg0Bw8
+         fDBUkc8S1uQ6hX2amo2VYvHORytZ46MCCIGu3SUpjSuJyD6OlFw/3LlcQ54r9swHKMdZ
+         429KnTKfV0wMWOzyJnO/iXj4aY5UYzf5dvzKM/rrXnYKl7mc2r+BvQ2bRSrKZQShwI7A
+         64Jw==
+X-Gm-Message-State: APjAAAXd4d9vXerj/I3goR7LCapAOaBtqUE5wot91Yy9Cerbou+ckA3B
+        cdfT0eY/Koz3R+8Jjmas0qCnGTqk
+X-Google-Smtp-Source: APXvYqzV4weJYVHbnM8dqMOBdnpidy/PsGfylPEqtErDsQGPSWkypEmACLluqUG/L6Aat2lpgniH7Q==
+X-Received: by 2002:a63:d84a:: with SMTP id k10mr2546494pgj.74.1560195116295;
+        Mon, 10 Jun 2019 12:31:56 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a64sm10786802pgc.53.2019.06.10.12.31.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 12:31:55 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     ioana.ciornei@nxp.com, olteanv@gmail.com,
+        rmk+kernel@armlinux.org.uk,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: dsa: Deal with non-existing PHY/fixed-link
+Date:   Mon, 10 Jun 2019 12:31:49 -0700
+Message-Id: <20190610193150.22231-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10 2019 at  5:07am -0400,
-Pankaj Gupta <pagupta@redhat.com> wrote:
+We need to specifically deal with phylink_of_phy_connect() returning
+-ENODEV, because this can happen when a CPU/DSA port does connect
+neither to a PHY, nor has a fixed-link property. This is a valid use
+case that is permitted by the binding and indicates to the switch:
+auto-configure port with maximum capabilities.
 
->  This patch sets dax device 'DAXDEV_SYNC' flag if all the target
->  devices of device mapper support synchrononous DAX. If device
->  mapper consists of both synchronous and asynchronous dax devices,
->  we don't set 'DAXDEV_SYNC' flag.
-> 
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
->  drivers/md/dm-table.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-> index 350cf0451456..c5160d846fe6 100644
-> --- a/drivers/md/dm-table.c
-> +++ b/drivers/md/dm-table.c
-> @@ -890,10 +890,17 @@ static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
->  			start, len);
->  }
->  
-> +static int device_synchronous(struct dm_target *ti, struct dm_dev *dev,
-> +				       sector_t start, sector_t len, void *data)
-> +{
-> +	return dax_synchronous(dev->dax_dev);
-> +}
-> +
->  bool dm_table_supports_dax(struct dm_table *t, int blocksize)
->  {
->  	struct dm_target *ti;
->  	unsigned i;
-> +	bool dax_sync = true;
->  
->  	/* Ensure that all targets support DAX. */
->  	for (i = 0; i < dm_table_get_num_targets(t); i++) {
-> @@ -906,7 +913,14 @@ bool dm_table_supports_dax(struct dm_table *t, int blocksize)
->  		    !ti->type->iterate_devices(ti, device_supports_dax,
->  			    &blocksize))
->  			return false;
-> +
-> +		/* Check devices support synchronous DAX */
-> +		if (dax_sync &&
-> +		    !ti->type->iterate_devices(ti, device_synchronous, NULL))
-> +			dax_sync = false;
->  	}
-> +	if (dax_sync)
-> +		set_dax_synchronous(t->md->dax_dev);
->  
->  	return true;
->  }
-> -- 
-> 2.20.1
-> 
+Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ net/dsa/port.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-dm_table_supports_dax() is called multiple times (from
-dm_table_set_restrictions and dm_table_determine_type).  It is strange
-to have a getter have a side-effect of being a setter too.  Overloading
-like this could get you in trouble in the future.
+diff --git a/net/dsa/port.c b/net/dsa/port.c
+index d74bc9df1359..dde3085ff065 100644
+--- a/net/dsa/port.c
++++ b/net/dsa/port.c
+@@ -622,7 +622,7 @@ static int dsa_port_phylink_register(struct dsa_port *dp)
+ 	}
+ 
+ 	err = phylink_of_phy_connect(dp->pl, port_dn, 0);
+-	if (err) {
++	if (err && err != -ENODEV) {
+ 		pr_err("could not attach to PHY: %d\n", err);
+ 		goto err_phy_connect;
+ 	}
+-- 
+2.17.1
 
-Are you certain this is what you want?
-
-Or would it be better to refactor dm_table_supports_dax() to take an
-iterate_devices_fn arg and have callers pass the appropriate function?
-Then have dm_table_set_restrictions() caller do:
-
-     if (dm_table_supports_dax(t, device_synchronous, NULL))
-     	  set_dax_synchronous(t->md->dax_dev);
-
-(NULL arg implies dm_table_supports_dax() refactoring would take a int
-*data pointer rather than int type).
-
-Mike
