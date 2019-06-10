@@ -2,95 +2,137 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7148CC468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145D7C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FC720820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14C620859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VeMFxewI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tNpoArwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387648AbfFJFnc (ORCPT
+        id S2387675AbfFJFpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 01:43:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45336 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387505AbfFJFnc (ORCPT
+        Mon, 10 Jun 2019 01:45:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37004 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387541AbfFJFpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 01:43:32 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w34so4389089pga.12
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 22:43:31 -0700 (PDT)
+        Mon, 10 Jun 2019 01:45:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v14so7777494wrr.4
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 22:45:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=tdl49RyRAuUkhNq/FTEulZjMEnaegQupXQMt+JK5L30=;
-        b=VeMFxewIUJvxxRvC5lF6kidVI5+hVSdtFihhzgGSCRPn8g5TfhmedwJd3022CF6Qah
-         gZtiUQMWI64nxXBjMUcEkrQkFQWeocMRqnkp3yg4jkdNFiSUebJ/Uh7MQqfn2O/eDIF+
-         FpgqWvEeWUOr4jP/t+07pdsP/itDTR9RIFwNawnivPgExCWE5JT2H5XnAlDJsYHlGjEh
-         +IVKR5iNOpbjFc7F07tuSUEiLIAo+s/SQnST39LE7fSX6Se3M7X+zb/KcDrYErbO+NNH
-         Xv1buvNzy17L+/stjQzpWfZ3udreJMleCrmBZOmXBNHK6T/58w2xVplAi67UUMp2aoNo
-         7RgA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jFjgjSUEKRW8v/PBr8uM0Wg98cLQUz1sDSFbELuCUcE=;
+        b=tNpoArwWtBlJJRHsX/hPjx3MAZiZF6YYEpBq1FZbegPrk37BcYygSrcUN8yzmYfKxE
+         6Zn5krotmeemt02oNjpS09FXQzSJ/AaQGMigsNRiSIKwElOWrnlfhiCh4Spw1bskMiEe
+         EJmLKrkXk4EXISbu6avfVBowRhv7a9FFpcW0Gmy8ICfOncRxrqmybcc56uyjnUMh9r1M
+         z7RImAYTxvbh3xK5KtXDzSSlrpXFbCUfoyeD8xd12w6OFGO47uAjsS9CjR1YQj2uFmll
+         ncarxHU9gZeKeAGz5xE6p6SPd70HwJ1cwAdTIajngGvCJvUaC5wO/XbqiCtD+NXeYMg9
+         Fj3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tdl49RyRAuUkhNq/FTEulZjMEnaegQupXQMt+JK5L30=;
-        b=bXr1Xlue3uPDwWcaet23xKeR0BeLer8baRzb38KpY6fLC5zC7UuQ/cOQ/5vDNbgQp7
-         1mJVAuwqCGqnd8m/8eRWBCU9LlCz98NI2ggKHmI02Gl+oK+H3uRIcVgpIWW4kOI3BdWT
-         OnLmU3CV/Gqp67qoUB0pPAgLmLly+Y7FiYiuz7y+mchgehPcl8Hxli2413fV0loyjc4x
-         8dNXZGRYPmWY4jSp5lcII2qauq+WujbooYD/mvLLHpM9pjZo4MtnNsVHXS8LLeG/PcLw
-         KPlVMIGqOioArFyEeEzczTHaedW7u9Qv0wnlKg6Xrp6rZecsG8Zkv4VHdt4cyScc/20o
-         HUTQ==
-X-Gm-Message-State: APjAAAW/c26WP1MzN6kuUAfUTTwaDpyXag6klD4H5PbP96LEFuD93mHI
-        7VrebyQPqrx+1tEBSLBOWT4=
-X-Google-Smtp-Source: APXvYqzMyhyfNohO8DPs/Or4CdV+gQAawW1oBt7DF0bsnylcSwQv/l4KIMqMSTPfYd0q+lwpytrS7A==
-X-Received: by 2002:a62:8643:: with SMTP id x64mr37320503pfd.7.1560145411460;
-        Sun, 09 Jun 2019 22:43:31 -0700 (PDT)
-Received: from hpz4g4.kern.oss.ntt.co.jp ([222.151.198.97])
-        by smtp.gmail.com with ESMTPSA id c124sm10526760pfa.115.2019.06.09.22.43.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 22:43:31 -0700 (PDT)
-From:   Naoto Kobayashi <naoto.kobayashi4c@gmail.com>
-To:     gregkh@linuxfoundation.org, gneukum1@gmail.com, jeremy@azazel.net,
-        maowenan@huawei.com
-Cc:     Naoto Kobayashi <naoto.kobayashi4c@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: kpc2000: remove extra white space in kpc2000_spi.c
-Date:   Mon, 10 Jun 2019 14:43:14 +0900
-Message-Id: <20190610054314.102880-1-naoto.kobayashi4c@gmail.com>
-X-Mailer: git-send-email 2.16.5
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jFjgjSUEKRW8v/PBr8uM0Wg98cLQUz1sDSFbELuCUcE=;
+        b=Mxq4paJL1h5XWjQKAbIZWpvug0RST6lwziXdei75SGEmoa0OU1sj+AODmUvHhsSbrk
+         +AdD0HzD2R9eRYHKv6pgfBJFW5DLrENqqP3EyawbG2auUa3oqtUZ0pEehXpScEwzGmyK
+         uTrJBIMoObsro5NANHcLk6/qaTJ/hBOqUBroF7mjEAsm62BUHW6ke8QqarhNN++hZ60k
+         pCuIv3O/AllC4wsbPxNUeKgwoMRBDsbZ6a04radwXf8xgX2253jQo4KV/YIDRd71piKH
+         nsQL1RsmCF/hWO2K7HmbaL2Uws2DRGlUWTipg4LCSLIKL9AHzTM6I2Z2S1N7HbJ77rCA
+         diOw==
+X-Gm-Message-State: APjAAAXoh83mBB0F4R7nfVb7jSB2OkMFz0IyWx9otdVFcO8lBFanqR+y
+        ukHBS4FNBC4ovKNnYsZGby4IUw==
+X-Google-Smtp-Source: APXvYqwWAgRKMtFPjdeET26ZJToROEXxA9GoDg9vOGLp2D4Nt1NCIogxeYxfRJW2kRr04VqT4177zQ==
+X-Received: by 2002:a5d:680a:: with SMTP id w10mr23479652wru.42.1560145551475;
+        Sun, 09 Jun 2019 22:45:51 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id e13sm21851849wra.16.2019.06.09.22.45.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Jun 2019 22:45:50 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 06:45:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Life is hard, and then you die" <ronald@innovation.ch>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mfd: apple-ibridge: Add Apple iBridge MFD driver.
+Message-ID: <20190610054548.GD4797@dell>
+References: <20190422031251.11968-1-ronald@innovation.ch>
+ <20190422031251.11968-2-ronald@innovation.ch>
+ <20190507122415.GC29524@dell>
+ <20190609234951.GB16597@innovation.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190609234951.GB16597@innovation.ch>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since whitespace should not appear between asterisk and
-variable name in a declaration statement, remove it and
-fix checkpatch.pl error "foo * bar" should be "foo *bar".
+On Sun, 09 Jun 2019, Life is hard, and then you die wrote:
 
-Signed-off-by: Naoto Kobayashi <naoto.kobayashi4c@gmail.com>
----
- drivers/staging/kpc2000/kpc2000_spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> On Tue, May 07, 2019 at 01:24:15PM +0100, Lee Jones wrote:
+> > On Sun, 21 Apr 2019, Ronald Tschalär wrote:
+> > 
+> > > The iBridge device provides access to several devices, including:
+> > > - the Touch Bar
+> > > - the iSight webcam
+> > > - the light sensor
+> > > - the fingerprint sensor
+> > > 
+> > > This driver provides the core support for managing the iBridge device
+> > > and the access to the underlying devices. In particular, since the
+> > > functionality for the touch bar and light sensor is exposed via USB HID
+> > > interfaces, and the same HID device is used for multiple functions, this
+> > > driver provides a multiplexing layer that allows multiple HID drivers to
+> > > be registered for a given HID device. This allows the touch bar and ALS
+> > > driver to be separated out into their own modules.
+> > > 
+> > > Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
+> > > ---
+> > >  drivers/mfd/Kconfig               |  15 +
+> > >  drivers/mfd/Makefile              |   1 +
+> > >  drivers/mfd/apple-ibridge.c       | 883 ++++++++++++++++++++++++++++++
+> > 
+> > I haven't taken a thorough look through, but I can tell you that the
+> > vast majority of what you're trying to do here does not belong in
+> > MFD.  MFD drivers are used to register child devices.  Almost all
+> > functionality or 'real work' should be contained in the drivers the
+> > MFD registers, not in the MFD parent itself.  You will need to move
+> > all 'real work' out into the subordinate device drivers for
+> > acceptance.
+> 
+> Thanks for your feedback. That was/is the idea: the actual Touch Bar
+> and ALS driver code is in separate modules - what is left in the
+> appple-ibridge mfd driver is a fairly generic hid driver
+> demultiplexer. However, that could be moved out into it's own
+> helper/module.
+> 
+> Having said that, it looks like the preference is to do all of this as
+> a hid driver with virtual hid devices instead of as an mfd driver.
 
-diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
-index 28132e9e260d..c3e5c1848f53 100644
---- a/drivers/staging/kpc2000/kpc2000_spi.c
-+++ b/drivers/staging/kpc2000/kpc2000_spi.c
-@@ -496,7 +496,7 @@ kp_spi_probe(struct platform_device *pldev)
- 	static int
- kp_spi_remove(struct platform_device *pldev)
- {
--	struct spi_master * master = platform_get_drvdata(pldev);
-+	struct spi_master *master = platform_get_drvdata(pldev);
- 	spi_unregister_master(master);
- 	return 0;
- }
---
-2.16.5
+Sounds like a better approach.
 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
