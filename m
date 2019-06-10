@@ -2,123 +2,151 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26B8C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA9EC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C742720870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65BF206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aypLgRrX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389780AbfFJUfS (ORCPT
+        id S2389783AbfFJUgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:35:18 -0400
-Received: from mga02.intel.com ([134.134.136.20]:4149 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389339AbfFJUfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:35:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 13:35:14 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2019 13:35:14 -0700
-Message-ID: <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Mon, 10 Jun 2019 13:27:07 -0700
-In-Reply-To: <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
-         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
-         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
-         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
-         <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
-         <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
-         <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
-         <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
-         <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Jun 2019 16:36:07 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43341 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389331AbfFJUgG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 16:36:06 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f25so5625952pgv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QIiaElKbYG7X2iRY6VXsdeM4+31zgx4vPIFfu4hUJug=;
+        b=aypLgRrX0btLwkQ78UmSd30OW9UF0AUZJnAd3r2/5HqpTZB7t9pPjkr79taehwRSBe
+         Uf3LjKJsRGeyWW7niEs4BHLmd/27Tp++YcV8xUIXVrHXkWkhfr39ad2bGk73/2ccXpRd
+         Krrfs143htc/xGI+Ppm9VimNWGnjKhQyxh//k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QIiaElKbYG7X2iRY6VXsdeM4+31zgx4vPIFfu4hUJug=;
+        b=DEttQB6HF6YDbjNEvIaoHeWoGJHDLvdqlL1+HB1KM0Re63/odxXGv9SQkFCrUsSBCG
+         0XVVLC6J15LsPN18ml2ROMVd3EDHI6DHpknAJrsp3rOH0UeRE/znAa6FnczM+TKGvxXx
+         yg+OVcXwD+GoYVx8ID03wSMnVkjbnQrEym3HDni4rOw5WjsV6ID6HSKcPsx+QlEfUnTv
+         95CeH4WwndsiwwdyMlhuhXhtDvbFE1mYB7x4pSJj2e+Jy1NOFRe8JAMb8x/rJ+U+ftKr
+         TH8ludDfexhOGRd7gdun24UG5/Jw9olox8fcrQkJXCbSRart0sKEy0Kpp7ctGFzsiVlS
+         jeKg==
+X-Gm-Message-State: APjAAAU/dsDodaqlTtm6UxWJj9ENkyEKUcOmMs1JrvS2h5p3uGgflmWN
+        VTbwrQzEjQWoSRjFts4OAAsI1Q==
+X-Google-Smtp-Source: APXvYqz36v1zCKX0GRWb534Z9an9udGHI/NESxPlvuGqVOMCrwC97gsWY6mXQoFhLwcNndoWLde2ZA==
+X-Received: by 2002:a62:1b85:: with SMTP id b127mr76850297pfb.165.1560198965895;
+        Mon, 10 Jun 2019 13:36:05 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id k22sm11148457pfk.178.2019.06.10.13.36.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 13:36:04 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 13:36:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v16 02/16] arm64: untag user pointers in access_ok and
+ __uaccess_mask_ptr
+Message-ID: <201906101335.DF80D631@keescook>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <4327b260fb17c4776a1e3c844f388e4948cfb747.1559580831.git.andreyknvl@google.com>
+ <20190610175326.GC25803@arrakis.emea.arm.com>
+ <201906101106.3CA50745E3@keescook>
+ <20190610185329.xhjawzfy4uddrkrj@mbp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610185329.xhjawzfy4uddrkrj@mbp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-10 at 12:52 -0700, Dave Hansen wrote:
-> On 6/10/19 12:38 PM, Yu-cheng Yu wrote:
-> > > > When an application starts, its highest stack address is determined.
-> > > > It uses that as the maximum the bitmap needs to cover.
-> > > 
-> > > Huh, I didn't think we ran code from the stack. ;)
-> > > 
-> > > Especially given the way that we implemented the new 5-level-paging
-> > > address space, I don't think that expecting code to be below the stack
-> > > is a good universal expectation.
+On Mon, Jun 10, 2019 at 07:53:30PM +0100, Catalin Marinas wrote:
+> On Mon, Jun 10, 2019 at 11:07:03AM -0700, Kees Cook wrote:
+> > On Mon, Jun 10, 2019 at 06:53:27PM +0100, Catalin Marinas wrote:
+> > > diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> > > index 3767fb21a5b8..fd191c5b92aa 100644
+> > > --- a/arch/arm64/kernel/process.c
+> > > +++ b/arch/arm64/kernel/process.c
+> > > @@ -552,3 +552,18 @@ void arch_setup_new_exec(void)
+> > >  
+> > >  	ptrauth_thread_init_user(current);
+> > >  }
+> > > +
+> > > +/*
+> > > + * Enable the relaxed ABI allowing tagged user addresses into the kernel.
+> > > + */
+> > > +int untagged_uaddr_set_mode(unsigned long arg)
+> > > +{
+> > > +	if (is_compat_task())
+> > > +		return -ENOTSUPP;
+> > > +	if (arg)
+> > > +		return -EINVAL;
+> > > +
+> > > +	set_thread_flag(TIF_UNTAGGED_UADDR);
+> > > +
+> > > +	return 0;
+> > > +}
 > > 
-> > Yes, you make a good point.  However, allowing the application manage the
-> > bitmap
-> > is the most efficient and flexible.  If the loader finds a legacy lib is
-> > beyond
-> > the bitmap can cover, it can deal with the problem by moving the lib to a
-> > lower
-> > address; or re-allocate the bitmap.
+> > I think this should be paired with a flag clearing in copy_thread(),
+> > yes? (i.e. each binary needs to opt in)
 > 
-> How could the loader reallocate the bitmap and coordinate with other
-> users of the bitmap?
+> It indeed needs clearing though not in copy_thread() as that's used on
+> clone/fork but rather in flush_thread(), called on the execve() path.
 
-Assuming the loader actually chooses to re-allocate, it can copy the old bitmap
-over to the new before doing the switch.  But, I agree, the other choice is
-easier; the loader can simply put the lib at lower address.  AFAIK, the loader
-does not request high address in mmap().
+Ah! Yes, thanks.
 
-> 
-> > If the loader cannot allocate a big bitmap to cover all 5-level
-> > address space (the bitmap will be large), it can put all legacy lib's
-> > at lower address.  We cannot do these easily in the kernel.
-> 
-> This is actually an argument to do it in the kernel.  The kernel can
-> always allocate the virtual space however it wants, no matter how large.
->  If we hide the bitmap behind a kernel API then we can put it at high
-> 5-level user addresses because we also don't have to worry about the
-> high bits confusing userspace.
+> And a note to myself: I think PR_UNTAGGED_ADDR (not UADDR) looks better
+> in a uapi header, the user doesn't differentiate between uaddr and
+> kaddr.
 
-We actually tried this.  The kernel needs to reserve the bitmap space in the
-beginning for every CET-enabled app, regardless of actual needs.  On each memory
-request, the kernel then must consider a percentage of allocated space in its
-calculation, and on systems with less memory this quickly becomes a problem.
+Good point. I would agree. :)
 
+-- 
+Kees Cook
