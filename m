@@ -2,139 +2,122 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751EEC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73142C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5482220820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5208720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389804AbfFJMUK (ORCPT
+        id S2389923AbfFJMUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 08:20:10 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:24507 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388952AbfFJMUK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 08:20:10 -0400
-X-UUID: 4ff2c7dd04a647038cdb442a2416699f-20190610
-X-UUID: 4ff2c7dd04a647038cdb442a2416699f-20190610
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 666678171; Mon, 10 Jun 2019 20:20:01 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 10 Jun 2019 20:20:00 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 10 Jun 2019 20:19:59 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v7 08/21] iommu/mediatek: Add larb-id remapped support
-Date:   Mon, 10 Jun 2019 20:17:47 +0800
-Message-ID: <1560169080-27134-9-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+        Mon, 10 Jun 2019 08:20:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:41640 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388952AbfFJMUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 08:20:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51118337;
+        Mon, 10 Jun 2019 05:20:18 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54A2A3F557;
+        Mon, 10 Jun 2019 05:20:17 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/arm_arch_timer: extract elf_hwcap use to
+ arch-helper
+To:     Will Deacon <will.deacon@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190430131413.10017-1-andrew.murray@arm.com>
+ <20190610120839.GH15979@fuggles.cambridge.arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ mQINBE6Jf0UBEADLCxpix34Ch3kQKA9SNlVQroj9aHAEzzl0+V8jrvT9a9GkK+FjBOIQz4KE
+ g+3p+lqgJH4NfwPm9H5I5e3wa+Scz9wAqWLTT772Rqb6hf6kx0kKd0P2jGv79qXSmwru28vJ
+ t9NNsmIhEYwS5eTfCbsZZDCnR31J6qxozsDHpCGLHlYym/VbC199Uq/pN5gH+5JHZyhyZiNW
+ ozUCjMqC4eNW42nYVKZQfbj/k4W9xFfudFaFEhAf/Vb1r6F05eBP1uopuzNkAN7vqS8XcgQH
+ qXI357YC4ToCbmqLue4HK9+2mtf7MTdHZYGZ939OfTlOGuxFW+bhtPQzsHiW7eNe0ew0+LaL
+ 3wdNzT5abPBscqXWVGsZWCAzBmrZato+Pd2bSCDPLInZV0j+rjt7MWiSxEAEowue3IcZA++7
+ ifTDIscQdpeKT8hcL+9eHLgoSDH62SlubO/y8bB1hV8JjLW/jQpLnae0oz25h39ij4ijcp8N
+ t5slf5DNRi1NLz5+iaaLg4gaM3ywVK2VEKdBTg+JTg3dfrb3DH7ctTQquyKun9IVY8AsxMc6
+ lxl4HxrpLX7HgF10685GG5fFla7R1RUnW5svgQhz6YVU33yJjk5lIIrrxKI/wLlhn066mtu1
+ DoD9TEAjwOmpa6ofV6rHeBPehUwMZEsLqlKfLsl0PpsJwov8TQARAQABtCNNYXJjIFp5bmdp
+ ZXIgPG1hcmMuenluZ2llckBhcm0uY29tPokCTwQTAQIAOQIbAwYLCQgHAwIGFQgCCQoLBBYC
+ AwECHgECF4AWIQSf1RxT4LVjGP2VnD0j0NC60T16QwUCXO+WxgAKCRAj0NC60T16QzfuEACd
+ oPsSJdUg3nm61VKq86Pp0mfCC5IVyD/vTDw3jDErsmtT7t8mMVgidSJe9cMEudLO5xske/mY
+ sC7ZZ4GFNRRsFs3wY5g+kg4yk2UY6q18HXRQJwzWCug2bkJPUxbh71nS3KPsvq4BBOeQiTIX
+ Xr0lTyReFAp+JZ0HpanAU/iD2usEZLDNLXYLRjaHlfkwouxt02XcTKbqRWNtKl3Ybj+mz5IA
+ qEQnA5Z8Nt9ZQmlZ4ASiXVVCbZKIR3RewBL6BP4OhYrvcPCtkoqlqKWZoHBs3ZicRXvcVUr/
+ nqUyZpqhmfht2mIE063L3kTfBqxJ1SQqPc0ZIModTh4ATEjC44x8ObQvtnmgL8EKJBhxJfjY
+ EUYLnwSejH1h+qgj94vn7n1RMVqXpCrWHyF7pCDBqq3gBxtDu6TWgi4iwh4CtdOzXBw2V39D
+ LlnABnrZl5SdVbRwV+Ek1399s/laceH8e4uNea50ho89WmP9AUCrXlawHohfDE3GMOV4BdQ2
+ DbJAtZnENQXaRK9gr86jbGQBga9VDvsBbRd+uegEmQ8nPspryWIz/gDRZLXIG8KE9Jj9OhwE
+ oiusVTLsw7KS4xKDK2Ixb/XGtJPLtUXbMM1n9YfLsB5JPZ3B08hhrv+8Vmm734yCXtxI0+7B
+ F1V4T2njuJKWTsmJWmx+tIY8y9muUK9rabkCDQROiX9FARAAz/al0tgJaZ/eu0iI/xaPk3DK
+ NIvr9SsKFe2hf3CVjxriHcRfoTfriycglUwtvKvhvB2Y8pQuWfLtP9Hx3H+YI5a78PO2tU1C
+ JdY5Momd3/aJBuUFP5blbx6n+dLDepQhyQrAp2mVC3NIp4T48n4YxL4Og0MORytWNSeygISv
+ Rordw7qDmEsa7wgFsLUIlhKmmV5VVv+wAOdYXdJ9S8n+XgrxSTgHj5f3QqkDtT0yG8NMLLmY
+ kZpOwWoMumeqn/KppPY/uTIwbYTD56q1UirDDB5kDRL626qm63nF00ByyPY+6BXH22XD8smj
+ f2eHw2szECG/lpD4knYjxROIctdC+gLRhz+Nlf8lEHmvjHgiErfgy/lOIf+AV9lvDF3bztjW
+ M5oP2WGeR7VJfkxcXt4JPdyDIH6GBK7jbD7bFiXf6vMiFCrFeFo/bfa39veKUk7TRlnX13go
+ gIZxqR6IvpkG0PxOu2RGJ7Aje/SjytQFa2NwNGCDe1bH89wm9mfDW3BuZF1o2+y+eVqkPZj0
+ mzfChEsiNIAY6KPDMVdInILYdTUAC5H26jj9CR4itBUcjE/tMll0n2wYRZ14Y/PM+UosfAhf
+ YfN9t2096M9JebksnTbqp20keDMEBvc3KBkboEfoQLU08NDo7ncReitdLW2xICCnlkNIUQGS
+ WlFVPcTQ2sMAEQEAAYkCHwQYAQIACQUCTol/RQIbDAAKCRAj0NC60T16QwsFD/9T4y30O0Wn
+ MwIgcU8T2c2WwKbvmPbaU2LDqZebHdxQDemX65EZCv/NALmKdA22MVSbAaQeqsDD5KYbmCyC
+ czilJ1i+tpZoJY5kJALHWWloI6Uyi2s1zAwlMktAZzgGMnI55Ifn0dAOK0p8oy7/KNGHNPwJ
+ eHKzpHSRgysQ3S1t7VwU4mTFJtXQaBFMMXg8rItP5GdygrFB7yUbG6TnrXhpGkFBrQs9p+SK
+ vCqRS3Gw+dquQ9QR+QGWciEBHwuSad5gu7QC9taN8kJQfup+nJL8VGtAKgGr1AgRx/a/V/QA
+ ikDbt/0oIS/kxlIdcYJ01xuMrDXf1jFhmGZdocUoNJkgLb1iFAl5daV8MQOrqciG+6tnLeZK
+ HY4xCBoigV7E8KwEE5yUfxBS0yRreNb+pjKtX6pSr1Z/dIo+td/sHfEHffaMUIRNvJlBeqaj
+ BX7ZveskVFafmErkH7HC+7ErIaqoM4aOh/Z0qXbMEjFsWA5yVXvCoJWSHFImL9Bo6PbMGpI0
+ 9eBrkNa1fd6RGcktrX6KNfGZ2POECmKGLTyDC8/kb180YpDJERN48S0QBa3Rvt06ozNgFgZF
+ Wvu5Li5PpY/t/M7AAkLiVTtlhZnJWyEJrQi9O2nXTzlG1PeqGH2ahuRxn7txA5j5PHZEZdL1
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <4b3b2717-a639-3b1a-625f-5e7c1ff0ccd0@arm.com>
+Date:   Mon, 10 Jun 2019 13:20:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20190610120839.GH15979@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The larb-id may be remapped in the smi-common, this means the
-larb-id reported in the mtk_iommu_isr isn't the real larb-id,
+On 10/06/2019 13:08, Will Deacon wrote:
+> On Tue, Apr 30, 2019 at 02:14:13PM +0100, Andrew Murray wrote:
+>> Different mechanisms are used to test and set elf_hwcaps between ARM
+>> and ARM64, this results in the use of #ifdef's in this file when
+>> setting/testing for the EVTSTRM hwcap.
+>>
+>> Let's improve readability by extracting this to an arch helper.
+>>
+>> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+>> ---
+>>  arch/arm/include/asm/arch_timer.h    | 13 +++++++++++++
+>>  arch/arm64/include/asm/arch_timer.h  | 13 +++++++++++++
+>>  drivers/clocksource/arm_arch_timer.c | 15 ++-------------
+>>  3 files changed, 28 insertions(+), 13 deletions(-)
+> 
+> Acked-by: Will Deacon <will.deacon@arm.com>
+> 
+> I assume this is going via Marc Z.
 
-Take mt8183 as a example:
-                       M4U
-                        |
----------------------------------------------
-|               SMI common                  |
--0-----7-----5-----6-----1-----2------3-----4- <- Id remapped
- |     |     |     |     |     |      |     |
-larb0 larb1 IPU0  IPU1 larb4 larb5  larb6  CCU
-disp  vdec  img   cam   venc  img    cam
-As above, larb0 connects with the id 0 in smi-common.
-          larb1 connects with the id 7 in smi-common.
-          ...
-If the larb-id reported in the isr is 7, actually it's larb1(vdec).
-In order to output the right larb-id in the isr, we add a larb-id
-remapping relationship in this patch.
+More likely Daniel Lezcano. I'll ack the patch once reposted to take
+Mark's remarks into account.
 
-If there is no this larb-id remapping in some SoCs, use the linear
-mapping array instead.
+Thanks,
 
-This also is a preparing patch for mt8183.
-
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
----
- drivers/iommu/mtk_iommu.c | 4 ++++
- drivers/iommu/mtk_iommu.h | 2 ++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 264dda4..ad838b9 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -220,6 +220,8 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
- 	fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
- 	fault_port = F_MMU0_INT_ID_PORT_ID(regval);
- 
-+	fault_larb = data->plat_data->larbid_remap[fault_larb];
-+
- 	if (report_iommu_fault(&dom->domain, data->dev, fault_iova,
- 			       write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ)) {
- 		dev_err_ratelimited(
-@@ -744,12 +746,14 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
- 	.m4u_plat     = M4U_MT2712,
- 	.has_4gb_mode = true,
- 	.has_bclk     = true,
-+	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
- };
- 
- static const struct mtk_iommu_plat_data mt8173_data = {
- 	.m4u_plat     = M4U_MT8173,
- 	.has_4gb_mode = true,
- 	.has_bclk     = true,
-+	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
- };
- 
- static const struct of_device_id mtk_iommu_of_ids[] = {
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index 63e235e..61fd5d6 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -46,6 +46,8 @@ struct mtk_iommu_plat_data {
- 
- 	/* HW will use the EMI clock if there isn't the "bclk". */
- 	bool                has_bclk;
-+
-+	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
- };
- 
- struct mtk_iommu_domain;
+	M.
 -- 
-1.9.1
-
+Jazz is not dead. It just smells funny...
