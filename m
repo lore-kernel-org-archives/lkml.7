@@ -2,139 +2,143 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A09C468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D308BC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D55F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560152924;
-	bh=KvIm6HtouftqCTee6FSb1zeL3AYFpzbI2I9FwwofGXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BYom0QO9oOR4owno9x8L7KXoFEjHK2JQO1t7I0kN6dlw5kwhuSuglLsIdi8Unqhi9
-	 aehfXdTmjGGFNbAZsew9wc5pwT3ZJ/IJ/RCVCsyEgtLmuzvWJdV462Dt3PfntufTeW
-	 99z+d3TUogGAlSpxOqJImm2917WVKR4viulxfqyA=
+	by mail.kernel.org (Postfix) with ESMTP id 79BF1206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="WwkEubxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388073AbfFJHsn (ORCPT
+        id S2388094AbfFJHtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 03:48:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388005AbfFJHsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:48:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F9F206E0;
-        Mon, 10 Jun 2019 07:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560152922;
-        bh=KvIm6HtouftqCTee6FSb1zeL3AYFpzbI2I9FwwofGXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V71pFYS9DZUK2y/72BBDM8kVV74UOhvwjsOuaZ4VZLLHfqr5ZoTJN1fP4OYwMzjTt
-         NZ12gOEAB/QY8SfMQVObGvhB+Pk+fRvU9OOHJdAzqg7vyBhSB0CV/6uXFpSSOWHqSu
-         AM6wlL541OocdIg7D5fb0tLJ0L8vlbfgN6rEaujc=
-Date:   Mon, 10 Jun 2019 09:48:40 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of AutoReporter
-Message-ID: <20190610074840.GB24746@kroah.com>
-References: <20190607153849.101321647@linuxfoundation.org>
- <20190607153855.717899507@linuxfoundation.org>
- <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
- <20190610073119.GB20470@kroah.com>
- <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
+        Mon, 10 Jun 2019 03:49:07 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:42262 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387946AbfFJHtG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 03:49:06 -0400
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 1BC3E2E146D;
+        Mon, 10 Jun 2019 10:49:03 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 3wMTGjTNnn-n2lW74fo;
+        Mon, 10 Jun 2019 10:49:03 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1560152943; bh=Qzebi1leFqcpZHW1I+Cib60DHdujFnQNpZ3bLJWHh6s=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=WwkEubxXt3DWtlV+9KizQuB1prBb89ONXLPhZyNQYoIevSM68jGLQVk2fRugkVPFh
+         JIqv/qCv4BBsJ4dCJxUzGy4oVGTj2bFZe0U/UKP4lLa30bldT57V1srm/EZJelyDpj
+         45DUEdB1IqrKrBNFudz/BcMMSxweMcZQpTPd9jNo=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d25:9e27:4f75:a150])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id BUMfaPbDgr-n1gKVU5p;
+        Mon, 10 Jun 2019 10:49:02 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] drivers/ata: print trim features at device initialization
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+References: <155989287898.1506.14253954112551051148.stgit@buzz>
+ <yq1wohxib7t.fsf@oracle.com>
+ <eebfb1cc-f6d0-580e-1d56-2af0f481a92f@yandex-team.ru>
+ <048ed77f-8faa-fb67-c6bc-10d953f52f89@yandex-team.ru>
+ <1560116241.3324.19.camel@HansenPartnership.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <b554c428-417e-5fef-1776-87a4db1d674a@yandex-team.ru>
+Date:   Mon, 10 Jun 2019 10:49:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <1560116241.3324.19.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 09:34:10AM +0200, Jiri Slaby wrote:
-> On 10. 06. 19, 9:31, Greg Kroah-Hartman wrote:
-> > On Mon, Jun 10, 2019 at 08:27:30AM +0200, Jiri Slaby wrote:
-> >> On 07. 06. 19, 17:39, Greg Kroah-Hartman wrote:
-> >>> From: Jonathan Corbet <corbet@lwn.net>
-> >>>
-> >>> commit 2404dad1f67f8917e30fc22a85e0dbcc85b99955 upstream.
-> >>>
-> >>> AutoReporter is going away; recent versions of sphinx emit a warning like:
-> >>>
-> >>>   Documentation/sphinx/kerneldoc.py:125:
-> >>>       RemovedInSphinx20Warning: AutodocReporter is now deprecated.
-> >>>       Use sphinx.util.docutils.switch_source_input() instead.
-> >>>
-> >>> Make the switch.  But switch_source_input() only showed up in 1.7, so we
-> >>> have to do ugly version checks to keep things working in older versions.
-> >>
-> >> Hi,
-> >>
-> >> this patch breaks our build of kernel-docs on 5.1.*:
-> >> https://build.opensuse.org/package/live_build_log/Kernel:stable/kernel-docs/standard/x86_64
-> >>
-> >> The error is:
-> >> [  250s] reST markup error:
-> >> [  250s]
-> >> /home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/linux-5.1/Documentation/gpu/i915.rst:403:
-> >> (SEVERE/4) Title level inconsistent:
-> >> [  250s]
-> >> [  250s] Global GTT Fence Handling
-> >> [  250s] ~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>
-> >> Reverting the patch from 5.1.* makes it work again.
-> >>
-> >> 5.2-rc3 (includes the patch) is OK:
-> >> https://build.opensuse.org/package/live_build_log/Kernel:HEAD/kernel-docs/standard/x86_64
-> >>
-> >> So 5.1.* must be missing something now.
-> > 
-> > Odd.  running 'make htmldocs' on 5.1 with these patches applied works
-> > for me here.
-> > 
-> > What version of sphinx are you using to build the package with?
+On 10.06.2019 0:37, James Bottomley wrote:
+> On Sat, 2019-06-08 at 17:13 +0300, Konstantin Khlebnikov wrote:
+>>> On 08.06.2019 11:25, Christoph Hellwig wrote:> On Fri, Jun 07, 2019
+>>> at 10:34:39AM +0300, Konstantin Khlebnikov wrote:
+>>>   >
+>>>   > Do we really need to spam dmesg with even more ATA crap?  What
+>>> about
+>>>   > a sysfs file that can be read on demand instead?
+>>>   >
+>>>
+>>> Makes sense.
+>>>
+>>> Trim state is exposed for ata_device:
+>>> /sys/class/ata_device/devX.Y/trim
+>>> but there is no link from scsi device to ata device so they hard to
+>>> match.
+>>>
+>>> I'll think about it.
+>>
+>> Nope. There is no obvious way to link scsi device with ata_device.
+>> ata_device is built on top of "transport_class" and
+>> "attribute_container".
+>> This some extremely over engineered sysfs framework used only in
+>> ata/scsi. I don't want to touch this.
 > 
-> >From the log, it looks like 1.8.5 (it's tumbleweed):
+> You don't need to know any of that.  The problem is actually when the
+> ata transport classes were first created, the devices weren't properly
+> parented.  What should have happened, like every other transport class,
+> is that the devices should have descended down to the scsi device as
+> the leaf in an integrated fashion.  Instead, what we seem to have is
+> three completely separate trees.
 > 
-> $ osc rbl Kernel:stable/kernel-docs/standard/x86_64|grep -i sphinx
-> [   11s] cycle: python3-sphinx_rtd_theme -> python3-Sphinx
-> [   11s]   breaking dependency python3-Sphinx -> python3-sphinx_rtd_theme
-> [   32s] [226/263] cumulate python3-sphinxcontrib-websupport-1.1.0-1.2
-> [   32s] [239/263] cumulate python3-Sphinx-1.8.5-2.2
-> [   32s] [242/263] cumulate python3-sphinx_rtd_theme-0.4.1-1.3
-> [   72s]
-> python3-sphinxcontrib-websupport-1.1.0########################################
-> [   72s] python3-sphinx_rtd_theme-0.4.1-1.3
-> ########################################
-> [   73s] python3-Sphinx-1.8.5-2.2
-> ########################################
-> [   73s] update-alternatives: using /usr/bin/sphinx-apidoc-3.7 to
-> provide /usr/bin/sphinx-apidoc (sphinx-apidoc) in auto mode
-> [  101s] + patch -s -F0 -E -p1 --no-backup-if-mismatch -i
-> /home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/patches.kernel.org/5.1.8-055-docs-Fix-conf.py-for-Sphin-2.0.patch
-> [  101s] + patch -s -F0 -E -p1 --no-backup-if-mismatch -i
-> /home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/patches.kernel.org/5.1.8-057-doc-Cope-with-Sphinx-logging-deprecations.patch
-> [  102s]   SPHINX  htmldocs -->
-> file:///home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/linux-5.1/html/Documentation/output
-> [  103s] Running Sphinx v1.8.5
+> So if you look at a SAS device, you see from the pci device:
+> 
+> host2/port-2:0/end_device-2:0/target2:0:0/2:0:0:0/block/sdb/sdb1
+> 
+> But if you look at a SATA device, you see three separate paths:
+> 
+> ata3/host3/target3\:0\:0/3\:0\:0\:0/block/sda/sda1
+> ata3/link3/dev3.0/ata_device/dev3.0
+> ata3/ata_port/ata3
+> 
+> Instead of an integrated tree
+> 
+> Unfortunately, this whole thing is unfixable now.  If I integrate the
+> tree properly, the separate port and link directories will get subsumed
+> and we won't be able to recover them with judicious linking so scripts
+> relying on them will break.  The best we can probably do is add
+> additional links with what we have.
+> 
+> To follow the way we usually do it, there should be a link from the ata
+> device to the scsi target, but that wouldn't help you find the "trim"
+> files, so it sounds like you want a link from the scsi device to the ata device, which would?
 
-Hm, 2.1 here:
-	Running Sphinx v2.1.0
-perhaps Tumbleweed needs to update?  :)
+Yes, I'm talking about link from scsi device to leaf ata_device node.
 
-Anyway, this should not be breaking, if Jon doesn't have any ideas, I'll
-just drop these changes.
+In libata scsi_device has one to one relation with ata_device.
+So making link like /sys/class/block/sda/device/ata_device should be possible easy.
+But I haven't found implicit reference from struct ata_device to ata_device in sysfs.
 
-thanks,
+In simplest ahci case whole path looks like:
+/sys/devices/pci0000:00/0000:00:1f.2/ata1/link1/dev1.0/ata_device/dev1.0
+|______________________|__ata_host__|port|link_|_tdev_|___ata_device___|
 
-greg k-h
+
+/sys/class/ata_device/dev1.0 points directly to leaf ata_device
+While in struct ata_device tdev is different intermediate node.
+
+It would be nice merge tdev and ata_device into one node, or at least embed leaf
+struct device into struct ata_device too.
+
+As I see ata registers only "transport" device while scsi transport template
+magically matches it and creates actual ata device of ata_dev_class.
+I see no reason for this complexity. Why ata host couldn't enumerate and
+register all these devices explicitly?
