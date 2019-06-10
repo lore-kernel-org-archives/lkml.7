@@ -2,198 +2,122 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BC0C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F20C4321B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A12CE2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WkUG0Dgq"
+	by mail.kernel.org (Postfix) with ESMTP id 7F9822082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389321AbfFJTrf (ORCPT
+        id S2389269AbfFJTtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:47:35 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:36093 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388901AbfFJTrf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:47:35 -0400
-Received: by mail-vk1-f194.google.com with SMTP id b69so1990951vkb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 12:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tJqkZkxvqyt0n9gXCfpqbeOFz1qw5IOHXOpz6/WZhNc=;
-        b=WkUG0DgqDvpwq5Ck702sSYctkVvRBLsLXKrdU9Bzq/ThgjnoERtwsm0XEtq5rMO1EB
-         tGyFG23ImgFkflLRvSlYUXBMirqPn3gdS2dGo0jssn48CfllSuxtbzmEM5mikB40Tk4h
-         VapbXtm/tt2rOYI3T/TYNqIZFBxkcqNtJCjLN+CsuZWqvUSw5tB3QIacT5gSlRXgis8K
-         rGD/0PCbHZEhvaMBvXoda0Lf4NQpR1Pz/z0nHKhrR1rW/kJfttMYtd+tjc3/0eG52Epn
-         wVv4cc9yi8+oRf29lOkpyD5LjS1iLBnZ3RMeWjeOscMdx2/PHu8BY591xYf92xNch16T
-         7wog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tJqkZkxvqyt0n9gXCfpqbeOFz1qw5IOHXOpz6/WZhNc=;
-        b=OU+Uukezr5tH8xmScaTYTLj70TYAaIxxp+YPV1ZpFhBiA9io13RxbdHbBFBU+klfh6
-         vO3ljEvzBznlT9a3q1pT910joS9ayvFauobTcEKUfvE5n2Id0tjGYA/K2duHU0PYDuQC
-         ypdo45WUjf3R1T7lSU5u0qSy5q5yKtyyzPVma5GQgPIha4+a4VM2EaiJcEJU/2HQwMom
-         nuRgZn+jAfPYwSy+r/CQCcIgzT7IgYlL8LygYFA/iuOyjvjoWWyIV32Rn22DyeOkO194
-         hyTt78FiDh7kbmfiYWRjaMRqvwFGAP7SBGpWgqEeZdclWTAmQX5oSADNTBd5kcmqwlNB
-         g2Qw==
-X-Gm-Message-State: APjAAAUI+gEwfXJz0JXhIEah1NycWAh60VNJeHZTpsL7+iJqNZmwUP/R
-        dgDTaJrw2k+e1BX/QFfVdMhPsw==
-X-Google-Smtp-Source: APXvYqxHX0MXghDAcbC5HGfJIEWJMHBjWcxTXhlF+7xiDLgOB64uA0+4DO5KecRyO0VbYw28h/SUqA==
-X-Received: by 2002:a1f:2896:: with SMTP id o144mr15347442vko.73.1560196053934;
-        Mon, 10 Jun 2019 12:47:33 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id v133sm5191417vkv.5.2019.06.10.12.47.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 12:47:33 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1haQGS-0003pA-Vq; Mon, 10 Jun 2019 16:47:32 -0300
-Date:   Mon, 10 Jun 2019 16:47:32 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     syzbot <syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com>,
-        dasaratharaman.chandramouli@intel.com, dledford@redhat.com,
-        leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, parav@mellanox.com,
-        roland@purestorage.com, sean.hefty@intel.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING: bad unlock balance in ucma_event_handler
-Message-ID: <20190610194732.GH18468@ziepe.ca>
-References: <000000000000af6530056e863794@google.com>
- <20180613170543.GB30019@ziepe.ca>
- <20190610184853.GG63833@gmail.com>
+        Mon, 10 Jun 2019 15:49:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:1644 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388901AbfFJTtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 15:49:42 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 12:49:41 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga008.jf.intel.com with ESMTP; 10 Jun 2019 12:49:41 -0700
+Date:   Mon, 10 Jun 2019 12:49:41 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v2 1/5] mm: Introduce vm_ops->may_mprotect()
+Message-ID: <20190610194941.GK15995@linux.intel.com>
+References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+ <20190606021145.12604-2-sean.j.christopherson@intel.com>
+ <20190610150600.GA3752@linux.intel.com>
+ <20190610155549.GB15995@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654FFD59@ORSMSX116.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610184853.GG63833@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654FFD59@ORSMSX116.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 11:48:54AM -0700, Eric Biggers wrote:
-> On Wed, Jun 13, 2018 at 11:05:43AM -0600, Jason Gunthorpe wrote:
-> > On Wed, Jun 13, 2018 at 06:47:02AM -0700, syzbot wrote:
-> > > Hello,
-> > > 
-> > > syzbot found the following crash on:
-> > > 
-> > > HEAD commit:    73fcb1a370c7 Merge branch 'akpm' (patches from Andrew)
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=16d70827800000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f3b4e30da84ec1ed
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=e5579222b6a3edd96522
-> > > compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
-> > > syzkaller repro:https://syzkaller.appspot.com/x/repro.syz?x=176daf97800000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e7bd57800000
-> > > 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com
-> > > 
-> > > 
-> > > =====================================
-> > > WARNING: bad unlock balance detected!
-> > > 4.17.0-rc5+ #58 Not tainted
-> > > kworker/u4:0/6 is trying to release lock (&file->mut) at:
-> > > [<ffffffff8593ecc0>] ucma_event_handler+0x780/0xff0
-> > > drivers/infiniband/core/ucma.c:390
-> > > but there are no more locks to release!
-> > > 
-> > > other info that might help us debug this:
-> > > 4 locks held by kworker/u4:0/6:
-> > >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at:
-> > > __write_once_size include/linux/compiler.h:215 [inline]
-> > >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at:
-> > > arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
-> > >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at: atomic64_set
-> > > include/asm-generic/atomic-instrumented.h:40 [inline]
-> > >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at: atomic_long_set
-> > > include/asm-generic/atomic-long.h:57 [inline]
-> > >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at: set_work_data
-> > > kernel/workqueue.c:617 [inline]
-> > >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at:
-> > > set_work_pool_and_clear_pending kernel/workqueue.c:644 [inline]
-> > >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at:
-> > > process_one_work+0xaef/0x1b50 kernel/workqueue.c:2116
-> > >  #1:         (ptrval) ((work_completion)(&(&req->work)->work)){+.+.}, at:
-> > > process_one_work+0xb46/0x1b50 kernel/workqueue.c:2120
-> > >  #2:         (ptrval) (&id_priv->handler_mutex){+.+.}, at:
-> > > addr_handler+0xa6/0x3d0 drivers/infiniband/core/cma.c:2796
-> > >  #3:         (ptrval) (&file->mut){+.+.}, at: ucma_event_handler+0x10e/0xff0
-> > > drivers/infiniband/core/ucma.c:350
+On Mon, Jun 10, 2019 at 10:47:52AM -0700, Xing, Cedric wrote:
+> > From: Christopherson, Sean J
+> > Sent: Monday, June 10, 2019 8:56 AM
 > > 
-> > I think this is probably a use-after-free race, eg when we do
-> > ctx->file->mut we have raced with ucma_free_ctx() ..
+> > > > As a result, LSM policies cannot be meaningfully applied, e.g. an
+> > > > LSM can deny access to the EPC as a whole, but can't deny PROT_EXEC
+> > > > on page that originated in a non-EXECUTE file (which is long gone by
+> > > > the time
+> > > > mprotect() is called).
+> > >
+> > > I have hard time following what is paragraph is trying to say.
+> > >
+> > > > By hooking mprotect(), SGX can make explicit LSM upcalls while an
+> > > > enclave is being built, i.e. when the kernel has a handle to origin
+> > > > of each enclave page, and enforce the result of the LSM policy
+> > > > whenever userspace maps the enclave page in the future.
+> > >
+> > > "LSM policy whenever calls mprotect()"? I'm no sure why you mean by
+> > > mapping here and if there is any need to talk about future. Isn't this
+> > > needed now?
 > > 
-> > Which probably means something along the way to free_ctx() did not
-> > call rdma_addr_cancel?
+> > Future is referring to the timeline of a running kernel, not the future
+> > of the kernel code.
 > > 
-> > Jason
+> > Rather than trying to explain all of the above with words, I'll provide
+> > code examples to show how ->may_protect() will be used by SGX and why it
+> > is the preferred solution.
 > 
-> This is still happening.  Just FYI, ignoring these reports doesn't make the bugs
-> go away.  Here's a crash report from v5.2.0-rc4:
+> The LSM concept is to separate security policy enforcement from the rest of
+> the kernel. For modules, the "official" way is to use VM_MAY* flags to limit
+> allowable permissions, while LSM uses security_file_mprotect().
+> I guess that's why we didn't have .may_mprotect() in the first place.
 
-There are many unfixed syzkaller bugs in rdma_cm, so I'm not surprised
-it is still happening..
+Heh, so I've typed up about five different responses to this comment.  In
+doing so, I think I've convinced myself that ->may_mprotect() is
+unnecessary.  Rther than hook mprotect(), simply update the VM_MAY* flags
+during mmap(), with all bits cleared if there isn't an associated enclave
+page.  IIRC, the need to add ->may_protect() came about when we were
+exploring more dynamic interplay between SGX and LSMs.
 
-Nobody has stepped forward to work on this code, and it is not a
-simple mess to understand, let alone try to fix.
+> What you are doing is enforcing some security policy outside of LSM, which
+> is dirty from architecture perspective.
 
-> =====================================
-> WARNING: bad unlock balance detected!
-> 5.2.0-rc4 #44 Not tainted
-> kworker/u4:2/61 is trying to release lock (&file->mut) at:
-> [<ffffffff851a3f81>] ucma_event_handler+0x711/0xef0 drivers/infiniband/core/ucma.c:394
-> but there are no more locks to release!
-> 
-> other info that might help us debug this:
-> 4 locks held by kworker/u4:2/61:
->  #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: __write_once_size include/linux/compiler.h:221 [inline]
->  #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
->  #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
->  #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
->  #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: set_work_data kernel/workqueue.c:620 [inline]
->  #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
->  #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: process_one_work+0x87e/0x1790 kernel/workqueue.c:2240
->  #1: 00000000d75dabcd ((work_completion)(&(&req->work)->work)){+.+.}, at: process_one_work+0x8b4/0x1790 kernel/workqueue.c:2244
->  #2: 0000000058b7aa49 (&id_priv->handler_mutex){+.+.}, at: addr_handler+0xaf/0x3d0 drivers/infiniband/core/cma.c:3031
->  #3: 00000000e5042b0a (&file->mut){+.+.}, at: ucma_event_handler+0xb3/0xef0 drivers/infiniband/core/ucma.c:354
-
-Well, it is holding the (logical) lock it is releasing, so this
-probably menas ctx->file changed value while this event handler is
-running. :\
-
-A quick look suggests ucma_migrate_id does that..
-
-.. and we can quickly see the bug, we try to obtain a lock:
-
-        mutex_lock(&ctx->file->mut);
-
-while another thread is changing that pointer under the lock we are
-trying to get:
-
-        ctx->file = new_file;
-
-So probably mutex_lock went to sleep, holding &ctx->file->mut in a
-register, then the thing in the lock changed ctx->file, finally the
-unlock reloaded ctx->file and got the new unlocked value, and crash.
-
-Which just an insane design in the first place.
-
-That is as far as I can get, trying to figure out how to rework
-ctx->file to be properly ref counted, accessed and locked, is a major
-task.. I don't even know right now what migrate_id is supposed to be
-for :(
-
-Jason
+No, the enclave page protections are enforced regardless of LSM policy,
+and in v2 those protections are immutable.  Yes, the explicit enclave
+page protection bits are being added primarily for LSMs, but they don't
+impact functionality other than at the security_enclave_load() touchpoint.
