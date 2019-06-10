@@ -2,102 +2,143 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2109C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1D8C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B332E20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D12620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOr0KjsX"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="oKO4mbCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389127AbfFJTb6 (ORCPT
+        id S2389185AbfFJTcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:31:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45616 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbfFJTb5 (ORCPT
+        Mon, 10 Jun 2019 15:32:05 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45713 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389141AbfFJTcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:31:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s11so5852221pfm.12;
-        Mon, 10 Jun 2019 12:31:57 -0700 (PDT)
+        Mon, 10 Jun 2019 15:32:04 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u10so7464732lfm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 12:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eUPzmPUFDWkI7Q7rSFifM1MJ4oIJgugGIlrWCoNmq3Q=;
-        b=HOr0KjsXy4RvLxgagrmOUQpJlnirP4L3ubMpzwf7mujRoVTQQ6oquZ/HmC0RcCTHdZ
-         IXP6CcqOWCTJ2RFIUFNJ/YWPEm6/AYmxNqH745cv/A3GZZ6xV9qgps3PelinTlWlIWjd
-         zcOKz1hTmtDSqWjjOO8cRJ/gyaGrIWugbpXwYn2ya6Eec6zPfwpk4dkZZd4WmRC1r0I/
-         pRCWHd9kbC6MjH+6BSj865Mj9F0zUh2y20DDMhMcRoyjs5y2lkoiDvb21UNRhuq2XgM2
-         SWpnv960bgYcdztPlcRqLHwCuObRsxo+tjGvhOLmTHL0+HbAlO9uftzuuMQOod5HG1N0
-         37GA==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IIoSsHs2Gt3kHbX+cuP9jRibTu3kMb1fSTDPWFLywq4=;
+        b=oKO4mbClwNDoCgUwCV9hFQelTUY+xAsbBQi8UXkaFFyxhzWF/FXpxQnPGBCRuSgfrN
+         VLnPReDyxOanh93THZAyuRf18DZQLhRc9AdKcjG1fvNU3nc0NcslkzYjzk5r4KC7lA3T
+         fHDSdZJQKDGB5Mgl9VB8V6UnMZESUdQdUUVSlTKHHLFCBkRavW8xXCQB4u/rcpNraDUL
+         Zvr4WKdbV7BlJtsMg4qjWfYbJ2oFXIBh8sLbEk9dGSxvqmG8ZimxO+99J3ytAS378x8I
+         iMwBcbKpuTZrkiNSkV1Nx17sKx+9zwJKNzQ9opk9OdqoZRwmoaF2S+Z3WY9cmyi2WgXD
+         JOkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eUPzmPUFDWkI7Q7rSFifM1MJ4oIJgugGIlrWCoNmq3Q=;
-        b=bVuVSSGsV6VGD0KBHjuakcnIyz7kFGnY/G8nWMjzYsFe3H0J33xruI9kNSE/2bUPrK
-         f66jXAYti/xLvhPRNOGWdmsTbqUN8YaHNSVpBHwSCACAp2AodZrdBki8gR/PpKB1o0SD
-         cpB9Vn+YT6XpUt3ZOcUTmVHt6La61vP3d83Z3xj/nqfFpVgtIbtDDM1AqMPgwSOg0Bw8
-         fDBUkc8S1uQ6hX2amo2VYvHORytZ46MCCIGu3SUpjSuJyD6OlFw/3LlcQ54r9swHKMdZ
-         429KnTKfV0wMWOzyJnO/iXj4aY5UYzf5dvzKM/rrXnYKl7mc2r+BvQ2bRSrKZQShwI7A
-         64Jw==
-X-Gm-Message-State: APjAAAXd4d9vXerj/I3goR7LCapAOaBtqUE5wot91Yy9Cerbou+ckA3B
-        cdfT0eY/Koz3R+8Jjmas0qCnGTqk
-X-Google-Smtp-Source: APXvYqzV4weJYVHbnM8dqMOBdnpidy/PsGfylPEqtErDsQGPSWkypEmACLluqUG/L6Aat2lpgniH7Q==
-X-Received: by 2002:a63:d84a:: with SMTP id k10mr2546494pgj.74.1560195116295;
-        Mon, 10 Jun 2019 12:31:56 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a64sm10786802pgc.53.2019.06.10.12.31.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 12:31:55 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     ioana.ciornei@nxp.com, olteanv@gmail.com,
-        rmk+kernel@armlinux.org.uk,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] net: dsa: Deal with non-existing PHY/fixed-link
-Date:   Mon, 10 Jun 2019 12:31:49 -0700
-Message-Id: <20190610193150.22231-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IIoSsHs2Gt3kHbX+cuP9jRibTu3kMb1fSTDPWFLywq4=;
+        b=W4p4vWWEO/ZoeTHLVjP1RWyNeh5Y5DOlgLMADf89CycyH7Sfl2PPJmG/KRytqjpl+c
+         sFMoAV8b3lITbXZUcfDRsd39TWneSC+w53/OrcGMvCRjzGeq+AhD6QuP8kemEp35/tOK
+         A0mGuL1ZIYhcTxhzSo3ZHCE72R6YvMzU+osWi589mFphZMnnxxhW5xvNCmA92mqbeARX
+         unXjtpFb/GBJK+LjqM1hyj2FZGyA/ZyUBJ2dhVxduwG0Ymt7V9UH8pNbnZy5dVMFJn8h
+         waBI8SXz9JFKLA2VdgoQSxUoCab1iWMYexMZ8+BgEXFAhsp0vFnZ5T7WaMeS3qhqupSj
+         8Stg==
+X-Gm-Message-State: APjAAAXsty7YZpZfpbuvpUH3dS7D4ln0bkUp8OY9UkbN0Pjg//bYyap6
+        mlk1pmW0gSG/6IBNg8E8waoD64xjwyVP8UiENdGP
+X-Google-Smtp-Source: APXvYqxvYthO9/gqYcTo77CUTe6wmEAHSs04Nn7iJsK2zbchLH0BsJ9Rd+mCQ8lntv+6VRIY5jRd+teiUkkJXjaPaAQ=
+X-Received: by 2002:ac2:4109:: with SMTP id b9mr4940972lfi.31.1560195121827;
+ Mon, 10 Jun 2019 12:32:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190606092342.GA21672@zhanggen-UX430UQ> <CAFqZXNuricWOMH3fQiCbPZyz2qwf7Gw1zmx1o+wLeTELSF=CUQ@mail.gmail.com>
+ <20190607121134.GA3357@zhanggen-UX430UQ>
+In-Reply-To: <20190607121134.GA3357@zhanggen-UX430UQ>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 10 Jun 2019 15:31:50 -0400
+Message-ID: <CAHC9VhS8W8p+9FwB9OHBhfsxP45ckjpqsqt6p85U5PZY=N=rYg@mail.gmail.com>
+Subject: Re: [PATCH v3] selinux: lsm: fix a missing-check bug in
+ selinux_add_mnt_opt( )
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to specifically deal with phylink_of_phy_connect() returning
--ENODEV, because this can happen when a CPU/DSA port does connect
-neither to a PHY, nor has a fixed-link property. This is a valid use
-case that is permitted by the binding and indicates to the switch:
-auto-configure port with maximum capabilities.
+On Fri, Jun 7, 2019 at 8:11 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+>
+> On Fri, Jun 07, 2019 at 10:39:05AM +0200, Ondrej Mosnacek wrote:
+> > On Thu, Jun 6, 2019 at 11:23 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+> > > In selinux_add_mnt_opt(), 'val' is allocated by kmemdup_nul(). It returns
+> > > NULL when fails. So 'val' should be checked. And 'mnt_opts' should be
+> > > freed when error.
+> > >
+> > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > Fixes: 757cbe597fe8 ("LSM: new method: ->sb_add_mnt_opt()")
+> > > ---
+> > > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> > > index 3ec702c..4e4c1c6 100644
+> > > --- a/security/selinux/hooks.c
+> > > +++ b/security/selinux/hooks.c
+> > > @@ -1052,15 +1052,23 @@ static int selinux_add_mnt_opt(const char *option, const char *val, int len,
+> > >         if (token == Opt_error)
+> > >                 return -EINVAL;
+> > >
+> > > -       if (token != Opt_seclabel)
+> > > -               val = kmemdup_nul(val, len, GFP_KERNEL);
+> > > +       if (token != Opt_seclabel) {
+> > > +                       val = kmemdup_nul(val, len, GFP_KERNEL);
+> > > +                       if (!val) {
+> > > +                               rc = -ENOMEM;
+> > > +                               goto free_opt;
+> > > +                       }
+> > > +       }
+> > >         rc = selinux_add_opt(token, val, mnt_opts);
+> > >         if (unlikely(rc)) {
+> > >                 kfree(val);
+> > > -               if (*mnt_opts) {
+> > > -                       selinux_free_mnt_opts(*mnt_opts);
+> > > -                       *mnt_opts = NULL;
+> > > -               }
+> > > +               goto free_opt;
+> > > +       }
+> > > +       return rc;
+> >
+> > At this point rc is guaranteed to be 0, so you can just 'return 0' for
+> > clarity. Also, I visually prefer an empty line between a return
+> > statement and a goto label, but I'm not sure what is the
+> > general/maintainer's preference.
+>
+> Am I supposed to revise and send a patch v4 for this, or let the
+> maintainer do this? :-)
 
-Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- net/dsa/port.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+First a few things from my perspective: I don't really care too much
+about the difference between returning "0" and "rc" here, one could
+argue that "0" is cleaner and that "rc" is "safer".  To me it isn't a
+big deal and generally isn't something I would even comment on unless
+there was something else in the patch that needed addressing.  I care
+a more about the style choice of having an empty line between the
+return and the start of the goto targets (vertical whitespace before
+the jump targets is good, please include it), but once again, I'm not
+sure I would comment on that.  The patch subject line is a bit
+confusing in that we already discussed when to use "selinux" and when
+to use "lsm", but I imagine there might be some confusion about using
+both so let me try and clear that up now: don't do it unless you have
+a *really* good reason to do so :)  In this case it is all SELinux
+code so there is no reason why you should be including the "lsm"
+prefix.
 
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index d74bc9df1359..dde3085ff065 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -622,7 +622,7 @@ static int dsa_port_phylink_register(struct dsa_port *dp)
- 	}
- 
- 	err = phylink_of_phy_connect(dp->pl, port_dn, 0);
--	if (err) {
-+	if (err && err != -ENODEV) {
- 		pr_err("could not attach to PHY: %d\n", err);
- 		goto err_phy_connect;
- 	}
+You've been pretty responsive, so if you don't mind submitting a v4
+with the changes mentioned above, that would be far more preferable to
+me making the changes.  I have some other comments about maintainer
+fixes to patches, but I'll save that for the other thread :)
+
 -- 
-2.17.1
-
+paul moore
+www.paul-moore.com
