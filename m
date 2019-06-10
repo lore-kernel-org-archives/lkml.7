@@ -2,113 +2,114 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F40C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6337DC468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4B820833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3295D206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pi8MLwR4"
+	dkim=pass (1024-bit key) header.d=newmedia-net.de header.i=@newmedia-net.de header.b="YCubijx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfFJEi0 (ORCPT
+        id S2387519AbfFJEsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 00:38:26 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39062 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbfFJEi0 (ORCPT
+        Mon, 10 Jun 2019 00:48:04 -0400
+Received: from webmail.newmedia-net.de ([185.84.6.166]:54386 "EHLO
+        webmail.newmedia-net.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387454AbfFJEsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 00:38:26 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g9so3117632plm.6
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 21:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mpvEIcub74Ft9tQ19C+ftgMqPmIXoqD9CmzUzCOdNHo=;
-        b=Pi8MLwR4TLdpCZ6t/LUx60qyKNBsya1oMtOVGH8Y2QkkD4FISlPx4rri2+Zc40wAAC
-         uNJnxIHb4x0TjU3oQ2BYr3ymaaof65cJdhUGwWBzCEvZfsHwP3JA99DCD2Pli/UZ5L6k
-         38hk8vOkAwnr81DK3tNkSdBjIYbby7+CuOdx3fF9Pq6CdcBX1zzOzzu5uwqHHgjVsvX0
-         U6t+0MCMUfPRYhIiOuVs77ir1LyqVoc5eyR5GAUE2rAoP6XsqXy4PVBAUPa6oV6VOJ+/
-         0NR+iMgET5E8ECG7DjQazl06DgVKpgQLO7iLiPfN5MJtbhechkNSVkKhz79BpftzA650
-         wQoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mpvEIcub74Ft9tQ19C+ftgMqPmIXoqD9CmzUzCOdNHo=;
-        b=mxPcuAPMprkLplBa0bvSF/uQc3XliKFn+//93MsdILLh5UzTo/y40wN47uYrRuRCux
-         pOvIGMHFYFoV8TyY45TinMCG1YRioQ3R1WD9piJD8TMOG9/++7XkEA206uv36XoVyo1l
-         YX8pZuhT13u480C3trmUz1Yry/fY2t/ul+iWBOKAy6bVBtpRKkWWgbySIT6tioK4KCwb
-         Rg2FuL43epgT/xIk/guZUqote1bWMZafL5ztiJT4Ons+ZzVr5MLf7EVL5LMiFmYpAt6M
-         pqXzEh/jwYDLNQ5uk9MrBfxuX7wDHbtzG2yhD2+ypvC356VFcYiFl0Yu6p+n3LRKlt+M
-         Lk7A==
-X-Gm-Message-State: APjAAAWmlUzL6yLKg6aDhFM1Oh8Iu8ZuzDWpPwd1VU/TLi4T1u1FzQpT
-        YO594YMdbwXIvxBx0UCxFMbCPrmk
-X-Google-Smtp-Source: APXvYqxRvLX40gv+OgzBjTF3wrCildCfFd1d4SpB/WueK+15EvhScQvfwHZvJubUBIUMqikrDRLAaA==
-X-Received: by 2002:a17:902:a516:: with SMTP id s22mr29601481plq.178.1560141505994;
-        Sun, 09 Jun 2019 21:38:25 -0700 (PDT)
-Received: from [10.0.2.15] ([171.79.92.225])
-        by smtp.gmail.com with ESMTPSA id n32sm8603724pji.29.2019.06.09.21.38.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 21:38:25 -0700 (PDT)
-Subject: Re: [PATCH] staging: rtl8723bs: core: rtw_mlme_ext.c: Remove unused
- variables
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        straube.linux@gmail.com, benniciemanuel78@gmail.com,
-        hardiksingh.k@gmail.com
-References: <20190607071123.28193-1-nishkadg.linux@gmail.com>
- <20190609110206.GD30671@kroah.com>
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-Message-ID: <74fd5a83-0f60-baae-a65f-bbc0cd9f4ad0@gmail.com>
-Date:   Mon, 10 Jun 2019 10:08:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Mon, 10 Jun 2019 00:48:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=newmedia-net.de; s=mikd;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=a+MCzpnl0xNsgcO1BNyJajn0uqIgCFJ5QcmD+iHYyro=;
+        b=YCubijx9eK9f9Ko/oDWdt6Qvg8YIMbn/pgO70gbQmWCHyDHKSpx/6569+7vP2TD88ivMyCH4aN07klszoX4w00nLLAum/DuJNRlpCVpI0S8J2tAw4hRR0Qlit9G+ESV1NRRVgfL+RFihIR3CMpKJwk0imNKo7fRLXunKZoP71qk=;
+Subject: Re: [PATCH] mt76: mt7615: add support for per-chain signal strength
+ reporting
+To:     Ryder Lee <ryder.lee@mediatek.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>,
+        Chih-Min Chen <chih-min.Chen@mediatek.com>,
+        YF Luo <yf.luo@mediatek.com>, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        linux-mediatek@lists.infradead.org, Roy Luo <royluo@google.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>
+References: <3912a2863e858f3623ced61737836e42c7b19149.1560071167.git.ryder.lee@mediatek.com>
+ <d6cfd2e9-4b2b-36ac-6cae-a34f74204801@newmedia-net.de>
+ <1560132590.28258.5.camel@mtkswgap22> <1560140541.5606.12.camel@mtkswgap22>
+From:   Sebastian Gottschall <s.gottschall@newmedia-net.de>
+Message-ID: <64662021-8e5a-91b5-9afb-3c9005564d19@newmedia-net.de>
+Date:   Mon, 10 Jun 2019 06:47:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190609110206.GD30671@kroah.com>
+In-Reply-To: <1560140541.5606.12.camel@mtkswgap22>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Received:  from [2003:c9:3f05:3a00:f095:7be4:6d09:fd49]
+        by webmail.newmedia-net.de with esmtpsa (TLSv1:AES128-SHA:128)
+        (Exim 4.72)
+        (envelope-from <s.gottschall@newmedia-net.de>)
+        id 1haCDp-0003SA-AI; Mon, 10 Jun 2019 06:47:53 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/06/19 4:32 PM, Greg KH wrote:
-> On Fri, Jun 07, 2019 at 12:41:23PM +0530, Nishka Dasgupta wrote:
->> Remove variables that are declared and assigned values but not otherwise
->> used.
->> Issue found with Coccinelle.
+okay. curious is, that my variant works with sane results too.
+i will test your variant and check the results
+
+Sebastian
+
+Am 10.06.2019 um 06:22 schrieb Ryder Lee:
+> On Mon, 2019-06-10 at 10:09 +0800, Ryder Lee wrote:
+>> On Sun, 2019-06-09 at 16:44 +0200, Sebastian Gottschall wrote:
+>>> according to my findings
+>>>
+>>> MT_RXV4_RCPI1 is part of rx descriptor 4 and not 3
+>>> so it must be rxdg4 = rxd[4] etc.
+>> RXV start from 1 in the code.
 >>
->> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
->> ---
->>   drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 9 ---------
->>   1 file changed, 9 deletions(-)
-> 
-> You sent me 8 patches for this driver, yet only 2 were ordered in a
-> series.  I have no idea what order to apply these in :(
-> 
-> Please resend them _all_ in a numbered patch series so I have a chance
-> to get this correct.
-
-Yes, I can do that. Who do I send the patch series to in that case? The 
-maintainers list is slightly different for each file, and most of the 
-patches in this driver are for different and unrelated files (except, I 
-think, the two that I did send as a patch series). Do I combine the 
-maintainers lists and send the entire patch series to everyone listed as 
-a maintainer for any one of the patches in it?
-
-Thanking you,
-Nishka
-
-> thanks,
-> 
-> greg k-h
-> 
-
+>> That is: RXV1 <-> rxdg0, RXV2 <-> rxdg1 ...so RXV4 <-> rxdg3
+>>
+>>> however rxdg3 contains MT_RXV3_IB_RSSIRX which can be used for signal calculation.
+>>> i already wrote a similar code for this driver which i sended to felix a long time ago.
+>>> my variant looks like
+>>>                   status->signal = (FIELD_GET(MT_RXV3_IB_RSSIRX, rxdg3) - 220) / 2;
+>>>                   status->chain_signal[0] = (FIELD_GET(MT_RXV4_RCPI0, rxdg4) - 220) / 2;
+>>>                   status->chain_signal[1] = (FIELD_GET(MT_RXV4_RCPI1, rxdg4) - 220) / 2;
+>>>                   status->chain_signal[2] = (FIELD_GET(MT_RXV4_RCPI2, rxdg4) - 220) / 2;
+>>>                   status->chain_signal[3] = (FIELD_GET(MT_RXV4_RCPI3, rxdg4) - 220) / 2;
+> mt7615 actually doesn't use in-band RSSI for signal calculation, but it
+> occurs to me that i should modify the code to compare per-chain's
+> signal. Something like this:
+>
+> 		status->chain_signal[0] = to_rssi(MT_RXV4_RCPI0, rxdg3);
+> 		status->chain_signal[1] = to_rssi(MT_RXV4_RCPI1, rxdg3);
+> 		status->chain_signal[2] = to_rssi(MT_RXV4_RCPI2, rxdg3);
+> 		status->chain_signal[3] = to_rssi(MT_RXV4_RCPI3, rxdg3);
+> 		status->signal = status->chain_signal[0];
+>
+> 		switch (status->chains) {
+> 		case 0xf:
+> 			status->signal = max(status->signal,
+> 					     status->chain_signal[3]);
+> 		case 0x7:
+> 			status->signal = max(status->signal,
+> 					     status->chain_signal[2]);
+> 		case 0x3:
+> 			status->signal = max(status->signal,
+> 					     status->chain_signal[1]);
+> 			break;
+> 		default:
+> 			break;
+> 		}
+>
+>
+> I could send a v2 or you can take care of that.
+>
+> Ryder
+>
+>
