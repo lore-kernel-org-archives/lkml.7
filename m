@@ -2,108 +2,148 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBB2C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC85C468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69862085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02AF7206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:38:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x7cXKFFB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P7eZqS7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388214AbfFJHhm (ORCPT
+        id S2388234AbfFJHip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 03:37:42 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33347 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388150AbfFJHhl (ORCPT
+        Mon, 10 Jun 2019 03:38:45 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:34791 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388034AbfFJHip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:37:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so8093713wru.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 00:37:41 -0700 (PDT)
+        Mon, 10 Jun 2019 03:38:45 -0400
+Received: by mail-yb1-f194.google.com with SMTP id x32so3421837ybh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 00:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3aJUsVJEK9+CBcf4UpPeGea/cLMYkv5xsZDArHsWziA=;
-        b=x7cXKFFBTeToSOdu9ScaVUDjqDt66N6zxwx5eiCRELdilz4D9HOV0PNBw0USpTHZyo
-         pRyDwvR7FHnybSkI/LJYZw00nrY/2UmFQdxuklZCaowJP0dgKU9AkSgaiLYbmq16A1rq
-         DZhmYxD5o/LDMc4Bu6RveBnZNWrIFtzHcRYI17JXx+3s1EhRfi7ZJoKoeFB+qZ0J7ubW
-         TWeaZgAjZcBYdfawOgOIIxbBa7oRvhWafut/epTazByr2fkOnHkbS4hFO2iTzqmGTZlE
-         Tx928gmgtLkiMPbuQdxchrEQ2aYEWIhfSjfrLSGV2PuhiExO1oP4JRtM0C/TY9hRwPWh
-         zb5A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ivYOsIQLaE0sFyLyjt7AVV6ZKC2mGOmSWvKcFrNuPaE=;
+        b=P7eZqS7v1jWK7YUf29+8gLaGSSiK7dU3B73uNY5V7CwGXNrkg5QvP+z0Dw1Gtad5ty
+         JdlDoiVl4itADcaBgTAVCdh72YIIgQ8/2IzoYFbrKzPvoZIr6l4PuZRstzbBPqdRh6Qd
+         XgkslJ1W9RaZccIBn2aVNsQFz5Vj0jmaC8xwazXHG2OpuvdEYV9++05a+qB5BSp6ND3b
+         X6jmii2rHoq0tyDkYvzX9oaLpE+ClHmIfKlAqGCOhuTcXib645dFnUNKT+BffM8r6tEf
+         n3Qy+M573i+KXP+UD8zITQmhKS9o9VUyF8hPFGFDz4K58ws0cd+hAh/kC9w6PRchjpeN
+         b5FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3aJUsVJEK9+CBcf4UpPeGea/cLMYkv5xsZDArHsWziA=;
-        b=dmVucz/B5u2BjtqAE9O4cs50pSm0eHI1Q7GpUAWfaDUdGhVD6kog790e4kRFdUOVrz
-         uHajy2X7Y7G/Zuogka7RC7a4PEVkd2My2hPpG5A8XIy+wtAX+kffd3EX8qRTtddEyt+K
-         uwZm15nC6Ux1meHQGjysQ3ym7UEK4VZKTs25TRAZonduk/umhgI5mUtO8Z7mkFFRb0zy
-         dfykYnWzABGG4dTZ6meqA24c0+EAy9H8UwrCdSIjxT6e6WB4emHVbmpjnHxZZeaJsabf
-         ek7KYpEmdTMiTIy/g5TZmOJTmUqLCT8NUKfSP8S84ZmJLhYEt2IUFh0EavSHADCccVSl
-         f+4A==
-X-Gm-Message-State: APjAAAVfdznir4Zf2p1+kZeJkoHndqOmkuV78ZqzTg/IYk8BxE1hx19P
-        qJY0qbsx8XL4P6G8mVIbpp0LXA==
-X-Google-Smtp-Source: APXvYqxFZIVaBoMnIveU6WQwFqVvm62qPtjos9GCmyqHffI7iTlBHH5oTNEWoqPqzxf7MS571LsXFw==
-X-Received: by 2002:adf:f951:: with SMTP id q17mr16745992wrr.173.1560152260502;
-        Mon, 10 Jun 2019 00:37:40 -0700 (PDT)
-Received: from localhost.localdomain (233.red-79-146-84.dynamicip.rima-tde.net. [79.146.84.233])
-        by smtp.gmail.com with ESMTPSA id t7sm8769520wrn.52.2019.06.10.00.37.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 10 Jun 2019 00:37:40 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org,
-        bjorn.andersson@linaro.org
-Subject: [PATCH] tty: serial: msm_serial: avoid system lockup condition
-Date:   Mon, 10 Jun 2019 09:37:37 +0200
-Message-Id: <20190610073737.22856-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ivYOsIQLaE0sFyLyjt7AVV6ZKC2mGOmSWvKcFrNuPaE=;
+        b=FtICQ+CM1PqWKwVmYZB78StmIt3bUvQGGn2tYPYqiYsp1W3E0ngq8361eum3mjiEc5
+         O/ZpIWbY/UVGO5HlzRmjfJswCE1QM80hCtNdw6u7R4eR2P0QaqY08s66Z106Wwmpy3gu
+         R+pchiLk6PgUfwJySCVgLz6q2g4Iwve1v2IQhX0eV0KvUH08yOfezntAzt0A3gUGL3pT
+         XgXSdlmpZWYmvDoCYfRPY/0knL2QV2pR8aXR9EARMQc6W1iO8Cson7f8qV0qqOBc582v
+         h6rdnGqsp+urdq36W3FisGH/clVw9k3FmnzW/BqR7aPKCruiwCGr+ywaamZ8p/EfG8lX
+         FE+g==
+X-Gm-Message-State: APjAAAXXnmk7p5lZm58cyZj6k6hv6Vx7RNjrrfiqfM2yTRcR6jn+i1ZF
+        OZTcZLrBS74x0YH0mruvvpo0hQ==
+X-Google-Smtp-Source: APXvYqyFUdlctc8HdWsYt+J1cb0djjlngW+/MYywRZ0lxsUs4EclvkHMtVtNDgPg8MnKDJqz9Fa6/w==
+X-Received: by 2002:a25:d1d5:: with SMTP id i204mr31442488ybg.292.1560152324219;
+        Mon, 10 Jun 2019 00:38:44 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li1322-146.members.linode.com. [45.79.223.146])
+        by smtp.gmail.com with ESMTPSA id 207sm2821824ywo.98.2019.06.10.00.38.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 00:38:43 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 15:38:25 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] perf trace: Exit when build eBPF program failure
+Message-ID: <20190610073825.GB6140@leoy-ThinkPad-X240s>
+References: <20190606094845.4800-1-leo.yan@linaro.org>
+ <20190606094845.4800-2-leo.yan@linaro.org>
+ <20190606133019.GA30166@kernel.org>
+ <20190606133424.GB30166@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606133424.GB30166@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function msm_wait_for_xmitr can be taken with interrupts
-disabled. In order to avoid a potential system lockup - demonstrated
-under stress testing conditions on SoC QCS404/5 - make sure we wait
-for a bounded amount of time.
+On Thu, Jun 06, 2019 at 10:34:24AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Jun 06, 2019 at 10:30:19AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Thu, Jun 06, 2019 at 05:48:42PM +0800, Leo Yan escreveu:
+> > > +++ b/tools/perf/builtin-trace.c
+> > > @@ -3664,6 +3664,14 @@ static int trace__config(const char *var, const char *value, void *arg)
+> > >  					       "event selector. use 'perf list' to list available events",
+> > >  					       parse_events_option);
+> > >  		err = parse_events_option(&o, value, 0);
+> > > +
+> > > +		/*
+> > > +		 * When parse option successfully parse_events_option() will
+> > > +		 * return 0, otherwise means the paring failure.  And it
+> > > +		 * returns 1 for eBPF program building failure; so adjust the
+> > > +		 * err value to -1 for the failure.
+> > > +		 */
+> > > +		err = err ? -1 : 0;
+> > 
+> > I'll rewrite the comment above to make it more succint and fix things
+> > like 'paring' (parsing):
+> > 
+> > 		/*
+> > 		 * parse_events_option() returns !0 to indicate failure
+> > 		 * while the perf_config code that calls trace__config()
+> > 		 * expects < 0 returns to indicate error, so:
+> > 		 */
+> > 
+> > 		 if (err)
+> > 		 	err = -1;
+> 
+> Even shorter, please let me know if I can keep your
+> Signed-off-by/authorship for this one.
 
-Tested on SoC QCS404.
+Sorry I miss this email.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- drivers/tty/serial/msm_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index f7e4e50bddbd..1a2a605cf068 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -3703,7 +3703,12 @@ static int trace__config(const char *var, const char *value, void *arg)
+>  		struct option o = OPT_CALLBACK('e', "event", &trace->evlist, "event",
+>  					       "event selector. use 'perf list' to list available events",
+>  					       parse_events_option);
+> -		err = parse_events_option(&o, value, 0);
+> +		/*
+> +		 * We can't propagate parse_event_option() return, as it is 1
+> +		 * for failure while perf_config() expects -1.
+> +		 */
+> +		if (parse_events_option(&o, value, 0))
+> +			err = -1;
+>  	} else if (!strcmp(var, "trace.show_timestamp")) {
+>  		trace->show_tstamp = perf_config_bool(var, value);
+>  	} else if (!strcmp(var, "trace.show_duration")) {
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 23833ad952ba..0d4f1fe2b3a2 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -383,10 +383,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
- 
- static inline void msm_wait_for_xmitr(struct uart_port *port)
- {
-+	unsigned int timeout = 500000;
-+
- 	while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
- 		if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
- 			break;
- 		udelay(1);
-+		if (timeout--)
-+			break;
- 	}
- 	msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
- }
--- 
-2.21.0
 
+Yeah, the change looks good to me. And very appreciate your effort to
+improve the patch quality.
+
+Thanks,
+Leo.
