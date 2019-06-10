@@ -2,109 +2,86 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE583C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9DEC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70FB2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bipLx+5R"
+	by mail.kernel.org (Postfix) with ESMTP id E72192082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388656AbfFJIwY (ORCPT
+        id S2388694AbfFJIyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:52:24 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7435 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387753AbfFJIwX (ORCPT
+        Mon, 10 Jun 2019 04:54:07 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:46153 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388190AbfFJIyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:52:23 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfe1a460000>; Mon, 10 Jun 2019 01:52:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 10 Jun 2019 01:52:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 10 Jun 2019 01:52:22 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Jun
- 2019 08:52:20 +0000
-Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190609164127.541128197@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <c767d39b-49b2-de5b-2527-a39fcd242bb6@nvidia.com>
-Date:   Mon, 10 Jun 2019 09:52:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 04:54:06 -0400
+Received: by mail-io1-f72.google.com with SMTP id s83so7026213iod.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:54:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=B+GJ6LoUin3FHSYWAY/WpPY5cwhDOKvGZMSTo6bA3w0=;
+        b=UWc18K6AiXKNEbBcTmMC/fujh+/TG/G3VdnXNkQBeDwjKHmJnVtL7GA0omxlnDaTRF
+         T8fed5eEKgxxzY4xxvU5Jb35wGFJ3Cd66L5ra3v44Ikt/tc5q1c0Or4Xp+/FL3VFz2eV
+         hgNE7PgHrBTc/8wQ6e6VLjBdFZRvraCF/hhev/bHUe+BIyysdbH7/sTehbSSw1hCrojY
+         aL1TfC0FGumkDebW+oiZ34gYsrzJIDnmWjmReusgiutLnk7tiPSO1hFtD8PR1RGwn3ez
+         I0kcxOO9Rx+HtPpLw2i5kQrWP2QLZQA0dXxps/7SvfwBALC1M5quvg9lqSqqhVp0YvZ2
+         NQQg==
+X-Gm-Message-State: APjAAAWjpO9JRgivgoZqTIUqA+eCmXuu+TBVa+MfRN7VPhgPL8ZCMY0O
+        tBijB7E0Z6Sv628ykiYPV9FeutTD5a4wLFRVOC57YJY4dunn
+X-Google-Smtp-Source: APXvYqyoSWqFu+6arntTEvpAyXafinBqpItYheR6lKljmWQHNNwD8mClxay8MGzPgA1v1+D2lBRzm0MtJjByafy3bbeeUx0Lv0Cj
 MIME-Version: 1.0
-In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560156742; bh=J6XNF4dkn8nArklPeyWj3Gm3x6+oHaJqI1gRQ7R3p+8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bipLx+5RyYWnqLbUxn6HSETSFOuI8lY7vLzVprF9/xxEaRbKY5F8C6mpW5AVgSQ8E
-         DRIgwTnvnbFBzMTAnFgi571bi83C00d7eEuwJ2b4/iGERI/5yBJGd7ZUWNofl4D8CA
-         MNRAU0QUHFEnwx0MqAj9LuEFxv3oXccNoAazLj1j7K/q1OyYrChid268Z1pG8X9B6j
-         nWYAPC+JK7+B2TXeQs/yyEopqSF/zvR8FH0vfKFdNpLNUv/FbLQEr9YItO6/uei9Ix
-         Iq6vXHTBMp45P7nwdg6/j0/zBylEHXMD7Y5Dpt8fcna3BS2D8Swfl0lC/7d2mP5NLH
-         tE0mwOt8flV2w==
+X-Received: by 2002:a6b:ba04:: with SMTP id k4mr1916868iof.127.1560156846109;
+ Mon, 10 Jun 2019 01:54:06 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 01:54:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009b3b80058af452ae@google.com>
+Subject: kernel panic: stack is corrupted in __lock_acquire (4)
+From:   syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 09/06/2019 17:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.9 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.9-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+syzbot found the following crash on:
 
-All tests are passing for Tegra ...
+HEAD commit:    fdf71426 net: fix indirect calls helpers for ptype list ho..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1199f551a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4f721a391cd46ea
+dashboard link: https://syzkaller.appspot.com/bug?extid=83979935eb6304f8cd46
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Test results for stable-v5.1:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    32 tests:	32 pass, 0 fail
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Linux version:	5.1.9-rc1-g5b3d375b3838
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
 
-Cheers
-Jon
+Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:  
+__lock_acquire+0x3959/0x5490 kernel/locking/lockdep.c:3820
+CPU: 1 PID: 11196 Comm: syz-executor.0 Not tainted 5.2.0-rc2+ #41
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
--- 
-nvpublic
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
