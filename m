@@ -2,108 +2,110 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F7EC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C88CC31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FA120862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yiQa/bzz"
+	by mail.kernel.org (Postfix) with ESMTP id EF21420820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfFJQfr (ORCPT
+        id S2387468AbfFJQhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:35:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53906 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbfFJQfq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:35:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AGZbqf048436;
-        Mon, 10 Jun 2019 11:35:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560184537;
-        bh=Pjc4DG4VaIY3HIjpSsdWHxC5fbapRyXHz4RqfmSktJs=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=yiQa/bzzV4Ah+D9TaXx7GW1nf6HYctpuXwQCaK5x3+0Clg2JcmlAaONu/zVgPlIqD
-         6vjQj/DN9DrQ1oTvkESU0ptXn+vkXnZDASZvVYVNpHcRpPqaHJYBP3v6ToxO2h10v7
-         gr7Ps6M6mne5N0QqsVBAudQbHCgQNLh/SKntXGo0=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AGZbxG037980
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Jun 2019 11:35:37 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
- Jun 2019 11:35:36 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 10 Jun 2019 11:35:37 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AGZa2p116934;
-        Mon, 10 Jun 2019 11:35:36 -0500
-Subject: Re: [PATCH v12 1/5] can: m_can: Create a m_can platform framework
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190509161109.10499-1-dmurphy@ti.com>
- <dbb7bdef-820d-5dcc-d7b5-a82bc1b076fb@ti.com>
- <a8e3f2d3-18c3-3bdb-1318-8964afc7e032@ti.com>
- <93530d94-ec65-de82-448e-f2460dd39fb9@ti.com>
-Message-ID: <0f6c41c8-0071-ed3a-9e65-caf02a0fbefe@ti.com>
-Date:   Mon, 10 Jun 2019 11:35:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <93530d94-ec65-de82-448e-f2460dd39fb9@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Mon, 10 Jun 2019 12:37:12 -0400
+Received: from mga07.intel.com ([134.134.136.100]:7055 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387407AbfFJQhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:37:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 09:37:11 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Jun 2019 09:37:10 -0700
+Message-ID: <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
+Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
+ ELF file
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
+Date:   Mon, 10 Jun 2019 09:29:04 -0700
+In-Reply-To: <20190607180115.GJ28398@e103592.cambridge.arm.com>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+         <20190606200646.3951-23-yu-cheng.yu@intel.com>
+         <20190607180115.GJ28398@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bump
+On Fri, 2019-06-07 at 19:01 +0100, Dave Martin wrote:
+> On Thu, Jun 06, 2019 at 01:06:41PM -0700, Yu-cheng Yu wrote:
+> > An ELF file's .note.gnu.property indicates features the executable file
+> > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+> > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+> > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
+> > 
+> > With this patch, if an arch needs to setup features from ELF properties,
+> > it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
+> > arch_setup_property().
+> > 
+> > For example, for X86_64:
+> > 
+> > int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
+> > {
+> > 	int r;
+> > 	uint32_t property;
+> > 
+> > 	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
+> > 			     &property);
+> > 	...
+> > }
+> 
+> Although this code works for the simple case, I have some concerns about
+> some aspects of the implementation here.  There appear to be some bounds
+> checking / buffer overrun issues, and the code seems quite complex.
+> 
+> Maybe this patch tries too hard to be compatible with toolchains that do
+> silly things such as embedding huge notes in an executable, or mixing
+> NT_GNU_PROPERTY_TYPE_0 in a single PT_NOTE with a load of junk not
+> relevant to the loader.  I wonder whether Linux can dictate what
+> interpretation(s) of the ELF specs it is prepared to support, rather than
+> trying to support absolutely anything.
 
-On 6/6/19 8:16 AM, Dan Murphy wrote:
-> Marc
->
-> Bump
->
-> On 5/31/19 6:51 AM, Dan Murphy wrote:
->> Marc
->>
->> On 5/15/19 3:54 PM, Dan Murphy wrote:
->>> Marc
->>>
->>> On 5/9/19 11:11 AM, Dan Murphy wrote:
->>>> Create a m_can platform framework that peripheral
->>>> devices can register to and use common code and register sets.
->>>> The peripheral devices may provide read/write and configuration
->>>> support of the IP.
->>>>
->>>> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>>
->>>> v12 - Update the m_can_read/write functions to create a backtrace 
->>>> if the callback
->>>> pointer is NULL. - https://lore.kernel.org/patchwork/patch/1052302/
->>>>
->>> Is this able to be merged now?
->>
->> ping
->>
->>
->>> Dan
->>>
->>> <snip>
+To me, looking at PT_GNU_PROPERTY and not trying to support anything is a
+logical choice.  And it breaks only a limited set of toolchains.
+
+I will simplify the parser and leave this patch as-is for anyone who wants to
+back-port.  Are there any objections or concerns?
+
+Yu-cheng
