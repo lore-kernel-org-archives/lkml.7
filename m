@@ -2,96 +2,90 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C3CC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A45CC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DCC20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64ABB20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="KkWwJFeh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aXsWgQ9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389926AbfFJVQ7 (ORCPT
+        id S2389932AbfFJVSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:16:59 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45550 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728517AbfFJVQ7 (ORCPT
+        Mon, 10 Jun 2019 17:18:18 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46832 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728517AbfFJVSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:16:59 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m206so7318531oib.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 14:16:59 -0700 (PDT)
+        Mon, 10 Jun 2019 17:18:18 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 81so5987229pfy.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 14:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZIUfIIMLN3e/0Y4suKqQ9G4anQzSpQbmomczdVDiSH0=;
-        b=KkWwJFehPDBhr4NdUmIaYVpcbBtcY+sekuoJua+arEHgspzccbX9hGECT92v0fLHyH
-         ZYmpD21H+NYveVnwr6RO/nTlzy8f3FuBTKhJnILGYDXW5cztpw6pG0t90GBA6nFI5SAk
-         dAIPcmF6URlzecpoiE/Kvy5nbaa1/QnR1RT0ORTmnbT+jN7CerR2BOQH8j2j4z8Kx+kw
-         /odvr+b9/RX9x8kPTajNIuMboPxdvwZpetK0TxmopBw+ZTFvme6ySe4mr44XBdgq1609
-         wewfjMfmlIO5tfEHmWioYCOm1x1R0YE9V/8iqa0iXDmjIzpgU85UXKd0JmwByRm5iEuv
-         vijQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=m0QdMbKNLVs0T8bKlIwsAC6CTJBWav9NlL0ckO7DwlA=;
+        b=aXsWgQ9MISu7GVEUvnuqIx+fsqGjVQgLb+MZC1mkE1EKEL+Yw+ZR7o/wgZr5NWOk4A
+         rFulQA7GH29PRBa/ecTRG3Ylp+faYI3nHqeOr5anX/cH/RqXZ+YLWjGA9z9XBIcv2mjy
+         W2vI8mfwM7dgPo9C1Xs9WYcMsCWOWMGOU8GJM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZIUfIIMLN3e/0Y4suKqQ9G4anQzSpQbmomczdVDiSH0=;
-        b=mNp7y/Kc8YbAW8OFeGCt+3VQDb3fOxtmBTv+D//Ne0Lipo8FCn43Z8B4rahULXwsiC
-         JZS+5xmPwc6a5LyIyo4TPXy+XU8A1+3nroxT7qHIM0vTflrufMN7Lg0xpgLKM19QmBq1
-         4/hOHucsqcvX/4CL40mx2ElLDUrHXyxggHNvAJz3m1/SXO/bIqmxWgokK2K9IlRG/BWJ
-         t/SLiNzTGdITuij3w5lcrIyiDQA0xwDfddP0ZqV850IvriZLvAANlUypIlLh1buBXDsR
-         /Nd0fj+CvrvI90AVXFDzPHKwAhpcggcDIKCSBNkaFLM6eGafgjaYNHYxzvYvVEV5EHeb
-         0o8A==
-X-Gm-Message-State: APjAAAVYXl9OCcWsSU8Gvh2uVK64eM4ZCk3j4WG4eRpJ+1klNISZzNrl
-        fZ8gheCr+HcQN4ejMuULG63k6ZA4WJs=
-X-Google-Smtp-Source: APXvYqzrQymgucgnl+z86o+ugZd1hdDPnQB2gmMuuW1BS1J+N2O8IQAMrfJxzBp9VL2vM3TkiEdeNA==
-X-Received: by 2002:aca:de04:: with SMTP id v4mr12968015oig.162.1560201418724;
-        Mon, 10 Jun 2019 14:16:58 -0700 (PDT)
-Received: from [192.168.1.5] (072-182-052-210.res.spectrum.com. [72.182.52.210])
-        by smtp.googlemail.com with ESMTPSA id h59sm1885798oth.30.2019.06.10.14.16.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=m0QdMbKNLVs0T8bKlIwsAC6CTJBWav9NlL0ckO7DwlA=;
+        b=SfCiaHycdIXAg5/sxEqPBONv8JHMxkceAouYxDBcfJ4V6Gr6U6p5lC1zyd/4b3PqNu
+         H1de0rZBHnuWd98URbW8CedHMW6fA0a0//8TmjLwlevxRR2H1j4wTq4YQnWDJZHkFjg5
+         8cqD/Z8PDZM04hMEuJyJkUXcFNiqKKjPBHjTIRY2RlfFQeAHwagWvi+4YRnOODKXCJs1
+         z0ksSaABC1WBbOH0xTZZIvUUAlHjiLO8bk6ui5bbuxsW2EPL/rS2ou1U2n7DnbHndmzP
+         ZrfWZ/NbXdN4HoqaUofoXQHAyoupHXb8J6OG+GHiMG/UwUNh839U7d7ylc8QwOfcMR/E
+         uA1g==
+X-Gm-Message-State: APjAAAUELmdLFvmFaEgPuD0YF/wC9p5vH26U3Qn+XUS+be9sfLrcJAII
+        KdVNBRZjZKDjl/KdB2Fqts0n2w==
+X-Google-Smtp-Source: APXvYqwnWc4Rkv1HzFVoZjhnGWJK4oUgbCaO10e5+E+NJPsLfANZDbIWyiAzXN7RiRLG8EjciU0zmg==
+X-Received: by 2002:a62:5c84:: with SMTP id q126mr50065148pfb.247.1560201497375;
+        Mon, 10 Jun 2019 14:18:17 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:e9ae:bd45:1bd9:e60d])
+        by smtp.gmail.com with ESMTPSA id p43sm427645pjp.4.2019.06.10.14.18.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 14:16:58 -0700 (PDT)
-Subject: Re: [PATCH 0/7] TTY Keyboard Status Request
-To:     Arseny Maslennikov <ar@cs.msu.ru>, Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "Vladimir D . Seleznev" <vseleznv@altlinux.org>
-References: <20190605081906.28938-1-ar@cs.msu.ru>
- <20190609174139.GA11944@xo-6d-61-c0.localdomain>
- <20190609194013.GA3736@cello> <20190609195132.GA1430@amd>
- <20190609205610.GB3736@cello>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <97e43820-6143-2a84-7d0d-6f40c6c937a7@landley.net>
-Date:   Mon, 10 Jun 2019 16:18:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 14:18:16 -0700 (PDT)
+From:   davidriley@chromium.org
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org, David Riley <davidriley@chromium.org>
+Subject: [PATCH v2 0/4] drm/virtio: Ensure cached capset entries are valid before copying.
+Date:   Mon, 10 Jun 2019 14:18:06 -0700
+Message-Id: <20190610211810.253227-1-davidriley@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+In-Reply-To: <20190605234423.11348-1-davidriley@chromium.org>
+References: <20190605234423.11348-1-davidriley@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190609205610.GB3736@cello>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/19 3:56 PM, Arseny Maslennikov wrote:
-> This is similar to SIGWINCH, which is default-ignored as well: if the
-> terminal width/height changes (like when a terminal emulator window is
-> resized), its foreground pgrp gets a surprise signal as well, and the
-> processes that don't care about WINCH (and thus have default
-> disposition) do not get confused.
-> E.g. 'strace cat' demonstrates this quite clearly.
+From: David Riley <davidriley@chromium.org>
 
-Once upon a time suspending pipelines with ctrl-z broke stuff all the time due
-to zero length reads being interpreted as EOF. These days I don't see that so
-much anymore, I think SA_RESTART is the default now?
 
-Rob
+v2: Updated barriers.
+
+David Riley (4):
+  drm/virtio: Ensure cached capset entries are valid before copying.
+  drm/virtio: Wake up all waiters when capset response comes in.
+  drm/virtio: Fix cache entry creation race.
+  drm/virtio: Add memory barriers for capset cache.
+
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c |  6 ++++--
+ drivers/gpu/drm/virtio/virtgpu_vq.c    | 26 ++++++++++++++++++++++++--
+ 2 files changed, 28 insertions(+), 4 deletions(-)
+
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
+
