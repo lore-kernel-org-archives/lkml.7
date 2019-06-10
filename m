@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F50CC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24802C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728D72082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B632082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389209AbfFJKBY (ORCPT
+        id S2389079AbfFJKBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:01:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56684 "EHLO huawei.com"
+        Mon, 10 Jun 2019 06:01:13 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56520 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389020AbfFJKBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:01:16 -0400
+        id S2387977AbfFJKBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:01:13 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7A1D1DF86D7B64D91357;
+        by Forcepoint Email with ESMTP id 14F7449E51D9192BF918;
         Mon, 10 Jun 2019 18:01:11 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 10 Jun 2019 18:00:52 +0800
+ 14.3.439.0; Mon, 10 Jun 2019 18:00:51 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
@@ -36,9 +36,9 @@ CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <zhangshaokun@hisilicon.com>, <ak@linux.intel.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH 5/5] perf jevents: Add support for Hisi hip08 L3C PMU aliasing
-Date:   Mon, 10 Jun 2019 17:59:32 +0800
-Message-ID: <1560160772-210844-6-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 1/5] perf pmu: Fix uncore PMU alias list for ARM64
+Date:   Mon, 10 Jun 2019 17:59:28 +0800
+Message-ID: <1560160772-210844-2-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1560160772-210844-1-git-send-email-john.garry@huawei.com>
 References: <1560160772-210844-1-git-send-email-john.garry@huawei.com>
@@ -51,72 +51,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Hisi hip08 L3C PMU event aliasing.
+In 292c34c10249 ("perf pmu: Fix core PMU alias list for X86 platform"),
+we fixed the issue of CPU events being aliased to uncore events.
 
-The kernel driver is in drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
+Fix this same issue for ARM64, since the said commit left the (broken)
+behaviour untouched for ARM64.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- .../arm64/hisilicon/hip08/uncore-l3c.json     | 37 +++++++++++++++++++
- tools/perf/pmu-events/jevents.c               |  1 +
- 2 files changed, 38 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
+ tools/perf/util/pmu.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
-new file mode 100644
-index 000000000000..5bdc1a533d5e
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
-@@ -0,0 +1,37 @@
-+[
-+   {
-+	    "EventCode": "0x00",
-+	    "EventName": "uncore_hisi_sccl_l3c.rd_cpipe",
-+	    "BriefDescription": "Total read accesses",
-+	    "PublicDescription": "Total read accesses",
-+	    "Unit": "hisi_sccl,l3c",
-+   },
-+   {
-+	    "EventCode": "0x01",
-+	    "EventName": "uncore_hisi_sccl_l3c.wr_cpipe",
-+	    "BriefDescription": "Total write accesses",
-+	    "PublicDescription": "Total write accesses",
-+	    "Unit": "hisi_sccl,l3c",
-+   },
-+   {
-+	    "EventCode": "0x02",
-+	    "EventName": "uncore_hisi_sccl_l3c.rd_hit_cpipe",
-+	    "BriefDescription": "Total read hits",
-+	    "PublicDescription": "Total read hits",
-+	    "Unit": "hisi_sccl,l3c",
-+   },
-+   {
-+	    "EventCode": "0x03",
-+	    "EventName": "uncore_hisi_sccl_l3c.wr_hit_cpipe",
-+	    "BriefDescription": "Total write hits",
-+	    "PublicDescription": "Total write hits",
-+	    "Unit": "hisi_sccl,l3c",
-+   },
-+   {
-+	    "EventCode": "0x04",
-+	    "EventName": "uncore_hisi_sccl_l3c.victim_num",
-+	    "BriefDescription": "l3c precharge commands",
-+	    "PublicDescription": "l3c precharge commands",
-+	    "Unit": "hisi_sccl,l3c",
-+   },
-+]
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 909e53e3b5bd..7d241efd03de 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -238,6 +238,7 @@ static struct map {
- 	{ "UPI LL", "uncore_upi" },
- 	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
- 	{ "hisi_sccl,hha", "hisi_sccl,hha" },
-+	{ "hisi_sccl,l3c", "hisi_sccl,l3c" },
- 	{}
- };
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index e0429f4ef335..036047f56efa 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -709,9 +709,7 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+ {
+ 	int i;
+ 	struct pmu_events_map *map;
+-	struct pmu_event *pe;
+ 	const char *name = pmu->name;
+-	const char *pname;
  
+ 	map = perf_pmu__find_map(pmu);
+ 	if (!map)
+@@ -722,28 +720,26 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+ 	 */
+ 	i = 0;
+ 	while (1) {
++		const char *cpu_name = is_arm_pmu_core(name) ? name : "cpu";
++		struct pmu_event *pe =&map->table[i++];
++		const char *pname = pe->pmu ? pe->pmu : cpu_name;
+ 
+-		pe = &map->table[i++];
+ 		if (!pe->name) {
+ 			if (pe->metric_group || pe->metric_name)
+ 				continue;
+ 			break;
+ 		}
+ 
+-		if (!is_arm_pmu_core(name)) {
+-			pname = pe->pmu ? pe->pmu : "cpu";
+-
+-			/*
+-			 * uncore alias may be from different PMU
+-			 * with common prefix
+-			 */
+-			if (pmu_is_uncore(name) &&
+-			    !strncmp(pname, name, strlen(pname)))
+-				goto new_alias;
++		/*
++		 * uncore alias may be from different PMU
++		 * with common prefix
++		 */
++		if (pmu_is_uncore(name) &&
++		    !strncmp(pname, name, strlen(pname)))
++			goto new_alias;
+ 
+-			if (strcmp(pname, name))
+-				continue;
+-		}
++		if (strcmp(pname, name))
++			continue;
+ 
+ new_alias:
+ 		/* need type casts to override 'const' */
 -- 
 2.17.1
 
