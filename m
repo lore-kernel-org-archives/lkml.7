@@ -2,88 +2,185 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F6FC31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43832C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0E4206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560178295;
-	bh=/U+wRbtteOILfQyqQEFAX34EWpIssdlfePMqvbBQcok=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=FOvHDGZ8EjU7GNV7Z9zfVcG6YH8ETpCBapF7ArupI8duRs9BOGby1g0TXtQG3xAQw
-	 BCesAkbORtfMJuP7KHhlp9yWC9n08E8/PMdyHXBtcG7TpcZYWe+Uo4vnH0Lac95tLa
-	 fVOdOw2L9GFw8KI8p4DiUuIbd2WvtAvtVCqWR9sw=
+	by mail.kernel.org (Postfix) with ESMTP id 1AA2A208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390982AbfFJOve (ORCPT
+        id S2390993AbfFJOwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49490 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 10:52:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:44346 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389123AbfFJOvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:51:33 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD1132085A;
-        Mon, 10 Jun 2019 14:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560178293;
-        bh=/U+wRbtteOILfQyqQEFAX34EWpIssdlfePMqvbBQcok=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=Ni0M5RTJQlOeKFtGcIhyjvjbFQh9+sc5iJLSUSog2oF2FOHTnobpDTXHykwpzxgoP
-         TZDXbEjB6h0jAElBvVK5dtBxqTyu8J34WTjIwPSqdNbb/z4yUNw2TDvhq+BsP3AHAK
-         dF5aylUD2a3MN7MyeBl1zrHT8NaBG5H7Zs8xVfko=
-Content-Type: text/plain; charset="utf-8"
+        id S2389123AbfFJOwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:52:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FE2A344;
+        Mon, 10 Jun 2019 07:52:16 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88BE73F73C;
+        Mon, 10 Jun 2019 07:52:13 -0700 (PDT)
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Abel Vesa <abelvesa@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Carlo Caione <ccaione@baylibre.com>
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <20190610131921.GB14647@lakrids.cambridge.arm.com>
+ <20190610132910.srd4j2gtidjeppdx@fsr-ub1664-175>
+ <6f1052ea-623a-b2e8-9aa8-22aef5fab4ca@arm.com>
+ <20190610135514.xd5myavjsloos2y3@fsr-ub1664-175>
+ <7b86aa90-6d64-589c-f11e-d2ee6ab3fd54@arm.com>
+ <VI1PR04MB5055A808A08A1C47784E4332EE130@VI1PR04MB5055.eurprd04.prod.outlook.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <760bde51-f683-5975-4431-864f16e3365b@arm.com>
+Date:   Mon, 10 Jun 2019 15:52:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CACRpkdbdkbSofrvJ0hSV66DX+DcwWXp0ONDjx0265Pz50yE8TA@mail.gmail.com>
-References: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org> <CACRpkdbdkbSofrvJ0hSV66DX+DcwWXp0ONDjx0265Pz50yE8TA@mail.gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tengfei Fan <tengfeif@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
-User-Agent: alot/0.8.1
-Date:   Mon, 10 Jun 2019 07:51:32 -0700
-Message-Id: <20190610145132.DD1132085A@mail.kernel.org>
+In-Reply-To: <VI1PR04MB5055A808A08A1C47784E4332EE130@VI1PR04MB5055.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Linus Walleij (2019-06-07 14:08:10)
-> On Fri, May 31, 2019 at 8:52 AM Tengfei Fan <tengfeif@codeaurora.org> wro=
-te:
->=20
-> > The gpio interrupt status bit is getting set after the
-> > irq is disabled and causing an immediate interrupt after
-> > enablling the irq, so clear status bit on irq_unmask.
-> >
-> > Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
->=20
-> This looks pretty serious, can one of the Qcom maintainers ACK
-> this?
->=20
-> Should it be sent to fixes and even stable?
->=20
-> Fixes: tag?
->=20
+On 10/06/2019 15:32, Leonard Crestez wrote:
+> On 6/10/2019 5:08 PM, Marc Zyngier wrote:
+>> On 10/06/2019 14:55, Abel Vesa wrote:
+>>> On 19-06-10 14:39:02, Marc Zyngier wrote:
+>>>> On 10/06/2019 14:29, Abel Vesa wrote:
+>>>>> On 19-06-10 14:19:21, Mark Rutland wrote:
+>>>>>> On Mon, Jun 10, 2019 at 03:13:44PM +0300, Abel Vesa wrote:
+> 
+>>>>>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
+>>>>>>> handler and registers instead a wrapper which calls in the 'hijacked'
+>>>>>>> handler, after that calling into EL3 which will take care of the actual
+>>>>>>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
+>>>>>>
+>>>>>> IIUC from last time [1,2], this erratum affects all interrupts
+>>>>>> targetting teh idle CPU, not just IPIs, so even if the bodge is more
+>>>>>> self-contained, it doesn't really solve the issue, and there are still
+>>>>>> cases where a CPU will not be woken from idle when it should be (e.g.
+>>>>>> upon receipt of an LPI).
+>>>>>
+>>>>> Wrong, this erratum does not affect any other type of interrupts, other
+>>>>> than IPIs. That is because all the other interrupts go through GPC,
+>>>>> which means the cores will wake up on any other type (again, other than IPI).
+>>>>
+>>>> Huh... Are you saying that LPIs and PPIs are going through the GPC, and
+>>>> will trigger the wake-up of the core? That's not the conclusion we
+>>>> reached last time.
+>>>
+>>> Hmm, I don't think that was the conclusion. Yes, Lucas was saying (IIRC)
+>>> that if you terminate the IRQs at GIC then all the other interrupts will be
+>>> in the same situation. But the performance improvement given by terminating
+>>> them at GIC might not be worth it when compared to the cpuidle support.
+>>
+>> PPIs are broken,
+>> relying on some other terrible hack for the timer (and only the timer,
+>> leaving other PPIs dead as a nail). It also implies that LPIs have never
+>> been looked into, and given that they aren't routed through the GPC, the
+>> conclusion is pretty easy to draw.
+>>
+>> Nobody is talking about performance here. It is strictly about
+>> correctness, and what I read about this system is that it cannot
+>> reliably use cpuidle.
+> My argument was that it's fine if PPIs and LPIs are broken as long as 
+> they're not used:
+> 
+>   * PPIs are only used for local timer which is not used for wakeup.
 
-How is the interrupt status bit getting set after the irq is disabled?
-It looks like this is a level type interrupt? I thought that after
-commit b55326dc969e ("pinctrl: msm: Really mask level interrupts to
-prevent latching") this wouldn't be a problem. Am I wrong, or is qcom
-just clearing out patches on drivers and this is the last one that needs
-to be upstreamed?
+How about the PMU and GIC maintenance interrupts? Any interrupt should
+get you out of idle.
 
+>   * LPIs on imx are not currently implemented.
+
+Define "implemented". You don't have an ITS at all? Or is it that you
+currently don't expose the ITS in your firmware?
+
+> This workaround is only targeted at a very specific SOC with specific 
+> usecases and in that context it behaves correctly, as far as I can tell.
+
+And I still maintain that such specific use cases should be kept
+specific, and that the mainline kernel should be reliable in all
+circumstances.
+
+> As mentioned in another thread the HW issue was already solved in newer 
+> chips of the same family (like imx8mm). If there is a need for PPIs and 
+> LPIs on imx8mq in the future then maybe we can detect that scenario and 
+> disable cpuidle?
+
+I'd suggest it the other way around. No cpuidle unless you absolutely
+force it, tainting the kernel in the process.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
