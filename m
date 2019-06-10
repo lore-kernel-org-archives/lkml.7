@@ -2,76 +2,116 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE46C06507
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6717AC5ACBE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78737207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383F6207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403768AbfFJOOi (ORCPT
+        id S2390774AbfFJORV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:14:38 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40268 "EHLO inva021.nxp.com"
+        Mon, 10 Jun 2019 10:17:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38290 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390716AbfFJOOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:14:33 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 12DB22007D8;
-        Mon, 10 Jun 2019 16:14:32 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2A5A22001D6;
-        Mon, 10 Jun 2019 16:14:27 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CA1EC402DD;
-        Mon, 10 Jun 2019 22:14:20 +0800 (SGT)
-From:   daniel.baluta@nxp.com
-To:     jassisinghbrar@gmail.com, o.rempel@pengutronix.de
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, linux-imx@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        aisheng.dong@nxp.com, Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [RFC PATCH 1/2] mailbox: imx: Clear GIEn bit at shutdown
-Date:   Mon, 10 Jun 2019 22:16:08 +0800
-Message-Id: <20190610141609.17559-2-daniel.baluta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190610141609.17559-1-daniel.baluta@nxp.com>
-References: <20190610141609.17559-1-daniel.baluta@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2390501AbfFJORV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:17:21 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BEA6C61980;
+        Mon, 10 Jun 2019 14:17:20 +0000 (UTC)
+Received: from flask (unknown [10.43.2.83])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 9A42819C59;
+        Mon, 10 Jun 2019 14:17:18 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Mon, 10 Jun 2019 16:17:17 +0200
+Date:   Mon, 10 Jun 2019 16:17:17 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH v3 2/3] KVM: X86: Implement PV sched yield hypercall
+Message-ID: <20190610141717.GA6604@flask>
+References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+ <1559178307-6835-3-git-send-email-wanpengli@tencent.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1559178307-6835-3-git-send-email-wanpengli@tencent.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 10 Jun 2019 14:17:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+2019-05-30 09:05+0800, Wanpeng Li:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> The target vCPUs are in runnable state after vcpu_kick and suitable 
+> as a yield target. This patch implements the sched yield hypercall.
+> 
+> 17% performance increasement of ebizzy benchmark can be observed in an 
+> over-subscribe environment. (w/ kvm-pv-tlb disabled, testing TLB flush 
+> call-function IPI-many since call-function is not easy to be trigged 
+> by userspace workload).
+> 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Liran Alon <liran.alon@oracle.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> @@ -7172,6 +7172,28 @@ void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *vcpu)
+>  	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
+>  }
+>  
+> +static void kvm_sched_yield(struct kvm *kvm, unsigned long dest_id)
+> +{
+> +	struct kvm_vcpu *target = NULL;
+> +	struct kvm_apic_map *map = NULL;
+> +
+> +	rcu_read_lock();
+> +	map = rcu_dereference(kvm->arch.apic_map);
+> +
+> +	if (unlikely(!map) || dest_id > map->max_apic_id)
+> +		goto out;
+> +
+> +	if (map->phys_map[dest_id]->vcpu) {
 
-GIEn is enabled at startup for RX doorbell mailboxes so
-we need to clear the bit at shutdown in order to avoid
-leaving the interrupt line enabled.
+This should check for map->phys_map[dest_id].
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- drivers/mailbox/imx-mailbox.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +		target = map->phys_map[dest_id]->vcpu;
+> +		rcu_read_unlock();
+> +		kvm_vcpu_yield_to(target);
+> +	}
+> +
+> +out:
+> +	if (!target)
+> +		rcu_read_unlock();
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 25be8bb5e371..9f74dee1a58c 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -217,8 +217,8 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
- 	if (cp->type == IMX_MU_TYPE_TXDB)
- 		tasklet_kill(&cp->txdb_tasklet);
- 
--	imx_mu_xcr_rmw(priv, 0,
--		   IMX_MU_xCR_TIEn(cp->idx) | IMX_MU_xCR_RIEn(cp->idx));
-+	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx) |
-+		       IMX_MU_xCR_RIEn(cp->idx) | IMX_MU_xCR_GIEn(cp->idx));
- 
- 	free_irq(priv->irq, chan);
- }
--- 
-2.17.1
+Also, I find the following logic clearer
 
+  {
+  	struct kvm_vcpu *target = NULL;
+  	struct kvm_apic_map *map;
+  	
+  	rcu_read_lock();
+  	map = rcu_dereference(kvm->arch.apic_map);
+  	
+  	if (likely(map) && dest_id <= map->max_apic_id && map->phys_map[dest_id])
+  		target = map->phys_map[dest_id]->vcpu;
+  	
+  	rcu_read_unlock();
+  	
+  	if (target)
+  		kvm_vcpu_yield_to(target);
+  }
+
+thanks.
