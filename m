@@ -2,115 +2,129 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8E7C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53649C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2DC20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAD42082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="saZqork8"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="K19HPNco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389515AbfFJUUm (ORCPT
+        id S2389520AbfFJUWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:20:42 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33394 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbfFJUUm (ORCPT
+        Mon, 10 Jun 2019 16:22:32 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:46329 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbfFJUWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:20:42 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y17so7583314lfe.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:20:40 -0700 (PDT)
+        Mon, 10 Jun 2019 16:22:31 -0400
+Received: by mail-vs1-f68.google.com with SMTP id l125so6363473vsl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9M6F3AKPv7OG6y2K7bhRRjnT8UdjtXCgz4Y9EEYL+yE=;
-        b=saZqork8B9+QM+f2nCfCrj8rlM59XPvq319ftaCyyiSzVlXueddIYsFl1oFOnoNHFM
-         n0AF32FIdOPtpWRwUDR0aAqA5HtgbdAmdTn91dQADsTaS168kCRS3nSIu6NssjwXamcx
-         o32tTM08DZGbBdZHIWl7VPJj+hvXJjegP1tRpW9ZjXONIohOHmzbE16SV2BqeldVXGk5
-         lTV7I6BCBpdqSxixsI4A2KZZVEySXl+5ULVAnFyY2xKZhBYNYIJgoYJTh7lBxgcetWqd
-         rQPDEQXjgYy/yB7xj8+VVCTVFcsDRyyhhRl/Tv61GQGEJBOlxYBPJjU3FlWP1wgTFE/T
-         JQWw==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pjVCLroEtR5thtHENU+41rmsthzX90Qup8xKfLtuOIo=;
+        b=K19HPNcouP0ODo43T/ieVlMc5iP7Lk9G9aVI2P7dc2rCH6dJnEqdU2xfq4buLJTj4h
+         M4mU1SbaYqIbEBIkVg9L83LgeD5YQoqnuLraIZ3siP6jRpw4SQrRQ/6W//sADKVAzQrY
+         KxLUDdd0PkTZ0ZFycaJFkVlUgK1aJnpGy0T9+ljCrodXc3pumX0zDpnULqEn1s7zwN6x
+         n4o0kaOLTnBG+uGQA7zcOUDqmZVKbU87MIAnMZLKTVOAH4DCCDz0HItKvm5IYfnnYL1Q
+         AuSfIXO2FBBsXitjr4AtDbkbtlKJFFeaxDynNu/2iSREyr9KBlzEFvjmySkZ7K1NyxUm
+         3anQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9M6F3AKPv7OG6y2K7bhRRjnT8UdjtXCgz4Y9EEYL+yE=;
-        b=ewbLUEPjaFqSOh+9nk3P6xA7NPB1BoyUSAxD7rpWx531EVpD9WLOVpa6LNq1DRwIN+
-         q1HZgNIjplqG7WWd3DF51GncMbXPioPeDagTVdCe1oATy3K6sTxxA0Ygpiz2ah7aAg4I
-         J49Rhtxmb9qXrxBjGs1M/Qqz6Y3tPpvgtB6DsTuIzZpyXYZaNx0saVG/DXJk9u7uuL45
-         H4Sbj4BJwMyAfhqz/FTYrM3EPe3cvuNARhY2sQT/eFrPGESuXTofsNcBAUoWYfj/pYaL
-         G3DPG7hCZUXN8mWTsCAjPtLPGeRsAAc8SD5L6qhAV0aOmYnNYOgbUt3fF4kSXGNHpKEP
-         xPTw==
-X-Gm-Message-State: APjAAAUlqlAaBsxqHccZi9KNy5wG8y21w7HidqH3jkXd4ufsNyWb4IMT
-        QvJu0YH/7fRlTCZ+2oEk8xu5ZCe8wl76ZpSDcXxq
-X-Google-Smtp-Source: APXvYqwwPuL2qotjbCVzlbt1SrW9wOBZt+K0jOXzvsil8EjXgCBDxYdewKxbzFBLnmMhZHg9PaXFTk/Q4SP8A69hMpA=
-X-Received: by 2002:ac2:410a:: with SMTP id b10mr18751609lfi.175.1560198039673;
- Mon, 10 Jun 2019 13:20:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190606085524.GA21119@zhanggen-UX430UQ> <CAFqZXNvM94T2reUsn6Mwuz6GNGNCR=wUNBE8w4tcjNuhJ6rCeQ@mail.gmail.com>
-In-Reply-To: <CAFqZXNvM94T2reUsn6Mwuz6GNGNCR=wUNBE8w4tcjNuhJ6rCeQ@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 10 Jun 2019 16:20:28 -0400
-Message-ID: <CAHC9VhT+e2Z+4=5P0g4B4F1g0w2SkQjwUnhQkmu5V+HvuZi8Cg@mail.gmail.com>
-Subject: Re: [PATCH v4] selinux: lsm: fix a missing-check bug in
- selinux_sb_eat_lsm_o pts()
-To:     Ondrej Mosnacek <omosnace@redhat.com>,
-        Gen Zhang <blackgod016574@gmail.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pjVCLroEtR5thtHENU+41rmsthzX90Qup8xKfLtuOIo=;
+        b=i18n7oXe58U05mB1GOHEOsTNvXovWIWx/aApGHIh5+ah7CVslG12rXzYPE0A9lBJAe
+         tTgj4ueC9PVH/76jN0sJn1LZaov41QPo01TU9DqbBomCaeHLiRDqPK0stTzp7kaxF/lP
+         3Ok8F9/R5E76nfAH/MDdb9prSlefNBrd2z0ZHG8xhwxOh+KhfRbEc2yA/y6jCmuhkTtO
+         YFbBd5m5E/buo8djsM1FgC+lLEm2PQzUJMpsNGKGQbpal38gOYhyV7pyCpB58rHObJXw
+         mOmE3rnOnw7turjpc0RURjK9bWbUhLH2SBMoBrq42D+EOF4qDuQINk7ZaZSXCXkQEGrX
+         Iz6Q==
+X-Gm-Message-State: APjAAAVpLBOw/jAkn1TDdrBQRwBSHJX8ES4yAFUAtZGwk0jB4ovoH2Pa
+        jY4QxUQMpjvaDLZXH/n98kQDQg==
+X-Google-Smtp-Source: APXvYqzq/ZPcn16JveVDVynPX8knAJ+UjsU996vlcsjMoepK8JJS9ZTZnb2iktQ/z6TJRz/IXxqnGA==
+X-Received: by 2002:a67:efca:: with SMTP id s10mr274642vsp.20.1560198150917;
+        Mon, 10 Jun 2019 13:22:30 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id u73sm2696384vku.37.2019.06.10.13.22.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 13:22:30 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [RESEND PATCH v2] sched: fix "runnable_avg_yN_inv" not used warnings
+Date:   Mon, 10 Jun 2019 16:22:05 -0400
+Message-Id: <1560198125-31872-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 4:41 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> On Thu, Jun 6, 2019 at 10:55 AM Gen Zhang <blackgod016574@gmail.com> wrote:
-> > In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
-> > returns NULL when fails. So 'arg' should be checked. And 'mnt_opts'
-> > should be freed when error.
-> >
-> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
->
-> My comments about the subject and an empty line before label apply
-> here as well, but Paul can fix both easily when applying ...
+runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+included in several other places because they need other macros all
+came from kernel/sched/sched-pelt.h which was generated by
+Documentation/scheduler/sched-pelt. As the result, it causes compilation
+a lot of warnings,
 
-Since we've been discussing general best practices for submitting
-patches in this thread (and the other related thread), I wanted to
-(re)clarify my thoughts around maintainers fixing patches when merging
-them upstream.
+In file included from kernel/sched/pelt.h:2,
+                 from kernel/sched/rt.c:8:
+kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
+but not used [-Wunused-const-variable=]
+In file included from kernel/sched/pelt.h:2,
+                 from kernel/sched/fair.c:705:
+kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
+but not used [-Wunused-const-variable=]
+In file included from kernel/sched/pelt.h:2,
+                 from kernel/sched/deadline.c:19:
+kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
+but not used [-Wunused-const-variable=]
 
-When in doubt, do not ever rely on the upstream maintainer fixing your
-patch while merging it, and if problems do arise during review, it is
-best to not ask the maintainer to fix them for you, but for you to fix
-them instead (you are the patch author after all!).  Similarly, making
-comments along the lines of "X can fix both easily when applying", is
-also a bad thing to say when reviewing patches.  It's the patch
-author's responsibility to fix the patch by address review comments,
-not the maintainer.  I'll typically let you know if you don't need to
-rework a patch(set).
+Silence it by appending the __maybe_unused attribute for it, so all
+generated variables and macros can still be kept in the same file.
 
-That said, there are times when the maintainer will change the patch
-during merging, most of which are due to resolving merge
-conflicts/fuzz with changes already in the tree (that *is* the
-maintainer's responsibility).  Speaking for myself, sometimes I will
-also make some minor changes if the patch author is away, or
-unreliable, or if there is a hard deadline near and I'm worried that
-the updated patch might not be ready in time.  I'll also sometimes
-make the changes directly if the patch is holding up a larger, more
-important patch(set), but that is really rare.  I'm sure I've made
-changes for other reasons in the past, and I'm sure I'll make changes
-for other reasons in the future, but hopefully this will give you a
-better idea of how the process works :)
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
+v2: add a comment for __maybe_unused.
+
+ Documentation/scheduler/sched-pelt.c | 3 ++-
+ kernel/sched/sched-pelt.h            | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+index e4219139386a..7238b355919c 100644
+--- a/Documentation/scheduler/sched-pelt.c
++++ b/Documentation/scheduler/sched-pelt.c
+@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
+ 	int i;
+ 	unsigned int x;
+ 
+-	printf("static const u32 runnable_avg_yN_inv[] = {");
++	/* To silence -Wunused-but-set-variable warnings. */
++	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+ 	for (i = 0; i < HALFLIFE; i++) {
+ 		x = ((1UL<<32)-1)*pow(y, i);
+ 
+diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+index a26473674fb7..c529706bed11 100644
+--- a/kernel/sched/sched-pelt.h
++++ b/kernel/sched/sched-pelt.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+ 
+-static const u32 runnable_avg_yN_inv[] = {
++static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+ 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+ 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+ 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
 -- 
-paul moore
-www.paul-moore.com
+1.8.3.1
+
