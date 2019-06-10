@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C07AC468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB5FC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5222082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF612082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388484AbfFJIQj (ORCPT
+        id S2388512AbfFJIQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:16:39 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37652 "EHLO inva021.nxp.com"
+        Mon, 10 Jun 2019 04:16:42 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37768 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388393AbfFJIQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:16:38 -0400
+        id S2388480AbfFJIQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:40 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 74134200747;
-        Mon, 10 Jun 2019 10:16:35 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AFB9A200737;
+        Mon, 10 Jun 2019 10:16:38 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 39628200748;
-        Mon, 10 Jun 2019 10:16:27 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ADBB7200733;
+        Mon, 10 Jun 2019 10:16:30 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9829D40326;
-        Mon, 10 Jun 2019 16:16:17 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 174EC402FB;
+        Mon, 10 Jun 2019 16:16:21 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
@@ -37,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 09/15] dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
-Date:   Mon, 10 Jun 2019 16:17:47 +0800
-Message-Id: <20190610081753.11422-10-yibin.gong@nxp.com>
+Subject: [PATCH v5 11/15] dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+Date:   Mon, 10 Jun 2019 16:17:49 +0800
+Message-Id: <20190610081753.11422-12-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 References: <20190610081753.11422-1-yibin.gong@nxp.com>
@@ -51,111 +51,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-ECSPI issue fixed from i.mx6ul at hardware level, no need
-ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx
-from where i.mx6ul source.
+Because the number of ecspi1 rx event on i.mx8mm is 0, the condition
+check ignore such special case without dma channel enabled, which caused
+ecspi1 rx works failed. Actually, no need to check event_id0/event_id1
+and replace checking 'event_id1' with 'DMA_DEV_TO_DEV', so that configure
+event_id1 only in case DEV_TO_DEV.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/imx-sdma.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+ drivers/dma/imx-sdma.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 61af656..525ca89 100644
+index 525ca89..f7c150d 100644
 --- a/drivers/dma/imx-sdma.c
 +++ b/drivers/dma/imx-sdma.c
-@@ -419,6 +419,13 @@ struct sdma_driver_data {
- 	int num_events;
- 	struct sdma_script_start_addrs	*script_addrs;
- 	bool check_ratio;
-+	/*
-+	 * ecspi ERR009165 fixed should be done in sdma script
-+	 * and it has been fixed in soc from i.mx6ul.
-+	 * please get more information from the below link:
-+	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
-+	 */
-+	bool ecspi_fixed;
- };
- 
- struct sdma_engine {
-@@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q = {
- 	.script_addrs = &sdma_script_imx6q,
- };
- 
-+static struct sdma_script_start_addrs sdma_script_imx6sx = {
-+	.ap_2_ap_addr = 642,
-+	.uart_2_mcu_addr = 817,
-+	.mcu_2_app_addr = 747,
-+	.uartsh_2_mcu_addr = 1032,
-+	.mcu_2_shp_addr = 960,
-+	.app_2_mcu_addr = 683,
-+	.shp_2_mcu_addr = 891,
-+	.spdif_2_mcu_addr = 1100,
-+	.mcu_2_spdif_addr = 1134,
-+};
-+
-+static struct sdma_driver_data sdma_imx6sx = {
-+	.chnenbl0 = SDMA_CHNENBL0_IMX35,
-+	.num_events = 48,
-+	.script_addrs = &sdma_script_imx6sx,
-+};
-+
-+static struct sdma_driver_data sdma_imx6ul = {
-+	.chnenbl0 = SDMA_CHNENBL0_IMX35,
-+	.num_events = 48,
-+	.script_addrs = &sdma_script_imx6sx,
-+	.ecspi_fixed = true,
-+};
-+
- static struct sdma_script_start_addrs sdma_script_imx7d = {
- 	.ap_2_ap_addr = 644,
- 	.uart_2_mcu_addr = 819,
-@@ -584,9 +616,15 @@ static const struct platform_device_id sdma_devtypes[] = {
- 		.name = "imx6q-sdma",
- 		.driver_data = (unsigned long)&sdma_imx6q,
- 	}, {
-+		.name = "imx6sx-sdma",
-+		.driver_data = (unsigned long)&sdma_imx6sx,
-+	}, {
- 		.name = "imx7d-sdma",
- 		.driver_data = (unsigned long)&sdma_imx7d,
- 	}, {
-+		.name = "imx6ul-sdma",
-+		.driver_data = (unsigned long)&sdma_imx6ul,
-+	}, {
- 		.name = "imx8mq-sdma",
- 		.driver_data = (unsigned long)&sdma_imx8mq,
- 	}, {
-@@ -602,7 +640,9 @@ static const struct of_device_id sdma_dt_ids[] = {
- 	{ .compatible = "fsl,imx35-sdma", .data = &sdma_imx35, },
- 	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
- 	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
-+	{ .compatible = "fsl,imx6sx-sdma", .data = &sdma_imx6sx, },
- 	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
-+	{ .compatible = "fsl,imx6ul-sdma", .data = &sdma_imx6ul, },
- 	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
- 	{ /* sentinel */ }
- };
-@@ -1166,8 +1206,17 @@ static int sdma_config_channel(struct dma_chan *chan)
+@@ -1202,7 +1202,7 @@ static int sdma_config_channel(struct dma_chan *chan)
+ 	if ((sdmac->peripheral_type != IMX_DMATYPE_MEMORY) &&
+ 			(sdmac->peripheral_type != IMX_DMATYPE_DSP)) {
+ 		/* Handle multiple event channels differently */
+-		if (sdmac->event_id1) {
++		if (sdmac->direction == DMA_DEV_TO_DEV) {
  			if (sdmac->peripheral_type == IMX_DMATYPE_ASRC_SP ||
  			    sdmac->peripheral_type == IMX_DMATYPE_ASRC)
  				sdma_set_watermarklevel_for_p2p(sdmac);
--		} else
-+		} else {
-+			/*
-+			 * ERR009165 fixed from i.mx6ul, no errata need,
-+			 * set bit31 to let sdma script skip the errata.
-+			 */
-+			if (sdmac->peripheral_type == IMX_DMATYPE_CSPI &&
-+			    sdmac->direction == DMA_MEM_TO_DEV &&
-+			    sdmac->sdma->drvdata->ecspi_fixed)
-+				__set_bit(31, &sdmac->watermark_level);
- 			__set_bit(sdmac->event_id0, sdmac->event_mask);
-+		}
+@@ -1370,9 +1370,9 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
  
- 		/* Address */
- 		sdmac->shp_addr = sdmac->per_address;
+ 	sdma_channel_synchronize(chan);
+ 
+-	if (sdmac->event_id0)
+-		sdma_event_disable(sdmac, sdmac->event_id0);
+-	if (sdmac->event_id1)
++	sdma_event_disable(sdmac, sdmac->event_id0);
++
++	if (sdmac->direction == DMA_DEV_TO_DEV)
+ 		sdma_event_disable(sdmac, sdmac->event_id1);
+ 
+ 	sdmac->event_id0 = 0;
+@@ -1670,13 +1670,11 @@ static int sdma_config(struct dma_chan *chan,
+ 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
+ 
+ 	/* Set ENBLn earlier to make sure dma request triggered after that */
+-	if (sdmac->event_id0) {
+-		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
+-			return -EINVAL;
+-		sdma_event_enable(sdmac, sdmac->event_id0);
+-	}
++	if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
++		return -EINVAL;
++	sdma_event_enable(sdmac, sdmac->event_id0);
+ 
+-	if (sdmac->event_id1) {
++	if (sdmac->direction == DMA_DEV_TO_DEV) {
+ 		if (sdmac->event_id1 >= sdmac->sdma->drvdata->num_events)
+ 			return -EINVAL;
+ 		sdma_event_enable(sdmac, sdmac->event_id1);
 -- 
 2.7.4
 
