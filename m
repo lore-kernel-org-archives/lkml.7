@@ -2,78 +2,73 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161E9C468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58CEC468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E013320833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:32:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ss5p1Lwy"
+	by mail.kernel.org (Postfix) with ESMTP id C8B4C20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 04:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbfFJEce (ORCPT
+        id S1728424AbfFJEep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 00:32:34 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42439 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728090AbfFJEcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 00:32:33 -0400
-Received: by mail-pl1-f196.google.com with SMTP id go2so3099878plb.9
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 21:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xHPzuC4R5KkZBw6vFRw90KpfbbD11GlApZT+SmWKwe4=;
-        b=Ss5p1Lwy68hqtdh3br0uV9egK7a/GcBg6EEsyJeGu3+IIamR5xkByvx2tCZ3y7Pg1w
-         4AK9N2fAAHodTXOMEkPMOly1SMDOxOTdYTyhHevVoNx6X36PPgiWxsifLf7/zsSiA+4k
-         mg2fPTy6ll0dYm6QUjXkHGHXlEg7AOA+hyZluTdR8NVIWGiLy0L1Jvm2noL1EU5zHBHC
-         uwTI0rS8FMVQZzi1pxjYgZ8FMZTMK3T8bFbPSuFTDGd49mQFGYZZ/x/hjA/v8rs2wWBj
-         ZoZFmr4M6gsuWs0fI7llM7xLgY4a3gRQAjEvZ+g52+ZcjGDCzi7bpRtbc9BNB0HwPCdE
-         G0Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xHPzuC4R5KkZBw6vFRw90KpfbbD11GlApZT+SmWKwe4=;
-        b=Q80i9HoqfwLdKq25mS7/PeUCWETC5sgRYUfyoOprnVM/OfcR2VnwjV1UtO7iSsrfDf
-         j9BUTvb8Fqci0U8z0FgY3BZx0+s1F26/K2B5OBVjzjkL+6UGd/GuVXkxZoaQrLmy5fsv
-         jTGEaLRuRrYQC8kZRMFYPmDOHA3R9ZbWI1gpQw/LlTCctywfmOgn9qr917hPw3U2OEyO
-         T4kjwJ9v+AcVyzkO1ON58h63mKSVNz8YbDz8EnbDKBHKkpquevB2sStgGBRD+FPQQ7ys
-         aXNK232clRAtkeGyKIEvRCmHlZ0LbowGlAb34kC4Iw3k3dt/Xl3zuTlXqkkecYdAx3uw
-         YfqA==
-X-Gm-Message-State: APjAAAV0Q/NLgvuRTfnwe9N4FUuabuW6qElqnVm+KEiaOEPX17AdIzSZ
-        /bwYxxBfVBdTxQFIbtyyAgs=
-X-Google-Smtp-Source: APXvYqzpCQBfxr7tCmPsXXFKsBCVmnhsOxlS5W/E2s+08qDC23SjwQwMkTJAH20Cb2JhL1mczbwGjQ==
-X-Received: by 2002:a17:902:968b:: with SMTP id n11mr32173861plp.120.1560141153272;
-        Sun, 09 Jun 2019 21:32:33 -0700 (PDT)
-Received: from [10.0.2.15] ([171.79.92.225])
-        by smtp.gmail.com with ESMTPSA id m20sm9102784pjn.16.2019.06.09.21.32.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 21:32:32 -0700 (PDT)
-Subject: Re: [PATCH 1/2] staging: rtl8712: r8712_setdatarate_cmd(): Change
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, straube.linux@gmail.com,
-        larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        colin.king@canonical.com, valdis.kletnieks@vt.edu,
-        tiny.windzz@gmail.com
-References: <20190607140658.11932-1-nishkadg.linux@gmail.com>
- <20190607141548.GP31203@kadam>
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-Message-ID: <98b587c9-df5b-0905-ab8f-69a4bae296b0@gmail.com>
-Date:   Mon, 10 Jun 2019 10:02:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 00:34:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:35948 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbfFJEeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 00:34:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69043337;
+        Sun,  9 Jun 2019 21:34:43 -0700 (PDT)
+Received: from [10.162.42.131] (p8cg001049571a15.blr.arm.com [10.162.42.131])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2CA33F557;
+        Sun,  9 Jun 2019 21:34:31 -0700 (PDT)
+Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
+ kprobe_page_fault()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-snps-arc@lists.infradead.org,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>
+References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+ <20190607201202.GA32656@bombadil.infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <f1b109a3-ef4c-359c-a124-e219e84a6266@arm.com>
+Date:   Mon, 10 Jun 2019 10:04:49 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190607141548.GP31203@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190607201202.GA32656@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,71 +76,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/19 7:45 PM, Dan Carpenter wrote:
-> Probably you sent this patch unintentionally.  The subject doesn't make
-> any sort of sense.  :P
-
-So the problem with the subject line is that git send-email and vim (as 
-configured on my laptop) tend to line-wrap even the subject line. Since 
-I have two patches that do the same thing for different functions, I 
-felt I should have the driver and the function name in the subject line 
-(to avoid confusion between the patches and to allow for easy searching 
-later). But that doesn't leave enough space in the subject line for 
-"Change return values/type" or any other descriptive message. What 
-should I do?
 
 
-> On Fri, Jun 07, 2019 at 07:36:57PM +0530, Nishka Dasgupta wrote:
->> Change the return values of function r8712_setdatarate_cmd from _SUCCESS
->> and _FAIL to 0 and -ENOMEM respectively.
->> Change the return type of the function from u8 to int to reflect this.
->> Change the call site of the function to check for 0 instead of _SUCCESS.
->> (Checking that the return value != 0 is not necessary; the return value
->    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> itself can simply be passed into the conditional.)
->    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-
-> This is obvious.  No need to mention it in the commit message.
-
-Okay, I'll amend that.
-
->> diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
->> index b424b8436fcf..761e2ba68a42 100644
->> --- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
->> +++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
->> @@ -1367,7 +1367,7 @@ static int r8711_wx_set_rate(struct net_device *dev,
->>   			datarates[i] = 0xff;
->>   		}
->>   	}
->> -	if (r8712_setdatarate_cmd(padapter, datarates) != _SUCCESS)
->> +	if (r8712_setdatarate_cmd(padapter, datarates))
->>   		ret = -ENOMEM;
->>
->>   	return ret;
+On 06/08/2019 01:42 AM, Matthew Wilcox wrote:
+> Before:
 > 
+>> @@ -46,23 +46,6 @@ kmmio_fault(struct pt_regs *regs, unsigned long addr)
+>>  	return 0;
+>>  }
+>>  
+>> -static nokprobe_inline int kprobes_fault(struct pt_regs *regs)
+>> -{
+>> -	if (!kprobes_built_in())
+>> -		return 0;
+>> -	if (user_mode(regs))
+>> -		return 0;
+>> -	/*
+>> -	 * To be potentially processing a kprobe fault and to be allowed to call
+>> -	 * kprobe_running(), we have to be non-preemptible.
+>> -	 */
+>> -	if (preemptible())
+>> -		return 0;
+>> -	if (!kprobe_running())
+>> -		return 0;
+>> -	return kprobe_fault_handler(regs, X86_TRAP_PF);
+>> -}
 > 
-> It would be better to write this like so:
+> After:
 > 
-> 	ret = r8712_setdatarate_cmd(padapter, datarates);
-> 	if (ret)
-> 		return ret;
+>> +++ b/include/linux/kprobes.h
+>> @@ -458,4 +458,20 @@ static inline bool is_kprobe_optinsn_slot(unsigned long addr)
+>>  }
+>>  #endif
+>>  
+>> +static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+>> +					      unsigned int trap)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	/*
+>> +	 * To be potentially processing a kprobe fault and to be allowed
+>> +	 * to call kprobe_running(), we have to be non-preemptible.
+>> +	 */
+>> +	if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
+>> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
+>> +			ret = 1;
+>> +	}
+>> +	return ret;
+>> +}
 > 
-> 	return 0;
+> Do you really think this is easier to read?
 > 
-> Or you could write it like:
-> 
-> 	return r8712_setdatarate_cmd(padapter, datarates);
+> Why not just move the x86 version to include/linux/kprobes.h, and replace
+> the int with bool?
 
-Okay, since this is the only point at which a return happens in this 
-function, I can do this.
+Will just return bool directly without an additional variable here as suggested
+before. But for the conditional statement, I guess the proposed one here is more
+compact than the x86 one.
 
-> Which ever one you prefer is fine
-Thanking you,
-Nishka
-
-> regards,
-> dan carpenter
 > 
+> On Fri, Jun 07, 2019 at 04:04:15PM +0530, Anshuman Khandual wrote:
+>> Very similar definitions for notify_page_fault() are being used by multiple
+>> architectures duplicating much of the same code. This attempts to unify all
+>> of them into a generic implementation, rename it as kprobe_page_fault() and
+>> then move it to a common header.
+> 
+> I think this description suffers from having been written for v1 of
+> this patch.  It describes what you _did_, but it's not what this patch
+> currently _is_.
+> 
+> Why not something like:
+> 
+> Architectures which support kprobes have very similar boilerplate around
+> calling kprobe_fault_handler().  Use a helper function in kprobes.h to
+> unify them, based on the x86 code.
+> 
+> This changes the behaviour for other architectures when preemption
+> is enabled.  Previously, they would have disabled preemption while
+> calling the kprobe handler.  However, preemption would be disabled
+> if this fault was due to a kprobe, so we know the fault was not due
+> to a kprobe handler and can simply return failure.  This behaviour was
+> introduced in commit a980c0ef9f6d ("x86/kprobes: Refactor kprobes_fault()
+> like kprobe_exceptions_notify()")
 
+Will replace commit message with above.
+
+> 
+>>  arch/arm/mm/fault.c      | 24 +-----------------------
+>>  arch/arm64/mm/fault.c    | 24 +-----------------------
+>>  arch/ia64/mm/fault.c     | 24 +-----------------------
+>>  arch/powerpc/mm/fault.c  | 23 ++---------------------
+>>  arch/s390/mm/fault.c     | 16 +---------------
+>>  arch/sh/mm/fault.c       | 18 ++----------------
+>>  arch/sparc/mm/fault_64.c | 16 +---------------
+>>  arch/x86/mm/fault.c      | 21 ++-------------------
+>>  include/linux/kprobes.h  | 16 ++++++++++++++++
+> 
+> What about arc and mips?
+
++ Vineet Gupta <vgupta@synopsys.com> 
++ linux-snps-arc@lists.infradead.org
+
++ James Hogan <jhogan@kernel.org>
++ Paul Burton <paul.burton@mips.com>
++ Ralf Baechle <ralf@linux-mips.org>
++ linux-mips@vger.kernel.org
+
+Both the above architectures dont call kprobe_fault_handler() from the
+page fault context (do_page_fault() to be specific). Though it gets called
+from mips kprobe_exceptions_notify (DIE_PAGE_FAULT). Am I missing something
+here ?
