@@ -6,60 +6,60 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DD1C28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC12C28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F132920859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856DA20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NnLT/vHj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ed47JMDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389360AbfFJKVD (ORCPT
+        id S2389370AbfFJKVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:21:03 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34919 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388937AbfFJKVC (ORCPT
+        Mon, 10 Jun 2019 06:21:48 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:40996 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388937AbfFJKVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:21:02 -0400
-Received: by mail-vs1-f66.google.com with SMTP id u124so4976831vsu.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:21:02 -0700 (PDT)
+        Mon, 10 Jun 2019 06:21:47 -0400
+Received: by mail-vk1-f194.google.com with SMTP id l73so1524705vkl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:21:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SP4C91hkmfb8nf4pEfeOT8GgXw6uPbDXmSTuJCq/gGc=;
-        b=NnLT/vHjyOBGZwlrcg6VlzgOH161C3LeV8WVy/Vu8rFpi3c/FRWMWJAgX1juq3HdBx
-         L8SvJdLZ3DJYOGXVVqnaHEP5aYAPVqmD06tmeB37f8Zd2tJkwL3EEk9U+CyW/i2cGMDn
-         /qbzJ3ipIzTlfQIz/Ku+Z+csNl5SVYR0z0h06poDeKOV3bCxAQ4+UPlvkgzYF3sHr6PW
-         fNIwoN7cDHj1MRQI75Wh16WPHdavqxIdQxDViUCNbS748aaCS+CSALai5WJM95xeE+Le
-         5WlgNvBWmNkP0+IZOmesajCOvIc6FGL6UJrFm0O3ov8s+u1/KMEO8G01o2byn1gEeC98
-         E3dg==
+        bh=OJxNCKHBqEq8hxmgfzQAJLVDLncAAe7CM9ROe+/BeNA=;
+        b=ed47JMDehrtw98oo73hPrYOSdiClydVSZax5u/whwsvttI4jMeBg5r4kAaxNqyhRB5
+         BQFS+aUFK4fp9pg9m4ABxFL8f8WSLttgJ/crALrwhCsB3v1rjfIrckms9BqtJaYXtlqc
+         bzwWVino1iCNJq+uESFaHxZLWBnG33vgs3Qmd1+/6T3+zMmoiN7Dl812exIOVO1cl1F7
+         +J34mbVL1NKVBr2n6AaV5gn/vEQktUbl74lRvHydB7/VR5zEDH8WVmV5fmMUTqQq4oUo
+         jgFxnXWvvAWYApcTfNa6leYI+JjgeKGVBFkeuu7YRcJuNtctRfWgPTUPlWa5tSEu7aqi
+         JNnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SP4C91hkmfb8nf4pEfeOT8GgXw6uPbDXmSTuJCq/gGc=;
-        b=XM/DWT1NKtx/BXHwKhV+Vpb/IWbegqb7NmzAtpDISA882+cXNI++bl9riUM92xcW1A
-         uhRWZU8OFToFYugSRCwbJTiImGO6bX4aexnemY+PIjKn2qKtCwYLNycwRTw41cGtFLRn
-         /lu51pnAhdun2b0L8zeo2hg3bSi12nn1bPM5XrEOJXAD3SoYtI94hBgMYw1Nf7grHy5R
-         RlAkZjKNF3xMLPduO2Ug2dvXFz6DdCy0Qtor2pQRrnmQkmOZUYFxssJ6YipWt8WMTO0N
-         ZEkePqiqSwIkVqh1CYshaKLomHGOm4RkKNk2hZrVnmcM27IEK545Q4HsTizOQUIWjBmY
-         BU/w==
-X-Gm-Message-State: APjAAAUtSu3vUdFCKQztmwaRG+AVdgCy2E8j7utCwxMhPMTT6XFOdkmn
-        4VuYNdPMSg0Hf9EaYT/T/V17u7nEXCtxdvW2Pee7rg==
-X-Google-Smtp-Source: APXvYqyEELW5eYybi8NTzXTq1BaVxGi1afLoOiDPwggiWfgN/Ej4B4ujdWWHnp+5MIZ0eyrZ5ciJlutJA2qYMY6qJQA=
-X-Received: by 2002:a67:706:: with SMTP id 6mr19148665vsh.200.1560162061544;
- Mon, 10 Jun 2019 03:21:01 -0700 (PDT)
+        bh=OJxNCKHBqEq8hxmgfzQAJLVDLncAAe7CM9ROe+/BeNA=;
+        b=ALjKPJ3mEp6hN39LlJ3YzzdWDvr5M+P/g9rUwRn/ip493lU9lLOmGmMIPpAETNjxD6
+         t45vEbgdo9hkqK0UDAGUYkgodLpcAAn/rtxJ672U7OlwmBtKC49axfn1ETZbzJLkUMW9
+         0fJ4gNWVSrxs4X4gtHX5CiZh3L8jqvhc8jjjPb3hzmHbF3JG5WRX8W7vmm0yUxPaxCgV
+         E9VDYM0lEVSpBb/f2HMYuUF4npUyDPZW56QrPfK5nn34CfpihDwFDFziBY5EVqTC08H/
+         yhix+tc89NKqZ+LfNha7m7PYHPzncALOxLj5xBroHsUJnpbSXLmxnelIeaRkoUnBlQ/x
+         CbGw==
+X-Gm-Message-State: APjAAAU6C0guzgtiiB9b4Yx14ah+WYqzVAWmThm1wSunkDv4dGrCepiI
+        T6MReCHc9hWXo0pPBwhA+MV9vaugG4Cv2WNLF0W52g==
+X-Google-Smtp-Source: APXvYqw85yEyPCfVXgt5WHExarvGTTNSk7I/nOG6fWausDPOCC8pBQhB+ownP2Y9XmGBJmpJYjtZLrkebjzWM3KbGXc=
+X-Received: by 2002:a1f:12d5:: with SMTP id 204mr12861074vks.4.1560162106571;
+ Mon, 10 Jun 2019 03:21:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190513192300.653-1-ulf.hansson@linaro.org> <20190513192300.653-5-ulf.hansson@linaro.org>
- <20190607150052.GC15577@e107155-lin>
-In-Reply-To: <20190607150052.GC15577@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org> <20190513192300.653-8-ulf.hansson@linaro.org>
+ <20190607151716.GF15577@e107155-lin>
+In-Reply-To: <20190607151716.GF15577@e107155-lin>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 10 Jun 2019 12:20:25 +0200
-Message-ID: <CAPDyKFqYZwQq_rDpfuV0K2-6_4N0frcFZ5iDab1OS8og+=zqPQ@mail.gmail.com>
-Subject: Re: [PATCH 04/18] ARM/ARM64: cpuidle: Let back-end init ops take the
- driver as input
+Date:   Mon, 10 Jun 2019 12:21:10 +0200
+Message-ID: <CAPDyKFoKNLqLzVx8uj_-iuWAHGCvty28mVKnipFVgjKD8oDNkQ@mail.gmail.com>
+Subject: Re: [PATCH 07/18] drivers: firmware: psci: Prepare to use OS
+ initiated suspend mode
 To:     Sudeep Holla <sudeep.holla@arm.com>
 Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -81,34 +81,57 @@ Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
         Linux PM <linux-pm@vger.kernel.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>
+        Lina Iyer <lina.iyer@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 17:01, Sudeep Holla <sudeep.holla@arm.com> wrote:
+On Fri, 7 Jun 2019 at 17:17, Sudeep Holla <sudeep.holla@arm.com> wrote:
 >
-> On Mon, May 13, 2019 at 09:22:46PM +0200, Ulf Hansson wrote:
-> > To allow arch back-end init ops to operate on the cpuidle driver for the
-> > corresponding CPU, let's pass along a pointer to the struct cpuidle_driver*
-> > and forward it the relevant layers of callbacks for ARM/ARM64.
+> On Mon, May 13, 2019 at 09:22:49PM +0200, Ulf Hansson wrote:
+> > The per CPU variable psci_power_state, contains an array of fixed values,
+> > which reflects the corresponding arm,psci-suspend-param parsed from DT, for
+> > each of the available CPU idle states.
+> >
+> > This isn't sufficient when using the hierarchical CPU topology in DT in
+> > combination with having PSCI OS initiated (OSI) mode enabled. More
+> > precisely, in OSI mode, Linux is responsible of telling the PSCI FW what
+> > idle state the cluster (a group of CPUs) should enter, while in PSCI
+> > Platform Coordinated (PC) mode, each CPU independently votes for an idle
+> > state of the cluster.
+> >
+> > For this reason, let's introduce an additional per CPU variable called
+> > domain_state and implement two helper functions to read/write its values.
+> > Following patches, which implements PM domain support for PSCI, will use
+> > the domain_state variable and set it to corresponding bits that represents
+> > the selected idle state for the cluster.
+> >
+> > Finally, in psci_cpu_suspend_enter() and psci_suspend_finisher(), let's
+> > take into account the values in the domain_state, as to get the complete
+> > suspend parameter.
 > >
 >
-> I may be wrong, but I see drv is just used to get state_count mostly.
-> It's also used in flattening part, but that should not be here either.
+> I understand it was split to ease review, but this patch also does
+> nothing as domain_state = 0 always. I was trying hard to find where it's
+> set, but I assume it will be done in later patches. Again may be this
+> can be squashed into the first caller of psci_set_domain_state
 
-Let me copy the note I added below the changelog for $subject patch,
-as hopefully that should clarify the reason to why this is needed.
+You have a point, but I am worried that it would look like this series
+is solely needed to support OSI mode. This is not the case. Let me
+explain.
 
-"- This patch is needed by the subsequent patch, but more importantly,
-also by "[PATCH 10/18] drivers: firmware: psci: Add hierarchical
-domain idle states converter"."
+Having $subject patch separate shows the specific changes needed to
+support OSI mode. The first caller of psci_set_domain_state() is added
+in patch9, however, patch9 is useful no matter of OSI or PC mode.
+
+Moreover, if I squash $subject patch with patch9, I would have to
+squash also the subsequent patch (patch8), as it depends on $subject
+patch.
+
+So, to conclude, are you happy with this as is or do you want me to
+squash the patches?
 
 Kind regards
 Uffe
