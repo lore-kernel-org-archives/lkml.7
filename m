@@ -2,89 +2,104 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43702C28EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8707AC468BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10046206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653D520833
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbfFJBF3 (ORCPT
+        id S1730090AbfFJBKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 21:05:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44502 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfFJBF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 21:05:29 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A66DA309265A;
-        Mon, 10 Jun 2019 01:05:15 +0000 (UTC)
-Received: from xz-x1 (dhcp-15-205.nay.redhat.com [10.66.15.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 411185B684;
-        Mon, 10 Jun 2019 01:05:11 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 09:05:08 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Luiz Capitulino <lcapitulino@redhat.com>
-Subject: Re: [PATCH] timers: Fix up get_target_base() to use old base properly
-Message-ID: <20190610010508.GB10028@xz-x1>
-References: <20190603132944.9726-1-peterx@redhat.com>
- <20190606152805.GA3652@amt.cnet>
+        Sun, 9 Jun 2019 21:10:41 -0400
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:48400 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfFJBKl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 21:10:41 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id x5A1AUBL030841; Mon, 10 Jun 2019 10:10:30 +0900
+X-Iguazu-Qid: 34trJGGSgoJWdfxbTO
+X-Iguazu-QSIG: v=2; s=0; t=1560129029; q=34trJGGSgoJWdfxbTO; m=aIrqk9CdBBughxTo19QPF+oC/4yEyVt+H0wlgc4JEC0=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1510) id x5A1ASfc035108;
+        Mon, 10 Jun 2019 10:10:29 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id x5A1ASBg004576;
+        Mon, 10 Jun 2019 10:10:28 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id x5A1AS6h021925;
+        Mon, 10 Jun 2019 10:10:28 +0900
+Date:   Mon, 10 Jun 2019 10:10:25 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 4.14 03/35] neighbor: Call __ipv4_neigh_lookup_noref in
+ neigh_xmit
+X-TSB-HOP: ON
+Message-ID: <20190610011024.utn5fft7nocabqxb@toshiba.co.jp>
+References: <20190609164125.377368385@linuxfoundation.org>
+ <20190609164125.756810906@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606152805.GA3652@amt.cnet>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 10 Jun 2019 01:05:28 +0000 (UTC)
+In-Reply-To: <20190609164125.756810906@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 12:28:08PM -0300, Marcelo Tosatti wrote:
-> On Mon, Jun 03, 2019 at 09:29:44PM +0800, Peter Xu wrote:
-> > get_target_base() in the timer code is not using the "base" parameter
-> > at all.  My gut feeling is that instead of removing that extra
-> > parameter, what we really want to do is "return the old base if it
-> > does not suite for a new one".
+Hi,
+
+On Sun, Jun 09, 2019 at 06:42:09PM +0200, Greg Kroah-Hartman wrote:
+> From: David Ahern <dsahern@gmail.com>
 > 
-> Hi Peter,
-
-Hi, Marcelo,
-
+> [ Upstream commit 4b2a2bfeb3f056461a90bd621e8bd7d03fa47f60 ]
 > 
-> I think its a dead parameter: you always want to use the local base
-> if the timer is not pinned.
+> Commit cd9ff4de0107 changed the key for IFF_POINTOPOINT devices to
+> INADDR_ANY but neigh_xmit which is used for MPLS encapsulations was not
+> updated to use the altered key. The result is that every packet Tx does
+> a lookup on the gateway address which does not find an entry, a new one
+> is created only to find the existing one in the table right before the
+> insert since arp_constructor was updated to reset the primary key. This
+> is seen in the allocs and destroys counters:
+>     ip -s -4 ntable show | head -10 | grep alloc
+> 
+> which increase for each packet showing the unnecessary overhread.
+> 
+> Fix by having neigh_xmit use __ipv4_neigh_lookup_noref for NEIGH_ARP_TABLE.
+> 
+> Fixes: cd9ff4de0107 ("ipv4: Make neigh lookup keys for loopback/point-to-point devices be INADDR_ANY")
+> Reported-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: David Ahern <dsahern@gmail.com>
+> Tested-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
 
-Thanks for the comment.
+This commit also requires the following commit:
 
-But what if it was pinned?  Could the old code always do right even in
-the scenario I mentioned below?
+commit 9b3040a6aafd7898ece7fc7efcbca71e42aa8069
+Author: David Ahern <dsahern@gmail.com>
+Date:   Sun May 5 11:16:20 2019 -0700
 
-https://lkml.org/lkml/2019/6/4/34
+    ipv4: Define __ipv4_neigh_lookup_noref when CONFIG_INET is disabled
 
-Also note that if the timer was not pinned, IMHO it'll go into the
-check below and it seems to likely to have another timer base instead
-of the local base if it's not a housekeeping cpu (because
-get_nohz_timer_target() will always try to provision timers onto the
-housekeeping ones), or did I misunderstand your comment?
+    Define __ipv4_neigh_lookup_noref to return NULL when CONFIG_INET is disabled.
 
-#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
-	if (static_branch_likely(&timers_migration_enabled) &&
-	    !(tflags & TIMER_PINNED))
-		return get_timer_cpu_base(tflags, get_nohz_timer_target());
-#endif
+    Fixes: 4b2a2bfeb3f0 ("neighbor: Call __ipv4_neigh_lookup_noref in neigh_xmit")
+    Reported-by: kbuild test robot <lkp@intel.com>
+    Signed-off-by: David Ahern <dsahern@gmail.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
 
-Regards,
+And this is also necessary for 4.4.y, 4.14.y, 4.19.y and 5.1.y.
+Please apply this commit.
 
--- 
-Peter Xu
+Best regards,
+  Nobuhiro
