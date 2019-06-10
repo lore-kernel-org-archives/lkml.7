@@ -2,134 +2,244 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF779C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3E5C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D93020679
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA5D20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lhn0ve90"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K9jH0fpc";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LEjAjg0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390206AbfFJNJu (ORCPT
+        id S2390246AbfFJNN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 09:09:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40025 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388848AbfFJNJt (ORCPT
+        Mon, 10 Jun 2019 09:13:59 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39408 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389762AbfFJNN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:09:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so463106wmj.5;
-        Mon, 10 Jun 2019 06:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4DTSuD5WBGBvupNhJtP3X0Pc53PYOTtYrnYbVQidS54=;
-        b=Lhn0ve90gOkQsFNoUq6NsPitucSAfMzJxr+bMtR0Fy93dV4FXxbHrupltTorx1cRml
-         S7jw6pOe/nl3Pyxr9FVdEequ1Y7K6LfIei+xG2aexjPIwid6Rk9RdW5QHjMw8XYV2qwm
-         4L3OIQiP9vwy78cyYtlV2kDtggd/3d3oZgKNdxtOqvWmM5vGCx0s453e6b1BWOF4UOB8
-         j5FbNkFK4dY35c4LaTAmAd2hAwtj9hCY+COfkdvqX54jPdZKFK9UIMMmw+jrlBwT47hb
-         ei3Vnu7/biVrLn9knWKVbkL5HL4OySxvlhzuFew/PpnLbfuMiD68f97oDK/HvNpMwPIo
-         uuXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4DTSuD5WBGBvupNhJtP3X0Pc53PYOTtYrnYbVQidS54=;
-        b=cD9VsQ/GpHgTTbp3wcCgJz6IXVKudFk7gD4jCfLjYDuWkxCNPXYt/17wblZZszulNv
-         0rmu2jgNlWhlc+R7SMpMv4om8GMnFaDnZGxPFqnHfHG4N5CgsVgfn2VEKZY0MWm52IUp
-         8d01vQ57O/ebvHrgOv18WbiIMxSm+ENEwWX8gG9n3FVsY1Ltp5c9clRteUs+lJuHd6L8
-         9hzudGHyTxW2A3JehE2SDbX6aNO7hzNWeKX/OnZuMcJUI5ID92iAWiPH4TkgvujtYVjP
-         1K2IsrN87qh/cJi4EUTWHuNTtOx+D8W0fcPoX5yRLWsJPJzge5QX3Ksl0y2qvxWS/04A
-         yLJQ==
-X-Gm-Message-State: APjAAAUqmjx6T2+mh7iwLnMV/+HkgTkP9DNxW6+IuaXhhp2KajWYn2dq
-        GRJswq50C52ucZbtjZqzInU=
-X-Google-Smtp-Source: APXvYqx/F1dQJ0k5OUzGxSXySawThyB31BH3NgObyoZRbmpPbYFJ32PH66RsXKRDbKn0+lh0foPMcg==
-X-Received: by 2002:a1c:7d13:: with SMTP id y19mr13177531wmc.21.1560172187613;
-        Mon, 10 Jun 2019 06:09:47 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id g8sm10876816wmf.17.2019.06.10.06.09.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 06:09:46 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 14:09:45 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 0/4] vsock/virtio: several fixes in the .probe() and
- .remove()
-Message-ID: <20190610130945.GL14257@stefanha-x1.localdomain>
-References: <20190528105623.27983-1-sgarzare@redhat.com>
+        Mon, 10 Jun 2019 09:13:59 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B0D4160261; Mon, 10 Jun 2019 13:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560172438;
+        bh=LwAgGkchs/Fzdy3FLqNUXNaSYeJqLqml87Nmc/rgzcM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=K9jH0fpc+XRcZ9zuxXDIa339uRa0nRf5EhBK+/kmJVcRugToXwb1UqzFvoJcH4U3K
+         N5TDkchZacjwtbOwOP6QQu+un0FqniD977J/liGt+8x5TB7DZ01w52gvLQwbHPsWSv
+         QIa83N0giedoYvQp7sfy3S3/rIGD4cMTq6gnTLh0=
+Received: from [10.204.79.142] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gkohli@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 46AF260261;
+        Mon, 10 Jun 2019 13:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560172436;
+        bh=LwAgGkchs/Fzdy3FLqNUXNaSYeJqLqml87Nmc/rgzcM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LEjAjg0aQZqM1UUurRbp+XQjiq2Wm3NTju0vra1LPjDw7qNC3eS7qx//GRxamW0jM
+         dLtr1FOdSG8Jmk20uzL3WugAw+2j2A5vt144CEowkphY+ICsSveoVghM/7NX4eAXZ1
+         Io8d0WWgCM04TVwGUA/P0J/OEd+OLYXSNs0GqKxE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 46AF260261
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+To:     Peter Zijlstra <peterz@infradead.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
+        oleg@redhat.com, mingo@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
+ <20190530080358.GG2623@hirez.programming.kicks-ass.net>
+ <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
+ <20190603123705.GB3419@hirez.programming.kicks-ass.net>
+ <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
+ <20190607133541.GJ3436@hirez.programming.kicks-ass.net>
+ <20190607142332.GF3463@hirez.programming.kicks-ass.net>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <16419960-3703-5988-e7ea-9d3a439f8b05@codeaurora.org>
+Date:   Mon, 10 Jun 2019 18:43:51 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Swj79WlilW4BQYVz"
-Content-Disposition: inline
-In-Reply-To: <20190528105623.27983-1-sgarzare@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190607142332.GF3463@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Swj79WlilW4BQYVz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 28, 2019 at 12:56:19PM +0200, Stefano Garzarella wrote:
-> During the review of "[PATCH] vsock/virtio: Initialize core virtio vsock
-> before registering the driver", Stefan pointed out some possible issues
-> in the .probe() and .remove() callbacks of the virtio-vsock driver.
->=20
-> This series tries to solve these issues:
-> - Patch 1 postpones the 'the_virtio_vsock' assignment at the end of the
->   .probe() to avoid that some sockets queue works when the initialization
->   is not finished.
-> - Patches 2 and 3 stop workers before to call vdev->config->reset(vdev) to
->   be sure that no one is accessing the device, and adds another flush at =
-the
->   end of the .remove() to avoid use after free.
-> - Patch 4 free also used buffers in the virtqueues during the .remove().
->=20
-> Stefano Garzarella (4):
->   vsock/virtio: fix locking around 'the_virtio_vsock'
->   vsock/virtio: stop workers during the .remove()
->   vsock/virtio: fix flush of works during the .remove()
->   vsock/virtio: free used buffers during the .remove()
->=20
->  net/vmw_vsock/virtio_transport.c | 105 ++++++++++++++++++++++++++-----
->  1 file changed, 90 insertions(+), 15 deletions(-)
+On 6/7/2019 7:53 PM, Peter Zijlstra wrote:
+> On Fri, Jun 07, 2019 at 03:35:41PM +0200, Peter Zijlstra wrote:
+>> On Wed, Jun 05, 2019 at 09:04:02AM -0600, Jens Axboe wrote:
+>>> How about the following plan - if folks are happy with this sched patch,
+>>> we can queue it up for 5.3. Once that is in, I'll kill the block change
+>>> that special cases the polled task wakeup. For 5.2, we go with Oleg's
+>>> patch for the swap case.
+>>
+>> OK, works for me. I'll go write a proper patch.
+> 
+> I now have the below; I'll queue that after the long weekend and let
+> 0-day chew on it for a while and then push it out to tip or something.
+> 
+> 
+> ---
+> Subject: sched: Optimize try_to_wake_up() for local wakeups
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Fri Jun 7 15:39:49 CEST 2019
+> 
+> Jens reported that significant performance can be had on some block
+> workloads (XXX numbers?) by special casing local wakeups. That is,
+> wakeups on the current task before it schedules out. Given something
+> like the normal wait pattern:
+> 
+> 	for (;;) {
+> 		set_current_state(TASK_UNINTERRUPTIBLE);
+> 
+> 		if (cond)
+> 			break;
+> 
+> 		schedule();
+> 	}
+> 	__set_current_state(TASK_RUNNING);
+> 
+> Any wakeup (on this CPU) after set_current_state() and before
+> schedule() would benefit from this.
+> 
+> Normal wakeups take p->pi_lock, which serializes wakeups to the same
+> task. By eliding that we gain concurrency on:
+> 
+>   - ttwu_stat(); we already had concurrency on rq stats, this now also
+>     brings it to task stats. -ENOCARE
+> 
+>   - tracepoints; it is now possible to get multiple instances of
+>     trace_sched_waking() (and possibly trace_sched_wakeup()) for the
+>     same task. Tracers will have to learn to cope.
+> 
+> Furthermore, p->pi_lock is used by set_special_state(), to order
+> against TASK_RUNNING stores from other CPUs. But since this is
+> strictly CPU local, we don't need the lock, and set_special_state()'s
+> disabling of IRQs is sufficient.
+> 
+> After the normal wakeup takes p->pi_lock it issues
+> smp_mb__after_spinlock(), in order to ensure the woken task must
+> observe prior stores before we observe the p->state. If this is CPU
+> local, this will be satisfied with a compiler barrier, and we rely on
+> try_to_wake_up() being a funcation call, which implies such.
+> 
+> Since, when 'p == current', 'p->on_rq' must be true, the normal wakeup
+> would continue into the ttwu_remote() branch, which normally is
+> concerned with exactly this wakeup scenario, except from a remote CPU.
+> IOW we're waking a task that is still running. In this case, we can
+> trivially avoid taking rq->lock, all that's left from this is to set
+> p->state.
+> 
+> This then yields an extremely simple and fast path for 'p == current'.
+> 
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: mingo@redhat.com
+> Cc: akpm@linux-foundation.org
+> Cc: hch@lst.de
+> Cc: gkohli@codeaurora.org
+> Cc: oleg@redhat.com
+> Reported-by: Jens Axboe <axboe@kernel.dk>
+> Tested-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>   kernel/sched/core.c |   33 ++++++++++++++++++++++++++++-----
+>   1 file changed, 28 insertions(+), 5 deletions(-)
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1991,6 +1991,28 @@ try_to_wake_up(struct task_struct *p, un
+>   	unsigned long flags;
+>   	int cpu, success = 0;
+>   
+> +	if (p == current) {
+> +		/*
+> +		 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
+> +		 * == smp_processor_id()'. Together this means we can special
+> +		 * case the whole 'p->on_rq && ttwu_remote()' case below
+> +		 * without taking any locks.
+> +		 *
+> +		 * In particular:
+> +		 *  - we rely on Program-Order guarantees for all the ordering,
+> +		 *  - we're serialized against set_special_state() by virtue of
+> +		 *    it disabling IRQs (this allows not taking ->pi_lock).
+> +		 */
+> +		if (!(p->state & state))
+> +			return false;
+> +
 
-Looking forward to v2.  I took a look at the discussion and I'll review
-v2 from scratch.  Just keep in mind that the mutex is used more for
-mutual exclusion of the init/exit code than to protect the_virtio_vsock,
-so we'll still need protection of init/exit code even with RCU.
+Hi Peter, Jen,
 
-Stefan
+As we are not taking pi_lock here , is there possibility of same task 
+dead call comes as this point of time for current thread, bcoz of which 
+we have seen earlier issue after this commit 0619317ff8ba
+[T114538]  do_task_dead+0xf0/0xf8
+[T114538]  do_exit+0xd5c/0x10fc
+[T114538]  do_group_exit+0xf4/0x110
+[T114538]  get_signal+0x280/0xdd8
+[T114538]  do_notify_resume+0x720/0x968
+[T114538]  work_pending+0x8/0x10
 
---Swj79WlilW4BQYVz
-Content-Type: application/pgp-signature; name="signature.asc"
+Is there a chance of TASK_DEAD set at this point of time?
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlz+VpkACgkQnKSrs4Gr
-c8gjIAf5AWLeKzDJN89IePr9aSiIQg5UqFqV3MQyrKA4CEklt/RqqcNc5/56tDEy
-bvy+2q8wvJ7/OiMV5W11mpCpeLFDR9h4pggfExa/lWg5l+XYFVYD5Zelym/k5KPk
-6M0hgDooBw4fm9rL2LalhQTTseflHIlXEdZK29E1lwX2em55BofBt5gRnk943uFm
-Su0p8R1u9Jjqe8cypBWNMEIdfJtGhi8Mcs4RYfm/YDmYpyYyOWp5T47VTth0h6Mw
-sJdCIlTi4tHHZSH53bZyjPJ8Hl7+kSh2afiMRgzNvuLPyNVhQEGzVWZd5svlNim/
-u1Px/8wo39dQECN0sS0MNY07nG327w==
-=Jv/l
------END PGP SIGNATURE-----
+> +		success = 1;
+> +		trace_sched_waking(p);
+> +		p->state = TASK_RUNNING;
+> +		trace_sched_wakeup(p);
+> +		goto out;
+> +	}
+> +
+>   	/*
+>   	 * If we are going to wake up a thread waiting for CONDITION we
+>   	 * need to ensure that CONDITION=1 done by the caller can not be
+> @@ -2000,7 +2022,7 @@ try_to_wake_up(struct task_struct *p, un
+>   	raw_spin_lock_irqsave(&p->pi_lock, flags);
+>   	smp_mb__after_spinlock();
+>   	if (!(p->state & state))
+> -		goto out;
+> +		goto unlock;
+>   
+>   	trace_sched_waking(p);
+>   
+> @@ -2030,7 +2052,7 @@ try_to_wake_up(struct task_struct *p, un
+>   	 */
+>   	smp_rmb();
+>   	if (p->on_rq && ttwu_remote(p, wake_flags))
+> -		goto stat;
+> +		goto unlock;
+>   
+>   #ifdef CONFIG_SMP
+>   	/*
+> @@ -2090,10 +2112,11 @@ try_to_wake_up(struct task_struct *p, un
+>   #endif /* CONFIG_SMP */
+>   
+>   	ttwu_queue(p, cpu, wake_flags);
+> -stat:
+> -	ttwu_stat(p, cpu, wake_flags);
+> -out:
+> +unlock:
+>   	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
+> +out:
+> +	if (success)
+> +		ttwu_stat(p, cpu, wake_flags);
+>   
+>   	return success;
+>   }
+> 
 
---Swj79WlilW4BQYVz--
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
