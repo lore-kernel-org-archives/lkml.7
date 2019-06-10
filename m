@@ -2,105 +2,236 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B761C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C7EC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C8D20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560190749;
-	bh=4fWiZZz2M6eGYS+d2dn1LzySa5nwwCMieUm3XeFYJpQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vgy7jibYP2HbFLNbk7wSWX43v/3d2/9rGZ+00+u64TfiV5f584Ah6yU/rJmV27zb5
-	 kwqNpP0BcGhLTGF69DaklLGjofVVSeRT16JdyglZHYn8ibYO0923Osqfo2CVSYAUfh
-	 jQuxzx9UnxK99tsxH3LSnBO9TTRJXwFLwYRn69J4=
+	by mail.kernel.org (Postfix) with ESMTP id 25D7D2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:22:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="CWrMCQpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387596AbfFJSTI (ORCPT
+        id S2388019AbfFJSWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:19:08 -0400
-Received: from mail-ua1-f43.google.com ([209.85.222.43]:34690 "EHLO
-        mail-ua1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfFJSTG (ORCPT
+        Mon, 10 Jun 2019 14:22:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33379 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbfFJSWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:19:06 -0400
-Received: by mail-ua1-f43.google.com with SMTP id 7so3450214uah.1;
-        Mon, 10 Jun 2019 11:19:06 -0700 (PDT)
+        Mon, 10 Jun 2019 14:22:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k187so4971436pga.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:22:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Rd7jWnbbAp4RfevQw78c7K7px6JtJUHSgmHkrc6gVU4=;
-        b=NoqhzsNrSi7dYNU8yAmO1tRvsVK2jYNpAak6UvyF+UpISCg7sKKp+j/LODUeyNnGGM
-         hB7/cEOSqt99ksyAvEbmXLwW8gjf7zgNTpXKPcsWgHJE4LXlXBTkZJGO863W9xk+Vfat
-         bVgUYj+I5DTk0xpfsYwKEFMzHbBQ25NIZlsNGltPdj8av7Iu80Z3ZEndzt9anwoXuCJg
-         w9DHDLsr4c9Shkn8cu5DWwZD9OGLwo8vPBxuBGW+Dso5njoo8SXGL4M9eyzxFV0sZd+c
-         pIqDtQM6P93Q2vkFkzEs75Hx4V++tpJfhxoXy6X8hAERs+zTcnH3Ww+l4K093n0sdlZm
-         G5qA==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=QY6i0yhlosYKBzQSKH6aCBy2mSO5xg+k21z4/T/g/QU=;
+        b=CWrMCQpEHfiGDH0/APPguYvej1X08PVZNfvMJvyD21ZEb3eivAPQzuJ8tMNj9FYVca
+         jql6TF1mR9e/BXtgpx/0lzJODxMFkITGUR41xdyHsLIfqch+LeMsbWN6NTv+5wuIWO5w
+         k/dR+pBTAAG82Or6u+B72UnwccZfrBi5DcRsbNOYJG2T8j+OXK5OPjgqSIL9e2LlYKMm
+         E6jBgwWnOtQ1n28ITAzOc9zWCcVIXOkz/DmXY2lcbUsRKz5yMVS59ue8TFiNaZ72DAS/
+         mey4HI5P1ReXAsJ8bNndgX98pMZXNuvfQyLKjH8LS31IW3AfyzhvNold+rai1GTNyc8r
+         ysHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rd7jWnbbAp4RfevQw78c7K7px6JtJUHSgmHkrc6gVU4=;
-        b=kAe/cL6qFoeAr8n1bnqFNTGbwblwVe3x+CaD0KysG7ckp0vKTlCG8LqnU9leE4aHpM
-         WGz54vrpPqM/INDqBNcIhLuX+4yrt7pcE+VE1Xz7p5ZHhIfyqT4+FlM+WV6epUh8p8qV
-         qb6MYibGtMNTvwJ+Iifn1vb7NT8BLr6hzhUt18f+gW+EYNVgszOhJgFG4ubj8FkSnNPV
-         Z9sOJjjyfsUwL4AfTgnAw2P3WG88UrVPudwmud+8/i6NCZW1dfDsCAO2I1K77oGCUrMY
-         r6PkOVB8s4fP5y7k7DHYHOabkMwKLTCMvNAhDELDTP1xewavc1uUzv8OxuEekJ48YzC9
-         jWFA==
-X-Gm-Message-State: APjAAAXfPdG0CQk3CYTYuc2AgFHglUzTMdtRRurxrElUFHt8Tm4hF3WQ
-        uXJ1MY5dO7sgVOF2QCGJ/2Y=
-X-Google-Smtp-Source: APXvYqyQrkANAPukJc9v5IcPa2tL2EIoyvjbdXZpPEWyXnxL8ESjiYbyJ4IvKpakUqHqBNPtNUcbQw==
-X-Received: by 2002:ab0:60c4:: with SMTP id g4mr8141145uam.46.1560190745317;
-        Mon, 10 Jun 2019 11:19:05 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:1677])
-        by smtp.gmail.com with ESMTPSA id t20sm4657335vkd.53.2019.06.10.11.19.03
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=QY6i0yhlosYKBzQSKH6aCBy2mSO5xg+k21z4/T/g/QU=;
+        b=eVpJaciAC4adtZQPpeeGejNK8l3JPN3J8jwhg2YHXwiR2O5aqe5+rh//Q1WTZ0aTB7
+         7b7CQhPfLcH0zbzIbCOxP2kUEOUTge8ToRFu+7hmHqnYAhd2cLB/t1oabv1t7u0Hzf3m
+         5jkWcIV/DIGItzcWE1zm6CTHoh+GW51rjccdpbbRCnMqL56NEEMlKBPZ/O8uyiZau1a1
+         bWIsPraTCZ8tKrNmQ53W6OWpSv8fj1nETOqLKoR0Jn+dxUgzF8kEYXVi1lt+RyLUTOIw
+         VSqfjpvzLsK0tb/R2OceCL/yVZqUFucMAhY7PjGLmEwckUPIGMb0wGoJVsApq1vpR1LK
+         Pfew==
+X-Gm-Message-State: APjAAAWtWdoOMIMG+zJc51OeeWmY6mmAvr3/0EoZZ+lbDUpQ6ZOFPc4s
+        Ws2CzUCytYPlQ1aJjhqwa5+i0A==
+X-Google-Smtp-Source: APXvYqxGA1nZyul0VfHAaNroAGuQ2k9Yaas0jtGOC35rwVfjQ8fqFhDRbECVetl1ZMn+hm+FtIhQTw==
+X-Received: by 2002:a17:90a:a410:: with SMTP id y16mr22740984pjp.62.1560190936876;
+        Mon, 10 Jun 2019 11:22:16 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b007:4b59:4135:ea27:71a0:a536? ([2600:1010:b007:4b59:4135:ea27:71a0:a536])
+        by smtp.gmail.com with ESMTPSA id d35sm10598703pgm.31.2019.06.10.11.22.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 11:19:04 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 11:19:01 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+d4bba5ccd4f9a2a68681@syzkaller.appspotmail.com>,
-        ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
-        daniel@iogearbox.net, hannes@cmpxchg.org, kafai@fb.com,
-        linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: KASAN: null-ptr-deref Read in css_task_iter_advance
-Message-ID: <20190610181901.GC3341036@devbig004.ftw2.facebook.com>
-References: <00000000000055aba7058af4d378@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000055aba7058af4d378@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Mon, 10 Jun 2019 11:22:15 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC][PATCH 00/13] Mount, FS, Block and Keyrings notifications [ver #4]
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <dac74580-5b48-86e4-8222-cac29a9f541d@schaufler-ca.com>
+Date:   Mon, 10 Jun 2019 11:22:13 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        USB list <linux-usb@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        raven@themaw.net, Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E0925E1F-E5F2-4457-8704-47B6E64FE3F3@amacapital.net>
+References: <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk> <be966d9c-e38d-7a30-8d80-fad5f25ab230@tycho.nsa.gov> <0cf7a49d-85f6-fba9-62ec-a378e0b76adf@schaufler-ca.com> <CALCETrX5O18q2=dUeC=hEtK2=t5KQpGBy9XveHxFw36OqkbNOg@mail.gmail.com> <dac74580-5b48-86e4-8222-cac29a9f541d@schaufler-ca.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Hillf.
 
-On Tue, Jun 11, 2019 at 12:59:23AM +0800, Hillf Danton wrote:
-> >syzbot will keep track of this bug report. See:
-> >https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >
-> Ignore my noise if you have no interest seeing the syzbot report.
+> On Jun 10, 2019, at 11:01 AM, Casey Schaufler <casey@schaufler-ca.com> wro=
+te:
+>=20
+>> On 6/10/2019 9:42 AM, Andy Lutomirski wrote:
+>>> On Mon, Jun 10, 2019 at 9:34 AM Casey Schaufler <casey@schaufler-ca.com>=
+ wrote:
+>>>> On 6/10/2019 8:21 AM, Stephen Smalley wrote:
+>>>>> On 6/7/19 10:17 AM, David Howells wrote:
+>>>>> Hi Al,
+>>>>>=20
+>>>>> Here's a set of patches to add a general variable-length notification q=
+ueue
+>>>>> concept and to add sources of events for:
+>>>>>=20
+>>>>>  (1) Mount topology events, such as mounting, unmounting, mount expiry=
+,
+>>>>>      mount reconfiguration.
+>>>>>=20
+>>>>>  (2) Superblock events, such as R/W<->R/O changes, quota overrun and I=
+/O
+>>>>>      errors (not complete yet).
+>>>>>=20
+>>>>>  (3) Key/keyring events, such as creating, linking and removal of keys=
+.
+>>>>>=20
+>>>>>  (4) General device events (single common queue) including:
+>>>>>=20
+>>>>>      - Block layer events, such as device errors
+>>>>>=20
+>>>>>      - USB subsystem events, such as device/bus attach/remove, device
+>>>>>        reset, device errors.
+>>>>>=20
+>>>>> One of the reasons for this is so that we can remove the issue of proc=
+esses
+>>>>> having to repeatedly and regularly scan /proc/mounts, which has proven=
+ to
+>>>>> be a system performance problem.  To further aid this, the fsinfo() sy=
+scall
+>>>>> on which this patch series depends, provides a way to access superbloc=
+k and
+>>>>> mount information in binary form without the need to parse /proc/mount=
+s.
+>>>>>=20
+>>>>>=20
+>>>>> LSM support is included, but controversial:
+>>>>>=20
+>>>>>  (1) The creds of the process that did the fput() that reduced the ref=
+count
+>>>>>      to zero are cached in the file struct.
+>>>>>=20
+>>>>>  (2) __fput() overrides the current creds with the creds from (1) whil=
+st
+>>>>>      doing the cleanup, thereby making sure that the creds seen by the=
 
-They're awesome.
+>>>>>      destruction notification generated by mntput() appears to come fr=
+om
+>>>>>      the last fputter.
+>>>>>=20
+>>>>>  (3) security_post_notification() is called for each queue that we mig=
+ht
+>>>>>      want to post a notification into, thereby allowing the LSM to pre=
+vent
+>>>>>      covert communications.
+>>>>>=20
+>>>>>  (?) Do I need to add security_set_watch(), say, to rule on whether a w=
+atch
+>>>>>      may be set in the first place?  I might need to add a variant per=
 
-> The following tiny diff, made in the hope that it may help you perhaps
-> reproduce the crash, waits css lock holders and then pick task off
-> the list of dying tasks.
+>>>>>      watch-type.
+>>>>>=20
+>>>>>  (?) Do I really need to keep track of the process creds in which an
+>>>>>      implicit object destruction happened?  For example, imagine you c=
+reate
+>>>>>      an fd with fsopen()/fsmount().  It is marked to dissolve the moun=
+t it
+>>>>>      refers to on close unless move_mount() clears that flag.  Now, im=
+agine
+>>>>>      someone looking at that fd through procfs at the same time as you=
+ exit
+>>>>>      due to an error.  The LSM sees the destruction notification come f=
+rom
+>>>>>      the looker if they happen to do their fput() after yours.
+>>>> I remain unconvinced that (1), (2), (3), and the final (?) above are a g=
+ood idea.
+>>>>=20
+>>>> For SELinux, I would expect that one would implement a collection of pe=
+r watch-type WATCH permission checks on the target object (or to some well-d=
+efined object label like the kernel SID if there is no object) that allow re=
+ceipt of all notifications of that watch-type for objects related to the tar=
+get object, where "related to" is defined per watch-type.
+>>>>=20
+>>>> I wouldn't expect SELinux to implement security_post_notification() at a=
+ll.  I can't see how one can construct a meaningful, stable policy for it.  I=
+'d argue that the triggering process is not posting the notification; the ke=
+rnel is posting the notification and the watcher has been authorized to rece=
+ive it.
+>>> I cannot agree. There is an explicit action by a subject that results
+>>> in information being delivered to an object. Just like a signal or a
+>>> UDP packet delivery. Smack handles this kind of thing just fine. The
+>>> internal mechanism that results in the access is irrelevant from
+>>> this viewpoint. I can understand how a mechanism like SELinux that
+>>> works on finer granularity might view it differently.
+>> I think you really need to give an example of a coherent policy that
+>> needs this.
+>=20
+> I keep telling you, and you keep ignoring what I say.
+>=20
+>>  As it stands, your analogy seems confusing.
+>=20
+> It's pretty simple. I have given both the abstract
+> and examples.
 
-I already posted a fix.  Well, at least I think it's the fix.
+You gave the /dev/null example, which is inapplicable to this patchset.
 
-  https://www.spinics.net/lists/cgroups/msg22468.html
+>=20
+>>  If someone
+>> changes the system clock, we don't restrict who is allowed to be
+>> notified (via, for example, TFD_TIMER_CANCEL_ON_SET) that the clock
+>> was changed based on who changed the clock.
+>=20
+> That's right. The system clock is not an object that
+> unprivileged processes can modify. In fact, it is not
+> an object at all. If you care to look, you will see that
+> Smack does nothing with the clock.
 
-Thanks.
+And this is different from the mount tree how?
 
--- 
-tejun
+>=20
+>>  Similarly, if someone
+>> tries to receive a packet on a socket, we check whether they have the
+>> right to receive on that socket (from the endpoint in question) and,
+>> if the sender is local, whether the sender can send to that socket.
+>> We do not check whether the sender can send to the receiver.
+>=20
+> Bzzzt! Smack sure does.
+
+This seems dubious. I=E2=80=99m still trying to get you to explain to a non-=
+Smack person why this makes sense.
+
+>=20
+>> The signal example is inapplicable.
+>=20
+> =46rom a modeling viewpoint the actions are identical.
+
+This seems incorrect to me and, I think, to most everyone else reading this.=
+ Can you explain?
+
+In SELinux-ese, when you write to a file, the subject is the writer and the o=
+bject is the file.  When you send a signal to a process, the object is the t=
+arget process.=
