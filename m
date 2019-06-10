@@ -2,132 +2,80 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F72C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE3AC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65C621783
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560196564;
-	bh=BSrEs7k4Eaj+qfKqbXB7x6RBjqYairyQB7xlNqEmonI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=N2Gj0+1T71OseFfEsy9NMJ+APHDkA2xV+WTejY1X+MS5JXeRoEumZiY+iltGWK2k5
-	 s8/uQtZkub9KqHzn7ZLEWbjtCsjFKe+8d2Lzb0zYZyXjV5c9RFKixJOPdfJ/SoION9
-	 PS/HwGgkE0T/BzoolQs9Toi22bYOS14EdCXLvmvg=
+	by mail.kernel.org (Postfix) with ESMTP id EFB9D206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389465AbfFJT4D (ORCPT
+        id S2389324AbfFJT6a convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34002 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 15:58:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56452 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389255AbfFJT4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:56:03 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A653212F5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 19:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560196562;
-        bh=BSrEs7k4Eaj+qfKqbXB7x6RBjqYairyQB7xlNqEmonI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uLzHkUDAQ8jOsA8YXnkz0O3Qklab8tzkEtYYWwVgKRQkiQKzSqsdLapdzrorKdIKK
-         n6Eo4HwM27qI73UXdMC+Vo7aJo27Dlu5OTlBwsHayFksgsHw2rZwNM92HHc08myrfM
-         frywWd5NERvhfQ373QnY3PfJ7m2L8vxY6KRo3fOE=
-Received: by mail-wm1-f42.google.com with SMTP id g135so538845wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 12:56:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAUsE7VesxAJWHwnBuF2IQ7lhvoRnnHC71d6eOmAlukOWmqR2YFF
-        ahr3nfFP95880ltaZys0VZN/XKob5czAh8OdR5kCBQ==
-X-Google-Smtp-Source: APXvYqzM9tcFDkfc5EcsyyIB59pCxk2ffDwv+KGOuXFY/1fKRXVVJv6PtkR8yujMk0ZblpfWuwOhhYeBeaPhDe6KICk=
-X-Received: by 2002:a7b:cd84:: with SMTP id y4mr14984047wmj.79.1560196560570;
- Mon, 10 Jun 2019 12:56:00 -0700 (PDT)
+        id S2389170AbfFJT63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 15:58:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 12:58:28 -0700
+X-ExtLoop1: 1
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by orsmga005.jf.intel.com with ESMTP; 10 Jun 2019 12:58:28 -0700
+Received: from orsmsx112.amr.corp.intel.com (10.22.240.13) by
+ ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 10 Jun 2019 12:58:28 -0700
+Received: from orsmsx109.amr.corp.intel.com ([169.254.11.79]) by
+ ORSMSX112.amr.corp.intel.com ([169.254.3.233]) with mapi id 14.03.0415.000;
+ Mon, 10 Jun 2019 12:58:28 -0700
+From:   "Hefty, Sean" <sean.hefty@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Eric Biggers <ebiggers@kernel.org>
+CC:     syzbot <syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com>,
+        "dasaratharaman.chandramouli@intel.com" 
+        <dasaratharaman.chandramouli@intel.com>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "roland@purestorage.com" <roland@purestorage.com>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Subject: RE: WARNING: bad unlock balance in ucma_event_handler
+Thread-Topic: WARNING: bad unlock balance in ucma_event_handler
+Thread-Index: AQHVH70r3ZnP/JtE/Uij3ZacQcoN06aVwI4A//+McGA=
+Date:   Mon, 10 Jun 2019 19:58:27 +0000
+Message-ID: <1828884A29C6694DAF28B7E6B8A82373B3E99E60@ORSMSX109.amr.corp.intel.com>
+References: <000000000000af6530056e863794@google.com>
+ <20180613170543.GB30019@ziepe.ca> <20190610184853.GG63833@gmail.com>
+ <20190610194732.GH18468@ziepe.ca>
+In-Reply-To: <20190610194732.GH18468@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMmFlNGYyMDgtNzFmOS00M2JhLWFjN2QtNjYzZjcwMjVjYmVhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTG1mRU5YQUcxYVwvSVRNTFJBRkY4ajRzZDM4TTg2bFRONmlTcUprQldvMVo3U0FOaUhOTDZ3XC81UmYzNUoxbWhuIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com> <20190606200926.4029-4-yu-cheng.yu@intel.com>
- <20190607080832.GT3419@hirez.programming.kicks-ass.net> <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
- <20190607174336.GM3436@hirez.programming.kicks-ass.net> <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
- <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net> <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
- <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net> <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
- <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com> <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
- <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
-In-Reply-To: <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 10 Jun 2019 12:55:48 -0700
-X-Gmail-Original-Message-ID: <CALCETrVzgkhu=kjF4U5MEc+TJmsDJf8pVgnoPH5F4gTdsDF4rQ@mail.gmail.com>
-Message-ID: <CALCETrVzgkhu=kjF4U5MEc+TJmsDJf8pVgnoPH5F4gTdsDF4rQ@mail.gmail.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 12:52 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 6/10/19 12:38 PM, Yu-cheng Yu wrote:
-> >>> When an application starts, its highest stack address is determined.
-> >>> It uses that as the maximum the bitmap needs to cover.
-> >> Huh, I didn't think we ran code from the stack. ;)
-> >>
-> >> Especially given the way that we implemented the new 5-level-paging
-> >> address space, I don't think that expecting code to be below the stack
-> >> is a good universal expectation.
-> > Yes, you make a good point.  However, allowing the application manage the bitmap
-> > is the most efficient and flexible.  If the loader finds a legacy lib is beyond
-> > the bitmap can cover, it can deal with the problem by moving the lib to a lower
-> > address; or re-allocate the bitmap.
->
-> How could the loader reallocate the bitmap and coordinate with other
-> users of the bitmap?
->
-> > If the loader cannot allocate a big bitmap to cover all 5-level
-> > address space (the bitmap will be large), it can put all legacy lib's
-> > at lower address.  We cannot do these easily in the kernel.
->
-> This is actually an argument to do it in the kernel.  The kernel can
-> always allocate the virtual space however it wants, no matter how large.
->  If we hide the bitmap behind a kernel API then we can put it at high
-> 5-level user addresses because we also don't have to worry about the
-> high bits confusing userspace.
->
+> That is as far as I can get, trying to figure out how to rework
+> ctx->file to be properly ref counted, accessed and locked, is a major
+> task.. I don't even know right now what migrate_id is supposed to be
+> for :(
 
-That's a fairly compelling argument.
+By default, events for a new connection (rdma_cm_id) go to the fd (rdma_cm_event_channel) associated with the listen.  This allows migrating those events to a different fd.
 
-The bitmap is one bit per page, right?  So it's smaller than the
-address space by a factor of 8*2^12 == 2^15.  This means that, if we
-ever get full 64-bit linear addresses reserved entirely for userspace
-(which could happen if my perennial request to Intel to split user and
-kernel addresses completely happens), then we'll need 2^48 bytes for
-the bitmap, which simply does not fit in the address space of a legacy
-application.
+- Sean
