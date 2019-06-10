@@ -2,402 +2,139 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D5EC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A09C468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412ED206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuAZlrzg"
+	by mail.kernel.org (Postfix) with ESMTP id 6D55F20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560152924;
+	bh=KvIm6HtouftqCTee6FSb1zeL3AYFpzbI2I9FwwofGXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BYom0QO9oOR4owno9x8L7KXoFEjHK2JQO1t7I0kN6dlw5kwhuSuglLsIdi8Unqhi9
+	 aehfXdTmjGGFNbAZsew9wc5pwT3ZJ/IJ/RCVCsyEgtLmuzvWJdV462Dt3PfntufTeW
+	 99z+d3TUogGAlSpxOqJImm2917WVKR4viulxfqyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388004AbfFJHsb (ORCPT
+        id S2388073AbfFJHsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 03:48:31 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45506 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387761AbfFJHsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:48:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s11so4782106pfm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 00:48:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5H6DGPewNEGTnqFcxQkV5ULFccMkx7tHAf4aT320zBo=;
-        b=fuAZlrzghJQyjBeQzJKm7a1oKmhPTt1CDXD9kCq8JmD3C5KmYCQMmGzrabeVTmfSJn
-         5IUSD9TepfE/BTcTXraNClCJV9F/Y/m/zemipbJ824mCqD1PmaEunkH9d8ntGNcdhk1F
-         HR5ZYffJiwpadVom+uxdJY4TohPvv6xnsBtvdhj9m0JWK+yn1XR9BSPWGNVkbRWRiz4B
-         wY17kef9PXN4w9TQCka481b4Q0YenqG/Uv0aStLZ8vIDhc6Ai5yvlKs6O68QluiHHUSL
-         3kzTNQsRdIv/l7GsVRNMZSlKbO64iC1S1g3wfuO82RzTwN0MpRqrwxruYf6/xqpwAueO
-         gjcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5H6DGPewNEGTnqFcxQkV5ULFccMkx7tHAf4aT320zBo=;
-        b=mGXrSWxTtYxbhVTCr+/362ZJ/DBS4JUtrRoxBIOKHWIJM9mna11p0lsJmPBTeARcRx
-         CsKbtB0DbvBYc8IGVfBHCroKE6imGBh89McFOmoRENK+gCtz/u/6rD7ht6av/Cciv88A
-         V6LN4hi1CppmYin3XE4ZdJKB+UyPX+lSXXEoQSr8gRq7qLEsZ9RcLlQNTzb4hN4AMcwN
-         YBIRvYZYS5xMSWVRp+81dQ00gMl9F+QgbcDKHZDINOvlkY5CFDOfaSjy5CNpe4pe4NPC
-         ZudiIwvxebllQ7RB7K10ko5Z/gqgCF+bS202dSbYkwC7pAacDMxCo036zO3nnIuTZDz/
-         nJrw==
-X-Gm-Message-State: APjAAAXwec4h8gHdrvXme5h9HyW1MwRizAuhP7Vcsqf0FL9SiEY6WJbU
-        fYickC6bTaATebHvvdqrRbg=
-X-Google-Smtp-Source: APXvYqxZcl+IGkdR5yNjWx1nokoAgVP7ALkstYJ+FtmN9IqE+BWtOQnmWf43BFQMw05nBDXPcspgZA==
-X-Received: by 2002:a63:e54d:: with SMTP id z13mr14529118pgj.132.1560152909855;
-        Mon, 10 Jun 2019 00:48:29 -0700 (PDT)
-Received: from localhost.localdomain.localdomain ([192.157.107.159])
-        by smtp.gmail.com with ESMTPSA id l1sm9405222pgi.91.2019.06.10.00.48.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 00:48:29 -0700 (PDT)
-From:   Hao Xu <haoxu.linuxkernel@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     gneukum1@gmail.com, haoxu.linuxkernel@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: kpc2000: kpc_i2c: remove the macros inb_p and outb_p
-Date:   Mon, 10 Jun 2019 15:48:24 +0800
-Message-Id: <1560152904-31894-1-git-send-email-haoxu.linuxkernel@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 10 Jun 2019 03:48:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388005AbfFJHsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 03:48:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F9F206E0;
+        Mon, 10 Jun 2019 07:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560152922;
+        bh=KvIm6HtouftqCTee6FSb1zeL3AYFpzbI2I9FwwofGXI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V71pFYS9DZUK2y/72BBDM8kVV74UOhvwjsOuaZ4VZLLHfqr5ZoTJN1fP4OYwMzjTt
+         NZ12gOEAB/QY8SfMQVObGvhB+Pk+fRvU9OOHJdAzqg7vyBhSB0CV/6uXFpSSOWHqSu
+         AM6wlL541OocdIg7D5fb0tLJ0L8vlbfgN6rEaujc=
+Date:   Mon, 10 Jun 2019 09:48:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of AutoReporter
+Message-ID: <20190610074840.GB24746@kroah.com>
+References: <20190607153849.101321647@linuxfoundation.org>
+ <20190607153855.717899507@linuxfoundation.org>
+ <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
+ <20190610073119.GB20470@kroah.com>
+ <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove inb_p and outb_p to call readq/writeq directly.
+On Mon, Jun 10, 2019 at 09:34:10AM +0200, Jiri Slaby wrote:
+> On 10. 06. 19, 9:31, Greg Kroah-Hartman wrote:
+> > On Mon, Jun 10, 2019 at 08:27:30AM +0200, Jiri Slaby wrote:
+> >> On 07. 06. 19, 17:39, Greg Kroah-Hartman wrote:
+> >>> From: Jonathan Corbet <corbet@lwn.net>
+> >>>
+> >>> commit 2404dad1f67f8917e30fc22a85e0dbcc85b99955 upstream.
+> >>>
+> >>> AutoReporter is going away; recent versions of sphinx emit a warning like:
+> >>>
+> >>>   Documentation/sphinx/kerneldoc.py:125:
+> >>>       RemovedInSphinx20Warning: AutodocReporter is now deprecated.
+> >>>       Use sphinx.util.docutils.switch_source_input() instead.
+> >>>
+> >>> Make the switch.  But switch_source_input() only showed up in 1.7, so we
+> >>> have to do ugly version checks to keep things working in older versions.
+> >>
+> >> Hi,
+> >>
+> >> this patch breaks our build of kernel-docs on 5.1.*:
+> >> https://build.opensuse.org/package/live_build_log/Kernel:stable/kernel-docs/standard/x86_64
+> >>
+> >> The error is:
+> >> [  250s] reST markup error:
+> >> [  250s]
+> >> /home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/linux-5.1/Documentation/gpu/i915.rst:403:
+> >> (SEVERE/4) Title level inconsistent:
+> >> [  250s]
+> >> [  250s] Global GTT Fence Handling
+> >> [  250s] ~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>
+> >> Reverting the patch from 5.1.* makes it work again.
+> >>
+> >> 5.2-rc3 (includes the patch) is OK:
+> >> https://build.opensuse.org/package/live_build_log/Kernel:HEAD/kernel-docs/standard/x86_64
+> >>
+> >> So 5.1.* must be missing something now.
+> > 
+> > Odd.  running 'make htmldocs' on 5.1 with these patches applied works
+> > for me here.
+> > 
+> > What version of sphinx are you using to build the package with?
+> 
+> >From the log, it looks like 1.8.5 (it's tumbleweed):
+> 
+> $ osc rbl Kernel:stable/kernel-docs/standard/x86_64|grep -i sphinx
+> [   11s] cycle: python3-sphinx_rtd_theme -> python3-Sphinx
+> [   11s]   breaking dependency python3-Sphinx -> python3-sphinx_rtd_theme
+> [   32s] [226/263] cumulate python3-sphinxcontrib-websupport-1.1.0-1.2
+> [   32s] [239/263] cumulate python3-Sphinx-1.8.5-2.2
+> [   32s] [242/263] cumulate python3-sphinx_rtd_theme-0.4.1-1.3
+> [   72s]
+> python3-sphinxcontrib-websupport-1.1.0########################################
+> [   72s] python3-sphinx_rtd_theme-0.4.1-1.3
+> ########################################
+> [   73s] python3-Sphinx-1.8.5-2.2
+> ########################################
+> [   73s] update-alternatives: using /usr/bin/sphinx-apidoc-3.7 to
+> provide /usr/bin/sphinx-apidoc (sphinx-apidoc) in auto mode
+> [  101s] + patch -s -F0 -E -p1 --no-backup-if-mismatch -i
+> /home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/patches.kernel.org/5.1.8-055-docs-Fix-conf.py-for-Sphin-2.0.patch
+> [  101s] + patch -s -F0 -E -p1 --no-backup-if-mismatch -i
+> /home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/patches.kernel.org/5.1.8-057-doc-Cope-with-Sphinx-logging-deprecations.patch
+> [  102s]   SPHINX  htmldocs -->
+> file:///home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/linux-5.1/html/Documentation/output
+> [  103s] Running Sphinx v1.8.5
 
-Signed-off-by: Hao Xu <haoxu.linuxkernel@gmail.com>
----
-Changes in v2:
-- remove the macros inb_p/outb_p and use readq/writeq directly, per https://lkml.kernel.org/lkml/20190608134505.GA963@arch-01.home/
----
- drivers/staging/kpc2000/kpc2000_i2c.c | 112 ++++++++++++++++------------------
- 1 file changed, 53 insertions(+), 59 deletions(-)
+Hm, 2.1 here:
+	Running Sphinx v2.1.0
+perhaps Tumbleweed needs to update?  :)
 
-diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
-index 69e8773..246d5b3 100644
---- a/drivers/staging/kpc2000/kpc2000_i2c.c
-+++ b/drivers/staging/kpc2000/kpc2000_i2c.c
-@@ -122,12 +122,6 @@ struct i2c_device {
- /* Not really a feature, but it's convenient to handle it as such */
- #define FEATURE_IDF             BIT(15)
- 
--// FIXME!
--#undef inb_p
--#define inb_p(a) readq((void *)a)
--#undef outb_p
--#define outb_p(d, a) writeq(d, (void *)a)
--
- /* Make sure the SMBus host is ready to start transmitting.
-  * Return 0 if it is, -EBUSY if it is not.
-  */
-@@ -135,7 +129,7 @@ static int i801_check_pre(struct i2c_device *priv)
- {
- 	int status;
- 
--	status = inb_p(SMBHSTSTS(priv));
-+	status = readq((void *)SMBHSTSTS(priv));
- 	if (status & SMBHSTSTS_HOST_BUSY) {
- 		dev_err(&priv->adapter.dev, "SMBus is busy, can't use it! (status=%x)\n", status);
- 		return -EBUSY;
-@@ -144,8 +138,8 @@ static int i801_check_pre(struct i2c_device *priv)
- 	status &= STATUS_FLAGS;
- 	if (status) {
- 		//dev_dbg(&priv->adapter.dev, "Clearing status flags (%02x)\n", status);
--		outb_p(status, SMBHSTSTS(priv));
--		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
-+		writeq(status, (void *)SMBHSTSTS(priv));
-+		status = readq((void *)SMBHSTSTS(priv)) & STATUS_FLAGS;
- 		if (status) {
- 			dev_err(&priv->adapter.dev, "Failed clearing status flags (%02x)\n", status);
- 			return -EBUSY;
-@@ -164,15 +158,15 @@ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
- 		dev_err(&priv->adapter.dev, "Transaction timeout\n");
- 		/* try to stop the current command */
- 		dev_dbg(&priv->adapter.dev, "Terminating the current operation\n");
--		outb_p(inb_p(SMBHSTCNT(priv)) | SMBHSTCNT_KILL, SMBHSTCNT(priv));
-+		writeq(readq((void *)SMBHSTCNT(priv)) | SMBHSTCNT_KILL, (void *)SMBHSTCNT(priv));
- 		usleep_range(1000, 2000);
--		outb_p(inb_p(SMBHSTCNT(priv)) & (~SMBHSTCNT_KILL), SMBHSTCNT(priv));
-+		writeq(readq((void *)SMBHSTCNT(priv)) & (~SMBHSTCNT_KILL), (void *)SMBHSTCNT(priv));
- 
- 		/* Check if it worked */
--		status = inb_p(SMBHSTSTS(priv));
-+		status = readq((void *)SMBHSTSTS(priv));
- 		if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED))
- 			dev_err(&priv->adapter.dev, "Failed terminating the transaction\n");
--		outb_p(STATUS_FLAGS, SMBHSTSTS(priv));
-+		writeq(STATUS_FLAGS, (void *)SMBHSTSTS(priv));
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -191,8 +185,8 @@ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
- 
- 	if (result) {
- 		/* Clear error flags */
--		outb_p(status & STATUS_FLAGS, SMBHSTSTS(priv));
--		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
-+		writeq(status & STATUS_FLAGS, (void *)SMBHSTSTS(priv));
-+		status = readq((void *)SMBHSTSTS(priv)) & STATUS_FLAGS;
- 		if (status)
- 			dev_warn(&priv->adapter.dev, "Failed clearing status flags at end of transaction (%02x)\n", status);
- 	}
-@@ -212,19 +206,19 @@ static int i801_transaction(struct i2c_device *priv, int xact)
- 	/* the current contents of SMBHSTCNT can be overwritten, since PEC,
- 	 * INTREN, SMBSCMD are passed in xact
- 	 */
--	outb_p(xact | I801_START, SMBHSTCNT(priv));
-+	writeq(xact | I801_START, (void *)SMBHSTCNT(priv));
- 
- 	/* We will always wait for a fraction of a second! */
- 	do {
- 		usleep_range(250, 500);
--		status = inb_p(SMBHSTSTS(priv));
-+		status = readq((void *)SMBHSTSTS(priv));
- 	} while ((status & SMBHSTSTS_HOST_BUSY) && (timeout++ < MAX_RETRIES));
- 
- 	result = i801_check_post(priv, status, timeout > MAX_RETRIES);
- 	if (result < 0)
- 		return result;
- 
--	outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
-+	writeq(SMBHSTSTS_INTR, (void *)SMBHSTSTS(priv));
- 	return 0;
- }
- 
-@@ -236,13 +230,13 @@ static void i801_wait_hwpec(struct i2c_device *priv)
- 
- 	do {
- 		usleep_range(250, 500);
--		status = inb_p(SMBHSTSTS(priv));
-+		status = readq((void *)SMBHSTSTS(priv));
- 	} while ((!(status & SMBHSTSTS_INTR)) && (timeout++ < MAX_RETRIES));
- 
- 	if (timeout > MAX_RETRIES)
- 		dev_dbg(&priv->adapter.dev, "PEC Timeout!\n");
- 
--	outb_p(status, SMBHSTSTS(priv));
-+	writeq(status, (void *)SMBHSTSTS(priv));
- }
- 
- static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_smbus_data *data, char read_write, int hwpec)
-@@ -250,14 +244,14 @@ static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_sm
- 	int i, len;
- 	int status;
- 
--	inb_p(SMBHSTCNT(priv)); /* reset the data buffer index */
-+	readq((void *)SMBHSTCNT(priv)); /* reset the data buffer index */
- 
- 	/* Use 32-byte buffer to process this transaction */
- 	if (read_write == I2C_SMBUS_WRITE) {
- 		len = data->block[0];
--		outb_p(len, SMBHSTDAT0(priv));
-+		writeq(len, (void *)SMBHSTDAT0(priv));
- 		for (i = 0; i < len; i++)
--			outb_p(data->block[i+1], SMBBLKDAT(priv));
-+			writeq(data->block[i+1], (void *)SMBBLKDAT(priv));
- 	}
- 
- 	status = i801_transaction(priv, I801_BLOCK_DATA | ENABLE_INT9 | I801_PEC_EN * hwpec);
-@@ -265,13 +259,13 @@ static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_sm
- 		return status;
- 
- 	if (read_write == I2C_SMBUS_READ) {
--		len = inb_p(SMBHSTDAT0(priv));
-+		len = readq((void *)SMBHSTDAT0(priv));
- 		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX)
- 			return -EPROTO;
- 
- 		data->block[0] = len;
- 		for (i = 0; i < len; i++)
--			data->block[i + 1] = inb_p(SMBBLKDAT(priv));
-+			data->block[i + 1] = readq((void *)SMBBLKDAT(priv));
- 	}
- 	return 0;
- }
-@@ -291,8 +285,8 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
- 	len = data->block[0];
- 
- 	if (read_write == I2C_SMBUS_WRITE) {
--		outb_p(len, SMBHSTDAT0(priv));
--		outb_p(data->block[1], SMBBLKDAT(priv));
-+		writeq(len, (void *)SMBHSTDAT0(priv));
-+		writeq(data->block[1], (void *)SMBBLKDAT(priv));
- 	}
- 
- 	for (i = 1; i <= len; i++) {
-@@ -307,28 +301,28 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
- 			else
- 				smbcmd = I801_BLOCK_DATA;
- 		}
--		outb_p(smbcmd | ENABLE_INT9, SMBHSTCNT(priv));
-+		writeq(smbcmd | ENABLE_INT9, (void *)SMBHSTCNT(priv));
- 
- 		if (i == 1)
--			outb_p(inb(SMBHSTCNT(priv)) | I801_START, SMBHSTCNT(priv));
-+			writeq(inb(SMBHSTCNT(priv)) | I801_START, (void *)SMBHSTCNT(priv));
- 		/* We will always wait for a fraction of a second! */
- 		timeout = 0;
- 		do {
- 			usleep_range(250, 500);
--			status = inb_p(SMBHSTSTS(priv));
-+			status = readq((void *)SMBHSTSTS(priv));
- 		} while ((!(status & SMBHSTSTS_BYTE_DONE)) && (timeout++ < MAX_RETRIES));
- 
- 		result = i801_check_post(priv, status, timeout > MAX_RETRIES);
- 		if (result < 0)
- 			return result;
- 		if (i == 1 && read_write == I2C_SMBUS_READ && command != I2C_SMBUS_I2C_BLOCK_DATA) {
--			len = inb_p(SMBHSTDAT0(priv));
-+			len = readq((void *)SMBHSTDAT0(priv));
- 			if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
- 				dev_err(&priv->adapter.dev, "Illegal SMBus block read size %d\n", len);
- 				/* Recover */
--				while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY)
--					outb_p(SMBHSTSTS_BYTE_DONE, SMBHSTSTS(priv));
--				outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
-+				while (readq((void *)SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY)
-+					writeq(SMBHSTSTS_BYTE_DONE, (void *)SMBHSTSTS(priv));
-+				writeq(SMBHSTSTS_INTR, (void *)SMBHSTSTS(priv));
- 				return -EPROTO;
- 			}
- 			data->block[0] = len;
-@@ -336,11 +330,11 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
- 
- 		/* Retrieve/store value in SMBBLKDAT */
- 		if (read_write == I2C_SMBUS_READ)
--			data->block[i] = inb_p(SMBBLKDAT(priv));
-+			data->block[i] = readq((void *)SMBBLKDAT(priv));
- 		if (read_write == I2C_SMBUS_WRITE && i+1 <= len)
--			outb_p(data->block[i+1], SMBBLKDAT(priv));
-+			writeq(data->block[i+1], (void *)SMBBLKDAT(priv));
- 		/* signals SMBBLKDAT ready */
--		outb_p(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, SMBHSTSTS(priv));
-+		writeq(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, (void *)SMBHSTSTS(priv));
- 	}
- 
- 	return 0;
-@@ -348,8 +342,8 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
- 
- static int i801_set_block_buffer_mode(struct i2c_device *priv)
- {
--	outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_E32B, SMBAUXCTL(priv));
--	if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0)
-+	writeq(readq((void *)SMBAUXCTL(priv)) | SMBAUXCTL_E32B, (void *)SMBAUXCTL(priv));
-+	if ((readq((void *)SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0)
- 		return -EIO;
- 	return 0;
- }
-@@ -412,39 +406,39 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 	switch (size) {
- 	case I2C_SMBUS_QUICK:
- 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_QUICK\n");
--		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
-+		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
- 		xact = I801_QUICK;
- 		break;
- 	case I2C_SMBUS_BYTE:
- 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE\n");
- 
--		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
-+		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
- 		if (read_write == I2C_SMBUS_WRITE)
--			outb_p(command, SMBHSTCMD(priv));
-+			writeq(command, (void *)SMBHSTCMD(priv));
- 		xact = I801_BYTE;
- 		break;
- 	case I2C_SMBUS_BYTE_DATA:
- 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE_DATA\n");
--		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--		outb_p(command, SMBHSTCMD(priv));
-+		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
-+		writeq(command, (void *)SMBHSTCMD(priv));
- 		if (read_write == I2C_SMBUS_WRITE)
--			outb_p(data->byte, SMBHSTDAT0(priv));
-+			writeq(data->byte, (void *)SMBHSTDAT0(priv));
- 		xact = I801_BYTE_DATA;
- 		break;
- 	case I2C_SMBUS_WORD_DATA:
- 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_WORD_DATA\n");
--		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--		outb_p(command, SMBHSTCMD(priv));
-+		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
-+		writeq(command, (void *)SMBHSTCMD(priv));
- 		if (read_write == I2C_SMBUS_WRITE) {
--			outb_p(data->word & 0xff, SMBHSTDAT0(priv));
--			outb_p((data->word & 0xff00) >> 8, SMBHSTDAT1(priv));
-+			writeq(data->word & 0xff, (void *)SMBHSTDAT0(priv));
-+			writeq((data->word & 0xff00) >> 8, (void *)SMBHSTDAT1(priv));
- 		}
- 		xact = I801_WORD_DATA;
- 		break;
- 	case I2C_SMBUS_BLOCK_DATA:
- 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BLOCK_DATA\n");
--		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--		outb_p(command, SMBHSTCMD(priv));
-+		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
-+		writeq(command, (void *)SMBHSTCMD(priv));
- 		block = 1;
- 		break;
- 	case I2C_SMBUS_I2C_BLOCK_DATA:
-@@ -452,14 +446,14 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 		/* NB: page 240 of ICH5 datasheet shows that the R/#W
- 		 * bit should be cleared here, even when reading
- 		 */
--		outb_p((addr & 0x7f) << 1, SMBHSTADD(priv));
-+		writeq((addr & 0x7f) << 1, (void *)SMBHSTADD(priv));
- 		if (read_write == I2C_SMBUS_READ) {
- 			/* NB: page 240 of ICH5 datasheet also shows
- 			 * that DATA1 is the cmd field when reading
- 			 */
--			outb_p(command, SMBHSTDAT1(priv));
-+			writeq(command, (void *)SMBHSTDAT1(priv));
- 		} else {
--			outb_p(command, SMBHSTCMD(priv));
-+			writeq(command, (void *)SMBHSTCMD(priv));
- 		}
- 		block = 1;
- 		break;
-@@ -470,10 +464,10 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 
- 	if (hwpec) { /* enable/disable hardware PEC */
- 		dev_dbg(&priv->adapter.dev, "  [acc] hwpec: yes\n");
--		outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_CRC, SMBAUXCTL(priv));
-+		writeq(readq((void *)SMBAUXCTL(priv)) | SMBAUXCTL_CRC, (void *)SMBAUXCTL(priv));
- 	} else {
- 		dev_dbg(&priv->adapter.dev, "  [acc] hwpec: no\n");
--		outb_p(inb_p(SMBAUXCTL(priv)) & (~SMBAUXCTL_CRC), SMBAUXCTL(priv));
-+		writeq(readq((void *)SMBAUXCTL(priv)) & (~SMBAUXCTL_CRC), (void *)SMBAUXCTL(priv));
- 	}
- 
- 	if (block) {
-@@ -491,7 +485,7 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 	 */
- 	if (hwpec || block) {
- 		dev_dbg(&priv->adapter.dev, "  [acc] hwpec || block\n");
--		outb_p(inb_p(SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), SMBAUXCTL(priv));
-+		writeq(readq((void *)SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), (void *)SMBAUXCTL(priv));
- 	}
- 	if (block) {
- 		dev_dbg(&priv->adapter.dev, "  [acc] block\n");
-@@ -510,11 +504,11 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 	case I801_BYTE:  /* Result put in SMBHSTDAT0 */
- 	case I801_BYTE_DATA:
- 		dev_dbg(&priv->adapter.dev, "  [acc] I801_BYTE or I801_BYTE_DATA\n");
--		data->byte = inb_p(SMBHSTDAT0(priv));
-+		data->byte = readq((void *)SMBHSTDAT0(priv));
- 		break;
- 	case I801_WORD_DATA:
- 		dev_dbg(&priv->adapter.dev, "  [acc] I801_WORD_DATA\n");
--		data->word = inb_p(SMBHSTDAT0(priv)) + (inb_p(SMBHSTDAT1(priv)) << 8);
-+		data->word = readq((void *)SMBHSTDAT0(priv)) + (readq((void *)SMBHSTDAT1(priv)) << 8);
- 		break;
- 	}
- 	return 0;
--- 
-1.8.3.1
+Anyway, this should not be breaking, if Jon doesn't have any ideas, I'll
+just drop these changes.
 
+thanks,
+
+greg k-h
