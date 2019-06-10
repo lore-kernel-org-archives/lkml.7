@@ -2,129 +2,329 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4487DC4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBCFC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9A320820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D81020859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:48:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="TsTK7lUj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ueNjZjx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388663AbfFJSqA (ORCPT
+        id S2388717AbfFJSsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:46:00 -0400
-Received: from mail-eopbgr750044.outbound.protection.outlook.com ([40.107.75.44]:16033
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387643AbfFJSp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:45:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D7UoZtI4cOmaUIZpi90EYVLT7+4P18Hw37/tcKZEN9o=;
- b=TsTK7lUjcxWUshBhc+kMj9iUajBttsf9f1FrPuQJEEtJNE+IptZdP/fRDzZvwNgur8disExjsRGp4Shbf5BQvqs6IX4QJzFZZUxFX8qjpUOVixgXzuAdzB0cPxXqKeV6VJzfKmclQBOP5bwsb0tRmGNy1CdIaj3XaN4lJRpnQW4=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB6389.namprd05.prod.outlook.com (20.178.232.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.7; Mon, 10 Jun 2019 18:45:53 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::134:af66:bedb:ead9]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::134:af66:bedb:ead9%3]) with mapi id 15.20.1987.008; Mon, 10 Jun 2019
- 18:45:52 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 13/15] x86/static_call: Add inline static call
- implementation for x86-64
-Thread-Topic: [PATCH 13/15] x86/static_call: Add inline static call
- implementation for x86-64
-Thread-Index: AQHVG6HbUZEsVsjdrUOVxRZQdAn/WKaVPtyAgAADVIA=
-Date:   Mon, 10 Jun 2019 18:45:52 +0000
-Message-ID: <40096B8A-C063-4219-89FC-A8E42981BF28@vmware.com>
-References: <20190605130753.327195108@infradead.org>
- <20190605131945.313688119@infradead.org>
- <20190610183357.zj6rwdpgw36anpfc@treble>
-In-Reply-To: <20190610183357.zj6rwdpgw36anpfc@treble>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8d0dbba8-dd68-444e-dda0-08d6edd3dd83
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB6389;
-x-ms-traffictypediagnostic: BYAPR05MB6389:
-x-microsoft-antispam-prvs: <BYAPR05MB6389AF282291FD1F4FFCC31AD0130@BYAPR05MB6389.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(366004)(136003)(396003)(199004)(54094003)(189003)(6436002)(25786009)(5660300002)(86362001)(83716004)(71190400001)(71200400001)(3846002)(6116002)(53936002)(6246003)(4326008)(229853002)(33656002)(256004)(316002)(82746002)(6486002)(6512007)(54906003)(81166006)(186003)(486006)(2616005)(11346002)(305945005)(446003)(8676002)(66066001)(7736002)(81156014)(7416002)(8936002)(76116006)(2906002)(476003)(66556008)(66476007)(64756008)(68736007)(66946007)(66446008)(76176011)(99286004)(36756003)(6916009)(73956011)(102836004)(26005)(478600001)(6506007)(14454004)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6389;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Nd+YuBq3TtzmF0vO7+XogWeH1kNs5a3Pl4jz91Kuxuufh58Cr6+UGMm3kUmRVBvCMJLLoRwUpvBG8ESRwuVzV1VPQkEm13UlB3tRjWN5+WLMnJBWvsCjVJA7vwn9wT5QNQM5m82bM5zE0nvXjpJpzcQg37GfALuSEfhdmoeSe1V1qAYtNusCt9vC3ab027bFF8UBsAsiVrqokNix7sKUJ5awyp0tf6pZMF9wIGDpYcTSmcxsquNKr7dYN0kp+/uR8X7NaSJtAi+CJCXtoLy+P0ckU2IlkPAQmoagrLETvCFCL+2E16XGW4gudS6KMsgUfA6gRXpsIDf4PnnThfKZLv5WcL1GeneNGPs1yApC6vHBJ37srqzc4etbSKo4f1Bp6RNytUUUAoFd3RIhJeJ7wYgPY8O5qXrsuyKfNe/1jUo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ED5D4475B15428419DB0B4DF2C368EA9@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 10 Jun 2019 14:48:02 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39939 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387643AbfFJSsB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 14:48:01 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c70so6092563qkg.7;
+        Mon, 10 Jun 2019 11:48:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FEliiaLTKP8myXUgDNGHzRUM+K36+7Eaw0xHvfUmPyQ=;
+        b=ueNjZjx0sJz73Xq9zKh6hoCNxjWxZWeKfeh4anO0WLYmpyzXckJMB0rpgqvQXi7u4D
+         5m3c3ggZTEUHS5yO0UJFm6Nl2SPFLdUutirGL1D1HR/wqk31hljDt/UvwL2/AzlGg2T6
+         UmChhzsrMhxMbKXpV1pbuIB6WySkrtaxevLDBaor4spYOZzR4h7JA/zfVSCCMk3vuQGv
+         3uXGZwUBs6svKSd8fjXe6JZReIkKGs6/wEddy9Pr9fCfrrJ2k34Xbrcmj1qaLrSzI967
+         quv4eE304lgLa1rp0JgYQ0ZotmQEiWHdaFcG6am0vvVebgSdlzO/Kzd/r5cghNcMmS+d
+         lTAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FEliiaLTKP8myXUgDNGHzRUM+K36+7Eaw0xHvfUmPyQ=;
+        b=Vp39OKBWsFfkMhiRE1l+hoE6jJYpsYKQHfbznPDiUrB17zYbIIR/pqZSCPRAYzQDaq
+         SxZMu2ztaNoTEBbexgsuutT4hJgqz8iTZOvSUszxlkTLt2Dp0R7N2o0nCD9Ik6LFEPD4
+         MwiLw8nLvFPY1wDhOnAZjL9vbbr6JrNwYKGjifh/ICNOUHq5cecfwR/gEoMdwWr65Aj6
+         DulwgklhWX8k2mfy9dbLZ60Inf41YZbPsNf+avgiM26+vsMCmjxxxbz1GHakzG7boM0e
+         WQPmt4RHfMQg35J2w2H/W4O7IJu8qUNmCJE7bVkPKbDDvUabTTysdwS1YoRMDCNmv31R
+         ZOpw==
+X-Gm-Message-State: APjAAAU86/Y5VTGi0oFFfISjRmVqS5nSflUix96lC3mpMCr4t+D0g5fx
+        BP6E0/dUMypDoHA5A4pYJmqU+XwX7lU=
+X-Google-Smtp-Source: APXvYqyIBZYI3GNEPpmwbLLr1TC49VIEUxDnZKsex8CV2BNabGKfgk26QtARRAvN/VazLEtgeM+WYA==
+X-Received: by 2002:ae9:f801:: with SMTP id x1mr14361175qkh.151.1560192480005;
+        Mon, 10 Jun 2019 11:48:00 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id n19sm4812199qkg.58.2019.06.10.11.47.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 11:47:58 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5428041149; Mon, 10 Jun 2019 15:47:54 -0300 (-03)
+Date:   Mon, 10 Jun 2019 15:47:54 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] perf augmented_raw_syscalls: Support arm64 raw
+ syscalls
+Message-ID: <20190610184754.GU21245@kernel.org>
+References: <20190606094845.4800-1-leo.yan@linaro.org>
+ <20190606094845.4800-4-leo.yan@linaro.org>
+ <20190606133838.GC30166@kernel.org>
+ <20190606141231.GC5970@leoy-ThinkPad-X240s>
+ <20190606144412.GC21245@kernel.org>
+ <20190607095831.GG5970@leoy-ThinkPad-X240s>
+ <20190609131849.GB6357@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d0dbba8-dd68-444e-dda0-08d6edd3dd83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 18:45:52.7824
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6389
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190609131849.GB6357@leoy-ThinkPad-X240s>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdW4gMTAsIDIwMTksIGF0IDExOjMzIEFNLCBKb3NoIFBvaW1ib2V1ZiA8anBvaW1ib2VA
-cmVkaGF0LmNvbT4gd3JvdGU6DQo+IA0KPiBPbiBXZWQsIEp1biAwNSwgMjAxOSBhdCAwMzowODow
-NlBNICswMjAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4+IC0tLSBhL2FyY2gveDg2L2luY2x1
-ZGUvYXNtL3N0YXRpY19jYWxsLmgNCj4+ICsrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL3N0YXRp
-Y19jYWxsLmgNCj4+IEBAIC0yLDYgKzIsMjAgQEANCj4+ICNpZm5kZWYgX0FTTV9TVEFUSUNfQ0FM
-TF9IDQo+PiAjZGVmaW5lIF9BU01fU1RBVElDX0NBTExfSA0KPj4gDQo+PiArI2luY2x1ZGUgPGFz
-bS9hc20tb2Zmc2V0cy5oPg0KPj4gKw0KPj4gKyNpZmRlZiBDT05GSUdfSEFWRV9TVEFUSUNfQ0FM
-TF9JTkxJTkUNCj4+ICsNCj4+ICsvKg0KPj4gKyAqIFRoaXMgdHJhbXBvbGluZSBpcyBvbmx5IHVz
-ZWQgZHVyaW5nIGJvb3QgLyBtb2R1bGUgaW5pdCwgc28gaXQncyBzYWZlIHRvIHVzZQ0KPj4gKyAq
-IHRoZSBpbmRpcmVjdCBicmFuY2ggd2l0aG91dCBhIHJldHBvbGluZS4NCj4+ICsgKi8NCj4+ICsj
-ZGVmaW5lIF9fQVJDSF9TVEFUSUNfQ0FMTF9UUkFNUF9KTVAoa2V5LCBmdW5jKQkJCQlcDQo+PiAr
-CUFOTk9UQVRFX1JFVFBPTElORV9TQUZFCQkJCQkJXA0KPj4gKwkiam1wcSAqIiBfX3N0cmluZ2lm
-eShrZXkpICIrIiBfX3N0cmluZ2lmeShTQ19LRVlfZnVuYykgIiglcmlwKSBcbiINCj4+ICsNCj4+
-ICsjZWxzZSAvKiAhQ09ORklHX0hBVkVfU1RBVElDX0NBTExfSU5MSU5FICovDQo+IA0KPiBJIHdv
-bmRlciBpZiB3ZSBjYW4gc2ltcGxpZnkgdGhpcyAoYW5kIGRyb3AgdGhlIGluZGlyZWN0IGJyYW5j
-aCkgYnkNCj4gZ2V0dGluZyByaWQgb2YgdGhlIGFib3ZlIGNydWZ0LCBhbmQgaW5zdGVhZCBqdXN0
-IHVzZSB0aGUgb3V0LW9mLWxpbmUNCj4gdHJhbXBvbGluZSBhcyB0aGUgZGVmYXVsdCBmb3IgaW5s
-aW5lIGFzIHdlbGwuDQo+IA0KPiBUaGVuIHRoZSBpbmxpbmUgY2FzZSBjb3VsZCBmYWxsIGJhY2sg
-dG8gdGhlIG91dC1vZi1saW5lIGltcGxlbWVudGF0aW9uDQo+IChieSBwYXRjaGluZyB0aGUgdHJh
-bXBvbGluZSdzIGptcCBkZXN0KSBiZWZvcmUgc3RhdGljX2NhbGxfaW5pdGlhbGl6ZWQNCj4gaXMg
-c2V0Lg0KDQpJIG11c3QgYmUgbWlzc2luZyBzb21lIGNvbnRleHQgLSBidXQgd2hhdCBndWFyYW50
-ZWVzIHRoYXQgdGhpcyBpbmRpcmVjdA0KYnJhbmNoIHdvdWxkIGJlIGV4YWN0bHkgNSBieXRlcyBs
-b25nPyBJc27igJl0IHRoZXJlIGFuIGFzc3VtcHRpb24gdGhhdCB0aGlzDQp3b3VsZCBiZSB0aGUg
-Y2FzZT8gU2hvdWxkbuKAmXQgdGhlcmUgYmUgc29tZSBoYW5kbGluZyBvZiB0aGUgcGFkZGluZz8N
-Cg0K
+Em Sun, Jun 09, 2019 at 09:18:49PM +0800, Leo Yan escreveu:
+> On Fri, Jun 07, 2019 at 05:58:31PM +0800, Leo Yan wrote:
+> > Hi Arnaldo,
+> > 
+> > On Thu, Jun 06, 2019 at 11:44:12AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > Em Thu, Jun 06, 2019 at 10:12:31PM +0800, Leo Yan escreveu:
+> > > > Hi Arnaldo,
+> > > > 
+> > > > On Thu, Jun 06, 2019 at 10:38:38AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > Em Thu, Jun 06, 2019 at 05:48:44PM +0800, Leo Yan escreveu:
+> > > > > > This patch adds support for arm64 raw syscall numbers so that we can use
+> > > > > > it on arm64 platform.
+> > > > > > 
+> > > > > > After applied this patch, we need to specify macro -D__aarch64__ or
+> > > > > > -D__x86_64__ in compilation option so Clang can use the corresponding
+> > > > > > syscall numbers for arm64 or x86_64 respectively, other architectures
+> > > > > > will report failure when compilation.
+> > > > > 
+> > > > > So, please check what I have in my perf/core branch, I've completely
+> > > > > removed arch specific stuff from augmented_raw_syscalls.c.
+> > > > > 
+> > > > > What is done now is use a map to specify what to copy, that same map
+> > > > > that is used to state which syscalls should be traced.
+> > > > > 
+> > > > > It uses that tools/perf/arch/arm64/entry/syscalls/mksyscalltbl to figure
+> > > > > out the mapping of syscall names to ids, just like is done for x86_64
+> > > > > and other arches, falling back to audit-libs when that syscalltbl thing
+> > > > > is not present.
+> > > > 
+> > > > Actually I have noticed mksyscalltbl has been enabled for arm64, and
+> > > > had to say your approach is much better :)
+> > > > 
+> > > > Thanks for the info and I will try your patch at my side.
+> > > 
+> > > That is excellent news! I'm eager to hear from you if this perf+BPF
+> > > integration experiment works for arm64.
+> > 
+> > I tested with the lastest perf/core branch which contains the patch:
+> > 'perf augmented_raw_syscalls: Tell which args are filenames and how
+> > many bytes to copy' and got the error as below:
+> > 
+> > # perf trace -e string -e /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c
+> > Error:  Invalid syscall access, chmod, chown, creat, futimesat, lchown, link, lstat, mkdir, mknod, newfstatat, open, readlink, rename,
+> > rmdir, stat, statfs, symlink, truncate, unlink
+
+Humm, I think that we can just make the code that parses the
+tools/perf/trace/strace/groups/string file to ignore syscalls it can't
+find in the syscall_tbl, i.e. trace those if they exist in the arch.
+
+> > Hint:   try 'perf list syscalls:sys_enter_*'
+> > Hint:   and: 'man syscalls'
+> > 
+> > So seems mksyscalltbl has not included completely for syscalls, I
+> > use below command to generate syscalltbl_arm64[] array and it don't
+> > include related entries for access, chmod, chown, etc ...
+
+So, we need to investigate why is that these are missing, good thing we
+have this 'strings' group :-)
+
+> > You could refer the generated syscalltbl_arm64 in:
+> > http://paste.ubuntu.com/p/8Bj7Jkm2mP/
+> 
+> After digging into this issue on Arm64, below is summary info:
+> 
+> - arm64 uses the header include/uapi/linux/unistd.h to define system
+>   call numbers, in this header some system calls are not defined (I
+>   think the reason is these system calls are obsolete at the end) so the
+>   corresponding strings are missed in the array syscalltbl_native,
+>   for arm64 the array is defined in the file:
+>   tools/perf/arch/arm64/include/generated/asm/syscalls.c.
+
+Yeah, I looked at the 'access' case and indeed it is not present in
+include/uapi/asm-generic/unistd.h, which is the place
+include/uapi/linux/unistd.h ends up.
+
+Ok please take a look at the patch at the end of this message, should be ok?
+
+I tested it by changing the strace/gorups/string file to have a few
+unknown syscalls, running it with -v we see:
+
+[root@quaco perf]# perf trace -v -e string ls
+Skipping unknown syscalls: access99, acct99, add_key99
+<SNIP other verbose messages>
+normal operation not considering those unknown syscalls.
+
+>   On the other hand, the file tools/perf/trace/strace/groups/string
+>   stores the required system call strings, these system call strings
+>   are based on x86_64 platform but not for arm64, the strings mismatch
+>   with the system call defined in the array syscalltbl_native.  This
+>   is the reason why reports the fail: "Error:  Invalid syscall access,
+>   chmod, chown, creat, futimesat, lchown, link, lstat, mkdir, mknod,
+>   newfstatat, open, readlink, rename, rmdir, stat, statfs, symlink,
+>   truncate, unlink".
+> 
+>   I tried to manually remove these reported strings from
+>   tools/perf/trace/strace/groups/string, then 'perf trace' can work
+>   well.
+> 
+>   But I don't know what's a good way to proceed.  Seems to me, we can
+>   create a dedicated string file
+>   tools/perf/trace/strace/groups/uapi_string which can be used to
+>   match with system calls definitions in include/uapi/linux/unistd.h.
+>   If there have other more general methods, will be great.
+ 
+> - As a side topic, arm64 also supports aarch32 compat system call
+>   which are defined in header arch/arm64/include/asm/unistd32.h.
+> 
+>   For either aarch64 or aarch32 system call, both of them finally will
+>   invoke function el0_svc_common() to handle system call [1].  But so
+>   far we don't distinguish the system call numbers is for aarch64 or
+>   aarch32 and always consider it's aarch64 system call.
+> 
+>   I think we can set an extra bit (e.g. use the 16th bit in 32 bits
+>   signed int) to indicate it's a aarch32 compat system call, but not
+>   sure if this is general method or not.
+
+compat syscalls were not supported because of limitations in the
+raw_syscalls:sys_{enter,exit} tracepoints I can't recall from the top of
+my head right now, I think that looking at that code
+(raw_syscalls:sys_{enter,exit}) git log history may provide the
+explanation.
+ 
+>   Maybe there have existed solution in other architectures for this,
+>   especially other platforms also should support 32 bits and 64 bits
+>   system calls along with the architecture evoluation, so want to
+>   inquiry firstly to avoid duplicate works.
+> 
+> Thanks a lot for suggestions!
+> Leo.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/kernel/syscall.c#n93
+
+- Arnaldo
+
+
+commit e0b34a78c4ed0a6422f5b2dafa0c8936e537ee41
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Mon Jun 10 15:37:45 2019 -0300
+
+    perf trace: Skip unknown syscalls when expanding strace like syscall groups
+    
+    We have $INSTALL_DIR/share/perf-core/strace/groups/string files with
+    syscalls that should be selected when 'string' is used, meaning, in this
+    case, syscalls that receive as one of its arguments a string, like a
+    pathname.
+    
+    But those were first selected and tested on x86_64, and end up failing
+    in architectures where some of those syscalls are not available, like
+    the 'access' syscall on arm64, which makes using 'perf trace -e string'
+    in such archs to fail.
+    
+    Since this the routine doing the validation is used only when reading
+    such files, do not fail when some syscall is not found in the
+    syscalltbl, instead just use pr_debug() to register that in case people
+    are suspicious of problems.
+    
+    Now using 'perf trace -e string' should work on arm64, selecting only
+    the syscalls that have a string and are available on that architecture.
+    
+    Reported-by: Leo Yan <leo.yan@linaro.org>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Alexei Starovoitov <ast@kernel.org>
+    Cc: Daniel Borkmann <daniel@iogearbox.net>
+    Cc: Jiri Olsa <jolsa@redhat.com>
+    Cc: Martin KaFai Lau <kafai@fb.com>
+    Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+    Cc: Mike Leach <mike.leach@linaro.org>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Song Liu <songliubraving@fb.com>
+    Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+    Cc: Yonghong Song <yhs@fb.com>
+    Link: https://lkml.kernel.org/n/tip-oa4c2x8p3587jme0g89fyg18@git.kernel.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 1a2a605cf068..eb70a4b71755 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1529,6 +1529,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ static int trace__validate_ev_qualifier(struct trace *trace)
+ {
+ 	int err = 0, i;
++	bool printed_invalid_prefix = false;
+ 	size_t nr_allocated;
+ 	struct str_node *pos;
+ 
+@@ -1555,14 +1556,15 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+ 			if (id >= 0)
+ 				goto matches;
+ 
+-			if (err == 0) {
+-				fputs("Error:\tInvalid syscall ", trace->output);
+-				err = -EINVAL;
++			if (!printed_invalid_prefix) {
++				pr_debug("Skipping unknown syscalls: ");
++				printed_invalid_prefix = true;
+ 			} else {
+-				fputs(", ", trace->output);
++				pr_debug(", ");
+ 			}
+ 
+-			fputs(sc, trace->output);
++			pr_debug("%s", sc);
++			continue;
+ 		}
+ matches:
+ 		trace->ev_qualifier_ids.entries[i++] = id;
+@@ -1591,15 +1593,14 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+ 		}
+ 	}
+ 
+-	if (err < 0) {
+-		fputs("\nHint:\ttry 'perf list syscalls:sys_enter_*'"
+-		      "\nHint:\tand: 'man syscalls'\n", trace->output);
+-out_free:
+-		zfree(&trace->ev_qualifier_ids.entries);
+-		trace->ev_qualifier_ids.nr = 0;
+-	}
+ out:
++	if (printed_invalid_prefix)
++		pr_debug("\n");
+ 	return err;
++out_free:
++	zfree(&trace->ev_qualifier_ids.entries);
++	trace->ev_qualifier_ids.nr = 0;
++	goto out;
+ }
+ 
+ /*
