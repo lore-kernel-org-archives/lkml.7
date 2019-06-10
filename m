@@ -4,197 +4,217 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7FCC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC24C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20BA6206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA6F208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:36:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389406AbfFJKej (ORCPT
+        id S2389499AbfFJKgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:34:39 -0400
-Received: from mail.us.es ([193.147.175.20]:46266 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388685AbfFJKei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:34:38 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id B90326D4E9
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 12:34:35 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id A8B61DA78D
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 12:34:35 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id A7E98DA737; Mon, 10 Jun 2019 12:34:35 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id C0701DA70C;
-        Mon, 10 Jun 2019 12:34:28 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 10 Jun 2019 12:33:47 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 4F1B6406B68B;
-        Mon, 10 Jun 2019 12:34:23 +0200 (CEST)
-Date:   Mon, 10 Jun 2019 12:34:17 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Lukasz Pawelczyk <l.pawelczyk@samsung.com>
-Cc:     Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukasz Pawelczyk <havner@gmail.com>
-Subject: Re: [PATCH v4] extensions: libxt_owner: Add supplementary groups
- option
-Message-ID: <20190610103417.jg7xnaprczu2kkq2@salvia>
-References: <CGME20190610094353eucas1p29eb71e82aa621c1e387513571a78710b@eucas1p2.samsung.com>
- <20190610094238.24904-1-l.pawelczyk@samsung.com>
+        Mon, 10 Jun 2019 06:36:39 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58327 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388708AbfFJKgj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:36:39 -0400
+X-UUID: e94ee55e12924c7ab24c280262a0d252-20190610
+X-UUID: e94ee55e12924c7ab24c280262a0d252-20190610
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 334693022; Mon, 10 Jun 2019 18:36:35 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 10 Jun 2019 18:36:33 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 10 Jun 2019 18:36:33 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, <linux-crypto@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        Crystal Guo <Crystal.Guo@mediatek.com>
+Subject: [PATCH v3 3/3] hwrng: add mtk-sec-rng driver
+Date:   Mon, 10 Jun 2019 18:36:24 +0800
+Message-ID: <1560162984-26104-4-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1560162984-26104-1-git-send-email-neal.liu@mediatek.com>
+References: <1560162984-26104-1-git-send-email-neal.liu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610094238.24904-1-l.pawelczyk@samsung.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 11:42:38AM +0200, Lukasz Pawelczyk wrote:
-> The --suppl-groups option causes GIDs specified with --gid-owner to be
-> also checked in the supplementary groups of a process.
+For MediaTek SoCs on ARMv8 with TrustZone enabled, peripherals like
+entropy sources is not accessible from normal world (linux) and
+rather accessible from secure world (ATF/TEE) only. This driver aims
+to provide a generic interface to ATF rng service.
 
-Could you also extend iptables/extensions/libxt_owner.t ?
+Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+---
+ drivers/char/hw_random/Kconfig       |   16 ++++++
+ drivers/char/hw_random/Makefile      |    1 +
+ drivers/char/hw_random/mtk-sec-rng.c |   97 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 114 insertions(+)
+ create mode 100644 drivers/char/hw_random/mtk-sec-rng.c
 
-Thanks.
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index 25a7d8f..6c82a3b 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -398,6 +398,22 @@ config HW_RANDOM_MTK
+ 
+ 	  If unsure, say Y.
+ 
++config HW_RANDOM_MTK_SEC
++	tristate "MediaTek Security Random Number Generator support"
++	depends on HW_RANDOM
++	depends on ARCH_MEDIATEK || COMPILE_TEST
++	default HW_RANDOM
++	help
++	  This driver provides kernel-side support for the Random Number
++	  Generator hardware found on MediaTek SoCs. The difference with
++	  mtk-rng is the Random Number Generator hardware is secure
++	  access only.
++
++	  To compile this driver as a module, choose M here. the
++	  module will be called mtk-sec-rng.
++
++	  If unsure, say Y.
++
+ config HW_RANDOM_S390
+ 	tristate "S390 True Random Number Generator support"
+ 	depends on S390
+diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+index 7c9ef4a..0ae4993 100644
+--- a/drivers/char/hw_random/Makefile
++++ b/drivers/char/hw_random/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_HW_RANDOM_PIC32) += pic32-rng.o
+ obj-$(CONFIG_HW_RANDOM_MESON) += meson-rng.o
+ obj-$(CONFIG_HW_RANDOM_CAVIUM) += cavium-rng.o cavium-rng-vf.o
+ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
++obj-$(CONFIG_HW_RANDOM_MTK_SEC) += mtk-sec-rng.o
+ obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
+ obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+ obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+diff --git a/drivers/char/hw_random/mtk-sec-rng.c b/drivers/char/hw_random/mtk-sec-rng.c
+new file mode 100644
+index 0000000..ecd2e29
+--- /dev/null
++++ b/drivers/char/hw_random/mtk-sec-rng.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 MediaTek Inc.
++ */
++
++#include <linux/arm-smccc.h>
++#include <linux/hw_random.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/soc/mediatek/mtk_sip_svc.h>
++
++#define MT67XX_RNG_MAGIC	0x74726e67
++#define SMC_RET_NUM		4
++#define MTK_SEC_RND_SIZE	(sizeof(u32) * SMC_RET_NUM)
++
++struct mtk_sec_rng_priv {
++	struct hwrng rng;
++};
++
++static void mtk_sec_get_rnd(uint32_t *val)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_smc(MTK_SIP_KERNEL_GET_RND,
++		      MT67XX_RNG_MAGIC, 0, 0, 0, 0, 0, 0, &res);
++
++	val[0] = res.a0;
++	val[1] = res.a1;
++	val[2] = res.a2;
++	val[3] = res.a3;
++}
++
++static int mtk_sec_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
++{
++	u32 val[4] = {0};
++	int retval = 0;
++	int i;
++
++	while (max >= MTK_SEC_RND_SIZE) {
++		mtk_sec_get_rnd(val);
++
++		for (i = 0; i < SMC_RET_NUM; i++) {
++			*(u32 *)buf = val[i];
++			buf += sizeof(u32);
++		}
++
++		retval += MTK_SEC_RND_SIZE;
++		max -= MTK_SEC_RND_SIZE;
++	}
++
++	return retval;
++}
++
++static int mtk_sec_rng_probe(struct platform_device *pdev)
++{
++	struct mtk_sec_rng_priv *priv;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->rng.name = pdev->name;
++	priv->rng.read = mtk_sec_rng_read;
++	priv->rng.priv = (unsigned long)&pdev->dev;
++	priv->rng.quality = 900;
++
++	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register rng device: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id mtk_sec_rng_match[] = {
++	{ .compatible = "mediatek,mtk-sec-rng", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, mtk_sec_rng_match);
++
++static struct platform_driver mtk_sec_rng_driver = {
++	.probe = mtk_sec_rng_probe,
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.owner = THIS_MODULE,
++		.of_match_table = mtk_sec_rng_match,
++	},
++};
++
++module_platform_driver(mtk_sec_rng_driver);
++
++MODULE_DESCRIPTION("MediaTek Security Random Number Generator Driver");
++MODULE_AUTHOR("Neal Liu <neal.liu@mediatek.com>");
++MODULE_LICENSE("GPL");
+-- 
+1.7.9.5
 
-> Signed-off-by: Lukasz Pawelczyk <l.pawelczyk@samsung.com>
-> ---
-> 
-> Changes from v3:
->  - removed XTOPT_INVERT from O_SUPPL_GROUPS,
->    it wasn't meant to be invertable
->     
-> Changes from v2:
->  - XT_SUPPL_GROUPS -> XT_OWNER_SUPPL_GROUPS
->     
-> Changes from v1:
->  - complementary -> supplementary
->  - manual (iptables-extensions)
-> 
->  extensions/libxt_owner.c           | 24 +++++++++++++++++-------
->  extensions/libxt_owner.man         |  4 ++++
->  include/linux/netfilter/xt_owner.h |  7 ++++---
->  3 files changed, 25 insertions(+), 10 deletions(-)
-> 
-> diff --git a/extensions/libxt_owner.c b/extensions/libxt_owner.c
-> index 87e4df31..1702b478 100644
-> --- a/extensions/libxt_owner.c
-> +++ b/extensions/libxt_owner.c
-> @@ -56,6 +56,7 @@ enum {
->  	O_PROCESS,
->  	O_SESSION,
->  	O_COMM,
-> +	O_SUPPL_GROUPS,
->  };
->  
->  static void owner_mt_help_v0(void)
-> @@ -87,7 +88,8 @@ static void owner_mt_help(void)
->  "owner match options:\n"
->  "[!] --uid-owner userid[-userid]      Match local UID\n"
->  "[!] --gid-owner groupid[-groupid]    Match local GID\n"
-> -"[!] --socket-exists                  Match if socket exists\n");
-> +"[!] --socket-exists                  Match if socket exists\n"
-> +"    --suppl-groups                   Also match supplementary groups set with --gid-owner\n");
->  }
->  
->  #define s struct ipt_owner_info
-> @@ -131,6 +133,7 @@ static const struct xt_option_entry owner_mt_opts[] = {
->  	 .flags = XTOPT_INVERT},
->  	{.name = "socket-exists", .id = O_SOCK_EXISTS, .type = XTTYPE_NONE,
->  	 .flags = XTOPT_INVERT},
-> +	{.name = "suppl-groups", .id = O_SUPPL_GROUPS, .type = XTTYPE_NONE},
->  	XTOPT_TABLEEND,
->  };
->  
-> @@ -275,6 +278,11 @@ static void owner_mt_parse(struct xt_option_call *cb)
->  			info->invert |= XT_OWNER_SOCKET;
->  		info->match |= XT_OWNER_SOCKET;
->  		break;
-> +	case O_SUPPL_GROUPS:
-> +		if (!(info->match & XT_OWNER_GID))
-> +			xtables_param_act(XTF_BAD_VALUE, "owner", "--suppl-groups", "you need to use --gid-owner first");
-> +		info->match |= XT_OWNER_SUPPL_GROUPS;
-> +		break;
->  	}
->  }
->  
-> @@ -455,9 +463,10 @@ static void owner_mt_print(const void *ip, const struct xt_entry_match *match,
->  {
->  	const struct xt_owner_match_info *info = (void *)match->data;
->  
-> -	owner_mt_print_item(info, "owner socket exists", XT_OWNER_SOCKET, numeric);
-> -	owner_mt_print_item(info, "owner UID match",     XT_OWNER_UID,    numeric);
-> -	owner_mt_print_item(info, "owner GID match",     XT_OWNER_GID,    numeric);
-> +	owner_mt_print_item(info, "owner socket exists", XT_OWNER_SOCKET,       numeric);
-> +	owner_mt_print_item(info, "owner UID match",     XT_OWNER_UID,          numeric);
-> +	owner_mt_print_item(info, "owner GID match",     XT_OWNER_GID,          numeric);
-> +	owner_mt_print_item(info, "incl. suppl. groups", XT_OWNER_SUPPL_GROUPS, numeric);
->  }
->  
->  static void
-> @@ -487,9 +496,10 @@ static void owner_mt_save(const void *ip, const struct xt_entry_match *match)
->  {
->  	const struct xt_owner_match_info *info = (void *)match->data;
->  
-> -	owner_mt_print_item(info, "--socket-exists",  XT_OWNER_SOCKET, true);
-> -	owner_mt_print_item(info, "--uid-owner",      XT_OWNER_UID,    true);
-> -	owner_mt_print_item(info, "--gid-owner",      XT_OWNER_GID,    true);
-> +	owner_mt_print_item(info, "--socket-exists",  XT_OWNER_SOCKET,       true);
-> +	owner_mt_print_item(info, "--uid-owner",      XT_OWNER_UID,          true);
-> +	owner_mt_print_item(info, "--gid-owner",      XT_OWNER_GID,          true);
-> +	owner_mt_print_item(info, "--suppl-groups",   XT_OWNER_SUPPL_GROUPS, true);
->  }
->  
->  static int
-> diff --git a/extensions/libxt_owner.man b/extensions/libxt_owner.man
-> index 49b58cee..e2479865 100644
-> --- a/extensions/libxt_owner.man
-> +++ b/extensions/libxt_owner.man
-> @@ -15,5 +15,9 @@ given user. You may also specify a numerical UID, or an UID range.
->  Matches if the packet socket's file structure is owned by the given group.
->  You may also specify a numerical GID, or a GID range.
->  .TP
-> +\fB\-\-suppl\-groups\fP
-> +Causes group(s) specified with \fB\-\-gid-owner\fP to be also checked in the
-> +supplementary groups of a process.
-> +.TP
->  [\fB!\fP] \fB\-\-socket\-exists\fP
->  Matches if the packet is associated with a socket.
-> diff --git a/include/linux/netfilter/xt_owner.h b/include/linux/netfilter/xt_owner.h
-> index 20817617..e7731dcc 100644
-> --- a/include/linux/netfilter/xt_owner.h
-> +++ b/include/linux/netfilter/xt_owner.h
-> @@ -4,9 +4,10 @@
->  #include <linux/types.h>
->  
->  enum {
-> -	XT_OWNER_UID    = 1 << 0,
-> -	XT_OWNER_GID    = 1 << 1,
-> -	XT_OWNER_SOCKET = 1 << 2,
-> +	XT_OWNER_UID          = 1 << 0,
-> +	XT_OWNER_GID          = 1 << 1,
-> +	XT_OWNER_SOCKET       = 1 << 2,
-> +	XT_OWNER_SUPPL_GROUPS = 1 << 3,
->  };
->  
->  struct xt_owner_match_info {
-> -- 
-> 2.20.1
-> 
