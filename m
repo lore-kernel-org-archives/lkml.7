@@ -2,143 +2,101 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15273C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E92EC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF10420859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560181686;
-	bh=s/LAKmlHEH3zUNukB0yjQTETxfcFC8gag3lro9BlcFw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f/Pgk5BRzrtSPhFSn3FrfV7yMaKSOF3P7vu9pwmcbkwo5LB/Ptj81pPYyo3HFkdTg
-	 xgfIZ8Xk8A7g4E9OjgyJWk3mDKNS0f1ZKSnRrkhI3IzOR0z47Vtlwl2ZQJh1yTZNRJ
-	 fcotGP1r6LSxyy2CeMkmi16rn4KKNk6Hill9r+Ys=
+	by mail.kernel.org (Postfix) with ESMTP id 608132085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:48:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gWnTJIR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391269AbfFJPsG (ORCPT
+        id S2391282AbfFJPsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:48:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390335AbfFJPsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:48:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39B3420859;
-        Mon, 10 Jun 2019 15:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560181684;
-        bh=s/LAKmlHEH3zUNukB0yjQTETxfcFC8gag3lro9BlcFw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gFGhGAj1S/a5vI1H1ndGakbD6DIjcERFGWfnPUIanOba4OK4VTRZPO+BfgsCCdGOW
-         ShymN1csSlnb787DHwuTvUWQIDGn3P2bsmRsPbpzpHLige+gygX/hFNlRXbKaIMG7Z
-         mxtXJHYwQ+XRGVmXE862+CMffmHoprAMc9niXEKY=
-Date:   Mon, 10 Jun 2019 17:48:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Merwin Trever Ferrao <merwintf@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 16/16] Staging: wlan-ng: cfg80211: fixed alignment issue
- with open parenthesis line ending with (
-Message-ID: <20190610154802.GA29035@kroah.com>
-References: <20190610103825.19364-1-merwintf@gmail.com>
+        Mon, 10 Jun 2019 11:48:11 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10168 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390335AbfFJPsK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:48:10 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5AFfYgf026022;
+        Mon, 10 Jun 2019 17:47:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=LgERwqK45s8WxfYNJ2p/eCQHczqBFZZAr61TGRo2H+4=;
+ b=gWnTJIR+98UCSxymsNwMRkgV+9V4yBZI5+4O8squ/S1WPag/BNss5IcSulDOH8T/qMqy
+ q5rRWgjZh1+axSfpm4jGFsbHUXiEKvFm5yX1fVKRlgcGeUpMJ1UiBH3GQvUc006KNBYZ
+ aaQBMZ5CoapQhFeAG4Xy6KLHH7l+oOyLUCEOe/V+gwEP4isq8+XLC7bW/5by5lGiK/x3
+ XouigYxflqzytqopMhVNGFhEgQPEP7iffCr4OeoYE1zREws/pzQJfakAvhXlF3eR6ezU
+ fzZSs6CeFFZkIWOMuauXgOa/ZhjVDilHLoY4vc8Z7eatw46qhvqsNEfDqCLJJMojWq9G AA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2t0256a973-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 10 Jun 2019 17:47:32 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B078D34;
+        Mon, 10 Jun 2019 15:47:30 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7E94F4F1D;
+        Mon, 10 Jun 2019 15:47:30 +0000 (GMT)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Jun
+ 2019 17:47:30 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Mon, 10 Jun 2019 17:47:30 +0200
+From:   Erwan LE RAY <erwan.leray@st.com>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        "Kevin Hilman" <khilman@baylibre.com>
+CC:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Clement Peron <clement.peron@devialet.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Stefan Agner <stefan@agner.ch>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "Gerald BAEZA" <gerald.baeza@st.com>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Bich HEMON <bich.hemon@st.com>,
+        "Fabrice GASNIER" <fabrice.gasnier@st.com>
+Subject: Re: [PATCH] ARM: debug: stm32: add UART early console configuration
+Thread-Topic: [PATCH] ARM: debug: stm32: add UART early console configuration
+Thread-Index: AQHU73OP100nvdfkikCtYg1KY+YHZqY1DV8AgC1naoCAMtJmgA==
+Date:   Mon, 10 Jun 2019 15:47:30 +0000
+Message-ID: <ff48768c-83e3-55dc-16a0-bd0af4133c7c@st.com>
+References: <1554883239-12051-1-git-send-email-erwan.leray@st.com>
+ <CAJiuCcd9884Kn2MAtLMzZpdSa-=xpCDKRLQSVC6NmRNC+YFtaA@mail.gmail.com>
+ <deebc332-277b-76b9-421f-7f67c6bdacc8@st.com>
+In-Reply-To: <deebc332-277b-76b9-421f-7f67c6bdacc8@st.com>
+Accept-Language: en-US, fr-FR
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <70F78C8ABFDF92458A8685FA5F79E676@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610103825.19364-1-merwintf@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 04:08:25PM +0530, Merwin Trever Ferrao wrote:
-> From: Merwin Trever Ferrao <Merwintf@gmail.com>
-> 
-> Fixed a coding style issue.
-> 
-> Signed-off-by: Merwin Trever Ferrao <merwintf@gmail.com>
-> ---
->  drivers/staging/wlan-ng/cfg80211.c | 32 ++++++++++++++----------------
->  1 file changed, 15 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
-> index eee1998c4b18..5424e2682911 100644
-> --- a/drivers/staging/wlan-ng/cfg80211.c
-> +++ b/drivers/staging/wlan-ng/cfg80211.c
-> @@ -324,8 +324,7 @@ static int prism2_scan(struct wiphy *wiphy,
->  		(i < request->n_channels) && i < ARRAY_SIZE(prism2_channels);
->  		i++)
->  		msg1.channellist.data.data[i] =
-> -			ieee80211_frequency_to_channel(
-> -				request->channels[i]->center_freq);
-> +			ieee80211_frequency_to_channel(request->channels[i]->center_freq);
-
-And now you violate the other coding style rule of too long lines :(
-
-You can just keep sending patches fixing this back and forth, if you
-want a never-ending set of patches to be applied, but we don't really
-like that.
-
-So the code is ok as-is.
-
->  	msg1.channellist.data.len = request->n_channels;
->  
->  	msg1.maxchanneltime.data = 250;
-> @@ -359,15 +358,15 @@ static int prism2_scan(struct wiphy *wiphy,
->  		freq = ieee80211_channel_to_frequency(msg2.dschannel.data,
->  						      NL80211_BAND_2GHZ);
->  		bss = cfg80211_inform_bss(wiphy,
-> -			ieee80211_get_channel(wiphy, freq),
-> -			CFG80211_BSS_FTYPE_UNKNOWN,
-> -			(const u8 *)&msg2.bssid.data.data,
-> -			msg2.timestamp.data, msg2.capinfo.data,
-> -			msg2.beaconperiod.data,
-> -			ie_buf,
-> -			ie_len,
-> -			(msg2.signal.data - 65536) * 100, /* Conversion to signed type */
-> -			GFP_KERNEL
-> +					  ieee80211_get_channel(wiphy, freq),
-> +					  CFG80211_BSS_FTYPE_UNKNOWN,
-> +					  (const u8 *)&msg2.bssid.data.data,
-> +					  msg2.timestamp.data, msg2.capinfo.data,
-> +					  msg2.beaconperiod.data,
-> +					  ie_buf,
-> +					  ie_len,
-> +					  (msg2.signal.data - 65536) * 100, /* Conversion to signed type */
-> +					  GFP_KERNEL
->  		);
-
-Why is this final ); way over here?
-
->  
->  		if (!bss) {
-> @@ -475,14 +474,13 @@ static int prism2_connect(struct wiphy *wiphy, struct net_device *dev,
->  			}
->  
->  			result = prism2_domibset_uint32(wlandev,
-> -				DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
-> -				sme->key_idx);
-> +							DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
-> +							sme->key_idx);
->  			if (result)
->  				goto exit;
->  
->  			/* send key to driver */
-> -			did = didmib_dot11smt_wepdefaultkeystable_key(
-> -					sme->key_idx + 1);
-> +			did = didmib_dot11smt_wepdefaultkeystable_key(sme->key_idx + 1);
-
-Too long of a line.
-
-Remember, checkpatch is just a "hint", you still have to use your brain
-when looking at the output of it.
-
-thanks,
-
-greg k-h
+SGkgT2xvZiwgQXJuZCBhbmQgS2V2aW4sDQoNCkdlbnRsZSByZW1pbmRlciBvbiBteSBmZWVkYmFj
+ayByZXF1ZXN0Lg0KDQpCZXN0IHJlZ2FyZHMsIEVyd2FuLg0K
