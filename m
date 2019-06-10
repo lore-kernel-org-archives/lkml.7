@@ -2,91 +2,103 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDF6C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB37C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 984C22064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301DB20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjFlVrzW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbFGRQUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389885AbfFJOmi (ORCPT
+        id S2390916AbfFJOmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:42:38 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45393 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389178AbfFJOmh (ORCPT
+        Mon, 10 Jun 2019 10:42:42 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39701 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389178AbfFJOmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:42:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s11so5423691pfm.12;
-        Mon, 10 Jun 2019 07:42:37 -0700 (PDT)
+        Mon, 10 Jun 2019 10:42:40 -0400
+Received: by mail-lf1-f66.google.com with SMTP id p24so6832292lfo.6;
+        Mon, 10 Jun 2019 07:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lysVkCXZE1N1pszgGn3d3NjjI/mk1GY/iek2DaxLeLs=;
-        b=CjFlVrzWAptiSiFPiWoYB2LiWJsGQ3EsR8d69jxkBAfQ80BYjrKfrasEylF3bpp9Ph
-         Q1FmgDtiTQwL1yqoxupQjMmH2cExRNDFZcSwkaq5ZjZPAnCM8gBnVxoA0X9MVc6KWfRt
-         eSCxaEZeqfi9HZABgeP4GhEiazruQNnRdNRie6zVbaLSfwqCpUfMA7VFGph9kH6AX02X
-         RYeTYg+4dqA3sSuFpbxXXUaTZ+10W7MCMLdsEpBd7SPhkqGS4xaBgv5szHkh6N8zvUDw
-         jUMDdNOLvj+t/ryMpMk1RLHvbzBBUEBOdaHoW9Z7gCLsbFdSsxNQgPABHg5gAYPDsQzj
-         9/nA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SFLtzn7p454HGGXIQlkjvG2CLSCPWdMp9Paqkm4rM+k=;
+        b=tbFGRQUKd+khQV9eVwEStu+IxlVOTskxdCU7u3s3t9S8zzYm3MQdycUje21pVH/Uxl
+         L9o/kjt+XnvRXrLp99GVzzEJ8Y8a7Xv0tZR6Hvlc/6O8wCyGMLdz672oU3QkAwtcRFBA
+         r9hLL1QEpvn7JuNRyuAZ/f2Ljpns3AvRv+m2+j6mspw0X16YsYpOH+B7rpU1m8OL6HHA
+         F6FElcSS4PUi36scC6+Ckhjj9ykDTXIZEbLNGMW3aAW7olNGwXYobx68NfFFRYSH5fOW
+         3nc1JSwOgkcbopKE7Oq239q9gZnGApijkge8jPa5+Dj98Da+3cDYz3GOW7xrxmqeJYNV
+         rAlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lysVkCXZE1N1pszgGn3d3NjjI/mk1GY/iek2DaxLeLs=;
-        b=kE8nakkBeWdmOJrETFFQSPQGFGLUfSPwla86dakBPPUHhOQlna6hmlJ7vuZHExCqie
-         KOTnj/D607nXA9C3uq74mMu2GazOpM30Dya9ubkghHujTg/g4IqE8yX4e8AoV3fLg/UD
-         D+HaVA8sTfEG1nBTqbklUvXhMFD2gxPM+E1XavMmg5GCG2bZz7h+KyY32OlgTqgHPrpq
-         JFX0xbwIReM8nWlbhn9Pmh5TcYW1UK0ZwZHqGZRDCbI6Tg0xjy0lxmxHWxir/Kn+0idT
-         XHox/1dB8eB3sZp5Xn+pWaxALBIMbZDaakMX4i0j9T9Ax5uU17BTNCPwHRRoMswn9AX5
-         5RkA==
-X-Gm-Message-State: APjAAAXhGodqaXBLFfAsSviiSJXCl+IRPmuX5L4es3S7TN616hfTZWvt
-        bayohFZI9dtmlAXBE1RT2EU=
-X-Google-Smtp-Source: APXvYqxUaY4YgF6AiKdAaetcR7MqipVvfCC3JH0SzGVgPI/LeCdpjH7QNWaxwRHebRP7x2xcc/wgsg==
-X-Received: by 2002:a17:90a:658b:: with SMTP id k11mr21856022pjj.44.1560177756932;
-        Mon, 10 Jun 2019 07:42:36 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 16sm10643578pfo.65.2019.06.10.07.42.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 07:42:36 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 07:42:35 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/83] 4.9.181-stable review
-Message-ID: <20190610144235.GB7705@roeck-us.net>
-References: <20190609164127.843327870@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SFLtzn7p454HGGXIQlkjvG2CLSCPWdMp9Paqkm4rM+k=;
+        b=qq9zO3pTJ/ZXMLlvrn6vtrge06pr0po+aHhozmhjH4mK6VvMTpSTznxmZTd/2icje2
+         EzDs+be+gs0I8pAPvvSOP22cDuDh7/yAcsyeIe/ekFU4heS3+ck3J5nNwRQwk4GkHim8
+         Vb8UsRIadR9fbbJSD9waRLAIhaSYCgzuWFJcEEJ/+cnglyoNE+emSQYZ7UoeGhUNSX1l
+         O1IslxWD1fJvBNU+VbMZwge5Rmj//mmBNRZJAx+RQW5yd58LgfA/J5NAL9o9zOgWwx/5
+         x2Htgo3AfVwAF9JXkHGo+st9Mxvuiko3Q2P/ddnz0mzuY4wCvKrujVFmNSn/0eKNC1+c
+         KAjg==
+X-Gm-Message-State: APjAAAUiU3eEuMNT4jNI6K/K9UFUAklV/aJi+ZfUwJQ9OoLi6emCoW+z
+        pzvLTCTOPk6HZN3wz6jLrTKne+ChcBaC7nhuq2Q=
+X-Google-Smtp-Source: APXvYqzS2XUDhCf3s3+GEUEe55OtH9zPXFNBU/AxsMsFncMeihyVsCqMSF54jEMyMDjEA5jze5a/E2+M3HJYdcKePeI=
+X-Received: by 2002:ac2:46d5:: with SMTP id p21mr1068566lfo.133.1560177758821;
+ Mon, 10 Jun 2019 07:42:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190517073813.GB2589@hirez.programming.kicks-ass.net>
+ <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
+ <20190517085126.GA3249@kroah.com> <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+ <20190517152200.GI8945@kernel.org> <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
+ <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org> <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
+ <20190610074510.GA24746@kroah.com> <CALrw=nEp=hUUaKtuU3Q1c_zKO3zYC3uP_s_Dyz_zhkxW7K+4mQ@mail.gmail.com>
+ <20190610142145.GC5937@kroah.com>
+In-Reply-To: <20190610142145.GC5937@kroah.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 10 Jun 2019 16:42:27 +0200
+Message-ID: <CANiq72kxyKV1z+dGmMtuq=gUWOYS=Y0EsNFqLKoFXWx6+n=J1g@mail.gmail.com>
+Subject: Re: Linux 4.19 and GCC 9
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Ignat Korchagin <ignat@cloudflare.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 06:41:30PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.181 release.
-> There are 83 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 11 Jun 2019 04:39:58 PM UTC.
-> Anything received after that time might be too late.
-> 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 322 pass: 322 fail: 0
+On Mon, Jun 10, 2019 at 4:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> > I also checked that 4.19.49 compiles fine with GCC 9, although with a
+> > lot of warnings, mostly from objtool, like "warning: objtool:
+> > sock_register()+0xd: sibling call from callable instruction with
+> > modified stack frame". But it's a start.
 
-Guenter
+I think Josh Poimboeuf added support for a few related things in GCC 8
+(e.g. 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")).
+
+> I'll look into these after the next round of kernels are released.  I
+> guess I'll go find a distro that has gcc9 on it to actually test
+> things...
+
+I typically compile a bare-bones GCC for those things, it is quite quick.
+
+Cheers,
+Miguel
