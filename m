@@ -2,99 +2,106 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B85C28EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 02:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45781C28EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 02:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1839120820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 02:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1802020840
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 02:23:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zj8WbwXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbfFJCXH (ORCPT
+        id S2387455AbfFJCXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 22:23:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:35064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387400AbfFJCXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 22:23:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7520A337;
-        Sun,  9 Jun 2019 19:23:05 -0700 (PDT)
-Received: from [10.162.42.131] (p8cg001049571a15.blr.arm.com [10.162.42.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19D773F557;
-        Sun,  9 Jun 2019 19:22:56 -0700 (PDT)
-Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
- <20190607220326.1e21fc9c@canb.auug.org.au>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <632eae55-92f5-1bfc-bfe4-24673558e1d8@arm.com>
-Date:   Mon, 10 Jun 2019 07:53:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 9 Jun 2019 22:23:30 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46333 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387400AbfFJCXa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 22:23:30 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h21so8901475qtn.13
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 19:23:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4zBkMGLED9l3FmX17OsaydHaK4tKEhb0w4jXMZi0ccg=;
+        b=Zj8WbwXAV390RUM8igQnwN61lwTTn/QbFvp7GcZyBuJTSfCO9v8ItH0DUz5AJwZKsL
+         yjsuCAo5jnkIuAgHavR0/2yY+KjqQFuhtBlgScpFJIGNHxNuOfFQzvysVmLkKjN8l8kc
+         E2U0AJGuEI/Hh15D86vvyGuVN5avU22QMBAZzMnkvdX/ft3/mmqouRkdh6z8j6W+zYJX
+         T0EWFI1oel+e2/ez/t+bhwWIR4bTVslecnKGaJ4/XMKs7na+Rr0QGCfBh0RPG+Jdew7J
+         uzi52nr3Fcmn66ktZ4fin9On0w8vICKx6gtvErIui78HM40zjdNKhIGHKArloFA9MWld
+         AT+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4zBkMGLED9l3FmX17OsaydHaK4tKEhb0w4jXMZi0ccg=;
+        b=dWJKAorwOLUkU/Sjz9xb7UHiIweIfKE2rRYjvd+0NIqoWzwilmMw2pHktDVisLzkrA
+         /FDgZe+BYBBtqKISET1ngKEYQUx91Toe8sSV+3CdN9V6asuwU5Qv/TpMEkVgarGoqXlk
+         6nr47z6hI+/fFf8XfaXX14bi9rmJ9Yw6UejsCXZelbf0EPwx8FDZN58++KE14NN2gdJ7
+         Kpc9Fl8ifEVEjn1XrYIsFBf5SMzFdZ0YRFGV3EI5nq7Z5l0gipzdu+CGu8J298rtj8Ba
+         tY1myP7xoLuh78zELT1k+j2PQop2yJpHfdadgIja8tnUCgFGu4XIPaqQJObBo0cmY6gs
+         gPnw==
+X-Gm-Message-State: APjAAAXnartV7jiEegrwjvcsG9av6Te5C3sAmCaaNb7X/FPGx4l/EHwD
+        tJx7YIz2AgLNogHW+RX2oxaTPRGXEKYRWjTAjnO+FEkG940=
+X-Google-Smtp-Source: APXvYqzBnLgtfH/jTIbc9mlUXwmH0geVF9fRd/xlU6Yr9cEj5fr+msC3D6w//Icba3eeagHGlzEfVC5sFpKCinCZowk=
+X-Received: by 2002:a0c:a8d1:: with SMTP id h17mr24478187qvc.117.1560133409793;
+ Sun, 09 Jun 2019 19:23:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190607220326.1e21fc9c@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1559855690.6132.50.camel@lca.pw> <CAHttsrYCD1xvL6hf6dXZ_6rB2pEra0HDZ+m5n8EMQr3+5AShnQ@mail.gmail.com>
+ <1559916886.6132.52.camel@lca.pw>
+In-Reply-To: <1559916886.6132.52.camel@lca.pw>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Mon, 10 Jun 2019 10:23:18 +0800
+Message-ID: <CAHttsrZN09-_GXujv2H5gAORLHcO2onrotFND5GrDXRGRtFpJQ@mail.gmail.com>
+Subject: Re: "locking/lockdep: Consolidate lock usage bit initialization" is buggy
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks for the further validation.
 
+On Fri, 7 Jun 2019 at 22:14, Qian Cai <cai@lca.pw> wrote:
+> Reverted the commit on the top of linux-next fixed the issue.
+>
+> With the commit (triggering the warning
+> DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused)),
+>
+> # cat /proc/lockdep_stats
+> lock-classes:                         1110 [max: 8192]
+> stack-trace entries:                     0 [max: 524288]
+> combined max dependencies:               1
+> uncategorized locks:                     0
+> unused locks:                         1110
+> max locking depth:                      14
+> debug_locks:                             0
+>
+> Without the commit (no warning),
+>
+> # cat /proc/lockdep_stats
+> lock-classes:                         1110 [max: 8192]
+> stack-trace entries:                  9932 [max: 524288]
+> combined max dependencies:               1
+> uncategorized locks:                  1113
+> unused locks:                            0
+> max locking depth:                      14
+> debug_locks:                             1
 
-On 06/07/2019 05:33 PM, Stephen Rothwell wrote:
-> Hi Anshuman,
-> 
-> On Fri,  7 Jun 2019 16:04:15 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->>
->> +static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
->> +					      unsigned int trap)
->> +{
->> +	int ret = 0;
->> +
->> +	/*
->> +	 * To be potentially processing a kprobe fault and to be allowed
->> +	 * to call kprobe_running(), we have to be non-preemptible.
->> +	 */
->> +	if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
->> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
->> +			ret = 1;
->> +	}
->> +	return ret;
->> +}
-> 
-> Since this is now declared as "bool" (thanks for that), you should make
-> "ret" be bool and use true and false;
+Then it is obviously we are talking on different things; then it is
+obviously a configuration problem. Fix will be posted soon.
 
-Sure, done.
+Sorry the bug.
+
+Thanks,
+Yuyang
