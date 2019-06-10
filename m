@@ -2,99 +2,87 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFD6C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E423FC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D2120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02F22089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560203236;
-	bh=A8TOGTJuwEvDUH/d1MVUsnWqz/0g/2fFNSmp+Wiv8QI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=txTa5JVlbqAitVKbAelfzwWkDtlCPUq6JU8cXKn0bbAltdsLJMLGhagR779R//qH0
-	 GfjodT1e9QBaiTMwMbSk44AamhNGg8jTI4vQ3/oe028jCPKTKsFP5KzO+HwN1UrcFr
-	 PgAgt44lG84/Oe+z/WE1gAG4Oh8RCngd1mxJwwR4=
+	s=default; t=1560203347;
+	bh=uPFHjqLTdJFsdVAbHYokoiNQcEqSEdSi7LpTrL//Q6g=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=BJ2fX5rASk5youvdpJzo3fcY+QeA7qqrNrfnQ9Fw/TnHCXrLPqL/lMhoKtANqQXld
+	 nBOcAdTKve0iz0j21uCt9TyGfnxWbRsHi9VlNfTQ50f/8r1mqoWQWcqK8UZxfDFzTX
+	 bfDJimqVShVRJvs9GWq9N+5vba6yWYR1HyPUP95Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389902AbfFJVrO (ORCPT
+        id S1728661AbfFJVtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:47:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55264 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 17:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387661AbfFJVrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:47:12 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        id S1726556AbfFJVtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 17:49:06 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D499212F5;
-        Mon, 10 Jun 2019 21:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED7320859;
+        Mon, 10 Jun 2019 21:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560203231;
-        bh=A8TOGTJuwEvDUH/d1MVUsnWqz/0g/2fFNSmp+Wiv8QI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IcBndJBr6x/GrCfOf5zp8rcKfj/TR41OBRQ/gcrB4SrrMIDF1Ny94rr/y28vbhhpg
-         Ey53NcaAnDuOIxsLaVnk5T4AaD3S6tpj0uSt1RrTIPZKX9oAZdoe1tCZB7GIVfDZPQ
-         Jd/WGPKVhIWpLau+kcCay2XV9gLLZhXsQHT3Lvco=
-Received: by mail-qt1-f181.google.com with SMTP id x2so11261378qtr.0;
-        Mon, 10 Jun 2019 14:47:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAVD8GbsHMZ/bW947Mq5DVvHQ6+M3bkupGcyWqlk/4nMZ2Dx49bf
-        1qkQMzjDyw105juR/V2BJCKknAzRjL6yrAry1Q==
-X-Google-Smtp-Source: APXvYqw9ixaCWUtaCgRr6x7b/pNyEcY2V2n0Ntzbi7l3rhY966w4TpEXuCtCcBErZwa27WAPk/RTAG7YzipmNve+aho=
-X-Received: by 2002:aed:3b33:: with SMTP id p48mr54298406qte.143.1560203230912;
- Mon, 10 Jun 2019 14:47:10 -0700 (PDT)
+        s=default; t=1560203345;
+        bh=uPFHjqLTdJFsdVAbHYokoiNQcEqSEdSi7LpTrL//Q6g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=a10GXHYLqBxJjxn9CZi9jpyeTO5bAKbqZhYTD/ou3vdttLQb89kw+SMTS7OgHlg45
+         9q42FvVpJk/Vf7AD3MXZFdx4yZk855odBMUrvx/JJZC2bIdrZ/rFsrd98RrbyR6CiV
+         E80fNuUx9N57OAAHGS0WI64onPpdroSX3Skg2Xpo=
+Subject: Re: [PATCH 4.9 00/83] 4.9.181-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190609164127.843327870@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <acefd433-24e4-cc32-4008-8d3f6fc65634@kernel.org>
+Date:   Mon, 10 Jun 2019 15:49:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190602080126.31075-1-paul.walmsley@sifive.com> <20190602080126.31075-4-paul.walmsley@sifive.com>
-In-Reply-To: <20190602080126.31075-4-paul.walmsley@sifive.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 10 Jun 2019 15:46:59 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJd6s6ta==AoxmNXdpzWL1RytSwR2P4MOfAFSEJavbt+w@mail.gmail.com>
-Message-ID: <CAL_JsqJd6s6ta==AoxmNXdpzWL1RytSwR2P4MOfAFSEJavbt+w@mail.gmail.com>
-Subject: Re: [PATCH 3/5] dt-bindings: riscv: convert cpu binding to json-schema
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 2:01 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> At Rob's request, we're starting to migrate our DT binding
-> documentation to json-schema YAML format.  Start by converting our cpu
-> binding documentation.  While doing so, document more properties and
-> nodes.  This includes adding binding documentation support for the E51
-> and U54 CPU cores ("harts") that are present on this SoC.  These cores
-> are described in:
->
->     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
->
-> This cpus.yaml file is intended to be a starting point and to
-> evolve over time.  It passes dt-doc-validate as of the yaml-bindings
-> commit 4c79d42e9216.
->
-> This patch was originally based on the ARM json-schema binding
-> documentation as added by commit 672951cbd1b7 ("dt-bindings: arm: Convert
-> cpu binding to json-schema").
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> ---
->  .../devicetree/bindings/riscv/cpus.yaml       | 168 ++++++++++++++++++
->  1 file changed, 168 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/riscv/cpus.yaml
+On 6/9/19 10:41 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.181 release.
+> There are 83 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 11 Jun 2019 04:39:58 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.181-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Compiled and booted on my test system. No dmesg regressions.
+
+thanks,
+-- Shuah
+
