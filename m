@@ -2,321 +2,182 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F9AC28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA33C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9712082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:52:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qC4Zcj5d"
+	by mail.kernel.org (Postfix) with ESMTP id 3636820859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389649AbfFJKwU (ORCPT
+        id S2388863AbfFJKxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:52:20 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:11771 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389623AbfFJKwR (ORCPT
+        Mon, 10 Jun 2019 06:53:04 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40579 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388373AbfFJKxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:52:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1560163936; x=1591699936;
-  h=to:cc:from:subject:message-id:date:mime-version:
-   content-transfer-encoding;
-  bh=clpm+5SOjdv+JFhxjYHFQLyawr88S0m/57U7l/fdAKQ=;
-  b=qC4Zcj5dih3kBJAWHA0MqIhI2BjDJNpst13YjL7uRyFXUa2ZMUWAVaK6
-   Y0jpSZeSKXJIMYtcUSBoSoztsaSRP+Dkd66ea4n2NbzMoUnxp2wszNekk
-   St7tens7CWOWo4E/Ox+MWDw0mKOgoMNZTPeLe+bubywFirNIAkPPys1Jk
-   s=;
-X-IronPort-AV: E=Sophos;i="5.60,575,1549929600"; 
-   d="scan'208";a="679047652"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Jun 2019 10:52:14 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 3737FA213D;
-        Mon, 10 Jun 2019 10:52:14 +0000 (UTC)
-Received: from EX13D07EUB001.ant.amazon.com (10.43.166.214) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 10 Jun 2019 10:52:13 +0000
-Received: from [10.220.227.170] (10.43.161.225) by
- EX13D07EUB001.ant.amazon.com (10.43.166.214) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 10 Jun 2019 10:52:07 +0000
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>, <barakw@amazon.com>,
-        <dwmw@amazon.co.uk>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <talel@amazon.com>
-CC:     <benh@kernel.crashing.org>, <ronenk@amazon.com>,
-        Hanna Hawa <hhhawa@amazon.com>,
-        "Aerov, Vladimir" <vaerov@amazon.com>
-From:   Zeev Zilberman <zeev@amazon.com>
-Subject: [PATCH v2 1/1] irqchip/gic: Add support for Amazon Graviton variant
- of GICv3+GICv2m
-Message-ID: <2cba86c2-77de-0b27-f23c-c83d9c6a03b2@amazon.com>
-Date:   Mon, 10 Jun 2019 13:52:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 06:53:03 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so4842922pgm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:53:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IrBElB7Dvt+ekOLqOELcuBpGs5ztYGEVdrqPLh5WW7s=;
+        b=QT4rHmFbwB1C1/6hJxmu0iaRi5v7maTfPw6ylsIocA7Mxjai1gIRLioOsbOvMVw1Da
+         OiLY0ZOtQgcFmsC/nLo9tDthW/hN3IGAH49PTq4zmXJZ0mnxfQH8NVa4HGSoZoan77Gd
+         pAkY96SAzcM9Sf1rW0VP4yMhrcwTYYYs0GfPxEH+qQol94NXy37A5/nsdePU2Nn5hck8
+         9LFXXb8cRMW/YOwL0tXE+z+59Qr3dmbWIo3PgD0PAebU6YlvTkDKcr/KaHi2C3FWH9/s
+         RmKCdcbqNNYJlBgltvsrg+o4B9+HhhTX36Xs8LMNnmibDlGSydQ4H+ed+vd8yTckUERU
+         o6Uw==
+X-Gm-Message-State: APjAAAWzNlv2d6K0DYtN0r9KZut5XRpz/Yz/mqtBFBEAx4h7Lw5osnlv
+        BoJXFJxtWfcp2w1jiY8VIbi1nB6sxg0=
+X-Google-Smtp-Source: APXvYqxPGMw3+1D+l5TB5e4THCbfQTkpsGSeU+iebeT0+u8S9YvnaAd7W1WrJYym+gmERVkL4+w6IQ==
+X-Received: by 2002:aa7:808d:: with SMTP id v13mr73501435pff.198.1560163982899;
+        Mon, 10 Jun 2019 03:53:02 -0700 (PDT)
+Received: from localhost.localdomain ([122.177.221.32])
+        by smtp.gmail.com with ESMTPSA id p43sm10611287pjp.4.2019.06.10.03.52.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 03:53:01 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
+ vmcoreinfo
+To:     James Morse <james.morse@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
+        Steve Capper <Steve.Capper@arm.com>, kexec@lists.infradead.org,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>,
+        bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org
+References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
+ <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
+ <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
+ <58c6cda9-9fd4-3b3e-740a-7b9b80b1f634@redhat.com>
+ <a48bb02c-8f93-4e3b-085d-a6f0e5a1f3a0@arm.com>
+ <66da4098-b221-408b-50ca-f3790b943965@redhat.com>
+ <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
+ <2a4af3a0-1342-fdd2-1cfd-e37abb99d8bd@arm.com>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <3ab2ca1a-95de-cecf-f590-1e2d00bb644b@redhat.com>
+Date:   Mon, 10 Jun 2019 16:22:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <2a4af3a0-1342-fdd2-1cfd-e37abb99d8bd@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.225]
-X-ClientProxiedBy: EX13D07UWA004.ant.amazon.com (10.43.160.32) To
- EX13D07EUB001.ant.amazon.com (10.43.166.214)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds support for Amazon Graviton custom variant of GICv2m, where
-hw irq is encoded using the MSI message address, as opposed to standard
-GICv2m, where hw irq is encoded in the MSI message data.
-In addition, the Graviton flavor of GICv2m is used along GICv3 (and not
-GICv2).
+Hi James,
 
-Co-developed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Zeev Zilberman <zeev@amazon.com>
----
-Changes from v1:
-- Fixed Signed-off-by order and added Co-developed-by tag
-- Removed redundant #ifdef CONFIG_ACPI
----
- drivers/irqchip/irq-gic-v2m.c          | 85 +++++++++++++++++++++++++++-------
- drivers/irqchip/irq-gic-v3.c           |  3 ++
- include/linux/irqchip/arm-gic-common.h |  5 ++
- include/linux/irqchip/arm-gic.h        |  3 --
- 4 files changed, 76 insertions(+), 20 deletions(-)
+On 06/07/2019 08:41 PM, James Morse wrote:
+> Hi Bhupesh,
+> 
+> (sorry for the delay on this)
 
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index 3c77ab6..5356739 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -56,6 +56,7 @@
- 
- /* List of flags for specific v2m implementation */
- #define GICV2M_NEEDS_SPI_OFFSET		0x00000001
-+#define GICV2M_GRAVITON_ADDRESS_ONLY	0x00000002
- 
- static LIST_HEAD(v2m_nodes);
- static DEFINE_SPINLOCK(v2m_lock);
-@@ -98,15 +99,26 @@ static struct msi_domain_info gicv2m_msi_domain_info = {
- 	.chip	= &gicv2m_msi_irq_chip,
- };
- 
-+static phys_addr_t gicv2m_get_msi_addr(struct v2m_data *v2m, int hwirq)
-+{
-+	if (v2m->flags & GICV2M_GRAVITON_ADDRESS_ONLY)
-+		return v2m->res.start | ((hwirq - 32) << 3);
-+	else
-+		return v2m->res.start + V2M_MSI_SETSPI_NS;
-+}
-+
- static void gicv2m_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct v2m_data *v2m = irq_data_get_irq_chip_data(data);
--	phys_addr_t addr = v2m->res.start + V2M_MSI_SETSPI_NS;
-+	phys_addr_t addr = gicv2m_get_msi_addr(v2m, data->hwirq);
- 
- 	msg->address_hi = upper_32_bits(addr);
- 	msg->address_lo = lower_32_bits(addr);
--	msg->data = data->hwirq;
- 
-+	if (v2m->flags & GICV2M_GRAVITON_ADDRESS_ONLY)
-+		msg->data = 0;
-+	else
-+		msg->data = data->hwirq;
- 	if (v2m->flags & GICV2M_NEEDS_SPI_OFFSET)
- 		msg->data -= v2m->spi_offset;
- 
-@@ -188,7 +200,7 @@ static int gicv2m_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	hwirq = v2m->spi_start + offset;
- 
- 	err = iommu_dma_prepare_msi(info->desc,
--				    v2m->res.start + V2M_MSI_SETSPI_NS);
-+				    gicv2m_get_msi_addr(v2m, hwirq));
- 	if (err)
- 		return err;
- 
-@@ -307,7 +319,7 @@ static int gicv2m_allocate_domains(struct irq_domain *parent)
- 
- static int __init gicv2m_init_one(struct fwnode_handle *fwnode,
- 				  u32 spi_start, u32 nr_spis,
--				  struct resource *res)
-+				  struct resource *res, u32 flags)
- {
- 	int ret;
- 	struct v2m_data *v2m;
-@@ -320,6 +332,7 @@ static int __init gicv2m_init_one(struct fwnode_handle *fwnode,
- 
- 	INIT_LIST_HEAD(&v2m->entry);
- 	v2m->fwnode = fwnode;
-+	v2m->flags = flags;
- 
- 	memcpy(&v2m->res, res, sizeof(struct resource));
- 
-@@ -334,7 +347,14 @@ static int __init gicv2m_init_one(struct fwnode_handle *fwnode,
- 		v2m->spi_start = spi_start;
- 		v2m->nr_spis = nr_spis;
- 	} else {
--		u32 typer = readl_relaxed(v2m->base + V2M_MSI_TYPER);
-+		u32 typer;
-+
-+		/* Graviton should always have explicit spi_start/nr_spis */
-+		if (v2m->flags & GICV2M_GRAVITON_ADDRESS_ONLY) {
-+			ret = -EINVAL;
-+			goto err_iounmap;
-+		}
-+		typer = readl_relaxed(v2m->base + V2M_MSI_TYPER);
- 
- 		v2m->spi_start = V2M_MSI_TYPER_BASE_SPI(typer);
- 		v2m->nr_spis = V2M_MSI_TYPER_NUM_SPI(typer);
-@@ -355,18 +375,21 @@ static int __init gicv2m_init_one(struct fwnode_handle *fwnode,
- 	 *
- 	 * Broadom NS2 GICv2m implementation has an erratum where the MSI data
- 	 * is 'spi_number - 32'
-+	 *
-+	 * Reading that register fails on the Graviton implementation
- 	 */
--	switch (readl_relaxed(v2m->base + V2M_MSI_IIDR)) {
--	case XGENE_GICV2M_MSI_IIDR:
--		v2m->flags |= GICV2M_NEEDS_SPI_OFFSET;
--		v2m->spi_offset = v2m->spi_start;
--		break;
--	case BCM_NS2_GICV2M_MSI_IIDR:
--		v2m->flags |= GICV2M_NEEDS_SPI_OFFSET;
--		v2m->spi_offset = 32;
--		break;
-+	if (!(v2m->flags & GICV2M_GRAVITON_ADDRESS_ONLY)) {
-+		switch (readl_relaxed(v2m->base + V2M_MSI_IIDR)) {
-+		case XGENE_GICV2M_MSI_IIDR:
-+			v2m->flags |= GICV2M_NEEDS_SPI_OFFSET;
-+			v2m->spi_offset = v2m->spi_start;
-+			break;
-+		case BCM_NS2_GICV2M_MSI_IIDR:
-+			v2m->flags |= GICV2M_NEEDS_SPI_OFFSET;
-+			v2m->spi_offset = 32;
-+			break;
-+		}
- 	}
--
- 	v2m->bm = kcalloc(BITS_TO_LONGS(v2m->nr_spis), sizeof(long),
- 			  GFP_KERNEL);
- 	if (!v2m->bm) {
-@@ -419,7 +442,8 @@ static int __init gicv2m_of_init(struct fwnode_handle *parent_handle,
- 			pr_info("DT overriding V2M MSI_TYPER (base:%u, num:%u)\n",
- 				spi_start, nr_spis);
- 
--		ret = gicv2m_init_one(&child->fwnode, spi_start, nr_spis, &res);
-+		ret = gicv2m_init_one(&child->fwnode, spi_start, nr_spis,
-+				      &res, 0);
- 		if (ret) {
- 			of_node_put(child);
- 			break;
-@@ -451,6 +475,25 @@ static struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
- 	return data->fwnode;
- }
- 
-+static bool acpi_check_amazon_graviton_quirks(void)
-+{
-+	static struct acpi_table_madt *madt;
-+	acpi_status status;
-+	bool rc = false;
-+
-+#define ACPI_AMZN_OEM_ID		"AMAZON"
-+
-+	status = acpi_get_table(ACPI_SIG_MADT, 0,
-+				(struct acpi_table_header **)&madt);
-+
-+	if (ACPI_FAILURE(status) || !madt)
-+		return rc;
-+	rc = !memcmp(madt->header.oem_id, ACPI_AMZN_OEM_ID, ACPI_OEM_ID_SIZE);
-+	acpi_put_table((struct acpi_table_header *)madt);
-+
-+	return rc;
-+}
-+
- static int __init
- acpi_parse_madt_msi(union acpi_subtable_headers *header,
- 		    const unsigned long end)
-@@ -460,6 +503,7 @@ acpi_parse_madt_msi(union acpi_subtable_headers *header,
- 	u32 spi_start = 0, nr_spis = 0;
- 	struct acpi_madt_generic_msi_frame *m;
- 	struct fwnode_handle *fwnode;
-+	u32 flags = 0;
- 
- 	m = (struct acpi_madt_generic_msi_frame *)header;
- 	if (BAD_MADT_ENTRY(m, end))
-@@ -469,6 +513,13 @@ acpi_parse_madt_msi(union acpi_subtable_headers *header,
- 	res.end = m->base_address + SZ_4K - 1;
- 	res.flags = IORESOURCE_MEM;
- 
-+	if (acpi_check_amazon_graviton_quirks()) {
-+		pr_info("applying Amazon Graviton quirk\n");
-+		res.end = res.start + SZ_8K - 1;
-+		flags |= GICV2M_GRAVITON_ADDRESS_ONLY;
-+		gicv2m_msi_domain_info.flags &= ~MSI_FLAG_MULTI_PCI_MSI;
-+	}
-+
- 	if (m->flags & ACPI_MADT_OVERRIDE_SPI_VALUES) {
- 		spi_start = m->spi_base;
- 		nr_spis = m->spi_count;
-@@ -483,7 +534,7 @@ acpi_parse_madt_msi(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	}
- 
--	ret = gicv2m_init_one(fwnode, spi_start, nr_spis, &res);
-+	ret = gicv2m_init_one(fwnode, spi_start, nr_spis, &res, flags);
- 	if (ret)
- 		irq_domain_free_fwnode(fwnode);
- 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index f44cd89..1282f81 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1343,6 +1343,9 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 	if (gic_dist_supports_lpis()) {
- 		its_init(handle, &gic_data.rdists, gic_data.domain);
- 		its_cpu_init();
-+	} else {
-+		if (IS_ENABLED(CONFIG_ARM_GIC_V2M))
-+			gicv2m_init(handle, gic_data.domain);
- 	}
- 
- 	if (gic_prio_masking_enabled()) {
-diff --git a/include/linux/irqchip/arm-gic-common.h b/include/linux/irqchip/arm-gic-common.h
-index 9a1a479..62a8821 100644
---- a/include/linux/irqchip/arm-gic-common.h
-+++ b/include/linux/irqchip/arm-gic-common.h
-@@ -39,4 +39,9 @@ struct gic_kvm_info {
- 
- const struct gic_kvm_info *gic_get_kvm_info(void);
- 
-+struct irq_domain;
-+struct fwnode_handle;
-+int gicv2m_init(struct fwnode_handle *parent_handle,
-+		struct irq_domain *parent);
-+
- #endif /* __LINUX_IRQCHIP_ARM_GIC_COMMON_H */
-diff --git a/include/linux/irqchip/arm-gic.h b/include/linux/irqchip/arm-gic.h
-index 0f049b3..7bd3bc6 100644
---- a/include/linux/irqchip/arm-gic.h
-+++ b/include/linux/irqchip/arm-gic.h
-@@ -160,9 +160,6 @@ int gic_of_init_child(struct device *dev, struct gic_chip_data **gic, int irq);
-  */
- void gic_init(void __iomem *dist , void __iomem *cpu);
- 
--int gicv2m_init(struct fwnode_handle *parent_handle,
--		struct irq_domain *parent);
--
- void gic_send_sgi(unsigned int cpu_id, unsigned int irq);
- int gic_get_cpu_id(unsigned int cpu);
- void gic_migrate_target(unsigned int new_cpu_id);
--- 
-2.7.4
+No problem.
+
+> On 04/05/2019 13:53, Bhupesh Sharma wrote:
+>> On 04/03/2019 11:24 PM, Bhupesh Sharma wrote:
+>>> On 04/02/2019 10:56 PM, James Morse wrote:
+>>>> Yes the kernel code is going to move around, this is why the information we expose via
+>>>> vmcoreinfo needs to be thought through: something we would always need, regardless of how
+>>>> the kernel implements it.
+>>>>
+> 
+>>>> Pointer-auth changes all this again, as we may prefer to use the bits for pointer-auth in
+>>>> one TTB or the other. PTRS_PER_PGD may show the 52bit value in this case, but neither TTBR
+>>>> is mapping 52bits of VA.
+>>>>
+>>>>
+>>>>> So far, I have generally come across discussions where the following variations of the
+>>>>> address spaces have been proposed/requested:
+>>>>> - 48bit kernel VA + 48-bit User VA,
+>>>>> - 48-bit kernel VA + 52-bit User VA,
+>>>>
+>>>> + 52bit kernel, because there is excessive quantities of memory, and the kernel maps it
+>>>> all, but 48-bit user, because it never maps all the memory, and we prefer the bits for
+>>>> pointer-auth.
+>>>>
+>>>>> - 52-bit kernel VA + 52-bit User VA.
+>>>>
+>>>> And...  all four may happen with the same built image. I don't see how you can tell these
+>>>> cases apart with the one (build-time-constant!) PTRS_PER_PGD value.
+>>>>
+>>>> I'm sure some of these cases are hypothetical, but by considering it all now, we can avoid
+>>>> three more kernel:vmcoreinfo updates, and three more fix-user-space-to-use-the-new-value.
+>>>
+>>> Agree.
+>>>
+>>>> I think you probably do need PTRS_PER_PGD, as this is the one value the mm is using to
+>>>> generate page tables. I'm pretty sure you also need T0SZ and T1SZ to know if that's
+>>>> actually in use, or the kernel is bodging round it with an offset.
+>>>
+>>> Sure, I am open to suggestions (as I realize that we need an additional VA_BITS_ACTUAL
+>>> variable export'ed for 52-bit kernel VA changes).
+> 
+> (stepping back a bit:)
+> 
+> I'm against exposing arch-specific #ifdefs that correspond to how we've configured the
+> arch code's interactions with mm. These are all moving targets, we can't have any of it
+> become ABI.
+
+Sure, I understand your concerns.
+
+> I have a straw-man for this: What is the value of PTE_FILE_MAX_BITS on your system?
+> I have no idea what this value is or means, an afternoon's archaeology would be needed(!).
+> This is something that made sense for one kernel version, a better idea came along, and it
+> was replaced. If we'd exposed this to user-space, we'd have to generate a value, even if
+> it doesn't mean anything. Exposing VA_BITS_ACTUAL is the same.
+> 
+> (Keep an eye out for when we change the kernel memory map, and any second-guessing based
+> on VA_BITS turns out to be wrong)
+> 
+> 
+> What we do have are the hardware properties. The kernel can't change these.
+> 
+> 
+>>> Also how do we standardize reading T0SZ and T1SZ in user-space. Do you propose I make an
+>>> enhancement in the cpu-feature-registers interface (see [1]) or the HWCAPS interface
+>>> (see [2]) for the same?
+> 
+> cpufeature won't help you if you've already panic()d and only have the vmcore file. This
+> stuff needs to go in vmcoreinfo.
+> 
+> As long as there is a description of how userspace uses these values, I think adding
+> key/values for TCR_EL1.TxSZ to the vmcoreinfo is a sensible way out of this. You probably
+> need TTBR1_EL1.BADDR too. (it should be specific fields, to prevent 'new uses' becoming ABI)
+> 
+> This tells you how the hardware was configured, and covers any combination of TxSZ tricks
+> we play, and whether those address bits are used for VA, or ptrauth for TTBR0 or TTRB1.
+
+Fair enough. Let me try and experiment with this suggestion a bit and I 
+will come back with a RFC patch/patchset by this weekend. Hopefully, it 
+will cover all the weird PA/VA bit combinations we are handling in arm64 
+distros these days :)
+
+Thanks,
+Bhupesh
+
+
+>> Any comments on the above points? At the moment we have to carry these fixes in the
+>> distribution kernels and I would like to have these fixed in upstream kernel itself.
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
