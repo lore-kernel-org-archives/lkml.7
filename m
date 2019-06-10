@@ -2,279 +2,90 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C235C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C3BC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE4B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4522082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="FVJe+yAq"
+	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="uFpTPEcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390115AbfFJV0X (ORCPT
+        id S2390146AbfFJV0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:26:23 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45365 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389984AbfFJV0O (ORCPT
+        Mon, 10 Jun 2019 17:26:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36805 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390113AbfFJV0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:26:14 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a14so14666394edv.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 14:26:13 -0700 (PDT)
+        Mon, 10 Jun 2019 17:26:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u8so738330wmm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 14:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8yEk4v/sNd8UDHobW3FZby6r9HfSzOfXYPDl4YnUOxU=;
-        b=FVJe+yAqxqZe3zCZdzhCs6cEQRqIDPyFRp7m8E9Cb8KraVoEFxI9HcpruX74hyASmO
-         WUL5S92+jmSlyiSaak9AweCqDp3LQ2iDKm421/V7BCugeVSiKYDUkT/o0rPw2wIb2+A9
-         AAMfeDZcc3JZfbuHZJDuVNmnnTt9rhy/zpIy+VFvEMQwsNjLmxOnklUEYRAZ2CtQF8VE
-         t+72lVFbzsIA7rauyrtqTIKANHVLQqGRFOzUiGIMDFL8jaNTcFyehKDDxeQgvPpvKqZf
-         EPCZllEDkXo968J42i2gKYCkh1lgbpEFrncld5ShPQJF/kr6uFSfddkzD28KAVmMebIP
-         KiZw==
+        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Mc4UMWOXRpniRfg/YA6rdVKg83xokm7a/gCcz99OO9Y=;
+        b=uFpTPEcnhoeUfN6R5mS/lOy4jy1oPL6nbblkSqTL3TG6ZYKl4Pxl1LdjYlVGHE4QBh
+         7cobvOiTm4Dt7Qxl5Wsm3bfUlRnGLQy++U5KUM2lb2RdGwjgtEUOTXKcJ/qaAdwKdIn5
+         MigvAWwh4TWhqmQVABnzUWlYcGGL4jRKXiAUU115FuXk7VhXUn4aBBg251VqgU29hXob
+         qbohthz5As7xrUJR2P6wDk6eviIerj1oIFJnSjgX+lq2S2z5rcKFPZ3mjNSFvqS0SJ+F
+         YCawArjFy69uVVtkh42D83IbsOqKwQT10kjuIjbitXErUWL6s2RQ3PZCMCLO+9VCrpxR
+         kv4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8yEk4v/sNd8UDHobW3FZby6r9HfSzOfXYPDl4YnUOxU=;
-        b=iKlO9k5rhfo8Z/OPT3RIBGN5U7M7DtLubd2PTs0jzldsPG/iXMnIcpd59qWexsvEQx
-         KllFt7C/1LKnJU9z5gwGRC3Ub1pPYFVihEt2pnEDw4Z0U/E/ccc8Iu1AHYfKuQmoJ/JV
-         r97573xtP25ecFMBikEn/+tKfrYWNrWZUElAbLgbMokHaNqgCr56cSl1QdwTNcVEFsEX
-         hcE0Z6MmDtUhr1tYYWCNcK9RZhbVyYMEKheViyFTe5VUNyY1DSQnERvtHcJRczkcLBCu
-         8mnsbclngD8eDmgQdpDEdhh8t30WSCJq5nkUgREKjl85wpBNkHn88PqpBR65/jSCo3od
-         BxqQ==
-X-Gm-Message-State: APjAAAWpgdHqrJazfE0+Ijzluk2Qh3Bci0OhUeRx7gG1IElyKPZfcuLU
-        E5rSRfesmiEFaVwudrvQ0F47Pg==
-X-Google-Smtp-Source: APXvYqxGC8u/8T56Y4L5MiJBJyHGEpbO8D6kz+Xq/eFPDHYYrwxV80yWGhkw/oz41DF44LKKFMIZww==
-X-Received: by 2002:a50:e1c9:: with SMTP id m9mr58228716edl.71.1560201973185;
-        Mon, 10 Jun 2019 14:26:13 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8109:9cc0:6dac:cd8f:f6e9:1b84:bbb1])
-        by smtp.gmail.com with ESMTPSA id d28sm1092256edn.31.2019.06.10.14.26.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 14:26:12 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     davem@davemloft.net, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org
-Cc:     tyhicks@canonical.com, pablo@netfilter.org,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, linux-kernel@vger.kernel.org,
-        richardrose@google.com, vapier@chromium.org, bhthompson@google.com,
-        smbarber@chromium.org, joelhockey@chromium.org,
-        ueberall@themenzentrisch.de,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH net-next v2 2/2] br_netfilter: namespace bridge netfilter sysctls
-Date:   Mon, 10 Jun 2019 23:26:06 +0200
-Message-Id: <20190610212606.29743-3-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190610212606.29743-1-christian@brauner.io>
-References: <20190610212606.29743-1-christian@brauner.io>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Mc4UMWOXRpniRfg/YA6rdVKg83xokm7a/gCcz99OO9Y=;
+        b=XbrIlEjNJZCw3FtQU9ZCl5F9KE3Y6qmMjTrxsDjqKX0G7qe8Plb71Iq8SdHFXNKvdj
+         3nZP+3/gh7TnyM8a+BMKf28xEyR3w5sXMP9O579COaDUkxSXugkqYx63SFkiG3cmpNTb
+         H7qyoOgE20TQoX4Rld6Qq/pCGKYny7Hb7fpi0epK4gboJLu+MNzmq9B/8tgzMMTZHzeX
+         vaxQ74N5UqpQzfg938j5HkuwBORcnY/cZU6DNcFJ9RbqIhhsjTi2u4x/taq3/vPoIZ5l
+         jkGBP0+8x51JZBoXi8rIkOWSRAN9UM0XiEB5qv3FbBhommK7+nBjA2RydPUKYjtwZgji
+         UPqw==
+X-Gm-Message-State: APjAAAU1sxvTFPtymLwAER2o6quS7zYnTRQzrcGAeApqoc0dlQOfPPme
+        A/ota2GvprovTnqeRx9BendpIX0O45k=
+X-Google-Smtp-Source: APXvYqyeuGvHOcZX+1y8oIDrqD5qVR9OcS4PL/eW8U0fC1mdpO/PrNdlwlgxUsIg+qiq3RWx1Xo/GA==
+X-Received: by 2002:a1c:108:: with SMTP id 8mr13793453wmb.159.1560201982401;
+        Mon, 10 Jun 2019 14:26:22 -0700 (PDT)
+Received: from localhost ([94.1.151.203])
+        by smtp.gmail.com with ESMTPSA id r5sm22420399wrg.10.2019.06.10.14.26.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 14:26:21 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 22:26:20 +0100
+From:   Matt Fleming <matt@codeblueprint.co.uk>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] sched/topology: Improve load balancing on AMD EPYC
+Message-ID: <20190610212620.GA4772@codeblueprint.co.uk>
+References: <20190605155922.17153-1-matt@codeblueprint.co.uk>
+ <20190605180035.GA3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605180035.GA3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the /proc/sys/net/bridge folder is only created in the initial
-network namespace. This patch ensures that the /proc/sys/net/bridge folder
-is available in each network namespace if the module is loaded and
-disappears from all network namespaces when the module is unloaded.
+On Wed, 05 Jun, at 08:00:35PM, Peter Zijlstra wrote:
+> 
+> And then we had two magic values :/
+> 
+> Should we not 'fix' RECLAIM_DISTANCE for EPYC or something? Because
+> surely, if we want to load-balance agressively over 30, then so too
+> should we do node_reclaim() I'm thikning.
 
-In doing so the patch makes the sysctls:
+Yeah we can fix it just for EPYC, Mel suggested that approach originally.
 
-bridge-nf-call-arptables
-bridge-nf-call-ip6tables
-bridge-nf-call-iptables
-bridge-nf-filter-pppoe-tagged
-bridge-nf-filter-vlan-tagged
-bridge-nf-pass-vlan-input-dev
-
-apply per network namespace. This unblocks some use-cases where users would
-like to e.g. not do bridge filtering for bridges in a specific network
-namespace while doing so for bridges located in another network namespace.
-
-The netfilter rules are afaict already per network namespace so it should
-be safe for users to specify whether bridge devices inside a network
-namespace are supposed to go through iptables et al. or not. Also, this can
-already be done per-bridge by setting an option for each individual bridge
-via Netlink. It should also be possible to do this for all bridges in a
-network namespace via sysctls.
-
-Cc: Tyler Hicks <tyhicks@canonical.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- net/bridge/br_netfilter_hooks.c | 117 ++++++++++++++++++++------------
- 1 file changed, 72 insertions(+), 45 deletions(-)
-
-diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index 4595c0d64e6a..fd9e991c1189 100644
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -45,13 +45,13 @@
- 
- static unsigned int brnf_net_id __read_mostly;
- 
--#ifdef CONFIG_SYSCTL
--static struct ctl_table_header *brnf_sysctl_header;
--#endif
--
- struct brnf_net {
- 	bool enabled;
- 
-+#ifdef CONFIG_SYSCTL
-+	struct ctl_table_header *ctl_hdr;
-+#endif
-+
- 	/* default value is 1 */
- 	int call_iptables;
- 	int call_ip6tables;
-@@ -976,23 +976,6 @@ static int brnf_device_event(struct notifier_block *unused, unsigned long event,
- 	return NOTIFY_OK;
- }
- 
--static void __net_exit brnf_exit_net(struct net *net)
--{
--	struct brnf_net *brnet = net_generic(net, brnf_net_id);
--
--	if (!brnet->enabled)
--		return;
--
--	nf_unregister_net_hooks(net, br_nf_ops, ARRAY_SIZE(br_nf_ops));
--	brnet->enabled = false;
--}
--
--static struct pernet_operations brnf_net_ops __read_mostly = {
--	.exit = brnf_exit_net,
--	.id   = &brnf_net_id,
--	.size = sizeof(struct brnf_net),
--};
--
- static struct notifier_block brnf_notifier __read_mostly = {
- 	.notifier_call = brnf_device_event,
- };
-@@ -1098,12 +1081,79 @@ static inline void br_netfilter_sysctl_default(struct brnf_net *brnf)
- 	brnf->pass_vlan_indev = 0;
- }
- 
-+static int br_netfilter_sysctl_init_net(struct net *net)
-+{
-+	struct ctl_table *table = brnf_table;
-+	struct brnf_net *brnet;
-+
-+	if (!net_eq(net, &init_net)) {
-+		table = kmemdup(table, sizeof(brnf_table), GFP_KERNEL);
-+		if (!table)
-+			return -ENOMEM;
-+	}
-+
-+	brnet = net_generic(net, brnf_net_id);
-+	table[0].data = &brnet->call_arptables;
-+	table[1].data = &brnet->call_iptables;
-+	table[2].data = &brnet->call_ip6tables;
-+	table[3].data = &brnet->filter_vlan_tagged;
-+	table[4].data = &brnet->filter_pppoe_tagged;
-+	table[5].data = &brnet->pass_vlan_indev;
-+
-+	br_netfilter_sysctl_default(brnet);
-+
-+	brnet->ctl_hdr = register_net_sysctl(net, "net/bridge", table);
-+	if (!brnet->ctl_hdr) {
-+		if (!net_eq(net, &init_net))
-+			kfree(table);
-+
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void br_netfilter_sysctl_exit_net(struct net *net,
-+					 struct brnf_net *brnet)
-+{
-+	unregister_net_sysctl_table(brnet->ctl_hdr);
-+	if (!net_eq(net, &init_net))
-+		kfree(brnet->ctl_hdr->ctl_table_arg);
-+}
-+
-+static int __net_init brnf_init_net(struct net *net)
-+{
-+	return br_netfilter_sysctl_init_net(net);
-+}
-+#endif
-+
-+static void __net_exit brnf_exit_net(struct net *net)
-+{
-+	struct brnf_net *brnet;
-+
-+	brnet = net_generic(net, brnf_net_id);
-+	if (brnet->enabled) {
-+		nf_unregister_net_hooks(net, br_nf_ops, ARRAY_SIZE(br_nf_ops));
-+		brnet->enabled = false;
-+	}
-+
-+#ifdef CONFIG_SYSCTL
-+	br_netfilter_sysctl_exit_net(net, brnet);
- #endif
-+}
-+
-+static struct pernet_operations brnf_net_ops __read_mostly = {
-+#ifdef CONFIG_SYSCTL
-+	.init = brnf_init_net,
-+#endif
-+	.exit = brnf_exit_net,
-+	.id   = &brnf_net_id,
-+	.size = sizeof(struct brnf_net),
-+};
- 
- static int __init br_netfilter_init(void)
- {
- 	int ret;
--	struct brnf_net *brnet;
- 
- 	ret = register_pernet_subsys(&brnf_net_ops);
- 	if (ret < 0)
-@@ -1115,26 +1165,6 @@ static int __init br_netfilter_init(void)
- 		return ret;
- 	}
- 
--#ifdef CONFIG_SYSCTL
--	brnet = net_generic(&init_net, brnf_net_id);
--	brnf_table[0].data = &brnet->call_arptables;
--	brnf_table[1].data = &brnet->call_iptables;
--	brnf_table[2].data = &brnet->call_ip6tables;
--	brnf_table[3].data = &brnet->filter_vlan_tagged;
--	brnf_table[4].data = &brnet->filter_pppoe_tagged;
--	brnf_table[5].data = &brnet->pass_vlan_indev;
--
--	br_netfilter_sysctl_default(brnet);
--
--	brnf_sysctl_header = register_net_sysctl(&init_net, "net/bridge", brnf_table);
--	if (brnf_sysctl_header == NULL) {
--		printk(KERN_WARNING
--		       "br_netfilter: can't register to sysctl.\n");
--		unregister_netdevice_notifier(&brnf_notifier);
--		unregister_pernet_subsys(&brnf_net_ops);
--		return -ENOMEM;
--	}
--#endif
- 	RCU_INIT_POINTER(nf_br_ops, &br_ops);
- 	printk(KERN_NOTICE "Bridge firewalling registered\n");
- 	return 0;
-@@ -1145,9 +1175,6 @@ static void __exit br_netfilter_fini(void)
- 	RCU_INIT_POINTER(nf_br_ops, NULL);
- 	unregister_netdevice_notifier(&brnf_notifier);
- 	unregister_pernet_subsys(&brnf_net_ops);
--#ifdef CONFIG_SYSCTL
--	unregister_net_sysctl_table(brnf_sysctl_header);
--#endif
- }
- 
- module_init(br_netfilter_init);
--- 
-2.21.0
-
+Suravee, Tom, what's the best way to detect these EPYC machines that need to
+override RECLAIM_DISTANCE?
