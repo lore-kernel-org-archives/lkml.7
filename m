@@ -2,220 +2,189 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8EBC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14877C4321B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B11920859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98962089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:48:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+8DWMq4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jrk/1Qed";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jrk/1Qed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390356AbfFJWhC (ORCPT
+        id S2390434AbfFJWs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 18:37:02 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44255 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390073AbfFJWhC (ORCPT
+        Mon, 10 Jun 2019 18:48:57 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:33088 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390340AbfFJWs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 18:37:02 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so6098143pfe.11;
-        Mon, 10 Jun 2019 15:37:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=q8b2TKU6JOAJlj9dzQ91v3D4QaEKDBsjJpwMvzaCt2U=;
-        b=R+8DWMq4UluXl/AGTjShDwuS1OZP5R2Hp/hgySjl4KWPHXCG20d7K+w0TfhIqLVmx2
-         JJSg0tm7me4YzjGyU3OyABU3sF6+RFsNN2V2p2CR37ZlhHN7Z2kzpGsLUr/cc/FuQAS6
-         DZx+U3sMe4qiPTycpKOz8Olm/m3Kf+nlCNrLU3Vma9blPPxdcj6WI0ZZLoLSKscdHZGI
-         EdbNHqk3/l+IR0AdJ/YCTpu43yobSSG3VRqfvtXUrtXj+9EmXNh5sZNiqqTbO8xod0cc
-         9Fb8BwWvg5mUxrtk7rjOKgPWj7FT/yoYI8V5u6SvGemhQmJ2cIZnNEtkrpGBaa/zCo5P
-         Q7Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=q8b2TKU6JOAJlj9dzQ91v3D4QaEKDBsjJpwMvzaCt2U=;
-        b=gxi2Jb2Y/QvORr9ZHK5hYT7BrGZb7XA1C6J1MDI/5X28FxH3LciLbfoNaI2tydaGs+
-         fJEYrM/mV/7XIBm3zjWAV8HHk6ttlySu5MtQslUHdgr+9B4VLnLSjVrFxM6hZ+cPsqdc
-         Wtu9cZSQ7xk9rnh7Y4e89yCM1SnSFjDQLMLakyHc4TfA02hYcoq8aMz370FdbtnqH0A1
-         xv4O51dBpI+mnR4YScx2+lc1hj3FKOOCkXED7c4Jxp6DySefFoeeM0bD7PpVpxuaYkBN
-         S/Cwk/Umgv51yHS8KLTSpQU2XbQZbrIa6wbS/d+0kNkIKFybarVpshIdClul2kOdakR7
-         ziGA==
-X-Gm-Message-State: APjAAAUGayG2nqxaZ91uzf9Pl0UWy6L0uzqbW1qb72YWQWZ5k941eXCv
-        rdRHglSrq2hW3v/kg3+AVgk=
-X-Google-Smtp-Source: APXvYqwd8sGYxy89XzGWUIQvVTvKCqg+kl6oGItr0yMFIo7CpSE1iaXNvQGc/dpHKLVKDrZXk8JXJA==
-X-Received: by 2002:aa7:8ecb:: with SMTP id b11mr37159852pfr.220.1560206220888;
-        Mon, 10 Jun 2019 15:37:00 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id g17sm14465463pfb.56.2019.06.10.15.36.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 15:37:00 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 15:36:58 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     bleung@chromium.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, libusb-devel@lists.sourceforge.net
-Subject: [PATCH] USB: add usbfs ioctl to retrieve the connection parameters
-Message-ID: <20190610223658.GA162167@dtor-ws>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 10 Jun 2019 18:48:56 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id CE2758EE182;
+        Mon, 10 Jun 2019 15:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1560206935;
+        bh=mb6IzwM78BT/viG2YgEvk/s6gBgJO14fZN6QaNMTcf0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=jrk/1QedcyxDoeH/nG3zibD+xvky2BjHsl77hFVLLkn8RtjNGKG+ui2IHJJiFOsAd
+         mrCUm9W/U0SZA9+ac9aDNJftoFL118Pk1K8N3fUWBj56jSOc2W9U+f3NP4SgzM5FuL
+         /48jgcNYp4iiQH+T4GgcAYd1ZlKL+h36987ETg1E=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ASJhwJ4X_a3j; Mon, 10 Jun 2019 15:48:55 -0700 (PDT)
+Received: from jarvis.lan (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 3B0818EE105;
+        Mon, 10 Jun 2019 15:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1560206935;
+        bh=mb6IzwM78BT/viG2YgEvk/s6gBgJO14fZN6QaNMTcf0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=jrk/1QedcyxDoeH/nG3zibD+xvky2BjHsl77hFVLLkn8RtjNGKG+ui2IHJJiFOsAd
+         mrCUm9W/U0SZA9+ac9aDNJftoFL118Pk1K8N3fUWBj56jSOc2W9U+f3NP4SgzM5FuL
+         /48jgcNYp4iiQH+T4GgcAYd1ZlKL+h36987ETg1E=
+Message-ID: <1560206933.3698.27.camel@HansenPartnership.com>
+Subject: Re: [PATCH] drivers/ata: print trim features at device
+ initialization
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Date:   Mon, 10 Jun 2019 15:48:53 -0700
+In-Reply-To: <b554c428-417e-5fef-1776-87a4db1d674a@yandex-team.ru>
+References: <155989287898.1506.14253954112551051148.stgit@buzz>
+         <yq1wohxib7t.fsf@oracle.com>
+         <eebfb1cc-f6d0-580e-1d56-2af0f481a92f@yandex-team.ru>
+         <048ed77f-8faa-fb67-c6bc-10d953f52f89@yandex-team.ru>
+         <1560116241.3324.19.camel@HansenPartnership.com>
+         <b554c428-417e-5fef-1776-87a4db1d674a@yandex-team.ru>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently usfbs gained availability to retrieve device speed, but there
-is sill no way to determine the bus number or list of ports the device
-is connected to when using usbfs. While this information can be obtained
-from sysfs, not all environments allow sysfs access. In a jailed
-environment a program might be simply given an opened file descriptor to
-usbfs device, and it is really important that all data can be gathered
-from said file descriptor.
+On Mon, 2019-06-10 at 10:49 +0300, Konstantin Khlebnikov wrote:
+> On 10.06.2019 0:37, James Bottomley wrote:
+> > On Sat, 2019-06-08 at 17:13 +0300, Konstantin Khlebnikov wrote:
+> > > > On 08.06.2019 11:25, Christoph Hellwig wrote:> On Fri, Jun 07,
+> > > > 2019
+> > > > at 10:34:39AM +0300, Konstantin Khlebnikov wrote:
+> > > >   >
+> > > >   > Do we really need to spam dmesg with even more ATA
+> > > > crap?  What
+> > > > about
+> > > >   > a sysfs file that can be read on demand instead?
+> > > >   >
+> > > > 
+> > > > Makes sense.
+> > > > 
+> > > > Trim state is exposed for ata_device:
+> > > > /sys/class/ata_device/devX.Y/trim
+> > > > but there is no link from scsi device to ata device so they
+> > > > hard to match.
+> > > > 
+> > > > I'll think about it.
+> > > 
+> > > Nope. There is no obvious way to link scsi device with
+> > > ata_device. ata_device is built on top of "transport_class" and
+> > > "attribute_container". This some extremely over engineered sysfs
+> > > framework used only in ata/scsi. I don't want to touch this.
+> > 
+> > You don't need to know any of that.  The problem is actually when
+> > the ata transport classes were first created, the devices weren't
+> > properly parented.  What should have happened, like every other
+> > transport class, is that the devices should have descended down to
+> > the scsi device as the leaf in an integrated fashion.  Instead,
+> > what we seem to have is three completely separate trees.
+> > 
+> > So if you look at a SAS device, you see from the pci device:
+> > 
+> > host2/port-2:0/end_device-2:0/target2:0:0/2:0:0:0/block/sdb/sdb1
+> > 
+> > But if you look at a SATA device, you see three separate paths:
+> > 
+> > ata3/host3/target3\:0\:0/3\:0\:0\:0/block/sda/sda1
+> > ata3/link3/dev3.0/ata_device/dev3.0
+> > ata3/ata_port/ata3
+> > 
+> > Instead of an integrated tree
+> > 
+> > Unfortunately, this whole thing is unfixable now.  If I integrate
+> > the tree properly, the separate port and link directories will get
+> > subsumed and we won't be able to recover them with judicious
+> > linking so scripts relying on them will break.  The best we can
+> > probably do is add additional links with what we have.
+> > 
+> > To follow the way we usually do it, there should be a link from the
+> > ata device to the scsi target, but that wouldn't help you find the
+> > "trim" files, so it sounds like you want a link from the scsi
+> > device to the ata device, which would?
+> 
+> Yes, I'm talking about link from scsi device to leaf ata_device node.
+> 
+> In libata scsi_device has one to one relation with ata_device.
+> So making link like /sys/class/block/sda/device/ata_device should be
+> possible easy.
+> But I haven't found implicit reference from struct ata_device to
+> ata_device in sysfs.
 
-This patch introduces a new ioctl, USBDEVFS_CONNINFO_EX, which return
-extended connection information for the device, including the bus
-number, address, port list and speed. The API allows kernel to extend
-amount of data returned by the ioctl and userspace has an option of
-adjusting the amount of data it is willing to consume. A new capability,
-USBDEVFS_CAP_CONNINFO_EX, is introduced to help userspace in determining
-whether the kernel supports this new ioctl.
+If that's all you want, it is pretty simple modulo the fact we can only
+get at the tdev, not the lower transport device, which is what you
+want, but at least it's linear from the symlink.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+The attached patch should do this.
+
+Now I see this for my non-sas device:
+
+# ls -l /sys/class/scsi_device/3\:0\:0\:0/device/ata_device
+lrwxrwxrwx 1 root root 0 Jun 10 13:39 /sys/class/scsi_device/3:0:0:0/device/ata_device -> ../../../link3/dev3.0
+
+James
+
 ---
- drivers/usb/core/devio.c          | 42 ++++++++++++++++++++++++++++++-
- include/uapi/linux/usbdevice_fs.h | 26 +++++++++++++++++++
- 2 files changed, 67 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index fa783531ee88..fb6a074e4f1d 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -1308,6 +1308,39 @@ static int proc_connectinfo(struct usb_dev_state *ps, void __user *arg)
- 	return 0;
- }
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 391ac0503dc0..b644336a6d65 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -4576,7 +4576,20 @@ void ata_scsi_scan_host(struct ata_port *ap, int sync)
+ 			sdev = __scsi_add_device(ap->scsi_host, channel, id, 0,
+ 						 NULL);
+ 			if (!IS_ERR(sdev)) {
++				int r;
++
+ 				dev->sdev = sdev;
++				/* this is a sysfs stupidity: we don't
++				 * care if the link actually gets
++				 * created: there's no error handling
++				 * for failure and we continue on
++				 * regardless, but we have to discard
++				 * the return value like this to
++				 * defeat unused result checking */
++				r = sysfs_create_link(&sdev->sdev_gendev.kobj,
++						      &dev->tdev.kobj,
++						      "ata_device");
++				(void)r;
+ 				scsi_device_put(sdev);
+ 			} else {
+ 				dev->sdev = NULL;
+@@ -4703,6 +4716,7 @@ static void ata_scsi_remove_dev(struct ata_device *dev)
+ 		ata_dev_info(dev, "detaching (SCSI %s)\n",
+ 			     dev_name(&sdev->sdev_gendev));
  
-+static int proc_conninfo_ex(struct usb_dev_state *ps,
-+			    void __user *arg, size_t size)
-+{
-+	struct usbdevfs_conninfo_ex ci;
-+	struct usb_device *udev = ps->dev;
-+
-+	if (size < sizeof(ci.size))
-+		return -EINVAL;
-+
-+	memset(&ci, 0, sizeof(ci));
-+	ci.size = sizeof(ci);
-+	ci.busnum = udev->bus->busnum;
-+	ci.devnum = udev->devnum;
-+	ci.speed = udev->speed;
-+
-+	while (udev && udev->portnum != 0) {
-+		if (++ci.num_ports <= ARRAY_SIZE(ci.ports))
-+			ci.ports[ARRAY_SIZE(ci.ports) - ci.num_ports] =
-+					udev->portnum;
-+		udev = udev->parent;
-+	}
-+
-+	if (ci.num_ports < ARRAY_SIZE(ci.ports))
-+		memmove(&ci.ports[0],
-+			&ci.ports[ARRAY_SIZE(ci.ports) - ci.num_ports],
-+			ci.num_ports);
-+
-+	if (copy_to_user(arg, &ci, min(sizeof(ci), size)))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
- static int proc_resetdevice(struct usb_dev_state *ps)
- {
- 	struct usb_host_config *actconfig = ps->dev->actconfig;
-@@ -2252,7 +2285,7 @@ static int proc_get_capabilities(struct usb_dev_state *ps, void __user *arg)
- 
- 	caps = USBDEVFS_CAP_ZERO_PACKET | USBDEVFS_CAP_NO_PACKET_SIZE_LIM |
- 			USBDEVFS_CAP_REAP_AFTER_DISCONNECT | USBDEVFS_CAP_MMAP |
--			USBDEVFS_CAP_DROP_PRIVILEGES;
-+			USBDEVFS_CAP_DROP_PRIVILEGES | USBDEVFS_CAP_CONNINFO_EX;
- 	if (!ps->dev->bus->no_stop_on_short)
- 		caps |= USBDEVFS_CAP_BULK_CONTINUATION;
- 	if (ps->dev->bus->sg_tablesize)
-@@ -2551,6 +2584,13 @@ static long usbdev_do_ioctl(struct file *file, unsigned int cmd,
- 		break;
++		sysfs_remove_link(&sdev->sdev_gendev.kobj, "ata_device");
+ 		scsi_remove_device(sdev);
+ 		scsi_device_put(sdev);
  	}
- 
-+	/* Handle variable-length commands */
-+	switch (cmd & ~IOCSIZE_MASK) {
-+	case USBDEVFS_CONNINFO_EX(0):
-+		ret = proc_conninfo_ex(ps, p, _IOC_SIZE(cmd));
-+		break;
-+	}
-+
-  done:
- 	usb_unlock_device(dev);
- 	if (ret >= 0)
-diff --git a/include/uapi/linux/usbdevice_fs.h b/include/uapi/linux/usbdevice_fs.h
-index 964e87217be4..393a2de914e8 100644
---- a/include/uapi/linux/usbdevice_fs.h
-+++ b/include/uapi/linux/usbdevice_fs.h
-@@ -76,6 +76,26 @@ struct usbdevfs_connectinfo {
- 	unsigned char slow;
- };
- 
-+struct usbdevfs_conninfo_ex {
-+	__u32 size;		/* Size of the structure from the kernel's */
-+				/* point of view. Can be used by userspace */
-+				/* to determine how much data can be       */
-+				/* used/trusted.                           */
-+	__u32 busnum;           /* USB bus number, as enumerated by the    */
-+				/* kernel, the device is connected to.     */
-+	__u32 devnum;           /* Device address on the bus.              */
-+	__u32 speed;		/* USB_SPEED_* constants from ch9.h        */
-+	u8 num_ports;		/* Number of ports the device is connected */
-+				/* to on the way to the root hub. It may   */
-+				/* be bigger than size of 'ports' array so */
-+				/* userspace can detect overflows.         */
-+	u8 ports[7];		/* List of ports on the way from the root  */
-+				/* hub to the device. Current limit in     */
-+				/* USB specification is 7 tiers (root hub, */
-+				/* 5 intermediate hubs, device), which     */
-+				/* gives at most 6 port entries.           */
-+};
-+
- #define USBDEVFS_URB_SHORT_NOT_OK	0x01
- #define USBDEVFS_URB_ISO_ASAP		0x02
- #define USBDEVFS_URB_BULK_CONTINUATION	0x04
-@@ -137,6 +157,7 @@ struct usbdevfs_hub_portinfo {
- #define USBDEVFS_CAP_REAP_AFTER_DISCONNECT	0x10
- #define USBDEVFS_CAP_MMAP			0x20
- #define USBDEVFS_CAP_DROP_PRIVILEGES		0x40
-+#define USBDEVFS_CAP_CONNINFO_EX		0x80
- 
- /* USBDEVFS_DISCONNECT_CLAIM flags & struct */
- 
-@@ -197,5 +218,10 @@ struct usbdevfs_streams {
- #define USBDEVFS_FREE_STREAMS      _IOR('U', 29, struct usbdevfs_streams)
- #define USBDEVFS_DROP_PRIVILEGES   _IOW('U', 30, __u32)
- #define USBDEVFS_GET_SPEED         _IO('U', 31)
-+/*
-+ * Returns struct usbdevfs_conninfo_ex; length is variable to allow
-+ * extending size of the data returned.
-+ */
-+#define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
- 
- #endif /* _UAPI_LINUX_USBDEVICE_FS_H */
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
-
-
--- 
-Dmitry
