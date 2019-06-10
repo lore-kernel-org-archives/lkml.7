@@ -2,176 +2,119 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ACFC468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F71C468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B571207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 088D9207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s1WMdgKl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JivEgBVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387787AbfFJGD5 (ORCPT
+        id S2387796AbfFJGGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 02:03:57 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39635 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387728AbfFJGD4 (ORCPT
+        Mon, 10 Jun 2019 02:06:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43594 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387718AbfFJGGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 02:03:56 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v18so6758054ljh.6
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 23:03:55 -0700 (PDT)
+        Mon, 10 Jun 2019 02:06:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so4622549pfg.10
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 23:06:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0Dm0JUHmNbBa06Nkd0nXLcKO7Ns6LtQgelo6VtXT2CY=;
-        b=s1WMdgKlsVp4rFa+3bC516UluZ4qt1B/E6S+JzOfuYhyUzmKvVX0Kpxclg4qYYQIs3
-         s2lsFrInQEHMA93PgySiXHETr3IBHnpIpYVDysaie23Y6hPMzPOtqh8oU0JdUaEKdHwp
-         +ZBel3bP46oLjZRmq+koulsSzqq1/Zq2NVGpukJSjjw7viMPVcgvGr8m6y388JO83XRC
-         uqfHdACnLklIGoWes5dO8mSeKM60kD9dnKD0E7kcTtM2guk2mhIVysFYVdPz4HgTW3QH
-         I+sXW6akKVe8x4oEY+C4Mgmlgq71aeaFZGpQrY1xH4dY0QMHad52C1Kp9PlXD3DjQIKN
-         Mu/Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/Dkvj991Uhw/1cfRgxPNcyrHB69xx77ySHEyTXjhqvA=;
+        b=JivEgBVuc6FZ4RjN29MeUE/bi4q5QoB1acpQCvG8UpXZhGQxck6vFiqw3+HjTh4Z5W
+         2K4vQW/5irgR3BnFrr6hbyNMNs+TGlC5gFHh39gF46VAA6T3UWprM0IpMfaexBbj7klS
+         C0Urd0dp0FU36novirPjriUnM1bK4c4qYvHL5ciE28lX6N/I6tkzuWewsiYx41IgwElK
+         8EN8i0ved+yvkXSHOyHWnRxljY31ztw1L4wSWA9XJg4P1lxb+WrzDxCzsVGJ9b6EpCpr
+         lNF96CTDQxEDstXRPOrYiz/mixGYEg9zIzZHwEFO467O4vSldUCZJuNfgCWnHkneFL4s
+         oaew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0Dm0JUHmNbBa06Nkd0nXLcKO7Ns6LtQgelo6VtXT2CY=;
-        b=XvZpTU/8MRft8yWxm52H496gNT8ky+X2rKfDYXw2eBwoE7Uw2VlrY4szO//vHQ6AEP
-         9uX8CW+1XlChpLMLAm2D6wa6spUEWoeYsSzAYn2bx0zsG5NuHs8L4DPEY3x/b+8FEqi2
-         P5PDS3gP/U/V3orGfa9I2Ql9sKiskBOsE/P54kpaasuGympXqJtfhstJo2bM9R4hW2q9
-         fOad9PUBWo6NR6pX+aKDLzleDN2n7Zek9+cuAEor8LXsLar17Rq3EjPlHkNSbvpT/m9O
-         rJlePYQhL37DJC8nIev/3YRjilUEQ4xbj96j7dd/yWS8qGN91bSgXwdpoFuOhPppPAnu
-         dRlw==
-X-Gm-Message-State: APjAAAWeVnMkNzLYAnYFxFqZ7CaDRnC62pr1Y1JIFeev2Qhp7uYrb31M
-        olqjtuHKhdZ1GCE1ThZMLKLj8hjkvc89GWXobtKj+w==
-X-Google-Smtp-Source: APXvYqzozS3RG8xkvD+3vVuLQoV4yxg+CI1GakigpKK4AKmL+ZCUNxNT4TKM5eUEBkLh4kTil+mk89HCugrTQUWYYqQ=
-X-Received: by 2002:a2e:2b11:: with SMTP id q17mr35483218lje.23.1560146634750;
- Sun, 09 Jun 2019 23:03:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/Dkvj991Uhw/1cfRgxPNcyrHB69xx77ySHEyTXjhqvA=;
+        b=Mi93uUw/OmIYWiAEKXjjUy3kKCYX4Vr+UHFv1o4putZWSHZ2ds+hiXUOeOXOw/spgN
+         kPcsRV3pptkY0u9dQPrSzf5bwrbxzaQSB2MCKSTmT8U0Hbf1kZ2IMNU9sC4x1YZ608h0
+         J++wC+2YEle5oVTeFsoJplV/UWApcWO8amY0znXMWbrKpg5USmdxVc6m7lj8M3k4ZYaB
+         kzpyaovgG56WSg6seHjZwvZrJis+N9rMhZ8aXO2xNNOArzuX3lTfdYeczf17Ot3Drnbk
+         9Hqi0Dq22G6FCwVvRG4kybKdytlQhyCTr2FpXQPG/JQP2ZNWLIIXdG/GkLGaW2mls7OM
+         g54w==
+X-Gm-Message-State: APjAAAVGkRJJSbdBlPDg9UCebFFs83DjDeMeFwRXd/jDJ2aqzkQy7rpj
+        PU42YoYhJ8u3+Kk1fNueW6rOrw==
+X-Google-Smtp-Source: APXvYqwLbTkJ83xIZQSN0X41sV2Qx5mmIUMQI8suaFwh1ovaQIunxZGLx5yEKCwIgFShFJqoprwhXg==
+X-Received: by 2002:a62:2643:: with SMTP id m64mr70607053pfm.46.1560146800022;
+        Sun, 09 Jun 2019 23:06:40 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id 26sm9290214pfi.147.2019.06.09.23.06.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Jun 2019 23:06:38 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dave Martin <Dave.Martin@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2] KVM: arm64: Implement vq_present() as a macro
+Date:   Mon, 10 Jun 2019 11:36:33 +0530
+Message-Id: <7c2590c4d8cc95cd40bbb05c0d0c5e2b0735a16b.1560145715.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-References: <20190609164127.541128197@linuxfoundation.org>
-In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 10 Jun 2019 11:33:43 +0530
-Message-ID: <CA+G9fYuxGDX0pX0BROB7mJqJuCPYRshzae+cTnb_xQXEtBpgXA@mail.gmail.com>
-Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 9 Jun 2019 at 22:15, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.1.9 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.1.9-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+This routine is a one-liner and doesn't really need to be function and
+should be rather implemented as a macro.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Suggested-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V1->V2:
+- The previous implementation was fixing a compilation error that
+  occurred only with old compilers (from 2015) due to a bug in the
+  compiler itself.
 
-Summary
-------------------------------------------------------------------------
+- Dave suggested to rather implement this as a macro which made more
+  sense.
 
-kernel: 5.1.9-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.1.y
-git commit: 5b3d375b3838a28e769a56fdcb67d5422579d53b
-git describe: v5.1.7-157-g5b3d375b3838
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/bui=
-ld/v5.1.7-157-g5b3d375b3838
+ arch/arm64/kvm/guest.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-No regressions (compared to build v5.1.7)
+diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+index 3ae2f82fca46..a429ed36a6a0 100644
+--- a/arch/arm64/kvm/guest.c
++++ b/arch/arm64/kvm/guest.c
+@@ -207,13 +207,7 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+ 
+ #define vq_word(vq) (((vq) - SVE_VQ_MIN) / 64)
+ #define vq_mask(vq) ((u64)1 << ((vq) - SVE_VQ_MIN) % 64)
+-
+-static bool vq_present(
+-	const u64 (*const vqs)[KVM_ARM64_SVE_VLS_WORDS],
+-	unsigned int vq)
+-{
+-	return (*vqs)[vq_word(vq)] & vq_mask(vq);
+-}
++#define vq_present(vqs, vq) ((*(vqs))[vq_word(vq)] & vq_mask(vq))
+ 
+ static int get_sve_vls(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+ {
+-- 
+2.21.0.rc0.269.g1a574e7a288b
 
-No fixes (compared to build v5.1.7)
-
-Ran 24361 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
