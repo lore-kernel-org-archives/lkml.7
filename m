@@ -2,82 +2,91 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7C9C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCE5C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645A020645
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247D82089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:43:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csR8vQek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390926AbfFJOmr (ORCPT
+        id S2390039AbfFJOnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:42:47 -0400
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:9580 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389178AbfFJOmq (ORCPT
+        Mon, 10 Jun 2019 10:43:15 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38075 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389317AbfFJOnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:42:46 -0400
-X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Jun 2019 10:42:45 EDT
-Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of AutoReporter
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     Jiri Slaby <jslaby@suse.cz>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20190607153849.101321647@linuxfoundation.org>
- <20190607153855.717899507@linuxfoundation.org>
- <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
- <20190610073119.GB20470@kroah.com>
- <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
- <20190610074840.GB24746@kroah.com> <20190610063340.051ee13b@lwn.net>
- <20190610140528.GA18627@kroah.com>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <f53d2786-a857-d69c-2ead-6e4c19708d6c@mageia.org>
-Date:   Mon, 10 Jun 2019 17:27:39 +0300
+        Mon, 10 Jun 2019 10:43:15 -0400
+Received: by mail-pg1-f194.google.com with SMTP id v11so5159136pgl.5;
+        Mon, 10 Jun 2019 07:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0jZ5l4R0gOuzDEE92f4hnQ6KUg3Ndgb03svKQhwL6tI=;
+        b=csR8vQek0KDNcCVN+FFM51FUFiHIadSzyyr1k91KQt+E1zLclXY7xF0xuMU5rOQMju
+         zWtMvDhQ8GCbThKxTioPeaLvELI6ASYeLJjGAHDRoRTWIjMdHpuBSoUezpjarRqLiDTN
+         yjBFvCWCnwlSZ6GImJbAXks2z5UwZ9CnZ0kuYQgrXfr2MHQfTNV81blu+tD5PJKQZH9h
+         3yinxo8C2kMrbLFdMabbLhwJ3vtNRS8S3V6ZfEYff5qxooBnDBdTrl3OONoHTPATogKn
+         jroLs9J1JrzSAys+t/2LEEPFVPdKv8jbVgAnWKmXEuO+83JHO+yvRiBpcbN/4gR4X8Mn
+         ZEMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0jZ5l4R0gOuzDEE92f4hnQ6KUg3Ndgb03svKQhwL6tI=;
+        b=cF7tVgk7fMwd4JZGUbsw1h1AHkEBk7+iiHJw9cmRIBa1qF/Dz57kQJhZ6t/G3pKk2l
+         csXPnFzCOe9KALA4CDuNyiyo/IkmMtQSdgSeBsZKk0ZmDdWHuPu114ckVOoB+kepzGiK
+         rTdJEyYr6k/UOs/JqXn2184AvBdF7QXUW4zqJcKCVPraFoWmq4/X847zc+IfxWO96fd2
+         MfKlB92vBF1jk0hMY450Cfhp7tj8vlKXo4Ivervu1m+TWrDxg5ZtX5NpxQ38DKRRSm2y
+         3VhNOMDm7k5BdYIG08FUo12gBvEN6h8WwKCaU23fztroGoZBPObx9VHdUGBiEzWSz0Jv
+         CCgw==
+X-Gm-Message-State: APjAAAX5pCwqGn6xpZyBQJUn5ipjOZn+Co6rIsWGS2JlEU93KRjyTrIv
+        xhyRMgupS6tr7uH1+LT8KTY=
+X-Google-Smtp-Source: APXvYqz9TyCmfSnsl09pBj2+kp4Xw1uh3XHfcv++Y9uuJLI8pbEwkKnk4xOokxgJislQfompIQmffw==
+X-Received: by 2002:a17:90a:2228:: with SMTP id c37mr21961431pje.9.1560177794573;
+        Mon, 10 Jun 2019 07:43:14 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p15sm12184509pgj.61.2019.06.10.07.43.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 07:43:14 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 07:43:13 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/35] 4.14.125-stable review
+Message-ID: <20190610144313.GC7705@roeck-us.net>
+References: <20190609164125.377368385@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190610140528.GA18627@kroah.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-WatchGuard-Spam-ID: str=0001.0A0C020A.5CFE6C66.0018,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.195
-X-WatchGuard-Mail-From: tmb@mageia.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den 10-06-2019 kl. 17:05, skrev Greg Kroah-Hartman:
-> On Mon, Jun 10, 2019 at 06:33:40AM -0600, Jonathan Corbet wrote:
->> On Mon, 10 Jun 2019 09:48:40 +0200
->> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->>
->>> Hm, 2.1 here:
->>> 	Running Sphinx v2.1.0
->>> perhaps Tumbleweed needs to update?  :)
->>
->> Heh...trying 2.1 is still on my list of things to do ... :)
->>
->>> Anyway, this should not be breaking, if Jon doesn't have any ideas, I'll
->>> just drop these changes.
->>
->> The fix for that is 551bd3368a7b (drm/i915: Maintain consistent
->> documentation subsection ordering) which was also marked for stable.  Jiri,
->> do you somehow not have that one?
+On Sun, Jun 09, 2019 at 06:42:06PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.125 release.
+> There are 35 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> It's part of this series, which is probably why it works for me.  Don't
-> know why it doesn't work for Jiri, unless he is cherry-picking things?
+> Responses should be made by Tue 11 Jun 2019 04:40:01 PM UTC.
+> Anything received after that time might be too late.
 > 
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 335 pass: 335 fail: 0
 
-Actualliy it is not.
-
-This patch Jiri responded to / points out to break stuff is part of 
-5.1.8, but the fix in in review queue for 5.1.9 :
-
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/diff/queue-5.1/drm-i915-maintain-consistent-documentation-subsection-ordering.patch?id=29167bff7a1c0d79dda104c44c262b0bc4cd6644
-
---
-Thomas
+Guenter
