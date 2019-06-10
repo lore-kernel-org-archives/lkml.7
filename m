@@ -2,120 +2,182 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18A7C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E35DC31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45A820859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D6720859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="Lbfc/E8m"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="GcbtoBrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391179AbfFJQYR (ORCPT
+        id S2390379AbfFJQZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:24:17 -0400
-Received: from mx.kolabnow.com ([95.128.36.42]:48560 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389927AbfFJQYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:24:17 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTP id A05BC403C9;
-        Mon, 10 Jun 2019 18:24:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received:received:received; s=dkim20160331; t=
-        1560183854; x=1561998255; bh=4bpS8XQNGbDvLWL5Tu0rslp1K0w4sKNibrp
-        rpGYwGH4=; b=Lbfc/E8mnx4qr/xRVmvwpJNjreFxLBG1J9En/UscbACfH5ewC4o
-        fdM5vNL18CAajaJ3rwNnqKg5Pecm49ZPpbgDv0r0bFBXrMeE/eFFXPNCC66mE4tE
-        LYLpjzXakF4sFhYEt4OAuBsWaSYkdplWpf1PwVaouLYQt0/1/wV005H8ABcKd6+x
-        L7cinuwe6q2Hctbwv42ZlPY0qSJueKXegUniFnNieutN4CspU6qTaeNn6TGYSf35
-        BfblhDncQCJFkGpt7Kk92bBNvDpVwmQYsaH/sGO9ukCZYNMMfnKU/TyZkDa5iZuo
-        LPZlROLxBzlImuJrhW3J7+5KZA5Xd5uk3F1jzr8lTRX2EB7cJq4SzH2ANG/S/fE+
-        5ju2DrIRELuGL9TmsppNoNL0nF0/1rwrTVvI0EhnYkVNkBok/mXMm/2x9MZPuIhb
-        W0d5WXmGs1DQEOEqSkYE05tJEWA4Nu2/pukwymh1Kv7Ce9I44DMgVeqw03TdEVkw
-        T+JXxAUuO4uRM/+pwXANQa6p/DkJ0UoATw2v8Kb97t7+tP1J2nL4A7hRZgxVwCmk
-        I5wgnyTpg8whQpZ+jx+L2IrDjr0/zXhgZ52pgI+N74z17+8yWAmXnV7LsoiszXIn
-        ahEq2dSpCjh1nU5gSy5q7Xf9FtRBlHKzHghVvaEpnqo4VfnAshoMcebg=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out003.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lIboWi3tIZq2; Mon, 10 Jun 2019 18:24:14 +0200 (CEST)
-Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTPS id 0847E402AB;
-        Mon, 10 Jun 2019 18:24:12 +0200 (CEST)
-Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
-        by int-mx001.mykolab.com (Postfix) with ESMTPS id 58491439;
-        Mon, 10 Jun 2019 18:24:12 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 09/33] docs: fault-injection: convert docs to ReST and rename to *.rst
-Date:   Mon, 10 Jun 2019 18:24:10 +0200
-Message-ID: <1693516.ET8j6nyPp2@harkonnen>
-In-Reply-To: <5bbdd14f23a8fa66164ac38d84662091b90adddc.1560045490.git.mchehab+samsung@kernel.org>
-References: <cover.1560045490.git.mchehab+samsung@kernel.org> <5bbdd14f23a8fa66164ac38d84662091b90adddc.1560045490.git.mchehab+samsung@kernel.org>
+        Mon, 10 Jun 2019 12:25:26 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40939 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389998AbfFJQZ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:25:26 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a21so8557518ljh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eipFIuppUEBChZz5jEQKJnDCMNGzgpujxoDXEsClrz0=;
+        b=GcbtoBrrxpTZ95MoI5I8PI/IWR4S1C/FKE6nwL2MNQJYCI1uPUShUb/2eNhZ09VLHr
+         ceSg3kp6GOu+D2HcrZ7XtTVUc/yl8vPCa1nV9yVOkOnsiY2EmSzZQ9I/eEdMyrbofzKe
+         7m1RSAId+c4XJqB8uAAf9noe7TGBhcN8oiXc6Rk2DzjzCF9G8TtpzUU0GYnNIACu6kkI
+         mwFOqnG/HQaThHI0C/HCE1ZF0UfQjhOmbKNkEKJxuxbUpbt9RMfIjF+hVxzUfmEyoOVf
+         eUrXyKqi9cos/KDis7qsJVzqmszRFnfpzNouAxxflgIBDlp+cG7uGzX2fgCaLuEPVseu
+         vzMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eipFIuppUEBChZz5jEQKJnDCMNGzgpujxoDXEsClrz0=;
+        b=a8TVIEfml6MkMOqRkqTnKk6MrYoupPVi32b5EwkvDsjDp11zsKrT1k0O1Gjdfgu1s8
+         uwQDVc9PSSpBbQeGaHXCcVEtHpHyHQlKPeZzgndZj+DWbxt+gN0ZqevDGh9ggzGkJzVU
+         nOkUD6aZifJ/XlCRq1a0zIuwdKZiXqnEqYMBj3XNtpfhGxZdKya8qha5usXjxeqoheUI
+         UlO/Rre14PqoFFcdQfmSvhKGdQjvWyjnKvCWnrjz1IQJNez9ynrKTj6CfLU0Ll93dtxc
+         lHFZjVnuae0gztPagyxej9zLQU8aZvKGqXQBpHjvGqmufoKLkB9iFzc8enDJMv5mcOFA
+         6jTg==
+X-Gm-Message-State: APjAAAVE7iJ5C+UgRjEW3lhVwgcYiD6l0G9yLHDI2AEKb7AFkb+b03ur
+        fCUsxqy9S97lxmxwG1AOsvsRNaO0spw=
+X-Google-Smtp-Source: APXvYqyznVsw9V2kAPwrtxirNjclrLSAsstJiifDJVxq7J/9R9usmEoDiJrJb+d2UJTKXwgwWbCvvg==
+X-Received: by 2002:a2e:9188:: with SMTP id f8mr17623754ljg.33.1560183923858;
+        Mon, 10 Jun 2019 09:25:23 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.86.166])
+        by smtp.gmail.com with ESMTPSA id 24sm2516567ljs.63.2019.06.10.09.25.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 09:25:23 -0700 (PDT)
+Subject: Re: [PATCH v5 4/5] dt-bindings: mtd: Add bindings for TI's AM654
+ HyperBus memory controller
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-mtd@lists.infradead.org,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190609103227.24875-1-vigneshr@ti.com>
+ <20190609103227.24875-5-vigneshr@ti.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <a808ffca-02a8-14b0-3422-c0905ab212a6@cogentembedded.com>
+Date:   Mon, 10 Jun 2019 19:25:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190609103227.24875-5-vigneshr@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In data Sunday, June 9, 2019 4:26:59 AM CEST, Mauro Carvalho Chehab ha 
-scritto:
-> The conversion is actually:
->   - add blank lines and identation in order to identify paragraphs;
->   - fix tables markups;
->   - add some lists markups;
->   - mark literal blocks;
->   - adjust title markups.
+Hello!
+
+On 06/09/2019 01:32 PM, Vignesh Raghavendra wrote:
+
+> Add binding documentation for TI's HyperBus memory controller present on
+> AM654 SoC.
 > 
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 > ---
->  ...ault-injection.txt => fault-injection.rst} | 265 +++++++++---------
->  Documentation/fault-injection/index.rst       |  20 ++
->  ...r-inject.txt => notifier-error-inject.rst} |  18 +-
->  ...injection.txt => nvme-fault-injection.rst} | 174 ++++++------
->  ...rovoke-crashes.txt => provoke-crashes.rst} |  40 ++-
->  Documentation/process/4.Coding.rst            |   2 +-
->  .../translations/it_IT/process/4.Coding.rst   |   2 +-
-
-Limited to translations/it_IT
-
-Acked-by: Federico Vaga <federico.vaga@vaga.pv.it>
-
->  .../translations/zh_CN/process/4.Coding.rst   |   2 +-
->  drivers/misc/lkdtm/core.c                     |   2 +-
->  include/linux/fault-inject.h                  |   2 +-
->  lib/Kconfig.debug                             |   2 +-
->  tools/testing/fault-injection/failcmd.sh      |   2 +-
->  12 files changed, 290 insertions(+), 241 deletions(-)
->  rename Documentation/fault-injection/{fault-injection.txt =>
-> fault-injection.rst} (68%) create mode 100644
-> Documentation/fault-injection/index.rst
->  rename Documentation/fault-injection/{notifier-error-inject.txt =>
-> notifier-error-inject.rst} (83%) rename
-> Documentation/fault-injection/{nvme-fault-injection.txt =>
-> nvme-fault-injection.rst} (19%) rename
-> Documentation/fault-injection/{provoke-crashes.txt => provoke-crashes.rst}
-> (45%)
+> v5:
+> Update binding example to show MMIO mux
+> Fix reg property for flash slave.
 > 
+>  .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 51 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+> new file mode 100644
+> index 000000000000..c2a2c2b42a92
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+> @@ -0,0 +1,51 @@
+> +Bindings for HyperBus Memory Controller (HBMC) on TI's K3 family of SoCs
+> +
+> +Required properties:
+> +- compatible : "ti,am654-hbmc" for AM654 SoC
+> +- reg : Two entries:
+> +	First entry pointed to the register space of HBMC controller
+> +	Second entry pointing to the memory map region dedicated for
+> +	MMIO access to attached flash devices
+> +- ranges : Address translation from offset within CS to allocated MMIO
+> +	   space in SoC
+> +
+> +Optional properties:
+> +- mux-controls : phandle to the multiplexer that controls selection of
+> +		 HBMC vs OSPI inside Flash SubSystem. Default is OSPI,
+> +		 if property is absent.
+> +		 See Documentation/devicetree/bindings/mux/reg-mux.txt
+> +		 for mmio-mux binding details
+> +
+> +Example:
+> +
+> +	fss: fss@47000000 {
 
+   What's FSS?
+   Regardless of the answer, the node names should be generic, like "memory-controller@".
 
+> +		compatible = "syscon", "simple-mfd";
 
+   If it's "sycon", the nme should probably be "system-controller".
+
+> +		reg = <0x0 0x47000000 0x0 0x100>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		hbmc_mux: hbmc-mux {
+
+   So, just "multiplexor"?
+
+> +			compatible = "mmio-mux";
+> +			#mux-control-cells = <1>;
+> +			mux-reg-masks = <0x4 0x2>; /* 0: reg 0x4, bit 1 */
+> +		};
+> +
+> +		hbmc: hbmc@47034000 {
+
+   Should be named "memory-controller@47034000", according to the DT spec.
+
+> +			compatible = "ti,am654-hbmc";
+> +			reg = <0x0 0x47034000 0x0 0x100>,
+> +				<0x5 0x00000000 0x1 0x0000000>;
+> +			power-domains = <&k3_pds 55>;
+> +			#address-cells = <2>;
+> +			#size-cells = <1>;
+> +			ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
+> +				 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
+> +			mux-controls = <&hbmc_mux 0>;
+> +
+> +			/* Slave flash node */
+> +			flash@0,0 {
+> +				compatible = "cypress,hyperflash", "cfi-flash";
+> +				reg = <0x0 0x0 0x4000000>;
+> +			};
+> +		};
+> +	};
+[...]
+
+MBR, Sergei
