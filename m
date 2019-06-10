@@ -2,65 +2,120 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCD7C31E74
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC66C31E76
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FC920859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EEA207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:34:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKp914S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403940AbfFJOeX (ORCPT
+        id S2403962AbfFJOem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:34:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:31491 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389851AbfFJOeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:34:23 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5ABA590C87;
-        Mon, 10 Jun 2019 14:34:23 +0000 (UTC)
-Received: from flask (unknown [10.43.2.83])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5DBDA19C59;
-        Mon, 10 Jun 2019 14:34:21 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Mon, 10 Jun 2019 16:34:20 +0200
-Date:   Mon, 10 Jun 2019 16:34:20 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
-Message-ID: <20190610143420.GA6594@flask>
-References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+        Mon, 10 Jun 2019 10:34:42 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45613 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403942AbfFJOel (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:34:41 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a14so12943113edv.12;
+        Mon, 10 Jun 2019 07:34:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MTGWsUBr2L+P8aBUG4WFSYpu/sxAUSElAPcxJpHZNu0=;
+        b=HKp914S4OkrsKUi0GgHD22923EyP+FFJGm6HKQ1iHKxNtx+/zxQaF9i1rbCrbHl5eb
+         0OHqNXMeYYGNlQtVmEEVUJof06bsfE9J6PcREobzGwzTAw2N30iVnWVifos0ssBpbzTt
+         x6PK9w3mSNENnFZ00RIt5m7CHsTewevwG6blysA42J5R8eH7Ub/HGdqSWiyP1T6kBKxg
+         QnDzaRXb7fJsWeFwLkRHq+R7xaXkK5sOQ3pguBCj7FnNH0j+4V2yhKjCgOyH5/sWZXSN
+         hawir52CgsvkCOghKcMb/aZgBjBiniBHMg5+Y7CDtkM1dr5YU/tjCG55jrKIjr2XC7ub
+         NMsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MTGWsUBr2L+P8aBUG4WFSYpu/sxAUSElAPcxJpHZNu0=;
+        b=ErlwVkrfmdGsjBacKBvy4fynH6ce9kxfzJGbeGidPTKaueZLFduJ+qaAl2s8M2axi2
+         7BGgrz3/1fi0h3S8iDEYMWPDHubqOdIUEuQ6Zl4FmW7T5LCv+Q3Cmt33ekn7wrRUiQoQ
+         WlL9EI6yk9V4S6W99U122Gva5tpZn+DrYjpCXwC9iQj+G6NlfQyjuqFfdOYIxMCFdax3
+         DUl3O9ztQOhim/Y+voHYbO8DBvH0BojTn/egqnGwKvqzAwYsePs9u6HSEu3y1nYTmasQ
+         o++msOmjr2YibnjRqysz7DQoxWakViYdZ0zRLvij8uja0idXXbcUNdKi1W6cH+JvNNJj
+         MP6A==
+X-Gm-Message-State: APjAAAWNGrDGX3dM3f8z7TjJL8B30O8owyj3j6P3BSbTeNiLww1gocWy
+        fjLix2FQ6oVgvShfvQBfsm0j38P+w1PMzW/Zju8=
+X-Google-Smtp-Source: APXvYqzG4pTXEWeYJu/98bKGKeUyLRBM6GfrMiLJSxD5yHuoJDChEYDidfgdt6pimDZUHUwcoAxyiqxSlc+gJJqdup8=
+X-Received: by 2002:a50:b1db:: with SMTP id n27mr28793697edd.62.1560177279272;
+ Mon, 10 Jun 2019 07:34:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 10 Jun 2019 14:34:23 +0000 (UTC)
+References: <20190610115831.175710-1-maowenan@huawei.com> <CAF=yD-JOCZHt6q3ArCqY5PMW1vP5ZmNkYMKUB14TrgU-X30cSQ@mail.gmail.com>
+ <caf8d25f-60e2-a0c0-dc21-956ea32ee59a@huawei.com>
+In-Reply-To: <caf8d25f-60e2-a0c0-dc21-956ea32ee59a@huawei.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Mon, 10 Jun 2019 10:34:03 -0400
+Message-ID: <CAF=yD-+g1bSGOubFUE8veZNvGiPy1oYsf+dFDd=hqXYD+k4g_Q@mail.gmail.com>
+Subject: Re: [PATCH -next] packet: remove unused variable 'status' in __packet_lookup_frame_in_block
+To:     maowenan <maowenan@huawei.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-05-30 09:05+0800, Wanpeng Li:
-> The idea is from Xen, when sending a call-function IPI-many to vCPUs, 
-> yield if any of the IPI target vCPUs was preempted. 17% performance 
-> increasement of ebizzy benchmark can be observed in an over-subscribe 
-> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function 
-> IPI-many since call-function is not easy to be trigged by userspace 
-> workload).
+On Mon, Jun 10, 2019 at 10:03 AM maowenan <maowenan@huawei.com> wrote:
+>
+>
+>
+> On 2019/6/10 21:05, Willem de Bruijn wrote:
+> > On Mon, Jun 10, 2019 at 8:17 AM Mao Wenan <maowenan@huawei.com> wrote:
+> >>
+> >> The variable 'status' in  __packet_lookup_frame_in_block() is never used since
+> >> introduction in commit f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer
+> >> implementation."), we can remove it.
+> >> And when __packet_lookup_frame_in_block() calls prb_retire_current_block(),
+> >> it can pass macro TP_STATUS_KERNEL instead of 0.
+> >>
+> >> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> >> ---
 
-Have you checked if we could gain performance by having the yield as an
-extension to our PV IPI call?
+> >>         /* Ok, close the current block */
+> >> -       prb_retire_current_block(pkc, po, 0);
+> >> +       prb_retire_current_block(pkc, po, TP_STATUS_KERNEL);
+> >
+> > I don't think that 0 is intended to mean TP_STATUS_KERNEL here.
+> >
+> > prb_retire_current_block calls prb_close_block which sets status to
+> >
+> >   TP_STATUS_USER | stat
+> >
+> > where stat is 0 or TP_STATUS_BLK_TMO.
+>
+>
+> #define TP_STATUS_KERNEL                      0
+> #define TP_STATUS_BLK_TMO               (1 << 5)
+>
+> Actually, packet_current_rx_frame calls __packet_lookup_frame_in_block with status=TP_STATUS_KERNEL
+> in original code.
+>
+> __packet_lookup_frame_in_block in this function, first is to check whether the currently active block
+> has enough space for the packet, which means status of block should be TP_STATUS_KERNEL, then it calls
+> prb_retire_current_block to retire this block.
 
-It would allow us to skip the VM entry/exit overhead on the caller.
-(The benefit of that might be negligible and it also poses a
- complication when splitting the target mask into several PV IPI
- hypercalls.)
+I know. I mean that the status here is what is passed to userspace on
+block retire.
 
-Thanks.
+It is not intended to be TP_STATUS_USER | TP_STATUS_KERNEL. That makes no sense.
+
+> Since there needs some discussion about means of status, I can send v2 only removing the parameter status of
+> __packet_lookup_frame_in_block?
+
+Sounds good.
