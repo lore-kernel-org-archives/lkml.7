@@ -2,133 +2,129 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ECCC468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E96A1C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE4620859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D7D2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C/7BgS21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388256AbfFJH4Q (ORCPT
+        id S2388272AbfFJH5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 03:56:16 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55539 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387781AbfFJH4Q (ORCPT
+        Mon, 10 Jun 2019 03:57:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38039 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388109AbfFJH5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:56:16 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so7471334wmj.5;
-        Mon, 10 Jun 2019 00:56:14 -0700 (PDT)
+        Mon, 10 Jun 2019 03:57:34 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d18so8112279wrs.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 00:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=xTVf10rNwhHdq0na/JiMNEiN+1J2gR7CZjLBDvBlZ9M=;
+        b=C/7BgS21M51i7i2CmNw0m1n793WHuwfoYQkS3WRWJWKQsQBxjw9CIy2+Faq9ymMTeV
+         U2GBuJzPbjKCHDCazNCv3EufybIeE1wUBtLZaPDWMGaINHWIIzfHC+0p9nVF7beZGSBd
+         //LURySsxd2kT8FOBdUsOWxnFZ+5dl+hoVq7XeFhuZowUdZd4O1UvhPIRq4tH0zazkBr
+         3TnjUYgkVr92aniAKuyUF8QQKGfjozeMSXNOnfXAnZNynC+7HVoNCxcff8tCQ4ZbboQl
+         zVeN/hmZoEiKQoXh76n41vtHuJpPK1irmunendNLi9m6ZVhJKXOgCoZBuaGpKeVJspaT
+         PIVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JreSm1tStfkiCEEJF3C4eyaoIRIivWMX4JlvKeKw+uY=;
-        b=Gg1FQb5DawSZFg63kg7Jf0dzE+0QnYd13xAlO+Cpdf14LY5wMk/aEUweJGDP2wFIeY
-         ev2K6lnZP2H3rGrZMzmPKR3H3Cp/csnaUxJrJJXEAsw794enMYRbvsHk/bKlotp0mb5E
-         9P8z2wX/MQypFwN71IZqAyQhygwGd8nftnz3oMs6VsZsOBBUD6WjZ4k34+HJ5iSo0jdT
-         BfAB8uz2+iyeaHYDM9kJm/1dV75xTySTy4/lRGekuh9ZUJBE9IiYRO5cNVDZMPeHwzrx
-         7z1NhjGsaga/SRg3O07gG5lCKxL2KPVREassYK1JA7Sb1+Dsmkim2oAHFZw6GyRruFbK
-         t3Fg==
-X-Gm-Message-State: APjAAAVWVBHs7Q3Dmfk/tNy0EDu6L3aft6gMhdJxHyExRfDEKslo4CRJ
-        b5HwCMxLJd1MMWwVtIaAakNZ//2l
-X-Google-Smtp-Source: APXvYqyb3ZkmoeKiX6MGRWoZRB03PTcoyENXce3Y2xr6LmdiWf2rnclza4UtTTVhxT7xmOO+uvGIzw==
-X-Received: by 2002:a1c:7304:: with SMTP id d4mr12105797wmb.39.1560153373963;
-        Mon, 10 Jun 2019 00:56:13 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id y184sm11745819wmg.14.2019.06.10.00.56.12
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 00:56:12 -0700 (PDT)
-Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of AutoReporter
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20190607153849.101321647@linuxfoundation.org>
- <20190607153855.717899507@linuxfoundation.org>
- <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
- <20190610073119.GB20470@kroah.com>
- <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
- <20190610074840.GB24746@kroah.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d12948a2-2786-6947-d771-681dc460a304@suse.cz>
-Date:   Mon, 10 Jun 2019 09:56:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=xTVf10rNwhHdq0na/JiMNEiN+1J2gR7CZjLBDvBlZ9M=;
+        b=TT6WVkAwXhMjB21MZN8B126qFkcF8DClzdBBL+xeMLsI0wCQdMSEGEYb8zQiZK0bz1
+         AOTYSAzeiLQsmmNr5ZAVdn8tcOB93EpW4l+ztJ4/1N+/wSPzIuwZfxN0EZFJ8SDvfntX
+         EMAyTtL19ubWFC0RTvck9P94bXml9AgQJ+LFYE1r4zehVT7V3YgycUA2X9WVt05ZfsJG
+         /aPxnGC6+AeYAf47RNxAl4z2LkUz1sDDrg+87muhA5QpuUd5prDCsQfYQLpusAPBrZxq
+         q7+GeCSgoP58nvulHZjmOjeAo7v0V7g+kfjlOz/kiHjvi5Me8WotHeTujo7uf7gW2s2D
+         q7wQ==
+X-Gm-Message-State: APjAAAUnguvF2dPhEyyD7Cd0ZAHg4BaC/DtpBSPp0VFKNfYTKIPRU4+V
+        yEsIOkaUlAvGKJ4ZNpb7Pg3h7w==
+X-Google-Smtp-Source: APXvYqwPND89CTG631SsvW5xJabNs8hX8frrZKJyV7VaYPuMk/7oG5ltYmF1iH5bZQdZa0Uy/r0eCA==
+X-Received: by 2002:a5d:6583:: with SMTP id q3mr47343484wru.184.1560153452753;
+        Mon, 10 Jun 2019 00:57:32 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id f13sm5796159wrt.27.2019.06.10.00.57.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 00:57:32 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 08:57:30 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, alokc@codeaurora.org,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/8] pinctrl: msm: Add ability for drivers to supply a
+ reserved GPIO list
+Message-ID: <20190610075730.GH4797@dell>
+References: <20190605114302.22509-1-lee.jones@linaro.org>
+ <20190605114302.22509-3-lee.jones@linaro.org>
+ <CACRpkdaEe3uKAsSuhbToevXH1cMsuMUvwaopLPuD+JkDTnuEnQ@mail.gmail.com>
+ <20190608041044.GK24059@builder>
 MIME-Version: 1.0
-In-Reply-To: <20190610074840.GB24746@kroah.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190608041044.GK24059@builder>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10. 06. 19, 9:48, Greg Kroah-Hartman wrote:
->> [  103s] Running Sphinx v1.8.5
+On Fri, 07 Jun 2019, Bjorn Andersson wrote:
+
+> On Fri 07 Jun 16:02 PDT 2019, Linus Walleij wrote:
 > 
-> Hm, 2.1 here:
-> 	Running Sphinx v2.1.0
-> perhaps Tumbleweed needs to update?  :)
+> > On Wed, Jun 5, 2019 at 1:43 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > 
+> > > When booting MSM based platforms with Device Tree or some ACPI
+> > > implementations, it is possible to provide a list of reserved pins
+> > > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
+> > > However some ACPI tables are not populated with this information,
+> > > thus it has to come from a knowledgable device driver instead.
+> > >
+> > > Here we provide the MSM common driver with additional support to
+> > > parse this informtion and correctly populate the widely used
+> > > 'valid_mask'.
+> > >
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> > Exactly how we should use of the API, so if Björn can supply an
+> > ACK to patches 3 and 4 I'm happy to apply them.
+> > 
+> > Björn?
+> > 
+> 
+> I'm waiting for a version that does not specify the reserved_gpios for
+> struct msm_pinctrl_soc_data sdm845_pinctrl {}, as this would override
+> the ability of getting these from DT.
+> 
+> I haven't seen such revision yet, will review it once I find it.
 
-Heh, it was submitted 3 days ago :):
-  https://build.opensuse.org/request/show/708276
-(And is blocked by a failing sphinx-test AFAICT.)
+Just testing it now.  It should be on the list by the time you start.
 
-> Anyway, this should not be breaking, if Jon doesn't have any ideas, I'll
-> just drop these changes.
-
-OK. In the meantime, I have reverted the commit in Kernel:stable for the
-time being.
-
-thanks,
 -- 
-js
-suse labs
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
