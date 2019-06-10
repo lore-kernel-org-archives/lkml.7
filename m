@@ -2,123 +2,112 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675DDC28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C519C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABBE20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717FD206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmjeWb38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389528AbfFJKm7 (ORCPT
+        id S2389557AbfFJKnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:42:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:40384 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389426AbfFJKm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:42:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20FE5337;
-        Mon, 10 Jun 2019 03:42:58 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31CE23F557;
-        Mon, 10 Jun 2019 03:44:37 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 11:42:53 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH 07/18] drivers: firmware: psci: Prepare to use OS
- initiated suspend mode
-Message-ID: <20190610104253.GB26602@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-8-ulf.hansson@linaro.org>
- <20190607151716.GF15577@e107155-lin>
- <CAPDyKFoKNLqLzVx8uj_-iuWAHGCvty28mVKnipFVgjKD8oDNkQ@mail.gmail.com>
+        Mon, 10 Jun 2019 06:43:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40764 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389426AbfFJKnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:43:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v19so19624wmj.5;
+        Mon, 10 Jun 2019 03:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4X5BVYduqqhkfrUdD8uPwIHjHoHTW0DOqj7pcTji4ds=;
+        b=MmjeWb38tYAVr0X4P+VQMcjoxY7H4NRBgapwwg5TO1ubz44Vwgk+rfoKSOPceAvsjj
+         sEBzyNi2ee6CUA7BRaxtnXUoEF+NswhINA2W23ijkjEmguFhsq9qbmmEm6DiD1o+Rxa9
+         a1UyF6Qaudbf9pgRavTSJCt+sLKesrSEZdkQeSYgAsBy0UJ3g9dsaUrmv2VCGIpoasGs
+         12PEmha9SSAfPr2pc7n+v0qPWly+BBg1F7ohYii7NJ+Pi3ANHmzZ9FxwdkyZ1+RHIHGU
+         Tch8A7J5TUxdHFeLd31NCDSqMCjdqyW9LwD1NRcZG+8IlB3ttbgtT5o+oZ1HOUZ+2qsE
+         bS2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4X5BVYduqqhkfrUdD8uPwIHjHoHTW0DOqj7pcTji4ds=;
+        b=OhKcHjtjqylfpSYP18djmZlEmOdfX8QQWab7vYAGJJBKcejdSyMvfYIWiRsviunIe5
+         D3vM1WWAKlm66A6yCFEGK19p6jujNs1bN5BAH7w6LNx+gO3l2ex6uE5PZogvFCiMvhLO
+         IrzFGAQrUuYwPF+P6ZkW8rKCqK/shdWKF8cgXyVXq8v6hKgaxzws3FXzxvukDKl8wb9b
+         WVSJAs3qm2uutI+gnYFmFLSJ72Guc2i+uot6EqATPO0m8+DDby2F+nRLC4ytIw0dXkTr
+         kmcP+kEgRzoKlaW7ZUQ8uEqfjanM0MIex5T8zWUAcIPUeP5rayFprlp0xgEFhngJrzEo
+         PBMA==
+X-Gm-Message-State: APjAAAXBiOrApZlhHS6qdGV0cmkwqyRzv8mGBVp8/upoEkGa/6hjxQfb
+        JLxIvq61V+50IA3PEhegxbCxcEjXLJg=
+X-Google-Smtp-Source: APXvYqxE2lcrbWL6CzVWGM91R+jiI+w/lbi80NOpyRVk5mPpNOrcPvlp/G7MVx/7dJ8gmGNA7HXAjg==
+X-Received: by 2002:a1c:1bc9:: with SMTP id b192mr12880619wmb.152.1560163392455;
+        Mon, 10 Jun 2019 03:43:12 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id x6sm10097421wrr.11.2019.06.10.03.43.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 03:43:11 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 12:43:10 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
+Cc:     XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
+        Naoki Saito <naoki.saito@alpsalpine.com>,
+        Hideo Kawase <hideo.kawase@alpsalpine.com>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRD?= =?utf-8?Q?H?=
+ =?utf-8?Q?=5D?= input: alps-fix the issue alps cs19 trackstick do not work.
+Message-ID: <20190610104310.qa5snt7jpcljodfv@pali>
+References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
+ <20190527100913.sgxrjrmphsjfmcdb@pali>
+ <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190528071824.jimhixhtsynzwixe@pali>
+ <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFoKNLqLzVx8uj_-iuWAHGCvty28mVKnipFVgjKD8oDNkQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 12:21:10PM +0200, Ulf Hansson wrote:
-> On Fri, 7 Jun 2019 at 17:17, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Mon, May 13, 2019 at 09:22:49PM +0200, Ulf Hansson wrote:
-> > > The per CPU variable psci_power_state, contains an array of fixed values,
-> > > which reflects the corresponding arm,psci-suspend-param parsed from DT, for
-> > > each of the available CPU idle states.
-> > >
-> > > This isn't sufficient when using the hierarchical CPU topology in DT in
-> > > combination with having PSCI OS initiated (OSI) mode enabled. More
-> > > precisely, in OSI mode, Linux is responsible of telling the PSCI FW what
-> > > idle state the cluster (a group of CPUs) should enter, while in PSCI
-> > > Platform Coordinated (PC) mode, each CPU independently votes for an idle
-> > > state of the cluster.
-> > >
-> > > For this reason, let's introduce an additional per CPU variable called
-> > > domain_state and implement two helper functions to read/write its values.
-> > > Following patches, which implements PM domain support for PSCI, will use
-> > > the domain_state variable and set it to corresponding bits that represents
-> > > the selected idle state for the cluster.
-> > >
-> > > Finally, in psci_cpu_suspend_enter() and psci_suspend_finisher(), let's
-> > > take into account the values in the domain_state, as to get the complete
-> > > suspend parameter.
-> > >
-> >
-> > I understand it was split to ease review, but this patch also does
-> > nothing as domain_state = 0 always. I was trying hard to find where it's
-> > set, but I assume it will be done in later patches. Again may be this
-> > can be squashed into the first caller of psci_set_domain_state
-> 
-> You have a point, but I am worried that it would look like this series
-> is solely needed to support OSI mode. This is not the case. Let me
-> explain.
-> 
-> Having $subject patch separate shows the specific changes needed to
-> support OSI mode. The first caller of psci_set_domain_state() is added
-> in patch9, however, patch9 is useful no matter of OSI or PC mode.
-> 
-> Moreover, if I squash $subject patch with patch9, I would have to
-> squash also the subsequent patch (patch8), as it depends on $subject
-> patch.
-> 
-> So, to conclude, are you happy with this as is or do you want me to
-> squash the patches?
-> 
+On Monday 10 June 2019 10:03:51 Xiaoxiao Liu wrote:
+> Hi Pali,
 
-Yes I am fine either way. As I put the comments in the same flow as I
-did review, I thought it's worth mentioning if someone else get similar
-thoughts. I am fine if you prefer to keep it the same way unless someone
-else raise the same point.
+Hi!
 
---
-Regards,
-Sudeep
+> We register our CS19 device as ALPS_ONLY_TRACKSTICK device.
+> And let the V8 protocol function support the process of ALPS_ONLY_TRACKSTICK device. 
+> 
+> I want to confirm if this solution OK?
+
+Yes, it is fine. Just make sure that touchapad input device is not
+registered when this ALPS_ONLY_TRACKSTICK flag is set. So userspace
+would not see any fake/unavailable touchpad input device.
+
+> Xiaoxiao.Liu
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
