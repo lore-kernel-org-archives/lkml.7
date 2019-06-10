@@ -2,114 +2,77 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35067C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524ADC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127F620859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BCB2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560200893;
+	bh=LM4DhDahgDAdAIFCtYW8OBEeB5PeHsxWNvc/AFAGCfs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Mkg5bxehXtZvGMF5x0TobeHLdYLHWFJeqlAIWNzFXnTmUxmtf/KpV588JtzuezQae
+	 p1PtPLv5CLXUd+Jk+3oQb7npQUrjHxQSIKEfz9yAIuArJ5oPlRZ/qVAk+tXHdHSyRS
+	 /Xu3xNrnzTiBLeoYSu72pT1g8LkKrO+zDmxzfEio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389869AbfFJVGg (ORCPT
+        id S2389815AbfFJVIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:06:36 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.129]:28313 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388311AbfFJVGf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:06:35 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id B17EAD64F
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:06:34 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id aRUwhcEecYTGMaRUwhZQNy; Mon, 10 Jun 2019 16:06:34 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.75.107] (port=48826 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1haRUd-003eSZ-CB; Mon, 10 Jun 2019 16:06:33 -0500
-Date:   Mon, 10 Jun 2019 16:06:13 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] libnvdimm, region: Use struct_size() in kzalloc()
-Message-ID: <20190610210613.GA21989@embeddedor>
+        Mon, 10 Jun 2019 17:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388642AbfFJVIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 17:08:12 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E2F22146E;
+        Mon, 10 Jun 2019 21:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560200891;
+        bh=LM4DhDahgDAdAIFCtYW8OBEeB5PeHsxWNvc/AFAGCfs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d/rNQR6pc7zQZH7+kgZM44zJLfnwtuBP1iONB9bdfZmnqqX4J6XF2Ss7nayt+Y/8P
+         2W8pkvQ6kan8YpRUYt3ppUluY7kjN5ya/enUvx5adykYpjBiFmNdx/T7ChtGg+BT13
+         xC1nudL8AEwyCLs57Bz1EeYXtoTKn/IFTVVYg9fM=
+Received: by mail-qt1-f169.google.com with SMTP id p15so4628609qtl.3;
+        Mon, 10 Jun 2019 14:08:11 -0700 (PDT)
+X-Gm-Message-State: APjAAAU1rfCstL+6o0d6Snp20I9L+DPQ6Ic6IsocDJh3ImNAF9H7dIWJ
+        ZNksyzaIQRWX3uJQiX6Nz4puihKO2BgCvNH4ZA==
+X-Google-Smtp-Source: APXvYqwz/L1AgE45vjVGdFYDHPRFSfJzFEJO+IgYWTlh/1Y7CMKQaGOwIO8zOyf+9q46atFDDdRncexYa0hsFQNqGrE=
+X-Received: by 2002:a0c:acef:: with SMTP id n44mr1253179qvc.39.1560200890657;
+ Mon, 10 Jun 2019 14:08:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.75.107
-X-Source-L: No
-X-Exim-ID: 1haRUd-003eSZ-CB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.75.107]:48826
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190604003218.241354-1-saravanak@google.com> <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com> <CAGETcx_Kb3+fFYHhBUdVbCSNTk4v5j1Ket=Et2ZQY0SHUgLLMw@mail.gmail.com>
+In-Reply-To: <CAGETcx_Kb3+fFYHhBUdVbCSNTk4v5j1Ket=Et2ZQY0SHUgLLMw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 10 Jun 2019 15:07:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKDa7Nin8bU_LV-hqjJe2RNQwKA_zsKoug8=eHmX78QZQ@mail.gmail.com>
+Message-ID: <CAL_JsqKDa7Nin8bU_LV-hqjJe2RNQwKA_zsKoug8=eHmX78QZQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        David Collins <collinsd@codeaurora.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Mon, Jun 10, 2019 at 1:15 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> I did. And I didn't get a response. Folks suggested this might be one of the preferred ways instead of sending "bump" emails.
 
-struct nd_region {
-	...
-        struct nd_mapping mapping[0];
-};
+It's summer time and people go on vacation.
 
-instance = kzalloc(sizeof(struct nd_region) + sizeof(struct nd_mapping) *
-                          count, GFP_KERNEL);
-
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = kzalloc(struct_size(instance, mapping, count), GFP_KERNEL);
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/nvdimm/region_devs.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index b4ef7d9ff22e..88becc87e234 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -1027,10 +1027,9 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 		}
- 		region_buf = ndbr;
- 	} else {
--		nd_region = kzalloc(sizeof(struct nd_region)
--				+ sizeof(struct nd_mapping)
--				* ndr_desc->num_mappings,
--				GFP_KERNEL);
-+		nd_region = kzalloc(struct_size(nd_region, mapping,
-+						ndr_desc->num_mappings),
-+				    GFP_KERNEL);
- 		region_buf = nd_region;
- 	}
- 
--- 
-2.21.0
-
+Rob
