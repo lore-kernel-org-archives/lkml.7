@@ -2,29 +2,29 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE778C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D67C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86542082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F4F2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388658AbfFJIzg (ORCPT
+        id S2388728AbfFJIzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:55:36 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:38659 "EHLO
+        Mon, 10 Jun 2019 04:55:38 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:56855 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387831AbfFJIzg (ORCPT
+        with ESMTP id S2387946AbfFJIzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 04:55:36 -0400
 X-Originating-IP: 90.88.159.246
 Received: from mc-bl-xps13.lan (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
         (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C5863FF80A;
-        Mon, 10 Jun 2019 08:55:30 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C3ADCFF80C;
+        Mon, 10 Jun 2019 08:55:33 +0000 (UTC)
 From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
 To:     davem@davemloft.net
 Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -33,10 +33,12 @@ Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
         thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
         miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
         ymarkman@marvell.com, mw@semihalf.com
-Subject: [PATCH net-next 0/3] net: mvpp2: Add extra ethtool stats
-Date:   Mon, 10 Jun 2019 10:55:26 +0200
-Message-Id: <20190610085529.16803-1-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next 1/3] net: mvpp2: Only clear the stat counters at port init
+Date:   Mon, 10 Jun 2019 10:55:27 +0200
+Message-Id: <20190610085529.16803-2-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190610085529.16803-1-maxime.chevallier@bootlin.com>
+References: <20190610085529.16803-1-maxime.chevallier@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,23 +46,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for more ethtool counters in PPv2 :
- - Per port counters, including one indicating the classifier drops
- - Per RXQ and per TXQ counters
+When first configuring a port on PPv2, we want to clear the internal
+counters so that we don't get values from previous boot stages.
 
-The first 2 patches perform some light rework and renaming, and the 3rd
-adds the extra counters.
+However, we can't really clear these counters when resetting the MAC,
+since there are valid reasons to do so while the port is being used,
+such as when reconfiguring the interface mode with the PHY.
 
-Maxime Chevallier (3):
-  net: mvpp2: Only clear the stat counters at port init
-  net: mvpp2: Rename mvpp2_ethtool_counters to
-    mvpp2_ethtool_mib_counters
-  net: mvpp2: Add support for more ethtool counters
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  18 +++
- .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 134 +++++++++++++++---
- 2 files changed, 133 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 4b4d79611339..ee653125194e 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1359,13 +1359,8 @@ static int mvpp2_ethtool_get_sset_count(struct net_device *dev, int sset)
+ 
+ static void mvpp2_mac_reset_assert(struct mvpp2_port *port)
+ {
+-	unsigned int i;
+ 	u32 val;
+ 
+-	/* Read the GOP statistics to reset the hardware counters */
+-	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_regs); i++)
+-		mvpp2_read_count(port, &mvpp2_ethtool_regs[i]);
+-
+ 	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) |
+ 	      MVPP2_GMAC_PORT_RESET_MASK;
+ 	writel(val, port->base + MVPP2_GMAC_CTRL_2_REG);
+@@ -4265,7 +4260,7 @@ static int mvpp2_port_init(struct mvpp2_port *port)
+ 	struct mvpp2 *priv = port->priv;
+ 	struct mvpp2_txq_pcpu *txq_pcpu;
+ 	unsigned int thread;
+-	int queue, err;
++	int queue, err, i;
+ 
+ 	/* Checks for hardware constraints */
+ 	if (port->first_rxq + port->nrxqs >
+@@ -4372,6 +4367,10 @@ static int mvpp2_port_init(struct mvpp2_port *port)
+ 	if (err)
+ 		goto err_free_percpu;
+ 
++	/* Read the GOP statistics to reset the hardware counters */
++	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_regs); i++)
++		mvpp2_read_count(port, &mvpp2_ethtool_regs[i]);
++
+ 	return 0;
+ 
+ err_free_percpu:
 -- 
 2.20.1
 
