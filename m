@@ -2,525 +2,233 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD4AC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57A6C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C42208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91009207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560165216;
-	bh=byRx5Dt5zmak1RFVWT6YJH7O5F4SoCFatjtO/QRgf9w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eZbb2KJ3Cw0P3mPQ93OiY8H3+WOCuk6sLl1oxvRuGXH3fyoIQoTj5iRPMwq+u6j76
-	 3PTge7EBh9KG/O71CUtyqDJm5crI143CK11GbgNhjxcA44woUmpbiSQbksvG8sVIJn
-	 yI90+BDAK96s+OTKdxYV8TD7q0EgEtqcS98l97p0=
+	s=default; t=1560165680;
+	bh=uVnH8jHOkUc6VdV33Y4LdnMpJ2/k7UUteSBf8vRusBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Tosk9oDpgY4E3A/sco4l4qgeH9glMw/G+QLNqfunghj2baef9qO9XqiwXYDZ82xsb
+	 +/Or0RNYGjYkcZX9h8FKdXu7nWUEfjDacYfAdJoNOC/nKNDzOeZdgOcNvjC5u55QSz
+	 9Kk4t9WOt8WN5zBKU1xajZ5Z4+hXRjA6sagwpBKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389707AbfFJLNf (ORCPT
+        id S2389657AbfFJLVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 07:13:35 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46062 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388570AbfFJLNe (ORCPT
+        Mon, 10 Jun 2019 07:21:19 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46516 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388611AbfFJLVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 07:13:34 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s11so5101383pfm.12;
-        Mon, 10 Jun 2019 04:13:33 -0700 (PDT)
+        Mon, 10 Jun 2019 07:21:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v9so3170171pgr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 04:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rPG+ROWOzHjK16mIcQ4C+hvTtB/BQwTOXkhzxALsNDM=;
-        b=NmKhfQn2/0M7QiWafaLEoMeyTHABnSvZPFy8O2V0AL4u+lJgz3njJVO5H5zxGzSy4h
-         xqy2KzD/DPsBMirf/T36qYm88jTFj8X6yvNuTsL1Bi5EzG+aT6xZ3Iuqua1UWhM+k0yO
-         GKY2t/Fyiv9LwekT+YjjHt3Sp5yhJKexKC6lqjeGNtd6uVcz0EntdyZo6eFsoNTHjVQX
-         uu12cLDdBNqTnwdJib0hsQJdAgoElWA9sdMeGjxMzFwrJywj8p6yYGc+mjPf2MrEQ8DK
-         jjyRMG/Vyt0JFVhWG1IBivNsQnuK1M/mpK5CR5Iu+DnuKJ8+3YdEGPIafurC55SsJ7PA
-         We0w==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TQ3BNHm4HBsU+MK/6HPDmQwS/rOC62UZ81SJs/UsUlo=;
+        b=iEVp+8jMVQcIzvPBL4gWGwyNqUvh5BeGA9YqAlxEnD53bAeL0wCTIHc4ESiPtKG2L1
+         6GQMJCf3jZURlwy+R6Dj8KwLjGqWcNK/WtXyBXEhKy5gdnX5joCA7aGNf/3ufJWLnrcg
+         AAm4aAZ/unWNlSxUpySdMfZULC412+aqjz5u7KcBkoMQhob4aN2gtHICrJH+b8Aq3GlL
+         WR90831SaE03RCxkW5qi04QGbbncOO5dvKeYpE4cIXf8umbROITrrDy2/zwy/xufzUSc
+         F1gtIHn85aXQ9N9D9SOtSuVoa0k5zY2+B21MA+0WJ2pwuClwXqxJ+4LfjJNIKUPeQHou
+         5wDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=rPG+ROWOzHjK16mIcQ4C+hvTtB/BQwTOXkhzxALsNDM=;
-        b=TSNFuYJnpKE8QsTiDOn1IyuZ0iAObReFpgaL+rspuPqBRR84DNeYCgnevaDe0t37c7
-         eCTNphI4lJIbagI+I9mgOfW6YkYl6MCqrullb3w+pB+V8q0+HUcSHTLrykf40EwFSENj
-         X3NZPHLP8nIi/N+/KRbdn0TxcT6wqvipnOR2OPnwHkTQ4N2KkH0SsWl6Du9/NCrkE/rO
-         Ulrhw0aoqETsoN2ELzod+pU1gIMxuNAZdbA6udgBHSU11VHUi8CLAOK556h/QV9uGBXp
-         IIROFLAOCiDBpe8ZIWiR7ltpCNtlZmsO5SFDZtj3EbLpdrfv3PdhATv5zB0cDYSuDpgl
-         IoIQ==
-X-Gm-Message-State: APjAAAXfTP7zliQw/CYDBZtMv37OgoeMduPxsQGqdxizVXS4TIYGDb78
-        4saseAx7emlj/et2Xfj1KIA=
-X-Google-Smtp-Source: APXvYqzY4WtiEyc3qVwXA80Fry7VpC5HipNq59JihUKhfrGRMamA0pPT4cEFDQGwJD6Cz7sjB8iumw==
-X-Received: by 2002:aa7:8193:: with SMTP id g19mr67599446pfi.162.1560165213314;
-        Mon, 10 Jun 2019 04:13:33 -0700 (PDT)
-Received: from bbox-2.seo.corp.google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id h14sm9224633pgj.8.2019.06.10.04.13.27
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TQ3BNHm4HBsU+MK/6HPDmQwS/rOC62UZ81SJs/UsUlo=;
+        b=GfdDhD/kpgHX5N4Y64x1rA4VE1gnvwGdBhL61dIKrjgHbxFc4Y6ofHCMQ0BtOOuP0o
+         VsG6pILold8Qfieb5NoMGsOr+Z1q3J0MGbEdqC6/gjsoTn3PTiP640pj3l7RzXM+fl4L
+         hr4J7KXiKaoTYaws5l8a165xf1cdNaov+cU7LKcq+wAAWLTDzlObozVWmx+ziNCJhY7y
+         Sh4KsntAOZeMzFjtT0vyhCFG6suWpc4pzn52LgCLkMQ+WQk7slA8YPZF0/SPJVi7PA89
+         r1gm3/QHuQH59usDhxPSv/lFlMgI5Am7wqjAdK3MFXHegVpUpVOn8b/DwWtofAlHwdgI
+         BPNg==
+X-Gm-Message-State: APjAAAU5e0EnH/tIk1f4ld4QuY32T4NMgc3V8OmFWYPLiJZs9TkR/IAt
+        J3ziZDEKCUu6GqyjLu167YM=
+X-Google-Smtp-Source: APXvYqyyMJnnahpyFh9ROPIwRbfBUlK8Ip2WF8TQvFOqWKHUU8dC/k6TuUYAZommSFHhvos8myxRSg==
+X-Received: by 2002:a65:42ca:: with SMTP id l10mr14997477pgp.181.1560165678241;
+        Mon, 10 Jun 2019 04:21:18 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id a11sm10526127pff.128.2019.06.10.04.21.14
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 04:13:32 -0700 (PDT)
+        Mon, 10 Jun 2019 04:21:16 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 20:21:12 +0900
 From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Minchan Kim <minchan@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Christopher Lameter <cl@linux.com>
-Subject: [PATCH v2 5/5] mm: factor out pmd young/dirty bit handling and THP split
-Date:   Mon, 10 Jun 2019 20:12:52 +0900
-Message-Id: <20190610111252.239156-6-minchan@kernel.org>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-In-Reply-To: <20190610111252.239156-1-minchan@kernel.org>
-References: <20190610111252.239156-1-minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@kernel.org,
+        Wu Fangsuo <fangsuowu@asrmicro.com>,
+        Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+Subject: Re: [PATCH] mm: fix trying to reclaim unevicable LRU page
+Message-ID: <20190610112112.GE55602@google.com>
+References: <20190524071114.74202-1-minchan@kernel.org>
+ <20190528151407.GE1658@dhcp22.suse.cz>
+ <20190530024229.GF229459@google.com>
+ <20190604122806.GH4669@dhcp22.suse.cz>
+ <20190610094222.GA55602@google.com>
+ <20190610103946.GE30967@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610103946.GE30967@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now, there are common part among MADV_COLD|PAGEOUT|FREE to reset
-access/dirty bit resetting or split the THP page to handle part
-of subpages in the THP page. This patch factor out the common part.
+On Mon, Jun 10, 2019 at 12:39:46PM +0200, Michal Hocko wrote:
+> On Mon 10-06-19 18:42:22, Minchan Kim wrote:
+> > On Tue, Jun 04, 2019 at 02:28:06PM +0200, Michal Hocko wrote:
+> > > On Thu 30-05-19 11:42:29, Minchan Kim wrote:
+> > > > On Tue, May 28, 2019 at 05:14:07PM +0200, Michal Hocko wrote:
+> > > > > [Cc Pankaj Suryawanshi who has reported a similar problem
+> > > > > http://lkml.kernel.org/r/SG2PR02MB309806967AE91179CAFEC34BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com]
+> > > > > 
+> > > > > On Fri 24-05-19 16:11:14, Minchan Kim wrote:
+> > > > > > There was below bugreport from Wu Fangsuo.
+> > > > > > 
+> > > > > > 7200 [  680.491097] c4 7125 (syz-executor) page:ffffffbf02f33b40 count:86 mapcount:84 mapping:ffffffc08fa7a810 index:0x24
+> > > > > > 7201 [  680.531186] c4 7125 (syz-executor) flags: 0x19040c(referenced|uptodate|arch_1|mappedtodisk|unevictable|mlocked)
+> > > > > > 7202 [  680.544987] c0 7125 (syz-executor) raw: 000000000019040c ffffffc08fa7a810 0000000000000024 0000005600000053
+> > > > > > 7203 [  680.556162] c0 7125 (syz-executor) raw: ffffffc009b05b20 ffffffc009b05b20 0000000000000000 ffffffc09bf3ee80
+> > > > > > 7204 [  680.566860] c0 7125 (syz-executor) page dumped because: VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page))
+> > > > > > 7205 [  680.578038] c0 7125 (syz-executor) page->mem_cgroup:ffffffc09bf3ee80
+> > > > > > 7206 [  680.585467] c0 7125 (syz-executor) ------------[ cut here ]------------
+> > > > > > 7207 [  680.592466] c0 7125 (syz-executor) kernel BUG at /home/build/farmland/adroid9.0/kernel/linux/mm/vmscan.c:1350!
+> > > > > > 7223 [  680.603663] c0 7125 (syz-executor) Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> > > > > > 7224 [  680.611436] c0 7125 (syz-executor) Modules linked in:
+> > > > > > 7225 [  680.616769] c0 7125 (syz-executor) CPU: 0 PID: 7125 Comm: syz-executor Tainted: G S              4.14.81 #3
+> > > > > > 7226 [  680.626826] c0 7125 (syz-executor) Hardware name: ASR AQUILAC EVB (DT)
+> > > > > > 7227 [  680.633623] c0 7125 (syz-executor) task: ffffffc00a54cd00 task.stack: ffffffc009b00000
+> > > > > > 7228 [  680.641917] c0 7125 (syz-executor) PC is at shrink_page_list+0x1998/0x3240
+> > > > > > 7229 [  680.649144] c0 7125 (syz-executor) LR is at shrink_page_list+0x1998/0x3240
+> > > > > > 7230 [  680.656303] c0 7125 (syz-executor) pc : [<ffffff90083a2158>] lr : [<ffffff90083a2158>] pstate: 60400045
+> > > > > > 7231 [  680.666086] c0 7125 (syz-executor) sp : ffffffc009b05940
+> > > > > > ..
+> > > > > > 7342 [  681.671308] c0 7125 (syz-executor) [<ffffff90083a2158>] shrink_page_list+0x1998/0x3240
+> > > > > > 7343 [  681.679567] c0 7125 (syz-executor) [<ffffff90083a3dc0>] reclaim_clean_pages_from_list+0x3c0/0x4f0
+> > > > > > 7344 [  681.688793] c0 7125 (syz-executor) [<ffffff900837ed64>] alloc_contig_range+0x3bc/0x650
+> > > > > > 7347 [  681.717421] c0 7125 (syz-executor) [<ffffff90084925cc>] cma_alloc+0x214/0x668
+> > > > > > 7348 [  681.724892] c0 7125 (syz-executor) [<ffffff90091e4d78>] ion_cma_allocate+0x98/0x1d8
+> > > > > > 7349 [  681.732872] c0 7125 (syz-executor) [<ffffff90091e0b20>] ion_alloc+0x200/0x7e0
+> > > > > > 7350 [  681.740302] c0 7125 (syz-executor) [<ffffff90091e154c>] ion_ioctl+0x18c/0x378
+> > > > > > 7351 [  681.747738] c0 7125 (syz-executor) [<ffffff90084c6824>] do_vfs_ioctl+0x17c/0x1780
+> > > > > > 7352 [  681.755514] c0 7125 (syz-executor) [<ffffff90084c7ed4>] SyS_ioctl+0xac/0xc0
+> > > > > > 
+> > > > > > Wu found it's due to [1]. Before that, unevictable page goes to cull_mlocked
+> > > > > > routine so that it couldn't reach the VM_BUG_ON_PAGE line.
+> > > > > > 
+> > > > > > To fix the issue, this patch filter out unevictable LRU pages
+> > > > > > from the reclaim_clean_pages_from_list in CMA.
+> > > > > 
+> > > > > The changelog is rather modest on details and I have to confess I have
+> > > > > little bit hard time to understand it. E.g. why do not we need to handle
+> > > > > the regular reclaim path?
+> > > > 
+> > > > No need to pass unevictable pages into regular reclaim patch if we are
+> > > > able to know in advance.
+> > > 
+> > > I am sorry to be dense here. So what is the difference in the CMA path?
+> > > Am I right that the pfn walk (CMA) rather than LRU isolation (reclaim)
+> > > is the key differentiator?
+> > 
+> > Yes.
+> > We could isolate unevictable LRU pages from the pfn waker to migrate and
+> > could discard clean file-backed pages to reduce migration latency in CMA
+> > path.
+> 
+> Please be explicit about that in the changelog. The fact that this is
+> not possible from the regular reclaim path is really important and not
+> obvious from the first glance.
+> 
+> Thanks!
 
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Christopher Lameter <cl@linux.com>
+Here it goes:
+
+Andrew, could you replace the patch with the below if Michal doesn't have
+any suggestion?
+
+Thanks.
+
+From 5cb8958ea240e2580bd2b331448009e8e1854240 Mon Sep 17 00:00:00 2001
+From: Minchan Kim <minchan@kernel.org>
+Date: Fri, 24 May 2019 15:54:10 +0900
+Subject: [PATCH] mm: fix trying to reclaim unevicable LRU page
+
+There was below bugreport from Wu Fangsuo.
+
+In CMA allocation path, isolate_migratepages_range could isolate unevictable
+LRU pages and reclaim_clean_page_from_list can try to reclaim them if
+they are clean file-backed pages.
+
+7200 [  680.491097] c4 7125 (syz-executor) page:ffffffbf02f33b40 count:86 mapcount:84 mapping:ffffffc08fa7a810 index:0x24
+7201 [  680.531186] c4 7125 (syz-executor) flags: 0x19040c(referenced|uptodate|arch_1|mappedtodisk|unevictable|mlocked)
+7202 [  680.544987] c0 7125 (syz-executor) raw: 000000000019040c ffffffc08fa7a810 0000000000000024 0000005600000053
+7203 [  680.556162] c0 7125 (syz-executor) raw: ffffffc009b05b20 ffffffc009b05b20 0000000000000000 ffffffc09bf3ee80
+7204 [  680.566860] c0 7125 (syz-executor) page dumped because: VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page))
+7205 [  680.578038] c0 7125 (syz-executor) page->mem_cgroup:ffffffc09bf3ee80
+7206 [  680.585467] c0 7125 (syz-executor) ------------[ cut here ]------------
+7207 [  680.592466] c0 7125 (syz-executor) kernel BUG at /home/build/farmland/adroid9.0/kernel/linux/mm/vmscan.c:1350!
+7223 [  680.603663] c0 7125 (syz-executor) Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+7224 [  680.611436] c0 7125 (syz-executor) Modules linked in:
+7225 [  680.616769] c0 7125 (syz-executor) CPU: 0 PID: 7125 Comm: syz-executor Tainted: G S              4.14.81 #3
+7226 [  680.626826] c0 7125 (syz-executor) Hardware name: ASR AQUILAC EVB (DT)
+7227 [  680.633623] c0 7125 (syz-executor) task: ffffffc00a54cd00 task.stack: ffffffc009b00000
+7228 [  680.641917] c0 7125 (syz-executor) PC is at shrink_page_list+0x1998/0x3240
+7229 [  680.649144] c0 7125 (syz-executor) LR is at shrink_page_list+0x1998/0x3240
+7230 [  680.656303] c0 7125 (syz-executor) pc : [<ffffff90083a2158>] lr : [<ffffff90083a2158>] pstate: 60400045
+7231 [  680.666086] c0 7125 (syz-executor) sp : ffffffc009b05940
+..
+7342 [  681.671308] c0 7125 (syz-executor) [<ffffff90083a2158>] shrink_page_list+0x1998/0x3240
+7343 [  681.679567] c0 7125 (syz-executor) [<ffffff90083a3dc0>] reclaim_clean_pages_from_list+0x3c0/0x4f0
+7344 [  681.688793] c0 7125 (syz-executor) [<ffffff900837ed64>] alloc_contig_range+0x3bc/0x650
+7347 [  681.717421] c0 7125 (syz-executor) [<ffffff90084925cc>] cma_alloc+0x214/0x668
+7348 [  681.724892] c0 7125 (syz-executor) [<ffffff90091e4d78>] ion_cma_allocate+0x98/0x1d8
+7349 [  681.732872] c0 7125 (syz-executor) [<ffffff90091e0b20>] ion_alloc+0x200/0x7e0
+7350 [  681.740302] c0 7125 (syz-executor) [<ffffff90091e154c>] ion_ioctl+0x18c/0x378
+7351 [  681.747738] c0 7125 (syz-executor) [<ffffff90084c6824>] do_vfs_ioctl+0x17c/0x1780
+7352 [  681.755514] c0 7125 (syz-executor) [<ffffff90084c7ed4>] SyS_ioctl+0xac/0xc0
+
+Wu found it's due to [1]. Before that, unevictable page goes to cull_mlocked
+routine so that it couldn't reach the VM_BUG_ON_PAGE line.
+
+To fix the issue, this patch filter out unevictable LRU pages
+from the reclaim_clean_pages_from_list in CMA.
+
+[1] ad6b67041a45, mm: remove SWAP_MLOCK in ttu
+
+Cc: <stable@kernel.org>	[4.12+]
+Reported-debugged-by: Wu Fangsuo <fangsuowu@asrmicro.com>
 Signed-off-by: Minchan Kim <minchan@kernel.org>
 ---
- include/linux/huge_mm.h |   3 -
- mm/huge_memory.c        |  74 -------------
- mm/madvise.c            | 234 +++++++++++++++++++++++-----------------
- 3 files changed, 135 insertions(+), 176 deletions(-)
+ mm/vmscan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 7cd5c150c21d..2667e1aa3ce5 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -29,9 +29,6 @@ extern struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
- 					  unsigned long addr,
- 					  pmd_t *pmd,
- 					  unsigned int flags);
--extern bool madvise_free_huge_pmd(struct mmu_gather *tlb,
--			struct vm_area_struct *vma,
--			pmd_t *pmd, unsigned long addr, unsigned long next);
- extern int zap_huge_pmd(struct mmu_gather *tlb,
- 			struct vm_area_struct *vma,
- 			pmd_t *pmd, unsigned long addr);
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9f8bce9a6b32..22e20f929463 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1668,80 +1668,6 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
- 	return 0;
- }
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index d9c3e873eca6..7350afae5c3c 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1505,7 +1505,7 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
  
--/*
-- * Return true if we do MADV_FREE successfully on entire pmd page.
-- * Otherwise, return false.
-- */
--bool madvise_free_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
--		pmd_t *pmd, unsigned long addr, unsigned long next)
--{
--	spinlock_t *ptl;
--	pmd_t orig_pmd;
--	struct page *page;
--	struct mm_struct *mm = tlb->mm;
--	bool ret = false;
--
--	tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
--
--	ptl = pmd_trans_huge_lock(pmd, vma);
--	if (!ptl)
--		goto out_unlocked;
--
--	orig_pmd = *pmd;
--	if (is_huge_zero_pmd(orig_pmd))
--		goto out;
--
--	if (unlikely(!pmd_present(orig_pmd))) {
--		VM_BUG_ON(thp_migration_supported() &&
--				  !is_pmd_migration_entry(orig_pmd));
--		goto out;
--	}
--
--	page = pmd_page(orig_pmd);
--	/*
--	 * If other processes are mapping this page, we couldn't discard
--	 * the page unless they all do MADV_FREE so let's skip the page.
--	 */
--	if (page_mapcount(page) != 1)
--		goto out;
--
--	if (!trylock_page(page))
--		goto out;
--
--	/*
--	 * If user want to discard part-pages of THP, split it so MADV_FREE
--	 * will deactivate only them.
--	 */
--	if (next - addr != HPAGE_PMD_SIZE) {
--		get_page(page);
--		spin_unlock(ptl);
--		split_huge_page(page);
--		unlock_page(page);
--		put_page(page);
--		goto out_unlocked;
--	}
--
--	if (PageDirty(page))
--		ClearPageDirty(page);
--	unlock_page(page);
--
--	if (pmd_young(orig_pmd) || pmd_dirty(orig_pmd)) {
--		pmdp_invalidate(vma, addr, pmd);
--		orig_pmd = pmd_mkold(orig_pmd);
--		orig_pmd = pmd_mkclean(orig_pmd);
--
--		set_pmd_at(mm, addr, pmd, orig_pmd);
--		tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
--	}
--
--	mark_page_lazyfree(page);
--	ret = true;
--out:
--	spin_unlock(ptl);
--out_unlocked:
--	return ret;
--}
--
- static inline void zap_deposited_table(struct mm_struct *mm, pmd_t *pmd)
- {
- 	pgtable_t pgtable;
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 3b9d2ba421b1..bb1906bb75fd 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -310,6 +310,91 @@ static long madvise_willneed(struct vm_area_struct *vma,
- 	return 0;
- }
- 
-+enum madv_pmdp_reset_t {
-+	MADV_PMDP_RESET,	/* pmd was reset successfully */
-+	MADV_PMDP_SPLIT,	/* pmd was split */
-+	MADV_PMDP_ERROR,
-+};
-+
-+static enum madv_pmdp_reset_t madvise_pmdp_reset_or_split(struct mm_walk *walk,
-+				pmd_t *pmd, spinlock_t *ptl,
-+				unsigned long addr, unsigned long end,
-+				bool young, bool dirty)
-+{
-+	pmd_t orig_pmd;
-+	unsigned long next;
-+	struct page *page;
-+	struct mmu_gather *tlb = walk->private;
-+	struct mm_struct *mm = walk->mm;
-+	struct vm_area_struct *vma = walk->vma;
-+	bool reset_young = false;
-+	bool reset_dirty = false;
-+	enum madv_pmdp_reset_t ret = MADV_PMDP_ERROR;
-+
-+	orig_pmd = *pmd;
-+	if (is_huge_zero_pmd(orig_pmd))
-+		return ret;
-+
-+	if (unlikely(!pmd_present(orig_pmd))) {
-+		VM_BUG_ON(thp_migration_supported() &&
-+				!is_pmd_migration_entry(orig_pmd));
-+		return ret;
-+	}
-+
-+	next = pmd_addr_end(addr, end);
-+	page = pmd_page(orig_pmd);
-+	if (next - addr != HPAGE_PMD_SIZE) {
-+		/*
-+		 * THP collapsing is not cheap so only split the page is
-+		 * private to the this process.
-+		 */
-+		if (page_mapcount(page) != 1)
-+			return ret;
-+		get_page(page);
-+		spin_unlock(ptl);
-+		lock_page(page);
-+		if (!split_huge_page(page))
-+			ret = MADV_PMDP_SPLIT;
-+		unlock_page(page);
-+		put_page(page);
-+		return ret;
-+	}
-+
-+	if (young && pmd_young(orig_pmd))
-+		reset_young = true;
-+	if (dirty && pmd_dirty(orig_pmd))
-+		reset_dirty = true;
-+
-+	/*
-+	 * Other process could rely on the PG_dirty for data consistency,
-+	 * not pte_dirty so we could reset PG_dirty only when we are owner
-+	 * of the page.
-+	 */
-+	if (reset_dirty) {
-+		if (page_mapcount(page) != 1)
-+			goto out;
-+		if (!trylock_page(page))
-+			goto out;
-+		if (PageDirty(page))
-+			ClearPageDirty(page);
-+		unlock_page(page);
-+	}
-+
-+	ret = MADV_PMDP_RESET;
-+	if (reset_young || reset_dirty) {
-+		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
-+		pmdp_invalidate(vma, addr, pmd);
-+		if (reset_young)
-+			orig_pmd = pmd_mkold(orig_pmd);
-+		if (reset_dirty)
-+			orig_pmd = pmd_mkclean(orig_pmd);
-+		set_pmd_at(mm, addr, pmd, orig_pmd);
-+		tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
-+	}
-+out:
-+	return ret;
-+}
-+
- static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
- 				unsigned long end, struct mm_walk *walk)
- {
-@@ -319,64 +404,31 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
- 	pte_t *orig_pte, *pte, ptent;
- 	spinlock_t *ptl;
- 	struct page *page;
--	unsigned long next;
- 
--	next = pmd_addr_end(addr, end);
- 	if (pmd_trans_huge(*pmd)) {
--		pmd_t orig_pmd;
--
--		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
- 		ptl = pmd_trans_huge_lock(pmd, vma);
- 		if (!ptl)
- 			return 0;
- 
--		orig_pmd = *pmd;
--		if (is_huge_zero_pmd(orig_pmd))
--			goto huge_unlock;
--
--		if (unlikely(!pmd_present(orig_pmd))) {
--			VM_BUG_ON(thp_migration_supported() &&
--					!is_pmd_migration_entry(orig_pmd));
--			goto huge_unlock;
--		}
--
--		page = pmd_page(orig_pmd);
--		if (next - addr != HPAGE_PMD_SIZE) {
--			int err;
--
--			if (page_mapcount(page) != 1)
--				goto huge_unlock;
--
--			get_page(page);
-+		switch (madvise_pmdp_reset_or_split(walk, pmd, ptl, addr, end,
-+							true, false)) {
-+		case MADV_PMDP_RESET:
- 			spin_unlock(ptl);
--			lock_page(page);
--			err = split_huge_page(page);
--			unlock_page(page);
--			put_page(page);
--			if (!err)
--				goto regular_page;
--			return 0;
--		}
--
--		if (pmd_young(orig_pmd)) {
--			pmdp_invalidate(vma, addr, pmd);
--			orig_pmd = pmd_mkold(orig_pmd);
--
--			set_pmd_at(mm, addr, pmd, orig_pmd);
--			tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
-+			page = pmd_page(*pmd);
-+			test_and_clear_page_young(page);
-+			deactivate_page(page);
-+			goto next;
-+		case MADV_PMDP_ERROR:
-+			spin_unlock(ptl);
-+			goto next;
-+		case MADV_PMDP_SPLIT:
-+			; /* go through */
+ 	list_for_each_entry_safe(page, next, page_list, lru) {
+ 		if (page_is_file_cache(page) && !PageDirty(page) &&
+-		    !__PageMovable(page)) {
++		    !__PageMovable(page) && !PageUnevictable(page)) {
+ 			ClearPageActive(page);
+ 			list_move(&page->lru, &clean_pages);
  		}
--
--		test_and_clear_page_young(page);
--		deactivate_page(page);
--huge_unlock:
--		spin_unlock(ptl);
--		return 0;
- 	}
- 
- 	if (pmd_trans_unstable(pmd))
- 		return 0;
- 
--regular_page:
- 	tlb_change_page_size(tlb, PAGE_SIZE);
- 	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
- 	flush_tlb_batched_pending(mm);
-@@ -414,6 +466,7 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
- 
- 	arch_enter_lazy_mmu_mode();
- 	pte_unmap_unlock(orig_pte, ptl);
-+next:
- 	cond_resched();
- 
- 	return 0;
-@@ -464,70 +517,38 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
- 	LIST_HEAD(page_list);
- 	struct page *page;
- 	int isolated = 0;
--	unsigned long next;
- 
- 	if (fatal_signal_pending(current))
- 		return -EINTR;
- 
--	next = pmd_addr_end(addr, end);
- 	if (pmd_trans_huge(*pmd)) {
--		pmd_t orig_pmd;
--
--		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
- 		ptl = pmd_trans_huge_lock(pmd, vma);
- 		if (!ptl)
- 			return 0;
- 
--		orig_pmd = *pmd;
--		if (is_huge_zero_pmd(orig_pmd))
--			goto huge_unlock;
--
--		if (unlikely(!pmd_present(orig_pmd))) {
--			VM_BUG_ON(thp_migration_supported() &&
--					!is_pmd_migration_entry(orig_pmd));
--			goto huge_unlock;
--		}
--
--		page = pmd_page(orig_pmd);
--		if (next - addr != HPAGE_PMD_SIZE) {
--			int err;
--
--			if (page_mapcount(page) != 1)
--				goto huge_unlock;
--			get_page(page);
-+		switch (madvise_pmdp_reset_or_split(walk, pmd, ptl, addr, end,
-+							true, false)) {
-+		case MADV_PMDP_RESET:
-+			page = pmd_page(*pmd);
- 			spin_unlock(ptl);
--			lock_page(page);
--			err = split_huge_page(page);
--			unlock_page(page);
--			put_page(page);
--			if (!err)
--				goto regular_page;
--			return 0;
--		}
--
--		if (isolate_lru_page(page))
--			goto huge_unlock;
--
--		if (pmd_young(orig_pmd)) {
--			pmdp_invalidate(vma, addr, pmd);
--			orig_pmd = pmd_mkold(orig_pmd);
--
--			set_pmd_at(mm, addr, pmd, orig_pmd);
--			tlb_remove_tlb_entry(tlb, pmd, addr);
-+			if (isolate_lru_page(page))
-+				return 0;
-+			ClearPageReferenced(page);
-+			test_and_clear_page_young(page);
-+			list_add(&page->lru, &page_list);
-+			reclaim_pages(&page_list);
-+			goto next;
-+		case MADV_PMDP_ERROR:
-+			spin_unlock(ptl);
-+			goto next;
-+		case MADV_PMDP_SPLIT:
-+			; /* go through */
- 		}
--
--		ClearPageReferenced(page);
--		test_and_clear_page_young(page);
--		list_add(&page->lru, &page_list);
--huge_unlock:
--		spin_unlock(ptl);
--		reclaim_pages(&page_list);
--		return 0;
- 	}
- 
- 	if (pmd_trans_unstable(pmd))
- 		return 0;
--regular_page:
-+
- 	tlb_change_page_size(tlb, PAGE_SIZE);
- 	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
- 	flush_tlb_batched_pending(mm);
-@@ -569,6 +590,7 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
- 	arch_leave_lazy_mmu_mode();
- 	pte_unmap_unlock(orig_pte, ptl);
- 	reclaim_pages(&page_list);
-+next:
- 	cond_resched();
- 
- 	return 0;
-@@ -620,12 +642,26 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 	pte_t *orig_pte, *pte, ptent;
- 	struct page *page;
- 	int nr_swap = 0;
--	unsigned long next;
- 
--	next = pmd_addr_end(addr, end);
--	if (pmd_trans_huge(*pmd))
--		if (madvise_free_huge_pmd(tlb, vma, pmd, addr, next))
-+	if (pmd_trans_huge(*pmd)) {
-+		ptl = pmd_trans_huge_lock(pmd, vma);
-+		if (!ptl)
-+			return 0;
-+
-+		switch (madvise_pmdp_reset_or_split(walk, pmd, ptl, addr, end,
-+							true, true)) {
-+		case MADV_PMDP_RESET:
-+			page = pmd_page(*pmd);
-+			spin_unlock(ptl);
-+			mark_page_lazyfree(page);
- 			goto next;
-+		case MADV_PMDP_ERROR:
-+			spin_unlock(ptl);
-+			goto next;
-+		case MADV_PMDP_SPLIT:
-+			; /* go through */
-+		}
-+	}
- 
- 	if (pmd_trans_unstable(pmd))
- 		return 0;
-@@ -737,8 +773,8 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 	}
- 	arch_leave_lazy_mmu_mode();
- 	pte_unmap_unlock(orig_pte, ptl);
--	cond_resched();
- next:
-+	cond_resched();
- 	return 0;
- }
- 
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
+
 
