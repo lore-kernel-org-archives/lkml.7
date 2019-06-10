@@ -2,111 +2,87 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B055BC28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF32FC468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC7320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF45C2089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560175532;
+	bh=KuTJDH4VWuHHa/K+CZFl0/sgbE8rc4TyaQuaGIu3Fuk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0JV8A3u17L8Z9irVh48XGiIg8MCC0/ma6Xoo7nLarFrg4U+j+N4PFwBSu8DKccnjR
+	 XOVeBvONfS8hsjLd23D3GKEEZDIiqeALt/8mLAk5L1Git0r3a6wzUTJ6BqMhmOE51s
+	 gTXdynmy2UNtu4JvQfBlC+YPONYz7xvZ1He0/NaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390669AbfFJOCt (ORCPT
+        id S2390673AbfFJOFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:02:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18542 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390384AbfFJOCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:02:48 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0C55D96CA51B27A67399;
-        Mon, 10 Jun 2019 22:02:43 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 10 Jun 2019
- 22:02:42 +0800
-Subject: Re: [PATCH -next] packet: remove unused variable 'status' in
- __packet_lookup_frame_in_block
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-References: <20190610115831.175710-1-maowenan@huawei.com>
- <CAF=yD-JOCZHt6q3ArCqY5PMW1vP5ZmNkYMKUB14TrgU-X30cSQ@mail.gmail.com>
-CC:     David Miller <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <caf8d25f-60e2-a0c0-dc21-956ea32ee59a@huawei.com>
-Date:   Mon, 10 Jun 2019 22:02:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Mon, 10 Jun 2019 10:05:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390384AbfFJOFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:05:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA33F20679;
+        Mon, 10 Jun 2019 14:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560175531;
+        bh=KuTJDH4VWuHHa/K+CZFl0/sgbE8rc4TyaQuaGIu3Fuk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IhozKF5dba+wL/G1hpjTdsu2oWPVZgI2havyA7AWQWCPv1VXTXjjPKf2c1cncO8Rg
+         q6f8R4BRb38BdlRsGHOKhHfnKTMP/nI4tLbXepRzHz9ochTaNwiYyccgdiBY21POqH
+         18vaa0c5R2bVH+2sPANL4IuV7zIOEntlJwfhGWcs=
+Date:   Mon, 10 Jun 2019 16:05:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Jiri Slaby <jslaby@suse.cz>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of AutoReporter
+Message-ID: <20190610140528.GA18627@kroah.com>
+References: <20190607153849.101321647@linuxfoundation.org>
+ <20190607153855.717899507@linuxfoundation.org>
+ <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
+ <20190610073119.GB20470@kroah.com>
+ <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
+ <20190610074840.GB24746@kroah.com>
+ <20190610063340.051ee13b@lwn.net>
 MIME-Version: 1.0
-In-Reply-To: <CAF=yD-JOCZHt6q3ArCqY5PMW1vP5ZmNkYMKUB14TrgU-X30cSQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610063340.051ee13b@lwn.net>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/6/10 21:05, Willem de Bruijn wrote:
-> On Mon, Jun 10, 2019 at 8:17 AM Mao Wenan <maowenan@huawei.com> wrote:
->>
->> The variable 'status' in  __packet_lookup_frame_in_block() is never used since
->> introduction in commit f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer
->> implementation."), we can remove it.
->> And when __packet_lookup_frame_in_block() calls prb_retire_current_block(),
->> it can pass macro TP_STATUS_KERNEL instead of 0.
->>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  net/packet/af_packet.c | 5 ++---
->>  1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
->> index a29d66d..fb1a79c 100644
->> --- a/net/packet/af_packet.c
->> +++ b/net/packet/af_packet.c
->> @@ -1003,7 +1003,6 @@ static void prb_fill_curr_block(char *curr,
->>  /* Assumes caller has the sk->rx_queue.lock */
->>  static void *__packet_lookup_frame_in_block(struct packet_sock *po,
->>                                             struct sk_buff *skb,
->> -                                               int status,
->>                                             unsigned int len
->>                                             )
->>  {
->> @@ -1046,7 +1045,7 @@ static void *__packet_lookup_frame_in_block(struct packet_sock *po,
->>         }
->>
->>         /* Ok, close the current block */
->> -       prb_retire_current_block(pkc, po, 0);
->> +       prb_retire_current_block(pkc, po, TP_STATUS_KERNEL);
+On Mon, Jun 10, 2019 at 06:33:40AM -0600, Jonathan Corbet wrote:
+> On Mon, 10 Jun 2019 09:48:40 +0200
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 > 
-> I don't think that 0 is intended to mean TP_STATUS_KERNEL here.
+> > Hm, 2.1 here:
+> > 	Running Sphinx v2.1.0
+> > perhaps Tumbleweed needs to update?  :)
 > 
-> prb_retire_current_block calls prb_close_block which sets status to
+> Heh...trying 2.1 is still on my list of things to do ... :)
 > 
->   TP_STATUS_USER | stat
+> > Anyway, this should not be breaking, if Jon doesn't have any ideas, I'll
+> > just drop these changes.
 > 
-> where stat is 0 or TP_STATUS_BLK_TMO.
+> The fix for that is 551bd3368a7b (drm/i915: Maintain consistent
+> documentation subsection ordering) which was also marked for stable.  Jiri,
+> do you somehow not have that one?
 
+It's part of this series, which is probably why it works for me.  Don't
+know why it doesn't work for Jiri, unless he is cherry-picking things?
 
-#define TP_STATUS_KERNEL		      0
-#define TP_STATUS_BLK_TMO		(1 << 5)
+thanks,
 
-Actually, packet_current_rx_frame calls __packet_lookup_frame_in_block with status=TP_STATUS_KERNEL
-in original code.
-
-__packet_lookup_frame_in_block in this function, first is to check whether the currently active block
-has enough space for the packet, which means status of block should be TP_STATUS_KERNEL, then it calls
-prb_retire_current_block to retire this block.
-
-Since there needs some discussion about means of status, I can send v2 only removing the parameter status of
-__packet_lookup_frame_in_block?
-
-> 
-> 
-
+greg k-h
