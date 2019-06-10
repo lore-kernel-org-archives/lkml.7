@@ -2,129 +2,122 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96A1C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE5C468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D7D2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C/7BgS21"
+	by mail.kernel.org (Postfix) with ESMTP id 5709A20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560153459;
+	bh=0J5cz45KXdQEbC0zP9NDZ6yJHvqD3V+zR61spu7qeCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RwyDulCjWK6g6fmOUt8FJUKkZTGVwS52Ag7cB8BYAuLWhv74ZY6CA8jRG6ad3A8Mn
+	 //jTFJFAoDXUWyvZq1aS58+70FQNVEdShWX0kbAkX9MAm+qutIsv3Hl9Om4WiEdnKV
+	 JXwdgNeEyXZNalHlFOJtOFsBCTKt618AJqwqJg2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388272AbfFJH5f (ORCPT
+        id S2388292AbfFJH5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 10 Jun 2019 03:57:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388109AbfFJH5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 03:57:35 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38039 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388109AbfFJH5e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:57:34 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d18so8112279wrs.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 00:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=xTVf10rNwhHdq0na/JiMNEiN+1J2gR7CZjLBDvBlZ9M=;
-        b=C/7BgS21M51i7i2CmNw0m1n793WHuwfoYQkS3WRWJWKQsQBxjw9CIy2+Faq9ymMTeV
-         U2GBuJzPbjKCHDCazNCv3EufybIeE1wUBtLZaPDWMGaINHWIIzfHC+0p9nVF7beZGSBd
-         //LURySsxd2kT8FOBdUsOWxnFZ+5dl+hoVq7XeFhuZowUdZd4O1UvhPIRq4tH0zazkBr
-         3TnjUYgkVr92aniAKuyUF8QQKGfjozeMSXNOnfXAnZNynC+7HVoNCxcff8tCQ4ZbboQl
-         zVeN/hmZoEiKQoXh76n41vtHuJpPK1irmunendNLi9m6ZVhJKXOgCoZBuaGpKeVJspaT
-         PIVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=xTVf10rNwhHdq0na/JiMNEiN+1J2gR7CZjLBDvBlZ9M=;
-        b=TT6WVkAwXhMjB21MZN8B126qFkcF8DClzdBBL+xeMLsI0wCQdMSEGEYb8zQiZK0bz1
-         AOTYSAzeiLQsmmNr5ZAVdn8tcOB93EpW4l+ztJ4/1N+/wSPzIuwZfxN0EZFJ8SDvfntX
-         EMAyTtL19ubWFC0RTvck9P94bXml9AgQJ+LFYE1r4zehVT7V3YgycUA2X9WVt05ZfsJG
-         /aPxnGC6+AeYAf47RNxAl4z2LkUz1sDDrg+87muhA5QpuUd5prDCsQfYQLpusAPBrZxq
-         q7+GeCSgoP58nvulHZjmOjeAo7v0V7g+kfjlOz/kiHjvi5Me8WotHeTujo7uf7gW2s2D
-         q7wQ==
-X-Gm-Message-State: APjAAAUnguvF2dPhEyyD7Cd0ZAHg4BaC/DtpBSPp0VFKNfYTKIPRU4+V
-        yEsIOkaUlAvGKJ4ZNpb7Pg3h7w==
-X-Google-Smtp-Source: APXvYqwPND89CTG631SsvW5xJabNs8hX8frrZKJyV7VaYPuMk/7oG5ltYmF1iH5bZQdZa0Uy/r0eCA==
-X-Received: by 2002:a5d:6583:: with SMTP id q3mr47343484wru.184.1560153452753;
-        Mon, 10 Jun 2019 00:57:32 -0700 (PDT)
-Received: from dell ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id f13sm5796159wrt.27.2019.06.10.00.57.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 00:57:32 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 08:57:30 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, alokc@codeaurora.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-Message-ID: <20190610075730.GH4797@dell>
-References: <20190605114302.22509-1-lee.jones@linaro.org>
- <20190605114302.22509-3-lee.jones@linaro.org>
- <CACRpkdaEe3uKAsSuhbToevXH1cMsuMUvwaopLPuD+JkDTnuEnQ@mail.gmail.com>
- <20190608041044.GK24059@builder>
+Received: from localhost (unknown [122.178.227.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7206120859;
+        Mon, 10 Jun 2019 07:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560153455;
+        bh=0J5cz45KXdQEbC0zP9NDZ6yJHvqD3V+zR61spu7qeCg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aNmT+sq6h4g+GUszEkq0f7ULAAPg8TMdX+o7uMtCkkOHxR+2c17Jlkh/ieYVwB5/d
+         lFk6rRtWpg6OYkmoXBK+TnaHzF4BeeLKtiT1KS5d+GMAjULZMa7u4Nir4c9lSL4x2f
+         qV+4ummAhbKbok5tLKME4d8egrLfzuBKTqd8E7yU=
+Date:   Mon, 10 Jun 2019 13:24:27 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH/RFC] dmaengine: Create symlinks from DMA channels to
+ slaves
+Message-ID: <20190610075427.GP9160@vkoul-mobl.Dlink>
+References: <20190607113835.15376-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190608041044.GK24059@builder>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190607113835.15376-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 07 Jun 2019, Bjorn Andersson wrote:
+On 07-06-19, 13:38, Geert Uytterhoeven wrote:
+> Currently it is not easy to find out which DMA channels are in use, and
+> by which slave devices.
+> 
+> Fix this by creating in sysfs a "slave" symlink from the DMA channel to
+> the actual slave device when a channel is requested, and removing it
+> again when the channel is released.
+> 
+> For now this is limited to DT and ACPI.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Questions:
+>   1. Do you think this is useful?
 
-> On Fri 07 Jun 16:02 PDT 2019, Linus Walleij wrote:
-> 
-> > On Wed, Jun 5, 2019 at 1:43 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > 
-> > > When booting MSM based platforms with Device Tree or some ACPI
-> > > implementations, it is possible to provide a list of reserved pins
-> > > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> > > However some ACPI tables are not populated with this information,
-> > > thus it has to come from a knowledgable device driver instead.
-> > >
-> > > Here we provide the MSM common driver with additional support to
-> > > parse this informtion and correctly populate the widely used
-> > > 'valid_mask'.
-> > >
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > 
-> > Exactly how we should use of the API, so if Björn can supply an
-> > ACK to patches 3 and 4 I'm happy to apply them.
-> > 
-> > Björn?
-> > 
-> 
-> I'm waiting for a version that does not specify the reserved_gpios for
-> struct msm_pinctrl_soc_data sdm845_pinctrl {}, as this would override
-> the ability of getting these from DT.
-> 
-> I haven't seen such revision yet, will review it once I find it.
+Yes for me at least :)
 
-Just testing it now.  It should be on the list by the time you start.
+>   2. Should backlinks (e.g. "dma:<name>") be created from the slave
+>      device to the DMA channel?
+>      This requires storing the name in struct dma_chan, for later
+>      symlink removal.
+
+that would certainly be more helpful
+
+>   3. Should this be extended to other ways of requesting channels?
+>      In many cases, no device pointer is available, so a device pointer
+>      parameter has to be added to all DMA channel request APIs that
+>      don't have it yet.
+
+I think that would need to be done.
+
+> ---
+>  drivers/dma/dmaengine.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 03ac4b96117cd8db..c11476f76fc96bcf 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -706,6 +706,10 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>  
+>  	if (chan) {
+>  		/* Valid channel found or requester needs to be deferred */
+> +		if (!IS_ERR(chan) &&
+> +		     sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
+> +				       "slave"))
+> +			dev_err(dev, "Cannot create DMA slave symlink\n");
+>  		if (!IS_ERR(chan) || PTR_ERR(chan) == -EPROBE_DEFER)
+>  			return chan;
+>  	}
+> @@ -786,6 +790,7 @@ void dma_release_channel(struct dma_chan *chan)
+>  	/* drop PRIVATE cap enabled by __dma_request_channel() */
+>  	if (--chan->device->privatecnt == 0)
+>  		dma_cap_clear(DMA_PRIVATE, chan->device->cap_mask);
+> +	sysfs_remove_link(&chan->dev->device.kobj, "slave");
+>  	mutex_unlock(&dma_list_mutex);
+>  }
+>  EXPORT_SYMBOL_GPL(dma_release_channel);
+> -- 
+> 2.17.1
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+~Vinod
