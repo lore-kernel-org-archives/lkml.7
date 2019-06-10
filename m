@@ -2,86 +2,65 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9DEC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE778C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72192082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86542082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388694AbfFJIyH (ORCPT
+        id S2388658AbfFJIzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:54:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:46153 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388190AbfFJIyG (ORCPT
+        Mon, 10 Jun 2019 04:55:36 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:38659 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387831AbfFJIzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:54:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id s83so7026213iod.13
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:54:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=B+GJ6LoUin3FHSYWAY/WpPY5cwhDOKvGZMSTo6bA3w0=;
-        b=UWc18K6AiXKNEbBcTmMC/fujh+/TG/G3VdnXNkQBeDwjKHmJnVtL7GA0omxlnDaTRF
-         T8fed5eEKgxxzY4xxvU5Jb35wGFJ3Cd66L5ra3v44Ikt/tc5q1c0Or4Xp+/FL3VFz2eV
-         hgNE7PgHrBTc/8wQ6e6VLjBdFZRvraCF/hhev/bHUe+BIyysdbH7/sTehbSSw1hCrojY
-         aL1TfC0FGumkDebW+oiZ34gYsrzJIDnmWjmReusgiutLnk7tiPSO1hFtD8PR1RGwn3ez
-         I0kcxOO9Rx+HtPpLw2i5kQrWP2QLZQA0dXxps/7SvfwBALC1M5quvg9lqSqqhVp0YvZ2
-         NQQg==
-X-Gm-Message-State: APjAAAWjpO9JRgivgoZqTIUqA+eCmXuu+TBVa+MfRN7VPhgPL8ZCMY0O
-        tBijB7E0Z6Sv628ykiYPV9FeutTD5a4wLFRVOC57YJY4dunn
-X-Google-Smtp-Source: APXvYqyoSWqFu+6arntTEvpAyXafinBqpItYheR6lKljmWQHNNwD8mClxay8MGzPgA1v1+D2lBRzm0MtJjByafy3bbeeUx0Lv0Cj
+        Mon, 10 Jun 2019 04:55:36 -0400
+X-Originating-IP: 90.88.159.246
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C5863FF80A;
+        Mon, 10 Jun 2019 08:55:30 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
+        ymarkman@marvell.com, mw@semihalf.com
+Subject: [PATCH net-next 0/3] net: mvpp2: Add extra ethtool stats
+Date:   Mon, 10 Jun 2019 10:55:26 +0200
+Message-Id: <20190610085529.16803-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ba04:: with SMTP id k4mr1916868iof.127.1560156846109;
- Mon, 10 Jun 2019 01:54:06 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 01:54:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009b3b80058af452ae@google.com>
-Subject: kernel panic: stack is corrupted in __lock_acquire (4)
-From:   syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This series adds support for more ethtool counters in PPv2 :
+ - Per port counters, including one indicating the classifier drops
+ - Per RXQ and per TXQ counters
 
-syzbot found the following crash on:
+The first 2 patches perform some light rework and renaming, and the 3rd
+adds the extra counters.
 
-HEAD commit:    fdf71426 net: fix indirect calls helpers for ptype list ho..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=1199f551a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4f721a391cd46ea
-dashboard link: https://syzkaller.appspot.com/bug?extid=83979935eb6304f8cd46
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Maxime Chevallier (3):
+  net: mvpp2: Only clear the stat counters at port init
+  net: mvpp2: Rename mvpp2_ethtool_counters to
+    mvpp2_ethtool_mib_counters
+  net: mvpp2: Add support for more ethtool counters
 
-Unfortunately, I don't have any reproducer for this crash yet.
+ drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  18 +++
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 134 +++++++++++++++---
+ 2 files changed, 133 insertions(+), 19 deletions(-)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
+-- 
+2.20.1
 
-Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:  
-__lock_acquire+0x3959/0x5490 kernel/locking/lockdep.c:3820
-CPU: 1 PID: 11196 Comm: syz-executor.0 Not tainted 5.2.0-rc2+ #41
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
