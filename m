@@ -2,131 +2,93 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94624C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C2CC28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6965E20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3182220859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flinDNZK"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gbzpln5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390457AbfFJNoL (ORCPT
+        id S2390468AbfFJNo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 09:44:11 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38108 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390156AbfFJNoL (ORCPT
+        Mon, 10 Jun 2019 09:44:28 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:34100 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390156AbfFJNo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:44:11 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s15so5780437wmj.3;
-        Mon, 10 Jun 2019 06:44:09 -0700 (PDT)
+        Mon, 10 Jun 2019 09:44:27 -0400
+Received: by mail-qt1-f173.google.com with SMTP id m29so10623999qtu.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 06:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sNvG9YY7XPCNYQ2UBNpiCWdd5MhYb4kt+Gf0IbU8IOo=;
-        b=flinDNZKnjs6s4ma5tdG2A0oUJSPW8EfGrulHAaE8+83iieBVEkBJSrRiseB4+Zaf/
-         wnra9k5DaOXkMUS6B9CQLATnNz9AzAN1IzxiNiHuqrI14zKJVZbZRVe7KcbWmLQKZWQi
-         tq7N/UIQM63jeVb8UkApaACWxG57FihRIf/udOZLFnSOXMbw13LCYFpByQnswx/igX70
-         6P6U3ya9H5Wk0DLccjmca/xlX4HguUTNC31cMoAa70gNnIjeVlmgBaBs5WhwovedVJwl
-         boaWUBTMhgZJt0mKGfracDo3a+Q5D9n8p7ZSyj5KsPsAePnJcuGnQ7kCEMi8Z31V2zxa
-         asUw==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8GlOa5AWYuEy0cWvebNNXvbMhWK/SQlKTGvJR13KtDA=;
+        b=gbzpln5zVB/PmXT2iLPA2ElaWr7aWY2nH1tfDMLxhJfyFw308Aows7Vkwh6+ziHcF2
+         kmLhlxUIPq+R5xUr6Y1HWkLjOD6d1jRhEpK/2YPPYdoAFTCQjXbtiUuMVg0ZaeVucMic
+         tk64cfUrhw2NNp0bl71PHE+ENt4l1UmK6NbMBIOz+FoISsdZheM7E1rsVv78/JZSQ6C6
+         MEB5+/LhkEzAmY/G8xpKM0EU3VoY+Sncc2/rJlgzyeRhG3GWUuSJ1IWPxmuEAFCcngSi
+         BGb2O4tqn1tRSh7QaRiuBYCafjDEHWEIum7HyVQW0ZZy7xhZDIP3M0xb+0ls4tgxj1Po
+         6gWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sNvG9YY7XPCNYQ2UBNpiCWdd5MhYb4kt+Gf0IbU8IOo=;
-        b=B54hFjZjM1tEIGmqHmX/tvpRxNrEhkSnHH4+SowHtmJORy19k9gD4S9KutfmF9nPZ6
-         MC+BTgz/3YxCKjHI49D6b+8SyWOqEf9dQEv8j1O6RX9EJPWdBmDbTQ6XouULytUpNLvc
-         bH8MqC63FK9C2CRw0ai/51yt9xB7MejSmKw8Oaawana7jm0mVXQDXEk7P0F6C14WKwA9
-         1rfcISZIf2ARBvGr97JwaFc8cbrQdZabn6FkaLBIklzd9W3EPavP2+ZKA12GD3XUSXgY
-         NX50TMs0NcdUh4XTrVcwKAxYVaI6cC3/0/coqIbRjBls8sr4+T+vX6bX3IVQXbLY3UKi
-         1zdQ==
-X-Gm-Message-State: APjAAAXiAgyf61nd5NvlMhMBVQSk9YElhXpN5tuyOeqHFpwTHDUu6UOw
-        GCnkhwqd9pWtpOEt08IXIco=
-X-Google-Smtp-Source: APXvYqxEibZ8BSB7QvrWbXPInpARHLL3QAUyPrZGR1ruT7xW5dTaQbkJ7lPpm57kOWpII+bEypnqJA==
-X-Received: by 2002:a1c:7a01:: with SMTP id v1mr14178337wmc.10.1560174249089;
-        Mon, 10 Jun 2019 06:44:09 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id w6sm16045904wro.71.2019.06.10.06.44.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 06:44:08 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 14:44:07 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/5] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190610134407.GM14257@stefanha-x1.localdomain>
-References: <20190531133954.122567-1-sgarzare@redhat.com>
- <20190531133954.122567-2-sgarzare@redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hdhkc9EpVJoq6PQ6"
-Content-Disposition: inline
-In-Reply-To: <20190531133954.122567-2-sgarzare@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8GlOa5AWYuEy0cWvebNNXvbMhWK/SQlKTGvJR13KtDA=;
+        b=cMXUEsOpPY+DNvQ+hdCEAuYghomtxUqM8L9Uqg/8pURiKt5HL9gX+NUPNog9trErxk
+         gOpBUT+8wL9X+1i+HxsPKfmkX5YTVS1lz8iygMZlW37PIKZqRk+aZM9zDPnEVHD3e3Q1
+         +N4Yx2j2FVWXIhnrDxsJn9CppoK7vXEhZ4nE7NSwh7NknpwdM3dTeKYIdP510JQNra23
+         coLNQSU4zOgQtUZUBt8SCncjk+/xCzmo7SBbl4VQaYHWSdFb88KHNG7fNZBluVbodkt3
+         BNONGN8BYwZUkoMX3AfZpSTJWLxlcbVITQ/YYezoD4Ao12AtCKOAZAvvBrHN3QychBF4
+         qpBA==
+X-Gm-Message-State: APjAAAURQ94xXXLksUJljF9Xhp5pSDgl7FfQx5Ubmgf0BG8AFcfBGD5d
+        s6UwGpuLkMrhrmrV8ipJRmRqdQ==
+X-Google-Smtp-Source: APXvYqzsCSsuUTOm+LNiBGW6RDxOvX0evmGXIygd9Tj5u7Y3Eee+b96fQyqmG3L8e4oFYbo6YbCzCg==
+X-Received: by 2002:ac8:595:: with SMTP id a21mr33144837qth.257.1560174266903;
+        Mon, 10 Jun 2019 06:44:26 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id q56sm2634272qtq.64.2019.06.10.06.44.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 06:44:26 -0700 (PDT)
+Message-ID: <1560174264.6132.65.camel@lca.pw>
+Subject: Re: "iommu/vt-d: Delegate DMA domain to generic iommu" series
+ breaks megaraid_sas
+From:   Qian Cai <cai@lca.pw>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     James Sewart <jamessewart@arista.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Date:   Mon, 10 Jun 2019 09:44:24 -0400
+In-Reply-To: <1e4f0642-e4e1-7602-3f50-37edc84ced50@linux.intel.com>
+References: <1559941717.6132.63.camel@lca.pw>
+         <1e4f0642-e4e1-7602-3f50-37edc84ced50@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 2019-06-09 at 10:43 +0800, Lu Baolu wrote:
+> Hi Qian,
+> 
+> I just posted some fix patches. I cc'ed them in your email inbox as
+> well. Can you please check whether they happen to fix your issue?
+> If not, do you mind posting more debug messages?
 
---hdhkc9EpVJoq6PQ6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Unfortunately, it does not work. Here is the dmesg.
 
-On Fri, May 31, 2019 at 03:39:50PM +0200, Stefano Garzarella wrote:
-> Since virtio-vsock was introduced, the buffers filled by the host
-> and pushed to the guest using the vring, are directly queued in
-> a per-socket list. These buffers are preallocated by the guest
-> with a fixed size (4 KB).
->=20
-> The maximum amount of memory used by each socket should be
-> controlled by the credit mechanism.
-> The default credit available per-socket is 256 KB, but if we use
-> only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> buffers, using up to 1 GB of memory per-socket. In addition, the
-> guest will continue to fill the vring with new 4 KB free buffers
-> to avoid starvation of other sockets.
->=20
-> This patch mitigates this issue copying the payload of small
-> packets (< 128 bytes) into the buffer of last packet queued, in
-> order to avoid wasting memory.
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  drivers/vhost/vsock.c                   |  2 +
->  include/linux/virtio_vsock.h            |  1 +
->  net/vmw_vsock/virtio_transport.c        |  1 +
->  net/vmw_vsock/virtio_transport_common.c | 60 +++++++++++++++++++++----
->  4 files changed, 55 insertions(+), 9 deletions(-)
+https://raw.githubusercontent.com/cailca/tmp/master/dmesg?token=AMC35QKPIZBYUMFU
+QKLW4ZC47ZPIK
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---hdhkc9EpVJoq6PQ6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlz+XqcACgkQnKSrs4Gr
-c8i67gf+IaHwIE70u0NAFbNbt2B8lH5vRZt1H3I0PmFUqoxPIhZ6wFj4rL1mPDD8
-W6mT6mla/sDPZQpeYKNJKg1tZ0N4rsl1hH/bW3huwjAGBlk7x9mP0LWUWailXE5P
-efL35fpqoiaVvqMDFCwwZFkoba7gB1jcYzzQJfbMz9k1UNRkypvhJyVD4Hs3JI+O
-C23eoQb5zO+9Z6aeFnsEj29zR4Abyw+f4kRVKPaJIETKUiMhK3x7fTaEXAkyW4R+
-bl1D7xPH+VCInPAbSdkGKp7xbWTAzASEfEPrq14jRNwt6mDAKY3Q51l3Ia0l19NY
-DMP6ErcemmdNksPZvxl0YWYTOD9pCg==
-=Jzyw
------END PGP SIGNATURE-----
-
---hdhkc9EpVJoq6PQ6--
