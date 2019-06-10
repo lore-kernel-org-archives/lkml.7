@@ -1,116 +1,145 @@
 Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF306C28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68292C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880CB20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZUu4FyQ4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SaLCPnR1"
+	by mail.kernel.org (Postfix) with ESMTP id 4190B20868
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560161578;
+	bh=qlsZvMtt4cBHEEFNgOuRWuRUO/DTFRqE+N8jSXnbmw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j7JyLdF2aP4CIvb9l7qBLDSTLm/5FoB9dlV26drT4S2ZyBLbUhSErcNd3AEvDGgwc
+	 5hy03fTnNQt5/r9+783psqBBu5xDM/aaAmk0OOwCXPXdcSqp7swNPtX/bRCdWy38z+
+	 rY7NQoA0hwG5ri/EkLzmFv1zOrIbof85UPSvoksU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389144AbfFJKKF (ORCPT
+        id S2389153AbfFJKM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:10:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46480 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388647AbfFJKKE (ORCPT
+        Mon, 10 Jun 2019 06:12:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36205 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388489AbfFJKM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:10:04 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 03D88602F3; Mon, 10 Jun 2019 10:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560161403;
-        bh=oMzk0exJ+xInm/wmcPKtXW9VAu75APw0ZR5LIiqwBMA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZUu4FyQ4F3QEJLmauV8ESFFe6E8Wsayf9AmyCygmDWmL4yGaNIFiSk/K84j/JFl99
-         QuWVJf67fyJ/eJGBAXy/l3NDfCne5VePno+QCvl4fjHBHVId8nUfuIe72UFZespvT8
-         BqFVgkO74GArdKHGYQt3myV9/pAROEAoYExzHRkU=
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D6A0E60265;
-        Mon, 10 Jun 2019 10:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560161402;
-        bh=oMzk0exJ+xInm/wmcPKtXW9VAu75APw0ZR5LIiqwBMA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SaLCPnR1Et/BEyNk+ZcTTxeIwo8gyJ/n2d+q5Xul05WI4YqSh0wyjjYUlXeZt+8+Z
-         +O2BI26+KyHgNgyePciF/SQ4O9PzcgvrTyBtFsV+9RRbmDVIbSqwDUzeLy3D/3kh8l
-         P7GuAlKBKloZtGxGR4J58CeiejGr35K20apQDEdE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D6A0E60265
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
- <CAAd0S9DKqAgFPgLzHiCBiJgE+OmUW7ainyjM_3-RyfCoKEa51A@mail.gmail.com>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <50231fba-7212-f8b9-9313-0c79294d4cc6@codeaurora.org>
-Date:   Mon, 10 Jun 2019 15:39:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 06:12:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id a3so4794530pgb.3;
+        Mon, 10 Jun 2019 03:12:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UpQZyxDAIZssxN7CCNuXeFikhiebMI4lHnTfzcrIiyQ=;
+        b=oT3Tgck9UOkWtTtrfEsTEc4PpMFYNC/1A+9ozR6V61Qzvmi8PU2PjmGz4nMCuGml3v
+         H+nRmhJEBftdYa/jqjOOUDmFd3EIVk3K904sggw8sHSKT+izqm8D6xXryQtEqRIQwnYd
+         kU6ue4gFnzw7c/7zfEq/nYUufkOUwE5mNFwKPN0SwyZ0Bbo4EwOKD09zGiKkw9lzRU0r
+         8oiPkxnTLIkCVg18tdGUfuEWKg8MvK4yGM9BSlB9tZo15gQMiOojbos6lEuAFQ2aqnVh
+         0TER9J8ovskikTwRLLABwQfJ8LIMQIbDXfzkiMaWGpOOhtsIYly64d/JTpyUpvwp9twe
+         /YWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UpQZyxDAIZssxN7CCNuXeFikhiebMI4lHnTfzcrIiyQ=;
+        b=BB4nb2lS3T8WBIyotovYNh6IQSZSyekD63yC/MsYPovDEM/DsgAmlsn6KX0nRyJmEc
+         rXFe8S8orQxNLzqTH5X5RHTfTHslTna6yREnJb6/vk2hZb7Ad3WC6JSCF+U4+Amtlcna
+         MI+rYqbamCqMNAAqcuUTXpuuBX0l3JO57Yo24ikl/LuGFBTxVZi7MaaxmVou32B9egzj
+         Fe+eT1XY7FDbypS86lv/N0bWrvvB42wZ7VaauZlDSe8SdOn9HuXcwfY791GN6E1lbC3f
+         3FNaigwglhJk1faJ6SayrmxG2MoSrL7J28u2VFzsEAgPmiD7QWxLrSVGJgISxVxyAmqO
+         NCPQ==
+X-Gm-Message-State: APjAAAWYN+Ri+MNlz7V/qttOt5/9Q3uXbLvQcvibwP26CD/pBICKiGlx
+        hM3I3ICf4qBj2ModOzEWiKs=
+X-Google-Smtp-Source: APXvYqzJUiyDWi8zaR4iqoYas4PnR+FTZYDwdV0l9Fr4aNPkQh14eZq3enRj6HzBCVUi/S2a/0C2XQ==
+X-Received: by 2002:a17:90a:3787:: with SMTP id v7mr10962360pjb.33.1560161576370;
+        Mon, 10 Jun 2019 03:12:56 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id l38sm9533673pje.12.2019.06.10.03.12.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 03:12:54 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 19:12:48 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, hdanton@sina.com
+Subject: Re: [RFCv2 4/6] mm: factor out madvise's core functionality
+Message-ID: <20190610101248.GD55602@google.com>
+References: <20190531064313.193437-1-minchan@kernel.org>
+ <20190531064313.193437-5-minchan@kernel.org>
+ <20190531070420.m7sxybbzzayig44o@butterfly.localdomain>
+ <20190531131226.GA195463@google.com>
+ <20190531143545.jwmgzaigd4rbw2wy@butterfly.localdomain>
+ <20190531232959.GC248371@google.com>
+ <20190605132728.mihzzw7galqjf5uz@butterfly.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <CAAd0S9DKqAgFPgLzHiCBiJgE+OmUW7ainyjM_3-RyfCoKEa51A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605132728.mihzzw7galqjf5uz@butterfly.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+Hi Oleksandr,
 
-On 6/6/2019 2:11 AM, Christian Lamparter wrote:
-> On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
->>
->> Add initial device tree support for the Qualcomm IPQ6018 SoC and
->> CP01 evaluation board.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
->>
->> +       clocks {
->> +               sleep_clk: sleep_clk {
->> +                       compatible = "fixed-clock";
->> +                       clock-frequency = <32000>;
->> +                       #clock-cells = <0>;
->> +               };
->> +
-> Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
-> on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
-> From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
-> declares them at 32000 Hz. Since you probably have access to the BOM and
-> datasheets. Can you please confirm what's the real clock frequency for
-> the IPQ6018.
-> (And maybe also for the sleep_clk of the IPQ4018 as well?).
+On Wed, Jun 05, 2019 at 03:27:28PM +0200, Oleksandr Natalenko wrote:
+< snip >
+> > > > > >  	write = madvise_need_mmap_write(behavior);
+> > > > > >  	if (write) {
+> > > > > > -		if (down_write_killable(&current->mm->mmap_sem))
+> > > > > > +		if (down_write_killable(&mm->mmap_sem))
+> > > > > >  			return -EINTR;
+> > > > > 
+> > > > > Do you still need that trick with mmget_still_valid() here?
+> > > > > Something like:
+> > > > 
+> > > > Since MADV_COLD|PAGEOUT doesn't change address space layout or
+> > > > vma->vm_flags, technically, we don't need it if I understand
+> > > > correctly. Right?
+> > > 
+> > > I'd expect so, yes. But.
+> > > 
+> > > Since we want this interface to be universal and to be able to cover
+> > > various needs, and since my initial intention with working in this
+> > > direction involved KSM, I'd ask you to enable KSM hints too, and once
+> > > (and if) that happens, the work there is done under write lock, and
+> > > you'll need this trick to be applied.
+> > > 
+> > > Of course, I can do that myself later in a subsequent patch series once
+> > > (and, again, if) your series is merged, but, maybe, we can cover this
+> > > already especially given the fact that KSM hinting is a relatively easy
+> > > task in this pile. I did some preliminary tests with it, and so far no
+> > > dragons have started to roar.
+> > 
+> > Then, do you mind sending a patch based upon this series to expose
+> > MADV_MERGEABLE to process_madvise? It will have the right description
+> > why you want to have such feature which I couldn't provide since I don't
+> > have enough material to write the motivation. And the patch also could
+> > include the logic to prevent coredump race, which is more proper since
+> > finally we need to hold mmap_sem write-side lock, finally.
+> > I will pick it up and will rebase since then.
 > 
+> Sure, I can. Would you really like to have it being based on this exact
+> revision, or I should wait till you deal with MADV_COLD & Co and re-iterate
+> this part again?
 
-What exactly is the issue that you faced ?
-Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
+I'm okay you to send your patch against this revision. I'm happy to
+include it when I start a new thread for process_madvise discussion
+after resolving MADV_COLD|PAGEOUT.
 
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Thanks.
