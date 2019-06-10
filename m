@@ -2,255 +2,116 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF4C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D1CC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC27207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C78520645
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MUrQlrir"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="pp0WsTPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbfFJRMk (ORCPT
+        id S2388470AbfFJRMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:12:40 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57778 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388341AbfFJRMi (ORCPT
+        Mon, 10 Jun 2019 13:12:45 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41623 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388374AbfFJRMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 13:12:38 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHCWqD057060;
-        Mon, 10 Jun 2019 12:12:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560186752;
-        bh=5SfKHLCw529kyp6oELk+x6cXgHwfk5Oxq0eDXnkhulU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=MUrQlrir+uNdIo9n2/papO42WezbSw/ZcLMe9QbvcCrJlU2kZuSNxKxv+p8ZuzNKn
-         0wgsvQrpx0eW0ESrww27U8K01hXGV4VnwdLlzBGnOlw94S+aGKeeKIQRcaS2Urv8Vu
-         BcfosXfR+WH8mte+Xwaexr2746LCt0cxth3YSzhg=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHCWxU080842
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Jun 2019 12:12:32 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
- Jun 2019 12:12:32 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 10 Jun 2019 12:12:32 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHCVCf067611;
-        Mon, 10 Jun 2019 12:12:32 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Russell King <rmk@arm.linux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH-next 12/20] gpio: gpio-omap: simplify read-modify-write
-Date:   Mon, 10 Jun 2019 20:10:55 +0300
-Message-ID: <20190610171103.30903-13-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190610171103.30903-1-grygorii.strashko@ti.com>
-References: <20190610171103.30903-1-grygorii.strashko@ti.com>
+Received: by mail-ot1-f67.google.com with SMTP id 107so9022485otj.8;
+        Mon, 10 Jun 2019 10:12:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3JnaLJmHCQcBLWJZGsxiSkHwMrFrHuZm5L/F2rfhVWU=;
+        b=pp0WsTPZ7OMTL/JJzGLjdzNV9I7yQgICLYWc/yOxPt9S7laf1uppD0WyctgGOvxrRz
+         gq/z/PStMuv8OB7T/+MfqM0s8pWMz6luGy3OZtC9GU1IKuXLcosNdY/rfx1OMVMu7e4i
+         oNz1VenR2sDfDASurROzhHyrYf5AFOiEvRM55CGFj8F9D3bQYguZQ/CB6s0hJT7lmLn+
+         rTJ8ddzV1TJctXFt00xr5SWlGD9rVweyUH28ytqFAuzVpuuKguGSfULoOJpSIzMYdNY9
+         W/U0VWyiy/FCEf52FVujCEo+nX3ucCFF9AnXAW1jjfTBzScc2rJND8azIIwaxBrV3gEU
+         +fZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3JnaLJmHCQcBLWJZGsxiSkHwMrFrHuZm5L/F2rfhVWU=;
+        b=G2BfV0xOOEpK8P8h0g3198HgkC/UgdkXaHMXoLbxvIV1SojUF1hZGYEtSbkwqudnXe
+         FWQKxE1peO0tf3LTrJR6CZskwXhS4rtR/zq6gBbr9Tv0PjEEsskYST6+TYQlMG2LaIvY
+         5WFyVGrXnUMLCDc/Y5THgGA6XgvrJ6hodQkaD/Lw7OV/Ov8acwoJ/EjMGqeUqnQZqLMu
+         5BR/8mosChPQK9byqFLxOVkEquZvmIBrmRQtmn77tNLJlmg5BuDvzGCy/FbSVYnNOcew
+         WGsIKYzrtZvo7JDSL9tfp0zFXR+NMp3Eh81hgygVnZjonoF+/C+OE85QxeIopSY6BhWu
+         XhsQ==
+X-Gm-Message-State: APjAAAV4lrXQGBosM9ds44gAIcwJBmMhAkXNH+b1D5Xd/i4rOGVT0lnK
+        LKynH73jlC7lUF9TaFWwvmlQQDO2LF1aYmBHsvs=
+X-Google-Smtp-Source: APXvYqzcpo4BpZAPqLLLpYSSE01zvU5EUgFlHr+Ht/clKAFUTErJOnLx9oCYmXCnhsHdXKqFqknUD8gL4WoFQP0RIMA=
+X-Received: by 2002:a9d:23ca:: with SMTP id t68mr29361498otb.98.1560186757760;
+ Mon, 10 Jun 2019 10:12:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190610163736.6187-1-martin.blumenstingl@googlemail.com>
+ <20190610163736.6187-4-martin.blumenstingl@googlemail.com> <8075d0ee-36fa-c4f3-f640-98cf54aba87b@arm.com>
+In-Reply-To: <8075d0ee-36fa-c4f3-f640-98cf54aba87b@arm.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 10 Jun 2019 19:12:26 +0200
+Message-ID: <CAFBinCC8wGZX2B7hc=U7qCHGwQEt9khdTwNinNVYhH=sZtFCZg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] arm64: dts: meson: use the generic Ethernet PHY reset
+ GPIO bindings
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     linux-amlogic@lists.infradead.org, khilman@baylibre.com,
+        andrew@lunn.ch, netdev@vger.kernel.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+Hi Robin,
 
-We already have a read-modify-write helper, but there's more that can
-be done with a read-modify-write helper if it returned the new value.
-Modify the existing helper to return the new value, and arrange for
-it to take one less argument by having the caller compute the register
-address.
+On Mon, Jun 10, 2019 at 6:54 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> Hi Martin,
+>
+> On 10/06/2019 17:37, Martin Blumenstingl wrote:
+> > The snps,reset-gpio bindings are deprecated in favour of the generic
+> > "Ethernet PHY reset" bindings.
+> >
+> > Replace snps,reset-gpio from the &ethmac node with reset-gpios in the
+> > ethernet-phy node. The old snps,reset-active-low property is now encoded
+> > directly as GPIO flag inside the reset-gpios property.
+> >
+> > snps,reset-delays-us is converted to reset-assert-us and
+> > reset-deassert-us. reset-assert-us is the second cell from
+> > snps,reset-delays-us while reset-deassert-us was the third cell.
+> >
+> > Instead of blindly copying the old values (which seems strange since
+> > they gave the PHY one second to come out of reset) over this also
+> > updates the delays based on the datasheets:
+> > - the Realtek RTL8211F PHY needs a 10ms delay (this applies to the
+> >    following boards: GXBB NanoPi K2, GXBB Odroid-C2, GXBB Vega S95
+> >    variants, GXBB Wetek variants, GXL P230, GXM Khadas VIM2, GXM Nexbox
+> >    A1, GXM Q200, GXM RBox Pro)
+>
+>  From the datasheets I've seen, RTL8211E/F specify an assert delay of
+> 10ms, but a deassert delay of 30ms.
+thank you for spotting this!
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/gpio/gpio-omap.c | 83 +++++++++++++++-------------------------
- 1 file changed, 30 insertions(+), 53 deletions(-)
+I don't have an RTL8211F datasheet, but I now see what you mean based
+on the RTL8211E datasheet.
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 369ce46e2b09..1a0890586b45 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -92,20 +92,25 @@ static inline struct gpio_bank *omap_irq_data_get_bank(struct irq_data *d)
- 	return gpiochip_get_data(chip);
- }
- 
--static void omap_set_gpio_direction(struct gpio_bank *bank, int gpio,
--				    int is_input)
-+static inline u32 omap_gpio_rmw(void __iomem *reg, u32 mask, bool set)
- {
--	void __iomem *reg = bank->base;
--	u32 l;
-+	u32 val = readl_relaxed(reg);
- 
--	reg += bank->regs->direction;
--	l = readl_relaxed(reg);
--	if (is_input)
--		l |= BIT(gpio);
-+	if (set)
-+		val |= mask;
- 	else
--		l &= ~(BIT(gpio));
--	writel_relaxed(l, reg);
--	bank->context.oe = l;
-+		val &= ~mask;
-+
-+	writel_relaxed(val, reg);
-+
-+	return val;
-+}
-+
-+static void omap_set_gpio_direction(struct gpio_bank *bank, int gpio,
-+				    int is_input)
-+{
-+	bank->context.oe = omap_gpio_rmw(bank->base + bank->regs->direction,
-+					 BIT(gpio), is_input);
- }
- 
- 
-@@ -131,29 +136,8 @@ static void omap_set_gpio_dataout_reg(struct gpio_bank *bank, unsigned offset,
- static void omap_set_gpio_dataout_mask(struct gpio_bank *bank, unsigned offset,
- 				       int enable)
- {
--	void __iomem *reg = bank->base + bank->regs->dataout;
--	u32 gpio_bit = BIT(offset);
--	u32 l;
--
--	l = readl_relaxed(reg);
--	if (enable)
--		l |= gpio_bit;
--	else
--		l &= ~gpio_bit;
--	writel_relaxed(l, reg);
--	bank->context.dataout = l;
--}
--
--static inline void omap_gpio_rmw(void __iomem *base, u32 reg, u32 mask, bool set)
--{
--	int l = readl_relaxed(base + reg);
--
--	if (set)
--		l |= mask;
--	else
--		l &= ~mask;
--
--	writel_relaxed(l, base + reg);
-+	bank->context.dataout = omap_gpio_rmw(bank->base + bank->regs->dataout,
-+					      BIT(offset), enable);
- }
- 
- static inline void omap_gpio_dbck_enable(struct gpio_bank *bank)
-@@ -217,16 +201,9 @@ static int omap2_set_gpio_debounce(struct gpio_bank *bank, unsigned offset,
- 	reg = bank->base + bank->regs->debounce;
- 	writel_relaxed(debounce, reg);
- 
--	reg = bank->base + bank->regs->debounce_en;
--	val = readl_relaxed(reg);
--
--	if (enable)
--		val |= l;
--	else
--		val &= ~l;
-+	val = omap_gpio_rmw(bank->base + bank->regs->debounce_en, l, enable);
- 	bank->dbck_enable_mask = val;
- 
--	writel_relaxed(val, reg);
- 	clk_disable(bank->dbck);
- 	/*
- 	 * Enable debounce clock per module.
-@@ -301,9 +278,9 @@ static inline void omap_set_gpio_trigger(struct gpio_bank *bank, int gpio,
- 	void __iomem *base = bank->base;
- 	u32 gpio_bit = BIT(gpio);
- 
--	omap_gpio_rmw(base, bank->regs->leveldetect0, gpio_bit,
-+	omap_gpio_rmw(base + bank->regs->leveldetect0, gpio_bit,
- 		      trigger & IRQ_TYPE_LEVEL_LOW);
--	omap_gpio_rmw(base, bank->regs->leveldetect1, gpio_bit,
-+	omap_gpio_rmw(base + bank->regs->leveldetect1, gpio_bit,
- 		      trigger & IRQ_TYPE_LEVEL_HIGH);
- 
- 	/*
-@@ -311,9 +288,9 @@ static inline void omap_set_gpio_trigger(struct gpio_bank *bank, int gpio,
- 	 * to be woken from idle state.  Set the appropriate edge detection
- 	 * in addition to the level detection.
- 	 */
--	omap_gpio_rmw(base, bank->regs->risingdetect, gpio_bit,
-+	omap_gpio_rmw(base + bank->regs->risingdetect, gpio_bit,
- 		      trigger & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_LEVEL_HIGH));
--	omap_gpio_rmw(base, bank->regs->fallingdetect, gpio_bit,
-+	omap_gpio_rmw(base + bank->regs->fallingdetect, gpio_bit,
- 		      trigger & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_LEVEL_LOW));
- 
- 	bank->context.leveldetect0 =
-@@ -329,7 +306,7 @@ static inline void omap_set_gpio_trigger(struct gpio_bank *bank, int gpio,
- 			   bank->context.leveldetect1;
- 
- 	if (likely(!(bank->non_wakeup_gpios & gpio_bit))) {
--		omap_gpio_rmw(base, bank->regs->wkup_en, gpio_bit, trigger != 0);
-+		omap_gpio_rmw(base + bank->regs->wkup_en, gpio_bit, trigger != 0);
- 		bank->context.wake_en =
- 			readl_relaxed(bank->base + bank->regs->wkup_en);
- 	}
-@@ -414,7 +391,7 @@ static int omap_set_gpio_triggering(struct gpio_bank *bank, int gpio,
- 			l |= BIT(gpio << 1);
- 
- 		/* Enable wake-up during idle for dynamic tick */
--		omap_gpio_rmw(base, bank->regs->wkup_en, BIT(gpio), trigger);
-+		omap_gpio_rmw(base + bank->regs->wkup_en, BIT(gpio), trigger);
- 		bank->context.wake_en =
- 			readl_relaxed(bank->base + bank->regs->wkup_en);
- 		writel_relaxed(l, reg);
-@@ -451,7 +428,7 @@ static void omap_disable_gpio_module(struct gpio_bank *bank, unsigned offset)
- 	    !LINE_USED(bank->mod_usage, offset) &&
- 	    !LINE_USED(bank->irq_usage, offset)) {
- 		/* Disable wake-up during idle for dynamic tick */
--		omap_gpio_rmw(base, bank->regs->wkup_en, BIT(offset), 0);
-+		omap_gpio_rmw(base + bank->regs->wkup_en, BIT(offset), 0);
- 		bank->context.wake_en =
- 			readl_relaxed(bank->base + bank->regs->wkup_en);
- 	}
-@@ -1046,9 +1023,9 @@ static void omap_gpio_mod_init(struct gpio_bank *bank)
- 		return;
- 	}
- 
--	omap_gpio_rmw(base, bank->regs->irqenable, l,
-+	omap_gpio_rmw(base + bank->regs->irqenable, l,
- 		      bank->regs->irqenable_inv);
--	omap_gpio_rmw(base, bank->regs->irqstatus, l,
-+	omap_gpio_rmw(base + bank->regs->irqstatus, l,
- 		      !bank->regs->irqenable_inv);
- 	if (bank->regs->debounce_en)
- 		writel_relaxed(0, base + bank->regs->debounce_en);
-@@ -1219,8 +1196,8 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
- 	 */
- 	if (!bank->loses_context && bank->enabled_non_wakeup_gpios) {
- 		nowake = bank->enabled_non_wakeup_gpios;
--		omap_gpio_rmw(base, bank->regs->fallingdetect, nowake, ~nowake);
--		omap_gpio_rmw(base, bank->regs->risingdetect, nowake, ~nowake);
-+		omap_gpio_rmw(base + bank->regs->fallingdetect, nowake, ~nowake);
-+		omap_gpio_rmw(base + bank->regs->risingdetect, nowake, ~nowake);
- 	}
- 
- update_gpio_context_count:
--- 
-2.17.1
+now that you pointed this out: it seems that I made a similar mistake
+with the IP101GR PHY
+The datasheet mentions: "Chip will be able to operate after 2.5ms
+delay of the rising edge of RESET_N"
+However, further down in the datasheet it states: "Set low to RESET_N
+pin, for at least 10ms ..."
 
+I'll wait a few days for more comments and then send a fixed version
+
+
+Martin
