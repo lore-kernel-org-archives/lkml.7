@@ -2,100 +2,112 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0D1C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01910C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E89CA20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560181950;
-	bh=S3Obzl9/JbERIVLJS+8FiZLzxXxktH57EXPHyk4KrWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WauH72/QuLhf+VJG+I3a6kskQ7a4q/1GS5fi7e9oWhHcJGVY18r8T5h8QOUd7avps
-	 Wh1KX2KQaZC/vUvbbg2HU2KAHaLiWJ50Mw8wmk48XUPl89pkbeX7RvczQhF3AH8O64
-	 SpF1IBEFLjasfbmC++b6gYPPKkXCiIAbZip5cUK8=
+	by mail.kernel.org (Postfix) with ESMTP id C5D75208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="oAoQN1PM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391328AbfFJPw2 (ORCPT
+        id S2391345AbfFJPxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:52:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390550AbfFJPw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:52:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 070FC20645;
-        Mon, 10 Jun 2019 15:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560181947;
-        bh=S3Obzl9/JbERIVLJS+8FiZLzxXxktH57EXPHyk4KrWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tn8ocLbtJ1owt61rmDtkXtCsozbgkupVgQ6ub8pBef5Q8gjH9+KqOm95BozK5NuuR
-         UdBYr5jYXTP2B9WsplBeCCUnNHFwlyiNF74AHRdPVu+rkcdzHFTxTrZf1oGENnwJT8
-         WuLuwi3mE6XbGdx/ejXGqPDTsLidfekmxXnMeOt4=
-Date:   Mon, 10 Jun 2019 17:52:25 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hao Xu <haoxu.linuxkernel@gmail.com>
-Cc:     devel@driverdev.osuosl.org, gneukum1@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: kpc2000: kpc_i2c: remove the macros inb_p
- and outb_p
-Message-ID: <20190610155225.GB29035@kroah.com>
-References: <1560152904-31894-1-git-send-email-haoxu.linuxkernel@gmail.com>
+        Mon, 10 Jun 2019 11:53:04 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45459 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390550AbfFJPxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:53:03 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n2so8726890otl.12;
+        Mon, 10 Jun 2019 08:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V7uCnX5LIMJHtHTPYaDf7mFvAliKfGgnILabe1niN2o=;
+        b=oAoQN1PM0ta5wsaELk8p5Ea3yH54iqbEAfrpkhqkZGMCVsw06eugxD2IoI4566Pjsw
+         Rk3pbbLyKj/rM4MV8Jjv0667R9dJqhWTmWuW+jO0XS9f8QWqFEjJrkpzCGADqWxbwRHM
+         Cv7E50lrJwB83BKjtPzWsfiHW8+NtdxbhBU3yGiD2FbAXv8YK1w6bySs13F7PvsPeSWb
+         oDBlQIlL4cn+nDMkZTE5S5JQSqmdjphWwsqsSLxweSu2w7HnxyJlf5OM7jgrjToA2OMF
+         j1XIFDG4Iywk3bh1QURsSspr/zYSw2nzOFyfgSApccMfQPOdHj3/5kLhE6+KhmXJwai4
+         t0eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V7uCnX5LIMJHtHTPYaDf7mFvAliKfGgnILabe1niN2o=;
+        b=fGfosXNyx0PlqnN6NXr3ie71V0X64wVWxwDDiPXyCUg94IsQSl6WmMiGWAuPl2kUN8
+         bat0wdmNUh/YtUB5XlX+H1Usglnr99RsDvJPODYB5NL2lksyjHuNkHhatdDzpoc+3GtZ
+         d4fPMwYE9bbJLWP9RNXIfKsC08uePZwI6oYxnLGzkrhuOuH65zEkfNtjqkIqow4dmSWR
+         NewC8TuLwj+zcPkMDKByxJfqli9mSsP4Hi5tiXAU3cLbcROjdFRVMRKsoXsQrqZxIIsN
+         eg8+PzGZ6qzokFMffNpwOM60V8GIWMGApmQAvF9FSHN3oQtMXM1i9wAeX1gIwAWMAK+A
+         c7Uw==
+X-Gm-Message-State: APjAAAVS2TEVLhw73I3oeG+bOau9683FSZk17KsP4z90BHv3+NKbOQB7
+        yhBPNI9P6cDTAlW2HfSq6xQTn287r07OYg5jghc=
+X-Google-Smtp-Source: APXvYqzBtsrTeIkjNn7DDhjuFe0wNjh2kvmCkP3GNZSqEC0xKl2tEIEqMtPBumjQp/9gUrheEnWAc4JbHlAvsf/i/IM=
+X-Received: by 2002:a9d:6d8d:: with SMTP id x13mr29456736otp.6.1560181982711;
+ Mon, 10 Jun 2019 08:53:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560152904-31894-1-git-send-email-haoxu.linuxkernel@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+ <20190609204510.GB8247@lunn.ch> <20190610114700.tymqzzax334ahtz4@flea>
+ <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com> <20190610132546.GE8247@lunn.ch>
+In-Reply-To: <20190610132546.GE8247@lunn.ch>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 10 Jun 2019 17:52:51 +0200
+Message-ID: <CAFBinCAc6cczcZX_diCZJiUsNObcmFqfdq4v_osiwee18Gk0iA@mail.gmail.com>
+Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 03:48:24PM +0800, Hao Xu wrote:
-> remove inb_p and outb_p to call readq/writeq directly.
-> 
-> Signed-off-by: Hao Xu <haoxu.linuxkernel@gmail.com>
-> ---
-> Changes in v2:
-> - remove the macros inb_p/outb_p and use readq/writeq directly, per https://lkml.kernel.org/lkml/20190608134505.GA963@arch-01.home/
-> ---
->  drivers/staging/kpc2000/kpc2000_i2c.c | 112 ++++++++++++++++------------------
->  1 file changed, 53 insertions(+), 59 deletions(-)
-> 
-> diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
-> index 69e8773..246d5b3 100644
-> --- a/drivers/staging/kpc2000/kpc2000_i2c.c
-> +++ b/drivers/staging/kpc2000/kpc2000_i2c.c
-> @@ -122,12 +122,6 @@ struct i2c_device {
->  /* Not really a feature, but it's convenient to handle it as such */
->  #define FEATURE_IDF             BIT(15)
->  
-> -// FIXME!
-> -#undef inb_p
-> -#define inb_p(a) readq((void *)a)
-> -#undef outb_p
-> -#define outb_p(d, a) writeq(d, (void *)a)
-> -
->  /* Make sure the SMBus host is ready to start transmitting.
->   * Return 0 if it is, -EBUSY if it is not.
->   */
-> @@ -135,7 +129,7 @@ static int i801_check_pre(struct i2c_device *priv)
->  {
->  	int status;
->  
-> -	status = inb_p(SMBHSTSTS(priv));
-> +	status = readq((void *)SMBHSTSTS(priv));
+Hi Andrew,
 
-Ugh, all of the void * casting, is is really needed everywhere?  That
-just makes everything a mess...
+On Mon, Jun 10, 2019 at 3:25 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > if anyone else (just like me) doesn't know about it, there are generic
+> > bindings defined here: [0]
+> >
+> > I just tested this on my X96 Max by defining the following properties
+> > inside the PHY node:
+> >   reset-delay-us = <10000>;
+> >   reset-assert-us = <10000>;
+> >   reset-deassert-us = <10000>;
+> >   reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+> >
+> > that means I don't need any stmmac patches which seems nice.
+> > instead I can submit a patch to mark the snps,reset-gpio properties in
+> > the dt-bindings deprecated (and refer to the generic bindings instead)
+> > what do you think?
+>
+> Hi Martin
+>
+> I know Linus wants to replace all users of old GPIO numbers with gpio
+> descriptors. So your patches have value, even if you don't need them.
+OK, then I will send my patches anyways
 
-thanks,
+> One other things to watch out for. We have generic code at two
+> levels. Either the GPIO is per PHY, and the properties should be in
+> the PHY node, or the reset is for all PHYs of an MDIO bus, and then
+> the properties should be in the MDIO node.
+our Amlogic boards only have one PHY and all schematics I'm aware of
+route the SoC's GPIO line directly to the PHY's reset line.
+so in my opinion defining the resets for the PHY is the right thing to do
 
-greg k-h
+
+Martin
