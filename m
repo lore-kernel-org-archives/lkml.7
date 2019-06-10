@@ -2,160 +2,147 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0072BC28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54117C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D853E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2876E2089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:32:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yfo8EUqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389464AbfFJKcf (ORCPT
+        id S2389480AbfFJKcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:32:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:40174 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389354AbfFJKce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:32:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E092D346;
-        Mon, 10 Jun 2019 03:32:33 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F383E3F557;
-        Mon, 10 Jun 2019 03:34:12 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 11:32:25 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mon, 10 Jun 2019 06:32:42 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36247 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389466AbfFJKcl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:32:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u8so7641181wmm.1;
+        Mon, 10 Jun 2019 03:32:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=IkG1E0AYyaW7+6Dt1fH+3V0jkXsmdfRM9uUK4jdUh+w=;
+        b=Yfo8EUqarFT7nPkF1aeKi1R8SH3rF0IbMaxPFbHD5BQef/cTOgwy1X/WI0zGiITxEX
+         jPeF/HOSXo3Qf0jFyOC2mSzVaSnASG/UpSuS2zNVb55CS8hRjSgBFQ9cfOSzDSNxx6Uz
+         FT+OBn8OrrCVB4V5V6YCIJhc9gwFGLARBwcGcYxgfn59c630P2IYvl9pFuCdqV4DjsA6
+         Sx92LVIpPcRLrdmqe444Idcck7Dgj09/ZSurEmcgyIGeQs1LYorx0pA5P03Vv8gQH62n
+         YIO1lG/oVeF0n4VkBxQQpD3JJa8tpu5TlY9a+Dj0ZxaST59vZwZRjsopxlD6YKsLcyMG
+         eBXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
+        bh=IkG1E0AYyaW7+6Dt1fH+3V0jkXsmdfRM9uUK4jdUh+w=;
+        b=IV56IsLGIQe/eNYAH7F83YHPxLq6EKdeBHZ5yru3bQ48HPrnwOs7iJnerMxBvXG2r0
+         KmY7KS5vbhamg/PEmQyi2uUKV6AJuFJLkhihGy4FQlLQcv3p/lBhoDCevHhPMGLoeIgi
+         9VhBrHjZcbx9+gr1/fwtNlJT2WXnXmVlmY5EZE/G5FjaiAqlqnmb5Mi/ijZE5uHWjvJ2
+         4g6f3tJeI7kbQog+1fkvpml6t52Jt9zLLYvWAC6lG0irlndho1VeuoYXccWgmRv+iqn0
+         YNwgX1PFr4jwU1tUM3Wp19bK+fq/bC2198gZzdgnyE4/PiWLtuh+vmKrlLjJKqUoyfCv
+         i0pw==
+X-Gm-Message-State: APjAAAVfUHV+03nnJSjguR7Js7p4IeGvTfvVOYbQSuM6bmJ3eEqpxXz1
+        pysbyYm+MqGGyzd7mB5+xlk=
+X-Google-Smtp-Source: APXvYqzibcwpB846QHozkg6IQp2B/oYTBKhsZYSYuuwjsqFbx1LuXZFZoi9TZb/x6Ii+Fr9hHWLjGA==
+X-Received: by 2002:a1c:7a10:: with SMTP id v16mr13435253wmc.98.1560162759118;
+        Mon, 10 Jun 2019 03:32:39 -0700 (PDT)
+Received: from arch-late ([87.196.73.9])
+        by smtp.gmail.com with ESMTPSA id o15sm12661526wrw.42.2019.06.10.03.32.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 03:32:38 -0700 (PDT)
+References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com> <20190606153825.8183-2-sebastien.szymanski@armadeus.com> <92ca6e6e-2ebd-cec4-4f75-2674fd2c3d99@infradead.org>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     driverdev-devel@linuxdriverproject.org
+Cc:     =?utf-8?Q?S=C3=A9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/18] ARM/ARM64: Support hierarchical CPU arrangement
- for PSCI
-Message-ID: <20190610103225.GA26602@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <CAJZ5v0gbK3AFCVC1b9LyXeMOM8fKR1=ECXZwaeSYRSqcK0UgYA@mail.gmail.com>
- <CAPDyKFpU3u248Gi+FnrVdY-EWXJQuu14uNV9d3Xs0W-K-EMEhg@mail.gmail.com>
- <20190607154210.GJ15577@e107155-lin>
- <20190607193407.GB24059@builder>
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v2 2/3] media: imx7-media-csi: add i.MX6UL support
+In-reply-to: <92ca6e6e-2ebd-cec4-4f75-2674fd2c3d99@infradead.org>
+Date:   Mon, 10 Jun 2019 11:32:36 +0100
+Message-ID: <m336khpw6z.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607193407.GB24059@builder>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 12:34:07PM -0700, Bjorn Andersson wrote:
-> On Fri 07 Jun 08:42 PDT 2019, Sudeep Holla wrote:
+Hi Randy,
+On Fri 07 Jun 2019 at 00:10, Randy Dunlap wrote:
+> On 6/6/19 8:38 AM, S=C3=A9bastien Szymanski wrote:
+>> i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L suppo=
+rt
+>> to imx7-media-csi driver.
+>>
+>> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.co=
+m>
+>> ---
+>>
+>> Changes for v2:
+>>  - rebase on top of linuxtv/master
+>>  - mention i.MX6UL/L in header and Kconfig help text
+>>  - rename csi_type to csi_soc_id
+>>
+>>  drivers/staging/media/imx/Kconfig          |  4 +-
+>>  drivers/staging/media/imx/imx7-media-csi.c | 62 ++++++++++++++++------
+>>  2 files changed, 49 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/media/i=
+mx/Kconfig
+>> index ad3d7df6bb3c..8b6dc42c39e0 100644
+>> --- a/drivers/staging/media/imx/Kconfig
+>> +++ b/drivers/staging/media/imx/Kconfig
+>> @@ -22,11 +22,11 @@ config VIDEO_IMX_CSI
+>>  	  A video4linux camera sensor interface driver for i.MX5/6.
+>>
+>>  config VIDEO_IMX7_CSI
+>> -	tristate "i.MX7 Camera Sensor Interface driver"
+>> +	tristate "i.MX6UL/L / i.MX7 Camera Sensor Interface driver"
+>>  	depends on VIDEO_IMX_MEDIA && VIDEO_DEV && I2C
+>>  	default y
 >
-> > On Tue, May 14, 2019 at 10:58:04AM +0200, Ulf Hansson wrote:
-> > > On Tue, 14 May 2019 at 10:08, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > >
-> > > > On Mon, May 13, 2019 at 9:23 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> > > > >
-> > > > > This series enables support for hierarchical CPU arrangement, managed by PSCI
-> > > > > for ARM/ARM64. It's based on using the generic PM domain (genpd), which
-> > > > > recently was extended to manage devices belonging to CPUs.
-> > > >
-> > > > ACK for the patches touching cpuidle in this series (from the
-> > > > framework perspective), but I'm assuming it to be taken care of by
-> > > > ARM/ARM64 maintainers.
-> > >
-> > > Thanks for the ack! Yes, this is for PSCI/ARM maintainers.
-> > >
-> > > BTW, apologize for sending this in the merge window, but wanted to
-> > > take the opportunity for people to have a look before OSPM Pisa next
-> > > week.
-> > >
-> >
-> > I will start looking at this series. But I would request PSCI/other
-> > maintainers to wait until we see some comparison data before we merge.
->
-> What comparison are you asking for here? Do you want to see the
-> improvement this series gives or are you hoping to compare it with some
-> other mechanism?
->
+> Hi,
+> I realize that this "default y" is not part of this patch set, but we have
+> pretty strong guidance that a driver should not default to 'y' unless it =
+is
+> needed for a system to boot.  If this driver is optional, then please drop
+> the 2 occurrences of "default y" in this Kconfig file.
 
-OK, I have mentioned this many times already, let me repeat it again.
-This series adds an alternative to the existing PC mode of CPU idle
-management. And it's clear that the main reason for the same is the
-improvement OSI mode offers vs the PC mode. I am asking the comparison
-for the same. And yes we need to compare apples with apples and not
-oranges here.
+Yeah, even though both depends on imx_media, I agree that they
+should not default to y. I will send a patch for this.
+Thanks.
 
-> > If they are fine to merge w/o that, I am fine. As of now we have just
-> > 1-2 platforms to test(that too not so simple to get started) and the
-> > long term support for them are questionable.
->
-> Why is the support for these platforms questionable? People are actively
-> working on these platforms and the feature set constantly improving.
->
+---
+Cheers,
+        Rui
 
-Qualcomm will never fix any firmware issues and we need to quirk
-any bugs found. I would prefer the first platform to minimize those
-as it would be reference. But I am sure QC won't care about firmware
-on SDM845 anymore, so not an ideal fit.
-
-We need to add support in TF-A to build complete reference story around
-OSI mode.
-
-> > Also with SDM845 supporting PC, we have excellent opportunity to
-> > compare and conclude the results found.
->
-> That's correct, ATF exists for SDM845. But with the standard choice of
-> firmware you will get OSI and I don't know of a board out there where
-> you can switch between them and do a apple to apple comparison.
->
-
-One that's not PSCI compliant, system must boot in PC. If QC was any
-serious about this, they would have attempted to fix them in firmware.
-We have given this comment at-least 4 years back and if that's not
-still in the current gen products, it says something. Sorry I don't
-trust the firmware story from QC.
-
-> Devices such as RB3 (96boards SDM845), Pixel3 and the Windows laptops
-> are all OSI only.
->
-
-Again not fully PSCI compliant.
 
 >
-> So landing this support is not a question of PC or OSI being the better
-> choice, it's a question of do we want to be able to enter these lower
-> power states - with the upstream kernel - on any past, present or future
-> Qualcomm devices.
->
+> thanks.
+>>  	help
+>>  	  Enable support for video4linux camera sensor interface driver for
+>> -	  i.MX7.
+>> +	  i.MX6UL/L or i.MX7.
+>>  endmenu
+>>  endif
 
-Nope, I disagree. Better they fix future products. This is a new feature
-in the kernel with the claim that it's better and since last 2-3 years
-no efforts are made to prove the claim. So I am not really worried
-about running low power modes on their past/present devices, but more
-worried about the precedence this might set with unproven claim and other
-vendors moving to this without considering all the implications.
-
---
-Regards,
-Sudeep
