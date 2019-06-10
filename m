@@ -2,225 +2,123 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415ABC4321B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED46C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14674207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k7jMXpoN"
+	by mail.kernel.org (Postfix) with ESMTP id 9F35F207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389076AbfFJTAQ (ORCPT
+        id S2389077AbfFJTBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:00:16 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42019 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388544AbfFJTAP (ORCPT
+        Mon, 10 Jun 2019 15:01:44 -0400
+Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:35863 "EHLO
+        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387674AbfFJTBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:00:15 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s15so11645093qtk.9;
-        Mon, 10 Jun 2019 12:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DYGCcgIzNRgOnK2uYJS4UUOKGwEBja8jP4+71AJtuO0=;
-        b=k7jMXpoNB7tftrdk5v1jb6fZEk5Fqeo3DHdjz8RAuHj0w0gpyBF0/VImwEe/W5HvdC
-         bL+2Sc4lpSSqI2oPdVwxRS+JzrNVRcgT14Ne+pcvx7SmJPDAJiYM5Ab9awsdS4+Lddjp
-         G/FSZoqMKmo9rRtFxrTVHNpy7P81rWKWfqx9ELG7G4yLSW8M8qo1XsMJ4IzYqze+JZ0z
-         ZSBNdx0/jC7IRe5JmMlv10Tc9U3CsFNbcNQ5z1c5SKgEhJ3J9qvXCGqmv8vJVTA644sz
-         syl/cRvx4dXaWfkRIfHQwVdPANprt4dMmI7KlKRfo0LigFo6OoNYiIWD7cQsEumTyN+O
-         pGjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DYGCcgIzNRgOnK2uYJS4UUOKGwEBja8jP4+71AJtuO0=;
-        b=dYcjyoEzaRdqUZQZ6tXjwhbJJa7I5vPPEvqWLVD95KwHGTHjYDYW09/xcj4evd/knX
-         P8z/qCMyIXVPVJbAR8cp7/3MhTW74M8jYqOadlYmrmAsIKjBwK+DVaTEJPotRglsjqBK
-         0K654u6xWFYad/PDVTy0saEgFwZFPYwD2QegUBrZeJLMAK8Y1GfOH3LUahj1JCFRjtC2
-         dQFYfjHH8rm+o3aZ7eb/O8PDdf9rNSpI6AcBPoPuI+zlTLOG+wTO6077MAOs5JpqDv+3
-         qdb/xrQ8DJNGkyzeoOhqKHWNyahtkf26TbI0omAlCEzRD4IAw4GYSzdicqv0TUlzJm/j
-         +70A==
-X-Gm-Message-State: APjAAAXKu2QDLR0SDA890jB9CKbR8k/wCDb/h3uMM0n875JbuQPyqCR9
-        /yXPso1poH+O0jVKn8LBxfbUF9FLvUdL9JI6A4o=
-X-Google-Smtp-Source: APXvYqxRHCyD/I8OlqUKWPrk0zoq7Q+e08ILTTNMItXDSzjMHnTfSg0B19FambpPsPGUXr1KTnIgKTMWndHo/UxWFTI=
-X-Received: by 2002:ac8:2a63:: with SMTP id l32mr40774096qtl.117.1560193214620;
- Mon, 10 Jun 2019 12:00:14 -0700 (PDT)
+        Mon, 10 Jun 2019 15:01:43 -0400
+Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
+        id 8D9FC461162; Mon, 10 Jun 2019 15:01:41 -0400 (EDT)
+Date:   Mon, 10 Jun 2019 15:01:41 -0400
+To:     "Fujinaka, Todd" <todd.fujinaka@intel.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        "e1000-devel@lists.sourceforge.net" 
+        <e1000-devel@lists.sourceforge.net>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [E1000-devel] [Intel-wired-lan] i40e X722 RSS problem with
+ NAT-Traversal IPsec packets
+Message-ID: <20190610190141.77k6gbrefm2mr6lb@csclub.uwaterloo.ca>
+References: <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
+ <20190521151537.xga4aiq3gjtiif4j@csclub.uwaterloo.ca>
+ <CAKgT0UfpZ-ve3Hx26gDkb+YTDHvN3=MJ7NZd2NE7ewF5g=kHHw@mail.gmail.com>
+ <20190521175456.zlkiiov5hry2l4q2@csclub.uwaterloo.ca>
+ <CAKgT0UcR3q1maBmJz7xj_i+_oux_6FQxua9DOjXQSZzyq6FhkQ@mail.gmail.com>
+ <20190522143956.quskqh33ko2wuf47@csclub.uwaterloo.ca>
+ <20190607143906.wgi344jcc77qvh24@csclub.uwaterloo.ca>
+ <CAKgT0Ue1M8_30PVPmoJy_EGo2mjM26ecz32Myx-hpnuq_6wdjw@mail.gmail.com>
+ <alpine.NEB.2.21.9999.1906071343460.809@chris.i8u.org>
+ <9B4A1B1917080E46B64F07F2989DADD69AFBF090@ORSMSX115.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <CGME20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df@eucas1p1.samsung.com>
- <20190610161546.30569-1-i.maximets@samsung.com>
-In-Reply-To: <20190610161546.30569-1-i.maximets@samsung.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 10 Jun 2019 12:00:03 -0700
-Message-ID: <CAEf4BzaJpWb+PakO2qmg-TQtOPKs=__4Vg=CksfqnarT0gtpqA@mail.gmail.com>
-Subject: Re: [PATCH bpf v3] xdp: fix hang while unregistering device bound to
- xdp socket
-To:     Ilya Maximets <i.maximets@samsung.com>
-Cc:     Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9B4A1B1917080E46B64F07F2989DADD69AFBF090@ORSMSX115.amr.corp.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 9:39 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->
-> Device that bound to XDP socket will not have zero refcount until the
-> userspace application will not close it. This leads to hang inside
-> 'netdev_wait_allrefs()' if device unregistering requested:
->
->   # ip link del p1
->   < hang on recvmsg on netlink socket >
->
->   # ps -x | grep ip
->   5126  pts/0    D+   0:00 ip link del p1
->
->   # journalctl -b
->
->   Jun 05 07:19:16 kernel:
->   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->
->   Jun 05 07:19:27 kernel:
->   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->   ...
->
-> Fix that by implementing NETDEV_UNREGISTER event notification handler
-> to properly clean up all the resources and unref device.
->
-> This should also allow socket killing via ss(8) utility.
->
-> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> ---
->
-> Version 3:
->
->     * Declaration lines ordered from longest to shortest.
->     * Checking of event type moved to the top to avoid unnecessary
->       locking.
->
-> Version 2:
->
->     * Completely re-implemented using netdev event handler.
->
->  net/xdp/xsk.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 64 insertions(+), 1 deletion(-)
->
-> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> index a14e8864e4fa..273a419a8c4d 100644
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -693,6 +693,57 @@ static int xsk_mmap(struct file *file, struct socket *sock,
->                                size, vma->vm_page_prot);
->  }
->
-> +static int xsk_notifier(struct notifier_block *this,
-> +                       unsigned long msg, void *ptr)
-> +{
-> +       struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-> +       struct net *net = dev_net(dev);
-> +       int i, unregister_count = 0;
-> +       struct sock *sk;
-> +
-> +       switch (msg) {
-> +       case NETDEV_UNREGISTER:
-> +               mutex_lock(&net->xdp.lock);
-> +               sk_for_each(sk, &net->xdp.list) {
-> +                       struct xdp_sock *xs = xdp_sk(sk);
-> +
-> +                       mutex_lock(&xs->mutex);
-> +                       if (dev != xs->dev) {
-> +                               mutex_unlock(&xs->mutex);
-> +                               continue;
-> +                       }
-> +
-> +                       sk->sk_err = ENETDOWN;
-> +                       if (!sock_flag(sk, SOCK_DEAD))
-> +                               sk->sk_error_report(sk);
-> +
-> +                       /* Wait for driver to stop using the xdp socket. */
-> +                       xdp_del_sk_umem(xs->umem, xs);
-> +                       xs->dev = NULL;
-> +                       synchronize_net();
-> +
-> +                       /* Clear device references in umem. */
-> +                       xdp_put_umem(xs->umem);
-> +                       xs->umem = NULL;
-> +
-> +                       mutex_unlock(&xs->mutex);
-> +                       unregister_count++;
-> +               }
-> +               mutex_unlock(&net->xdp.lock);
-> +
-> +               if (unregister_count) {
-> +                       /* Wait for umem clearing completion. */
-> +                       synchronize_net();
-> +                       for (i = 0; i < unregister_count; i++)
-> +                               dev_put(dev);
-> +               }
-> +
-> +               break;
-> +       }
-> +
-> +       return NOTIFY_DONE;
-> +}
-> +
->  static struct proto xsk_proto = {
->         .name =         "XDP",
->         .owner =        THIS_MODULE,
-> @@ -727,7 +778,8 @@ static void xsk_destruct(struct sock *sk)
->         if (!sock_flag(sk, SOCK_DEAD))
->                 return;
->
-> -       xdp_put_umem(xs->umem);
-> +       if (xs->umem)
-> +               xdp_put_umem(xs->umem);
+On Fri, Jun 07, 2019 at 10:08:31PM +0000, Fujinaka, Todd wrote:
+> Just a quick update with the response I got and I'll make sure this is in our internal bug database.
+> 
+> Here's what I got back, and it looks like you guys have tried this already:
+> 
+> Have they tried these steps to configure RSS:
+> 
+> RSS Hash Flow
+> -------------
+> 
+> Allows you to set the hash bytes per flow type and any combination of one or
+> more options for Receive Side Scaling (RSS) hash byte configuration.
+> 
+> #ethtool -N <dev> rx-flow-hash <type> <option>
+> 
+> Where <type> is:
+>   tcp4  signifying TCP over IPv4
+>   udp4  signifying UDP over IPv4
+>   tcp6  signifying TCP over IPv6
+>   udp6  signifying UDP over IPv6
+> And <option> is one or more of:
+>   s Hash on the IP source address of the rx packet.
+>   d Hash on the IP destination address of the rx packet.
+>   f Hash on bytes 0 and 1 of the Layer 4 header of the rx packet.
+>   n Hash on bytes 2 and 3 of the Layer 4 header of the rx packet.
 
-xpd_put_umem already checks for NULL umem, so you don't have to do it here.
+With potentially 10000 ipsec connections, we don't even want to look at
+creating manual flow entries.  There isn't enough room for that.  We just
+wanted RSS to do its job the way it does on every other NIC in the past.
+After years of using mostly intel NICs that just worked, this one has
+been quite the surprise.
 
->
->         sk_refcnt_debug_dec(sk);
->  }
-> @@ -784,6 +836,10 @@ static const struct net_proto_family xsk_family_ops = {
->         .owner  = THIS_MODULE,
->  };
->
-> +static struct notifier_block xsk_netdev_notifier = {
-> +       .notifier_call  = xsk_notifier,
-> +};
-> +
->  static int __net_init xsk_net_init(struct net *net)
->  {
->         mutex_init(&net->xdp.lock);
-> @@ -816,8 +872,15 @@ static int __init xsk_init(void)
->         err = register_pernet_subsys(&xsk_net_ops);
->         if (err)
->                 goto out_sk;
-> +
-> +       err = register_netdevice_notifier(&xsk_netdev_notifier);
-> +       if (err)
-> +               goto out_pernet;
-> +
->         return 0;
->
-> +out_pernet:
-> +       unregister_pernet_subsys(&xsk_net_ops);
->  out_sk:
->         sock_unregister(PF_XDP);
->  out_proto:
-> --
-> 2.17.1
->
+> Also, looks like the driver needs to be updated to latest version:
+> >>> 1.1767.0 i40e 0000:3d:00.0: The driver for the device detected a
+> >>> newer version of the NVM image than expected. Please install the
+> >>> most recent version of the network driver.
+> 
+> Out of tree: https://sourceforge.net/projects/e1000/files/i40e%20stable/
+
+Already tried with 4.19 kernel which is essentially identical to the
+latest out of tree driver (I diffed them and found no functional
+differences at all) and it didn't help.  Well it was essentially identical
+to the latest out of tree a few weeks ago.  It seems there is now a
+newer one with some changes although nothing in the list of changes
+sound relevant.
+
+We do not want to use the out of tree driver and even trying it out is
+a lot of work.  We used to use it in the past for some NIC types but
+stopped due to the hassle of maintaining the integration.  If any problems
+exist in the in kernel driver we will patch it, but so far that does not
+appear to be the problem.  The tests we did so far indicate the firmware
+isn't applying an RSS value to certain packet types.  Even mapping every
+RSS value to queue 7 still saw these packets arrive on queue 0 which
+should of course be impossible if the firmware was working.  Now if
+there is anything in the out of tree driver that you think can explain
+this problem, I will look at it and consider trying it, but so far I
+see nothing that makes that worth the effort.  It just doesn't look like
+a driver problem.  If someone has access to a S2600WFT board (or some
+other C612 based board) it should be simple enough to try replaying
+the captured packet and see what RSS queue it hits (with ATR disabled
+of course).
+
+The message is because we tried installing an NVM update to see if it
+fixed anything, and it did not.  We could put the old version back,
+but since neither version works I didn't bother yet.
+
+-- 
+Len Sorensen
