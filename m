@@ -2,101 +2,136 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB15C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D24C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7843820820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A55220820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389105AbfFJT2e (ORCPT
+        id S2389160AbfFJT2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:28:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2978 "EHLO mga18.intel.com"
+        Mon, 10 Jun 2019 15:28:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51628 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfFJT2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:28:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 12:28:33 -0700
-X-ExtLoop1: 1
-Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
-  by orsmga003.jf.intel.com with ESMTP; 10 Jun 2019 12:28:33 -0700
-Message-ID: <dbd8a4dcc9de6e7b3232c6c90597939a794860b9.camel@intel.com>
-Subject: Re: [PATCH 5/6] iommu/vt-d: Cleanup after delegating DMA domain to
- generic iommu
-From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-To:     "Mehta, Sohil" <sohil.mehta@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>, "cai@lca.pw" <cai@lca.pw>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-Date:   Mon, 10 Jun 2019 12:25:31 -0700
-In-Reply-To: <1560192412.27481.12.camel@intel.com>
-References: <20190609023803.23832-1-baolu.lu@linux.intel.com>
-         <20190609023803.23832-6-baolu.lu@linux.intel.com>
-         <1560192412.27481.12.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        id S1728276AbfFJT2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 15:28:48 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D9FFB120D7;
+        Mon, 10 Jun 2019 19:28:23 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A734160C47;
+        Mon, 10 Jun 2019 19:28:04 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 15:28:03 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
+        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
+        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
+        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
+        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
+        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
+        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
+        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
+        david@redhat.com, david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
+        yuval.shaia@oracle.com, kilobyte@angband.pl, jstaron@google.com,
+        rdunlap@infradead.org
+Subject: Re: [PATCH v11 4/7] dm: enable synchronous dax
+Message-ID: <20190610192803.GA29002@redhat.com>
+References: <20190610090730.8589-1-pagupta@redhat.com>
+ <20190610090730.8589-5-pagupta@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610090730.8589-5-pagupta@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 10 Jun 2019 19:28:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-10 at 11:45 -0700, Mehta, Sohil wrote:
-> On Sun, 2019-06-09 at 10:38 +0800, Lu Baolu wrote:
-> >  static int __init si_domain_init(int hw)
-> > @@ -3306,14 +3252,13 @@ static int __init init_dmars(void)
-> >                 if (pasid_supported(iommu))
-> >                         intel_svm_init(iommu);
-> >  #endif
-> > -       }
-> >  
-> > -       /*
-> > -        * Now that qi is enabled on all iommus, set the root entry
-> > and flush
-> > -        * caches. This is required on some Intel X58 chipsets,
-> > otherwise the
-> > -        * flush_context function will loop forever and the boot
-> > hangs.
-> > -        */
-> > -       for_each_active_iommu(iommu, drhd) {
-> > +               /*
-> > +                * Now that qi is enabled on all iommus, set the root
-> > entry and
-> > +                * flush caches. This is required on some Intel X58
-> > chipsets,
-> > +                * otherwise the flush_context function will loop
-> > forever and
-> > +                * the boot hangs.
-> > +                */
-> >                 iommu_flush_write_buffer(iommu);
-> >                 iommu_set_root_entry(iommu);
-> >                 iommu->flush.flush_context(iommu, 0, 0, 0,
-> > DMA_CCMD_GLOBAL_INVL);
+On Mon, Jun 10 2019 at  5:07am -0400,
+Pankaj Gupta <pagupta@redhat.com> wrote:
+
+>  This patch sets dax device 'DAXDEV_SYNC' flag if all the target
+>  devices of device mapper support synchrononous DAX. If device
+>  mapper consists of both synchronous and asynchronous dax devices,
+>  we don't set 'DAXDEV_SYNC' flag.
 > 
-> This changes the intent of the original code. As the comment says
-> enable QI on all IOMMUs, then flush the caches and set the root entry.
-> The order of setting the root entries has changed now.
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> ---
+>  drivers/md/dm-table.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> Refer: 
-> Commit a4c34ff1c029 ('iommu/vt-d: Enable QI on all IOMMUs before
-> setting root entry')
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index 350cf0451456..c5160d846fe6 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -890,10 +890,17 @@ static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
+>  			start, len);
+>  }
+>  
+> +static int device_synchronous(struct dm_target *ti, struct dm_dev *dev,
+> +				       sector_t start, sector_t len, void *data)
+> +{
+> +	return dax_synchronous(dev->dax_dev);
+> +}
+> +
+>  bool dm_table_supports_dax(struct dm_table *t, int blocksize)
+>  {
+>  	struct dm_target *ti;
+>  	unsigned i;
+> +	bool dax_sync = true;
+>  
+>  	/* Ensure that all targets support DAX. */
+>  	for (i = 0; i < dm_table_get_num_targets(t); i++) {
+> @@ -906,7 +913,14 @@ bool dm_table_supports_dax(struct dm_table *t, int blocksize)
+>  		    !ti->type->iterate_devices(ti, device_supports_dax,
+>  			    &blocksize))
+>  			return false;
+> +
+> +		/* Check devices support synchronous DAX */
+> +		if (dax_sync &&
+> +		    !ti->type->iterate_devices(ti, device_synchronous, NULL))
+> +			dax_sync = false;
+>  	}
+> +	if (dax_sync)
+> +		set_dax_synchronous(t->md->dax_dev);
+>  
+>  	return true;
+>  }
+> -- 
+> 2.20.1
+> 
 
-Thanks Sohil! for catching the bug.
-Will send a V2 to Lu Baolu fixing this.
+dm_table_supports_dax() is called multiple times (from
+dm_table_set_restrictions and dm_table_determine_type).  It is strange
+to have a getter have a side-effect of being a setter too.  Overloading
+like this could get you in trouble in the future.
 
-Regards,
-Sai
+Are you certain this is what you want?
 
+Or would it be better to refactor dm_table_supports_dax() to take an
+iterate_devices_fn arg and have callers pass the appropriate function?
+Then have dm_table_set_restrictions() caller do:
+
+     if (dm_table_supports_dax(t, device_synchronous, NULL))
+     	  set_dax_synchronous(t->md->dax_dev);
+
+(NULL arg implies dm_table_supports_dax() refactoring would take a int
+*data pointer rather than int type).
+
+Mike
