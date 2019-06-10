@@ -2,85 +2,132 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AC9C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2B8C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9476B20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8FDA20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389198AbfFJJwv (ORCPT
+        id S2388880AbfFJJxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 05:52:51 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:46995 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388315AbfFJJws (ORCPT
+        Mon, 10 Jun 2019 05:53:32 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:54218 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388100AbfFJJxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 05:52:48 -0400
-Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 2FD22200018;
-        Mon, 10 Jun 2019 09:52:44 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 11:52:43 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
-Message-ID: <20190610095243.7xwp4xhauds22qzw@flea>
-References: <20190607231100.5894-1-peron.clem@gmail.com>
- <20190607231100.5894-5-peron.clem@gmail.com>
+        Mon, 10 Jun 2019 05:53:31 -0400
+Received: by mail-it1-f193.google.com with SMTP id m187so12275316ite.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 02:53:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zP+U4owfQx+AxiXAq571meL0GzDGTRsnhiqrLs/D2hU=;
+        b=ARGbZevxq0VLOmsQdM8PXUBDpmVT7rXJyatFJGHpRE4GKI4CJvGR4YeFxg0ePeWqLL
+         1EsUcodJN7qSqVqil143kwVUevPmHgFRjaJtUY/q7edwyyGJfAmKaOHdWlEtGo6gqMzN
+         J+IV6tRYpMvXr0O8HJexiJW/JJjzB/PZ35yJJtPRapqZHaxqS+icRru7cXUJj/f/QlbO
+         jaWWt0Ljfaukj/q6Q1O/P2s47yqbc/rlkf69bAEaaiizB2anOJcVahs90NHyE4hrdVUn
+         teLQwpiB/Nz20l/LI82UAvwUngpZ7SyPpTVG1GWhF1O3aHlSgZyyGq5xqr/PhxLdU1XA
+         xwaA==
+X-Gm-Message-State: APjAAAVIaQ5f9qf5ZBAWbYB0BCvPiCt1RmMLb+fDSpi8eUw3ufG8Osaa
+        O5WksPfLzDaQrpZEn9pIZMfvNP+IaxOYvHDzrZ0LEw==
+X-Google-Smtp-Source: APXvYqxiB6IGg45gdK2p5guuqIhLLseg3VCwZw7cBiPX4uxiDiO6qRniP/UJNrbg/+4SuYQ5kw8sqXpkJ7a5PA1Wl8Q=
+X-Received: by 2002:a02:7b2d:: with SMTP id q45mr41554211jac.127.1560160410784;
+ Mon, 10 Jun 2019 02:53:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ivt2koe4dst4bk6o"
-Content-Disposition: inline
-In-Reply-To: <20190607231100.5894-5-peron.clem@gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190610073617.19767-1-kasong@redhat.com>
+In-Reply-To: <20190610073617.19767-1-kasong@redhat.com>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Mon, 10 Jun 2019 17:53:19 +0800
+Message-ID: <CACPcB9cRjPPMkC7+yToCZ_MoVw8McMcycRQ6tZT3yjD6pi4-NA@mail.gmail.com>
+Subject: Re: [PATCH] x86/kexec: Add ACPI NVS region to the ident map
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Dave Young <dyoung@redhat.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Cc:     Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ivt2koe4dst4bk6o
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Jun 08, 2019 at 01:10:51AM +0200, Cl=E9ment P=E9ron wrote:
-> We are using RXINT bits definition when looking at RXSTA register.
+On Mon, Jun 10, 2019 at 3:37 PM Kairui Song <kasong@redhat.com> wrote:
 >
-> These bits are equal but it's not really proper.
+> With the recent addition of RSDP parsing in decompression stage, kexec
+> kernel now needs ACPI tables to be covered by the identity mapping.
+> And in commit 6bbeb276b71f ("x86/kexec: Add the EFI system tables and
+> ACPI tables to the ident map"), ACPI tables memory region was added to
+> the ident map.
 >
-> Introduce the RXSTA bits and use them to have coherency.
+> But on some machines, there is only ACPI NVS memory region, and the ACPI
+> tables is located in the NVS region instead. In such case second kernel
+> will still fail when trying to access ACPI tables.
 >
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> So, to fix the problem, add NVS memory region in the ident map as well.
+>
+> Fixes: 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI tables to the ident map")
+> Suggested-by: Junichi Nomura <j-nomura@ce.jp.nec.com>
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>
+> Tested with my laptop and VM, on top of current tip:x86/boot.
+>
+>  arch/x86/kernel/machine_kexec_64.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 3c77bdf7b32a..a406602fdb3c 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -54,14 +54,26 @@ static int mem_region_callback(struct resource *res, void *arg)
+>  static int
+>  map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
+>  {
+> -       unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> +       int ret;
+> +       unsigned long flags;
+>         struct init_pgtable_data data;
+>
+>         data.info = info;
+>         data.level4p = level4p;
+>         flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> -       return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
+> -                                  &data, mem_region_callback);
+> +
+> +       ret = walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
+> +                                 &data, mem_region_callback);
+> +       if (ret && ret != -EINVAL)
+> +               return ret;
+> +
+> +       /* ACPI tables could be located in ACPI Non-volatile Storage region */
+> +       ret = walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1,
+> +                                 &data, mem_region_callback);
+> +       if (ret && ret != -EINVAL)
+> +               return ret;
+> +
+> +       return 0;
+>  }
+>  #else
+>  static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
+> --
+> 2.21.0
+>
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Hi, could you help test the tip branch with this applied? This should
+fix all the issues, I can't find any other issues now. Thanks.
 
-Maxime
 
 --
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ivt2koe4dst4bk6o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP4oawAKCRDj7w1vZxhR
-xczjAP9NhvNXW8RraDQEXB1eNk6zeYRoUohLhNFarH0MsVC7hQEAx0/R3cfra11q
-g8lAS+DDEk4kx5iSDIwC7EK1bfYB7Q0=
-=c9cn
------END PGP SIGNATURE-----
-
---ivt2koe4dst4bk6o--
+Best Regards,
+Kairui Song
