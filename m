@@ -2,137 +2,402 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FBFC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D5EC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0A5206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 412ED206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Lk8F+SqZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuAZlrzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387966AbfFJHrS (ORCPT
+        id S2388004AbfFJHsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 03:47:18 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:47064 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387761AbfFJHrS (ORCPT
+        Mon, 10 Jun 2019 03:48:31 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45506 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387761AbfFJHsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:47:18 -0400
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190610074715epoutp048cc6226d5663fa55ee7dd0b226fc0f69~mxrzz5l6d0131701317epoutp04m
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 07:47:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190610074715epoutp048cc6226d5663fa55ee7dd0b226fc0f69~mxrzz5l6d0131701317epoutp04m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560152835;
-        bh=z/G1igbwiUep1NIceSc0CppCqkrly7VeDS7GZ1WcTWU=;
-        h=From:To:Subject:Date:References:From;
-        b=Lk8F+SqZo9pUTSKTAENoqTFC6837HmWDemKrsdY5C46oXF/GrGH81PC56HY9IUivx
-         qQ++zLDAN7P3b05neYMJpOFLEEFAWi1FDFSRGSMG1IoAnOa2F+2sloh3eiCpj3Pqnu
-         k8merTPj5X3c9zKFJpGzrlPQTHifUfMZUnEXSzkQ=
-Received: from epsmges2p3.samsung.com (unknown [182.195.40.186]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20190610074713epcas2p4b09d92f4d01b499234b62ad5d7e9a735~mxrxfVyQ80810508105epcas2p40;
-        Mon, 10 Jun 2019 07:47:13 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        60.89.04206.DFA0EFC5; Mon, 10 Jun 2019 16:47:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190610074708epcas2p3dcbdc49d114c544c1de721666d574b43~mxrtRLTuM2375123751epcas2p3H;
-        Mon, 10 Jun 2019 07:47:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190610074708epsmtrp15ec3a7b12cab19a17cb55846105b4ed6~mxrtN9V2F0888208882epsmtrp1i;
-        Mon, 10 Jun 2019 07:47:08 +0000 (GMT)
-X-AuditID: b6c32a47-14bff7000000106e-6d-5cfe0afd7f89
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EF.D9.03692.CFA0EFC5; Mon, 10 Jun 2019 16:47:08 +0900 (KST)
-Received: from KORND000991 (unknown [12.36.165.95]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190610074708epsmtip1e63acca72f837ec89ce264c295db796c~mxrs86WOc3251532515epsmtip1J;
-        Mon, 10 Jun 2019 07:47:08 +0000 (GMT)
-From:   =?UTF-8?B?64Ko7JiB66+8?= <youngmin.nam@samsung.com>
-To:     <pmladek@suse.com>, <andriy.shevchenko@linux.intel.com>,
-        <sergey.senozhatsky@gmail.com>, <geert+renesas@glider.be>,
-        <rostedt@goodmis.org>, <me@tobin.cc>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] vsprintf: fix data type of variable in string_nocheck()
-Date:   Mon, 10 Jun 2019 16:47:07 +0900
-Message-ID: <040301d51f60$b4959100$1dc0b300$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AdUfX+j/BHVROm56QV+h+YfouHIpCg==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBJsWRmVeSWpSXmKPExsWy7bCmue5frn8xBgtn8Fj0Nk1nspg7exKj
-        xeVdc9gsbrcdY7X4//grq8W+jgdMFms/P2Z3YPeYeFbXY+esu+weLftusXvMOxnosX7LVRaP
-        L9dfM3p83iQXwB6VY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+Ti
-        E6DrlpkDdI6SQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQsECvODG3uDQvXS85
-        P9fK0MDAyBSoMiEn48gqx4L5rBWbJx9na2CcydLFyMkhIWAi8fjzNLYuRi4OIYEdjBIHT99l
-        h3A+MUp8/X2TBcL5xihxo/EGE0zLqum/oFr2AiWaJzJDOC8YJabvfscKUsUmYCnx6s9JsCoR
-        gQOMEh8WtgAlODiEBTwk9v6sAzFZBFQltl5KBTF5gcp3HcwC6eQVEJQ4OfMJ2HnMAtoSyxa+
-        ZobYqyCx4+xrRpByEQE9idf/XCBKRCRmd7ZBlZxhk2g+XgVSIiHgInHnohlEWFji1fEt7BC2
-        lMTL/jYou15i8balYMdLCExglJi/6QNUwlhi1rN2sFXMApoS63fpQ4xUljhyC+owPomOw3/Z
-        IcK8Eh1tQhCNahK/pmxghLBlJHYvXgF1mIfE6Z27wCEjJBArsezCI+YJjAqzkLw7C8m7s5D8
-        NQvhhgWMLKsYxVILinPTU4uNCoyR43kTIziVarnvYNx2zucQowAHoxIPr4TT3xgh1sSy4src
-        Q4wSHMxKIrxvj/6JEeJNSaysSi3Kjy8qzUktPsRoCoyLicxSosn5wDSfVxJvaGpkZmZgaWph
-        amZkoSTOu4n7ZoyQQHpiSWp2ampBahFMHxMHp1QDY8a6Z57FZh+dDaVfx0tPsvgQYstUW+Lt
-        06XYn9u45MyRoF9xq+9ruRRNr+tbK+SoHHoteN71iye/HZzO8/wfZ5NyYvrPE/J8vQm+O6uM
-        S17vsD3t1fpxzoY9vbuyd6zbzSP4uOJJx6yfhqwlCf1rrb2mxtsnrWlrPGAWsbEts3xCeAVb
-        q5WaEktxRqKhFnNRcSIA4kUFZ7sDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsWy7bCSnO4frn8xBmfmKVv0Nk1nspg7exKj
-        xeVdc9gsbrcdY7X4//grq8W+jgdMFms/P2Z3YPeYeFbXY+esu+weLftusXvMOxnosX7LVRaP
-        L9dfM3p83iQXwB7FZZOSmpNZllqkb5fAlbHpeitbQT9rxY6J75kbGDtZuhg5OSQETCRWTf/F
-        BmILCexmlNg7SR0iLiNxe+VlVghbWOJ+yxEgmwuo5hmjxJc3q8Aa2AQsJV79OckGkhAROMEo
-        MfvlfiCHg0NYwENi7886EJNFQFVi66VUEJMXqHzXwSyQTl4BQYmTM5+AncAsoC3R+7CVEcZe
-        tvA1M8RaBYkdZ18zgrSKCOhJvP7nAlEiIjG7s415AqPALCSTZiGZNAvJpFlIWhYwsqxilEwt
-        KM5Nzy02LDDMSy3XK07MLS7NS9dLzs/dxAiOBy3NHYyXl8QfYhTgYFTi4ZVw+hsjxJpYVlyZ
-        e4hRgoNZSYT37dE/MUK8KYmVValF+fFFpTmpxYcYpTlYlMR5n+YdixQSSE8sSc1OTS1ILYLJ
-        MnFwSjUwasZvu8bzyf3FicU323RPyXoa8N07Z3vz7R+Fbcet+ue0GD9fli2q9LrQScH3enLZ
-        lwP75fvtFcV5UvnevWX15i27fy4g8YOnQNbZSa/feflOsv/PsoiHvW7uVh5eyTMqDyex7Jyz
-        SDi0WtjEvtJI7rvqztPO3VUHzBe4fo692xPBdXjH8a9GSizFGYmGWsxFxYkAmKzed4MCAAA=
-X-CMS-MailID: 20190610074708epcas2p3dcbdc49d114c544c1de721666d574b43
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190610074708epcas2p3dcbdc49d114c544c1de721666d574b43
-References: <CGME20190610074708epcas2p3dcbdc49d114c544c1de721666d574b43@epcas2p3.samsung.com>
+        Mon, 10 Jun 2019 03:48:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id s11so4782106pfm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 00:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5H6DGPewNEGTnqFcxQkV5ULFccMkx7tHAf4aT320zBo=;
+        b=fuAZlrzghJQyjBeQzJKm7a1oKmhPTt1CDXD9kCq8JmD3C5KmYCQMmGzrabeVTmfSJn
+         5IUSD9TepfE/BTcTXraNClCJV9F/Y/m/zemipbJ824mCqD1PmaEunkH9d8ntGNcdhk1F
+         HR5ZYffJiwpadVom+uxdJY4TohPvv6xnsBtvdhj9m0JWK+yn1XR9BSPWGNVkbRWRiz4B
+         wY17kef9PXN4w9TQCka481b4Q0YenqG/Uv0aStLZ8vIDhc6Ai5yvlKs6O68QluiHHUSL
+         3kzTNQsRdIv/l7GsVRNMZSlKbO64iC1S1g3wfuO82RzTwN0MpRqrwxruYf6/xqpwAueO
+         gjcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5H6DGPewNEGTnqFcxQkV5ULFccMkx7tHAf4aT320zBo=;
+        b=mGXrSWxTtYxbhVTCr+/362ZJ/DBS4JUtrRoxBIOKHWIJM9mna11p0lsJmPBTeARcRx
+         CsKbtB0DbvBYc8IGVfBHCroKE6imGBh89McFOmoRENK+gCtz/u/6rD7ht6av/Cciv88A
+         V6LN4hi1CppmYin3XE4ZdJKB+UyPX+lSXXEoQSr8gRq7qLEsZ9RcLlQNTzb4hN4AMcwN
+         YBIRvYZYS5xMSWVRp+81dQ00gMl9F+QgbcDKHZDINOvlkY5CFDOfaSjy5CNpe4pe4NPC
+         ZudiIwvxebllQ7RB7K10ko5Z/gqgCF+bS202dSbYkwC7pAacDMxCo036zO3nnIuTZDz/
+         nJrw==
+X-Gm-Message-State: APjAAAXwec4h8gHdrvXme5h9HyW1MwRizAuhP7Vcsqf0FL9SiEY6WJbU
+        fYickC6bTaATebHvvdqrRbg=
+X-Google-Smtp-Source: APXvYqxZcl+IGkdR5yNjWx1nokoAgVP7ALkstYJ+FtmN9IqE+BWtOQnmWf43BFQMw05nBDXPcspgZA==
+X-Received: by 2002:a63:e54d:: with SMTP id z13mr14529118pgj.132.1560152909855;
+        Mon, 10 Jun 2019 00:48:29 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([192.157.107.159])
+        by smtp.gmail.com with ESMTPSA id l1sm9405222pgi.91.2019.06.10.00.48.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 00:48:29 -0700 (PDT)
+From:   Hao Xu <haoxu.linuxkernel@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     gneukum1@gmail.com, haoxu.linuxkernel@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: kpc2000: kpc_i2c: remove the macros inb_p and outb_p
+Date:   Mon, 10 Jun 2019 15:48:24 +0800
+Message-Id: <1560152904-31894-1-git-send-email-haoxu.linuxkernel@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes data type of precision with int.
-The precision is declared as signed int in struct printf_spec.
+remove inb_p and outb_p to call readq/writeq directly.
 
-Signed-off-by: Youngmin Nam <youngmin.nam=40samsung.com>
+Signed-off-by: Hao Xu <haoxu.linuxkernel@gmail.com>
 ---
- lib/vsprintf.c =7C 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+- remove the macros inb_p/outb_p and use readq/writeq directly, per https://lkml.kernel.org/lkml/20190608134505.GA963@arch-01.home/
+---
+ drivers/staging/kpc2000/kpc2000_i2c.c | 112 ++++++++++++++++------------------
+ 1 file changed, 53 insertions(+), 59 deletions(-)
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 63937044c57d..cd0cd9279b12 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-=40=40 -599,7 +599,7 =40=40 static char *string_nocheck(char *buf, char *en=
-d, const char *s,
- 			    struct printf_spec spec)
- =7B
- 	int len =3D 0;
--	size_t lim =3D spec.precision;
-+	int lim =3D spec.precision;
-=20
- 	while (lim--) =7B
- 		char c =3D *s++;
---=20
-2.21.0
+diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
+index 69e8773..246d5b3 100644
+--- a/drivers/staging/kpc2000/kpc2000_i2c.c
++++ b/drivers/staging/kpc2000/kpc2000_i2c.c
+@@ -122,12 +122,6 @@ struct i2c_device {
+ /* Not really a feature, but it's convenient to handle it as such */
+ #define FEATURE_IDF             BIT(15)
+ 
+-// FIXME!
+-#undef inb_p
+-#define inb_p(a) readq((void *)a)
+-#undef outb_p
+-#define outb_p(d, a) writeq(d, (void *)a)
+-
+ /* Make sure the SMBus host is ready to start transmitting.
+  * Return 0 if it is, -EBUSY if it is not.
+  */
+@@ -135,7 +129,7 @@ static int i801_check_pre(struct i2c_device *priv)
+ {
+ 	int status;
+ 
+-	status = inb_p(SMBHSTSTS(priv));
++	status = readq((void *)SMBHSTSTS(priv));
+ 	if (status & SMBHSTSTS_HOST_BUSY) {
+ 		dev_err(&priv->adapter.dev, "SMBus is busy, can't use it! (status=%x)\n", status);
+ 		return -EBUSY;
+@@ -144,8 +138,8 @@ static int i801_check_pre(struct i2c_device *priv)
+ 	status &= STATUS_FLAGS;
+ 	if (status) {
+ 		//dev_dbg(&priv->adapter.dev, "Clearing status flags (%02x)\n", status);
+-		outb_p(status, SMBHSTSTS(priv));
+-		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
++		writeq(status, (void *)SMBHSTSTS(priv));
++		status = readq((void *)SMBHSTSTS(priv)) & STATUS_FLAGS;
+ 		if (status) {
+ 			dev_err(&priv->adapter.dev, "Failed clearing status flags (%02x)\n", status);
+ 			return -EBUSY;
+@@ -164,15 +158,15 @@ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
+ 		dev_err(&priv->adapter.dev, "Transaction timeout\n");
+ 		/* try to stop the current command */
+ 		dev_dbg(&priv->adapter.dev, "Terminating the current operation\n");
+-		outb_p(inb_p(SMBHSTCNT(priv)) | SMBHSTCNT_KILL, SMBHSTCNT(priv));
++		writeq(readq((void *)SMBHSTCNT(priv)) | SMBHSTCNT_KILL, (void *)SMBHSTCNT(priv));
+ 		usleep_range(1000, 2000);
+-		outb_p(inb_p(SMBHSTCNT(priv)) & (~SMBHSTCNT_KILL), SMBHSTCNT(priv));
++		writeq(readq((void *)SMBHSTCNT(priv)) & (~SMBHSTCNT_KILL), (void *)SMBHSTCNT(priv));
+ 
+ 		/* Check if it worked */
+-		status = inb_p(SMBHSTSTS(priv));
++		status = readq((void *)SMBHSTSTS(priv));
+ 		if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED))
+ 			dev_err(&priv->adapter.dev, "Failed terminating the transaction\n");
+-		outb_p(STATUS_FLAGS, SMBHSTSTS(priv));
++		writeq(STATUS_FLAGS, (void *)SMBHSTSTS(priv));
+ 		return -ETIMEDOUT;
+ 	}
+ 
+@@ -191,8 +185,8 @@ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
+ 
+ 	if (result) {
+ 		/* Clear error flags */
+-		outb_p(status & STATUS_FLAGS, SMBHSTSTS(priv));
+-		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
++		writeq(status & STATUS_FLAGS, (void *)SMBHSTSTS(priv));
++		status = readq((void *)SMBHSTSTS(priv)) & STATUS_FLAGS;
+ 		if (status)
+ 			dev_warn(&priv->adapter.dev, "Failed clearing status flags at end of transaction (%02x)\n", status);
+ 	}
+@@ -212,19 +206,19 @@ static int i801_transaction(struct i2c_device *priv, int xact)
+ 	/* the current contents of SMBHSTCNT can be overwritten, since PEC,
+ 	 * INTREN, SMBSCMD are passed in xact
+ 	 */
+-	outb_p(xact | I801_START, SMBHSTCNT(priv));
++	writeq(xact | I801_START, (void *)SMBHSTCNT(priv));
+ 
+ 	/* We will always wait for a fraction of a second! */
+ 	do {
+ 		usleep_range(250, 500);
+-		status = inb_p(SMBHSTSTS(priv));
++		status = readq((void *)SMBHSTSTS(priv));
+ 	} while ((status & SMBHSTSTS_HOST_BUSY) && (timeout++ < MAX_RETRIES));
+ 
+ 	result = i801_check_post(priv, status, timeout > MAX_RETRIES);
+ 	if (result < 0)
+ 		return result;
+ 
+-	outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
++	writeq(SMBHSTSTS_INTR, (void *)SMBHSTSTS(priv));
+ 	return 0;
+ }
+ 
+@@ -236,13 +230,13 @@ static void i801_wait_hwpec(struct i2c_device *priv)
+ 
+ 	do {
+ 		usleep_range(250, 500);
+-		status = inb_p(SMBHSTSTS(priv));
++		status = readq((void *)SMBHSTSTS(priv));
+ 	} while ((!(status & SMBHSTSTS_INTR)) && (timeout++ < MAX_RETRIES));
+ 
+ 	if (timeout > MAX_RETRIES)
+ 		dev_dbg(&priv->adapter.dev, "PEC Timeout!\n");
+ 
+-	outb_p(status, SMBHSTSTS(priv));
++	writeq(status, (void *)SMBHSTSTS(priv));
+ }
+ 
+ static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_smbus_data *data, char read_write, int hwpec)
+@@ -250,14 +244,14 @@ static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_sm
+ 	int i, len;
+ 	int status;
+ 
+-	inb_p(SMBHSTCNT(priv)); /* reset the data buffer index */
++	readq((void *)SMBHSTCNT(priv)); /* reset the data buffer index */
+ 
+ 	/* Use 32-byte buffer to process this transaction */
+ 	if (read_write == I2C_SMBUS_WRITE) {
+ 		len = data->block[0];
+-		outb_p(len, SMBHSTDAT0(priv));
++		writeq(len, (void *)SMBHSTDAT0(priv));
+ 		for (i = 0; i < len; i++)
+-			outb_p(data->block[i+1], SMBBLKDAT(priv));
++			writeq(data->block[i+1], (void *)SMBBLKDAT(priv));
+ 	}
+ 
+ 	status = i801_transaction(priv, I801_BLOCK_DATA | ENABLE_INT9 | I801_PEC_EN * hwpec);
+@@ -265,13 +259,13 @@ static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_sm
+ 		return status;
+ 
+ 	if (read_write == I2C_SMBUS_READ) {
+-		len = inb_p(SMBHSTDAT0(priv));
++		len = readq((void *)SMBHSTDAT0(priv));
+ 		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX)
+ 			return -EPROTO;
+ 
+ 		data->block[0] = len;
+ 		for (i = 0; i < len; i++)
+-			data->block[i + 1] = inb_p(SMBBLKDAT(priv));
++			data->block[i + 1] = readq((void *)SMBBLKDAT(priv));
+ 	}
+ 	return 0;
+ }
+@@ -291,8 +285,8 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
+ 	len = data->block[0];
+ 
+ 	if (read_write == I2C_SMBUS_WRITE) {
+-		outb_p(len, SMBHSTDAT0(priv));
+-		outb_p(data->block[1], SMBBLKDAT(priv));
++		writeq(len, (void *)SMBHSTDAT0(priv));
++		writeq(data->block[1], (void *)SMBBLKDAT(priv));
+ 	}
+ 
+ 	for (i = 1; i <= len; i++) {
+@@ -307,28 +301,28 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
+ 			else
+ 				smbcmd = I801_BLOCK_DATA;
+ 		}
+-		outb_p(smbcmd | ENABLE_INT9, SMBHSTCNT(priv));
++		writeq(smbcmd | ENABLE_INT9, (void *)SMBHSTCNT(priv));
+ 
+ 		if (i == 1)
+-			outb_p(inb(SMBHSTCNT(priv)) | I801_START, SMBHSTCNT(priv));
++			writeq(inb(SMBHSTCNT(priv)) | I801_START, (void *)SMBHSTCNT(priv));
+ 		/* We will always wait for a fraction of a second! */
+ 		timeout = 0;
+ 		do {
+ 			usleep_range(250, 500);
+-			status = inb_p(SMBHSTSTS(priv));
++			status = readq((void *)SMBHSTSTS(priv));
+ 		} while ((!(status & SMBHSTSTS_BYTE_DONE)) && (timeout++ < MAX_RETRIES));
+ 
+ 		result = i801_check_post(priv, status, timeout > MAX_RETRIES);
+ 		if (result < 0)
+ 			return result;
+ 		if (i == 1 && read_write == I2C_SMBUS_READ && command != I2C_SMBUS_I2C_BLOCK_DATA) {
+-			len = inb_p(SMBHSTDAT0(priv));
++			len = readq((void *)SMBHSTDAT0(priv));
+ 			if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
+ 				dev_err(&priv->adapter.dev, "Illegal SMBus block read size %d\n", len);
+ 				/* Recover */
+-				while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY)
+-					outb_p(SMBHSTSTS_BYTE_DONE, SMBHSTSTS(priv));
+-				outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
++				while (readq((void *)SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY)
++					writeq(SMBHSTSTS_BYTE_DONE, (void *)SMBHSTSTS(priv));
++				writeq(SMBHSTSTS_INTR, (void *)SMBHSTSTS(priv));
+ 				return -EPROTO;
+ 			}
+ 			data->block[0] = len;
+@@ -336,11 +330,11 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
+ 
+ 		/* Retrieve/store value in SMBBLKDAT */
+ 		if (read_write == I2C_SMBUS_READ)
+-			data->block[i] = inb_p(SMBBLKDAT(priv));
++			data->block[i] = readq((void *)SMBBLKDAT(priv));
+ 		if (read_write == I2C_SMBUS_WRITE && i+1 <= len)
+-			outb_p(data->block[i+1], SMBBLKDAT(priv));
++			writeq(data->block[i+1], (void *)SMBBLKDAT(priv));
+ 		/* signals SMBBLKDAT ready */
+-		outb_p(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, SMBHSTSTS(priv));
++		writeq(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, (void *)SMBHSTSTS(priv));
+ 	}
+ 
+ 	return 0;
+@@ -348,8 +342,8 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
+ 
+ static int i801_set_block_buffer_mode(struct i2c_device *priv)
+ {
+-	outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_E32B, SMBAUXCTL(priv));
+-	if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0)
++	writeq(readq((void *)SMBAUXCTL(priv)) | SMBAUXCTL_E32B, (void *)SMBAUXCTL(priv));
++	if ((readq((void *)SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0)
+ 		return -EIO;
+ 	return 0;
+ }
+@@ -412,39 +406,39 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
+ 	switch (size) {
+ 	case I2C_SMBUS_QUICK:
+ 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_QUICK\n");
+-		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
++		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
+ 		xact = I801_QUICK;
+ 		break;
+ 	case I2C_SMBUS_BYTE:
+ 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE\n");
+ 
+-		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
++		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
+ 		if (read_write == I2C_SMBUS_WRITE)
+-			outb_p(command, SMBHSTCMD(priv));
++			writeq(command, (void *)SMBHSTCMD(priv));
+ 		xact = I801_BYTE;
+ 		break;
+ 	case I2C_SMBUS_BYTE_DATA:
+ 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE_DATA\n");
+-		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-		outb_p(command, SMBHSTCMD(priv));
++		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
++		writeq(command, (void *)SMBHSTCMD(priv));
+ 		if (read_write == I2C_SMBUS_WRITE)
+-			outb_p(data->byte, SMBHSTDAT0(priv));
++			writeq(data->byte, (void *)SMBHSTDAT0(priv));
+ 		xact = I801_BYTE_DATA;
+ 		break;
+ 	case I2C_SMBUS_WORD_DATA:
+ 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_WORD_DATA\n");
+-		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-		outb_p(command, SMBHSTCMD(priv));
++		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
++		writeq(command, (void *)SMBHSTCMD(priv));
+ 		if (read_write == I2C_SMBUS_WRITE) {
+-			outb_p(data->word & 0xff, SMBHSTDAT0(priv));
+-			outb_p((data->word & 0xff00) >> 8, SMBHSTDAT1(priv));
++			writeq(data->word & 0xff, (void *)SMBHSTDAT0(priv));
++			writeq((data->word & 0xff00) >> 8, (void *)SMBHSTDAT1(priv));
+ 		}
+ 		xact = I801_WORD_DATA;
+ 		break;
+ 	case I2C_SMBUS_BLOCK_DATA:
+ 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BLOCK_DATA\n");
+-		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-		outb_p(command, SMBHSTCMD(priv));
++		writeq(((addr & 0x7f) << 1) | (read_write & 0x01), (void *)SMBHSTADD(priv));
++		writeq(command, (void *)SMBHSTCMD(priv));
+ 		block = 1;
+ 		break;
+ 	case I2C_SMBUS_I2C_BLOCK_DATA:
+@@ -452,14 +446,14 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
+ 		/* NB: page 240 of ICH5 datasheet shows that the R/#W
+ 		 * bit should be cleared here, even when reading
+ 		 */
+-		outb_p((addr & 0x7f) << 1, SMBHSTADD(priv));
++		writeq((addr & 0x7f) << 1, (void *)SMBHSTADD(priv));
+ 		if (read_write == I2C_SMBUS_READ) {
+ 			/* NB: page 240 of ICH5 datasheet also shows
+ 			 * that DATA1 is the cmd field when reading
+ 			 */
+-			outb_p(command, SMBHSTDAT1(priv));
++			writeq(command, (void *)SMBHSTDAT1(priv));
+ 		} else {
+-			outb_p(command, SMBHSTCMD(priv));
++			writeq(command, (void *)SMBHSTCMD(priv));
+ 		}
+ 		block = 1;
+ 		break;
+@@ -470,10 +464,10 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
+ 
+ 	if (hwpec) { /* enable/disable hardware PEC */
+ 		dev_dbg(&priv->adapter.dev, "  [acc] hwpec: yes\n");
+-		outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_CRC, SMBAUXCTL(priv));
++		writeq(readq((void *)SMBAUXCTL(priv)) | SMBAUXCTL_CRC, (void *)SMBAUXCTL(priv));
+ 	} else {
+ 		dev_dbg(&priv->adapter.dev, "  [acc] hwpec: no\n");
+-		outb_p(inb_p(SMBAUXCTL(priv)) & (~SMBAUXCTL_CRC), SMBAUXCTL(priv));
++		writeq(readq((void *)SMBAUXCTL(priv)) & (~SMBAUXCTL_CRC), (void *)SMBAUXCTL(priv));
+ 	}
+ 
+ 	if (block) {
+@@ -491,7 +485,7 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
+ 	 */
+ 	if (hwpec || block) {
+ 		dev_dbg(&priv->adapter.dev, "  [acc] hwpec || block\n");
+-		outb_p(inb_p(SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), SMBAUXCTL(priv));
++		writeq(readq((void *)SMBAUXCTL(priv)) & ~(SMBAUXCTL_CRC | SMBAUXCTL_E32B), (void *)SMBAUXCTL(priv));
+ 	}
+ 	if (block) {
+ 		dev_dbg(&priv->adapter.dev, "  [acc] block\n");
+@@ -510,11 +504,11 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
+ 	case I801_BYTE:  /* Result put in SMBHSTDAT0 */
+ 	case I801_BYTE_DATA:
+ 		dev_dbg(&priv->adapter.dev, "  [acc] I801_BYTE or I801_BYTE_DATA\n");
+-		data->byte = inb_p(SMBHSTDAT0(priv));
++		data->byte = readq((void *)SMBHSTDAT0(priv));
+ 		break;
+ 	case I801_WORD_DATA:
+ 		dev_dbg(&priv->adapter.dev, "  [acc] I801_WORD_DATA\n");
+-		data->word = inb_p(SMBHSTDAT0(priv)) + (inb_p(SMBHSTDAT1(priv)) << 8);
++		data->word = readq((void *)SMBHSTDAT0(priv)) + (readq((void *)SMBHSTDAT1(priv)) << 8);
+ 		break;
+ 	}
+ 	return 0;
+-- 
+1.8.3.1
 
