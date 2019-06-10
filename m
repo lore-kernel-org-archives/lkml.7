@@ -2,108 +2,177 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8FEC468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC30FC28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6800D2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:02:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="R1GOxNf+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="R1+9C+PI"
+	by mail.kernel.org (Postfix) with ESMTP id CFAE320859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389325AbfFJLCC (ORCPT
+        id S2389344AbfFJLCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 07:02:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60568 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389191AbfFJLCC (ORCPT
+        Mon, 10 Jun 2019 07:02:11 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:57174 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388982AbfFJLCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 07:02:02 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B6F4E602F3; Mon, 10 Jun 2019 11:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560164521;
-        bh=mRD0HxQRl5qvKBhQoKCxAZoQjXYl9uAGRc+kOHjgp68=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=R1GOxNf+yljtjiwU+Fi0t3WEP0qcYT3squbnT1TdnJPRXEEFZ+Iw+n15K3NuOHWls
-         Xs4wSTZDnl9L2L3qUPwuS0kz6M/C7lWPAttdE0tb+QLYhhwcArsSaQDjj4G0Pjpt3X
-         YPmdskbpEQ5g9dY7dDo8H010W+42UQxkvtHJluR8=
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3D50060271;
-        Mon, 10 Jun 2019 11:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560164519;
-        bh=mRD0HxQRl5qvKBhQoKCxAZoQjXYl9uAGRc+kOHjgp68=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=R1+9C+PIOrIaeixpPyIerEfvdehTjfet+LxQbNBKhChBEx9+0hbBLIGGCkq4NJmOB
-         qTAP9KBidpLhnp4Myb41gzmir6AKYZ7pwv9toiPDdlIOgx1EBjOXLKGe/v4kqGv66Y
-         /WSehylOGAagYmnO7UwXXof1yn2BXFrqK9lsVj78=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3D50060271
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH 2/6] dt-bindings: qcom: Add ipq6018 bindings
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linus.walleij@linaro.org, Stephen Boyd <sboyd@kernel.org>,
-        agross@kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
-        linux-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
- <20190608032754.GD24059@builder>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <93e5b0c5-f97b-ef62-8c7f-262e80a53b49@codeaurora.org>
-Date:   Mon, 10 Jun 2019 16:31:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 07:02:10 -0400
+Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 87edd61c9de09749; Mon, 10 Jun 2019 13:02:08 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, peterz@infradead.org,
+        vishal.l.verma@intel.com, dave.hansen@linux.intel.com,
+        ard.biesheuvel@linaro.org, linux-nvdimm@lists.01.org,
+        x86@kernel.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH v3 01/10] acpi/numa: Establish a new drivers/acpi/numa/ directory
+Date:   Mon, 10 Jun 2019 13:02:07 +0200
+Message-ID: <2852346.FjP3BEmj8C@kreacher>
+In-Reply-To: <155993563815.3036719.5542204455414415743.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <155993563277.3036719.17400338098057706494.stgit@dwillia2-desk3.amr.corp.intel.com> <155993563815.3036719.5542204455414415743.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190608032754.GD24059@builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/8/2019 8:57 AM, Bjorn Andersson wrote:
-> On Wed 05 Jun 10:15 PDT 2019, Sricharan R wrote:
+On Friday, June 7, 2019 9:27:18 PM CEST Dan Williams wrote:
+> Currently hmat.c lives under an "hmat" directory which does not enhance
+> the description of the file. The initial motivation for giving hmat.c
+> its own directory was to delineate it as mm functionality in contrast to
+> ACPI device driver functionality.
 > 
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: speriaka <speriaka@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
->> index f6316ab..7b19028 100644
->> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
->> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
->> @@ -36,6 +36,7 @@ description: |
->>    	mdm9615
->>    	ipq8074
->>    	sdm845
->> +	ipq6018
+> As ACPI continues to play an increasing role in conveying
+> memory location and performance topology information to the OS take the
+> opportunity to co-locate these NUMA relevant tables in a combined
+> directory.
 > 
-> It would be nice if these lists where sorted, but as that's not the
-> case, please sort it wrt the other ipq at least.
+> numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
+> hmat.c.
+> 
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+A CC to linux-acpi is missing from this series.
+
+> ---
+>  drivers/acpi/Kconfig       |    9 +--------
+>  drivers/acpi/Makefile      |    3 +--
+>  drivers/acpi/hmat/Makefile |    2 --
+>  drivers/acpi/numa/Kconfig  |    7 ++++++-
+>  drivers/acpi/numa/Makefile |    3 +++
+>  drivers/acpi/numa/hmat.c   |    0 
+>  drivers/acpi/numa/srat.c   |    0 
+>  7 files changed, 11 insertions(+), 13 deletions(-)
+>  delete mode 100644 drivers/acpi/hmat/Makefile
+>  rename drivers/acpi/{hmat/Kconfig => numa/Kconfig} (72%)
+>  create mode 100644 drivers/acpi/numa/Makefile
+>  rename drivers/acpi/{hmat/hmat.c => numa/hmat.c} (100%)
+>  rename drivers/acpi/{numa.c => numa/srat.c} (100%)
+> 
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index 283ee94224c6..82c4a31c8701 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -321,12 +321,6 @@ config ACPI_THERMAL
+>  	  To compile this driver as a module, choose M here:
+>  	  the module will be called thermal.
+>  
+> -config ACPI_NUMA
+> -	bool "NUMA support"
+> -	depends on NUMA
+> -	depends on (X86 || IA64 || ARM64)
+> -	default y if IA64_GENERIC || IA64_SGI_SN2 || ARM64
+> -
+>  config ACPI_CUSTOM_DSDT_FILE
+>  	string "Custom DSDT Table file to include"
+>  	default ""
+> @@ -475,8 +469,7 @@ config ACPI_REDUCED_HARDWARE_ONLY
+>  	  If you are unsure what to do, do not enable this option.
+>  
+>  source "drivers/acpi/nfit/Kconfig"
+> -source "drivers/acpi/hmat/Kconfig"
+> -
+> +source "drivers/acpi/numa/Kconfig"
+>  source "drivers/acpi/apei/Kconfig"
+>  source "drivers/acpi/dptf/Kconfig"
+>  
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 5d361e4e3405..f08a661274e8 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -55,7 +55,6 @@ acpi-$(CONFIG_X86)		+= acpi_cmos_rtc.o
+>  acpi-$(CONFIG_X86)		+= x86/apple.o
+>  acpi-$(CONFIG_X86)		+= x86/utils.o
+>  acpi-$(CONFIG_DEBUG_FS)		+= debugfs.o
+> -acpi-$(CONFIG_ACPI_NUMA)	+= numa.o
+>  acpi-$(CONFIG_ACPI_PROCFS_POWER) += cm_sbs.o
+>  acpi-y				+= acpi_lpat.o
+>  acpi-$(CONFIG_ACPI_LPIT)	+= acpi_lpit.o
+> @@ -80,7 +79,7 @@ obj-$(CONFIG_ACPI_PROCESSOR)	+= processor.o
+>  obj-$(CONFIG_ACPI)		+= container.o
+>  obj-$(CONFIG_ACPI_THERMAL)	+= thermal.o
+>  obj-$(CONFIG_ACPI_NFIT)		+= nfit/
+> -obj-$(CONFIG_ACPI_HMAT)		+= hmat/
+> +obj-$(CONFIG_ACPI_NUMA)		+= numa/
+>  obj-$(CONFIG_ACPI)		+= acpi_memhotplug.o
+>  obj-$(CONFIG_ACPI_HOTPLUG_IOAPIC) += ioapic.o
+>  obj-$(CONFIG_ACPI_BATTERY)	+= battery.o
+> diff --git a/drivers/acpi/hmat/Makefile b/drivers/acpi/hmat/Makefile
+> deleted file mode 100644
+> index 1c20ef36a385..000000000000
+> --- a/drivers/acpi/hmat/Makefile
+> +++ /dev/null
+> @@ -1,2 +0,0 @@
+> -# SPDX-License-Identifier: GPL-2.0-only
+> -obj-$(CONFIG_ACPI_HMAT) := hmat.o
+> diff --git a/drivers/acpi/hmat/Kconfig b/drivers/acpi/numa/Kconfig
+> similarity index 72%
+> rename from drivers/acpi/hmat/Kconfig
+> rename to drivers/acpi/numa/Kconfig
+> index 95a29964dbea..d14582387ed0 100644
+> --- a/drivers/acpi/hmat/Kconfig
+> +++ b/drivers/acpi/numa/Kconfig
+> @@ -1,4 +1,9 @@
+> -# SPDX-License-Identifier: GPL-2.0
+> +config ACPI_NUMA
+> +	bool "NUMA support"
+> +	depends on NUMA
+> +	depends on (X86 || IA64 || ARM64)
+> +	default y if IA64_GENERIC || IA64_SGI_SN2 || ARM64
+> +
+>  config ACPI_HMAT
+>  	bool "ACPI Heterogeneous Memory Attribute Table Support"
+>  	depends on ACPI_NUMA
+> diff --git a/drivers/acpi/numa/Makefile b/drivers/acpi/numa/Makefile
+> new file mode 100644
+> index 000000000000..517a6c689a94
+> --- /dev/null
+> +++ b/drivers/acpi/numa/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_ACPI_NUMA) += srat.o
+> +obj-$(CONFIG_ACPI_HMAT) += hmat.o
+> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/numa/hmat.c
+> similarity index 100%
+> rename from drivers/acpi/hmat/hmat.c
+> rename to drivers/acpi/numa/hmat.c
+> diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa/srat.c
+> similarity index 100%
+> rename from drivers/acpi/numa.c
+> rename to drivers/acpi/numa/srat.c
+> 
 > 
 
- ok.
-
-Regards,
- Sricharan
 
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
