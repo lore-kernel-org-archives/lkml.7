@@ -2,160 +2,99 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE75C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBF6C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8442B206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560194142;
-	bh=bwqpF3I6lO7fWvagsxvA4v6sU5wPG0JemCNLZlDlq8Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=G1u+To8WV/UOnE41QIBO1d8WVL5INO9qNjrWnksTzzCY3RDwMBqa9KCn393xNYhA/
-	 o/6atEK6Q6KiNEdG7P0YaH+dhOQ3vK4hBEW//qq2f2jrb0uaZ0YapWH58hnrYeDu80
-	 /JuhJN8L25OaRIVzyibMF36pQGcO4nwTrsGHzW08=
+	by mail.kernel.org (Postfix) with ESMTP id EC0D220820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:20:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="S+LGW0Qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389675AbfFJTPl (ORCPT
+        id S2388954AbfFJTUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:15:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 15:20:34 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33234 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389195AbfFJTPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:15:40 -0400
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387674AbfFJTUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 15:20:34 -0400
+Received: from zn.tnic (p200300EC2F052B000C22B0A0C73B2F50.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:2b00:c22:b0a0:c73b:2f50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D91212173C
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 19:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560194139;
-        bh=bwqpF3I6lO7fWvagsxvA4v6sU5wPG0JemCNLZlDlq8Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Xe13SfBQ9jVPup9P6gfDqODjAROjYF3feQ8rc1jxRgFzRjx0SSAYAA8Jr62rJv6fa
-         TWmlfY7NjWTQp+eMeBZuaoImCepyydT+2ygKG9WIsgbUZPpJ+RYh78sAgh3UvRojnV
-         wbQM5WgAh/dC0yeqr26jVvR8zt2xgUM4Szj4xvIQ=
-Received: by mail-wr1-f49.google.com with SMTP id f9so10300137wre.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 12:15:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAWwJQNysVriVxO2/Xc/92sQ67PtagaYJsKqBEsb4Jd4mxPKSmAV
-        R+e59OEnIqTCvXdCdD8XheqEib3W188r/IkieBCoLg==
-X-Google-Smtp-Source: APXvYqypfa4skx8hkgphvRTlO10XR3vZ0R1oIgntdrw7LesWhWM3R3rndKtbU7gLtSJsZ4estO+TO7D8oT+MoCFoMvU=
-X-Received: by 2002:a5d:6207:: with SMTP id y7mr26919319wru.265.1560194137485;
- Mon, 10 Jun 2019 12:15:37 -0700 (PDT)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 08E371EC028C;
+        Mon, 10 Jun 2019 21:20:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560194432;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=xxCXT9OKK1v5ESsvG4S6KsVbQbx8GC4XzBvX1zTEGIU=;
+        b=S+LGW0QoH1i2NOU0vWiLwIh6m2F/Mw8WrG7smVcaGK0ISYKStqFcHh7LO0uH1YDlxplicK
+        sLNTvqPvFkZfdyaKXq5b1wIYShJOaLGbhquh7t+n0UySQrDjupDDILfkGkF05Ep9JhVkpJ
+        lceruCEwrUJu+vp0SS+21ldzB0xGrT4=
+Date:   Mon, 10 Jun 2019 21:20:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [RFC PATCH] x86/cpufeatures: Enumerate new AVX512 bfloat16
+ instructions
+Message-ID: <20190610192026.GI5488@zn.tnic>
+References: <1560186158-174788-1-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
-References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
- <20190606021145.12604-3-sean.j.christopherson@intel.com> <960B34DE67B9E140824F1DCDEC400C0F65500E13@ORSMSX116.amr.corp.intel.com>
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F65500E13@ORSMSX116.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 10 Jun 2019 12:15:25 -0700
-X-Gmail-Original-Message-ID: <CALCETrWv9FYDtiHMfnfH==jE00tt7F22t-zcnP+XjfRCQgLr7A@mail.gmail.com>
-Message-ID: <CALCETrWv9FYDtiHMfnfH==jE00tt7F22t-zcnP+XjfRCQgLr7A@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/5] x86/sgx: Require userspace to define enclave
- pages' protection bits
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1560186158-174788-1-git-send-email-fenghua.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 11:29 AM Xing, Cedric <cedric.xing@intel.com> wrote:
->
-> > From: Christopherson, Sean J
-> > Sent: Wednesday, June 05, 2019 7:12 PM
-> >
-> > +/**
-> > + * sgx_map_allowed - check vma protections against the associated
-> > enclave page
-> > + * @encl:    an enclave
-> > + * @start:   start address of the mapping (inclusive)
-> > + * @end:     end address of the mapping (exclusive)
-> > + * @prot:    protection bits of the mapping
-> > + *
-> > + * Verify a userspace mapping to an enclave page would not violate the
-> > +security
-> > + * requirements of the *kernel*.  Note, this is in no way related to
-> > +the
-> > + * page protections enforced by hardware via the EPCM.  The EPCM
-> > +protections
-> > + * can be directly extended by the enclave, i.e. cannot be relied upon
-> > +by the
-> > + * kernel for security guarantees of any kind.
-> > + *
-> > + * Return:
-> > + *   0 on success,
-> > + *   -EACCES if the mapping is disallowed
-> > + */
-> > +int sgx_map_allowed(struct sgx_encl *encl, unsigned long start,
-> > +                 unsigned long end, unsigned long prot) {
-> > +     struct sgx_encl_page *page;
-> > +     unsigned long addr;
-> > +
-> > +     prot &= (VM_READ | VM_WRITE | VM_EXEC);
-> > +     if (!prot || !encl)
-> > +             return 0;
-> > +
-> > +     mutex_lock(&encl->lock);
-> > +
-> > +     for (addr = start; addr < end; addr += PAGE_SIZE) {
-> > +             page = radix_tree_lookup(&encl->page_tree, addr >>
-> > PAGE_SHIFT);
-> > +
-> > +             /*
-> > +              * Do not allow R|W|X to a non-existent page, or protections
-> > +              * beyond those of the existing enclave page.
-> > +              */
-> > +             if (!page || (prot & ~page->prot))
-> > +                     return -EACCES;
->
-> In SGX2, pages will be "mapped" before being populated.
->
-> Here's a brief summary for those who don't have enough background on how new EPC pages could be added to a running enclave in SGX2:
->   - There are 2 new instructions - EACCEPT and EAUG.
->   - EAUG is used by SGX module to add (augment) a new page to an existing enclave. The newly added page is *inaccessible* until the enclave *accepts* it.
->   - EACCEPT is the instruction for an enclave to accept a new page.
->
-> And the s/w flow for an enclave to request new EPC pages is expected to be something like the following:
->   - The enclave issues EACCEPT at the linear address that it would like a new page.
->   - EACCEPT results in #PF, as there's no page at the linear address above.
->   - SGX module is notified about the #PF, in form of its vma->vm_ops->fault() being called by kernel.
->   - SGX module EAUGs a new EPC page at the fault address, and resumes the enclave.
->   - EACCEPT is reattempted, and succeeds at this time.
+On Mon, Jun 10, 2019 at 10:02:38AM -0700, Fenghua Yu wrote:
+> AVX512 Vector Neural Network Instructions (VNNI) in Intel Deep Learning
+> Boost support bfloat16 format (BF16). BF16 is a short version of FP32 and
+> has several advantages over FP16. BF16 offers more than enough range for
+> deep learning training tasks and doesn't need to handle hardware exception
+> as this is a performance optimization. FP32 accumulation after the
+> multiply is essential to achieve sufficient numerical behavior on an
+> application level. 
+> 
+> AVX512 bfloat16 instructions can be enumerated by:
+> 	CPUID.(EAX=7,ECX=1):EAX[bit 5] AVX512_BF16
+>     
+> Detailed information of the CPUID bit and AVX512 bfloat16 instructions
+> can be found in the latest Intel Architecture Instruction Set Extensions
+> and Future Features Programming Reference.
+> 
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> ---
+> 
+> Since split lock feature (to-be-upstreamed) occupies the last bit 
+> of word 7, need to create a new word 19 to host AVX512_BF16 and other
+> future features.
 
-This seems like an odd workflow.  Shouldn't the #PF return back to
-untrusted userspace so that the untrusted user code can make its own
-decision as to whether it wants to EAUG a page there as opposed to,
-say, killing the enclave or waiting to keep resource usage under
-control?
+Is CPUID.(EAX=7,ECX=1):EAX going to contain only feature bits? If so,
+just make it a proper feature word instead of a linux-specific one.
+
+Also, while on the subject, you can recycle word 11
+
+/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:0 (EDX), word 11 */
+#define X86_FEATURE_CQM_LLC             (11*32+ 1) /* LLC QoS if 1 */
+
+and move it to scattered as it is a complete waste. Word 12 too, for
+that matter. But do that in separate patches.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
