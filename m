@@ -2,128 +2,153 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FFCC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81EFC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3B82085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C9C20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:52:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Sl+8Rmb2"
+	dkim=pass (1024-bit key) header.d=aampusa.onmicrosoft.com header.i=@aampusa.onmicrosoft.com header.b="euRjqUvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391308AbfFJPvi (ORCPT
+        id S2391317AbfFJPv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:51:38 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40432 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390550AbfFJPvh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:51:37 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w196so6584303oie.7;
-        Mon, 10 Jun 2019 08:51:36 -0700 (PDT)
+        Mon, 10 Jun 2019 11:51:59 -0400
+Received: from mail-eopbgr770105.outbound.protection.outlook.com ([40.107.77.105]:27118
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390550AbfFJPv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:51:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZuHcFSp9RV6IeTzjDjOYf2cyyZ7YnVvyyWSJ347qo6A=;
-        b=Sl+8Rmb2SbYgcshM1Z0Js0gffJMpHV6iNwuBeKkftDEg6qJgrbJkm+yybg3CWqzJ2x
-         qR/7WtHww9+6woEtKc/YlVDtO0g8Y7A5kuCpvgscXSZXtgke0JyDjp7/Ew/b8W3AI/1n
-         gk/fXnfGrZlppgM50p9VnIWFn0op1rziV+e31gh6EDInrEX50Zgw9lXzNQTzACC4Jz4y
-         xuZfkn9Py55sJbkDpD6NHuD5fTNDddBbEKMWUsAunWtMuSUEU6AKzYsvxiPACEuq19TJ
-         TR+RMKGFu9vNaEkKqQAk3oVJ4ZRkCumfzKglVgjyGf5iNvXv1fklUHBgHDDTgVFNNHmA
-         0rXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZuHcFSp9RV6IeTzjDjOYf2cyyZ7YnVvyyWSJ347qo6A=;
-        b=mosc0Z4WQ2YUgEFcicolS++ZbxPUbOsXqOv3hgfZXBrFgz6RjRxbjPYClTpp3vP674
-         /mlut4Vn/qmN4ZozCl2cFn9el/bml+1OOUTet5UkHB6htHvKBQ7EyPAE8W8ET/71iFSG
-         Pcn1nkR9i2LOD0FMJCQFB0snS6yzimJbrwlROSLrOlu462FGHSR4aL+kxB7HgEHbBTmO
-         s9IhdDpIOWJ+Q/OREZ2OuopIuuR8ueCUhnElOgCPrcnOIIo7XgV6k033R/zFIm2TP87Z
-         WWdKzRoV6OBjNQLdIB5Sfq6MgqGIbvKgUcfHA5YrJE/NEM0F9VVYXX0TkXMKU+vj+8oZ
-         HuqQ==
-X-Gm-Message-State: APjAAAV2kfq6PdKeSNPDmHI82YUVqo1/L95X8h4pdEeK59QF7GOenbEg
-        jVytFcOIZMrGH4LWLl3txmXEvlRyfdNcOuVbLiw=
-X-Google-Smtp-Source: APXvYqwamDEZ2pn1KOIAFzWrcT6R7MpvRaH+7gsnVBBoMuB1pYAjxIlbqNIxs3Use8vvJu0GGPKKrdLueixgJ+eH8z4=
-X-Received: by 2002:aca:4403:: with SMTP id r3mr12815875oia.39.1560181896310;
- Mon, 10 Jun 2019 08:51:36 -0700 (PDT)
+ d=aampusa.onmicrosoft.com; s=selector2-aampusa-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vhQ7Jlo+CG6aHOTtB2lYlyVwVYjEgJQozE785PtbeUE=;
+ b=euRjqUvPd6PJhuv5l2SuZU00bR8UMyhnnF9BOU1PzrVaWDAkZmANItVCcyJkb6QjW4YLzAALaXrrgAdSN0WiWscIovvh71SZdMBwTO9J5yDaoKFB8OIigX+Nn4Z6X9NbwMzdw6JlVAEK0lZKDiLY5m1u9CccrEcYlhCj5GVWEwg=
+Received: from BL0PR07MB4115.namprd07.prod.outlook.com (52.132.10.149) by
+ BL0PR07MB5457.namprd07.prod.outlook.com (20.177.207.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.17; Mon, 10 Jun 2019 15:51:52 +0000
+Received: from BL0PR07MB4115.namprd07.prod.outlook.com
+ ([fe80::f064:5129:63c6:d3e]) by BL0PR07MB4115.namprd07.prod.outlook.com
+ ([fe80::f064:5129:63c6:d3e%6]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
+ 15:51:52 +0000
+From:   Ken Sloat <KSloat@aampglobal.com>
+To:     "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>
+CC:     Ken Sloat <KSloat@aampglobal.com>,
+        "alexandre.belloni@free-electrons.com" 
+        <alexandre.belloni@free-electrons.com>,
+        "wim@iguana.be" <wim@iguana.be>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [RFE]: watchdog: atmel: atmel-sama5d4-wdt
+Thread-Topic: [RFE]: watchdog: atmel: atmel-sama5d4-wdt
+Thread-Index: AdUfoOr5PB/8HxffRU28PtnqCbe4YA==
+Date:   Mon, 10 Jun 2019 15:51:52 +0000
+Message-ID: <BL0PR07MB41152EDB169FE9ED1AD3B4C9AD130@BL0PR07MB4115.namprd07.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=KSloat@aampglobal.com; 
+x-originating-ip: [100.3.71.115]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 41b96d04-6d08-4938-3f0f-08d6edbb8ea1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR07MB5457;
+x-ms-traffictypediagnostic: BL0PR07MB5457:
+x-microsoft-antispam-prvs: <BL0PR07MB5457093A55D420BF05ABCFE6AD130@BL0PR07MB5457.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(396003)(376002)(366004)(346002)(136003)(189003)(199004)(102836004)(5660300002)(6506007)(186003)(14454004)(316002)(52536014)(55016002)(9686003)(33656002)(25786009)(66066001)(71190400001)(80792005)(7696005)(5640700003)(26005)(71200400001)(6436002)(74316002)(8936002)(76116006)(2501003)(86362001)(66476007)(54906003)(64756008)(476003)(73956011)(66556008)(2351001)(2906002)(6916009)(66946007)(81166006)(66446008)(81156014)(256004)(14444005)(68736007)(53936002)(7736002)(478600001)(486006)(99286004)(305945005)(3846002)(8676002)(6116002)(4326008)(72206003);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR07MB5457;H:BL0PR07MB4115.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: aampglobal.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: kq+GWHL/SGmKL4Q9XwZPd0cvqM9NcyUR3OUxudN6tHa1IxDOYL3sI1LT3CC+fqAjhDjzKSrBkT1mTR0/vP2ainpYN8yZZPCV6z7z3wYUNfAZp9BUAKFSMLbZKSBiTf6oQ54uSAO1b3fGJJ7b+fKVcb7vckhPR39T0kXZRgS8W6MDKRrScmrIlzxcJqtEvVwfyuPX/aa+HMaD+WMOXXzEnJgNqsiSNAi+HXjSeVIsuB4QLKojuB3irrNdWFlzYGEN49LnYA7Si+YFHepUcQ4EueJgVrVggygIbCyVe43OWySd03TaaQGMQ4h7fQxXWMftEoiSBCQpbEePYnsxRipC8ls5zmqPRrGtpEnhP3KZWmg77oFcXfBuse07PB2wRC4REbzSNLos7kRS4Y8FCE9a6veF9Y7AvJbiQ0i/zaTXT3U=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609204510.GB8247@lunn.ch> <20190610114700.tymqzzax334ahtz4@flea>
- <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com> <20190610135109.7alkvruvw2jbtwph@flea>
-In-Reply-To: <20190610135109.7alkvruvw2jbtwph@flea>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 10 Jun 2019 17:51:25 +0200
-Message-ID: <CAFBinCAy=YR+qV=vYtAV4p5ftcR-VuYTJz3wuMY-k6PWcmbDQQ@mail.gmail.com>
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: aampglobal.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41b96d04-6d08-4938-3f0f-08d6edbb8ea1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 15:51:52.6063
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e20e3a66-8b9e-46e9-b859-cb654c1ec6ea
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ken.sloat@aampglobal.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5457
+X-MS-Exchange-CrossPremises-AuthAs: Internal
+X-MS-Exchange-CrossPremises-AuthMechanism: 04
+X-MS-Exchange-CrossPremises-AuthSource: BL0PR07MB4115.namprd07.prod.outlook.com
+X-MS-Exchange-CrossPremises-TransportTrafficType: Email
+X-MS-Exchange-CrossPremises-TransportTrafficSubType: 
+X-MS-Exchange-CrossPremises-SCL: 1
+X-MS-Exchange-CrossPremises-messagesource: StoreDriver
+X-MS-Exchange-CrossPremises-BCC: 
+X-MS-Exchange-CrossPremises-originalclientipaddress: 100.3.71.115
+X-MS-Exchange-CrossPremises-transporttraffictype: Email
+X-MS-Exchange-CrossPremises-transporttrafficsubtype: 
+X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
+X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
+X-OrganizationHeadersPreserved: BL0PR07MB5457.namprd07.prod.outlook.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 3:51 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi Martin,
->
-> On Mon, Jun 10, 2019 at 02:31:17PM +0200, Martin Blumenstingl wrote:
-> > On Mon, Jun 10, 2019 at 1:47 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > Hi Andrew,
-> > >
-> > > On Sun, Jun 09, 2019 at 10:45:10PM +0200, Andrew Lunn wrote:
-> > > > > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
-> > > > > "Always leave the campground cleaner than you found it."
-> > > >
-> > > > > I
-> > > > > am also looking for suggestions how to handle these cross-tree changes
-> > > > > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
-> > > > > go through the net-next tree. I will re-send patch #5 separately as
-> > > > > this should go through Kevin's linux-amlogic tree).
-> > > >
-> > > > Patches 1 and 4 don't seem to have and dependencies. So i would
-> > > > suggest splitting them out and submitting them to netdev for merging
-> > > > independent of the rest.
-> > >
-> > > Jumping on the occasion of that series. These properties have been
-> > > defined to deal with phy reset, while it seems that the PHY core can
-> > > now handle that pretty easily through generic properties.
-> > >
-> > > Wouldn't it make more sense to just move to that generic properties
-> > > that already deals with the flags properly?
-> > thank you for bringing this up!
-> > if anyone else (just like me) doesn't know about it, there are generic
-> > bindings defined here: [0]
-> >
-> > I just tested this on my X96 Max by defining the following properties
-> > inside the PHY node:
-> >   reset-delay-us = <10000>;
-> >   reset-assert-us = <10000>;
-> >   reset-deassert-us = <10000>;
-> >   reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-> >
-> > that means I don't need any stmmac patches which seems nice.
->
-> I'm glad it works for you :)
->
-> > instead I can submit a patch to mark the snps,reset-gpio properties in
-> > the dt-bindings deprecated (and refer to the generic bindings instead)
-> > what do you think?
->
-> I already did as part of the binding reworks I did earlier today:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-June/658427.html
-great, thank you - you have my Reviewed-by!
+Hello Nicolas,
+
+I wanted to open a discussion proposing new functionality to allow disablin=
+g of the watchdog timer upon entering=20
+suspend in the SAMA5D2/4.
+
+Typical use case of a hardware watchdog timer in the kernel is a userspace =
+application opens the watchdog timer and
+periodically "kicks" it. If the application hits a deadlock somewhere and i=
+s no longer able to kick it, then the watchdog
+intervenes and often resets the processor. Such is the case for the Atmel d=
+river (which also allows a watchdog interrupt
+to be asserted in lieu of a system reset). In most use cases, upon entering=
+ a low power/suspend state, the application=20
+will no longer be able to "kick" the watchdog. If the watchdog is not disab=
+led or kicked via another method, then it will
+reset the system. This is the current behavior of the Atmel driver as of to=
+day.
+
+The watchdog peripheral itself does have a "WDIDLEHLT" bit however, and thi=
+s is enabled via the "atmel,idle-halt" dt
+property. However, this is not very useful, as it literally only makes the =
+watchdog count when the CPU is active. This=20
+results in non-deterministic triggering of the WDT and means that if a crit=
+ical application were to crash, it may be
+quite a long time before the WDT would ever trigger. Below is a similar sta=
+tement made in the device-tree doc for this
+peripheral:
+
+- atmel,idle-halt: present if you want to stop the watchdog when the CPU is
+		   in idle state.
+	CAUTION: This property should be used with care, it actually makes the
+	watchdog not counting when the CPU is in idle state, therefore the
+	watchdog reset time depends on mean CPU usage and will not reset at all
+	if the CPU stop working while it is in idle state, which is probably
+	not what you want.
+
+It seems to me, that it would be logical and useful to introduce a new prop=
+erty that would cause the Atmel WDT
+to disable on suspend and re-enable on resume. It also appears that the WDT=
+ is re-initialized anyways upon
+resume, so the only piece missing here would really be a dt flag and a call=
+ to disable.
+
+I would be happy to submit a patch implementing this change, but wanted to =
+open up a discussion here as to the
+merits of this idea as perhaps it has been considered in the past.
+
+Thanks,
+Ken Sloat
+
