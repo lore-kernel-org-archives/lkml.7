@@ -2,182 +2,61 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71618C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E024C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 491BB20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560188123;
-	bh=UCCLY0Hb0at28Unntx0BHelgTjPEmEnaUNBh6coXqH8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=hiiHh+OcyDj+HZrjEfyCbV/UvEzbzfbkyxctMRNpi9yjiwyTyWvqW4RfeYn0e5rrr
-	 0+lH1MkoXzywMAPsNvOIk1fg8GAIctOI+av5loxNU3oc1A9JnAkcjkxwPMUULzcGEB
-	 NaLoElT1JrIppHnYkFm5i5lW6+kzqWDuHR5BdZK8=
+	by mail.kernel.org (Postfix) with ESMTP id 7DAE720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbfFJRfW (ORCPT
+        id S2388392AbfFJRfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:35:22 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53872 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387895AbfFJRfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:35:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=xk0yfBGvdLO0KU54ORNxzCY30BhH9sdHIZjFiWTb7as=; b=NWFQ+46CubOa
-        sCKqOLXNBxmUrVbcXRZ3iHqmDFEXfDcHZA+xsNjYac0s66Ijfr6Ld6FdqVP4pm/BSvL7eft3gLW0b
-        faiidVlBh5ole8J5rE+JqtHGq2E/11VROEXi3etv4SpS+OQ1U9IMRspl+enowt9Qx84yFgy99M+Nc
-        GnxH4=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1haOBp-0006FT-HC; Mon, 10 Jun 2019 17:34:37 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id F095D440049; Mon, 10 Jun 2019 18:34:36 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Alex Levin <levinale@chromium.org>
-Cc:     alsa-devel@alsa-project.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        benzh@chromium.org, cujomalainey@chromium.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: Intel: sst: fix kmalloc call with wrong flags" to the asoc tree
-In-Reply-To: <20190607221911.118136-1-levinale@chromium.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190610173436.F095D440049@finisterre.sirena.org.uk>
-Date:   Mon, 10 Jun 2019 18:34:36 +0100 (BST)
+        Mon, 10 Jun 2019 13:35:53 -0400
+Received: from ms.lwn.net ([45.79.88.28]:44930 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388346AbfFJRfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:35:52 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 9710F382;
+        Mon, 10 Jun 2019 17:35:51 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 11:35:50 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v3 13/33] docs: infiniband: convert docs to ReST and
+ rename to *.rst
+Message-ID: <20190610113550.250aad35@lwn.net>
+In-Reply-To: <20190610172712.GG18468@ziepe.ca>
+References: <cover.1560045490.git.mchehab+samsung@kernel.org>
+        <09036fdb89c4bec94cb92d25398c026afdb134e7.1560045490.git.mchehab+samsung@kernel.org>
+        <20190610172712.GG18468@ziepe.ca>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon, 10 Jun 2019 14:27:12 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-   ASoC: Intel: sst: fix kmalloc call with wrong flags
+> Looks OK to me, do you want to run these patches through the docs tree
+> or through RDMA?
+> 
+> Given that we've generally pushed doc updates through rdma, I think
+> I'd prefer the latter? Jonathan?
 
-has been applied to the asoc tree at
+Whichever works best for you is fine with me; go ahead and take them.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 3da428ff2aa5a5191ba2f1630eea75f03242f3f2 Mon Sep 17 00:00:00 2001
-From: Alex Levin <levinale@chromium.org>
-Date: Fri, 7 Jun 2019 15:19:11 -0700
-Subject: [PATCH] ASoC: Intel: sst: fix kmalloc call with wrong flags
-
-When calling kmalloc with GFP_KERNEL in case CONFIG_SLOB is unset,
-kmem_cache_alloc_trace is called.
-
-In case CONFIG_TRACING is set, kmem_cache_alloc_trace will ball
-slab_alloc, which will call slab_pre_alloc_hook which might_sleep_if.
-
-The context in which it is called in this case, the
-intel_sst_interrupt_mrfld, calling a sleeping kmalloc generates a BUG():
-
-Fixes: 972b0d456e64 ("ASoC: Intel: remove GFP_ATOMIC, use GFP_KERNEL")
-
-[   20.250671] BUG: sleeping function called from invalid context at mm/slab.h:422
-[   20.250683] in_atomic(): 1, irqs_disabled(): 1, pid: 1791, name: Chrome_IOThread
-[   20.250690] CPU: 0 PID: 1791 Comm: Chrome_IOThread Tainted: G        W         4.19.43 #61
-[   20.250693] Hardware name: GOOGLE Kefka, BIOS Google_Kefka.7287.337.0 03/02/2017
-[   20.250697] Call Trace:
-[   20.250704]  <IRQ>
-[   20.250716]  dump_stack+0x7e/0xc3
-[   20.250725]  ___might_sleep+0x12a/0x140
-[   20.250731]  kmem_cache_alloc_trace+0x53/0x1c5
-[   20.250736]  ? update_cfs_rq_load_avg+0x17e/0x1aa
-[   20.250740]  ? cpu_load_update+0x6c/0xc2
-[   20.250746]  sst_create_ipc_msg+0x2d/0x88
-[   20.250752]  intel_sst_interrupt_mrfld+0x12a/0x22c
-[   20.250758]  __handle_irq_event_percpu+0x133/0x228
-[   20.250764]  handle_irq_event_percpu+0x35/0x7a
-[   20.250768]  handle_irq_event+0x36/0x55
-[   20.250773]  handle_fasteoi_irq+0xab/0x16c
-[   20.250779]  handle_irq+0xd9/0x11e
-[   20.250785]  do_IRQ+0x54/0xe0
-[   20.250791]  common_interrupt+0xf/0xf
-[   20.250795]  </IRQ>
-[   20.250800] RIP: 0010:__lru_cache_add+0x4e/0xad
-[   20.250806] Code: 00 01 48 c7 c7 b8 df 01 00 65 48 03 3c 25 28 f1 00 00 48 8b 48 08 48 89 ca 48 ff ca f6 c1 01 48 0f 44 d0 f0 ff 42 34 0f b6 0f <89> ca fe c2 88 17 48 89 44 cf 08 80 fa 0f 74 0e 48 8b 08 66 85 c9
-[   20.250809] RSP: 0000:ffffa568810bfd98 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffd6
-[   20.250814] RAX: ffffd3b904eb1940 RBX: ffffd3b904eb1940 RCX: 0000000000000004
-[   20.250817] RDX: ffffd3b904eb1940 RSI: ffffa10ee5c47450 RDI: ffffa10efba1dfb8
-[   20.250821] RBP: ffffa568810bfda8 R08: ffffa10ef9c741c1 R09: dead000000000100
-[   20.250824] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa10ee8d52a40
-[   20.250827] R13: ffffa10ee8d52000 R14: ffffa10ee5c47450 R15: 800000013ac65067
-[   20.250835]  lru_cache_add_active_or_unevictable+0x4e/0xb8
-[   20.250841]  handle_mm_fault+0xd98/0x10c4
-[   20.250848]  __do_page_fault+0x235/0x42d
-[   20.250853]  ? page_fault+0x8/0x30
-[   20.250858]  do_page_fault+0x3d/0x17a
-[   20.250862]  ? page_fault+0x8/0x30
-[   20.250866]  page_fault+0x1e/0x30
-[   20.250872] RIP: 0033:0x7962fdea9304
-[   20.250875] Code: 0f 11 4c 17 f0 c3 48 3b 15 f1 26 31 00 0f 83 e2 00 00 00 48 39 f7 72 0f 74 12 4c 8d 0c 16 4c 39 cf 0f 82 63 01 00 00 48 89 d1 <f3> a4 c3 80 fa 08 73 12 80 fa 04 73 1e 80 fa 01 77 26 72 05 0f b6
-[   20.250879] RSP: 002b:00007962f4db5468 EFLAGS: 00010206
-[   20.250883] RAX: 00003c8cc9d47008 RBX: 0000000000000000 RCX: 0000000000001b48
-[   20.250886] RDX: 0000000000002b40 RSI: 00003c8cc9551000 RDI: 00003c8cc9d48000
-[   20.250890] RBP: 00007962f4db5820 R08: 0000000000000000 R09: 00003c8cc9552b48
-[   20.250893] R10: 0000562dd1064d30 R11: 00003c8cc825b908 R12: 00003c8cc966d3c0
-[   20.250896] R13: 00003c8cc9e280c0 R14: 0000000000000000 R15: 0000000000000000
-
-Signed-off-by: Alex Levin <levinale@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/intel/atom/sst/sst_pvt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/intel/atom/sst/sst_pvt.c b/sound/soc/intel/atom/sst/sst_pvt.c
-index 00a37a09dc9b..dba0ca07ebf9 100644
---- a/sound/soc/intel/atom/sst/sst_pvt.c
-+++ b/sound/soc/intel/atom/sst/sst_pvt.c
-@@ -166,11 +166,11 @@ int sst_create_ipc_msg(struct ipc_post **arg, bool large)
- {
- 	struct ipc_post *msg;
- 
--	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_ATOMIC);
- 	if (!msg)
- 		return -ENOMEM;
- 	if (large) {
--		msg->mailbox_data = kzalloc(SST_MAILBOX_SIZE, GFP_KERNEL);
-+		msg->mailbox_data = kzalloc(SST_MAILBOX_SIZE, GFP_ATOMIC);
- 		if (!msg->mailbox_data) {
- 			kfree(msg);
- 			return -ENOMEM;
--- 
-2.20.1
-
+jon
