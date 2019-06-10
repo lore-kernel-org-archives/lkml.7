@@ -2,129 +2,80 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53649C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757B1C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAD42082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:22:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="K19HPNco"
+	by mail.kernel.org (Postfix) with ESMTP id 4658B2089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560198338;
+	bh=gDGsy2m0w4KjVtKFwe6BhIUXecNIJ+3dfki+ru/tPh8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=G4LRbP+mh1Ra58WFsWx2BQJ8n3KZYA0V2hNAPrNmmq70PH6hl3yJcK3AKzhLql6io
+	 Yc5IQ8Slap2CGSODDlF92ni8GfclevkEimtqualPKUXDsMozsiREWiowyCq40vbvZc
+	 M78fNKWWE38i6mEfTa8m+xrA0+qnkMqlJC3/Hpa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389520AbfFJUWc (ORCPT
+        id S1728575AbfFJUZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:22:32 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:46329 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbfFJUWb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:22:31 -0400
-Received: by mail-vs1-f68.google.com with SMTP id l125so6363473vsl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pjVCLroEtR5thtHENU+41rmsthzX90Qup8xKfLtuOIo=;
-        b=K19HPNcouP0ODo43T/ieVlMc5iP7Lk9G9aVI2P7dc2rCH6dJnEqdU2xfq4buLJTj4h
-         M4mU1SbaYqIbEBIkVg9L83LgeD5YQoqnuLraIZ3siP6jRpw4SQrRQ/6W//sADKVAzQrY
-         KxLUDdd0PkTZ0ZFycaJFkVlUgK1aJnpGy0T9+ljCrodXc3pumX0zDpnULqEn1s7zwN6x
-         n4o0kaOLTnBG+uGQA7zcOUDqmZVKbU87MIAnMZLKTVOAH4DCCDz0HItKvm5IYfnnYL1Q
-         AuSfIXO2FBBsXitjr4AtDbkbtlKJFFeaxDynNu/2iSREyr9KBlzEFvjmySkZ7K1NyxUm
-         3anQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pjVCLroEtR5thtHENU+41rmsthzX90Qup8xKfLtuOIo=;
-        b=i18n7oXe58U05mB1GOHEOsTNvXovWIWx/aApGHIh5+ah7CVslG12rXzYPE0A9lBJAe
-         tTgj4ueC9PVH/76jN0sJn1LZaov41QPo01TU9DqbBomCaeHLiRDqPK0stTzp7kaxF/lP
-         3Ok8F9/R5E76nfAH/MDdb9prSlefNBrd2z0ZHG8xhwxOh+KhfRbEc2yA/y6jCmuhkTtO
-         YFbBd5m5E/buo8djsM1FgC+lLEm2PQzUJMpsNGKGQbpal38gOYhyV7pyCpB58rHObJXw
-         mOmE3rnOnw7turjpc0RURjK9bWbUhLH2SBMoBrq42D+EOF4qDuQINk7ZaZSXCXkQEGrX
-         Iz6Q==
-X-Gm-Message-State: APjAAAVpLBOw/jAkn1TDdrBQRwBSHJX8ES4yAFUAtZGwk0jB4ovoH2Pa
-        jY4QxUQMpjvaDLZXH/n98kQDQg==
-X-Google-Smtp-Source: APXvYqzq/ZPcn16JveVDVynPX8knAJ+UjsU996vlcsjMoepK8JJS9ZTZnb2iktQ/z6TJRz/IXxqnGA==
-X-Received: by 2002:a67:efca:: with SMTP id s10mr274642vsp.20.1560198150917;
-        Mon, 10 Jun 2019 13:22:30 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id u73sm2696384vku.37.2019.06.10.13.22.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 13:22:30 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     mingo@redhat.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [RESEND PATCH v2] sched: fix "runnable_avg_yN_inv" not used warnings
-Date:   Mon, 10 Jun 2019 16:22:05 -0400
-Message-Id: <1560198125-31872-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 10 Jun 2019 16:25:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728276AbfFJUZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 16:25:36 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A1D2082E;
+        Mon, 10 Jun 2019 20:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560198336;
+        bh=gDGsy2m0w4KjVtKFwe6BhIUXecNIJ+3dfki+ru/tPh8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Yj8hOlAXMRwNLlH6Amy1TzXfZppDj4xeVMeEj0fQEUQnRwg7Mv7a605hX0mse2Fuk
+         3ouZynDrxCD6uEDnic2VdnvaHBN922w0/nf4WgQc1EGH5dS0Mk5n3DMSPFyOi12t/t
+         ASqzAnr+09Bb7VwT+2j4C62GHBiYj456tra1Le4g=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     x86@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH 0/5] vsyscall xonly mode
+Date:   Mon, 10 Jun 2019 13:25:26 -0700
+Message-Id: <cover.1560198181.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
-included in several other places because they need other macros all
-came from kernel/sched/sched-pelt.h which was generated by
-Documentation/scheduler/sched-pelt. As the result, it causes compilation
-a lot of warnings,
+Hi all-
 
-In file included from kernel/sched/pelt.h:2,
-                 from kernel/sched/rt.c:8:
-kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
-but not used [-Wunused-const-variable=]
-In file included from kernel/sched/pelt.h:2,
-                 from kernel/sched/fair.c:705:
-kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
-but not used [-Wunused-const-variable=]
-In file included from kernel/sched/pelt.h:2,
-                 from kernel/sched/deadline.c:19:
-kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
-but not used [-Wunused-const-variable=]
+This adds a new "xonly" mode for vsyscalls and makes it the default.
+xonly is a bit more secure -- Kees knows about an exploit that relied on
+read access to the vsyscall page.  It's also nicer from a paging
+perspective, as it doesn't require user access to any of the kernel
+address space as far as the CPU is concerned.  This would, for example,
+allow a much simpler implementation of per-process vsyscall disabling.
 
-Silence it by appending the __maybe_unused attribute for it, so all
-generated variables and macros can still be kept in the same file.
+Andy Lutomirski (5):
+  x86/vsyscall: Remove the vsyscall=native documentation
+  x86/vsyscall: Add a new vsyscall=xonly mode
+  x86/vsyscall: Document odd #PF's error code for vsyscalls
+  selftests/x86/vsyscall: Verify that vsyscall=none blocks execution
+  x86/vsyscall: Change the default vsyscall mode to xonly
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+ .../admin-guide/kernel-parameters.txt         | 11 ++-
+ arch/x86/Kconfig                              | 32 ++++---
+ arch/x86/entry/vsyscall/vsyscall_64.c         | 19 ++++-
+ arch/x86/mm/fault.c                           |  7 ++
+ tools/testing/selftests/x86/test_vsyscall.c   | 83 +++++++++++++------
+ 5 files changed, 107 insertions(+), 45 deletions(-)
 
-v2: add a comment for __maybe_unused.
-
- Documentation/scheduler/sched-pelt.c | 3 ++-
- kernel/sched/sched-pelt.h            | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
-index e4219139386a..7238b355919c 100644
---- a/Documentation/scheduler/sched-pelt.c
-+++ b/Documentation/scheduler/sched-pelt.c
-@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
- 	int i;
- 	unsigned int x;
- 
--	printf("static const u32 runnable_avg_yN_inv[] = {");
-+	/* To silence -Wunused-but-set-variable warnings. */
-+	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
- 	for (i = 0; i < HALFLIFE; i++) {
- 		x = ((1UL<<32)-1)*pow(y, i);
- 
-diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
-index a26473674fb7..c529706bed11 100644
---- a/kernel/sched/sched-pelt.h
-+++ b/kernel/sched/sched-pelt.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
- 
--static const u32 runnable_avg_yN_inv[] = {
-+static const u32 runnable_avg_yN_inv[] __maybe_unused = {
- 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
- 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
- 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
 -- 
-1.8.3.1
+2.21.0
 
