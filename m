@@ -2,171 +2,179 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1938C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BB1C468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9B52082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA1C2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:57:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dLWDNPrk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388801AbfFJI4z convert rfc822-to-8bit (ORCPT
+        id S2388807AbfFJI5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:56:55 -0400
-Received: from mga11.intel.com ([192.55.52.93]:20077 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387890AbfFJI4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:56:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 01:56:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,573,1557212400"; 
-   d="scan'208";a="183356562"
-Received: from irsmsx109.ger.corp.intel.com ([163.33.3.23])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Jun 2019 01:56:50 -0700
-Received: from irsmsx106.ger.corp.intel.com ([169.254.8.159]) by
- IRSMSX109.ger.corp.intel.com ([169.254.13.115]) with mapi id 14.03.0415.000;
- Mon, 10 Jun 2019 09:56:49 +0100
-From:   "Hunter, Adrian" <adrian.hunter@intel.com>
-To:     Douglas Anderson <dianders@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>
-CC:     "brcm80211-dev-list.pdl@broadcom.com" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        "briannorris@chromium.org" <briannorris@chromium.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "Naveen Gupta" <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        "mka@chromium.org" <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "brcm80211-dev-list@cypress.com" <brcm80211-dev-list@cypress.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Madhan Mohan R <MadhanMohan.R@cypress.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: RE: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around
- commands expected to fail
-Thread-Topic: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around
- commands expected to fail
-Thread-Index: AQHVHYGgpJQnscIJM0Sp+tedAd/IWaaUmKDA
-Date:   Mon, 10 Jun 2019 08:56:48 +0000
-Message-ID: <363DA0ED52042842948283D2FC38E4649C52F8A0@IRSMSX106.ger.corp.intel.com>
-References: <20190607223716.119277-1-dianders@chromium.org>
- <20190607223716.119277-4-dianders@chromium.org>
-In-Reply-To: <20190607223716.119277-4-dianders@chromium.org>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDI2YzI0OTgtNzI3MS00MjMzLWI1Y2ItM2UzYmQzMmNjNjI5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibXJTOFJGTDUyRTNsdUtXRHErakU5XC96bWhJYkZ6SERVekJnaDZtK3ZjWnF2YlM3ejQ1YlRhdHlKcnZvbERXSFEifQ==
-x-originating-ip: [163.33.239.181]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 10 Jun 2019 04:57:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32828 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388570AbfFJI5I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:57:08 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so8340244wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GlDt1J1fvetPyCESKlMjIqNMRM316J8zlPWhx4LvhsY=;
+        b=dLWDNPrkI87/+NMFnp/VUOiz1kzAkorqRcxWDj2CwmyrVaPmdZqEui/iYaPCvA3EBt
+         YqPI7+TYFzoQSWEuLJ74QLiw7ke6fg0PByg9knMnNIJzN+tYd3RT0OFaQ1VaeWcl/XDV
+         awBdJmYgsMK8KCOAC7Z2wtU68rJmTZvwuKiNyxNeML9bl9KJTutqOQmU8kuQI/TYfwbV
+         AzJH+7TANCbH6cLFyWGUve2ETdV7hkG5L4N5L9qc6RVwJDemOGB1Si7ol9cFGmU175+g
+         paimTa6NSc3J74RFiZVjkGCiiF/3P9cWgXEwoZ3uqJjfAI+kZ7CD2L4yRZPYmU+Mear2
+         dvYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GlDt1J1fvetPyCESKlMjIqNMRM316J8zlPWhx4LvhsY=;
+        b=jt2Q0jJTR0fpJfDiEWpAjYo4gtA7agQra1jr7b9FSc+AEUFzV992SLKRXnrQVieU/m
+         0DEM+3AA/hGxy4Z71NCQqb2bGTjrNQmCbesb/F0arc/SybJmr2OTD+NRxK2iK4hTNmsx
+         IhXnOOVaB4502+LB4gNH0xOkNUPkJ+PygkW8Wi2V23fFsXxv51IURPfJ8IXWO3St5E5C
+         dYspzdCEfZpRgH7NESeXY52rbkxjFDrllAHOOaKu60o8n1S+CMjQWX+vAbXMyUpBGVj1
+         59IKTTPLhUogTD68H5KZoRa+dT+zB/Q826/hRtFY8aIb4M4yocdbRJjJ+bhYuwy7uk4n
+         43ew==
+X-Gm-Message-State: APjAAAWzjiQORgweBchM3f8qP/KEafk9+2vaVMfVwma1OqKN37+Q86wD
+        mIJ4XHuu70YFpdIX1Pe4rdNrog==
+X-Google-Smtp-Source: APXvYqwjc0a0DLhGA1q6cGuReETiH52r+c3VwON9VQ9q0tUiL5klLowpEXxkevN5zMVwdmaiDjiyJg==
+X-Received: by 2002:adf:e691:: with SMTP id r17mr27661347wrm.67.1560157026515;
+        Mon, 10 Jun 2019 01:57:06 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id h1sm9097423wrt.20.2019.06.10.01.57.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 01:57:06 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 09:57:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        alsa-devel@alsa-project.org, linux-iio@vger.kernel.org,
+        fabien.lahoudere@collabora.com, Takashi Iwai <tiwai@suse.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD and Cros due for the
+ v5.3 merge window
+Message-ID: <20190610085704.GM4797@dell>
+References: <20190603183401.151408-1-gwendal@chromium.org>
+ <20190604055908.GA4797@dell>
+ <CAFqH_51gMu81f=VFQaF4u9-tAWDMocGAwM_fOPT3Cctv6KWniw@mail.gmail.com>
+ <20190610082012.GK4797@dell>
+ <CAFqH_50J1wqdhWw5nW+D=crfg=JjUrSh2it=JORx5Wn8LfNTQg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFqH_50J1wqdhWw5nW+D=crfg=JjUrSh2it=JORx5Wn8LfNTQg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Douglas Anderson [mailto:dianders@chromium.org]
-> Sent: Saturday, June 8, 2019 1:37 AM
-> To: Ulf Hansson <ulf.hansson@linaro.org>; Kalle Valo
-> <kvalo@codeaurora.org>; Hunter, Adrian <adrian.hunter@intel.com>; Arend
-> van Spriel <arend.vanspriel@broadcom.com>
-> Cc: brcm80211-dev-list.pdl@broadcom.com; linux-
-> rockchip@lists.infradead.org; Double Lo <double.lo@cypress.com>;
-> briannorris@chromium.org; linux-wireless@vger.kernel.org; Naveen Gupta
-> <naveen.gupta@cypress.com>; Madhan Mohan R
-> <madhanmohan.r@cypress.com>; mka@chromium.org; Wright Feng
-> <wright.feng@cypress.com>; Chi-Hsien Lin <chi-hsien.lin@cypress.com>;
-> netdev@vger.kernel.org; brcm80211-dev-list@cypress.com; Douglas
-> Anderson <dianders@chromium.org>; Franky Lin
-> <franky.lin@broadcom.com>; linux-kernel@vger.kernel.org; Madhan Mohan
-> R <MadhanMohan.R@cypress.com>; Hante Meuleman
-> <hante.meuleman@broadcom.com>; YueHaibing
-> <yuehaibing@huawei.com>; David S. Miller <davem@davemloft.net>
-> Subject: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around
-> commands expected to fail
-> 
-> There are certain cases, notably when transitioning between sleep and active
-> state, when Broadcom SDIO WiFi cards will produce errors on the SDIO bus.
-> This is evident from the source code where you can see that we try
-> commands in a loop until we either get success or we've tried too many
-> times.  The comment in the code reinforces this by saying "just one write
-> attempt may fail"
-> 
-> Unfortunately these failures sometimes end up causing an "-EILSEQ"
-> back to the core which triggers a retuning of the SDIO card and that blocks all
-> traffic to the card until it's done.
-> 
-> Let's disable retuning around the commands we expect might fail.
-> 
-> Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
-> Changes in v3:
-> - Expect errors for all of brcmf_sdio_kso_control() (Adrian).
-> 
-> Changes in v2: None
-> 
->  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> index 4a750838d8cd..4040aae1f9ed 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> @@ -16,6 +16,7 @@
->  #include <linux/mmc/sdio_ids.h>
->  #include <linux/mmc/sdio_func.h>
->  #include <linux/mmc/card.h>
-> +#include <linux/mmc/core.h>
+On Mon, 10 Jun 2019, Enric Balletbo Serra wrote:
 
-SDIO function drivers should not really include linux/mmc/core.h
-(Also don't know why linux/mmc/card.h is included)
+> Hi,
+> 
+> Thanks for the ib Lee.
+> 
+> Doing my Monday rebase I just noticed we will have a trivial conflict
+> for the merge window.
+> 
+> Missatge de Lee Jones <lee.jones@linaro.org> del dia dl., 10 de juny
+> 2019 a les 10:20:
+> >
+> > As requested.
+> >
+> > Enjoy!
+> >
+> > The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> >
+> >   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-cros-v5.3
+> >
+> > for you to fetch changes up to 3aa6be30da899619c44aa654313ba66eb44e7291:
+> >
+> >   mfd: cros_ec: Update I2S API (2019-06-10 09:15:08 +0100)
+> >
+> > ----------------------------------------------------------------
+> > Immutable branch between MFD and Cros due for the v5.3 merge window
+> >
+> > ----------------------------------------------------------------
+> > Gwendal Grignou (30):
+> >       mfd: cros_ec: Update license term
+> 
+> That's the commit will have problems due
+> 
+> commit 9c92ab61914157664a2fbdf926df0eb937838e45
+> Author: Thomas Gleixner <tglx@linutronix.de>
+> Date:   Wed May 29 07:17:56 2019 -0700
+> 
+>     treewide: Replace GPLv2 boilerplate/reference with SPDX - rule 282
+> 
+> That was introduced in v5.2-rc4
 
->  #include <linux/semaphore.h>
->  #include <linux/firmware.h>
->  #include <linux/module.h>
-> @@ -667,6 +668,8 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool
-> on)
-> 
->  	brcmf_dbg(TRACE, "Enter: on=%d\n", on);
-> 
-> +	mmc_expect_errors_begin(bus->sdiodev->func1->card->host);
-> +
->  	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
->  	/* 1st KSO write goes to AOS wake up core if device is asleep  */
->  	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR,
-> wr_val, &err); @@ -727,6 +730,8 @@ brcmf_sdio_kso_control(struct
-> brcmf_sdio *bus, bool on)
->  	if (try_cnt > MAX_KSO_ATTEMPTS)
->  		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
-> 
-> +	mmc_expect_errors_end(bus->sdiodev->func1->card->host);
-> +
->  	return err;
->  }
-> 
-> --
-> 2.22.0.rc2.383.gf4fbbf30c2-goog
+Thanks for the heads-up.  Hopefully -next will catch it.  If not,
+hopefully Git will just 'do the right thing' (TM).
 
+> >       mfd: cros_ec: Zero BUILD_ macro
+> >       mfd: cros_ec: set comments properly
+> >       mfd: cros_ec: add ec_align macros
+> >       mfd: cros_ec: Define commands as 4-digit UPPER CASE hex values
+> >       mfd: cros_ec: use BIT macro
+> >       mfd: cros_ec: Update ACPI interface definition
+> >       mfd: cros_ec: move HDMI CEC API definition
+> >       mfd: cros_ec: Remove zero-size structs
+> >       mfd: cros_ec: Add Flash V2 commands API
+> >       mfd: cros_ec: Add PWM_SET_DUTY API
+> >       mfd: cros_ec: Add lightbar v2 API
+> >       mfd: cros_ec: Expand hash API
+> >       mfd: cros_ec: Add EC transport protocol v4
+> >       mfd: cros_ec: Complete MEMS sensor API
+> >       mfd: cros_ec: Fix event processing API
+> >       mfd: cros_ec: Add fingerprint API
+> >       mfd: cros_ec: Fix temperature API
+> >       mfd: cros_ec: Complete Power and USB PD API
+> >       mfd: cros_ec: Add API for keyboard testing
+> >       mfd: cros_ec: Add Hibernate API
+> >       mfd: cros_ec: Add Smart Battery Firmware update API
+> >       mfd: cros_ec: Add I2C passthru protection API
+> >       mfd: cros_ec: Add API for EC-EC communication
+> >       mfd: cros_ec: Add API for Touchpad support
+> >       mfd: cros_ec: Add API for Fingerprint support
+> >       mfd: cros_ec: Add API for rwsig
+> >       mfd: cros_ec: Add SKU ID and Secure storage API
+> >       mfd: cros_ec: Add Management API entry points
+> >       mfd: cros_ec: Update I2S API
+> >
+> >  include/linux/mfd/cros_ec_commands.h | 3658 +++++++++++++++++++++++++++-------
+> >  sound/soc/codecs/cros_ec_codec.c     |    8 +-
+> >  2 files changed, 2915 insertions(+), 751 deletions(-)
+> >
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
