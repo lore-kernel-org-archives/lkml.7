@@ -2,108 +2,96 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E466C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94C6C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6776A20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:44:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVW5iXzx"
+	by mail.kernel.org (Postfix) with ESMTP id 8A8C520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388357AbfFJSov (ORCPT
+        id S2388532AbfFJSpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:44:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46953 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387643AbfFJSov (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:44:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z23so9283937ote.13;
-        Mon, 10 Jun 2019 11:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D3rnPxkKkOcWLjb9M3zXKMP8YGdus9mVV7OMcZq7pcE=;
-        b=DVW5iXzx64p4Z3JZnxlxs0vIKwgxfFCNmYLEcmQukipOh4AkADT4du6f0HN/erCPT0
-         yuTL9qyCL6VAMwebjQD3hB1vTUCR3FJEraylBTE1PQ/6HfA7xk47lLm92/JbD/8kquWs
-         8whChl5q7Bd4PZZRchNe33DfU/HStFantcBM+eLHLsstePld5xV84aCqf4L03cmJiFu8
-         KH8bTM434yHlZjNa0ohDkL0oJz6qFfjNGcr8fw2SL9GgZvo5VgeYu5O5KL93bK2DNED2
-         5j3uNh1vklJhT2VMvsjlKcZjt2c/z7HiKLaKetkwy0kQXJCMJHv0GtezcsQrC1x6hZSa
-         T+dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D3rnPxkKkOcWLjb9M3zXKMP8YGdus9mVV7OMcZq7pcE=;
-        b=lJ2DqAaD7/l+Bf5Sc4XmmllarcolpNILShmZmodr4nevzv2/ytlxkbJVq7iHZavmvP
-         FSULL2lgaODGd9poX0TGmfYUl0ZiQTNz4oKWMbfhc0i1DAdgiNGcEeY45clkej0l+kJ5
-         2T+JkCeOxLlHC6FmG2B2dEM6WLEIrZKVPdjD86IFqb5PkLJlNCDOy8/ELMSWqXtYKK2+
-         vULE542Hxi0bsrxm0F2gnxfUVxsmFzxDcaFD3QT+/SxIm8YNpQWUfbY9Y9Bj4lW3EUPo
-         XveYpJfpTn0NrVhZMsyqJGXFpEDhtP06KuON+FdX3Ra+FYUBNJ3eAeogiq/4bkmGzVz9
-         B41g==
-X-Gm-Message-State: APjAAAUCnwGAOM1jfquPrL5Zb0o5LZXQUSjvYBbBSDUVJo5aIBtl2Uc5
-        7fHT6uWDTxO5WJx1bTcUEHd5mh/M
-X-Google-Smtp-Source: APXvYqzFkDPZUfQTRZ+iIhDbbjsNqAeRD5O0Bl+f2oVgQX41yDJYVUD2AZA7z+ewtprdGgM6/MXViQ==
-X-Received: by 2002:a9d:6c46:: with SMTP id g6mr25448205otq.162.1560192290284;
-        Mon, 10 Jun 2019 11:44:50 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id f5sm4018251otl.51.2019.06.10.11.44.48
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 11:44:49 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
- <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
- <7697a9d10777b28ae79fdffdde6d0985555f6310.camel@kernel.crashing.org>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <3ed1ccfe-d7ca-11b9-17b3-303d1ae1bb0f@lwfinger.net>
-Date:   Mon, 10 Jun 2019 13:44:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <7697a9d10777b28ae79fdffdde6d0985555f6310.camel@kernel.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 10 Jun 2019 14:45:24 -0400
+Received: from mga04.intel.com ([192.55.52.120]:30827 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387643AbfFJSpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 14:45:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 11:45:23 -0700
+X-ExtLoop1: 1
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by orsmga002.jf.intel.com with ESMTP; 10 Jun 2019 11:45:23 -0700
+Received: from orsmsx113.amr.corp.intel.com ([169.254.9.248]) by
+ ORSMSX102.amr.corp.intel.com ([169.254.3.187]) with mapi id 14.03.0415.000;
+ Mon, 10 Jun 2019 11:45:23 -0700
+From:   "Mehta, Sohil" <sohil.mehta@intel.com>
+To:     "joro@8bytes.org" <joro@8bytes.org>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
+        "cai@lca.pw" <cai@lca.pw>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+Subject: Re: [PATCH 5/6] iommu/vt-d: Cleanup after delegating DMA domain to
+ generic iommu
+Thread-Topic: [PATCH 5/6] iommu/vt-d: Cleanup after delegating DMA domain to
+ generic iommu
+Thread-Index: AQHVHm1riigSOeMSoEKdi5DrOzgP5aaVsjoA
+Date:   Mon, 10 Jun 2019 18:45:23 +0000
+Message-ID: <1560192412.27481.12.camel@intel.com>
+References: <20190609023803.23832-1-baolu.lu@linux.intel.com>
+         <20190609023803.23832-6-baolu.lu@linux.intel.com>
+In-Reply-To: <20190609023803.23832-6-baolu.lu@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.110.4]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <06FAD7A4365DF84993512DC9E698AAA7@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 11:21 PM, Benjamin Herrenschmidt wrote:
-> 
->> Please try the attached patch. I'm not really pleased with it and I will
->> continue to determine why the fallback to a 30-bit mask fails, but at least this
->> one works for me.
-> 
-> Your patch only makes sense if the device is indeed capable of
-> addressing 31-bits.
-> 
-> So either the driver is buggy and asks for a too small mask in which
-> case your patch is ok, or it's not and you're just going to cause all
-> sort of interesting random problems including possible memory
-> corruption.
-
-Of course the driver may be buggy, but it asks for the correct mask.
-
-This particular device is not capable of handling 32-bit DMA. The driver detects 
-the 32-bit failure and falls back to 30 bits. It works on x86, and did on PPC32 
-until 5.1. As Christoph said, it should always be possible to use fewer bits 
-than the maximum.
-
-Similar devices that are new enough to use b43 rather than b43legacy work with 
-new kernels; however, they have and use 32-bit DMA.
-
-Larry
+T24gU3VuLCAyMDE5LTA2LTA5IGF0IDEwOjM4ICswODAwLCBMdSBCYW9sdSB3cm90ZToNCj4gwqBz
+dGF0aWMgaW50IF9faW5pdCBzaV9kb21haW5faW5pdChpbnQgaHcpDQo+IEBAIC0zMzA2LDE0ICsz
+MjUyLDEzIEBAIHN0YXRpYyBpbnQgX19pbml0IGluaXRfZG1hcnModm9pZCkNCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocGFzaWRfc3VwcG9ydGVkKGlvbW11KSkNCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ZWxfc3ZtX2lu
+aXQoaW9tbXUpOw0KPiDCoCNlbmRpZg0KPiAtwqDCoMKgwqDCoMKgwqB9DQo+IMKgDQo+IC3CoMKg
+wqDCoMKgwqDCoC8qDQo+IC3CoMKgwqDCoMKgwqDCoCAqIE5vdyB0aGF0IHFpIGlzIGVuYWJsZWQg
+b24gYWxsIGlvbW11cywgc2V0IHRoZSByb290IGVudHJ5DQo+IGFuZCBmbHVzaA0KPiAtwqDCoMKg
+wqDCoMKgwqAgKiBjYWNoZXMuIFRoaXMgaXMgcmVxdWlyZWQgb24gc29tZSBJbnRlbCBYNTggY2hp
+cHNldHMsDQo+IG90aGVyd2lzZSB0aGUNCj4gLcKgwqDCoMKgwqDCoMKgICogZmx1c2hfY29udGV4
+dCBmdW5jdGlvbiB3aWxsIGxvb3AgZm9yZXZlciBhbmQgdGhlIGJvb3QNCj4gaGFuZ3MuDQo+IC3C
+oMKgwqDCoMKgwqDCoCAqLw0KPiAtwqDCoMKgwqDCoMKgwqBmb3JfZWFjaF9hY3RpdmVfaW9tbXUo
+aW9tbXUsIGRyaGQpIHsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8qDQo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKiBOb3cgdGhhdCBxaSBpcyBlbmFibGVkIG9u
+IGFsbCBpb21tdXMsIHNldCB0aGUgcm9vdA0KPiBlbnRyeSBhbmQNCj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCAqIGZsdXNoIGNhY2hlcy4gVGhpcyBpcyByZXF1aXJlZCBvbiBzb21l
+IEludGVsIFg1OA0KPiBjaGlwc2V0cywNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCAqIG90aGVyd2lzZSB0aGUgZmx1c2hfY29udGV4dCBmdW5jdGlvbiB3aWxsIGxvb3ANCj4gZm9y
+ZXZlciBhbmQNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqIHRoZSBib290IGhh
+bmdzLg0KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICovDQo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgaW9tbXVfZmx1c2hfd3JpdGVfYnVmZmVyKGlvbW11KTsNCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpb21tdV9zZXRfcm9vdF9lbnRyeShpb21t
+dSk7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW9tbXUtPmZsdXNoLmZsdXNo
+X2NvbnRleHQoaW9tbXUsIDAsIDAsIDAsDQo+IERNQV9DQ01EX0dMT0JBTF9JTlZMKTsNCg0KDQpU
+aGlzIGNoYW5nZXMgdGhlIGludGVudCBvZiB0aGUgb3JpZ2luYWwgY29kZS4gQXMgdGhlIGNvbW1l
+bnQgc2F5cw0KZW5hYmxlIFFJIG9uIGFsbCBJT01NVXMsIHRoZW4gZmx1c2ggdGhlIGNhY2hlcyBh
+bmQgc2V0IHRoZSByb290IGVudHJ5Lg0KVGhlIG9yZGVyIG9mIHNldHRpbmcgdGhlIHJvb3QgZW50
+cmllcyBoYXMgY2hhbmdlZCBub3cuDQoNClJlZmVyOsKgDQpDb21taXQgYTRjMzRmZjFjMDI5ICgn
+aW9tbXUvdnQtZDogRW5hYmxlIFFJIG9uIGFsbCBJT01NVXMgYmVmb3JlDQpzZXR0aW5nIHJvb3Qg
+ZW50cnknKQ0KDQotLVNvaGls
