@@ -2,113 +2,154 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1FAC31E42
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D1CC31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A2220862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9326C20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404050AbfFJPzz (ORCPT
+        id S2404061AbfFJP4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:55:55 -0400
+        Mon, 10 Jun 2019 11:56:02 -0400
 Received: from mga12.intel.com ([192.55.52.136]:5731 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403791AbfFJPzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:55:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S2404020AbfFJPzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:55:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 08:55:52 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 08:55:49 -0700
 X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga004.jf.intel.com with ESMTP; 10 Jun 2019 08:55:51 -0700
-Message-ID: <e1543e7beb0eb55d6febcd847ccab9b219e60338.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Pavel Machek <pavel@ucw.cz>, Dave Hansen <dave.hansen@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga004.jf.intel.com with ESMTP; 10 Jun 2019 08:55:49 -0700
+Date:   Mon, 10 Jun 2019 08:55:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
         Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Mon, 10 Jun 2019 08:47:45 -0700
-In-Reply-To: <20190608205218.GA2359@xo-6d-61-c0.localdomain>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
-         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
-         <20190608205218.GA2359@xo-6d-61-c0.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v2 1/5] mm: Introduce vm_ops->may_mprotect()
+Message-ID: <20190610155549.GB15995@linux.intel.com>
+References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+ <20190606021145.12604-2-sean.j.christopherson@intel.com>
+ <20190610150600.GA3752@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610150600.GA3752@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-06-08 at 22:52 +0200, Pavel Machek wrote:
-> Hi!
+On Mon, Jun 10, 2019 at 06:06:00PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Jun 05, 2019 at 07:11:41PM -0700, Sean Christopherson wrote:
+> > SGX will use the may_mprotect() hook to prevent userspace from
+> > circumventing various security checks, e.g. Linux Security Modules.
+> > Naming it may_mprotect() instead of simply mprotect() is intended to
+> > reflect the hook's purpose as a way to gate mprotect() as opposed to
+> > a wholesale replacement.
 > 
-> > > I've no idea what the kernel should do; since you failed to answer the
-> > > question what happens when you point this to garbage.
-> > > 
-> > > Does it then fault or what?
-> > 
-> > Yeah, I think you'll fault with a rather mysterious CR2 value since
-> > you'll go look at the instruction that faulted and not see any
-> > references to the CR2 value.
-> > 
-> > I think this new MSR probably needs to get included in oops output when
-> > CET is enabled.
-> > 
-> > Why don't we require that a VMA be in place for the entire bitmap?
-> > Don't we need a "get" prctl function too in case something like a JIT is
-> > running and needs to find the location of this bitmap to set bits itself?
-> > 
-> > Or, do we just go whole-hog and have the kernel manage the bitmap
-> > itself. Our interface here could be:
-> > 
-> > 	prctl(PR_MARK_CODE_AS_LEGACY, start, size);
-> > 
-> > and then have the kernel allocate and set the bitmap for those code
-> > locations.
+> "This commit adds may_mprotect() to struct vm_operations_struct, which
+> can be used to ask from the owner of a VMA if mprotect() is allowed."
 > 
-> For the record, that sounds like a better interface than userspace knowing
-> about the bitmap formats...
-> 									Pavel
+> This would be more appropriate statement because that is what the code
+> change aims for precisely. I did not even understand what you meant by
+> gating in this context. I would leave SGX and LSM's (and especially
+> "various security checks", which means abssolutely nothing) out of the
+> first paragraph completely.
+> 
+> > Enclaves are built by copying data from normal memory into the Enclave
+> > Page Cache (EPC).  Due to the nature of SGX, the EPC is represented by a
+> > single file that must be MAP_SHARED, i.e. mprotect() only ever sees a
+> > MAP_SHARED vm_file that references single file path.  Furthermore, all
+> > enclaves will need read, write and execute pages in the EPC.
+> 
+> I would just say that "Due to the fact that EPC is delivered as IO
+> memory from the preboot firmware, it can be only mapped as MAP_SHARED".
+> It is what it is.
 
-Initially we implemented the bitmap that way.  To manage the bitmap, every time
-the application issues a syscall for a .so it loads, and the kernel does
-copy_from_user() & copy_to_user() (or similar things).  If a system has a few
-legacy .so files and every application does the same, it can take a long time to
-boot up.
+I was trying to convey that the nature of SGX itself requires that an
+enclave's pages are shared between process.  E.g. {MAP,VM}_SHARED would be
+required even if we modified the mmu to handle EPC memory in such a way
+that it didn't have to be tagged with VM_PFNMAP.
 
-Yu-cheng
+> > As a result, LSM policies cannot be meaningfully applied, e.g. an LSM
+> > can deny access to the EPC as a whole, but can't deny PROT_EXEC on page
+> > that originated in a non-EXECUTE file (which is long gone by the time
+> > mprotect() is called).
+> 
+> I have hard time following what is paragraph is trying to say.
+> 
+> > By hooking mprotect(), SGX can make explicit LSM upcalls while an
+> > enclave is being built, i.e. when the kernel has a handle to origin of
+> > each enclave page, and enforce the result of the LSM policy whenever
+> > userspace maps the enclave page in the future.
+> 
+> "LSM policy whenever calls mprotect()"? I'm no sure why you mean by
+> mapping here and if there is any need to talk about future. Isn't this
+> needed now?
 
+Future is referring to the timeline of a running kernel, not the future
+of the kernel code.
+
+Rather than trying to explain all of the above with words, I'll provide
+code examples to show how ->may_protect() will be used by SGX and why it
+is the preferred solution.
+
+> > Alternatively, SGX could play games with MAY_{READ,WRITE,EXEC}, but
+> > that approach is quite ugly, e.g. would require userspace to call an
+> > SGX ioctl() prior to using mprotect() to extend a page's protections.
+> 
+> Instead of talking "playing games" I would state what could be done with
+> VM_MAY{READ,WRITE,EXEC} and why it is bad. Leaves questions otherwise.
+> 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  include/linux/mm.h |  2 ++
+> >  mm/mprotect.c      | 15 +++++++++++----
+> >  2 files changed, 13 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 0e8834ac32b7..a697996040ac 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -458,6 +458,8 @@ struct vm_operations_struct {
+> >  	void (*close)(struct vm_area_struct * area);
+> >  	int (*split)(struct vm_area_struct * area, unsigned long addr);
+> >  	int (*mremap)(struct vm_area_struct * area);
+> > +	int (*may_mprotect)(struct vm_area_struct * area, unsigned long start,
+> > +			    unsigned long end, unsigned long prot);
+> 
+> Could be just boolean.
+> 
+> /Jarkko
