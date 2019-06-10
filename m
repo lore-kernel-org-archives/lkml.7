@@ -2,113 +2,116 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34596C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2686EC4321B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFFF20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0159B20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="o8BDOgkl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zayqil/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfFJURh (ORCPT
+        id S2389385AbfFJUT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:17:37 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:36078 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbfFJURg (ORCPT
+        Mon, 10 Jun 2019 16:19:56 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40571 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbfFJUTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:17:36 -0400
-Received: by mail-vs1-f67.google.com with SMTP id l20so6383604vsp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:17:36 -0700 (PDT)
+        Mon, 10 Jun 2019 16:19:55 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so2641891pfp.7;
+        Mon, 10 Jun 2019 13:19:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=+KFBFAnU1kNLS5/DKe/r6zwMtKjfn/DnI3zFYfYxNlc=;
-        b=o8BDOgklNuALK2PUSerrywtUap632G7138gs/frChasanKKOl727v44LmNUOBio7So
-         hdrVPvS784jp0pyoDtoL8Jho0cg96LMHO+0VhXhBM3XdmPfUz6kTMchwa94ln1EoMjP1
-         9L2UMKNzUlEKp2FDdy5vvhnn8Rryx97cRHaGnhOxMVNBOcyw2KkTXXkOmx4Cf6ct97T+
-         LzSkRkJ2ZHCu1CSK6cxYB34HjFceVlB4jfBmJvEA/HOR3vMFQ9L41t48044/cM3UWAIq
-         gXWNZTAWtM2PIITzMq5+YJoBWFUTm6vGLY7LrU39t6KJmmaxbL9F+HemvOh8jmleLYWG
-         nLBg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=03W6FmFaWOA/TRw2Cw9foNPgPUhYZqfikMgm3aoqsqw=;
+        b=Zayqil/OVQgMEKpvIa3qi7YurE3ir3/GOQj63Tc2tiNhM6mMrG5gKb6qZG7VL6rc3F
+         GQvtUl0zu878fRPj2/voYS70txbNm9LQxl0D5uM20gsyzj86SEDrK6AMnC9UgEaG5Sgy
+         XXxE4OK6yyntHwA3KtXiryO5lvri3WYHEwsgXUIHmdtB+OW2B24mWZxlk1zfydTZbAL5
+         AqBbpLu4AwJ7p2ZLfNGEu/GxBCc9rYP3zK5G6Wvce1VAH98SdNDL8P0BxwelaoH2567W
+         Q7xC7S7BKCJr7s5DH9x/u8HV2xg39Zg/WCKSPmf/EGWszPqv/K5sohzo4bpm/uqDqdtJ
+         hFzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+KFBFAnU1kNLS5/DKe/r6zwMtKjfn/DnI3zFYfYxNlc=;
-        b=n1W7lpvHJUvoBYkqGHeYbatFdX9ohhGjU+yV3WBx/UyQasYW3vYkH0QOnJpd17Ryok
-         rR+gXPJuv1Euxf37FiPlk7infF8D8bpqF6o+nhmP9Y+cR+P47g/Y3WIlxoS+TvIU+9gK
-         FRrJheeVygRf0kH2D+PxZAxX0jXEEGCHkTGEr1yThGYkZlb7dufvo1+4TVSMf6Bi1swv
-         CNuBqgnqXRGHFcMcCEna2Dgbh0+CvOAHNthHoCa2KSPyCt6dtt1C9TgKE2U9/l+C2vGl
-         vyYobnqOiOzHHeMlNbenA5YPcJ4u8vFpsr+k+i68o6B4ftV421ET5JwQYcjk8HcmyAcW
-         xDpg==
-X-Gm-Message-State: APjAAAV28V+9lDe5+b6+XG61H9MDRJVvZn8u76CfiQwLsxSDrLJ9ruhG
-        fDdXqZWF2tFnXmWxyL0ijMUUMg==
-X-Google-Smtp-Source: APXvYqyc9Xcrbu4ikQqdVtLIBBUsdOaz/oDlfNrCxwZpzobjTDrXPdwH9mgLx3VFD0zRlRtaDiBQGg==
-X-Received: by 2002:a67:ed8b:: with SMTP id d11mr37836572vsp.35.1560197855728;
-        Mon, 10 Jun 2019 13:17:35 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id g26sm2188267ual.10.2019.06.10.13.17.34
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=03W6FmFaWOA/TRw2Cw9foNPgPUhYZqfikMgm3aoqsqw=;
+        b=nzh/ZmUE78MrfnrNaCG3a3cm7+2mvXJz+aCn2qEc1TusEqcQPbLVs9u4e0z7JDDNXS
+         tKXGxP/WO5v+g06m94GUOfUjud59nkaFfM5FmILCql5rfOHRhLuLJuLgi3UVgGGtwPV8
+         HzmBvnyxOQUWiC09Ka1x8Jfyc1AhwVQ1EY29bkYpPN3fGhRh2oiGLfgGJ8189+dCF14J
+         irDiwrPvZ9q14osz7G+GSzkG+q8Ee7Y9sxUvfGOVzyZC9pxACNeQG5K5sHdr/+Nyo5N/
+         e/0r3Y4rn4/ZjEIExncFTlHLsp836weZgjl6nr7Zak9JI4NF/aZk9CZHQmgt11LJH1We
+         7tng==
+X-Gm-Message-State: APjAAAXVDFnWRNEv2u21bnI9iTeHcyB0dsdDuJQSGnSFujKvmhaJCJU2
+        G1zqo/4GRzxnbmF6Lm3JL5k=
+X-Google-Smtp-Source: APXvYqwezggIX1oeRyjxUbAw7ivczegK/PwSD0j5lFeS9Hvgs6GNvrhwwY60DrA/AVvp+Ton+2OD/Q==
+X-Received: by 2002:a17:90a:9dc5:: with SMTP id x5mr22051562pjv.110.1560197995050;
+        Mon, 10 Jun 2019 13:19:55 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b35sm312310pjc.15.2019.06.10.13.19.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 13:17:35 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [RESEND PATCH] acpi/osl: fix a W=1 kernel-doc warning
-Date:   Mon, 10 Jun 2019 16:17:14 -0400
-Message-Id: <1560197834-31551-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 10 Jun 2019 13:19:53 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 13:19:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Amy.Shih@advantech.com.tw
+Cc:     she90122@gmail.com, oakley.ding@advantech.com.tw,
+        jia.sui@advantech.com.cn, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (nct7904) Add extra sysfs support for fan,
+ voltage and temperature.
+Message-ID: <20190610201952.GA13191@roeck-us.net>
+References: <20190610080736.6593-1-Amy.Shih@advantech.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610080736.6593-1-Amy.Shih@advantech.com.tw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It appears that kernel-doc does not understand the return type *__ref,
+On Mon, Jun 10, 2019 at 08:07:35AM +0000, Amy.Shih@advantech.com.tw wrote:
+> From: "amy.shih" <amy.shih@advantech.com.tw>
+> 
+> This patch do 2 jobs as described in below:
+> 
+> 1. NCT-7904D also supports reading of channel limitation registers
+> and SMI status registers for fan, voltage and temperature monitoring,
+> add below sysfs nodes:
+> 
+> -fan[1-*]_min
+> -fan[1-*]_alarm
+> -in[0-*]_min
+> -in[0-*]_max
+> -in[0-*]_alarm
 
-drivers/acpi/osl.c:306: warning: cannot understand function prototype:
-'void __iomem *__ref acpi_os_map_iomem(acpi_physical_address phys,
-acpi_size size)
+Not really. Voltage attributes still start with 1.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/acpi/osl.c     | 4 ++--
- include/acpi/acpi_io.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> -temp[1-*]_max
+> -temp[1-*]_max_hyst
+> -temp[1-*]_emergency
+> -temp[1-*]_emergency_hyst
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index cc7507091dec..9c0edf2fc0dd 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -301,8 +301,8 @@ static void acpi_unmap(acpi_physical_address pg_off, void __iomem *vaddr)
-  * During early init (when acpi_permanent_mmap has not been set yet) this
-  * routine simply calls __acpi_map_table() to get the job done.
-  */
--void __iomem *__ref
--acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
-+void __iomem __ref
-+*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
- {
- 	struct acpi_ioremap *map;
- 	void __iomem *virt;
-diff --git a/include/acpi/acpi_io.h b/include/acpi/acpi_io.h
-index d0633fc1fc15..12d8bd333fe7 100644
---- a/include/acpi/acpi_io.h
-+++ b/include/acpi/acpi_io.h
-@@ -16,8 +16,8 @@ static inline void __iomem *acpi_os_ioremap(acpi_physical_address phys,
- 
- extern bool acpi_permanent_mmap;
- 
--void __iomem *__ref
--acpi_os_map_iomem(acpi_physical_address phys, acpi_size size);
-+void __iomem __ref
-+*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size);
- void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size);
- void __iomem *acpi_os_get_iomem(acpi_physical_address phys, unsigned int size);
- 
--- 
-1.8.3.1
+Why emergency and not crit ? The registers are labeled "critical",
+and there is no mention of "emergency" in the datasheet.
 
+> -temp[1-*]_alarm
+> 
+> 2. Add the temp[1-*]_type sysfs to show type of temperature sensor is
+> thermal diode, thermistor, AMD SB-TSI or Intel PECI.
+> 
+> Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+> ---
+
+This is where the changelog should go. Also, patches should be versioned.
+
+More detailed review will follow.
+
+Thanks,
+Guenter
