@@ -2,190 +2,152 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83137C468C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D1FC468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFBB207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AE82085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JUO0jDnb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YiHkTJdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbfFJGoe (ORCPT
+        id S2387858AbfFJGp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 02:44:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45449 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387829AbfFJGoe (ORCPT
+        Mon, 10 Jun 2019 02:45:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44364 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387797AbfFJGp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 02:44:34 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so7887501wre.12
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 23:44:32 -0700 (PDT)
+        Mon, 10 Jun 2019 02:45:28 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so4681788pfe.11
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 23:45:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6v285XyrONVGX85JZPN2vEBoOamuC/TCwUgIuT1MYVI=;
-        b=JUO0jDnbhpEfAJfOIn/mmbA+BYvZwYR3dpEtmWpv9PZIPu+703QoKa9lYvNN7XE01N
-         AVuskQ8lgqYi+ReRHmxOrXd+3ZIitSv/af+yb//VqjPkALpRfqUZdL/uGfKplsJoFcGw
-         dz7tWj7T0RpYSYQNTTZ1dnCBTeRYE4/Ss6EQ2RS+ITbVhrViYs2H0KPJims9t1QepBn6
-         fae6961ZZ0d1mcM/cSiHvZVl4tLZgujzYzWG9ouCPAuwDM1CzhtchbqGQkSuZ7/q8F20
-         tbp9aLC0U4YJItjQdYRh9Y8lOaSRcOuO4hKmsKR1J6jdVcvCG0XFPTTX4C383DwnePsf
-         sP/Q==
+         :content-disposition:in-reply-to:user-agent;
+        bh=AXxwZFqkJLSKlo1AKtUaQ/ENUlkKBcpyhgleO3ow388=;
+        b=YiHkTJdx7yCQJW8EhCRhbAexTIwEPNmnltUScnOW70LR5R4M0zGWwRb1Azugg0mJKW
+         1NA30+nTtQdDYboc8TiR9TieUCKkKkTaYdMz7DS6OCELNzNdmg2HxnOUWymdQ3zfq85E
+         bfsgwfd/uS3RMxh83/W534VSOilBSyr0kmQ0X9Iq95QtCCWd1/4cB4VqWzK5Xwrj9Tc5
+         zmmhH9ZhZi2uBbk1EEE8Y5CCPprTI/kSMcOTWuTBghacpXttDiXPnnXt45grFnDt7MXu
+         VaDUVAbJ8ZgFLxsF4plIJ28cBfq2CMUFkbn8+Ho0M8O08U86avUP+fao+YizCgc2QqS5
+         DdHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6v285XyrONVGX85JZPN2vEBoOamuC/TCwUgIuT1MYVI=;
-        b=S+0srizbl8dCBGh6AzqWHndmug8ALTD3vYAQUMYsIzBySilvisTTrH2aVqbPWekJIb
-         EpyjZWjMZ8q3TbrSfWl8TtU9DWHiFa0yLQq6hUUwYvopyBySBxDbP8mcTxA4qL56h+Ku
-         ktiT2jgvtXwD8RxanXnsWJ60yRfdoTNC+lLsskjYZSgJ+lbiQAWxwhnjAJjD/wyc2c/T
-         J6XFqkGjAYTlM7oLm7FTwl13AqL5sqBpJwqiPwPnGpJ6PxrxHU+cuuw/2e3gRPziWLth
-         HWEQq80zqgUAzBn98nq9g0l7RLvBAV8abLHOeHYAet7b14krmZRRrzTxaECTw2BhRZoq
-         kK7A==
-X-Gm-Message-State: APjAAAVm8q0V5ahPhII6ilAG81bLvKq4r+ik75aJDXmLbx2pao94I3yF
-        J1O1P7NFD033K+iAtbFwEjCNHQ==
-X-Google-Smtp-Source: APXvYqy45tNcTtpg/c94lrABKtUPI2IloeMt1vo9EvaBBcW/D4raRflIRHWeOa3AYFf8Fefw5c/jrg==
-X-Received: by 2002:adf:a11d:: with SMTP id o29mr14522807wro.262.1560149071686;
-        Sun, 09 Jun 2019 23:44:31 -0700 (PDT)
-Received: from dell ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id a2sm5038333wmj.9.2019.06.09.23.44.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Jun 2019 23:44:30 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 07:44:28 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        wsa+renesas@sang-engineering.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
-Message-ID: <20190610064428.GF4797@dell>
-References: <20190607082901.6491-1-lee.jones@linaro.org>
- <CAKv+Gu_SP7qBggCrVkF41BimV3PnCQXb5OUKyCsE0bBxa68RZA@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AXxwZFqkJLSKlo1AKtUaQ/ENUlkKBcpyhgleO3ow388=;
+        b=tMgM2Tu3yVpHn+nt/1vw5W4FINxrAVgQ/d3Gl//GZwZSDt6yXK0pAup2XoCfg+38Cr
+         /UO37Zf2FOSUfNo18quhGs8YZ49tX6q8fUomGwhQAz/d0FwKp6BLYcQEhbWY0+EkybYw
+         I+MHJa2BymwCM8leD42T00xFjxE4m2HEXm05PfbKWixEJTU1u5YFVOLkEDDxjxpiIkjH
+         7UBiOdvM5J3qCcd+6XwhLFYucM/vY/sIu4c4rP6g+jbDjP6MuZkA+7U46QToI7s5FPME
+         0V/jkCeT4/W8w3m876JA2/HF84wX1idmVIar+xqasFhzf8vneLe3ziO+Ljb46OFYEqKr
+         79Zg==
+X-Gm-Message-State: APjAAAV8z9cayVell3Qa7CUc+b915k7VdgofknYs1uplpb3W/sWgpsvB
+        sl0CEEz164OIZVOhKbfp3JouOQHg4MsmnQ==
+X-Google-Smtp-Source: APXvYqw08rKgZJAkQBntaYmCPFTNxHfKWkcs3bOrEThz724Nqp1BmapHkmdPOiD5NJuFIDU1d/qeZg==
+X-Received: by 2002:a63:5207:: with SMTP id g7mr13953365pgb.356.1560149127632;
+        Sun, 09 Jun 2019 23:45:27 -0700 (PDT)
+Received: from ubuntu ([104.192.108.9])
+        by smtp.gmail.com with ESMTPSA id s17sm8726251pfm.74.2019.06.09.23.45.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Jun 2019 23:45:27 -0700 (PDT)
+Date:   Sun, 9 Jun 2019 23:45:21 -0700
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
+        kilobyte@angband.pl, textshell@uchuujin.de, mpatocka@redhat.com,
+        daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] vt: Fix a missing-check bug in con_init()
+Message-ID: <20190610064519.GA3143@ubuntu>
+References: <20190528004529.GA12388@zhanggen-UX430UQ>
+ <20190608160138.GA3840@zhanggen-UX430UQ>
+ <20190608162219.GB11699@kroah.com>
+ <nycvar.YSQ.7.76.1906082010430.1558@knanqh.ubzr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKv+Gu_SP7qBggCrVkF41BimV3PnCQXb5OUKyCsE0bBxa68RZA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <nycvar.YSQ.7.76.1906082010430.1558@knanqh.ubzr>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 07 Jun 2019, Ard Biesheuvel wrote:
-
-> On Fri, 7 Jun 2019 at 10:29, Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > Add a match table to allow automatic probing of ACPI device
-> > QCOM0220.  Ignore clock attainment errors.  Set default clock
-> > frequency value.
-> >
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/i2c/busses/i2c-qcom-geni.c | 19 +++++++++++++++++--
-> >  1 file changed, 17 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> > index db075bc0d952..0fa93b448e8d 100644
-> > --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-> >
-> > +#include <linux/acpi.h>
-> >  #include <linux/clk.h>
-> >  #include <linux/dma-mapping.h>
-> >  #include <linux/err.h>
-> > @@ -483,6 +484,12 @@ static const struct i2c_algorithm geni_i2c_algo = {
-> >         .functionality  = geni_i2c_func,
-> >  };
-> >
-> > +static const struct acpi_device_id geni_i2c_acpi_match[] = {
-> > +       { "QCOM0220"},
-> > +       { },
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, geni_i2c_acpi_match);
-> > +
+On Sat, Jun 08, 2019 at 08:15:46PM -0400, Nicolas Pitre wrote:
+> On Sat, 8 Jun 2019, Greg KH wrote:
 > 
-> We usually put #ifdef CONFIG_ACPI/#endif around these, otherwise you
-> end up with acpi:XXXX modaliases even though ACPI is not compiled in.
-
-No problem.
-
-> >  static int geni_i2c_probe(struct platform_device *pdev)
-> >  {
-> >         struct geni_i2c_dev *gi2c;
-> > @@ -502,7 +509,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
-> >                 return PTR_ERR(gi2c->se.base);
-> >
-> >         gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
+> > On Sun, Jun 09, 2019 at 12:01:38AM +0800, Gen Zhang wrote:
+> > > On Tue, May 28, 2019 at 08:45:29AM +0800, Gen Zhang wrote:
+> > > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
+> > > > vc->vc_screenbuf is allocated by kzalloc(). And they are used in the 
+> > > > following codes. However, kzalloc() returns NULL when fails, and null 
+> > > > pointer dereference may happen. And it will cause the kernel to crash. 
+> > > > Therefore, we should check the return value and handle the error.
+> > > > 
+> > > > Further, since the allcoation is in a loop, we should free all the 
+> > > > allocated memory in a loop.
+> > > > 
+> > > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+> > > > ---
+> > > > diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> > > > index fdd12f8..d50f68f 100644
+> > > > --- a/drivers/tty/vt/vt.c
+> > > > +++ b/drivers/tty/vt/vt.c
+> > > > @@ -3350,10 +3350,14 @@ static int __init con_init(void)
+> > > >  
+> > > >  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
+> > > >  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
+> > > > +		if (!vc)
+> > > > +			goto fail1;
+> > > >  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+> > > >  		tty_port_init(&vc->port);
+> > > >  		visual_init(vc, currcons, 1);
+> > > >  		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
+> > > > +		if (!vc->vc_screenbuf)
+> > > > +			goto fail2;
+> > > >  		vc_init(vc, vc->vc_rows, vc->vc_cols,
+> > > >  			currcons || !vc->vc_sw->con_save_screen);
+> > > >  	}
+> > > > @@ -3375,6 +3379,16 @@ static int __init con_init(void)
+> > > >  	register_console(&vt_console_driver);
+> > > >  #endif
+> > > >  	return 0;
+> > > > +fail1:
+> > > > +	while (currcons > 0) {
+> > > > +		currcons--;
+> > > > +		kfree(vc_cons[currcons].d->vc_screenbuf);
+> > > > +fail2:
+> > > > +		kfree(vc_cons[currcons].d);
+> > > > +		vc_cons[currcons].d = NULL;
+> > > > +	}
+> > 
+> > Wait, will that even work?  You can jump into the middle of a while
+> > loop?
 > 
-> Can we avoid this call altogether in ACPI mode? Also, please use
-
-I'm trying not to place all non-ACPI specific callers into if ()
-statements.  The tabbing becomes ridiculous in some places.  A great
-deal of these calls are requesting optional resources too, so it's
-better to simply ignore the returning error in the cases where
-non-optional resources (such as this one) are requested, since it has
-the least impact on the existing code.
-
-> 'has_acpi_companion()' to test whether we are probing via ACPI.
-
-Sure.
-
-> > -       if (IS_ERR(gi2c->se.clk)) {
-> > +       if (IS_ERR(gi2c->se.clk) && !ACPI_HANDLE(&pdev->dev)) {
+> Absolutely.
+> 
+> > Ugh, that's beyond ugly.
+> 
+> That was me who suggested to do it like that. To me, this is nicer than 
+> the proposed alternatives. For an error path that is rather unlikely to 
+> happen, I think this is a very concise and eleguant way to do it.
+> 
+> > And please provide "real" names for the
+> > labels, "fail1" and "fail2" do not tell anything here.
+> 
+> That I agree with.
 > 
 > 
-> >                 ret = PTR_ERR(gi2c->se.clk);
-> >                 dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
-> >                 return ret;
-> > @@ -510,12 +517,19 @@ static int geni_i2c_probe(struct platform_device *pdev)
-> >
-> >         ret = device_property_read_u32(&pdev->dev, "clock-frequency",
-> >                                                         &gi2c->clk_freq_out);
-> > -       if (ret) {
-> > +       if (ret && !ACPI_HANDLE(&pdev->dev)) {
-> >                 dev_info(&pdev->dev,
-> >                         "Bus frequency not specified, default to 100kHz.\n");
-> >                 gi2c->clk_freq_out = KHZ(100);
-> >         }
-> >
-> > +       if (ACPI_HANDLE(&pdev->dev)) {
-> > +               ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
-> > +
-> > +               /* Using default, same as the !ACPI case above */
-> > +               gi2c->clk_freq_out = KHZ(100);
-> > +       }
-> > +
-> 
-> You are overriding the speed to 100 kHz even if the ACPI device has a
-> "clock-frequency" property.
+> Nicolas
+Thanks for your comments. Then am I supposed to revise the patch and
+send a v4 version?
 
-Will look at this.
-
-Thanks Ard.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks
+Gen
