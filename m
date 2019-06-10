@@ -2,98 +2,179 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6647BC4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBD2C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313BA206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C5C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zx+/PZhf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="anjqADdv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390607AbfFJWRZ (ORCPT
+        id S2390205AbfFJWZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 18:17:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56028 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390491AbfFJWRH (ORCPT
+        Mon, 10 Jun 2019 18:25:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39458 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388328AbfFJWZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 18:17:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UZgDc4NqB64labXbUkmbFOqDnFwUTKKO+bOXvo7uUrA=; b=Zx+/PZhfBbEfWkc+XH2fIwn4gM
-        7sgLtr4sCHafnRXr+XP2JznmcIlNX248bZCdifub5mH85zuhsxvCQFfLsrnBtM63fMYYp2P1/dRDo
-        7igRKORw8p0LCRWlvpUm0g09bQT3Gxa37R3n9bMHaOoFTL03BkBzS6hC71K/ypgdQ94DKUZx6aRq6
-        4HIYRs8/jlN+25vLIjY/0Q8BksuIehE1hxqYcBmTCMzTh3T2PpgqHkpVS0Mu+bczO7iYXgQWFFrQ/
-        wtx/glJXrELv35+7bMj8/QeYzcozoHW944bedT0rSogiTXrMhrXa9OM0YYC/XlogqbfTe88ICP1uG
-        r+l+FaoA==;
-Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1haSbA-0003og-6Y; Mon, 10 Jun 2019 22:17:04 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, uclinux-dev@uclinux.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 15/17] riscv: don't allow selecting SBI-based drivers for M-mode
-Date:   Tue, 11 Jun 2019 00:16:19 +0200
-Message-Id: <20190610221621.10938-16-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190610221621.10938-1-hch@lst.de>
-References: <20190610221621.10938-1-hch@lst.de>
+        Mon, 10 Jun 2019 18:25:56 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 196so5764919pgc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 15:25:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:cc:subject:to:user-agent:date;
+        bh=9hBqZJD2Tz09wfOJDUxIvJB/XBCbBflZm3IPa1V/vxE=;
+        b=anjqADdvlUHgxpXTA/xLq/4vsfjEG1pLhPFxuBOoSnhDfQK/DLla5XumwWWyElC6Pc
+         PS/vAaTAZ0X4ENtlyOgXM52+IXMmYlK/mrW38hordPGkJpua0G7qIjeRrGDafXtUX4JO
+         TTshciiU8SjktCILESKUC21nDTZENol6TjYeY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:cc:subject:to
+         :user-agent:date;
+        bh=9hBqZJD2Tz09wfOJDUxIvJB/XBCbBflZm3IPa1V/vxE=;
+        b=OrCBXWp3aZWba2gOfqi04bw05e2pZhYncUwdP1QO6ENYhOoZkgUBgY7UofjOmjzFlh
+         qDMIdfQSHrPZyRxksmiohWajJA/g5ZWulPpsm9yl6lj93u2T/x8QsM6MQREq3/RviPd8
+         zgfWdN+nFSohh9CbpQjGAq0w0hORHu7Tu6Ey44GoLOcwSMkICmxnMMpbrL5v775oTIRj
+         uMQiR9tXZmAHJ0aabmCRiLrzyZwHWm+cxIQIaUcSKaSx/OS0aAYFJiNXByRdixNCVEF8
+         ZYjCzuREFia9176D5ybI/gUtryZhbSoICj8+oZzTM5ADztc54VShrc3Uep6QMwVefd34
+         qHTA==
+X-Gm-Message-State: APjAAAVW1P/JKYsPu/U06qKfdmufHreo+5eCdbPR3EJFHflIrsJPUjCv
+        6MvC50gfLP/GP9WplUrTglYHGg==
+X-Google-Smtp-Source: APXvYqywzldrMc5v86IYfA+eXCNafyrhC15q1lAcvIj3lXXvZ4LL1QGrW0wDFfeIOenalH46fBvZdg==
+X-Received: by 2002:aa7:8219:: with SMTP id k25mr79051964pfi.38.1560205555034;
+        Mon, 10 Jun 2019 15:25:55 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id v138sm8863906pfc.15.2019.06.10.15.25.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 15:25:54 -0700 (PDT)
+Message-ID: <5cfed8f2.1c69fb81.1dcd3.27c1@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAE=gft6jxR9Lt7tLwm6VKy9_shMVW7wf3g6rBGEqtB7oNH0hUA@mail.gmail.com>
+References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-3-drinkcat@chromium.org> <155778659317.14659.136626364818483852@swboyd.mtv.corp.google.com> <CANMq1KBMd7eR3dP=V9gJ6G4OgE6DsXad_gzvuNJ25_pee4+6eg@mail.gmail.com> <155786487644.14659.17142525593824613967@swboyd.mtv.corp.google.com> <CANMq1KCNzn-5sYJZGivUedsNaQfVW_MjgDZn27W6sz8Fk3beNA@mail.gmail.com> <CAE=gft6jxR9Lt7tLwm6VKy9_shMVW7wf3g6rBGEqtB7oNH0hUA@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-gpio@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+To:     Evan Green <evgreen@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 10 Jun 2019 15:25:53 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+Quoting Evan Green (2019-05-30 10:12:03)
+> On Wed, May 15, 2019 at 1:05 AM Nicolas Boichat <drinkcat@chromium.org> w=
+rote:
+> >
+> > On Wed, May 15, 2019 at 4:14 AM Stephen Boyd <swboyd@chromium.org> wrot=
+e:
+> >
+> > > We could immediately unmask those lines in the hardware when the
+> > > set_wake() callback is called. That way the genirq layer can use the
+> > > driver to do what it wants with the hardware and the driver can make
+> > > sure that set_wake() will always cause the wakeup interrupt to be
+> > > delivered to genirq even when software has disabled it.
+> > >
+> > > But I think that there might be a problem with how genirq understands
+> > > the masked state of a line when the wakeup implementation conflates
+> > > masked state with wakeup armed state. Consider this call-flow:
+> > >
+> > >         irq masked in hardware, IRQD_IRQ_MASKED is set
+> > >         enable_irq_wake()
+> > >           unmask_irq in hardware
+> > >         IRQD_WAKEUP_ARMED is set
+> > >         <suspend and wakeup from irq>
+> > >         handle_level_irq()
+> > >           mask_ack_irq()
+> > >             mask_irq()
+> > >               if (irqd_irq_masked()) -> returns true and skips maskin=
+g!
+> > >             if (desc->irq_data.chip->irq_ack)
+> > >               ...
+> > >           irq_may_run()
+> > >             irq_pm_check_wakeup()
+> > >               irq_disable()
+> > >                 mask_irq() -> does nothing again
+> > >
+> > > In the above flow, we never mask the irq because we thought it was
+> > > already masked when it was disabled, but the irqchip implementation
+> > > unmasked it to make wakeup work. Maybe we should always mask the irq =
+if
+> > > wakeup is armed and we're trying to call mask_irq()? Looks hacky.
+> > >
+> > > diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+> > > index 51128bea3846..20257d528880 100644
+> > > --- a/kernel/irq/chip.c
+> > > +++ b/kernel/irq/chip.c
+> > > @@ -411,7 +411,7 @@ static inline void mask_ack_irq(struct irq_desc *=
+desc)
+> > >
+> > >  void mask_irq(struct irq_desc *desc)
+> > >  {
+> > > -       if (irqd_irq_masked(&desc->irq_data))
+> > > +       if (!irqd_is_wakeup_armed(&desc->irq_data) && irqd_irq_masked=
+(&desc->irq_data))
+> > >                 return;
+> > >
+> > >         if (desc->irq_data.chip->irq_mask) {
+> >
+> > I'm... really not sure what's the best approach here. But basically,
+> > yes, if we can find a way to properly handle wake and interrupt
+> > behaviour for drivers with a single mask, that'd be good.
+> > IRQCHIP_MASK_ON_SUSPEND only seems to be doing half of the work, since
+> > it does not cover the disable+wake source case.
+> >
+> > Thanks,
+>=20
+> I finally got around to studying this patch. This series seems okay to
+> me. The underlying problem is really that the hardware IRQ enabled
+> state is out of sync with what Linux thinks. This happens during
+> suspend because Linux thinks the irq is disabled, but due to the
+> hardware constraints on this platform, the interrupt has to be enabled
+> for it to be a wake source. So the mtk driver re-enables the
+> interrupt, and then has to find a way to get back in sync with Linux's
+> IRQ mask state.
+>=20
+> One possible approach is mentioned above by Stephen: stop calling
+> disable_irq in the cros EC driver. Then both linux and mtk agree the
+> interrupt is enabled at suspend time. I think this ran into other
+> problems though, where the EC gets its interrupt but is unable to
+> silence it because the underlying SPI bus is still suspended.
 
-Do not allow selecting SBI related options with MMU option not set.
+Does this happen? I thought the interrupt would only be delivered once
+all drivers have resumed from the noirq resume phase. Maybe the SPI
+controller needs to resume there instead of in the normal resume path
+and then this isn't a problem.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/tty/hvc/Kconfig    | 2 +-
- drivers/tty/serial/Kconfig | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+>=20
+> The other approach, taken here, is to mask the interrupt when it first
+> comes in, getting Linux and mtk back in agreement that yes, the
+> interrupt is masked. Outside of enlightening the generic IRQ core
+> about these types of interrupts that need to get re-enabled to be wake
+> sources, this seems like a reasonable approach.
 
-diff --git a/drivers/tty/hvc/Kconfig b/drivers/tty/hvc/Kconfig
-index 4d22b911111f..5a1ab6b536ff 100644
---- a/drivers/tty/hvc/Kconfig
-+++ b/drivers/tty/hvc/Kconfig
-@@ -89,7 +89,7 @@ config HVC_DCC
- 
- config HVC_RISCV_SBI
- 	bool "RISC-V SBI console support"
--	depends on RISCV
-+	depends on RISCV && !M_MODE
- 	select HVC_DRIVER
- 	help
- 	  This enables support for console output via RISC-V SBI calls, which
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 0d31251e04cc..59dba9f9e466 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -88,7 +88,7 @@ config SERIAL_EARLYCON_ARM_SEMIHOST
- 
- config SERIAL_EARLYCON_RISCV_SBI
- 	bool "Early console using RISC-V SBI"
--	depends on RISCV
-+	depends on RISCV && !M_MODE
- 	select SERIAL_CORE
- 	select SERIAL_CORE_CONSOLE
- 	select SERIAL_EARLYCON
--- 
-2.20.1
+I prefer we teach the genirq layer about these types of irqchips. That
+way the solution is common and not a one-off fix for Mediatek chips. I'm
+sure that this same problem will come up again for another SoC vendor
+out there so having a chip flag that does the other half of
+IRQCHIP_MASK_ON_SUSPEND would be appropriate.
 
