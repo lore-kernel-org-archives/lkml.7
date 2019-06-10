@@ -2,116 +2,111 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82658C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B055BC28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6152A20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC7320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390623AbfFJN6s (ORCPT
+        id S2390669AbfFJOCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 09:58:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12365 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390587AbfFJN6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:58:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 06:58:47 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2019 06:58:47 -0700
-Received: from achugh-mobl.amr.corp.intel.com (unknown [10.254.100.69])
-        by linux.intel.com (Postfix) with ESMTP id 6192E5800FF;
-        Mon, 10 Jun 2019 06:58:46 -0700 (PDT)
-Subject: Re: [alsa-devel] [RFC PATCH 5/6] dt-bindings: soundwire: add bindings
- for Qcom controller
-To:     Vinod Koul <vkoul@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
- <20190607085643.932-6-srinivas.kandagatla@linaro.org>
- <20190610045150.GJ9160@vkoul-mobl.Dlink>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <c6829f76-f119-31d5-c3eb-506e2d50f298@linux.intel.com>
-Date:   Mon, 10 Jun 2019 08:58:55 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Mon, 10 Jun 2019 10:02:49 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18542 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390384AbfFJOCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:02:48 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0C55D96CA51B27A67399;
+        Mon, 10 Jun 2019 22:02:43 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 10 Jun 2019
+ 22:02:42 +0800
+Subject: Re: [PATCH -next] packet: remove unused variable 'status' in
+ __packet_lookup_frame_in_block
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+References: <20190610115831.175710-1-maowenan@huawei.com>
+ <CAF=yD-JOCZHt6q3ArCqY5PMW1vP5ZmNkYMKUB14TrgU-X30cSQ@mail.gmail.com>
+CC:     David Miller <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <caf8d25f-60e2-a0c0-dc21-956ea32ee59a@huawei.com>
+Date:   Mon, 10 Jun 2019 22:02:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190610045150.GJ9160@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <CAF=yD-JOCZHt6q3ArCqY5PMW1vP5ZmNkYMKUB14TrgU-X30cSQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
->> diff --git a/Documentation/devicetree/bindings/soundwire/qcom,swr.txt b/Documentation/devicetree/bindings/soundwire/qcom,swr.txt
->> new file mode 100644
->> index 000000000000..eb84d0f4f36f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soundwire/qcom,swr.txt
->> @@ -0,0 +1,62 @@
->> +Qualcomm SoundWire Controller
->> +
->> +This binding describes the Qualcomm SoundWire Controller Bindings.
->> +
->> +Required properties:
->> +
->> +- compatible:		Must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
->> +	 		example:
->> +			"qcom,soundwire-v1.3.0"
->> +			"qcom,soundwire-v1.5.0"
->> +			"qcom,soundwire-v1.6.0"
->> +- reg:			SoundWire controller address space.
->> +- interrupts:		SoundWire controller interrupt.
->> +- clock-names:		Must contain "iface".
->> +- clocks:		Interface clocks needed for controller.
->> +- #sound-dai-cells:	Must be 1 for digital audio interfaces on the controllers.
->> +- #address-cells:	Must be 1 for SoundWire devices;
->> +- #size-cells:		Must be <0> as SoundWire addresses have no size component.
->> +- qcom,dout-ports: 	Must be count of data out ports
->> +- qcom,din-ports: 	Must be count of data in ports
-> 
-> On these I think we should have specified dpn properties as specified in
-> DisCo, but then looking at spec we do not define that for master, but
-> bus seems to have it.
-> 
-> Pierre do you why master does not have dpn properties in DisCo?
 
-Because there are no DP0 or DPn registers defined for Masters in the 
-SoundWire 1.x spec. DisCo is about specifying properties for standard 
-registers, when they are not standard vendor extensions need to come 
-into play.
+On 2019/6/10 21:05, Willem de Bruijn wrote:
+> On Mon, Jun 10, 2019 at 8:17 AM Mao Wenan <maowenan@huawei.com> wrote:
+>>
+>> The variable 'status' in  __packet_lookup_frame_in_block() is never used since
+>> introduction in commit f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer
+>> implementation."), we can remove it.
+>> And when __packet_lookup_frame_in_block() calls prb_retire_current_block(),
+>> it can pass macro TP_STATUS_KERNEL instead of 0.
+>>
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> ---
+>>  net/packet/af_packet.c | 5 ++---
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+>> index a29d66d..fb1a79c 100644
+>> --- a/net/packet/af_packet.c
+>> +++ b/net/packet/af_packet.c
+>> @@ -1003,7 +1003,6 @@ static void prb_fill_curr_block(char *curr,
+>>  /* Assumes caller has the sk->rx_queue.lock */
+>>  static void *__packet_lookup_frame_in_block(struct packet_sock *po,
+>>                                             struct sk_buff *skb,
+>> -                                               int status,
+>>                                             unsigned int len
+>>                                             )
+>>  {
+>> @@ -1046,7 +1045,7 @@ static void *__packet_lookup_frame_in_block(struct packet_sock *po,
+>>         }
+>>
+>>         /* Ok, close the current block */
+>> -       prb_retire_current_block(pkc, po, 0);
+>> +       prb_retire_current_block(pkc, po, TP_STATUS_KERNEL);
+> 
+> I don't think that 0 is intended to mean TP_STATUS_KERNEL here.
+> 
+> prb_retire_current_block calls prb_close_block which sets status to
+> 
+>   TP_STATUS_USER | stat
+> 
+> where stat is 0 or TP_STATUS_BLK_TMO.
+
+
+#define TP_STATUS_KERNEL		      0
+#define TP_STATUS_BLK_TMO		(1 << 5)
+
+Actually, packet_current_rx_frame calls __packet_lookup_frame_in_block with status=TP_STATUS_KERNEL
+in original code.
+
+__packet_lookup_frame_in_block in this function, first is to check whether the currently active block
+has enough space for the packet, which means status of block should be TP_STATUS_KERNEL, then it calls
+prb_retire_current_block to retire this block.
+
+Since there needs some discussion about means of status, I can send v2 only removing the parameter status of
+__packet_lookup_frame_in_block?
 
 > 
->> +- qcom,ports-offset1:	Must be frame offset1 of each data port.
->> +			Out followed by In. Used for Block size calculation.
->> +- qcom,ports-offset2: 	Must be frame offset2 of each data port.
->> +			Out followed by In. Used for Block size calculation.
->> +- qcom,ports-sinterval-low: Must be sample interval low of each data port.
->> +			Out followed by In. Used for Sample Interval calculation.
 > 
-> These are software so do not belong here
-
-Not necessarily. They define the allocation expected on that link and I 
-see no problem specifying those values here. It's the moral equivalent 
-of specifying which TDM slots and the bit depth of one slot you'd use 
-for DSP_A/B.
-And if you push back, then what would be your alternate proposal on 
-where those values might be stored? This is a very specific usage of the 
-link and it makes sense to me to have the information in firmware - 
-exposed with properties - rather than hard-coded in a pretend bus 
-allocation routine in the kernel. Either the allocation is fully dynamic 
-and it's handled by the kernel or it's static and it's better to store 
-it in firmware to deal with platform-to-platform variations.
 
