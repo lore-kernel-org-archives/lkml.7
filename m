@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48D5C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5C9C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F92A2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32CC20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N579Ut31"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KPlC0asT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388390AbfFJImT (ORCPT
+        id S2388551AbfFJImY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:42:19 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39407 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387992AbfFJImS (ORCPT
+        Mon, 10 Jun 2019 04:42:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40883 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388430AbfFJImV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:42:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so7281631wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:42:17 -0700 (PDT)
+        Mon, 10 Jun 2019 04:42:21 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so8254719wre.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:42:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Dg3oC3jeSqKLOMc1HRQAN+HlqdHVv5WaH1kaddbCmVU=;
-        b=N579Ut3169MDjhrrsBHmt//MQCwAN9tpPt3Zo1dy964bOck+NE2epVrhRBU1VblB2u
-         argmebVwjEfyM0/+EdEoAX0b5Fq5NxYGpIQuKYxcRm3f6DrXYUp9+3Phnsrs72hPDxLY
-         9FeO0ZoZfziqPPQ5Sabb6aQTkrkkpKHrgStbDGRScUYfIpJ7xF3SyWOxHQOwYZqwhKcz
-         EniNcgCcFjDzdPD/Gnpf3RA+qXhbvSAs16aNmMS2qJDjp6tBrLfK6Mgb0HZOpg+9qNwL
-         oQ6VHz8UKkO2idUdzyEKI+GrwcIaOp0HZzEmgPvcIdAyT9BdrZ+vROzlL53L0fsTHRCe
-         Amsw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=/JaaoIAXOHk6r3bUaQxdq6m85g1r1iKBVjxqAQyHOKY=;
+        b=KPlC0asTsYkXAfvDqUgZ/ZaGrDo+NxM0SUTauF0UbE0oVpuEWnIjRW0d4d4eK3voTD
+         pge6GUVTA/fOzY986+f87X1ppOF9lBX/SJnB6PLo3ZBMUM4btr9ZgT52VrVoUYg6DjxP
+         GDwl2RYwc3KZFbYYOUO3ZrWlaGx5HYX4zfLwpGSgW/2GTQ7xbl0Alf4DCt3G1sYvnqSW
+         2Av4JLFjVKf7QTkUgs1H7ADEuNQ5LzdMzUJaFzpVBAtRA/8TYBBSW9Q0lsFsJos8ocay
+         nmgNOyF2wm1/PaAVAYW9o9Jr1cxdmnCAS9Qj9m/op6h7efURq90aW+ZwaKXNAbnSK7wP
+         aIWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Dg3oC3jeSqKLOMc1HRQAN+HlqdHVv5WaH1kaddbCmVU=;
-        b=hh1o3MPknV4YkqcttkFZr1jW/Z5IIkQ0fOz529wNUopR90LtoFp7QU5SIgYsmzlCkq
-         Zm6kaO/hkRLYLzPSo00TpW3caAl+v8V1IFvkcnVm96f+HrWsVZRFS28u5R3lFqJtBoIU
-         tvptqWVeCrenuYq9Np9NdCAfV2uNWM+qBbJXds4QDF4a88k+E4zxC1rXRQWCaVfVdheS
-         1aHjXQ8pBocD1V0PckUk1IfH+jWDOteMTpzRvqerYht1H2nJ8nz+S4tMI/pAsIgXJ13Z
-         WnIBlHLJARXfC8Xitl96WATqJfWyUsTsTZKmCvjFEVqKKyo6GB5U2UrFYayfW4AHjfzf
-         7HTQ==
-X-Gm-Message-State: APjAAAVgWp8HLOQzr2lmMh7k1Xc2pgZzPTWPfQ5OgUQSMmXx4mheXog1
-        lfmvgazQGl1bboNlN50Ie9Q2eQ==
-X-Google-Smtp-Source: APXvYqxdxCdZ2/sBtdJ+/F3Df3JCTp8kjj6xUmL6L4kDCCYLWsWmFp9Vfz2ZkU8np8UWYiu6QPITaA==
-X-Received: by 2002:a1c:9c8a:: with SMTP id f132mr7642789wme.29.1560156136449;
-        Mon, 10 Jun 2019 01:42:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=/JaaoIAXOHk6r3bUaQxdq6m85g1r1iKBVjxqAQyHOKY=;
+        b=BwXnQpx29vb8g0wsmqv3sC1KyJfz9lbaMkohytfsyZ5GhGwaLElje1Fru0n98AlXsr
+         HzeRDrylJH9byn2Kk0PP+gV2KqcasayZlHX8PEl/vGeaXEJJUEtOmTRa6CADqUAGoxmm
+         QLd/P7C/DbntbvIWaT/Zrhbdb5aloougKlfj5E19XZF4xaZu99NMF1OKl6ayxpQQLkHx
+         xbDhBJZbqpWSyATQR6hE8VI+hJhqwXBArNRxAIoVrTt0l+AGEoOZhcDnCLnAZyuZI7TG
+         QT3QlJ47xtE83x3aCEZ63LqhsuNhIJp+5hiHGSNnkBLuZRplVXGYxJNG+y3JXZQi319L
+         xtfA==
+X-Gm-Message-State: APjAAAVU45aWLAXtixJJXq0BmD7wiPav8wFXKZ43Hc8I3IzQejZHgJti
+        5sPd6sbq8VYwwRE3a3hEfPgZAw==
+X-Google-Smtp-Source: APXvYqzQZOiDnuYFcAlCqVwbD8w92qHikrlYd/QR16F3PP1kyMO+vT8BZ4gvbN767L0PA0e6vy3+bQ==
+X-Received: by 2002:adf:e5d2:: with SMTP id a18mr30727001wrn.212.1560156139427;
+        Mon, 10 Jun 2019 01:42:19 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id a125sm9929670wmf.42.2019.06.10.01.42.15
+        by smtp.gmail.com with ESMTPSA id a125sm9929670wmf.42.2019.06.10.01.42.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 01:42:15 -0700 (PDT)
+        Mon, 10 Jun 2019 01:42:19 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     alokc@codeaurora.org, andy.gross@linaro.org,
         david.brown@linaro.org, wsa+renesas@sang-engineering.com,
@@ -64,78 +65,123 @@ To:     alokc@codeaurora.org, andy.gross@linaro.org,
         linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
-Date:   Mon, 10 Jun 2019 09:42:06 +0100
-Message-Id: <20190610084213.1052-1-lee.jones@linaro.org>
+Subject: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Date:   Mon, 10 Jun 2019 09:42:09 +0100
+Message-Id: <20190610084213.1052-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190610084213.1052-1-lee.jones@linaro.org>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a match table to allow automatic probing of ACPI device
-QCOM0220.  Ignore clock attainment errors.  Set default clock
-frequency value.
+This patch provides basic support for booting with ACPI instead
+of the currently supported Device Tree.  When doing so there are a
+couple of differences which we need to taken into consideration.
+
+Firstly, the SDM850 ACPI tables omit information pertaining to the
+4 reserved GPIOs on the platform.  If Linux attempts to touch/
+initialise any of these lines, the firmware will restart the
+platform.
+
+Secondly, when booting with ACPI, it is expected that the firmware
+will set-up things like; Regulators, Clocks, Pin Functions, etc in
+their ideal configuration.  Thus, the possible Pin Functions
+available to this platform are not advertised when providing the
+higher GPIOD/Pinctrl APIs with pin information.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/i2c/busses/i2c-qcom-geni.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/pinctrl/qcom/Kconfig          |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdm845.c | 36 ++++++++++++++++++++++++++-
+ 2 files changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index db075bc0d952..9e3b8a98688d 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index 2e66ab72c10b..aafbe932424f 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -168,7 +168,7 @@ config PINCTRL_SDM660
+ 
+ config PINCTRL_SDM845
+        tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+-       depends on GPIOLIB && OF
++       depends on GPIOLIB && (OF || ACPI)
+        select PINCTRL_MSM
+        help
+          This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+index c97f20fca5fd..98a438dba711 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
++++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+  */
  
 +#include <linux/acpi.h>
- #include <linux/clk.h>
- #include <linux/dma-mapping.h>
- #include <linux/err.h>
-@@ -483,6 +484,14 @@ static const struct i2c_algorithm geni_i2c_algo = {
- 	.functionality	= geni_i2c_func,
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
+ 	UFS_RESET(ufs_reset, 0x99f000),
  };
  
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id geni_i2c_acpi_match[] = {
-+	{ "QCOM0220"},
++static const int sdm845_acpi_reserved_gpios[] = {
++	0, 1, 2, 3, 81, 82, 83, 84, -1
++};
++
+ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+ 	.pins = sdm845_pins,
+ 	.npins = ARRAY_SIZE(sdm845_pins),
+@@ -1287,11 +1292,39 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+ 	.ngpios = 150,
+ };
+ 
++static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
++	.pins = sdm845_pins,
++	.npins = ARRAY_SIZE(sdm845_pins),
++	.groups = sdm845_groups,
++	.ngroups = ARRAY_SIZE(sdm845_groups),
++	.reserved_gpios = sdm845_acpi_reserved_gpios,
++	.ngpios = 150,
++};
++
+ static int sdm845_pinctrl_probe(struct platform_device *pdev)
+ {
+-	return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
++	int ret;
++
++	if (pdev->dev.of_node) {
++		ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
++	} else if (has_acpi_companion(&pdev->dev)) {
++		ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
++	} else {
++		dev_err(&pdev->dev, "DT and ACPI disabled\n");
++		return -EINVAL;
++	}
++
++	return ret;
+ }
+ 
++#if CONFIG_ACPI
++static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
++	{ "QCOM0217"},
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(acpi, geni_i2c_acpi_match);
++MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
 +#endif
 +
- static int geni_i2c_probe(struct platform_device *pdev)
- {
- 	struct geni_i2c_dev *gi2c;
-@@ -502,7 +511,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(gi2c->se.base);
- 
- 	gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
--	if (IS_ERR(gi2c->se.clk)) {
-+	if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(&pdev->dev)) {
- 		ret = PTR_ERR(gi2c->se.clk);
- 		dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
- 		return ret;
-@@ -516,6 +525,9 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 		gi2c->clk_freq_out = KHZ(100);
- 	}
- 
-+	if (has_acpi_companion(&pdev->dev))
-+		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
-+
- 	gi2c->irq = platform_get_irq(pdev, 0);
- 	if (gi2c->irq < 0) {
- 		dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
-@@ -660,6 +672,7 @@ static struct platform_driver geni_i2c_driver = {
- 		.name = "geni_i2c",
- 		.pm = &geni_i2c_pm_ops,
- 		.of_match_table = geni_i2c_dt_match,
-+		.acpi_match_table = ACPI_PTR(geni_i2c_acpi_match),
+ static const struct of_device_id sdm845_pinctrl_of_match[] = {
+ 	{ .compatible = "qcom,sdm845-pinctrl", },
+ 	{ },
+@@ -1302,6 +1335,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
+ 		.name = "sdm845-pinctrl",
+ 		.pm = &msm_pinctrl_dev_pm_ops,
+ 		.of_match_table = sdm845_pinctrl_of_match,
++		.acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
  	},
- };
- 
+ 	.probe = sdm845_pinctrl_probe,
+ 	.remove = msm_pinctrl_remove,
 -- 
 2.17.1
 
