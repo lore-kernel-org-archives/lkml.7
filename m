@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AC8C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99B1C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757DE20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C304820820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HrY0Qmw4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RLeDGOFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390015AbfFJVUr (ORCPT
+        id S2390249AbfFJVUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:20:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38024 "EHLO
+        Mon, 10 Jun 2019 17:20:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38264 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390184AbfFJVUo (ORCPT
+        with ESMTP id S2390184AbfFJVUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:20:44 -0400
+        Mon, 10 Jun 2019 17:20:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hGQgwRV1eNL4J8F+4meQGtmLL8M3JcwulArYLNjpMJ8=; b=HrY0Qmw4UWxKsjKqwlGOY2rvJG
-        UK7OXPg1aHe65+DyhhWcTojLokTJuiKlgU8nm8jMKBk33aAczqlY4M+sdNWN96cA1i1qGwkYqXF+V
-        mCCACQ9yMyyfq6db7oCILXsO6ILPJDp8AViRTldak/C0s2Q+zPIUJabe3/tFNnTwTOEz+OuFBun19
-        ho/e6SH9Qkxm1v5kl1uQmzMtKLsQ/oxe0W9JwbPLuSzebhJKB+R1lyA/+996cue4125f5nczqXmKp
-        K9NVnDSnmA+fj0Q4Df69lnzNSX9zx4U7lbSdN1vKmwJhVe6BPKUnobOt/MEYHA34xgJbug9+IHAmX
-        4w7EhwmA==;
+        bh=1jVYMx/arZAqs3yuKoy0cJPUA3vC+BJxP8Rm0Qe6EP0=; b=RLeDGOFuoEZIU9Yz3L63IZUUz5
+        dMkmwauB0/YGOaKSByq48/Po0fjYbOpKaT2U5m6IsGlvf80ujBTEc4ShK/FrfLnQBAtVz+s9/5NwH
+        2OcXoPeCABwy6MXhqnLwhl1y6ffF+r7nA+a6FDl06pRqMso7LCdeA1DVEX+i5Ptxhs6XMA1RbIJ2+
+        Ch7L+/809ketnOVB2AYZfg4ylqI/N+LRd/HF6NTQ69H9fvrY3oGAg5suKEzMBhwqdrKNjjYzYGCDn
+        SG/ryasHhHqXAhnDDEAIrXpKu/HWWQvfkljoPukucA0zTwcjXn8KEkkc/9BTehqzpG4SOi5mnwCkP
+        gs3Bsz0w==;
 Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1haRiZ-0000Zd-Af; Mon, 10 Jun 2019 21:20:40 +0000
+        id 1haRic-0000bq-Co; Mon, 10 Jun 2019 21:20:42 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Greg Ungerer <gerg@linux-m68k.org>
 Cc:     Michal Simek <monstr@monstr.eu>,
@@ -46,9 +46,9 @@ Cc:     Michal Simek <monstr@monstr.eu>,
         linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
         linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 08/15] binfmt_flat: add endianess annotations
-Date:   Mon, 10 Jun 2019 23:20:08 +0200
-Message-Id: <20190610212015.9157-9-hch@lst.de>
+Subject: [PATCH 09/15] binfmt_flat: add a ARCH_HAS_BINFMT_FLAT option
+Date:   Mon, 10 Jun 2019 23:20:09 +0200
+Message-Id: <20190610212015.9157-10-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190610212015.9157-1-hch@lst.de>
 References: <20190610212015.9157-1-hch@lst.de>
@@ -60,94 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most binfmt_flat on-disk fields are big endian.  Use the proper __be32
-type where applicable.
+Allow architectures to opt into ARCH_HAS_BINFMT_FLAT support instead of
+assuming that all nommu ports support the format.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/binfmt_flat.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ arch/arm/Kconfig        | 1 +
+ arch/c6x/Kconfig        | 1 +
+ arch/h8300/Kconfig      | 1 +
+ arch/m68k/Kconfig       | 1 +
+ arch/microblaze/Kconfig | 1 +
+ arch/sh/Kconfig         | 1 +
+ arch/xtensa/Kconfig     | 1 +
+ fs/Kconfig.binfmt       | 5 ++++-
+ 8 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index 6ae0f9af3fc9..6c1848dee724 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -421,7 +421,8 @@ static int load_flat_file(struct linux_binprm *bprm,
- 	unsigned long textpos, datapos, realdatastart;
- 	u32 text_len, data_len, bss_len, stack_len, full_data, flags;
- 	unsigned long len, memp, memp_size, extra, rlim;
--	u32 __user *reloc, *rp;
-+	__be32 __user *reloc;
-+	u32 __user *rp;
- 	struct inode *inode;
- 	int i, rev, relocs;
- 	loff_t fpos;
-@@ -594,7 +595,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 			goto err;
- 		}
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index b1b48c0bde76..695a26c68064 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -4,6 +4,7 @@ config ARM
+ 	default y
+ 	select ARCH_32BIT_OFF_T
+ 	select ARCH_CLOCKSOURCE_DATA
++	select ARCH_HAS_BINFMT_FLAT
+ 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_ELF_RANDOMIZE
+diff --git a/arch/c6x/Kconfig b/arch/c6x/Kconfig
+index eeb0471268a0..78dfe186d708 100644
+--- a/arch/c6x/Kconfig
++++ b/arch/c6x/Kconfig
+@@ -7,6 +7,7 @@
+ config C6X
+ 	def_bool y
+ 	select ARCH_32BIT_OFF_T
++	select ARCH_HAS_BINFMT_FLAT
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+ 	select CLKDEV_LOOKUP
+diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
+index 7457f190caaa..ec800e9d5aad 100644
+--- a/arch/h8300/Kconfig
++++ b/arch/h8300/Kconfig
+@@ -2,6 +2,7 @@
+ config H8300
+         def_bool y
+ 	select ARCH_32BIT_OFF_T
++	select ARCH_HAS_BINFMT_FLAT
+ 	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
+ 	select BINFMT_FLAT_OLD_ALWAYS_RAM
+ 	select GENERIC_ATOMIC64
+diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+index fd69ee5ad6ab..c0c43c624afa 100644
+--- a/arch/m68k/Kconfig
++++ b/arch/m68k/Kconfig
+@@ -3,6 +3,7 @@ config M68K
+ 	bool
+ 	default y
+ 	select ARCH_32BIT_OFF_T
++	select ARCH_HAS_BINFMT_FLAT
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
+ 	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+index f11433daab4a..d411de05b628 100644
+--- a/arch/microblaze/Kconfig
++++ b/arch/microblaze/Kconfig
+@@ -3,6 +3,7 @@ config MICROBLAZE
+ 	def_bool y
+ 	select ARCH_32BIT_OFF_T
+ 	select ARCH_NO_SWAP
++	select ARCH_HAS_BINFMT_FLAT if !MMU
+ 	select ARCH_HAS_DMA_COHERENT_TO_PFN if MMU
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index b77f512bb176..df3e6215b78c 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config SUPERH
+ 	def_bool y
++	select ARCH_HAS_BINFMT_FLAT if !MMU
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+index 6ec1b75eabc5..ebc135bda921 100644
+--- a/arch/xtensa/Kconfig
++++ b/arch/xtensa/Kconfig
+@@ -2,6 +2,7 @@
+ config XTENSA
+ 	def_bool y
+ 	select ARCH_32BIT_OFF_T
++	select ARCH_HAS_BINFMT_FLAT if !MMU
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+ 	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+index 82f7d7f234f3..286b425b30b9 100644
+--- a/fs/Kconfig.binfmt
++++ b/fs/Kconfig.binfmt
+@@ -91,9 +91,12 @@ config BINFMT_SCRIPT
  
--		reloc = (u32 __user *)
-+		reloc = (__be32 __user *)
- 			(datapos + (ntohl(hdr->reloc_start) - text_len));
- 		memp = realdatastart;
- 		memp_size = len;
-@@ -619,7 +620,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 				MAX_SHARED_LIBS * sizeof(u32),
- 				FLAT_DATA_ALIGN);
+ 	  Most systems will not boot if you say M or N here.  If unsure, say Y.
  
--		reloc = (u32 __user *)
-+		reloc = (__be32 __user *)
- 			(datapos + (ntohl(hdr->reloc_start) - text_len));
- 		memp = textpos;
- 		memp_size = len;
-@@ -785,15 +786,16 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		u32 __maybe_unused persistent = 0;
- 		for (i = 0; i < relocs; i++) {
- 			u32 addr, relval;
-+			__be32 tmp;
- 
- 			/*
- 			 * Get the address of the pointer to be
- 			 * relocated (of course, the address has to be
- 			 * relocated first).
- 			 */
--			if (get_user(relval, reloc + i))
-+			if (get_user(tmp, reloc + i))
- 				return -EFAULT;
--			relval = ntohl(relval);
-+			relval = ntohl(tmp);
- 			addr = flat_get_relocate_addr(relval);
- 			rp = (u32 __user *)calc_reloc(addr, libinfo, id, 1);
- 			if (rp == (u32 __user *)RELOC_FAILED) {
-@@ -812,8 +814,13 @@ static int load_flat_file(struct linux_binprm *bprm,
- 				 * Do the relocation.  PIC relocs in the data section are
- 				 * already in target order
- 				 */
--				if ((flags & FLAT_FLAG_GOTPIC) == 0)
--					addr = ntohl(addr);
-+				if ((flags & FLAT_FLAG_GOTPIC) == 0) {
-+					/*
-+					 * Meh, the same value can have a different
-+					 * byte order based on a flag..
-+					 */
-+					addr = ntohl((__force __be32)addr);
-+				}
- 				addr = calc_reloc(addr, libinfo, id, 0);
- 				if (addr == RELOC_FAILED) {
- 					ret = -ENOEXEC;
-@@ -828,11 +835,10 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		}
- 	} else {
- 		for (i = 0; i < relocs; i++) {
--			u32 relval;
-+			__be32 relval;
- 			if (get_user(relval, reloc + i))
- 				return -EFAULT;
--			relval = ntohl(relval);
--			old_reloc(relval);
-+			old_reloc(ntohl(relval));
- 		}
- 	}
++config ARCH_HAS_BINFMT_FLAT
++	bool
++
+ config BINFMT_FLAT
+ 	bool "Kernel support for flat binaries"
+-	depends on !MMU || ARM || M68K
++	depends on ARCH_HAS_BINFMT_FLAT
+ 	help
+ 	  Support uClinux FLAT format binaries.
  
 -- 
 2.20.1
