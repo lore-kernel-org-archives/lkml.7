@@ -2,300 +2,131 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3606CC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CBAC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36E3207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="M9UkW3UP"
+	by mail.kernel.org (Postfix) with ESMTP id 8FB0520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388707AbfFJJ2d (ORCPT
+        id S2388770AbfFJJaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 05:28:33 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43294 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388033AbfFJJ2c (ORCPT
+        Mon, 10 Jun 2019 05:30:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:37469 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388380AbfFJJaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 05:28:32 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 16so7227307ljv.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 02:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=siqDWvGSxvpmTq2GM5l552jdMTJFA9bvabxI7lDs8sw=;
-        b=M9UkW3UPLP9GJr/RX3CrUt/jlkZJFeuT8xn9FDO/o0bCTKm3BUpm+VS2jfEfaFXAda
-         rsALVxrCr4vcm45HVjeopfXPfGr+nAbf6y494V78N1MaBSQuE2UrGfCPgXYo5KMAQ9XF
-         fkbrMEzn5GbgduyyIfXA1hAIvGEf3sJwS7S16AAk1OPP+4LYQ8Pb8pgnOjUWKwG5Vgbk
-         FMD7096bhBhdzS/KFWiL9Wl+ioJJ0vhyUCRbpYHR3/GHXxTV2XoKJcxSB9qbNDRpdiwc
-         kMNHrcApaUuakOyY8iQ7XD6YcfKT2HC3LpdWheqw9JfBOziEnPiGu1oDbTE0X09FqE+d
-         +1Yw==
+        Mon, 10 Jun 2019 05:30:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id j18so7108277ioj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 02:30:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=siqDWvGSxvpmTq2GM5l552jdMTJFA9bvabxI7lDs8sw=;
-        b=j57McN4mKJ1FDDH1NnEnVg+rXMRm0YfbapfpZ+1tMdG+CFO/mKQdigm/YB9C0otmFJ
-         DJi3vQX+XUwK5fltjKbIPG+ehBI4eUMvePW+oLK5NpoWMFC7jTLPUVQWMDs3EBQm5HIT
-         6ckjuoMotCb+gsaYrq0BD1O5yiszEWD9ZkYSPr6jZubElGFR9uJ3LDYguXjL2pye2hoV
-         nlOaHnSy/b28SK9yRiXS+A2ZgEc4vagJWsLzlqut2ZI7gutZfvJmOwGiNwTQZOT08PCK
-         17pbd782dgP9hRZkV4B7uAR1eF3jsvAva+Q5jO9ThtNZbpPB9Dmtzivck0q/e6iHvi+4
-         kmPw==
-X-Gm-Message-State: APjAAAVXSXrS/D/blJYkx+V0d/j/MOcPr49jJLZhgrx2I8NKnlbBs5gL
-        hhsuAcb34cfUwgbMySyk8ZX/tw==
-X-Google-Smtp-Source: APXvYqwTwqoLaAq9vX4Zoq2YgFBIJYHMlu+uKRsYN5By8Xhb99xxFDC8Uata1k4OsVPpJ3zmmHWJDA==
-X-Received: by 2002:a2e:9c4d:: with SMTP id t13mr36547053ljj.106.1560158908417;
-        Mon, 10 Jun 2019 02:28:28 -0700 (PDT)
-Received: from [192.168.1.169] (h-29-16.A159.priv.bahnhof.se. [79.136.29.16])
-        by smtp.gmail.com with ESMTPSA id q7sm2218753ljc.45.2019.06.10.02.28.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 02:28:27 -0700 (PDT)
-Subject: Re: [PATCH] mtd: spi-nor: use 16-bit WRR command when QE is set on
- spansion flashes
-To:     Tudor.Ambarus@microchip.com, geert@linux-m68k.org,
-        marek.vasut+renesas@gmail.com, marek.vasut@gmail.com,
-        vigneshr@ti.com
-Cc:     dwmw2@infradead.org, computersforpeace@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <c57fe97b-ad4a-874e-663f-7f3a737824c9@microchip.com>
- <20190610062351.24405-1-tudor.ambarus@microchip.com>
-From:   Jonas Bonn <jonas@norrbonn.se>
-Message-ID: <f4b968d3-b982-68e7-e8e4-d153875f0e1f@norrbonn.se>
-Date:   Mon, 10 Jun 2019 11:28:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Np+xPJWikxtIIlIvGvVx4ZfVKde2a2GTO356MNseHYo=;
+        b=jgqjHfoqTDqz37qexxOpEsTq11cEhkUCvsOoqKbFCe5Y/H3sPCzUsN22D+kyPvMYyQ
+         sH+K/Hvd5BiSe4lOIBtoHn8D5+p1lWH3NLxAFBtAwmUizDt5zYr8F0z/xds+Ukiv8qcU
+         a5LMhPaTa4DSHiTZp2ucfCXFNaV6cIV/1VK9Yq/J8YhqKDMKI66Wp3rcARAxZF2Cj4vH
+         5Z0N8IYl/FA0cD+vbP8Gpmuu6QlpTG4K+rq15oT/vJMwO649xoocvycwUbG4hpeeYeM2
+         uPQ3s1ombALYCz9sYiPECwtAe/AQEZoHiLkTZt1AMkNs+bkKgMIzSIDVEMvnc+zTH0m6
+         wk+Q==
+X-Gm-Message-State: APjAAAWZY37a5iHX+KVacln6SeUROd3RbJHVF3Si7+G4/9X1tgrijUN/
+        ligBzPzkV0Pa3FNidoDZjWIdDJLD4/WfiaD/om5qvlBPkr8d
+X-Google-Smtp-Source: APXvYqz2M+f0Q17h76RoBB7choSL+vGIvH++EpNIaPAzhimyQwDJcGoElZVdPCA72l9rTJFgMT/hvree53vNcYjlWWDhxWCDz0Rs
 MIME-Version: 1.0
-In-Reply-To: <20190610062351.24405-1-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a24:690f:: with SMTP id e15mr378569itc.31.1560159005811;
+ Mon, 10 Jun 2019 02:30:05 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 02:30:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000055aba7058af4d378@google.com>
+Subject: KASAN: null-ptr-deref Read in css_task_iter_advance
+From:   syzbot <syzbot+d4bba5ccd4f9a2a68681@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
+        daniel@iogearbox.net, hannes@cmpxchg.org, kafai@fb.com,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor,
+Hello,
 
-On 10/06/2019 08:24, Tudor.Ambarus@microchip.com wrote:
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
-> 
-> SPI memory devices from different manufacturers have widely
-> different configurations for Status, Control and Configuration
-> registers. JEDEC 216C defines a new map for these common register
-> bits and their functions, and describes how the individual bits may
-> be accessed for a specific device. For the JEDEC 216B compliant
-> flashes, we can partially deduce Status and Configuration registers
-> functions by inspecting the 16th DWORD of BFPT. Older flashes that
-> don't declare the SFDP tables (SPANSION FL512SAIFG1 311QQ063 A ©11
-> SPANSION) let the software decide how to interact with these registers.
-> 
-> The commit dcb4b22eeaf4 ("spi-nor: s25fl512s supports region locking")
-> uncovered a probe error for s25fl512s, when the QUAD bit CR[1] was set
-> in the bootloader. When this bit is set, only the Write Register
-> WRR command format with 16 data bits may be used, WRR with 8 bits
-> is not recognized and hence the error when trying to clear the block
-> protection bits.
-> 
-> Fix the above by using 16-bits WRR command when Quad bit is set.
-> 
-> Backward compatibility should be fine. The newly introduced
-> spi_nor_spansion_clear_sr_bp() is tightly coupled with the
-> spansion_quad_enable() function. Both assume that the Write Register
-> with 16 bits, together with the Read Configuration Register (35h)
-> instructions are supported.
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> ---
-> Geert, Jonas,
-> 
-> This patch is compile-tested only. I don't have the flash, I need your
-> help for testing this.
+syzbot found the following crash on:
 
-Tested this on my hardware.  It works fine in the non-quad case.
+HEAD commit:    3f310e51 Add linux-next specific files for 20190607
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=170acfa6a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d176e1849bbc45
+dashboard link: https://syzkaller.appspot.com/bug?extid=d4bba5ccd4f9a2a68681
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Tested-by: Jonas Bonn <jonas@norrbonn.se>
+Unfortunately, I don't have any reproducer for this crash yet.
 
-/Jonas
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d4bba5ccd4f9a2a68681@syzkaller.appspotmail.com
 
-> 
-> Thanks,
-> ta
-> 
->   drivers/mtd/spi-nor/spi-nor.c | 116 ++++++++++++++++++++++++++++++++++++++----
->   include/linux/mtd/spi-nor.h   |   1 +
->   2 files changed, 106 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index c0a8837c0575..af9ac7f09cc2 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -1636,6 +1636,92 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
->   	return 0;
->   }
->   
-> +/**
-> + * spi_nor_clear_sr_bp() - clear the Status Register Block Protection bits.
-> + * @nor:        pointer to a 'struct spi_nor'
-> + *
-> + * Read-modify-write function that clears the Block Protection bits from the
-> + * Status Register without affecting other bits.
-> + *
-> + * Return: 0 on success, -errno otherwise.
-> + */
-> +static int spi_nor_clear_sr_bp(struct spi_nor *nor)
-> +{
-> +	int ret;
-> +	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
-> +
-> +	ret = read_sr(nor);
-> +	if (ret < 0) {
-> +		dev_err(nor->dev, "error while reading status register\n");
-> +		return ret;
-> +	}
-> +
-> +	write_enable(nor);
-> +
-> +	ret = write_sr(nor, ret & ~mask);
-> +	if (ret) {
-> +		dev_err(nor->dev, "write to status register failed\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = spi_nor_wait_till_ready(nor);
-> +	if (ret)
-> +		dev_err(nor->dev, "timeout while writing status register\n");
-> +	return ret;
-> +}
-> +
-> +/**
-> + * spi_nor_spansion_clear_sr_bp() - clear the Status Register Block Protection
-> + * bits on spansion flashes.
-> + * @nor:        pointer to a 'struct spi_nor'
-> + *
-> + * Read-modify-write function that clears the Block Protection bits from the
-> + * Status Register without affecting other bits. The function is tightly
-> + * coupled with the spansion_quad_enable() function. Both assume that the Write
-> + * Register with 16 bits, together with the Read Configuration Register (35h)
-> + * instructions are supported
-> + *
-> + * Return: 0 on success, -errno otherwise.
-> + */
-> +static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
-> +{
-> +	int ret;
-> +	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
-> +	u8 sr_cr[2] = {0};
-> +
-> +	/* Check current Quad Enable bit value. */
-> +	ret = read_cr(nor);
-> +	if (ret < 0) {
-> +		dev_err(nor->dev,
-> +			"error while reading configuration register\n");
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * When the configuration register QUAD bit CR[1] is 1, only
-> +	 * the WRR command format with 16 data bits may be used.
-> +	 */
-> +	if (ret & CR_QUAD_EN_SPAN) {
-> +		sr_cr[1] = ret;
-> +
-> +		ret = read_sr(nor);
-> +		if (ret < 0) {
-> +			dev_err(nor->dev,
-> +				"error while reading status register\n");
-> +			return ret;
-> +		}
-> +		sr_cr[0] = ret & ~mask;
-> +
-> +		ret = write_sr_cr(nor, sr_cr);
-> +		if (ret)
-> +			dev_err(nor->dev, "16-bit write register failed\n");
-> +		return ret;
-> +	}
-> +
-> +	/* If quad bit is not set, use 8-bit WRR command. */
-> +	return spi_nor_clear_sr_bp(nor);
-> +}
-> +
->   /* Used when the "_ext_id" is two bytes at most */
->   #define INFO(_jedec_id, _ext_id, _sector_size, _n_sectors, _flags)	\
->   		.id = {							\
-> @@ -3663,6 +3749,8 @@ static int spi_nor_init_params(struct spi_nor *nor,
->   		default:
->   			/* Kept only for backward compatibility purpose. */
->   			params->quad_enable = spansion_quad_enable;
-> +			if (nor->clear_sr_bp)
-> +				nor->clear_sr_bp = spi_nor_spansion_clear_sr_bp;
->   			break;
->   		}
->   
-> @@ -3915,17 +4003,13 @@ static int spi_nor_init(struct spi_nor *nor)
->   {
->   	int err;
->   
-> -	/*
-> -	 * Atmel, SST, Intel/Numonyx, and others serial NOR tend to power up
-> -	 * with the software protection bits set
-> -	 */
-> -	if (JEDEC_MFR(nor->info) == SNOR_MFR_ATMEL ||
-> -	    JEDEC_MFR(nor->info) == SNOR_MFR_INTEL ||
-> -	    JEDEC_MFR(nor->info) == SNOR_MFR_SST ||
-> -	    nor->info->flags & SPI_NOR_HAS_LOCK) {
-> -		write_enable(nor);
-> -		write_sr(nor, 0);
-> -		spi_nor_wait_till_ready(nor);
-> +	if (nor->clear_sr_bp) {
-> +		err = nor->clear_sr_bp(nor);
-> +		if (err) {
-> +			dev_err(nor->dev,
-> +				"fail to clear block protection bits\n");
-> +			return err;
-> +		}
+==================================================================
+BUG: KASAN: null-ptr-deref in atomic_read  
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: null-ptr-deref in css_task_iter_advance+0x240/0x540  
+kernel/cgroup/cgroup.c:4503
+Read of size 4 at addr 0000000000000004 by task syz-executor.2/26575
+
+CPU: 1 PID: 26575 Comm: syz-executor.2 Not tainted 5.2.0-rc3-next-20190607  
+#11
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  __kasan_report.cold+0x5/0x36 mm/kasan/report.c:486
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+  kasan_check_read+0x11/0x20 mm/kasan/common.c:94
+  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+  css_task_iter_advance+0x240/0x540 kernel/cgroup/cgroup.c:4503
+  css_task_iter_start+0x18b/0x230 kernel/cgroup/cgroup.c:4543
+  __cgroup_procs_start.isra.0+0x32f/0x400 kernel/cgroup/cgroup.c:4638
+  cgroup_procs_start kernel/cgroup/cgroup.c:4660 [inline]
+  cgroup_procs_start+0x1e7/0x260 kernel/cgroup/cgroup.c:4647
+  cgroup_seqfile_start+0xa4/0xd0 kernel/cgroup/cgroup.c:3752
+  kernfs_seq_start+0xdc/0x190 fs/kernfs/file.c:118
+  seq_read+0x2a7/0x1110 fs/seq_file.c:224
+  kernfs_fop_read+0xed/0x560 fs/kernfs/file.c:252
+  do_loop_readv_writev fs/read_write.c:714 [inline]
+  do_loop_readv_writev fs/read_write.c:701 [inline]
+  do_iter_read+0x4a4/0x660 fs/read_write.c:935
+  vfs_readv+0xf0/0x160 fs/read_write.c:997
+  do_preadv+0x1c4/0x280 fs/read_write.c:1089
+  __do_sys_preadv fs/read_write.c:1139 [inline]
+  __se_sys_preadv fs/read_write.c:1134 [inline]
+  __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1134
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459279
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f4ee9fa8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000459279
+RDX: 0000000000000001 RSI: 0000000020000180 RDI: 0000000000000005
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f4ee9fa96d4
+R13: 00000000004c6376 R14: 00000000004dae78 R15: 00000000ffffffff
+==================================================================
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
->   	}
->   
->   	if (nor->quad_enable) {
-> @@ -4050,6 +4134,16 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->   	if (info->flags & SPI_S3AN)
->   		nor->flags |=  SNOR_F_READY_XSR_RDY;
->   
-> +	/*
-> +	 * Atmel, SST, Intel/Numonyx, and others serial NOR tend to power up
-> +	 * with the software protection bits set.
-> +	 */
-> +	if (JEDEC_MFR(nor->info) == SNOR_MFR_ATMEL ||
-> +	    JEDEC_MFR(nor->info) == SNOR_MFR_INTEL ||
-> +	    JEDEC_MFR(nor->info) == SNOR_MFR_SST ||
-> +	    nor->info->flags & SPI_NOR_HAS_LOCK)
-> +		nor->clear_sr_bp = spi_nor_clear_sr_bp;
-> +
->   	/* Parse the Serial Flash Discoverable Parameters table. */
->   	ret = spi_nor_init_params(nor, &params);
->   	if (ret)
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index b3d360b0ee3d..566bd5010bc8 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -410,6 +410,7 @@ struct spi_nor {
->   	int (*flash_unlock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
->   	int (*flash_is_locked)(struct spi_nor *nor, loff_t ofs, uint64_t len);
->   	int (*quad_enable)(struct spi_nor *nor);
-> +	int (*clear_sr_bp)(struct spi_nor *nor);
->   
->   	void *priv;
->   };
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
