@@ -2,72 +2,80 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14877C4321B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BD5C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98962089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jrk/1Qed";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jrk/1Qed"
+	by mail.kernel.org (Postfix) with ESMTP id 481E12145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390434AbfFJWs5 (ORCPT
+        id S2390475AbfFJWs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 10 Jun 2019 18:48:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59984 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390340AbfFJWs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 18:48:57 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:33088 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390340AbfFJWs4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 18:48:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id CE2758EE182;
-        Mon, 10 Jun 2019 15:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1560206935;
-        bh=mb6IzwM78BT/viG2YgEvk/s6gBgJO14fZN6QaNMTcf0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jrk/1QedcyxDoeH/nG3zibD+xvky2BjHsl77hFVLLkn8RtjNGKG+ui2IHJJiFOsAd
-         mrCUm9W/U0SZA9+ac9aDNJftoFL118Pk1K8N3fUWBj56jSOc2W9U+f3NP4SgzM5FuL
-         /48jgcNYp4iiQH+T4GgcAYd1ZlKL+h36987ETg1E=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ASJhwJ4X_a3j; Mon, 10 Jun 2019 15:48:55 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 3B0818EE105;
-        Mon, 10 Jun 2019 15:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1560206935;
-        bh=mb6IzwM78BT/viG2YgEvk/s6gBgJO14fZN6QaNMTcf0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jrk/1QedcyxDoeH/nG3zibD+xvky2BjHsl77hFVLLkn8RtjNGKG+ui2IHJJiFOsAd
-         mrCUm9W/U0SZA9+ac9aDNJftoFL118Pk1K8N3fUWBj56jSOc2W9U+f3NP4SgzM5FuL
-         /48jgcNYp4iiQH+T4GgcAYd1ZlKL+h36987ETg1E=
-Message-ID: <1560206933.3698.27.camel@HansenPartnership.com>
-Subject: Re: [PATCH] drivers/ata: print trim features at device
- initialization
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Date:   Mon, 10 Jun 2019 15:48:53 -0700
-In-Reply-To: <b554c428-417e-5fef-1776-87a4db1d674a@yandex-team.ru>
-References: <155989287898.1506.14253954112551051148.stgit@buzz>
-         <yq1wohxib7t.fsf@oracle.com>
-         <eebfb1cc-f6d0-580e-1d56-2af0f481a92f@yandex-team.ru>
-         <048ed77f-8faa-fb67-c6bc-10d953f52f89@yandex-team.ru>
-         <1560116241.3324.19.camel@HansenPartnership.com>
-         <b554c428-417e-5fef-1776-87a4db1d674a@yandex-team.ru>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 15:48:56 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2019 15:48:56 -0700
+Message-ID: <1b961c71d30e31ecb22da2c5401b1a81cb802d86.camel@intel.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Mon, 10 Jun 2019 15:40:49 -0700
+In-Reply-To: <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+         <20190606200926.4029-4-yu-cheng.yu@intel.com>
+         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
+         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
+         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+         <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
+         <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
+         <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
+         <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
+         <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
+         <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
+         <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
+         <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
+         <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
+X-Mailer: Evolution 3.28.1-2 
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,116 +83,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-10 at 10:49 +0300, Konstantin Khlebnikov wrote:
-> On 10.06.2019 0:37, James Bottomley wrote:
-> > On Sat, 2019-06-08 at 17:13 +0300, Konstantin Khlebnikov wrote:
-> > > > On 08.06.2019 11:25, Christoph Hellwig wrote:> On Fri, Jun 07,
-> > > > 2019
-> > > > at 10:34:39AM +0300, Konstantin Khlebnikov wrote:
-> > > >   >
-> > > >   > Do we really need to spam dmesg with even more ATA
-> > > > crap?  What
-> > > > about
-> > > >   > a sysfs file that can be read on demand instead?
-> > > >   >
-> > > > 
-> > > > Makes sense.
-> > > > 
-> > > > Trim state is exposed for ata_device:
-> > > > /sys/class/ata_device/devX.Y/trim
-> > > > but there is no link from scsi device to ata device so they
-> > > > hard to match.
-> > > > 
-> > > > I'll think about it.
+On Mon, 2019-06-10 at 15:02 -0700, Dave Hansen wrote:
+> On 6/10/19 1:58 PM, Yu-cheng Yu wrote:
+> > > > On each memory request, the kernel then must consider a percentage of
+> > > > allocated space in its calculation, and on systems with less memory
+> > > > this quickly becomes a problem.
 > > > 
-> > > Nope. There is no obvious way to link scsi device with
-> > > ata_device. ata_device is built on top of "transport_class" and
-> > > "attribute_container". This some extremely over engineered sysfs
-> > > framework used only in ata/scsi. I don't want to touch this.
+> > > I'm not sure what you're referring to here?  Are you referring to our
+> > > overcommit limits?
 > > 
-> > You don't need to know any of that.  The problem is actually when
-> > the ata transport classes were first created, the devices weren't
-> > properly parented.  What should have happened, like every other
-> > transport class, is that the devices should have descended down to
-> > the scsi device as the leaf in an integrated fashion.  Instead,
-> > what we seem to have is three completely separate trees.
-> > 
-> > So if you look at a SAS device, you see from the pci device:
-> > 
-> > host2/port-2:0/end_device-2:0/target2:0:0/2:0:0:0/block/sdb/sdb1
-> > 
-> > But if you look at a SATA device, you see three separate paths:
-> > 
-> > ata3/host3/target3\:0\:0/3\:0\:0\:0/block/sda/sda1
-> > ata3/link3/dev3.0/ata_device/dev3.0
-> > ata3/ata_port/ata3
-> > 
-> > Instead of an integrated tree
-> > 
-> > Unfortunately, this whole thing is unfixable now.  If I integrate
-> > the tree properly, the separate port and link directories will get
-> > subsumed and we won't be able to recover them with judicious
-> > linking so scripts relying on them will break.  The best we can
-> > probably do is add additional links with what we have.
-> > 
-> > To follow the way we usually do it, there should be a link from the
-> > ata device to the scsi target, but that wouldn't help you find the
-> > "trim" files, so it sounds like you want a link from the scsi
-> > device to the ata device, which would?
+> > Yes.
 > 
-> Yes, I'm talking about link from scsi device to leaf ata_device node.
-> 
-> In libata scsi_device has one to one relation with ata_device.
-> So making link like /sys/class/block/sda/device/ata_device should be
-> possible easy.
-> But I haven't found implicit reference from struct ata_device to
-> ata_device in sysfs.
+> My assumption has always been that these large, potentially sparse
+> hardware tables *must* be mmap()'d with MAP_NORESERVE specified.  That
+> should keep them from being problematic with respect to overcommit.
 
-If that's all you want, it is pretty simple modulo the fact we can only
-get at the tdev, not the lower transport device, which is what you
-want, but at least it's linear from the symlink.
+Ok, we will go back to do_mmap() with MAP_PRIVATE, MAP_NORESERVE and
+VM_DONTDUMP.  The bitmap will cover only 48-bit address space.
 
-The attached patch should do this.
+We then create PR_MARK_CODE_AS_LEGACY.  The kernel will set the bitmap, but it
+is going to be slow.
 
-Now I see this for my non-sas device:
+Perhaps we still let the app fill the bitmap?
 
-# ls -l /sys/class/scsi_device/3\:0\:0\:0/device/ata_device
-lrwxrwxrwx 1 root root 0 Jun 10 13:39 /sys/class/scsi_device/3:0:0:0/device/ata_device -> ../../../link3/dev3.0
-
-James
-
----
-
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 391ac0503dc0..b644336a6d65 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4576,7 +4576,20 @@ void ata_scsi_scan_host(struct ata_port *ap, int sync)
- 			sdev = __scsi_add_device(ap->scsi_host, channel, id, 0,
- 						 NULL);
- 			if (!IS_ERR(sdev)) {
-+				int r;
-+
- 				dev->sdev = sdev;
-+				/* this is a sysfs stupidity: we don't
-+				 * care if the link actually gets
-+				 * created: there's no error handling
-+				 * for failure and we continue on
-+				 * regardless, but we have to discard
-+				 * the return value like this to
-+				 * defeat unused result checking */
-+				r = sysfs_create_link(&sdev->sdev_gendev.kobj,
-+						      &dev->tdev.kobj,
-+						      "ata_device");
-+				(void)r;
- 				scsi_device_put(sdev);
- 			} else {
- 				dev->sdev = NULL;
-@@ -4703,6 +4716,7 @@ static void ata_scsi_remove_dev(struct ata_device *dev)
- 		ata_dev_info(dev, "detaching (SCSI %s)\n",
- 			     dev_name(&sdev->sdev_gendev));
- 
-+		sysfs_remove_link(&sdev->sdev_gendev.kobj, "ata_device");
- 		scsi_remove_device(sdev);
- 		scsi_device_put(sdev);
- 	}
+Yu-cheng
