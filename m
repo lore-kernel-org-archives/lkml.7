@@ -2,104 +2,115 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8707AC468BD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D793EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653D520833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EFE207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="d6t8jFSZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H1IZduQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbfFJBKl (ORCPT
+        id S2387405AbfFJBME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 21:10:41 -0400
-Received: from mo-csw1514.securemx.jp ([210.130.202.153]:48400 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfFJBKl (ORCPT
+        Sun, 9 Jun 2019 21:12:04 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:43221 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725933AbfFJBMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 21:10:41 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1514) id x5A1AUBL030841; Mon, 10 Jun 2019 10:10:30 +0900
-X-Iguazu-Qid: 34trJGGSgoJWdfxbTO
-X-Iguazu-QSIG: v=2; s=0; t=1560129029; q=34trJGGSgoJWdfxbTO; m=aIrqk9CdBBughxTo19QPF+oC/4yEyVt+H0wlgc4JEC0=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1510) id x5A1ASfc035108;
-        Mon, 10 Jun 2019 10:10:29 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id x5A1ASBg004576;
-        Mon, 10 Jun 2019 10:10:28 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id x5A1AS6h021925;
-        Mon, 10 Jun 2019 10:10:28 +0900
-Date:   Mon, 10 Jun 2019 10:10:25 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 4.14 03/35] neighbor: Call __ipv4_neigh_lookup_noref in
- neigh_xmit
-X-TSB-HOP: ON
-Message-ID: <20190610011024.utn5fft7nocabqxb@toshiba.co.jp>
-References: <20190609164125.377368385@linuxfoundation.org>
- <20190609164125.756810906@linuxfoundation.org>
+        Sun, 9 Jun 2019 21:12:03 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id D905444A;
+        Sun,  9 Jun 2019 21:12:01 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sun, 09 Jun 2019 21:12:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=fe120Davi0T3Sjl5YLfPWyocg7C
+        ao7t/LQjsjCRH0lU=; b=d6t8jFSZevacgPIZUzoP50IQXqsA55IR0OudGjTn3lm
+        hDUlRxV/3cdMiN4nLp5Z967BrAUt5Ud3jcA7VKV4lx1eBuAHiChgHM4+To+OoSON
+        r5b0ANqXHUGHxokQskqp9lFjIzn4wcEXdg5P/JSkAr3CqaoR6I94RTg2y7/oEr/i
+        Ai0G7tfZEsSIJId3QuZYdosvqpeK7VK1uYj2wbGW/xMGA4JAuoaVYAuUuK0rQruD
+        UxwU1d2NmigbgLJk2r5FHiZFck/h/yIhcrw2DWhIzO2/NE+P69n8A+Cq/fyg9+WZ
+        LTnwwr3c1EJ8VnbJH9wwcXQBqqgXHbrSJzM9j17CzPQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fe120D
+        avi0T3Sjl5YLfPWyocg7Cao7t/LQjsjCRH0lU=; b=H1IZduQRvo0WIm/CU1Mz/i
+        7BudZwbDvx5M7oJe7sPwy9IY4kvjH/4aJPXE2+tGoZBkqN2pTN8TuozXtrcmgZDC
+        Nv/pvNwJP7fnu0mwjkL7+B3o0Tm3Wa9apgkUybGxqMURUppPrGBTM5PPTeJmWmDT
+        mCbMbMviuT0MOTrSQe49JPSG/u8mnmgNvD5niaFTOaT2bxYZg8GaaO0dXpJv4jDK
+        VoBdoBpTr/cCzzsuvH78W6sOh3jGYm90UfeVfLUvgTDMwp7QYNchdjTL11PbcFe3
+        i+0zOR2kxHfDVs/620EyZrWlu98muHaWDD+0MZmuO+b0TBwsnQyVe9Bi6cCJARHw
+        ==
+X-ME-Sender: <xms:YK79XNTKxStsUgsqyZBtk-QZzbz5HitfbyVxpCW6Qf5aRlKFiVwBPQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudehuddggedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppedvuddtrddvfedrfedrleenucfrrghrrghmpehmrghilhhf
+    rhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:YK79XAmZQVccUpEAxclDJ-hf66vneQBtvQIiY88vdg7TheWrGXY-Sg>
+    <xmx:YK79XPbGGQWeuyPHG9hZccOyz3dudVlQJSpP9OSa6eodnt-3VZaVgw>
+    <xmx:YK79XCY1yyvMDSgBSOuqEzdQTfpTQB-qZzeD26N38MOJ-c6SbT2osg>
+    <xmx:Ya79XI18SokR_XETjHXhVy01npYJIOJ8i5qlPvo1WqHwx4wmPMHbUw>
+Received: from localhost (unknown [210.23.3.9])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 52E768005C;
+        Sun,  9 Jun 2019 21:11:59 -0400 (EDT)
+Date:   Mon, 10 Jun 2019 11:11:55 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Neil Brown <neilb@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: filesystems: vfs: Render method descriptions
+Message-ID: <20190610011155.GB2469@caerus>
+References: <20190604002656.30925-1-tobin@kernel.org>
+ <20190606094628.0e8775f7@lwn.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190609164125.756810906@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190606094628.0e8775f7@lwn.net>
+X-Mailer: Mutt 1.9.4 (2018-02-28)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Sun, Jun 09, 2019 at 06:42:09PM +0200, Greg Kroah-Hartman wrote:
-> From: David Ahern <dsahern@gmail.com>
+On Thu, Jun 06, 2019 at 09:46:28AM -0600, Jonathan Corbet wrote:
+> On Tue,  4 Jun 2019 10:26:56 +1000
+> "Tobin C. Harding" <tobin@kernel.org> wrote:
 > 
-> [ Upstream commit 4b2a2bfeb3f056461a90bd621e8bd7d03fa47f60 ]
+> > Currently vfs.rst does not render well into HTML the method descriptions
+> > for VFS data structures.  We can improve the HTML output by putting the
+> > description string on a new line following the method name.
+> > 
+> > Suggested-by: Jonathan Corbet <corbet@lwn.net>
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> > 
+> > Jon,
+> > 
+> > As discussed on LKML; this patch applies on top of the series
+> > 
+> > 	[PATCH v4 0/9] docs: Convert VFS doc to RST
+> > 
+> > If it does not apply cleanly to your branch please feel free to ask me
+> > to fix it.
 > 
-> Commit cd9ff4de0107 changed the key for IFF_POINTOPOINT devices to
-> INADDR_ANY but neigh_xmit which is used for MPLS encapsulations was not
-> updated to use the altered key. The result is that every packet Tx does
-> a lookup on the gateway address which does not find an entry, a new one
-> is created only to find the existing one in the table right before the
-> insert since arp_constructor was updated to reset the primary key. This
-> is seen in the allocs and destroys counters:
->     ip -s -4 ntable show | head -10 | grep alloc
-> 
-> which increase for each packet showing the unnecessary overhread.
-> 
-> Fix by having neigh_xmit use __ipv4_neigh_lookup_noref for NEIGH_ARP_TABLE.
-> 
-> Fixes: cd9ff4de0107 ("ipv4: Make neigh lookup keys for loopback/point-to-point devices be INADDR_ANY")
-> Reported-by: Alan Maguire <alan.maguire@oracle.com>
-> Signed-off-by: David Ahern <dsahern@gmail.com>
-> Tested-by: Alan Maguire <alan.maguire@oracle.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
+> There was one merge conflict, but nothing too serious.  I've applied it,
+> and things look a lot better - thanks!
 
-This commit also requires the following commit:
+Awesome, cheers mate.
 
-commit 9b3040a6aafd7898ece7fc7efcbca71e42aa8069
-Author: David Ahern <dsahern@gmail.com>
-Date:   Sun May 5 11:16:20 2019 -0700
-
-    ipv4: Define __ipv4_neigh_lookup_noref when CONFIG_INET is disabled
-
-    Define __ipv4_neigh_lookup_noref to return NULL when CONFIG_INET is disabled.
-
-    Fixes: 4b2a2bfeb3f0 ("neighbor: Call __ipv4_neigh_lookup_noref in neigh_xmit")
-    Reported-by: kbuild test robot <lkp@intel.com>
-    Signed-off-by: David Ahern <dsahern@gmail.com>
-    Signed-off-by: David S. Miller <davem@davemloft.net>
-
-And this is also necessary for 4.4.y, 4.14.y, 4.19.y and 5.1.y.
-Please apply this commit.
-
-Best regards,
-  Nobuhiro
+	Tobin
