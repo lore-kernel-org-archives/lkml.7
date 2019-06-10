@@ -2,150 +2,101 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC2FC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D4FC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24715206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560185111;
-	bh=Y8E+4PLVaGcBC0QnRuAjUawfq3/72hXoE582Tg5tIuw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GppAuD8uB3mvh86JxwbC9OT0nNr8X4aGA3gakcMOs7cb9v6CkrFd2L/6zOTp5HKoB
-	 Ps25IdH6TPEEcRhJ8qiPs+win1zvLIGpy4tA/Ad38E4XkPSqyaz1HW08Q3chP+f1I+
-	 zC96OQAt4hjZbmnjdg1FK4WINwcFGdIIv1S+POLE=
+	by mail.kernel.org (Postfix) with ESMTP id 360D4206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:45:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dLs3GkEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfFJQpK (ORCPT
+        id S1727947AbfFJQpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfFJQpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:45:09 -0400
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6C7021721
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560185109;
-        bh=Y8E+4PLVaGcBC0QnRuAjUawfq3/72hXoE582Tg5tIuw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Fdl5Mp6OFSDt3DCrov3d5WLecAs8AUPX1ywAScLTsCKksWtXDo2JJqnW3akTYEVlF
-         iSlMkzu6Ioq3+PYsbL2AtxOzNh4FtmhrlJgmlKU9ZhoQwnwjdO3mm0JIhFqWIsn70P
-         wiVCMaw4aSvGl/y7bYPEV5gs0S9vVdxgVt9FzYXM=
-Received: by mail-wr1-f42.google.com with SMTP id f9so9869375wre.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:45:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAWO3b28E+oVhTLe5WJ+GY3BkXeQj1vIgUMytoRoiJ/OGBNbggRf
-        Zj9kZ5u2hBTud4AmXqZEWV7y8Q7o1pV2W8ZM5aVLUg==
-X-Google-Smtp-Source: APXvYqzYkr99eA23CbFFE0bAMXptfrueXWcrQU2TMu+R/pORoCW0lJCU07jWbIkOi7KgS2qyV0BaNVqRqxtywNB94M0=
-X-Received: by 2002:a5d:4d06:: with SMTP id z6mr19532206wrt.343.1560185107248;
- Mon, 10 Jun 2019 09:45:07 -0700 (PDT)
+        Mon, 10 Jun 2019 12:45:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37831 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfFJQpl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:45:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v14so9895260wrr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=atD0PAi5sOPjSTIUUiE9fFF80lpCvQQKnWdofwI4CI8=;
+        b=dLs3GkEG06LBImSCtU4a4V8jXEuk8rKwMUHm/kWB8kFTH1DYKZXAc5sf8OLn11z4Qi
+         CT518WxPuKwwWBMO5Cht9KvgWQmqpjALn6YS94P4IM+0OEbL6aNxKpvwMlmoanOEG8e1
+         sr6+yB0LwZxDJmkipEhPMBL7em/oi+hHiIqlfqZBhwxaPN3perkctaBNG2sRbs9+gY6Z
+         V/Dkx0SVfgqYKC9yXWIiOx3mpC9GguyMzUFfaqe5Wu5g84L4IDygZjWfgp7rW8hFMbp2
+         NysgQxSw1r0XKDeLLCvlCECQF6nIHnzEvUxNdnWyI7KsZ6TmEM0zQgJgznSPfNesMR0d
+         O39w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=atD0PAi5sOPjSTIUUiE9fFF80lpCvQQKnWdofwI4CI8=;
+        b=Ukr8ZTeSvzHZoFEJAeqmlsWUnagjRP+JZMTEyJ0lm6O9wMrRzpJufuSKhBvRQfQhIC
+         I490mfkD3LxmrPzdzAQOqboWccIsvyyb8Xs9+czVaYxOQ45BkQMdTfIv3TJYpgaOrj9C
+         8hZd+DDm43vmOxLCeJ72PQOtc4Bcfs63y+mmfaGUnLRp3Ifmc9qvY4XADbBrwLc/uLf0
+         CgEEnaWyanZYSyJVayhnRCbr29kdvpRjeVAwqsqkh1sKjCflrhMp0euQqjF1lquPDz9e
+         6PS7wdfxiiKMWZRExXGRXPXBS6Gro+GR2myR5rlXZPKX4ZXoMatBYBUF5TOwnKIVEexK
+         lVRA==
+X-Gm-Message-State: APjAAAURbDW9FZnud5iFcrljLgJLzPlral+RJr7wMcnGsnp3mn9wcMk9
+        wynSwEP3R8jWTvBQDfcDtLXn9pjU
+X-Google-Smtp-Source: APXvYqwAlPuwzIPq1MSOToglEmT/DFNbT0pEDv8nx8cpyBG5z+0hTiPXvPFfRewOCOPc/g9BnsUZOw==
+X-Received: by 2002:a5d:5510:: with SMTP id b16mr11138175wrv.267.1560185139530;
+        Mon, 10 Jun 2019 09:45:39 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133DDA40000C4C39937FBD289.dip0.t-ipconnect.de. [2003:f1:33dd:a400:c4:c399:37fb:d289])
+        by smtp.googlemail.com with ESMTPSA id g17sm11441158wrm.7.2019.06.10.09.45.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 09:45:39 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/2] arm64: dts: g12a/g12b: add the Ethernet PHY GPIO IRQs
+Date:   Mon, 10 Jun 2019 18:45:29 +0200
+Message-Id: <20190610164531.8303-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
- <20190606021145.12604-4-sean.j.christopherson@intel.com> <20190610160005.GC3752@linux.intel.com>
-In-Reply-To: <20190610160005.GC3752@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 10 Jun 2019 09:44:55 -0700
-X-Gmail-Original-Message-ID: <CALCETrVovr8XNZSroey7pHF46O=kj_c5D9K8h=z2T_cNrpvMig@mail.gmail.com>
-Message-ID: <CALCETrVovr8XNZSroey7pHF46O=kj_c5D9K8h=z2T_cNrpvMig@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/5] x86/sgx: Enforce noexec filesystem restriction
- for enclaves
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 9:00 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Wed, Jun 05, 2019 at 07:11:43PM -0700, Sean Christopherson wrote:
-> > +             goto out;
-> > +     }
-> > +
-> > +     /*
-> > +      * Query VM_MAYEXEC as an indirect path_noexec() check (see do_mmap()),
-> > +      * but with some future proofing against other cases that may deny
-> > +      * execute permissions.
-> > +      */
-> > +     if (!(vma->vm_flags & VM_MAYEXEC)) {
-> > +             ret = -EACCES;
-> > +             goto out;
-> > +     }
-> > +
-> > +     if (copy_from_user(dst, (void __user *)src, PAGE_SIZE))
-> > +             ret = -EFAULT;
-> > +     else
-> > +             ret = 0;
-> > +
-> > +out:
-> > +     up_read(&current->mm->mmap_sem);
-> > +
-> > +     return ret;
-> > +}
->
-> I would suggest to express the above instead like this for clarity
-> and consistency:
->
->                 goto err_map_sem;
->         }
->
->         /* Query VM_MAYEXEC as an indirect path_noexec() check
->          * (see do_mmap()).
->          */
->         if (!(vma->vm_flags & VM_MAYEXEC)) {
->                 ret = -EACCES;
->                 goto err_mmap_sem;
->         }
->
->         if (copy_from_user(dst, (void __user *)src, PAGE_SIZE)) {
->                 ret = -EFAULT;
->                 goto err_mmap_sem;
->         }
->
->         return 0;
->
-> err_mmap_sem:
->         up_read(&current->mm->mmap_sem);
->         return ret;
-> }
->
-> The comment about future proofing is unnecessary.
->
+Avoid polling of the PHY status by passing the Ethernet PHY's GPIO
+interrupt line to the PHY node.
 
-I'm also torn as to whether this patch is needed at all.  If we ever
-get O_MAYEXEC, then enclave loaders should use it to enforce noexec in
-userspace.  Otherwise I'm unconvinced it's that special.
+I tested this successfully on my X96 Max, but I don't have an Odroid-N2
+to test it there. The reset and interrupt GPIO part of the schematics
+seems to be identical for both boards (and probably other "reference
+design" based boards as well).
+
+This depends on two of my other series:
+1. "irqchip/meson-gpio: Add support for Meson-G12A SoC" from [0]
+2. "Ethernet PHY reset GPIO updates for Amlogic SoCs" from [1]
+
+
+[0] https://patchwork.kernel.org/cover/10983339/
+[1] https://patchwork.kernel.org/cover/10985155/
+
+
+Martin Blumenstingl (2):
+  arm64: dts: meson: g12b: odroid-n2: add the Ethernet PHY interrupt
+    line
+  arm64: dts: meson: g12a: x96-max: add the Ethernet PHY interrupt line
+
+ arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts   | 4 ++++
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+-- 
+2.22.0
+
