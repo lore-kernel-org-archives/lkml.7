@@ -2,109 +2,193 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0DCC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B016BC31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F5620820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:38:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="BLco2ick"
+	by mail.kernel.org (Postfix) with ESMTP id 7FC30206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560184974;
+	bh=tXbHag/USdm+4mUHgtj4zWsRGotIHMmzJx1x6Cx6xwE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qdG+yVLv9C3t8SJlr6iOG38ka48F45F1QWk6tIP7XfR90pRGU8mC2oiJctOO9YYhr
+	 g/ucyYkYdgSKFlHMrs0T+eKZuFFdwDdy2XpdyVLjH6sCIQsluNwAt/PBL562CnxILK
+	 8gdV/eTjFVkEyQ+fQ9x0dTrLJIUUfZlu7IP6PovE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbfFJQiP (ORCPT
+        id S1727796AbfFJQmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:38:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53825 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbfFJQiD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:38:03 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so18828wmj.3;
-        Mon, 10 Jun 2019 09:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=93d8Luo3dr92mQ97MIWFoBIVe2vH3TgLc7Y5zBMUADU=;
-        b=BLco2ickJdzVTDOmtPA6pU8JGKbc8q/sFLGVjNqwdZQSjNAV9PQk1ZLJUBLOADSWWs
-         gwUJ1+DOIjdupl+cO9WBuzZIxZ0WDt9vFzq+8Nq+qgF5Tr4Iq1REeTMYjpE26W3NkQ1r
-         SUk1SQqhaHpn6JldkZfm5nY8tHKF5MQ0Izu4n650nIvTFyKX3mv+CBuUPkjD+vpLrQKa
-         KErEwVcCmEdUpnNEYo9E39M5d0IIPWo7oZGslNeJoDZSq3+J9JguS1vrUL6B1+Sx2GZj
-         kxhttuHbHpPSEt9SI7rNM8TQQMmlqAgKkJ8147+ERsYXIBuvbMEGL8sfdhKXpSh10baB
-         ziYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=93d8Luo3dr92mQ97MIWFoBIVe2vH3TgLc7Y5zBMUADU=;
-        b=CpVM0JzMnFH9zgxePWs3nv9jCPb0vsbPHVSsAjzwSpUKkHYhMEAGFkjhq7AbatUehN
-         QqKlNOkBG0inQpdeFA5vH33VBKmCEsssltaO/LAPzEfV/lva3AkM8A/7k5wPmKghgQAB
-         vqzGRsyhzYB62pPJZrBV0HE/X1mkUKBsntHaVha3fyLv2KEylO3nkNkIZSc4Jz967n1G
-         NX/8VV6BoqHcDg8Yz4s+VrKBFmlVVNU0RaSL47pNFBGo8gWcRxax8x9N94N803Tihrzg
-         Hf3SI/RbP+VPH6cTStBRCUbnxn1KiolgiuXLhiXw5eJfGSvZx9fy+Wm+laCc5Xlb+Rzy
-         XiTQ==
-X-Gm-Message-State: APjAAAV8FfK8tRMSNPmVBjjdRM3ZDrEycsLe0UT+eSlBXbVwYKcZZfYi
-        M9TaabVzCKtXau2FkJsYffs=
-X-Google-Smtp-Source: APXvYqwp/VkFBJAJAcYToiC670FPFfJr8pHKpmUcNpT/ZB+25Ehrm6GqyZnXYjFC4GFUrgQ4CBFIxg==
-X-Received: by 2002:a7b:cb84:: with SMTP id m4mr15184615wmi.50.1560184680413;
-        Mon, 10 Jun 2019 09:38:00 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133DDA40000C4C39937FBD289.dip0.t-ipconnect.de. [2003:f1:33dd:a400:c4:c399:37fb:d289])
-        by smtp.googlemail.com with ESMTPSA id g5sm13900517wrp.29.2019.06.10.09.37.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 09:37:59 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linus.walleij@linaro.org, andrew@lunn.ch,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 4/4] arm64: dts: meson: g12b: odroid-n2: add the Ethernet PHY reset line
-Date:   Mon, 10 Jun 2019 18:37:36 +0200
-Message-Id: <20190610163736.6187-5-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190610163736.6187-1-martin.blumenstingl@googlemail.com>
-References: <20190610163736.6187-1-martin.blumenstingl@googlemail.com>
+        Mon, 10 Jun 2019 12:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726214AbfFJQmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:42:52 -0400
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEAD02086A
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560184971;
+        bh=tXbHag/USdm+4mUHgtj4zWsRGotIHMmzJx1x6Cx6xwE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eg/VT6ZIqewlHruvFiwIrW6sxxeaAfyq+pd7qIvGmU+WUps1udbDUIqJ+9K2h0dif
+         DJX0ZlsJGLw0TCdbwpEogokcRurDpRAmW/hKGpGS+xsS2DRkbiXmRbpHra7NbxmarJ
+         fZhXRLK1uac7cGQhmHU7vQcPaYoXd8gWGwGM4mdk=
+Received: by mail-wm1-f44.google.com with SMTP id 22so37905wmg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:42:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAXZDAy0KxM6DUZmjuaB92MBYMwAlpYXgRRb5iygCiK12cl8bNS1
+        q5ZLiHYsOXFdFpPu8hNCqrgx6i82kzeyRO6IJoa9og==
+X-Google-Smtp-Source: APXvYqyv8NSCEyJg2Hv8AHPLVJY9L6V2V/QOLFaZD86SuSFB89IZcrzuIySjt90M5yKSGdxvGrqfW/B+zWfAS5WxmAU=
+X-Received: by 2002:a1c:a942:: with SMTP id s63mr14224080wme.76.1560184969283;
+ Mon, 10 Jun 2019 09:42:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
+ <be966d9c-e38d-7a30-8d80-fad5f25ab230@tycho.nsa.gov> <0cf7a49d-85f6-fba9-62ec-a378e0b76adf@schaufler-ca.com>
+In-Reply-To: <0cf7a49d-85f6-fba9-62ec-a378e0b76adf@schaufler-ca.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 10 Jun 2019 09:42:37 -0700
+X-Gmail-Original-Message-ID: <CALCETrX5O18q2=dUeC=hEtK2=t5KQpGBy9XveHxFw36OqkbNOg@mail.gmail.com>
+Message-ID: <CALCETrX5O18q2=dUeC=hEtK2=t5KQpGBy9XveHxFw36OqkbNOg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 00/13] Mount, FS, Block and Keyrings notifications
+ [ver #4]
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        USB list <linux-usb@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        raven@themaw.net, Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reset line of the RTL8211F PHY is routed to the GPIOZ_15 pad.
-Describe this in the device tree so the PHY framework can bring the PHY
-into a known state when initializing it. GPIOZ_15 doesn't support
-driving the output HIGH (to take the PHY out of reset, only output LOW
-to reset the PHY is supported). The datasheet states it's an "3.3V input
-tolerant open drain (OD) output pin". Instead there's a pull-up resistor
-on the board to take the PHY out of reset. The GPIO itself will be set
-to INPUT mode to take the PHY out of reset and LOW to reset the PHY,
-which is achieved with the flags (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN).
+On Mon, Jun 10, 2019 at 9:34 AM Casey Schaufler <casey@schaufler-ca.com> wr=
+ote:
+>
+> On 6/10/2019 8:21 AM, Stephen Smalley wrote:
+> > On 6/7/19 10:17 AM, David Howells wrote:
+> >>
+> >> Hi Al,
+> >>
+> >> Here's a set of patches to add a general variable-length notification =
+queue
+> >> concept and to add sources of events for:
+> >>
+> >>   (1) Mount topology events, such as mounting, unmounting, mount expir=
+y,
+> >>       mount reconfiguration.
+> >>
+> >>   (2) Superblock events, such as R/W<->R/O changes, quota overrun and =
+I/O
+> >>       errors (not complete yet).
+> >>
+> >>   (3) Key/keyring events, such as creating, linking and removal of key=
+s.
+> >>
+> >>   (4) General device events (single common queue) including:
+> >>
+> >>       - Block layer events, such as device errors
+> >>
+> >>       - USB subsystem events, such as device/bus attach/remove, device
+> >>         reset, device errors.
+> >>
+> >> One of the reasons for this is so that we can remove the issue of proc=
+esses
+> >> having to repeatedly and regularly scan /proc/mounts, which has proven=
+ to
+> >> be a system performance problem.  To further aid this, the fsinfo() sy=
+scall
+> >> on which this patch series depends, provides a way to access superbloc=
+k and
+> >> mount information in binary form without the need to parse /proc/mount=
+s.
+> >>
+> >>
+> >> LSM support is included, but controversial:
+> >>
+> >>   (1) The creds of the process that did the fput() that reduced the re=
+fcount
+> >>       to zero are cached in the file struct.
+> >>
+> >>   (2) __fput() overrides the current creds with the creds from (1) whi=
+lst
+> >>       doing the cleanup, thereby making sure that the creds seen by th=
+e
+> >>       destruction notification generated by mntput() appears to come f=
+rom
+> >>       the last fputter.
+> >>
+> >>   (3) security_post_notification() is called for each queue that we mi=
+ght
+> >>       want to post a notification into, thereby allowing the LSM to pr=
+event
+> >>       covert communications.
+> >>
+> >>   (?) Do I need to add security_set_watch(), say, to rule on whether a=
+ watch
+> >>       may be set in the first place?  I might need to add a variant pe=
+r
+> >>       watch-type.
+> >>
+> >>   (?) Do I really need to keep track of the process creds in which an
+> >>       implicit object destruction happened?  For example, imagine you =
+create
+> >>       an fd with fsopen()/fsmount().  It is marked to dissolve the mou=
+nt it
+> >>       refers to on close unless move_mount() clears that flag.  Now, i=
+magine
+> >>       someone looking at that fd through procfs at the same time as yo=
+u exit
+> >>       due to an error.  The LSM sees the destruction notification come=
+ from
+> >>       the looker if they happen to do their fput() after yours.
+> >
+> > I remain unconvinced that (1), (2), (3), and the final (?) above are a =
+good idea.
+> >
+> > For SELinux, I would expect that one would implement a collection of pe=
+r watch-type WATCH permission checks on the target object (or to some well-=
+defined object label like the kernel SID if there is no object) that allow =
+receipt of all notifications of that watch-type for objects related to the =
+target object, where "related to" is defined per watch-type.
+> >
+> > I wouldn't expect SELinux to implement security_post_notification() at =
+all.  I can't see how one can construct a meaningful, stable policy for it.=
+  I'd argue that the triggering process is not posting the notification; th=
+e kernel is posting the notification and the watcher has been authorized to=
+ receive it.
+>
+> I cannot agree. There is an explicit action by a subject that results
+> in information being delivered to an object. Just like a signal or a
+> UDP packet delivery. Smack handles this kind of thing just fine. The
+> internal mechanism that results in the access is irrelevant from
+> this viewpoint. I can understand how a mechanism like SELinux that
+> works on finer granularity might view it differently.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+I think you really need to give an example of a coherent policy that
+needs this.  As it stands, your analogy seems confusing.  If someone
+changes the system clock, we don't restrict who is allowed to be
+notified (via, for example, TFD_TIMER_CANCEL_ON_SET) that the clock
+was changed based on who changed the clock.  Similarly, if someone
+tries to receive a packet on a socket, we check whether they have the
+right to receive on that socket (from the endpoint in question) and,
+if the sender is local, whether the sender can send to that socket.
+We do not check whether the sender can send to the receiver.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 4146cd84989c..0d9ec45b8059 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -186,6 +186,10 @@
- 		/* Realtek RTL8211F (0x001cc916) */	
- 		reg = <0>;
- 		max-speed = <1000>;
-+
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <10000>;
-+		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
- 	};
- };
- 
--- 
-2.22.0
+The signal example is inapplicable.  Sending a signal to a process is
+an explicit action done to that process, and it can easily adversely
+affect the target.  Of course it requires permission.
 
+--Andy
