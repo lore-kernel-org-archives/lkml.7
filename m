@@ -7,142 +7,136 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA75CC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC83C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0722082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488942082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YFg4JsGl"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="NC0Ym/md"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389798AbfFJUuD (ORCPT
+        id S1728607AbfFJUv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:50:03 -0400
-Received: from mail-eopbgr60081.outbound.protection.outlook.com ([40.107.6.81]:34477
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389429AbfFJUuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:50:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pZ17w6KiquhG6fWhhZl398LFgYMwAjV/i9/BxYAExfE=;
- b=YFg4JsGlreztRJYlRK7jVCn8A2ssZ0kl4vfO//kSXRNljlRVXPBGsg3EoUMP0s1C/cHazOwh7KIFUbC+NPOrM+8XdLdeJg0UAJLbGLAg/TpoQholIiU73tK0//l3Cic95U3odi/BhEXKOTGAUuyb4DhX5lRc5BgohezZ96Rmt34=
-Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com (10.175.24.138) by
- VI1PR0402MB2704.eurprd04.prod.outlook.com (10.175.23.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Mon, 10 Jun 2019 20:49:59 +0000
-Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com
- ([fe80::f494:9fa1:ebae:6053]) by VI1PR0402MB2800.eurprd04.prod.outlook.com
- ([fe80::f494:9fa1:ebae:6053%8]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
- 20:49:59 +0000
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-CC:     netdev <netdev@vger.kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: dsa: Deal with non-existing PHY/fixed-link
-Thread-Topic: [PATCH net-next] net: dsa: Deal with non-existing PHY/fixed-link
-Thread-Index: AQHVH8MsxSzXIT7T/0mW4aEu7RtYPg==
-Date:   Mon, 10 Jun 2019 20:49:59 +0000
-Message-ID: <VI1PR0402MB2800ED1A422B900F63561F9CE0130@VI1PR0402MB2800.eurprd04.prod.outlook.com>
-References: <20190610193150.22231-1-f.fainelli@gmail.com>
- <CA+h21hrcymxF7zk4yHFGhjxbLERTCU6WkfzLGQVoZ5Yxoo4xxw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ioana.ciornei@nxp.com; 
-x-originating-ip: [188.26.252.192]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b0dc24dd-449b-432c-2d96-08d6ede533e1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2704;
-x-ms-traffictypediagnostic: VI1PR0402MB2704:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR0402MB270430933DCBBF468F835A78E0130@VI1PR0402MB2704.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(396003)(136003)(346002)(189003)(199004)(110136005)(4326008)(2906002)(54906003)(5660300002)(26005)(66446008)(53936002)(73956011)(76116006)(186003)(66476007)(66556008)(52536014)(8936002)(66946007)(33656002)(66066001)(25786009)(229853002)(8676002)(44832011)(74316002)(64756008)(446003)(486006)(476003)(6306002)(86362001)(71200400001)(55016002)(305945005)(14454004)(9686003)(71190400001)(966005)(81166006)(99286004)(7736002)(6436002)(316002)(81156014)(6116002)(6246003)(102836004)(5024004)(478600001)(7696005)(6506007)(14444005)(256004)(68736007)(53546011)(76176011)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2704;H:VI1PR0402MB2800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Z/UG3kVJ1C7NMc5VXRxwLrgoPhrIQG4BShjyFA1lkdBM3m4zcqzWC8GEyqDEUQkEbGGUOreKIh18kz3vw2+zycyP/5kPc7AtQFRQiL0Jj+R7hWpd2JabavAdZ2QNvpBhWHGFAJMnORzjo3PecgQIuXLsJ8hV3Jaytu7idYL2KgMO+qOeEWo8+h/53N/Hl6gNgkDeHxMUs1aLbg0hUr7TVh5/xuAebIlIBpeyn3bbCSVXysvcIr/5o5iJ3/yCSPSUiKxWp/xEm1+fdtaofYLw/CYbSdsDl0+Jfdo9CJfwh+yyzSsx5R2k5uJyrHWo9EZKGTJDZG8y1QL+WdUkwZvRv2ky53m90D7jbuuJqk8IUhZUq90TLOwhq/CxVp8eDapM4nFyTrPht5+JcS4wv+HtVswNvasuKmJuLyI1MtOuUxA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 10 Jun 2019 16:51:27 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45057 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727588AbfFJUv1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 16:51:27 -0400
+Received: by mail-vs1-f67.google.com with SMTP id n21so6450115vsp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:51:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eyYkEWRj0YJV5ZLI8Mg19WpHWifRtrV4TMHZVE8qPm8=;
+        b=NC0Ym/mdsDncoZDorvKAM6xnQHqO/QrBZMSByQ87DFOKOY5LektD3i2fXTPFMV5gEb
+         B+jz+3Dd13t7MZNh2lFBrzF3VPLx1KIsiagqMIMYyENWW6PDVua6vokHuxp4iRB7SGBP
+         oFhMiqoPRQF0lp325kHJWPXC+dup4oIV+FxnM24bVaa7URJymXv0UBdm6axvZ/7SXM0V
+         KpHpsjeDDyeZoP+I9UaJoBhGziX7ec09BY4mQMov6WeiEnm+l5+JUFxqG2hd7MI5PM0F
+         5X61FbBw9ul1y43HMTwi6J7dygh1JPsAue+OITbRaSvfqs4rtsLSqXqhyOol/LAVEb3N
+         Mc1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eyYkEWRj0YJV5ZLI8Mg19WpHWifRtrV4TMHZVE8qPm8=;
+        b=Ac53C9Q8KFi3/sdW+bAA0EfuWKaDwdfZabVHjdnBOyNZXNtQk+9yZAtwvYea2eiptA
+         XRMEDA3VaG0C0e0mbrOumECP3oPCeNS/doIxLa2iSxa29+Iy7k2I0G+op5fQAmtmY+Qf
+         gPD6ZM9ylaExnzQx+K07eb87serI/xsos5kqL+GXqM5rbMMVv2mB/Fh9zbL3xKPtcoq0
+         2wzgnFCowwtjv7k5XdjkCHQWqS6szNKiE50b0bX0ikj5P4mYdUpvAV3e3Pk7Ct0wjGMi
+         JliKp5Ca1MuQptBvLAUjqxN6TJklhwlI7NHsC8T0HRHzH5jTP0/HVqjm1I6nB8kJw3jF
+         CayQ==
+X-Gm-Message-State: APjAAAW8WKnKFCM0nc8zXwSIntuUFzQZRoYrOa6od5xnxH1ucVtoLNei
+        jtPNWaOYt+v3q2JYFlmbidMPH4biFtdQR3o5yLBgpQ==
+X-Google-Smtp-Source: APXvYqxHiF7j7PUoNqVyn9OY/HQVtXAWopKiEj3RQFyhF+xmBBltqTuNBj9BhxevhFCKpkFJxP+TtW+cFT392wT7E5c=
+X-Received: by 2002:a67:6b43:: with SMTP id g64mr28426206vsc.183.1560199886317;
+ Mon, 10 Jun 2019 13:51:26 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0dc24dd-449b-432c-2d96-08d6ede533e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 20:49:59.1741
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ioana.ciornei@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2704
+References: <20190610175234.196844-1-dianders@chromium.org>
+In-Reply-To: <20190610175234.196844-1-dianders@chromium.org>
+From:   Sean Paul <sean@poorly.run>
+Date:   Mon, 10 Jun 2019 16:50:50 -0400
+Message-ID: <CAMavQKLRm8uYu3O=co5Ui7YjkK0hKHAd=+TA0oExfqnLc+TLFA@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge/synopsys: dw-hdmi: Fix unwedge crash when no
+ pinctrl entries
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Sean Paul <seanpaul@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Erico Nunes <nunes.erico@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 10:53 PM, Vladimir Oltean wrote:=0A=
-> On Mon, 10 Jun 2019 at 22:31, Florian Fainelli <f.fainelli@gmail.com> wro=
-te:=0A=
->>=0A=
->> We need to specifically deal with phylink_of_phy_connect() returning=0A=
->> -ENODEV, because this can happen when a CPU/DSA port does connect=0A=
->> neither to a PHY, nor has a fixed-link property. This is a valid use=0A=
->> case that is permitted by the binding and indicates to the switch:=0A=
->> auto-configure port with maximum capabilities.=0A=
->>=0A=
->> Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")=0A=
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>=0A=
->> ---=0A=
->>   net/dsa/port.c | 2 +-=0A=
->>   1 file changed, 1 insertion(+), 1 deletion(-)=0A=
->>=0A=
->> diff --git a/net/dsa/port.c b/net/dsa/port.c=0A=
->> index d74bc9df1359..dde3085ff065 100644=0A=
->> --- a/net/dsa/port.c=0A=
->> +++ b/net/dsa/port.c=0A=
->> @@ -622,7 +622,7 @@ static int dsa_port_phylink_register(struct dsa_port=
- *dp)=0A=
->>          }=0A=
->>=0A=
->>          err =3D phylink_of_phy_connect(dp->pl, port_dn, 0);=0A=
->> -       if (err) {=0A=
->> +       if (err && err !=3D -ENODEV) {=0A=
->>                  pr_err("could not attach to PHY: %d\n", err);=0A=
->>                  goto err_phy_connect;=0A=
->>          }=0A=
->> --=0A=
->> 2.17.1=0A=
->>=0A=
-> =0A=
-> Hi Florian,=0A=
-> =0A=
-> Can you give an example of when this is a valid use case, and why=0A=
-> fixed-link is not appropriate?=0A=
-> =0A=
-> Regards,=0A=
-> -Vladimir=0A=
-> =0A=
-=0A=
-Hi,=0A=
-=0A=
-This reminds me of a previous discussion on what to do when the DSA CPU =0A=
-port does not have a device_tree node at all: =0A=
-https://www.spinics.net/lists/netdev/msg573554.html.=0A=
-=0A=
-This was the case of the dsa-loop driver that probes as a platform =0A=
-device. I'm still not clear how the PHYLINK callbacks are supposed to =0A=
-work in that case though.=0A=
-=0A=
---=0A=
-Ioana=0A=
-=0A=
-=0A=
+On Mon, Jun 10, 2019 at 1:52 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> In commit 50f9495efe30 ("drm/bridge/synopsys: dw-hdmi: Add "unwedge"
+> for ddc bus") I stupidly used IS_ERR() to check for whether we have an
+> "unwedge" pinctrl state even though on most flows through the driver
+> the unwedge state will just be NULL.
+>
+> Fix it so that we consistently use NULL for no unwedge state.
+>
+> Fixes: 50f9495efe30 ("drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc bus")
+> Reported-by: Erico Nunes <nunes.erico@gmail.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+Thanks Erico for the report, and Doug for fixing this up quickly, I've applied
+the patch to drm-misc-next
+
+Sean
+
+> ---
+>
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index f25e091b93c5..5e4e9408d00f 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -251,7 +251,7 @@ static void dw_hdmi_i2c_init(struct dw_hdmi *hdmi)
+>  static bool dw_hdmi_i2c_unwedge(struct dw_hdmi *hdmi)
+>  {
+>         /* If no unwedge state then give up */
+> -       if (IS_ERR(hdmi->unwedge_state))
+> +       if (!hdmi->unwedge_state)
+>                 return false;
+>
+>         dev_info(hdmi->dev, "Attempting to unwedge stuck i2c bus\n");
+> @@ -2686,11 +2686,13 @@ __dw_hdmi_probe(struct platform_device *pdev,
+>                         hdmi->default_state =
+>                                 pinctrl_lookup_state(hdmi->pinctrl, "default");
+>
+> -                       if (IS_ERR(hdmi->default_state) &&
+> -                           !IS_ERR(hdmi->unwedge_state)) {
+> -                               dev_warn(dev,
+> -                                        "Unwedge requires default pinctrl\n");
+> -                               hdmi->unwedge_state = ERR_PTR(-ENODEV);
+> +                       if (IS_ERR(hdmi->default_state) ||
+> +                           IS_ERR(hdmi->unwedge_state)) {
+> +                               if (!IS_ERR(hdmi->unwedge_state))
+> +                                       dev_warn(dev,
+> +                                                "Unwedge requires default pinctrl\n");
+> +                               hdmi->default_state = NULL;
+> +                               hdmi->unwedge_state = NULL;
+>                         }
+>                 }
+>
+> --
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
+>
