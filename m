@@ -2,194 +2,193 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768C7C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CD5C28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5199420859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A85120859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:58:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kJwSbhsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390190AbfFJM6A (ORCPT
+        id S2390197AbfFJM6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 08:58:00 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:12881 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388833AbfFJM57 (ORCPT
+        Mon, 10 Jun 2019 08:58:33 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41233 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389309AbfFJM6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 08:57:59 -0400
-X-UUID: 44b1444b21454c46b7128d0660bccda7-20190610
-X-UUID: 44b1444b21454c46b7128d0660bccda7-20190610
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 572842966; Mon, 10 Jun 2019 20:57:51 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 10 Jun 2019 20:57:44 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 10 Jun 2019 20:57:43 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>
-Subject: [PATCH v2 12/12] arm64: dts: mediatek: Get rid of mediatek,larb for MM nodes
-Date:   Mon, 10 Jun 2019 20:55:13 +0800
-Message-ID: <1560171313-28299-13-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
-References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
+        Mon, 10 Jun 2019 08:58:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id 136so6550874lfa.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 05:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7DLFQ8by/jV1+O/LDvQ3huJEjoQ4sVNIYrRFls+hbxg=;
+        b=kJwSbhswbKbQHzM85JPdk5WWpRJM3BNteN454cZjnKRT4+2cK1IwcgVbguNeugjWKU
+         anfYSptxIdmrRV7MDJsWRwyVls6QGDNJe5RT+rmXTGCG/V7I4ey08t14jgw3CqDZdqaM
+         4iETn+6dLcyFpjEoplS3FYXNzJi3sRorfA74TrLC+x6NxDVEIZqzxw7UcdmfBUQRlhlD
+         XI6GJjZNM0hgCsW6GDaj6cyDatbRJLDB/QZwR6Hjgxqcihk9ghBmHeWACTK2zvqac68v
+         dsnJZUC75L3rxuEyKrjXMpty88ykkZ7ebW3xpLMPpt/RQC6Pk3NpgulvKjx1FFOGfJXq
+         0hQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7DLFQ8by/jV1+O/LDvQ3huJEjoQ4sVNIYrRFls+hbxg=;
+        b=f81xaamiHdxEstUKwN6TdVoJ97fZsJZFf7s6IYt1o7915zMoM1RrunfAVMI/NPh7uy
+         qBjj/VB28I8aOS5TwEZxDmBntGGWtzwx23BQmq1Z36h2RmGYOUiYGbxfXjftuzmMw+IZ
+         cEWzzOwY3bQmaeFz9GkbB2b3/kC4Tif1qg7Y9kbQL6z9C6kADUTo/tSkVYMyPHzxRqZE
+         KX68OCL+JxOYXqpUJlIIe7hVdRd9mLE17t8yhm+T7IsDBO7ZMMZcJGByWXxEic2HKFAW
+         tT98z1S1LkfmfqvNBKw/87HYq3uCQfKorvsyxfncXEwUR7SaAyXrzBKXHWTZ52eVMcpL
+         XBkQ==
+X-Gm-Message-State: APjAAAURHSxcMSCr1aXmt9OqOhn71uPOwarbC7nm6nghHHE8VcvqLO0C
+        njHKGiwodu16sgIuEjs18/D/5kkSUK3f+i5A2Iuoxw==
+X-Google-Smtp-Source: APXvYqw+d2TzVaMlkIN2DtQbw9EMUt0fHjzFymluDcPEIw5oOSKylqjj5JhidkPvvSMbBAUtXjailq7IiV0LAj261QA=
+X-Received: by 2002:ac2:4d17:: with SMTP id r23mr28592327lfi.130.1560171510009;
+ Mon, 10 Jun 2019 05:58:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20190606094657.23612-1-anders.roxell@linaro.org> <20190606071052.412a766d@coco.lan>
+In-Reply-To: <20190606071052.412a766d@coco.lan>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Mon, 10 Jun 2019 14:58:18 +0200
+Message-ID: <CADYN=9K0k30U5Uov3RHuSQAe2hfdVCWayWHmVdzQ9umD8Mpi-A@mail.gmail.com>
+Subject: Re: [PATCH 0/8] fix warnings for same module names
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        marex@denx.de, stefan@agner.ch, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, b.zolnierkie@samsung.com,
+        a.hajda@samsung.com, p.zabel@pengutronix.de, hkallweit1@gmail.com,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-fbdev@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After adding device_link between the IOMMU consumer and smi,
-the mediatek,larb is unnecessary now.
+On Thu, 6 Jun 2019 at 12:11, Mauro Carvalho Chehab <mchehab@kernel.org> wrote:
+>
+> Em Thu,  6 Jun 2019 11:46:57 +0200
+> Anders Roxell <anders.roxell@linaro.org> escreveu:
+>
+> > Hi,
+> >
+> > This patch set addresses warnings that module names are named the
+> > same, this may lead to a problem that wrong module gets loaded or if one
+> > of the two same-name modules exports a symbol, this can confuse the
+> > dependency resolution. and the build may fail.
+> >
+> >
+> > Patch "drivers: net: dsa: realtek: fix warning same module names" and
+> > "drivers: net: phy: realtek: fix warning same module names" resolves the
+> > name clatch realtek.ko.
+> >
+> > warning: same module names found:
+> >   drivers/net/phy/realtek.ko
+> >   drivers/net/dsa/realtek.ko
+> >
+> >
+> > Patch  "drivers: (video|gpu): fix warning same module names" resolves
+> > the name clatch mxsfb.ko.
+> >
+> > warning: same module names found:
+> >   drivers/video/fbdev/mxsfb.ko
+> >   drivers/gpu/drm/mxsfb/mxsfb.ko
+> >
+> > Patch "drivers: media: i2c: fix warning same module names" resolves the
+> > name clatch adv7511.ko however, it seams to refer to the same device
+> > name in i2c_device_id, does anyone have any guidance how that should be
+> > solved?
+> >
+> > warning: same module names found:
+> >   drivers/gpu/drm/bridge/adv7511/adv7511.ko
+> >   drivers/media/i2c/adv7511.ko
+> >
+> >
+> > Patch "drivers: media: coda: fix warning same module names" resolves the
+> > name clatch coda.ko.
+> >
+> > warning: same module names found:
+> >   fs/coda/coda.ko
+> >   drivers/media/platform/coda/coda.ko
+>
+> Media change look ok, and probably the other patches too, but the
+> problem here is: who will apply it and when.
+>
+> The way you grouped the changes makes harder for subsystem maintainers
+> to pick, as the same patch touches multiple subsystems.
+>
+> On the other hand, if this gets picked by someone else, it has the
+> potential to cause conflicts between linux-next and the maintainer's
+> tree.
+>
+> So, the best would be if you re-arrange this series to submit one
+> patch per subsystem.
 
-CC: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Evan Green <evgreen@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 15 ---------------
- 1 file changed, 15 deletions(-)
+I will send it per subsystem.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 15f1842..06e2c09 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -921,7 +921,6 @@
- 				 <&mmsys CLK_MM_MUTEX_32K>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_RDMA0>;
--			mediatek,larb = <&larb0>;
- 			mediatek,vpu = <&vpu>;
- 		};
- 
-@@ -932,7 +931,6 @@
- 				 <&mmsys CLK_MM_MUTEX_32K>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_RDMA1>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		mdp_rsz0: rsz@14003000 {
-@@ -962,7 +960,6 @@
- 			clocks = <&mmsys CLK_MM_MDP_WDMA>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_WDMA>;
--			mediatek,larb = <&larb0>;
- 		};
- 
- 		mdp_wrot0: wrot@14007000 {
-@@ -971,7 +968,6 @@
- 			clocks = <&mmsys CLK_MM_MDP_WROT0>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_WROT0>;
--			mediatek,larb = <&larb0>;
- 		};
- 
- 		mdp_wrot1: wrot@14008000 {
-@@ -980,7 +976,6 @@
- 			clocks = <&mmsys CLK_MM_MDP_WROT1>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_WROT1>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		ovl0: ovl@1400c000 {
-@@ -990,7 +985,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_OVL0>;
- 			iommus = <&iommu M4U_PORT_DISP_OVL0>;
--			mediatek,larb = <&larb0>;
- 		};
- 
- 		ovl1: ovl@1400d000 {
-@@ -1000,7 +994,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_OVL1>;
- 			iommus = <&iommu M4U_PORT_DISP_OVL1>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		rdma0: rdma@1400e000 {
-@@ -1010,7 +1003,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
--			mediatek,larb = <&larb0>;
- 		};
- 
- 		rdma1: rdma@1400f000 {
-@@ -1020,7 +1012,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		rdma2: rdma@14010000 {
-@@ -1030,7 +1021,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_RDMA2>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA2>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		wdma0: wdma@14011000 {
-@@ -1040,7 +1030,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_WDMA0>;
- 			iommus = <&iommu M4U_PORT_DISP_WDMA0>;
--			mediatek,larb = <&larb0>;
- 		};
- 
- 		wdma1: wdma@14012000 {
-@@ -1050,7 +1039,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_WDMA1>;
- 			iommus = <&iommu M4U_PORT_DISP_WDMA1>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		color0: color@14013000 {
-@@ -1294,7 +1282,6 @@
- 			      <0 0x16027800 0 0x800>,	/* VDEC_HWB */
- 			      <0 0x16028400 0 0x400>;	/* VDEC_HWG */
- 			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_LOW>;
--			mediatek,larb = <&larb1>;
- 			iommus = <&iommu M4U_PORT_HW_VDEC_MC_EXT>,
- 				 <&iommu M4U_PORT_HW_VDEC_PP_EXT>,
- 				 <&iommu M4U_PORT_HW_VDEC_AVC_MV_EXT>,
-@@ -1364,8 +1351,6 @@
- 			      <0 0x19002000 0 0x1000>;	/* VENC_LT_SYS */
- 			interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
- 				     <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
--			mediatek,larb = <&larb3>,
--					<&larb5>;
- 			iommus = <&iommu M4U_PORT_VENC_RCPU>,
- 				 <&iommu M4U_PORT_VENC_REC>,
- 				 <&iommu M4U_PORT_VENC_BSDMA>,
--- 
-1.9.1
+Cheers,
+Anders
 
+>
+>
+> >
+> >
+> > Patch "drivers: net: phy: fix warning same module names" resolves the
+> > name clatch asix.ko.
+> >
+> > warning: same module names found:
+> >   drivers/net/phy/asix.ko
+> >   drivers/net/usb/asix.ko
+> >
+> > Patch "drivers: mfd: 88pm800: fix warning same module names" and
+> > "drivers: regulator: 88pm800: fix warning same module names" resolves
+> > the name clatch 88pm800.ko.
+> >
+> > warning: same module names found:
+> >   drivers/regulator/88pm800.ko
+> >   drivers/mfd/88pm800.ko
+> >
+> >
+> > Cheers,
+> > Anders
+> >
+> > Anders Roxell (8):
+> >   drivers: net: dsa: realtek: fix warning same module names
+> >   drivers: net: phy: realtek: fix warning same module names
+> >   drivers: (video|gpu): fix warning same module names
+> >   drivers: media: i2c: fix warning same module names
+> >   drivers: media: coda: fix warning same module names
+> >   drivers: net: phy: fix warning same module names
+> >   drivers: mfd: 88pm800: fix warning same module names
+> >   drivers: regulator: 88pm800: fix warning same module names
+> >
+> >  drivers/gpu/drm/bridge/adv7511/Makefile | 10 +++++-----
+> >  drivers/gpu/drm/mxsfb/Makefile          |  4 ++--
+> >  drivers/media/i2c/Makefile              |  3 ++-
+> >  drivers/media/platform/coda/Makefile    |  4 ++--
+> >  drivers/mfd/Makefile                    |  7 +++++--
+> >  drivers/net/dsa/Makefile                |  4 ++--
+> >  drivers/net/phy/Makefile                |  6 ++++--
+> >  drivers/regulator/Makefile              |  3 ++-
+> >  drivers/video/fbdev/Makefile            |  3 ++-
+> >  9 files changed, 26 insertions(+), 18 deletions(-)
+> >
+>
+>
+>
+> Thanks,
+> Mauro
