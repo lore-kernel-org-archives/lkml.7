@@ -2,103 +2,126 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B74DC31E42
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E07CC31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5C520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CE92089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:05:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="P6xSAZNk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403885AbfFJQF2 (ORCPT
+        id S2404062AbfFJQFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:05:28 -0400
-Received: from mga12.intel.com ([192.55.52.136]:6422 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403847AbfFJQF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:05:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 09:05:26 -0700
-X-ExtLoop1: 1
-Received: from cmargarx-wtg.ger.corp.intel.com (HELO localhost) ([10.249.34.77])
-  by fmsmga006.fm.intel.com with ESMTP; 10 Jun 2019 09:05:16 -0700
-Date:   Mon, 10 Jun 2019 19:05:16 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v2 4/5] LSM: x86/sgx: Introduce ->enclave_load() hook
- for Intel SGX
-Message-ID: <20190610160423.GD3752@linux.intel.com>
-References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
- <20190606021145.12604-5-sean.j.christopherson@intel.com>
+        Mon, 10 Jun 2019 12:05:34 -0400
+Received: from mail-eopbgr40040.outbound.protection.outlook.com ([40.107.4.40]:21553
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403847AbfFJQFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:05:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M+VzdtUPNs0Qsr8q4rBSwfK18f19SNMd3ZofZrRSFwU=;
+ b=P6xSAZNkK3OGIMOvqppZt3JQ5OwYdewNtk0i/ZvKptQFrhz9ZYum1xZLodbwPHTcY21vIZ3RFnt6XtJnuLwv0Tw7fazpLUVn4gqUhU2TZWLgvwkPqGBSIU4jEOXD8zzq6YyH6dF65c2tWj7fXVFzHe24vOFWMHWx4a8FMWn0gjk=
+Received: from AM0PR05MB4130.eurprd05.prod.outlook.com (52.134.90.143) by
+ AM0PR05MB4387.eurprd05.prod.outlook.com (52.134.93.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.13; Mon, 10 Jun 2019 16:05:27 +0000
+Received: from AM0PR05MB4130.eurprd05.prod.outlook.com
+ ([fe80::4825:8958:8055:def7]) by AM0PR05MB4130.eurprd05.prod.outlook.com
+ ([fe80::4825:8958:8055:def7%3]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
+ 16:05:27 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ajay Kaher <akaher@vmware.com>
+CC:     "aarcange@redhat.com" <aarcange@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "sean.hefty@intel.com" <sean.hefty@intel.com>,
+        "hal.rosenstock@gmail.com" <hal.rosenstock@gmail.com>,
+        Matan Barak <matanb@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "srivatsab@vmware.com" <srivatsab@vmware.com>,
+        "amakhalov@vmware.com" <amakhalov@vmware.com>
+Subject: Re: [PATCH] [v4.14.y] infiniband: fix race condition between
+ infiniband mlx4, mlx5  driver and core dumping
+Thread-Topic: [PATCH] [v4.14.y] infiniband: fix race condition between
+ infiniband mlx4, mlx5  driver and core dumping
+Thread-Index: AQHVH4tSEyCAUrGWFkaDJIPiIklE3KaVDYWA
+Date:   Mon, 10 Jun 2019 16:05:27 +0000
+Message-ID: <20190610160521.GJ18446@mellanox.com>
+References: <1560199937-23476-1-git-send-email-akaher@vmware.com>
+In-Reply-To: <1560199937-23476-1-git-send-email-akaher@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR0101CA0057.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:14::34) To AM0PR05MB4130.eurprd05.prod.outlook.com
+ (2603:10a6:208:57::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 50b390ed-c575-46b9-9608-08d6edbd73f4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4387;
+x-ms-traffictypediagnostic: AM0PR05MB4387:
+x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
+x-microsoft-antispam-prvs: <AM0PR05MB43878D40173CE641A9CBE923CF130@AM0PR05MB4387.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:407;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(396003)(39860400002)(376002)(189003)(199004)(316002)(25786009)(2616005)(476003)(486006)(99286004)(76176011)(4326008)(66066001)(478600001)(52116002)(36756003)(11346002)(446003)(66946007)(186003)(6512007)(66476007)(26005)(6486002)(229853002)(66446008)(64756008)(386003)(6506007)(66556008)(53936002)(102836004)(73956011)(68736007)(54906003)(6916009)(6436002)(305945005)(256004)(81166006)(7736002)(8936002)(2906002)(7416002)(8676002)(81156014)(6246003)(71190400001)(71200400001)(14444005)(6116002)(3846002)(86362001)(33656002)(1076003)(4744005)(5660300002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4387;H:AM0PR05MB4130.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bp4pf/ZhjjpDCrnkLAHxQYc8bmcaqUIuLJmZgCW7sSfE04lwuE87VB1mBe+PB0Tp8EmTRGPcSDvzC/AJu6LXSC+Acn2axArpNOkw8ZsMBnteopEX1TaCl8ODKJFuRaQCescMNcQxBFgGExq0+X0BVjctxO2NNKSnO09/8S6Crc17Y8MlxcIVG8EZtPJ5DlcSiOh+zdls1RJY5vFLZ070loEyup1PKKgNRZswCNWhc0bW2BPQmMdbPcEYkIXIW6g1N7O+WtqIxaACXLZbI1HkBpvPV8kNK3TajxsrB9MqFAf5wzrEx1p/Ekw/d2EzhZ9Cvad1jBDH184KJV9mDBIjvRc5iBTEzaOV1fn8N598QuCnqj1lW1Fqtb9T52mIG6fDvWQUql3gDS1Py50taMeoTUBy5BMC19UqKu4Yh8UqrIw=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <ACA6821CDC8397409049C57892C1C405@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606021145.12604-5-sean.j.christopherson@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50b390ed-c575-46b9-9608-08d6edbd73f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 16:05:27.3182
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4387
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 07:11:44PM -0700, Sean Christopherson wrote:
-> enclave_load() is roughly analogous to the existing file_mprotect().
-> 
-> Due to the nature of SGX and its Enclave Page Cache (EPC), all enclave
-> VMAs are backed by a single file, i.e. /dev/sgx/enclave, that must be
-> MAP_SHARED.  Furthermore, all enclaves need read, write and execute
-> VMAs.  As a result, the existing/standard call to file_mprotect() does
-> not provide any meaningful security for enclaves since an LSM can only
-> deny/grant access to the EPC as a whole.
-> 
-> security_enclave_load() is called when SGX is first loading an enclave
-> page, i.e. copying a page from normal memory into the EPC.  Although
-> the prototype for enclave_load() is similar to file_mprotect(), e.g.
-> SGX could theoretically use file_mprotect() and set reqprot=prot, a
-> separate hook is desirable as the semantics of an enclave's protection
-> bits are different than those of vmas, e.g. an enclave page tracks the
-> maximal set of protections, whereas file_mprotect() operates on the
-> actual protections being provided.  In other words, LSMs will likely
-> want to implement different policies for enclave page protections.
-> 
-> Note, extensive discussion yielded no sane alternative to some form of
-> SGX specific LSM hook[1].
-> 
-> [1] https://lkml.kernel.org/r/CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+On Tue, Jun 11, 2019 at 02:22:17AM +0530, Ajay Kaher wrote:
+> This patch is the extension of following upstream commit to fix
+> the race condition between get_task_mm() and core dumping
+> for IB->mlx4 and IB->mlx5 drivers:
+>=20
+> commit 04f5866e41fb ("coredump: fix race condition between
+> mmget_not_zero()/get_task_mm() and core dumping")'
+>=20
+> Thanks to Jason for pointing this.
+>=20
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> ---
+>  drivers/infiniband/hw/mlx4/main.c | 4 +++-
+>  drivers/infiniband/hw/mlx5/main.c | 3 +++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
 
-4/5 and 5/5 should only be added after upstreaming SGX.
+Acked-by: Jason Gunthorpe <jgg@mellanox.com>
 
-/Jarkko
+Jason
