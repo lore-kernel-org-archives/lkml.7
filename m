@@ -2,166 +2,300 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1188AC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3606CC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BCA207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36E3207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hJCkx2KR"
+	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="M9UkW3UP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388984AbfFJJWu (ORCPT
+        id S2388707AbfFJJ2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 05:22:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43502 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388218AbfFJJWt (ORCPT
+        Mon, 10 Jun 2019 05:28:33 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43294 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388033AbfFJJ2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 05:22:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r18so8371670wrm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 02:22:48 -0700 (PDT)
+        Mon, 10 Jun 2019 05:28:32 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 16so7227307ljv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 02:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=G1lpUotvma47Z1RO2D5VX/I7uflkBXZ22xkg1HQ/USI=;
-        b=hJCkx2KR+NIkDwRFeraGfF4DHt2DUmwtr60qd9nLSH36qGSOynSiXeBtl5ybF8L0dn
-         pnA/bDiJGCLtMFrKG64+F4PxE/BCjEnmUfgybp5rvC84ASqfVLs+C7uKecLuJCDAOxWo
-         nL4ORmsbFf6ofo5z0z78tNg1LeWUIxyO901/KwIoH+c/xzpLZJLgrkprAWxAZqJ+OEP1
-         nFZLqfILmv5pT7tNKbySmIy22ONGFTE8fGEDz8KzFkJJaGzD9V9yDSEzeGC+4BWr4Z9e
-         FdxvQDp8O5Loq/iEqqXceHHaLCdkegi8ZozuBckAqV6LiQPJDHVQJTe4H0zcalEQXVFh
-         INAg==
+        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=siqDWvGSxvpmTq2GM5l552jdMTJFA9bvabxI7lDs8sw=;
+        b=M9UkW3UPLP9GJr/RX3CrUt/jlkZJFeuT8xn9FDO/o0bCTKm3BUpm+VS2jfEfaFXAda
+         rsALVxrCr4vcm45HVjeopfXPfGr+nAbf6y494V78N1MaBSQuE2UrGfCPgXYo5KMAQ9XF
+         fkbrMEzn5GbgduyyIfXA1hAIvGEf3sJwS7S16AAk1OPP+4LYQ8Pb8pgnOjUWKwG5Vgbk
+         FMD7096bhBhdzS/KFWiL9Wl+ioJJ0vhyUCRbpYHR3/GHXxTV2XoKJcxSB9qbNDRpdiwc
+         kMNHrcApaUuakOyY8iQ7XD6YcfKT2HC3LpdWheqw9JfBOziEnPiGu1oDbTE0X09FqE+d
+         +1Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=G1lpUotvma47Z1RO2D5VX/I7uflkBXZ22xkg1HQ/USI=;
-        b=Kk/sxrnx9c1GukqRZjhKf9ONpPvMcrftnrd8HcLRWEqDyJjXkAXxtXg2KY0JEScJjO
-         ysH7UT8S6oTrf18XitvAh/qKwWEUZEgFhg5GvMi26TfMKB0zfEhdz6rNTAy83uAGjc8I
-         ZQLKNmri8syNGah2YgUqOduqu4s+nroGPAtt82MxEMQ/rLrsFLgQJjE7LEkSPzkCKPsX
-         cWwHnLi+zBMARp3y1BF1JNBlQAFvW1ugFguXtNPklJPstt1aiOjbg3rBiMjzLKv1lhXp
-         NoGUQZ8UuhY7fv9+8sMnKiOpTxO6ArIUfZ1LU9rgGKrQBS3NAozhmsNPx/TPJnvG1B0q
-         oBvw==
-X-Gm-Message-State: APjAAAWDkVueON5pB9SPiaXEGFptkjERk76Rdab5LEqUT7oekIicSTjO
-        zGvv5R3/uJM+CyI0s8Z4iHh2Jw==
-X-Google-Smtp-Source: APXvYqwF7A2E5R4fmM/F0NbqYzotL3Yb9yzsKrwKjxbsYMU0XzfAxqQRhUHKAoBn6OW6wfm5SWZNSQ==
-X-Received: by 2002:adf:b64b:: with SMTP id i11mr44160150wre.205.1560158567552;
-        Mon, 10 Jun 2019 02:22:47 -0700 (PDT)
-Received: from dell ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id l18sm7825015wrv.38.2019.06.10.02.22.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 02:22:46 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 10:22:45 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        wsa+renesas@sang-engineering.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-Message-ID: <20190610092245.GN4797@dell>
-References: <20190610084213.1052-1-lee.jones@linaro.org>
- <20190610084213.1052-4-lee.jones@linaro.org>
- <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
- <20190610085542.GL4797@dell>
- <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=siqDWvGSxvpmTq2GM5l552jdMTJFA9bvabxI7lDs8sw=;
+        b=j57McN4mKJ1FDDH1NnEnVg+rXMRm0YfbapfpZ+1tMdG+CFO/mKQdigm/YB9C0otmFJ
+         DJi3vQX+XUwK5fltjKbIPG+ehBI4eUMvePW+oLK5NpoWMFC7jTLPUVQWMDs3EBQm5HIT
+         6ckjuoMotCb+gsaYrq0BD1O5yiszEWD9ZkYSPr6jZubElGFR9uJ3LDYguXjL2pye2hoV
+         nlOaHnSy/b28SK9yRiXS+A2ZgEc4vagJWsLzlqut2ZI7gutZfvJmOwGiNwTQZOT08PCK
+         17pbd782dgP9hRZkV4B7uAR1eF3jsvAva+Q5jO9ThtNZbpPB9Dmtzivck0q/e6iHvi+4
+         kmPw==
+X-Gm-Message-State: APjAAAVXSXrS/D/blJYkx+V0d/j/MOcPr49jJLZhgrx2I8NKnlbBs5gL
+        hhsuAcb34cfUwgbMySyk8ZX/tw==
+X-Google-Smtp-Source: APXvYqwTwqoLaAq9vX4Zoq2YgFBIJYHMlu+uKRsYN5By8Xhb99xxFDC8Uata1k4OsVPpJ3zmmHWJDA==
+X-Received: by 2002:a2e:9c4d:: with SMTP id t13mr36547053ljj.106.1560158908417;
+        Mon, 10 Jun 2019 02:28:28 -0700 (PDT)
+Received: from [192.168.1.169] (h-29-16.A159.priv.bahnhof.se. [79.136.29.16])
+        by smtp.gmail.com with ESMTPSA id q7sm2218753ljc.45.2019.06.10.02.28.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 02:28:27 -0700 (PDT)
+Subject: Re: [PATCH] mtd: spi-nor: use 16-bit WRR command when QE is set on
+ spansion flashes
+To:     Tudor.Ambarus@microchip.com, geert@linux-m68k.org,
+        marek.vasut+renesas@gmail.com, marek.vasut@gmail.com,
+        vigneshr@ti.com
+Cc:     dwmw2@infradead.org, computersforpeace@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <c57fe97b-ad4a-874e-663f-7f3a737824c9@microchip.com>
+ <20190610062351.24405-1-tudor.ambarus@microchip.com>
+From:   Jonas Bonn <jonas@norrbonn.se>
+Message-ID: <f4b968d3-b982-68e7-e8e4-d153875f0e1f@norrbonn.se>
+Date:   Mon, 10 Jun 2019 11:28:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190610062351.24405-1-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
+Hi Tudor,
 
-> On Mon, 10 Jun 2019 at 10:55, Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
-> >
-> > > On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
-> > > >
-> > > > This patch provides basic support for booting with ACPI instead
-> > > > of the currently supported Device Tree.  When doing so there are a
-> > > > couple of differences which we need to taken into consideration.
-> > > >
-> > > > Firstly, the SDM850 ACPI tables omit information pertaining to the
-> > > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
-> > > > initialise any of these lines, the firmware will restart the
-> > > > platform.
-> > > >
-> > > > Secondly, when booting with ACPI, it is expected that the firmware
-> > > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
-> > > > their ideal configuration.  Thus, the possible Pin Functions
-> > > > available to this platform are not advertised when providing the
-> > > > higher GPIOD/Pinctrl APIs with pin information.
-> > > >
-> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > >
-> > > For the ACPI probing boilerplate:
-> > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > >
-> > > *However*, I really don't like hardcoding reserved GPIOs like this.
-> > > What guarantee do we have that each and every ACPI system
-> > > incorporating the QCOM0217 device has the exact same list of reserved
-> > > GPIOs?
-> >
-> > This is SDM845 specific, so the chances are reduced.
+On 10/06/2019 08:24, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-> You don't know that.
-
-All the evidence I have to hand tells me that this is the case.  Even
-on very closely related variants Qualcomm uses different H/W blocks
-for GPIO.
-
-> > However, if another SDM845 variant does crop up, also lacking the
-> > "gpios" property, we will have to find another differentiating factor
-> > between them and conduct some matching.  What else can you do with
-> > platforms supporting non-complete/non-forthcoming ACPI tables?
-> >
+> SPI memory devices from different manufacturers have widely
+> different configurations for Status, Control and Configuration
+> registers. JEDEC 216C defines a new map for these common register
+> bits and their functions, and describes how the individual bits may
+> be accessed for a specific device. For the JEDEC 216B compliant
+> flashes, we can partially deduce Status and Configuration registers
+> functions by inspecting the 16th DWORD of BFPT. Older flashes that
+> don't declare the SFDP tables (SPANSION FL512SAIFG1 311QQ063 A ©11
+> SPANSION) let the software decide how to interact with these registers.
 > 
-> Either we don't touch any pins at all if they are not referenced
-> explicitly anywhere
+> The commit dcb4b22eeaf4 ("spi-nor: s25fl512s supports region locking")
+> uncovered a probe error for s25fl512s, when the QUAD bit CR[1] was set
+> in the bootloader. When this bit is set, only the Write Register
+> WRR command format with 16 data bits may be used, WRR with 8 bits
+> is not recognized and hence the error when trying to clear the block
+> protection bits.
+> 
+> Fix the above by using 16-bits WRR command when Quad bit is set.
+> 
+> Backward compatibility should be fine. The newly introduced
+> spi_nor_spansion_clear_sr_bp() is tightly coupled with the
+> spansion_quad_enable() function. Both assume that the Write Register
+> with 16 bits, together with the Read Configuration Register (35h)
+> instructions are supported.
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+> Geert, Jonas,
+> 
+> This patch is compile-tested only. I don't have the flash, I need your
+> help for testing this.
 
-I guess this would require an API change, which is out of scope of
-this patch-set.  Happy to change this implementation later if the
-subsystem allows for it though.
+Tested this on my hardware.  It works fine in the non-quad case.
 
-> or we parse the PEP tables, which seem to cover
-> some of this information (if Bjorn's analysis is correct)
+Tested-by: Jonas Bonn <jonas@norrbonn.se>
 
-Maybe someone can conduct some further work on this when we start to
-enable or write a driver for the PEP (Windows-compatible System Power
-Management Controller).  The tables for the PEP look pretty complex,
-so this task would be extremely difficult if not impossible without
-Qualcomm's help.  I wouldn't even know how to extrapolate this
-information from the tables.
+/Jonas
 
-> (if Bjorn's analysis is correct)
+> 
+> Thanks,
+> ta
+> 
+>   drivers/mtd/spi-nor/spi-nor.c | 116 ++++++++++++++++++++++++++++++++++++++----
+>   include/linux/mtd/spi-nor.h   |   1 +
+>   2 files changed, 106 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index c0a8837c0575..af9ac7f09cc2 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -1636,6 +1636,92 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+>   	return 0;
+>   }
+>   
+> +/**
+> + * spi_nor_clear_sr_bp() - clear the Status Register Block Protection bits.
+> + * @nor:        pointer to a 'struct spi_nor'
+> + *
+> + * Read-modify-write function that clears the Block Protection bits from the
+> + * Status Register without affecting other bits.
+> + *
+> + * Return: 0 on success, -errno otherwise.
+> + */
+> +static int spi_nor_clear_sr_bp(struct spi_nor *nor)
+> +{
+> +	int ret;
+> +	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
+> +
+> +	ret = read_sr(nor);
+> +	if (ret < 0) {
+> +		dev_err(nor->dev, "error while reading status register\n");
+> +		return ret;
+> +	}
+> +
+> +	write_enable(nor);
+> +
+> +	ret = write_sr(nor, ret & ~mask);
+> +	if (ret) {
+> +		dev_err(nor->dev, "write to status register failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = spi_nor_wait_till_ready(nor);
+> +	if (ret)
+> +		dev_err(nor->dev, "timeout while writing status register\n");
+> +	return ret;
+> +}
+> +
+> +/**
+> + * spi_nor_spansion_clear_sr_bp() - clear the Status Register Block Protection
+> + * bits on spansion flashes.
+> + * @nor:        pointer to a 'struct spi_nor'
+> + *
+> + * Read-modify-write function that clears the Block Protection bits from the
+> + * Status Register without affecting other bits. The function is tightly
+> + * coupled with the spansion_quad_enable() function. Both assume that the Write
+> + * Register with 16 bits, together with the Read Configuration Register (35h)
+> + * instructions are supported
+> + *
+> + * Return: 0 on success, -errno otherwise.
+> + */
+> +static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
+> +{
+> +	int ret;
+> +	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
+> +	u8 sr_cr[2] = {0};
+> +
+> +	/* Check current Quad Enable bit value. */
+> +	ret = read_cr(nor);
+> +	if (ret < 0) {
+> +		dev_err(nor->dev,
+> +			"error while reading configuration register\n");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * When the configuration register QUAD bit CR[1] is 1, only
+> +	 * the WRR command format with 16 data bits may be used.
+> +	 */
+> +	if (ret & CR_QUAD_EN_SPAN) {
+> +		sr_cr[1] = ret;
+> +
+> +		ret = read_sr(nor);
+> +		if (ret < 0) {
+> +			dev_err(nor->dev,
+> +				"error while reading status register\n");
+> +			return ret;
+> +		}
+> +		sr_cr[0] = ret & ~mask;
+> +
+> +		ret = write_sr_cr(nor, sr_cr);
+> +		if (ret)
+> +			dev_err(nor->dev, "16-bit write register failed\n");
+> +		return ret;
+> +	}
+> +
+> +	/* If quad bit is not set, use 8-bit WRR command. */
+> +	return spi_nor_clear_sr_bp(nor);
+> +}
+> +
+>   /* Used when the "_ext_id" is two bytes at most */
+>   #define INFO(_jedec_id, _ext_id, _sector_size, _n_sectors, _flags)	\
+>   		.id = {							\
+> @@ -3663,6 +3749,8 @@ static int spi_nor_init_params(struct spi_nor *nor,
+>   		default:
+>   			/* Kept only for backward compatibility purpose. */
+>   			params->quad_enable = spansion_quad_enable;
+> +			if (nor->clear_sr_bp)
+> +				nor->clear_sr_bp = spi_nor_spansion_clear_sr_bp;
+>   			break;
+>   		}
+>   
+> @@ -3915,17 +4003,13 @@ static int spi_nor_init(struct spi_nor *nor)
+>   {
+>   	int err;
+>   
+> -	/*
+> -	 * Atmel, SST, Intel/Numonyx, and others serial NOR tend to power up
+> -	 * with the software protection bits set
+> -	 */
+> -	if (JEDEC_MFR(nor->info) == SNOR_MFR_ATMEL ||
+> -	    JEDEC_MFR(nor->info) == SNOR_MFR_INTEL ||
+> -	    JEDEC_MFR(nor->info) == SNOR_MFR_SST ||
+> -	    nor->info->flags & SPI_NOR_HAS_LOCK) {
+> -		write_enable(nor);
+> -		write_sr(nor, 0);
+> -		spi_nor_wait_till_ready(nor);
+> +	if (nor->clear_sr_bp) {
+> +		err = nor->clear_sr_bp(nor);
+> +		if (err) {
+> +			dev_err(nor->dev,
+> +				"fail to clear block protection bits\n");
+> +			return err;
+> +		}
 
-Bjorn is about to provide his Reviewed-by for this implementation.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+
+>   	}
+>   
+>   	if (nor->quad_enable) {
+> @@ -4050,6 +4134,16 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>   	if (info->flags & SPI_S3AN)
+>   		nor->flags |=  SNOR_F_READY_XSR_RDY;
+>   
+> +	/*
+> +	 * Atmel, SST, Intel/Numonyx, and others serial NOR tend to power up
+> +	 * with the software protection bits set.
+> +	 */
+> +	if (JEDEC_MFR(nor->info) == SNOR_MFR_ATMEL ||
+> +	    JEDEC_MFR(nor->info) == SNOR_MFR_INTEL ||
+> +	    JEDEC_MFR(nor->info) == SNOR_MFR_SST ||
+> +	    nor->info->flags & SPI_NOR_HAS_LOCK)
+> +		nor->clear_sr_bp = spi_nor_clear_sr_bp;
+> +
+>   	/* Parse the Serial Flash Discoverable Parameters table. */
+>   	ret = spi_nor_init_params(nor, &params);
+>   	if (ret)
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index b3d360b0ee3d..566bd5010bc8 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -410,6 +410,7 @@ struct spi_nor {
+>   	int (*flash_unlock)(struct spi_nor *nor, loff_t ofs, uint64_t len);
+>   	int (*flash_is_locked)(struct spi_nor *nor, loff_t ofs, uint64_t len);
+>   	int (*quad_enable)(struct spi_nor *nor);
+> +	int (*clear_sr_bp)(struct spi_nor *nor);
+>   
+>   	void *priv;
+>   };
+> 
