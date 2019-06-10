@@ -2,125 +2,123 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64529C28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675DDC28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD72206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560163190;
-	bh=VTwgLXfF83Mn6JXooLjce/55tge+9zMU3zcuVQhaDTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qk5RhYYyYsPOWQoLQGA1dquBd+maJSXqrN7iVMIZoPUwfTC3MN7lX1HhO/fpyov6K
-	 +JeY0KDW3ksZWR7lg/Etlc2jpxMkX3GShxUavYRIhjBhsEhZ8H9grLrdFh/t9FJEs+
-	 Nw8bZDA7qRfxMqwAw7tiIyEwTmf+I1WszxO91rmA=
+	by mail.kernel.org (Postfix) with ESMTP id 4ABBE20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389546AbfFJKjt (ORCPT
+        id S2389528AbfFJKm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:39:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58772 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388396AbfFJKjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:39:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA37DAFAB;
-        Mon, 10 Jun 2019 10:39:46 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 12:39:46 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, stable@kernel.org,
-        Wu Fangsuo <fangsuowu@asrmicro.com>,
-        Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-Subject: Re: [PATCH] mm: fix trying to reclaim unevicable LRU page
-Message-ID: <20190610103946.GE30967@dhcp22.suse.cz>
-References: <20190524071114.74202-1-minchan@kernel.org>
- <20190528151407.GE1658@dhcp22.suse.cz>
- <20190530024229.GF229459@google.com>
- <20190604122806.GH4669@dhcp22.suse.cz>
- <20190610094222.GA55602@google.com>
+        Mon, 10 Jun 2019 06:42:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:40384 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389426AbfFJKm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:42:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20FE5337;
+        Mon, 10 Jun 2019 03:42:58 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31CE23F557;
+        Mon, 10 Jun 2019 03:44:37 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 11:42:53 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH 07/18] drivers: firmware: psci: Prepare to use OS
+ initiated suspend mode
+Message-ID: <20190610104253.GB26602@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-8-ulf.hansson@linaro.org>
+ <20190607151716.GF15577@e107155-lin>
+ <CAPDyKFoKNLqLzVx8uj_-iuWAHGCvty28mVKnipFVgjKD8oDNkQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610094222.GA55602@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPDyKFoKNLqLzVx8uj_-iuWAHGCvty28mVKnipFVgjKD8oDNkQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 10-06-19 18:42:22, Minchan Kim wrote:
-> On Tue, Jun 04, 2019 at 02:28:06PM +0200, Michal Hocko wrote:
-> > On Thu 30-05-19 11:42:29, Minchan Kim wrote:
-> > > On Tue, May 28, 2019 at 05:14:07PM +0200, Michal Hocko wrote:
-> > > > [Cc Pankaj Suryawanshi who has reported a similar problem
-> > > > http://lkml.kernel.org/r/SG2PR02MB309806967AE91179CAFEC34BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com]
-> > > > 
-> > > > On Fri 24-05-19 16:11:14, Minchan Kim wrote:
-> > > > > There was below bugreport from Wu Fangsuo.
-> > > > > 
-> > > > > 7200 [  680.491097] c4 7125 (syz-executor) page:ffffffbf02f33b40 count:86 mapcount:84 mapping:ffffffc08fa7a810 index:0x24
-> > > > > 7201 [  680.531186] c4 7125 (syz-executor) flags: 0x19040c(referenced|uptodate|arch_1|mappedtodisk|unevictable|mlocked)
-> > > > > 7202 [  680.544987] c0 7125 (syz-executor) raw: 000000000019040c ffffffc08fa7a810 0000000000000024 0000005600000053
-> > > > > 7203 [  680.556162] c0 7125 (syz-executor) raw: ffffffc009b05b20 ffffffc009b05b20 0000000000000000 ffffffc09bf3ee80
-> > > > > 7204 [  680.566860] c0 7125 (syz-executor) page dumped because: VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page))
-> > > > > 7205 [  680.578038] c0 7125 (syz-executor) page->mem_cgroup:ffffffc09bf3ee80
-> > > > > 7206 [  680.585467] c0 7125 (syz-executor) ------------[ cut here ]------------
-> > > > > 7207 [  680.592466] c0 7125 (syz-executor) kernel BUG at /home/build/farmland/adroid9.0/kernel/linux/mm/vmscan.c:1350!
-> > > > > 7223 [  680.603663] c0 7125 (syz-executor) Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> > > > > 7224 [  680.611436] c0 7125 (syz-executor) Modules linked in:
-> > > > > 7225 [  680.616769] c0 7125 (syz-executor) CPU: 0 PID: 7125 Comm: syz-executor Tainted: G S              4.14.81 #3
-> > > > > 7226 [  680.626826] c0 7125 (syz-executor) Hardware name: ASR AQUILAC EVB (DT)
-> > > > > 7227 [  680.633623] c0 7125 (syz-executor) task: ffffffc00a54cd00 task.stack: ffffffc009b00000
-> > > > > 7228 [  680.641917] c0 7125 (syz-executor) PC is at shrink_page_list+0x1998/0x3240
-> > > > > 7229 [  680.649144] c0 7125 (syz-executor) LR is at shrink_page_list+0x1998/0x3240
-> > > > > 7230 [  680.656303] c0 7125 (syz-executor) pc : [<ffffff90083a2158>] lr : [<ffffff90083a2158>] pstate: 60400045
-> > > > > 7231 [  680.666086] c0 7125 (syz-executor) sp : ffffffc009b05940
-> > > > > ..
-> > > > > 7342 [  681.671308] c0 7125 (syz-executor) [<ffffff90083a2158>] shrink_page_list+0x1998/0x3240
-> > > > > 7343 [  681.679567] c0 7125 (syz-executor) [<ffffff90083a3dc0>] reclaim_clean_pages_from_list+0x3c0/0x4f0
-> > > > > 7344 [  681.688793] c0 7125 (syz-executor) [<ffffff900837ed64>] alloc_contig_range+0x3bc/0x650
-> > > > > 7347 [  681.717421] c0 7125 (syz-executor) [<ffffff90084925cc>] cma_alloc+0x214/0x668
-> > > > > 7348 [  681.724892] c0 7125 (syz-executor) [<ffffff90091e4d78>] ion_cma_allocate+0x98/0x1d8
-> > > > > 7349 [  681.732872] c0 7125 (syz-executor) [<ffffff90091e0b20>] ion_alloc+0x200/0x7e0
-> > > > > 7350 [  681.740302] c0 7125 (syz-executor) [<ffffff90091e154c>] ion_ioctl+0x18c/0x378
-> > > > > 7351 [  681.747738] c0 7125 (syz-executor) [<ffffff90084c6824>] do_vfs_ioctl+0x17c/0x1780
-> > > > > 7352 [  681.755514] c0 7125 (syz-executor) [<ffffff90084c7ed4>] SyS_ioctl+0xac/0xc0
-> > > > > 
-> > > > > Wu found it's due to [1]. Before that, unevictable page goes to cull_mlocked
-> > > > > routine so that it couldn't reach the VM_BUG_ON_PAGE line.
-> > > > > 
-> > > > > To fix the issue, this patch filter out unevictable LRU pages
-> > > > > from the reclaim_clean_pages_from_list in CMA.
-> > > > 
-> > > > The changelog is rather modest on details and I have to confess I have
-> > > > little bit hard time to understand it. E.g. why do not we need to handle
-> > > > the regular reclaim path?
-> > > 
-> > > No need to pass unevictable pages into regular reclaim patch if we are
-> > > able to know in advance.
-> > 
-> > I am sorry to be dense here. So what is the difference in the CMA path?
-> > Am I right that the pfn walk (CMA) rather than LRU isolation (reclaim)
-> > is the key differentiator?
+On Mon, Jun 10, 2019 at 12:21:10PM +0200, Ulf Hansson wrote:
+> On Fri, 7 Jun 2019 at 17:17, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Mon, May 13, 2019 at 09:22:49PM +0200, Ulf Hansson wrote:
+> > > The per CPU variable psci_power_state, contains an array of fixed values,
+> > > which reflects the corresponding arm,psci-suspend-param parsed from DT, for
+> > > each of the available CPU idle states.
+> > >
+> > > This isn't sufficient when using the hierarchical CPU topology in DT in
+> > > combination with having PSCI OS initiated (OSI) mode enabled. More
+> > > precisely, in OSI mode, Linux is responsible of telling the PSCI FW what
+> > > idle state the cluster (a group of CPUs) should enter, while in PSCI
+> > > Platform Coordinated (PC) mode, each CPU independently votes for an idle
+> > > state of the cluster.
+> > >
+> > > For this reason, let's introduce an additional per CPU variable called
+> > > domain_state and implement two helper functions to read/write its values.
+> > > Following patches, which implements PM domain support for PSCI, will use
+> > > the domain_state variable and set it to corresponding bits that represents
+> > > the selected idle state for the cluster.
+> > >
+> > > Finally, in psci_cpu_suspend_enter() and psci_suspend_finisher(), let's
+> > > take into account the values in the domain_state, as to get the complete
+> > > suspend parameter.
+> > >
+> >
+> > I understand it was split to ease review, but this patch also does
+> > nothing as domain_state = 0 always. I was trying hard to find where it's
+> > set, but I assume it will be done in later patches. Again may be this
+> > can be squashed into the first caller of psci_set_domain_state
 > 
-> Yes.
-> We could isolate unevictable LRU pages from the pfn waker to migrate and
-> could discard clean file-backed pages to reduce migration latency in CMA
-> path.
+> You have a point, but I am worried that it would look like this series
+> is solely needed to support OSI mode. This is not the case. Let me
+> explain.
+> 
+> Having $subject patch separate shows the specific changes needed to
+> support OSI mode. The first caller of psci_set_domain_state() is added
+> in patch9, however, patch9 is useful no matter of OSI or PC mode.
+> 
+> Moreover, if I squash $subject patch with patch9, I would have to
+> squash also the subsequent patch (patch8), as it depends on $subject
+> patch.
+> 
+> So, to conclude, are you happy with this as is or do you want me to
+> squash the patches?
+> 
 
-Please be explicit about that in the changelog. The fact that this is
-not possible from the regular reclaim path is really important and not
-obvious from the first glance.
+Yes I am fine either way. As I put the comments in the same flow as I
+did review, I thought it's worth mentioning if someone else get similar
+thoughts. I am fine if you prefer to keep it the same way unless someone
+else raise the same point.
 
-Thanks!
-
--- 
-Michal Hocko
-SUSE Labs
+--
+Regards,
+Sudeep
