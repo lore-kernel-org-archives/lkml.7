@@ -2,193 +2,223 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4040C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214B6C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1219208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560200375;
-	bh=dI/BJlaJPgTAa6Ru+0W+XmCLy9W/37V7lpMtYMPQChQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2Dep5W3qR888vZUyIOvBm5rglP8mQE9ZwE/dvplMtkn+WvY7aLw8NaHXYGGTCOAyy
-	 KZxAUxNyFpShu3hhh6Fax10RIn3D6aDLxKSsiGiv4T4cGp/OW4zU40TxOBASQYFKS2
-	 5glQZOSWw0LsXeHtng9iesbPfnqJbm5ePfA/oq+0=
+	by mail.kernel.org (Postfix) with ESMTP id D862F208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:00:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXXUVR6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389597AbfFJU7f (ORCPT
+        id S2389753AbfFJVAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727588AbfFJU7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:59:34 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3A992089E;
-        Mon, 10 Jun 2019 20:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560200373;
-        bh=dI/BJlaJPgTAa6Ru+0W+XmCLy9W/37V7lpMtYMPQChQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gO9QfFjHvHrVSOAKsvu9mfDGBaAa1rC79LdbXnkz1abvtb3qBMPyV2lco9lpMDalF
-         XolaahQdB7U8De7j4soNdeVxOwHRXga4RaQIgNHyx25cv6uUW8GYXMg7vYUUFTcN9z
-         r6dKpDqQxK552Syj0bTXnRNbW8AiNH2xLagcZ2Ck=
-Date:   Mon, 10 Jun 2019 13:59:31 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        Dave Watson <davejwatson@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     syzbot <syzbot+06537213db7ba2745c4a@syzkaller.appspotmail.com>,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: [net/tls] Re: memory leak in create_ctx
-Message-ID: <20190610205929.GL63833@gmail.com>
-References: <000000000000a420af058ad4bca2@google.com>
+        Mon, 10 Jun 2019 17:00:30 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38401 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389601AbfFJVA3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 17:00:29 -0400
+Received: by mail-lj1-f195.google.com with SMTP id o13so9350392lji.5;
+        Mon, 10 Jun 2019 14:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=g39p7pRbpSMDIScu67WyJzsZf6+u/by8lux69Jz2cl8=;
+        b=QXXUVR6QusQtKBkGw7HTMu/34srrz9pCvPEa4akXuQPbujOakR7RHqKsJchjjTfReI
+         eJJFDpW9UcUFJf+Tl03K8dr3cOGVjCD2BOLCe+rPUZ9XjBqPVZSu42qldz79rwdpERW/
+         RFawvmqH9SKjv9tTnWV871sVOMUdqTPGXcNaeQyvl94UBf9wH6mZEWa2kKxL+DXqodWv
+         hxut4ACxkEehrW14zX1UnCC5MpE8RlECl/XrEMFubK6YG+ESugvOlfSBKq7bgnPN3VwG
+         KnnvwdZ+4S4YdTNpaIaPP7NtlrKSVquZ4VxssTMxTRBtgh3P+fPlW7WYp8v5FVfy2Xox
+         BCJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g39p7pRbpSMDIScu67WyJzsZf6+u/by8lux69Jz2cl8=;
+        b=sTzVfw5AW5WsiW10IwQOh8Vy8uWYLTECqT2/21ayj3SUyaFx6+kE/LYjlaJwEDds/Y
+         5otF1Be1cSTedAzmsxPidfrh38HyhN2TiCcxTOMYlEf84xh1dtVCBhizpFLIacYOHjBs
+         eDCfaVl8As/m+Sign/i9MJv6llvjBPQ0PA+dN9na3qOLn1mz8D4nd2zUdR7yGBkWFt8V
+         vjdC8jeocfwnMZrsXhL2aKokVFw5Cy1vWXrAMWNTjmUbP44mFFYX6DpLQktxrXY6X0mA
+         4OGJLqdKr8XnAcrGMz9srGP5grTKdqXhJ1LFIWNNUZuVWbzmylJdg8OJQSrVKe41pcc3
+         fDxg==
+X-Gm-Message-State: APjAAAVZ/qKhJkBXO7+CEk+T0pzA8gDnvr4bmOoS6BjVxXXPA1JxJhps
+        lQx61wAIB6LqBbT95YxI7vQ=
+X-Google-Smtp-Source: APXvYqzErDgp4F/CXL3VLNDHYkwE8ezP/+CchX6/UREHrJR5e5TWTFaYaVBWCXkQKgw4LdVR1j6DmA==
+X-Received: by 2002:a2e:5b0f:: with SMTP id p15mr19533438ljb.82.1560200426706;
+        Mon, 10 Jun 2019 14:00:26 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id m25sm2192641lfp.97.2019.06.10.14.00.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 14:00:25 -0700 (PDT)
+Subject: Re: [PATCH V4 6/6] i2c: tegra: remove BUG, BUG_ON
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560186515-30797-1-git-send-email-bbiswas@nvidia.com>
+ <1560186515-30797-6-git-send-email-bbiswas@nvidia.com>
+ <06ab30b6-bf79-c628-0a04-d0307511a06f@gmail.com>
+ <851d7837-5b98-228e-d8c9-3c41be1fb2e0@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e733bcb0-ea8c-61d1-e6b5-cee8b7696c70@gmail.com>
+Date:   Tue, 11 Jun 2019 00:00:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000a420af058ad4bca2@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <851d7837-5b98-228e-d8c9-3c41be1fb2e0@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like a TLS bug.  icsk->icsk_ulp_data isn't always freed.
+10.06.2019 22:41, Bitan Biswas пишет:
+> 
+> 
+> On 6/10/19 11:12 AM, Dmitry Osipenko wrote:
+>> 10.06.2019 20:08, Bitan Biswas пишет:
+>>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+>>> as needed. Remove BUG() and make Rx and Tx case handling
+>>> similar.
+>>>
+>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>> ---
+>>>   drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
+>>>   1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> Looks that this is still not correct. What if it transfer-complete flag
+>> is set and buffer is full on RX? In this case the transfer will succeed
+>> while it was a failure.
+>>
+>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
+>>> b/drivers/i2c/busses/i2c-tegra.c
+>>> index 4dfb4c1..30619d6 100644
+>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>> @@ -515,7 +515,6 @@ static int tegra_i2c_empty_rx_fifo(struct
+>>> tegra_i2c_dev *i2c_dev)
+>>>        * prevent overwriting past the end of buf
+>>>        */
+>>>       if (rx_fifo_avail > 0 && buf_remaining > 0) {
+>>> -        BUG_ON(buf_remaining > 3);
+>>
+>> Actually error should be returned here since out-of-bounds memory
+>> accesses must be avoided, hence:
+>>
+>>     if (WARN_ON_ONCE(buf_remaining > 3))
+>>         return -EINVAL;
+> buf_remaining will be less than equal to 3 because of the expression
+> earlier
+> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-tegra.c#L520
+> 
 
-On Sat, Jun 08, 2019 at 12:13:06PM -0700, syzbot wrote:
-> Hello,
+Ah yes, indeed!
+
 > 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=170e0bfea00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d5c73825cbdc7326
-> dashboard link: https://syzkaller.appspot.com/bug?extid=06537213db7ba2745c4a
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10aa806aa00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+06537213db7ba2745c4a@syzkaller.appspotmail.com
-> 
-> IPv6: ADDRCONF(NETDEV_CHANGE): team0: link becomes ready
-> 2019/06/08 14:55:51 executed programs: 15
-> 2019/06/08 14:55:56 executed programs: 31
-> 2019/06/08 14:56:02 executed programs: 51
-> BUG: memory leak
-> unreferenced object 0xffff888117ceae00 (size 512):
->   comm "syz-executor.3", pid 7233, jiffies 4294949016 (age 13.640s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000e6550967>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:55 [inline]
->     [<00000000e6550967>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<00000000e6550967>] slab_alloc mm/slab.c:3326 [inline]
->     [<00000000e6550967>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
->     [<0000000014132182>] kmalloc include/linux/slab.h:547 [inline]
->     [<0000000014132182>] kzalloc include/linux/slab.h:742 [inline]
->     [<0000000014132182>] create_ctx+0x25/0x70 net/tls/tls_main.c:601
->     [<00000000e08e1a44>] tls_init net/tls/tls_main.c:787 [inline]
->     [<00000000e08e1a44>] tls_init+0x97/0x1e0 net/tls/tls_main.c:769
->     [<0000000037b0c43c>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
->     [<0000000037b0c43c>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
->     [<000000007a284277>] do_tcp_setsockopt.isra.0+0x19a/0xd60
-> net/ipv4/tcp.c:2784
->     [<00000000f35f3415>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3098
->     [<00000000c840962c>] sock_common_setsockopt+0x38/0x50
-> net/core/sock.c:3124
->     [<0000000006b0801f>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
->     [<00000000a6309f52>] __do_sys_setsockopt net/socket.c:2083 [inline]
->     [<00000000a6309f52>] __se_sys_setsockopt net/socket.c:2080 [inline]
->     [<00000000a6309f52>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
->     [<00000000fa555bbc>] do_syscall_64+0x76/0x1a0
-> arch/x86/entry/common.c:301
->     [<00000000a06d7d1a>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> BUG: memory leak
-> unreferenced object 0xffff88810965dc00 (size 512):
->   comm "syz-executor.2", pid 7235, jiffies 4294949016 (age 13.640s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000e6550967>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:55 [inline]
->     [<00000000e6550967>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<00000000e6550967>] slab_alloc mm/slab.c:3326 [inline]
->     [<00000000e6550967>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
->     [<0000000014132182>] kmalloc include/linux/slab.h:547 [inline]
->     [<0000000014132182>] kzalloc include/linux/slab.h:742 [inline]
->     [<0000000014132182>] create_ctx+0x25/0x70 net/tls/tls_main.c:601
->     [<00000000e08e1a44>] tls_init net/tls/tls_main.c:787 [inline]
->     [<00000000e08e1a44>] tls_init+0x97/0x1e0 net/tls/tls_main.c:769
->     [<0000000037b0c43c>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
->     [<0000000037b0c43c>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
->     [<000000007a284277>] do_tcp_setsockopt.isra.0+0x19a/0xd60
-> net/ipv4/tcp.c:2784
->     [<00000000f35f3415>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3098
->     [<00000000c840962c>] sock_common_setsockopt+0x38/0x50
-> net/core/sock.c:3124
->     [<0000000006b0801f>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
->     [<00000000a6309f52>] __do_sys_setsockopt net/socket.c:2083 [inline]
->     [<00000000a6309f52>] __se_sys_setsockopt net/socket.c:2080 [inline]
->     [<00000000a6309f52>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
->     [<00000000fa555bbc>] do_syscall_64+0x76/0x1a0
-> arch/x86/entry/common.c:301
->     [<00000000a06d7d1a>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> BUG: memory leak
-> unreferenced object 0xffff8881207d7600 (size 512):
->   comm "syz-executor.5", pid 7244, jiffies 4294949019 (age 13.610s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000e6550967>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:55 [inline]
->     [<00000000e6550967>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<00000000e6550967>] slab_alloc mm/slab.c:3326 [inline]
->     [<00000000e6550967>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
->     [<0000000014132182>] kmalloc include/linux/slab.h:547 [inline]
->     [<0000000014132182>] kzalloc include/linux/slab.h:742 [inline]
->     [<0000000014132182>] create_ctx+0x25/0x70 net/tls/tls_main.c:601
->     [<00000000e08e1a44>] tls_init net/tls/tls_main.c:787 [inline]
->     [<00000000e08e1a44>] tls_init+0x97/0x1e0 net/tls/tls_main.c:769
->     [<0000000037b0c43c>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
->     [<0000000037b0c43c>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
->     [<000000007a284277>] do_tcp_setsockopt.isra.0+0x19a/0xd60
-> net/ipv4/tcp.c:2784
->     [<00000000f35f3415>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3098
->     [<00000000c840962c>] sock_common_setsockopt+0x38/0x50
-> net/core/sock.c:3124
->     [<0000000006b0801f>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
->     [<00000000a6309f52>] __do_sys_setsockopt net/socket.c:2083 [inline]
->     [<00000000a6309f52>] __se_sys_setsockopt net/socket.c:2080 [inline]
->     [<00000000a6309f52>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
->     [<00000000fa555bbc>] do_syscall_64+0x76/0x1a0
-> arch/x86/entry/common.c:301
->     [<00000000a06d7d1a>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>>>           val = i2c_readl(i2c_dev, I2C_RX_FIFO);
+>>>           val = cpu_to_le32(val);
+>>>           memcpy(buf, &val, buf_remaining);
+>>> @@ -523,7 +522,6 @@ static int tegra_i2c_empty_rx_fifo(struct
+>>> tegra_i2c_dev *i2c_dev)
+>>>           rx_fifo_avail--;
+>>>       }
+>>>   -    BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+>>
+>> Better not to ignore this as well:
+>>
+>>     if (WARN_ON_ONCE(rx_fifo_avail > 0 &&
+>>              buf_remaining > 0))
+>>         return -EINVAL;
+>>
+> Please check below line.
+> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-tegra.c#L532
 > 
 > 
+> It ensures that buf_remaining will be 0 and we never hit the BUG_ON as
+> follows:
+
+[1] Okay, but it doesn't ensure about rx_fifo_avail. So it could be:
+
+	if (WARN_ON_ONCE(rx_fifo_avail))
+		return -EINVAL;
+
+>>> -    BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
 > 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>>>       i2c_dev->msg_buf_remaining = buf_remaining;
+>>>       i2c_dev->msg_buf = buf;
+>>>   @@ -581,7 +579,6 @@ static int tegra_i2c_fill_tx_fifo(struct
+>>> tegra_i2c_dev *i2c_dev)
+>>>        * boundary and fault.
+>>>        */
+>>>       if (tx_fifo_avail > 0 && buf_remaining > 0) {
+>>> -        BUG_ON(buf_remaining > 3);
+>>
+>> And here, cause this will corrupt stack:
+>>
+>>         if (WARN_ON_ONCE(buf_remaining > 3))
+>>             return -EINVAL;
+>>
+> Please check the line
+> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-tegra.c#L576
 > 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
 > 
+> It ensures buf_remaining will be less or equal to 3.
+
+Okay, agree here.
+
+>>>           memcpy(&val, buf, buf_remaining);
+>>>           val = le32_to_cpu(val);
+>>>   @@ -850,7 +847,8 @@ static irqreturn_t tegra_i2c_isr(int irq, void
+>>> *dev_id)
+>>>               if (i2c_dev->msg_buf_remaining)
+>>>                   tegra_i2c_empty_rx_fifo(i2c_dev);
+>>>               else
+>>> -                BUG();
+>>> +                tegra_i2c_mask_irq(i2c_dev,
+>>> +                           I2C_INT_RX_FIFO_DATA_REQ);
+>>
+>> Then here:
+>>
+>>     if (WARN_ON_ONCE(!i2c_dev->msg_buf_remaining) ||
+>>         tegra_i2c_empty_rx_fifo(i2c_dev)) {
+>>         i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
+>>         goto err;
+>>     }
+>>
+> Can you please elaborate why the condition needs to be as follows
+> instead of " if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) " ?
+> 
+>>     if (WARN_ON_ONCE(!i2c_dev->msg_buf_remaining) ||
+>>         tegra_i2c_empty_rx_fifo(i2c_dev)) {
+
+Because this is a "receive" transfer and hence it is a error condition
+if the data-message was already fully received and then there is another
+request from hardware to receive more data. So
+"!i2c_dev->msg_buf_remaining" is the error condition here because there
+is no more space in the buffer.
+
+Looking at this again, seems checking for "if
+(WARN_ON_ONCE(rx_fifo_avail))" in the above hunk [1] will be already
+enough since a not fully drained RX FIFO means that there is no enough
+space in the buffer. Then it could be:
+
+        if (tegra_i2c_empty_rx_fifo(i2c_dev)) {
+                i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
+                goto err;
+	}
