@@ -2,147 +2,151 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC06C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933A7C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2148220859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67168207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HAQGPWUr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DK+uSure"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388676AbfFJIm7 (ORCPT
+        id S2388368AbfFJIod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:42:59 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45735 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388355AbfFJImU (ORCPT
+        Mon, 10 Jun 2019 04:44:33 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:38326 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388035AbfFJIoc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:42:20 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so8236892wre.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:42:19 -0700 (PDT)
+        Mon, 10 Jun 2019 04:44:32 -0400
+Received: by mail-it1-f193.google.com with SMTP id e25so5713715itk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qYq7mFFCoR+D5QhtdnXfa7L63GrDNr+4aaRo7anMzNg=;
-        b=HAQGPWUrBC+m/uOp1ExdylTBwwXMRfgop11L7pNji5XWXcPZW+6ErRLi511mBcytaZ
-         W3UqLkpw33YmjBArJFkiHuEHbOEyKduZ+bAn1mEZaUDLiIz0ME6BhyAqU9BZvH7w4t+c
-         rfxKHG3Vi1cDONkuWZlhKKSyjl21utH0TeuiZXwU6bY4c5DqQm23B1Ij/Kf+CFiZQdZS
-         1IreLq1aIZRV0ksEv4kfk4qGpXympkIsPxtlWW9qyKWS8h1amE5syenHSK7Z1CX4qH63
-         7iKFPjYSg8pCpTER+gxm8AcOcrvXC8eg15KcJ/txMHz4kDbhbyfiQ5AM02XS+7GT4M7B
-         8oMA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VS+cgEF/QUrbLF7DuqoiP4P2XAG1E5uMf3M9NoVhDxc=;
+        b=DK+uSuretD7HL2a7vsPPnfX+8oGDG1VU/1GW3bNgb2Ee3mlXI/EOFVpP71A1qCzXmV
+         qdq2OtFbX/XHjAVPfppxUcaVS0NKqNSJGPnYsfBuj0fqOQ1QstV+o4rfTetA4URaJBQy
+         uoooP6cJSJS5sWkHj/DxE98Nntg/SUyT37V1pSRlpNzgzDJW084gU7ULnySZeBZc0GiQ
+         /UqxysPa4zWEXmNTK+aHxuxZEu0Lnx+tNdN7d4AcMHl6cN96/WolqeISR9Yt9qpROthj
+         6rK86ggqQAlclsN6bGEHYdS7LfAnNh8jifGC0KHGOdoulTaGk6lNYT20ntnXk+DDjHF1
+         /hEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qYq7mFFCoR+D5QhtdnXfa7L63GrDNr+4aaRo7anMzNg=;
-        b=nHoRKAn86XBxbv+ge5lPvXTjYsnxdzNx9AhcxV+A8IR0wMphXO1BI/K9/a9pthW1fd
-         DDltlmAb7aVoGZWDzUt30Mp9lv2WrJbTNRu76yZ+6VJ3kZHAfhq/kqOjAmjJXw5ecLhs
-         s+hEIdzIQ6pcjEiYpOSgJeJow5OtHwweFD4+oIZSZ2pl3coqB2fgPnC+/R30/waqJy7r
-         2HaTU7sz+xWNn2YnxMyT4iiSxN5EHQpalbzn61ZRwv2Yafu23un1ymH2r+c3OicwfFdT
-         4xM740iCX+blDwupwIrZG8qcO/KJGK1PbhuTFuVPxTRVVNJSgXmWH45uTTqnZpUCXG+t
-         KcTw==
-X-Gm-Message-State: APjAAAWTYx0AMd0B1jH0rbxeYejarux65ntUJ/pyMR5CtHv324xMmqeS
-        uQBf8R5qYL2cWNFO4Ko3QP8MPg==
-X-Google-Smtp-Source: APXvYqzd94XuV2bw5qRr4c4SqMDr5KX6F6dDBrqoRThTieNRJaWBshe3NLdMg2h1vW6jj1+Btr9Plg==
-X-Received: by 2002:adf:ed41:: with SMTP id u1mr28476611wro.162.1560156138478;
-        Mon, 10 Jun 2019 01:42:18 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id a125sm9929670wmf.42.2019.06.10.01.42.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 01:42:18 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     alokc@codeaurora.org, andy.gross@linaro.org,
-        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
-        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 3/8] pinctrl: msm: Add ability for drivers to supply a reserved GPIO list
-Date:   Mon, 10 Jun 2019 09:42:08 +0100
-Message-Id: <20190610084213.1052-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190610084213.1052-1-lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VS+cgEF/QUrbLF7DuqoiP4P2XAG1E5uMf3M9NoVhDxc=;
+        b=fby5rv26avg/8FoeaAr0GYhNp/yEUs93xzQdQgF834ijwkmZYi7rcnKOEB8KDe+hiz
+         OWg1DuWz9PK0dbu6BRaR25WXPhWra9vGqGkkV1xIKY1ic+1s8tCvLrewSsIibLlaRf1q
+         2oyXpABAAFqXfXoJGRrdloLuW9F8TAOosNwXRY0t94m3t9JPJyaQNAVbxEW4XJrbK07X
+         cws7EuOldYQK4MgY2VPH7nfJ0tO09oKrXiOXfJkOfbqlwBlXretLxirzjtL1rAAK9xeC
+         0H3V1bmKB+VZl3PNSHqe8mStTKi7Hfun8ha9/+tszv/6kpIUWbokLhYK1B+KmnUZtLUp
+         YO+g==
+X-Gm-Message-State: APjAAAU7yF2B4k6bFcxfo19EIucsPO5UB7Lz87IxTmfdJk632Rpxk9sJ
+        oUv4B7u1u4rphJQQIzVq830F1hE6u0ThqBAj7n8MmA==
+X-Google-Smtp-Source: APXvYqyFs/Qz/+BC0ZDFUppIgbEfWY14++ciL9hJj1GnRU8+kHd3W+8xr8lU+QumsR1X+b0RC4Ha2EIH/Cvf+6SH3Ws=
+X-Received: by 2002:a02:ce37:: with SMTP id v23mr44208035jar.2.1560156271880;
+ Mon, 10 Jun 2019 01:44:31 -0700 (PDT)
+MIME-Version: 1.0
 References: <20190610084213.1052-1-lee.jones@linaro.org>
+In-Reply-To: <20190610084213.1052-1-lee.jones@linaro.org>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 10 Jun 2019 10:44:19 +0200
+Message-ID: <CAKv+Gu9UYQmPS0UxYztNTiFLYA1kqtL4HxttqFQovc26hffwmg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        wsa+renesas@sang-engineering.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting MSM based platforms with Device Tree or some ACPI
-implementations, it is possible to provide a list of reserved pins
-via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-However some ACPI tables are not populated with this information,
-thus it has to come from a knowledgable device driver instead.
+On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
+>
+> Add a match table to allow automatic probing of ACPI device
+> QCOM0220.  Ignore clock attainment errors.  Set default clock
+> frequency value.
+>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Here we provide the MSM common driver with additional support to
-parse this informtion and correctly populate the widely used
-'valid_mask'.
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 18 ++++++++++++++++++
- drivers/pinctrl/qcom/pinctrl-msm.h |  1 +
- 2 files changed, 19 insertions(+)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index ee8119879c4c..3ac740b36508 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -607,8 +607,23 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip)
- 	int ret;
- 	unsigned int len, i;
- 	unsigned int max_gpios = pctrl->soc->ngpios;
-+	const int *reserved = pctrl->soc->reserved_gpios;
- 	u16 *tmp;
- 
-+	/* Driver provided reserved list overrides DT and ACPI */
-+	if (reserved) {
-+		bitmap_fill(chip->valid_mask, max_gpios);
-+		for (i = 0; reserved[i] >= 0; i++) {
-+			if (i >= max_gpios || reserved[i] >= max_gpios) {
-+				dev_err(pctrl->dev, "invalid list of reserved GPIOs\n");
-+				return -EINVAL;
-+			}
-+			clear_bit(reserved[i], chip->valid_mask);
-+		}
-+
-+		return 0;
-+	}
-+
- 	/* The number of GPIOs in the ACPI tables */
- 	len = ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL,
- 						   0);
-@@ -964,6 +979,9 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
- 
- static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
- {
-+	if (pctrl->soc->reserved_gpios)
-+		return true;
-+
- 	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
- }
- 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index c12048e54a6f..23b93ae92269 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -121,6 +121,7 @@ struct msm_pinctrl_soc_data {
- 	bool pull_no_keeper;
- 	const char *const *tiles;
- 	unsigned int ntiles;
-+	const int *reserved_gpios;
- };
- 
- extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
--- 
-2.17.1
-
+> ---
+>  drivers/i2c/busses/i2c-qcom-geni.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index db075bc0d952..9e3b8a98688d 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+>
+> +#include <linux/acpi.h>
+>  #include <linux/clk.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/err.h>
+> @@ -483,6 +484,14 @@ static const struct i2c_algorithm geni_i2c_algo = {
+>         .functionality  = geni_i2c_func,
+>  };
+>
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id geni_i2c_acpi_match[] = {
+> +       { "QCOM0220"},
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, geni_i2c_acpi_match);
+> +#endif
+> +
+>  static int geni_i2c_probe(struct platform_device *pdev)
+>  {
+>         struct geni_i2c_dev *gi2c;
+> @@ -502,7 +511,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>                 return PTR_ERR(gi2c->se.base);
+>
+>         gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
+> -       if (IS_ERR(gi2c->se.clk)) {
+> +       if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(&pdev->dev)) {
+>                 ret = PTR_ERR(gi2c->se.clk);
+>                 dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
+>                 return ret;
+> @@ -516,6 +525,9 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>                 gi2c->clk_freq_out = KHZ(100);
+>         }
+>
+> +       if (has_acpi_companion(&pdev->dev))
+> +               ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
+> +
+>         gi2c->irq = platform_get_irq(pdev, 0);
+>         if (gi2c->irq < 0) {
+>                 dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
+> @@ -660,6 +672,7 @@ static struct platform_driver geni_i2c_driver = {
+>                 .name = "geni_i2c",
+>                 .pm = &geni_i2c_pm_ops,
+>                 .of_match_table = geni_i2c_dt_match,
+> +               .acpi_match_table = ACPI_PTR(geni_i2c_acpi_match),
+>         },
+>  };
+>
+> --
+> 2.17.1
+>
