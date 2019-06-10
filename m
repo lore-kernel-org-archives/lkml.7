@@ -2,87 +2,171 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E423FC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7416BC4321B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02F22089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560203347;
-	bh=uPFHjqLTdJFsdVAbHYokoiNQcEqSEdSi7LpTrL//Q6g=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=BJ2fX5rASk5youvdpJzo3fcY+QeA7qqrNrfnQ9Fw/TnHCXrLPqL/lMhoKtANqQXld
-	 nBOcAdTKve0iz0j21uCt9TyGfnxWbRsHi9VlNfTQ50f/8r1mqoWQWcqK8UZxfDFzTX
-	 bfDJimqVShVRJvs9GWq9N+5vba6yWYR1HyPUP95Q=
+	by mail.kernel.org (Postfix) with ESMTP id 5637320859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfFJVtH (ORCPT
+        id S1728690AbfFJVtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbfFJVtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:49:06 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ED7320859;
-        Mon, 10 Jun 2019 21:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560203345;
-        bh=uPFHjqLTdJFsdVAbHYokoiNQcEqSEdSi7LpTrL//Q6g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=a10GXHYLqBxJjxn9CZi9jpyeTO5bAKbqZhYTD/ou3vdttLQb89kw+SMTS7OgHlg45
-         9q42FvVpJk/Vf7AD3MXZFdx4yZk855odBMUrvx/JJZC2bIdrZ/rFsrd98RrbyR6CiV
-         E80fNuUx9N57OAAHGS0WI64onPpdroSX3Skg2Xpo=
-Subject: Re: [PATCH 4.9 00/83] 4.9.181-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 10 Jun 2019 17:49:43 -0400
+Received: from emh04.mail.saunalahti.fi ([62.142.5.110]:58306 "EHLO
+        emh04.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfFJVtn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 17:49:43 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-70-161-nat.elisa-mobile.fi [85.76.70.161])
+        by emh04.mail.saunalahti.fi (Postfix) with ESMTP id F06A5300A5;
+        Tue, 11 Jun 2019 00:49:38 +0300 (EEST)
+Date:   Tue, 11 Jun 2019 00:49:38 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Alexandre Oliva <lxoliva@fsfla.org>
+Cc:     "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Tom Li <tomli@tomli.me>, James Hogan <jhogan@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190609164127.843327870@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <acefd433-24e4-cc32-4008-8d3f6fc65634@kernel.org>
-Date:   Mon, 10 Jun 2019 15:49:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform
+ Drivers
+Message-ID: <20190610214938.GB7147@darkstar.musicnaut.iki.fi>
+References: <20190211230614.GB22242@darkstar.musicnaut.iki.fi>
+ <orva1jj9ht.fsf@lxoliva.fsfla.org>
+ <20190217235951.GA20700@darkstar.musicnaut.iki.fi>
+ <orpnrpj2rk.fsf@lxoliva.fsfla.org>
+ <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org>
+ <orlg1ryyo2.fsf@lxoliva.fsfla.org>
+ <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org>
+ <orwolaw5u1.fsf@lxoliva.fsfla.org>
+ <alpine.LFD.2.21.1903082347330.31648@eddie.linux-mips.org>
+ <or7ead4lq3.fsf@lxoliva.fsfla.org>
 MIME-Version: 1.0
-In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <or7ead4lq3.fsf@lxoliva.fsfla.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/19 10:41 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.181 release.
-> There are 83 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 11 Jun 2019 04:39:58 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.181-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi,
 
-Compiled and booted on my test system. No dmesg regressions.
+On Sun, May 26, 2019 at 06:19:00AM -0300, Alexandre Oliva wrote:
+> On Mar  8, 2019, "Maciej W. Rozycki" <macro@linux-mips.org> wrote:
+> 
+> >  Anyway I meant: does `war_io_reorder_wmb' expand to `wmb' on your system?
+> 
+> No, it expands to `barrier' on the yeeloong:
+> 
+> CONFIG_CPU_LOONGSON2F=y
+> CONFIG_CPU_LOONGSON2F_WORKAROUNDS=y
+> CONFIG_CPU_LOONGSON2=y
+> CONFIG_SYS_HAS_CPU_LOONGSON2F=y
+> 
+> 
+> I've finally managed to do the bisection on object files I mentioned I'd
+> do to try to pinpoint where __BUILT_IOPORT_PFX with barrier rather than
+> !barrier regressed.
+> 
+> I found that forcing barrier off for drivers/irqchip/irq-i8259 was
+> enough to avoid the problem.
+> 
+> (I further narrowed it down to byte I/O, which is no surprise
+> considering irq-i8259 doesn't seem to use any non-byte I/O.)
+> 
+> Then I narrowed it down to output only.
+> 
+> A Loongson2F kernel built with the patch below works at normal speed.
+> I've also keyed the -1 barrier selector to compiling the irq-i8259
+> driver only, and that got me a functional kernel, but I'm not confident
+> that the same issues that affect the interrupt controller, preventing it
+> from initializing correctly, is not also affecting other drivers, just
+> in less visible ways, so the patch conservatively reverts to the older
+> barriers for all I/O (i.e., non-mem) out primitives.
+> 
+> I've tested this on a yeeloong on top of v5.1.5.
+> 
+> I'm tempted to start using this patch in my Freeloong builds of GNU
+> Linux-libre for gnewsense/yeeloong of 5.0 and 5.1 stable releases, to
+> try to make them usable.  Can anyone suggest any reason why it might be
+> risky to do so, moving on as much as I could to the new barriers,
+> sticking to the 4.19-one only for non-mem out?  As in, could mixing the
+> barriers be riskier than reverting to the 4.19 barriers everywhere?
+> 
+> Thanks in advance for any insights and recommendations,
 
-thanks,
--- Shuah
+Thanks for this work! I'm not yet sure if this completely solves the
+issue, but it's surely an improvement.
 
+Testing multiple reboots on Loongson Mini-PC with the libata driver,
+/proc/irq/14/spurious still shows tens of thousands spurious interrupts,
+e.g.
+
+	count 79453
+	unhandled 76998
+	last_unhandled 4294673096 ms
+
+where as it with the legacy IDE driver it stays reliably at 0 and the total
+count is well under 10000.
+
+However, with your patch the "nobody cared" is never reached so all is
+good. I tried 10 boots with the patch and all were successful. Without
+the patch 8 out of 10 failed with the "nobody cared" warning.
+
+A.
+
+> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+> index 845fbbc7a2e3..04be4758d4ff 100644
+> --- a/arch/mips/include/asm/io.h
+> +++ b/arch/mips/include/asm/io.h
+> @@ -416,7 +416,7 @@ static inline void pfx##out##bwlq##p(type val, unsigned long port)	\
+>  	volatile type *__addr;						\
+>  	type __val;							\
+>  									\
+> -	if (barrier)							\
+> +	if (barrier > 0)						\
+>  		iobarrier_rw();						\
+>  	else								\
+>  		war_io_reorder_wmb();					\
+> @@ -467,13 +467,22 @@ BUILDIO_MEM(w, u16)
+>  BUILDIO_MEM(l, u32)
+>  BUILDIO_MEM(q, u64)
+>  
+> -#define __BUILD_IOPORT_PFX(bus, bwlq, type)				\
+> -	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0,)			\
+> -	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0, _p)
+> +#define __BUILD_IOPORT_PFX(bus, bwlq, type, barrier)			\
+> +	__BUILD_IOPORT_SINGLE(bus, bwlq, type, barrier, 0,)		\
+> +	__BUILD_IOPORT_SINGLE(bus, bwlq, type, barrier, 0, _p)
+> +
+> +/* Choose the kind of barrier used for out in __BUILD_IOPORT_SINGLE in
+> +   non-__mem_ variants.  On Loongson2F, irq-i8259 fails to initialize
+> +   when this is defined to 1.  */
+> +#if defined(CONFIG_CPU_LOONGSON2)
+> +#define USE_IO_BARRIER_FOR_NON_MEM_OUT -1
+> +#else
+> +#define USE_IO_BARRIER_FOR_NON_MEM_OUT 1
+> +#endif
+>  
+>  #define BUILDIO_IOPORT(bwlq, type)					\
+> -	__BUILD_IOPORT_PFX(, bwlq, type)				\
+> -	__BUILD_IOPORT_PFX(__mem_, bwlq, type)
+> +	__BUILD_IOPORT_PFX(, bwlq, type, USE_IO_BARRIER_FOR_NON_MEM_OUT) \
+> +	__BUILD_IOPORT_PFX(__mem_, bwlq, type, 2)
+>  
+>  BUILDIO_IOPORT(b, u8)
+>  BUILDIO_IOPORT(w, u16)
+> 
+> 
+> -- 
+> Alexandre Oliva, freedom fighter  he/him   https://FSFLA.org/blogs/lxo
+> Be the change, be Free!                 FSF Latin America board member
+> GNU Toolchain Engineer                        Free Software Evangelist
+> Hay que enGNUrecerse, pero sin perder la terGNUra jamás - Che GNUevara
