@@ -2,127 +2,249 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C74C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A56CC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB23F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:53:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rOOXWNQJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2ACF9207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388599AbfFJRxZ (ORCPT
+        id S2388693AbfFJRxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:53:25 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37848 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388174AbfFJRxZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:53:25 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w13so15711010eds.4;
-        Mon, 10 Jun 2019 10:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v1cwCImDOstaAdDepmaoSdovcsMeX1QCpfpK/bKSfWg=;
-        b=rOOXWNQJxx/m8GcJW8LlP4CvbEPV9w2vljn+BGcYXxzMTbnfupXJdGgFGVdxkbdfD3
-         3R5ik6Zyy8LXupk4G/vjgRcR6uHM9xYgw0CHAbuyviyt+mhXoe1U8mkTo6EGpZ3d+aJy
-         2oRWPregGxv9aOV5NpfIKdHTe1OdddrI1aR7vEnLMhI3Ibc4KM3JqZJlpd1sXyJBxxvr
-         jUvnf0Q6iDy+7HZ+IIoC9uSrrz37Ec6MF3/YHVHOlBQSE9oircXZqdU9eFj2uHBMw1Mz
-         M9zitjjGyqNXx3fgeddHMnSfGP5gWixqsVXUg4cSuBpTGM4dRAxSEJqfSNFoefAIRvSk
-         ssfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v1cwCImDOstaAdDepmaoSdovcsMeX1QCpfpK/bKSfWg=;
-        b=Nc5UM2J6dbNyMdZhqHm22e2Rp1LEco/f4iCWb8qadnqK6hmLn7g3YjCoW7HoYBOasV
-         5bMHJTKFj8nVwPZ0s/0PGhUErogJHEY01uiMWvHSlB9+WGpVqW/DzHSZfMlMzkmuyO/S
-         32No18hwaz8aWWbS2lh5DWjMpOmgrp+aKQZS5TlZ1kTKLXdfTszUJar3fUSEPlrzej9t
-         WGP8SiUiSVfRF4gN3Sp0L5xFwUh5v0BmrE/o4Vp+4uJH0tCcNGyhfb4Rp2pOXRXJ6xIJ
-         JmirivlA/kCkdf/uQODObMvz4Kn4605Tg+vA/34obIaP8GBu/Dg0mNsnHmWqobzrZHDE
-         n/sw==
-X-Gm-Message-State: APjAAAW1tziCGhd/0H78DC0uB4ptO51NVH0fnQ32SLn1sYXleiX3T+oa
-        sFWSz3rSY4GLM7EpMqrZnQ3HRkBnpi6DFGp0hrI=
-X-Google-Smtp-Source: APXvYqza5AvXqQv6lJCZftZ7ng0sD7CUY06mSZD508SbQGK3VJgsRzDxMDimvEwZ8zJZOftWgr1DjsQszfluQLPurrM=
-X-Received: by 2002:a50:d1d8:: with SMTP id i24mr69636414edg.57.1560189203181;
- Mon, 10 Jun 2019 10:53:23 -0700 (PDT)
+        Mon, 10 Jun 2019 13:53:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:47008 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388174AbfFJRxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:53:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED62C337;
+        Mon, 10 Jun 2019 10:53:33 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4ABC63F246;
+        Mon, 10 Jun 2019 10:53:29 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 18:53:27 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v16 02/16] arm64: untag user pointers in access_ok and
+ __uaccess_mask_ptr
+Message-ID: <20190610175326.GC25803@arrakis.emea.arm.com>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <4327b260fb17c4776a1e3c844f388e4948cfb747.1559580831.git.andreyknvl@google.com>
 MIME-Version: 1.0
-References: <20190610172308.21129-1-jorge.ramirez-ortiz@linaro.org>
-In-Reply-To: <20190610172308.21129-1-jorge.ramirez-ortiz@linaro.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 10 Jun 2019 10:53:09 -0700
-Message-ID: <CAF6AEGuAPurGcRh42iRkt3paD=kWLJw-ic_LL1QGY=ws8_00XA@mail.gmail.com>
-Subject: Re: [PATCH v3] tty: serial: msm_serial: avoid system lockup condition
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, agross@kernel.org,
-        David Brown <david.brown@linaro.org>, jslaby@suse.com,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        khasim.mohammed@linaro.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4327b260fb17c4776a1e3c844f388e4948cfb747.1559580831.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:23 AM Jorge Ramirez-Ortiz
-<jorge.ramirez-ortiz@linaro.org> wrote:
->
-> The function msm_wait_for_xmitr can be taken with interrupts
-> disabled. In order to avoid a potential system lockup - demonstrated
-> under stress testing conditions on SoC QCS404/5 - make sure we wait
-> for a bounded amount of time.
->
-> Tested on SoC QCS404.
->
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-
-
-I had observed that heavy UART traffic would lockup the system (on
-sdm845, but I guess same serial driver)?
-
-But a comment from the peanut gallary:  wouldn't this fix lead to TX
-corruption, ie. writing more into TX fifo before hw is ready?  I
-haven't looked closely at the driver, but a way to wait without irqs
-disabled would seem nicer..
-
-BR,
--R
-
-> ---
->  v2: fix exit condition (timeout --> !timeout)
->  v3: add these clarification messages
->
->  drivers/tty/serial/msm_serial.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> index 23833ad952ba..3657a24913fc 100644
-> --- a/drivers/tty/serial/msm_serial.c
-> +++ b/drivers/tty/serial/msm_serial.c
-> @@ -383,10 +383,14 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
->
->  static inline void msm_wait_for_xmitr(struct uart_port *port)
->  {
-> +       unsigned int timeout = 500000;
-> +
->         while (!(msm_read(port, UART_SR) & UART_SR_TX_EMPTY)) {
->                 if (msm_read(port, UART_ISR) & UART_ISR_TX_READY)
->                         break;
->                 udelay(1);
-> +               if (!timeout--)
-> +                       break;
->         }
->         msm_write(port, UART_CR_CMD_RESET_TX_READY, UART_CR);
+On Mon, Jun 03, 2019 at 06:55:04PM +0200, Andrey Konovalov wrote:
+> diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
+> index e5d5f31c6d36..9164ecb5feca 100644
+> --- a/arch/arm64/include/asm/uaccess.h
+> +++ b/arch/arm64/include/asm/uaccess.h
+> @@ -94,7 +94,7 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
+>  	return ret;
 >  }
-> --
-> 2.21.0
->
+>  
+> -#define access_ok(addr, size)	__range_ok(addr, size)
+> +#define access_ok(addr, size)	__range_ok(untagged_addr(addr), size)
+
+I'm going to propose an opt-in method here (RFC for now). We can't have
+a check in untagged_addr() since this is already used throughout the
+kernel for both user and kernel addresses (khwasan) but we can add one
+in __range_ok(). The same prctl() option will be used for controlling
+the precise/imprecise mode of MTE later on. We can use a TIF_ flag here
+assuming that this will be called early on and any cloned thread will
+inherit this.
+
+Anyway, it's easier to paste some diff than explain but Vincenzo can
+fold them into his ABI patches that should really go together with
+these. I added a couple of MTE definitions for prctl() as an example,
+not used currently:
+
+------------------8<---------------------------------------------
+diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+index fcd0e691b1ea..2d4cb7e4edab 100644
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@ -307,6 +307,10 @@ extern void __init minsigstksz_setup(void);
+ /* PR_PAC_RESET_KEYS prctl */
+ #define PAC_RESET_KEYS(tsk, arg)	ptrauth_prctl_reset_keys(tsk, arg)
+ 
++/* PR_UNTAGGED_UADDR prctl */
++int untagged_uaddr_set_mode(unsigned long arg);
++#define SET_UNTAGGED_UADDR_MODE(arg)	untagged_uaddr_set_mode(arg)
++
+ /*
+  * For CONFIG_GCC_PLUGIN_STACKLEAK
+  *
+diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+index c285d1ce7186..89ce77773c49 100644
+--- a/arch/arm64/include/asm/thread_info.h
++++ b/arch/arm64/include/asm/thread_info.h
+@@ -101,6 +101,7 @@ void arch_release_task_struct(struct task_struct *tsk);
+ #define TIF_SVE			23	/* Scalable Vector Extension in use */
+ #define TIF_SVE_VL_INHERIT	24	/* Inherit sve_vl_onexec across exec */
+ #define TIF_SSBD		25	/* Wants SSB mitigation */
++#define TIF_UNTAGGED_UADDR	26
+ 
+ #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
+ #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
+@@ -116,6 +117,7 @@ void arch_release_task_struct(struct task_struct *tsk);
+ #define _TIF_FSCHECK		(1 << TIF_FSCHECK)
+ #define _TIF_32BIT		(1 << TIF_32BIT)
+ #define _TIF_SVE		(1 << TIF_SVE)
++#define _TIF_UNTAGGED_UADDR	(1 << TIF_UNTAGGED_UADDR)
+ 
+ #define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_SIGPENDING | \
+ 				 _TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
+diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
+index 9164ecb5feca..54f5bbaebbc4 100644
+--- a/arch/arm64/include/asm/uaccess.h
++++ b/arch/arm64/include/asm/uaccess.h
+@@ -73,6 +73,9 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
+ {
+ 	unsigned long ret, limit = current_thread_info()->addr_limit;
+ 
++	if (test_thread_flag(TIF_UNTAGGED_UADDR))
++		addr = untagged_addr(addr);
++
+ 	__chk_user_ptr(addr);
+ 	asm volatile(
+ 	// A + B <= C + 1 for all A,B,C, in four easy steps:
+@@ -94,7 +97,7 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
+ 	return ret;
+ }
+ 
+-#define access_ok(addr, size)	__range_ok(untagged_addr(addr), size)
++#define access_ok(addr, size)	__range_ok(addr, size)
+ #define user_addr_max			get_fs
+ 
+ #define _ASM_EXTABLE(from, to)						\
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 3767fb21a5b8..fd191c5b92aa 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -552,3 +552,18 @@ void arch_setup_new_exec(void)
+ 
+ 	ptrauth_thread_init_user(current);
+ }
++
++/*
++ * Enable the relaxed ABI allowing tagged user addresses into the kernel.
++ */
++int untagged_uaddr_set_mode(unsigned long arg)
++{
++	if (is_compat_task())
++		return -ENOTSUPP;
++	if (arg)
++		return -EINVAL;
++
++	set_thread_flag(TIF_UNTAGGED_UADDR);
++
++	return 0;
++}
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 094bb03b9cc2..4afd5e2980ee 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -229,4 +229,9 @@ struct prctl_mm_map {
+ # define PR_PAC_APDBKEY			(1UL << 3)
+ # define PR_PAC_APGAKEY			(1UL << 4)
+ 
++/* Untagged user addresses for arm64 */
++#define PR_UNTAGGED_UADDR		55
++# define PR_MTE_IMPRECISE_CHECK		0
++# define PR_MTE_PRECISE_CHECK		1
++
+ #endif /* _LINUX_PRCTL_H */
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 2969304c29fe..b1f67a8cffc4 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -124,6 +124,9 @@
+ #ifndef PAC_RESET_KEYS
+ # define PAC_RESET_KEYS(a, b)	(-EINVAL)
+ #endif
++#ifndef SET_UNTAGGED_UADDR_MODE
++# define SET_UNTAGGED_UADDR_MODE	(-EINVAL)
++#endif
+ 
+ /*
+  * this is where the system-wide overflow UID and GID are defined, for
+@@ -2492,6 +2495,11 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+ 			return -EINVAL;
+ 		error = PAC_RESET_KEYS(me, arg2);
+ 		break;
++	case PR_UNTAGGED_UADDR:
++		if (arg3 || arg4 || arg5)
++			return -EINVAL;
++		error = SET_UNTAGGED_UADDR_MODE(arg2);
++		break;
+ 	default:
+ 		error = -EINVAL;
+ 		break;
+------------------8<---------------------------------------------
+
+The tag_ptr() function in the test library would become:
+
+static void *tag_ptr(void *ptr)
+{
+	static int tbi_enabled = 0;
+	unsigned long tag = 0;
+
+	if (!tbi_enabled) {
+		if (prctl(PR_UNTAGGED_UADDR, 0, 0, 0, 0) == 0)
+			tbi_enabled = 1;
+	}
+
+	if (!ptr)
+		return ptr;
+	if (tbi_enabled)
+		tag = rand() & 0xff;
+
+	return (void *)((unsigned long)ptr | (tag << TAG_SHIFT));
+}
+
+-- 
+Catalin
