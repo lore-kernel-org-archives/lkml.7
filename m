@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9143DC28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900D0C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739042082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF282082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389150AbfFJKBR (ORCPT
+        id S2389219AbfFJKBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:01:17 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56522 "EHLO huawei.com"
+        Mon, 10 Jun 2019 06:01:25 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56642 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389030AbfFJKBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:01:13 -0400
+        id S2389034AbfFJKBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:01:14 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0AE522FA1468851684E8;
+        by Forcepoint Email with ESMTP id 2E5DBBBC5DAFD6257719;
         Mon, 10 Jun 2019 18:01:11 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
@@ -36,9 +36,9 @@ CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <zhangshaokun@hisilicon.com>, <ak@linux.intel.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH 4/5] perf jevents: Add support for Hisi hip08 HHA PMU aliasing
-Date:   Mon, 10 Jun 2019 17:59:31 +0800
-Message-ID: <1560160772-210844-5-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 3/5] perf jevents: Add support for Hisi hip08 DDRC PMU aliasing
+Date:   Mon, 10 Jun 2019 17:59:30 +0800
+Message-ID: <1560160772-210844-4-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1560160772-210844-1-git-send-email-john.garry@huawei.com>
 References: <1560160772-210844-1-git-send-email-john.garry@huawei.com>
@@ -51,83 +51,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Hisi hip08 HHA PMU aliasing.
+Add support for Hisi hip08 DDRC PMU event aliasing. We can now do
+something like this:
 
-The kernel driver is in drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+$perf list
+
+[snip]
+
+uncore ddrc:
+  uncore_hisi_sccl_ddrc.act_cmd
+       [DDRC active commands. Unit: hisi_sccl,ddrc]
+  uncore_hisi_sccl_ddrc.flux_rcmd
+       [DDRC read commands. Unit: hisi_sccl,ddrc]
+  uncore_hisi_sccl_ddrc.flux_wcmd
+       [DDRC write commands. Unit: hisi_sccl,ddrc]
+  uncore_hisi_sccl_ddrc.flux_wr
+       [DDRC precharge commands. Unit: hisi_sccl,ddrc]
+  uncore_hisi_sccl_ddrc.rnk_chg
+       [DDRC rank commands. Unit: hisi_sccl,ddrc]
+  uncore_hisi_sccl_ddrc.rw_chg
+       [DDRC read and write changes. Unit: hisi_sccl,ddrc]
+
+$sudo ./perf stat -e uncore_hisi_sccl_ddrc.flux_rcmd --no-merge sleep 1
+
+ Performance counter stats for 'system wide':
+
+                 0      uncore_hisi_sccl_ddrc.flux_rcmd [hisi_sccl1_ddrc0]
+                 0      uncore_hisi_sccl_ddrc.flux_rcmd [hisi_sccl3_ddrc1]
+                 0      uncore_hisi_sccl_ddrc.flux_rcmd [hisi_sccl1_ddrc3]
+                 0      uncore_hisi_sccl_ddrc.flux_rcmd [hisi_sccl1_ddrc1]
+                 0      uncore_hisi_sccl_ddrc.flux_rcmd [hisi_sccl3_ddrc2]
+                 0      uncore_hisi_sccl_ddrc.flux_rcmd [hisi_sccl3_ddrc0]
+            25,722      uncore_hisi_sccl_ddrc.flux_rcmd [hisi_sccl1_ddrc2]
+                 0      uncore_hisi_sccl_ddrc.flux_rcmd [hisi_sccl3_ddrc3]
+
+       1.001344685 seconds time elapsed
+
+The kernel driver is in drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- .../arm64/hisilicon/hip08/uncore-hha.json     | 51 +++++++++++++++++++
+ .../arm64/hisilicon/hip08/uncore-ddrc.json    | 44 +++++++++++++++++++
  tools/perf/pmu-events/jevents.c               |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+ 2 files changed, 45 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
 
-diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
 new file mode 100644
-index 000000000000..f94b8513166e
+index 000000000000..901b1fe65629
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
-@@ -0,0 +1,51 @@
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+@@ -0,0 +1,44 @@
 +[
 +   {
-+	    "EventCode": "0x00",
-+	    "EventName": "uncore_hisi_sccl_hha.rx_ops_num",
-+	    "BriefDescription": "The number of all operations received by the HHA",
-+	    "PublicDescription": "The number of all operations received by the HHA",
-+	    "Unit": "hisi_sccl,hha",
-+   },
-+   {
-+	    "EventCode": "0x01",
-+	    "EventName": "uncore_hisi_sccl_hha.rx_outer",
-+	    "BriefDescription": "The number of all operations received by the HHA from another socket",
-+	    "PublicDescription": "The number of all operations received by the HHA from another socket",
-+	    "Unit": "hisi_sccl,hha",
-+   },
-+   {
 +	    "EventCode": "0x02",
-+	    "EventName": "uncore_hisi_sccl_hha.rx_sccl",
-+	    "BriefDescription": "The number of all operations received by the HHA from another SCCL in this socket",
-+	    "PublicDescription": "The number of all operations received by the HHA from another SCCL in this socket",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventName": "uncore_hisi_sccl_ddrc.flux_wcmd",
++	    "BriefDescription": "DDRC write commands",
++	    "PublicDescription": "DDRC write commands",
++	    "Unit": "hisi_sccl,ddrc",
 +   },
 +   {
-+	    "EventCode": "0x1c",
-+	    "EventName": "uncore_hisi_sccl_hha.rd_ddr_64b",
-+	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 64 bytes",
-+	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 64bytes",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventCode": "0x03",
++	    "EventName": "uncore_hisi_sccl_ddrc.flux_rcmd",
++	    "BriefDescription": "DDRC read commands",
++	    "PublicDescription": "DDRC read commands",
++	    "Unit": "hisi_sccl,ddrc",
 +   },
 +   {
-+	    "EventCode": "0x1d",
-+	    "EventName": "uncore_hisi_sccl_hha.wr_dr_64b",
-+	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
-+	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventCode": "0x04",
++	    "EventName": "uncore_hisi_sccl_ddrc.flux_wr",
++	    "BriefDescription": "DDRC precharge commands",
++	    "PublicDescription": "DDRC precharge commands",
++	    "Unit": "hisi_sccl,ddrc",
 +   },
 +   {
-+	    "EventCode": "0x1e",
-+	    "EventName": "uncore_hisi_sccl_hha.rd_ddr_128b",
-+	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
-+	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventCode": "0x05",
++	    "EventName": "uncore_hisi_sccl_ddrc.act_cmd",
++	    "BriefDescription": "DDRC active commands",
++	    "PublicDescription": "DDRC active commands",
++	    "Unit": "hisi_sccl,ddrc",
 +   },
 +   {
-+	    "EventCode": "0x1f",
-+	    "EventName": "uncore_hisi_sccl_hha.wr_ddr_128b",
-+	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
-+	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventCode": "0x06",
++	    "EventName": "uncore_hisi_sccl_ddrc.rnk_chg",
++	    "BriefDescription": "DDRC rank commands",
++	    "PublicDescription": "DDRC rank commands",
++	    "Unit": "hisi_sccl,ddrc",
++   },
++   {
++	    "EventCode": "0x07",
++	    "EventName": "uncore_hisi_sccl_ddrc.rw_chg",
++	    "BriefDescription": "DDRC read and write changes",
++	    "PublicDescription": "DDRC read and write changes",
++	    "Unit": "hisi_sccl,ddrc",
 +   },
 +]
 diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index cf9a60333554..909e53e3b5bd 100644
+index 58f77fd0f59f..cf9a60333554 100644
 --- a/tools/perf/pmu-events/jevents.c
 +++ b/tools/perf/pmu-events/jevents.c
-@@ -237,6 +237,7 @@ static struct map {
+@@ -236,6 +236,7 @@ static struct map {
+ 	{ "CPU-M-CF", "cpum_cf" },
  	{ "CPU-M-SF", "cpum_sf" },
  	{ "UPI LL", "uncore_upi" },
- 	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
-+	{ "hisi_sccl,hha", "hisi_sccl,hha" },
++	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
  	{}
  };
  
