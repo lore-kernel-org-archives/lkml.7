@@ -2,91 +2,104 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A0DC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F8BC468D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815262085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJY6JEAu"
+	by mail.kernel.org (Postfix) with ESMTP id F384520862
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560177977;
+	bh=FQJK1JBRrqxEU8KBQ1nxhtuOOcsP2AwKZ2zJ6Un8dqM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xPPgT18YqNQ5sbHjgDSL/R/0GenqU1ZQNaCkuIkTQUf+FBFjsDKbr/uwKw6lyVYqQ
+	 ZM9NE9HOWdnciclKefWgfTF5f6phOzqBEk72e0GPA0RsxJm2OIJDGxTtVzgB4QHIXc
+	 //WrgOMq30mJg4Wc+Jtrv9G8KQcHY1rpqQfeBaQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390943AbfFJOpF (ORCPT
+        id S2390945AbfFJOqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:45:05 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42217 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388373AbfFJOpF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:45:05 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l19so2563769pgh.9;
-        Mon, 10 Jun 2019 07:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C/EioYkWJI+ACXBljRa/OmZ/UyBQX7KXRa97iNPRhJo=;
-        b=lJY6JEAurOuuqV7zCNx7iT/zjeN2iexVCBhNyhq/cEF7g+Xw2jj3HxI7SHeA6NHOnf
-         KKo9udeasPty+RasDn61/kBt4nuFNzoEo4Xr+IPeqXC2bz9ADFTBN9g8O0x+sdFQwVNe
-         wECWIa7H+LMGvtOPJ+uBcpP44fV2lAwjZ1cYZfIGhHNfIYCRMyvYDxVA+NG+Wl1dl6+J
-         IKkVYgLxAKMbEpmQwMrHh8w/vVr16bq+t3njNdd8vdoMhnwgl5nqS79gEfvM3m5rKbbD
-         fGZzBByJRCLvdB8K3Kffs7r19/WSYJJVtYKBxE/++dWHWqKsWEUU4o343nNIVpx8/KyD
-         +AQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C/EioYkWJI+ACXBljRa/OmZ/UyBQX7KXRa97iNPRhJo=;
-        b=BUE6hcHo1EOCgqG4Ma1iVePAJWobXgteEE50H2NO+V+ovi4/IPMCoyX3BNKIMeVzzP
-         sStDeXTVZrUjCkF2okX5z28UGjGsVhzFZsMkv1kopFXBOEme7GYU8B4b5CIDjjgNDkwn
-         q1eCoOEN4MeNctOiTgpfbaFm+ACo2g7uc9O+hha7oXDm/aWvDlUMrgTIwW6QxKYniigC
-         7wlkUq7AJ4yTUzlpwCdYs6WZzbrvfoNdrDcY/WOEW25yeCHP3ZAsjfDXDzs6zV9CI2mS
-         dZMO2Kc/mjn4TbfAzokB8s+F2h2lV0EXjWg9DE4urhPfa0zG0RukE4sSma7eU6eHK8Iy
-         lZSw==
-X-Gm-Message-State: APjAAAXDQR06M6xFqqABxlbNQ9AmykCjH68UqnYVwyUBLt0ST2Lgo7BN
-        fznORs9FsszkMq4Sg2pvsQjZiIKw
-X-Google-Smtp-Source: APXvYqzXsVtHWAXkxv4b0StfNVlB4bFF3cOZKAaeWlJwuFj8gtQ8T5/vnprUJ2ggeQVC2GLMsYuq0g==
-X-Received: by 2002:a17:90a:1b4a:: with SMTP id q68mr21644483pjq.61.1560177904648;
-        Mon, 10 Jun 2019 07:45:04 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z128sm12822907pfz.99.2019.06.10.07.45.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 07:45:04 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 07:45:03 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
-Message-ID: <20190610144503.GE7705@roeck-us.net>
-References: <20190609164127.541128197@linuxfoundation.org>
+        Mon, 10 Jun 2019 10:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388373AbfFJOqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:46:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5B1C2085A;
+        Mon, 10 Jun 2019 14:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560177975;
+        bh=FQJK1JBRrqxEU8KBQ1nxhtuOOcsP2AwKZ2zJ6Un8dqM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z9UAwWKSNdLkFAxqVXa4+9RWRC1wO/5o/fNxxbwE/2wTtLmhJDLTB2/7bYRqCgyaa
+         9uY4Is8+qyFwnBiHmsZEVTRfQjkXvQc1iXE8HEFa3Q3l1chH5s8aqnq4mWYB7y7yaU
+         +TkMdSaYZYkt3yRnFCTThGY9PW0vvtrIX2Mx/4Rs=
+Date:   Mon, 10 Jun 2019 16:46:13 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        linux-bluetooth@vger.kernel.org, Jeremy Cline <jeremy@jcline.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Bluetooth regression breaking BT connection for all 2.0 and
+ older devices in 5.0.15+, 5.1.x and master
+Message-ID: <20190610144613.GD31086@kroah.com>
+References: <af8cf6f4-4979-2f6f-68ed-e5b368b17ec7@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <af8cf6f4-4979-2f6f-68ed-e5b368b17ec7@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 06:41:11PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.9 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Jun 10, 2019 at 03:31:55PM +0200, Hans de Goede wrote:
+> Hi All,
 > 
-> Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
-> Anything received after that time might be too late.
+> First of all this is a known issue and it seems a fix is in the works,
+> but what I do not understand is why the commit causing this has not
+> simply been reverted until the fix is done, esp. for the 5.0.x
+> stable series where this was introduced in 5.0.15.
 > 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 351 pass: 351 fail: 0
+> The problem I'm talking about is commit d5bb334a8e17 ("Bluetooth: Align
+> minimum encryption key size for LE and BR/EDR connections"):
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d5bb334a8e171b262e48f378bd2096c0ea458265
+> basically completely breaking all somewhat older (and some current cheap
+> no-name) bluetooth devices:
+> 
+> A revert of this was first proposed on May 22nd:
+> https://lore.kernel.org/netdev/CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com/T/
+> We are 18 days further now and this problem still exists, including in the
+> 5.0.15+ and 5.1.x stable kernels.
+> 
+> A solution has been suggested: https://lore.kernel.org/linux-bluetooth/20190522070540.48895-1-marcel@holtmann.org/T/#u
+> and at least the Fedora 5.1.4+ kernels now carry this as a temporary fix,
+> but as of today I do not see a fix nor a revert in Torvald's tree yet and
+> neither does there seem to be any fix in the 5.0.x and 5.1.x stable series.
+> 
+> In the mean time we are getting a lot of bug reports about this:
+> https://bugzilla.kernel.org/show_bug.cgi?id=203643
+> https://bugzilla.redhat.com/show_bug.cgi?id=1711468
+> https://bugzilla.redhat.com/show_bug.cgi?id=1713871
+> https://bugzilla.redhat.com/show_bug.cgi?id=1713980
+> 
+> And some reporters:
+> https://bugzilla.redhat.com/show_bug.cgi?id=1713871#c4
+> Are indicating that the Fedora kernels with the workaround included
+> still do not work...
+> 
+> As such I would like to suggest that we just revert the troublesome
+> commit for now and re-add it when we have a proper fix.
 
-Guenter
+I agree, can someone revert this in Linus's tree so I can revert it in a
+stable release?
+
+thanks,
+
+greg k-h
