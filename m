@@ -6,72 +6,100 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4107C468BD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 03:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479B5C468BD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 03:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7852089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 03:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F006207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 03:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387712AbfFJDUN (ORCPT
+        id S2387584AbfFJDY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 23:20:13 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43254 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387420AbfFJDTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 23:19:33 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9142C1A0746;
-        Mon, 10 Jun 2019 05:19:31 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 729861A001F;
-        Mon, 10 Jun 2019 05:19:27 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0D8AE402FB;
-        Mon, 10 Jun 2019 11:19:21 +0800 (SGT)
-From:   Yangbo Lu <yangbo.lu@nxp.com>
-To:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [PATCH 1/6] ptp: add QorIQ PTP support for DPAA2
-Date:   Mon, 10 Jun 2019 11:21:03 +0800
-Message-Id: <20190610032108.5791-2-yangbo.lu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190610032108.5791-1-yangbo.lu@nxp.com>
-References: <20190610032108.5791-1-yangbo.lu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 9 Jun 2019 23:24:26 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:16421 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387483AbfFJDYZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 23:24:25 -0400
+X-IronPort-AV: E=Sophos;i="5.63,572,1557158400"; 
+   d="scan'208";a="66690332"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 10 Jun 2019 11:24:14 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 5D60E4CDD44A;
+        Mon, 10 Jun 2019 11:24:11 +0800 (CST)
+Received: from localhost.localdomain (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Mon, 10 Jun 2019 11:24:15 +0800
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+To:     <vyasevich@gmail.com>, <nhorman@tuxdriver.com>,
+        <marcelo.leitner@gmail.com>, <davem@davemloft.net>
+CC:     <linux-sctp@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Subject: [PATCH] sctp: Add rcu lock to protect dst entry in sctp_transport_route
+Date:   Mon, 10 Jun 2019 11:20:00 +0800
+Message-ID: <1560136800-17961-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: 5D60E4CDD44A.ADDBD
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is to add QorIQ PTP support for DPAA2.
-Although dpaa2-ptp.c driver is a fsl_mc_driver which
-is using MC APIs for register accessing, it's same
-IP block with eTSEC/DPAA/ENETC 1588 timer. We will
-convert to reuse ptp_qoriq driver by using register
-ioremap and dropping related MC APIs.
+syzbot found a crash in rt_cache_valid. Problem is that when more
+threads release dst in sctp_transport_route, the route cache can
+be freed.
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+As follows,
+p1:
+sctp_transport_route
+  dst_release
+  get_dst
+
+p2:
+sctp_transport_route
+  dst_release
+  get_dst
+...
+
+If enough threads calling dst_release will cause dst->refcnt==0
+then rcu softirq will reclaim the dst entry,get_dst then use
+the freed memory.
+
+This patch adds rcu lock to protect the dst_entry here.
+
+Fixes: 6e91b578bf3f("sctp: re-use sctp_transport_pmtu in sctp_transport_route")
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Reported-by: syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com
 ---
- drivers/ptp/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sctp/transport.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
-index 9b8fee5..b1b454f 100644
---- a/drivers/ptp/Kconfig
-+++ b/drivers/ptp/Kconfig
-@@ -44,7 +44,7 @@ config PTP_1588_CLOCK_DTE
+diff --git a/net/sctp/transport.c b/net/sctp/transport.c
+index ad158d3..5ad7e20 100644
+--- a/net/sctp/transport.c
++++ b/net/sctp/transport.c
+@@ -308,8 +308,13 @@ void sctp_transport_route(struct sctp_transport *transport,
+ 	struct sctp_association *asoc = transport->asoc;
+ 	struct sctp_af *af = transport->af_specific;
  
- config PTP_1588_CLOCK_QORIQ
- 	tristate "Freescale QorIQ 1588 timer as PTP clock"
--	depends on GIANFAR || FSL_DPAA_ETH || FSL_ENETC || FSL_ENETC_VF
-+	depends on GIANFAR || FSL_DPAA_ETH || FSL_DPAA2_ETH || FSL_ENETC || FSL_ENETC_VF
- 	depends on PTP_1588_CLOCK
- 	default y
- 	help
++	/* When dst entry is being released, route cache may be referred
++	 * again. Add rcu lock here to protect dst entry.
++	 */
++	rcu_read_lock();
+ 	sctp_transport_dst_release(transport);
+ 	af->get_dst(transport, saddr, &transport->fl, sctp_opt2sk(opt));
++	rcu_read_unlock();
+ 
+ 	if (saddr)
+ 		memcpy(&transport->saddr, saddr, sizeof(union sctp_addr));
 -- 
 2.7.4
+
+
 
