@@ -2,110 +2,128 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C88CC31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF049C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF21420820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1DF20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="c6QlcPSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbfFJQhM (ORCPT
+        id S1728436AbfFJQh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:37:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:7055 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387407AbfFJQhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:37:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 09:37:11 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Jun 2019 09:37:10 -0700
-Message-ID: <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
- ELF file
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Date:   Mon, 10 Jun 2019 09:29:04 -0700
-In-Reply-To: <20190607180115.GJ28398@e103592.cambridge.arm.com>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
-         <20190606200646.3951-23-yu-cheng.yu@intel.com>
-         <20190607180115.GJ28398@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Jun 2019 12:37:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44596 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfFJQh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:37:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b17so9856297wrq.11;
+        Mon, 10 Jun 2019 09:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sh13vqQhVeUIp4ueCnaiflQcpY8w0hvllTIAtF32R/Y=;
+        b=c6QlcPSWKF3BsvTZ/GIitZ8/3RkBf+tAU+lNnFvq9R0cwY7ZSTiKjHM58uNS9AvEuL
+         8sykECWPbbVW0Po663W/EyEhlwwIZRkAmPC7YUl4tL+VGMSmScl+W18I7BYC5kCPXz1Y
+         35WDuuUcnqFmF2kH9d0/og7OAQbbBIFTdfyzP3jmbVgb1RRena6AxnKrtesKwdr3sqs6
+         33uVwN3IyoM8VTpXPN5emJgiwxo3HWFHTLyXiTX+TPGTJY4IBA7MB1WicpFOwY/pmDMb
+         EjP1W140eDFQ20VCtf6Byv0h7MwSkzqDV/00u81EHXq1iM/5aGRJi+3emTRpE1s8HDxb
+         mLWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sh13vqQhVeUIp4ueCnaiflQcpY8w0hvllTIAtF32R/Y=;
+        b=MMZZm3bB6ujKMlodsdGr85uCjltY6U9cqshYyYiFnJOLEm9fThXRFt7wziZH6bPyph
+         QHtFpG+oGN/NdEE9y02y1fJQHxULY31kXDnWS0On3zwQrHLMAxuOzPwOIHbLiywg4jqk
+         xMPORU9/wYnrLrHy06JKg2DixQpasR6wo6kMWRGPywgL+juEoMzOKeL8mB0zuL0Ar4vN
+         5PKL7/U3bWW8BB7FuyoZ1Xroi4Frwb6vDMLh9bJIGbV7U5XzaDhcFcERHV4xcBcdqZQg
+         9UX3bm7ybQTomWCJoa2ZKkBc/hZG1/jT4VLoIZ163iYKoZcv64Cee2Xmr/CaZhj2gcbC
+         n5yg==
+X-Gm-Message-State: APjAAAV/LFIwxXoK8LHd8DWv7q3fLiTJmLnOkA4VemsW+XMmN0oOLfoY
+        DKTSnqymoCzRQozv/dBqB/E=
+X-Google-Smtp-Source: APXvYqydlQA+PLFxW4LDdRVC2OqHQ48h8LCrH5vskDoOkpLzQroMIZP5WjRCaEJpvZm70zC3KggTFw==
+X-Received: by 2002:a5d:53ca:: with SMTP id a10mr32962184wrw.131.1560184675468;
+        Mon, 10 Jun 2019 09:37:55 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133DDA40000C4C39937FBD289.dip0.t-ipconnect.de. [2003:f1:33dd:a400:c4:c399:37fb:d289])
+        by smtp.googlemail.com with ESMTPSA id g5sm13900517wrp.29.2019.06.10.09.37.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 09:37:54 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linus.walleij@linaro.org, andrew@lunn.ch,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/4] Ethernet PHY reset GPIO updates for Amlogic SoCs
+Date:   Mon, 10 Jun 2019 18:37:32 +0200
+Message-Id: <20190610163736.6187-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 19:01 +0100, Dave Martin wrote:
-> On Thu, Jun 06, 2019 at 01:06:41PM -0700, Yu-cheng Yu wrote:
-> > An ELF file's .note.gnu.property indicates features the executable file
-> > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
-> > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
-> > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
-> > 
-> > With this patch, if an arch needs to setup features from ELF properties,
-> > it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
-> > arch_setup_property().
-> > 
-> > For example, for X86_64:
-> > 
-> > int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
-> > {
-> > 	int r;
-> > 	uint32_t property;
-> > 
-> > 	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
-> > 			     &property);
-> > 	...
-> > }
-> 
-> Although this code works for the simple case, I have some concerns about
-> some aspects of the implementation here.  There appear to be some bounds
-> checking / buffer overrun issues, and the code seems quite complex.
-> 
-> Maybe this patch tries too hard to be compatible with toolchains that do
-> silly things such as embedding huge notes in an executable, or mixing
-> NT_GNU_PROPERTY_TYPE_0 in a single PT_NOTE with a load of junk not
-> relevant to the loader.  I wonder whether Linux can dictate what
-> interpretation(s) of the ELF specs it is prepared to support, rather than
-> trying to support absolutely anything.
+While trying to add the Ethernet PHY interrupt on the X96 Max I found
+that the current reset line definition is incorrect. Patch #1 fixes
+this.
 
-To me, looking at PT_GNU_PROPERTY and not trying to support anything is a
-logical choice.  And it breaks only a limited set of toolchains.
+Since the fix requires moving from the deprecated "snps,reset-gpio"
+property to the generic Ethernet PHY reset bindings I decided to move
+all Amlogic boards over to the non-deprecated bindings. That's what
+patches #2 and #3 do.
 
-I will simplify the parser and leave this patch as-is for anyone who wants to
-back-port.  Are there any objections or concerns?
+Finally I found that Odroid-N2 doesn't define the Ethernet PHY's reset
+GPIO yet. I don't have that board so I can't test whether it really
+works but based on the schematics it should. 
 
-Yu-cheng
+This series is a partial successor to "stmmac: honor the GPIO flags
+for the PHY reset GPIO" from [0]. I decided not to take Linus W.'s
+Reviewed-by from patch #4 of that series because I had to change the
+wording and I want to be sure that he's happy with that now.
+
+One quick note regarding patches #1 and #4: I decided to violate the
+"max 80 characters per line" (by 4 characters) limit because I find
+that the result is easier to read then it would be if I split the
+line.
+
+
+[0] https://patchwork.kernel.org/cover/10983801/
+
+
+Martin Blumenstingl (4):
+  arm64: dts: meson: g12a: x96-max: fix the Ethernet PHY reset line
+  ARM: dts: meson: switch to the generic Ethernet PHY reset bindings
+  arm64: dts: meson: use the generic Ethernet PHY reset GPIO bindings
+  arm64: dts: meson: g12b: odroid-n2: add the Ethernet PHY reset line
+
+ arch/arm/boot/dts/meson8b-ec100.dts                   |  9 +++++----
+ arch/arm/boot/dts/meson8b-mxq.dts                     |  9 +++++----
+ arch/arm/boot/dts/meson8b-odroidc1.dts                |  9 +++++----
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts             |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts    |  7 ++++---
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts  |  4 ++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts  |  9 +++++----
+ .../arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts   |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts       |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi  |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi     |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts  | 11 ++++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 10 +++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts   |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts        | 11 ++++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts    |  8 ++++----
+ 17 files changed, 80 insertions(+), 66 deletions(-)
+
+-- 
+2.22.0
+
