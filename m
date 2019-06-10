@@ -2,244 +2,223 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3E5C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D232FC468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA5D20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00F42089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K9jH0fpc";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LEjAjg0a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ToX2hnaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390246AbfFJNN7 (ORCPT
+        id S2390279AbfFJNQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 09:13:59 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39408 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389762AbfFJNN7 (ORCPT
+        Mon, 10 Jun 2019 09:16:57 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42296 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388848AbfFJNQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:13:59 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B0D4160261; Mon, 10 Jun 2019 13:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560172438;
-        bh=LwAgGkchs/Fzdy3FLqNUXNaSYeJqLqml87Nmc/rgzcM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=K9jH0fpc+XRcZ9zuxXDIa339uRa0nRf5EhBK+/kmJVcRugToXwb1UqzFvoJcH4U3K
-         N5TDkchZacjwtbOwOP6QQu+un0FqniD977J/liGt+8x5TB7DZ01w52gvLQwbHPsWSv
-         QIa83N0giedoYvQp7sfy3S3/rIGD4cMTq6gnTLh0=
-Received: from [10.204.79.142] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: gkohli@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 46AF260261;
-        Mon, 10 Jun 2019 13:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560172436;
-        bh=LwAgGkchs/Fzdy3FLqNUXNaSYeJqLqml87Nmc/rgzcM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LEjAjg0aQZqM1UUurRbp+XQjiq2Wm3NTju0vra1LPjDw7qNC3eS7qx//GRxamW0jM
-         dLtr1FOdSG8Jmk20uzL3WugAw+2j2A5vt144CEowkphY+ICsSveoVghM/7NX4eAXZ1
-         Io8d0WWgCM04TVwGUA/P0J/OEd+OLYXSNs0GqKxE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 46AF260261
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
-Subject: Re: [PATCH] block: fix a crash in do_task_dead()
-To:     Peter Zijlstra <peterz@infradead.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
-        oleg@redhat.com, mingo@redhat.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1559161526-618-1-git-send-email-cai@lca.pw>
- <20190530080358.GG2623@hirez.programming.kicks-ass.net>
- <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
- <20190603123705.GB3419@hirez.programming.kicks-ass.net>
- <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
- <20190607133541.GJ3436@hirez.programming.kicks-ass.net>
- <20190607142332.GF3463@hirez.programming.kicks-ass.net>
-From:   Gaurav Kohli <gkohli@codeaurora.org>
-Message-ID: <16419960-3703-5988-e7ea-9d3a439f8b05@codeaurora.org>
-Date:   Mon, 10 Jun 2019 18:43:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 09:16:57 -0400
+Received: by mail-io1-f68.google.com with SMTP id u19so6810848ior.9
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 06:16:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VNk3HOCqwDsrkq+M3DdByXFYq0E8aVmGy+Vn0t1wmaY=;
+        b=ToX2hnaPH/yjK/yvnjCSobIl6X1PxRHZMTxaYxnc93jtRyxCkM3sfJvZbB3eAFqge5
+         z45yC+pgHMwEPckZDsqHcg3+caBoy+JVKU6sBaM7KXnyPck3vnFJCTBeAIu2luYq4rE7
+         6jE4cIiKDovZWrh469CXU7kt6U5jlpxxU8KzxA4RSx9XNMVFQTzjfD5PZpFVNN56S/dC
+         wfU4+tId3+iEaUkIFgfL12VBZ+n+AqnyyGI/Eri/43BgAjMUircdZ4iNrUmiAACGZ2oD
+         UIUXMG9YKUl5xEuoDvNTIlCuEfIufTITNC74w5cX338XdLkR+BuY1t7qATuGZ1QjdeyV
+         bZDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VNk3HOCqwDsrkq+M3DdByXFYq0E8aVmGy+Vn0t1wmaY=;
+        b=oOo4JIX1aMRJcd9eJYc7YfZDYxEClc6xFlfBWhmLC1dPexnQtLSbnVgi4pHi+os0V+
+         6XbZ0fnOHx6gv8zLodQJ8Zc2VPe8rn34Fr+qV3N9DSisyJeJD+nUI9Y4Ju+tYsYnrXSl
+         P1TYV1RxaGh7Q+z+jAqWNcNpTVV9qeiIIE8O9eqX1KQHgpaZgt2r25lv2C7TbsopchLb
+         GuqIxlCz5m7VAtd47XLCzea1vB3G087yceUr1MZLkFaAFh/BPcyBhxTMqTgEcK88nf8r
+         FtAetArAq+UJISg48WPYnpwGbzK+ocyvkF4ZHI5hExypBM0a4cLFO8Lp/lh3q/ilfMZa
+         88vQ==
+X-Gm-Message-State: APjAAAXLXs9W5NMidaHoXTFt6HDK6aCw5rLBPxNshK9/gsUVXpcblAPO
+        Do/JuyKuHnLMX6FEpavKu5lYRuNkojrv+njku2pP/A==
+X-Google-Smtp-Source: APXvYqzarBFbSF1naKHDvaWpGg/Ufru9EOjzFBYFWaY07cg7Q42+dj/GPRcQhIHhjw/DdT+Mn5GafMfhlQuQGHRdbPM=
+X-Received: by 2002:a5d:9d83:: with SMTP id 3mr37963127ion.65.1560172616087;
+ Mon, 10 Jun 2019 06:16:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190607142332.GF3463@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1534907237-2982-1-git-send-email-jia.he@hxt-semitech.com>
+ <CAKv+Gu9u8RcrzSHdgXiqHS9HK1aSrjbPxVUSCP0DT4erAhx0pw@mail.gmail.com>
+ <20180907144447.GD12788@arm.com> <84b8e874-2a52-274c-4806-968470e66a08@huawei.com>
+In-Reply-To: <84b8e874-2a52-274c-4806-968470e66a08@huawei.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 10 Jun 2019 15:16:43 +0200
+Message-ID: <CAKv+Gu9fd2Y7USDYnQdUuYd9L2OD99kU4A1x1JSF442KN96TTA@mail.gmail.com>
+Subject: Re: [PATCH v11 0/3] remain and optimize memblock_next_valid_pfn on
+ arm and arm64
+To:     Hanjun Guo <guohanjun@huawei.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kemi Wang <kemi.wang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Petr Tesarik <ptesarik@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Daniel Vacek <neelx@redhat.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
+        Jia He <jia.he@hxt-semitech.com>, Jia He <hejianet@gmail.com>,
+        Gioh Kim <gi-oh.kim@profitbricks.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Philip Derrin <philip@cog.systems>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 8 Jun 2019 at 06:22, Hanjun Guo <guohanjun@huawei.com> wrote:
+>
+> Hi Ard, Will,
+>
+> This week we were trying to debug an issue of time consuming in mem_init(),
+> and leading to this similar solution form Jia He, so I would like to bring this
+> thread back, please see my detail test result below.
+>
+> On 2018/9/7 22:44, Will Deacon wrote:
+> > On Thu, Sep 06, 2018 at 01:24:22PM +0200, Ard Biesheuvel wrote:
+> >> On 22 August 2018 at 05:07, Jia He <hejianet@gmail.com> wrote:
+> >>> Commit b92df1de5d28 ("mm: page_alloc: skip over regions of invalid pfns
+> >>> where possible") optimized the loop in memmap_init_zone(). But it causes
+> >>> possible panic bug. So Daniel Vacek reverted it later.
+> >>>
+> >>> But as suggested by Daniel Vacek, it is fine to using memblock to skip
+> >>> gaps and finding next valid frame with CONFIG_HAVE_ARCH_PFN_VALID.
+> >>>
+> >>> More from what Daniel said:
+> >>> "On arm and arm64, memblock is used by default. But generic version of
+> >>> pfn_valid() is based on mem sections and memblock_next_valid_pfn() does
+> >>> not always return the next valid one but skips more resulting in some
+> >>> valid frames to be skipped (as if they were invalid). And that's why
+> >>> kernel was eventually crashing on some !arm machines."
+> >>>
+> >>> About the performance consideration:
+> >>> As said by James in b92df1de5,
+> >>> "I have tested this patch on a virtual model of a Samurai CPU with a
+> >>> sparse memory map.  The kernel boot time drops from 109 to 62 seconds."
+> >>> Thus it would be better if we remain memblock_next_valid_pfn on arm/arm64.
+> >>>
+> >>> Besides we can remain memblock_next_valid_pfn, there is still some room
+> >>> for improvement. After this set, I can see the time overhead of memmap_init
+> >>> is reduced from 27956us to 13537us in my armv8a server(QDF2400 with 96G
+> >>> memory, pagesize 64k). I believe arm server will benefit more if memory is
+> >>> larger than TBs
+> >>>
+> >>
+> >> OK so we can summarize the benefits of this series as follows:
+> >> - boot time on a virtual model of a Samurai CPU drops from 109 to 62 seconds
+> >> - boot time on a QDF2400 arm64 server with 96 GB of RAM drops by ~15
+> >> *milliseconds*
+> >>
+> >> Google was not very helpful in figuring out what a Samurai CPU is and
+> >> why we should care about the boot time of Linux running on a virtual
+> >> model of it, and the 15 ms speedup is not that compelling either.
+>
+> Testing this patch set on top of Kunpeng 920 based ARM64 server, with
+> 384G memory in total, we got the time consuming below
+>
+>              without this patch set      with this patch set
+> mem_init()        13310ms                      1415ms
+>
+> So we got about 8x speedup on this machine, which is very impressive.
+>
+
+Yes, this is impressive. But does it matter in the grand scheme of
+things? How much time does this system take to arrive at this point
+from power on?
+
+> The time consuming is related the memory DIMM size and where to locate those
+> memory DIMMs in the slots. In above case, we are using 16G memory DIMM.
+> We also tested 1T memory with 64G size for each memory DIMM on another ARM64
+> machine, the time consuming reduced from 20s to 2s (I think it's related to
+> firmware implementations).
+>
+
+I agree that this optimization looks good in isolation, but the fact
+that you spotted a bug justifies my skepticism at the time. On the
+other hand, now that we have several independent reports (from you,
+but also from the Renesas folks) that the speedup is worthwhile for
+real world use cases, I think it does make sense to revisit it.
+
+So what I would like to see is the patch set being proposed again,
+with the new data points added for documentation. Also, the commit
+logs need to crystal clear about how the meaning of PFN validity
+differs between ARM and other architectures, and why the assumptions
+that the optimization is based on are guaranteed to hold.
 
 
-On 6/7/2019 7:53 PM, Peter Zijlstra wrote:
-> On Fri, Jun 07, 2019 at 03:35:41PM +0200, Peter Zijlstra wrote:
->> On Wed, Jun 05, 2019 at 09:04:02AM -0600, Jens Axboe wrote:
->>> How about the following plan - if folks are happy with this sched patch,
->>> we can queue it up for 5.3. Once that is in, I'll kill the block change
->>> that special cases the polled task wakeup. For 5.2, we go with Oleg's
->>> patch for the swap case.
->>
->> OK, works for me. I'll go write a proper patch.
-> 
-> I now have the below; I'll queue that after the long weekend and let
-> 0-day chew on it for a while and then push it out to tip or something.
-> 
-> 
-> ---
-> Subject: sched: Optimize try_to_wake_up() for local wakeups
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Fri Jun 7 15:39:49 CEST 2019
-> 
-> Jens reported that significant performance can be had on some block
-> workloads (XXX numbers?) by special casing local wakeups. That is,
-> wakeups on the current task before it schedules out. Given something
-> like the normal wait pattern:
-> 
-> 	for (;;) {
-> 		set_current_state(TASK_UNINTERRUPTIBLE);
-> 
-> 		if (cond)
-> 			break;
-> 
-> 		schedule();
-> 	}
-> 	__set_current_state(TASK_RUNNING);
-> 
-> Any wakeup (on this CPU) after set_current_state() and before
-> schedule() would benefit from this.
-> 
-> Normal wakeups take p->pi_lock, which serializes wakeups to the same
-> task. By eliding that we gain concurrency on:
-> 
->   - ttwu_stat(); we already had concurrency on rq stats, this now also
->     brings it to task stats. -ENOCARE
-> 
->   - tracepoints; it is now possible to get multiple instances of
->     trace_sched_waking() (and possibly trace_sched_wakeup()) for the
->     same task. Tracers will have to learn to cope.
-> 
-> Furthermore, p->pi_lock is used by set_special_state(), to order
-> against TASK_RUNNING stores from other CPUs. But since this is
-> strictly CPU local, we don't need the lock, and set_special_state()'s
-> disabling of IRQs is sufficient.
-> 
-> After the normal wakeup takes p->pi_lock it issues
-> smp_mb__after_spinlock(), in order to ensure the woken task must
-> observe prior stores before we observe the p->state. If this is CPU
-> local, this will be satisfied with a compiler barrier, and we rely on
-> try_to_wake_up() being a funcation call, which implies such.
-> 
-> Since, when 'p == current', 'p->on_rq' must be true, the normal wakeup
-> would continue into the ttwu_remote() branch, which normally is
-> concerned with exactly this wakeup scenario, except from a remote CPU.
-> IOW we're waking a task that is still running. In this case, we can
-> trivially avoid taking rq->lock, all that's left from this is to set
-> p->state.
-> 
-> This then yields an extremely simple and fast path for 'p == current'.
-> 
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: mingo@redhat.com
-> Cc: akpm@linux-foundation.org
-> Cc: hch@lst.de
-> Cc: gkohli@codeaurora.org
-> Cc: oleg@redhat.com
-> Reported-by: Jens Axboe <axboe@kernel.dk>
-> Tested-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->   kernel/sched/core.c |   33 ++++++++++++++++++++++++++++-----
->   1 file changed, 28 insertions(+), 5 deletions(-)
-> 
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1991,6 +1991,28 @@ try_to_wake_up(struct task_struct *p, un
->   	unsigned long flags;
->   	int cpu, success = 0;
->   
-> +	if (p == current) {
-> +		/*
-> +		 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
-> +		 * == smp_processor_id()'. Together this means we can special
-> +		 * case the whole 'p->on_rq && ttwu_remote()' case below
-> +		 * without taking any locks.
-> +		 *
-> +		 * In particular:
-> +		 *  - we rely on Program-Order guarantees for all the ordering,
-> +		 *  - we're serialized against set_special_state() by virtue of
-> +		 *    it disabling IRQs (this allows not taking ->pi_lock).
-> +		 */
-> +		if (!(p->state & state))
-> +			return false;
+
+> >>
+> >> Apologies to Jia that it took 11 revisions to reach this conclusion,
+> >> but in /my/ opinion, tweaking the fragile memblock/pfn handling code
+> >> for this reason is totally unjustified, and we're better off
+> >> disregarding these patches.
+>
+> Indeed this patch set has a bug, For exampe, if we have 3 regions which
+> is [a, b] [c, d] [e, f] if address of pfn is bigger than the end address of
+> last region, we will increase early_region_idx to count of region, which is
+> out of bound of the regions. Fixed by patch below,
+>
+>  mm/memblock.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 8279295..8283bf0 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1252,13 +1252,17 @@ unsigned long __init_memblock memblock_next_valid_pfn(unsigned long pfn)
+>                 if (pfn >= start_pfn && pfn < end_pfn)
+>                         return pfn;
+>
+> -               early_region_idx++;
+> +               /* try slow path */
+> +               if (++early_region_idx == type->cnt)
+> +                       goto slow_path;
 > +
-
-Hi Peter, Jen,
-
-As we are not taking pi_lock here , is there possibility of same task 
-dead call comes as this point of time for current thread, bcoz of which 
-we have seen earlier issue after this commit 0619317ff8ba
-[T114538]  do_task_dead+0xf0/0xf8
-[T114538]  do_exit+0xd5c/0x10fc
-[T114538]  do_group_exit+0xf4/0x110
-[T114538]  get_signal+0x280/0xdd8
-[T114538]  do_notify_resume+0x720/0x968
-[T114538]  work_pending+0x8/0x10
-
-Is there a chance of TASK_DEAD set at this point of time?
-
-
-> +		success = 1;
-> +		trace_sched_waking(p);
-> +		p->state = TASK_RUNNING;
-> +		trace_sched_wakeup(p);
-> +		goto out;
-> +	}
-> +
->   	/*
->   	 * If we are going to wake up a thread waiting for CONDITION we
->   	 * need to ensure that CONDITION=1 done by the caller can not be
-> @@ -2000,7 +2022,7 @@ try_to_wake_up(struct task_struct *p, un
->   	raw_spin_lock_irqsave(&p->pi_lock, flags);
->   	smp_mb__after_spinlock();
->   	if (!(p->state & state))
-> -		goto out;
-> +		goto unlock;
->   
->   	trace_sched_waking(p);
->   
-> @@ -2030,7 +2052,7 @@ try_to_wake_up(struct task_struct *p, un
->   	 */
->   	smp_rmb();
->   	if (p->on_rq && ttwu_remote(p, wake_flags))
-> -		goto stat;
-> +		goto unlock;
->   
->   #ifdef CONFIG_SMP
->   	/*
-> @@ -2090,10 +2112,11 @@ try_to_wake_up(struct task_struct *p, un
->   #endif /* CONFIG_SMP */
->   
->   	ttwu_queue(p, cpu, wake_flags);
-> -stat:
-> -	ttwu_stat(p, cpu, wake_flags);
-> -out:
-> +unlock:
->   	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
-> +out:
-> +	if (success)
-> +		ttwu_stat(p, cpu, wake_flags);
->   
->   	return success;
->   }
-> 
-
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+>                 next_start_pfn = PFN_DOWN(regions[early_region_idx].base);
+>
+>                 if (pfn >= end_pfn && pfn <= next_start_pfn)
+>                         return next_start_pfn;
+>         }
+>
+> +slow_path:
+>         /* slow path, do the binary searching */
+>         do {
+>                 mid = (right + left) / 2;
+>
+> As the really impressive speedup on our ARM64 server system, could you reconsider
+> this patch set for merge? if you want more data I'm willing to clarify and give
+> more test.
+>
