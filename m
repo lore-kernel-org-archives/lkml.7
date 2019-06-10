@@ -2,248 +2,147 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6943C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA75CC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7622F2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0722082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyo3HAQC"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YFg4JsGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389871AbfFJUr5 (ORCPT
+        id S2389798AbfFJUuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:47:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36491 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389429AbfFJUr5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:47:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r7so84494pfl.3;
-        Mon, 10 Jun 2019 13:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=9FIvf0wdVvsh5I953IzVSfOkHxWGo3u/M3vEl9IVjf4=;
-        b=dyo3HAQCVAXrKSUS/OuygXcHmDusgpOEkKSWnmNchqonJxYZXEUPC0DkQ36pdi7Ar0
-         KARN/uVRF2ozIIBwvYLFiH55asDk+maKte0fddLEbvBs2cP4Y8UE8tU2PsSm18xFu32Q
-         vq/7/zdh93XIfv28anmqwej7k1W3UMC+K8yrZNdTsx1emRpbpY2AaXiXCgBYrtFrmaC1
-         Tv2Z9Gj3qL929kjCpu4izt58CwCj85IER8dtIxqLG16XRI9dOgYdkij9+NxYtpL3h20H
-         CGBDeG/6xwshMWB7J8RmbDtMwfz0fKnQu/qaorPwI/bRMna20YY+b+jmcfYzHeSB6DTU
-         Qa/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=9FIvf0wdVvsh5I953IzVSfOkHxWGo3u/M3vEl9IVjf4=;
-        b=c1iGpAdDmmtJ3hGPcQ1Gl/FzeagHUey76E2AKDROC8cZEGXgJ1s30dzc3kX8LoYqUs
-         jYZTYMGTomP9G9KR3z8JKxjwnZCgPlVyYWkOp4gD/K+umJ7ZWW3eR0fRUl7wZXc5EOR1
-         72UR0v7qNlMkaS4dCR+i6DeqtcwBggVoyZDbyfAQNFAGb8pJcd0BPWkELtEUTJhoHBJ1
-         KdnQdhSdZPbkofcay5NJok709D6nypnp0S7SwWUNfm25/8JsjImupv6tgiqytW9wvL/x
-         HYWHNXWLsmtpzRVgvqiCs/a4xYhNyHrAHpmBfdw5GgHNXqXtrfoTnLJOT1LFy5wZGSLI
-         imtQ==
-X-Gm-Message-State: APjAAAX7fTy8HngD7WBDTpFyVQffn4eCfmp7FioDJFiD0Ct1N1Dwb0vi
-        pXbbz1gtFCuxJx7H4HT54zxoVYMLWLI=
-X-Google-Smtp-Source: APXvYqx7Q2aQkAXzVIegtQdOQ+87SITbXXreG8ofxTybxcwyRH/MJGlT5c5dytHzHzzj//q7XWREnw==
-X-Received: by 2002:aa7:8013:: with SMTP id j19mr14391055pfi.212.1560199676141;
-        Mon, 10 Jun 2019 13:47:56 -0700 (PDT)
-Received: from [172.20.174.171] ([2620:10d:c090:180::1:1558])
-        by smtp.gmail.com with ESMTPSA id d19sm310809pjs.22.2019.06.10.13.47.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 13:47:55 -0700 (PDT)
-From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     "Ilya Maximets" <i.maximets@samsung.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        Mon, 10 Jun 2019 16:50:03 -0400
+Received: from mail-eopbgr60081.outbound.protection.outlook.com ([40.107.6.81]:34477
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389429AbfFJUuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 16:50:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pZ17w6KiquhG6fWhhZl398LFgYMwAjV/i9/BxYAExfE=;
+ b=YFg4JsGlreztRJYlRK7jVCn8A2ssZ0kl4vfO//kSXRNljlRVXPBGsg3EoUMP0s1C/cHazOwh7KIFUbC+NPOrM+8XdLdeJg0UAJLbGLAg/TpoQholIiU73tK0//l3Cic95U3odi/BhEXKOTGAUuyb4DhX5lRc5BgohezZ96Rmt34=
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com (10.175.24.138) by
+ VI1PR0402MB2704.eurprd04.prod.outlook.com (10.175.23.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Mon, 10 Jun 2019 20:49:59 +0000
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::f494:9fa1:ebae:6053]) by VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::f494:9fa1:ebae:6053%8]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
+ 20:49:59 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     Vladimir Oltean <olteanv@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     netdev <netdev@vger.kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
-        "Magnus Karlsson" <magnus.karlsson@intel.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>
-Subject: Re: [PATCH bpf v3] xdp: fix hang while unregistering device bound to
- xdp socket
-Date:   Mon, 10 Jun 2019 13:47:54 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <06C99519-64B9-4A91-96B9-0F99731E3857@gmail.com>
-In-Reply-To: <20190610161546.30569-1-i.maximets@samsung.com>
-References: <CGME20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df@eucas1p1.samsung.com>
- <20190610161546.30569-1-i.maximets@samsung.com>
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] net: dsa: Deal with non-existing PHY/fixed-link
+Thread-Topic: [PATCH net-next] net: dsa: Deal with non-existing PHY/fixed-link
+Thread-Index: AQHVH8MsxSzXIT7T/0mW4aEu7RtYPg==
+Date:   Mon, 10 Jun 2019 20:49:59 +0000
+Message-ID: <VI1PR0402MB2800ED1A422B900F63561F9CE0130@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+References: <20190610193150.22231-1-f.fainelli@gmail.com>
+ <CA+h21hrcymxF7zk4yHFGhjxbLERTCU6WkfzLGQVoZ5Yxoo4xxw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ioana.ciornei@nxp.com; 
+x-originating-ip: [188.26.252.192]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b0dc24dd-449b-432c-2d96-08d6ede533e1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2704;
+x-ms-traffictypediagnostic: VI1PR0402MB2704:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR0402MB270430933DCBBF468F835A78E0130@VI1PR0402MB2704.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(396003)(136003)(346002)(189003)(199004)(110136005)(4326008)(2906002)(54906003)(5660300002)(26005)(66446008)(53936002)(73956011)(76116006)(186003)(66476007)(66556008)(52536014)(8936002)(66946007)(33656002)(66066001)(25786009)(229853002)(8676002)(44832011)(74316002)(64756008)(446003)(486006)(476003)(6306002)(86362001)(71200400001)(55016002)(305945005)(14454004)(9686003)(71190400001)(966005)(81166006)(99286004)(7736002)(6436002)(316002)(81156014)(6116002)(6246003)(102836004)(5024004)(478600001)(7696005)(6506007)(14444005)(256004)(68736007)(53546011)(76176011)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2704;H:VI1PR0402MB2800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Z/UG3kVJ1C7NMc5VXRxwLrgoPhrIQG4BShjyFA1lkdBM3m4zcqzWC8GEyqDEUQkEbGGUOreKIh18kz3vw2+zycyP/5kPc7AtQFRQiL0Jj+R7hWpd2JabavAdZ2QNvpBhWHGFAJMnORzjo3PecgQIuXLsJ8hV3Jaytu7idYL2KgMO+qOeEWo8+h/53N/Hl6gNgkDeHxMUs1aLbg0hUr7TVh5/xuAebIlIBpeyn3bbCSVXysvcIr/5o5iJ3/yCSPSUiKxWp/xEm1+fdtaofYLw/CYbSdsDl0+Jfdo9CJfwh+yyzSsx5R2k5uJyrHWo9EZKGTJDZG8y1QL+WdUkwZvRv2ky53m90D7jbuuJqk8IUhZUq90TLOwhq/CxVp8eDapM4nFyTrPht5+JcS4wv+HtVswNvasuKmJuLyI1MtOuUxA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0dc24dd-449b-432c-2d96-08d6ede533e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 20:49:59.1741
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ioana.ciornei@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2704
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10 Jun 2019, at 9:15, Ilya Maximets wrote:
-
-> Device that bound to XDP socket will not have zero refcount until the
-> userspace application will not close it. This leads to hang inside
-> 'netdev_wait_allrefs()' if device unregistering requested:
->
->   # ip link del p1
->   < hang on recvmsg on netlink socket >
->
->   # ps -x | grep ip
->   5126  pts/0    D+   0:00 ip link del p1
->
->   # journalctl -b
->
->   Jun 05 07:19:16 kernel:
->   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->
->   Jun 05 07:19:27 kernel:
->   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->   ...
->
-> Fix that by implementing NETDEV_UNREGISTER event notification handler
-> to properly clean up all the resources and unref device.
->
-> This should also allow socket killing via ss(8) utility.
->
-> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> ---
->
-> Version 3:
->
->     * Declaration lines ordered from longest to shortest.
->     * Checking of event type moved to the top to avoid unnecessary
->       locking.
->
-> Version 2:
->
->     * Completely re-implemented using netdev event handler.
->
->  net/xdp/xsk.c | 65 
-> ++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 64 insertions(+), 1 deletion(-)
->
-> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> index a14e8864e4fa..273a419a8c4d 100644
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -693,6 +693,57 @@ static int xsk_mmap(struct file *file, struct 
-> socket *sock,
->  			       size, vma->vm_page_prot);
->  }
->
-> +static int xsk_notifier(struct notifier_block *this,
-> +			unsigned long msg, void *ptr)
-> +{
-> +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-> +	struct net *net = dev_net(dev);
-> +	int i, unregister_count = 0;
-> +	struct sock *sk;
-> +
-> +	switch (msg) {
-> +	case NETDEV_UNREGISTER:
-> +		mutex_lock(&net->xdp.lock);
-
-The call is under the rtnl lock, and we're not modifying
-the list, so this mutex shouldn't be needed.
-
-
-> +		sk_for_each(sk, &net->xdp.list) {
-> +			struct xdp_sock *xs = xdp_sk(sk);
-> +
-> +			mutex_lock(&xs->mutex);
-> +			if (dev != xs->dev) {
-> +				mutex_unlock(&xs->mutex);
-> +				continue;
-> +			}
-> +
-> +			sk->sk_err = ENETDOWN;
-> +			if (!sock_flag(sk, SOCK_DEAD))
-> +				sk->sk_error_report(sk);
-> +
-> +			/* Wait for driver to stop using the xdp socket. */
-> +			xdp_del_sk_umem(xs->umem, xs);
-> +			xs->dev = NULL;
-> +			synchronize_net();
-Isn't this by handled by the unregister_count case below?
-
-> +
-> +			/* Clear device references in umem. */
-> +			xdp_put_umem(xs->umem);
-> +			xs->umem = NULL;
-
-This makes me uneasy.  We need to unregister the umem from
-the device (xdp_umem_clear_dev()) but this can remove the umem
-pages out from underneath the xsk.
-
-Perhaps what's needed here is the equivalent of an unbind()
-call that just detaches the umem/sk from the device, but does
-not otherwise tear them down.
-
-
-> +			mutex_unlock(&xs->mutex);
-> +			unregister_count++;
-> +		}
-> +		mutex_unlock(&net->xdp.lock);
-> +
-> +		if (unregister_count) {
-> +			/* Wait for umem clearing completion. */
-> +			synchronize_net();
-> +			for (i = 0; i < unregister_count; i++)
-> +				dev_put(dev);
-> +		}
-> +
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
->  static struct proto xsk_proto = {
->  	.name =		"XDP",
->  	.owner =	THIS_MODULE,
-> @@ -727,7 +778,8 @@ static void xsk_destruct(struct sock *sk)
->  	if (!sock_flag(sk, SOCK_DEAD))
->  		return;
->
-> -	xdp_put_umem(xs->umem);
-> +	if (xs->umem)
-> +		xdp_put_umem(xs->umem);
-Not needed - xdp_put_umem() already does a null check.
--- 
-Jonathan
-
-
->
->  	sk_refcnt_debug_dec(sk);
->  }
-> @@ -784,6 +836,10 @@ static const struct net_proto_family 
-> xsk_family_ops = {
->  	.owner	= THIS_MODULE,
->  };
->
-> +static struct notifier_block xsk_netdev_notifier = {
-> +	.notifier_call	= xsk_notifier,
-> +};
-> +
->  static int __net_init xsk_net_init(struct net *net)
->  {
->  	mutex_init(&net->xdp.lock);
-> @@ -816,8 +872,15 @@ static int __init xsk_init(void)
->  	err = register_pernet_subsys(&xsk_net_ops);
->  	if (err)
->  		goto out_sk;
-> +
-> +	err = register_netdevice_notifier(&xsk_netdev_notifier);
-> +	if (err)
-> +		goto out_pernet;
-> +
->  	return 0;
->
-> +out_pernet:
-> +	unregister_pernet_subsys(&xsk_net_ops);
->  out_sk:
->  	sock_unregister(PF_XDP);
->  out_proto:
-> -- 
-> 2.17.1
+On 6/10/19 10:53 PM, Vladimir Oltean wrote:=0A=
+> On Mon, 10 Jun 2019 at 22:31, Florian Fainelli <f.fainelli@gmail.com> wro=
+te:=0A=
+>>=0A=
+>> We need to specifically deal with phylink_of_phy_connect() returning=0A=
+>> -ENODEV, because this can happen when a CPU/DSA port does connect=0A=
+>> neither to a PHY, nor has a fixed-link property. This is a valid use=0A=
+>> case that is permitted by the binding and indicates to the switch:=0A=
+>> auto-configure port with maximum capabilities.=0A=
+>>=0A=
+>> Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")=0A=
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>=0A=
+>> ---=0A=
+>>   net/dsa/port.c | 2 +-=0A=
+>>   1 file changed, 1 insertion(+), 1 deletion(-)=0A=
+>>=0A=
+>> diff --git a/net/dsa/port.c b/net/dsa/port.c=0A=
+>> index d74bc9df1359..dde3085ff065 100644=0A=
+>> --- a/net/dsa/port.c=0A=
+>> +++ b/net/dsa/port.c=0A=
+>> @@ -622,7 +622,7 @@ static int dsa_port_phylink_register(struct dsa_port=
+ *dp)=0A=
+>>          }=0A=
+>>=0A=
+>>          err =3D phylink_of_phy_connect(dp->pl, port_dn, 0);=0A=
+>> -       if (err) {=0A=
+>> +       if (err && err !=3D -ENODEV) {=0A=
+>>                  pr_err("could not attach to PHY: %d\n", err);=0A=
+>>                  goto err_phy_connect;=0A=
+>>          }=0A=
+>> --=0A=
+>> 2.17.1=0A=
+>>=0A=
+> =0A=
+> Hi Florian,=0A=
+> =0A=
+> Can you give an example of when this is a valid use case, and why=0A=
+> fixed-link is not appropriate?=0A=
+> =0A=
+> Regards,=0A=
+> -Vladimir=0A=
+> =0A=
+=0A=
+Hi,=0A=
+=0A=
+This reminds me of a previous discussion on what to do when the DSA CPU =0A=
+port does not have a device_tree node at all: =0A=
+https://www.spinics.net/lists/netdev/msg573554.html.=0A=
+=0A=
+This was the case of the dsa-loop driver that probes as a platform =0A=
+device. I'm still not clear how the PHYLINK callbacks are supposed to =0A=
+work in that case though.=0A=
+=0A=
+--=0A=
+Ioana=0A=
+=0A=
+=0A=
