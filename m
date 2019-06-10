@@ -2,173 +2,182 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638FAC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66552C28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398F32082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Rf8Qb0SN"
+	by mail.kernel.org (Postfix) with ESMTP id 46B642082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388910AbfFJK6Z (ORCPT
+        id S2388978AbfFJK7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:58:25 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13975 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388100AbfFJK6Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:58:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfe37cf0000>; Mon, 10 Jun 2019 03:58:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 10 Jun 2019 03:58:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 10 Jun 2019 03:58:23 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Jun
- 2019 10:58:20 +0000
-Subject: Re: [PATCH V3 6/6] i2c: tegra: remove BUG, BUG_ON
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560143324-21754-1-git-send-email-bbiswas@nvidia.com>
- <1560143324-21754-6-git-send-email-bbiswas@nvidia.com>
- <89190a56-bc79-7c07-9b21-ebdfb532df30@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <4f151ae7-423b-1938-39a8-7ec4ae3632df@nvidia.com>
-Date:   Mon, 10 Jun 2019 03:58:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 06:59:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:40554 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388100AbfFJK7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:59:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04AE8337;
+        Mon, 10 Jun 2019 03:59:08 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18E233F557;
+        Mon, 10 Jun 2019 04:00:46 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 11:59:03 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH 09/18] drivers: firmware: psci: Add support for PM
+ domains using genpd
+Message-ID: <20190610105903.GC26602@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-10-ulf.hansson@linaro.org>
+ <20190607152751.GH15577@e107155-lin>
+ <CAPDyKFq3FFZEAEKrPfvBPUpAGKaTo05zS0-5sfgBjGFhRZ0b=w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <89190a56-bc79-7c07-9b21-ebdfb532df30@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560164303; bh=lYjgI1UWPoZLXbIUed6fb+EDt6VdZ6jGT7Re5zlKS3Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Rf8Qb0SN4ovj+Qp1dEQHo0zSmrebV8dGXtEUfkLyi2rlV4SUO06NZmDfPGyuAUdU0
-         rbjfrYsMMAJWemr+Fi8Dxdq5ehPEuuljFwgf+ZSdNy/e41n/ZmhzHtNPPJIcQI3xvj
-         tUACYmUiHsQaUu9/2lj31PufPHzdTU64EDbR7ZyP17KdVZMhsLGpM825G7QYWRZNIg
-         /UIZPI7RXI0Fm70pvXa9dolXt29FH2T2AkPIFjlQU3BfVHcTYJefu2FmhnEm4vtOc5
-         MsMBnweoZrTtYlHGIPsBsALFty+moxaAGBe5qcXH2bhKuX6ecvExHcVxlG6IOkf+Ez
-         dnNYZuVlUGY2A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFq3FFZEAEKrPfvBPUpAGKaTo05zS0-5sfgBjGFhRZ0b=w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 10, 2019 at 12:21:41PM +0200, Ulf Hansson wrote:
+> On Fri, 7 Jun 2019 at 17:27, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Mon, May 13, 2019 at 09:22:51PM +0200, Ulf Hansson wrote:
+> > > When the hierarchical CPU topology layout is used in DT, we need to setup
+> > > the corresponding PM domain data structures, as to allow a CPU and a group
+> > > of CPUs to be power managed accordingly. Let's enable this by deploying
+> > > support through the genpd interface.
+> > >
+> > > Additionally, when the OS initiated mode is supported by the PSCI FW, let's
+> > > also parse the domain idle states DT bindings as to make genpd responsible
+> > > for the state selection, when the states are compatible with
+> > > "domain-idle-state". Otherwise, when only Platform Coordinated mode is
+> > > supported, we rely solely on the state selection to be managed through the
+> > > regular cpuidle framework.
+> > >
+> > > If the initialization of the PM domain data structures succeeds and the OS
+> > > initiated mode is supported, we try to switch to it. In case it fails,
+> > > let's fall back into a degraded mode, rather than bailing out and returning
+> > > an error code.
+> > >
+> > > Due to that the OS initiated mode may become enabled, we need to adjust to
+> > > maintain backwards compatibility for a kernel started through a kexec call.
+> > > Do this by explicitly switch to Platform Coordinated mode during boot.
+> > >
+> > > Finally, the actual initialization of the PM domain data structures, is
+> > > done via calling the new shared function, psci_dt_init_pm_domains().
+> > > However, this is implemented by subsequent changes.
+> > >
+> > > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+> > > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > > ---
+> > >
+> > > Changes:
+> > >       - Simplify code setting domain_state at power off.
+> > >       - Use the genpd ->free_state() callback to manage freeing of states.
+> > >       - Fixup a bogus while loop.
+> > >
+> > > ---
+> > >  drivers/firmware/psci/Makefile         |   2 +-
+> > >  drivers/firmware/psci/psci.c           |   7 +-
+> > >  drivers/firmware/psci/psci.h           |   5 +
+> > >  drivers/firmware/psci/psci_pm_domain.c | 268 +++++++++++++++++++++++++
+> > >  4 files changed, 280 insertions(+), 2 deletions(-)
+> > >  create mode 100644 drivers/firmware/psci/psci_pm_domain.c
+> > >
+
+[...]
+
+> > > +
+> > > +static int psci_pd_parse_states(struct device_node *np,
+> > > +                     struct genpd_power_state **states, int *state_count)
+> > > +{
+> > > +     int ret;
+> > > +
+> > > +     /* Parse the domain idle states. */
+> > > +     ret = of_genpd_parse_idle_states(np, states, state_count);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> >
+> >
+> > Lots of things here in this file are not psci specific. They can be
+> > moved as generic CPU PM domain support.
+>
+> What exactly do you mean by CPU PM domain support?
+>
+> The current split is based upon how the generic PM domain (genpd)
+> supports CPU devices (see GENPD_FLAG_CPU_DOMAIN), which is already
+> available.
+>
+> I agree that finding the right balance between what can be made
+> generic and driver specific is not always obvious. Often it's better
+> to start with having more things in the driver code, then move things
+> into a common framework, later on, when that turns out to make sense.
+>
+
+Indeed, I agree. But when reviewing this time I thought it should be
+possible to push generic stuff into existing dt_idle_driver. I must
+admit that I haven't thought much in details, just thought of expressing
+the idea and see. But yes it's difficult to find the balance but at the
+same time we need reasons to have these in psci :)
 
 
-On 6/10/19 3:30 AM, Dmitry Osipenko wrote:
-> 10.06.2019 8:08, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
->> as needed. Replace BUG() with error handling code.
->> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
->>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
->>   drivers/i2c/busses/i2c-tegra.c | 18 +++++++++++-------
->>   1 file changed, 11 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
-ra.c
->> index 4dfb4c1..d9e99b4 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -73,6 +73,7 @@
->>   #define I2C_ERR_NO_ACK				BIT(0)
->>   #define I2C_ERR_ARBITRATION_LOST		BIT(1)
->>   #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
->> +#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
->>  =20
->>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->>   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
->> @@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_=
-dev *i2c_dev)
->>   	 * prevent overwriting past the end of buf
->>   	 */
->>   	if (rx_fifo_avail > 0 && buf_remaining > 0) {
->> -		BUG_ON(buf_remaining > 3);
->>   		val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
->>   		val =3D cpu_to_le32(val);
->>   		memcpy(buf, &val, buf_remaining);
->> @@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_=
-dev *i2c_dev)
->>   		rx_fifo_avail--;
->>   	}
->>  =20
->> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
->>   	i2c_dev->msg_buf_remaining =3D buf_remaining;
->>   	i2c_dev->msg_buf =3D buf;
->>  =20
->> @@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_d=
-ev *i2c_dev)
->>   	 * boundary and fault.
->>   	 */
->>   	if (tx_fifo_avail > 0 && buf_remaining > 0) {
->> -		BUG_ON(buf_remaining > 3);
->>   		memcpy(&val, buf, buf_remaining);
->>   		val =3D le32_to_cpu(val);
->>  =20
->> @@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *de=
-v_id)
->>  =20
->>   	if (!i2c_dev->is_curr_dma_xfer) {
->>   		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
->> -			if (i2c_dev->msg_buf_remaining)
->> +			if (i2c_dev->msg_buf_remaining) {
->>   				tegra_i2c_empty_rx_fifo(i2c_dev);
->> -			else
->> -				BUG();
->> +			} else {
->> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
->> +				i2c_dev->msg_err |=3D I2C_ERR_UNEXPECTED_STATUS;
->> +				goto err;
->> +			}
->>   		}
->>  =20
->>   		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
->> @@ -876,7 +877,10 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev=
-_id)
->>   	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->>   		if (i2c_dev->is_curr_dma_xfer)
->>   			i2c_dev->msg_buf_remaining =3D 0;
->> -		BUG_ON(i2c_dev->msg_buf_remaining);
->> +		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
->> +			i2c_dev->msg_err |=3D I2C_ERR_UNKNOWN_INTERRUPT;
->> +			goto err;
->> +		}
->>   		complete(&i2c_dev->msg_complete);
->>   	}
->>   	goto done;
->>
->=20
-> It looks nearly ideal now, although there is still one thing that could
-> be improved. We're going to print a error message in a case of RX and
-> spew a warning on a similar case of TX, this makes code inconsistent.
-> Let's switch to either a error message or just a warning in both places.
->=20
-Agree. I shall share the updated patch.
+> >
+> > > +     /* Fill out the PSCI specifics for each found state. */
+> > > +     ret = psci_pd_parse_state_nodes(*states, *state_count);
+> > > +     if (ret)
+> > > +             kfree(*states);
+> > > +
+> >
+> > Things like above are PSCI.
+> >
+> > I am trying to see if we can do something to achieve partitions like we
+> > have today: psci.c just has PSCI specific stuff and dt_idle_states.c
+> > deals with generic idle stuff.
+> 
+> I am open to any suggestions. Although, I am not sure I understand
+> your comment and nor the reason to why you want me to change.
+> 
+> So, what is the problem with having the code that you refer to, inside
+> drivers/firmware/psci/psci_pm_domain.c? Can't we just start with that
+> and see how it plays?
+> 
 
--Thanks,
-  Bitan
+I need to think how to partition this well. I don't have suggestions
+right away, but I need to get convinced what we have here is best we
+can do or come up with a better solution. I didn't like it as is at
+this time.
+
+--
+Regards,
+Sudeep
