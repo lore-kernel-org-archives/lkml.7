@@ -2,113 +2,110 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186E2C31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333BEC31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51F920862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:47:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="ddQy0EE+"
+	by mail.kernel.org (Postfix) with ESMTP id 025F120859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560188919;
+	bh=JCYtr578JZHDpZDNNeR6oaJuu0zaAN8vx7GBh/2uwDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SitiiSeTtdCLs15q5DqKaLGtomjlDVDf9/B33HfzUXsNTvj9iz3iKwMAN+HqLKbo8
+	 coC3D7aYP7g6R1iXv8k93JU9gBhF1oQViRjNokOHPF0ZGErlAZYK+tDovx8fspzqgS
+	 knCm2zurTQ6wgXAKMni7pAh0m0yAxvQ1fQN2VxBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388669AbfFJRr7 (ORCPT
+        id S2388686AbfFJRsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:47:59 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:59114 "EHLO
-        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387643AbfFJRr5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:47:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=B+NQK0qQzwriFdGQRKl3qnBuYxHERXIyxTc267JOpl0=; b=ddQy0EE+r/As82BHbGL2enMiF
-        +xSkrfjkaTQ0AJxemttV6by74YhcQ50DLiLC1sA3I03bUdF2mNxbHrY1p4ORkTzfe/rv/xfMgzol2
-        SI2MK+71N2dyNCMb6kZwrM5MZdJ8KNTla+ziNnIZzH+w52ZzB0PpDi3xi3X39ShZeK5/E=;
-Received: from merlot.physics.ox.ac.uk ([163.1.241.98] helo=merlot)
-        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <huw@codeweavers.com>)
-        id 1haOPC-0004C2-Gt; Mon, 10 Jun 2019 12:48:27 -0500
-Received: from daviesh by merlot with local (Exim 4.90_1)
-        (envelope-from <huw@codeweavers.com>)
-        id 1haOOY-0003Rh-VS; Mon, 10 Jun 2019 18:47:47 +0100
-Date:   Mon, 10 Jun 2019 18:47:46 +0100
-From:   Huw Davies <huw@codeweavers.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v6 01/19] kernel: Standardize vdso_datapage
-Message-ID: <20190610174746.GA13224@merlot.physics.ox.ac.uk>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-2-vincenzo.frascino@arm.com>
- <CAK8P3a3EnvkLND2RJdZtEY64PhK5g0sbbuytQro=f0cPur2g9g@mail.gmail.com>
- <bb5253b2-623c-c927-27a2-1d3a2990d20f@arm.com>
+        Mon, 10 Jun 2019 13:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388137AbfFJRsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:48:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06F382082E;
+        Mon, 10 Jun 2019 17:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560188917;
+        bh=JCYtr578JZHDpZDNNeR6oaJuu0zaAN8vx7GBh/2uwDs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OCtSbOGJJdsJVtrRQic15syeuz/CIQssKTnv1lIGTU+xmmTbiBHry4ebqKYPZhsTD
+         fTiDmvJAimgk6+vtSXUmyQqn4MGqYJ5Xti6wN4yb/f0jrcONCQ77ig5Ki7vOg+jvEv
+         skCS43g9oOaIilC9DIV05MC7Tb7Y7kWLUXJwfizY=
+Date:   Mon, 10 Jun 2019 19:48:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] firmware: Add support for loading compressed files
+Message-ID: <20190610174835.GA11472@kroah.com>
+References: <20190520092647.8622-1-tiwai@suse.de>
+ <20190610172130.GA28902@kroah.com>
+ <s5h1s01ic08.wl-tiwai@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bb5253b2-623c-c927-27a2-1d3a2990d20f@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <s5h1s01ic08.wl-tiwai@suse.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 01:05:40PM +0100, Vincenzo Frascino wrote:
-> On 31/05/2019 09:16, Arnd Bergmann wrote:
-> > On Thu, May 30, 2019 at 4:15 PM Vincenzo Frascino
-> > <vincenzo.frascino@arm.com> wrote:
+On Mon, Jun 10, 2019 at 07:30:31PM +0200, Takashi Iwai wrote:
+> On Mon, 10 Jun 2019 19:21:30 +0200,
+> Greg Kroah-Hartman wrote:
 > > 
-> >> + * vdso_data will be accessed by 64 bit and compat code at the same time
-> >> + * so we should be careful before modifying this structure.
-> >> + */
-> >> +struct vdso_data {
-> >> +       u32                     seq;
-> >> +
-> >> +       s32                     clock_mode;
-> >> +       u64                     cycle_last;
-> >> +       u64                     mask;
-> >> +       u32                     mult;
-> >> +       u32                     shift;
-> >> +
-> >> +       struct vdso_timestamp   basetime[VDSO_BASES];
-> >> +
-> >> +       s32                     tz_minuteswest;
-> >> +       s32                     tz_dsttime;
-> >> +       u32                     hrtimer_res;
-> >> +};
+> > On Mon, May 20, 2019 at 11:26:42AM +0200, Takashi Iwai wrote:
+> > > Hi,
+> > > 
+> > > this is a patch set to add the support for loading compressed firmware
+> > > files.
+> > > 
+> > > The primary motivation is to reduce the storage size; e.g. currently
+> > > the amount of /lib/firmware on my machine counts up to 419MB, and this
+> > > can be reduced to 130MB file compression.  No bad deal.
+> > > 
+> > > The feature adds only fallback to the compressed file, so it should
+> > > work as it was as long as the normal firmware file is present.  The
+> > > f/w loader decompresses the content, so that there is no change needed
+> > > in the caller side.
+> > > 
+> > > Currently only XZ format is supported.  A caveat is that the kernel XZ
+> > > helper code supports only CRC32 (or none) integrity check type, so
+> > > you'll have to compress the files via xz -C crc32 option.
+> > > 
+> > > The patch set begins with a few other improvements and refactoring,
+> > > followed by the compression support.
+> > > 
+> > > In addition to this, dracut needs a small fix to deal with the *.xz
+> > > files.
+> > > 
+> > > Also, the latest patchset is found in topic/fw-decompress branch of my
+> > > sound.git tree:
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
 > > 
-> > The structure contains four padding bytes at the end, which is
-> > something we try to avoid, at least if this ends up being used as
-> > an ABI. Maybe add "u32 __unused" at the end?
-> > 
+> > I've applied the first 3 patches to my tree, as they were sane and good
+> > cleanups.
 > 
-> Agreed, I will fix this in v7.
+> Great, thanks!
+> 
+> > I'll wait for a test-case and a resend of the second two before taking
+> > them {hint} :)
+> 
+> The patch for test_firmware was already sent, and it includes the test
+> of the compressed firmware file.  In anyway, I'm going to resubmit the
+> rest tomorrow.
 
-Note that this is also necessary to ensure that CLOCK_MONOTONIC_RAW
-works in the 32-bit vDSO on x86_64 kernels.
+Ah, sorry, I seem to have missed that.  A new series would be best,
+thanks!
 
-Huw.
+greg k-h
