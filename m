@@ -2,98 +2,113 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33A7C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F622C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6092207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hNHkuWRD"
+	by mail.kernel.org (Postfix) with ESMTP id 83C70207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389035AbfFJSzL (ORCPT
+        id S2389043AbfFJSz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:55:11 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:52597 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388491AbfFJSzK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:55:10 -0400
-Received: by mail-it1-f196.google.com with SMTP id l21so784915ita.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3OQiFS4mzZNpmchUtzhYv2GneN1IZGSv7wacJrf6EtE=;
-        b=hNHkuWRDqlR3Q3TDaxHRzI06RqOjj75TOm4O2BEcyfY0AOdiydlwK2wHdT4xm6B8iT
-         c2OTYhCNwn6/48JaeFcoPisRPJk2Ypw6FzF9hwTd17Lq9FURyXB6uxvutuGxuGi/aMDV
-         bBmb3wHsiLbhCsSUfuqYYVT6vmhgQccim0vyw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3OQiFS4mzZNpmchUtzhYv2GneN1IZGSv7wacJrf6EtE=;
-        b=Ug4/QZL8wJtqnHcyj6BVHU6sNaYAKuj0vXtLYVxYxgtD7wcZS6ipfUrCDL02vxWCqS
-         3ETo1orBqU8/UXhtwEbZL22QB5lb8+QL8/B6D9226tKhAz5a7tNwQNu8xKj0/eCrn9md
-         nh0d0Uh3BJaz1TnC1BQ0NlQzlRNVL++dbIwxHAxr/us0w+wDYRki1btCaccQLkL71HDw
-         4LcKUFp6WzTGNEoIZOYSBckjBdS9WxVUUJ+rd/VTE0tHIGXihvFBbA8/YMbfgjSMFkab
-         PefOiOv1mbGkui4e606tkENQwbLr40qMPjKewBTfVf6RZmMtFikKJYW1xbNLfe9vS55i
-         /slw==
-X-Gm-Message-State: APjAAAUEI37BiV8L6MEFW1xBur2ZgFVFC6uml0y3MHAFJM/v1nzbtXDn
-        f41X3L3I9gbuBQ/oAppDofulSg==
-X-Google-Smtp-Source: APXvYqwKv/qZm4110xGTzg1+th2td34sNn7y93waDnRsw7ju3/C0X2SG909IBDR3rPJdGyr5tvxhSA==
-X-Received: by 2002:a24:1dd5:: with SMTP id 204mr16517482itj.180.1560192909650;
-        Mon, 10 Jun 2019 11:55:09 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id d7sm3581954iob.67.2019.06.10.11.55.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 11:55:09 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     linux-mmc@vger.kernel.org
-Cc:     ernest.zhang@bayhubtech.com, djkurtz@chromium.org,
-        Raul E Rangel <rrangel@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 3/3] mmc: sdhci: Fix indenting on SDHCI_CTRL_8BITBUS
-Date:   Mon, 10 Jun 2019 12:53:53 -0600
-Message-Id: <20190610185354.35310-3-rrangel@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-In-Reply-To: <20190610185354.35310-1-rrangel@chromium.org>
-References: <20190610185354.35310-1-rrangel@chromium.org>
+        Mon, 10 Jun 2019 14:55:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54780 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388069AbfFJSz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 14:55:28 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2DEBC5AFD9;
+        Mon, 10 Jun 2019 18:55:24 +0000 (UTC)
+Received: from treble (ovpn-121-189.rdu2.redhat.com [10.10.121.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 03B1E1001DC0;
+        Mon, 10 Jun 2019 18:55:14 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 13:55:13 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 13/15] x86/static_call: Add inline static call
+ implementation for x86-64
+Message-ID: <20190610185513.pbtc7udpkfd5jsuu@treble>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131945.313688119@infradead.org>
+ <20190610183357.zj6rwdpgw36anpfc@treble>
+ <40096B8A-C063-4219-89FC-A8E42981BF28@vmware.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <40096B8A-C063-4219-89FC-A8E42981BF28@vmware.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 10 Jun 2019 18:55:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value is referring to SDHCI_HOST_CONTROL, not SDHCI_CTRL_DMA_MASK.
+On Mon, Jun 10, 2019 at 06:45:52PM +0000, Nadav Amit wrote:
+> > On Jun 10, 2019, at 11:33 AM, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > 
+> > On Wed, Jun 05, 2019 at 03:08:06PM +0200, Peter Zijlstra wrote:
+> >> --- a/arch/x86/include/asm/static_call.h
+> >> +++ b/arch/x86/include/asm/static_call.h
+> >> @@ -2,6 +2,20 @@
+> >> #ifndef _ASM_STATIC_CALL_H
+> >> #define _ASM_STATIC_CALL_H
+> >> 
+> >> +#include <asm/asm-offsets.h>
+> >> +
+> >> +#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
+> >> +
+> >> +/*
+> >> + * This trampoline is only used during boot / module init, so it's safe to use
+> >> + * the indirect branch without a retpoline.
+> >> + */
+> >> +#define __ARCH_STATIC_CALL_TRAMP_JMP(key, func)				\
+> >> +	ANNOTATE_RETPOLINE_SAFE						\
+> >> +	"jmpq *" __stringify(key) "+" __stringify(SC_KEY_func) "(%rip) \n"
+> >> +
+> >> +#else /* !CONFIG_HAVE_STATIC_CALL_INLINE */
+> > 
+> > I wonder if we can simplify this (and drop the indirect branch) by
+> > getting rid of the above cruft, and instead just use the out-of-line
+> > trampoline as the default for inline as well.
+> > 
+> > Then the inline case could fall back to the out-of-line implementation
+> > (by patching the trampoline's jmp dest) before static_call_initialized
+> > is set.
+> 
+> I must be missing some context - but what guarantees that this indirect
+> branch would be exactly 5 bytes long? Isn’t there an assumption that this
+> would be the case? Shouldn’t there be some handling of the padding?
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
+We don't patch the indirect branch.  It's just part of a temporary
+trampoline which is called by the call site, and which does "jmp
+key->func" during boot until static call initialization is done.
 
- drivers/mmc/host/sdhci.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+(Though I'm suggesting removing that.)
 
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 199712e7adbb3..89fd96596a1f7 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -89,7 +89,7 @@
- #define   SDHCI_CTRL_ADMA32	0x10
- #define   SDHCI_CTRL_ADMA64	0x18
- #define   SDHCI_CTRL_ADMA3	0x18
--#define   SDHCI_CTRL_8BITBUS	0x20
-+#define  SDHCI_CTRL_8BITBUS	0x20
- #define  SDHCI_CTRL_CDTEST_INS	0x40
- #define  SDHCI_CTRL_CDTEST_EN	0x80
- 
 -- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
-
+Josh
