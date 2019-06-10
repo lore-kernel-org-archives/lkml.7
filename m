@@ -1,113 +1,132 @@
 Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729AEC468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94624C28CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDFA2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6965E20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4mWtFUi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flinDNZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390437AbfFJNoE (ORCPT
+        id S2390457AbfFJNoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 09:44:04 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:45980 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390156AbfFJNoE (ORCPT
+        Mon, 10 Jun 2019 09:44:11 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38108 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390156AbfFJNoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:44:04 -0400
-Received: by mail-wr1-f47.google.com with SMTP id f9so9229562wre.12;
-        Mon, 10 Jun 2019 06:44:03 -0700 (PDT)
+        Mon, 10 Jun 2019 09:44:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s15so5780437wmj.3;
+        Mon, 10 Jun 2019 06:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=GDu0QwPCusVspXV4UKYTJxVUs5M4uFp08JVK5Ji1WKs=;
-        b=M4mWtFUiuUezKyHLHRGvKjvTcvOwmZ65rlQTjHp0sreALkQBCnEAxb49u5gK5XwsUY
-         94aWJfFYiG+ZRQbg7kC67ww323amM9OKXgttJJqsd4NzhQW74zw5bnYV/uhUjvoq8e0/
-         jws+oaf+Shs8hMqKvAyNstFeoVxrCkGGII+J0yDCR5om3YgKFSgrT6DYHvYnSKT0IRK8
-         vMjV0fLwvXQKoTYnmdWXVOPFmlWndMhZo12X70nCFOAtD+M+AP7C6alapn/oLBu1/9uf
-         QpaVFk+vQNm0sOBSGHyjbOtiwYTIAVUd6YQvw0RNjptcehjvQz/Jcsjr63zVrVChyuSd
-         EtiA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sNvG9YY7XPCNYQ2UBNpiCWdd5MhYb4kt+Gf0IbU8IOo=;
+        b=flinDNZKnjs6s4ma5tdG2A0oUJSPW8EfGrulHAaE8+83iieBVEkBJSrRiseB4+Zaf/
+         wnra9k5DaOXkMUS6B9CQLATnNz9AzAN1IzxiNiHuqrI14zKJVZbZRVe7KcbWmLQKZWQi
+         tq7N/UIQM63jeVb8UkApaACWxG57FihRIf/udOZLFnSOXMbw13LCYFpByQnswx/igX70
+         6P6U3ya9H5Wk0DLccjmca/xlX4HguUTNC31cMoAa70gNnIjeVlmgBaBs5WhwovedVJwl
+         boaWUBTMhgZJt0mKGfracDo3a+Q5D9n8p7ZSyj5KsPsAePnJcuGnQ7kCEMi8Z31V2zxa
+         asUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=GDu0QwPCusVspXV4UKYTJxVUs5M4uFp08JVK5Ji1WKs=;
-        b=obcZMOyqTcmMOIS2W6O3TSBcIHY9Pw9Bp6KOQ4YkE11MtZj94/tpPRGV0s/aBA5gSy
-         usgnBpR9HYR49e/cPrvlYeEquDRysWDjFcq+42qTUnZyQTrJDpHS2BbUlYXKKyjJZ1iN
-         zgz4+amqDiE8c2yJ4RZigAUDugd7CxdqCLLFNLvW2FSvLmgLUGqSEXkUpLvzs2GeyVYT
-         nj0tIudSN1Hp1KAIlB9wM6U2Su7bohxhR48888+ut4QefbshYTBq8IuGFyCIABLGY+iN
-         HYm0s1Z8e9HAAmxeckjJI+IVqJKmej2knf9g6msSU/wokkeR49SVxpi10EXHJn2zJ41q
-         Xp0w==
-X-Gm-Message-State: APjAAAV7uETbZyht2em3Rc1Tuc7QgNUm+C09vWKEYiI0/aEG68fFNyfX
-        QCTviL0zlMc9fe8GK96Gg5IF0TBW
-X-Google-Smtp-Source: APXvYqxBDuVR7450I2FIYHtLVnW+5dWWGYu5KZPvAViadIdj6/DBBVkyjoJdLn5nT8k2FwSNtCMmYw==
-X-Received: by 2002:adf:de8b:: with SMTP id w11mr21313791wrl.134.1560174242212;
-        Mon, 10 Jun 2019 06:44:02 -0700 (PDT)
-Received: from gmail.com (net-31-27-155-100.cust.vodafonedsl.it. [31.27.155.100])
-        by smtp.gmail.com with ESMTPSA id u1sm3954706wml.14.2019.06.10.06.44.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 06:44:01 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 15:44:01 +0200
-From:   Paolo Pisati <p.pisati@gmail.com>
-To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: msm8996: qcom-qmp: apq8096-db820c fails to boot, reset back to
- fastboot and locks up
-Message-ID: <20190610134401.GA12964@harukaze>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sNvG9YY7XPCNYQ2UBNpiCWdd5MhYb4kt+Gf0IbU8IOo=;
+        b=B54hFjZjM1tEIGmqHmX/tvpRxNrEhkSnHH4+SowHtmJORy19k9gD4S9KutfmF9nPZ6
+         MC+BTgz/3YxCKjHI49D6b+8SyWOqEf9dQEv8j1O6RX9EJPWdBmDbTQ6XouULytUpNLvc
+         bH8MqC63FK9C2CRw0ai/51yt9xB7MejSmKw8Oaawana7jm0mVXQDXEk7P0F6C14WKwA9
+         1rfcISZIf2ARBvGr97JwaFc8cbrQdZabn6FkaLBIklzd9W3EPavP2+ZKA12GD3XUSXgY
+         NX50TMs0NcdUh4XTrVcwKAxYVaI6cC3/0/coqIbRjBls8sr4+T+vX6bX3IVQXbLY3UKi
+         1zdQ==
+X-Gm-Message-State: APjAAAXiAgyf61nd5NvlMhMBVQSk9YElhXpN5tuyOeqHFpwTHDUu6UOw
+        GCnkhwqd9pWtpOEt08IXIco=
+X-Google-Smtp-Source: APXvYqxEibZ8BSB7QvrWbXPInpARHLL3QAUyPrZGR1ruT7xW5dTaQbkJ7lPpm57kOWpII+bEypnqJA==
+X-Received: by 2002:a1c:7a01:: with SMTP id v1mr14178337wmc.10.1560174249089;
+        Mon, 10 Jun 2019 06:44:09 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id w6sm16045904wro.71.2019.06.10.06.44.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 06:44:08 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 14:44:07 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/5] vsock/virtio: limit the memory used per-socket
+Message-ID: <20190610134407.GM14257@stefanha-x1.localdomain>
+References: <20190531133954.122567-1-sgarzare@redhat.com>
+ <20190531133954.122567-2-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hdhkc9EpVJoq6PQ6"
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190531133954.122567-2-sgarzare@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From time to time, my apq8096-db820c fails to boot to userspace, reset back to
-fastboot and locks up: to easily reproduce the issue, i'm boot looping using a
-cron job with a 1 min reboot entry on the board while leaving a "while 1; do
-fastboot boot boot.img; done" on the host pc.
 
-The issue is present in mainline up to 5.2-rc4, using defconfig and:
+--hdhkc9EpVJoq6PQ6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-CONFIG_SCSI_UFS_QCOM=y
-CONFIG_PHY_QCOM_QMP=y
-CONFIG_PHY_QCOM_UFS=y
+On Fri, May 31, 2019 at 03:39:50PM +0200, Stefano Garzarella wrote:
+> Since virtio-vsock was introduced, the buffers filled by the host
+> and pushed to the guest using the vring, are directly queued in
+> a per-socket list. These buffers are preallocated by the guest
+> with a fixed size (4 KB).
+>=20
+> The maximum amount of memory used by each socket should be
+> controlled by the credit mechanism.
+> The default credit available per-socket is 256 KB, but if we use
+> only 1 byte per packet, the guest can queue up to 262144 of 4 KB
+> buffers, using up to 1 GB of memory per-socket. In addition, the
+> guest will continue to fill the vring with new 4 KB free buffers
+> to avoid starvation of other sockets.
+>=20
+> This patch mitigates this issue copying the payload of small
+> packets (< 128 bytes) into the buffer of last packet queued, in
+> order to avoid wasting memory.
+>=20
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  drivers/vhost/vsock.c                   |  2 +
+>  include/linux/virtio_vsock.h            |  1 +
+>  net/vmw_vsock/virtio_transport.c        |  1 +
+>  net/vmw_vsock/virtio_transport_common.c | 60 +++++++++++++++++++++----
+>  4 files changed, 55 insertions(+), 9 deletions(-)
 
-but was present in previous releases too (e.g. 4.14., 4.19, etc qcom-lt or
-mainline), where it's even easier to reproduce (e.g. takes way less reboots to
-trigger it).
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-These are the last lines printed out:
-...
-[    7.407209] qcom-qmp-phy 34000.phy: Registered Qcom-QMP phy
-[    7.448058] qcom-qmp-phy 7410000.phy: Registered Qcom-QMP phy
-[    7.461859] ufs_qcom_phy_qmp_14nm 627000.phy: invalid resource
-[    7.535434] qcom-qmp-phy 34000.phy: phy common block init timed-out
-[    7.538596] phy phy-34000.phy.0: phy init failed --> -110
-[    7.550891] qcom-pcie: probe of 600000.pcie failed with error -110
-[    7.619008] qcom-pcie 608000.pcie: 608000.pcie supply vddpe-3v3 not found,
-using dummy regulator
+--hdhkc9EpVJoq6PQ6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
-S - QC_IMAGE_VERSION_STRING=BOOT.XF.1.0-00301
-S - IMAGE_VARIANT_STRING=M8996LAB
-S - OEM_IMAGE_VERSION_STRING=crm-ubuntu68
-S - Boot Interface: UFS
-S - Secure Boot: Off
-...
+-----BEGIN PGP SIGNATURE-----
 
-Full boot here: https://pastebin.ubuntu.com/p/rtjVrD3yzk/
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlz+XqcACgkQnKSrs4Gr
+c8i67gf+IaHwIE70u0NAFbNbt2B8lH5vRZt1H3I0PmFUqoxPIhZ6wFj4rL1mPDD8
+W6mT6mla/sDPZQpeYKNJKg1tZ0N4rsl1hH/bW3huwjAGBlk7x9mP0LWUWailXE5P
+efL35fpqoiaVvqMDFCwwZFkoba7gB1jcYzzQJfbMz9k1UNRkypvhJyVD4Hs3JI+O
+C23eoQb5zO+9Z6aeFnsEj29zR4Abyw+f4kRVKPaJIETKUiMhK3x7fTaEXAkyW4R+
+bl1D7xPH+VCInPAbSdkGKp7xbWTAzASEfEPrq14jRNwt6mDAKY3Q51l3Ia0l19NY
+DMP6ErcemmdNksPZvxl0YWYTOD9pCg==
+=Jzyw
+-----END PGP SIGNATURE-----
 
-Any idea what is going on? Am i doing something wrong?
--- 
-bye,
-p.
+--hdhkc9EpVJoq6PQ6--
