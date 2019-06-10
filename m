@@ -2,167 +2,121 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC30C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D716DC28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE3AA204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CB4204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6ydAOyZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="hjRROG+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389445AbfFJKaK (ORCPT
+        id S2389452AbfFJKcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:30:10 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40712 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388708AbfFJKaK (ORCPT
+        Mon, 10 Jun 2019 06:32:01 -0400
+Received: from mail.codeweavers.com ([50.203.203.244]:60106 "EHLO
+        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389193AbfFJKcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:30:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a21so7412802ljh.7;
-        Mon, 10 Jun 2019 03:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=k8dA6RtWLtudf1teyKI10V5TZyW2ANtVz5AmNzW3i/g=;
-        b=R6ydAOyZW56n9eFfphJR3L864w54mjYrfJx1u/g+k8w4wrbL5Ki2c24IN3boXytA7Y
-         hV5GURE68GTT3Pyke1Bc6QHNt94gUPRiSXF/HYkW6X6OTSUPCDdYREXLOBzkmUyKhn86
-         FbsBCg88HuFjRewh+9Xpp8IFIHHsTERCncPmWnxi6JM7XTlmXSQih6rgKn4gSN3cOExh
-         5bYqJ+4dl0x0QkxpBRsi7ublZsDrD8mAS+7WSe90nHPIkMfaQPvnHAkewM/5EeQMq0Jp
-         TZXMc/tC8aYx+WYHzGjGrzeTEuW4y+3qrc7qioQyx+aHFloyQeUzjLQ3eXKW84ftAWM/
-         RR0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k8dA6RtWLtudf1teyKI10V5TZyW2ANtVz5AmNzW3i/g=;
-        b=D+7hBImH+35GS6PnsETPx3jtVHsObuBT9Dr8hjwK0Bmgfb6nWO8ST0g6hZVrt9B+Ce
-         fLUC9GW9K9tMNLmr9JyBf6k3335fNDdfBDj1hBoD1gVXHwcgWRA6i1rGyo0NNHKtUF3D
-         1Ou1qeWPrmH0ebHxpgJYhYAATu3wSJ/bRduuYqpOKql4PAsMCn+conyIhzpVCmfKWFGs
-         C22REHzb3vX08C5XfGPSc13otTY9J7gekizLKkZ0/n+YJYM/7KB+nkUJl0UGjW99GXBs
-         cMfhj4HqYiJXrnvYJYkpuk1tOre2dqEt1atJ7JRChOL/l+kamcrkXxDImuPi7hLALcyz
-         JbPg==
-X-Gm-Message-State: APjAAAV0x1KoWCpo9vuy1MXRGsQa8pKxnWVcpmxEjnsYkuwUNKQfC89d
-        O9Wpm3ZuWuFtnAV+PpjV0Ww=
-X-Google-Smtp-Source: APXvYqznUdzN9LQp8pXPFcTmESUCywQVgS0KTkZAzwrqkOh/LVRnl5fEgB5uaBQAoytYy1dMIv28Qg==
-X-Received: by 2002:a2e:89cc:: with SMTP id c12mr36047954ljk.90.1560162607864;
-        Mon, 10 Jun 2019 03:30:07 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id 80sm1913515lfz.56.2019.06.10.03.30.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 03:30:06 -0700 (PDT)
-Subject: Re: [PATCH V3 6/6] i2c: tegra: remove BUG, BUG_ON
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560143324-21754-1-git-send-email-bbiswas@nvidia.com>
- <1560143324-21754-6-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <89190a56-bc79-7c07-9b21-ebdfb532df30@gmail.com>
-Date:   Mon, 10 Jun 2019 13:30:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 10 Jun 2019 06:32:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codeweavers.com; s=6377696661; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=r1QCXvsFSkr/gu9OZ1c2/BfPNle5pK0zTIVRxi0RTVk=; b=hjRROG+sFrE9zFuM8Vg02v27O
+        FDAbrF9af8NdndoODfFLAOuxiRPtskkK//A2yPN7rMVtXXfjqy2nquqVAFGRrrlctF0cBo6tq86nF
+        i18hKpNeWqZwPmeQllUbNGCa5spznXUBbErcn4I9xgPQepcYoVDaO8pH6i3y1BaBLsuCY=;
+Received: from merlot.physics.ox.ac.uk ([163.1.241.98] helo=merlot)
+        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <huw@codeweavers.com>)
+        id 1haHbL-0004O8-8w; Mon, 10 Jun 2019 05:32:32 -0500
+Received: from daviesh by merlot with local (Exim 4.90_1)
+        (envelope-from <huw@codeweavers.com>)
+        id 1haHai-0003ER-2l; Mon, 10 Jun 2019 11:31:52 +0100
+Date:   Mon, 10 Jun 2019 11:31:52 +0100
+From:   Huw Davies <huw@codeweavers.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v6 01/19] kernel: Standardize vdso_datapage
+Message-ID: <20190610103151.GD11076@merlot.physics.ox.ac.uk>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-2-vincenzo.frascino@arm.com>
+ <20190610092751.GA11076@merlot.physics.ox.ac.uk>
+ <58cedde2-0d54-7d2d-f519-77cb71f543fd@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1560143324-21754-6-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58cedde2-0d54-7d2d-f519-77cb71f543fd@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.06.2019 8:08, Bitan Biswas пишет:
-> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
-> as needed. Replace BUG() with error handling code.
-> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
+On Mon, Jun 10, 2019 at 11:17:48AM +0100, Vincenzo Frascino wrote:
+> On 10/06/2019 10:27, Huw Davies wrote:
+> > On Thu, May 30, 2019 at 03:15:13PM +0100, Vincenzo Frascino wrote:
+> >> --- /dev/null
+> >> +++ b/include/vdso/datapage.h
+> >> @@ -0,0 +1,91 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +#ifndef __VDSO_DATAPAGE_H
+> >> +#define __VDSO_DATAPAGE_H
+> >> +
+> >> +#ifdef __KERNEL__
+> >> +
+> >> +#ifndef __ASSEMBLY__
+> >> +
+> >> +#include <linux/bits.h>
+> >> +#include <linux/time.h>
+> >> +#include <linux/types.h>
+> >> +
+> >> +#define VDSO_BASES	(CLOCK_TAI + 1)
+> >> +#define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
+> >> +			 BIT(CLOCK_MONOTONIC)		| \
+> >> +			 BIT(CLOCK_BOOTTIME)		| \
+> >> +			 BIT(CLOCK_TAI))
+> >> +#define VDSO_COARSE	(BIT(CLOCK_REALTIME_COARSE)	| \
+> >> +			 BIT(CLOCK_MONOTONIC_COARSE))
+> >> +#define VDSO_RAW	(BIT(CLOCK_MONOTONIC_RAW))
+> >> +
+> >> +#define CS_HRES_COARSE	0
+> >> +#define CS_RAW		1
+> > 
+> > CS_HRES_COARSE seems like a confusing name choice to me.  What you
+> > really mean is not RAW.
+> > 
+> > How about CS_ADJ to indicate that its updated by adjtime?
+> > CS_XTIME might be another option.
+> > 
 > 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 4dfb4c1..d9e99b4 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -73,6 +73,7 @@
->  #define I2C_ERR_NO_ACK				BIT(0)
->  #define I2C_ERR_ARBITRATION_LOST		BIT(1)
->  #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
-> +#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
->  
->  #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->  #define PACKET_HEADER0_PACKET_ID_SHIFT		16
-> @@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	 * prevent overwriting past the end of buf
->  	 */
->  	if (rx_fifo_avail > 0 && buf_remaining > 0) {
-> -		BUG_ON(buf_remaining > 3);
->  		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
->  		val = cpu_to_le32(val);
->  		memcpy(buf, &val, buf_remaining);
-> @@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->  		rx_fifo_avail--;
->  	}
->  
-> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
->  	i2c_dev->msg_buf_remaining = buf_remaining;
->  	i2c_dev->msg_buf = buf;
->  
-> @@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	 * boundary and fault.
->  	 */
->  	if (tx_fifo_avail > 0 && buf_remaining > 0) {
-> -		BUG_ON(buf_remaining > 3);
->  		memcpy(&val, buf, buf_remaining);
->  		val = le32_to_cpu(val);
->  
-> @@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->  
->  	if (!i2c_dev->is_curr_dma_xfer) {
->  		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
-> -			if (i2c_dev->msg_buf_remaining)
-> +			if (i2c_dev->msg_buf_remaining) {
->  				tegra_i2c_empty_rx_fifo(i2c_dev);
-> -			else
-> -				BUG();
-> +			} else {
-> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
-> +				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
-> +				goto err;
-> +			}
->  		}
->  
->  		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-> @@ -876,7 +877,10 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->  	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->  		if (i2c_dev->is_curr_dma_xfer)
->  			i2c_dev->msg_buf_remaining = 0;
-> -		BUG_ON(i2c_dev->msg_buf_remaining);
-> +		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
-> +			i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
-> +			goto err;
-> +		}
->  		complete(&i2c_dev->msg_complete);
->  	}
->  	goto done;
-> 
+> I divided the timers in 3 sets (HRES, COARSE, RAW), CS_HRES_COARSE refers to the
+> first two and CS_RAW to the third. I will ad a comment to explain the logic in
+> the next iteration.
 
-It looks nearly ideal now, although there is still one thing that could
-be improved. We're going to print a error message in a case of RX and
-spew a warning on a similar case of TX, this makes code inconsistent.
-Let's switch to either a error message or just a warning in both places.
+I'm thinking ahead about a possible CLOCK_MONOTONIC_RAW_COARSE (which
+would be useful at least for Wine).  In that case you'd have four clock
+types non-raw and raw, each with either hres or coarse.
+
+Huw.
