@@ -2,293 +2,224 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4349AC468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE76C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFD420859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855BC2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TLJxZMAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388775AbfFJIzp (ORCPT
+        id S2388789AbfFJIzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:55:45 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:57797 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388742AbfFJIzm (ORCPT
+        Mon, 10 Jun 2019 04:55:50 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45152 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388777AbfFJIzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:55:42 -0400
-X-Originating-IP: 90.88.159.246
-Received: from mc-bl-xps13.lan (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D9BBAFF813;
-        Mon, 10 Jun 2019 08:55:37 +0000 (UTC)
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     davem@davemloft.net
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
-        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
-        ymarkman@marvell.com, mw@semihalf.com
-Subject: [PATCH net-next 3/3] net: mvpp2: Add support for more ethtool counters
-Date:   Mon, 10 Jun 2019 10:55:29 +0200
-Message-Id: <20190610085529.16803-4-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190610085529.16803-1-maxime.chevallier@bootlin.com>
-References: <20190610085529.16803-1-maxime.chevallier@bootlin.com>
+        Mon, 10 Jun 2019 04:55:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so8279719wre.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GpySo1g8LDVz9k5a5vKZQ7sUTfsxzgZnBVStPDXVsTE=;
+        b=TLJxZMAGuxy/AarP67BjcpuFCdXmgR43IKr0+QKdb6Ol6EwjkgW464DzS62DwAo+dO
+         4l3D0glt/AANh00dpOKeX5lgOGgnaHX5MLKI65hRHi1lyXRAlxo+62OuFKkD2ZaRQmV/
+         rI8WIiHsmp51LUX4YV67upchYnpEWrPy/SORxZ7qXCtZ2qHX3OSg2GFqUgV0Qmye4QRn
+         vHth3Dz6FslHlbL0Hr2s3SDTPwXw4Rw1HdBy85K9V5tOqQ5Vt0wKY5E3wp4wLIRhsXug
+         FNL3oCKSL/XBHtVjEY+6D6WgGpP7i050rJ6/+HHW2jGvqbrA7bIIrN60uwfYlIt2VUPj
+         LJcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GpySo1g8LDVz9k5a5vKZQ7sUTfsxzgZnBVStPDXVsTE=;
+        b=QOnVsTHuGbhI/RY3rtIK2liXLb0bYC4+LOSnsihoDKhYzB+rTkKIAJDp5R4ZgZWUNj
+         O67eTgYA+yGmZJ33vyJ9M7aw9wLq3muhMO1MgjkYKAjFv/UcpZJvPWr9x7VV9TkK+t91
+         LqlUaC3M+qZ5v3LVnaAHowyOELS+3jEhIkhI7fDW4Ky/+zsOcxVjlohKhmIiqOsPImdm
+         87i7NELJLjP1SZiZrCz1IToEQrHwYxQsUbUe7mwf7A48Pr3Wi8vWkHR0PQSNv89Qr0gB
+         8P7Zw4TjrfHXDuegIJWo+8ZKGADBU+dYRWRrnaN+03WMBCOSM7UxlEx1NN6eGjAcdNWg
+         vT+A==
+X-Gm-Message-State: APjAAAX/UXTSsQKQDoXMx65WA65pvdZdkw1zy927VodFHwvwst15YmaB
+        pe99GeZR3ZEigEbWWQNmmOzdkw==
+X-Google-Smtp-Source: APXvYqyjQYjI9vIrm/FNhIBXPO/+5VtKCSvydqLfAPGAnBQLd3gOIGqGaZYrgEZEfWBncvk0AvMC2A==
+X-Received: by 2002:adf:aa09:: with SMTP id p9mr23598944wrd.59.1560156944579;
+        Mon, 10 Jun 2019 01:55:44 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id x129sm13809283wmg.44.2019.06.10.01.55.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 01:55:44 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 09:55:42 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        wsa+renesas@sang-engineering.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Message-ID: <20190610085542.GL4797@dell>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190610084213.1052-4-lee.jones@linaro.org>
+ <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Besides the MIB counters, some other useful counters can be exposed to
-the user. This commit adds support for :
+On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
 
- - Per-port counters, that indicate FIFO drops and classifier drops,
- - Per-rxq counters,
- - Per-txq counters
+> On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > This patch provides basic support for booting with ACPI instead
+> > of the currently supported Device Tree.  When doing so there are a
+> > couple of differences which we need to taken into consideration.
+> >
+> > Firstly, the SDM850 ACPI tables omit information pertaining to the
+> > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> > initialise any of these lines, the firmware will restart the
+> > platform.
+> >
+> > Secondly, when booting with ACPI, it is expected that the firmware
+> > will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> > their ideal configuration.  Thus, the possible Pin Functions
+> > available to this platform are not advertised when providing the
+> > higher GPIOD/Pinctrl APIs with pin information.
+> >
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> 
+> For the ACPI probing boilerplate:
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> 
+> *However*, I really don't like hardcoding reserved GPIOs like this.
+> What guarantee do we have that each and every ACPI system
+> incorporating the QCOM0217 device has the exact same list of reserved
+> GPIOs?
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  18 +++
- .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 132 +++++++++++++++---
- 2 files changed, 132 insertions(+), 18 deletions(-)
+This is SDM845 specific, so the chances are reduced.
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-index d67c970f02e5..4d9564ba68f6 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-@@ -329,8 +329,26 @@
- #define     MVPP22_BM_ADDR_HIGH_VIRT_RLS_MASK	0xff00
- #define     MVPP22_BM_ADDR_HIGH_VIRT_RLS_SHIFT	8
- 
-+/* Packet Processor per-port counters */
-+#define MVPP2_OVERRUN_ETH_DROP			0x7000
-+#define MVPP2_CLS_ETH_DROP			0x7020
-+
- /* Hit counters registers */
- #define MVPP2_CTRS_IDX				0x7040
-+#define     MVPP22_CTRS_TX_CTR(port, txq)	((txq) | ((port) << 3) | BIT(7))
-+#define MVPP2_TX_DESC_ENQ_CTR			0x7100
-+#define MVPP2_TX_DESC_ENQ_TO_DDR_CTR		0x7104
-+#define MVPP2_TX_BUFF_ENQ_TO_DDR_CTR		0x7108
-+#define MVPP2_TX_DESC_ENQ_HW_FWD_CTR		0x710c
-+#define MVPP2_RX_DESC_ENQ_CTR			0x7120
-+#define MVPP2_TX_PKTS_DEQ_CTR			0x7130
-+#define MVPP2_TX_PKTS_FULL_QUEUE_DROP_CTR	0x7200
-+#define MVPP2_TX_PKTS_EARLY_DROP_CTR		0x7204
-+#define MVPP2_TX_PKTS_BM_DROP_CTR		0x7208
-+#define MVPP2_TX_PKTS_BM_MC_DROP_CTR		0x720c
-+#define MVPP2_RX_PKTS_FULL_QUEUE_DROP_CTR	0x7220
-+#define MVPP2_RX_PKTS_EARLY_DROP_CTR		0x7224
-+#define MVPP2_RX_PKTS_BM_DROP_CTR		0x7228
- #define MVPP2_CLS_DEC_TBL_HIT_CTR		0x7700
- #define MVPP2_CLS_FLOW_TBL_HIT_CTR		0x7704
- 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 01380ccb2139..c51f1d5b550b 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -1258,6 +1258,17 @@ static u64 mvpp2_read_count(struct mvpp2_port *port,
- 	return val;
- }
- 
-+/* Some counters are accessed indirectly by first writing an index to
-+ * MVPP2_CTRS_IDX. The index can represent various resources depending on the
-+ * register we access, it can be a hit counter for some classification tables,
-+ * a counter specific to a rxq, a txq or a buffer pool.
-+ */
-+static u32 mvpp2_read_index(struct mvpp2 *priv, u32 index, u32 reg)
-+{
-+	mvpp2_write(priv, MVPP2_CTRS_IDX, index);
-+	return mvpp2_read(priv, reg);
-+}
-+
- /* Due to the fact that software statistics and hardware statistics are, by
-  * design, incremented at different moments in the chain of packet processing,
-  * it is very likely that incoming packets could have been dropped after being
-@@ -1297,32 +1308,114 @@ static const struct mvpp2_ethtool_counter mvpp2_ethtool_mib_regs[] = {
- 	{ MVPP2_MIB_LATE_COLLISION, "late_collision" },
- };
- 
-+static const struct mvpp2_ethtool_counter mvpp2_ethtool_port_regs[] = {
-+	{ MVPP2_OVERRUN_ETH_DROP, "rx_fifo_or_parser_overrun_drops" },
-+	{ MVPP2_CLS_ETH_DROP, "rx_classifier_drops" },
-+};
-+
-+static const struct mvpp2_ethtool_counter mvpp2_ethtool_txq_regs[] = {
-+	{ MVPP2_TX_DESC_ENQ_CTR, "txq_%d_desc_enqueue" },
-+	{ MVPP2_TX_DESC_ENQ_TO_DDR_CTR, "txq_%d_desc_enqueue_to_ddr" },
-+	{ MVPP2_TX_BUFF_ENQ_TO_DDR_CTR, "txq_%d_buff_euqueue_to_ddr" },
-+	{ MVPP2_TX_DESC_ENQ_HW_FWD_CTR, "txq_%d_desc_hardware_forwarded" },
-+	{ MVPP2_TX_PKTS_DEQ_CTR, "txq_%d_packets_dequeued" },
-+	{ MVPP2_TX_PKTS_FULL_QUEUE_DROP_CTR, "txq_%d_queue_full_drops" },
-+	{ MVPP2_TX_PKTS_EARLY_DROP_CTR, "txq_%d_packets_early_drops" },
-+	{ MVPP2_TX_PKTS_BM_DROP_CTR, "txq_%d_packets_bm_drops" },
-+	{ MVPP2_TX_PKTS_BM_MC_DROP_CTR, "txq_%d_packets_rep_bm_drops" },
-+};
-+
-+static const struct mvpp2_ethtool_counter mvpp2_ethtool_rxq_regs[] = {
-+	{ MVPP2_RX_DESC_ENQ_CTR, "rxq_%d_desc_enqueue" },
-+	{ MVPP2_RX_PKTS_FULL_QUEUE_DROP_CTR, "rxq_%d_queue_full_drops" },
-+	{ MVPP2_RX_PKTS_EARLY_DROP_CTR, "rxq_%d_packets_early_drops" },
-+	{ MVPP2_RX_PKTS_BM_DROP_CTR, "rxq_%d_packets_bm_drops" },
-+};
-+
-+#define MVPP2_N_ETHTOOL_STATS(ntxqs, nrxqs)	(ARRAY_SIZE(mvpp2_ethtool_mib_regs) + \
-+						 ARRAY_SIZE(mvpp2_ethtool_port_regs) + \
-+						 (ARRAY_SIZE(mvpp2_ethtool_txq_regs) * (ntxqs)) + \
-+						 (ARRAY_SIZE(mvpp2_ethtool_rxq_regs) * (nrxqs)))
-+
- static void mvpp2_ethtool_get_strings(struct net_device *netdev, u32 sset,
- 				      u8 *data)
- {
--	if (sset == ETH_SS_STATS) {
--		int i;
-+	struct mvpp2_port *port = netdev_priv(netdev);
-+	int i, q;
- 
--		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_mib_regs); i++)
--			strscpy(data + i * ETH_GSTRING_LEN,
--				mvpp2_ethtool_mib_regs[i].string,
--				ETH_GSTRING_LEN);
-+	if (sset != ETH_SS_STATS)
-+		return;
-+
-+	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_mib_regs); i++) {
-+		strscpy(data, mvpp2_ethtool_mib_regs[i].string,
-+			ETH_GSTRING_LEN);
-+		data += ETH_GSTRING_LEN;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_port_regs); i++) {
-+		strscpy(data, mvpp2_ethtool_port_regs[i].string,
-+			ETH_GSTRING_LEN);
-+		data += ETH_GSTRING_LEN;
-+	}
-+
-+	for (q = 0; q < port->ntxqs; q++) {
-+		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++) {
-+			snprintf(data, ETH_GSTRING_LEN,
-+				 mvpp2_ethtool_txq_regs[i].string, q);
-+			data += ETH_GSTRING_LEN;
-+		}
-+	}
-+
-+	for (q = 0; q < port->nrxqs; q++) {
-+		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++) {
-+			snprintf(data, ETH_GSTRING_LEN,
-+				 mvpp2_ethtool_rxq_regs[i].string,
-+				 q);
-+			data += ETH_GSTRING_LEN;
-+		}
- 	}
- }
- 
-+static void mvpp2_read_stats(struct mvpp2_port *port)
-+{
-+	u64 *pstats;
-+	int i, q;
-+
-+	pstats = port->ethtool_stats;
-+
-+	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_mib_regs); i++)
-+		*pstats++ += mvpp2_read_count(port, &mvpp2_ethtool_mib_regs[i]);
-+
-+	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_port_regs); i++)
-+		*pstats++ += mvpp2_read(port->priv,
-+					mvpp2_ethtool_port_regs[i].offset +
-+					4 * port->id);
-+
-+	for (q = 0; q < port->ntxqs; q++)
-+		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++)
-+			*pstats++ += mvpp2_read_index(port->priv,
-+						      MVPP22_CTRS_TX_CTR(port->id, i),
-+						      mvpp2_ethtool_txq_regs[i].offset);
-+
-+	/* Rxqs are numbered from 0 from the user standpoint, but not from the
-+	 * driver's. We need to add the  port->first_rxq offset.
-+	 */
-+	for (q = 0; q < port->nrxqs; q++)
-+		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++)
-+			*pstats++ += mvpp2_read_index(port->priv,
-+						      port->first_rxq + i,
-+						      mvpp2_ethtool_rxq_regs[i].offset);
-+}
-+
- static void mvpp2_gather_hw_statistics(struct work_struct *work)
- {
- 	struct delayed_work *del_work = to_delayed_work(work);
- 	struct mvpp2_port *port = container_of(del_work, struct mvpp2_port,
- 					       stats_work);
--	u64 *pstats;
--	int i;
- 
- 	mutex_lock(&port->gather_stats_lock);
- 
--	pstats = port->ethtool_stats;
--	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_mib_regs); i++)
--		*pstats++ += mvpp2_read_count(port, &mvpp2_ethtool_mib_regs[i]);
-+	mvpp2_read_stats(port);
- 
- 	/* No need to read again the counters right after this function if it
- 	 * was called asynchronously by the user (ie. use of ethtool).
-@@ -1346,14 +1439,16 @@ static void mvpp2_ethtool_get_stats(struct net_device *dev,
- 
- 	mutex_lock(&port->gather_stats_lock);
- 	memcpy(data, port->ethtool_stats,
--	       sizeof(u64) * ARRAY_SIZE(mvpp2_ethtool_mib_regs));
-+	       sizeof(u64) * MVPP2_N_ETHTOOL_STATS(port->ntxqs, port->nrxqs));
- 	mutex_unlock(&port->gather_stats_lock);
- }
- 
- static int mvpp2_ethtool_get_sset_count(struct net_device *dev, int sset)
- {
-+	struct mvpp2_port *port = netdev_priv(dev);
-+
- 	if (sset == ETH_SS_STATS)
--		return ARRAY_SIZE(mvpp2_ethtool_mib_regs);
-+		return MVPP2_N_ETHTOOL_STATS(port->ntxqs, port->nrxqs);
- 
- 	return -EOPNOTSUPP;
- }
-@@ -4261,7 +4356,7 @@ static int mvpp2_port_init(struct mvpp2_port *port)
- 	struct mvpp2 *priv = port->priv;
- 	struct mvpp2_txq_pcpu *txq_pcpu;
- 	unsigned int thread;
--	int queue, err, i;
-+	int queue, err;
- 
- 	/* Checks for hardware constraints */
- 	if (port->first_rxq + port->nrxqs >
-@@ -4368,9 +4463,10 @@ static int mvpp2_port_init(struct mvpp2_port *port)
- 	if (err)
- 		goto err_free_percpu;
- 
--	/* Read the GOP statistics to reset the hardware counters */
--	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_mib_regs); i++)
--		mvpp2_read_count(port, &mvpp2_ethtool_mib_regs[i]);
-+	/* Clear all port stats */
-+	mvpp2_read_stats(port);
-+	memset(port->ethtool_stats, 0,
-+	       MVPP2_N_ETHTOOL_STATS(port->ntxqs, port->nrxqs) * sizeof(u64));
- 
- 	return 0;
- 
-@@ -5053,7 +5149,7 @@ static int mvpp2_port_probe(struct platform_device *pdev,
- 	}
- 
- 	port->ethtool_stats = devm_kcalloc(&pdev->dev,
--					   ARRAY_SIZE(mvpp2_ethtool_mib_regs),
-+					   MVPP2_N_ETHTOOL_STATS(ntxqs, nrxqs),
- 					   sizeof(u64), GFP_KERNEL);
- 	if (!port->ethtool_stats) {
- 		err = -ENOMEM;
+However, if another SDM845 variant does crop up, also lacking the
+"gpios" property, we will have to find another differentiating factor
+between them and conduct some matching.  What else can you do with
+platforms supporting non-complete/non-forthcoming ACPI tables?
+
+> > ---
+> >  drivers/pinctrl/qcom/Kconfig          |  2 +-
+> >  drivers/pinctrl/qcom/pinctrl-sdm845.c | 36 ++++++++++++++++++++++++++-
+> >  2 files changed, 36 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> > index 2e66ab72c10b..aafbe932424f 100644
+> > --- a/drivers/pinctrl/qcom/Kconfig
+> > +++ b/drivers/pinctrl/qcom/Kconfig
+> > @@ -168,7 +168,7 @@ config PINCTRL_SDM660
+> >
+> >  config PINCTRL_SDM845
+> >         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+> > -       depends on GPIOLIB && OF
+> > +       depends on GPIOLIB && (OF || ACPI)
+> >         select PINCTRL_MSM
+> >         help
+> >           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> > diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > index c97f20fca5fd..98a438dba711 100644
+> > --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> > @@ -3,6 +3,7 @@
+> >   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+> >   */
+> >
+> > +#include <linux/acpi.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/platform_device.h>
+> > @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
+> >         UFS_RESET(ufs_reset, 0x99f000),
+> >  };
+> >
+> > +static const int sdm845_acpi_reserved_gpios[] = {
+> > +       0, 1, 2, 3, 81, 82, 83, 84, -1
+> > +};
+> > +
+> >  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+> >         .pins = sdm845_pins,
+> >         .npins = ARRAY_SIZE(sdm845_pins),
+> > @@ -1287,11 +1292,39 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+> >         .ngpios = 150,
+> >  };
+> >
+> > +static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
+> > +       .pins = sdm845_pins,
+> > +       .npins = ARRAY_SIZE(sdm845_pins),
+> > +       .groups = sdm845_groups,
+> > +       .ngroups = ARRAY_SIZE(sdm845_groups),
+> > +       .reserved_gpios = sdm845_acpi_reserved_gpios,
+> > +       .ngpios = 150,
+> > +};
+> > +
+> >  static int sdm845_pinctrl_probe(struct platform_device *pdev)
+> >  {
+> > -       return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
+> > +       int ret;
+> > +
+> > +       if (pdev->dev.of_node) {
+> > +               ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
+> > +       } else if (has_acpi_companion(&pdev->dev)) {
+> > +               ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
+> > +       } else {
+> > +               dev_err(&pdev->dev, "DT and ACPI disabled\n");
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       return ret;
+> >  }
+> >
+> > +#if CONFIG_ACPI
+> > +static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
+> > +       { "QCOM0217"},
+> > +       { },
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
+> > +#endif
+> > +
+> >  static const struct of_device_id sdm845_pinctrl_of_match[] = {
+> >         { .compatible = "qcom,sdm845-pinctrl", },
+> >         { },
+> > @@ -1302,6 +1335,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
+> >                 .name = "sdm845-pinctrl",
+> >                 .pm = &msm_pinctrl_dev_pm_ops,
+> >                 .of_match_table = sdm845_pinctrl_of_match,
+> > +               .acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
+> >         },
+> >         .probe = sdm845_pinctrl_probe,
+> >         .remove = msm_pinctrl_remove,
+> >
+
 -- 
-2.20.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
