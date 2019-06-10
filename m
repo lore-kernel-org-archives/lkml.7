@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC07DC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF104C31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9592086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0BD20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560188091;
-	bh=fcm35JOA6ZapFfDwSJbUiZT06l0PsXp6oUU4RnwG7Do=;
+	s=default; t=1560188092;
+	bh=jWkAWQunZXXWSf+rGiHXL9t60c8lnlyNwKwze0ZWG/c=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=cxMoECwL0GAYQv831WmRZR1ZpgcHtPTaCV0XlGJ6wHfkU72SDo+x3hgQzzJkjGgkX
-	 Ro0LxqhXEo0nyvUNnRM36qC1ZazBTv6pkjkbp1+OrFgV2h5lmlGrJ9gFi3+tlyKEBE
-	 sL6lC/STXNWOb3+jPfez1UH25Kutz6mswvg+CP1w=
+	b=HOM4BM6M5bbmzO9X1undS3mVswpGns49vDfkG6WecHx74icGB26TkNeEendgJnvzK
+	 Y2mpMgWWuoLpeBuxX525XGXfNKlxGvfP4TL0kn7Cwt/aOrceAvuaNHGBrqHCkPE/m/
+	 aR6xYDeMhbmWrPFq4FI3Iky5yKLa+gvo/StkiMjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388229AbfFJRev (ORCPT
+        id S2388282AbfFJRev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 10 Jun 2019 13:34:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52992 "EHLO
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53022 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387492AbfFJRev (ORCPT
+        with ESMTP id S2388170AbfFJRev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 13:34:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,25 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=WmWx1d5ZiY2U4Nqy7aAua5rzNc7jtyqb64fzhepsCbs=; b=ejX2a8rT1GNj
-        L6p7eJrhEy61yaaxVHEJDbji7wV5Atg4xjp49wZfJA3VaSfcAfuWKI83Wc/J8MtPutJutQKGRcGGR
-        W+3X3vvV97fVaQD93g+BmOSKPuCJdv569Eg+hg3WHkcPvWgVSzotuT3HwOfme6/hkAlNm6hTRcCuN
-        8iQ0E=;
+        List-Archive; bh=jpIsnQKToLnfohGME7GlwGk9uxrjkhAPVWzXiTiDiLc=; b=wrdkbQAWqIyR
+        6HwbjH6zBnFBJ9bwyB/T71DJmGBVMBAuSfEcL8xQCREYWl1HoCkRxGO+bqQZEC9fIJ9uJ6pEhtp/w
+        z0tFevrdlr4v36b7vVug1wD8PvXA/ACah9KORB210WHjNdjs5h1PR0kBG4C8RgVzMloMWoUAyYyk9
+        0nMfI=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1haOBz-0006G3-4e; Mon, 10 Jun 2019 17:34:47 +0000
+        id 1haOBy-0006G0-Jh; Mon, 10 Jun 2019 17:34:46 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id B100A440046; Mon, 10 Jun 2019 18:34:46 +0100 (BST)
+        id 29048440046; Mon, 10 Jun 2019 18:34:46 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-i2c@vger.kernel.org,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: max8952: simplify getting the adapter of a client" to the regulator tree
-In-Reply-To: <20190608105619.593-26-wsa+renesas@sang-engineering.com>
+Subject: Applied "regulator: max77802: Drop unused includes" to the regulator tree
+In-Reply-To: <20190609110513.29220-1-linus.walleij@linaro.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190610173446.B100A440046@finisterre.sirena.org.uk>
+Message-Id: <20190610173446.29048440046@finisterre.sirena.org.uk>
 Date:   Mon, 10 Jun 2019 18:34:46 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: max8952: simplify getting the adapter of a client
+   regulator: max77802: Drop unused includes
 
 has been applied to the regulator tree at
 
@@ -86,33 +87,35 @@ to this mail.
 Thanks,
 Mark
 
-From 6b96092a6bfa65566dda2f5a68a559a743b8d132 Mon Sep 17 00:00:00 2001
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Date: Sat, 8 Jun 2019 12:56:04 +0200
-Subject: [PATCH] regulator: max8952: simplify getting the adapter of a client
+From d17adf7d3f5be74bdfda89ceed7bff3910ffb6d4 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 9 Jun 2019 13:05:13 +0200
+Subject: [PATCH] regulator: max77802: Drop unused includes
 
-We have a dedicated pointer for that, so use it. Much easier to read and
-less computation involved.
+This driver does not use any symbols from <linux/gpio.h>
+no <linux/gpio/consumer.h> so just drop the includes.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Javier Martinez Canillas <javierm@redhat.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/max8952.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/max77802-regulator.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/regulator/max8952.c b/drivers/regulator/max8952.c
-index cf2a2912cb1b..451237efb359 100644
---- a/drivers/regulator/max8952.c
-+++ b/drivers/regulator/max8952.c
-@@ -192,7 +192,7 @@ static struct max8952_platform_data *max8952_parse_dt(struct device *dev)
- static int max8952_pmic_probe(struct i2c_client *client,
- 		const struct i2c_device_id *i2c_id)
- {
--	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-+	struct i2c_adapter *adapter = client->adapter;
- 	struct max8952_platform_data *pdata = dev_get_platdata(&client->dev);
- 	struct regulator_config config = { };
- 	struct max8952_data *max8952;
+diff --git a/drivers/regulator/max77802-regulator.c b/drivers/regulator/max77802-regulator.c
+index ea7b50397300..7b8ec8c0bd15 100644
+--- a/drivers/regulator/max77802-regulator.c
++++ b/drivers/regulator/max77802-regulator.c
+@@ -14,9 +14,7 @@
+ #include <linux/kernel.h>
+ #include <linux/bug.h>
+ #include <linux/err.h>
+-#include <linux/gpio.h>
+ #include <linux/slab.h>
+-#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
 -- 
 2.20.1
 
