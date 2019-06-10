@@ -2,233 +2,123 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A4BC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87611C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EC620645
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5761520820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:31:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cXohEkVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390056AbfFJMW2 (ORCPT
+        id S2389963AbfFJMba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 08:22:28 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5798 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389705AbfFJMW2 (ORCPT
+        Mon, 10 Jun 2019 08:31:30 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34970 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389167AbfFJMb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 08:22:28 -0400
-X-UUID: 333a931d8d7843e6b969a23840688dc1-20190610
-X-UUID: 333a931d8d7843e6b969a23840688dc1-20190610
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 179440488; Mon, 10 Jun 2019 20:22:19 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 10 Jun 2019 20:22:18 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 10 Jun 2019 20:22:17 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v7 21/21] iommu/mediatek: Switch to SPDX license identifier
-Date:   Mon, 10 Jun 2019 20:18:00 +0800
-Message-ID: <1560169080-27134-22-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+        Mon, 10 Jun 2019 08:31:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y6so6089945oix.2;
+        Mon, 10 Jun 2019 05:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nFynJG6GkMrt4lyp8IC+dRaN8zX6LxP0uU9NEUWvbzI=;
+        b=cXohEkVc0ZP8pvQlDl8p6OE4YZbfDSAvS5aWQeuKTLlZqlj7v78cTJ15xSpsOzjR22
+         xqW8m8BQQTHBCyUybgg4cjc9zpHtLHToZBnVKwVpPrd2gMNZEaQEY+U2aASQmhONplHu
+         xCN+NI806+E9j8cNzavcdXo5PAqDEEspH4deJbZqbsj2prDFodwaiUI3/We1XgFxezKC
+         nUwyXdytL8UYR+4FW0gFx5nL4COz2G9KZnTvc6tRryCozSSCylWM6PxbPnrrKKLOPF4y
+         QKkBohVJzmnYPPPYwQEoIC2AXqhhVVwSaWDLT5t/w7U2D7lWdPCdL9uK58kqqA82/8t4
+         vL2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nFynJG6GkMrt4lyp8IC+dRaN8zX6LxP0uU9NEUWvbzI=;
+        b=mQ5EYUbQkMQ9gvxu8OEZCmkvjE0x8ntIetK5Qnud+8/shwOD4FgUdyIIHqssXjnkw+
+         Tood+m2WpuwslX6QPXTnFyQtEGVs8LUJ52W494XtN7+H455z2I1YZEic/u6sEqZXf7Uq
+         hiXE/ElgtGA1vVRrL2wG/V9LMl1QR+Jz2KMC9ztC01d2hTsEhV3ja6dByzcToH7bWJ5d
+         5uVC28j3aNiIwD5WAhkJGidcpgVAIEzRRwCcSYD3ftqEQ/UeYMKZlhB5m3IBX3mLTf/e
+         X4Y0eP19JxZBAJLnaPqW9oXevMXbPWb3PJU4q4zgOwq6Gv/ljs1LHGvtZ60dRQRTYOPL
+         z0LA==
+X-Gm-Message-State: APjAAAXKIfJ8F7ixw9CUmfM9Hp/zs30bnuRdrkSyqTrfJy1pAtAiAA0t
+        zYibsdpjskFM0zjCe4s52KK9723TnUsB3Ir00Lw=
+X-Google-Smtp-Source: APXvYqxpBiHP08OPhwvFiE1hD4gx+oq+4oIRwCJaMPkj/6FYkD61ABAJqXsC6FpliWoKBw4Uc0ZVvhgV6HFS3Jve/S4=
+X-Received: by 2002:aca:51cf:: with SMTP id f198mr10179250oib.140.1560169888423;
+ Mon, 10 Jun 2019 05:31:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+ <20190609204510.GB8247@lunn.ch> <20190610114700.tymqzzax334ahtz4@flea>
+In-Reply-To: <20190610114700.tymqzzax334ahtz4@flea>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 10 Jun 2019 14:31:17 +0200
+Message-ID: <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
+Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to SPDX license identifier for MediaTek iommu/smi and their
-header files.
+Hi Maxime,
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
----
- drivers/iommu/mtk_iommu.c                     | 10 +---------
- drivers/iommu/mtk_iommu.h                     | 10 +---------
- drivers/iommu/mtk_iommu_v1.c                  | 10 +---------
- drivers/memory/mtk-smi.c                      | 10 +---------
- include/dt-bindings/memory/mt2701-larb-port.h | 10 +---------
- include/dt-bindings/memory/mt8173-larb-port.h | 10 +---------
- include/soc/mediatek/smi.h                    | 10 +---------
- 7 files changed, 7 insertions(+), 63 deletions(-)
+On Mon, Jun 10, 2019 at 1:47 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Hi Andrew,
+>
+> On Sun, Jun 09, 2019 at 10:45:10PM +0200, Andrew Lunn wrote:
+> > > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
+> > > "Always leave the campground cleaner than you found it."
+> >
+> > > I
+> > > am also looking for suggestions how to handle these cross-tree changes
+> > > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
+> > > go through the net-next tree. I will re-send patch #5 separately as
+> > > this should go through Kevin's linux-amlogic tree).
+> >
+> > Patches 1 and 4 don't seem to have and dependencies. So i would
+> > suggest splitting them out and submitting them to netdev for merging
+> > independent of the rest.
+>
+> Jumping on the occasion of that series. These properties have been
+> defined to deal with phy reset, while it seems that the PHY core can
+> now handle that pretty easily through generic properties.
+>
+> Wouldn't it make more sense to just move to that generic properties
+> that already deals with the flags properly?
+thank you for bringing this up!
+if anyone else (just like me) doesn't know about it, there are generic
+bindings defined here: [0]
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 34f2e40..6fe3369 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -1,15 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/memblock.h>
- #include <linux/bug.h>
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index e8114b2..b24cfd3 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #ifndef _MTK_IOMMU_H_
-diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-index 73308ad..0b0908c 100644
---- a/drivers/iommu/mtk_iommu_v1.c
-+++ b/drivers/iommu/mtk_iommu_v1.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * IOMMU API for MTK architected m4u v1 implementations
-  *
-@@ -5,15 +6,6 @@
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-  *
-  * Based on driver/iommu/mtk_iommu.c
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/memblock.h>
- #include <linux/bug.h>
-diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-index 10e6493..9688341 100644
---- a/drivers/memory/mtk-smi.c
-+++ b/drivers/memory/mtk-smi.c
-@@ -1,15 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/clk.h>
- #include <linux/component.h>
-diff --git a/include/dt-bindings/memory/mt2701-larb-port.h b/include/dt-bindings/memory/mt2701-larb-port.h
-index 6764d74..c511f0f 100644
---- a/include/dt-bindings/memory/mt2701-larb-port.h
-+++ b/include/dt-bindings/memory/mt2701-larb-port.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015 MediaTek Inc.
-  * Author: Honghui Zhang <honghui.zhang@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #ifndef _MT2701_LARB_PORT_H_
-diff --git a/include/dt-bindings/memory/mt8173-larb-port.h b/include/dt-bindings/memory/mt8173-larb-port.h
-index 111b4b0..a62bfeb 100644
---- a/include/dt-bindings/memory/mt8173-larb-port.h
-+++ b/include/dt-bindings/memory/mt8173-larb-port.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef __DTS_IOMMU_PORT_MT8173_H
- #define __DTS_IOMMU_PORT_MT8173_H
-diff --git a/include/soc/mediatek/smi.h b/include/soc/mediatek/smi.h
-index a65324d..7a8d870 100644
---- a/include/soc/mediatek/smi.h
-+++ b/include/soc/mediatek/smi.h
-@@ -1,15 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2015-2016 MediaTek Inc.
-  * Author: Yong Wu <yong.wu@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef MTK_IOMMU_SMI_H
- #define MTK_IOMMU_SMI_H
--- 
-1.9.1
+I just tested this on my X96 Max by defining the following properties
+inside the PHY node:
+  reset-delay-us = <10000>;
+  reset-assert-us = <10000>;
+  reset-deassert-us = <10000>;
+  reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
 
+that means I don't need any stmmac patches which seems nice.
+instead I can submit a patch to mark the snps,reset-gpio properties in
+the dt-bindings deprecated (and refer to the generic bindings instead)
+what do you think?
+
+
+Martin
+
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/phy.txt?id=b54dd90cab00f5b64ed8ce533991c20bf781a3cd#n58
