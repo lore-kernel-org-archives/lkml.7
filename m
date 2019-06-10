@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF774C468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA07C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996032082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED16D2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388410AbfFJIQb (ORCPT
+        id S2388437AbfFJIQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:16:31 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37316 "EHLO inva021.nxp.com"
+        Mon, 10 Jun 2019 04:16:34 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37134 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387824AbfFJIQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:16:28 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BE40D200737;
-        Mon, 10 Jun 2019 10:16:26 +0200 (CEST)
+        id S2388393AbfFJIQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:32 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A23E1A07C5;
+        Mon, 10 Jun 2019 10:16:30 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8D47A200739;
-        Mon, 10 Jun 2019 10:16:18 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 68BDE1A07D5;
+        Mon, 10 Jun 2019 10:16:22 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E1F70402D2;
-        Mon, 10 Jun 2019 16:16:08 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 68E4640310;
+        Mon, 10 Jun 2019 16:16:12 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
@@ -37,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 04/15] dmaengine: imx-sdma: remove dupilicated sdma_load_context
-Date:   Mon, 10 Jun 2019 16:17:42 +0800
-Message-Id: <20190610081753.11422-5-yibin.gong@nxp.com>
+Subject: [PATCH v5 06/15] spi: imx: fix ERR009165
+Date:   Mon, 10 Jun 2019 16:17:44 +0800
+Message-Id: <20190610081753.11422-7-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 References: <20190610081753.11422-1-yibin.gong@nxp.com>
@@ -51,38 +51,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Since sdma_transfer_init() will do sdma_load_context before any
-sdma transfer, no need once more in sdma_config_channel().
+Change to XCH  mode even in dma mode, please refer to the below
+errata:
+https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Acked-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/dma/imx-sdma.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/spi/spi-imx.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 21db6b69..dbd1dcd 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1134,7 +1134,6 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
- static int sdma_config_channel(struct dma_chan *chan)
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index 09c9a1e..6795910 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -585,8 +585,9 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+ 	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
+ 	spi_imx->spi_bus_clk = clk;
+ 
++	/* ERR009165: work in XHC mode as PIO */
+ 	if (spi_imx->usedma)
+-		ctrl |= MX51_ECSPI_CTRL_SMC;
++		ctrl &= ~MX51_ECSPI_CTRL_SMC;
+ 
+ 	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
+ 
+@@ -612,12 +613,14 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+ 
+ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
  {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
--	int ret;
++	u32 tx_wml = 0;
++
+ 	/*
+ 	 * Configure the DMA register: setup the watermark
+ 	 * and enable DMA request.
+ 	 */
+ 	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
+-		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
++		MX51_ECSPI_DMA_TX_WML(tx_wml) |
+ 		MX51_ECSPI_DMA_RXT_WML(spi_imx->wml) |
+ 		MX51_ECSPI_DMA_TEDEN | MX51_ECSPI_DMA_RXDEN |
+ 		MX51_ECSPI_DMA_RXTDEN, spi_imx->base + MX51_ECSPI_DMA);
+@@ -1171,7 +1174,11 @@ static int spi_imx_dma_configure(struct spi_master *master)
+ 	tx.direction = DMA_MEM_TO_DEV;
+ 	tx.dst_addr = spi_imx->base_phys + MXC_CSPITXDATA;
+ 	tx.dst_addr_width = buswidth;
+-	tx.dst_maxburst = spi_imx->wml;
++	/*
++	 * For ERR009165 with tx_wml = 0 could enlarge burst size to fifo size
++	 * to speed up fifo filling as possible.
++	 */
++	tx.dst_maxburst = spi_imx->devtype_data->fifo_size;
+ 	ret = dmaengine_slave_config(master->dma_tx, &tx);
+ 	if (ret) {
+ 		dev_err(spi_imx->dev, "TX dma configuration failed with %d\n", ret);
+@@ -1265,10 +1272,6 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
+ {
+ 	int ret;
  
- 	sdma_disable_channel(chan);
- 
-@@ -1174,9 +1173,7 @@ static int sdma_config_channel(struct dma_chan *chan)
- 		sdmac->watermark_level = 0; /* FIXME: M3_BASE_ADDRESS */
- 	}
- 
--	ret = sdma_load_context(sdmac);
+-	/* use pio mode for i.mx6dl chip TKT238285 */
+-	if (of_machine_is_compatible("fsl,imx6dl"))
+-		return 0;
 -
--	return ret;
-+	return 0;
- }
+ 	spi_imx->wml = spi_imx->devtype_data->fifo_size / 2;
  
- static int sdma_set_channel_priority(struct sdma_channel *sdmac,
+ 	/* Prepare for TX DMA: */
 -- 
 2.7.4
 
