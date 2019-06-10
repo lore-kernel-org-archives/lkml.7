@@ -2,143 +2,140 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4040C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FF3C4321B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8C520859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560198356;
-	bh=LM7HCsspgClDyFFU9bfxU7yzdejIvcxPP+NiHgQckcY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0Db+lcO3/sLtk5b3bbgd07vYcbsstrm74s0TmvJwtgQ5GOTvxarfNLSukqn8mPAA
-	 bwRpM7BhC/KZChBj+uG1ETXu8zaIMEclMII/Pb4C+bbwZAlYd09T/2bHc90zGYh+K2
-	 ktuD+tmQ2VwwOv5gxNeHvnfOM4U9PcDXLAduSvIw=
+	by mail.kernel.org (Postfix) with ESMTP id BD9FB2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:29:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6f3CvIr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389681AbfFJUZ4 (ORCPT
+        id S2389558AbfFJU3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389337AbfFJUZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:25:39 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D1C320870;
-        Mon, 10 Jun 2019 20:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560198338;
-        bh=LM7HCsspgClDyFFU9bfxU7yzdejIvcxPP+NiHgQckcY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8Qst0XkJgfUaO8LzI2g6QMlQK40vtFmOk9iX8piYgY3znc2GBX5zapAxY8+VSby1
-         er8N0zjs4qZiJ1iXJjl+z/70r1/g5ufTQlgWFPMtpJuAcDX8LUIZqlPcAtjiYn0FQ9
-         SAwge416WEwQLarrpZEoFvxWOqk9s4uNE8Lmh9yo=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     x86@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 3/5] x86/vsyscall: Document odd #PF's error code for vsyscalls
-Date:   Mon, 10 Jun 2019 13:25:29 -0700
-Message-Id: <d28856fff74a385f88c493dafb9d96d2c38d91a2.1560198181.git.luto@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1560198181.git.luto@kernel.org>
-References: <cover.1560198181.git.luto@kernel.org>
+        Mon, 10 Jun 2019 16:29:31 -0400
+Received: from mail-pg1-f174.google.com ([209.85.215.174]:39473 "EHLO
+        mail-pg1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389331AbfFJU3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 16:29:30 -0400
+Received: by mail-pg1-f174.google.com with SMTP id 196so5628251pgc.6;
+        Mon, 10 Jun 2019 13:29:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1u+Mk6P0GQp2YK+MbgZCemejiKqi+QRb5rVGWIgElFw=;
+        b=G6f3CvIrKb/qPOpOxDrnhusVhhss4a4rdtkGIF9mDlmmqxSCz9ObWvhgBgTnml10hK
+         JlDF0m8kSM2MRPw0DedfKg+9suAC/0w4ywoA7lTnIPx8Vd0L5QZM9kIEIdUepk9/A/Ci
+         L3MsIhQZWfa778Ov/yadphBGN+mqRGE4K8TJ0XcXmyKaYfOK0bHJNtcQJNQTlOX6mgPf
+         64bOa+0uK/5ghOUmBiBDDHn00kAT8AOzLX3YDmwNBbldXKVw7I5mp39nlvqkgaTnQFLn
+         YHKUn9nd/mzA8vWJXcCk0LQFfz3S9tv6sz66Jd4qeWovTDBwzjn2zTC5wxejL248uT+B
+         It3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1u+Mk6P0GQp2YK+MbgZCemejiKqi+QRb5rVGWIgElFw=;
+        b=n1MH7YF2AMUJYxCjcTAitWgMS/TyxrkYjX2PFIibfmSDv6CapqXHy+5s8/ehvn11c2
+         2u5GYBgskzqzguJxVrtUm03nMqaXEcuY4eptEgQb3RNBpGdJeIFcXy8BYKqoRmxm/IuI
+         lLPKrg237ExH9LQC4Z/FyEMB7VRd7qun/HmR+Lq3+pvPFRYoZK6nH64KXsoSracgLlD8
+         MlNrEGvY3IxgxPDaKtHJBy6Jb8AAk1HxOZXjcVbAwmHRCMs+QDwjCAymOeGv2hFp3o7/
+         YWWm2NdqbnhCJ8xGOXQTjw2Szm3ZN7W5ct5+/zVBOHuCjNFtUQ5bXkgpHgUOrMKcotvZ
+         xFiw==
+X-Gm-Message-State: APjAAAUJ4W4jkWAKB8AHaIPnA1JuGTRIcBiPo7yq1jSEXhRsbZskxoiL
+        EzFGklwhnxBSy/uwbWSYdLg=
+X-Google-Smtp-Source: APXvYqz8RUYRoaZm+zRUDtcye0JXQIhd3kp2snzDV/NHDjl0J3yKwIxNh87p7iEdeOMp2hurxqjFtA==
+X-Received: by 2002:a62:5801:: with SMTP id m1mr77055067pfb.32.1560198569901;
+        Mon, 10 Jun 2019 13:29:29 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 131sm6435257pfx.57.2019.06.10.13.29.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 13:29:29 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 13:29:28 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc:     Ken Sloat <KSloat@aampglobal.com>,
+        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
+        "wim@iguana.be" <wim@iguana.be>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFE]: watchdog: atmel: atmel-sama5d4-wdt
+Message-ID: <20190610202928.GB13191@roeck-us.net>
+References: <BL0PR07MB41152EDB169FE9ED1AD3B4C9AD130@BL0PR07MB4115.namprd07.prod.outlook.com>
+ <20190610162811.GA11270@roeck-us.net>
+ <20190610201301.GH25472@piout.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610201301.GH25472@piout.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even if vsyscall=none, we report uer page faults on the vsyscall
-page as though the PROT bit in the error code was set.  Add a
-comment explaining why this is probably okay and display the value
-in the test case.
+On Mon, Jun 10, 2019 at 10:13:01PM +0200, Alexandre Belloni wrote:
+> Hello,
+> 
+> On 10/06/2019 09:28:11-0700, Guenter Roeck wrote:
+> > On Mon, Jun 10, 2019 at 03:51:52PM +0000, Ken Sloat wrote:
+> > > Hello Nicolas,
+> > > 
+> > > I wanted to open a discussion proposing new functionality to allow disabling of the watchdog timer upon entering 
+> > > suspend in the SAMA5D2/4.
+> > > 
+> > > Typical use case of a hardware watchdog timer in the kernel is a userspace application opens the watchdog timer and
+> > > periodically "kicks" it. If the application hits a deadlock somewhere and is no longer able to kick it, then the watchdog
+> > > intervenes and often resets the processor. Such is the case for the Atmel driver (which also allows a watchdog interrupt
+> > > to be asserted in lieu of a system reset). In most use cases, upon entering a low power/suspend state, the application 
+> > > will no longer be able to "kick" the watchdog. If the watchdog is not disabled or kicked via another method, then it will
+> > > reset the system. This is the current behavior of the Atmel driver as of today.
+> > > 
+> > > The watchdog peripheral itself does have a "WDIDLEHLT" bit however, and this is enabled via the "atmel,idle-halt" dt
+> > > property. However, this is not very useful, as it literally only makes the watchdog count when the CPU is active. This 
+> > > results in non-deterministic triggering of the WDT and means that if a critical application were to crash, it may be
+> > > quite a long time before the WDT would ever trigger. Below is a similar statement made in the device-tree doc for this
+> > > peripheral:
+> > > 
+> > > - atmel,idle-halt: present if you want to stop the watchdog when the CPU is
+> > > 		   in idle state.
+> > > 	CAUTION: This property should be used with care, it actually makes the
+> > > 	watchdog not counting when the CPU is in idle state, therefore the
+> > > 	watchdog reset time depends on mean CPU usage and will not reset at all
+> > > 	if the CPU stop working while it is in idle state, which is probably
+> > > 	not what you want.
+> > > 
+> > > It seems to me, that it would be logical and useful to introduce a new property that would cause the Atmel WDT
+> > > to disable on suspend and re-enable on resume. It also appears that the WDT is re-initialized anyways upon
+> > > resume, so the only piece missing here would really be a dt flag and a call to disable.
+> > > 
+> > Wondering - why would this need a dt property ? That would be quite unusual. Is
+> > there a condition where one would _not_ want the watchdog to stop on suspend ?
+> > 
+> 
+> There are customers that protects suspend/resume using the watchdog.
+> They wake up their platform every 15s to ping the watchdog.
+> 
 
-While we're at it, explain why our behavior is correct with respect
-to PKRU.
+Interesting use case.
 
-If anyone really cares about more accurate emulation, we could
-change the behavior.
+> Also, I don't see why the application deciding to go to suspend wouldn't
+> be able to disable the watchdog before do so if this is the wanted policy.
+> 
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
- arch/x86/mm/fault.c                         | 7 +++++++
- tools/testing/selftests/x86/test_vsyscall.c | 9 ++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+Many watchdog drivers already implement suspend/resume support. Such a
+platform specific functionality seems to be quite undesirable to me.
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 46df4c6aae46..1b18819e8e11 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -710,6 +710,10 @@ static void set_signal_archinfo(unsigned long address,
- 	 * To avoid leaking information about the kernel page
- 	 * table layout, pretend that user-mode accesses to
- 	 * kernel addresses are always protection faults.
-+	 *
-+	 * NB: This means that failed vsyscalls with vsyscall=none
-+	 * will have the PROT bit.  This doesn't leak any
-+	 * information and does not appear to cause any problems.
- 	 */
- 	if (address >= TASK_SIZE_MAX)
- 		error_code |= X86_PF_PROT;
-@@ -1376,6 +1380,9 @@ void do_user_addr_fault(struct pt_regs *regs,
- 	 *
- 	 * The vsyscall page does not have a "real" VMA, so do this
- 	 * emulation before we go searching for VMAs.
-+	 *
-+	 * PKRU never rejects instruction fetches, so we don't need
-+	 * to consider the PF_PK bit.
- 	 */
- 	if ((hw_error_code & X86_PF_INSTR) && is_vsyscall_vaddr(address)) {
- 		if (emulate_vsyscall(regs, address))
-diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
-index 0b4f1cc2291c..4c9a8d76dba0 100644
---- a/tools/testing/selftests/x86/test_vsyscall.c
-+++ b/tools/testing/selftests/x86/test_vsyscall.c
-@@ -183,9 +183,13 @@ static inline long sys_getcpu(unsigned * cpu, unsigned * node,
- }
- 
- static jmp_buf jmpbuf;
-+static volatile unsigned long segv_err;
- 
- static void sigsegv(int sig, siginfo_t *info, void *ctx_void)
- {
-+	ucontext_t *ctx = (ucontext_t *)ctx_void;
-+
-+	segv_err =  ctx->uc_mcontext.gregs[REG_ERR];
- 	siglongjmp(jmpbuf, 1);
- }
- 
-@@ -416,8 +420,11 @@ static int test_vsys_r(void)
- 	} else if (!can_read && should_read_vsyscall) {
- 		printf("[FAIL]\tWe don't have read access, but we should\n");
- 		return 1;
-+	} else if (can_read) {
-+		printf("[OK]\tWe have read access\n");
- 	} else {
--		printf("[OK]\tgot expected result\n");
-+		printf("[OK]\tWe do not have read access: #PF(0x%lx)\n",
-+		       segv_err);
- 	}
- #endif
- 
--- 
-2.21.0
+Besides (and pretty much all watchdog drivers implementing suspend/resume
+do that wrong), you'd likely want to disable the watchog late during
+suspend and early during resume to reduce the risk of a hang. I don't
+think you can do that from userspace.
 
+Thanks,
+Guenter
