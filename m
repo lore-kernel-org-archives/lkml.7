@@ -2,144 +2,107 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E99DC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD26C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0279F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NS6I1EfO"
+	by mail.kernel.org (Postfix) with ESMTP id 893EB20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387444AbfFJQuX (ORCPT
+        id S1728251AbfFJQvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:50:23 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35445 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727648AbfFJQuW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:50:22 -0400
-Received: by mail-io1-f65.google.com with SMTP id m24so7441030ioo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jigJfFRZkdX+fDWDB3Z6i7DXek+TxEO+iFMi0ontPyI=;
-        b=NS6I1EfOS4Qln6O21W/qaWiFUMqu8lDW/jqsVurVgncwNQNmgiZ7ryVM5WNjFbA1tg
-         6okpyEoD7k4sfn32wuY4Hw3AvMOSF+FH1cyzQTqePdpEc4PxU4V1MR7kC4tb8xOzYBLB
-         9dcsOIODkMVEkDakGWmtbuSR/ZtezbmGzY+/k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jigJfFRZkdX+fDWDB3Z6i7DXek+TxEO+iFMi0ontPyI=;
-        b=Fu7GkzLgEthB6+n4DTpETC/Vgcf66BWVTCOIJAkAuQykkGHZTHV2TR4jQiYKO+B6cN
-         /YgR3z4MyMIS69Syza6o3YSmyHr8W/G83oAB6+wE/UcVuWye0ccrf5ckbztE7EofEojV
-         yRVMG7Q6m7nrGccnrqR5jekf6H1f1OdNYnUieJnyjSgZW/aYU1ZS+W33pKFYdbw55cmC
-         E82z8AAEC4I5sRTEEacFi5YogEBd5JnT6iekV8fvB7frXc28qZJUdmVM46APGjWKEcUB
-         YVvc/nGeEAnXYdDckLq+g/AoCcYLRSeC9IpEYWrqJyJGc+YtWa8s77VwVVvXPVuhl/ed
-         W3NQ==
-X-Gm-Message-State: APjAAAVgadgFRkD2jHlWV5kd+8vJtfKaoEkIQMX0SZ75hxWqXCJMzf8E
-        DIRjyEZO4hxX4wd+OT3+UvWedHDgkFg=
-X-Google-Smtp-Source: APXvYqwXL7a7Wcn4wiXf2O/2ZACFP297WuyPZWUN/PRvfmbHQo7QUlNm+WOsj5n/VX3F4MxaJjd+bg==
-X-Received: by 2002:a6b:8e4a:: with SMTP id q71mr41532593iod.298.1560185421514;
-        Mon, 10 Jun 2019 09:50:21 -0700 (PDT)
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com. [209.85.166.47])
-        by smtp.gmail.com with ESMTPSA id a7sm3840022iok.19.2019.06.10.09.50.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 09:50:20 -0700 (PDT)
-Received: by mail-io1-f47.google.com with SMTP id k20so7401537ios.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:50:20 -0700 (PDT)
-X-Received: by 2002:a6b:b642:: with SMTP id g63mr8234768iof.142.1560185419663;
- Mon, 10 Jun 2019 09:50:19 -0700 (PDT)
+        Mon, 10 Jun 2019 12:51:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49454 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725270AbfFJQva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:51:30 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56651308213B;
+        Mon, 10 Jun 2019 16:51:30 +0000 (UTC)
+Received: from flask (unknown [10.43.2.83])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5CB085C1B4;
+        Mon, 10 Jun 2019 16:51:28 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Mon, 10 Jun 2019 18:51:27 +0200
+Date:   Mon, 10 Jun 2019 18:51:27 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2 2/3] KVM: LAPIC: lapic timer interrupt is injected by
+ posted interrupt
+Message-ID: <20190610165127.GA8389@flask>
+References: <1559799086-13912-1-git-send-email-wanpengli@tencent.com>
+ <1559799086-13912-3-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-References: <20190607223716.119277-1-dianders@chromium.org>
- <20190607223716.119277-4-dianders@chromium.org> <363DA0ED52042842948283D2FC38E4649C52F8A0@IRSMSX106.ger.corp.intel.com>
-In-Reply-To: <363DA0ED52042842948283D2FC38E4649C52F8A0@IRSMSX106.ger.corp.intel.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 10 Jun 2019 09:50:06 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U8eo78Ee9xjhGXJMv=8YF9o89KLX024GH3iBRnRjCRvQ@mail.gmail.com>
-Message-ID: <CAD=FV=U8eo78Ee9xjhGXJMv=8YF9o89KLX024GH3iBRnRjCRvQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around
- commands expected to fail
-To:     "Hunter, Adrian" <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        "brcm80211-dev-list.pdl@broadcom.com" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        "briannorris@chromium.org" <briannorris@chromium.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        "mka@chromium.org" <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "brcm80211-dev-list@cypress.com" <brcm80211-dev-list@cypress.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559799086-13912-3-git-send-email-wanpengli@tencent.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 10 Jun 2019 16:51:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+2019-06-06 13:31+0800, Wanpeng Li:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Dedicated instances are currently disturbed by unnecessary jitter due 
+> to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+> There is no hardware virtual timer on Intel for guest like ARM. Both 
+> programming timer in guest and the emulated timer fires incur vmexits.
+> This patch tries to avoid vmexit which is incurred by the emulated 
+> timer fires in dedicated instance scenario. 
+> 
+> When nohz_full is enabled in dedicated instances scenario, the emulated 
+> timers can be offload to the nearest busy housekeeping cpus since APICv 
+> is really common in recent years. The guest timer interrupt is injected 
+> by posted-interrupt which is delivered by housekeeping cpu once the emulated 
+> timer fires. 
+> 
+> 3%~5% redis performance benefit can be observed on Skylake server.
+> 
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 32 +++++++++++++++++++++++++-------
+>  arch/x86/kvm/x86.h   |  5 +++++
+>  2 files changed, 30 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 09b7387..c08e5a8 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -133,6 +133,12 @@ static inline bool posted_interrupt_inject_timer_enabled(struct kvm_vcpu *vcpu)
+>  		kvm_mwait_in_guest(vcpu->kvm);
+>  }
+>  
+> +static inline bool can_posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> +{
+> +	return posted_interrupt_inject_timer_enabled(vcpu) &&
+> +		!vcpu_halt_in_guest(vcpu);
 
-On Mon, Jun 10, 2019 at 1:56 AM Hunter, Adrian <adrian.hunter@intel.com> wrote:
->
-> > --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> > +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/mmc/sdio_ids.h>
-> >  #include <linux/mmc/sdio_func.h>
-> >  #include <linux/mmc/card.h>
-> > +#include <linux/mmc/core.h>
->
-> SDIO function drivers should not really include linux/mmc/core.h
-> (Also don't know why linux/mmc/card.h is included)
+It would make more sense to have a condition for general blocking in
+KVM, but keep in mind that we're not running on the same cpu anymore, so
+any code like that has to be properly protected against VM entries under
+our hands.  (The VCPU could appear halted here, but before we get make
+the timer pending, the VCPU would enter and potentially never check the
+interrupt.)
 
-OK, so I guess you're requesting an extra level of "sdio_" wrappers
-for all the functions I need to call.  I don't think the wrappers buy
-us a ton other than to abstract things a little bit and make it look
-prettier.  :-)  ...but certainly I can code that up if that's what
-everyone wants.
+I think we should be able to simply do
 
-Just to make sure, I looked in "drivers/net/wireless/" and I do see
-quite a few instances of "mmc_" functions being used.  That doesn't
-mean all these instances are correct but it does appear to be
-commonplace.  Selected examples:
+  if (posted_interrupt_inject_timer_enabled(vcpu))
+  	kvm_inject_apic_timer_irqs();
 
-drivers/net/wireless/ath/ath10k/sdio.c:
-  ret = mmc_hw_reset(ar_sdio->func->card->host);
-
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:
-  mmc_set_data_timeout(md, func->card);
-  mmc_wait_for_req(func->card->host, mr);
-
-drivers/net/wireless/marvell/mwifiex/sdio.c:
-  mmc_hw_reset(func->card->host);
-
-drivers/net/wireless/rsi/rsi_91x_sdio.c:
-  err = mmc_wait_for_cmd(host, &cmd, 3);
+directly in the apic_timer_expired() as the injection will wake up the
+target if necessary.  It's going to be a bit slow for timer callback in
+those (too slow to warrant special handling?), but there hopefully
+aren't any context restrictions in place.
 
 
-...anyway, I'll give it a few days and if nobody else chimes in then
-I'll assume you indeed want "sdio_" wrappers for things and I'll post
-a v4.  If patch #1 happens to land in the meantime then I won't
-object.  ;-)
-
-
--Doug
+Thanks.
