@@ -2,144 +2,95 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B636C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FADAC31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED5D207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B6920862
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560179538;
+	bh=h7mmrFketdGrH+jhcRTn+JLEZxAETRUZZjfI6AMHvCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g6cuzgD8apkRswcyrvOE6hgSkNMdt5eFmIKyoWynd13A0foT+FdWHZkWw8R6iZsRE
+	 UHDqNimQ9IhCgPypvMs9qk4KSIQJ3nSh2atRmuG6Yob3quwco2/Is6JgaCVXE3DbKS
+	 Fwrfps1LB1s4diShP63047QbP4sTqeGENcrd+7Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391090AbfFJPLk (ORCPT
+        id S2391102AbfFJPMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:11:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:44552 "EHLO foss.arm.com"
+        Mon, 10 Jun 2019 11:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390081AbfFJPLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:11:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BA69344;
-        Mon, 10 Jun 2019 08:11:39 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 207BC3F246;
-        Mon, 10 Jun 2019 08:11:38 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 16:11:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     syzbot <syzbot+7008b8b8ba7df475fdc8@syzkaller.appspotmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        David Howells <dhowells@redhat.com>
-Subject: Re: BUG: Dentry still in use [unmount of tmpfs tmpfs]
-Message-ID: <20190610151135.GC16989@lakrids.cambridge.arm.com>
-References: <000000000000456245058adf33a4@google.com>
+        id S2389322AbfFJPMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:12:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D408207E0;
+        Mon, 10 Jun 2019 15:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560179536;
+        bh=h7mmrFketdGrH+jhcRTn+JLEZxAETRUZZjfI6AMHvCA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hf0QAKqPWs3ENU591+37VscvqlxLG+/JbxsSF6qbnzU1/X5YVItVSaPjV2rM4rQ09
+         B2uL15jg0n+qvd/+BGm0HDMCWtU1ZX9y71BYyMplT4kmo4siqp9sMlIAHDG9P9BcSE
+         gwGJufDeL6oNOgTo8oiicRdA7nzeTfFWE1hgQOPk=
+Date:   Mon, 10 Jun 2019 17:12:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, johan@kernel.org,
+        Nava kishore Manne <nava.manne@xilinx.com>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] serial: xilinx_uartps: Fix warnings in the driver
+Message-ID: <20190610151213.GA7305@kroah.com>
+References: <c6753260caf8b20cc002b15fcbf22b759c91d760.1560156294.git.michal.simek@xilinx.com>
+ <20190610144425.GC31086@kroah.com>
+ <888c7d0a-28dc-978c-662a-e96ee3863c41@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000456245058adf33a4@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <888c7d0a-28dc-978c-662a-e96ee3863c41@xilinx.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 12:42:06AM -0700, syzbot wrote:
-> Hello,
+On Mon, Jun 10, 2019 at 05:06:57PM +0200, Michal Simek wrote:
+> On 10. 06. 19 16:44, Greg KH wrote:
+> > On Mon, Jun 10, 2019 at 10:44:55AM +0200, Michal Simek wrote:
+> >> From: Nava kishore Manne <nava.manne@xilinx.com>
+> >>
+> >> This patch fixes the below warning
+> >>
+> >>         -->Symbolic permissions 'S_IRUGO' are not preferred.
+> >>            Consider using octal permissions '0444'.
+> >>         -->macros should not use a trailing semicolon.
+> >>         -->line over 80 characters.
+> >>         -->void function return statements are not generally useful.
+> >>         -->Prefer 'unsigned int' to bare use of 'unsigned'.
+> >>
+> >> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> >> ---
+> >>
+> >> Happy to split it if needed.
+> > 
+> > Please split.  Do not do more than one "logical thing" per patch.
+> > 
+> > And the subject is not correct, there are no general "warnings", these
+> > are all checkpatch warnings, not a build issue.
 > 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16eacf36a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=7008b8b8ba7df475fdc8
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
+> ok. Will do. Any issue with second patch?
 
-I suspect that this is the same issue I reported at:
+It will change your user/kernel api but hey, it's your call, it looks
+like a nice fix to me :)
 
-  https://lore.kernel.org/lkml/20190605135401.GB30925@lakrids.cambridge.arm.com/
+thanks,
 
-... which has a C reproducer hand-minimized from Syzkaller's
-auto-generated repro.
-
-Thanks,
-Mark.
-
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+7008b8b8ba7df475fdc8@syzkaller.appspotmail.com
-> 
-> BUG: Dentry 00000000c5e232d4{i=15d04,n=/}  still in use (2) [unmount of
-> tmpfs tmpfs]
-> WARNING: CPU: 0 PID: 22126 at fs/dcache.c:1529 umount_check fs/dcache.c:1520
-> [inline]
-> WARNING: CPU: 0 PID: 22126 at fs/dcache.c:1529 umount_check.cold+0xe9/0x10a
-> fs/dcache.c:1510
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 22126 Comm: syz-executor.5 Not tainted 5.2.0-rc3+ #16
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  panic+0x2cb/0x744 kernel/panic.c:219
->  __warn.cold+0x20/0x4d kernel/panic.c:576
->  report_bug+0x263/0x2b0 lib/bug.c:186
->  fixup_bug arch/x86/kernel/traps.c:179 [inline]
->  fixup_bug arch/x86/kernel/traps.c:174 [inline]
->  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
->  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
->  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> RIP: 0010:umount_check fs/dcache.c:1529 [inline]
-> RIP: 0010:umount_check.cold+0xe9/0x10a fs/dcache.c:1510
-> Code: 89 ff e8 50 62 f0 ff 48 81 c3 68 06 00 00 45 89 e8 4c 89 e1 53 4d 8b
-> 0f 4c 89 f2 4c 89 e6 48 c7 c7 c0 ff 75 87 e8 31 d4 a1 ff <0f> 0b 58 e9 bd 2a
-> ff ff e8 20 62 f0 ff e9 29 ff ff ff 45 31 f6 e9
-> RSP: 0018:ffff8880659d7bf8 EFLAGS: 00010286
-> RAX: 0000000000000054 RBX: ffff8880934748a8 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff815ac976 RDI: ffffed100cb3af71
-> RBP: ffff8880659d7c28 R08: 0000000000000054 R09: ffffed1015d06011
-> R10: ffffed1015d06010 R11: ffff8880ae830087 R12: ffff88808fa10840
-> R13: 0000000000000002 R14: 0000000000015d04 R15: ffffffff88c21260
->  d_walk+0x194/0x950 fs/dcache.c:1264
->  do_one_tree+0x28/0x40 fs/dcache.c:1536
->  shrink_dcache_for_umount+0x72/0x170 fs/dcache.c:1552
->  generic_shutdown_super+0x6d/0x370 fs/super.c:443
->  kill_anon_super+0x3e/0x60 fs/super.c:1137
->  kill_litter_super+0x50/0x60 fs/super.c:1146
->  deactivate_locked_super+0x95/0x100 fs/super.c:331
->  deactivate_super fs/super.c:362 [inline]
->  deactivate_super+0x1b2/0x1d0 fs/super.c:358
->  cleanup_mnt+0xbf/0x160 fs/namespace.c:1120
->  __cleanup_mnt+0x16/0x20 fs/namespace.c:1127
->  task_work_run+0x145/0x1c0 kernel/task_work.c:113
->  tracehook_notify_resume include/linux/tracehook.h:185 [inline]
->  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:168
->  prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
->  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
->  do_syscall_64+0x58e/0x680 arch/x86/entry/common.c:304
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x412f61
-> Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48
-> 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89
-> c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-> RSP: 002b:00007fff7b2152c0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-> RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000412f61
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
-> RBP: 0000000000000001 R08: 00000000ea5b01f8 R09: ffffffffffffffff
-> R10: 00007fff7b2153a0 R11: 0000000000000293 R12: 0000000000760d58
-> R13: 0000000000077aaa R14: 0000000000077ad7 R15: 000000000075bf2c
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+greg k-h
