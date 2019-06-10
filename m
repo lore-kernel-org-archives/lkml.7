@@ -2,95 +2,136 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,UPPERCASE_50_75,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8401CC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FBCC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAA920862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5386E20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:37:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NUJmW7gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387710AbfFJSea (ORCPT
+        id S2388014AbfFJShO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:34:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46192 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfFJSea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:34:30 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 66615C18B2E5;
-        Mon, 10 Jun 2019 18:34:29 +0000 (UTC)
-Received: from treble (ovpn-121-189.rdu2.redhat.com [10.10.121.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67EC419C59;
-        Mon, 10 Jun 2019 18:34:07 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 13:33:57 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 13/15] x86/static_call: Add inline static call
- implementation for x86-64
-Message-ID: <20190610183357.zj6rwdpgw36anpfc@treble>
-References: <20190605130753.327195108@infradead.org>
- <20190605131945.313688119@infradead.org>
+        Mon, 10 Jun 2019 14:37:14 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46851 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbfFJShO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 14:37:14 -0400
+Received: by mail-oi1-f193.google.com with SMTP id 203so6974527oid.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7veQMV4vdO1C5dpO9ycXFC4aPPPHJeIK2IgV104ibaI=;
+        b=NUJmW7gmjIxIkooBQg4y/lDJ/e+wTIRZDTLBEabe4PL5dk2JUbI9pxJ77RNDt0oS4F
+         uVC2lHr2p9RTXSoqZsnSuSRpxVAw0KnpAp9tsFyspUdAEtHIrnFoSFJexy+M8HJI6Wgi
+         +vFO6t1EA+ecbIpBLBF3VKovIUoGihu5958X1xSd1p3knme9cuBehSzzDnWm74WoOTvy
+         XutgQjcK/+rs8gxpWgCy6Y7qLBzUniUfeUc5WIBUYRN+J2KkMxvI/kjIzqFFEAUA6yaM
+         nG4INVBwmEJ0Z6AY5sDJS8O3KCH371khF+2mi0v7ga3iOt32D/NujwxmoPqtnJGlaf8i
+         KGXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7veQMV4vdO1C5dpO9ycXFC4aPPPHJeIK2IgV104ibaI=;
+        b=mDo0ly7zqsT98ZlxxjDch+4NaljFM8fudr/YX+6bIU/4hqFnzUbApVe7i2vg4uL7H4
+         lp97pMgdhCuU/FYZy3fzfbt3hCD4KWKLuIxJUP0f7hUIXreJB1vFXMynrjzMtpfiXCsE
+         UTRXxzQoTGPrUeIPu8v2H3e+CmlRz2GACBk+wpcieds5bWeGOBjsd3oA70GbsJvhedtO
+         DWDeVeaflsFCA0zlQMB+qgG58KSYtmpY3/zt9J6aUTOn1exeJvSujnxekrvScmdjAm/G
+         mNuOhhxaHgAzhJLd49KHmkNzomKasnnniMET1XZUKDdaTAsm12F9QkkZgfHepnAPHH5E
+         3u8g==
+X-Gm-Message-State: APjAAAWz3S95n/OYLvrIhgohVd+4BhWTYBHZ24lxB3Noy/i5nangKQIg
+        fQjvpvwpTmsnb6992iW8pbs2L8C5772OyXhO5Ixwzg==
+X-Google-Smtp-Source: APXvYqxa6f9/poTt7ElU5olgALujPLljhaAX0gJHb0JyzDQ5wmo8KA4TkoN0Tjb35MWoMW/J8LDzVE5lm/qeP9F48Ag=
+X-Received: by 2002:aca:50d2:: with SMTP id e201mr13187675oib.83.1560191832970;
+ Mon, 10 Jun 2019 11:37:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190605131945.313688119@infradead.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 10 Jun 2019 18:34:29 +0000 (UTC)
+References: <20190609151613.195164-1-elver@google.com> <20190610180121.GA22428@agluck-desk2.amr.corp.intel.com>
+In-Reply-To: <20190610180121.GA22428@agluck-desk2.amr.corp.intel.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 10 Jun 2019 20:37:01 +0200
+Message-ID: <CANpmjNOVjcgprWviex0uPCCAC4+qW=sh6d+BdYtZATNd-w_hbA@mail.gmail.com>
+Subject: Re: [PATCH] EDAC, ie31200: Add Intel Coffee Lake CPU support
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     jbaron@akamai.com, LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 03:08:06PM +0200, Peter Zijlstra wrote:
-> --- a/arch/x86/include/asm/static_call.h
-> +++ b/arch/x86/include/asm/static_call.h
-> @@ -2,6 +2,20 @@
->  #ifndef _ASM_STATIC_CALL_H
->  #define _ASM_STATIC_CALL_H
->  
-> +#include <asm/asm-offsets.h>
-> +
-> +#ifdef CONFIG_HAVE_STATIC_CALL_INLINE
-> +
-> +/*
-> + * This trampoline is only used during boot / module init, so it's safe to use
-> + * the indirect branch without a retpoline.
-> + */
-> +#define __ARCH_STATIC_CALL_TRAMP_JMP(key, func)				\
-> +	ANNOTATE_RETPOLINE_SAFE						\
-> +	"jmpq *" __stringify(key) "+" __stringify(SC_KEY_func) "(%rip) \n"
-> +
-> +#else /* !CONFIG_HAVE_STATIC_CALL_INLINE */
+On Mon, 10 Jun 2019 at 20:01, Luck, Tony <tony.luck@intel.com> wrote:
+>
+> On Sun, Jun 09, 2019 at 05:16:13PM +0200, Marco Elver wrote:
+>
+> Marco,
+>
+> Thanks for the patch. One comment below.
+>
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_1), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_2), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_3), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_4), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_5), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_6), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_7), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_8), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > -     {
+> > -             PCI_VEND_DEV(INTEL, IE31200_HB_9), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > -             IE31200},
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_1), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_2), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_3), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_4), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_5), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_6), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_7), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_8), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+> > +     { PCI_VEND_DEV(INTEL, IE31200_HB_9), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+> > +       IE31200 },
+>
+> Are these lines just changing the formatting from three lines
+> per entry to two?
 
-I wonder if we can simplify this (and drop the indirect branch) by
-getting rid of the above cruft, and instead just use the out-of-line
-trampoline as the default for inline as well.
+Yes. Originally I had a version that added the new entries in the same
+style as before, but failed check_patch.pl due to exceeding 80 chars.
+I'll send v2 that reverts the formatting, but has to break line after
+the 2nd PCI_ANY_ID for the new entries. I'd prefer not to introduce
+another macro.
 
-Then the inline case could fall back to the out-of-line implementation
-(by patching the trampoline's jmp dest) before static_call_initialized
-is set.
-
--- 
-Josh
+Thanks,
+-- Marco
