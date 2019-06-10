@@ -2,198 +2,136 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113F1C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0641DC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22D82082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FDD2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:37:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="fXJ3tPQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389759AbfFJLg5 (ORCPT
+        id S2389772AbfFJLhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 07:36:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:41046 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389748AbfFJLg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 07:36:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 445AF337;
-        Mon, 10 Jun 2019 04:36:56 -0700 (PDT)
-Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DB543F557;
-        Mon, 10 Jun 2019 04:38:35 -0700 (PDT)
-Subject: Re: [PATCH v3 5/8] arm64: Fix incorrect irqflag restore for priority
- masking
-From:   Julien Thierry <julien.thierry@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        yuzenghui@huawei.com, wanghaibin.wang@huawei.com,
-        james.morse@arm.com, will.deacon@arm.com, catalin.marinas@arm.com,
-        mark.rutland@arm.com, liwei391@huawei.com,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>
-References: <1559813517-41540-1-git-send-email-julien.thierry@arm.com>
- <1559813517-41540-6-git-send-email-julien.thierry@arm.com>
- <68594d4e-ed5a-2e11-42c3-eafb4f6bbd05@arm.com>
- <cddd5774-cdf1-f14c-cf17-d160a7138a47@arm.com>
-Message-ID: <5a5bfa6a-30e6-a6dd-4482-29f27888d823@arm.com>
-Date:   Mon, 10 Jun 2019 12:36:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 10 Jun 2019 07:37:19 -0400
+Received: from mail.codeweavers.com ([50.203.203.244]:33844 "EHLO
+        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389346AbfFJLhR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 07:37:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codeweavers.com; s=6377696661; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/SHmrx2OGszMojwi0lkosVsMjx6Rojf4MNms94FoV6s=; b=fXJ3tPQbcxZUY4oPTr+zNREb2
+        +TZVfbKrwmmpFX0cNPelz/zBugEAZq3q+j53J1q82ddkA15wUt52LnzMYzBHR580J5t182ToSyJ3h
+        BOU7JidlIXFf0Nm8TND3eg0KC+FRUjmi23Cg8Bk7TbKCiBGyqEm706PZ+pFNELL2d0L4c=;
+Received: from merlot.physics.ox.ac.uk ([163.1.241.98] helo=merlot)
+        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <huw@codeweavers.com>)
+        id 1haIcW-0005Ee-5w; Mon, 10 Jun 2019 06:37:49 -0500
+Received: from daviesh by merlot with local (Exim 4.90_1)
+        (envelope-from <huw@codeweavers.com>)
+        id 1haIbs-0003Fy-Tx; Mon, 10 Jun 2019 12:37:09 +0100
+Date:   Mon, 10 Jun 2019 12:37:08 +0100
+From:   Huw Davies <huw@codeweavers.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v6 01/19] kernel: Standardize vdso_datapage
+Message-ID: <20190610113708.GE11076@merlot.physics.ox.ac.uk>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-2-vincenzo.frascino@arm.com>
+ <20190610092751.GA11076@merlot.physics.ox.ac.uk>
+ <58cedde2-0d54-7d2d-f519-77cb71f543fd@arm.com>
+ <20190610103151.GD11076@merlot.physics.ox.ac.uk>
+ <83ab2758-0e8c-35d5-906a-0338bcee3310@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <cddd5774-cdf1-f14c-cf17-d160a7138a47@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83ab2758-0e8c-35d5-906a-0338bcee3310@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/06/2019 08:49, Julien Thierry wrote:
+On Mon, Jun 10, 2019 at 12:07:45PM +0100, Vincenzo Frascino wrote:
+> On 10/06/2019 11:31, Huw Davies wrote:
+> > On Mon, Jun 10, 2019 at 11:17:48AM +0100, Vincenzo Frascino wrote:
+> >> On 10/06/2019 10:27, Huw Davies wrote:
+> >>> On Thu, May 30, 2019 at 03:15:13PM +0100, Vincenzo Frascino wrote:
+> >>>> --- /dev/null
+> >>>> +++ b/include/vdso/datapage.h
+> >>>> @@ -0,0 +1,91 @@
+> >>>> +/* SPDX-License-Identifier: GPL-2.0 */
+> >>>> +#ifndef __VDSO_DATAPAGE_H
+> >>>> +#define __VDSO_DATAPAGE_H
+> >>>> +
+> >>>> +#ifdef __KERNEL__
+> >>>> +
+> >>>> +#ifndef __ASSEMBLY__
+> >>>> +
+> >>>> +#include <linux/bits.h>
+> >>>> +#include <linux/time.h>
+> >>>> +#include <linux/types.h>
+> >>>> +
+> >>>> +#define VDSO_BASES	(CLOCK_TAI + 1)
+> >>>> +#define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
+> >>>> +			 BIT(CLOCK_MONOTONIC)		| \
+> >>>> +			 BIT(CLOCK_BOOTTIME)		| \
+> >>>> +			 BIT(CLOCK_TAI))
+> >>>> +#define VDSO_COARSE	(BIT(CLOCK_REALTIME_COARSE)	| \
+> >>>> +			 BIT(CLOCK_MONOTONIC_COARSE))
+> >>>> +#define VDSO_RAW	(BIT(CLOCK_MONOTONIC_RAW))
+> >>>> +
+> >>>> +#define CS_HRES_COARSE	0
+> >>>> +#define CS_RAW		1
+> >>>
+> >>> CS_HRES_COARSE seems like a confusing name choice to me.  What you
+> >>> really mean is not RAW.
+> >>>
+> >>> How about CS_ADJ to indicate that its updated by adjtime?
+> >>> CS_XTIME might be another option.
+> >>>
+> >>
+> >> I divided the timers in 3 sets (HRES, COARSE, RAW), CS_HRES_COARSE refers to the
+> >> first two and CS_RAW to the third. I will ad a comment to explain the logic in
+> >> the next iteration.
+> > 
+> > I'm thinking ahead about a possible CLOCK_MONOTONIC_RAW_COARSE (which
+> > would be useful at least for Wine).  In that case you'd have four clock
+> > types non-raw and raw, each with either hres or coarse.
+> > 
 > 
-> 
-> On 07/06/2019 17:29, Marc Zyngier wrote:
->> On 06/06/2019 10:31, Julien Thierry wrote:
->>> When using IRQ priority masking to disable interrupts, in order to deal
->>> with the PSR.I state, local_irq_save() would convert the I bit into a
->>> PMR value (GIC_PRIO_IRQOFF). This resulted in local_irq_restore()
->>> potentially modifying the value of PMR in undesired location due to the
->>> state of PSR.I upon flag saving [1].
->>>
->>> In an attempt to solve this issue in a less hackish manner, introduce
->>> a bit (GIC_PRIO_IGNORE_PMR) for the PMR values that can represent
->>> whether PSR.I is being used to disable interrupts, in which case it
->>> takes precedence of the status of interrupt masking via PMR.
->>>
->>> GIC_PRIO_IGNORE_PMR is chosen such that (<pmr_value> |
->>> GIC_PRIO_IGNORE_PMR) does not mask more interrupts than <pmr_value> as
->>> some sections (e.g. arch_cpu_idle(), interrupt acknowledge path)
->>> requires PMR not to mask interrupts that could be signaled to the
->>> CPU when using only PSR.I.
->>>
->>
->> s/GIC_PRIO_IGNORE_PMR/GIC_PRIO_PSR_I_SET/
->>
->>> [1] https://www.spinics.net/lists/arm-kernel/msg716956.html
->>>
->>> Fixes: commit 4a503217ce37 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
->>> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
->>> Reported-by: Zenghui Yu <yuzenghui@huawei.com>
->>> Cc: Steven Rostedt <rostedt@goodmis.org>
->>> Cc: Wei Li <liwei391@huawei.com>
->>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>> Cc: Will Deacon <will.deacon@arm.com>
->>> Cc: Christoffer Dall <christoffer.dall@arm.com>
->>> Cc: Marc Zyngier <marc.zyngier@arm.com>
->>> Cc: James Morse <james.morse@arm.com>
->>> Cc: Suzuki K Pouloze <suzuki.poulose@arm.com>
->>> Cc: Oleg Nesterov <oleg@redhat.com>
->>> ---
->>>  arch/arm64/include/asm/arch_gicv3.h |  4 ++-
->>>  arch/arm64/include/asm/daifflags.h  | 68 ++++++++++++++++++++++---------------
->>>  arch/arm64/include/asm/irqflags.h   | 67 +++++++++++++++---------------------
->>>  arch/arm64/include/asm/kvm_host.h   |  7 ++--
->>>  arch/arm64/include/asm/ptrace.h     | 10 ++++--
->>>  arch/arm64/kernel/entry.S           | 38 ++++++++++++++++++---
->>>  arch/arm64/kernel/process.c         |  2 +-
->>>  arch/arm64/kernel/smp.c             |  8 +++--
->>>  arch/arm64/kvm/hyp/switch.c         |  2 +-
->>>  9 files changed, 123 insertions(+), 83 deletions(-)
->>>
+> Thanks for this, I was not aware of CLOCK_MONOTONIC_RAW_COARSE.
+> I tried to find, though, some details, but I could not find any. Could you
+> please provide some reference?
 
-[...]
+It doesn't exist yet ;-)  However it doesn't seem crazy that such a
+clock should exist.  I was really using it to illustrate that
+raw / non-raw is orthogonal to hres / coarse.
 
->>> diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
->>> index fbe1aba..b6f757f 100644
->>> --- a/arch/arm64/include/asm/irqflags.h
->>> +++ b/arch/arm64/include/asm/irqflags.h
->>> @@ -67,43 +67,46 @@ static inline void arch_local_irq_disable(void)
->>>   */
->>>  static inline unsigned long arch_local_save_flags(void)
->>>  {
->>> -	unsigned long daif_bits;
->>>  	unsigned long flags;
->>>
->>> -	daif_bits = read_sysreg(daif);
->>> -
->>> -	/*
->>> -	 * The asm is logically equivalent to:
->>> -	 *
->>> -	 * if (system_uses_irq_prio_masking())
->>> -	 *	flags = (daif_bits & PSR_I_BIT) ?
->>> -	 *			GIC_PRIO_IRQOFF :
->>> -	 *			read_sysreg_s(SYS_ICC_PMR_EL1);
->>> -	 * else
->>> -	 *	flags = daif_bits;
->>> -	 */
->>>  	asm volatile(ALTERNATIVE(
->>> -			"mov	%0, %1\n"
->>> -			"nop\n"
->>> -			"nop",
->>> -			__mrs_s("%0", SYS_ICC_PMR_EL1)
->>> -			"ands	%1, %1, " __stringify(PSR_I_BIT) "\n"
->>> -			"csel	%0, %0, %2, eq",
->>> -			ARM64_HAS_IRQ_PRIO_MASKING)
->>> -		: "=&r" (flags), "+r" (daif_bits)
->>> -		: "r" ((unsigned long) GIC_PRIO_IRQOFF)
->>> -		: "cc", "memory");
->>> +		"mrs	%0, daif",
->>> +		__mrs_s("%0", SYS_ICC_PMR_EL1),
->>> +		ARM64_HAS_IRQ_PRIO_MASKING)
->>> +		: "=&r" (flags)
->>> +		:
->>> +		: "memory");
->>
->> I think this is worth a comment here, as you're changing the semantics
->> of arch_local_save_flags(). Maybe just indicating that the only thing
->> this should be used for is to carry the interrupt state, and nothing else.
->>
-> 
-> Arguably, this is what gets called by local_save_flags() which is arch
-> independent and, as far as I understand, is only aware of the interrupt
-> state being contained in the flags (arch might wish to store more stuff
-> in it, but overall, generic code cannot rely on it).
-> 
-> I'll still add a comment so that code directly calling arch_save_flags()
-> doesn't try to play with PSR.DA_F. (In such a cases it would be probably
-> clearer for them to do direct DAIF reads/writes IMO).
-> 
+That being said, this really doesn't matter that much.
 
-After checking, arch_local_save_flags() already has the following
-comment above it:
-
-/*
-
-
-
- * Save the current interrupt enable state.
-
-
-
- */
-
-
-Which suggests you shouldn't rely on having the value of debug state and
-other (it just happens to be there, maybe wrongfully...).
-
-And user checking the flags should use arch_irqs_disabled_flags() rather
-than "flags & PSR_I_BIT != 0".
-
-Also, those semantics where already changed when we introduced priority
-masking and included the PMR value in the irqflags.
-
-I'm not sure there is a lot more explanation to do in this patch in
-particular.
-
-Thanks,
-
--- 
-Julien Thierry
+Huw.
