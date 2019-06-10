@@ -2,105 +2,77 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FFCC468D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11036C31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD642086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0AA020820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560185286;
-	bh=oFtb1o3AXLUr4k9TH9OD5ZZ8qF8S9a/ouxAXF91MYh0=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=lx4PBe0SjUrZ1sUu43v3qsEYQSw27Llxi2eg5dLFimnZ6mRtsyRqmiQ0dlPTyc/4E
-	 uLYQ+OXhxndfCRt6CF78n8UdmJedVmkowmZI03lhr7GHEK7PpevKI/YNj2qVaEbwbL
-	 PcOF5o4DsX1ngMQjtvOzLbzwYNhQOBMIYUY9svMQ=
+	s=default; t=1560185290;
+	bh=3q0wdBIBloAaKbF30NNBcupNXjug5nIS2FnWZbNAe2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=plCbuXmKK72ZyK+kQSUlpaC2eBKt8n7cfPdfPUnvCeRYDwa/9no2iHL2wq7uXlmHe
+	 6vQtjfxWhWh/7TXhEmnYGsXDnoiDqPiDR9Rx/AKLCYIqKfCcyb49DGE2L5Z4CoJT5e
+	 7HhlDMiqwhGZ/5DO1dhjiXhLEFQZu/tmlpelAst0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbfFJQsG (ORCPT
+        id S2387523AbfFJQsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:48:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53110 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 12:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfFJQsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:48:05 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1726217AbfFJQsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:48:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18D15206C3;
-        Mon, 10 Jun 2019 16:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B062F21721;
+        Mon, 10 Jun 2019 16:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560185285;
-        bh=oFtb1o3AXLUr4k9TH9OD5ZZ8qF8S9a/ouxAXF91MYh0=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=tBcMESXBdsEGjobi+BHjlGd2RIqXKwu6aeRyd10RYmRrXjQpm69IIqrxRkhXkEUGP
-         AQyCw2PvGkD4ULELPPRFasXJIN7qpaewJiXRuwPJDsMS6aGgFogx+c/GJwb3W3C3dm
-         dVV/fDf3akooB5cM5Lom0XOdDCSitrtzKqlGPfuY=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1560185289;
+        bh=3q0wdBIBloAaKbF30NNBcupNXjug5nIS2FnWZbNAe2g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xewsbSbPxHoWDdWHAHP9sZybWLjLS7IliCL/Tc6Tya2fNau5BlSCNVvB6IKoCpTq3
+         nE3MNfKlGZxuUduGprJf6rfo062bFn4e5pHJjgqdOPwN4qbdnRNCn0qsBcnFphAAka
+         Jj1oP+oNoGSk4SxkQw6qOq0HqoIckotX3VhDXWvc=
+Date:   Mon, 10 Jun 2019 18:48:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Erwan Le Ray <erwan.leray@st.com>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-serial@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Bich Hemon <bich.hemon@st.com>
+Subject: Re: [PATCH 04/10] serial: stm32: add pm_runtime support
+Message-ID: <20190610164807.GA25660@kroah.com>
+References: <1559638519-6128-1-git-send-email-erwan.leray@st.com>
+ <1559638519-6128-5-git-send-email-erwan.leray@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <048a25c0-3a2c-3906-84d4-5eb67f3ce2ef@codeaurora.org>
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org> <1559754961-26783-6-git-send-email-sricharan@codeaurora.org> <20190608034835.GH24059@builder> <048a25c0-3a2c-3906-84d4-5eb67f3ce2ef@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sricharan R <sricharan@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org,
-        agross@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
-User-Agent: alot/0.8.1
-Date:   Mon, 10 Jun 2019 09:48:04 -0700
-Message-Id: <20190610164805.18D15206C3@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559638519-6128-5-git-send-email-erwan.leray@st.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sricharan R (2019-06-10 08:45:22)
-> On 6/8/2019 9:18 AM, Bjorn Andersson wrote:
-> > On Wed 05 Jun 10:16 PDT 2019, Sricharan R wrote:
-> >> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/d=
-ts/qcom/ipq6018.dtsi
-> >> new file mode 100644
-> >> index 0000000..79cccdd
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-> >> +                    compatible =3D "fixed-clock";
-> >> +                    clock-frequency =3D <32000>;
-> >> +                    #clock-cells =3D <0>;
-> >> +            };
-> >> +
-> >> +            xo: xo {
-> >> +                    compatible =3D "fixed-clock";
-> >> +                    clock-frequency =3D <24000000>;
-> >> +                    #clock-cells =3D <0>;
-> >> +            };
-> >> +
-> >> +            bias_pll_cc_clk {
-> >=20
-> > Please give this a label and reference it from the node that uses it
-> > (regardless of the implementation matching by clock name).
-> >=20
->  ok, in that case, so might have to remove these for now, till we add
->  the corresponding users.
+On Tue, Jun 04, 2019 at 10:55:13AM +0200, Erwan Le Ray wrote:
+> Use pm_runtime for clock management.
+> 
+> Signed-off-by: Bich Hemon <bich.hemon@st.com>
+> Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-Yes, please remove them. They don't look like board clks, instead
-they're SoC level details that need to be created by some clk driver
-like GCC.
+Does not apply to my tree :(
 
->=20
-> >> +                    compatible =3D "fixed-clock";
-> >> +                    clock-frequency =3D <300000000>;
-> >> +                    #clock-cells =3D <0>;
-> >> +            };
-> >> +
-> >> +            bias_pll_nss_noc_clk {
-> >> +                    compatible =3D "fixed-clock";
-> >> +                    clock-frequency =3D <416500000>;
-> >> +                    #clock-cells =3D <0>;
-> >> +            };
-> >> +
+
