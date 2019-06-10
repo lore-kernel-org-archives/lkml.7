@@ -1,330 +1,169 @@
 Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBCFC4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87031C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D81020859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ueNjZjx0"
+	by mail.kernel.org (Postfix) with ESMTP id 57ABB20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560192539;
+	bh=XZ86jjwF1oGd+f9Yai/J2YS8bqa+X4CsP9P3m5jkPgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kokZTvrmUo2tKrX5VkaTNlzoS1P+DrMXPidYwWT637Dcs2rhxc9hSOBmeC77VFSWn
+	 aJZtA0XE+vu5dgjRN8xN3FIHBCZh7oNEy4bcjNeMT39AMnNHAURXPOxpr1NQ6E1u49
+	 zlOAxhe7wp+fk3a++/5N8ACBS/9ajYS+BoD+Iolk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388717AbfFJSsC (ORCPT
+        id S2388740AbfFJSs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:48:02 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39939 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387643AbfFJSsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:48:01 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c70so6092563qkg.7;
-        Mon, 10 Jun 2019 11:48:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FEliiaLTKP8myXUgDNGHzRUM+K36+7Eaw0xHvfUmPyQ=;
-        b=ueNjZjx0sJz73Xq9zKh6hoCNxjWxZWeKfeh4anO0WLYmpyzXckJMB0rpgqvQXi7u4D
-         5m3c3ggZTEUHS5yO0UJFm6Nl2SPFLdUutirGL1D1HR/wqk31hljDt/UvwL2/AzlGg2T6
-         UmChhzsrMhxMbKXpV1pbuIB6WySkrtaxevLDBaor4spYOZzR4h7JA/zfVSCCMk3vuQGv
-         3uXGZwUBs6svKSd8fjXe6JZReIkKGs6/wEddy9Pr9fCfrrJ2k34Xbrcmj1qaLrSzI967
-         quv4eE304lgLa1rp0JgYQ0ZotmQEiWHdaFcG6am0vvVebgSdlzO/Kzd/r5cghNcMmS+d
-         lTAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FEliiaLTKP8myXUgDNGHzRUM+K36+7Eaw0xHvfUmPyQ=;
-        b=Vp39OKBWsFfkMhiRE1l+hoE6jJYpsYKQHfbznPDiUrB17zYbIIR/pqZSCPRAYzQDaq
-         SxZMu2ztaNoTEBbexgsuutT4hJgqz8iTZOvSUszxlkTLt2Dp0R7N2o0nCD9Ik6LFEPD4
-         MwiLw8nLvFPY1wDhOnAZjL9vbbr6JrNwYKGjifh/ICNOUHq5cecfwR/gEoMdwWr65Aj6
-         DulwgklhWX8k2mfy9dbLZ60Inf41YZbPsNf+avgiM26+vsMCmjxxxbz1GHakzG7boM0e
-         WQPmt4RHfMQg35J2w2H/W4O7IJu8qUNmCJE7bVkPKbDDvUabTTysdwS1YoRMDCNmv31R
-         ZOpw==
-X-Gm-Message-State: APjAAAU86/Y5VTGi0oFFfISjRmVqS5nSflUix96lC3mpMCr4t+D0g5fx
-        BP6E0/dUMypDoHA5A4pYJmqU+XwX7lU=
-X-Google-Smtp-Source: APXvYqyIBZYI3GNEPpmwbLLr1TC49VIEUxDnZKsex8CV2BNabGKfgk26QtARRAvN/VazLEtgeM+WYA==
-X-Received: by 2002:ae9:f801:: with SMTP id x1mr14361175qkh.151.1560192480005;
-        Mon, 10 Jun 2019 11:48:00 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id n19sm4812199qkg.58.2019.06.10.11.47.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 11:47:58 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5428041149; Mon, 10 Jun 2019 15:47:54 -0300 (-03)
-Date:   Mon, 10 Jun 2019 15:47:54 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] perf augmented_raw_syscalls: Support arm64 raw
- syscalls
-Message-ID: <20190610184754.GU21245@kernel.org>
-References: <20190606094845.4800-1-leo.yan@linaro.org>
- <20190606094845.4800-4-leo.yan@linaro.org>
- <20190606133838.GC30166@kernel.org>
- <20190606141231.GC5970@leoy-ThinkPad-X240s>
- <20190606144412.GC21245@kernel.org>
- <20190607095831.GG5970@leoy-ThinkPad-X240s>
- <20190609131849.GB6357@leoy-ThinkPad-X240s>
+        Mon, 10 Jun 2019 14:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387643AbfFJSs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 14:48:57 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A92B920820;
+        Mon, 10 Jun 2019 18:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560192536;
+        bh=XZ86jjwF1oGd+f9Yai/J2YS8bqa+X4CsP9P3m5jkPgs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vxSI1n8hE3eHo/16Zg9bxLvcSmbXCMzoUQftAKSOey74cbJ0zFxqpltBc9zdQKEVy
+         hDIKg4YD2+TT+LptXX/spm2ZXE4xJSdVGYsM8cGvhTC8UT2GacA2Gop52+Ux1XEtJP
+         ICgSsbL7k6a5Slvj9AV11Iqv/enrD28Qv+oNr+4Y=
+Date:   Mon, 10 Jun 2019 11:48:54 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     syzbot <syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com>,
+        dasaratharaman.chandramouli@intel.com, dledford@redhat.com,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, parav@mellanox.com,
+        roland@purestorage.com, sean.hefty@intel.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING: bad unlock balance in ucma_event_handler
+Message-ID: <20190610184853.GG63833@gmail.com>
+References: <000000000000af6530056e863794@google.com>
+ <20180613170543.GB30019@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190609131849.GB6357@leoy-ThinkPad-X240s>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20180613170543.GB30019@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, Jun 09, 2019 at 09:18:49PM +0800, Leo Yan escreveu:
-> On Fri, Jun 07, 2019 at 05:58:31PM +0800, Leo Yan wrote:
-> > Hi Arnaldo,
+On Wed, Jun 13, 2018 at 11:05:43AM -0600, Jason Gunthorpe wrote:
+> On Wed, Jun 13, 2018 at 06:47:02AM -0700, syzbot wrote:
+> > Hello,
 > > 
-> > On Thu, Jun 06, 2019 at 11:44:12AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Thu, Jun 06, 2019 at 10:12:31PM +0800, Leo Yan escreveu:
-> > > > Hi Arnaldo,
-> > > > 
-> > > > On Thu, Jun 06, 2019 at 10:38:38AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > Em Thu, Jun 06, 2019 at 05:48:44PM +0800, Leo Yan escreveu:
-> > > > > > This patch adds support for arm64 raw syscall numbers so that we can use
-> > > > > > it on arm64 platform.
-> > > > > > 
-> > > > > > After applied this patch, we need to specify macro -D__aarch64__ or
-> > > > > > -D__x86_64__ in compilation option so Clang can use the corresponding
-> > > > > > syscall numbers for arm64 or x86_64 respectively, other architectures
-> > > > > > will report failure when compilation.
-> > > > > 
-> > > > > So, please check what I have in my perf/core branch, I've completely
-> > > > > removed arch specific stuff from augmented_raw_syscalls.c.
-> > > > > 
-> > > > > What is done now is use a map to specify what to copy, that same map
-> > > > > that is used to state which syscalls should be traced.
-> > > > > 
-> > > > > It uses that tools/perf/arch/arm64/entry/syscalls/mksyscalltbl to figure
-> > > > > out the mapping of syscall names to ids, just like is done for x86_64
-> > > > > and other arches, falling back to audit-libs when that syscalltbl thing
-> > > > > is not present.
-> > > > 
-> > > > Actually I have noticed mksyscalltbl has been enabled for arm64, and
-> > > > had to say your approach is much better :)
-> > > > 
-> > > > Thanks for the info and I will try your patch at my side.
-> > > 
-> > > That is excellent news! I'm eager to hear from you if this perf+BPF
-> > > integration experiment works for arm64.
+> > syzbot found the following crash on:
 > > 
-> > I tested with the lastest perf/core branch which contains the patch:
-> > 'perf augmented_raw_syscalls: Tell which args are filenames and how
-> > many bytes to copy' and got the error as below:
+> > HEAD commit:    73fcb1a370c7 Merge branch 'akpm' (patches from Andrew)
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=16d70827800000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=f3b4e30da84ec1ed
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=e5579222b6a3edd96522
+> > compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
+> > syzkaller repro:https://syzkaller.appspot.com/x/repro.syz?x=176daf97800000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e7bd57800000
 > > 
-> > # perf trace -e string -e /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c
-> > Error:  Invalid syscall access, chmod, chown, creat, futimesat, lchown, link, lstat, mkdir, mknod, newfstatat, open, readlink, rename,
-> > rmdir, stat, statfs, symlink, truncate, unlink
-
-Humm, I think that we can just make the code that parses the
-tools/perf/trace/strace/groups/string file to ignore syscalls it can't
-find in the syscall_tbl, i.e. trace those if they exist in the arch.
-
-> > Hint:   try 'perf list syscalls:sys_enter_*'
-> > Hint:   and: 'man syscalls'
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+e5579222b6a3edd96522@syzkaller.appspotmail.com
 > > 
-> > So seems mksyscalltbl has not included completely for syscalls, I
-> > use below command to generate syscalltbl_arm64[] array and it don't
-> > include related entries for access, chmod, chown, etc ...
-
-So, we need to investigate why is that these are missing, good thing we
-have this 'strings' group :-)
-
-> > You could refer the generated syscalltbl_arm64 in:
-> > http://paste.ubuntu.com/p/8Bj7Jkm2mP/
+> > 
+> > =====================================
+> > WARNING: bad unlock balance detected!
+> > 4.17.0-rc5+ #58 Not tainted
+> > kworker/u4:0/6 is trying to release lock (&file->mut) at:
+> > [<ffffffff8593ecc0>] ucma_event_handler+0x780/0xff0
+> > drivers/infiniband/core/ucma.c:390
+> > but there are no more locks to release!
+> > 
+> > other info that might help us debug this:
+> > 4 locks held by kworker/u4:0/6:
+> >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at:
+> > __write_once_size include/linux/compiler.h:215 [inline]
+> >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at:
+> > arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+> >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at: atomic64_set
+> > include/asm-generic/atomic-instrumented.h:40 [inline]
+> >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at: atomic_long_set
+> > include/asm-generic/atomic-long.h:57 [inline]
+> >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at: set_work_data
+> > kernel/workqueue.c:617 [inline]
+> >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at:
+> > set_work_pool_and_clear_pending kernel/workqueue.c:644 [inline]
+> >  #0:         (ptrval) ((wq_completion)"ib_addr"){+.+.}, at:
+> > process_one_work+0xaef/0x1b50 kernel/workqueue.c:2116
+> >  #1:         (ptrval) ((work_completion)(&(&req->work)->work)){+.+.}, at:
+> > process_one_work+0xb46/0x1b50 kernel/workqueue.c:2120
+> >  #2:         (ptrval) (&id_priv->handler_mutex){+.+.}, at:
+> > addr_handler+0xa6/0x3d0 drivers/infiniband/core/cma.c:2796
+> >  #3:         (ptrval) (&file->mut){+.+.}, at: ucma_event_handler+0x10e/0xff0
+> > drivers/infiniband/core/ucma.c:350
 > 
-> After digging into this issue on Arm64, below is summary info:
+> I think this is probably a use-after-free race, eg when we do
+> ctx->file->mut we have raced with ucma_free_ctx() ..
 > 
-> - arm64 uses the header include/uapi/linux/unistd.h to define system
->   call numbers, in this header some system calls are not defined (I
->   think the reason is these system calls are obsolete at the end) so the
->   corresponding strings are missed in the array syscalltbl_native,
->   for arm64 the array is defined in the file:
->   tools/perf/arch/arm64/include/generated/asm/syscalls.c.
-
-Yeah, I looked at the 'access' case and indeed it is not present in
-include/uapi/asm-generic/unistd.h, which is the place
-include/uapi/linux/unistd.h ends up.
-
-Ok please take a look at the patch at the end of this message, should be ok?
-
-I tested it by changing the strace/gorups/string file to have a few
-unknown syscalls, running it with -v we see:
-
-[root@quaco perf]# perf trace -v -e string ls
-Skipping unknown syscalls: access99, acct99, add_key99
-<SNIP other verbose messages>
-normal operation not considering those unknown syscalls.
-
->   On the other hand, the file tools/perf/trace/strace/groups/string
->   stores the required system call strings, these system call strings
->   are based on x86_64 platform but not for arm64, the strings mismatch
->   with the system call defined in the array syscalltbl_native.  This
->   is the reason why reports the fail: "Error:  Invalid syscall access,
->   chmod, chown, creat, futimesat, lchown, link, lstat, mkdir, mknod,
->   newfstatat, open, readlink, rename, rmdir, stat, statfs, symlink,
->   truncate, unlink".
+> Which probably means something along the way to free_ctx() did not
+> call rdma_addr_cancel?
 > 
->   I tried to manually remove these reported strings from
->   tools/perf/trace/strace/groups/string, then 'perf trace' can work
->   well.
-> 
->   But I don't know what's a good way to proceed.  Seems to me, we can
->   create a dedicated string file
->   tools/perf/trace/strace/groups/uapi_string which can be used to
->   match with system calls definitions in include/uapi/linux/unistd.h.
->   If there have other more general methods, will be great.
- 
-> - As a side topic, arm64 also supports aarch32 compat system call
->   which are defined in header arch/arm64/include/asm/unistd32.h.
-> 
->   For either aarch64 or aarch32 system call, both of them finally will
->   invoke function el0_svc_common() to handle system call [1].  But so
->   far we don't distinguish the system call numbers is for aarch64 or
->   aarch32 and always consider it's aarch64 system call.
-> 
->   I think we can set an extra bit (e.g. use the 16th bit in 32 bits
->   signed int) to indicate it's a aarch32 compat system call, but not
->   sure if this is general method or not.
+> Jason
 
-compat syscalls were not supported because of limitations in the
-raw_syscalls:sys_{enter,exit} tracepoints I can't recall from the top of
-my head right now, I think that looking at that code
-(raw_syscalls:sys_{enter,exit}) git log history may provide the
-explanation.
- 
->   Maybe there have existed solution in other architectures for this,
->   especially other platforms also should support 32 bits and 64 bits
->   system calls along with the architecture evoluation, so want to
->   inquiry firstly to avoid duplicate works.
-> 
-> Thanks a lot for suggestions!
-> Leo.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/kernel/syscall.c#n93
+This is still happening.  Just FYI, ignoring these reports doesn't make the bugs
+go away.  Here's a crash report from v5.2.0-rc4:
 
-- Arnaldo
+https://syzkaller.appspot.com/text?tag=CrashReport&x=102aa7c1a00000
 
+=====================================
+WARNING: bad unlock balance detected!
+5.2.0-rc4 #44 Not tainted
+-------------------------------------
+kworker/u4:2/61 is trying to release lock (&file->mut) at:
+[<ffffffff851a3f81>] ucma_event_handler+0x711/0xef0 drivers/infiniband/core/ucma.c:394
+but there are no more locks to release!
 
-commit e0b34a78c4ed0a6422f5b2dafa0c8936e537ee41
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Mon Jun 10 15:37:45 2019 -0300
+other info that might help us debug this:
+4 locks held by kworker/u4:2/61:
+ #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: __write_once_size include/linux/compiler.h:221 [inline]
+ #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
+ #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+ #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: set_work_data kernel/workqueue.c:620 [inline]
+ #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
+ #0: 000000005ff5546b ((wq_completion)ib_addr){+.+.}, at: process_one_work+0x87e/0x1790 kernel/workqueue.c:2240
+ #1: 00000000d75dabcd ((work_completion)(&(&req->work)->work)){+.+.}, at: process_one_work+0x8b4/0x1790 kernel/workqueue.c:2244
+ #2: 0000000058b7aa49 (&id_priv->handler_mutex){+.+.}, at: addr_handler+0xaf/0x3d0 drivers/infiniband/core/cma.c:3031
+ #3: 00000000e5042b0a (&file->mut){+.+.}, at: ucma_event_handler+0xb3/0xef0 drivers/infiniband/core/ucma.c:354
 
-    perf trace: Skip unknown syscalls when expanding strace like syscall groups
-    
-    We have $INSTALL_DIR/share/perf-core/strace/groups/string files with
-    syscalls that should be selected when 'string' is used, meaning, in this
-    case, syscalls that receive as one of its arguments a string, like a
-    pathname.
-    
-    But those were first selected and tested on x86_64, and end up failing
-    in architectures where some of those syscalls are not available, like
-    the 'access' syscall on arm64, which makes using 'perf trace -e string'
-    in such archs to fail.
-    
-    Since this the routine doing the validation is used only when reading
-    such files, do not fail when some syscall is not found in the
-    syscalltbl, instead just use pr_debug() to register that in case people
-    are suspicious of problems.
-    
-    Now using 'perf trace -e string' should work on arm64, selecting only
-    the syscalls that have a string and are available on that architecture.
-    
-    Reported-by: Leo Yan <leo.yan@linaro.org>
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Alexei Starovoitov <ast@kernel.org>
-    Cc: Daniel Borkmann <daniel@iogearbox.net>
-    Cc: Jiri Olsa <jolsa@redhat.com>
-    Cc: Martin KaFai Lau <kafai@fb.com>
-    Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-    Cc: Mike Leach <mike.leach@linaro.org>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Song Liu <songliubraving@fb.com>
-    Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-    Cc: Yonghong Song <yhs@fb.com>
-    Link: https://lkml.kernel.org/n/tip-oa4c2x8p3587jme0g89fyg18@git.kernel.org
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+stack backtrace:
+CPU: 1 PID: 61 Comm: kworker/u4:2 Not tainted 5.2.0-rc4 #44
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: ib_addr process_one_req
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_unlock_imbalance_bug kernel/locking/lockdep.c:3846 [inline]
+ print_unlock_imbalance_bug.cold+0x114/0x123 kernel/locking/lockdep.c:3823
+ __lock_release kernel/locking/lockdep.c:4062 [inline]
+ lock_release+0x67b/0xa00 kernel/locking/lockdep.c:4322
+ __mutex_unlock_slowpath+0x8e/0x6b0 kernel/locking/mutex.c:1198
+ mutex_unlock+0xd/0x10 kernel/locking/mutex.c:714
+ ucma_event_handler+0x711/0xef0 drivers/infiniband/core/ucma.c:394
+ addr_handler+0x2e9/0x3d0 drivers/infiniband/core/cma.c:3064
+ process_one_req+0x106/0x680 drivers/infiniband/core/addr.c:644
+ process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+ kthread+0x354/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 1a2a605cf068..eb70a4b71755 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1529,6 +1529,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- static int trace__validate_ev_qualifier(struct trace *trace)
- {
- 	int err = 0, i;
-+	bool printed_invalid_prefix = false;
- 	size_t nr_allocated;
- 	struct str_node *pos;
- 
-@@ -1555,14 +1556,15 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 			if (id >= 0)
- 				goto matches;
- 
--			if (err == 0) {
--				fputs("Error:\tInvalid syscall ", trace->output);
--				err = -EINVAL;
-+			if (!printed_invalid_prefix) {
-+				pr_debug("Skipping unknown syscalls: ");
-+				printed_invalid_prefix = true;
- 			} else {
--				fputs(", ", trace->output);
-+				pr_debug(", ");
- 			}
- 
--			fputs(sc, trace->output);
-+			pr_debug("%s", sc);
-+			continue;
- 		}
- matches:
- 		trace->ev_qualifier_ids.entries[i++] = id;
-@@ -1591,15 +1593,14 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 		}
- 	}
- 
--	if (err < 0) {
--		fputs("\nHint:\ttry 'perf list syscalls:sys_enter_*'"
--		      "\nHint:\tand: 'man syscalls'\n", trace->output);
--out_free:
--		zfree(&trace->ev_qualifier_ids.entries);
--		trace->ev_qualifier_ids.nr = 0;
--	}
- out:
-+	if (printed_invalid_prefix)
-+		pr_debug("\n");
- 	return err;
-+out_free:
-+	zfree(&trace->ev_qualifier_ids.entries);
-+	trace->ev_qualifier_ids.nr = 0;
-+	goto out;
- }
- 
- /*
+- Eric
