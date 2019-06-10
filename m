@@ -2,161 +2,190 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892C1C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83137C468C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A0C207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFBB207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jaa9EAs0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JUO0jDnb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387828AbfFJGoH (ORCPT
+        id S2387846AbfFJGoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 02:44:07 -0400
-Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:27780
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387655AbfFJGoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 02:44:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QOw+8RG6TiPIg1IJb6MH9vPRw0/JTcOKgymZbG+4g+w=;
- b=Jaa9EAs0Gd9eTWUzWj5r2qfncsCKu5wscb3afSodq4qxW8dX5KmgUATyiXD+WGKXj4T0m1e+tcVeq0/sIKvugF7o3eFKjuI/JwAMtaeV+/ao4AZZjSA1FgLETIOW02Zo3dRvCcfz4WO8Tpo+8ympuI5aMfuL6BcznvsQv/YrmEA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Mon, 10 Jun 2019 06:44:00 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
- 06:44:00 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [RESEND] input: keyboard: imx: make sure keyboard can always wake
- up system
-Thread-Topic: [RESEND] input: keyboard: imx: make sure keyboard can always
- wake up system
-Thread-Index: AQHU6odaZd/8EWsin0yXXO1zjKS4q6Z1V6CAgAALV+CAH3eEoA==
-Date:   Mon, 10 Jun 2019 06:44:00 +0000
-Message-ID: <DB3PR0402MB39169646E73C1A78958EA325F5130@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1554341727-16084-1-git-send-email-Anson.Huang@nxp.com>
- <20190521053047.GG183429@dtor-ws>
- <DB3PR0402MB3916ED371BF79D823FBC5171F5070@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916ED371BF79D823FBC5171F5070@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a9a2fc0e-032f-49b7-14c6-08d6ed6f0555
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3916;
-x-ms-traffictypediagnostic: DB3PR0402MB3916:
-x-microsoft-antispam-prvs: <DB3PR0402MB39160C61CA48C14F718487D9F5130@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(136003)(396003)(39860400002)(13464003)(199004)(189003)(6246003)(54906003)(2906002)(446003)(53936002)(11346002)(25786009)(4326008)(476003)(7736002)(81166006)(68736007)(8676002)(486006)(5660300002)(8936002)(305945005)(1361003)(81156014)(316002)(52536014)(186003)(2501003)(44832011)(86362001)(26005)(229853002)(14444005)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(9686003)(71200400001)(33656002)(76116006)(74316002)(256004)(3846002)(66066001)(55016002)(6436002)(6116002)(5640700003)(14454004)(2351001)(102836004)(99286004)(6916009)(478600001)(76176011)(6506007)(53546011)(71190400001)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3916;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GDMYDNc4fAq9cl8nkO60D/tDt9ffV3JXVz0MuYtiGMR4VLQUPdus2f9dg6tIwa/G29tgq6coaBBek7dqkFk9fFnNm93LShCfnDmzeQfo4dYcGneXXfiuD20+s6gDemP7gWHx6z9UmVHwpBoB65j6yYTsnecxXtHQgfywFyYu/O/4hX2zrGaIlEnWZP+CiqWtS3IeX/+K4BEzVW8ey6aN19XcrT4ykcLeqv+5TumUIc7274mQBBNcMLpnmhQQLV6vHXrE15kMabd7e4gtEKuQ62etjl4lMlTMGqRXTRFCyfrA3TK9ycbht926R1VNKI6/pxyx4IfVR3wZ4jBC2hy2cVVLOgFQP68tizXJ5GiA8mlVtvxF8DVGHPOHTyHRweGpgB89QP/X5M0BsGdzVIgN5S2EdV2HOoF6d6ukeXWy804=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 10 Jun 2019 02:44:34 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45449 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387829AbfFJGoe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 02:44:34 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so7887501wre.12
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 23:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6v285XyrONVGX85JZPN2vEBoOamuC/TCwUgIuT1MYVI=;
+        b=JUO0jDnbhpEfAJfOIn/mmbA+BYvZwYR3dpEtmWpv9PZIPu+703QoKa9lYvNN7XE01N
+         AVuskQ8lgqYi+ReRHmxOrXd+3ZIitSv/af+yb//VqjPkALpRfqUZdL/uGfKplsJoFcGw
+         dz7tWj7T0RpYSYQNTTZ1dnCBTeRYE4/Ss6EQ2RS+ITbVhrViYs2H0KPJims9t1QepBn6
+         fae6961ZZ0d1mcM/cSiHvZVl4tLZgujzYzWG9ouCPAuwDM1CzhtchbqGQkSuZ7/q8F20
+         tbp9aLC0U4YJItjQdYRh9Y8lOaSRcOuO4hKmsKR1J6jdVcvCG0XFPTTX4C383DwnePsf
+         sP/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6v285XyrONVGX85JZPN2vEBoOamuC/TCwUgIuT1MYVI=;
+        b=S+0srizbl8dCBGh6AzqWHndmug8ALTD3vYAQUMYsIzBySilvisTTrH2aVqbPWekJIb
+         EpyjZWjMZ8q3TbrSfWl8TtU9DWHiFa0yLQq6hUUwYvopyBySBxDbP8mcTxA4qL56h+Ku
+         ktiT2jgvtXwD8RxanXnsWJ60yRfdoTNC+lLsskjYZSgJ+lbiQAWxwhnjAJjD/wyc2c/T
+         J6XFqkGjAYTlM7oLm7FTwl13AqL5sqBpJwqiPwPnGpJ6PxrxHU+cuuw/2e3gRPziWLth
+         HWEQq80zqgUAzBn98nq9g0l7RLvBAV8abLHOeHYAet7b14krmZRRrzTxaECTw2BhRZoq
+         kK7A==
+X-Gm-Message-State: APjAAAVm8q0V5ahPhII6ilAG81bLvKq4r+ik75aJDXmLbx2pao94I3yF
+        J1O1P7NFD033K+iAtbFwEjCNHQ==
+X-Google-Smtp-Source: APXvYqy45tNcTtpg/c94lrABKtUPI2IloeMt1vo9EvaBBcW/D4raRflIRHWeOa3AYFf8Fefw5c/jrg==
+X-Received: by 2002:adf:a11d:: with SMTP id o29mr14522807wro.262.1560149071686;
+        Sun, 09 Jun 2019 23:44:31 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id a2sm5038333wmj.9.2019.06.09.23.44.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Jun 2019 23:44:30 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 07:44:28 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        wsa+renesas@sang-engineering.com,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
+Message-ID: <20190610064428.GF4797@dell>
+References: <20190607082901.6491-1-lee.jones@linaro.org>
+ <CAKv+Gu_SP7qBggCrVkF41BimV3PnCQXb5OUKyCsE0bBxa68RZA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9a2fc0e-032f-49b7-14c6-08d6ed6f0555
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 06:44:00.4919
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3916
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKv+Gu_SP7qBggCrVkF41BimV3PnCQXb5OUKyCsE0bBxa68RZA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERtaXRyeQ0KCUFueSBmZWVkYmFjayBmb3IgdGhpcyBwYXRjaD8NCg0KVGhhbmtzLA0KQW5z
-b24NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnNvbiBIdWFuZw0K
-PiBTZW50OiBUdWVzZGF5LCBNYXkgMjEsIDIwMTkgMjozNiBQTQ0KPiBUbzogZG1pdHJ5LnRvcm9r
-aG92QGdtYWlsLmNvbQ0KPiBDYzogc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRy
-b25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207IGxp
-bnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC0NCj4gaW14
-IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtSRVNFTkRdIGlucHV0OiBrZXli
-b2FyZDogaW14OiBtYWtlIHN1cmUga2V5Ym9hcmQgY2FuIGFsd2F5cw0KPiB3YWtlIHVwIHN5c3Rl
-bQ0KPiANCj4gSGksIERtaXRyeQ0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PiA+IEZyb206IGRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb20gW21haWx0bzpkbWl0cnkudG9yb2to
-b3ZAZ21haWwuY29tXQ0KPiA+IFNlbnQ6IFR1ZXNkYXksIE1heSAyMSwgMjAxOSAxOjMxIFBNDQo+
-ID4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiA+IENjOiBzaGF3bmd1
-b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOw0KPiA+IGtlcm5lbEBwZW5ndXRy
-b25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOw0KPiA+IGxpbnV4LWlucHV0QHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LSBpbXggPGxpbnV4LWlteEBueHAuY29tPg0K
-PiA+IFN1YmplY3Q6IFJlOiBbUkVTRU5EXSBpbnB1dDoga2V5Ym9hcmQ6IGlteDogbWFrZSBzdXJl
-IGtleWJvYXJkIGNhbg0KPiA+IGFsd2F5cyB3YWtlIHVwIHN5c3RlbQ0KPiA+DQo+ID4gSGkgQW5z
-b24sDQo+ID4gT24gVGh1LCBBcHIgMDQsIDIwMTkgYXQgMDE6NDA6MTZBTSArMDAwMCwgQW5zb24g
-SHVhbmcgd3JvdGU6DQo+ID4gPiBUaGVyZSBhcmUgc2V2ZXJhbCBzY2VuYXJpb3MgdGhhdCBrZXli
-b2FyZCBjYW4gTk9UIHdha2UgdXAgc3lzdGVtDQo+ID4gPiBmcm9tIHN1c3BlbmQsIGUuZy4sIGlm
-IGEga2V5Ym9hcmQgaXMgZGVwcmVzc2VkIGJldHdlZW4gc3lzdGVtIGRldmljZQ0KPiA+ID4gc3Vz
-cGVuZCBwaGFzZSBhbmQgZGV2aWNlIG5vaXJxIHN1c3BlbmQgcGhhc2UsIHRoZSBrZXlib2FyZCBJ
-U1Igd2lsbA0KPiA+ID4gYmUgY2FsbGVkIGFuZCBib3RoIGtleWJvYXJkIGRlcHJlc3MgYW5kIHJl
-bGVhc2UgaW50ZXJydXB0cyB3aWxsIGJlDQo+ID4gPiBkaXNhYmxlZCwgdGhlbiBrZXlib2FyZCB3
-aWxsIG5vIGxvbmdlciBiZSBhYmxlIHRvIHdha2UgdXAgc3lzdGVtLg0KPiA+ID4gQW5vdGhlciBz
-Y2VuYXJpbyB3b3VsZCBiZSwgaWYgYSBrZXlib2FyZCBpcyBrZXB0IGRlcHJlc3NlZCwgYW5kIHRo
-ZW4NCj4gPiA+IHN5c3RlbSBnb2VzIGludG8gc3VzcGVuZCwgdGhlIGV4cGVjdGVkIGJlaGF2aW9y
-IHdvdWxkIGJlIHdoZW4NCj4gPiA+IGtleWJvYXJkIGlzIHJlbGVhc2VkLCBzeXN0ZW0gd2lsbCBi
-ZSB3YWtlZCB1cCwgYnV0IGN1cnJlbnQNCj4gPiA+IGltcGxlbWVudGF0aW9uIGNhbiBOT1QgYWNo
-aWV2ZSB0aGF0LCBiZWNhdXNlIGJvdGggZGVwcmVzcyBhbmQNCj4gPiA+IHJlbGVhc2UgaW50ZXJy
-dXB0cyBhcmUgZGlzYWJsZWQgaW4gSVNSLCBhbmQgdGhlIGV2ZW50IGNoZWNrIGlzIHN0aWxsIGlu
-DQo+IHByb2dyZXNzLg0KPiA+ID4NCj4gPiA+IFRvIGZpeCB0aGVzZSBpc3N1ZXMsIG5lZWQgdG8g
-bWFrZSBzdXJlIGtleWJvYXJkJ3MgZGVwcmVzcyBvciByZWxlYXNlDQo+ID4gPiBpbnRlcnJ1cHQg
-aXMgZW5hYmxlZCBhZnRlciBub2lycSBkZXZpY2Ugc3VzcGVuZCBwaGFzZSwgdGhpcyBwYXRjaA0K
-PiA+ID4gbW92ZXMgdGhlIHN1c3BlbmQvcmVzdW1lIGNhbGxiYWNrIHRvIG5vaXJxIHN1c3BlbmQv
-cmVzdW1lIHBoYXNlLA0KPiBhbmQNCj4gPiA+IGVuYWJsZSB0aGUgY29ycmVzcG9uZGluZyBpbnRl
-cnJ1cHQgYWNjb3JkaW5nIHRvIGN1cnJlbnQga2V5Ym9hcmQgc3RhdHVzLg0KPiA+DQo+ID4gSSBi
-ZWxpZXZlIGl0IGlzIHBvc3NpYmxlIGZvciBJUlEgdG8gYmUgZGlzYWJsZWQgYW5kIHN0aWxsICBi
-ZWluZw0KPiA+IGVuYWJsZWQgYXMgd2FrZXVwIHNvdXJjZS4gV2hhdCBoYXBwZW5zIGlmIHlvdSBj
-YWxsIGRpc2FibGVfaXJxKCkNCj4gPiBiZWZvcmUgZGlzYWJsaW5nIHRoZSBjbG9jaz8NCj4gDQo+
-IERvaW5nIGJlbG93IGRvZXMgTk9UIGZpeCB0aGUgc2NlbmFyaW8vaXNzdWUgMTAwJSwgaWYgdGhl
-IGtleXBhZCdzIElSUQ0KPiBhcnJpdmVkIGR1cmluZyBzdXNwZW5kIHBoYXNlIGJ1dCBiZWZvcmUg
-ZGlzYWJsaW5nIGl0cyBJUlEgaW4gaXRzIHN1c3BlbmQNCj4gY2FsbGJhY2ssIHRoZW4gaXNzdWUg
-aXMgc3RpbGwgdGhlcmUsIGFzIHRoZSBpc3N1ZSBpcyB0aGF0IHdoZW4gc3lzdGVtIHN1c3BlbmQs
-DQo+IGtleXBhZCdzIGlycSBhcnJpdmVkIGR1cmluZyBzdXNwZW5kIGFuZCBub2lycSBzdXNwZW5k
-IHBoYXNlLCB0aGVuIGtleXBhZCdzDQo+IGhhcmR3YXJlIGludGVycnVwdCBkZXRlY3Rpb24gd2ls
-bCBiZSBkaXNhYmxlZCBpbiB0aGUgSVNSIGhhbmRsZXIsIGFuZCB0aGUNCj4gdGltZXIgZXZlbnQg
-c2V0dXAgYnkgSVNSIGhhbmRsZXIgaXMgTk9UIGZpcmVkLA0KPiBpbXhfa2V5cGFkX2NoZWNrX2Zv
-cl9ldmVudHMoKSBpcyBOT1QgZXhlY3V0ZWQgYW5kIGhhcmR3YXJlIGtleXBhZCdzDQo+IGRlcHJl
-c3MvcmVsZWFzZSBpbnRlcnJ1cHQgaXMgTk9UIHJlLWVuYWJsZWQgeWV0LCBzbyBpdCBjYW4gTk9U
-IHdha2UgdXANCj4gc3lzdGVtIGFueW1vcmUuLi4NCj4gDQo+IFNvIEkgdGhpbmsgdGhlIHNvbGlk
-IGZpeCBpcyB0byBtYWtlIHN1cmUga2V5cGFkIGNhbiBnZW5lcmF0ZSBJUlEgKGVpdGhlcg0KPiBk
-ZXByZXNzIG9yIHJlbGVhc2UpIGF0IGFueSB0aW1lIGR1cmluZyBzeXN0ZW0gc3VzcGVuZCBmbG93
-Lg0KPiANCj4gKysrIGIvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9pbXhfa2V5cGFkLmMNCj4gQEAg
-LTUzMyw2ICs1MzMsOCBAQCBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGlteF9rYmRfc3VzcGVu
-ZChzdHJ1Y3QNCj4gZGV2aWNlICpkZXYpDQo+ICAgICAgICAgLyogaW14IGtiZCBjYW4gd2FrZSB1
-cCBzeXN0ZW0gZXZlbiBjbG9jayBpcyBkaXNhYmxlZCAqLw0KPiAgICAgICAgIG11dGV4X2xvY2so
-JmlucHV0X2Rldi0+bXV0ZXgpOw0KPiANCj4gKyAgICAgICBkaXNhYmxlX2lycShrYmQtPmlycSk7
-DQo+ICsNCj4gICAgICAgICBpZiAoaW5wdXRfZGV2LT51c2VycykNCj4gICAgICAgICAgICAgICAg
-IGNsa19kaXNhYmxlX3VucHJlcGFyZShrYmQtPmNsayk7DQo+IA0KPiANCj4gQEAgLTU2Miw2ICs1
-NjksOCBAQCBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGlteF9rYmRfcmVzdW1lKHN0cnVjdA0K
-PiBkZXZpY2UgKmRldikNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZ290byBlcnJfY2xrOw0K
-PiAgICAgICAgIH0NCj4gDQo+ICsgICAgICAgZW5hYmxlX2lycShrYmQtPmlycSk7DQo+ICsNCj4g
-IGVycl9jbGs6DQo+IA0KPiBBbnNvbi4NCj4gDQo+ID4NCj4gPiBUaGFua3MuDQo+ID4NCj4gPiAt
-LQ0KPiA+IERtaXRyeQ0K
+On Fri, 07 Jun 2019, Ard Biesheuvel wrote:
+
+> On Fri, 7 Jun 2019 at 10:29, Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > Add a match table to allow automatic probing of ACPI device
+> > QCOM0220.  Ignore clock attainment errors.  Set default clock
+> > frequency value.
+> >
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/i2c/busses/i2c-qcom-geni.c | 19 +++++++++++++++++--
+> >  1 file changed, 17 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> > index db075bc0d952..0fa93b448e8d 100644
+> > --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+> >
+> > +#include <linux/acpi.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/dma-mapping.h>
+> >  #include <linux/err.h>
+> > @@ -483,6 +484,12 @@ static const struct i2c_algorithm geni_i2c_algo = {
+> >         .functionality  = geni_i2c_func,
+> >  };
+> >
+> > +static const struct acpi_device_id geni_i2c_acpi_match[] = {
+> > +       { "QCOM0220"},
+> > +       { },
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, geni_i2c_acpi_match);
+> > +
+> 
+> We usually put #ifdef CONFIG_ACPI/#endif around these, otherwise you
+> end up with acpi:XXXX modaliases even though ACPI is not compiled in.
+
+No problem.
+
+> >  static int geni_i2c_probe(struct platform_device *pdev)
+> >  {
+> >         struct geni_i2c_dev *gi2c;
+> > @@ -502,7 +509,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
+> >                 return PTR_ERR(gi2c->se.base);
+> >
+> >         gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
+> 
+> Can we avoid this call altogether in ACPI mode? Also, please use
+
+I'm trying not to place all non-ACPI specific callers into if ()
+statements.  The tabbing becomes ridiculous in some places.  A great
+deal of these calls are requesting optional resources too, so it's
+better to simply ignore the returning error in the cases where
+non-optional resources (such as this one) are requested, since it has
+the least impact on the existing code.
+
+> 'has_acpi_companion()' to test whether we are probing via ACPI.
+
+Sure.
+
+> > -       if (IS_ERR(gi2c->se.clk)) {
+> > +       if (IS_ERR(gi2c->se.clk) && !ACPI_HANDLE(&pdev->dev)) {
+> 
+> 
+> >                 ret = PTR_ERR(gi2c->se.clk);
+> >                 dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
+> >                 return ret;
+> > @@ -510,12 +517,19 @@ static int geni_i2c_probe(struct platform_device *pdev)
+> >
+> >         ret = device_property_read_u32(&pdev->dev, "clock-frequency",
+> >                                                         &gi2c->clk_freq_out);
+> > -       if (ret) {
+> > +       if (ret && !ACPI_HANDLE(&pdev->dev)) {
+> >                 dev_info(&pdev->dev,
+> >                         "Bus frequency not specified, default to 100kHz.\n");
+> >                 gi2c->clk_freq_out = KHZ(100);
+> >         }
+> >
+> > +       if (ACPI_HANDLE(&pdev->dev)) {
+> > +               ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
+> > +
+> > +               /* Using default, same as the !ACPI case above */
+> > +               gi2c->clk_freq_out = KHZ(100);
+> > +       }
+> > +
+> 
+> You are overriding the speed to 100 kHz even if the ACPI device has a
+> "clock-frequency" property.
+
+Will look at this.
+
+Thanks Ard.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
