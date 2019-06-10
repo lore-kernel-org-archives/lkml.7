@@ -2,153 +2,238 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1423BC468C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81644C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C5C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4515020820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K5SS6Lge"
+	dkim=pass (1024-bit key) header.d=newmedia-net.de header.i=@newmedia-net.de header.b="zVCfIp4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387680AbfFJFJS (ORCPT
+        id S2387610AbfFJFLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 01:09:18 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14320 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387452AbfFJFJQ (ORCPT
+        Mon, 10 Jun 2019 01:11:22 -0400
+Received: from webmail.newmedia-net.de ([185.84.6.166]:57982 "EHLO
+        webmail.newmedia-net.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbfFJFLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 01:09:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfde5fa0001>; Sun, 09 Jun 2019 22:09:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 09 Jun 2019 22:09:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 09 Jun 2019 22:09:15 -0700
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Jun
- 2019 05:09:15 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 10 Jun 2019 05:09:15 +0000
-Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cfde5f80000>; Sun, 09 Jun 2019 22:09:14 -0700
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Subject: [PATCH V3 6/6] i2c: tegra: remove BUG, BUG_ON
-Date:   Sun, 9 Jun 2019 22:08:44 -0700
-Message-ID: <1560143324-21754-6-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560143324-21754-1-git-send-email-bbiswas@nvidia.com>
-References: <1560143324-21754-1-git-send-email-bbiswas@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 10 Jun 2019 01:11:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=newmedia-net.de; s=mikd;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject; bh=vHvqO36rgNxEIk194ajJnKV4ToM132hVV+XGxAFMsGg=;
+        b=zVCfIp4chS2BFHy8dYiYHRBCQG94hshNGbr34qw8Yqa7ed+EkbGvLiAF2KhVgdKVGnYlHVyA2nD5K+IxM1gW5DpdEeol9crFT+O+f7x2X8LhXxtAEJ4RmbU4kSJbBezy5AGszDaRTurW6AF3qyHUbtCjDQshBMLrs73ChITkNPw=;
+Subject: possible fix for broken cmac crypto support
+From:   Sebastian Gottschall <s.gottschall@newmedia-net.de>
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Chih-Min Chen <chih-min.Chen@mediatek.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
+ <ade7ef01-8b06-ec7d-4caf-e581f4033819@newmedia-net.de>
+ <CAJ0CqmVBogQrqf4Gckr5gQ6tCrdZG=p60ZiC+-WW-yxt93+40Q@mail.gmail.com>
+ <0eea6d21-1de2-abc3-93f4-70ed04dac3df@newmedia-net.de>
+Message-ID: <e6b4bd01-58d3-6616-6d06-620ca7cdc19c@newmedia-net.de>
+Date:   Mon, 10 Jun 2019 07:11:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560143354; bh=0cUae7tO9JVjLYIhmSupio08w6fbxlvcuf5mqB5IMx4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=K5SS6LgebxOT5F0Hua41ldzuQ0OtApByg4fJgkUHAuSY7Z/ewp8FNPOnRPLLQ58Is
-         CZawD0wiu1UngYfYcF47m32AIhTbcBMp7xkvtUCsE/mvZc/DZRPBxfB4IrDh1RU4M3
-         sBpeMWBVu0oSkGruFQk51vPHUyxdGWikWMMUYHsmnNtBIVPA23oIzvzVTdfkYANGa7
-         ZlfBeeig5q+FYaqUBMltlMSu2cdYXa2ANkBXptGfA8EkN9dAFk4Rk1OAhOwZ4RtHYM
-         KqxX3YXD4pU+D64BzMEZw/nSH3b5/AWy8b3AOaXGa6J+e2o7LFmV869dW4tqnTZ4bE
-         cRT5FWF/4PiKQ==
+In-Reply-To: <0eea6d21-1de2-abc3-93f4-70ed04dac3df@newmedia-net.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Received:  from [2003:c9:3f05:3a00:f095:7be4:6d09:fd49]
+        by webmail.newmedia-net.de with esmtpsa (TLSv1:AES128-SHA:128)
+        (Exim 4.72)
+        (envelope-from <s.gottschall@newmedia-net.de>)
+        id 1haCab-0007AN-4P; Mon, 10 Jun 2019 07:11:25 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
-as needed. Replace BUG() with error handling code.
-Define I2C_ERR_UNEXPECTED_STATUS for error handling.
+this is no real patch for this mailing list since i havent cloned yet a 
+git tree. take it as a hint
+this fixes the BUG WARN if SAE encryption is used (mandatory for mesh / 
+802.11s crypto)
+that will not fix that mesh is not working (likelly just with other 
+vendors), but it will fix crypto at least
 
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
----
- drivers/i2c/busses/i2c-tegra.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+Sebastian
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 4dfb4c1..d9e99b4 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -73,6 +73,7 @@
- #define I2C_ERR_NO_ACK				BIT(0)
- #define I2C_ERR_ARBITRATION_LOST		BIT(1)
- #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
-+#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
- 
- #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
- #define PACKET_HEADER0_PACKET_ID_SHIFT		16
-@@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * prevent overwriting past the end of buf
- 	 */
- 	if (rx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
- 		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
- 		val = cpu_to_le32(val);
- 		memcpy(buf, &val, buf_remaining);
-@@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 		rx_fifo_avail--;
- 	}
- 
--	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
- 	i2c_dev->msg_buf_remaining = buf_remaining;
- 	i2c_dev->msg_buf = buf;
- 
-@@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * boundary and fault.
- 	 */
- 	if (tx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
- 		memcpy(&val, buf, buf_remaining);
- 		val = le32_to_cpu(val);
- 
-@@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 
- 	if (!i2c_dev->is_curr_dma_xfer) {
- 		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
--			if (i2c_dev->msg_buf_remaining)
-+			if (i2c_dev->msg_buf_remaining) {
- 				tegra_i2c_empty_rx_fifo(i2c_dev);
--			else
--				BUG();
-+			} else {
-+				dev_err(i2c_dev->dev, "unexpected rx data request\n");
-+				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
-+				goto err;
-+			}
- 		}
- 
- 		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-@@ -876,7 +877,10 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
- 		if (i2c_dev->is_curr_dma_xfer)
- 			i2c_dev->msg_buf_remaining = 0;
--		BUG_ON(i2c_dev->msg_buf_remaining);
-+		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
-+			i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
-+			goto err;
-+		}
- 		complete(&i2c_dev->msg_complete);
- 	}
- 	goto done;
--- 
-2.7.4
+Index: main.c
+===================================================================
+--- main.c      (revision 4584)
++++ main.c      (revision 4585)
+@@ -180,6 +180,20 @@ static int mt7615_set_key(struct ieee80211_hw *hw,
+             !(key->flags & IEEE80211_KEY_FLAG_PAIRWISE))
+                 return -EOPNOTSUPP;
 
++       switch (key->cipher) {
++       case WLAN_CIPHER_SUITE_WEP40:
++       case WLAN_CIPHER_SUITE_WEP104:
++       case WLAN_CIPHER_SUITE_TKIP:
++       case WLAN_CIPHER_SUITE_CCMP:
++       case WLAN_CIPHER_SUITE_CCMP_256:
++       case WLAN_CIPHER_SUITE_GCMP:
++       case WLAN_CIPHER_SUITE_GCMP_256:
++       case WLAN_CIPHER_SUITE_SMS4:
++               break;
++       default:
++               return -EOPNOTSUPP;
++       }
++
+         if (cmd == SET_KEY) {
+                 key->hw_key_idx = wcid->idx;
+                 wcid->hw_key_idx = idx;
+
+Am 09.06.2019 um 16:36 schrieb Sebastian Gottschall:
+> by the way. this big fat kernel warning exists in all operation modes 
+> unless anything else but aes-128 ccmp is used. since the chipset is 
+> capable of doing gcmp etc. as well
+> it would be nice if this issue can be fixed. otherwise encryption 
+> support can be defined as "broken" for mt7615
+>
+> Am 06.06.2019 um 18:19 schrieb Lorenzo Bianconi:
+>>> i tested your patch against a qca 9984 chipset using SAE and without
+>>> encryption. both did not work. the devices are connecting, but no data
+>>> connection is possible
+>> Hi Sebastian,
+>>
+>> I tested Ryder's patch using mt76x2 as mesh peer and it works fine 
+>> for me.
+>> Could you please provide some more info?
+>>
+>> Regards,
+>> Lorenzo
+>>
+>>>
+>>> Sebastian
+>>>
+>>> Am 03.06.2019 um 08:08 schrieb Ryder Lee:
+>>>> Enable NL80211_IFTYPE_MESH_POINT and update its path.
+>>>>
+>>>> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+>>>> ---
+>>>> Changes since v3 - fix a wrong expression
+>>>> Changes since v2 - remove unused definitions
+>>>> ---
+>>>>    drivers/net/wireless/mediatek/mt76/mt7615/init.c | 6 ++++++
+>>>>    drivers/net/wireless/mediatek/mt76/mt7615/main.c | 1 +
+>>>>    drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 4 +++-
+>>>>    drivers/net/wireless/mediatek/mt76/mt7615/mcu.h  | 6 ------
+>>>>    4 files changed, 10 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c 
+>>>> b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+>>>> index 59f604f3161f..f860af6a42da 100644
+>>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+>>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
+>>>> @@ -133,6 +133,9 @@ static const struct ieee80211_iface_limit 
+>>>> if_limits[] = {
+>>>>        {
+>>>>                .max = MT7615_MAX_INTERFACES,
+>>>>                .types = BIT(NL80211_IFTYPE_AP) |
+>>>> +#ifdef CONFIG_MAC80211_MESH
+>>>> +                      BIT(NL80211_IFTYPE_MESH_POINT) |
+>>>> +#endif
+>>>>                         BIT(NL80211_IFTYPE_STATION)
+>>>>        }
+>>>>    };
+>>>> @@ -195,6 +198,9 @@ int mt7615_register_device(struct mt7615_dev *dev)
+>>>>        dev->mt76.antenna_mask = 0xf;
+>>>>
+>>>>        wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+>>>> +#ifdef CONFIG_MAC80211_MESH
+>>>> + BIT(NL80211_IFTYPE_MESH_POINT) |
+>>>> +#endif
+>>>>                                 BIT(NL80211_IFTYPE_AP);
+>>>>
+>>>>        ret = mt76_register_device(&dev->mt76, true, mt7615_rates,
+>>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c 
+>>>> b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>>>> index b0bb7cc12385..585e67fa2728 100644
+>>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+>>>> @@ -37,6 +37,7 @@ static int get_omac_idx(enum nl80211_iftype type, 
+>>>> u32 mask)
+>>>>
+>>>>        switch (type) {
+>>>>        case NL80211_IFTYPE_AP:
+>>>> +     case NL80211_IFTYPE_MESH_POINT:
+>>>>                /* ap use hw bssid 0 and ext bssid */
+>>>>                if (~mask & BIT(HW_BSSID_0))
+>>>>                        return HW_BSSID_0;
+>>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c 
+>>>> b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+>>>> index 43f70195244c..e82297048449 100644
+>>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+>>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+>>>> @@ -754,6 +754,7 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev 
+>>>> *dev,
+>>>>
+>>>>        switch (vif->type) {
+>>>>        case NL80211_IFTYPE_AP:
+>>>> +     case NL80211_IFTYPE_MESH_POINT:
+>>>>                tx_wlan_idx = mvif->sta.wcid.idx;
+>>>>                conn_type = CONNECTION_INFRA_AP;
+>>>>                break;
+>>>> @@ -968,7 +969,7 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, 
+>>>> struct ieee80211_vif *vif,
+>>>>                .rx_wtbl = {
+>>>>                        .tag = cpu_to_le16(WTBL_RX),
+>>>>                        .len = cpu_to_le16(sizeof(struct wtbl_rx)),
+>>>> -                     .rca1 = vif->type != NL80211_IFTYPE_AP,
+>>>> +                     .rca1 = vif->type == NL80211_IFTYPE_STATION,
+>>>>                        .rca2 = 1,
+>>>>                        .rv = 1,
+>>>>                },
+>>>> @@ -1042,6 +1043,7 @@ static void sta_rec_convert_vif_type(enum 
+>>>> nl80211_iftype type, u32 *conn_type)
+>>>>    {
+>>>>        switch (type) {
+>>>>        case NL80211_IFTYPE_AP:
+>>>> +     case NL80211_IFTYPE_MESH_POINT:
+>>>>                if (conn_type)
+>>>>                        *conn_type = CONNECTION_INFRA_STA;
+>>>>                break;
+>>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h 
+>>>> b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
+>>>> index e96efb13fa4d..0915cb735699 100644
+>>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
+>>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
+>>>> @@ -105,25 +105,19 @@ enum {
+>>>>    #define STA_TYPE_STA                BIT(0)
+>>>>    #define STA_TYPE_AP         BIT(1)
+>>>>    #define STA_TYPE_ADHOC              BIT(2)
+>>>> -#define STA_TYPE_TDLS                BIT(3)
+>>>>    #define STA_TYPE_WDS                BIT(4)
+>>>>    #define STA_TYPE_BC         BIT(5)
+>>>>
+>>>>    #define NETWORK_INFRA               BIT(16)
+>>>>    #define NETWORK_P2P         BIT(17)
+>>>>    #define NETWORK_IBSS                BIT(18)
+>>>> -#define NETWORK_MESH         BIT(19)
+>>>> -#define NETWORK_BOW          BIT(20)
+>>>>    #define NETWORK_WDS         BIT(21)
+>>>>
+>>>>    #define CONNECTION_INFRA_STA        (STA_TYPE_STA | NETWORK_INFRA)
+>>>>    #define CONNECTION_INFRA_AP (STA_TYPE_AP | NETWORK_INFRA)
+>>>>    #define CONNECTION_P2P_GC   (STA_TYPE_STA | NETWORK_P2P)
+>>>>    #define CONNECTION_P2P_GO   (STA_TYPE_AP | NETWORK_P2P)
+>>>> -#define CONNECTION_MESH_STA  (STA_TYPE_STA | NETWORK_MESH)
+>>>> -#define CONNECTION_MESH_AP   (STA_TYPE_AP | NETWORK_MESH)
+>>>>    #define CONNECTION_IBSS_ADHOC       (STA_TYPE_ADHOC | NETWORK_IBSS)
+>>>> -#define CONNECTION_TDLS              (STA_TYPE_STA | NETWORK_INFRA 
+>>>> | STA_TYPE_TDLS)
+>>>>    #define CONNECTION_WDS              (STA_TYPE_WDS | NETWORK_WDS)
+>>>>    #define CONNECTION_INFRA_BC (STA_TYPE_BC | NETWORK_INFRA)
+>>>>
+>
