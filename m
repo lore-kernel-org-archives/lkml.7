@@ -2,32 +2,33 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF42C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CA7C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 671C42085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363F02089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388557AbfFJIQr (ORCPT
+        id S2388594AbfFJIQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:16:47 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37858 "EHLO inva021.nxp.com"
+        Mon, 10 Jun 2019 04:16:50 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37708 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388516AbfFJIQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:16:44 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D868200737;
-        Mon, 10 Jun 2019 10:16:42 +0200 (CEST)
+        id S2388538AbfFJIQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:47 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D47E31A07AC;
+        Mon, 10 Jun 2019 10:16:45 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C0B320072F;
-        Mon, 10 Jun 2019 10:16:34 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A274A1A07C7;
+        Mon, 10 Jun 2019 10:16:37 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 81CE9402C0;
-        Mon, 10 Jun 2019 16:16:24 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0A8F5402D2;
+        Mon, 10 Jun 2019 16:16:27 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
@@ -37,9 +38,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 13/15] ARM: dts: imx6sll: correct sdma compatible
-Date:   Mon, 10 Jun 2019 16:17:51 +0800
-Message-Id: <20190610081753.11422-14-yibin.gong@nxp.com>
+Subject: [PATCH v5 15/15] dmaengine: imx-sdma: add uart rom script
+Date:   Mon, 10 Jun 2019 16:17:53 +0800
+Message-Id: <20190610081753.11422-16-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 References: <20190610081753.11422-1-yibin.gong@nxp.com>
@@ -51,27 +52,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Correct sdma compatible since ecspi errata ERR009165 has been fixed
-on i.mx6sll as i.mx6ul.
+For the compatibility of NXP internal legacy kernel before 4.19 which
+is based on uart ram script and upstreaming kernel based on uart rom
+script, add both uart ram/rom script in latest sdma firmware. By default
+uart rom script used.
+Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
+back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
+
+rom script:
+	uart_2_mcu_addr
+	uartsh_2_mcu_addr /* through spba bus */
+ram script:
+	uart_2_mcu_ram_addr
+	uartsh_2_mcu_ram_addr /* through spba bus */
+
+Please get latest sdma firmware from the below and put them into the path
+(/lib/firmware/imx/sdma/):
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+/tree/imx/sdma
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- arch/arm/boot/dts/imx6sll.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/imx-sdma.c                     |  4 ++--
+ include/linux/platform_data/dma-imx-sdma.h | 10 ++++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index 1b4899f..d810e10 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -619,7 +619,7 @@
- 			};
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index f7c150d..deea9aa 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1733,8 +1733,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
  
- 			sdma: dma-controller@20ec000 {
--				compatible = "fsl,imx6sll-sdma", "fsl,imx35-sdma";
-+				compatible = "fsl,imx6sll-sdma", "fsl,imx6ul-sdma";
- 				reg = <0x020ec000 0x4000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SLL_CLK_IPG>,
+ #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
+ #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
+-#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
+-#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
++#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
++#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
+ 
+ static void sdma_add_scripts(struct sdma_engine *sdma,
+ 		const struct sdma_script_start_addrs *addr)
+diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+index f794fee..e12d2e8 100644
+--- a/include/linux/platform_data/dma-imx-sdma.h
++++ b/include/linux/platform_data/dma-imx-sdma.h
+@@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
+ 	s32 per_2_firi_addr;
+ 	s32 mcu_2_firi_addr;
+ 	s32 uart_2_per_addr;
+-	s32 uart_2_mcu_addr;
++	s32 uart_2_mcu_ram_addr;
+ 	s32 per_2_app_addr;
+ 	s32 mcu_2_app_addr;
+ 	s32 per_2_per_addr;
+ 	s32 uartsh_2_per_addr;
+-	s32 uartsh_2_mcu_addr;
++	s32 uartsh_2_mcu_ram_addr;
+ 	s32 per_2_shp_addr;
+ 	s32 mcu_2_shp_addr;
+ 	s32 ata_2_mcu_addr;
+@@ -52,7 +52,13 @@ struct sdma_script_start_addrs {
+ 	s32 zcanfd_2_mcu_addr;
+ 	s32 zqspi_2_mcu_addr;
+ 	s32 mcu_2_ecspi_addr;
++	s32 mcu_2_sai_addr;
++	s32 sai_2_mcu_addr;
++	s32 uart_2_mcu_addr;
++	s32 uartsh_2_mcu_addr;
+ 	/* End of v3 array */
++	s32 mcu_2_zqspi_addr;
++	/* End of v4 array */
+ };
+ 
+ /**
 -- 
 2.7.4
 
