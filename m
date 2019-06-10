@@ -2,119 +2,159 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EF1C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F810C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B77208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2257A208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iD93RKJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404006AbfFJPzn (ORCPT
+        id S2404019AbfFJPzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:55:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60284 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391326AbfFJPzn (ORCPT
+        Mon, 10 Jun 2019 11:55:45 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:44256 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404005AbfFJPzn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 11:55:43 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5AFlYrJ070102
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:55:41 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t1rynky8p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:55:41 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Mon, 10 Jun 2019 16:55:39 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 10 Jun 2019 16:55:34 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5AFtXs559965666
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Jun 2019 15:55:33 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE8A1AE051;
-        Mon, 10 Jun 2019 15:55:33 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34469AE055;
-        Mon, 10 Jun 2019 15:55:33 +0000 (GMT)
-Received: from osiris (unknown [9.145.162.214])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 10 Jun 2019 15:55:33 +0000 (GMT)
-Date:   Mon, 10 Jun 2019 17:55:31 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v3 00/33] Convert files to ReST - part 1
-References: <cover.1560045490.git.mchehab+samsung@kernel.org>
- <20190609091642.GA3705@osiris>
- <20190609092940.5e34e3b0@recife.lan>
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 79D5AC5896;
+        Mon, 10 Jun 2019 15:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1560182141; bh=aihNbKp08qv3DocJmNBn+1cqwnR6GWVl1CV2mAjc24U=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=iD93RKJs/EbchZsrL1WjVDrxDFv9IToe8PnqWY1KtMl6yN80aQqdRjpdKJZxNNKHm
+         DbQJz1DWUGgUBkXgmo6VHAOvHU1k+/SY09ttUqAj62JO2uw/ARIIGT+sX25pJA428H
+         /WyHNbF5/9z6l1GzRJrXlWo4wEAhl607nvt30OH4oiNr725gslsq2exmbKFu48sYEB
+         n+bljA7YRJDwb8HwHgOYl8B5G+m1hymXxAmkai7AXwOKsZu8HuFP+N3ckBtUolbRyE
+         6Si4gqf9ckH/9DOJya1YWB10LUZiHf/fy535HVbW9vFl757aN78pJazA+sRh5aeNDX
+         HrBCAAQzvm6/g==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 3B5E5A0276;
+        Mon, 10 Jun 2019 15:55:42 +0000 (UTC)
+Received: from us01wembx1.internal.synopsys.com ([169.254.1.22]) by
+ US01WEHTC2.internal.synopsys.com ([10.12.239.237]) with mapi id
+ 14.03.0415.000; Mon, 10 Jun 2019 08:55:41 -0700
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Cupertino Miranda <Cupertino.Miranda@synopsys.com>
+CC:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Claudiu Zissulescu <Claudiu.Zissulescu@synopsys.com>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: ARC Assembler: bundle_align_mode directive support
+Thread-Topic: ARC Assembler: bundle_align_mode directive support
+Thread-Index: AQHVHicA2N+x/AVgjkyWYOIr/ofXig==
+Date:   Mon, 10 Jun 2019 15:55:41 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A2525686@us01wembx1.internal.synopsys.com>
+References: <3962a9ad199cea45b1cfadb80be551aab83b7028.camel@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.13.184.19]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190609092940.5e34e3b0@recife.lan>
-X-TM-AS-GCONF: 00
-x-cbid: 19061015-0008-0000-0000-000002F1FB8D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061015-0009-0000-0000-0000225EF2D2
-Message-Id: <20190610155531.GC4031@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906100108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 09:29:40AM -0300, Mauro Carvalho Chehab wrote:
-> Em Sun, 9 Jun 2019 11:16:43 +0200
-> > Will there be a web page (e.g. kernel.org), which contains always the
-> > latest upstream version?
-> 
-> Yes:
-> 
-> 	https://www.kernel.org/doc/html/latest/
-> 
-> I guess this one is based on Linus tree.
-> 
-> Jon also maintains a version at:
-> 
-> 	https://static.lwn.net/kerneldoc/
-> 
-> I guess that one is based on docs-next branch from the Docs tree.
-> 
-> Btw, if you want to build it for yourself, you could use:
-> 
-> 	make htmldocs
-
-Thanks a lot!
-
-> > I can pick these up for s390. Or do you want to send the whole series
-> > in one go upstream?
-> 
-> Yeah, feel free to pick them via the s390 tree.
-
-Ok, applied! :)
-
+On 6/8/19 11:21 AM, Eugeniy Paltsev wrote:=0A=
+> Hi Cupertino,=0A=
+>=0A=
+> I tried to use ".bundle_align_mode" directive in ARC assembly, but I got =
+following error:=0A=
+> ----------------->8--------------=0A=
+> Assembler messages:=0A=
+> Error: unknown pseudo-op: `.bundle_align_mode'=0A=
+> ----------------->8--------------=0A=
+>=0A=
+> Is it possible to implement it in ARC assembler?=0A=
+> There is some context about the reason we want to have it:=0A=
+>=0A=
+> I'm trying to add support of jump labels for ARC in linux kernel. Jump la=
+bels=0A=
+> provide an interface to generate static branches using self-modifying cod=
+e.=0A=
+> This allows us to implement conditional branches where changing branch=0A=
+> direction is expensive but branch selection is basically 'free'.=0A=
+>=0A=
+> There is nuance in current implementation:=0A=
+> We need to patch code by rewriting 32-bit NOP by 32-bit BRANCH instructio=
+n (or vice versa).=0A=
+> It can be easily done with following code:=0A=
+> ----------------->8--------------=0A=
+> write_32_bit(new_instruction)=0A=
+> flush_l1_dcache_range_this_cpu=0A=
+> invalidate_l1_icache_range_all_cpu=0A=
+> ----------------->8--------------=0A=
+>=0A=
+> I$ update will be atomic in most of cases except the patched instruction =
+share=0A=
+> two L1 cache lines (so first 16 bits of instruction are in the one cache =
+line and=0A=
+> last 16 bit are in another cache line).=0A=
+> In such case we can execute half-updated instruction if we are patching l=
+ive code (and we are unlucky enough :)=0A=
+=0A=
+While I understand your need for alignment, I don't see how you can possibl=
+y=0A=
+execute stray lines.=0A=
+dcache flush will be propagated by hardware (SCU) to all cores (as applicab=
+le) and=0A=
+the icache cache flush xcall is synchronous and will have to finish on all =
+cores=0A=
+before we proceed to execute the cod eitself.=0A=
+=0A=
+>=0A=
+> As of today I simply align by 4 byte instruction which can be patched wit=
+h ".balign 4" directive:=0A=
+> ----------------->8--------------=0A=
+> static __always_inline bool arch_static_branch_jump(struct static_key *ke=
+y,=0A=
+>     bool branch)=0A=
+> {=0A=
+> asm_volatile_goto(".balign 4\n"=0A=
+>  "1:\n"=0A=
+>  "b %l[l_yes]\n" // <- instruction which can be patched=0A=
+>  ".pushsection __jump_table, \"aw\"\n"=0A=
+>  ".word 1b, %l[l_yes], %c0\n"=0A=
+>  ".popsection\n"=0A=
+>  : : "i" (&((char *)key)[branch]) : : l_yes);=0A=
+>=0A=
+> return false;=0A=
+> l_yes:=0A=
+> return true;=0A=
+> }=0A=
+> ----------------->8--------------=0A=
+>=0A=
+> In that case patched instruction is aligned with one 16-bit NOP if this i=
+s required.=0A=
+> However 'align by 4' directive is much stricter than it actually required=
+. =0A=
+=0A=
+I don't quite understand. Can u write a couple of lines of pseudo assembly =
+to show=0A=
+what the issue is.=0A=
+=0A=
+> It's enough=0A=
+> that our 32-bit instruction don't cross l1 cache line boundary.=0A=
+> That will save us from adding useless NOP padding in most of the cases.=
+=0A=
+> It can be implemented with ".bundle_align_mode" directive which isn't sup=
+ported by ARC AS unfortunately.=0A=
+=0A=
+This seems like a reasonable request (contingent to the difficulty of=0A=
+implementation in binutils). but I can't comprehend why you would need it.=
+=0A=
