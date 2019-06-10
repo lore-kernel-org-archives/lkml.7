@@ -2,104 +2,103 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F8BC468D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B8BC31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F384520862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560177977;
-	bh=FQJK1JBRrqxEU8KBQ1nxhtuOOcsP2AwKZ2zJ6Un8dqM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xPPgT18YqNQ5sbHjgDSL/R/0GenqU1ZQNaCkuIkTQUf+FBFjsDKbr/uwKw6lyVYqQ
-	 ZM9NE9HOWdnciclKefWgfTF5f6phOzqBEk72e0GPA0RsxJm2OIJDGxTtVzgB4QHIXc
-	 //WrgOMq30mJg4Wc+Jtrv9G8KQcHY1rpqQfeBaQY=
+	by mail.kernel.org (Postfix) with ESMTP id B6BD62085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390945AbfFJOqQ (ORCPT
+        id S2390948AbfFJOrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45218 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 10:47:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58804 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388373AbfFJOqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:46:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2388373AbfFJOrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:47:03 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5B1C2085A;
-        Mon, 10 Jun 2019 14:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560177975;
-        bh=FQJK1JBRrqxEU8KBQ1nxhtuOOcsP2AwKZ2zJ6Un8dqM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z9UAwWKSNdLkFAxqVXa4+9RWRC1wO/5o/fNxxbwE/2wTtLmhJDLTB2/7bYRqCgyaa
-         9uY4Is8+qyFwnBiHmsZEVTRfQjkXvQc1iXE8HEFa3Q3l1chH5s8aqnq4mWYB7y7yaU
-         +TkMdSaYZYkt3yRnFCTThGY9PW0vvtrIX2Mx/4Rs=
-Date:   Mon, 10 Jun 2019 16:46:13 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        linux-bluetooth@vger.kernel.org, Jeremy Cline <jeremy@jcline.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Bluetooth regression breaking BT connection for all 2.0 and
- older devices in 5.0.15+, 5.1.x and master
-Message-ID: <20190610144613.GD31086@kroah.com>
-References: <af8cf6f4-4979-2f6f-68ed-e5b368b17ec7@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 1C59AD56EF;
+        Mon, 10 Jun 2019 14:46:47 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id EB5FD5DD63;
+        Mon, 10 Jun 2019 14:46:44 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 10 Jun 2019 16:46:44 +0200 (CEST)
+Date:   Mon, 10 Jun 2019 16:46:42 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Gaurav Kohli <gkohli@codeaurora.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Qian Cai <cai@lca.pw>,
+        akpm@linux-foundation.org, hch@lst.de, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+Message-ID: <20190610144641.GA8127@redhat.com>
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
+ <20190530080358.GG2623@hirez.programming.kicks-ass.net>
+ <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
+ <20190603123705.GB3419@hirez.programming.kicks-ass.net>
+ <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
+ <20190607133541.GJ3436@hirez.programming.kicks-ass.net>
+ <20190607142332.GF3463@hirez.programming.kicks-ass.net>
+ <16419960-3703-5988-e7ea-9d3a439f8b05@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <af8cf6f4-4979-2f6f-68ed-e5b368b17ec7@redhat.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <16419960-3703-5988-e7ea-9d3a439f8b05@codeaurora.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 10 Jun 2019 14:47:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 03:31:55PM +0200, Hans de Goede wrote:
-> Hi All,
-> 
-> First of all this is a known issue and it seems a fix is in the works,
-> but what I do not understand is why the commit causing this has not
-> simply been reverted until the fix is done, esp. for the 5.0.x
-> stable series where this was introduced in 5.0.15.
-> 
-> The problem I'm talking about is commit d5bb334a8e17 ("Bluetooth: Align
-> minimum encryption key size for LE and BR/EDR connections"):
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d5bb334a8e171b262e48f378bd2096c0ea458265
-> basically completely breaking all somewhat older (and some current cheap
-> no-name) bluetooth devices:
-> 
-> A revert of this was first proposed on May 22nd:
-> https://lore.kernel.org/netdev/CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com/T/
-> We are 18 days further now and this problem still exists, including in the
-> 5.0.15+ and 5.1.x stable kernels.
-> 
-> A solution has been suggested: https://lore.kernel.org/linux-bluetooth/20190522070540.48895-1-marcel@holtmann.org/T/#u
-> and at least the Fedora 5.1.4+ kernels now carry this as a temporary fix,
-> but as of today I do not see a fix nor a revert in Torvald's tree yet and
-> neither does there seem to be any fix in the 5.0.x and 5.1.x stable series.
-> 
-> In the mean time we are getting a lot of bug reports about this:
-> https://bugzilla.kernel.org/show_bug.cgi?id=203643
-> https://bugzilla.redhat.com/show_bug.cgi?id=1711468
-> https://bugzilla.redhat.com/show_bug.cgi?id=1713871
-> https://bugzilla.redhat.com/show_bug.cgi?id=1713980
-> 
-> And some reporters:
-> https://bugzilla.redhat.com/show_bug.cgi?id=1713871#c4
-> Are indicating that the Fedora kernels with the workaround included
-> still do not work...
-> 
-> As such I would like to suggest that we just revert the troublesome
-> commit for now and re-add it when we have a proper fix.
+On 06/10, Gaurav Kohli wrote:
+>
+> >@@ -1991,6 +1991,28 @@ try_to_wake_up(struct task_struct *p, un
+> >  	unsigned long flags;
+> >  	int cpu, success = 0;
+> >+	if (p == current) {
+> >+		/*
+> >+		 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
+> >+		 * == smp_processor_id()'. Together this means we can special
+> >+		 * case the whole 'p->on_rq && ttwu_remote()' case below
+> >+		 * without taking any locks.
+> >+		 *
+> >+		 * In particular:
+> >+		 *  - we rely on Program-Order guarantees for all the ordering,
+> >+		 *  - we're serialized against set_special_state() by virtue of
+> >+		 *    it disabling IRQs (this allows not taking ->pi_lock).
+> >+		 */
+> >+		if (!(p->state & state))
+> >+			return false;
+> >+
+>
+> Hi Peter, Jen,
+>
+> As we are not taking pi_lock here , is there possibility of same task dead
+> call comes as this point of time for current thread, bcoz of which we have
+> seen earlier issue after this commit 0619317ff8ba
+> [T114538]  do_task_dead+0xf0/0xf8
+> [T114538]  do_exit+0xd5c/0x10fc
+> [T114538]  do_group_exit+0xf4/0x110
+> [T114538]  get_signal+0x280/0xdd8
+> [T114538]  do_notify_resume+0x720/0x968
+> [T114538]  work_pending+0x8/0x10
+>
+> Is there a chance of TASK_DEAD set at this point of time?
 
-I agree, can someone revert this in Linus's tree so I can revert it in a
-stable release?
+In this case try_to_wake_up(current, TASK_NORMAL) will do nothing, see the
+if (!(p->state & state)) above.
 
-thanks,
+See also the comment about set_special_state() above. It disables irqs and
+this is enough to ensure that try_to_wake_up(current) from irq can't race
+with set_special_state(TASK_DEAD).
 
-greg k-h
+Oleg.
+
