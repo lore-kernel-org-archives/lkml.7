@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478EDC4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30856C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B67E20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0640B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P9wzd+Vm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JqZQbuDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390426AbfFJVVR (ORCPT
+        id S2390203AbfFJVUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:21:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39192 "EHLO
+        Mon, 10 Jun 2019 17:20:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37866 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390342AbfFJVVB (ORCPT
+        with ESMTP id S2390157AbfFJVUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:21:01 -0400
+        Mon, 10 Jun 2019 17:20:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=M/oZjZKd86UGxkRYl1oTzaFRcdpwOtKgZIoGTg33tK4=; b=P9wzd+Vmog+LwRnUCtnR1Y910o
-        R3ZVpkRWtcyNj9izlXH0SvAq6405+7KU69QeYXom7oJwUdwOx9jpJKE8dmuq7z3VWUguJ8Nt1yDO7
-        AboacC7p81nVVKWPpicJ+e4K9fP8GcruiBX7nDO0J2rC/Hv8vRyApo6RtRKQzDuQ0Tn+g3srFbBt1
-        vxtHJBDqO1hUzD6ePBxmHARkZmbHu8OSNW5SbkXgEx4E8QFzLctRkVLooaIJYeysmviVAUAsWZzZs
-        ri90hTjLL8YqXl5S0jmkASO5WB9lCS7WncHdcL9KOwaGsK4FMUoAxNmkPP2QbHeWCbaaZpqLgUg+e
-        UDNX7+8Q==;
+        bh=HU6kHTNFa+R10seSyyeXaLI/u/CE3GjB+DCIYQwe6ww=; b=JqZQbuDCovZhJ4IBx1qsE+p2ND
+        3TvQWbUKInHoY+mqZdgwEG8GKanRtU1iJfnl+w0hzvtJS1pQmXPUIJq/2dxgfAlAaTzrtURsr54JW
+        021XQkikQMjm45CWhrxBAVt8eUNmsovcrAYCS2XEXCB9Cz8vRsufCTlP984e1Xye70+opSXQ3frBL
+        sxAqar8ACYKvI2xR6IFt0i2ka5O1Y8VGlgZzwuoJjVQCulkCN/iLE6Y6MVFt6O3BCwpOlqB61mCh3
+        5rqpWGvfa3+XVZ9Ri2svg3pSfVWXfsFWUTVxL6eBgPk+NTEMr1fTcx1NteHX3EjihFOkhWY63PJKT
+        Bj5HQK7A==;
 Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1haRip-0000p9-Vm; Mon, 10 Jun 2019 21:20:56 +0000
+        id 1haRiW-0000XW-Qp; Mon, 10 Jun 2019 21:20:37 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Greg Ungerer <gerg@linux-m68k.org>
 Cc:     Michal Simek <monstr@monstr.eu>,
@@ -46,9 +46,9 @@ Cc:     Michal Simek <monstr@monstr.eu>,
         linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
         linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 14/15] binfmt_flat: don't offset the data start
-Date:   Mon, 10 Jun 2019 23:20:14 +0200
-Message-Id: <20190610212015.9157-15-hch@lst.de>
+Subject: [PATCH 07/15] binfmt_flat: use __be32 for the on-disk format
+Date:   Mon, 10 Jun 2019 23:20:07 +0200
+Message-Id: <20190610212015.9157-8-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190610212015.9157-1-hch@lst.de>
 References: <20190610212015.9157-1-hch@lst.de>
@@ -60,84 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ever since the initial commit of the binfmt_flat shared library
-support back in the bitkeeper days we've offset the actual in-memory
-.data start by one field per possible shared library, or 1 in case
-shared library support isn't enabled.  I can't find anything in the
-loader that actually makes use of it, nor was it present before
-shared library support it.
+So far binfmt_flat has onl been supported on 32-bit platforms, so the
+variable size of the fields didn't matter.  But the upcoming RISC-V
+nommu port supports 64-bit CPUs, and we now have a conflict between
+the elf2flt creation tool that always uses 32-bit fields and the kernel
+that uses (unsigned) long field.  Switch to the userspace view as the
+rest of the binfmt_flat format is completely architecture neutral,
+and binfmt_flat isn't the right binary format for huge executables to
+start with.
+
+While we're at it also ensure these fields are using __be types as
+they big endian and are byteswapped when loaded.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/binfmt_flat.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index 2c7f32d5435f..e1ccc9f14150 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -572,7 +572,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 			goto err;
- 		}
+wip
+---
+ include/linux/flat.h | 48 ++++++++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/include/linux/flat.h b/include/linux/flat.h
+index 21d901ba191b..59e892d5fadb 100644
+--- a/include/linux/flat.h
++++ b/include/linux/flat.h
+@@ -24,26 +24,26 @@
+  */
  
--		len = data_len + extra + MAX_SHARED_LIBS * sizeof(unsigned long);
-+		len = data_len + extra;
- 		len = PAGE_ALIGN(len);
- 		realdatastart = vm_mmap(NULL, 0, len,
- 			PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE, 0);
-@@ -586,9 +586,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 			vm_munmap(textpos, text_len);
- 			goto err;
- 		}
--		datapos = ALIGN(realdatastart +
--				MAX_SHARED_LIBS * sizeof(unsigned long),
--				FLAT_DATA_ALIGN);
-+		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
+ struct flat_hdr {
+-	char magic[4];
+-	unsigned long rev;          /* version (as above) */
+-	unsigned long entry;        /* Offset of first executable instruction
+-	                               with text segment from beginning of file */
+-	unsigned long data_start;   /* Offset of data segment from beginning of
+-	                               file */
+-	unsigned long data_end;     /* Offset of end of data segment
+-	                               from beginning of file */
+-	unsigned long bss_end;      /* Offset of end of bss segment from beginning
+-	                               of file */
++	char	magic[4];
++	__be32	rev;          /* version (as above) */
++	__be32	entry;        /* Offset of first executable instruction
++				 with text segment from beginning of file */
++	__be32	data_start;   /* Offset of data segment from beginning of
++				 file */
++	__be32	data_end;     /* Offset of end of data segment from beginning
++				 of file */
++	__be32	bss_end;      /* Offset of end of bss segment from beginning
++				 of file */
  
- 		pr_debug("Allocated data+bss+stack (%u bytes): %lx\n",
- 			 data_len + bss_len + stack_len, datapos);
-@@ -618,7 +616,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		memp_size = len;
- 	} else {
+ 	/* (It is assumed that data_end through bss_end forms the bss segment.) */
  
--		len = text_len + data_len + extra + MAX_SHARED_LIBS * sizeof(u32);
-+		len = text_len + data_len + extra;
- 		len = PAGE_ALIGN(len);
- 		textpos = vm_mmap(NULL, 0, len,
- 			PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE, 0);
-@@ -633,9 +631,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		}
+-	unsigned long stack_size;   /* Size of stack, in bytes */
+-	unsigned long reloc_start;  /* Offset of relocation records from
+-	                               beginning of file */
+-	unsigned long reloc_count;  /* Number of relocation records */
+-	unsigned long flags;
+-	unsigned long build_date;   /* When the program/library was built */
+-	unsigned long filler[5];    /* Reservered, set to zero */
++	__be32	stack_size;   /* Size of stack, in bytes */
++	__be32	reloc_start;  /* Offset of relocation records from beginning of
++				 file */
++	__be32	reloc_count;  /* Number of relocation records */
++	__be32	flags;
++	__be32	build_date;   /* When the program/library was built */
++	__u32	filler[5];    /* Reservered, set to zero */
+ };
  
- 		realdatastart = textpos + ntohl(hdr->data_start);
--		datapos = ALIGN(realdatastart +
--				MAX_SHARED_LIBS * sizeof(u32),
--				FLAT_DATA_ALIGN);
-+		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
+ #define FLAT_FLAG_RAM    0x0001 /* load program entirely into RAM */
+@@ -67,19 +67,19 @@ struct flat_hdr {
+ #define OLD_FLAT_RELOC_TYPE_BSS		2
  
- 		reloc = (__be32 __user *)
- 			(datapos + (ntohl(hdr->reloc_start) - text_len));
-@@ -652,8 +648,9 @@ static int load_flat_file(struct linux_binprm *bprm,
- 					 (text_len + full_data
- 						  - sizeof(struct flat_hdr)),
- 					 0);
--			memmove((void *) datapos, (void *) realdatastart,
--					full_data);
-+			if (datapos != realdatastart)
-+				memmove((void *)datapos, (void *)realdatastart,
-+						full_data);
- #else
- 			/*
- 			 * This is used on MMU systems mainly for testing.
-@@ -709,8 +706,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		if (IS_ERR_VALUE(result)) {
- 			ret = result;
- 			pr_err("Unable to read code+data+bss, errno %d\n", ret);
--			vm_munmap(textpos, text_len + data_len + extra +
--				MAX_SHARED_LIBS * sizeof(u32));
-+			vm_munmap(textpos, text_len + data_len + extra);
- 			goto err;
- 		}
- 	}
+ typedef union {
+-	unsigned long	value;
++	u32		value;
+ 	struct {
+ # if defined(mc68000) && !defined(CONFIG_COLDFIRE)
+-		signed long offset : 30;
+-		unsigned long type : 2;
++		s32	offset : 30;
++		u32	type : 2;
+ #   	define OLD_FLAT_FLAG_RAM    0x1 /* load program entirely into RAM */
+ # elif defined(__BIG_ENDIAN_BITFIELD)
+-		unsigned long type : 2;
+-		signed long offset : 30;
++		u32	type : 2;
++		s32	offset : 30;
+ #   	define OLD_FLAT_FLAG_RAM    0x1 /* load program entirely into RAM */
+ # elif defined(__LITTLE_ENDIAN_BITFIELD)
+-		signed long offset : 30;
+-		unsigned long type : 2;
++		s32	offset : 30;
++		u32	type : 2;
+ #   	define OLD_FLAT_FLAG_RAM    0x1 /* load program entirely into RAM */
+ # else
+ #   	error "Unknown bitfield order for flat files."
 -- 
 2.20.1
 
