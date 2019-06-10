@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3247C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D497C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9108A2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357822086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:16:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WoT5qfZO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oiEyUrF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390186AbfFJWQd (ORCPT
+        id S2390224AbfFJWQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 18:16:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52846 "EHLO
+        Mon, 10 Jun 2019 18:16:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53036 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389989AbfFJWQb (ORCPT
+        with ESMTP id S2390192AbfFJWQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 18:16:31 -0400
+        Mon, 10 Jun 2019 18:16:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uHFTnl4vUjrNVYTFv2dDUy+7np+VKavI9He7Ga2MW2s=; b=WoT5qfZOaCdlI5cjodJO96MTUa
-        0x0FTUYOBpRsHYygY/XLRcYru1xwfiTUOH/aiIMRbNiEB0rWP1GO4Xk2gH/26HqDQe+j2Ybm6u/Rv
-        hupkRFH69Ysbq0FC3igQAwsbpJU618sqwSYdNRkyNM58whYGLdOuZJih7LYrSSzsRQCkMlyedKmp1
-        ApZeHTypJnTEPZDUphxKWpF2bD7O6bBM0bMcDdsTblUbbiQq7uHikPzv7wXg0izoJxUurD2y92zv1
-        LM0WfD9mxU80dyyv93OBxyEnVWpfoleq8QXyRkJoWLd4bGvAAP2qR00MhSEMk9xXdbgybODC2RYFM
-        ypkZtJVA==;
+        bh=C4SI1FY60nHM9WI3SinoYDutxba0iN08JIEwzLdROHQ=; b=oiEyUrF9IL6rgPxNWJeKLxV3Vy
+        A8cdnaU0V5jZiFy3sqNuhMbp91le0IAXzEcVclX9d5PaW1wff2o6pTA2bVm2UN/onTrJQeQHryhSB
+        nnUPnH7xpOvpXmaxOwDz5rOGqBMRMR9NOBhqyJ7XBHdXPfiNQ7Mrhp+9f29lQk9Y2BTdGyyJaPI6q
+        TVeAWffkUc/loManhERDhHXfQFG0B8mzkFQcnNPbAmCYplm8rVef85/v60iq+c5KwdSp2mrl3onW7
+        9J84YrKSW1WBeNpq/YL/fl/gqcugODpbtY3JYypgfqN8/G4+0fyb15o3i+3K2HQTTcFQgDpiCsyvL
+        jnUhjrDQ==;
 Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1haSaa-0002mM-Ql; Mon, 10 Jun 2019 22:16:29 +0000
+        id 1haSad-0002pA-7n; Mon, 10 Jun 2019 22:16:31 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Palmer Dabbelt <palmer@sifive.com>
 Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, uclinux-dev@uclinux.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/17] mm: stub out all of swapops.h for !CONFIG_MMU
-Date:   Tue, 11 Jun 2019 00:16:06 +0200
-Message-Id: <20190610221621.10938-3-hch@lst.de>
+Subject: [PATCH 03/17] mm/nommu: fix the MAP_UNINITIALIZED flag
+Date:   Tue, 11 Jun 2019 00:16:07 +0200
+Message-Id: <20190610221621.10938-4-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190610221621.10938-1-hch@lst.de>
 References: <20190610221621.10938-1-hch@lst.de>
@@ -57,47 +57,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The whole header file deals with swap entries and PTEs, none of which
-can exist for nommu builds.
+We can't expose UAPI symbols differently based on CONFIG_ symbols, as
+userspace won't have them available.  Instead always define the flag,
+but only repsect it based on the config option.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/swapops.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/xtensa/include/uapi/asm/mman.h    | 6 +-----
+ include/uapi/asm-generic/mman-common.h | 8 +++-----
+ mm/nommu.c                             | 4 +++-
+ 3 files changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-index 4d961668e5fc..b02922556846 100644
---- a/include/linux/swapops.h
-+++ b/include/linux/swapops.h
-@@ -6,6 +6,8 @@
- #include <linux/bug.h>
- #include <linux/mm_types.h>
- 
-+#ifdef CONFIG_MMU
-+
- /*
-  * swapcache pages are stored in the swapper_space radix tree.  We want to
-  * get good packing density in that tree, so the index should be dense in
-@@ -50,13 +52,11 @@ static inline pgoff_t swp_offset(swp_entry_t entry)
- 	return entry.val & SWP_OFFSET_MASK;
- }
- 
--#ifdef CONFIG_MMU
- /* check whether a pte points to a swap entry */
- static inline int is_swap_pte(pte_t pte)
- {
- 	return !pte_none(pte) && !pte_present(pte);
- }
+diff --git a/arch/xtensa/include/uapi/asm/mman.h b/arch/xtensa/include/uapi/asm/mman.h
+index be726062412b..ebbb48842190 100644
+--- a/arch/xtensa/include/uapi/asm/mman.h
++++ b/arch/xtensa/include/uapi/asm/mman.h
+@@ -56,12 +56,8 @@
+ #define MAP_STACK	0x40000		/* give out an address that is best suited for process/thread stacks */
+ #define MAP_HUGETLB	0x80000		/* create a huge page mapping */
+ #define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
+-#ifdef CONFIG_MMAP_ALLOW_UNINITIALIZED
+-# define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
++#define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
+ 					 * uninitialized */
+-#else
+-# define MAP_UNINITIALIZED 0x0		/* Don't support this flag */
 -#endif
  
  /*
-  * Convert the arch-dependent pte representation of a swp_entry_t into an
-@@ -375,4 +375,5 @@ static inline int non_swap_entry(swp_entry_t entry)
- }
- #endif
+  * Flags for msync
+diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+index abd238d0f7a4..cb556b430e71 100644
+--- a/include/uapi/asm-generic/mman-common.h
++++ b/include/uapi/asm-generic/mman-common.h
+@@ -19,15 +19,13 @@
+ #define MAP_TYPE	0x0f		/* Mask for type of mapping */
+ #define MAP_FIXED	0x10		/* Interpret addr exactly */
+ #define MAP_ANONYMOUS	0x20		/* don't use a file */
+-#ifdef CONFIG_MMAP_ALLOW_UNINITIALIZED
+-# define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be uninitialized */
+-#else
+-# define MAP_UNINITIALIZED 0x0		/* Don't support this flag */
+-#endif
  
-+#endif /* CONFIG_MMU */
- #endif /* _LINUX_SWAPOPS_H */
+ /* 0x0100 - 0x80000 flags are defined in asm-generic/mman.h */
+ #define MAP_FIXED_NOREPLACE	0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
+ 
++#define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
++					 * uninitialized */
++
+ /*
+  * Flags for mlock
+  */
+diff --git a/mm/nommu.c b/mm/nommu.c
+index d8c02fbe03b5..ec75a0dffd4f 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -1349,7 +1349,9 @@ unsigned long do_mmap(struct file *file,
+ 	add_nommu_region(region);
+ 
+ 	/* clear anonymous mappings that don't ask for uninitialized data */
+-	if (!vma->vm_file && !(flags & MAP_UNINITIALIZED))
++	if (!vma->vm_file &&
++	    (!IS_ENABLED(CONFIG_MMAP_ALLOW_UNINITIALIZED) ||
++	     !(flags & MAP_UNINITIALIZED)))
+ 		memset((void *)region->vm_start, 0,
+ 		       region->vm_end - region->vm_start);
+ 
 -- 
 2.20.1
 
