@@ -2,132 +2,140 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D63C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDB7C468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6CF20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486A520833
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:14:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tghixlPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbfFJHMT (ORCPT
+        id S2387867AbfFJHOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 03:12:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:60903 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387581AbfFJHMT (ORCPT
+        Mon, 10 Jun 2019 03:14:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40804 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387541AbfFJHOK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:12:19 -0400
-X-UUID: 9f0457cc934d4f35b73fcb4307072f38-20190610
-X-UUID: 9f0457cc934d4f35b73fcb4307072f38-20190610
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1673450468; Mon, 10 Jun 2019 15:12:11 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 10 Jun 2019 15:12:09 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 10 Jun 2019 15:12:09 +0800
-Message-ID: <1560150729.14203.11.camel@mtkswgap22>
-Subject: Re: [PATCH] mt76: mt7615: add support for per-chain signal strength
- reporting
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Sebastian Gottschall <s.gottschall@newmedia-net.de>
-CC:     Sean Wang <sean.wang@mediatek.com>,
-        Chih-Min Chen <chih-min.Chen@mediatek.com>,
-        YF Luo <yf.luo@mediatek.com>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, Roy Luo <royluo@google.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        "Felix Fietkau" <nbd@nbd.name>
-Date:   Mon, 10 Jun 2019 15:12:09 +0800
-In-Reply-To: <64662021-8e5a-91b5-9afb-3c9005564d19@newmedia-net.de>
-References: <3912a2863e858f3623ced61737836e42c7b19149.1560071167.git.ryder.lee@mediatek.com>
-         <d6cfd2e9-4b2b-36ac-6cae-a34f74204801@newmedia-net.de>
-         <1560132590.28258.5.camel@mtkswgap22> <1560140541.5606.12.camel@mtkswgap22>
-         <64662021-8e5a-91b5-9afb-3c9005564d19@newmedia-net.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Jun 2019 03:14:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so4525200pgm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 00:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FskRycTTyw9VRob7qpJa6qG+/LxbamrBi5S18mFOQHg=;
+        b=tghixlPkQyso0KUDuc1jCi34GALkRrwpmUJCfEdsgePr9fCl8KIOf0HrwH000EF5Uu
+         BlrHQ17p+/fSj1TVH4L5J10yWB4diMPseHlK6WcGIG4cklfdigVsMSgWX2rLjf4Ct3lI
+         EAV3k7XTbF6S6O1ONRnBDM0jCmRryMcFfGObQJg5XQWzivOZ1qm4+oKPI6JOz4CaaiHB
+         Igb2hwMHvj2wrahAu8GmF4ZpneQV5WfVlREC1s1r3EAostvEQ1Ceom+YGTOjUb207QAw
+         wUgQ1dlMNKh75jk0XFuzVnEhb79tNV9XBBRbjFjEy5NFdrv9toWOVXMNgK+b2kBSRSXX
+         vLQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FskRycTTyw9VRob7qpJa6qG+/LxbamrBi5S18mFOQHg=;
+        b=C0uPAdCP0NEsHKTVsLiqLpNQWzEVRX3qwP1YtSKMOBfcqPdvzQwsu/jDyq+chNG1Wv
+         GjXifD6oJFgX6JhBcshOS9GuIsPEn288IlessPW3OLXs2UALKce/NqjGk6HGfh5N68Bm
+         K0IzAnifVXXDDwLzEFqYu68y1P/DWkip2AYKpF8l+nTvWA1Q8k8F+0NcmEnxs2233V6V
+         GNT3nelo5bCd7j68tUd0fmzhswZpxP8TG7xXL2vqa+QqCEvMuekTY9vtrhu8rpEyyksy
+         vqjXr/JN7/kZ8PzfX9kuwKgneYE6ecjMezeFj4GSwUe80TwJFo0ndkizbxUPj0eMI9q8
+         rFiw==
+X-Gm-Message-State: APjAAAUxl+tnKWwaeGewm8Q7Bfp/2NBNPmSNgjZx9XcovNS35cxx3YOq
+        RmYu+6MKuX/eeSwtSJ516CWQWYP1
+X-Google-Smtp-Source: APXvYqwPS2FKtnEXjVaAkSwbEk/iqraTtbkreDdnS2XmmJkV024GJpWEejPAC4UPdtJ+95cB1AHp9A==
+X-Received: by 2002:a17:90a:650c:: with SMTP id i12mr20064499pjj.44.1560150849546;
+        Mon, 10 Jun 2019 00:14:09 -0700 (PDT)
+Received: from [10.0.2.15] ([171.79.92.225])
+        by smtp.gmail.com with ESMTPSA id m5sm2010017pjl.24.2019.06.10.00.14.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 00:14:09 -0700 (PDT)
+Subject: Re: [PATCH] staging: rtl8723bs: core: rtw_mlme_ext.c: Remove unused
+ variables
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, hardiksingh.k@gmail.com,
+        linux-kernel@vger.kernel.org, benniciemanuel78@gmail.com
+References: <20190607071123.28193-1-nishkadg.linux@gmail.com>
+ <20190609110206.GD30671@kroah.com>
+ <74fd5a83-0f60-baae-a65f-bbc0cd9f4ad0@gmail.com>
+ <20190610054927.GA13124@kroah.com>
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+Message-ID: <7554e171-360f-f0a8-5742-9a60e4a1cc2d@gmail.com>
+Date:   Mon, 10 Jun 2019 12:44:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 0BD6B986BECE4C40659DF7058A6D7B24417A93659896793BB653FCF3A5D280E92000:8
-X-MTK:  N
+In-Reply-To: <20190610054927.GA13124@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-10 at 06:47 +0200, Sebastian Gottschall wrote:
-> okay. curious is, that my variant works with sane results too.
-> i will test your variant and check the results
+On 10/06/19 11:19 AM, Greg KH wrote:
+> On Mon, Jun 10, 2019 at 10:08:21AM +0530, Nishka Dasgupta wrote:
+>> On 09/06/19 4:32 PM, Greg KH wrote:
+>>> On Fri, Jun 07, 2019 at 12:41:23PM +0530, Nishka Dasgupta wrote:
+>>>> Remove variables that are declared and assigned values but not otherwise
+>>>> used.
+>>>> Issue found with Coccinelle.
+>>>>
+>>>> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>>>> ---
+>>>>    drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 9 ---------
+>>>>    1 file changed, 9 deletions(-)
+>>>
+>>> You sent me 8 patches for this driver, yet only 2 were ordered in a
+>>> series.  I have no idea what order to apply these in :(
+>>>
+>>> Please resend them _all_ in a numbered patch series so I have a chance
+>>> to get this correct.
+>>
+>> Yes, I can do that. Who do I send the patch series to in that case? The
+>> maintainers list is slightly different for each file, and most of the
+>> patches in this driver are for different and unrelated files (except, I
+>> think, the two that I did send as a patch series). Do I combine the
+>> maintainers lists and send the entire patch series to everyone listed as a
+>> maintainer for any one of the patches in it?
 > 
-> Sebastian
+> The maintainer and mailing list is the same for all of the files in a
+> single driver.  If not, then something is wrong.
 
-Please don't top post as it's hard to track the thread.
+I'm using get_maintainers.pl with no arguments, and for rtl8723bs, I am 
+getting a lot of different mailing lists.
+E.g
+For core/rtw_ieee80211.c, I'm getting the following list:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Michael Straube <straube.linux@gmail.com>
+Andy Shevchenko <andy.shevchenko@gmail.com>
+Hardik Singh Rathore <hardiksingh.k@gmail.com>
+Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>
+Nishka Dasgupta <nishkadg.linux@gmail.com>
+devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM)
+linux-kernel@vger.kernel.org (open list)
 
-More specifically, IBRSSI is obtained from packet's L-STF portion and
-MTK HW PD (packet detection) will take it as a reference. (with
-variation more or less)
+Which is not the same as for core/rtw_mlme_ext.c (the current patch).
 
-As for RCPI which is calculated from packet's data portion. The other
-MTK chipsets may use IBRSSI as their baseband couldn't report RCPI.
+> And yes, you can combine the list of people if you wish but be sure you
+> are not just randomly including people who happened to touch the driver
+> "last".
 
-Ryder
+Okay, I'll combine then. But is there any metric I should be using to 
+filter the output of get_maintainer.pl? Currently I'm running it with no 
+arguments and just adding everyone.
 
-> Am 10.06.2019 um 06:22 schrieb Ryder Lee:
-> > On Mon, 2019-06-10 at 10:09 +0800, Ryder Lee wrote:
-> >> On Sun, 2019-06-09 at 16:44 +0200, Sebastian Gottschall wrote:
-> >>> according to my findings
-> >>>
-> >>> MT_RXV4_RCPI1 is part of rx descriptor 4 and not 3
-> >>> so it must be rxdg4 = rxd[4] etc.
-> >> RXV start from 1 in the code.
-> >>
-> >> That is: RXV1 <-> rxdg0, RXV2 <-> rxdg1 ...so RXV4 <-> rxdg3
-> >>
-> >>> however rxdg3 contains MT_RXV3_IB_RSSIRX which can be used for signal calculation.
-> >>> i already wrote a similar code for this driver which i sended to felix a long time ago.
-> >>> my variant looks like
-> >>>                   status->signal = (FIELD_GET(MT_RXV3_IB_RSSIRX, rxdg3) - 220) / 2;
-> >>>                   status->chain_signal[0] = (FIELD_GET(MT_RXV4_RCPI0, rxdg4) - 220) / 2;
-> >>>                   status->chain_signal[1] = (FIELD_GET(MT_RXV4_RCPI1, rxdg4) - 220) / 2;
-> >>>                   status->chain_signal[2] = (FIELD_GET(MT_RXV4_RCPI2, rxdg4) - 220) / 2;
-> >>>                   status->chain_signal[3] = (FIELD_GET(MT_RXV4_RCPI3, rxdg4) - 220) / 2;
-> > mt7615 actually doesn't use in-band RSSI for signal calculation, but it
-> > occurs to me that i should modify the code to compare per-chain's
-> > signal. Something like this:
-> >
-> > 		status->chain_signal[0] = to_rssi(MT_RXV4_RCPI0, rxdg3);
-> > 		status->chain_signal[1] = to_rssi(MT_RXV4_RCPI1, rxdg3);
-> > 		status->chain_signal[2] = to_rssi(MT_RXV4_RCPI2, rxdg3);
-> > 		status->chain_signal[3] = to_rssi(MT_RXV4_RCPI3, rxdg3);
-> > 		status->signal = status->chain_signal[0];
-> >
-> > 		switch (status->chains) {
-> > 		case 0xf:
-> > 			status->signal = max(status->signal,
-> > 					     status->chain_signal[3]);
-> > 		case 0x7:
-> > 			status->signal = max(status->signal,
-> > 					     status->chain_signal[2]);
-> > 		case 0x3:
-> > 			status->signal = max(status->signal,
-> > 					     status->chain_signal[1]);
-> > 			break;
-> > 		default:
-> > 			break;
-> > 		}
-> >
-> >
-> > I could send a v2 or you can take care of that.
-> >
-> > Ryder
-> >
-> >
+Thanking you,
+Nishka
 
+> greg k-h
+> 
 
