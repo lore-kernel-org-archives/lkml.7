@@ -2,91 +2,90 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2F4C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B139DC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B7020859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560197113;
-	bh=PduZaRzQRSkUFp6m8ZuArUO0JgqoGEOmHa6pWYxRhLY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qvcrst1tBL31h0y0WNbeZUhmj8OIbo2swAyRYLE8gaUkuSeUq3oPDk66+AiQ0SW0Y
-	 AZjS0fTFfO/ufl8VS2aA5zJp8FAsIBqiExoIUI4zeHq23wZoDUM4upo8lCuYKehjkR
-	 RPO9wMd/zyAvRKXehScEjRnMpcr77V5uHVzmqX6o=
+	by mail.kernel.org (Postfix) with ESMTP id 67B8620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:05:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="rcWrdec/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389408AbfFJUFM (ORCPT
+        id S2389466AbfFJUFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:05:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389170AbfFJUFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:05:12 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8188206E0;
-        Mon, 10 Jun 2019 20:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560197111;
-        bh=PduZaRzQRSkUFp6m8ZuArUO0JgqoGEOmHa6pWYxRhLY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=THqierrQ3+YbCKPeWK1KP2EH89+NflIOBBl/puw8HhTzdGgC6kpn+afPni4h21D8y
-         cUPYgRp1SwvfIcbGjuZD/510c42MO514WgKmJwvDnF3o4XJwKjUM+oc0zmAwDDwSQq
-         GA3St+YuMNf3bmJYn7ZzZ+PLg5m1N7zCIehpkVHI=
-Date:   Mon, 10 Jun 2019 13:05:11 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>, Yu Zhao <yuzhao@google.com>,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] mm: treewide: Clarify pgtable_page_{ctor,dtor}() naming
-Message-Id: <20190610130511.310e8d2cc8d6b02b2c3e238d@linux-foundation.org>
-In-Reply-To: <20190610163354.24835-1-mark.rutland@arm.com>
-References: <20190610163354.24835-1-mark.rutland@arm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Jun 2019 16:05:53 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46689 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389170AbfFJUFx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 16:05:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so4846611ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:05:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8SF78ZtQnVw4meJ8EJONYZwlPUHgQPUvTSa99AqdBgU=;
+        b=rcWrdec/E9sDrmrCQDZ06tIyqcs5/k1EUESVSY+S1Cg6GQn6h9qy+BDmoYs1wsVg9I
+         g42UkqXkrAlUMW6nP1Rz/XFK/wQj/GaU8nTQfeHt4ng8NonfnxijFoYq3PQ93p3CXGcT
+         G32Heb8dJxd1L3dQzfANtPaMJmYEYuUiw29MRS/QWD8Os0kG/QpqN8bC62USIMOgwh0i
+         AhIRRPuXpLl5MCITpL8Mjn/OT+EqwnS2zIAKR/9xz0bLbPAY7h1dqyubaOd5ORjJ8PqZ
+         +TVZxzuabviG985UYi73kxFgNhhuBo81kUv4NC29vZLRUmtg5F6N/k7NuHKE5b2KpFRA
+         1biw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8SF78ZtQnVw4meJ8EJONYZwlPUHgQPUvTSa99AqdBgU=;
+        b=C7h6l4bClLXQDPuaOVDjYVEXCCRjJLcxjrtoefRHMDLGYvOMGHbLS8hwUctDe/zREx
+         lF4gHYyHcYfCW7G7Sz55Yp3BJKsfn4v/oWXGxfSmGLAjCeetjt1nEPR5HXK9UCOw1dKU
+         1gLBmY5U1GAFtkRRHk7tImOmhF7HPIf4IXkC5hhpH9o/UNoJT78d9VKzR3cQPg8hn1ki
+         MvBW8YpdHrwtC1J22ultax0HZWjHviALflL8QV799yeDg8Cq52DCKDSwAMabG3qAS1sH
+         5gD45ll+F5u8ioxqX+dJpQD+QDdrEYYA9rrmmD0aW+1sS2Fez/x9mlgq5bD/nhGClxjT
+         5cIw==
+X-Gm-Message-State: APjAAAVPKMitqQQVZzl8k+KCMST4hJrjmZ3kHHjWmqU5qaO9ZlaJAdJV
+        sLPPIkdkBdyb5eyeKaLQzbp4ZA==
+X-Google-Smtp-Source: APXvYqxJkhuh6OlUK5H+u52AQvvvP//n3NzjSE12meA4CT/a1rcVee2qlkuqgalMfr2jAg57HDvkBQ==
+X-Received: by 2002:a2e:86c1:: with SMTP id n1mr14005941ljj.162.1560197150994;
+        Mon, 10 Jun 2019 13:05:50 -0700 (PDT)
+Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
+        by smtp.gmail.com with ESMTPSA id f4sm2157079ljm.13.2019.06.10.13.05.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 13:05:50 -0700 (PDT)
+From:   =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
+To:     gregkh@linuxfoundation.org
+Cc:     dan.carpenter@oracle.com, jeremy@azazel.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
+Subject: [PATCH 0/2] staging: kpc2000: minor fixes in kp2000_pcie_probe
+Date:   Mon, 10 Jun 2019 22:05:33 +0200
+Message-Id: <20190610200535.31820-1-simon@nikanor.nu>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 17:33:54 +0100 Mark Rutland <mark.rutland@arm.com> wrote:
+These two patches fixes issues pointed out by Dan in a previous
+staging/kpc2000 patch thread: many comments in kp2000_pcie_probe just
+repeats the code and the current label names doesn't add any information
+and makes it hard to follow the code.
 
-> The naming of pgtable_page_{ctor,dtor}() seems to have confused a few
-> people, and until recently arm64 used these erroneously/pointlessly for
-> other levels of pagetable.
-> 
-> To make it incredibly clear that these only apply to the PTE level, and
-> to align with the naming of pgtable_pmd_page_{ctor,dtor}(), let's rename
-> them to pgtable_pte_page_{ctor,dtor}().
-> 
-> The bulk of this conversion was performed by the below Coccinelle
-> semantic patch, with manual whitespace fixups applied within macros, and
-> Documentation updated by hand.
+Rename all labels and remove the comments that just repeats the code.
 
-eep.  I get a spectacular number of rejects thanks to Mike's series
+Simon Sandström (2):
+  staging: kpc2000: improve label names in kp2000_pcie_probe
+  staging: kpc2000: remove unnecessary comments in kp2000_pcie_probe
 
-asm-generic-x86-introduce-generic-pte_allocfree_one.patch
-alpha-switch-to-generic-version-of-pte-allocation.patch
-arm-switch-to-generic-version-of-pte-allocation.patch
-arm64-switch-to-generic-version-of-pte-allocation.patch
-csky-switch-to-generic-version-of-pte-allocation.patch
-m68k-sun3-switch-to-generic-version-of-pte-allocation.patch
-mips-switch-to-generic-version-of-pte-allocation.patch
-nds32-switch-to-generic-version-of-pte-allocation.patch
-nios2-switch-to-generic-version-of-pte-allocation.patch
-parisc-switch-to-generic-version-of-pte-allocation.patch
-riscv-switch-to-generic-version-of-pte-allocation.patch
-um-switch-to-generic-version-of-pte-allocation.patch
-unicore32-switch-to-generic-version-of-pte-allocation.patch
+ drivers/staging/kpc2000/kpc2000/core.c | 80 ++++++++------------------
+ 1 file changed, 25 insertions(+), 55 deletions(-)
 
-But at least they will make your patch smaller!
+-- 
+2.20.1
+
