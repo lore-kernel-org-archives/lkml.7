@@ -2,154 +2,104 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BE0C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A8BC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CB620820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CHzp2/jM"
+	by mail.kernel.org (Postfix) with ESMTP id 0F76920820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389476AbfFJUJe (ORCPT
+        id S2389391AbfFJUNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:09:34 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56797 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389099AbfFJUJd (ORCPT
+        Mon, 10 Jun 2019 16:13:09 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:49301 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389099AbfFJUNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:09:33 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5AK80w34057172
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 10 Jun 2019 13:08:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5AK80w34057172
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560197281;
-        bh=8CH7/Z39abKKy8RxsnD113lmL8hqQ7iG7mCzh9v8ZA0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=CHzp2/jMzL+O+QKahhWaAReCCbdOR4iL1hk7If1xKZQEqSI9A6OsLL/NPV27dCZlB
-         MEUur3Yx6SgOmihSRCTMZJJSJAl3Gf5TsS5YHQ2tsARPYsuw5aFs6JM9pnBztD7f4n
-         gt20VnH9KeBQo+sNiGkFn3lHGy6mLaQ278J0etQQjzEnmuuq4QJaF368xx/gtDAi/A
-         0rhZynrE69CMC2p9Ewk+K1manBlUw+er0QN38nz7MFLT4j9O2y79ks6VxlOySs/ncI
-         pemNtM/ufSmesXncrZk/3PyMz+gr5lQHRMFPDRT2pLjKX30Cm1Np+AcMXTxaKa0jOX
-         6yrub/9PjFTjg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5AK7xvJ4057162;
-        Mon, 10 Jun 2019 13:07:59 -0700
-Date:   Mon, 10 Jun 2019 13:07:59 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kairui Song <tipbot@zytor.com>
-Message-ID: <tip-5a949b38839e284b1307540c56b03caf57da9736@git.kernel.org>
-Cc:     rjw@rjwysocki.net, bp@suse.de, dyoung@redhat.com,
-        j-nomura@ce.jp.nec.com, linux-kernel@vger.kernel.org,
-        kasong@redhat.com, x86@kernel.org, mingo@kernel.org,
-        fanc.fnst@cn.fujitsu.com, tglx@linutronix.de, lijiang@redhat.com,
-        bhe@redhat.com, dirk.vandermerwe@netronome.com, hpa@zytor.com
-Reply-To: hpa@zytor.com, dirk.vandermerwe@netronome.com, bhe@redhat.com,
-          lijiang@redhat.com, tglx@linutronix.de, fanc.fnst@cn.fujitsu.com,
-          mingo@kernel.org, kasong@redhat.com, x86@kernel.org,
-          linux-kernel@vger.kernel.org, dyoung@redhat.com,
-          j-nomura@ce.jp.nec.com, bp@suse.de, rjw@rjwysocki.net
-In-Reply-To: <20190610073617.19767-1-kasong@redhat.com>
-References: <20190610073617.19767-1-kasong@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/boot] x86/kexec: Add the ACPI NVS region to the ident map
-Git-Commit-ID: 5a949b38839e284b1307540c56b03caf57da9736
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 10 Jun 2019 16:13:09 -0400
+X-Originating-IP: 37.205.120.66
+Received: from localhost (unknown [37.205.120.66])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 2B7A6E000B;
+        Mon, 10 Jun 2019 20:13:04 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 22:13:01 +0200
+From:   Alexandre Belloni <alexandre.belloni@free-electrons.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Ken Sloat <KSloat@aampglobal.com>,
+        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
+        "wim@iguana.be" <wim@iguana.be>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFE]: watchdog: atmel: atmel-sama5d4-wdt
+Message-ID: <20190610201301.GH25472@piout.net>
+References: <BL0PR07MB41152EDB169FE9ED1AD3B4C9AD130@BL0PR07MB4115.namprd07.prod.outlook.com>
+ <20190610162811.GA11270@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190610162811.GA11270@roeck-us.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5a949b38839e284b1307540c56b03caf57da9736
-Gitweb:     https://git.kernel.org/tip/5a949b38839e284b1307540c56b03caf57da9736
-Author:     Kairui Song <kasong@redhat.com>
-AuthorDate: Mon, 10 Jun 2019 15:36:17 +0800
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Mon, 10 Jun 2019 22:00:26 +0200
+Hello,
 
-x86/kexec: Add the ACPI NVS region to the ident map
+On 10/06/2019 09:28:11-0700, Guenter Roeck wrote:
+> On Mon, Jun 10, 2019 at 03:51:52PM +0000, Ken Sloat wrote:
+> > Hello Nicolas,
+> > 
+> > I wanted to open a discussion proposing new functionality to allow disabling of the watchdog timer upon entering 
+> > suspend in the SAMA5D2/4.
+> > 
+> > Typical use case of a hardware watchdog timer in the kernel is a userspace application opens the watchdog timer and
+> > periodically "kicks" it. If the application hits a deadlock somewhere and is no longer able to kick it, then the watchdog
+> > intervenes and often resets the processor. Such is the case for the Atmel driver (which also allows a watchdog interrupt
+> > to be asserted in lieu of a system reset). In most use cases, upon entering a low power/suspend state, the application 
+> > will no longer be able to "kick" the watchdog. If the watchdog is not disabled or kicked via another method, then it will
+> > reset the system. This is the current behavior of the Atmel driver as of today.
+> > 
+> > The watchdog peripheral itself does have a "WDIDLEHLT" bit however, and this is enabled via the "atmel,idle-halt" dt
+> > property. However, this is not very useful, as it literally only makes the watchdog count when the CPU is active. This 
+> > results in non-deterministic triggering of the WDT and means that if a critical application were to crash, it may be
+> > quite a long time before the WDT would ever trigger. Below is a similar statement made in the device-tree doc for this
+> > peripheral:
+> > 
+> > - atmel,idle-halt: present if you want to stop the watchdog when the CPU is
+> > 		   in idle state.
+> > 	CAUTION: This property should be used with care, it actually makes the
+> > 	watchdog not counting when the CPU is in idle state, therefore the
+> > 	watchdog reset time depends on mean CPU usage and will not reset at all
+> > 	if the CPU stop working while it is in idle state, which is probably
+> > 	not what you want.
+> > 
+> > It seems to me, that it would be logical and useful to introduce a new property that would cause the Atmel WDT
+> > to disable on suspend and re-enable on resume. It also appears that the WDT is re-initialized anyways upon
+> > resume, so the only piece missing here would really be a dt flag and a call to disable.
+> > 
+> Wondering - why would this need a dt property ? That would be quite unusual. Is
+> there a condition where one would _not_ want the watchdog to stop on suspend ?
+> 
 
-With the recent addition of RSDP parsing in the decompression stage,
-a kexec-ed kernel now needs ACPI tables to be covered by the identity
-mapping. And in commit
+There are customers that protects suspend/resume using the watchdog.
+They wake up their platform every 15s to ping the watchdog.
 
-  6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI tables to the ident map")
+Also, I don't see why the application deciding to go to suspend wouldn't
+be able to disable the watchdog before do so if this is the wanted policy.
 
-the ACPI tables memory region was added to the ident map.
+> If anything I would suggest to drop atmel,idle-halt completely; it really looks
+> like it would make the watchdog unreliable.
+> 
+> Thanks,
+> Guenter
 
-But some machines have only an ACPI NVS memory region and the ACPI
-tables are located in that region. In such case, the kexec-ed kernel
-will still fail when trying to access ACPI tables if they're not mapped.
-
-So add the NVS memory region to the ident map as well.
-
- [ bp: Massage. ]
-
-Fixes: 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI tables to the ident map")
-Suggested-by: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: kexec@lists.infradead.org
-Cc: Lianbo Jiang <lijiang@redhat.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190610073617.19767-1-kasong@redhat.com
----
- arch/x86/kernel/machine_kexec_64.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 3c77bdf7b32a..b2b88dcaaf88 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -54,14 +54,26 @@ static int mem_region_callback(struct resource *res, void *arg)
- static int
- map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
- {
--	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
- 	struct init_pgtable_data data;
-+	unsigned long flags;
-+	int ret;
- 
- 	data.info = info;
- 	data.level4p = level4p;
- 	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
--	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
--				   &data, mem_region_callback);
-+
-+	ret = walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-+				  &data, mem_region_callback);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	/* ACPI tables could be located in ACPI Non-volatile Storage region */
-+	ret = walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1,
-+				  &data, mem_region_callback);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	return 0;
- }
- #else
- static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
