@@ -2,318 +2,378 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9866C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331B5C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45F6206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E140A206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:27:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GfwAcreq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388503AbfFJIX7 (ORCPT
+        id S2388455AbfFJI1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:23:59 -0400
-Received: from relay.sw.ru ([185.231.240.75]:37516 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387825AbfFJIX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:23:58 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1haFao-0001ay-LH; Mon, 10 Jun 2019 11:23:50 +0300
-Subject: Re: [PATCH 1/3] mm: thp: make deferred split shrinker memcg aware
-To:     Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        mhocko@suse.com, kirill.shutemov@linux.intel.com, hughd@google.com,
-        shakeelb@google.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
- <1559047464-59838-2-git-send-email-yang.shi@linux.alibaba.com>
- <487665fe-c792-5078-292a-481f33d31d30@virtuozzo.com>
- <f57d9c67-8e20-b430-2ca3-74fa2f31415a@linux.alibaba.com>
- <20fe4ea6-c1c5-67bb-5c7e-2db0a9af6892@virtuozzo.com>
- <cb1f0ecd-d127-89ec-da2f-47fba1d6ba79@linux.alibaba.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <c82f24d9-035b-e7e8-f8be-3489803a8319@virtuozzo.com>
-Date:   Mon, 10 Jun 2019 11:23:49 +0300
+        Mon, 10 Jun 2019 04:27:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38313 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388041AbfFJI1l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:27:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d18so8208148wrs.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A37KVk/TxifJsVNalXVoRHH861G3sRXMWjHmk2uFY2M=;
+        b=GfwAcreqPVer5VZpTnACEitJnXlm0m+ZJTICWWGT8anLZ0XG5b2OYbIHY7/wfXcNWv
+         lmzjOOm23dCDWC1KALbuTOzbWGCBrbBP66+ldH0WNYApE3GXys1W5oPwYpfMlwKXfcz6
+         ucxS2IGC0hGnZyaEGkviU2eyJGicMkqr4JRnMf068/JTszGTaDJjowjC4tEKgEoDaVMr
+         3QEALegKlofNNsRgt8NTGeetL6unawnjTvQf6hGUiMfHFvEH4u49OUMSo/MDSdGdbIqe
+         Bgua22q3EUnAmEBskpe8GLbq2fAdmn8lVxG9JCmWcHMfiJB6KX/jfyXTSQohi2bXHl2W
+         WfRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A37KVk/TxifJsVNalXVoRHH861G3sRXMWjHmk2uFY2M=;
+        b=B6YQDzZFpDl5q8gIcOocwLV7E4qtkFVLht2L5aburukHI8yY6FOC0n+mm6OMA+tpD1
+         HDC0IsB8I51cQOFf9KtAWz/iddHA0WRVYa/P248Go542lx6Tk1EyHKwuexGzmEYB6Euv
+         JgaI0r6BDsbB3oAFou4GjaTHtrnhpO/fr5aXdNfBgR49JgZkL3oH6rl0+2ILlFXTCNCt
+         GiUfquAn4HO9Qe8CUs25BStr7MK34sHRl1krpgq+3Bmlx+8stHAHkZXpvX6A22yWeFpU
+         MDKGXjN9bVJlMMNLvNRgPLg7G7ji0tVB0oRwKhTOlYyGzoAmxwI73OkXMJVa3H1riiQg
+         EUkw==
+X-Gm-Message-State: APjAAAUNuZJlUk25NB7rr7liqP2W7TfYaCpsICnaj+ImZxll7fmRFD7f
+        1cwqX6JQGM9XbCAWnrx3Bx7+xJJrdTBlOw==
+X-Google-Smtp-Source: APXvYqyU0P1s2pRG5AtbsgnoLVeAozBW9+nm5u6a2qJdGzEp/UYtuWum3mqTg5H52gD7qEe/59GjRA==
+X-Received: by 2002:a5d:4992:: with SMTP id r18mr29891457wrq.107.1560155259056;
+        Mon, 10 Jun 2019 01:27:39 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id f204sm12730331wme.18.2019.06.10.01.27.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 01:27:38 -0700 (PDT)
+Subject: Re: [RFC PATCH 6/6] soundwire: qcom: add support for SoundWire
+ controller
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+ <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+ <20190610064025.GK9160@vkoul-mobl.Dlink>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <2938660d-81e1-d6b2-4179-9f32c6ca1644@linaro.org>
+Date:   Mon, 10 Jun 2019 09:27:37 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <cb1f0ecd-d127-89ec-da2f-47fba1d6ba79@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190610064025.GK9160@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.05.2019 14:25, Yang Shi wrote:
-> 
-> 
-> On 5/29/19 4:14 PM, Kirill Tkhai wrote:
->> On 29.05.2019 05:43, Yang Shi wrote:
->>>
->>> On 5/28/19 10:42 PM, Kirill Tkhai wrote:
->>>> Hi, Yang,
->>>>
->>>> On 28.05.2019 15:44, Yang Shi wrote:
->>>>> Currently THP deferred split shrinker is not memcg aware, this may cause
->>>>> premature OOM with some configuration. For example the below test would
->>>>> run into premature OOM easily:
->>>>>
->>>>> $ cgcreate -g memory:thp
->>>>> $ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
->>>>> $ cgexec -g memory:thp transhuge-stress 4000
->>>>>
->>>>> transhuge-stress comes from kernel selftest.
->>>>>
->>>>> It is easy to hit OOM, but there are still a lot THP on the deferred
->>>>> split queue, memcg direct reclaim can't touch them since the deferred
->>>>> split shrinker is not memcg aware.
->>>>>
->>>>> Convert deferred split shrinker memcg aware by introducing per memcg
->>>>> deferred split queue.  The THP should be on either per node or per memcg
->>>>> deferred split queue if it belongs to a memcg.  When the page is
->>>>> immigrated to the other memcg, it will be immigrated to the target
->>>>> memcg's deferred split queue too.
->>>>>
->>>>> And, move deleting THP from deferred split queue in page free before
->>>>> memcg uncharge so that the page's memcg information is available.
->>>>>
->>>>> Reuse the second tail page's deferred_list for per memcg list since the
->>>>> same THP can't be on multiple deferred split queues.
->>>>>
->>>>> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
->>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>>>> Cc: Michal Hocko <mhocko@suse.com>
->>>>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
->>>>> Cc: Hugh Dickins <hughd@google.com>
->>>>> Cc: Shakeel Butt <shakeelb@google.com>
->>>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->>>>> ---
->>>>>    include/linux/huge_mm.h    |  24 ++++++
->>>>>    include/linux/memcontrol.h |   6 ++
->>>>>    include/linux/mm_types.h   |   7 +-
->>>>>    mm/huge_memory.c           | 182 +++++++++++++++++++++++++++++++++------------
->>>>>    mm/memcontrol.c            |  20 +++++
->>>>>    mm/swap.c                  |   4 +
->>>>>    6 files changed, 194 insertions(+), 49 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
->>>>> index 7cd5c15..f6d1cde 100644
->>>>> --- a/include/linux/huge_mm.h
->>>>> +++ b/include/linux/huge_mm.h
->>>>> @@ -250,6 +250,26 @@ static inline bool thp_migration_supported(void)
->>>>>        return IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION);
->>>>>    }
->>>>>    +static inline struct list_head *page_deferred_list(struct page *page)
->>>>> +{
->>>>> +    /*
->>>>> +     * Global deferred list in the second tail pages is occupied by
->>>>> +     * compound_head.
->>>>> +     */
->>>>> +    return &page[2].deferred_list;
->>>>> +}
->>>>> +
->>>>> +static inline struct list_head *page_memcg_deferred_list(struct page *page)
->>>>> +{
->>>>> +    /*
->>>>> +     * Memcg deferred list in the second tail pages is occupied by
->>>>> +     * compound_head.
->>>>> +     */
->>>>> +    return &page[2].memcg_deferred_list;
->>>>> +}
->>>>> +
->>>>> +extern void del_thp_from_deferred_split_queue(struct page *);
->>>>> +
->>>>>    #else /* CONFIG_TRANSPARENT_HUGEPAGE */
->>>>>    #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
->>>>>    #define HPAGE_PMD_MASK ({ BUILD_BUG(); 0; })
->>>>> @@ -368,6 +388,10 @@ static inline bool thp_migration_supported(void)
->>>>>    {
->>>>>        return false;
->>>>>    }
->>>>> +
->>>>> +static inline void del_thp_from_deferred_split_queue(struct page *page)
->>>>> +{
->>>>> +}
->>>>>    #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->>>>>      #endif /* _LINUX_HUGE_MM_H */
->>>>> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
->>>>> index bc74d6a..9ff5fab 100644
->>>>> --- a/include/linux/memcontrol.h
->>>>> +++ b/include/linux/memcontrol.h
->>>>> @@ -316,6 +316,12 @@ struct mem_cgroup {
->>>>>        struct list_head event_list;
->>>>>        spinlock_t event_list_lock;
->>>>>    +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>>>> +    struct list_head split_queue;
->>>>> +    unsigned long split_queue_len;
->>>>> +    spinlock_t split_queue_lock;
->>>>> +#endif
->>>>> +
->>>>>        struct mem_cgroup_per_node *nodeinfo[0];
->>>>>        /* WARNING: nodeinfo must be the last member here */
->>>>>    };
->>>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->>>>> index 8ec38b1..405f5e6 100644
->>>>> --- a/include/linux/mm_types.h
->>>>> +++ b/include/linux/mm_types.h
->>>>> @@ -139,7 +139,12 @@ struct page {
->>>>>            struct {    /* Second tail page of compound page */
->>>>>                unsigned long _compound_pad_1;    /* compound_head */
->>>>>                unsigned long _compound_pad_2;
->>>>> -            struct list_head deferred_list;
->>>>> +            union {
->>>>> +                /* Global THP deferred split list */
->>>>> +                struct list_head deferred_list;
->>>>> +                /* Memcg THP deferred split list */
->>>>> +                struct list_head memcg_deferred_list;
->>>> Why we need two namesakes for this list entry?
->>>>
->>>> For me it looks redundantly: it does not give additional information,
->>>> but it leads to duplication (and we have two helpers page_deferred_list()
->>>> and page_memcg_deferred_list() instead of one).
->>> Yes, kind of. Actually I was also wondering if this is worth or not. My point is this may improve the code readability. We can figure out what split queue (per node or per memcg) is being manipulated just by the name of the list.
->>>
->>> If the most people thought this is unnecessary, I'm definitely ok to just keep one name.
->>>
->>>>> +            };
->>>>>            };
->>>>>            struct {    /* Page table pages */
->>>>>                unsigned long _pt_pad_1;    /* compound_head */
->>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->>>>> index 9f8bce9..0b9cfe1 100644
->>>>> --- a/mm/huge_memory.c
->>>>> +++ b/mm/huge_memory.c
->>>>> @@ -492,12 +492,6 @@ pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
->>>>>        return pmd;
->>>>>    }
->>>>>    -static inline struct list_head *page_deferred_list(struct page *page)
->>>>> -{
->>>>> -    /* ->lru in the tail pages is occupied by compound_head. */
->>>>> -    return &page[2].deferred_list;
->>>>> -}
->>>>> -
->>>>>    void prep_transhuge_page(struct page *page)
->>>>>    {
->>>>>        /*
->>>>> @@ -505,7 +499,10 @@ void prep_transhuge_page(struct page *page)
->>>>>         * as list_head: assuming THP order >= 2
->>>>>         */
->>>>>    -    INIT_LIST_HEAD(page_deferred_list(page));
->>>>> +    if (mem_cgroup_disabled())
->>>>> +        INIT_LIST_HEAD(page_deferred_list(page));
->>>>> +    else
->>>>> +        INIT_LIST_HEAD(page_memcg_deferred_list(page));
->>>>>        set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
->>>>>    }
->>>>>    @@ -2664,6 +2661,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->>>>>        bool mlocked;
->>>>>        unsigned long flags;
->>>>>        pgoff_t end;
->>>>> +    struct mem_cgroup *memcg = head->mem_cgroup;
->>>>>          VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
->>>>>        VM_BUG_ON_PAGE(!PageLocked(page), page);
->>>>> @@ -2744,17 +2742,30 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->>>>>        }
->>>>>          /* Prevent deferred_split_scan() touching ->_refcount */
->>>>> -    spin_lock(&pgdata->split_queue_lock);
->>>>> +    if (!memcg)
->>>>> +        spin_lock(&pgdata->split_queue_lock);
->>>>> +    else
->>>>> +        spin_lock(&memcg->split_queue_lock);
->>>>>        count = page_count(head);
->>>>>        mapcount = total_mapcount(head);
->>>>>        if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
->>>>> -        if (!list_empty(page_deferred_list(head))) {
->>>>> -            pgdata->split_queue_len--;
->>>>> -            list_del(page_deferred_list(head));
->>>>> +        if (!memcg) {
->>>>> +            if (!list_empty(page_deferred_list(head))) {
->>>>> +                pgdata->split_queue_len--;
->>>>> +                list_del(page_deferred_list(head));
->>>>> +            }
->>>>> +        } else {
->>>>> +            if (!list_empty(page_memcg_deferred_list(head))) {
->>>>> +                memcg->split_queue_len--;
->>>>> +                list_del(page_memcg_deferred_list(head));
->>>>> +            }
->>>>>            }
->>>>>            if (mapping)
->>>>>                __dec_node_page_state(page, NR_SHMEM_THPS);
->>>>> -        spin_unlock(&pgdata->split_queue_lock);
->>>>> +        if (!memcg)
->>>>> +            spin_unlock(&pgdata->split_queue_lock);
->>>>> +        else
->>>>> +            spin_unlock(&memcg->split_queue_lock);
->>>>>            __split_huge_page(page, list, end, flags);
->>>>>            if (PageSwapCache(head)) {
->>>>>                swp_entry_t entry = { .val = page_private(head) };
->>>>> @@ -2771,7 +2782,10 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->>>>>                dump_page(page, "total_mapcount(head) > 0");
->>>>>                BUG();
->>>>>            }
->>>>> -        spin_unlock(&pgdata->split_queue_lock);
->>>>> +        if (!memcg)
->>>>> +            spin_unlock(&pgdata->split_queue_lock);
->>>>> +        else
->>>>> +            spin_unlock(&memcg->split_queue_lock);
->>>>>    fail:        if (mapping)
->>>>>                xa_unlock(&mapping->i_pages);
->>>>>            spin_unlock_irqrestore(&pgdata->lru_lock, flags);
->>>>> @@ -2791,17 +2805,40 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
->>>>>        return ret;
->>>>>    }
->>>>>    -void free_transhuge_page(struct page *page)
->>>>> +void del_thp_from_deferred_split_queue(struct page *page)
->>>>>    {
->>>>>        struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
->>>>>        unsigned long flags;
->>>>> +    struct mem_cgroup *memcg = compound_head(page)->mem_cgroup;
->>>>>    -    spin_lock_irqsave(&pgdata->split_queue_lock, flags);
->>>>> -    if (!list_empty(page_deferred_list(page))) {
->>>>> -        pgdata->split_queue_len--;
->>>>> -        list_del(page_deferred_list(page));
->>>>> +    /*
->>>>> +     * The THP may be not on LRU at this point, e.g. the old page of
->>>>> +     * NUMA migration.  And PageTransHuge is not enough to distinguish
->>>>> +     * with other compound page, e.g. skb, THP destructor is not used
->>>>> +     * anymore and will be removed, so the compound order sounds like
->>>>> +     * the only choice here.
->>>>> +     */
->>>>> +    if (PageTransHuge(page) && compound_order(page) == HPAGE_PMD_ORDER) {
->>>>> +        if (!memcg) {
->>>>> +            spin_lock_irqsave(&pgdata->split_queue_lock, flags);
->>>>> +            if (!list_empty(page_deferred_list(page))) {
->>>>> +                pgdata->split_queue_len--;
->>>>> +                list_del(page_deferred_list(page));
->>>>> +            }
->>>>> +            spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
->>>>> +        } else {
->>>>> +            spin_lock_irqsave(&memcg->split_queue_lock, flags);
->>>>> +            if (!list_empty(page_memcg_deferred_list(page))) {
->>>>> +                memcg->split_queue_len--;
->>>>> +                list_del(page_memcg_deferred_list(page));
->>>>> +            }
->>>>> +            spin_unlock_irqrestore(&memcg->split_queue_lock, flags);
->>>> Such the patterns look like a duplication of functionality, we already have
->>>> in list_lru: it handles both root_mem_cgroup and all children memcg.
->>> Would you please point me to some example code?
->> I mean that we do almost the same in list_lru_add(): check for whether
->> item is already added, find the desired list, maintain the list's len.
->>
->> It looks all the above we may replace with something like
->>
->> list_lru_add(defered_thp_lru, page_deferred_list(page))
->>
->> after necessary preparations (some rewriting of the rest of code is needed).
-> 
-> Aha, I got your point. I'm not quite familiar with that code. I took a quick loot at it, it looks the current APIs are not good enough for deferred split, which needs irqsave/irqrestore version list add/del/move/walk and page refcount bumped version walk.
+Thanks for taking time to review!
 
-I missed the point about refcount bumping, could you please clarify?
+
+On 10/06/2019 07:40, Vinod Koul wrote:
+> On 07-06-19, 09:56, Srinivas Kandagatla wrote:
+>> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+>> either integrated as part of WCD audio codecs via slimbus or
+>> as part of SOC I/O.
+>>
+>> This patchset adds support to a very basic controller which has been
+>> tested with WCD934x SoundWire controller connected to WSA881x smart
+>> speaker amplifiers.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/soundwire/Kconfig  |   9 +
+>>   drivers/soundwire/Makefile |   4 +
+>>   drivers/soundwire/qcom.c   | 983 +++++++++++++++++++++++++++++++++++++
+> 
+> Can you split this to two patches (at least), master driver followed by
+> DAI driver
+
+Sure.
+
+> 
+>> +
+>> +#define SWRM_COMP_HW_VERSION					0x00
+> 
+> What does COMP stand for?
+
+Controller splits registers into "Component(core configuration 
+registers)", "Interrupt" "Command Fifo" and so on...
+
+> 
+>> +#define SWRM_COMP_CFG_ADDR					0x04
+>> +#define SWRM_COMP_CFG_IRQ_LEVEL_OR_PULSE_MSK			BIT(1)
+>> +#define SWRM_COMP_CFG_ENABLE_MSK				BIT(0)
+>> +#define SWRM_COMP_PARAMS					0x100
+>> +#define SWRM_COMP_PARAMS_DOUT_PORTS_MASK			GENMASK(4, 0)
+>> +#define SWRM_COMP_PARAMS_DIN_PORTS_MASK				GENMASK(9, 5)
+>> +#define SWRM_COMP_PARAMS_WR_FIFO_DEPTH				GENMASK(14, 10)
+>> +#define SWRM_COMP_PARAMS_RD_FIFO_DEPTH				GENMASK(19, 15)
+>> +#define SWRM_COMP_PARAMS_AUTO_ENUM_SLAVES			GENMASK(32. 20)
+> 
+> Thats a lot of text, So as others have said we need to rethink the
+> naming conventions, perhaps QC_SDW_PARAM_AUTO_ENUM (feel free to drop
+> SDW as well from here as it QC specific!
+> 
+> Also move common ones to core..
+> 
+>> +#define SWRM_INTERRUPT_STATUS					0x200
+>> +#define SWRM_INTERRUPT_STATUS_RMSK				GENMASK(16, 0)
+>> +#define SWRM_INTERRUPT_STATUS_SLAVE_PEND_IRQ			BIT(0)
+>> +#define SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED		BIT(1)
+>> +#define SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS		BIT(2)
+>> +#define SWRM_INTERRUPT_STATUS_MASTER_CLASH_DET			BIT(3)
+>> +#define SWRM_INTERRUPT_STATUS_RD_FIFO_OVERFLOW			BIT(4)
+>> +#define SWRM_INTERRUPT_STATUS_RD_FIFO_UNDERFLOW			BIT(5)
+>> +#define SWRM_INTERRUPT_STATUS_WR_CMD_FIFO_OVERFLOW		BIT(6)
+>> +#define SWRM_INTERRUPT_STATUS_CMD_ERROR				BIT(7)
+>> +#define SWRM_INTERRUPT_STATUS_DOUT_PORT_COLLISION		BIT(8)
+>> +#define SWRM_INTERRUPT_STATUS_READ_EN_RD_VALID_MISMATCH		BIT(9)
+>> +#define SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED		BIT(10)
+>> +#define SWRM_INTERRUPT_STATUS_NEW_SLAVE_AUTO_ENUM_FINISHED	BIT(11)
+>> +#define SWRM_INTERRUPT_STATUS_AUTO_ENUM_FAILED			BIT(12)
+>> +#define SWRM_INTERRUPT_STATUS_AUTO_ENUM_TABLE_IS_FULL		BIT(13)
+>> +#define SWRM_INTERRUPT_STATUS_BUS_RESET_FINISHED		BIT(14)
+>> +#define SWRM_INTERRUPT_STATUS_CLK_STOP_FINISHED			BIT(15)
+>> +#define SWRM_INTERRUPT_STATUS_ERROR_PORT_TEST			BIT(16)
+>> +#define SWRM_INTERRUPT_MASK_ADDR				0x204
+>> +#define SWRM_INTERRUPT_CLEAR					0x208
+>> +#define SWRM_CMD_FIFO_WR_CMD					0x300
+>> +#define SWRM_CMD_FIFO_RD_CMD					0x304
+>> +#define SWRM_CMD_FIFO_CMD					0x308
+>> +#define SWRM_CMD_FIFO_STATUS					0x30C
+>> +#define SWRM_CMD_FIFO_CFG_ADDR					0x314
+>> +#define SWRM_CMD_FIFO_CFG_NUM_OF_CMD_RETRY_SHFT			0x0
+>> +#define SWRM_CMD_FIFO_RD_FIFO_ADDR				0x318
+>> +#define SWRM_ENUMERATOR_CFG_ADDR				0x500
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_ADDR(m)		(0x101C + 0x40 * (m))
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_SSP_PERIOD_SHFT		16
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT			3
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_BMSK			GENMASK(2, 0)
+>> +#define SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT			0
+>> +#define SWRM_MCP_CFG_ADDR					0x1048
+>> +#define SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_BMSK		GENMASK(21, 17)
+>> +#define SWRM_MCP_CFG_MAX_NUM_OF_CMD_NO_PINGS_SHFT		0x11
+>> +#define SWRM_MCP_STATUS						0x104C
+>> +#define SWRM_MCP_STATUS_BANK_NUM_MASK				BIT(0)
+>> +#define SWRM_MCP_SLV_STATUS					0x1090
+>> +#define SWRM_MCP_SLV_STATUS_MASK				GENMASK(1, 0)
+>> +#define SWRM_DP_PORT_CTRL_BANK(n, m)	(0x1124 + 0x100 * (n - 1) + 0x40 * m)
+>> +#define SWRM_DP_PORT_CTRL2_BANK(n, m)	(0x1126 + 0x100 * (n - 1) + 0x40 * m)
+>> +#define SWRM_DP_PORT_CTRL_EN_CHAN_SHFT				0x18
+>> +#define SWRM_DP_PORT_CTRL_OFFSET2_SHFT				0x10
+>> +#define SWRM_DP_PORT_CTRL_OFFSET1_SHFT				0x08
+>> +#define SWRM_AHB_BRIDGE_WR_DATA_0				0xc885
+>> +#define SWRM_AHB_BRIDGE_WR_ADDR_0				0xc889
+>> +#define SWRM_AHB_BRIDGE_RD_ADDR_0				0xc88d
+>> +#define SWRM_AHB_BRIDGE_RD_DATA_0				0xc891
+>> +
+>> +#define SWRM_REG_VAL_PACK(data, dev, id, reg)	\
+>> +			((reg) | ((id) << 16) | ((dev) << 20) | ((data) << 24))
+>> +
+>> +#define SWRM_MAX_ROW_VAL	0 /* Rows = 48 */
+>> +#define SWRM_DEFAULT_ROWS	48
+>> +#define SWRM_MIN_COL_VAL	0 /* Cols = 2 */
+>> +#define SWRM_DEFAULT_COL	16
+>> +#define SWRM_SPECIAL_CMD_ID	0xF
+>> +#define MAX_FREQ_NUM		1
+>> +#define TIMEOUT_MS		1000
+>> +#define QCOM_SWRM_MAX_RD_LEN	0xf
+>> +#define DEFAULT_CLK_FREQ	9600000
+>> +#define SWRM_MAX_DAIS		0xF
+> 
+> I was thinking it would make sense to move this to DT, DAI is after all
+> a hw property!
+
+I will give that a try before sending out next version.
+> 
+>> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 cmd_data,
+>> +				     u8 dev_addr, u16 reg_addr)
+>> +{
+>> +	int ret = 0;
+>> +	u8 cmd_id;
+>> +	u32 val;
+>> +
+>> +	mutex_lock(&ctrl->lock);
+>> +	if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+>> +		cmd_id = SWRM_SPECIAL_CMD_ID;
+>> +	} else {
+>> +		if (++ctrl->wr_cmd_id == SWRM_SPECIAL_CMD_ID)
+>> +			ctrl->wr_cmd_id = 0;
+>> +
+>> +		cmd_id = ctrl->wr_cmd_id;
+>> +	}
+>> +
+>> +	val = SWRM_REG_VAL_PACK(cmd_data, dev_addr, cmd_id, reg_addr);
+>> +	ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
+>> +	if (ret < 0) {
+>> +		dev_err(ctrl->dev, "%s: reg 0x%x write failed, err:%d\n",
+>> +			__func__, val, ret);
+>> +		goto err;
+>> +	}
+>> +
+>> +	if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+>> +		ctrl->fifo_status = 0;
+>> +		ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+>> +						  msecs_to_jiffies(TIMEOUT_MS));
+> 
+> why not wait for completion on non broadcast?
+> 
+
+This could lead to dead-lock if we endup reading registers from 
+interrupt handler.
+
+>> +static int qcom_swrm_cmd_fifo_rd_cmd(struct qcom_swrm_ctrl *ctrl,
+>> +				     u8 dev_addr, u16 reg_addr,
+>> +				     u32 len, u8 *rval)
+>> +{
+>> +	int i, ret = 0;
+> 
+> Superfluous initialization of ret
+> 
+I agree.
+>> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
+>> +{
+>> +	struct qcom_swrm_ctrl *ctrl = dev_id;
+>> +	u32 sts, value;
+>> +
+>> +	sts = ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS);
+>> +
+>> +	if (sts & SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED)
+>> +		complete(&ctrl->sp_cmd_comp);
+>> +
+>> +	if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
+>> +		value = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS);
+>> +		dev_err_ratelimited(ctrl->dev,
+>> +				    "CMD error, fifo status 0x%x\n",
+>> +				     value);
+>> +		ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
+>> +		if ((value & 0xF) == 0xF) {
+>> +			ctrl->fifo_status = -ENODATA;
+>> +			complete(&ctrl->sp_cmd_comp);
+>> +		}
+>> +	}
+>> +
+>> +	if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
+>> +	    sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS) {
+>> +		if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
+>> +			ctrl->status[0] = SDW_SLAVE_ATTACHED;
+>> +
+>> +		schedule_work(&ctrl->slave_work);
+> 
+> So why are we scheduling work, you are the thread handler so I think it
+> should be okay and better to invoke bus for status update.
+
+I had seen lockup issues as this would trigger broadcast messages which 
+would wait on completion interrupt!
+
+> 
+>> +	}
+>> +
+>> +	if (sts & SWRM_INTERRUPT_STATUS_SLAVE_PEND_IRQ)
+>> +		dev_dbg(ctrl->dev, "Slave pend irq\n");
+>> +
+>> +	if (sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED)
+>> +		dev_dbg(ctrl->dev, "New slave attached\n");
+> 
+> No updating bus on the status?
+> 
+Its done down below this function! These are debug messages only!
+looks redundant, will remove it.
+
+>> +static enum sdw_command_response qcom_swrm_xfer_msg(struct sdw_bus *bus,
+>> +						    struct sdw_msg *msg)
+>> +{
+>> +	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
+>> +	int ret, i, len;
+>> +
+>> +	if (msg->flags == SDW_MSG_FLAG_READ) {
+>> +		for (i = 0; i < msg->len;) {
+>> +			if ((msg->len - i) < QCOM_SWRM_MAX_RD_LEN)
+>> +				len = msg->len - i;
+>> +			else
+>> +				len = QCOM_SWRM_MAX_RD_LEN;
+>> +
+>> +			ret = qcom_swrm_cmd_fifo_rd_cmd(ctrl, msg->dev_num,
+>> +							msg->addr + i, len,
+>> +						       &msg->buf[i]);
+>> +			if (ret < 0) {
+>> +				if (ret == -ENODATA)
+>> +					return SDW_CMD_IGNORED;
+>> +
+>> +				return ret;
+>> +			}
+>> +
+>> +			i = i + len;
+>> +		}
+>> +	} else if (msg->flags == SDW_MSG_FLAG_WRITE) {
+>> +		for (i = 0; i < msg->len; i++) {
+>> +			ret = qcom_swrm_cmd_fifo_wr_cmd(ctrl, msg->buf[i],
+>> +							msg->dev_num,
+>> +						       msg->addr + i);
+>> +			if (ret < 0) {
+>> +				if (ret == -ENODATA)
+>> +					return SDW_CMD_IGNORED;
+>> +
+>> +				return ret;
+> 
+> So we need to convert this to sdw_command_response before returning.
+> 
+Sure!
+
+>> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
+>> +			     struct snd_soc_dai *dai)
+>> +{
+>> +	struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+>> +
+>> +	if (!ctrl->sruntime[dai->id])
+>> +		return -EINVAL;
+>> +
+>> +	return sdw_enable_stream(ctrl->sruntime[dai->id]);
+> 
+> Hmm you need to handle dai prepare being called for multiple times.
+> Thanks for pointing this out, Will fix this.
+
+>> +static int qcom_pdm_set_sdw_stream(struct snd_soc_dai *dai,
+>> +				   void *stream, int direction)
+>> +{
+>> +	return 0;
+>> +}
+> 
+> lets remove if we dont intend to do anything!
+> 
+Hm, not sure how I missed this one!
+
+>> +static int qcom_swrm_runtime_suspend(struct device *device)
+>> +{
+>> +	/* TBD */
+>> +	return 0;
+>> +}
+>> +
+>> +static int qcom_swrm_runtime_resume(struct device *device)
+>> +{
+>> +	/* TBD */
+>> +	return 0;
+>> +}
+> 
+> Again, lets remove these, add when we have the functionality
+We have issues without this, as soundwire bus would return error on 
+runtime pm get/set. For RFC, I had to make this dummy, I will be able to 
+add and test some code in next 1/2 spins.
 
 Thanks,
-Kirill
+srini
+> 
