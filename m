@@ -2,82 +2,143 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A89C28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E8CC5ACBC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C09E20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560175791;
-	bh=ZAdzIptRY5irvM99E4Rd4sa4j4ZDbKjnWVOozitc7jA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yVVCefXxLKxUjxXfbYNHR0SyrJlyr5fudBb4wyEwmbTO+Cy0jD8cTznyjasTxNfLm
-	 7f2CBsVr2WkZMmbXFJMwqnzy6yazIR+Ls9RZ3zkXuy71y0u52HtyeV+Ja8dPGoZXhe
-	 5swIz/MESSmRJ5T9Vy1lrH1GZ/kfxSJolMS7Oqi8=
+	by mail.kernel.org (Postfix) with ESMTP id ABAFA2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390728AbfFJOJu (ORCPT
+        id S2390737AbfFJOMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 10:12:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:43696 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389171AbfFJOJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:09:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F01F207E0;
-        Mon, 10 Jun 2019 14:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560175789;
-        bh=ZAdzIptRY5irvM99E4Rd4sa4j4ZDbKjnWVOozitc7jA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mUWo8Wug7Wud6ryWjivz2LO3St7mSAblmp81R6eSmB9pMqPwNqr9/hEvrQtoKgD8r
-         2SI8V7RcQCjJMZsl9MuOpLwLMKaFMv7Vd7tOO07735Cotp0leXUGw/rND9MJUH4cUB
-         sR3w/GcCm4K4H571eyof1Ot/MQnVh4RdsCBp/TpU=
-Date:   Mon, 10 Jun 2019 16:09:47 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     devel@driverdev.osuosl.org, YueHaibing <yuehaibing@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 -next] staging: fieldbus: Fix build error without
- CONFIG_REGMAP_MMIO
-Message-ID: <20190610140947.GB18627@kroah.com>
-References: <CAGngYiU=uFjJFEoiHFUr+ab73sJksaTBkfxvQwL1X6WJnhchqw@mail.gmail.com>
- <20190528142912.13224-1-yuehaibing@huawei.com>
- <CAGngYiW_hCDPRWao+389BfUH_2sP4S6pL+gteim=kDrnb9UDzQ@mail.gmail.com>
- <3f4c1d4c-656b-8266-38c4-3f7c36a2bd7e@huawei.com>
- <20190528155956.GA21964@kroah.com>
- <CAGngYiW8Y3jt9ikb5e9LtfSkquZquLgB5iSRVXyka9fUXLrqYQ@mail.gmail.com>
- <CAGngYiV9XsPL8Mk9_K9=0a-k6P6JN_waJvk5bDH+mDwGMAYbmw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGngYiV9XsPL8Mk9_K9=0a-k6P6JN_waJvk5bDH+mDwGMAYbmw@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        id S2390691AbfFJOMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:12:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54E5D346;
+        Mon, 10 Jun 2019 07:12:23 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E49C33F73C;
+        Mon, 10 Jun 2019 07:12:18 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Subject: [RFC] mm/ioremap: Probe platform for p4d huge map support
+Date:   Mon, 10 Jun 2019 19:42:26 +0530
+Message-Id: <1560175946-25231-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 08:51:10AM -0400, Sven Van Asbroeck wrote:
-> Hello Greg, just a friendly ping regarding this patch. It got my Reviewed-by tag
-> two weeks ago, no further feedback from anyone. Is there anything you would
-> like us to do before queuing this?
-> 
-> Link to v2 that got the Reviewed-by:
-> https://lkml.org/lkml/2019/5/28/609
-> 
-> On Tue, May 28, 2019 at 1:31 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
-> > For the v2 patch:
-> > Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Finishing up what the commit c2febafc67734a ("mm: convert generic code to
+5-level paging") started out while levelling up P4D huge mapping support
+at par with PUD and PMD. A new arch call back arch_ioremap_p4d_supported()
+is being added which just maintains status quo (P4D huge map not supported)
+on x86 and arm64.
 
-Odd, sorry, must have fell through the cracks, I'll pick it up now.
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: x86@kernel.org
 
-thanks,
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
 
-greg k-h
+- Detected this from code audit while reviewing Nicholas Piggin's ioremap
+  changes https://patchwork.kernel.org/project/linux-mm/list/?series=129479
+
+- Build and boot tested on x86 and arm64 platforms
+- Build tested on some others
+
+ arch/arm64/mm/mmu.c   | 5 +++++
+ arch/x86/mm/ioremap.c | 5 +++++
+ include/linux/io.h    | 1 +
+ lib/ioremap.c         | 2 ++
+ 4 files changed, 13 insertions(+)
+
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a1bfc4413982..646c82922d77 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -953,6 +953,11 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+ 	return dt_virt;
+ }
+ 
++int __init arch_ioremap_p4d_supported(void)
++{
++	return 0;
++}
++
+ int __init arch_ioremap_pud_supported(void)
+ {
+ 	/*
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 4b6423e7bd21..6cbbec83991d 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -440,6 +440,11 @@ void iounmap(volatile void __iomem *addr)
+ }
+ EXPORT_SYMBOL(iounmap);
+ 
++int __init arch_ioremap_p4d_supported(void)
++{
++	return 0;
++}
++
+ int __init arch_ioremap_pud_supported(void)
+ {
+ #ifdef CONFIG_X86_64
+diff --git a/include/linux/io.h b/include/linux/io.h
+index 32e30e8fb9db..58514cebfce6 100644
+--- a/include/linux/io.h
++++ b/include/linux/io.h
+@@ -45,6 +45,7 @@ static inline int ioremap_page_range(unsigned long addr, unsigned long end,
+ 
+ #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+ void __init ioremap_huge_init(void);
++int arch_ioremap_p4d_supported(void);
+ int arch_ioremap_pud_supported(void);
+ int arch_ioremap_pmd_supported(void);
+ #else
+diff --git a/lib/ioremap.c b/lib/ioremap.c
+index 063213685563..c3dc213b6980 100644
+--- a/lib/ioremap.c
++++ b/lib/ioremap.c
+@@ -30,6 +30,8 @@ early_param("nohugeiomap", set_nohugeiomap);
+ void __init ioremap_huge_init(void)
+ {
+ 	if (!ioremap_huge_disabled) {
++		if (arch_ioremap_p4d_supported())
++			ioremap_p4d_capable = 1;
+ 		if (arch_ioremap_pud_supported())
+ 			ioremap_pud_capable = 1;
+ 		if (arch_ioremap_pmd_supported())
+-- 
+2.20.1
+
