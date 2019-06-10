@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3C3C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E68DC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22220207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA5220820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mANGvUlk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NHJP3aYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388339AbfFJRM3 (ORCPT
+        id S2388373AbfFJRMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:12:29 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44446 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387898AbfFJRM0 (ORCPT
+        Mon, 10 Jun 2019 13:12:35 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58034 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388341AbfFJRMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:12:26 -0400
+        Mon, 10 Jun 2019 13:12:32 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHCG0p121555;
-        Mon, 10 Jun 2019 12:12:16 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHCQUD110035;
+        Mon, 10 Jun 2019 12:12:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560186736;
-        bh=mRBjHVSGVjmh06j3YRgbF6k6lDaugFDHiLDKP+4u0kM=;
+        s=ti-com-17Q1; t=1560186746;
+        bh=Ew1K6dc7XJ3Lz8pVJ6FwwRkOUCloXwI4ODLhOfwKs2A=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=mANGvUlk0EVPNp5Z1gQWmbIavoQghIE9hfDvbe6QKk8UJS37FVmxLbZBaogKEF9eJ
-         ZfZRJ9iO1WmCHcOICvLc3rw4UQnM267VHI9znNJZZUYZkARaPl4OBHVU8xckyiEdm9
-         vlFM1zrhv0fmwAfPxn8qYMkqu6Oc6DezuHGewRD0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHCGXe011053
+        b=NHJP3aYQ5nFeClYJ+sqWP4MdxtcIfaH7GesHywLvY6k7YAh1v0O80jXr+NlmoGmo2
+         JhpvOw4f5Uk3hAVUMpt9s8bgdgo1NSTyRWyhh6nTdrbVkEocaCHbZh36ozSUIXZLPG
+         PNlZl1J3aoexuCJAMSvQ4ECvh/lvlR7wGJ9ZEeHw=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHCPxK011206
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Jun 2019 12:12:16 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 10 Jun 2019 12:12:25 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
- Jun 2019 12:12:12 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2019 12:12:25 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 10 Jun 2019 12:12:12 -0500
+ Frontend Transport; Mon, 10 Jun 2019 12:12:25 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHCBGW051427;
-        Mon, 10 Jun 2019 12:12:11 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHCOJR051660;
+        Mon, 10 Jun 2019 12:12:25 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Russell King <rmk@arm.linux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -58,9 +58,9 @@ CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH-next 09/20] gpio: gpio-omap: simplify get_multiple()
-Date:   Mon, 10 Jun 2019 20:10:52 +0300
-Message-ID: <20190610171103.30903-10-grygorii.strashko@ti.com>
+Subject: [PATCH-next 11/20] gpio: gpio-omap: simplify bank->level_mask
+Date:   Mon, 10 Jun 2019 20:10:54 +0300
+Message-ID: <20190610171103.30903-12-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610171103.30903-1-grygorii.strashko@ti.com>
 References: <20190610171103.30903-1-grygorii.strashko@ti.com>
@@ -74,73 +74,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
-There is no reason to have helper functions to read the datain and
-dataout registers when they are only used in one location.  Simplify
-this code to make it more readable.
+bank->level_mask is merely the bitwise or of the level detection
+context which we have already read in this function.  Rather than
+repeating additional reads, compute it from the values already
+read.
 
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/gpio/gpio-omap.c | 36 +++++++++++-------------------------
- 1 file changed, 11 insertions(+), 25 deletions(-)
+ drivers/gpio/gpio-omap.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index bf1e6f1d0de7..a26decc5c611 100644
+index 8fdac6e4a929..369ce46e2b09 100644
 --- a/drivers/gpio/gpio-omap.c
 +++ b/drivers/gpio/gpio-omap.c
-@@ -175,22 +175,6 @@ static void omap_set_gpio_dataout_mask_multiple(struct gpio_bank *bank,
- 	bank->context.dataout = l;
- }
+@@ -325,6 +325,9 @@ static inline void omap_set_gpio_trigger(struct gpio_bank *bank, int gpio,
+ 	bank->context.fallingdetect =
+ 			readl_relaxed(bank->base + bank->regs->fallingdetect);
  
--static unsigned long omap_get_gpio_datain_multiple(struct gpio_bank *bank,
--					      unsigned long *mask)
--{
--	void __iomem *reg = bank->base + bank->regs->datain;
--
--	return readl_relaxed(reg) & *mask;
--}
--
--static unsigned long omap_get_gpio_dataout_multiple(struct gpio_bank *bank,
--					       unsigned long *mask)
--{
--	void __iomem *reg = bank->base + bank->regs->dataout;
--
--	return readl_relaxed(reg) & *mask;
--}
--
- static inline void omap_gpio_rmw(void __iomem *base, u32 reg, u32 mask, bool set)
- {
- 	int l = readl_relaxed(base + reg);
-@@ -987,18 +971,20 @@ static int omap_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
- 				  unsigned long *bits)
- {
- 	struct gpio_bank *bank = gpiochip_get_data(chip);
--	void __iomem *reg = bank->base + bank->regs->direction;
--	unsigned long in = readl_relaxed(reg), l;
-+	void __iomem *base = bank->base;
-+	u32 direction, m, val = 0;
++	bank->level_mask = bank->context.leveldetect0 |
++			   bank->context.leveldetect1;
 +
-+	direction = readl_relaxed(base + bank->regs->direction);
- 
--	*bits = 0;
-+	m = direction & *mask;
-+	if (m)
-+		val |= readl_relaxed(base + bank->regs->datain) & m;
- 
--	l = in & *mask;
--	if (l)
--		*bits |= omap_get_gpio_datain_multiple(bank, &l);
-+	m = ~direction & *mask;
-+	if (m)
-+		val |= readl_relaxed(base + bank->regs->dataout) & m;
- 
--	l = ~in & *mask;
--	if (l)
--		*bits |= omap_get_gpio_dataout_multiple(bank, &l);
-+	*bits = val;
- 
- 	return 0;
+ 	if (likely(!(bank->non_wakeup_gpios & gpio_bit))) {
+ 		omap_gpio_rmw(base, bank->regs->wkup_en, gpio_bit, trigger != 0);
+ 		bank->context.wake_en =
+@@ -344,10 +347,6 @@ static inline void omap_set_gpio_trigger(struct gpio_bank *bank, int gpio,
+ 		else
+ 			bank->enabled_non_wakeup_gpios &= ~gpio_bit;
+ 	}
+-
+-	bank->level_mask =
+-		readl_relaxed(bank->base + bank->regs->leveldetect0) |
+-		readl_relaxed(bank->base + bank->regs->leveldetect1);
  }
+ 
+ #ifdef CONFIG_ARCH_OMAP1
 -- 
 2.17.1
 
