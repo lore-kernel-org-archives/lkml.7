@@ -2,33 +2,32 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90B0C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C07AC468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB972082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5222082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388459AbfFJIQi (ORCPT
+        id S2388484AbfFJIQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:16:38 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37466 "EHLO inva021.nxp.com"
+        Mon, 10 Jun 2019 04:16:39 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37652 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387824AbfFJIQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:16:35 -0400
+        id S2388393AbfFJIQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:38 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 59C0A200737;
-        Mon, 10 Jun 2019 10:16:32 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 74134200747;
+        Mon, 10 Jun 2019 10:16:35 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2650C2001C0;
-        Mon, 10 Jun 2019 10:16:24 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 39628200748;
+        Mon, 10 Jun 2019 10:16:27 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2400C40319;
-        Mon, 10 Jun 2019 16:16:14 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9829D40326;
+        Mon, 10 Jun 2019 16:16:17 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
@@ -38,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 07/15] spi: imx: remove ERR009165 workaround on i.mx6ul
-Date:   Mon, 10 Jun 2019 16:17:45 +0800
-Message-Id: <20190610081753.11422-8-yibin.gong@nxp.com>
+Subject: [PATCH v5 09/15] dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+Date:   Mon, 10 Jun 2019 16:17:47 +0800
+Message-Id: <20190610081753.11422-10-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 References: <20190610081753.11422-1-yibin.gong@nxp.com>
@@ -52,135 +51,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
-i.mx8m/8mm still need this errata. Please refer to nxp official
-errata document from https://www.nxp.com/ .
-
-For removing workaround on those chips. Add new i.mx6ul type.
+ECSPI issue fixed from i.mx6ul at hardware level, no need
+ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx
+from where i.mx6ul source.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/spi/spi-imx.c | 50 +++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 5 deletions(-)
+ drivers/dma/imx-sdma.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 6795910..91660dc 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -57,6 +57,7 @@ enum spi_imx_devtype {
- 	IMX35_CSPI,	/* CSPI on all i.mx except above */
- 	IMX51_ECSPI,	/* ECSPI on i.mx51 */
- 	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
-+	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
- };
- 
- struct spi_imx_data;
-@@ -75,6 +76,11 @@ struct spi_imx_devtype_data {
- 	bool has_slavemode;
- 	unsigned int fifo_size;
- 	bool dynamic_burst;
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 61af656..525ca89 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -419,6 +419,13 @@ struct sdma_driver_data {
+ 	int num_events;
+ 	struct sdma_script_start_addrs	*script_addrs;
+ 	bool check_ratio;
 +	/*
-+	 * ERR009165 fixed or not:
++	 * ecspi ERR009165 fixed should be done in sdma script
++	 * and it has been fixed in soc from i.mx6ul.
++	 * please get more information from the below link:
 +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
 +	 */
-+	bool tx_glitch_fixed;
- 	enum spi_imx_devtype devtype;
++	bool ecspi_fixed;
  };
  
-@@ -128,7 +134,8 @@ static inline int is_imx35_cspi(struct spi_imx_data *d)
- 
- static inline int is_imx51_ecspi(struct spi_imx_data *d)
- {
--	return d->devtype_data->devtype == IMX51_ECSPI;
-+	return d->devtype_data->devtype == IMX51_ECSPI ||
-+	       d->devtype_data->devtype == IMX6UL_ECSPI;
- }
- 
- static inline int is_imx53_ecspi(struct spi_imx_data *d)
-@@ -585,9 +592,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
- 	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
- 	spi_imx->spi_bus_clk = clk;
- 
--	/* ERR009165: work in XHC mode as PIO */
--	if (spi_imx->usedma)
--		ctrl &= ~MX51_ECSPI_CTRL_SMC;
-+	/*
-+	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
-+	 * before i.mx6ul.
-+	 */
-+	if (spi_imx->usedma) {
-+		if (spi_imx->devtype_data->tx_glitch_fixed)
-+			ctrl |= MX51_ECSPI_CTRL_SMC;
-+		else
-+			ctrl &= ~MX51_ECSPI_CTRL_SMC;
-+	}
- 
- 	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
- 
-@@ -615,6 +629,8 @@ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
- {
- 	u32 tx_wml = 0;
- 
-+	if (spi_imx->devtype_data->tx_glitch_fixed)
-+		tx_wml = spi_imx->wml;
- 	/*
- 	 * Configure the DMA register: setup the watermark
- 	 * and enable DMA request.
-@@ -1012,6 +1028,23 @@ static struct spi_imx_devtype_data imx53_ecspi_devtype_data = {
- 	.devtype = IMX53_ECSPI,
+ struct sdma_engine {
+@@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q = {
+ 	.script_addrs = &sdma_script_imx6q,
  };
  
-+static struct spi_imx_devtype_data imx6ul_ecspi_devtype_data = {
-+	.intctrl = mx51_ecspi_intctrl,
-+	.prepare_message = mx51_ecspi_prepare_message,
-+	.prepare_transfer = mx51_ecspi_prepare_transfer,
-+	.trigger = mx51_ecspi_trigger,
-+	.rx_available = mx51_ecspi_rx_available,
-+	.reset = mx51_ecspi_reset,
-+	.setup_wml = mx51_setup_wml,
-+	.fifo_size = 64,
-+	.has_dmamode = true,
-+	.dynamic_burst = true,
-+	.has_slavemode = true,
-+	.tx_glitch_fixed = true,
-+	.disable = mx51_ecspi_disable,
-+	.devtype = IMX6UL_ECSPI,
++static struct sdma_script_start_addrs sdma_script_imx6sx = {
++	.ap_2_ap_addr = 642,
++	.uart_2_mcu_addr = 817,
++	.mcu_2_app_addr = 747,
++	.uartsh_2_mcu_addr = 1032,
++	.mcu_2_shp_addr = 960,
++	.app_2_mcu_addr = 683,
++	.shp_2_mcu_addr = 891,
++	.spdif_2_mcu_addr = 1100,
++	.mcu_2_spdif_addr = 1134,
 +};
 +
- static const struct platform_device_id spi_imx_devtype[] = {
- 	{
- 		.name = "imx1-cspi",
-@@ -1035,6 +1068,9 @@ static const struct platform_device_id spi_imx_devtype[] = {
- 		.name = "imx53-ecspi",
- 		.driver_data = (kernel_ulong_t) &imx53_ecspi_devtype_data,
++static struct sdma_driver_data sdma_imx6sx = {
++	.chnenbl0 = SDMA_CHNENBL0_IMX35,
++	.num_events = 48,
++	.script_addrs = &sdma_script_imx6sx,
++};
++
++static struct sdma_driver_data sdma_imx6ul = {
++	.chnenbl0 = SDMA_CHNENBL0_IMX35,
++	.num_events = 48,
++	.script_addrs = &sdma_script_imx6sx,
++	.ecspi_fixed = true,
++};
++
+ static struct sdma_script_start_addrs sdma_script_imx7d = {
+ 	.ap_2_ap_addr = 644,
+ 	.uart_2_mcu_addr = 819,
+@@ -584,9 +616,15 @@ static const struct platform_device_id sdma_devtypes[] = {
+ 		.name = "imx6q-sdma",
+ 		.driver_data = (unsigned long)&sdma_imx6q,
  	}, {
-+		.name = "imx6ul-ecspi",
-+		.driver_data = (kernel_ulong_t) &imx6ul_ecspi_devtype_data,
++		.name = "imx6sx-sdma",
++		.driver_data = (unsigned long)&sdma_imx6sx,
 +	}, {
- 		/* sentinel */
- 	}
- };
-@@ -1047,6 +1083,7 @@ static const struct of_device_id spi_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx35-cspi", .data = &imx35_cspi_devtype_data, },
- 	{ .compatible = "fsl,imx51-ecspi", .data = &imx51_ecspi_devtype_data, },
- 	{ .compatible = "fsl,imx53-ecspi", .data = &imx53_ecspi_devtype_data, },
-+	{ .compatible = "fsl,imx6ul-ecspi", .data = &imx6ul_ecspi_devtype_data, },
+ 		.name = "imx7d-sdma",
+ 		.driver_data = (unsigned long)&sdma_imx7d,
+ 	}, {
++		.name = "imx6ul-sdma",
++		.driver_data = (unsigned long)&sdma_imx6ul,
++	}, {
+ 		.name = "imx8mq-sdma",
+ 		.driver_data = (unsigned long)&sdma_imx8mq,
+ 	}, {
+@@ -602,7 +640,9 @@ static const struct of_device_id sdma_dt_ids[] = {
+ 	{ .compatible = "fsl,imx35-sdma", .data = &sdma_imx35, },
+ 	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
+ 	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
++	{ .compatible = "fsl,imx6sx-sdma", .data = &sdma_imx6sx, },
+ 	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
++	{ .compatible = "fsl,imx6ul-sdma", .data = &sdma_imx6ul, },
+ 	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
  	{ /* sentinel */ }
  };
- MODULE_DEVICE_TABLE(of, spi_imx_dt_ids);
-@@ -1178,7 +1215,10 @@ static int spi_imx_dma_configure(struct spi_master *master)
- 	 * For ERR009165 with tx_wml = 0 could enlarge burst size to fifo size
- 	 * to speed up fifo filling as possible.
- 	 */
--	tx.dst_maxburst = spi_imx->devtype_data->fifo_size;
-+	if (spi_imx->devtype_data->tx_glitch_fixed)
-+		tx.dst_maxburst = spi_imx->wml;
-+	else
-+		tx.dst_maxburst = spi_imx->devtype_data->fifo_size;
- 	ret = dmaengine_slave_config(master->dma_tx, &tx);
- 	if (ret) {
- 		dev_err(spi_imx->dev, "TX dma configuration failed with %d\n", ret);
+@@ -1166,8 +1206,17 @@ static int sdma_config_channel(struct dma_chan *chan)
+ 			if (sdmac->peripheral_type == IMX_DMATYPE_ASRC_SP ||
+ 			    sdmac->peripheral_type == IMX_DMATYPE_ASRC)
+ 				sdma_set_watermarklevel_for_p2p(sdmac);
+-		} else
++		} else {
++			/*
++			 * ERR009165 fixed from i.mx6ul, no errata need,
++			 * set bit31 to let sdma script skip the errata.
++			 */
++			if (sdmac->peripheral_type == IMX_DMATYPE_CSPI &&
++			    sdmac->direction == DMA_MEM_TO_DEV &&
++			    sdmac->sdma->drvdata->ecspi_fixed)
++				__set_bit(31, &sdmac->watermark_level);
+ 			__set_bit(sdmac->event_id0, sdmac->event_mask);
++		}
+ 
+ 		/* Address */
+ 		sdmac->shp_addr = sdmac->per_address;
 -- 
 2.7.4
 
