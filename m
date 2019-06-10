@@ -2,141 +2,111 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC83C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C00DC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488942082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37AC920820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="NC0Ym/md"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Zb5w8rP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbfFJUv1 (ORCPT
+        id S2389807AbfFJUvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:51:27 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:45057 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727588AbfFJUv1 (ORCPT
+        Mon, 10 Jun 2019 16:51:41 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36714 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727588AbfFJUvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:51:27 -0400
-Received: by mail-vs1-f67.google.com with SMTP id n21so6450115vsp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:51:26 -0700 (PDT)
+        Mon, 10 Jun 2019 16:51:40 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k21so13078726edq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:51:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eyYkEWRj0YJV5ZLI8Mg19WpHWifRtrV4TMHZVE8qPm8=;
-        b=NC0Ym/mdsDncoZDorvKAM6xnQHqO/QrBZMSByQ87DFOKOY5LektD3i2fXTPFMV5gEb
-         B+jz+3Dd13t7MZNh2lFBrzF3VPLx1KIsiagqMIMYyENWW6PDVua6vokHuxp4iRB7SGBP
-         oFhMiqoPRQF0lp325kHJWPXC+dup4oIV+FxnM24bVaa7URJymXv0UBdm6axvZ/7SXM0V
-         KpHpsjeDDyeZoP+I9UaJoBhGziX7ec09BY4mQMov6WeiEnm+l5+JUFxqG2hd7MI5PM0F
-         5X61FbBw9ul1y43HMTwi6J7dygh1JPsAue+OITbRaSvfqs4rtsLSqXqhyOol/LAVEb3N
-         Mc1g==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LwPRrFIFVpFh7windfuH8fQym2aENAjRfJxjWELiSBU=;
+        b=Zb5w8rP85WrEmAp+Zr/D+9qTV1RoeJ9+bGxf6ZGFaz//eje5o8iDyuC629FdHNoZHM
+         M6NOkiKW5X94YWAH/0ShGapQoZma0hlhSk6PpQEgi915CF1Dv1mhkO/conE2CVt3RObX
+         ksdmzpJiEaaT8Yjo9vuQP3/LNVzAO7x6LBf7L7PR+g89d/pcyU9i67wPGHBkQEiC2ISG
+         qdF9toeA0vtNzb1Fd88YeDnqmdHXoZrEQoob4+rUi/sJyLbrlfMfj4RPQBeM7Zhz4UQr
+         Rps++y3zxLadol/OIc8Cv+L+LUVb9gstJIM2XJOSfG/oNJXv+6ypGOgTjXRr43Utd7px
+         oGWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eyYkEWRj0YJV5ZLI8Mg19WpHWifRtrV4TMHZVE8qPm8=;
-        b=Ac53C9Q8KFi3/sdW+bAA0EfuWKaDwdfZabVHjdnBOyNZXNtQk+9yZAtwvYea2eiptA
-         XRMEDA3VaG0C0e0mbrOumECP3oPCeNS/doIxLa2iSxa29+Iy7k2I0G+op5fQAmtmY+Qf
-         gPD6ZM9ylaExnzQx+K07eb87serI/xsos5kqL+GXqM5rbMMVv2mB/Fh9zbL3xKPtcoq0
-         2wzgnFCowwtjv7k5XdjkCHQWqS6szNKiE50b0bX0ikj5P4mYdUpvAV3e3Pk7Ct0wjGMi
-         JliKp5Ca1MuQptBvLAUjqxN6TJklhwlI7NHsC8T0HRHzH5jTP0/HVqjm1I6nB8kJw3jF
-         CayQ==
-X-Gm-Message-State: APjAAAW8WKnKFCM0nc8zXwSIntuUFzQZRoYrOa6od5xnxH1ucVtoLNei
-        jtPNWaOYt+v3q2JYFlmbidMPH4biFtdQR3o5yLBgpQ==
-X-Google-Smtp-Source: APXvYqxHiF7j7PUoNqVyn9OY/HQVtXAWopKiEj3RQFyhF+xmBBltqTuNBj9BhxevhFCKpkFJxP+TtW+cFT392wT7E5c=
-X-Received: by 2002:a67:6b43:: with SMTP id g64mr28426206vsc.183.1560199886317;
- Mon, 10 Jun 2019 13:51:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LwPRrFIFVpFh7windfuH8fQym2aENAjRfJxjWELiSBU=;
+        b=EDNOWKAP8LdVgISLq5KVPq+01dtoq1QAjexX9tGQNdVzPDIYrFb+yjKoxs1PowbyGG
+         T+1ZeWqwE8p6O0bB9IlnIdw/F6vqIWOt49Y7rvDnS1TPA+pms6+CCMcGE+RrcPPzx9Jf
+         Hkqdk2xgIQI1H7hjEvPCP4HQv2DMEbQzjDQZ/m/D0anrlVAoisZv4Vxwldd78bz+N5mu
+         RqrnUu0PgwP3ETozCcPQDcrRC5Qk4Xl1XjU80Ky2nCMaazphxAoyu1ntoQ3Q0Cn8INs8
+         CwAwWvtB82Vdz+PosOXYsoD6m1ItljM0r6fmqWpmLcHoG0DS+AJLnFdKQFaOQRkjgP/Q
+         Uk9w==
+X-Gm-Message-State: APjAAAXkT9zKzVJ+3K7Hrqzlx3Xx1jDZ/b3OYabzu/XbIDUiTBITe57w
+        UFeJGEz7SL+WgrhVKIa5l36haQ==
+X-Google-Smtp-Source: APXvYqwi/4K4O7p3F5fWVp5YvhiOxBsgwx+PVV7Ojw/tfOBJ/2puw1O0OPD6xnMpmS+Mb4sPcC1x7Q==
+X-Received: by 2002:a17:906:d7aa:: with SMTP id pk10mr1184294ejb.125.1560199899038;
+        Mon, 10 Jun 2019 13:51:39 -0700 (PDT)
+Received: from brauner.io ([2a02:8109:9cc0:6dac:cd8f:f6e9:1b84:bbb1])
+        by smtp.gmail.com with ESMTPSA id k9sm1976063eja.72.2019.06.10.13.51.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 13:51:38 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 22:51:36 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, tyhicks@canonical.com,
+        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, linux-kernel@vger.kernel.org,
+        richardrose@google.com, vapier@chromium.org, bhthompson@google.com,
+        smbarber@chromium.org, joelhockey@chromium.org,
+        ueberall@themenzentrisch.de
+Subject: Re: [PATCH net-next v1 1/1] br_netfilter: namespace bridge netfilter
+ sysctls
+Message-ID: <20190610205134.6wqparmtsdzbiutv@brauner.io>
+References: <20190609162304.3388-1-christian@brauner.io>
+ <20190609162304.3388-2-christian@brauner.io>
+ <20190610174136.p3fbcbn33en5bb7f@salvia>
 MIME-Version: 1.0
-References: <20190610175234.196844-1-dianders@chromium.org>
-In-Reply-To: <20190610175234.196844-1-dianders@chromium.org>
-From:   Sean Paul <sean@poorly.run>
-Date:   Mon, 10 Jun 2019 16:50:50 -0400
-Message-ID: <CAMavQKLRm8uYu3O=co5Ui7YjkK0hKHAd=+TA0oExfqnLc+TLFA@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge/synopsys: dw-hdmi: Fix unwedge crash when no
- pinctrl entries
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Sean Paul <seanpaul@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Erico Nunes <nunes.erico@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190610174136.p3fbcbn33en5bb7f@salvia>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 1:52 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> In commit 50f9495efe30 ("drm/bridge/synopsys: dw-hdmi: Add "unwedge"
-> for ddc bus") I stupidly used IS_ERR() to check for whether we have an
-> "unwedge" pinctrl state even though on most flows through the driver
-> the unwedge state will just be NULL.
->
-> Fix it so that we consistently use NULL for no unwedge state.
->
-> Fixes: 50f9495efe30 ("drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc bus")
-> Reported-by: Erico Nunes <nunes.erico@gmail.com>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Mon, Jun 10, 2019 at 07:41:36PM +0200, Pablo Neira Ayuso wrote:
+> Thanks for updating this patch to use struct brnf_net.
+> 
+> A few comments below.
+> 
+> On Sun, Jun 09, 2019 at 06:23:04PM +0200, Christian Brauner wrote:
+> [...]
+> > diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
+> > index 89808ce293c4..302fcd3aade2 100644
+> > --- a/include/net/netfilter/br_netfilter.h
+> > +++ b/include/net/netfilter/br_netfilter.h
+> > @@ -85,17 +82,42 @@ static inline __be16 vlan_proto(const struct sk_buff *skb)
+> >  		return 0;
+> >  }
+> >  
+> > -#define IS_VLAN_IP(skb) \
+> > -	(vlan_proto(skb) == htons(ETH_P_IP) && \
+> > -	 brnf_filter_vlan_tagged)
+> > +static inline bool is_vlan_ip(const struct sk_buff *skb, const struct net *net)
+> > +{
+> 
+> I like this conversion from macro to static inline a lot.
+> 
+> But if you let me ask for one more change, would you split this in two
+> patches? One to replace #defines by static inline.
 
-Thanks Erico for the report, and Doug for fixing this up quickly, I've applied
-the patch to drm-misc-next
-
-Sean
-
-> ---
->
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index f25e091b93c5..5e4e9408d00f 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -251,7 +251,7 @@ static void dw_hdmi_i2c_init(struct dw_hdmi *hdmi)
->  static bool dw_hdmi_i2c_unwedge(struct dw_hdmi *hdmi)
->  {
->         /* If no unwedge state then give up */
-> -       if (IS_ERR(hdmi->unwedge_state))
-> +       if (!hdmi->unwedge_state)
->                 return false;
->
->         dev_info(hdmi->dev, "Attempting to unwedge stuck i2c bus\n");
-> @@ -2686,11 +2686,13 @@ __dw_hdmi_probe(struct platform_device *pdev,
->                         hdmi->default_state =
->                                 pinctrl_lookup_state(hdmi->pinctrl, "default");
->
-> -                       if (IS_ERR(hdmi->default_state) &&
-> -                           !IS_ERR(hdmi->unwedge_state)) {
-> -                               dev_warn(dev,
-> -                                        "Unwedge requires default pinctrl\n");
-> -                               hdmi->unwedge_state = ERR_PTR(-ENODEV);
-> +                       if (IS_ERR(hdmi->default_state) ||
-> +                           IS_ERR(hdmi->unwedge_state)) {
-> +                               if (!IS_ERR(hdmi->unwedge_state))
-> +                                       dev_warn(dev,
-> +                                                "Unwedge requires default pinctrl\n");
-> +                               hdmi->default_state = NULL;
-> +                               hdmi->unwedge_state = NULL;
->                         }
->                 }
->
-> --
-> 2.22.0.rc2.383.gf4fbbf30c2-goog
->
+Sure.
