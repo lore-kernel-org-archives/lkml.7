@@ -2,112 +2,93 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01910C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDED4C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D75208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="oAoQN1PM"
+	by mail.kernel.org (Postfix) with ESMTP id CDC232085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391345AbfFJPxE (ORCPT
+        id S2391353AbfFJPx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:53:04 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45459 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390550AbfFJPxD (ORCPT
+        Mon, 10 Jun 2019 11:53:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43198 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390689AbfFJPx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:53:03 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n2so8726890otl.12;
-        Mon, 10 Jun 2019 08:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V7uCnX5LIMJHtHTPYaDf7mFvAliKfGgnILabe1niN2o=;
-        b=oAoQN1PM0ta5wsaELk8p5Ea3yH54iqbEAfrpkhqkZGMCVsw06eugxD2IoI4566Pjsw
-         Rk3pbbLyKj/rM4MV8Jjv0667R9dJqhWTmWuW+jO0XS9f8QWqFEjJrkpzCGADqWxbwRHM
-         Cv7E50lrJwB83BKjtPzWsfiHW8+NtdxbhBU3yGiD2FbAXv8YK1w6bySs13F7PvsPeSWb
-         oDBlQIlL4cn+nDMkZTE5S5JQSqmdjphWwsqsSLxweSu2w7HnxyJlf5OM7jgrjToA2OMF
-         j1XIFDG4Iywk3bh1QURsSspr/zYSw2nzOFyfgSApccMfQPOdHj3/5kLhE6+KhmXJwai4
-         t0eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V7uCnX5LIMJHtHTPYaDf7mFvAliKfGgnILabe1niN2o=;
-        b=fGfosXNyx0PlqnN6NXr3ie71V0X64wVWxwDDiPXyCUg94IsQSl6WmMiGWAuPl2kUN8
-         bat0wdmNUh/YtUB5XlX+H1Usglnr99RsDvJPODYB5NL2lksyjHuNkHhatdDzpoc+3GtZ
-         d4fPMwYE9bbJLWP9RNXIfKsC08uePZwI6oYxnLGzkrhuOuH65zEkfNtjqkIqow4dmSWR
-         NewC8TuLwj+zcPkMDKByxJfqli9mSsP4Hi5tiXAU3cLbcROjdFRVMRKsoXsQrqZxIIsN
-         eg8+PzGZ6qzokFMffNpwOM60V8GIWMGApmQAvF9FSHN3oQtMXM1i9wAeX1gIwAWMAK+A
-         c7Uw==
-X-Gm-Message-State: APjAAAVS2TEVLhw73I3oeG+bOau9683FSZk17KsP4z90BHv3+NKbOQB7
-        yhBPNI9P6cDTAlW2HfSq6xQTn287r07OYg5jghc=
-X-Google-Smtp-Source: APXvYqzBtsrTeIkjNn7DDhjuFe0wNjh2kvmCkP3GNZSqEC0xKl2tEIEqMtPBumjQp/9gUrheEnWAc4JbHlAvsf/i/IM=
-X-Received: by 2002:a9d:6d8d:: with SMTP id x13mr29456736otp.6.1560181982711;
- Mon, 10 Jun 2019 08:53:02 -0700 (PDT)
+        Mon, 10 Jun 2019 11:53:56 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5AFlaGU019654
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:53:55 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t1s9ptvwt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:53:55 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Mon, 10 Jun 2019 16:53:53 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 10 Jun 2019 16:53:51 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5AFroZt36503572
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jun 2019 15:53:50 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5DCE5A405F;
+        Mon, 10 Jun 2019 15:53:50 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CA9FA405C;
+        Mon, 10 Jun 2019 15:53:50 +0000 (GMT)
+Received: from osiris (unknown [9.145.162.214])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 10 Jun 2019 15:53:50 +0000 (GMT)
+Date:   Mon, 10 Jun 2019 17:53:48 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390: mark __ctl_set_bit and __ctl_clear_bit as
+ __always_inline
+References: <1560112544-10440-1-git-send-email-linux@roeck-us.net>
 MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609204510.GB8247@lunn.ch> <20190610114700.tymqzzax334ahtz4@flea>
- <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com> <20190610132546.GE8247@lunn.ch>
-In-Reply-To: <20190610132546.GE8247@lunn.ch>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 10 Jun 2019 17:52:51 +0200
-Message-ID: <CAFBinCAc6cczcZX_diCZJiUsNObcmFqfdq4v_osiwee18Gk0iA@mail.gmail.com>
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560112544-10440-1-git-send-email-linux@roeck-us.net>
+X-TM-AS-GCONF: 00
+x-cbid: 19061015-0028-0000-0000-00000379007C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061015-0029-0000-0000-00002438EB60
+Message-Id: <20190610155348.GA4031@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=841 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906100108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Sun, Jun 09, 2019 at 01:35:44PM -0700, Guenter Roeck wrote:
+> s390:tinyconfig fails to build with gcc 8.3.0.
+...
+> Marking __ctl_set_bit and __ctl_clear_bit as __always_inline fixes the
+> problem.
+> 
+> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  arch/s390/include/asm/ctl_reg.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Mon, Jun 10, 2019 at 3:25 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > if anyone else (just like me) doesn't know about it, there are generic
-> > bindings defined here: [0]
-> >
-> > I just tested this on my X96 Max by defining the following properties
-> > inside the PHY node:
-> >   reset-delay-us = <10000>;
-> >   reset-assert-us = <10000>;
-> >   reset-deassert-us = <10000>;
-> >   reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-> >
-> > that means I don't need any stmmac patches which seems nice.
-> > instead I can submit a patch to mark the snps,reset-gpio properties in
-> > the dt-bindings deprecated (and refer to the generic bindings instead)
-> > what do you think?
->
-> Hi Martin
->
-> I know Linus wants to replace all users of old GPIO numbers with gpio
-> descriptors. So your patches have value, even if you don't need them.
-OK, then I will send my patches anyways
+Applied, thanks!
 
-> One other things to watch out for. We have generic code at two
-> levels. Either the GPIO is per PHY, and the properties should be in
-> the PHY node, or the reset is for all PHYs of an MDIO bus, and then
-> the properties should be in the MDIO node.
-our Amlogic boards only have one PHY and all schematics I'm aware of
-route the SoC's GPIO line directly to the PHY's reset line.
-so in my opinion defining the resets for the PHY is the right thing to do
-
-
-Martin
