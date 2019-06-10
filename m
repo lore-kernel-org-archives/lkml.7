@@ -2,88 +2,105 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DFEC468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9969C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7863C20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560146228;
-	bh=gVSjw6cdQb6viXKvlgOAwxtKB7Vv7gaxQtNRY9At4+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YmBGolsGBD4NWb8bSbpWAXJUPYEmgjlaFZo6IKou+QWagt1lwn9E4wXNCT1UAzYcl
-	 YamS5NgIrkkmlKSxwSDwmGqz+gtQsz0MbnGX2i2g7RPB+scZ4Pinfo528atESMPH+C
-	 uCX8Ti8aVpmWCRdcI6TjMIQCnbRG1ztbYf5z3F30=
+	by mail.kernel.org (Postfix) with ESMTP id A930720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:57:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvi4ka6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387751AbfFJF5H (ORCPT
+        id S2387767AbfFJF5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 01:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387667AbfFJF5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 01:57:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B745207E0;
-        Mon, 10 Jun 2019 05:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560146226;
-        bh=gVSjw6cdQb6viXKvlgOAwxtKB7Vv7gaxQtNRY9At4+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RnpViJzd0Fh/QqWnMiJw6azEXk6YjpqzDENORTkQ7Uc1aXVEQQViJqHZupxW/w1C8
-         0jpKlFBF4gaGpdA/4Gj+qW6eSCJo4X1viyX6JZfZNzs5q+O8GJOoYnu1SS+eJbS/nI
-         lmm2il7qbGRbGgHovP008rcSaXjFGo6IF23+5tVc=
-Date:   Mon, 10 Jun 2019 07:57:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jiunn Chang <c0d1n61at3@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
-Message-ID: <20190610055704.GE13825@kroah.com>
-References: <20190609164127.541128197@linuxfoundation.org>
- <20190609223737.2gaz62e3q2yp2ruy@rYz3n>
+        Mon, 10 Jun 2019 01:57:21 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41249 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387667AbfFJF5V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 01:57:21 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g7so2210575oia.8;
+        Sun, 09 Jun 2019 22:57:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oiOwKSP/ccDns3j0mEFKcTsM+cS+Anm8rfm4zUSLz4c=;
+        b=mvi4ka6fEstHc5jivxug7RZ1YQBuPCCCS+NWYISGkZTEWTnZjsQSncSls8F0TBJN6w
+         Czhx2hIX9F2yw9/TwS93vrA7Dj6shBxW2OBSnV7rJ4ZkmBgZK8GHuACUhQpbzfC4w5C9
+         liQuw64oPnXpreoymw88KdlprGb+38plttb7MZz7Qq/4KLdTTOetbeUN6+oKJk6E7guF
+         QuyI2AfoFKsXboxFM1XfMFOOzluhrveGhVxTsRatMoP6KvKQF0QEWTRgqgNZRIVvCFXk
+         b47CePJsJHk+ihnjgsMg18ga//oizYuNYLxgd9eufNjWuvdnAt1liECPTzsXA+La1+dj
+         54Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oiOwKSP/ccDns3j0mEFKcTsM+cS+Anm8rfm4zUSLz4c=;
+        b=URutBlsA9jIM8aWqejSQ1M+6WM2AYmsDMe7KrHWwrSa79axdqV9kBb+tYorNVseOIe
+         ZW8mnUR12vfUoOC0qZRdn+9N7ku9ycVaXWH5PQsPJX2edO+W+ITSM1dmiRlVQBTdCxGn
+         4GjuotLn4BzjqOS3nhFcRl8UsfN543cS1r4JrzaQb8W6FtH5c1TomHE+r3K2wndCPLKM
+         mWnD9DkkjvCuVuW9IQQy0xDy585eBf5q6vnc0h9hoxueKU8A3NWf38Rt4ckG5+5de9af
+         00s9jZ3cb6GVQpduycmu5vOzqBAXMJPPdp70yq7Y+BtqAVXHq8X2R1UTL5jt/hNrCwpY
+         1omA==
+X-Gm-Message-State: APjAAAU0aRHfJjVujvKXyv2fBbggkb6GoEcLG5VM8q0DgWNsv5oOmVkm
+        uq3TVzfor+Ki62i7PQLnxqW6nQ16x4eiVeyAjnkEnQ==
+X-Google-Smtp-Source: APXvYqxiUNi45JzeMrTmD6aCbVkG3rpaG7jQ2l1DGBIeqNs9IZrt+V4OkCDFIIi+4FeWw4bN+N/M7OWAlVDSdi+C2qA=
+X-Received: by 2002:aca:e0d6:: with SMTP id x205mr10698237oig.47.1560146240240;
+ Sun, 09 Jun 2019 22:57:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190609223737.2gaz62e3q2yp2ruy@rYz3n>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 10 Jun 2019 13:58:06 +0800
+Message-ID: <CANRm+CwMPcKKwjvG9BridvuSXQNXDZQVJnWY-RNQNZ75vQC0Bg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 05:37:37PM -0500, Jiunn Chang wrote:
-> On Sun, Jun 09, 2019 at 06:41:11PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.9 release.
-> > There are 70 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.9-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > -------------
-> 
-> Compiled and booted.  No regressions on x86_64.
-
-Thanks for testing and letting me know.
-
-greg k-h
+ping, :)
+On Thu, 30 May 2019 at 09:05, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> The idea is from Xen, when sending a call-function IPI-many to vCPUs,
+> yield if any of the IPI target vCPUs was preempted. 17% performance
+> increasement of ebizzy benchmark can be observed in an over-subscribe
+> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function
+> IPI-many since call-function is not easy to be trigged by userspace
+> workload).
+>
+> v2 -> v3:
+>  * add bounds-check on dest_id
+>
+> v1 -> v2:
+>  * check map is not NULL
+>  * check map->phys_map[dest_id] is not NULL
+>  * make kvm_sched_yield static
+>  * change dest_id to unsinged long
+>
+> Wanpeng Li (3):
+>   KVM: X86: Yield to IPI target if necessary
+>   KVM: X86: Implement PV sched yield hypercall
+>   KVM: X86: Expose PV_SCHED_YIELD CPUID feature bit to guest
+>
+>  Documentation/virtual/kvm/cpuid.txt      |  4 ++++
+>  Documentation/virtual/kvm/hypercalls.txt | 11 +++++++++++
+>  arch/x86/include/uapi/asm/kvm_para.h     |  1 +
+>  arch/x86/kernel/kvm.c                    | 21 +++++++++++++++++++++
+>  arch/x86/kvm/cpuid.c                     |  3 ++-
+>  arch/x86/kvm/x86.c                       | 26 ++++++++++++++++++++++++++
+>  include/uapi/linux/kvm_para.h            |  1 +
+>  7 files changed, 66 insertions(+), 1 deletion(-)
+>
+> --
+> 2.7.4
+>
