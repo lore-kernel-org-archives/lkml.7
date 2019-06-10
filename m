@@ -2,152 +2,186 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D1FC468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2F1C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AE82085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:45:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YiHkTJdx"
+	by mail.kernel.org (Postfix) with ESMTP id F04B120859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387858AbfFJGp2 (ORCPT
+        id S2387871AbfFJGpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 02:45:28 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44364 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387797AbfFJGp2 (ORCPT
+        Mon, 10 Jun 2019 02:45:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52422 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387810AbfFJGp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 02:45:28 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t16so4681788pfe.11
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 23:45:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AXxwZFqkJLSKlo1AKtUaQ/ENUlkKBcpyhgleO3ow388=;
-        b=YiHkTJdx7yCQJW8EhCRhbAexTIwEPNmnltUScnOW70LR5R4M0zGWwRb1Azugg0mJKW
-         1NA30+nTtQdDYboc8TiR9TieUCKkKkTaYdMz7DS6OCELNzNdmg2HxnOUWymdQ3zfq85E
-         bfsgwfd/uS3RMxh83/W534VSOilBSyr0kmQ0X9Iq95QtCCWd1/4cB4VqWzK5Xwrj9Tc5
-         zmmhH9ZhZi2uBbk1EEE8Y5CCPprTI/kSMcOTWuTBghacpXttDiXPnnXt45grFnDt7MXu
-         VaDUVAbJ8ZgFLxsF4plIJ28cBfq2CMUFkbn8+Ho0M8O08U86avUP+fao+YizCgc2QqS5
-         DdHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AXxwZFqkJLSKlo1AKtUaQ/ENUlkKBcpyhgleO3ow388=;
-        b=tMgM2Tu3yVpHn+nt/1vw5W4FINxrAVgQ/d3Gl//GZwZSDt6yXK0pAup2XoCfg+38Cr
-         /UO37Zf2FOSUfNo18quhGs8YZ49tX6q8fUomGwhQAz/d0FwKp6BLYcQEhbWY0+EkybYw
-         I+MHJa2BymwCM8leD42T00xFjxE4m2HEXm05PfbKWixEJTU1u5YFVOLkEDDxjxpiIkjH
-         7UBiOdvM5J3qCcd+6XwhLFYucM/vY/sIu4c4rP6g+jbDjP6MuZkA+7U46QToI7s5FPME
-         0V/jkCeT4/W8w3m876JA2/HF84wX1idmVIar+xqasFhzf8vneLe3ziO+Ljb46OFYEqKr
-         79Zg==
-X-Gm-Message-State: APjAAAV8z9cayVell3Qa7CUc+b915k7VdgofknYs1uplpb3W/sWgpsvB
-        sl0CEEz164OIZVOhKbfp3JouOQHg4MsmnQ==
-X-Google-Smtp-Source: APXvYqw08rKgZJAkQBntaYmCPFTNxHfKWkcs3bOrEThz724Nqp1BmapHkmdPOiD5NJuFIDU1d/qeZg==
-X-Received: by 2002:a63:5207:: with SMTP id g7mr13953365pgb.356.1560149127632;
-        Sun, 09 Jun 2019 23:45:27 -0700 (PDT)
-Received: from ubuntu ([104.192.108.9])
-        by smtp.gmail.com with ESMTPSA id s17sm8726251pfm.74.2019.06.09.23.45.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 23:45:27 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 23:45:21 -0700
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        kilobyte@angband.pl, textshell@uchuujin.de, mpatocka@redhat.com,
-        daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] vt: Fix a missing-check bug in con_init()
-Message-ID: <20190610064519.GA3143@ubuntu>
-References: <20190528004529.GA12388@zhanggen-UX430UQ>
- <20190608160138.GA3840@zhanggen-UX430UQ>
- <20190608162219.GB11699@kroah.com>
- <nycvar.YSQ.7.76.1906082010430.1558@knanqh.ubzr>
+        Mon, 10 Jun 2019 02:45:29 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5A6fvUo092868
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 02:45:27 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t1gc14c6e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 02:45:27 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <anju@linux.vnet.ibm.com>;
+        Mon, 10 Jun 2019 07:45:25 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 10 Jun 2019 07:45:22 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5A6jEeC28508438
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jun 2019 06:45:14 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D85D52059;
+        Mon, 10 Jun 2019 06:45:21 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.35.72])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 742C15204E;
+        Mon, 10 Jun 2019 06:45:19 +0000 (GMT)
+From:   Anju T Sudhakar <anju@linux.vnet.ibm.com>
+To:     mpe@ellerman.id.au, acme@kernel.org, jolsa@redhat.com
+Cc:     namhyung@kernel.org, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        anju@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com
+Subject: [PATCH RESEND 1/2] tools/perf: Add arch neutral function to choose event for perf kvm record
+Date:   Mon, 10 Jun 2019 12:15:17 +0530
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.1906082010430.1558@knanqh.ubzr>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061006-0028-0000-0000-00000378DAC2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061006-0029-0000-0000-00002438C425
+Message-Id: <20190610064518.949-1-anju@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906100047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 08:15:46PM -0400, Nicolas Pitre wrote:
-> On Sat, 8 Jun 2019, Greg KH wrote:
-> 
-> > On Sun, Jun 09, 2019 at 12:01:38AM +0800, Gen Zhang wrote:
-> > > On Tue, May 28, 2019 at 08:45:29AM +0800, Gen Zhang wrote:
-> > > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
-> > > > vc->vc_screenbuf is allocated by kzalloc(). And they are used in the 
-> > > > following codes. However, kzalloc() returns NULL when fails, and null 
-> > > > pointer dereference may happen. And it will cause the kernel to crash. 
-> > > > Therefore, we should check the return value and handle the error.
-> > > > 
-> > > > Further, since the allcoation is in a loop, we should free all the 
-> > > > allocated memory in a loop.
-> > > > 
-> > > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
-> > > > ---
-> > > > diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> > > > index fdd12f8..d50f68f 100644
-> > > > --- a/drivers/tty/vt/vt.c
-> > > > +++ b/drivers/tty/vt/vt.c
-> > > > @@ -3350,10 +3350,14 @@ static int __init con_init(void)
-> > > >  
-> > > >  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
-> > > >  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> > > > +		if (!vc)
-> > > > +			goto fail1;
-> > > >  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
-> > > >  		tty_port_init(&vc->port);
-> > > >  		visual_init(vc, currcons, 1);
-> > > >  		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-> > > > +		if (!vc->vc_screenbuf)
-> > > > +			goto fail2;
-> > > >  		vc_init(vc, vc->vc_rows, vc->vc_cols,
-> > > >  			currcons || !vc->vc_sw->con_save_screen);
-> > > >  	}
-> > > > @@ -3375,6 +3379,16 @@ static int __init con_init(void)
-> > > >  	register_console(&vt_console_driver);
-> > > >  #endif
-> > > >  	return 0;
-> > > > +fail1:
-> > > > +	while (currcons > 0) {
-> > > > +		currcons--;
-> > > > +		kfree(vc_cons[currcons].d->vc_screenbuf);
-> > > > +fail2:
-> > > > +		kfree(vc_cons[currcons].d);
-> > > > +		vc_cons[currcons].d = NULL;
-> > > > +	}
-> > 
-> > Wait, will that even work?  You can jump into the middle of a while
-> > loop?
-> 
-> Absolutely.
-> 
-> > Ugh, that's beyond ugly.
-> 
-> That was me who suggested to do it like that. To me, this is nicer than 
-> the proposed alternatives. For an error path that is rather unlikely to 
-> happen, I think this is a very concise and eleguant way to do it.
-> 
-> > And please provide "real" names for the
-> > labels, "fail1" and "fail2" do not tell anything here.
-> 
-> That I agree with.
-> 
-> 
-> Nicolas
-Thanks for your comments. Then am I supposed to revise the patch and
-send a v4 version?
+'perf kvm record' uses 'cycles'(if the user did not specify any event) as
+the default event to profile the guest.
+This will not provide any proper samples from the guest incase of
+powerpc architecture, since in powerpc the PMUs are controlled by
+the guest rather than the host.
 
-Thanks
-Gen
+Patch adds a function to pick an arch specific event for 'perf kvm record',
+instead of selecting 'cycles' as a default event for all architectures.
+
+For powerpc this function checks for any user specified event, and if there
+isn't any it returns invalid instead of proceeding with 'cycles' event.
+
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+---
+ tools/perf/arch/powerpc/util/kvm-stat.c | 37 +++++++++++++++++++++++++
+ tools/perf/builtin-kvm.c                | 12 +++++++-
+ tools/perf/util/kvm-stat.h              |  2 +-
+ 3 files changed, 49 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+index f9db341c47b6..66f8fe500945 100644
+--- a/tools/perf/arch/powerpc/util/kvm-stat.c
++++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+@@ -8,6 +8,7 @@
+ 
+ #include "book3s_hv_exits.h"
+ #include "book3s_hcalls.h"
++#include <subcmd/parse-options.h>
+ 
+ #define NR_TPS 4
+ 
+@@ -172,3 +173,39 @@ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
+ 
+ 	return ret;
+ }
++
++/*
++ * Incase of powerpc architecture, pmu registers are programmable
++ * by guest kernel. So monitoring guest via host may not provide
++ * valid samples. It is better to fail the "perf kvm record"
++ * with default "cycles" event to monitor guest in powerpc.
++ *
++ * Function to parse the arguments and return appropriate values.
++ */
++int kvm_add_default_arch_event(int *argc, const char **argv)
++{
++	const char **tmp;
++	bool event = false;
++	int i, j = *argc;
++
++	const struct option event_options[] = {
++		OPT_BOOLEAN('e', "event", &event, NULL),
++		OPT_END()
++	};
++
++	tmp = calloc(j + 1, sizeof(char *));
++	if (!tmp)
++		return -EINVAL;
++
++	for (i = 0; i < j; i++)
++		tmp[i] = argv[i];
++
++	parse_options(j, tmp, event_options, NULL, 0);
++	if (!event) {
++		free(tmp);
++		return -EINVAL;
++	}
++
++	free(tmp);
++	return 0;
++}
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index dbb6f737a3e2..fe33b3ec55c9 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -1510,11 +1510,21 @@ static int kvm_cmd_stat(const char *file_name, int argc, const char **argv)
+ }
+ #endif /* HAVE_KVM_STAT_SUPPORT */
+ 
++int __weak kvm_add_default_arch_event(int *argc __maybe_unused,
++					const char **argv __maybe_unused)
++{
++	return 0;
++}
++
+ static int __cmd_record(const char *file_name, int argc, const char **argv)
+ {
+-	int rec_argc, i = 0, j;
++	int rec_argc, i = 0, j, ret;
+ 	const char **rec_argv;
+ 
++	ret = kvm_add_default_arch_event(&argc, argv);
++	if (ret)
++		return -EINVAL;
++
+ 	rec_argc = argc + 2;
+ 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+ 	rec_argv[i++] = strdup("record");
+diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
+index 1403dec189b4..da38b56c46cb 100644
+--- a/tools/perf/util/kvm-stat.h
++++ b/tools/perf/util/kvm-stat.h
+@@ -144,5 +144,5 @@ extern const int decode_str_len;
+ extern const char *kvm_exit_reason;
+ extern const char *kvm_entry_trace;
+ extern const char *kvm_exit_trace;
+-
++extern int kvm_add_default_arch_event(int *argc, const char **argv);
+ #endif /* __PERF_KVM_STAT_H */
+-- 
+2.17.2
+
