@@ -2,180 +2,231 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFB2C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B905AC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E6E20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823B3206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CA/9jjUG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQaual/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390842AbfFJXwI (ORCPT
+        id S2390874AbfFJXwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 19:52:08 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44890 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390682AbfFJXwF (ORCPT
+        Mon, 10 Jun 2019 19:52:11 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:53009 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390682AbfFJXwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 19:52:05 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t7so1655130plr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:52:04 -0700 (PDT)
+        Mon, 10 Jun 2019 19:52:10 -0400
+Received: by mail-qt1-f202.google.com with SMTP id c48so10362450qta.19
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:52:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zTMxpEEXAhPalCGk2uwvI4Mw2/TbyDqYYFDJpjeMgJM=;
-        b=CA/9jjUGtQ1g8jH3eI7LaH1zTRGcBGM6SIXNKdkqtIKxVMJ52CM8PTouVpZI532u8j
-         ujrtQ/dbZ8tEkdej07Kn9Lf2dtpz5B6iMdvzCi0kZHyDAN65FbQPSY2W1MdE62/VJNFD
-         DokqiXe3WIqy3Tj6Zsjmbq181/8BklVk2IFTM=
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=mlxJDYZKh9wYq/WtDU7yH8cffd94xLXLnzUxx7frAqI=;
+        b=rQaual/DBiHZHp7DF8/Thr626kZ6P76nw2hD0Qm0ARQj1OU230xKPZK/zrQPw3iF/D
+         1bFE4j3ANW8glHQXKut7i+XxXmc6m1+FnKeycgykblAfjN0pF98kCZruBZRD7v4wAyJK
+         WxXT7EFz4Q24oMf+tuM1XRS4IuZTqz6toAcZyTq/IT9zFnMWkkLVnnQpvIesrPdxK8xe
+         faO4x9hpF/ZOoLuwAG+riS5RAA5p/nqfzTqP4iDcxD9o2xxe31N4qKqc33s7WM/m4omS
+         jJJq+N6EyyP/agi856I2pxB7aNv/WPTQYyH/tFoxVJGcgXp5R9E3MwWVjbJo9I2GSoy+
+         s/lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zTMxpEEXAhPalCGk2uwvI4Mw2/TbyDqYYFDJpjeMgJM=;
-        b=k3sq9AuYAUxay7eiLTQVX+JAFclVi5HWAmSelofTaERc3OYPHWfVNH3oHdeuIEOGEn
-         jTmGH/KDi0TyiLU2kVnmmFYObJ4NKjuwCQH1ydGj9OU/UEcaBV0XEnV+ooRvOFboJkzS
-         X2s97rn+kFbbEYosa3iehHvUgIzFH6tWI8lJa8tc9Zh+Unkc7XldgcTBvjYo9vPItovi
-         fcm7U/JpHx8PRRYN90A4w7rJOSrCRw9VBfJT5xXPnLe9Gm1HGilAchSp9OxHSHFXPpqE
-         lUooJPGZdIDLYWmo/IyiKUnaHjVZVD9UVd2fAX0RPxS3c8LNPl0uo9GnkvzN/IIEKXgy
-         Bv+g==
-X-Gm-Message-State: APjAAAXTE8fDXt+QigUKGXMXI4wWglKsO8JYY2qwPJTOR1GQft/UqPjS
-        paC7i9rLf5IKP63cJRpSFKcQlA==
-X-Google-Smtp-Source: APXvYqwEq2Riap96orfEJ5J7t1DMOxlcSqT8vZ+0LAjMb9tv27xDvdsQ7kXG4J9ZyFg707prgfvnQg==
-X-Received: by 2002:a17:902:a708:: with SMTP id w8mr69255143plq.162.1560210724170;
-        Mon, 10 Jun 2019 16:52:04 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y4sm11934800pgc.85.2019.06.10.16.52.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 16:52:03 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 16:52:02 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Garnier <thgarnie@chromium.org>
-Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
-        Thomas Garnier <thgarnie@google.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 08/12] x86/acpi: Adapt assembly for PIE support
-Message-ID: <201906101652.CA88F8F@keescook>
-References: <20190520231948.49693-1-thgarnie@chromium.org>
- <20190520231948.49693-9-thgarnie@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520231948.49693-9-thgarnie@chromium.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=mlxJDYZKh9wYq/WtDU7yH8cffd94xLXLnzUxx7frAqI=;
+        b=DWvOhPeh+Fnegk0ZBVcRSD7z96/kJ41ByD28M0DqmJRP1m2Uw3unLNbv8CTyCCDgTU
+         xMRRxu64dznIPocuZK0v880pOEq5vlMEfQUBP0M64bmHpNjlbMiipFkCa6+tLEHJD0fZ
+         w5NON4gzA/b9BkF0RGAkWg4vNGqpsTA2iMPV68WVQbNb8/bpyHzzb06RHlbNEBWxqf4e
+         AmiFcIJC9iPPMJ2oNf0mb/2L4pBdAE9jzgmk1501VTC5sOAbKV0jDLF60oV57cek1Cru
+         52QQX9AkTK+9PafC2cjtkwvUed5befdf8z4V6PPl1KMQNclszf7OumPloZGgZqDKBnn7
+         3bMA==
+X-Gm-Message-State: APjAAAURa8EocK3mgUxFR7yNrAhib4xlwtGdZKjH2pOd1anFbZ+MXcgy
+        wAjeAu+jQ3Cu32GfkjGxokVQMOctwdxbqbBU7yU2fM1eeyCn0z9vIVLw2iPDp/sFqI2/MuSJaNB
+        FgxbTugDWnLhNfp19Hbca1lRzLvFDz2ZD6RvlYSi9V1CbdmgVLEny1MeNVYbgmhfHA60=
+X-Google-Smtp-Source: APXvYqya2j1UvRFWBx9kQIW/1TpCoTAj4gQTPHahMs8WLCgjSh12s3FCppHWR7MYPd2wk4l8FUWyAM7tgQ==
+X-Received: by 2002:a0c:89a5:: with SMTP id 34mr38263565qvr.110.1560210728734;
+ Mon, 10 Jun 2019 16:52:08 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 16:52:00 -0700
+In-Reply-To: <20190610235201.145457-1-fengc@google.com>
+Message-Id: <20190610235201.145457-3-fengc@google.com>
+Mime-Version: 1.0
+References: <20190610235201.145457-1-fengc@google.com>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+Subject: [RESEND PATCH v3 2/3] dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
+From:   Chenbo Feng <fengc@google.com>
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        --validate@google.com
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel-team@android.com
+Content-Type: text/plain; charset="utf-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 04:19:33PM -0700, Thomas Garnier wrote:
-> From: Thomas Garnier <thgarnie@google.com>
-> 
-> Change the assembly code to use only relative references of symbols for the
-> kernel to be PIE compatible.
-> 
-> Position Independent Executable (PIE) support will allow to extend the
-> KASLR randomization range below 0xffffffff80000000.
-> 
-> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+From: Greg Hackmann <ghackmann@google.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+This patch adds complimentary DMA_BUF_SET_NAME and DMA_BUF_GET_NAME
+ioctls, which lets userspace processes attach a free-form name to each
+buffer.
 
--Kees
+This information can be extremely helpful for tracking and accounting
+shared buffers.  For example, on Android, we know what each buffer will
+be used for at allocation time: GL, multimedia, camera, etc.  The
+userspace allocator can use DMA_BUF_SET_NAME to associate that
+information with the buffer, so we can later give developers a
+breakdown of how much memory they're allocating for graphics, camera,
+etc.
 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  arch/x86/kernel/acpi/wakeup_64.S | 31 ++++++++++++++++---------------
->  1 file changed, 16 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
-> index 510fa12aab73..e080e943e295 100644
-> --- a/arch/x86/kernel/acpi/wakeup_64.S
-> +++ b/arch/x86/kernel/acpi/wakeup_64.S
-> @@ -14,7 +14,7 @@
->  	 * Hooray, we are in Long 64-bit mode (but still running in low memory)
->  	 */
->  ENTRY(wakeup_long64)
-> -	movq	saved_magic, %rax
-> +	movq	saved_magic(%rip), %rax
->  	movq	$0x123456789abcdef0, %rdx
->  	cmpq	%rdx, %rax
->  	jne	bogus_64_magic
-> @@ -25,14 +25,14 @@ ENTRY(wakeup_long64)
->  	movw	%ax, %es
->  	movw	%ax, %fs
->  	movw	%ax, %gs
-> -	movq	saved_rsp, %rsp
-> +	movq	saved_rsp(%rip), %rsp
->  
-> -	movq	saved_rbx, %rbx
-> -	movq	saved_rdi, %rdi
-> -	movq	saved_rsi, %rsi
-> -	movq	saved_rbp, %rbp
-> +	movq	saved_rbx(%rip), %rbx
-> +	movq	saved_rdi(%rip), %rdi
-> +	movq	saved_rsi(%rip), %rsi
-> +	movq	saved_rbp(%rip), %rbp
->  
-> -	movq	saved_rip, %rax
-> +	movq	saved_rip(%rip), %rax
->  	jmp	*%rax
->  ENDPROC(wakeup_long64)
->  
-> @@ -45,7 +45,7 @@ ENTRY(do_suspend_lowlevel)
->  	xorl	%eax, %eax
->  	call	save_processor_state
->  
-> -	movq	$saved_context, %rax
-> +	leaq	saved_context(%rip), %rax
->  	movq	%rsp, pt_regs_sp(%rax)
->  	movq	%rbp, pt_regs_bp(%rax)
->  	movq	%rsi, pt_regs_si(%rax)
-> @@ -64,13 +64,14 @@ ENTRY(do_suspend_lowlevel)
->  	pushfq
->  	popq	pt_regs_flags(%rax)
->  
-> -	movq	$.Lresume_point, saved_rip(%rip)
-> +	leaq	.Lresume_point(%rip), %rax
-> +	movq	%rax, saved_rip(%rip)
->  
-> -	movq	%rsp, saved_rsp
-> -	movq	%rbp, saved_rbp
-> -	movq	%rbx, saved_rbx
-> -	movq	%rdi, saved_rdi
-> -	movq	%rsi, saved_rsi
-> +	movq	%rsp, saved_rsp(%rip)
-> +	movq	%rbp, saved_rbp(%rip)
-> +	movq	%rbx, saved_rbx(%rip)
-> +	movq	%rdi, saved_rdi(%rip)
-> +	movq	%rsi, saved_rsi(%rip)
->  
->  	addq	$8, %rsp
->  	movl	$3, %edi
-> @@ -82,7 +83,7 @@ ENTRY(do_suspend_lowlevel)
->  	.align 4
->  .Lresume_point:
->  	/* We don't restore %rax, it must be 0 anyway */
-> -	movq	$saved_context, %rax
-> +	leaq	saved_context(%rip), %rax
->  	movq	saved_context_cr4(%rax), %rbx
->  	movq	%rbx, %cr4
->  	movq	saved_context_cr3(%rax), %rbx
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
+Signed-off-by: Greg Hackmann <ghackmann@google.com>
+Signed-off-by: Chenbo Feng <fengc@google.com>
+---
+ drivers/dma-buf/dma-buf.c    | 49 +++++++++++++++++++++++++++++++++---
+ include/linux/dma-buf.h      |  5 +++-
+ include/uapi/linux/dma-buf.h |  3 +++
+ 3 files changed, 53 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index ffd5a2ad7d6f..c1da5f9ce44d 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -48,8 +48,24 @@ struct dma_buf_list {
+ 
+ static struct dma_buf_list db_list;
+ 
++static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
++{
++	struct dma_buf *dmabuf;
++	char name[DMA_BUF_NAME_LEN];
++	size_t ret = 0;
++
++	dmabuf = dentry->d_fsdata;
++	mutex_lock(&dmabuf->lock);
++	if (dmabuf->name)
++		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
++	mutex_unlock(&dmabuf->lock);
++
++	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
++			     dentry->d_name.name, ret > 0 ? name : "");
++}
++
+ static const struct dentry_operations dma_buf_dentry_ops = {
+-	.d_dname = simple_dname,
++	.d_dname = dmabuffs_dname,
+ };
+ 
+ static struct vfsmount *dma_buf_mnt;
+@@ -297,6 +313,27 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
+ 	return events;
+ }
+ 
++static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
++{
++	char *name = strndup_user(buf, DMA_BUF_NAME_LEN);
++	long ret = 0;
++
++	if (IS_ERR(name))
++		return PTR_ERR(name);
++
++	mutex_lock(&dmabuf->lock);
++	if (!list_empty(&dmabuf->attachments)) {
++		ret = -EBUSY;
++		goto out_unlock;
++	}
++	kfree(dmabuf->name);
++	dmabuf->name = name;
++
++out_unlock:
++	mutex_unlock(&dmabuf->lock);
++	return ret;
++}
++
+ static long dma_buf_ioctl(struct file *file,
+ 			  unsigned int cmd, unsigned long arg)
+ {
+@@ -335,6 +372,10 @@ static long dma_buf_ioctl(struct file *file,
+ 			ret = dma_buf_begin_cpu_access(dmabuf, direction);
+ 
+ 		return ret;
++
++	case DMA_BUF_SET_NAME:
++		return dma_buf_set_name(dmabuf, (const char __user *)arg);
++
+ 	default:
+ 		return -ENOTTY;
+ 	}
+@@ -376,6 +417,7 @@ static struct file *dma_buf_getfile(struct dma_buf *dmabuf, int flags)
+ 		goto err_alloc_file;
+ 	file->f_flags = flags & (O_ACCMODE | O_NONBLOCK);
+ 	file->private_data = dmabuf;
++	file->f_path.dentry->d_fsdata = dmabuf;
+ 
+ 	return file;
+ 
+@@ -1082,12 +1124,13 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
+ 			continue;
+ 		}
+ 
+-		seq_printf(s, "%08zu\t%08x\t%08x\t%08ld\t%s\t%08lu\n",
++		seq_printf(s, "%08zu\t%08x\t%08x\t%08ld\t%s\t%08lu\t%s\n",
+ 				buf_obj->size,
+ 				buf_obj->file->f_flags, buf_obj->file->f_mode,
+ 				file_count(buf_obj->file),
+ 				buf_obj->exp_name,
+-				file_inode(buf_obj->file)->i_ino);
++				file_inode(buf_obj->file)->i_ino,
++				buf_obj->name ?: "");
+ 
+ 		robj = buf_obj->resv;
+ 		while (true) {
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index 58725f890b5b..582998e19df6 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -255,10 +255,12 @@ struct dma_buf_ops {
+  * @file: file pointer used for sharing buffers across, and for refcounting.
+  * @attachments: list of dma_buf_attachment that denotes all devices attached.
+  * @ops: dma_buf_ops associated with this buffer object.
+- * @lock: used internally to serialize list manipulation, attach/detach and vmap/unmap
++ * @lock: used internally to serialize list manipulation, attach/detach and
++ *        vmap/unmap, and accesses to name
+  * @vmapping_counter: used internally to refcnt the vmaps
+  * @vmap_ptr: the current vmap ptr if vmapping_counter > 0
+  * @exp_name: name of the exporter; useful for debugging.
++ * @name: userspace-provided name; useful for accounting and debugging.
+  * @owner: pointer to exporter module; used for refcounting when exporter is a
+  *         kernel module.
+  * @list_node: node for dma_buf accounting and debugging.
+@@ -286,6 +288,7 @@ struct dma_buf {
+ 	unsigned vmapping_counter;
+ 	void *vmap_ptr;
+ 	const char *exp_name;
++	const char *name;
+ 	struct module *owner;
+ 	struct list_head list_node;
+ 	void *priv;
+diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
+index d75df5210a4a..dbc7092e04b5 100644
+--- a/include/uapi/linux/dma-buf.h
++++ b/include/uapi/linux/dma-buf.h
+@@ -35,7 +35,10 @@ struct dma_buf_sync {
+ #define DMA_BUF_SYNC_VALID_FLAGS_MASK \
+ 	(DMA_BUF_SYNC_RW | DMA_BUF_SYNC_END)
+ 
++#define DMA_BUF_NAME_LEN	32
++
+ #define DMA_BUF_BASE		'b'
+ #define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
++#define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
+ 
+ #endif
 -- 
-Kees Cook
+2.22.0.rc2.383.gf4fbbf30c2-goog
+
