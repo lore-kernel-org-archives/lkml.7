@@ -2,142 +2,141 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247AEC31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C2EC31E42
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA3A21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhfeEdpi"
+	by mail.kernel.org (Postfix) with ESMTP id 5C43620859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391056AbfFJPE5 (ORCPT
+        id S2391071AbfFJPGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:04:57 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44065 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389368AbfFJPE4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:04:56 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so6875257lfm.11;
-        Mon, 10 Jun 2019 08:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JlGKclY/bHvJDeSRZXa+M2saWzmI4Gp/wAz0wTgws2w=;
-        b=NhfeEdpiincXSqU7FtldKqketoZf30UquGvzS6kxSQdA4NdSNMuQMjFZCI7zprrq9n
-         tdrH//tHgqASjIuQmcjL4Zs7JRTkKGLgyftJOoju/Q2NIqDNntuBwzQFRQq/P2GK1OXW
-         D4kMHiO0wXGoF1WNI4XLlCGLoI1tlblW1G6tlzFqgpIxrDnLCX5Pohf1t/GYjcc+SkRj
-         2RW02M15MxLf2Nbt1LScwn3atbTWbzq27/pCMeQ1GEpsZqbXJ8v1tFl5yW5R2EDtRNSH
-         Y3+aYI5n03uFtrmykJzVYtKjGbn4dNRuWbp9HHCzpApFX+TpmLVl2QcG3Q/S5ru24a15
-         04Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JlGKclY/bHvJDeSRZXa+M2saWzmI4Gp/wAz0wTgws2w=;
-        b=G3yi9SyFnKUQ1Bp9ktcmQQGlGCtWMR9OOeQnjiG8Nnn8jdBQLtOxq+BW1tskEwlqj4
-         lrG2W7+jmj5gPcrSEbUFjpzmyy0zpn7B6ABLjwYCSt6mCmaM9J4x1dAJPsLeJ2LmaYTG
-         H+w0Kcc17aWJLNXljg3UIGXlwou3DY+3aWjw3oRQTqGvUbrELKWVzT1nqPHQzBife93V
-         EVzVVsuMCqekbFJsKBhLY2HR4+8tIsODuThWucsAmzITWFS2wgjJBEv67azXyBM6F32J
-         Y/Nt/U5DoyntomzCdNGCXWpgUXQ8H0xdf1pDhlNDLfBCmOWn/+q89CVKxtDLldKgffAM
-         XqIw==
-X-Gm-Message-State: APjAAAXVX3fsnW68WkbO4qOdF0WFSnDgFcfVabPktTDHHXCLdzdGlwQ7
-        TKHOdYKjriIbIFzeNyAAOUch5CFwefz/O3EdoBo=
-X-Google-Smtp-Source: APXvYqyI13FJbeAILiPcIRmZTbdQFmXeaIUoLLMbMnYGK6WIzeQwFknFTGYM7gn3KAyYoHR3RAwJJIoEnbXB+9V4eEk=
-X-Received: by 2002:a19:491d:: with SMTP id w29mr18544344lfa.149.1560179094278;
- Mon, 10 Jun 2019 08:04:54 -0700 (PDT)
+        Mon, 10 Jun 2019 11:06:18 -0400
+Received: from mga01.intel.com ([192.55.52.88]:38253 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389368AbfFJPGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:06:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 08:06:17 -0700
+X-ExtLoop1: 1
+Received: from agusev-mobl.ger.corp.intel.com (HELO localhost) ([10.249.46.248])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Jun 2019 08:06:05 -0700
+Date:   Mon, 10 Jun 2019 18:06:00 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v2 1/5] mm: Introduce vm_ops->may_mprotect()
+Message-ID: <20190610150600.GA3752@linux.intel.com>
+References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+ <20190606021145.12604-2-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20190517085126.GA3249@kroah.com> <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
- <20190517152200.GI8945@kernel.org> <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
- <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org> <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
- <20190610074510.GA24746@kroah.com> <CALrw=nEp=hUUaKtuU3Q1c_zKO3zYC3uP_s_Dyz_zhkxW7K+4mQ@mail.gmail.com>
- <20190610142145.GC5937@kroah.com> <CANiq72kxyKV1z+dGmMtuq=gUWOYS=Y0EsNFqLKoFXWx6+n=J1g@mail.gmail.com>
- <20190610144858.GA1481@kroah.com>
-In-Reply-To: <20190610144858.GA1481@kroah.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Mon, 10 Jun 2019 17:04:43 +0200
-Message-ID: <CANiq72maZcuMXQoSDPhY=+4UKUFPwbQLuGsqcoPX-feCerbBtw@mail.gmail.com>
-Subject: Re: Linux 4.19 and GCC 9
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Ignat Korchagin <ignat@cloudflare.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606021145.12604-2-sean.j.christopherson@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 4:49 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jun 10, 2019 at 04:42:27PM +0200, Miguel Ojeda wrote:
-> > I think Josh Poimboeuf added support for a few related things in GCC 8
-> > (e.g. 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")).
->
-> That commit is already in all stable releases, so does there need to be
-> a gcc 9 specific one?
+On Wed, Jun 05, 2019 at 07:11:41PM -0700, Sean Christopherson wrote:
+> SGX will use the may_mprotect() hook to prevent userspace from
+> circumventing various security checks, e.g. Linux Security Modules.
+> Naming it may_mprotect() instead of simply mprotect() is intended to
+> reflect the hook's purpose as a way to gate mprotect() as opposed to
+> a wholesale replacement.
 
-Ah, you are right. Hm... I recall discussing this at some point when
-cleaning up for GCC 9, let me take a look...
+"This commit adds may_mprotect() to struct vm_operations_struct, which
+can be used to ask from the owner of a VMA if mprotect() is allowed."
 
-> > I typically compile a bare-bones GCC for those things, it is quite quick.
->
-> Pointers to how to do that is appreciated.  It's been years since I had
-> to build gcc "from scratch".
+This would be more appropriate statement because that is what the code
+change aims for precisely. I did not even understand what you meant by
+gating in this context. I would leave SGX and LSM's (and especially
+"various security checks", which means abssolutely nothing) out of the
+first paragraph completely.
 
-We crossed emails -- I copy it here on-list in case someone else wants it :-)
+> Enclaves are built by copying data from normal memory into the Enclave
+> Page Cache (EPC).  Due to the nature of SGX, the EPC is represented by a
+> single file that must be MAP_SHARED, i.e. mprotect() only ever sees a
+> MAP_SHARED vm_file that references single file path.  Furthermore, all
+> enclaves will need read, write and execute pages in the EPC.
 
-mkdir ${BUILD_PATH} \
-    && cd ${BUILD_PATH} \
-    && ${REPO_PATH}/configure \
-        --enable-languages=c,c++ \
-        --disable-multilib \
-        --disable-bootstrap \
-        --disable-nls \
-        --prefix=${INSTALL_PATH} \
-    && time make \
-    && time make install
+I would just say that "Due to the fact that EPC is delivered as IO
+memory from the preboot firmware, it can be only mapped as MAP_SHARED".
+It is what it is.
 
-The key thing is disabling bootstrap to have a single-pass compilation
--- that speeds up things a lot (although, of course, you get less
-testing). I would guess you can also disable c++ for the kernel for
-even a faster build. You can also use -j, but even without it it does
-not really take long (1 hour? -- way less than LLVM anyway). The
-installed size nowadays is about 1 GiB.
+> As a result, LSM policies cannot be meaningfully applied, e.g. an LSM
+> can deny access to the EPC as a whole, but can't deny PROT_EXEC on page
+> that originated in a non-EXECUTE file (which is long gone by the time
+> mprotect() is called).
 
-To get the actual code, I use the git mirror in github for speed
-(although it is not that big anyway):
+I have hard time following what is paragraph is trying to say.
 
-  git clone https://github.com/gcc-mirror/gcc
+> By hooking mprotect(), SGX can make explicit LSM upcalls while an
+> enclave is being built, i.e. when the kernel has a handle to origin of
+> each enclave page, and enforce the result of the LSM policy whenever
+> userspace maps the enclave page in the future.
 
-The tags you want to use look like:
+"LSM policy whenever calls mprotect()"? I'm no sure why you mean by
+mapping here and if there is any need to talk about future. Isn't this
+needed now?
 
-  gcc-9_1_0-release
+> Alternatively, SGX could play games with MAY_{READ,WRITE,EXEC}, but
+> that approach is quite ugly, e.g. would require userspace to call an
+> SGX ioctl() prior to using mprotect() to extend a page's protections.
 
-Also, the first time you run this, you may need some extra dependencies:
+Instead of talking "playing games" I would state what could be done with
+VM_MAY{READ,WRITE,EXEC} and why it is bad. Leaves questions otherwise.
 
-  libgmp-dev (maybe named gmp-devel)
-  libmpfr-dev (mpfr-devel)
-  libmpc-dev (libmpc-devel)
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  include/linux/mm.h |  2 ++
+>  mm/mprotect.c      | 15 +++++++++++----
+>  2 files changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0e8834ac32b7..a697996040ac 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -458,6 +458,8 @@ struct vm_operations_struct {
+>  	void (*close)(struct vm_area_struct * area);
+>  	int (*split)(struct vm_area_struct * area, unsigned long addr);
+>  	int (*mremap)(struct vm_area_struct * area);
+> +	int (*may_mprotect)(struct vm_area_struct * area, unsigned long start,
+> +			    unsigned long end, unsigned long prot);
 
-Unless your distro is quite old, I think they should simply work (a
-few years ago I had to compile those manually, but nowadays I don't
-seem to need them anymore).
+Could be just boolean.
 
-Cheers,
-Miguel
+/Jarkko
