@@ -2,176 +2,209 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64E2C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF0CC468C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF94020833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9162E20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387678AbfFJG1g (ORCPT
+        id S2387717AbfFJG3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 02:27:36 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35709 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387464AbfFJG1g (ORCPT
+        Mon, 10 Jun 2019 02:29:01 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:55515 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387464AbfFJG3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 02:27:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c6so6947033wml.0;
-        Sun, 09 Jun 2019 23:27:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=03+ZK6LAjM8ILNXXxSHCfPsZg74aqkiPoQlY+3bYDfY=;
-        b=Wxt4Nz8WI/UOzZ4jMRTSEDpEUG7XBev8O0as4Lu1IQOihbKApyLP/EoAcHiOuNUASR
-         JN6AfT5/fGk0S1mzcUeu80+MddBRp+dvmMcZCqb+jsTlU1TEUgHTvFyLrtp4WWGAp9ja
-         1y7160aqF7hlWZm0rMrqSE2ej5POs9uuizi20HhtL4gGsNDp3jRedCS8rwwWzbzvQSqh
-         2JFtvx3OquKk0jOVF3Z4avdFnMxKFbH+/T4DkNMBU1kkB5pDYBVtL5vPHRw2gzEM+D46
-         nmuh7Z1v3Jjn09LEFPmGAEZ3b9hlSP6v2kpt/CFQRInbeewXuEAE1Dns6O6sKIur7SxQ
-         H2wg==
-X-Gm-Message-State: APjAAAUUZwY6A6T80giecqgW1u5ZVe4ZBNyeNYBc0LTo/BgEAUAij63x
-        6OoDaUngGpCahXQXuEqZiMc=
-X-Google-Smtp-Source: APXvYqym0eVMVUS/3rAVBTojqjkYbfslDuTMT4cp4ElKLPPECjSLY6kKDyke7dg6yxB1YmdzXR/DLg==
-X-Received: by 2002:a1c:b706:: with SMTP id h6mr11693787wmf.119.1560148053012;
-        Sun, 09 Jun 2019 23:27:33 -0700 (PDT)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id u23sm7502739wmj.33.2019.06.09.23.27.31
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 23:27:31 -0700 (PDT)
-Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of AutoReporter
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-References: <20190607153849.101321647@linuxfoundation.org>
- <20190607153855.717899507@linuxfoundation.org>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
-Date:   Mon, 10 Jun 2019 08:27:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190607153855.717899507@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Jun 2019 02:29:01 -0400
+X-IronPort-AV: E=Sophos;i="5.60,573,1549897200"; 
+   d="scan'208";a="18044931"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 10 Jun 2019 15:28:58 +0900
+Received: from localhost.localdomain (unknown [10.166.17.210])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6942D4001DC4;
+        Mon, 10 Jun 2019 15:28:58 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     kishon@ti.com
+Cc:     geert+renesas@glider.be, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
+Date:   Mon, 10 Jun 2019 15:23:55 +0900
+Message-Id: <1560147835-7629-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07. 06. 19, 17:39, Greg Kroah-Hartman wrote:
-> From: Jonathan Corbet <corbet@lwn.net>
-> 
-> commit 2404dad1f67f8917e30fc22a85e0dbcc85b99955 upstream.
-> 
-> AutoReporter is going away; recent versions of sphinx emit a warning like:
-> 
->   Documentation/sphinx/kerneldoc.py:125:
->       RemovedInSphinx20Warning: AutodocReporter is now deprecated.
->       Use sphinx.util.docutils.switch_source_input() instead.
-> 
-> Make the switch.  But switch_source_input() only showed up in 1.7, so we
-> have to do ugly version checks to keep things working in older versions.
+The powered flag should be set for any other phys anyway. Also
+the flag should be locked by the channel. Otherwise, after we have
+revised the device tree for the usb phy, the following warning
+happened during a second system suspend. And if the driver doesn't
+lock the flag, an imbalance is possible when enabling the regulator
+during system resume. So, this patch fixes the issues.
 
-Hi,
+< The warning >
+[   56.026531] unbalanced disables for USB20_VBUS0
+[   56.031108] WARNING: CPU: 3 PID: 513 at drivers/regulator/core.c:2593 _regula
+tor_disable+0xe0/0x1c0
+[   56.040146] Modules linked in: rcar_du_drm rcar_lvds drm_kms_helper drm drm_p
+anel_orientation_quirks vsp1 videobuf2_vmalloc videobuf2_dma_contig videobuf2_me
+mops videobuf2_v4l2 videobuf2_common videodev snd_soc_rcar renesas_usbhs snd_soc
+_audio_graph_card media snd_soc_simple_card_utils crct10dif_ce renesas_usb3 snd_
+soc_ak4613 rcar_fcp pwm_rcar usb_dmac phy_rcar_gen3_usb3 pwm_bl ipv6
+[   56.074047] CPU: 3 PID: 513 Comm: kworker/u16:19 Not tainted 5.2.0-rc3-00001-
+g5f20a19 #6
+[   56.082129] Hardware name: Renesas Salvator-X board based on r8a7795 ES2.0+ (
+DT)
+[   56.089524] Workqueue: events_unbound async_run_entry_fn
+[   56.094832] pstate: 40000005 (nZcv daif -PAN -UAO)
+[   56.099617] pc : _regulator_disable+0xe0/0x1c0
+[   56.104054] lr : _regulator_disable+0xe0/0x1c0
+[   56.108489] sp : ffff0000121c3ae0
+[   56.111796] x29: ffff0000121c3ae0 x28: 0000000000000000
+[   56.117102] x27: 0000000000000000 x26: ffff000010fe0e60
+[   56.122407] x25: 0000000000000002 x24: 0000000000000001
+[   56.127712] x23: 0000000000000002 x22: ffff8006f99d4000
+[   56.133017] x21: ffff8006f99cc000 x20: ffff8006f9846800
+[   56.138322] x19: ffff8006f9846800 x18: ffffffffffffffff
+[   56.143626] x17: 0000000000000000 x16: 0000000000000000
+[   56.148931] x15: ffff0000112f96c8 x14: ffff0000921c37f7
+[   56.154235] x13: ffff0000121c3805 x12: ffff000011312000
+[   56.159540] x11: 0000000005f5e0ff x10: ffff0000112f9f20
+[   56.164844] x9 : ffff0000112d3018 x8 : 00000000000001ad
+[   56.170149] x7 : 00000000ffffffcc x6 : ffff8006ff768180
+[   56.175453] x5 : ffff8006ff768180 x4 : 0000000000000000
+[   56.180758] x3 : ffff8006ff76ef10 x2 : ffff8006ff768180
+[   56.186062] x1 : 3d2eccbaead8fb00 x0 : 0000000000000000
+[   56.191367] Call trace:
+[   56.193808]  _regulator_disable+0xe0/0x1c0
+[   56.197899]  regulator_disable+0x40/0x78
+[   56.201820]  rcar_gen3_phy_usb2_power_off+0x3c/0x50
+[   56.206692]  phy_power_off+0x48/0xd8
+[   56.210263]  usb_phy_roothub_power_off+0x30/0x50
+[   56.214873]  usb_phy_roothub_suspend+0x1c/0x50
+[   56.219311]  hcd_bus_suspend+0x13c/0x168
+[   56.223226]  generic_suspend+0x4c/0x58
+[   56.226969]  usb_suspend_both+0x1ac/0x238
+[   56.230972]  usb_suspend+0xcc/0x170
+[   56.234455]  usb_dev_suspend+0x10/0x18
+[   56.238199]  dpm_run_callback.isra.6+0x20/0x68
+[   56.242635]  __device_suspend+0x110/0x308
+[   56.246637]  async_suspend+0x24/0xa8
+[   56.250205]  async_run_entry_fn+0x40/0xf8
+[   56.254210]  process_one_work+0x1e0/0x320
+[   56.258211]  worker_thread+0x40/0x450
+[   56.261867]  kthread+0x124/0x128
+[   56.265094]  ret_from_fork+0x10/0x18
+[   56.268661] ---[ end trace 86d7ec5de5c517af ]---
+[   56.273290] phy phy-ee080200.usb-phy.10: phy poweroff failed --> -5
 
-this patch breaks our build of kernel-docs on 5.1.*:
-https://build.opensuse.org/package/live_build_log/Kernel:stable/kernel-docs/standard/x86_64
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 549b6b55b005 ("phy: renesas: rcar-gen3-usb2: enable/disable independent irqs")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
 
-The error is:
-[  250s] reST markup error:
-[  250s]
-/home/abuild/rpmbuild/BUILD/kernel-docs-5.1.8/linux-5.1/Documentation/gpu/i915.rst:403:
-(SEVERE/4) Title level inconsistent:
-[  250s]
-[  250s] Global GTT Fence Handling
-[  250s] ~~~~~~~~~~~~~~~~~~~~~~~~~
+Changes from v2:
+ - Revise the commit log.
+ - Add a comment on the mutex definition.
+ - Add Geert-san's Reviewed-by and Tested-by.
+ https://patchwork.kernel.org/patch/10981299/
 
-Reverting the patch from 5.1.* makes it work again.
+Changes from v1:
+ - Add mutex lock to avoid enabling the regulator imbalance during resume.
+ - I got Geert-san's Tested-by, but I didn't add the tag because
+   v1 still has the imbalance issue above.
+ https://patchwork.kernel.org/patch/10976299/
 
-5.2-rc3 (includes the patch) is OK:
-https://build.opensuse.org/package/live_build_log/Kernel:HEAD/kernel-docs/standard/x86_64
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-So 5.1.* must be missing something now.
-
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  Documentation/sphinx/kerneldoc.py |   34 ++++++++++++++++++++++++++--------
->  1 file changed, 26 insertions(+), 8 deletions(-)
-> 
-> --- a/Documentation/sphinx/kerneldoc.py
-> +++ b/Documentation/sphinx/kerneldoc.py
-> @@ -37,7 +37,17 @@ import glob
->  from docutils import nodes, statemachine
->  from docutils.statemachine import ViewList
->  from docutils.parsers.rst import directives, Directive
-> -from sphinx.ext.autodoc import AutodocReporter
-> +
-> +#
-> +# AutodocReporter is only good up to Sphinx 1.7
-> +#
-> +import sphinx
-> +
-> +Use_SSI = sphinx.__version__[:3] >= '1.7'
-> +if Use_SSI:
-> +    from sphinx.util.docutils import switch_source_input
-> +else:
-> +    from sphinx.ext.autodoc import AutodocReporter
->  
->  __version__  = '1.0'
-
-thanks,
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 1322185..8ffba67 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -13,6 +13,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+@@ -106,6 +107,7 @@ struct rcar_gen3_chan {
+ 	struct rcar_gen3_phy rphys[NUM_OF_PHYS];
+ 	struct regulator *vbus;
+ 	struct work_struct work;
++	struct mutex lock;	/* protects rphys[...].powered */
+ 	enum usb_dr_mode dr_mode;
+ 	bool extcon_host;
+ 	bool is_otg_channel;
+@@ -437,15 +439,16 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
+ 	struct rcar_gen3_chan *channel = rphy->ch;
+ 	void __iomem *usb2_base = channel->base;
+ 	u32 val;
+-	int ret;
++	int ret = 0;
+ 
++	mutex_lock(&channel->lock);
+ 	if (!rcar_gen3_are_all_rphys_power_off(channel))
+-		return 0;
++		goto out;
+ 
+ 	if (channel->vbus) {
+ 		ret = regulator_enable(channel->vbus);
+ 		if (ret)
+-			return ret;
++			goto out;
+ 	}
+ 
+ 	val = readl(usb2_base + USB2_USBCTR);
+@@ -454,7 +457,10 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
+ 	val &= ~USB2_USBCTR_PLL_RST;
+ 	writel(val, usb2_base + USB2_USBCTR);
+ 
++out:
++	/* The powered flag should be set for any other phys anyway */
+ 	rphy->powered = true;
++	mutex_unlock(&channel->lock);
+ 
+ 	return 0;
+ }
+@@ -465,14 +471,18 @@ static int rcar_gen3_phy_usb2_power_off(struct phy *p)
+ 	struct rcar_gen3_chan *channel = rphy->ch;
+ 	int ret = 0;
+ 
++	mutex_lock(&channel->lock);
+ 	rphy->powered = false;
+ 
+ 	if (!rcar_gen3_are_all_rphys_power_off(channel))
+-		return 0;
++		goto out;
+ 
+ 	if (channel->vbus)
+ 		ret = regulator_disable(channel->vbus);
+ 
++out:
++	mutex_unlock(&channel->lock);
++
+ 	return ret;
+ }
+ 
+@@ -639,6 +649,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	if (!phy_usb2_ops)
+ 		return -EINVAL;
+ 
++	mutex_init(&channel->lock);
+ 	for (i = 0; i < NUM_OF_PHYS; i++) {
+ 		channel->rphys[i].phy = devm_phy_create(dev, NULL,
+ 							phy_usb2_ops);
 -- 
-js
-suse labs
+2.7.4
+
