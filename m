@@ -2,107 +2,142 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C488C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247AEC31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E235A20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA3A21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:04:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhfeEdpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390173AbfFJPER (ORCPT
+        id S2391056AbfFJPE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:04:17 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.130]:19312 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390128AbfFJPEQ (ORCPT
+        Mon, 10 Jun 2019 11:04:57 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44065 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389368AbfFJPE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:04:16 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id ECF9A38F5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 10:04:15 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id aLqJhZEhydnCeaLqJhBode; Mon, 10 Jun 2019 10:04:15 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.75.107] (port=58560 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1haLqI-000U5a-FH; Mon, 10 Jun 2019 10:04:15 -0500
-Date:   Mon, 10 Jun 2019 10:04:12 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] block: bio: Use struct_size() in kmalloc()
-Message-ID: <20190610150412.GA8430@embeddedor>
+        Mon, 10 Jun 2019 11:04:56 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r15so6875257lfm.11;
+        Mon, 10 Jun 2019 08:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JlGKclY/bHvJDeSRZXa+M2saWzmI4Gp/wAz0wTgws2w=;
+        b=NhfeEdpiincXSqU7FtldKqketoZf30UquGvzS6kxSQdA4NdSNMuQMjFZCI7zprrq9n
+         tdrH//tHgqASjIuQmcjL4Zs7JRTkKGLgyftJOoju/Q2NIqDNntuBwzQFRQq/P2GK1OXW
+         D4kMHiO0wXGoF1WNI4XLlCGLoI1tlblW1G6tlzFqgpIxrDnLCX5Pohf1t/GYjcc+SkRj
+         2RW02M15MxLf2Nbt1LScwn3atbTWbzq27/pCMeQ1GEpsZqbXJ8v1tFl5yW5R2EDtRNSH
+         Y3+aYI5n03uFtrmykJzVYtKjGbn4dNRuWbp9HHCzpApFX+TpmLVl2QcG3Q/S5ru24a15
+         04Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JlGKclY/bHvJDeSRZXa+M2saWzmI4Gp/wAz0wTgws2w=;
+        b=G3yi9SyFnKUQ1Bp9ktcmQQGlGCtWMR9OOeQnjiG8Nnn8jdBQLtOxq+BW1tskEwlqj4
+         lrG2W7+jmj5gPcrSEbUFjpzmyy0zpn7B6ABLjwYCSt6mCmaM9J4x1dAJPsLeJ2LmaYTG
+         H+w0Kcc17aWJLNXljg3UIGXlwou3DY+3aWjw3oRQTqGvUbrELKWVzT1nqPHQzBife93V
+         EVzVVsuMCqekbFJsKBhLY2HR4+8tIsODuThWucsAmzITWFS2wgjJBEv67azXyBM6F32J
+         Y/Nt/U5DoyntomzCdNGCXWpgUXQ8H0xdf1pDhlNDLfBCmOWn/+q89CVKxtDLldKgffAM
+         XqIw==
+X-Gm-Message-State: APjAAAXVX3fsnW68WkbO4qOdF0WFSnDgFcfVabPktTDHHXCLdzdGlwQ7
+        TKHOdYKjriIbIFzeNyAAOUch5CFwefz/O3EdoBo=
+X-Google-Smtp-Source: APXvYqyI13FJbeAILiPcIRmZTbdQFmXeaIUoLLMbMnYGK6WIzeQwFknFTGYM7gn3KAyYoHR3RAwJJIoEnbXB+9V4eEk=
+X-Received: by 2002:a19:491d:: with SMTP id w29mr18544344lfa.149.1560179094278;
+ Mon, 10 Jun 2019 08:04:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.75.107
-X-Source-L: No
-X-Exim-ID: 1haLqI-000U5a-FH
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.75.107]:58560
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190517085126.GA3249@kroah.com> <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+ <20190517152200.GI8945@kernel.org> <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
+ <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org> <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
+ <20190610074510.GA24746@kroah.com> <CALrw=nEp=hUUaKtuU3Q1c_zKO3zYC3uP_s_Dyz_zhkxW7K+4mQ@mail.gmail.com>
+ <20190610142145.GC5937@kroah.com> <CANiq72kxyKV1z+dGmMtuq=gUWOYS=Y0EsNFqLKoFXWx6+n=J1g@mail.gmail.com>
+ <20190610144858.GA1481@kroah.com>
+In-Reply-To: <20190610144858.GA1481@kroah.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Mon, 10 Jun 2019 17:04:43 +0200
+Message-ID: <CANiq72maZcuMXQoSDPhY=+4UKUFPwbQLuGsqcoPX-feCerbBtw@mail.gmail.com>
+Subject: Re: Linux 4.19 and GCC 9
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Ignat Korchagin <ignat@cloudflare.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Mon, Jun 10, 2019 at 4:49 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jun 10, 2019 at 04:42:27PM +0200, Miguel Ojeda wrote:
+> > I think Josh Poimboeuf added support for a few related things in GCC 8
+> > (e.g. 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")).
+>
+> That commit is already in all stable releases, so does there need to be
+> a gcc 9 specific one?
 
-struct bio_map_data {
-	...
-        struct iovec iov[];
-};
+Ah, you are right. Hm... I recall discussing this at some point when
+cleaning up for GCC 9, let me take a look...
 
-instance = kmalloc(sizeof(sizeof(struct bio_map_data) + sizeof(struct iovec) *
-                          count, GFP_KERNEL);
+> > I typically compile a bare-bones GCC for those things, it is quite quick.
+>
+> Pointers to how to do that is appreciated.  It's been years since I had
+> to build gcc "from scratch".
 
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
+We crossed emails -- I copy it here on-list in case someone else wants it :-)
 
-instance = kmalloc(struct_size(instance, iov, count), GFP_KERNEL);
+mkdir ${BUILD_PATH} \
+    && cd ${BUILD_PATH} \
+    && ${REPO_PATH}/configure \
+        --enable-languages=c,c++ \
+        --disable-multilib \
+        --disable-bootstrap \
+        --disable-nls \
+        --prefix=${INSTALL_PATH} \
+    && time make \
+    && time make install
 
-This code was detected with the help of Coccinelle.
+The key thing is disabling bootstrap to have a single-pass compilation
+-- that speeds up things a lot (although, of course, you get less
+testing). I would guess you can also disable c++ for the kernel for
+even a faster build. You can also use -j, but even without it it does
+not really take long (1 hour? -- way less than LLVM anyway). The
+installed size nowadays is about 1 GiB.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- block/bio.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+To get the actual code, I use the git mirror in github for speed
+(although it is not that big anyway):
 
-diff --git a/block/bio.c b/block/bio.c
-index 683cbb40f051..4bcdcd3f63f4 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1120,8 +1120,7 @@ static struct bio_map_data *bio_alloc_map_data(struct iov_iter *data,
- 	if (data->nr_segs > UIO_MAXIOV)
- 		return NULL;
- 
--	bmd = kmalloc(sizeof(struct bio_map_data) +
--		       sizeof(struct iovec) * data->nr_segs, gfp_mask);
-+	bmd = kmalloc(struct_size(bmd, iov, data->nr_segs), gfp_mask);
- 	if (!bmd)
- 		return NULL;
- 	memcpy(bmd->iov, data->iov, sizeof(struct iovec) * data->nr_segs);
--- 
-2.21.0
+  git clone https://github.com/gcc-mirror/gcc
 
+The tags you want to use look like:
+
+  gcc-9_1_0-release
+
+Also, the first time you run this, you may need some extra dependencies:
+
+  libgmp-dev (maybe named gmp-devel)
+  libmpfr-dev (mpfr-devel)
+  libmpc-dev (libmpc-devel)
+
+Unless your distro is quite old, I think they should simply work (a
+few years ago I had to compile those manually, but nowadays I don't
+seem to need them anymore).
+
+Cheers,
+Miguel
