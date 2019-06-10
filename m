@@ -2,221 +2,123 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107DBC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26B8C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD1F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C742720870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389755AbfFJUeX (ORCPT
+        id S2389780AbfFJUfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:34:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53706 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389714AbfFJUeW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:34:22 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5AKWU2w063795
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:34:20 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t1uapy57n-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:34:20 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Mon, 10 Jun 2019 21:34:15 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 10 Jun 2019 21:34:11 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5AKYAnG48889920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Jun 2019 20:34:10 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48AB111C04A;
-        Mon, 10 Jun 2019 20:34:10 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5753911C052;
-        Mon, 10 Jun 2019 20:34:08 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.85.139.99])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 10 Jun 2019 20:34:08 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v3 3/3] powerpc: Add support to initialize ima policy rules
-Date:   Mon, 10 Jun 2019 16:33:57 -0400
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1560198837-18857-1-git-send-email-nayna@linux.ibm.com>
-References: <1560198837-18857-1-git-send-email-nayna@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19061020-0016-0000-0000-00000287D71C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061020-0017-0000-0000-000032E50167
-Message-Id: <1560198837-18857-4-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906100139
+        Mon, 10 Jun 2019 16:35:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4149 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389339AbfFJUfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 16:35:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 13:35:14 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2019 13:35:14 -0700
+Message-ID: <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Mon, 10 Jun 2019 13:27:07 -0700
+In-Reply-To: <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+         <20190606200926.4029-4-yu-cheng.yu@intel.com>
+         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
+         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
+         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+         <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
+         <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
+         <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
+         <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
+         <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PowerNV secure boot relies on the kernel IMA security subsystem to
-perform the OS kernel image signature verification. Since each secure
-boot mode has different IMA policy requirements, dynamic definition of
-the policy rules based on the runtime secure boot mode of the system is
-required. On systems that support secure boot, but have it disabled,
-only measurement policy rules of the kernel image and modules are
-defined.
+On Mon, 2019-06-10 at 12:52 -0700, Dave Hansen wrote:
+> On 6/10/19 12:38 PM, Yu-cheng Yu wrote:
+> > > > When an application starts, its highest stack address is determined.
+> > > > It uses that as the maximum the bitmap needs to cover.
+> > > 
+> > > Huh, I didn't think we ran code from the stack. ;)
+> > > 
+> > > Especially given the way that we implemented the new 5-level-paging
+> > > address space, I don't think that expecting code to be below the stack
+> > > is a good universal expectation.
+> > 
+> > Yes, you make a good point.  However, allowing the application manage the
+> > bitmap
+> > is the most efficient and flexible.  If the loader finds a legacy lib is
+> > beyond
+> > the bitmap can cover, it can deal with the problem by moving the lib to a
+> > lower
+> > address; or re-allocate the bitmap.
+> 
+> How could the loader reallocate the bitmap and coordinate with other
+> users of the bitmap?
 
-This patch defines the arch-specific implementation to retrieve the
-secure boot mode of the system and accordingly configures the IMA policy
-rules.
+Assuming the loader actually chooses to re-allocate, it can copy the old bitmap
+over to the new before doing the switch.  But, I agree, the other choice is
+easier; the loader can simply put the lib at lower address.  AFAIK, the loader
+does not request high address in mmap().
 
-This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
-config is enabled.
+> 
+> > If the loader cannot allocate a big bitmap to cover all 5-level
+> > address space (the bitmap will be large), it can put all legacy lib's
+> > at lower address.  We cannot do these easily in the kernel.
+> 
+> This is actually an argument to do it in the kernel.  The kernel can
+> always allocate the virtual space however it wants, no matter how large.
+>  If we hide the bitmap behind a kernel API then we can put it at high
+> 5-level user addresses because we also don't have to worry about the
+> high bits confusing userspace.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/powerpc/Kconfig           | 14 +++++++++
- arch/powerpc/kernel/Makefile   |  1 +
- arch/powerpc/kernel/ima_arch.c | 54 ++++++++++++++++++++++++++++++++++
- include/linux/ima.h            |  3 +-
- 4 files changed, 71 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/kernel/ima_arch.c
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 8c1c636308c8..9de77bb14f54 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -902,6 +902,20 @@ config PPC_MEM_KEYS
- 
- 	  If unsure, say y.
- 
-+config PPC_SECURE_BOOT
-+	prompt "Enable PowerPC Secure Boot"
-+	bool
-+	default n
-+	depends on PPC64
-+	depends on OPAL_SECVAR
-+	depends on IMA
-+	depends on IMA_ARCH_POLICY
-+	help
-+	  Linux on POWER with firmware secure boot enabled needs to define
-+	  security policies to extend secure boot to the OS.This config
-+	  allows user to enable OS Secure Boot on PowerPC systems that
-+	  have firmware secure boot support.
-+
- endmenu
- 
- config ISA_DMA_API
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index 0ea6c4aa3a20..75c929b41341 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -131,6 +131,7 @@ ifdef CONFIG_IMA
- obj-y				+= ima_kexec.o
- endif
- endif
-+obj-$(CONFIG_PPC_SECURE_BOOT)	+= ima_arch.o
- 
- obj-$(CONFIG_AUDIT)		+= audit.o
- obj64-$(CONFIG_AUDIT)		+= compat_audit.o
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-new file mode 100644
-index 000000000000..1767bf6e6550
---- /dev/null
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 IBM Corporation
-+ * Author: Nayna Jain <nayna@linux.ibm.com>
-+ *
-+ * ima_arch.c
-+ *      - initialize ima policies for PowerPC Secure Boot
-+ */
-+
-+#include <linux/ima.h>
-+#include <asm/secboot.h>
-+
-+bool arch_ima_get_secureboot(void)
-+{
-+	bool sb_mode;
-+
-+	sb_mode = get_powerpc_sb_mode();
-+	if (sb_mode)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+/*
-+ * File signature verification is not needed, include only measurements
-+ */
-+static const char *const default_arch_rules[] = {
-+	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
-+	"measure func=MODULE_CHECK template=ima-modsig",
-+	NULL
-+};
-+
-+/* Both file signature verification and measurements are needed */
-+static const char *const sb_arch_rules[] = {
-+	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
-+	"measure func=MODULE_CHECK template=ima-modsig",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig template=ima-modsig",
-+#if !IS_ENABLED(CONFIG_MODULE_SIG)
-+	"appraise func=MODULE_CHECK appraise_type=imasig|modsig template=ima-modsig",
-+#endif
-+	NULL
-+};
-+
-+/*
-+ * On PowerPC, file measurements are to be added to the IMA measurement list
-+ * irrespective of the secure boot state of the system. Signature verification
-+ * is conditionally enabled based on the secure boot state.
-+ */
-+const char *const *arch_get_ima_policy(void)
-+{
-+	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot())
-+		return sb_arch_rules;
-+	return default_arch_rules;
-+}
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index fd9f7cf4cdf5..a01df076ecae 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -31,7 +31,8 @@ extern void ima_post_path_mknod(struct dentry *dentry);
- extern void ima_add_kexec_buffer(struct kimage *image);
- #endif
- 
--#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390)
-+#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
-+	|| defined(CONFIG_PPC_SECURE_BOOT)
- extern bool arch_ima_get_secureboot(void);
- extern const char * const *arch_get_ima_policy(void);
- #else
--- 
-2.20.1
+We actually tried this.  The kernel needs to reserve the bitmap space in the
+beginning for every CET-enabled app, regardless of actual needs.  On each memory
+request, the kernel then must consider a percentage of allocated space in its
+calculation, and on systems with less memory this quickly becomes a problem.
 
