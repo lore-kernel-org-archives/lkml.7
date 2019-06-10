@@ -2,185 +2,177 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43832C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D73C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA2A208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC27820859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 14:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390993AbfFJOwR (ORCPT
+        id S2389972AbfFJOyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 10:52:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:44346 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389123AbfFJOwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 10:52:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FE2A344;
-        Mon, 10 Jun 2019 07:52:16 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88BE73F73C;
-        Mon, 10 Jun 2019 07:52:13 -0700 (PDT)
-Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Abel Vesa <abelvesa@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Carlo Caione <ccaione@baylibre.com>
-References: <20190610121346.15779-1-abel.vesa@nxp.com>
- <20190610131921.GB14647@lakrids.cambridge.arm.com>
- <20190610132910.srd4j2gtidjeppdx@fsr-ub1664-175>
- <6f1052ea-623a-b2e8-9aa8-22aef5fab4ca@arm.com>
- <20190610135514.xd5myavjsloos2y3@fsr-ub1664-175>
- <7b86aa90-6d64-589c-f11e-d2ee6ab3fd54@arm.com>
- <VI1PR04MB5055A808A08A1C47784E4332EE130@VI1PR04MB5055.eurprd04.prod.outlook.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <760bde51-f683-5975-4431-864f16e3365b@arm.com>
-Date:   Mon, 10 Jun 2019 15:52:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 10:54:08 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:52107 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389379AbfFJOyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 10:54:07 -0400
+Received: by mail-it1-f200.google.com with SMTP id w80so9031374itc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 07:54:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=pR/lX6upYTN7oLpDXNAj1RULtz2NNsKYuEMTxGjiiNs=;
+        b=UcoSXorPO4Y03ihZbwwovIRXja7uwKliWMKbHnmlTC6cgB+GVREzJrpnAr5jOS95wd
+         8wJVSUiSdHPg6sgjXDykV/zgC0Tj/HBXmhh4SRTlsAJF/Sb1OZw1YRm/4FINw99SsQ0D
+         MJtGNuuf2dlgTXxDmnNfOeWFJxGl8hWQEng4D1aAhls1GIJrMWBd8o4IoPEV03N1gJmv
+         bGCHW38rKjFfN1dRQLc7KwW4QyrDMdWUWzu34wNkRz9BUvj4z2FbXZED4jIalfJpn0aF
+         ihv5ISlwgdk3lqfkg/7xIO33VIVuQg35OunbaZ3cBh9mRl4S+tDpooWbcYlNdTrHNduX
+         8CaQ==
+X-Gm-Message-State: APjAAAXrJhDXWwFRUue21Babl1D3Sn7K8cD/ZUlpBlTiWIjbGRCM1q+h
+        bjxceUCC5wwqUIJ4vPNbrIZt8KO3vQ+tdh5PeRmq6iF61EnO
+X-Google-Smtp-Source: APXvYqytFAYUICLEM4+lMx4UH7184LYVFDGiDmcQiFqyD8xDKekWsiRUitH2pZ25t5OESdonAF3MGXeYMB4TYKbch2CFqoKC8XUR
 MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB5055A808A08A1C47784E4332EE130@VI1PR04MB5055.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:938f:: with SMTP id z15mr45355127jah.108.1560178446420;
+ Mon, 10 Jun 2019 07:54:06 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 07:54:06 -0700
+In-Reply-To: <0000000000002f9ef4058848f26d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000015d213058af95a5f@google.com>
+Subject: Re: KASAN: use-after-free Read in kfree_skb (3)
+From:   syzbot <syzbot+dcb1305dd05699c40640@syzkaller.appspotmail.com>
+To:     johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marcel@holtmann.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/06/2019 15:32, Leonard Crestez wrote:
-> On 6/10/2019 5:08 PM, Marc Zyngier wrote:
->> On 10/06/2019 14:55, Abel Vesa wrote:
->>> On 19-06-10 14:39:02, Marc Zyngier wrote:
->>>> On 10/06/2019 14:29, Abel Vesa wrote:
->>>>> On 19-06-10 14:19:21, Mark Rutland wrote:
->>>>>> On Mon, Jun 10, 2019 at 03:13:44PM +0300, Abel Vesa wrote:
-> 
->>>>>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
->>>>>>> handler and registers instead a wrapper which calls in the 'hijacked'
->>>>>>> handler, after that calling into EL3 which will take care of the actual
->>>>>>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
->>>>>>
->>>>>> IIUC from last time [1,2], this erratum affects all interrupts
->>>>>> targetting teh idle CPU, not just IPIs, so even if the bodge is more
->>>>>> self-contained, it doesn't really solve the issue, and there are still
->>>>>> cases where a CPU will not be woken from idle when it should be (e.g.
->>>>>> upon receipt of an LPI).
->>>>>
->>>>> Wrong, this erratum does not affect any other type of interrupts, other
->>>>> than IPIs. That is because all the other interrupts go through GPC,
->>>>> which means the cores will wake up on any other type (again, other than IPI).
->>>>
->>>> Huh... Are you saying that LPIs and PPIs are going through the GPC, and
->>>> will trigger the wake-up of the core? That's not the conclusion we
->>>> reached last time.
->>>
->>> Hmm, I don't think that was the conclusion. Yes, Lucas was saying (IIRC)
->>> that if you terminate the IRQs at GIC then all the other interrupts will be
->>> in the same situation. But the performance improvement given by terminating
->>> them at GIC might not be worth it when compared to the cpuidle support.
->>
->> PPIs are broken,
->> relying on some other terrible hack for the timer (and only the timer,
->> leaving other PPIs dead as a nail). It also implies that LPIs have never
->> been looked into, and given that they aren't routed through the GPC, the
->> conclusion is pretty easy to draw.
->>
->> Nobody is talking about performance here. It is strictly about
->> correctness, and what I read about this system is that it cannot
->> reliably use cpuidle.
-> My argument was that it's fine if PPIs and LPIs are broken as long as 
-> they're not used:
-> 
->   * PPIs are only used for local timer which is not used for wakeup.
+syzbot has found a reproducer for the following crash on:
 
-How about the PMU and GIC maintenance interrupts? Any interrupt should
-get you out of idle.
+HEAD commit:    d1fdb6d8 Linux 5.2-rc4
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=138bdc01a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
+dashboard link: https://syzkaller.appspot.com/bug?extid=dcb1305dd05699c40640
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c787f2a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10e32801a00000
 
->   * LPIs on imx are not currently implemented.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+dcb1305dd05699c40640@syzkaller.appspotmail.com
 
-Define "implemented". You don't have an ITS at all? Or is it that you
-currently don't expose the ITS in your firmware?
+==================================================================
+BUG: KASAN: use-after-free in atomic_read  
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in refcount_read include/linux/refcount.h:43  
+[inline]
+BUG: KASAN: use-after-free in skb_unref include/linux/skbuff.h:1016 [inline]
+BUG: KASAN: use-after-free in kfree_skb+0x38/0x390 net/core/skbuff.c:690
+Read of size 4 at addr ffff88808d7fb2d4 by task kworker/u4:3/189
 
-> This workaround is only targeted at a very specific SOC with specific 
-> usecases and in that context it behaves correctly, as far as I can tell.
+CPU: 0 PID: 189 Comm: kworker/u4:3 Not tainted 5.2.0-rc4 #25
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events_unbound flush_to_ldisc
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+  kasan_check_read+0x11/0x20 mm/kasan/common.c:94
+  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+  refcount_read include/linux/refcount.h:43 [inline]
+  skb_unref include/linux/skbuff.h:1016 [inline]
+  kfree_skb+0x38/0x390 net/core/skbuff.c:690
+  bcsp_recv+0x2d8/0x13a0 drivers/bluetooth/hci_bcsp.c:608
+  hci_uart_tty_receive+0x225/0x530 drivers/bluetooth/hci_ldisc.c:592
+  tty_ldisc_receive_buf+0x15f/0x1c0 drivers/tty/tty_buffer.c:465
+  tty_port_default_receive_buf+0x7d/0xb0 drivers/tty/tty_port.c:38
+  receive_buf drivers/tty/tty_buffer.c:481 [inline]
+  flush_to_ldisc+0x222/0x390 drivers/tty/tty_buffer.c:533
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-And I still maintain that such specific use cases should be kept
-specific, and that the mainline kernel should be reliable in all
-circumstances.
+Allocated by task 189:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
+  slab_post_alloc_hook mm/slab.h:437 [inline]
+  slab_alloc_node mm/slab.c:3269 [inline]
+  kmem_cache_alloc_node+0x131/0x710 mm/slab.c:3579
+  __alloc_skb+0xd5/0x5e0 net/core/skbuff.c:194
+  alloc_skb include/linux/skbuff.h:1054 [inline]
+  bt_skb_alloc include/net/bluetooth/bluetooth.h:339 [inline]
+  bcsp_recv+0x8c1/0x13a0 drivers/bluetooth/hci_bcsp.c:670
+  hci_uart_tty_receive+0x225/0x530 drivers/bluetooth/hci_ldisc.c:592
+  tty_ldisc_receive_buf+0x15f/0x1c0 drivers/tty/tty_buffer.c:465
+  tty_port_default_receive_buf+0x7d/0xb0 drivers/tty/tty_port.c:38
+  receive_buf drivers/tty/tty_buffer.c:481 [inline]
+  flush_to_ldisc+0x222/0x390 drivers/tty/tty_buffer.c:533
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-> As mentioned in another thread the HW issue was already solved in newer 
-> chips of the same family (like imx8mm). If there is a need for PPIs and 
-> LPIs on imx8mq in the future then maybe we can detect that scenario and 
-> disable cpuidle?
+Freed by task 8808:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3432 [inline]
+  kmem_cache_free+0x86/0x260 mm/slab.c:3698
+  kfree_skbmem net/core/skbuff.c:620 [inline]
+  kfree_skbmem+0xc5/0x150 net/core/skbuff.c:614
+  __kfree_skb net/core/skbuff.c:677 [inline]
+  kfree_skb net/core/skbuff.c:694 [inline]
+  kfree_skb+0xf0/0x390 net/core/skbuff.c:688
+  bcsp_recv+0x2d8/0x13a0 drivers/bluetooth/hci_bcsp.c:608
+  hci_uart_tty_receive+0x225/0x530 drivers/bluetooth/hci_ldisc.c:592
+  tiocsti drivers/tty/tty_io.c:2195 [inline]
+  tty_ioctl+0x921/0x14a0 drivers/tty/tty_io.c:2571
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-I'd suggest it the other way around. No cpuidle unless you absolutely
-force it, tainting the kernel in the process.
+The buggy address belongs to the object at ffff88808d7fb200
+  which belongs to the cache skbuff_head_cache of size 224
+The buggy address is located 212 bytes inside of
+  224-byte region [ffff88808d7fb200, ffff88808d7fb2e0)
+The buggy address belongs to the page:
+page:ffffea000235fec0 refcount:1 mapcount:0 mapping:ffff88821b6f6540  
+index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea000256f0c8 ffffea0002a49888 ffff88821b6f6540
+raw: 0000000000000000 ffff88808d7fb0c0 000000010000000c 0000000000000000
+page dumped because: kasan: bad access detected
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Memory state around the buggy address:
+  ffff88808d7fb180: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff88808d7fb200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88808d7fb280: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                                                  ^
+  ffff88808d7fb300: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+  ffff88808d7fb380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
