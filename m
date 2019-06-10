@@ -2,105 +2,124 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B0FC4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B6BC43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653FA2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2948D2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560204495;
+	bh=e8XjUFtZMStDPYS3FRKtj43AwF2CGKnQQ24s2uVvYvo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=w3rc0q0jAu3aF3xus6FptLXHmPjq6azr6OZJgnwAdUdWOKJEM1io69tIbByJuh2mr
+	 wIIq7QMUaA5XalUvAX86HwXzSOPZOGbJ5G9NXq8lD/jxhtglQlClruL88uIh0/I+Vs
+	 ooCxKPOYVavisxtpjUIIkMLTZgiL7V6mPkZ+sgQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390033AbfFJWIC (ORCPT
+        id S2390137AbfFJWIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 18:08:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50200 "EHLO mx1.redhat.com"
+        Mon, 10 Jun 2019 18:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728674AbfFJWIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 18:08:02 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2390036AbfFJWIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 18:08:14 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7E933082E20;
-        Mon, 10 Jun 2019 22:07:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-126.rdu2.redhat.com [10.10.120.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 49AEA19C59;
-        Mon, 10 Jun 2019 22:07:47 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <25d88489-9850-f092-205e-0a4fc292f41b@schaufler-ca.com>
-References: <25d88489-9850-f092-205e-0a4fc292f41b@schaufler-ca.com> <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk> <be966d9c-e38d-7a30-8d80-fad5f25ab230@tycho.nsa.gov> <0cf7a49d-85f6-fba9-62ec-a378e0b76adf@schaufler-ca.com> <CALCETrX5O18q2=dUeC=hEtK2=t5KQpGBy9XveHxFw36OqkbNOg@mail.gmail.com> <dac74580-5b48-86e4-8222-cac29a9f541d@schaufler-ca.com> <E0925E1F-E5F2-4457-8704-47B6E64FE3F3@amacapital.net> <4b7d02b2-2434-8a7c-66cc-7dbebc37efbc@schaufler-ca.com> <CALCETrU+PKVbrKQJoXj9x_5y+vTZENMczHqyM_Xb85ca5YDZuA@mail.gmail.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     dhowells@redhat.com, Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        USB list <linux-usb@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 317032082E;
+        Mon, 10 Jun 2019 22:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560204493;
+        bh=e8XjUFtZMStDPYS3FRKtj43AwF2CGKnQQ24s2uVvYvo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BIlELQVmQiXsINDdVkW14pOS9K8s3Gx2mingJ1IaepHxagdpMTpD4ZzyEKsLXADQu
+         LDDLzvbv2yQR2aXp8ujaMwhG5b7sVH+1JVNw3f8Wr643gACxp2ikFsJnG7lIjoeKQt
+         enV0L8Nd0qyRS4RKerZLlzNTADXiWwd0A8vbWeho=
+Subject: Re: [PATCH v16 16/16] selftests, arm64: add a selftest for passing
+ tagged pointers to kernel
+To:     Kees Cook <keescook@chromium.org>,
+        Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        raven@themaw.net, Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [RFC][PATCH 00/13] Mount, FS, Block and Keyrings notifications [ver #4]
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>, shuah <shuah@kernel.org>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <9e1b5998a28f82b16076fc85ab4f88af5381cf74.1559580831.git.andreyknvl@google.com>
+ <201906072055.7DFED7B@keescook>
+From:   shuah <shuah@kernel.org>
+Message-ID: <2bc277f8-e67e-30e0-5824-8184c2b03237@kernel.org>
+Date:   Mon, 10 Jun 2019 16:08:10 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <29009.1560204466.1@warthog.procyon.org.uk>
-Date:   Mon, 10 Jun 2019 23:07:46 +0100
-Message-ID: <29010.1560204466@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 10 Jun 2019 22:08:02 +0000 (UTC)
+In-Reply-To: <201906072055.7DFED7B@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Casey Schaufler <casey@schaufler-ca.com> wrote:
-
-> Process A and process B both open /dev/null.
-> A and B can write and read to their hearts content
-> to/from /dev/null without ever once communicating.
-> The mutual accessibility of /dev/null in no way implies that
-> A and B can communicate. If A can set a watch on /dev/null,
-> and B triggers an event, there still has to be an access
-> check on the delivery of the event because delivering an event
-> to A is not an action on /dev/null, but on A.
-
-If a process has the privilege, it appears that fanotify() allows that process
-to see others accessing /dev/null (FAN_ACCESS, FAN_ACCESS_PERM).  There don't
-seem to be any LSM checks there either.
-
-On the other hand, the privilege required is CAP_SYS_ADMIN,
-
-> > The mount tree can't be modified by unprivileged users, unless a
-> > privileged user very carefully configured it as such.
+On 6/7/19 9:56 PM, Kees Cook wrote:
+> On Mon, Jun 03, 2019 at 06:55:18PM +0200, Andrey Konovalov wrote:
+>> This patch is a part of a series that extends arm64 kernel ABI to allow to
+>> pass tagged user pointers (with the top byte set to something else other
+>> than 0x00) as syscall arguments.
+>>
+>> This patch adds a simple test, that calls the uname syscall with a
+>> tagged user pointer as an argument. Without the kernel accepting tagged
+>> user pointers the test fails with EFAULT.
+>>
+>> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 > 
-> "Unless" means *is* possible. In which case access control is
-> required. I will admit to being less then expert on the extent
-> to which mounts can be done without privilege.
+> I'm adding Shuah to CC in case she has some suggestions about the new
+> selftest.
 
-Automounts in network filesystems, for example.
+Thanks Kees.
 
-The initial mount of the network filesystem requires local privilege, but then
-mountpoints are managed with remote privilege as granted by things like
-kerberos tickets.  The local kernel has no control.
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> -Kees
+> 
 
-If you have CONFIG_AFS_FS enabled in your kernel, for example, and you install
-the keyutils package (dnf, rpm, apt, etc.), then you should be able to do:
+Looks good to me.
 
-	mount -t afs none /mnt -o dyn
-	ls /afs/grand.central.org/software/
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-for example.  That will go through a couple of automount points.  Assuming you
-don't have a kerberos login on those servers, however, you shouldn't be able
-to add new mountpoints.
-
-Someone watching the mount topology can see events when an automount is
-enacted and when it expires, the latter being an event with the system as the
-subject since the expiry is done on a timeout set by the kernel.
-
-David
+thanks,
+-- Shuah
