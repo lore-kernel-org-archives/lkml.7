@@ -2,122 +2,125 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B517C468BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF42C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F02B206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052C720863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:35:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BwWnqSas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388523AbfFJIaS (ORCPT
+        id S2388188AbfFJIfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:30:18 -0400
-Received: from muru.com ([72.249.23.125]:52442 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387862AbfFJIaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:30:18 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AEF5E807E;
-        Mon, 10 Jun 2019 08:30:36 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 01:30:12 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Joshua Frkuska <joshua_frkuska@mentor.com>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>, eyalr@ti.com
-Subject: Re: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
- inverted IRQ
-Message-ID: <20190610083012.GV5447@atomide.com>
-References: <20190607172958.20745-1-erosca@de.adit-jv.com>
- <87tvcxncuq.fsf@codeaurora.org>
+        Mon, 10 Jun 2019 04:35:22 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:33603 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387862AbfFJIfW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:35:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1560155720; x=1591691720;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=ykr4rzL4VAsv6dmWe3aUa6AdEVp465Gxa0La54MnkBo=;
+  b=BwWnqSassoHzeZCbJMjdA2+4mCL2B0Vsu77Oisds8Lruzb7TjJ+rhviv
+   T7qz1Xl2TU785OZdCAVntvH9CqPqXp+cE2TMOZN06maqBcwJKdbQ/0rYm
+   NIGe93CfPQu5fk+YznbkMPT2MFHnxZhP131dxetwdiTZX9UdvuYVFrkZg
+   k=;
+X-IronPort-AV: E=Sophos;i="5.60,573,1549929600"; 
+   d="scan'208";a="804494672"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 10 Jun 2019 08:35:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 1B767A2006;
+        Mon, 10 Jun 2019 08:35:13 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 10 Jun 2019 08:35:13 +0000
+Received: from udc4a3e82dbc15a031435.hfa15.amazon.com (10.43.160.69) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 10 Jun 2019 08:35:04 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <nicolas.ferre@microchip.com>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <mark.rutland@arm.com>,
+        <mchehab+samsung@kernel.org>, <robh+dt@kernel.org>,
+        <davem@davemloft.net>, <shawn.lin@rock-chips.com>,
+        <tglx@linutronix.de>, <devicetree@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <jonnyc@amazon.com>, <hhhawa@amazon.com>, <ronenk@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>,
+        Talel Shenhar <talel@amazon.com>
+Subject: [PATCH v4 0/2] Amazon's Annapurna Labs Fabric Interrupt Controller
+Date:   Mon, 10 Jun 2019 11:34:41 +0300
+Message-ID: <1560155683-29584-1-git-send-email-talel@amazon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tvcxncuq.fsf@codeaurora.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.69]
+X-ClientProxiedBy: EX13D15UWB004.ant.amazon.com (10.43.161.61) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This series introduces support for Amazon's Annapurna Labs Fabric Interrupt
+Controller.
 
-* Kalle Valo <kvalo@codeaurora.org> [190610 07:01]:
-> Eugeniu Rosca <erosca@de.adit-jv.com> writes:
-> 
-> > The wl1837mod datasheet [1] says about the WL_IRQ pin:
-> >
-> >  ---8<---
-> > SDIO available, interrupt out. Active high. [..]
-> > Set to rising edge (active high) on powerup.
-> >  ---8<---
-> >
-> > That's the reason of seeing the interrupt configured as:
-> >  - IRQ_TYPE_EDGE_RISING on HiKey 960/970
-> >  - IRQ_TYPE_LEVEL_HIGH on a number of i.MX6 platforms
-> >
-> > We assert that all those platforms have the WL_IRQ pin connected
-> > to the SoC _directly_ (confirmed on HiKey 970 [2]).
-> >
-> > That's not the case for R-Car Kingfisher extension target, which carries
-> > a WL1837MODGIMOCT IC. There is an SN74LV1T04DBVR inverter present
-> > between the WLAN_IRQ pin of the WL18* chip and the SoC, effectively
-> > reversing the requirement quoted from [1]. IOW, in Kingfisher DTS
-> > configuration we would need to use IRQ_TYPE_EDGE_FALLING or
-> > IRQ_TYPE_LEVEL_LOW.
-> >
-> > Unfortunately, v4.2-rc1 commit bd763482c82ea2 ("wl18xx: wlan_irq:
-> > support platform dependent interrupt types") made a special case out
-> > of these interrupt types. After this commit, it is impossible to provide
-> > an IRQ configuration via DTS which would describe an inverter present
-> > between the WL18* chip and the SoC, generating the need for workarounds
-> > like [3].
-> >
-> > Create a boolean OF property, called "invert-irq" to specify that
-> > the WLAN_IRQ pin of WL18* is connected to the SoC via an inverter.
-> >
-> > This solution has been successfully tested on R-Car H3ULCB-KF-M06 using
-> > the DTS configuration [4] combined with the "invert-irq" property.
-> >
-> > [1] http://www.ti.com/lit/ds/symlink/wl1837mod.pdf
-> > [2] https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/
-> > [3] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
-> > [4] https://patchwork.kernel.org/patch/10895879/
-> >     ("arm64: dts: ulcb-kf: Add support for TI WL1837")
-> >
-> > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> 
-> Tony&Eyal, do you agree with this?
+The Amazon's Annapurna Labs FIC (Fabric Interrupt Controller) has 32
+inputs/sources. This FIC may be cascaded into another FIC or connected
+directly to the main CPU Interrupt Controller (e.g. GIC).
 
-Yeah if there's some hardware between the WLAN device and the SoC
-inverting the interrupt, I don't think we have clear a way to deal
-with it short of setting up a separate irqchip that does the
-translation.
+Changes since v3:
+=================
+- tightened the verification for supported trigger types
+- updated dt-binding's example to meet the binding description
+  (interrupt-cells to 2)
+- added description to interrupt-cells to explain each field
+- changed pr_err to pr_debug inside al_fic_irq_set_type in order to allow
+  the user to enable printouts for verbose information in case of errors
 
-But in some cases we also do not want to invert the interrupt, so
-I think this property should take IRQ_TYPE_EDGE_RISING and
-IRQ_TYPE_EDGE_RISING values to override the setting for
-the WLAN end of the hardware?
+Changes since v2:
+=================
+- updated dt-bindings to use proper format for entry name
+- removed kernel-doc format style from Copyright
+- removed unneeded/misplaced selects from Kconfig
+- changed used mmio operation to relaxed flavor
+- changed error return value from EPERM to EINVAL int case of attempting to
+  reconfigure the FIC after it has been configured
+- fixed commenting format
+- used drivers define instead of subsystem internals
+- moved al_fic_hw_init function to caller
+- removed al_fic_wire_get_domain from documentation
+- removed argument validation from al_fic_wire_init
 
-Let's wait a bit longer for comments from Eyal too.
+Changes since v1:
+=================
+- removing unused exported APIs
+- updating cover letter and commit message accordingly
 
-Regards,
 
-Tony
+
+Talel Shenhar (2):
+  dt-bindings: interrupt-controller: Amazon's Annapurna Labs FIC
+  irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt
+    Controller Driver
+
+ .../interrupt-controller/amazon,al-fic.txt         |  29 +++
+ MAINTAINERS                                        |   6 +
+ drivers/irqchip/Kconfig                            |   8 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-al-fic.c                       | 278 +++++++++++++++++++++
+ 5 files changed, 322 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+ create mode 100644 drivers/irqchip/irq-al-fic.c
+
+-- 
+2.7.4
+
