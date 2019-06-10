@@ -2,173 +2,202 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D97C31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADE5C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF2D220862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0F22089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bKVhvvtQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xcO2PnZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391526AbfFJQRm (ORCPT
+        id S2391532AbfFJQSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:17:42 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:58468 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389123AbfFJQRl (ORCPT
+        Mon, 10 Jun 2019 12:18:10 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:44788 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388932AbfFJQSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:17:41 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190610161740euoutp02fc1efeba5893347e5c13bba1565d3126~m4pdXc3la2503525035euoutp02G
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:17:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190610161740euoutp02fc1efeba5893347e5c13bba1565d3126~m4pdXc3la2503525035euoutp02G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560183460;
-        bh=sAFK7z11VVTb7FnfO2m2bg3sqAxX7frwXuQTxjAelag=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bKVhvvtQaX5z3yG5D3noiVf8R9JGqcQzsgM4ySLGGbT0PomeYQBC83qR9mTw9Jyua
-         3pIcMsHBxaAqZBjhD1EsUUfHxAaZhn+A06VLXpezFDFwaZvziwulPTd0A4AHAPGkS3
-         0ad0WjSl04p41ZhcwN5Bg5uxwlfgd6rr9JcPH+go=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190610161739eucas1p17c0338184126cab4edaa1e201e70e2dc~m4pcjC3Pk1445614456eucas1p10;
-        Mon, 10 Jun 2019 16:17:39 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id E8.D4.04298.3A28EFC5; Mon, 10
-        Jun 2019 17:17:39 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190610161738eucas1p18e8ea92ad360435f32979380caed7f0b~m4pbzh9tt1445614456eucas1p1z;
-        Mon, 10 Jun 2019 16:17:38 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190610161738eusmtrp2a2a495b577bf1fbfabfc5ce074264323~m4pbj2g5A1476914769eusmtrp2g;
-        Mon, 10 Jun 2019 16:17:38 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-7f-5cfe82a3680a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 0E.D3.04140.2A28EFC5; Mon, 10
-        Jun 2019 17:17:38 +0100 (BST)
-Received: from [106.109.129.180] (unknown [106.109.129.180]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190610161737eusmtip1dd37683d70038d9f90fe32a0dfdf9043~m4parH2bQ2310323103eusmtip1d;
-        Mon, 10 Jun 2019 16:17:37 +0000 (GMT)
-Subject: Re: [PATCH bpf v2] xdp: fix hang while unregistering device bound
- to xdp socket
-From:   Ilya Maximets <i.maximets@samsung.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>
-Message-ID: <06eee1e3-283a-d665-904b-f0bc89b73232@samsung.com>
-Date:   Mon, 10 Jun 2019 19:17:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Mon, 10 Jun 2019 12:18:09 -0400
+Received: by mail-vk1-f196.google.com with SMTP id x129so1780516vkc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:18:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+Lexs7lCKdgDAEVjOBEFYA59MwxfKqXG6tvntQ8bHzw=;
+        b=xcO2PnZkW+F4UU9MsXYaCbJVNKKZKzbZsGy53K1jMzN/9krqa851AqdXtroHI00o/Q
+         DJghqhVRJTi7N3jmsJ9lTFnOvdWu589ajjUzM+kDqF/6lL5EhxTIca6T8crmqqnztfEp
+         gxWYlVxzJTM4qT7biSfB1rjaHcsQc524jOhSVKpXQlSBtcfL8zLUpPjkPusXFCWua7GP
+         5W7S7Gln4ougwWnQXyKbtEUY/uYR4lO+gRJJuLLt3uAr+jhoOdmCbnUWp31UWHdrMNDL
+         QXS44Ylwhtk7/uqG1wR2Z7SbyjitwvdfmLvR92+/02pV14ncZoGsl7VmTGNwrPakBIXE
+         FY3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Lexs7lCKdgDAEVjOBEFYA59MwxfKqXG6tvntQ8bHzw=;
+        b=L1Hptt7Lxp+Y2waCtZNspdL5G2RyFKMbMR/2cqm3wuc+Q26meN+UwHeaCoWnn/Yo9m
+         JyRIK6BXv6j8y+qhBRhhotBx8OJZLvnMmpeH+XNVJTWMFT3/QYZMO51F8FJ+updQ8WlC
+         QhdaDlSkvTYYVBhlgl9nbB9MJfgvwRRqJ8hpA9+/i80DmF8GXAzIEkhYqaDOgEM5k14O
+         ZxzKBmNdsKzXKiIsE/wYaiT2Y4FVhhwMoAmCEGhAZ9LLCaKJiuhM4lLjRb8I85QnoPr+
+         DboElw8slW1hJvM9RZdZ+66XHffVgTq3+05PrWn5l8mV0AJCS8LMRcQJwqUGr87nmM6E
+         n4yA==
+X-Gm-Message-State: APjAAAVRsMr6kCBH0fALkhhlaOC6wXeXLrDbS45nsFWjyr+DEPkHLd8Z
+        ewo3caKDRSobAacC8pnQOI6b088UqPovdRfUsONF1A==
+X-Google-Smtp-Source: APXvYqxXOc1rbvj07KJ9c3TSP8OsrNH8c+zeKh7yobG+clGIFT8mWGYzXYV4CzB3jyz+d2U30aZ1uM7tkgdDuw0Arqk=
+X-Received: by 2002:a1f:23d6:: with SMTP id j205mr10128228vkj.52.1560183487698;
+ Mon, 10 Jun 2019 09:18:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d8b2bc92-3b7e-dfe7-35ee-61a68d46ff02@samsung.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djP87qLm/7FGDT+ErH407aB0eLzkeNs
-        FnPOt7BYXGn/yW5x7EULm8WudTOZLS7vmsNmseLQCaDYAjGL7f37GB24PLasvMnksXPWXXaP
-        xXteMnlM737I7NG3ZRWjx+dNcgFsUVw2Kak5mWWpRfp2CVwZKy7rFGznrVh17S1bA+MRri5G
-        Tg4JAROJqZOOsXQxcnAICaxglHguDBIWEvjCKPF5WVYXIxeQ/ZlRYsHF7aww9Y9evWaESCwH
-        Knq6lw3C+cgoMeP1YiaQKmGBKIlv/56C2WwCOhKnVh9hBLFFBAwlft2YwgrSwCywlkni0p+J
-        YKt5BewkJnRmg5gsAqoSl6+Kg5SLCkRIfNm5CayVV0BQ4uTMJywgNqeAvcSJo2/AbGYBcYmm
-        LytZIWx5ie1v5zCDjJcQOMcu0X3kKyPE1S4St1t3MEPYwhKvjm9hh7BlJP7vnM8EYddL3G95
-        yQjR3MEoMf3QP6iEvcSW1+fYQY5jFtCUWL9LHyLsKPH9UjtYWEKAT+LGW0GIG/gkJm2bzgwR
-        5pXoaBOCqFaR+H1wOdQFUhI3331mn8CoNAvJZ7OQfDMLyTezEPYuYGRZxSieWlqcm55abJiX
-        Wq5XnJhbXJqXrpecn7uJEZigTv87/mkH49dLSYcYBTgYlXh4I6L/xQixJpYVV+YeYpTgYFYS
-        4V0hBRTiTUmsrEotyo8vKs1JLT7EKM3BoiTOW83wIFpIID2xJDU7NbUgtQgmy8TBKdXAOG3/
-        P64U/lNqfAUyDN///lXpcmYW9fmxQnJ5rNYdnquKWRxi6n8Znm7+4f1Ims/OxPPixTzNWbLr
-        F273XHvBoe4f94n7Xv8vcfiqvdgWuftibNZaN5XvPGtVOTqs+v35nBu/K4SqzBCdzjG/rMd/
-        mvzc21E5PWYrO1dsnLLVc23PyfJefqN3SizFGYmGWsxFxYkAYheG7kwDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsVy+t/xu7qLmv7FGEyeJGjxp20Do8XnI8fZ
-        LOacb2GxuNL+k93i2IsWNotd62YyW1zeNYfNYsWhE0CxBWIW2/v3MTpweWxZeZPJY+esu+we
-        i/e8ZPKY3v2Q2aNvyypGj8+b5ALYovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOt
-        jEyV9O1sUlJzMstSi/TtEvQyVlzWKdjOW7Hq2lu2BsYjXF2MnBwSAiYSj169Zuxi5OIQEljK
-        KPFx5URWiISUxI9fF6BsYYk/17rYIIreM0osvfSHGSQhLBAlcenxcTCbTUBH4tTqI4wgtoiA
-        ocSvG1NYQRqYBdYySexa3cwEkhAS+MIo8WmxeRcjBwevgJ3EhM5sEJNFQFXi8lVxkApRgQiJ
-        2bsaWEBsXgFBiZMzn4DZnAL2EieOvgGzmQXUJf7Mu8QMYYtLNH1ZyQphy0tsfzuHeQKj0Cwk
-        7bOQtMxC0jILScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgXG57djPLTsYu94FH2IU
-        4GBU4uGNiP4XI8SaWFZcmXuIUYKDWUmEd4UUUIg3JbGyKrUoP76oNCe1+BCjKdBvE5mlRJPz
-        gSkjryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDY013I0vBsWkv
-        o9t26bKZSC1yOG7au+/nevabLk0iQpOUdA4Ylhd4rKm/bblMYM0HkTv1Tis8SjelXXggp11i
-        V/jXdv3zKxzfjs/cnGrCuPDq7qDe//PXeaf722dWh9xMTGidWL11wvQl9S7H67JSmTxe3Nx7
-        SrN43rFX5lJsnRUvyxh2r7/7QomlOCPRUIu5qDgRAGsFRj/hAgAA
-X-CMS-MailID: 20190610161738eucas1p18e8ea92ad360435f32979380caed7f0b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e
-References: <CGME20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e@eucas1p1.samsung.com>
-        <20190607173143.4919-1-i.maximets@samsung.com>
-        <20190607163156.12cd3418@cakuba.netronome.com>
-        <d8b2bc92-3b7e-dfe7-35ee-61a68d46ff02@samsung.com>
+References: <20190501175457.195855-1-rrangel@chromium.org> <CAPDyKFpL1nHt1E1zgS-iDZf_KDWk2CN32Lvr+5Nmo8CtB2VCWg@mail.gmail.com>
+ <20190607160553.GA185100@google.com>
+In-Reply-To: <20190607160553.GA185100@google.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 10 Jun 2019 18:17:31 +0200
+Message-ID: <CAPDyKFout6AY2Q92pYQ-KPH0NENq1-SkYivkDxjjb=uB=tKXuQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] mmc: sdhci: Manually check card status after reset
+To:     Raul Rangel <rrangel@chromium.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        hongjiefang <hongjiefang@asrmicro.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Kyle Roeschley <kyle.roeschley@ni.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.06.2019 11:05, Ilya Maximets wrote:
-> On 08.06.2019 2:31, Jakub Kicinski wrote:
->> On Fri,  7 Jun 2019 20:31:43 +0300, Ilya Maximets wrote:
->>> +static int xsk_notifier(struct notifier_block *this,
->>> +			unsigned long msg, void *ptr)
->>> +{
->>> +	struct sock *sk;
->>> +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
->>> +	struct net *net = dev_net(dev);
->>> +	int i, unregister_count = 0;
->>
->> Please order the var declaration lines longest to shortest.
->> (reverse christmas tree)
-> 
-> Hi.
-> I'm not a fan of mixing 'struct's with bare types in the declarations.
-> Moving the 'sk' to the third place will make a hole like this:
-> 
-> 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-> 	struct net *net = dev_net(dev);
-> 	struct sock *sk;
-> 	int i, unregister_count = 0;
-> 
-> Which is not looking good.
-> Moving to the 4th place:
-> 
-> 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-> 	struct net *net = dev_net(dev);
-> 	int i, unregister_count = 0;
-> 	struct sock *sk;
++ Adrian
 
-I've sent v3 with this variant and with moved msg check to the top level.
+On Fri, 7 Jun 2019 at 18:05, Raul Rangel <rrangel@chromium.org> wrote:
+>
+> On Tue, May 28, 2019 at 09:38:20AM +0200, Ulf Hansson wrote:
+> > On Wed, 1 May 2019 at 19:55, Raul E Rangel <rrangel@chromium.org> wrote:
+>
+> First off, thanks for the review.
+>
+> > >
+> > > There is a race condition between resetting the SDHCI controller and
+> > > disconnecting the card.
+> > >
+> > > For example:
+> > > 0) Card is connected and transferring data
+> > > 1) mmc_sd_reset is called to reset the controller due to a data error
+> >
+> > I assume you refer to mmc_sd_hw_reset()? In that case, I think you
+> > have interpreted the purpose of mmc_sd_hw_reset() slightly wrong. It's
+> > responsibility is to reset the SD-card and not the host/controller.
+> You are correct. I was looking at a 4.14 kernel where it's called
+> mmc_sd_reset. 4.19 and above call it mmc_sd_hw_reset.
+>
+> All I was trying to convey here was that a block error will eventually
+> call sdhci_set_ios with SOFT_RESET_ALL via:
+> mmc_blk_reset
+> mmc_hw_reset
+> mmc_sd_hw_reset
+> mmc_power_cycle
+> mmc_power_off
+> mmc_set_initial_state
+> sdhci_set_ios
+> sdhci_reinit
+> sdhci_init
+> sdhci_do_reset(host, SDHCI_RESET_ALL);
+>
+> >
+> > Whether there some additional "reset" of the controller needed, that
+> > is assumed by the core, to be managed via the ->set_ios() callback for
+> > the host.
+> >
+> > > 2) sdhci_set_ios calls sdhci_do_reset
+> > > 3) SOFT_RESET_ALL is toggled which clears the IRQs the controller has
+> > > configured.
+> > > 4) Wait for SOFT_RESET_ALL to clear
+> > > 5) CD logic notices card is gone and CARD_PRESENT goes low, but since the
+> > >    IRQs are not configured a CARD_REMOVED interrupt is never raised.
+> > > 6) IRQs are enabled again
+> > > 7) mmc layer never notices the device is disconnected. The SDHCI layer
+> > >    will keep returning -ENOMEDIUM. This results in a card that is always
+> > >    present and not functional.
+> >
+> > This sounds like host specific problems, which most likely should be
+> > fixed in host driver, solely. Unless I am missing something, of
+> > course.
+>
+> So in sdhci_do_reset we call the reset callback which is typically
+> sdhci_reset. sdhci_reset can wait for up to 100ms waiting for the
+> controller to reset. If SDHCI_RESET_ALL was passed as the flag, the
+> controller will clear the IRQ mask. If during that 100ms the card is
+> removed there is no notification to the MMC system that the card was
+> removed. So it seems like the card is always present.
 
-> 
-> This variant doesn't look good for me because of mixing 'struct's with
-> bare integers.
-> 
-> Do you think I need to use one of above variants?
-> 
->>
->>> +	mutex_lock(&net->xdp.lock);
->>> +	sk_for_each(sk, &net->xdp.list) {
->>> +		struct xdp_sock *xs = xdp_sk(sk);
->>> +
->>> +		mutex_lock(&xs->mutex);
->>> +		switch (msg) {
->>> +		case NETDEV_UNREGISTER:
->>
->> You should probably check the msg type earlier and not take all the
->> locks and iterate for other types..
-> 
-> Yeah. I thought about it too. Will fix in the next version.
-> 
-> Best regards, Ilya Maximets.
-> 
+So you are saying that the problem occurs when the card is removed
+during this 100ms period?
+
+I assume there a way for sdhci to re-validate whether the card has
+been removed during this period, right?
+
+>
+> > >  drivers/mmc/core/sd.c | 20 ++++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > >
+> > > diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+> > > index 265e1aeeb9d8..9206c4297d66 100644
+> > > --- a/drivers/mmc/core/sd.c
+> > > +++ b/drivers/mmc/core/sd.c
+> > > @@ -1242,7 +1242,27 @@ static int mmc_sd_runtime_resume(struct mmc_host *host)
+> > >
+> > >  static int mmc_sd_hw_reset(struct mmc_host *host)
+> > >  {
+> > > +       int present;
+> > >         mmc_power_cycle(host, host->card->ocr);
+> > > +
+> > > +       present = host->ops->get_cd(host);
+> > > +
+> > > +       /* The card status could have changed while resetting. */
+> > > +       if ((mmc_card_removed(host->card) && present) ||
+> > > +           (!mmc_card_removed(host->card) && !present)) {
+> > > +               pr_info("%s: card status changed during reset\n",
+> > > +                      mmc_hostname(host));
+> > > +               host->ops->card_event(host);
+> > > +               mmc_detect_change(host, 0);
+> > > +       }
+> > > +
+> > > +       /* Don't perform unnecessary transactions if the card is missing. */
+> > > +       if (!present) {
+> > > +               pr_info("%s: card was removed during reset\n",
+> > > +                       mmc_hostname(host));
+> > > +               return -ENOMEDIUM;
+> > > +       }
+> > > +
+> >
+> > When doing a  mmc_hw_reset() (which ends up calling mmc_sd_hw_reset()
+> > in case of SD cards), we are making a final attempt to make the card
+> > functional again, via a power cycle and a re-init of it.
+> >
+> > In this path, we don't care whether the card is removed, as that
+> > should have been detected already when the block layer calls
+> > mmc_detect_card_removed().
+>
+> mmc_detect_card_removed has the guard `host->detect_change` to
+> prevent it from checking the card status again. So maybe the fix to the
+> missing interrupt/race condition is to set `host->detect_change = 1`
+> from sdhci_do_reset after calling the reset handler. This way there will
+> always be a single poll after a full reset so the correct card status can
+> be detected?
+
+It sounds like you should call mmc_detect_change(), after the reset to
+let the core check for cards that may have been removed/inserted.
+
+Would that work?
+
+[...]
+
+Kind regards
+Uffe
