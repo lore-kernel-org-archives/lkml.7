@@ -2,133 +2,106 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E195C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED6DC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D429A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:14:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=quantenna.com header.i=@quantenna.com header.b="gcyuFbik"
+	by mail.kernel.org (Postfix) with ESMTP id 31ABF206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404136AbfFJQO6 (ORCPT
+        id S2391509AbfFJQPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:14:58 -0400
-Received: from mail-eopbgr770050.outbound.protection.outlook.com ([40.107.77.50]:43074
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725320AbfFJQO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:14:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quantenna.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9gO0nx2SmB2MRMZhDGxDIp4JMMlmjnEm4TPPDI2uaJI=;
- b=gcyuFbikmiqlNzxbm6nHBvfdDbP83lyNZP0JbtE7/C2jnmXkN/v8A4odpTEjhk3gUBGTe9bDyWZkcLBxbf+U+MafTMO1tc3pchR+obDRJP2Bwuh7i8//uhRuRPtJcEQUPWyCAVrfDBtNZnhBrRJqgOJ95czpXe5aUiKpQpGdixo=
-Received: from BYAPR05MB4743.namprd05.prod.outlook.com (52.135.233.97) by
- BYAPR05MB4757.namprd05.prod.outlook.com (52.135.233.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.10; Mon, 10 Jun 2019 16:14:38 +0000
-Received: from BYAPR05MB4743.namprd05.prod.outlook.com
- ([fe80::b83d:21d:3288:182a]) by BYAPR05MB4743.namprd05.prod.outlook.com
- ([fe80::b83d:21d:3288:182a%6]) with mapi id 15.20.1987.004; Mon, 10 Jun 2019
- 16:14:38 +0000
-Received: from SN6PR05MB4928.namprd05.prod.outlook.com (52.135.117.74) by
- SN6PR05MB5231.namprd05.prod.outlook.com (20.177.248.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.4; Mon, 10 Jun 2019 16:14:00 +0000
-Received: from SN6PR05MB4928.namprd05.prod.outlook.com
- ([fe80::a902:576c:72d6:b358]) by SN6PR05MB4928.namprd05.prod.outlook.com
- ([fe80::a902:576c:72d6:b358%5]) with mapi id 15.20.1987.004; Mon, 10 Jun 2019
- 16:14:00 +0000
-From:   Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-CC:     Igor Mitsyanko <imitsyanko@quantenna.com>,
-        Avinash Patil <avinashp@quantenna.com>,
-        Sergey Matyukevich <smatyukevich@quantenna.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] qtnfmac: Use struct_size() in kzalloc()
-Thread-Topic: [PATCH][next] qtnfmac: Use struct_size() in kzalloc()
-Thread-Index: AQHVHWjZ1AedDHs530eADQaD4eZD6aaVFC0A
-Date:   Mon, 10 Jun 2019 16:14:00 +0000
-Message-ID: <20190610161352.xymnc4lg2jad4lah@bars>
-References: <20190607191745.GA19120@embeddedor>
-In-Reply-To: <20190607191745.GA19120@embeddedor>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0023.namprd07.prod.outlook.com
- (2603:10b6:a02:bc::36) To SN6PR05MB4928.namprd05.prod.outlook.com
- (2603:10b6:805:9d::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sergey.matyukevich.os@quantenna.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [195.182.157.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b04299bb-5e97-43e3-b0dc-08d6edbea5eb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR05MB5231;
-x-ms-traffictypediagnostic: SN6PR05MB5231:|BYAPR05MB4757:
-x-moderation-data: 6/10/2019 4:14:36 PM
-x-microsoft-antispam-prvs: <BYAPR05MB4757573F6D1C3D53B10B83B9A3130@BYAPR05MB4757.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(376002)(39840400004)(136003)(366004)(346002)(396003)(51914003)(189003)(199004)(26005)(446003)(11346002)(4744005)(102836004)(476003)(33716001)(76176011)(66946007)(2906002)(6436002)(486006)(4326008)(3846002)(186003)(52116002)(66556008)(6116002)(66446008)(86362001)(25786009)(5660300002)(66476007)(6506007)(386003)(64756008)(1076003)(99286004)(229853002)(68736007)(478600001)(316002)(6486002)(6246003)(54906003)(73956011)(66066001)(9686003)(6512007)(436003)(6916009)(53936002)(256004)(8676002)(305945005)(7736002)(14454004)(71200400001)(71190400001)(81156014)(81166006)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4757;H:BYAPR05MB4743.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: quantenna.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Nbb3Ss4rYdCQWes7YwwXjaJMstTeTS7/5Q23akKPz4vBWC96OO8kmCAaCgyiJCzFadE1/tZGMdSv98ZYrR+LfZCyTH5WgdipVwjHYrVz+OD0fsbQnMtsKj+Hqd3ruCYa81Zar+Q3k3DS7fma125IUyCoe80Q2eufStkF1LfN6ivpm+i0AV/okLox5BbmgAGVCskH0k34mKavocOvED2TjeAiRucHoUbdqqD68CT19C9MgTULIMn+IlWdOy2jMBXRRCGzQ/bIWRferfxhp9FuhdbMWCgCdOC7YeUIen3OH7n7861Rw+L6Layjhd+Cin0+YVZ0/1kM7Fpj4UfDYhhRA4YTKg4WEsRe7fp44bdtwLE4M+ayFJMRsIVXCN3Cyq/brlM8hb9cmje/Hd4Phc0nzKq1T78kZ/YCzCtbKxH9+2g=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DED1CC9DFD99EA448ADB8F0B5D29DDDB@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 10 Jun 2019 12:15:34 -0400
+Received: from mga11.intel.com ([192.55.52.93]:43609 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390990AbfFJQPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:15:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 09:15:33 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga006.jf.intel.com with ESMTP; 10 Jun 2019 09:15:32 -0700
+Date:   Mon, 10 Jun 2019 09:15:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v2 2/5] x86/sgx: Require userspace to define enclave
+ pages' protection bits
+Message-ID: <20190610161532.GC15995@linux.intel.com>
+References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+ <20190606021145.12604-3-sean.j.christopherson@intel.com>
+ <20190610152717.GB3752@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: quantenna.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b04299bb-5e97-43e3-b0dc-08d6edbea5eb
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a355dbce-62b4-4789-9446-c1d5582180ff
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SPO_Arbitration_d2f137f7-57a3-41a6-974a-9a603eeb68f6@quantenna.onmicrosoft.com
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 16:14:38.4379
- (UTC)
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4757
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610152717.GB3752@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
->=20
-> struct ieee80211_regdomain {
->         ...
->         struct ieee80211_reg_rule reg_rules[];
-> };
->=20
-> instance =3D kzalloc(sizeof(*mac->rd) +
->                           sizeof(struct ieee80211_reg_rule) *
->                           count, GFP_KERNEL);
->=20
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
->=20
-> instance =3D kzalloc(struct_size(instance, reg_rules, count), GFP_KERNEL)=
-;
->=20
-> This code was detected with the help of Coccinelle.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-=20
-Hi Gustavo,
-Thanks for the patch !
+On Mon, Jun 10, 2019 at 06:27:17PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Jun 05, 2019 at 07:11:42PM -0700, Sean Christopherson wrote:
+> > [SNAP]
+> 
+> Same general criticism as for the previous patch: try to say things as
+> they are without anything extra.
+> 
+> > A third alternative would be to pull the protection bits from the page's
+> > SECINFO, i.e. make decisions based on the protections enforced by
+> > hardware.  However, with SGX2, userspace can extend the hardware-
+> > enforced protections via ENCLU[EMODPE], e.g. can add a page as RW and
+> > later convert it to RX.  With SGX2, making a decision based on the
+> > initial protections would either create a security hole or force SGX to
+> > dynamically track "dirty" pages (see first alternative above).
+> > 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> 
+> 'flags' should would renamed as 'secinfo_flags_mask' even if the name is
+> longish. It would use the same values as the SECINFO flags. The field in
+> struct sgx_encl_page should have the same name. That would express
+> exactly relation between SECINFO and the new field. I would have never
+> asked on last iteration why SECINFO is not enough with a better naming.
 
-Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+No, these flags do not impact the EPCM protections in any way.  Userspace
+can extend the EPCM protections without going through the kernel.  The
+protection flags for an enclave page impact VMA/PTE protection bits.
 
-Regards,
-Sergey
+IMO, it is best to treat the EPCM as being completely separate from the
+kernel's EPC management.
+
+> The same field can be also used to cage page type to a subset of values.
+> 
+> /Jarkko
