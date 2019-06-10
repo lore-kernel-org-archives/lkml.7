@@ -7,57 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57986C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC07DC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2D12086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9592086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560188085;
-	bh=BQzNzIj2rYt2Qif3a8wh6eHXrCli9bYWbGETCRPA1ro=;
+	s=default; t=1560188091;
+	bh=fcm35JOA6ZapFfDwSJbUiZT06l0PsXp6oUU4RnwG7Do=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=RFxbLdgl6XSYc7K3oxCmTr9WKZHhcpyqa/lutBLGD5/mhIACzsHxzf8TxyH7TXbLZ
-	 tBpr8lUNJZJSVUisRXpVcjK05ZYiTXkXsq16I7tDPiA08rNi+99NjjtkizTA6p1YkG
-	 LyL7M1OedGsM1Q/90Ja1OuKKaOXBM4qX3raaxnHQ=
+	b=cxMoECwL0GAYQv831WmRZR1ZpgcHtPTaCV0XlGJ6wHfkU72SDo+x3hgQzzJkjGgkX
+	 Ro0LxqhXEo0nyvUNnRM36qC1ZazBTv6pkjkbp1+OrFgV2h5lmlGrJ9gFi3+tlyKEBE
+	 sL6lC/STXNWOb3+jPfez1UH25Kutz6mswvg+CP1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388162AbfFJReo (ORCPT
+        id S2388229AbfFJRev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:34:44 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52806 "EHLO
+        Mon, 10 Jun 2019 13:34:51 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52992 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387492AbfFJReo (ORCPT
+        with ESMTP id S2387492AbfFJRev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:34:44 -0400
+        Mon, 10 Jun 2019 13:34:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=fevmjU5tOdpDdx3DPX7fS0fYUcE471UMXLZugj2U+0A=; b=Yw4WaYMJ6woV
-        D0rw+GApqyBqVxQfImdx/cKdLjgFoGszwaoEXW8RvIaljHqd85xMeF0uIQ722R2FFNPyEGUIMD7a7
-        a128iNv6esByzIGdu6jt65rUgh1PpuonY44OB6nJL6CZKKkBUpu76CVLfD6vRo2PZJ4kBuHMYbXwT
-        APT1Q=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        List-Archive; bh=WmWx1d5ZiY2U4Nqy7aAua5rzNc7jtyqb64fzhepsCbs=; b=ejX2a8rT1GNj
+        L6p7eJrhEy61yaaxVHEJDbji7wV5Atg4xjp49wZfJA3VaSfcAfuWKI83Wc/J8MtPutJutQKGRcGGR
+        W+3X3vvV97fVaQD93g+BmOSKPuCJdv569Eg+hg3WHkcPvWgVSzotuT3HwOfme6/hkAlNm6hTRcCuN
+        8iQ0E=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1haOBp-0006FS-37; Mon, 10 Jun 2019 17:34:37 +0000
+        id 1haOBz-0006G3-4e; Mon, 10 Jun 2019 17:34:47 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 5F311440046; Mon, 10 Jun 2019 18:34:36 +0100 (BST)
+        id B100A440046; Mon, 10 Jun 2019 18:34:46 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: axg-card: fix null pointer dereference in clean up" to the asoc tree
-In-Reply-To: <20190610125344.18221-1-jbrunet@baylibre.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: max8952: simplify getting the adapter of a client" to the regulator tree
+In-Reply-To: <20190608105619.593-26-wsa+renesas@sang-engineering.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190610173436.5F311440046@finisterre.sirena.org.uk>
-Date:   Mon, 10 Jun 2019 18:34:36 +0100 (BST)
+Message-Id: <20190610173446.B100A440046@finisterre.sirena.org.uk>
+Date:   Mon, 10 Jun 2019 18:34:46 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +61,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: meson: axg-card: fix null pointer dereference in clean up
+   regulator: max8952: simplify getting the adapter of a client
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,45 +86,33 @@ to this mail.
 Thanks,
 Mark
 
-From 960f428ca0a04a59e74639571126245a3efc4bcf Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Mon, 10 Jun 2019 14:53:44 +0200
-Subject: [PATCH] ASoC: meson: axg-card: fix null pointer dereference in clean
- up
+From 6b96092a6bfa65566dda2f5a68a559a743b8d132 Mon Sep 17 00:00:00 2001
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Date: Sat, 8 Jun 2019 12:56:04 +0200
+Subject: [PATCH] regulator: max8952: simplify getting the adapter of a client
 
-When using modern dai_link style, we must first make sure the
-struct snd_soc_dai_link_component exists before accessing its members.
+We have a dedicated pointer for that, so use it. Much easier to read and
+less computation involved.
 
-In case of early probe deferral, some of the '.cpus' or '.codecs' may not
-have been allocated yet. Check this before calling of_node_put() on the
-structure member.
-
-Fixes: c84836d7f650 ("ASoC: meson: axg-card: use modern dai_link style")
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/meson/axg-card.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/regulator/max8952.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
-index fb03258d00ae..70bb0cbad233 100644
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -115,9 +115,11 @@ static void axg_card_clean_references(struct axg_card *priv)
- 
- 	if (card->dai_link) {
- 		for_each_card_prelinks(card, i, link) {
--			of_node_put(link->cpus->of_node);
-+			if (link->cpus)
-+				of_node_put(link->cpus->of_node);
- 			for_each_link_codecs(link, j, codec)
--				of_node_put(codec->of_node);
-+				if (codec)
-+					of_node_put(codec->of_node);
- 		}
- 	}
- 
+diff --git a/drivers/regulator/max8952.c b/drivers/regulator/max8952.c
+index cf2a2912cb1b..451237efb359 100644
+--- a/drivers/regulator/max8952.c
++++ b/drivers/regulator/max8952.c
+@@ -192,7 +192,7 @@ static struct max8952_platform_data *max8952_parse_dt(struct device *dev)
+ static int max8952_pmic_probe(struct i2c_client *client,
+ 		const struct i2c_device_id *i2c_id)
+ {
+-	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
++	struct i2c_adapter *adapter = client->adapter;
+ 	struct max8952_platform_data *pdata = dev_get_platdata(&client->dev);
+ 	struct regulator_config config = { };
+ 	struct max8952_data *max8952;
 -- 
 2.20.1
 
