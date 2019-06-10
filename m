@@ -2,114 +2,193 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EDCC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4040C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E207820820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dykvvYF6"
+	by mail.kernel.org (Postfix) with ESMTP id A1219208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560200375;
+	bh=dI/BJlaJPgTAa6Ru+0W+XmCLy9W/37V7lpMtYMPQChQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Dep5W3qR888vZUyIOvBm5rglP8mQE9ZwE/dvplMtkn+WvY7aLw8NaHXYGGTCOAyy
+	 KZxAUxNyFpShu3hhh6Fax10RIn3D6aDLxKSsiGiv4T4cGp/OW4zU40TxOBASQYFKS2
+	 5glQZOSWw0LsXeHtng9iesbPfnqJbm5ePfA/oq+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfFJUxK (ORCPT
+        id S2389597AbfFJU7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:53:10 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49115 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbfFJUxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:53:09 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5AKqCGh4072505
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 10 Jun 2019 13:52:12 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5AKqCGh4072505
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560199933;
-        bh=A2cy2pnoZYAsn5lO0GtT00kfuwyKxTuvGLoBKtmJWzc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=dykvvYF603sp4czAtt0C0HKGWWJNg7X3pc3wSZFqbew+2HoehZOq+Z0QILr1W4vUr
-         70s0MsGotmzaDZPgX5EJfV8FU6ysZzgCDs6U3mvR8YyHVDIwjHPFk5VnN+XFu+UiRM
-         AgnoFx/shzYK7QphsBVvKVe74AMdtl7CNAzfhoThCcoVIFFfFjVfQmUKIzTNgCO/kI
-         kWELeZPpWHm/w99brAKD79wecYnC07XezNzC8Vzr5BcgnncGz2PZ/MRFXIY3o7mneu
-         N6Cwb/Lp0zJ89euoE/4brY/M6Qm/yQ1urPY8j1ZBKwi4mtpi8oqYkGvEcvN7xurDfg
-         tXbwD+06oH9yQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5AKqBJj4072502;
-        Mon, 10 Jun 2019 13:52:11 -0700
-Date:   Mon, 10 Jun 2019 13:52:11 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Uros Bizjak <tipbot@zytor.com>
-Message-ID: <tip-515f0453752e3daba7c47d37d9172a66509a56fd@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, x86@kernel.org,
-        bp@suse.de, reinette.chatre@intel.com, mingo@redhat.com,
-        ubizjak@gmail.com, tglx@linutronix.de, hpa@zytor.com,
-        fenghua.yu@intel.com
-Reply-To: fenghua.yu@intel.com, hpa@zytor.com, tglx@linutronix.de,
-          ubizjak@gmail.com, reinette.chatre@intel.com, mingo@redhat.com,
-          bp@suse.de, x86@kernel.org, mingo@kernel.org,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190606200044.5730-1-ubizjak@gmail.com>
-References: <20190606200044.5730-1-ubizjak@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cache] x86/resctrl: Use _ASM_BX to avoid ifdeffery
-Git-Commit-ID: 515f0453752e3daba7c47d37d9172a66509a56fd
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 10 Jun 2019 16:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727588AbfFJU7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 16:59:34 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3A992089E;
+        Mon, 10 Jun 2019 20:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560200373;
+        bh=dI/BJlaJPgTAa6Ru+0W+XmCLy9W/37V7lpMtYMPQChQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gO9QfFjHvHrVSOAKsvu9mfDGBaAa1rC79LdbXnkz1abvtb3qBMPyV2lco9lpMDalF
+         XolaahQdB7U8De7j4soNdeVxOwHRXga4RaQIgNHyx25cv6uUW8GYXMg7vYUUFTcN9z
+         r6dKpDqQxK552Syj0bTXnRNbW8AiNH2xLagcZ2Ck=
+Date:   Mon, 10 Jun 2019 13:59:31 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        Dave Watson <davejwatson@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     syzbot <syzbot+06537213db7ba2745c4a@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: [net/tls] Re: memory leak in create_ctx
+Message-ID: <20190610205929.GL63833@gmail.com>
+References: <000000000000a420af058ad4bca2@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <000000000000a420af058ad4bca2@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  515f0453752e3daba7c47d37d9172a66509a56fd
-Gitweb:     https://git.kernel.org/tip/515f0453752e3daba7c47d37d9172a66509a56fd
-Author:     Uros Bizjak <ubizjak@gmail.com>
-AuthorDate: Thu, 6 Jun 2019 22:00:44 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Mon, 10 Jun 2019 22:36:38 +0200
+Looks like a TLS bug.  icsk->icsk_ulp_data isn't always freed.
 
-x86/resctrl: Use _ASM_BX to avoid ifdeffery
-
-Use the _ASM_BX macro which expands to either %rbx or %ebx, depending on
-the 32-bit or 64-bit config selected.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190606200044.5730-1-ubizjak@gmail.com
----
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 604c0e3bcc83..09408794eab2 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -431,11 +431,7 @@ static int pseudo_lock_fn(void *_rdtgrp)
- #else
- 	register unsigned int line_size asm("esi");
- 	register unsigned int size asm("edi");
--#ifdef CONFIG_X86_64
--	register void *mem_r asm("rbx");
--#else
--	register void *mem_r asm("ebx");
--#endif /* CONFIG_X86_64 */
-+	register void *mem_r asm(_ASM_BX);
- #endif /* CONFIG_KASAN */
- 
- 	/*
+On Sat, Jun 08, 2019 at 12:13:06PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=170e0bfea00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d5c73825cbdc7326
+> dashboard link: https://syzkaller.appspot.com/bug?extid=06537213db7ba2745c4a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10aa806aa00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+06537213db7ba2745c4a@syzkaller.appspotmail.com
+> 
+> IPv6: ADDRCONF(NETDEV_CHANGE): team0: link becomes ready
+> 2019/06/08 14:55:51 executed programs: 15
+> 2019/06/08 14:55:56 executed programs: 31
+> 2019/06/08 14:56:02 executed programs: 51
+> BUG: memory leak
+> unreferenced object 0xffff888117ceae00 (size 512):
+>   comm "syz-executor.3", pid 7233, jiffies 4294949016 (age 13.640s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000e6550967>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:55 [inline]
+>     [<00000000e6550967>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>     [<00000000e6550967>] slab_alloc mm/slab.c:3326 [inline]
+>     [<00000000e6550967>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+>     [<0000000014132182>] kmalloc include/linux/slab.h:547 [inline]
+>     [<0000000014132182>] kzalloc include/linux/slab.h:742 [inline]
+>     [<0000000014132182>] create_ctx+0x25/0x70 net/tls/tls_main.c:601
+>     [<00000000e08e1a44>] tls_init net/tls/tls_main.c:787 [inline]
+>     [<00000000e08e1a44>] tls_init+0x97/0x1e0 net/tls/tls_main.c:769
+>     [<0000000037b0c43c>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
+>     [<0000000037b0c43c>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
+>     [<000000007a284277>] do_tcp_setsockopt.isra.0+0x19a/0xd60
+> net/ipv4/tcp.c:2784
+>     [<00000000f35f3415>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3098
+>     [<00000000c840962c>] sock_common_setsockopt+0x38/0x50
+> net/core/sock.c:3124
+>     [<0000000006b0801f>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
+>     [<00000000a6309f52>] __do_sys_setsockopt net/socket.c:2083 [inline]
+>     [<00000000a6309f52>] __se_sys_setsockopt net/socket.c:2080 [inline]
+>     [<00000000a6309f52>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
+>     [<00000000fa555bbc>] do_syscall_64+0x76/0x1a0
+> arch/x86/entry/common.c:301
+>     [<00000000a06d7d1a>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> BUG: memory leak
+> unreferenced object 0xffff88810965dc00 (size 512):
+>   comm "syz-executor.2", pid 7235, jiffies 4294949016 (age 13.640s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000e6550967>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:55 [inline]
+>     [<00000000e6550967>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>     [<00000000e6550967>] slab_alloc mm/slab.c:3326 [inline]
+>     [<00000000e6550967>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+>     [<0000000014132182>] kmalloc include/linux/slab.h:547 [inline]
+>     [<0000000014132182>] kzalloc include/linux/slab.h:742 [inline]
+>     [<0000000014132182>] create_ctx+0x25/0x70 net/tls/tls_main.c:601
+>     [<00000000e08e1a44>] tls_init net/tls/tls_main.c:787 [inline]
+>     [<00000000e08e1a44>] tls_init+0x97/0x1e0 net/tls/tls_main.c:769
+>     [<0000000037b0c43c>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
+>     [<0000000037b0c43c>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
+>     [<000000007a284277>] do_tcp_setsockopt.isra.0+0x19a/0xd60
+> net/ipv4/tcp.c:2784
+>     [<00000000f35f3415>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3098
+>     [<00000000c840962c>] sock_common_setsockopt+0x38/0x50
+> net/core/sock.c:3124
+>     [<0000000006b0801f>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
+>     [<00000000a6309f52>] __do_sys_setsockopt net/socket.c:2083 [inline]
+>     [<00000000a6309f52>] __se_sys_setsockopt net/socket.c:2080 [inline]
+>     [<00000000a6309f52>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
+>     [<00000000fa555bbc>] do_syscall_64+0x76/0x1a0
+> arch/x86/entry/common.c:301
+>     [<00000000a06d7d1a>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> BUG: memory leak
+> unreferenced object 0xffff8881207d7600 (size 512):
+>   comm "syz-executor.5", pid 7244, jiffies 4294949019 (age 13.610s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000e6550967>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:55 [inline]
+>     [<00000000e6550967>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>     [<00000000e6550967>] slab_alloc mm/slab.c:3326 [inline]
+>     [<00000000e6550967>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+>     [<0000000014132182>] kmalloc include/linux/slab.h:547 [inline]
+>     [<0000000014132182>] kzalloc include/linux/slab.h:742 [inline]
+>     [<0000000014132182>] create_ctx+0x25/0x70 net/tls/tls_main.c:601
+>     [<00000000e08e1a44>] tls_init net/tls/tls_main.c:787 [inline]
+>     [<00000000e08e1a44>] tls_init+0x97/0x1e0 net/tls/tls_main.c:769
+>     [<0000000037b0c43c>] __tcp_set_ulp net/ipv4/tcp_ulp.c:126 [inline]
+>     [<0000000037b0c43c>] tcp_set_ulp+0xe2/0x190 net/ipv4/tcp_ulp.c:147
+>     [<000000007a284277>] do_tcp_setsockopt.isra.0+0x19a/0xd60
+> net/ipv4/tcp.c:2784
+>     [<00000000f35f3415>] tcp_setsockopt+0x71/0x80 net/ipv4/tcp.c:3098
+>     [<00000000c840962c>] sock_common_setsockopt+0x38/0x50
+> net/core/sock.c:3124
+>     [<0000000006b0801f>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
+>     [<00000000a6309f52>] __do_sys_setsockopt net/socket.c:2083 [inline]
+>     [<00000000a6309f52>] __se_sys_setsockopt net/socket.c:2080 [inline]
+>     [<00000000a6309f52>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
+>     [<00000000fa555bbc>] do_syscall_64+0x76/0x1a0
+> arch/x86/entry/common.c:301
+>     [<00000000a06d7d1a>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
