@@ -2,173 +2,128 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8997AC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A45C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B7B20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A65F20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S5twQrqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390931AbfFJXwc convert rfc822-to-8bit (ORCPT
+        id S2390961AbfFJXwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 19:52:32 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:58228 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390568AbfFJXwc (ORCPT
+        Mon, 10 Jun 2019 19:52:36 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35217 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390932AbfFJXwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 19:52:32 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x5ANpjra015106
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 11 Jun 2019 08:51:45 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x5ANpj1a007816;
-        Tue, 11 Jun 2019 08:51:45 +0900
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x5ANpDXZ009406;
-        Tue, 11 Jun 2019 08:51:45 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-5840663; Tue, 11 Jun 2019 08:50:39 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0319.002; Tue,
- 11 Jun 2019 08:50:39 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-CC:     Wanpeng Li <kernellwp@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Punit Agrawal <punit.agrawal@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Michal Hocko" <mhocko@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        Xiao Guangrong <xiaoguangrong@tencent.com>,
-        "lidongchen@tencent.com" <lidongchen@tencent.com>,
-        "yongkaiwu@tencent.com" <yongkaiwu@tencent.com>
-Subject: Re: [PATCH v2] mm: hwpoison: disable memory error handling on 1GB
- hugepage
-Thread-Topic: [PATCH v2] mm: hwpoison: disable memory error handling on 1GB
- hugepage
-Thread-Index: AQHVFnaoUuMkT7+k5kKGu78GtXiXKKaVCtaA
-Date:   Mon, 10 Jun 2019 23:50:38 +0000
-Message-ID: <20190610235045.GB30991@hori.linux.bs1.fc.nec.co.jp>
-References: <20180130013919.GA19959@hori1.linux.bs1.fc.nec.co.jp>
- <1517284444-18149-1-git-send-email-n-horiguchi@ah.jp.nec.com>
- <87inbbjx2w.fsf@e105922-lin.cambridge.arm.com>
- <20180207011455.GA15214@hori1.linux.bs1.fc.nec.co.jp>
- <87fu6bfytm.fsf@e105922-lin.cambridge.arm.com>
- <20180208121749.0ac09af2b5a143106f339f55@linux-foundation.org>
- <87wozhvc49.fsf@concordia.ellerman.id.au>
- <e673f38a-9e5f-21f6-421b-b3cb4ff02e91@oracle.com>
- <CANRm+CxAgWVv5aVzQ0wdP_A7QQgqfy7nN_SxyaactG7Mnqfr2A@mail.gmail.com>
- <f79d828c-b0b4-8a20-c316-a13430cfb13c@oracle.com>
-In-Reply-To: <f79d828c-b0b4-8a20-c316-a13430cfb13c@oracle.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.96]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <D93DB5550526EC4A8EA7D6EFB4444954@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Mon, 10 Jun 2019 19:52:34 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s27so5863615pgl.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=//UIhUwMjcLEhM8jw0JdGfPxbu/l+D9BdzjQBHxa+3I=;
+        b=S5twQrqcfMlYQ7HpJx67BBgHCAXoiezTWufgTwmq7vEJIDmSmgxiNFaSqrzgEZLYBb
+         tiZ+uAc3MEee8GOKVN3q66fZBuujaKmt6U4ZDFTEE92khx921OCBx/0XA3OLN2i34diO
+         jJwwMQZ/GLIYF6fVKnWmKER+HFF1f0apsT4/E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=//UIhUwMjcLEhM8jw0JdGfPxbu/l+D9BdzjQBHxa+3I=;
+        b=hWtq70ko3KIobait4P7IQ/1iMfnymc8RuOMYnREu0xOfiH/UH6E6KpD/cL6zeUqUGS
+         iid2vvpc1Uivkw/qDga20GN1z7CA+UalcVoFKa0Vd7W0+0UKRHTO3Bbdr1df5zCEZ4TC
+         +mdjk/gFopLOoHespi2+7WeSd2FOq43ez/qMXNnD2d0X++MNO8+BjEdN9Xi8U508a+UK
+         mBujLXV3I7eUqTivi2zrxa4/Gdlvs15ZALoBtzaGGzMkYg21ntndMbAy3MTurEmx2QZ2
+         uWSG5KIxtkyzuMDCWmnNgGSOzsZ8Da9vS+hi8ffF6EncSfUM+w0TafYAM2UmjYd+Rqkk
+         PcZg==
+X-Gm-Message-State: APjAAAVNyx+/PHDCuN5jGudBLvii0O7DO7tmu7JvzYModiZJ2voTTkuh
+        mXypIR0ik0cCsjP9z7GyDvvMaA==
+X-Google-Smtp-Source: APXvYqx/uFQL581YeJrYZ1Czs+Zxdcfgf1YQbiKV68dE70gZNUeve1m6AmJretOfUB9S5Ieus0eafg==
+X-Received: by 2002:a63:a056:: with SMTP id u22mr17603182pgn.318.1560210754118;
+        Mon, 10 Jun 2019 16:52:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 144sm18161980pfy.54.2019.06.10.16.52.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 16:52:33 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 16:52:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Garnier <thgarnie@chromium.org>
+Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
+        Thomas Garnier <thgarnie@google.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 10/12] x86/power/64: Adapt assembly for PIE support
+Message-ID: <201906101652.94483CD@keescook>
+References: <20190520231948.49693-1-thgarnie@chromium.org>
+ <20190520231948.49693-11-thgarnie@chromium.org>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520231948.49693-11-thgarnie@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 04:31:01PM -0700, Mike Kravetz wrote:
-> On 5/28/19 2:49 AM, Wanpeng Li wrote:
-> > Cc Paolo,
-> > Hi all,
-> > On Wed, 14 Feb 2018 at 06:34, Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> >>
-> >> On 02/12/2018 06:48 PM, Michael Ellerman wrote:
-> >>> Andrew Morton <akpm@linux-foundation.org> writes:
-> >>>
-> >>>> On Thu, 08 Feb 2018 12:30:45 +0000 Punit Agrawal <punit.agrawal@arm.com> wrote:
-> >>>>
-> >>>>>>
-> >>>>>> So I don't think that the above test result means that errors are properly
-> >>>>>> handled, and the proposed patch should help for arm64.
-> >>>>>
-> >>>>> Although, the deviation of pud_huge() avoids a kernel crash the code
-> >>>>> would be easier to maintain and reason about if arm64 helpers are
-> >>>>> consistent with expectations by core code.
-> >>>>>
-> >>>>> I'll look to update the arm64 helpers once this patch gets merged. But
-> >>>>> it would be helpful if there was a clear expression of semantics for
-> >>>>> pud_huge() for various cases. Is there any version that can be used as
-> >>>>> reference?
-> >>>>
-> >>>> Is that an ack or tested-by?
-> >>>>
-> >>>> Mike keeps plaintively asking the powerpc developers to take a look,
-> >>>> but they remain steadfastly in hiding.
-> >>>
-> >>> Cc'ing linuxppc-dev is always a good idea :)
-> >>>
-> >>
-> >> Thanks Michael,
-> >>
-> >> I was mostly concerned about use cases for soft/hard offline of huge pages
-> >> larger than PMD_SIZE on powerpc.  I know that powerpc supports PGD_SIZE
-> >> huge pages, and soft/hard offline support was specifically added for this.
-> >> See, 94310cbcaa3c "mm/madvise: enable (soft|hard) offline of HugeTLB pages
-> >> at PGD level"
-> >>
-> >> This patch will disable that functionality.  So, at a minimum this is a
-> >> 'heads up'.  If there are actual use cases that depend on this, then more
-> >> work/discussions will need to happen.  From the e-mail thread on PGD_SIZE
-> >> support, I can not tell if there is a real use case or this is just a
-> >> 'nice to have'.
-> > 
-> > 1GB hugetlbfs pages are used by DPDK and VMs in cloud deployment, we
-> > encounter gup_pud_range() panic several times in product environment.
-> > Is there any plan to reenable and fix arch codes?
+On Mon, May 20, 2019 at 04:19:35PM -0700, Thomas Garnier wrote:
+> From: Thomas Garnier <thgarnie@google.com>
 > 
-> I too am aware of slightly more interest in 1G huge pages.  Suspect that as
-> Intel MMU capacity increases to handle more TLB entries there will be more
-> and more interest.
+> Change the assembly code to use only relative references of symbols for the
+> kernel to be PIE compatible.
 > 
-> Personally, I am not looking at this issue.  Perhaps Naoya will comment as
-> he know most about this code.
-
-Thanks for forwarding this to me, I'm feeling that memory error handling
-on 1GB hugepage is demanded as real use case.
-
+> Position Independent Executable (PIE) support will allow to extend the
+> KASLR randomization range below 0xffffffff80000000.
 > 
-> > In addition, https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kvm/mmu.c#n3213
-> > The memory in guest can be 1GB/2MB/4K, though the host-backed memory
-> > are 1GB hugetlbfs pages, after above PUD panic is fixed,
-> > try_to_unmap() which is called in MCA recovery path will mark the PUD
-> > hwpoison entry. The guest will vmexit and retry endlessly when
-> > accessing any memory in the guest which is backed by this 1GB poisoned
-> > hugetlbfs page. We have a plan to split this 1GB hugetblfs page by 2MB
-> > hugetlbfs pages/4KB pages, maybe file remap to a virtual address range
-> > which is 2MB/4KB page granularity, also split the KVM MMU 1GB SPTE
-> > into 2MB/4KB and mark the offensive SPTE w/ a hwpoison flag, a sigbus
-> > will be delivered to VM at page fault next time for the offensive
-> > SPTE. Is this proposal acceptable?
+> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  arch/x86/power/hibernate_asm_64.S | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> I am not sure of the error handling design, but this does sound reasonable.
+> diff --git a/arch/x86/power/hibernate_asm_64.S b/arch/x86/power/hibernate_asm_64.S
+> index 3008baa2fa95..9ed980efef72 100644
+> --- a/arch/x86/power/hibernate_asm_64.S
+> +++ b/arch/x86/power/hibernate_asm_64.S
+> @@ -24,7 +24,7 @@
+>  #include <asm/frame.h>
+>  
+>  ENTRY(swsusp_arch_suspend)
+> -	movq	$saved_context, %rax
+> +	leaq	saved_context(%rip), %rax
+>  	movq	%rsp, pt_regs_sp(%rax)
+>  	movq	%rbp, pt_regs_bp(%rax)
+>  	movq	%rsi, pt_regs_si(%rax)
+> @@ -115,7 +115,7 @@ ENTRY(restore_registers)
+>  	movq	%rax, %cr4;  # turn PGE back on
+>  
+>  	/* We don't restore %rax, it must be 0 anyway */
+> -	movq	$saved_context, %rax
+> +	leaq	saved_context(%rip), %rax
+>  	movq	pt_regs_sp(%rax), %rsp
+>  	movq	pt_regs_bp(%rax), %rbp
+>  	movq	pt_regs_si(%rax), %rsi
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
 
-I agree that that's better.
-
-> That block of code which potentially dissolves a huge page on memory error
-> is hard to understand and I'm not sure if that is even the 'normal'
-> functionality.  Certainly, we would hate to waste/poison an entire 1G page
-> for an error on a small subsection.
-
-Yes, that's not practical, so we need at first establish the code base for
-2GB hugetlb splitting and then extending it to 1GB next.
-
-Thanks,
-Naoya Horiguchi
+-- 
+Kees Cook
