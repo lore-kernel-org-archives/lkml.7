@@ -2,119 +2,113 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBDBC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186E2C31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E5F2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51F920862
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:47:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="ddQy0EE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388629AbfFJRrz convert rfc822-to-8bit (ORCPT
+        id S2388669AbfFJRr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:47:55 -0400
-Received: from mga11.intel.com ([192.55.52.93]:49726 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387643AbfFJRrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:47:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 10:47:54 -0700
-X-ExtLoop1: 1
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga005.jf.intel.com with ESMTP; 10 Jun 2019 10:47:53 -0700
-Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 10 Jun 2019 10:47:53 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.166]) by
- ORSMSX160.amr.corp.intel.com ([169.254.13.69]) with mapi id 14.03.0415.000;
- Mon, 10 Jun 2019 10:47:53 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: RE: [RFC PATCH v2 1/5] mm: Introduce vm_ops->may_mprotect()
-Thread-Topic: [RFC PATCH v2 1/5] mm: Introduce vm_ops->may_mprotect()
-Thread-Index: AQHVHA01/2g2StwB+UmAXBpwpA92D6aVeUUAgAAN64D//6b7AA==
-Date:   Mon, 10 Jun 2019 17:47:52 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654FFD59@ORSMSX116.amr.corp.intel.com>
-References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
- <20190606021145.12604-2-sean.j.christopherson@intel.com>
- <20190610150600.GA3752@linux.intel.com>
- <20190610155549.GB15995@linux.intel.com>
-In-Reply-To: <20190610155549.GB15995@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzM0YTFiOWItZTQxNy00N2YxLTg4NjEtNzdmZjc4ODE1N2EwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicWhaTjFJMVVqenc2R1JyZHdBTkplRTlsOFZQZWV6YkM5eGl0YXh4TmZcL1VnaVFVQlRcL005U1Jpa2ZaVEh6XC9PTyJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 10 Jun 2019 13:47:59 -0400
+Received: from mail.codeweavers.com ([50.203.203.244]:59114 "EHLO
+        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387643AbfFJRr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:47:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codeweavers.com; s=6377696661; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=B+NQK0qQzwriFdGQRKl3qnBuYxHERXIyxTc267JOpl0=; b=ddQy0EE+r/As82BHbGL2enMiF
+        +xSkrfjkaTQ0AJxemttV6by74YhcQ50DLiLC1sA3I03bUdF2mNxbHrY1p4ORkTzfe/rv/xfMgzol2
+        SI2MK+71N2dyNCMb6kZwrM5MZdJ8KNTla+ziNnIZzH+w52ZzB0PpDi3xi3X39ShZeK5/E=;
+Received: from merlot.physics.ox.ac.uk ([163.1.241.98] helo=merlot)
+        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <huw@codeweavers.com>)
+        id 1haOPC-0004C2-Gt; Mon, 10 Jun 2019 12:48:27 -0500
+Received: from daviesh by merlot with local (Exim 4.90_1)
+        (envelope-from <huw@codeweavers.com>)
+        id 1haOOY-0003Rh-VS; Mon, 10 Jun 2019 18:47:47 +0100
+Date:   Mon, 10 Jun 2019 18:47:46 +0100
+From:   Huw Davies <huw@codeweavers.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v6 01/19] kernel: Standardize vdso_datapage
+Message-ID: <20190610174746.GA13224@merlot.physics.ox.ac.uk>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-2-vincenzo.frascino@arm.com>
+ <CAK8P3a3EnvkLND2RJdZtEY64PhK5g0sbbuytQro=f0cPur2g9g@mail.gmail.com>
+ <bb5253b2-623c-c927-27a2-1d3a2990d20f@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb5253b2-623c-c927-27a2-1d3a2990d20f@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Christopherson, Sean J
-> Sent: Monday, June 10, 2019 8:56 AM
+On Tue, Jun 04, 2019 at 01:05:40PM +0100, Vincenzo Frascino wrote:
+> On 31/05/2019 09:16, Arnd Bergmann wrote:
+> > On Thu, May 30, 2019 at 4:15 PM Vincenzo Frascino
+> > <vincenzo.frascino@arm.com> wrote:
+> > 
+> >> + * vdso_data will be accessed by 64 bit and compat code at the same time
+> >> + * so we should be careful before modifying this structure.
+> >> + */
+> >> +struct vdso_data {
+> >> +       u32                     seq;
+> >> +
+> >> +       s32                     clock_mode;
+> >> +       u64                     cycle_last;
+> >> +       u64                     mask;
+> >> +       u32                     mult;
+> >> +       u32                     shift;
+> >> +
+> >> +       struct vdso_timestamp   basetime[VDSO_BASES];
+> >> +
+> >> +       s32                     tz_minuteswest;
+> >> +       s32                     tz_dsttime;
+> >> +       u32                     hrtimer_res;
+> >> +};
+> > 
+> > The structure contains four padding bytes at the end, which is
+> > something we try to avoid, at least if this ends up being used as
+> > an ABI. Maybe add "u32 __unused" at the end?
+> > 
 > 
-> > > As a result, LSM policies cannot be meaningfully applied, e.g. an
-> > > LSM can deny access to the EPC as a whole, but can't deny PROT_EXEC
-> > > on page that originated in a non-EXECUTE file (which is long gone by
-> > > the time
-> > > mprotect() is called).
-> >
-> > I have hard time following what is paragraph is trying to say.
-> >
-> > > By hooking mprotect(), SGX can make explicit LSM upcalls while an
-> > > enclave is being built, i.e. when the kernel has a handle to origin
-> > > of each enclave page, and enforce the result of the LSM policy
-> > > whenever userspace maps the enclave page in the future.
-> >
-> > "LSM policy whenever calls mprotect()"? I'm no sure why you mean by
-> > mapping here and if there is any need to talk about future. Isn't this
-> > needed now?
-> 
-> Future is referring to the timeline of a running kernel, not the future
-> of the kernel code.
-> 
-> Rather than trying to explain all of the above with words, I'll provide
-> code examples to show how ->may_protect() will be used by SGX and why it
-> is the preferred solution.
+> Agreed, I will fix this in v7.
 
-The LSM concept is to separate security policy enforcement from the rest of the kernel. For modules, the "official" way is to use VM_MAY* flags to limit allowable permissions, while LSM uses security_file_mprotect(). I guess that's why we didn't have .may_mprotect() in the first place. What you are doing is enforcing some security policy outside of LSM, which is dirty from architecture perspective.
+Note that this is also necessary to ensure that CLOCK_MONOTONIC_RAW
+works in the 32-bit vDSO on x86_64 kernels.
+
+Huw.
