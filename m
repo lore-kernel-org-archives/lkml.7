@@ -2,279 +2,289 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE9FC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD09C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E875C207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:58:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="ko4TaIcu"
+	by mail.kernel.org (Postfix) with ESMTP id C084B2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 11:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389777AbfFJL6B (ORCPT
+        id S2389779AbfFJL7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 07:58:01 -0400
-Received: from mail-eopbgr690081.outbound.protection.outlook.com ([40.107.69.81]:47118
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389631AbfFJL6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 07:58:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VaQQeniIaixELSuiqfMd7oYniKecnqldHHa2SMh6KVA=;
- b=ko4TaIcuNru761A5WWl/DY7fm9r00C6orqYHwo/Kne+OfwMq7SirUq1XgCHlBqtMcG6oUIxOZczS1VKvxdu6vClzGXaSeQOJWGXnYrBlWRvGhx+3FICwARvv2B2ysDo2p/HCcOC8FknvsO//1PnhONHw5N0OO8RcILcZxJ5oI4s=
-Received: from CH2PR15MB3575.namprd15.prod.outlook.com (52.132.228.77) by
- CH2PR15MB3526.namprd15.prod.outlook.com (10.255.155.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Mon, 10 Jun 2019 11:57:52 +0000
-Received: from CH2PR15MB3575.namprd15.prod.outlook.com
- ([fe80::8d6a:e759:6fd:5ee0]) by CH2PR15MB3575.namprd15.prod.outlook.com
- ([fe80::8d6a:e759:6fd:5ee0%7]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
- 11:57:52 +0000
-From:   Jon Maloy <jon.maloy@ericsson.com>
-To:     Xin Long <lucien.xin@gmail.com>,
-        syzbot <syzbot+78fbe679c8ca8d264a8d@syzkaller.appspotmail.com>
-CC:     davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        Ying Xue <ying.xue@windriver.com>
-Subject: RE: memory leak in tipc_buf_acquire
-Thread-Topic: memory leak in tipc_buf_acquire
-Thread-Index: AQHVEnY0xNBWYk+efkuiBxv6xDP03aaTwdEAgAEf77A=
-Date:   Mon, 10 Jun 2019 11:57:52 +0000
-Message-ID: <CH2PR15MB3575EDA28674D0E5CC67EF5B9A130@CH2PR15MB3575.namprd15.prod.outlook.com>
-References: <000000000000000c060589a8bc66@google.com>
- <CADvbK_cMohjd3U=8H8ECT74rK85Tjy1FZYAXQQ_CsWgFq3c5gA@mail.gmail.com>
-In-Reply-To: <CADvbK_cMohjd3U=8H8ECT74rK85Tjy1FZYAXQQ_CsWgFq3c5gA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jon.maloy@ericsson.com; 
-x-originating-ip: [24.225.233.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a5a40d19-7208-4d96-ee2a-08d6ed9ade0a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CH2PR15MB3526;
-x-ms-traffictypediagnostic: CH2PR15MB3526:
-x-ms-exchange-purlcount: 8
-x-microsoft-antispam-prvs: <CH2PR15MB3526B64FB4A773AC1F1D0F339A130@CH2PR15MB3526.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(366004)(39850400004)(189003)(199004)(13464003)(33656002)(8936002)(8676002)(81156014)(81166006)(7736002)(99286004)(7696005)(305945005)(86362001)(66066001)(110136005)(54906003)(316002)(6506007)(53546011)(229853002)(486006)(44832011)(6436002)(11346002)(446003)(102836004)(476003)(5660300002)(256004)(25786009)(52536014)(76176011)(4326008)(26005)(6246003)(14454004)(6116002)(2906002)(53936002)(478600001)(55016002)(71190400001)(3846002)(74316002)(66556008)(66946007)(64756008)(71200400001)(966005)(14444005)(186003)(68736007)(66446008)(66476007)(73956011)(6306002)(76116006)(9686003)(99710200001)(505234006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR15MB3526;H:CH2PR15MB3575.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: ericsson.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CPxkU/N9lsZAtKoJpCjCy0zjAyDcH4KY9HHoVnrMssgfwihNTmwkgxkoVceNtv/nKQK1RY0YQQypN/Gyp+zk9O8jdP3NEEwP/MUaTmeTLfwNVScNIaVeEGIhgz2H2t4Tj0BoY3ZDcJYyPBrV3vH/7a7XPtREuAnSSbRPqrr0iyJ9n/QHR/mD5MRGa0xkNti0Y+nwc4lbkgrEgwCYFhAhkrHnkXbq0LevkTAdeUtKOL4daDW+dzEp5VwyHqQY3nSxw/kPkWlad5VpqrDUMnJ6sqXVRjOx/goIuX8vLoPWjR2te6TmtGFxErHdKf8Ad8xSoZ6MiOoYsMPZA+Rp0asi8mZZS5CTuwor4NcgWh/sYUwa3XVBVMWc1BCWBYsvbrdzGi5ZwmfwlF3R1bMIVeH8N0Z5sdtvYSZgTSejIkU9N9s=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 10 Jun 2019 07:59:40 -0400
+Received: from muru.com ([72.249.23.125]:52504 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388373AbfFJL7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 07:59:39 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 5FA8D80CD;
+        Mon, 10 Jun 2019 11:59:59 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] bus: ti-sysc: Add support for module specific reset quirks
+Date:   Mon, 10 Jun 2019 04:59:35 -0700
+Message-Id: <20190610115935.40448-1-tony@atomide.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5a40d19-7208-4d96-ee2a-08d6ed9ade0a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 11:57:52.3299
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jon.maloy@ericsson.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR15MB3526
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbmV0ZGV2LW93bmVyQHZn
-ZXIua2VybmVsLm9yZyA8bmV0ZGV2LW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24NCj4gQmVoYWxm
-IE9mIFhpbiBMb25nDQo+IFNlbnQ6IDktSnVuLTE5IDE0OjQ1DQo+IFRvOiBzeXpib3QgPHN5emJv
-dCs3OGZiZTY3OWM4Y2E4ZDI2NGE4ZEBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29tPg0KPiBDYzog
-ZGF2ZW0gPGRhdmVtQGRhdmVtbG9mdC5uZXQ+OyBKb24gTWFsb3kgPGpvbi5tYWxveUBlcmljc3Nv
-bi5jb20+Ow0KPiBMS01MIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgbmV0d29yayBk
-ZXYNCj4gPG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc+OyBzeXprYWxsZXItYnVncyA8c3l6a2FsbGVy
-LQ0KPiBidWdzQGdvb2dsZWdyb3Vwcy5jb20+OyB0aXBjLWRpc2N1c3Npb25AbGlzdHMuc291cmNl
-Zm9yZ2UubmV0OyBZaW5nIFh1ZQ0KPiA8eWluZy54dWVAd2luZHJpdmVyLmNvbT4NCj4gU3ViamVj
-dDogUmU6IG1lbW9yeSBsZWFrIGluIHRpcGNfYnVmX2FjcXVpcmUNCj4gDQo+IE9uIFNhdCwgTWF5
-IDI1LCAyMDE5IGF0IDU6MTggQU0gc3l6Ym90DQo+IDxzeXpib3QrNzhmYmU2NzljOGNhOGQyNjRh
-OGRAc3l6a2FsbGVyLmFwcHNwb3RtYWlsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIZWxsbywNCj4g
-Pg0KPiA+IHN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KPiA+DQo+ID4gSEVB
-RCBjb21taXQ6ICAgIDRkZGU4MjFlIE1lcmdlIHRhZyAneGZzLTUuMi1maXhlcy0xJyBvZiBnaXQ6
-Ly9naXQua2VybmVsLm8uLg0KPiA+IGdpdCB0cmVlOiAgICAgICB1cHN0cmVhbQ0KPiA+IGNvbnNv
-bGUgb3V0cHV0Og0KPiA+IGh0dHBzOi8vcHJvdGVjdDIuZmlyZWV5ZS5jb20vdXJsP2s9MmE5YmRj
-YTMtNzYxMTA5YjUtMmE5YjljMzgtDQo+IDg2MmYxNGE5DQo+ID4gMzY1ZS0NCj4gNGVkOGZiNTJl
-Yjc4MmFhYiZxPTEmdT1odHRwcyUzQSUyRiUyRnN5emthbGxlci5hcHBzcG90LmNvbSUyRnglDQo+
-IDJGDQo+ID4gbG9nLnR4dCUzRnglM0QxMDdkYjczYWEwMDAwMCBrZXJuZWwgY29uZmlnOg0KPiA+
-IGh0dHBzOi8vcHJvdGVjdDIuZmlyZWV5ZS5jb20vdXJsP2s9YTE4NjMwMTUtZmQwY2U1MDMtYTE4
-NjcwOGUtDQo+IDg2MmYxNGE5DQo+ID4gMzY1ZS0NCj4gMDQwNTZmMjExMTM1NDY2MCZxPTEmdT1o
-dHRwcyUzQSUyRiUyRnN5emthbGxlci5hcHBzcG90LmNvbSUyRnglDQo+IDJGDQo+ID4gLmNvbmZp
-ZyUzRnglM0Q2MWRkOWUxNWE3NjE2OTFkIGRhc2hib2FyZCBsaW5rOg0KPiA+IGh0dHBzOi8vcHJv
-dGVjdDIuZmlyZWV5ZS5jb20vdXJsP2s9YmE5MjNiMjMtZTYxOGVlMzUtYmE5MjdiYjgtDQo+IDg2
-MmYxNGE5MzY1ZS0NCj4gNjE4N2UyZjM0M2ZlM2EzZSZxPTEmdT1odHRwcyUzQSUyRiUyRnN5emth
-bGxlci5hcHBzcG90LmNvbSUyRmJ1Zw0KPiAlM0ZleHRpZCUzRDc4ZmJlNjc5YzhjYThkMjY0YThk
-DQo+ID4gY29tcGlsZXI6ICAgICAgIGdjYyAoR0NDKSA5LjAuMCAyMDE4MTIzMSAoZXhwZXJpbWVu
-dGFsKQ0KPiA+IHN5eiByZXBybzogICAgICBodHRwczovL3Byb3RlY3QyLmZpcmVleWUuY29tL3Vy
-bD9rPTI3ZWExYTU4LTdiNjBjZjRlLQ0KPiAyN2VhNWFjMy04NjJmMTRhOTM2NWUtDQo+IGYxN2Yx
-M2ZiN2YxMDBmYTEmcT0xJnU9aHR0cHMlM0ElMkYlMkZzeXprYWxsZXIuYXBwc3BvdC5jb20lMkZ4
-JTINCj4gRnJlcHJvLnN5eiUzRnglM0QxNjJiZDg0Y2EwMDAwMA0KPiA+IEMgcmVwcm9kdWNlcjog
-ICBodHRwczovL3Byb3RlY3QyLmZpcmVleWUuY29tL3VybD9rPWRiZTQ3OTliLTg3NmVhYzhkLQ0K
-PiBkYmU0MzkwMC04NjJmMTRhOTM2NWUtDQo+IDc4N2E3NTVhNWExODAwZDYmcT0xJnU9aHR0cHMl
-M0ElMkYlMkZzeXprYWxsZXIuYXBwc3BvdC5jb20lMkZ4DQo+ICUyRnJlcHJvLmMlM0Z4JTNEMTYw
-YzYwNWNhMDAwMDANCj4gPg0KPiBMb29rcyB3ZSBuZWVkIHRvIHB1cmdlIGVhY2ggbWVtYmVyJ3Mg
-ZGVmZXJyZWRxIGxpc3QgaW4gdGlwY19ncm91cF9kZWxldGUoKToNCj4gZGlmZiAtLWdpdCBhL25l
-dC90aXBjL2dyb3VwLmMgYi9uZXQvdGlwYy9ncm91cC5jIGluZGV4IDk5MmJlNjEuLjIzODIzZWIN
-Cj4gMTAwNjQ0DQo+IC0tLSBhL25ldC90aXBjL2dyb3VwLmMNCj4gKysrIGIvbmV0L3RpcGMvZ3Jv
-dXAuYw0KPiBAQCAtMjE4LDYgKzIxOCw3IEBAIHZvaWQgdGlwY19ncm91cF9kZWxldGUoc3RydWN0
-IG5ldCAqbmV0LCBzdHJ1Y3QNCj4gdGlwY19ncm91cCAqZ3JwKQ0KPiANCj4gICByYnRyZWVfcG9z
-dG9yZGVyX2Zvcl9lYWNoX2VudHJ5X3NhZmUobSwgdG1wLCB0cmVlLCB0cmVlX25vZGUpIHsNCj4g
-ICB0aXBjX2dyb3VwX3Byb3RvX3htaXQoZ3JwLCBtLCBHUlBfTEVBVkVfTVNHLCAmeG1pdHEpOw0K
-PiArIF9fc2tiX3F1ZXVlX3B1cmdlKCZtLT5kZWZlcnJlZHEpOw0KPiAgIGxpc3RfZGVsKCZtLT5s
-aXN0KTsNCj4gICBrZnJlZShtKTsNCj4gICB9DQoNClllcywgSSB0aGluayB5b3UgYXJlIHJpZ2h0
-LiBJJ2xsIGNoZWNrIGl0IGZ1cnRoZXIuDQoNClRoYW5rcw0KLy8vam9uDQoNCj4gDQo+ID4gSU1Q
-T1JUQU5UOiBpZiB5b3UgZml4IHRoZSBidWcsIHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcg
-dG8gdGhlIGNvbW1pdDoNCj4gPiBSZXBvcnRlZC1ieTogc3l6Ym90Kzc4ZmJlNjc5YzhjYThkMjY0
-YThkQHN5emthbGxlci5hcHBzcG90bWFpbC5jb20NCj4gPg0KPiA+IHR5cGU9MTQwMCBhdWRpdCgx
-NTU4NzAxNjgxLjc3NTozNik6IGF2YzogIGRlbmllZCAgeyBtYXAgfSBmb3INCj4gPiBwaWQ9NzEy
-OCBjb21tPSJzeXotZXhlY3V0b3I5ODciIHBhdGg9Ii9yb290L3N5ei1leGVjdXRvcjk4NzY1NjE0
-NyINCj4gZGV2PSJzZGExIg0KPiA+IGlubz0xNTkwMCBzY29udGV4dD11bmNvbmZpbmVkX3U6c3lz
-dGVtX3I6aW5zbW9kX3Q6czAtczA6YzAuYzEwMjMNCj4gPiB0Y29udGV4dD11bmNvbmZpbmVkX3U6
-b2JqZWN0X3I6dXNlcl9ob21lX3Q6czAgdGNsYXNzPWZpbGUgcGVybWlzc2l2ZT0xDQo+ID4gZXhl
-Y3V0aW5nIHByb2dyYW0gZXhlY3V0aW5nIHByb2dyYW0gZXhlY3V0aW5nIHByb2dyYW0gZXhlY3V0
-aW5nDQo+ID4gcHJvZ3JhbQ0KPiA+IEJVRzogbWVtb3J5IGxlYWsNCj4gPiB1bnJlZmVyZW5jZWQg
-b2JqZWN0IDB4ZmZmZjg4ODEwZGY4M2MwMCAoc2l6ZSA1MTIpOg0KPiA+ICAgIGNvbW0gInNvZnRp
-cnEiLCBwaWQgMCwgamlmZmllcyA0Mjk0OTQyMzU0IChhZ2UgMTkuODMwcykNCj4gPiAgICBoZXgg
-ZHVtcCAoZmlyc3QgMzIgYnl0ZXMpOg0KPiA+ICAgICAgMzggMWEgMGQgMGYgODEgODggZmYgZmYg
-MzggMWEgMGQgMGYgODEgODggZmYgZmYgIDguLi4uLi4uOC4uLi4uLi4NCj4gPiAgICAgIDAwIDAw
-IDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwICAuLi4uLi4uLi4uLi4u
-Li4uDQo+ID4gICAgYmFja3RyYWNlOg0KPiA+ICAgICAgWzwwMDAwMDAwMDkzNzVlZTQyPl0ga21l
-bWxlYWtfYWxsb2NfcmVjdXJzaXZlDQo+ID4gaW5jbHVkZS9saW51eC9rbWVtbGVhay5oOjU1IFtp
-bmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAwOTM3NWVlNDI+XSBzbGFiX3Bvc3RfYWxsb2NfaG9v
-ayBtbS9zbGFiLmg6NDM5IFtpbmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAwOTM3NWVlNDI+XSBz
-bGFiX2FsbG9jX25vZGUgbW0vc2xhYi5jOjMyNjkgW2lubGluZV0NCj4gPiAgICAgIFs8MDAwMDAw
-MDA5Mzc1ZWU0Mj5dIGttZW1fY2FjaGVfYWxsb2Nfbm9kZSsweDE1My8weDJhMA0KPiBtbS9zbGFi
-LmM6MzU3OQ0KPiA+ICAgICAgWzwwMDAwMDAwMDRjNTYzOTIyPl0gX19hbGxvY19za2IrMHg2ZS8w
-eDIxMCBuZXQvY29yZS9za2J1ZmYuYzoxOTgNCj4gPiAgICAgIFs8MDAwMDAwMDBlYzg3YmZhMT5d
-IGFsbG9jX3NrYl9mY2xvbmUgaW5jbHVkZS9saW51eC9za2J1ZmYuaDoxMTA3DQo+ID4gW2lubGlu
-ZV0NCj4gPiAgICAgIFs8MDAwMDAwMDBlYzg3YmZhMT5dIHRpcGNfYnVmX2FjcXVpcmUrMHgyZi8w
-eDgwIG5ldC90aXBjL21zZy5jOjY2DQo+ID4gICAgICBbPDAwMDAwMDAwZDE1MWVmODQ+XSB0aXBj
-X21zZ19jcmVhdGUrMHgzNy8weGUwIG5ldC90aXBjL21zZy5jOjk4DQo+ID4gICAgICBbPDAwMDAw
-MDAwOGJiNDM3YjA+XSB0aXBjX2dyb3VwX2NyZWF0ZV9ldmVudCsweGIzLzB4MWIwDQo+ID4gbmV0
-L3RpcGMvZ3JvdXAuYzo2NzkNCj4gPiAgICAgIFs8MDAwMDAwMDA5NDdiMWQwZj5dIHRpcGNfZ3Jv
-dXBfcHJvdG9fcmN2KzB4NTY5LzB4NjQwDQo+ID4gbmV0L3RpcGMvZ3JvdXAuYzo3ODENCj4gPiAg
-ICAgIFs8MDAwMDAwMDBiNzVhYjAzOT5dIHRpcGNfc2tfcHJvdG9fcmN2IG5ldC90aXBjL3NvY2tl
-dC5jOjE5OTYNCj4gW2lubGluZV0NCj4gPiAgICAgIFs8MDAwMDAwMDBiNzVhYjAzOT5dIHRpcGNf
-c2tfZmlsdGVyX3JjdisweDlhYy8weGYyMA0KPiA+IG5ldC90aXBjL3NvY2tldC5jOjIxNjMNCj4g
-PiAgICAgIFs8MDAwMDAwMDAwZGFiN2E2Yz5dIHRpcGNfc2tfZW5xdWV1ZSBuZXQvdGlwYy9zb2Nr
-ZXQuYzoyMjU1IFtpbmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAwMGRhYjdhNmM+XSB0aXBjX3Nr
-X3JjdisweDQ5NC8weDhhMA0KPiBuZXQvdGlwYy9zb2NrZXQuYzoyMzA2DQo+ID4gICAgICBbPDAw
-MDAwMDAwMDIzYTdkZGQ+XSB0aXBjX25vZGVfeG1pdCsweDE5Ni8weDFmMA0KPiBuZXQvdGlwYy9u
-b2RlLmM6MTQ0Mg0KPiA+ICAgICAgWzwwMDAwMDAwMDMzN2RkOWViPl0gdGlwY19ub2RlX3htaXRf
-c2tiIG5ldC90aXBjL25vZGUuYzoxNDkxDQo+IFtpbmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAw
-MzM3ZGQ5ZWI+XSB0aXBjX25vZGVfZGlzdHJfeG1pdCsweDdkLzB4MTIwDQo+ID4gbmV0L3RpcGMv
-bm9kZS5jOjE1MDYNCj4gPiAgICAgIFs8MDAwMDAwMDBiNjM3NTE4Mj5dIHRpcGNfZ3JvdXBfZGVs
-ZXRlKzB4ZTYvMHgxMzANCj4gbmV0L3RpcGMvZ3JvdXAuYzoyMjQNCj4gPiAgICAgIFs8MDAwMDAw
-MDAwMzYxYmEyYj5dIHRpcGNfc2tfbGVhdmUrMHg1Ny8weGIwDQo+IG5ldC90aXBjL3NvY2tldC5j
-OjI5MjUNCj4gPiAgICAgIFs8MDAwMDAwMDA5ZGY5MDUwNT5dIHRpcGNfcmVsZWFzZSsweDdiLzB4
-NWUwIG5ldC90aXBjL3NvY2tldC5jOjU4NA0KPiA+ICAgICAgWzwwMDAwMDAwMDlmMzE4OWRhPl0g
-X19zb2NrX3JlbGVhc2UrMHg0Yi8weGUwIG5ldC9zb2NrZXQuYzo2MDcNCj4gPiAgICAgIFs8MDAw
-MDAwMDBkMzU2OGVlMD5dIHNvY2tfY2xvc2UrMHgxYi8weDMwIG5ldC9zb2NrZXQuYzoxMjc5DQo+
-ID4gICAgICBbPDAwMDAwMDAwMjY2YTYyMTU+XSBfX2ZwdXQrMHhlZC8weDMwMCBmcy9maWxlX3Rh
-YmxlLmM6MjgwDQo+ID4NCj4gPiBCVUc6IG1lbW9yeSBsZWFrDQo+ID4gdW5yZWZlcmVuY2VkIG9i
-amVjdCAweGZmZmY4ODgxMTE4OTU0MDAgKHNpemUgMTAyNCk6DQo+ID4gICAgY29tbSAic29mdGly
-cSIsIHBpZCAwLCBqaWZmaWVzIDQyOTQ5NDIzNTQgKGFnZSAxOS44MzBzKQ0KPiA+ICAgIGhleCBk
-dW1wIChmaXJzdCAzMiBieXRlcyk6DQo+ID4gICAgICAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAw
-MCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAgLi4uLi4uLi4uLi4uLi4uLg0KPiA+ICAgICAgMDAgMDAg
-MDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgIC4uLi4uLi4uLi4uLi4u
-Li4NCj4gPiAgICBiYWNrdHJhY2U6DQo+ID4gICAgICBbPDAwMDAwMDAwZTJlMjg1NWU+XSBrbWVt
-bGVha19hbGxvY19yZWN1cnNpdmUNCj4gPiBpbmNsdWRlL2xpbnV4L2ttZW1sZWFrLmg6NTUgW2lu
-bGluZV0NCj4gPiAgICAgIFs8MDAwMDAwMDBlMmUyODU1ZT5dIHNsYWJfcG9zdF9hbGxvY19ob29r
-IG1tL3NsYWIuaDo0MzkgW2lubGluZV0NCj4gPiAgICAgIFs8MDAwMDAwMDBlMmUyODU1ZT5dIHNs
-YWJfYWxsb2Nfbm9kZSBtbS9zbGFiLmM6MzI2OSBbaW5saW5lXQ0KPiA+ICAgICAgWzwwMDAwMDAw
-MGUyZTI4NTVlPl0ga21lbV9jYWNoZV9hbGxvY19ub2RlX3RyYWNlKzB4MTViLzB4MmEwDQo+ID4g
-bW0vc2xhYi5jOjM1OTcNCj4gPiAgICAgIFs8MDAwMDAwMDBhNTAzMGNlNz5dIF9fZG9fa21hbGxv
-Y19ub2RlIG1tL3NsYWIuYzozNjE5IFtpbmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAwYTUwMzBj
-ZTc+XSBfX2ttYWxsb2Nfbm9kZV90cmFja19jYWxsZXIrMHgzOC8weDUwDQo+ID4gbW0vc2xhYi5j
-OjM2MzQNCj4gPiAgICAgIFs8MDAwMDAwMDAzOTIxMjQ1MT5dIF9fa21hbGxvY19yZXNlcnZlLmlz
-cmEuMCsweDQwLzB4YjANCj4gPiBuZXQvY29yZS9za2J1ZmYuYzoxNDINCj4gPiAgICAgIFs8MDAw
-MDAwMDAzMDdjYjRjZj5dIF9fYWxsb2Nfc2tiKzB4YTAvMHgyMTAgbmV0L2NvcmUvc2tidWZmLmM6
-MjEwDQo+ID4gICAgICBbPDAwMDAwMDAwZWM4N2JmYTE+XSBhbGxvY19za2JfZmNsb25lIGluY2x1
-ZGUvbGludXgvc2tidWZmLmg6MTEwNw0KPiA+IFtpbmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAw
-ZWM4N2JmYTE+XSB0aXBjX2J1Zl9hY3F1aXJlKzB4MmYvMHg4MCBuZXQvdGlwYy9tc2cuYzo2Ng0K
-PiA+ICAgICAgWzwwMDAwMDAwMGQxNTFlZjg0Pl0gdGlwY19tc2dfY3JlYXRlKzB4MzcvMHhlMCBu
-ZXQvdGlwYy9tc2cuYzo5OA0KPiA+ICAgICAgWzwwMDAwMDAwMDhiYjQzN2IwPl0gdGlwY19ncm91
-cF9jcmVhdGVfZXZlbnQrMHhiMy8weDFiMA0KPiA+IG5ldC90aXBjL2dyb3VwLmM6Njc5DQo+ID4g
-ICAgICBbPDAwMDAwMDAwOTQ3YjFkMGY+XSB0aXBjX2dyb3VwX3Byb3RvX3JjdisweDU2OS8weDY0
-MA0KPiA+IG5ldC90aXBjL2dyb3VwLmM6NzgxDQo+ID4gICAgICBbPDAwMDAwMDAwYjc1YWIwMzk+
-XSB0aXBjX3NrX3Byb3RvX3JjdiBuZXQvdGlwYy9zb2NrZXQuYzoxOTk2DQo+IFtpbmxpbmVdDQo+
-ID4gICAgICBbPDAwMDAwMDAwYjc1YWIwMzk+XSB0aXBjX3NrX2ZpbHRlcl9yY3YrMHg5YWMvMHhm
-MjANCj4gPiBuZXQvdGlwYy9zb2NrZXQuYzoyMTYzDQo+ID4gICAgICBbPDAwMDAwMDAwMGRhYjdh
-NmM+XSB0aXBjX3NrX2VucXVldWUgbmV0L3RpcGMvc29ja2V0LmM6MjI1NSBbaW5saW5lXQ0KPiA+
-ICAgICAgWzwwMDAwMDAwMDBkYWI3YTZjPl0gdGlwY19za19yY3YrMHg0OTQvMHg4YTANCj4gbmV0
-L3RpcGMvc29ja2V0LmM6MjMwNg0KPiA+ICAgICAgWzwwMDAwMDAwMDAyM2E3ZGRkPl0gdGlwY19u
-b2RlX3htaXQrMHgxOTYvMHgxZjANCj4gbmV0L3RpcGMvbm9kZS5jOjE0NDINCj4gPiAgICAgIFs8
-MDAwMDAwMDAzMzdkZDllYj5dIHRpcGNfbm9kZV94bWl0X3NrYiBuZXQvdGlwYy9ub2RlLmM6MTQ5
-MQ0KPiBbaW5saW5lXQ0KPiA+ICAgICAgWzwwMDAwMDAwMDMzN2RkOWViPl0gdGlwY19ub2RlX2Rp
-c3RyX3htaXQrMHg3ZC8weDEyMA0KPiA+IG5ldC90aXBjL25vZGUuYzoxNTA2DQo+ID4gICAgICBb
-PDAwMDAwMDAwYjYzNzUxODI+XSB0aXBjX2dyb3VwX2RlbGV0ZSsweGU2LzB4MTMwDQo+IG5ldC90
-aXBjL2dyb3VwLmM6MjI0DQo+ID4gICAgICBbPDAwMDAwMDAwMDM2MWJhMmI+XSB0aXBjX3NrX2xl
-YXZlKzB4NTcvMHhiMA0KPiBuZXQvdGlwYy9zb2NrZXQuYzoyOTI1DQo+ID4gICAgICBbPDAwMDAw
-MDAwOWRmOTA1MDU+XSB0aXBjX3JlbGVhc2UrMHg3Yi8weDVlMCBuZXQvdGlwYy9zb2NrZXQuYzo1
-ODQNCj4gPiAgICAgIFs8MDAwMDAwMDA5ZjMxODlkYT5dIF9fc29ja19yZWxlYXNlKzB4NGIvMHhl
-MCBuZXQvc29ja2V0LmM6NjA3DQo+ID4NCj4gPiBCVUc6IG1lbW9yeSBsZWFrDQo+ID4gdW5yZWZl
-cmVuY2VkIG9iamVjdCAweGZmZmY4ODgxMGU2M2RlMDAgKHNpemUgNTEyKToNCj4gPiAgICBjb21t
-ICJzb2Z0aXJxIiwgcGlkIDAsIGppZmZpZXMgNDI5NDk0MzU0OCAoYWdlIDcuODkwcykNCj4gPiAg
-ICBoZXggZHVtcCAoZmlyc3QgMzIgYnl0ZXMpOg0KPiA+ICAgICAgMzggMTAgMGQgMGYgODEgODgg
-ZmYgZmYgMzggMTAgMGQgMGYgODEgODggZmYgZmYgIDguLi4uLi4uOC4uLi4uLi4NCj4gPiAgICAg
-IDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwIDAwICAuLi4uLi4u
-Li4uLi4uLi4uDQo+ID4gICAgYmFja3RyYWNlOg0KPiA+ICAgICAgWzwwMDAwMDAwMDkzNzVlZTQy
-Pl0ga21lbWxlYWtfYWxsb2NfcmVjdXJzaXZlDQo+ID4gaW5jbHVkZS9saW51eC9rbWVtbGVhay5o
-OjU1IFtpbmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAwOTM3NWVlNDI+XSBzbGFiX3Bvc3RfYWxs
-b2NfaG9vayBtbS9zbGFiLmg6NDM5IFtpbmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAwOTM3NWVl
-NDI+XSBzbGFiX2FsbG9jX25vZGUgbW0vc2xhYi5jOjMyNjkgW2lubGluZV0NCj4gPiAgICAgIFs8
-MDAwMDAwMDA5Mzc1ZWU0Mj5dIGttZW1fY2FjaGVfYWxsb2Nfbm9kZSsweDE1My8weDJhMA0KPiBt
-bS9zbGFiLmM6MzU3OQ0KPiA+ICAgICAgWzwwMDAwMDAwMDRjNTYzOTIyPl0gX19hbGxvY19za2Ir
-MHg2ZS8weDIxMCBuZXQvY29yZS9za2J1ZmYuYzoxOTgNCj4gPiAgICAgIFs8MDAwMDAwMDBlYzg3
-YmZhMT5dIGFsbG9jX3NrYl9mY2xvbmUgaW5jbHVkZS9saW51eC9za2J1ZmYuaDoxMTA3DQo+ID4g
-W2lubGluZV0NCj4gPiAgICAgIFs8MDAwMDAwMDBlYzg3YmZhMT5dIHRpcGNfYnVmX2FjcXVpcmUr
-MHgyZi8weDgwIG5ldC90aXBjL21zZy5jOjY2DQo+ID4gICAgICBbPDAwMDAwMDAwZDE1MWVmODQ+
-XSB0aXBjX21zZ19jcmVhdGUrMHgzNy8weGUwIG5ldC90aXBjL21zZy5jOjk4DQo+ID4gICAgICBb
-PDAwMDAwMDAwOGJiNDM3YjA+XSB0aXBjX2dyb3VwX2NyZWF0ZV9ldmVudCsweGIzLzB4MWIwDQo+
-ID4gbmV0L3RpcGMvZ3JvdXAuYzo2NzkNCj4gPiAgICAgIFs8MDAwMDAwMDA5NDdiMWQwZj5dIHRp
-cGNfZ3JvdXBfcHJvdG9fcmN2KzB4NTY5LzB4NjQwDQo+ID4gbmV0L3RpcGMvZ3JvdXAuYzo3ODEN
-Cj4gPiAgICAgIFs8MDAwMDAwMDBiNzVhYjAzOT5dIHRpcGNfc2tfcHJvdG9fcmN2IG5ldC90aXBj
-L3NvY2tldC5jOjE5OTYNCj4gW2lubGluZV0NCj4gPiAgICAgIFs8MDAwMDAwMDBiNzVhYjAzOT5d
-IHRpcGNfc2tfZmlsdGVyX3JjdisweDlhYy8weGYyMA0KPiA+IG5ldC90aXBjL3NvY2tldC5jOjIx
-NjMNCj4gPiAgICAgIFs8MDAwMDAwMDAwZGFiN2E2Yz5dIHRpcGNfc2tfZW5xdWV1ZSBuZXQvdGlw
-Yy9zb2NrZXQuYzoyMjU1IFtpbmxpbmVdDQo+ID4gICAgICBbPDAwMDAwMDAwMGRhYjdhNmM+XSB0
-aXBjX3NrX3JjdisweDQ5NC8weDhhMA0KPiBuZXQvdGlwYy9zb2NrZXQuYzoyMzA2DQo+ID4gICAg
-ICBbPDAwMDAwMDAwMDIzYTdkZGQ+XSB0aXBjX25vZGVfeG1pdCsweDE5Ni8weDFmMA0KPiBuZXQv
-dGlwYy9ub2RlLmM6MTQ0Mg0KPiA+ICAgICAgWzwwMDAwMDAwMDMzN2RkOWViPl0gdGlwY19ub2Rl
-X3htaXRfc2tiIG5ldC90aXBjL25vZGUuYzoxNDkxDQo+IFtpbmxpbmVdDQo+ID4gICAgICBbPDAw
-MDAwMDAwMzM3ZGQ5ZWI+XSB0aXBjX25vZGVfZGlzdHJfeG1pdCsweDdkLzB4MTIwDQo+ID4gbmV0
-L3RpcGMvbm9kZS5jOjE1MDYNCj4gPiAgICAgIFs8MDAwMDAwMDBiNjM3NTE4Mj5dIHRpcGNfZ3Jv
-dXBfZGVsZXRlKzB4ZTYvMHgxMzANCj4gbmV0L3RpcGMvZ3JvdXAuYzoyMjQNCj4gPiAgICAgIFs8
-MDAwMDAwMDAwMzYxYmEyYj5dIHRpcGNfc2tfbGVhdmUrMHg1Ny8weGIwDQo+IG5ldC90aXBjL3Nv
-Y2tldC5jOjI5MjUNCj4gPiAgICAgIFs8MDAwMDAwMDA5ZGY5MDUwNT5dIHRpcGNfcmVsZWFzZSsw
-eDdiLzB4NWUwIG5ldC90aXBjL3NvY2tldC5jOjU4NA0KPiA+ICAgICAgWzwwMDAwMDAwMDlmMzE4
-OWRhPl0gX19zb2NrX3JlbGVhc2UrMHg0Yi8weGUwIG5ldC9zb2NrZXQuYzo2MDcNCj4gPiAgICAg
-IFs8MDAwMDAwMDBkMzU2OGVlMD5dIHNvY2tfY2xvc2UrMHgxYi8weDMwIG5ldC9zb2NrZXQuYzox
-Mjc5DQo+ID4gICAgICBbPDAwMDAwMDAwMjY2YTYyMTU+XSBfX2ZwdXQrMHhlZC8weDMwMCBmcy9m
-aWxlX3RhYmxlLmM6MjgwDQo+ID4NCj4gPg0KPiA+DQo+ID4gLS0tDQo+ID4gVGhpcyBidWcgaXMg
-Z2VuZXJhdGVkIGJ5IGEgYm90LiBJdCBtYXkgY29udGFpbiBlcnJvcnMuDQo+ID4gU2VlIGh0dHBz
-Oi8vcHJvdGVjdDIuZmlyZWV5ZS5jb20vdXJsP2s9NjQyNGExNDEtMzhhZTc0NTctNjQyNGUxZGEt
-DQo+IDg2MmYxNGE5MzY1ZS0NCj4gMjlkMjhkNGUzN2M5ZGU5NyZxPTEmdT1odHRwcyUzQSUyRiUy
-Rmdvby5nbCUyRnRwc21FSiBmb3IgbW9yZQ0KPiBpbmZvcm1hdGlvbiBhYm91dCBzeXpib3QuDQo+
-ID4gc3l6Ym90IGVuZ2luZWVycyBjYW4gYmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3Jv
-dXBzLmNvbS4NCj4gPg0KPiA+IHN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2YgdGhpcyBidWcgcmVw
-b3J0LiBTZWU6DQo+ID4gaHR0cHM6Ly9wcm90ZWN0Mi5maXJlZXllLmNvbS91cmw/az1lMzI2NmZl
-Ny1iZmFjYmFmMS1lMzI2MmY3Yy0NCj4gODYyZjE0YTkzNjVlLQ0KPiA4MGExNGRjMDk3ZjYxZGZl
-JnE9MSZ1PWh0dHBzJTNBJTJGJTJGZ29vLmdsJTJGdHBzbUVKJTIzc3RhdHVzDQo+IGZvciBob3cg
-dG8gY29tbXVuaWNhdGUgd2l0aCBzeXpib3QuDQo+ID4gc3l6Ym90IGNhbiB0ZXN0IHBhdGNoZXMg
-Zm9yIHRoaXMgYnVnLCBmb3IgZGV0YWlscyBzZWU6DQo+ID4gaHR0cHM6Ly9wcm90ZWN0Mi5maXJl
-ZXllLmNvbS91cmw/az0yNmUyZjFlOC03YTY4MjRmZS0yNmUyYjE3My0NCj4gODYyZjE0YTkNCj4g
-PiAzNjVlLQ0KPiBlNTY5ZWU5OGY4OTYyNWQ0JnE9MSZ1PWh0dHBzJTNBJTJGJTJGZ29vLmdsJTJG
-dHBzbUVKJTIzdGVzdGluZy0NCj4gcGENCj4gPiB0Y2hlcw0K
+Some older interconnect target modules need module internal clock
+toggling quirks to reset properly. We've been doing this in the
+platform code earlier, but need to be able to it directly in the
+ti-sysc driver when we no longer rely on on the platform code.
+
+Let's add reset handling for 1-wire, i2c and watchdog. Later on
+we can add more modules like msdi and dss as they get tested.
+For dra7 pcie, we should be able to just use the rstctrl reset
+driver when available.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+
+This is based on the following series I posted earlier:
+
+[PATCHv2 00/13] ti-sysc driver changes to drop custom hwmods property
+
+---
+ drivers/bus/ti-sysc.c                 | 129 +++++++++++++++++++++++++-
+ include/linux/platform_data/ti-sysc.h |   3 +
+ 2 files changed, 127 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -71,6 +71,9 @@ static const char * const clock_names[SYSC_MAX_CLOCKS] = {
+  * @name: name if available
+  * @revision: interconnect target module revision
+  * @needs_resume: runtime resume needed on resume from suspend
++ * @clk_enable_quirk: module specific clock enable quirk
++ * @clk_disable_quirk: module specific clock disable quirk
++ * @reset_done_quirk: module specific reset done quirk
+  */
+ struct sysc {
+ 	struct device *dev;
+@@ -94,6 +97,9 @@ struct sysc {
+ 	unsigned int child_needs_resume:1;
+ 	unsigned int disable_on_idle:1;
+ 	struct delayed_work idle_work;
++	void (*clk_enable_quirk)(struct sysc *sysc);
++	void (*clk_disable_quirk)(struct sysc *sysc);
++	void (*reset_done_quirk)(struct sysc *sysc);
+ };
+ 
+ static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
+@@ -760,8 +766,11 @@ static int sysc_ioremap(struct sysc *ddata)
+ 			    ddata->offsets[SYSC_SYSCONFIG],
+ 			    ddata->offsets[SYSC_SYSSTATUS]);
+ 
++		if (size < SZ_1K)
++			size = SZ_1K;
++
+ 		if ((size + sizeof(u32)) > ddata->module_size)
+-			return -EINVAL;
++			size = ddata->module_size;
+ 	}
+ 
+ 	ddata->module_va = devm_ioremap(ddata->dev,
+@@ -1234,6 +1243,22 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 		   SYSC_QUIRK_EXT_OPT_CLOCK | SYSC_QUIRK_NO_RESET_ON_INIT |
+ 		   SYSC_QUIRK_SWSUP_SIDLE),
+ 
++	/* Quirks that need to be set based on detected module */
++	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
++		SYSC_MODULE_QUIRK_HDQ1W),
++	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
++		   SYSC_MODULE_QUIRK_HDQ1W),
++	SYSC_QUIRK("i2c", 0, 0, 0x20, 0x10, 0x00000036, 0x000000ff,
++		   SYSC_MODULE_QUIRK_I2C),
++	SYSC_QUIRK("i2c", 0, 0, 0x20, 0x10, 0x0000003c, 0x000000ff,
++		   SYSC_MODULE_QUIRK_I2C),
++	SYSC_QUIRK("i2c", 0, 0, 0x20, 0x10, 0x00000040, 0x000000ff,
++		   SYSC_MODULE_QUIRK_I2C),
++	SYSC_QUIRK("i2c", 0, 0, 0x10, 0x90, 0x5040000a, 0xfffff0f0,
++		   SYSC_MODULE_QUIRK_I2C),
++	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
++		   SYSC_MODULE_QUIRK_WDT),
++
+ #ifdef DEBUG
+ 	SYSC_QUIRK("adc", 0, 0, 0x10, -1, 0x47300001, 0xffffffff, 0),
+ 	SYSC_QUIRK("atl", 0, 0, -1, -1, 0x0a070100, 0xffffffff, 0),
+@@ -1247,11 +1272,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 	SYSC_QUIRK("dwc3", 0, 0, 0x10, -1, 0x500a0200, 0xffffffff, 0),
+ 	SYSC_QUIRK("epwmss", 0, 0, 0x4, -1, 0x47400001, 0xffffffff, 0),
+ 	SYSC_QUIRK("gpu", 0, 0x1fc00, 0x1fc10, -1, 0, 0, 0),
+-	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff, 0),
+-	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff, 0),
+ 	SYSC_QUIRK("hsi", 0, 0, 0x10, 0x14, 0x50043101, 0xffffffff, 0),
+ 	SYSC_QUIRK("iss", 0, 0, 0x10, -1, 0x40000101, 0xffffffff, 0),
+-	SYSC_QUIRK("i2c", 0, 0, 0x10, 0x90, 0x5040000a, 0xfffff0f0, 0),
+ 	SYSC_QUIRK("lcdc", 0, 0, 0x54, -1, 0x4f201000, 0xffffffff, 0),
+ 	SYSC_QUIRK("mcasp", 0, 0, 0x4, -1, 0x44306302, 0xffffffff, 0),
+ 	SYSC_QUIRK("mcasp", 0, 0, 0x4, -1, 0x44307b02, 0xffffffff, 0),
+@@ -1287,7 +1309,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, -1, 0x50700101, 0xffffffff, 0),
+ 	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
+ 		   0xffffffff, 0),
+-	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0, 0),
+ 	SYSC_QUIRK("vfpe", 0, 0, 0x104, -1, 0x4d001200, 0xffffffff, 0),
+ #endif
+ };
+@@ -1360,6 +1381,94 @@ static void sysc_init_revision_quirks(struct sysc *ddata)
+ 	}
+ }
+ 
++/* 1-wire needs module's internal clocks enabled for reset */
++static void sysc_clk_enable_quirk_hdq1w(struct sysc *ddata)
++{
++	int offset = 0x0c;	/* HDQ_CTRL_STATUS */
++	u16 val;
++
++	val = sysc_read(ddata, offset);
++	val |= BIT(5);
++	sysc_write(ddata, offset, val);
++}
++
++/* I2C needs extra enable bit toggling for reset */
++static void sysc_clk_quirk_i2c(struct sysc *ddata, bool enable)
++{
++	int offset;
++	u16 val;
++
++	/* I2C_CON, omap2/3 is different from omap4 and later */
++	if ((ddata->revision & 0xffffff00) == 0x001f0000)
++		offset = 0x24;
++	else
++		offset = 0xa4;
++
++	/* I2C_EN */
++	val = sysc_read(ddata, offset);
++	if (enable)
++		val |= BIT(15);
++	else
++		val &= ~BIT(15);
++	sysc_write(ddata, offset, val);
++}
++
++static void sysc_clk_enable_quirk_i2c(struct sysc *ddata)
++{
++	sysc_clk_quirk_i2c(ddata, true);
++}
++
++static void sysc_clk_disable_quirk_i2c(struct sysc *ddata)
++{
++	sysc_clk_quirk_i2c(ddata, false);
++}
++
++/* Watchdog timer needs a disable sequence after reset */
++static void sysc_reset_done_quirk_wdt(struct sysc *ddata)
++{
++	int wps, spr, error;
++	u32 val;
++
++	wps = 0x34;
++	spr = 0x48;
++
++	sysc_write(ddata, spr, 0xaaaa);
++	error = readl_poll_timeout(ddata->module_va + wps, val,
++				   !(val & 0x10), 100,
++				   MAX_MODULE_SOFTRESET_WAIT);
++	if (error)
++		dev_warn(ddata->dev, "wdt disable spr failed\n");
++
++	sysc_write(ddata, wps, 0x5555);
++	error = readl_poll_timeout(ddata->module_va + wps, val,
++				   !(val & 0x10), 100,
++				   MAX_MODULE_SOFTRESET_WAIT);
++	if (error)
++		dev_warn(ddata->dev, "wdt disable wps failed\n");
++}
++
++static void sysc_init_module_quirks(struct sysc *ddata)
++{
++	if (ddata->legacy_mode || !ddata->name)
++		return;
++
++	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_HDQ1W) {
++		ddata->clk_enable_quirk = sysc_clk_enable_quirk_hdq1w;
++
++		return;
++	}
++
++	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_I2C) {
++		ddata->clk_enable_quirk = sysc_clk_enable_quirk_i2c;
++		ddata->clk_disable_quirk = sysc_clk_disable_quirk_i2c;
++
++		return;
++	}
++
++	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_WDT)
++		ddata->reset_done_quirk = sysc_reset_done_quirk_wdt;
++}
++
+ static int sysc_clockdomain_init(struct sysc *ddata)
+ {
+ 	struct ti_sysc_platform_data *pdata = dev_get_platdata(ddata->dev);
+@@ -1468,10 +1577,16 @@ static int sysc_reset(struct sysc *ddata)
+ 	else
+ 		syss_done = ddata->cfg.syss_mask;
+ 
++	if (ddata->clk_disable_quirk)
++		ddata->clk_disable_quirk(ddata);
++
+ 	sysc_val = sysc_read_sysconfig(ddata);
+ 	sysc_val |= sysc_mask;
+ 	sysc_write(ddata, sysc_offset, sysc_val);
+ 
++	if (ddata->clk_enable_quirk)
++		ddata->clk_enable_quirk(ddata);
++
+ 	/* Poll on reset status */
+ 	if (syss_offset >= 0) {
+ 		error = readx_poll_timeout(sysc_read_sysstatus, ddata, rstval,
+@@ -1485,6 +1600,9 @@ static int sysc_reset(struct sysc *ddata)
+ 					   100, MAX_MODULE_SOFTRESET_WAIT);
+ 	}
+ 
++	if (ddata->reset_done_quirk)
++		ddata->reset_done_quirk(ddata);
++
+ 	return error;
+ }
+ 
+@@ -1531,6 +1649,7 @@ static int sysc_init_module(struct sysc *ddata)
+ 
+ 	ddata->revision = sysc_read_revision(ddata);
+ 	sysc_init_revision_quirks(ddata);
++	sysc_init_module_quirks(ddata);
+ 
+ 	if (ddata->legacy_mode) {
+ 		error = sysc_legacy_init(ddata);
+diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
+--- a/include/linux/platform_data/ti-sysc.h
++++ b/include/linux/platform_data/ti-sysc.h
+@@ -47,6 +47,9 @@ struct sysc_regbits {
+ 	s8 emufree_shift;
+ };
+ 
++#define SYSC_MODULE_QUIRK_HDQ1W		BIT(17)
++#define SYSC_MODULE_QUIRK_I2C		BIT(16)
++#define SYSC_MODULE_QUIRK_WDT		BIT(15)
+ #define SYSS_QUIRK_RESETDONE_INVERTED	BIT(14)
+ #define SYSC_QUIRK_SWSUP_MSTANDBY	BIT(13)
+ #define SYSC_QUIRK_SWSUP_SIDLE_ACT	BIT(12)
+-- 
+2.21.0
