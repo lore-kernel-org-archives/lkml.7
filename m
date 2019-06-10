@@ -2,115 +2,155 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D793EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52395C468BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7EFE207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:12:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="d6t8jFSZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H1IZduQR"
+	by mail.kernel.org (Postfix) with ESMTP id 338232083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 01:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387405AbfFJBME (ORCPT
+        id S2387426AbfFJBNd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 21:12:04 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:43221 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725933AbfFJBMD (ORCPT
+        Sun, 9 Jun 2019 21:13:33 -0400
+Received: from mo-csw1116.securemx.jp ([210.130.202.158]:40462 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387401AbfFJBNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 21:12:03 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id D905444A;
-        Sun,  9 Jun 2019 21:12:01 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sun, 09 Jun 2019 21:12:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=fe120Davi0T3Sjl5YLfPWyocg7C
-        ao7t/LQjsjCRH0lU=; b=d6t8jFSZevacgPIZUzoP50IQXqsA55IR0OudGjTn3lm
-        hDUlRxV/3cdMiN4nLp5Z967BrAUt5Ud3jcA7VKV4lx1eBuAHiChgHM4+To+OoSON
-        r5b0ANqXHUGHxokQskqp9lFjIzn4wcEXdg5P/JSkAr3CqaoR6I94RTg2y7/oEr/i
-        Ai0G7tfZEsSIJId3QuZYdosvqpeK7VK1uYj2wbGW/xMGA4JAuoaVYAuUuK0rQruD
-        UxwU1d2NmigbgLJk2r5FHiZFck/h/yIhcrw2DWhIzO2/NE+P69n8A+Cq/fyg9+WZ
-        LTnwwr3c1EJ8VnbJH9wwcXQBqqgXHbrSJzM9j17CzPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fe120D
-        avi0T3Sjl5YLfPWyocg7Cao7t/LQjsjCRH0lU=; b=H1IZduQRvo0WIm/CU1Mz/i
-        7BudZwbDvx5M7oJe7sPwy9IY4kvjH/4aJPXE2+tGoZBkqN2pTN8TuozXtrcmgZDC
-        Nv/pvNwJP7fnu0mwjkL7+B3o0Tm3Wa9apgkUybGxqMURUppPrGBTM5PPTeJmWmDT
-        mCbMbMviuT0MOTrSQe49JPSG/u8mnmgNvD5niaFTOaT2bxYZg8GaaO0dXpJv4jDK
-        VoBdoBpTr/cCzzsuvH78W6sOh3jGYm90UfeVfLUvgTDMwp7QYNchdjTL11PbcFe3
-        i+0zOR2kxHfDVs/620EyZrWlu98muHaWDD+0MZmuO+b0TBwsnQyVe9Bi6cCJARHw
-        ==
-X-ME-Sender: <xms:YK79XNTKxStsUgsqyZBtk-QZzbz5HitfbyVxpCW6Qf5aRlKFiVwBPQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudehuddggedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
-    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
-    gsihhnrdgttgeqnecukfhppedvuddtrddvfedrfedrleenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:YK79XAmZQVccUpEAxclDJ-hf66vneQBtvQIiY88vdg7TheWrGXY-Sg>
-    <xmx:YK79XPbGGQWeuyPHG9hZccOyz3dudVlQJSpP9OSa6eodnt-3VZaVgw>
-    <xmx:YK79XCY1yyvMDSgBSOuqEzdQTfpTQB-qZzeD26N38MOJ-c6SbT2osg>
-    <xmx:Ya79XI18SokR_XETjHXhVy01npYJIOJ8i5qlPvo1WqHwx4wmPMHbUw>
-Received: from localhost (unknown [210.23.3.9])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 52E768005C;
-        Sun,  9 Jun 2019 21:11:59 -0400 (EDT)
-Date:   Mon, 10 Jun 2019 11:11:55 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Neil Brown <neilb@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: filesystems: vfs: Render method descriptions
-Message-ID: <20190610011155.GB2469@caerus>
-References: <20190604002656.30925-1-tobin@kernel.org>
- <20190606094628.0e8775f7@lwn.net>
+        Sun, 9 Jun 2019 21:13:33 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1116) id x5A1DLZS010038; Mon, 10 Jun 2019 10:13:22 +0900
+X-Iguazu-Qid: 2wHHQt19ee7x6MxTMp
+X-Iguazu-QSIG: v=2; s=0; t=1560129201; q=2wHHQt19ee7x6MxTMp; m=PkVytovximZf+X04eLdOmqmOwtpqG1GewyRvU/NImc8=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1110) id x5A1DKDP038143;
+        Mon, 10 Jun 2019 10:13:21 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id x5A1DK5b006560;
+        Mon, 10 Jun 2019 10:13:20 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id x5A1DJYx025356;
+        Mon, 10 Jun 2019 10:13:20 +0900
+From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     <nobuhiro1.iwamatsu@toshiba.co.jp>, <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <alan.maguire@oracle.com>, <dsahern@gmail.com>,
+        <davem@davemloft.net>
+Subject: RE: [PATCH 4.14 03/35] neighbor: Call __ipv4_neigh_lookup_noref in
+ neigh_xmit
+Thread-Topic: [PATCH 4.14 03/35] neighbor: Call __ipv4_neigh_lookup_noref in
+ neigh_xmit
+Thread-Index: AQHVHuNu8OzoZhxZwE2KmkrEWxzIOaaUFMqAgAAAXmA=
+Date:   Mon, 10 Jun 2019 01:13:16 +0000
+X-TSB-HOP: ON
+Message-ID: <OSBPR01MB418448C373F7E3F2D4BCFE0592130@OSBPR01MB4184.jpnprd01.prod.outlook.com>
+References: <20190609164125.377368385@linuxfoundation.org>
+ <20190609164125.756810906@linuxfoundation.org>
+ <20190610011024.utn5fft7nocabqxb@toshiba.co.jp>
+In-Reply-To: <20190610011024.utn5fft7nocabqxb@toshiba.co.jp>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nobuhiro1.iwamatsu@toshiba.co.jp; 
+x-originating-ip: [103.91.184.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 44e7b07e-efaa-4a66-c5bb-08d6ed40d150
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:OSBPR01MB2454;
+x-ms-traffictypediagnostic: OSBPR01MB2454:
+x-ld-processed: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f,ExtAddr
+x-microsoft-antispam-prvs: <OSBPR01MB2454C2B4B944B62129ED26CA92130@OSBPR01MB2454.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:576;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(396003)(136003)(39860400002)(13464003)(189003)(199004)(8936002)(256004)(110136005)(66556008)(64756008)(33656002)(229853002)(54906003)(66476007)(102836004)(14444005)(76176011)(66946007)(81156014)(305945005)(99286004)(14454004)(66446008)(73956011)(2906002)(81166006)(7696005)(8676002)(7736002)(53546011)(55016002)(53936002)(6246003)(6436002)(74482002)(486006)(6506007)(4326008)(476003)(74316002)(9686003)(68736007)(52536014)(3846002)(66066001)(25786009)(5660300002)(86362001)(6116002)(478600001)(46636005)(76116006)(186003)(446003)(11346002)(26005)(71190400001)(316002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:OSBPR01MB2454;H:OSBPR01MB4184.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toshiba.co.jp does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TkKm08qU9iFw+Yi5RUB+fFrdc52Buw7G0Uhmzzt5HGCjF1Y4fq+xxHEstl8ROQO4ONNFmt5XuoPL89ySwV5y1+LZBx0PjNNdGjVfQL5MfDSAEzNjIbSTID7Blq4hOAOKkvvJT1NIWUwiYd/UnT0pNsVRbZDf1a7q36erbZ5m/ezmkXbQTlimXYOZXJNcAUlo2+Lq1S2XUBrhiLZ6QVvDFv8h4wVUDPUYSo2J5DsDcRmfMfNzNxAgcTcMLdyq5Pe7HYwsljtvKCe9ouJjFsGL4Y/BBNxxtgydCIsCiXqjJhnNPAB4nrW3YBrw8vDRu7iuHlhHh807AO1d8lEhdsZ4BubEg2nKFiyZO/B96Kl9h1QeUVK/nyEt+9AcW0LE3mq40iCG0mpSsx+FUG6GAJVxeWx9TkMvlOOOFWtfXKLqO7w=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606094628.0e8775f7@lwn.net>
-X-Mailer: Mutt 1.9.4 (2018-02-28)
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44e7b07e-efaa-4a66-c5bb-08d6ed40d150
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 01:13:16.3626
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nobuhiro1.iwamatsu@toshiba.co.jp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2454
+MSSCP.TransferMailToMossAgent: 103
+X-OriginatorOrg: toshiba.co.jp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 09:46:28AM -0600, Jonathan Corbet wrote:
-> On Tue,  4 Jun 2019 10:26:56 +1000
-> "Tobin C. Harding" <tobin@kernel.org> wrote:
+Hi again.
+
+> -----Original Message-----
+> From: stable-owner@vger.kernel.org
+> [mailto:stable-owner@vger.kernel.org] On Behalf Of Nobuhiro Iwamatsu
+> Sent: Monday, June 10, 2019 10:10 AM
+> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-kernel@vger.kernel.org; stable@vger.kernel.org; Alan Maguire
+> <alan.maguire@oracle.com>; David Ahern <dsahern@gmail.com>; David S.
+> Miller <davem@davemloft.net>
+> Subject: Re: [PATCH 4.14 03/35] neighbor: Call __ipv4_neigh_lookup_noref
+> in neigh_xmit
 > 
-> > Currently vfs.rst does not render well into HTML the method descriptions
-> > for VFS data structures.  We can improve the HTML output by putting the
-> > description string on a new line following the method name.
-> > 
-> > Suggested-by: Jonathan Corbet <corbet@lwn.net>
-> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> Hi,
+> 
+> On Sun, Jun 09, 2019 at 06:42:09PM +0200, Greg Kroah-Hartman wrote:
+> > From: David Ahern <dsahern@gmail.com>
+> >
+> > [ Upstream commit 4b2a2bfeb3f056461a90bd621e8bd7d03fa47f60 ]
+> >
+> > Commit cd9ff4de0107 changed the key for IFF_POINTOPOINT devices to
+> > INADDR_ANY but neigh_xmit which is used for MPLS encapsulations was
+> > not updated to use the altered key. The result is that every packet
+> Tx
+> > does a lookup on the gateway address which does not find an entry, a
+> > new one is created only to find the existing one in the table right
+> > before the insert since arp_constructor was updated to reset the
+> > primary key. This is seen in the allocs and destroys counters:
+> >     ip -s -4 ntable show | head -10 | grep alloc
+> >
+> > which increase for each packet showing the unnecessary overhread.
+> >
+> > Fix by having neigh_xmit use __ipv4_neigh_lookup_noref for
+> NEIGH_ARP_TABLE.
+> >
+> > Fixes: cd9ff4de0107 ("ipv4: Make neigh lookup keys for
+> > loopback/point-to-point devices be INADDR_ANY")
+> > Reported-by: Alan Maguire <alan.maguire@oracle.com>
+> > Signed-off-by: David Ahern <dsahern@gmail.com>
+> > Tested-by: Alan Maguire <alan.maguire@oracle.com>
+> > Signed-off-by: David S. Miller <davem@davemloft.net>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > > ---
-> > 
-> > Jon,
-> > 
-> > As discussed on LKML; this patch applies on top of the series
-> > 
-> > 	[PATCH v4 0/9] docs: Convert VFS doc to RST
-> > 
-> > If it does not apply cleanly to your branch please feel free to ask me
-> > to fix it.
 > 
-> There was one merge conflict, but nothing too serious.  I've applied it,
-> and things look a lot better - thanks!
+> This commit also requires the following commit:
+> 
+> commit 9b3040a6aafd7898ece7fc7efcbca71e42aa8069
+> Author: David Ahern <dsahern@gmail.com>
+> Date:   Sun May 5 11:16:20 2019 -0700
+> 
+>     ipv4: Define __ipv4_neigh_lookup_noref when CONFIG_INET is disabled
+> 
+>     Define __ipv4_neigh_lookup_noref to return NULL when CONFIG_INET is
+> disabled.
+> 
+>     Fixes: 4b2a2bfeb3f0 ("neighbor: Call __ipv4_neigh_lookup_noref in
+> neigh_xmit")
+>     Reported-by: kbuild test robot <lkp@intel.com>
+>     Signed-off-by: David Ahern <dsahern@gmail.com>
+>     Signed-off-by: David S. Miller <davem@davemloft.net>
+> 
+> And this is also necessary for 4.4.y, 4.14.y, 4.19.y and 5.1.y.
 
-Awesome, cheers mate.
+4.4.y, 4.9.y, 4.19.y and 5.1.y.
 
-	Tobin
+> Please apply this commit.
+> 
+Best regards,
+  Nobuhiro
