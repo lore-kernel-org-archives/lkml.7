@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FB8C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92496C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D6D206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FCEE206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388653AbfFJIR2 (ORCPT
+        id S2388673AbfFJIRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:17:28 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37040 "EHLO inva020.nxp.com"
+        Mon, 10 Jun 2019 04:17:41 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37086 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388252AbfFJIQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:16:30 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B062B1A07AF;
-        Mon, 10 Jun 2019 10:16:28 +0200 (CEST)
+        id S2387825AbfFJIQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:23 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 60DA7200747;
+        Mon, 10 Jun 2019 10:16:21 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AF5EB1A07AC;
-        Mon, 10 Jun 2019 10:16:20 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F316200738;
+        Mon, 10 Jun 2019 10:16:13 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A6558402DD;
-        Mon, 10 Jun 2019 16:16:10 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BCD404030E;
+        Mon, 10 Jun 2019 16:16:03 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
@@ -37,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 05/15] dmaengine: imx-sdma: add mcu_2_ecspi script
-Date:   Mon, 10 Jun 2019 16:17:43 +0800
-Message-Id: <20190610081753.11422-6-yibin.gong@nxp.com>
+Subject: [PATCH v5 01/15] Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+Date:   Mon, 10 Jun 2019 16:17:39 +0800
+Message-Id: <20190610081753.11422-2-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 References: <20190610081753.11422-1-yibin.gong@nxp.com>
@@ -51,41 +51,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Add mcu_2_ecspi script to fix ecspi errata ERR009165.
+  There are two ways for SDMA accessing SPBA devices: one is SDMA->AIPS
+->SPBA(masterA port), another is SDMA->SPBA(masterC port). Please refer
+to the 'Figure 58-1. i.MX 6Dual/6Quad SPBA connectivity' of i.mx6DQ
+Reference Manual. SDMA provide the corresponding app_2_mcu/mcu_2_app and
+shp_2_mcu/mcu_2_shp script for such two options. So both AIPS and SPBA
+scripts should keep the same behaviour, the issue only caught in AIPS
+script sounds not solide.
+  The issue is more likely as the ecspi errata
+ERR009165(http://www.nxp.com/docs/en/errata/IMX6DQCE.pdf):
+eCSPI: TXFIFO empty flag glitch can cause the current FIFO transfer to
+       be sent twice
+So revert commit 'df07101e1c4a' firstly.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/imx-sdma.c                     | 3 +++
- include/linux/platform_data/dma-imx-sdma.h | 1 +
- 2 files changed, 4 insertions(+)
+ arch/arm/boot/dts/imx6q.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index dbd1dcd..61af656 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -924,6 +924,9 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
- 		emi_2_per = sdma->script_addrs->mcu_2_ata_addr;
- 		break;
- 	case IMX_DMATYPE_CSPI:
-+		per_2_emi = sdma->script_addrs->app_2_mcu_addr;
-+		emi_2_per = sdma->script_addrs->mcu_2_ecspi_addr;
-+		break;
- 	case IMX_DMATYPE_EXT:
- 	case IMX_DMATYPE_SSI:
- 	case IMX_DMATYPE_SAI:
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 6eaa53c..f794fee 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -51,6 +51,7 @@ struct sdma_script_start_addrs {
- 	/* End of v2 array */
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
-+	s32 mcu_2_ecspi_addr;
- 	/* End of v3 array */
- };
- 
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index d038f41..7175898 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -172,7 +172,7 @@
+ 					clocks = <&clks IMX6Q_CLK_ECSPI5>,
+ 						 <&clks IMX6Q_CLK_ECSPI5>;
+ 					clock-names = "ipg", "per";
+-					dmas = <&sdma 11 8 1>, <&sdma 12 8 2>;
++					dmas = <&sdma 11 7 1>, <&sdma 12 7 2>;
+ 					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
 -- 
 2.7.4
 
