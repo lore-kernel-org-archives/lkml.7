@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA04C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FB8C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C8A20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D6D206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388638AbfFJIRU (ORCPT
+        id S2388653AbfFJIR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:17:20 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37554 "EHLO inva021.nxp.com"
+        Mon, 10 Jun 2019 04:17:28 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37040 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388439AbfFJIQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:16:36 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1D216200741;
-        Mon, 10 Jun 2019 10:16:34 +0200 (CEST)
+        id S2388252AbfFJIQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:30 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B062B1A07AF;
+        Mon, 10 Jun 2019 10:16:28 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1A99520072F;
-        Mon, 10 Jun 2019 10:16:26 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AF5EB1A07AC;
+        Mon, 10 Jun 2019 10:16:20 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D330540323;
-        Mon, 10 Jun 2019 16:16:15 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A6558402DD;
+        Mon, 10 Jun 2019 16:16:10 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
@@ -37,9 +37,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 08/15] spi: imx: add new i.mx6ul compatible name in binding doc
-Date:   Mon, 10 Jun 2019 16:17:46 +0800
-Message-Id: <20190610081753.11422-9-yibin.gong@nxp.com>
+Subject: [PATCH v5 05/15] dmaengine: imx-sdma: add mcu_2_ecspi script
+Date:   Mon, 10 Jun 2019 16:17:43 +0800
+Message-Id: <20190610081753.11422-6-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 References: <20190610081753.11422-1-yibin.gong@nxp.com>
@@ -51,27 +51,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-ERR009165 fixed from i.mx6ul, add its compatible name in binding
-doc.
+Add mcu_2_ecspi script to fix ecspi errata ERR009165.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/imx-sdma.c                     | 3 +++
+ include/linux/platform_data/dma-imx-sdma.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 2d32641..b3d02a3 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -10,6 +10,7 @@ Required properties:
-   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
-   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
-   - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
-+  - "fsl,imx6ul-ecspi" for SPI compatible with the one integrated on i.MX6UL and later Soc
-   - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8M
- - reg : Offset and length of the register set for the device
- - interrupts : Should contain CSPI/eCSPI interrupt
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index dbd1dcd..61af656 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -924,6 +924,9 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+ 		emi_2_per = sdma->script_addrs->mcu_2_ata_addr;
+ 		break;
+ 	case IMX_DMATYPE_CSPI:
++		per_2_emi = sdma->script_addrs->app_2_mcu_addr;
++		emi_2_per = sdma->script_addrs->mcu_2_ecspi_addr;
++		break;
+ 	case IMX_DMATYPE_EXT:
+ 	case IMX_DMATYPE_SSI:
+ 	case IMX_DMATYPE_SAI:
+diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+index 6eaa53c..f794fee 100644
+--- a/include/linux/platform_data/dma-imx-sdma.h
++++ b/include/linux/platform_data/dma-imx-sdma.h
+@@ -51,6 +51,7 @@ struct sdma_script_start_addrs {
+ 	/* End of v2 array */
+ 	s32 zcanfd_2_mcu_addr;
+ 	s32 zqspi_2_mcu_addr;
++	s32 mcu_2_ecspi_addr;
+ 	/* End of v3 array */
+ };
+ 
 -- 
 2.7.4
 
