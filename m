@@ -2,100 +2,115 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E659FC31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC5CC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C747520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38D2207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:11:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IY7mJsgQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbfFJRLR (ORCPT
+        id S2387637AbfFJRL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:11:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34636 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbfFJRLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:11:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D4E40C18B2DB;
-        Mon, 10 Jun 2019 17:11:12 +0000 (UTC)
-Received: from flask (unknown [10.43.2.83])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D77026061B;
-        Mon, 10 Jun 2019 17:11:10 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Mon, 10 Jun 2019 19:11:10 +0200
-Date:   Mon, 10 Jun 2019 19:11:10 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v2 1/3] KVM: LAPIC: Make lapic timer unpinned when timer
- is injected by posted-interrupt
-Message-ID: <20190610171110.GB8389@flask>
-References: <1559799086-13912-1-git-send-email-wanpengli@tencent.com>
- <1559799086-13912-2-git-send-email-wanpengli@tencent.com>
+        Mon, 10 Jun 2019 13:11:26 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44254 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfFJRLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:11:24 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHBCWa121338;
+        Mon, 10 Jun 2019 12:11:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560186672;
+        bh=t38w1L4mrxYXXMjDQM1becdv+NFut23PDyS5X30wChs=;
+        h=From:To:CC:Subject:Date;
+        b=IY7mJsgQmMZXyAx1hLY3wQu261gSm79u4CiTJ53uSmXqLjbf7invQW++CCrFO2mb7
+         V3Ag3YM3RSQuMRUJmbTfgRAYLvLu9YCWbjTDjb2g9UXuZTI1p4doIEb1128wCPwOh/
+         RgT+mKi7stL9fx7C4U/xUt+07bLYEVs1JPf9DCb4=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHBCiO079481
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Jun 2019 12:11:12 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
+ Jun 2019 12:11:11 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 10 Jun 2019 12:11:11 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHBAaL066346;
+        Mon, 10 Jun 2019 12:11:11 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Russell King <rmk@arm.linux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH-next 00/20]  gpio: gpio-omap: set of fixes and big clean-up
+Date:   Mon, 10 Jun 2019 20:10:43 +0300
+Message-ID: <20190610171103.30903-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1559799086-13912-2-git-send-email-wanpengli@tencent.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 10 Jun 2019 17:11:12 +0000 (UTC)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-06-06 13:31+0800, Wanpeng Li:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Make lapic timer unpinned when timer is injected by posted-interrupt,
-> the emulated timer can be offload to the housekeeping cpus.
-> 
-> The host admin should fine tuned, e.g. dedicated instances scenario 
-> w/ nohz_full cover the pCPUs which vCPUs resident, several pCPUs 
-> surplus for housekeeping, disable mwait/hlt/pause vmexits to occupy 
-> the pCPUs, fortunately preemption timer is disabled after mwait is 
-> exposed to guest which makes emulated timer offload can be possible. 
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c            | 20 ++++++++++++++++----
->  arch/x86/kvm/x86.c              |  5 +++++
->  arch/x86/kvm/x86.h              |  2 ++
->  include/linux/sched/isolation.h |  2 ++
->  kernel/sched/isolation.c        |  6 ++++++
->  5 files changed, 31 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index fcf42a3..09b7387 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -127,6 +127,12 @@ static inline u32 kvm_x2apic_id(struct kvm_lapic *apic)
->  	return apic->vcpu->vcpu_id;
->  }
->  
-> +static inline bool posted_interrupt_inject_timer_enabled(struct kvm_vcpu *vcpu)
-> +{
-> +	return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
-> +		kvm_mwait_in_guest(vcpu->kvm);
+Hi Linus, Russell, Tony, All,
 
-I'm torn about the mwait dependency.  It covers a lot of the targeted
-user base, but the relation is convoluted and not fitting perfectly.
+This series contains set of patches from Russell King which were circulated
+internally for quite some time already and I fill it's reasonable to move
+future discussion upstream (and also avoid rebasing).
+Fisrt two patches are fixes and the rest are big, great clean up
+from Russell King.
 
-What do you think about making posted_interrupt_inject_timer_enabled()
-just
+Personally, I like this clean up and refactoring very much and don't want
+it to be lost.
 
-	pi_inject_timer && kvm_vcpu_apicv_active(vcpu)
+Code can be found at:
+ git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
+branch:
+ lkml-next-gpio-clean-up
 
-and disarming the vmx preemption timer when
-posted_interrupt_inject_timer_enabled(), just like we do with mwait now?
+Russell King (20):
+  gpio: gpio-omap: ensure irq is enabled before wakeup
+  gpio: gpio-omap: fix lack of irqstatus_raw0 for OMAP4
+  gpio: gpio-omap: remove remainder of list management
+  gpio: gpio-omap: clean up edge interrupt handling
+  gpio: gpio-omap: remove irq_ack method
+  gpio: gpio-omap: move omap_gpio_request() and omap_gpio_free()
+  gpio: gpio-omap: simplify omap_gpio_get_direction()
+  gpio: gpio-omap: simplify get() method
+  gpio: gpio-omap: simplify get_multiple()
+  gpio: gpio-omap: simplify set_multiple()
+  gpio: gpio-omap: simplify bank->level_mask
+  gpio: gpio-omap: simplify read-modify-write
+  gpio: gpio-omap: simplify omap_toggle_gpio_edge_triggering()
+  gpio: gpio-omap: simplify omap_set_gpio_irqenable()
+  gpio: gpio-omap: remove dataout variation in context handling
+  gpio: gpio-omap: clean up omap_gpio_restore_context()
+  gpio: gpio-omap: constify register tables
+  gpio: gpio-omap: clean up wakeup handling
+  gpio: gpio-omap: irq_startup() must not return error codes
+  gpio: gpio-omap: clean up register access in omap2_set_gpio_debounce()
 
-Thanks.
+ drivers/gpio/gpio-omap.c                | 497 ++++++++----------------
+ include/linux/platform_data/gpio-omap.h |   2 +-
+ 2 files changed, 161 insertions(+), 338 deletions(-)
+
+-- 
+2.17.1
+
