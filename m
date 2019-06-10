@@ -2,123 +2,180 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC39C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFB2C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25AD2173B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E6E20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V/8aJ9Bo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CA/9jjUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390814AbfFJXwF (ORCPT
+        id S2390842AbfFJXwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 19:52:05 -0400
-Received: from mail-oi1-f201.google.com ([209.85.167.201]:52551 "EHLO
-        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390568AbfFJXwE (ORCPT
+        Mon, 10 Jun 2019 19:52:08 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44890 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390682AbfFJXwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 19:52:04 -0400
-Received: by mail-oi1-f201.google.com with SMTP id y81so3392868oig.19
+        Mon, 10 Jun 2019 19:52:05 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t7so1655130plr.11
         for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=M35jpHh+HUdAc93UKOjDO7JbyHiHSckhQH2gYDGobXY=;
-        b=V/8aJ9BoljeksjjbvJVkvok+M4cu/Zi4V0ZnLJks3J17Tx2XIcaTwiX2OC2jFldJme
-         KtkOvG/qkTOvKgG2G4oUhsML/44UixS0oT25mPxx6sNem5IhlTl9fXvMHG3FeDtzuh6+
-         i5DJbsd1R1JO0xdAtlSwPayiik4d7p211BflfA2sTdbuizialJPgbaXXaCVmmQyVcQvx
-         /zkGhwsZYFcDGZJQ05AMGyhdh6EZEVMIoq+/8ujnk8LODnw1l8q9MC2zgSZ1/H9AuOfC
-         vwCVF8fqu/yTnwv7wJAWEtxrUpxU5ldhDJZq7B95WXQK+9nRo53DeEdaPqFbZKUCTgi+
-         danQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zTMxpEEXAhPalCGk2uwvI4Mw2/TbyDqYYFDJpjeMgJM=;
+        b=CA/9jjUGtQ1g8jH3eI7LaH1zTRGcBGM6SIXNKdkqtIKxVMJ52CM8PTouVpZI532u8j
+         ujrtQ/dbZ8tEkdej07Kn9Lf2dtpz5B6iMdvzCi0kZHyDAN65FbQPSY2W1MdE62/VJNFD
+         DokqiXe3WIqy3Tj6Zsjmbq181/8BklVk2IFTM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=M35jpHh+HUdAc93UKOjDO7JbyHiHSckhQH2gYDGobXY=;
-        b=gIGTYXKirNYxr5YXrIA2Psqae/NXbdHDLpX9aTvmM+JwCmKRYrPCOrx3Hh03uUTYSI
-         jLF4roqA156Mu27cYd/EaPBb8v81yKz/Hm7WnZTY9zV+GD8Q9bjwMmwpn0IsrSwmxId6
-         yd2Ujk19QrpIvxgabpbkNgPvElakvr/eGYpXvLGELpA/BwwIYcyoyKWrx3xtun2+xHom
-         K+dDcCGUC4eqp1i+ZX5gJUG75eBPIEZt3DJKijOCptxBgIzKTZaiCyfciKDVY50fFEcN
-         YclWq5154+FPRDX1Kt29basP411eEJS74ZhU/nc0fv7PfVarYoHgDoU7Gtsbck1Yj5Ho
-         xlbw==
-X-Gm-Message-State: APjAAAX6fupHdL0jKq6TmZFL12oq57IsYSNatqFTiPY+tMIQ8HYBoFxL
-        fw3mxyLUNpxWqDnpLM2WSi62krYbOWoRqiBbwQ0e+1VaCHjpAGq+l4BPRBO8lTchYIzW78e87pP
-        F554WTpuCUnscOH7cIF/hkW7IYfgUjLKRd/aLi177WGWAHOznkRlx2AVCQUZGieLdHos=
-X-Google-Smtp-Source: APXvYqz5HVmvYAuUjwPj5rFsB8gNIYhrw9pY5CGqSimzEyfTZABC92Z+V648M/PgUJEFOqt/y8mKBWL+1g==
-X-Received: by 2002:aca:f4ce:: with SMTP id s197mr14299094oih.45.1560210723679;
- Mon, 10 Jun 2019 16:52:03 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 16:51:58 -0700
-Message-Id: <20190610235201.145457-1-fengc@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [RESEND PATCH v3 0/3] Improve the dma-buf tracking
-From:   Chenbo Feng <fengc@google.com>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        --validate@google.com
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zTMxpEEXAhPalCGk2uwvI4Mw2/TbyDqYYFDJpjeMgJM=;
+        b=k3sq9AuYAUxay7eiLTQVX+JAFclVi5HWAmSelofTaERc3OYPHWfVNH3oHdeuIEOGEn
+         jTmGH/KDi0TyiLU2kVnmmFYObJ4NKjuwCQH1ydGj9OU/UEcaBV0XEnV+ooRvOFboJkzS
+         X2s97rn+kFbbEYosa3iehHvUgIzFH6tWI8lJa8tc9Zh+Unkc7XldgcTBvjYo9vPItovi
+         fcm7U/JpHx8PRRYN90A4w7rJOSrCRw9VBfJT5xXPnLe9Gm1HGilAchSp9OxHSHFXPpqE
+         lUooJPGZdIDLYWmo/IyiKUnaHjVZVD9UVd2fAX0RPxS3c8LNPl0uo9GnkvzN/IIEKXgy
+         Bv+g==
+X-Gm-Message-State: APjAAAXTE8fDXt+QigUKGXMXI4wWglKsO8JYY2qwPJTOR1GQft/UqPjS
+        paC7i9rLf5IKP63cJRpSFKcQlA==
+X-Google-Smtp-Source: APXvYqwEq2Riap96orfEJ5J7t1DMOxlcSqT8vZ+0LAjMb9tv27xDvdsQ7kXG4J9ZyFg707prgfvnQg==
+X-Received: by 2002:a17:902:a708:: with SMTP id w8mr69255143plq.162.1560210724170;
+        Mon, 10 Jun 2019 16:52:04 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y4sm11934800pgc.85.2019.06.10.16.52.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 16:52:03 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 16:52:02 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Garnier <thgarnie@chromium.org>
+Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
+        Thomas Garnier <thgarnie@google.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 08/12] x86/acpi: Adapt assembly for PIE support
+Message-ID: <201906101652.CA88F8F@keescook>
+References: <20190520231948.49693-1-thgarnie@chromium.org>
+ <20190520231948.49693-9-thgarnie@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520231948.49693-9-thgarnie@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, all dma-bufs share the same anonymous inode. While we can count
-how many dma-buf fds or mappings a process has, we can't get the size of
-the backing buffers or tell if two entries point to the same dma-buf. And
-in debugfs, we can get a per-buffer breakdown of size and reference count,
-but can't tell which processes are actually holding the references to each
-buffer.
+On Mon, May 20, 2019 at 04:19:33PM -0700, Thomas Garnier wrote:
+> From: Thomas Garnier <thgarnie@google.com>
+> 
+> Change the assembly code to use only relative references of symbols for the
+> kernel to be PIE compatible.
+> 
+> Position Independent Executable (PIE) support will allow to extend the
+> KASLR randomization range below 0xffffffff80000000.
+> 
+> Signed-off-by: Thomas Garnier <thgarnie@google.com>
 
-To resolve the issue above and provide better method for userspace to track
-the dma-buf usage across different processes, the following changes are
-proposed in dma-buf kernel side. First of all, replace the singleton inode
-inside the dma-buf subsystem with a mini-filesystem, and assign each
-dma-buf a unique inode out of this filesystem.  With this change, calling
-stat(2) on each entry gives the caller a unique ID (st_ino), the buffer's
-size (st_size), and even the number of pages assigned to each dma-buffer.
-Secoundly, add the inode information to /sys/kernel/debug/dma_buf/bufinfo
-so in the case where a buffer is mmap()ed into a process=E2=80=99s address =
-space
-but all remaining fds have been closed, we can still get the dma-buf
-information and try to accociate it with the process by searching the
-proc/pid/maps and looking for the corresponding inode number exposed in
-dma-buf debug fs. Thirdly, created an ioctl to assign names to dma-bufs
-which lets userspace assign short names (e.g., "CAMERA") to buffers. This
-information can be extremely helpful for tracking and accounting shared
-buffers based on their usage and original purpose. Last but not least, add
-dma-buf information to /proc/pid/fdinfo by adding a show_fdinfo() handler
-to dma_buf_file_operations. The handler will print the file_count and name
-of each buffer.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Change in v2:
-* Add a check to prevent changing dma-buf name when it is attached to
-  devices.
-* Fixed some compile warnings
+-Kees
 
-Change in v3:
-* Removed the GET_DMA_BUF_NAME ioctls, add the dma_buf pointer to dentry
-  d_fsdata so the name can be displayed in proc/pid/maps and
-  proc/pid/map_files.
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  arch/x86/kernel/acpi/wakeup_64.S | 31 ++++++++++++++++---------------
+>  1 file changed, 16 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
+> index 510fa12aab73..e080e943e295 100644
+> --- a/arch/x86/kernel/acpi/wakeup_64.S
+> +++ b/arch/x86/kernel/acpi/wakeup_64.S
+> @@ -14,7 +14,7 @@
+>  	 * Hooray, we are in Long 64-bit mode (but still running in low memory)
+>  	 */
+>  ENTRY(wakeup_long64)
+> -	movq	saved_magic, %rax
+> +	movq	saved_magic(%rip), %rax
+>  	movq	$0x123456789abcdef0, %rdx
+>  	cmpq	%rdx, %rax
+>  	jne	bogus_64_magic
+> @@ -25,14 +25,14 @@ ENTRY(wakeup_long64)
+>  	movw	%ax, %es
+>  	movw	%ax, %fs
+>  	movw	%ax, %gs
+> -	movq	saved_rsp, %rsp
+> +	movq	saved_rsp(%rip), %rsp
+>  
+> -	movq	saved_rbx, %rbx
+> -	movq	saved_rdi, %rdi
+> -	movq	saved_rsi, %rsi
+> -	movq	saved_rbp, %rbp
+> +	movq	saved_rbx(%rip), %rbx
+> +	movq	saved_rdi(%rip), %rdi
+> +	movq	saved_rsi(%rip), %rsi
+> +	movq	saved_rbp(%rip), %rbp
+>  
+> -	movq	saved_rip, %rax
+> +	movq	saved_rip(%rip), %rax
+>  	jmp	*%rax
+>  ENDPROC(wakeup_long64)
+>  
+> @@ -45,7 +45,7 @@ ENTRY(do_suspend_lowlevel)
+>  	xorl	%eax, %eax
+>  	call	save_processor_state
+>  
+> -	movq	$saved_context, %rax
+> +	leaq	saved_context(%rip), %rax
+>  	movq	%rsp, pt_regs_sp(%rax)
+>  	movq	%rbp, pt_regs_bp(%rax)
+>  	movq	%rsi, pt_regs_si(%rax)
+> @@ -64,13 +64,14 @@ ENTRY(do_suspend_lowlevel)
+>  	pushfq
+>  	popq	pt_regs_flags(%rax)
+>  
+> -	movq	$.Lresume_point, saved_rip(%rip)
+> +	leaq	.Lresume_point(%rip), %rax
+> +	movq	%rax, saved_rip(%rip)
+>  
+> -	movq	%rsp, saved_rsp
+> -	movq	%rbp, saved_rbp
+> -	movq	%rbx, saved_rbx
+> -	movq	%rdi, saved_rdi
+> -	movq	%rsi, saved_rsi
+> +	movq	%rsp, saved_rsp(%rip)
+> +	movq	%rbp, saved_rbp(%rip)
+> +	movq	%rbx, saved_rbx(%rip)
+> +	movq	%rdi, saved_rdi(%rip)
+> +	movq	%rsi, saved_rsi(%rip)
+>  
+>  	addq	$8, %rsp
+>  	movl	$3, %edi
+> @@ -82,7 +83,7 @@ ENTRY(do_suspend_lowlevel)
+>  	.align 4
+>  .Lresume_point:
+>  	/* We don't restore %rax, it must be 0 anyway */
+> -	movq	$saved_context, %rax
+> +	leaq	saved_context(%rip), %rax
+>  	movq	saved_context_cr4(%rax), %rbx
+>  	movq	%rbx, %cr4
+>  	movq	saved_context_cr3(%rax), %rbx
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
 
-Greg Hackmann (3):
-  dma-buf: give each buffer a full-fledged inode
-  dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
-  dma-buf: add show_fdinfo handler
-
- drivers/dma-buf/dma-buf.c    | 122 +++++++++++++++++++++++++++++++++--
- include/linux/dma-buf.h      |   5 +-
- include/uapi/linux/dma-buf.h |   3 +
- include/uapi/linux/magic.h   |   1 +
- 4 files changed, 124 insertions(+), 7 deletions(-)
-
---=20
-2.21.0.1020.gf2820cf01a-goog
-
+-- 
+Kees Cook
