@@ -2,349 +2,1700 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501E3C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC023C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEDF206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6891D20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 19:55:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="VlLOqyfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389454AbfFJTyI (ORCPT
+        id S2389460AbfFJTzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 15:54:08 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:40728 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389173AbfFJTyI (ORCPT
+        Mon, 10 Jun 2019 15:55:00 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:34906 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389193AbfFJTy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 15:54:08 -0400
-Received: from ramsan ([84.194.111.163])
-        by baptiste.telenet-ops.be with bizsmtp
-        id P7ts2000E3XaVaC017tsEz; Mon, 10 Jun 2019 21:53:54 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1haQMa-0001pP-Qp
-        for linux-kernel@vger.kernel.org; Mon, 10 Jun 2019 21:53:52 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1haQMa-0004q6-PM
-        for linux-kernel@vger.kernel.org; Mon, 10 Jun 2019 21:53:52 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-kernel@vger.kernel.org
-Subject: Build regressions/improvements in v5.2-rc4
-Date:   Mon, 10 Jun 2019 21:53:52 +0200
-Message-Id: <20190610195352.18560-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Jun 2019 15:54:59 -0400
+Received: by mail-vk1-f194.google.com with SMTP id k1so1991038vkb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 12:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=2mY9mnmGx5kpau8F4BNtSIW0KQB657POTz6rhVrgu5U=;
+        b=VlLOqyfj3Bc+z+3rjgNzj8c9JNHlvkfotUUXg8N06MuRMmCxJN3QYL2E7ERGL0nu8M
+         uEqPf9Vr2Ej2mu11RO7LObtx7OkcDKVz5nmL3cXGEkUsf06HddpJHIfRN/KFnAH0mJ9y
+         f+ndhqDZKaqDzg5WqbqOAMUafNR2lxvSJ/EyzF4aimOIESs05auIRuUnk2V5xkaV7HCz
+         E6PP97L7iGMiEl2GJL8QcjNYUdoakpdmwDR805fkslav6FNw7/tDXnYAYXRRLCCw9rwg
+         t0wokeMaH2kYWrB7V30FFZ6b61+pbji/RL/PuBn9EGRIsyo4rgxZnGDQq6lkpIEi0mQZ
+         uAJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=2mY9mnmGx5kpau8F4BNtSIW0KQB657POTz6rhVrgu5U=;
+        b=lwaUMNj6IM/KLhfkR+ILROAObszGOnYQkddhGEe8twrFG57Ek/H6dDMteiLh38UM1U
+         QeQVisqX6d9NYNjx1utg8C4Fgz1azyoF/RoxcYEfPG4oxYQ/ax0kRrg5B3P5ZYl3YZtV
+         uPM9GUifovy/BzarNJXWAomc84IRUumxAK6ChFg40USRpsqid7uO/BNVunK6Ne32Yy0l
+         W6tNwQhqg7lYI2iT2fky2UIi9ldWX/ey1KBqt0tMTxZCQA1UcrL5jOMz6ptn23h9pscm
+         Q+BB3albC5MDSOXG5tbSvSEfjxR8vr90LJ+LIy1bwADrDlPhqhgly/ej59vsRrJMOva7
+         ZszQ==
+X-Gm-Message-State: APjAAAX6tE1HRI3ql6uTJgPx9Y9mkkJVxgYvb8seeSIYTStYb7a7mp79
+        LI5gIicsyQZ+YTsZzPgc6/Pl/w==
+X-Google-Smtp-Source: APXvYqxaoPkUl5OBPH36ictsBD5uhjDxDlCSrAcFNWGVapejLFctHGUGJ1OCRxnLTvtYyDA7Z6yfSQ==
+X-Received: by 2002:a1f:b6c5:: with SMTP id g188mr7665935vkf.2.1560196495998;
+        Mon, 10 Jun 2019 12:54:55 -0700 (PDT)
+Received: from tpx230-nicolas.collaboramtl (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
+        by smtp.gmail.com with ESMTPSA id r23sm3710821uan.7.2019.06.10.12.54.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 12:54:54 -0700 (PDT)
+Message-ID: <ffaad429bbdcf1a15049ec6df404618f4f2a9a36.camel@ndufresne.ca>
+Subject: Re: [PATCHv4 1/2] media: docs-rst: Document memory-to-memory video
+ decoder interface
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
+Date:   Mon, 10 Jun 2019 15:54:51 -0400
+In-Reply-To: <20190603112835.19661-2-hverkuil-cisco@xs4all.nl>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+         <20190603112835.19661-2-hverkuil-cisco@xs4all.nl>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-OknBN+gaimL8cCxWIoDu"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Below is the list of build error/warning regressions/improvements in
-v5.2-rc4[1] compared to v5.1[2].
 
-Summarized:
-  - build errors: +1/-0
-  - build warnings: +148/-112
+--=-OknBN+gaimL8cCxWIoDu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-JFYI, when comparing v5.2-rc4[1] to v5.2-rc3[3], the summaries are:
-  - build errors: +0/-1
-  - build warnings: +56/-58
+Hi Hans,
 
-Note that there may be false regressions, as some logs are incomplete.
-Still, they're build errors/warnings.
+I went through it, and I think we are close to ready. Unfortunately, I
+believe the SOURCE_CHANGE event is still under specified. There was a
+post recently to try and add a new flag for changes in color space
+which is not included here. We are also missing a workflow for changes
+that don't affect the allocation but will affect the rendering on a
+display (like colorimetry). Userspace needs to know at which frames
+these parameter changes in order to signal that to the following
+processing block. I think we must have a plane for this.
 
-Happy fixing! ;-)
+Another aspect, I'd like if we could relax a bit the bits about dynamic
+resolutions, making some space for the "static resolution" cases.
+Something to keep in mind, these "static resolution" HW might not be
+able to inform userspace of the display size of the picture, we should
+check with Maxime what happens with the Amlogic.
 
-Thanks to the linux-next team for providing the build service.
+Le lundi 03 juin 2019 =C3=A0 13:28 +0200, Hans Verkuil a =C3=A9crit :
+> From: Tomasz Figa <tfiga@chromium.org>
+>=20
+> Due to complexity of the video decoding process, the V4L2 drivers of
+> stateful decoder hardware require specific sequences of V4L2 API calls
+> to be followed. These include capability enumeration, initialization,
+> decoding, seek, pause, dynamic resolution change, drain and end of
+> stream.
+>=20
+> Specifics of the above have been discussed during Media Workshops at
+> LinuxCon Europe 2012 in Barcelona and then later Embedded Linux
+> Conference Europe 2014 in D=C3=BCsseldorf. The de facto Codec API that
+> originated at those events was later implemented by the drivers we alread=
+y
+> have merged in mainline, such as s5p-mfc or coda.
+>=20
+> The only thing missing was the real specification included as a part of
+> Linux Media documentation. Fix it now and document the decoder part of
+> the Codec API.
+>=20
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> ---
+>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
+>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    8 +-
+>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |    5 +
+>  Documentation/media/uapi/v4l/v4l2.rst         |   10 +-
+>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
+>  5 files changed, 1132 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+>=20
+> diff --git a/Documentation/media/uapi/v4l/dev-decoder.rst b/Documentation=
+/media/uapi/v4l/dev-decoder.rst
+> new file mode 100644
+> index 000000000000..b106f2d97c48
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/dev-decoder.rst
+> @@ -0,0 +1,1084 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +.. _decoder:
+> +
+> +*************************************************
+> +Memory-to-memory Stateful Video Decoder Interface
+> +*************************************************
+> +
+> +A stateful video decoder takes complete chunks of the bitstream (e.g. An=
+nex-B
+> +H.264/HEVC stream, raw VP8/9 stream) and decodes them into raw video fra=
+mes in
 
-[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/d1fdb6d8f6a4109a4263176c84b899076a5f8008/ (all 242 configs)
-[2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd/ (236 out of 242 configs)
-[3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a/ (all 242 configs)
+(minor, may ignore)
+This isn't very precise, do we expect to document this per-format ? I
+think we should maybe say "a complete frame of the bitstream", that
+being said, I think stateful CODEC should be allowed to implement the
+per-slice/per-frame control we are adding to stateless CODEC. Maybe
+something like "documented complete chunks of bitstream" ?
 
+> +display order. The decoder is expected not to require any additional inf=
+ormation
+> +from the client to process these buffers.
+> +
+> +Performing software parsing, processing etc. of the stream in the driver=
+ in
+> +order to support this interface is strongly discouraged. In case such
+> +operations are needed, use of the Stateless Video Decoder Interface (in
+> +development) is strongly advised.
+> +
+> +Conventions and notation used in this document
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +1. The general V4L2 API rules apply if not specified in this document
+> +   otherwise.
+> +
+> +2. The meaning of words "must", "may", "should", etc. is as per `RFC
+> +   2119 <https://tools.ietf.org/html/rfc2119>`_.
+> +
+> +3. All steps not marked "optional" are required.
+> +
+> +4. :c:func:`VIDIOC_G_EXT_CTRLS` and :c:func:`VIDIOC_S_EXT_CTRLS` may be =
+used
+> +   interchangeably with :c:func:`VIDIOC_G_CTRL` and :c:func:`VIDIOC_S_CT=
+RL`,
+> +   unless specified otherwise.
+> +
+> +5. Single-planar API (see :ref:`planar-apis`) and applicable structures =
+may be
+> +   used interchangeably with multi-planar API, unless specified otherwis=
+e,
+> +   depending on decoder capabilities and following the general V4L2 guid=
+elines.
+> +
+> +6. i =3D [a..b]: sequence of integers from a to b, inclusive, i.e. i =3D
+> +   [0..2]: i =3D 0, 1, 2.
+> +
+> +7. Given an ``OUTPUT`` buffer A, then A=E2=80=99 represents a buffer on =
+the ``CAPTURE``
+> +   queue containing data that resulted from processing buffer A.
+> +
+> +.. _decoder-glossary:
+> +
+> +Glossary
+> +=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +CAPTURE
+> +   the destination buffer queue; for decoders, the queue of buffers cont=
+aining
+> +   decoded frames; for encoders, the queue of buffers containing an enco=
+ded
+> +   bitstream; ``V4L2_BUF_TYPE_VIDEO_CAPTURE`` or
+> +   ``V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE``; data is captured from the har=
+dware
+> +   into ``CAPTURE`` buffers.
+> +
+> +client
+> +   the application communicating with the decoder or encoder implementin=
+g
+> +   this interface.
+> +
+> +coded format
+> +   encoded/compressed video bitstream format (e.g. H.264, VP8, etc.); se=
+e
+> +   also: raw format.
+> +
+> +coded height
+> +   height for given coded resolution.
+> +
+> +coded resolution
+> +   stream resolution in pixels aligned to codec and hardware requirement=
+s;
+> +   typically visible resolution rounded up to full macroblocks;
+> +   see also: visible resolution.
+> +
+> +coded width
+> +   width for given coded resolution.
+> +
+> +decode order
+> +   the order in which frames are decoded; may differ from display order =
+if the
+> +   coded format includes a feature of frame reordering; for decoders,
+> +   ``OUTPUT`` buffers must be queued by the client in decode order; for
+> +   encoders ``CAPTURE`` buffers must be returned by the encoder in decod=
+e order.
+> +
+> +destination
+> +   data resulting from the decode process; see ``CAPTURE``.
+> +
+> +display order
+> +   the order in which frames must be displayed; for encoders, ``OUTPUT``
+> +   buffers must be queued by the client in display order; for decoders,
+> +   ``CAPTURE`` buffers must be returned by the decoder in display order.
+> +
+> +DPB
+> +   Decoded Picture Buffer; an H.264/HEVC term for a buffer that stores a=
+ decoded
+> +   raw frame available for reference in further decoding steps.
+> +
+> +EOS
+> +   end of stream.
+> +
+> +IDR
+> +   Instantaneous Decoder Refresh; a type of a keyframe in an H.264/HEVC-=
+encoded
+> +   stream, which clears the list of earlier reference frames (DPBs).
+> +
+> +keyframe
+> +   an encoded frame that does not reference frames decoded earlier, i.e.
+> +   can be decoded fully on its own.
+> +
+> +macroblock
+> +   a processing unit in image and video compression formats based on lin=
+ear
+> +   block transforms (e.g. H.264, VP8, VP9); codec-specific, but for most=
+ of
+> +   popular codecs the size is 16x16 samples (pixels).
+> +
+> +OUTPUT
+> +   the source buffer queue; for decoders, the queue of buffers containin=
+g
+> +   an encoded bitstream; for encoders, the queue of buffers containing r=
+aw
+> +   frames; ``V4L2_BUF_TYPE_VIDEO_OUTPUT`` or
+> +   ``V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE``; the hardware is fed with data
+> +   from ``OUTPUT`` buffers.
+> +
+> +PPS
+> +   Picture Parameter Set; a type of metadata entity in an H.264/HEVC bit=
+stream.
+> +
+> +raw format
+> +   uncompressed format containing raw pixel data (e.g. YUV, RGB formats)=
+.
+> +
+> +resume point
+> +   a point in the bitstream from which decoding may start/continue, with=
+out
+> +   any previous state/data present, e.g.: a keyframe (VP8/VP9) or
+> +   SPS/PPS/IDR sequence (H.264/HEVC); a resume point is required to star=
+t decode
+> +   of a new stream, or to resume decoding after a seek.
+> +
+> +source
+> +   data fed to the decoder or encoder; see ``OUTPUT``.
+> +
+> +source height
+> +   height in pixels for given source resolution; relevant to encoders on=
+ly.
+> +
+> +source resolution
+> +   resolution in pixels of source frames being source to the encoder and
+> +   subject to further cropping to the bounds of visible resolution; rele=
+vant to
+> +   encoders only.
+> +
+> +source width
+> +   width in pixels for given source resolution; relevant to encoders onl=
+y.
+> +
+> +SPS
+> +   Sequence Parameter Set; a type of metadata entity in an H.264/HEVC bi=
+tstream.
+> +
+> +stream metadata
+> +   additional (non-visual) information contained inside encoded bitstrea=
+m;
+> +   for example: coded resolution, visible resolution, codec profile.
+> +
+> +visible height
+> +   height for given visible resolution; display height.
+> +
+> +visible resolution
+> +   stream resolution of the visible picture, in pixels, to be used for
+> +   display purposes; must be smaller or equal to coded resolution;
+> +   display resolution.
+> +
+> +visible width
+> +   width for given visible resolution; display width.
+> +
+> +State machine
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +.. kernel-render:: DOT
+> +   :alt: DOT digraph of decoder state machine
+> +   :caption: Decoder state machine
+> +
+> +   digraph decoder_state_machine {
+> +       node [shape =3D doublecircle, label=3D"Decoding"] Decoding;
+> +
+> +       node [shape =3D circle, label=3D"Initialization"] Initialization;
+> +       node [shape =3D circle, label=3D"Capture\nsetup"] CaptureSetup;
+> +       node [shape =3D circle, label=3D"Dynamic\nresolution\nchange"] Re=
+sChange;
+> +       node [shape =3D circle, label=3D"Stopped"] Stopped;
+> +       node [shape =3D circle, label=3D"Drain"] Drain;
+> +       node [shape =3D circle, label=3D"Seek"] Seek;
+> +       node [shape =3D circle, label=3D"End of stream"] EoS;
+> +
+> +       node [shape =3D point]; qi
+> +       qi -> Initialization [ label =3D "open()" ];
+> +
+> +       Initialization -> CaptureSetup [ label =3D "CAPTURE\nformat\nesta=
+blished" ];
+> +
+> +       CaptureSetup -> Stopped [ label =3D "CAPTURE\nbuffers\nready" ];
+> +
+> +       Decoding -> ResChange [ label =3D "Stream\nresolution\nchange" ];
+> +       Decoding -> Drain [ label =3D "V4L2_DEC_CMD_STOP" ];
+> +       Decoding -> EoS [ label =3D "EoS mark\nin the stream" ];
+> +       Decoding -> Seek [ label =3D "VIDIOC_STREAMOFF(OUTPUT)" ];
+> +       Decoding -> Stopped [ label =3D "VIDIOC_STREAMOFF(CAPTURE)" ];
+> +       Decoding -> Decoding;
+> +
+> +       ResChange -> CaptureSetup [ label =3D "CAPTURE\nformat\nestablish=
+ed" ];
+> +       ResChange -> Seek [ label =3D "VIDIOC_STREAMOFF(OUTPUT)" ];
+> +
+> +       EoS -> Drain [ label =3D "Implicit\ndrain" ];
+> +
+> +       Drain -> Stopped [ label =3D "All CAPTURE\nbuffers dequeued\nor\n=
+VIDIOC_STREAMOFF(CAPTURE)" ];
+> +       Drain -> Seek [ label =3D "VIDIOC_STREAMOFF(OUTPUT)" ];
+> +
+> +       Seek -> Decoding [ label =3D "VIDIOC_STREAMON(OUTPUT)" ];
+> +       Seek -> Initialization [ label =3D "VIDIOC_REQBUFS(OUTPUT, 0)" ];
+> +
+> +       Stopped -> Decoding [ label =3D "V4L2_DEC_CMD_START\nor\nVIDIOC_S=
+TREAMON(CAPTURE)" ];
+> +       Stopped -> Seek [ label =3D "VIDIOC_STREAMOFF(OUTPUT)" ];
+> +   }
+> +
+> +Querying capabilities
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +1. To enumerate the set of coded formats supported by the decoder, the
+> +   client may call :c:func:`VIDIOC_ENUM_FMT` on ``OUTPUT``.
+> +
+> +   * The full set of supported formats will be returned, regardless of t=
+he
+> +     format set on ``CAPTURE``.
+> +
+> +2. To enumerate the set of supported raw formats, the client may call
+> +   :c:func:`VIDIOC_ENUM_FMT` on ``CAPTURE``.
+> +
+> +   * Only the formats supported for the format currently active on ``OUT=
+PUT``
+> +     will be returned.
+> +
+> +   * In order to enumerate raw formats supported by a given coded format=
+,
+> +     the client must first set that coded format on ``OUTPUT`` and then
+> +     enumerate formats on ``CAPTURE``.
+> +
+> +3. The client may use :c:func:`VIDIOC_ENUM_FRAMESIZES` to detect support=
+ed
+> +   resolutions for a given format, passing desired pixel format in
+> +   :c:type:`v4l2_frmsizeenum` ``pixel_format``.
+> +
+> +   * Values returned by :c:func:`VIDIOC_ENUM_FRAMESIZES` for a coded pix=
+el
+> +     format will include all possible coded resolutions supported by the
+> +     decoder for given coded pixel format.
+> +
+> +   * Values returned by :c:func:`VIDIOC_ENUM_FRAMESIZES` for a raw pixel=
+ format
+> +     will include all possible frame buffer resolutions supported by the
+> +     decoder for given raw pixel format and the coded format currently s=
+et on
+> +     ``OUTPUT``.
+> +
+> +4. Supported profiles and levels for the coded format currently set on
+> +   ``OUTPUT``, if applicable, may be queried using their respective cont=
+rols
+> +   via :c:func:`VIDIOC_QUERYCTRL`.
+> +
+> +Initialization
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +1. Set the coded format on ``OUTPUT`` via :c:func:`VIDIOC_S_FMT`
+> +
+> +   * **Required fields:**
+> +
+> +     ``type``
+> +         a ``V4L2_BUF_TYPE_*`` enum appropriate for ``OUTPUT``.
+> +
+> +     ``pixelformat``
+> +         a coded pixel format.
+> +
+> +     ``width``, ``height``
+> +         coded resolution of the stream; required only if it cannot be p=
+arsed
+> +         from the stream for the given coded format; otherwise the decod=
+er will
+> +         use this resolution as a placeholder resolution that will likel=
+y change
+> +         as soon as it can parse the actual coded resolution from the st=
+ream.
+> +
+> +     ``sizeimage``
+> +         desired size of ``OUTPUT`` buffers; the decoder may adjust it t=
+o
+> +         match hardware requirements.
+> +
+> +     other fields
+> +         follow standard semantics.
+> +
+> +   * **Return fields:**
+> +
+> +     ``sizeimage``
+> +         adjusted size of ``OUTPUT`` buffers.
+> +
+> +   * The ``CAPTURE`` format will be updated with an appropriate frame bu=
+ffer
+> +     resolution instantly based on the width and height returned by
+> +     :c:func:`VIDIOC_S_FMT`.
+> +     However, for coded formats that include stream resolution informati=
+on,
+> +     after the decoder is done parsing the information from the stream, =
+it will
+> +     update the ``CAPTURE`` format with new values and signal a source c=
+hange
+> +     event, regardless of whether they match the values set by the clien=
+t or
+> +     not.
+> +
+> +   .. important::
+> +
+> +      Changing the ``OUTPUT`` format may change the currently set ``CAPT=
+URE``
+> +      format. How the new ``CAPTURE`` format is determined is up to the =
+decoder
+> +      and the client must ensure it matches its needs afterwards.
+> +
+> +2.  Allocate source (bitstream) buffers via :c:func:`VIDIOC_REQBUFS` on
+> +    ``OUTPUT``.
+> +
+> +    * **Required fields:**
+> +
+> +      ``count``
+> +          requested number of buffers to allocate; greater than zero.
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``OUTPUT``.
+> +
+> +      ``memory``
+> +          follows standard semantics.
+> +
+> +    * **Return fields:**
+> +
+> +      ``count``
+> +          the actual number of buffers allocated.
+> +
+> +    .. warning::
+> +
+> +       The actual number of allocated buffers may differ from the ``coun=
+t``
+> +       given. The client must check the updated value of ``count`` after=
+ the
+> +       call returns.
+> +
+> +    Alternatively, :c:func:`VIDIOC_CREATE_BUFS` on the ``OUTPUT`` queue =
+can be
+> +    used to have more control over buffer allocation.
+> +
+> +    * **Required fields:**
+> +
+> +      ``count``
+> +          requested number of buffers to allocate; greater than zero.
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``OUTPUT``.
+> +
+> +      ``memory``
+> +          follows standard semantics.
+> +
+> +      ``format``
+> +          follows standard semantics.
+> +
+> +    * **Return fields:**
+> +
+> +      ``count``
+> +          adjusted to the number of allocated buffers.
+> +
+> +    .. warning::
+> +
+> +       The actual number of allocated buffers may differ from the ``coun=
+t``
+> +       given. The client must check the updated value of ``count`` after=
+ the
+> +       call returns.
+> +
+> +3.  Start streaming on the ``OUTPUT`` queue via :c:func:`VIDIOC_STREAMON=
+`.
+> +
+> +4.  **This step only applies to coded formats that contain resolution in=
+formation
+> +    in the stream.** Continue queuing/dequeuing bitstream buffers to/fro=
+m the
+> +    ``OUTPUT`` queue via :c:func:`VIDIOC_QBUF` and :c:func:`VIDIOC_DQBUF=
+`. The
+> +    buffers will be processed and returned to the client in order, until
+> +    required metadata to configure the ``CAPTURE`` queue are found. This=
+ is
+> +    indicated by the decoder sending a ``V4L2_EVENT_SOURCE_CHANGE`` even=
+t with
+> +    ``changes`` set to ``V4L2_EVENT_SRC_CH_RESOLUTION``.
+> +
+> +    * It is not an error if the first buffer does not contain enough dat=
+a for
+> +      this to occur. Processing of the buffers will continue as long as =
+more
+> +      data is needed.
+> +
+> +    * If data in a buffer that triggers the event is required to decode =
+the
+> +      first frame, it will not be returned to the client, until the
+> +      initialization sequence completes and the frame is decoded.
+> +
+> +    * If the client has not set the coded resolution of the stream on it=
+s own,
+> +      calling :c:func:`VIDIOC_G_FMT`, :c:func:`VIDIOC_S_FMT`,
+> +      :c:func:`VIDIOC_TRY_FMT` or :c:func:`VIDIOC_REQBUFS` on the ``CAPT=
+URE``
+> +      queue will not return the real values for the stream until a
+> +      ``V4L2_EVENT_SOURCE_CHANGE`` event is signaled.
+> +
+> +    .. important::
+> +
+> +       Any client query issued after the decoder queues the event will r=
+eturn
+> +       values applying to the just parsed stream, including queue format=
+s,
+> +       selection rectangles and controls.
+> +
+> +    .. note::
+> +
+> +       A client capable of acquiring stream parameters from the bitstrea=
+m on
+> +       its own may attempt to set the width and height of the ``OUTPUT``=
+ format
+> +       to non-zero values matching the coded size of the stream, skip th=
+is step
+> +       and continue with the `Capture setup` sequence. However, it must =
+not
+> +       rely on any driver queries regarding stream parameters, such as
+> +       selection rectangles and controls, since the decoder has not pars=
+ed them
+> +       from the stream yet. If the values configured by the client do no=
+t match
+> +       those parsed by the decoder, a `Dynamic resolution change` will b=
+e
+> +       triggered to reconfigure them.
+> +
+> +    .. note::
+> +
+> +       No decoded frames are produced during this phase.
+> +
+> +5.  Continue with the `Capture setup` sequence.
+> +
+> +Capture setup
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +1.  Call :c:func:`VIDIOC_G_FMT` on the ``CAPTURE`` queue to get format f=
+or the
+> +    destination buffers parsed/decoded from the bitstream.
+> +
+> +    * **Required fields:**
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+> +
+> +    * **Return fields:**
+> +
+> +      ``width``, ``height``
+> +          frame buffer resolution for the decoded frames.
+> +
+> +      ``pixelformat``
+> +          pixel format for decoded frames.
+> +
+> +      ``num_planes`` (for _MPLANE ``type`` only)
+> +          number of planes for pixelformat.
+> +
+> +      ``sizeimage``, ``bytesperline``
+> +          as per standard semantics; matching frame buffer format.
+> +
+> +    .. note::
+> +
+> +       The value of ``pixelformat`` may be any pixel format supported by=
+ the
+> +       decoder for the current stream. The decoder should choose a
+> +       preferred/optimal format for the default configuration. For examp=
+le, a
+> +       YUV format may be preferred over an RGB format if an additional
+> +       conversion step would be required for the latter.
+> +
+> +2.  **Optional.** Acquire the visible resolution via
+> +    :c:func:`VIDIOC_G_SELECTION`.
+> +
+> +    * **Required fields:**
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+> +
+> +      ``target``
+> +          set to ``V4L2_SEL_TGT_COMPOSE``.
+> +
+> +    * **Return fields:**
+> +
+> +      ``r.left``, ``r.top``, ``r.width``, ``r.height``
+> +          the visible rectangle; it must fit within the frame buffer res=
+olution
+> +          returned by :c:func:`VIDIOC_G_FMT` on ``CAPTURE``.
+> +
+> +    * The following selection targets are supported on ``CAPTURE``:
+> +
+> +      ``V4L2_SEL_TGT_CROP_BOUNDS``
+> +          corresponds to the coded resolution of the stream.
+> +
+> +      ``V4L2_SEL_TGT_CROP_DEFAULT``
+> +          the rectangle covering the part of the ``CAPTURE`` buffer that
+> +          contains meaningful picture data (visible area); width and hei=
+ght
+> +          will be equal to the visible resolution of the stream.
+> +
+> +      ``V4L2_SEL_TGT_CROP``
+> +          the rectangle within the coded resolution to be output to
+> +          ``CAPTURE``; defaults to ``V4L2_SEL_TGT_CROP_DEFAULT``; read-o=
+nly on
+> +          hardware without additional compose/scaling capabilities.
+> +
+> +      ``V4L2_SEL_TGT_COMPOSE_BOUNDS``
+> +          the maximum rectangle within a ``CAPTURE`` buffer, which the c=
+ropped
+> +          frame can be composed into; equal to ``V4L2_SEL_TGT_CROP`` if =
+the
+> +          hardware does not support compose/scaling.
+> +
+> +      ``V4L2_SEL_TGT_COMPOSE_DEFAULT``
+> +          equal to ``V4L2_SEL_TGT_CROP``.
+> +
+> +      ``V4L2_SEL_TGT_COMPOSE``
+> +          the rectangle inside a ``CAPTURE`` buffer into which the cropp=
+ed
+> +          frame is written; defaults to ``V4L2_SEL_TGT_COMPOSE_DEFAULT``=
+;
+> +          read-only on hardware without additional compose/scaling capab=
+ilities.
+> +
+> +      ``V4L2_SEL_TGT_COMPOSE_PADDED``
+> +          the rectangle inside a ``CAPTURE`` buffer which is overwritten=
+ by the
+> +          hardware; equal to ``V4L2_SEL_TGT_COMPOSE`` if the hardware do=
+es not
+> +          write padding pixels.
+> +
+> +    .. warning::
+> +
+> +       The values are guaranteed to be meaningful only after the decoder
+> +       successfully parses the stream metadata. The client must not rely=
+ on the
+> +       query before that happens.
+> +
+> +3.  **Optional.** Enumerate ``CAPTURE`` formats via :c:func:`VIDIOC_ENUM=
+_FMT` on
+> +    the ``CAPTURE`` queue. Once the stream information is parsed and kno=
+wn, the
+> +    client may use this ioctl to discover which raw formats are supporte=
+d for
+> +    given stream and select one of them via :c:func:`VIDIOC_S_FMT`.
+> +
+> +    .. important::
+> +
+> +       The decoder will return only formats supported for the currently
+> +       established coded format, as per the ``OUTPUT`` format and/or str=
+eam
+> +       metadata parsed in this initialization sequence, even if more for=
+mats
+> +       may be supported by the decoder in general. In other words, the s=
+et
+> +       returned will be a subset of the initial query mentioned in the
+> +       `Querying capabilities` section.
+> +
+> +       For example, a decoder may support YUV and RGB formats for resolu=
+tions
+> +       1920x1088 and lower, but only YUV for higher resolutions (due to
+> +       hardware limitations). After parsing a resolution of 1920x1088 or=
+ lower,
+> +       :c:func:`VIDIOC_ENUM_FMT` may return a set of YUV and RGB pixel f=
+ormats,
+> +       but after parsing resolution higher than 1920x1088, the decoder w=
+ill not
+> +       return RGB, unsupported for this resolution.
+> +
+> +       However, subsequent resolution change event triggered after
+> +       discovering a resolution change within the same stream may switch
+> +       the stream into a lower resolution and :c:func:`VIDIOC_ENUM_FMT`
+> +       would return RGB formats again in that case.
+> +
+> +4.  **Optional.** Set the ``CAPTURE`` format via :c:func:`VIDIOC_S_FMT` =
+on the
+> +    ``CAPTURE`` queue. The client may choose a different format than
+> +    selected/suggested by the decoder in :c:func:`VIDIOC_G_FMT`.
+> +
+> +    * **Required fields:**
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+> +
+> +      ``pixelformat``
+> +          a raw pixel format.
+> +
+> +   * Setting the ``CAPTURE`` format will reset the compose selection rec=
+tangles
+> +     to their default values, based on the new resolution, as described =
+in the
+> +     previous step.
+> +
+> +5. **Optional.** Set the compose rectangle via :c:func:`VIDIOC_S_SELECTI=
+ON` on
+> +   the ``CAPTURE`` queue if it is desired and if the decoder has compose=
+ and/or
+> +   scaling capabilities.
+> +
+> +   * **Required fields:**
+> +
+> +     ``type``
+> +         a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+> +
+> +     ``target``
+> +         set to ``V4L2_SEL_TGT_COMPOSE``.
+> +
+> +     ``r.left``, ``r.top``, ``r.width``, ``r.height``
+> +         the rectangle inside a ``CAPTURE`` buffer into which the croppe=
+d
+> +         frame is written; defaults to ``V4L2_SEL_TGT_COMPOSE_DEFAULT``;
+> +         read-only on hardware without additional compose/scaling capabi=
+lities.
+> +
+> +   * **Return fields:**
+> +
+> +     ``r.left``, ``r.top``, ``r.width``, ``r.height``
+> +         the visible rectangle; it must fit within the frame buffer reso=
+lution
+> +         returned by :c:func:`VIDIOC_G_FMT` on ``CAPTURE``.
+> +
+> +   .. warning::
+> +
+> +      The decoder may adjust the compose rectangle to the nearest
+> +      supported one to meet codec and hardware requirements. The client =
+needs
+> +      to check the adjusted rectangle returned by :c:func:`VIDIOC_S_SELE=
+CTION`.
+> +
+> +6.  If all the following conditions are met, the client may resume the d=
+ecoding
+> +    instantly:
+> +
+> +    * ``sizeimage`` of the new format (determined in previous steps) is =
+less
+> +      than or equal to the size of currently allocated buffers,
+> +
+> +    * the number of buffers currently allocated is greater than or equal=
+ to the
+> +      minimum number of buffers acquired in previous steps. To fulfill t=
+his
+> +      requirement, the client may use :c:func:`VIDIOC_CREATE_BUFS` to ad=
+d new
+> +      buffers.
+> +
+> +    In that case, the remaining steps do not apply and the client may re=
+sume
+> +    the decoding by one of the following actions:
+> +
+> +    * if the ``CAPTURE`` queue is streaming, call :c:func:`VIDIOC_DECODE=
+R_CMD`
+> +      with the ``V4L2_DEC_CMD_START`` command,
+> +
+> +    * if the ``CAPTURE`` queue is not streaming, call :c:func:`VIDIOC_ST=
+REAMON`
+> +      on the ``CAPTURE`` queue.
+> +
+> +    However, if the client intends to change the buffer set, to lower
+> +    memory usage or for any other reasons, it may be achieved by followi=
+ng
+> +    the steps below.
+> +
+> +7.  **If the** ``CAPTURE`` **queue is streaming,** keep queuing and dequ=
+euing
+> +    buffers on the ``CAPTURE`` queue until a buffer marked with the
+> +    ``V4L2_BUF_FLAG_LAST`` flag is dequeued.
+> +
+> +8.  **If the** ``CAPTURE`` **queue is streaming,** call :c:func:`VIDIOC_=
+STREAMOFF`
+> +    on the ``CAPTURE`` queue to stop streaming.
+> +
+> +    .. warning::
+> +
+> +       The ``OUTPUT`` queue must remain streaming. Calling
+> +       :c:func:`VIDIOC_STREAMOFF` on it would abort the sequence and tri=
+gger a
+> +       seek.
+> +
+> +9.  **If the** ``CAPTURE`` **queue has buffers allocated,** free the ``C=
+APTURE``
+> +    buffers using :c:func:`VIDIOC_REQBUFS`.
+> +
+> +    * **Required fields:**
+> +
+> +      ``count``
+> +          set to 0.
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+> +
+> +      ``memory``
+> +          follows standard semantics.
+> +
+> +10. Allocate ``CAPTURE`` buffers via :c:func:`VIDIOC_REQBUFS` on the
+> +    ``CAPTURE`` queue.
+> +
+> +    * **Required fields:**
+> +
+> +      ``count``
+> +          requested number of buffers to allocate; greater than zero.
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+> +
+> +      ``memory``
+> +          follows standard semantics.
+> +
+> +    * **Return fields:**
+> +
+> +      ``count``
+> +          actual number of buffers allocated.
+> +
+> +    .. warning::
+> +
+> +       The actual number of allocated buffers may differ from the ``coun=
+t``
+> +       given. The client must check the updated value of ``count`` after=
+ the
+> +       call returns.
+> +
+> +    .. note::
+> +
+> +       To allocate more than the minimum number of buffers (for pipeline
+> +       depth), the client may query the ``V4L2_CID_MIN_BUFFERS_FOR_CAPTU=
+RE``
+> +       control to get the minimum number of buffers required, and pass t=
+he
+> +       obtained value plus the number of additional buffers needed in th=
+e
+> +       ``count`` field to :c:func:`VIDIOC_REQBUFS`.
+> +
+> +    Alternatively, :c:func:`VIDIOC_CREATE_BUFS` on the ``CAPTURE`` queue=
+ can be
+> +    used to have more control over buffer allocation. For example, by
+> +    allocating buffers larger than the current ``CAPTURE`` format, futur=
+e
+> +    resolution changes can be accommodated.
+> +
+> +    * **Required fields:**
+> +
+> +      ``count``
+> +          requested number of buffers to allocate; greater than zero.
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+> +
+> +      ``memory``
+> +          follows standard semantics.
+> +
+> +      ``format``
+> +          a format representing the maximum framebuffer resolution to be
+> +          accommodated by newly allocated buffers.
+> +
+> +    * **Return fields:**
+> +
+> +      ``count``
+> +          adjusted to the number of allocated buffers.
+> +
+> +    .. warning::
+> +
+> +        The actual number of allocated buffers may differ from the ``cou=
+nt``
+> +        given. The client must check the updated value of ``count`` afte=
+r the
+> +        call returns.
+> +
+> +    .. note::
+> +
+> +       To allocate buffers for a format different than parsed from the s=
+tream
+> +       metadata, the client must proceed as follows, before the metadata
+> +       parsing is initiated:
+> +
+> +       * set width and height of the ``OUTPUT`` format to desired coded =
+resolution to
+> +         let the decoder configure the ``CAPTURE`` format appropriately,
+> +
+> +       * query the ``CAPTURE`` format using :c:func:`VIDIOC_G_FMT` and s=
+ave it
+> +         until this step.
+> +
+> +       The format obtained in the query may be then used with
+> +       :c:func:`VIDIOC_CREATE_BUFS` in this step to allocate the buffers=
+.
+> +
+> +11. Call :c:func:`VIDIOC_STREAMON` on the ``CAPTURE`` queue to start dec=
+oding
+> +    frames.
+> +
+> +Decoding
+> +=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +This state is reached after the `Capture setup` sequence finishes succes=
+sfully.
+> +In this state, the client queues and dequeues buffers to both queues via
+> +:c:func:`VIDIOC_QBUF` and :c:func:`VIDIOC_DQBUF`, following the standard
+> +semantics.
+> +
+> +The content of the source ``OUTPUT`` buffers depends on the active coded=
+ pixel
+> +format and may be affected by codec-specific extended controls, as state=
+d in
+> +the documentation of each format.
+> +
+> +Both queues operate independently, following the standard behavior of V4=
+L2
+> +buffer queues and memory-to-memory devices. In addition, the order of de=
+coded
+> +frames dequeued from the ``CAPTURE`` queue may differ from the order of =
+queuing
+> +coded frames to the ``OUTPUT`` queue, due to properties of the selected =
+coded
+> +format, e.g. frame reordering.
+> +
+> +The client must not assume any direct relationship between ``CAPTURE``
+> +and ``OUTPUT`` buffers and any specific timing of buffers becoming
+> +available to dequeue. Specifically:
+> +
+> +* a buffer queued to ``OUTPUT`` may result in no buffers being produced
+> +  on ``CAPTURE`` (e.g. if it does not contain encoded data, or if only
+> +  metadata syntax structures are present in it),
+> +
+> +* a buffer queued to ``OUTPUT`` may result in more than one buffer produ=
+ced
+> +  on ``CAPTURE`` (if the encoded data contained more than one frame, or =
+if
+> +  returning a decoded frame allowed the decoder to return a frame that
+> +  preceded it in decode, but succeeded it in the display order),
+> +
+> +* a buffer queued to ``OUTPUT`` may result in a buffer being produced on
+> +  ``CAPTURE`` later into decode process, and/or after processing further
+> +  ``OUTPUT`` buffers, or be returned out of order, e.g. if display
+> +  reordering is used,
+> +
+> +* buffers may become available on the ``CAPTURE`` queue without addition=
+al
+> +  buffers queued to ``OUTPUT`` (e.g. during drain or ``EOS``), because o=
+f the
+> +  ``OUTPUT`` buffers queued in the past whose decoding results are only
+> +  available at later time, due to specifics of the decoding process.
+> +
+> +.. note::
+> +
+> +   To allow matching decoded ``CAPTURE`` buffers with ``OUTPUT`` buffers=
+ they
+> +   originated from, the client can set the ``timestamp`` field of the
+> +   :c:type:`v4l2_buffer` struct when queuing an ``OUTPUT`` buffer. The
+> +   ``CAPTURE`` buffer(s), which resulted from decoding that ``OUTPUT`` b=
+uffer
+> +   will have their ``timestamp`` field set to the same value when dequeu=
+ed.
+> +
+> +   In addition to the straightforward case of one ``OUTPUT`` buffer prod=
+ucing
+> +   one ``CAPTURE`` buffer, the following cases are defined:
+> +
+> +   * one ``OUTPUT`` buffer generates multiple ``CAPTURE`` buffers: the s=
+ame
+> +     ``OUTPUT`` timestamp will be copied to multiple ``CAPTURE`` buffers=
+.
+> +
+> +   * multiple ``OUTPUT`` buffers generate one ``CAPTURE`` buffer: timest=
+amp of
+> +     the ``OUTPUT`` buffer queued last will be copied.
+> +
+> +   * the decoding order differs from the display order (i.e. the ``CAPTU=
+RE``
+> +     buffers are out-of-order compared to the ``OUTPUT`` buffers): ``CAP=
+TURE``
+> +     timestamps will not retain the order of ``OUTPUT`` timestamps.
+> +
+> +During the decoding, the decoder may initiate one of the special sequenc=
+es, as
+> +listed below. The sequences will result in the decoder returning all the
+> +``CAPTURE`` buffers that originated from all the ``OUTPUT`` buffers proc=
+essed
+> +before the sequence started. Last of the buffers will have the
+> +``V4L2_BUF_FLAG_LAST`` flag set. To determine the sequence to follow, th=
+e client
+> +must check if there is any pending event and:
+> +
+> +* if a ``V4L2_EVENT_SOURCE_CHANGE`` event is pending, the `Dynamic resol=
+ution
+> +  change` sequence needs to be followed,
+> +
+> +* if a ``V4L2_EVENT_EOS`` event is pending, the `End of stream` sequence=
+ needs
+> +  to be followed.
+> +
+> +Some of the sequences can be intermixed with each other and need to be h=
+andled
+> +as they happen. The exact operation is documented for each sequence.
+> +
+> +Should a decoding error occur, it will be reported to the client with th=
+e level
+> +of details depending on the decoder capabilities. Specifically:
+> +
+> +* the CAPTURE buffer that contains the results of the failed decode oper=
+ation
+> +  will be returned with the V4L2_BUF_FLAG_ERROR flag set,
+> +
+> +* if the decoder is able to precisely report the OUTPUT buffer that trig=
+gered
+> +  the error, such buffer will be returned with the V4L2_BUF_FLAG_ERROR f=
+lag
+> +  set.
+> +
+> +In case of a fatal failure that does not allow the decoding to continue,=
+ any
+> +further operations on corresponding decoder file handle will return the =
+-EIO
+> +error code. The client may close the file handle and open a new one, or
+> +alternatively reinitialize the instance by stopping streaming on both qu=
+eues,
+> +releasing all buffers and performing the Initialization sequence again.
+> +
+> +Seek
+> +=3D=3D=3D=3D
+> +
+> +Seek is controlled by the ``OUTPUT`` queue, as it is the source of coded=
+ data.
+> +The seek does not require any specific operation on the ``CAPTURE`` queu=
+e, but
+> +it may be affected as per normal decoder operation.
+> +
+> +1. Stop the ``OUTPUT`` queue to begin the seek sequence via
+> +   :c:func:`VIDIOC_STREAMOFF`.
+> +
+> +   * **Required fields:**
+> +
+> +     ``type``
+> +         a ``V4L2_BUF_TYPE_*`` enum appropriate for ``OUTPUT``.
+> +
+> +   * The decoder will drop all the pending ``OUTPUT`` buffers and they m=
+ust be
+> +     treated as returned to the client (following standard semantics).
+> +
+> +2. Restart the ``OUTPUT`` queue via :c:func:`VIDIOC_STREAMON`
+> +
+> +   * **Required fields:**
+> +
+> +     ``type``
+> +         a ``V4L2_BUF_TYPE_*`` enum appropriate for ``OUTPUT``.
+> +
+> +   * The decoder will start accepting new source bitstream buffers after=
+ the
+> +     call returns.
+> +
+> +3. Start queuing buffers containing coded data after the seek to the ``O=
+UTPUT``
+> +   queue until a suitable resume point is found.
+> +
+> +   .. note::
+> +
+> +      There is no requirement to begin queuing coded data starting exact=
+ly
+> +      from a resume point (e.g. SPS or a keyframe). Any queued ``OUTPUT`=
+`
+> +      buffers will be processed and returned to the client until a suita=
+ble
+> +      resume point is found.  While looking for a resume point, the deco=
+der
+> +      should not produce any decoded frames into ``CAPTURE`` buffers.
+> +
+> +      Some hardware is known to mishandle seeks to a non-resume point. S=
+uch an
+> +      operation may result in an unspecified number of corrupted decoded=
+ frames
+> +      being made available on the ``CAPTURE`` queue. Drivers must ensure=
+ that
+> +      no fatal decoding errors or crashes occur, and implement any neces=
+sary
+> +      handling and workarounds for hardware issues related to seek opera=
+tions.
+> +
+> +   .. warning::
+> +
+> +      In case of the H.264/HEVC codec, the client must take care not to =
+seek
+> +      over a change of SPS/PPS. Even though the target frame could be a
+> +      keyframe, the stale SPS/PPS inside decoder state would lead to und=
+efined
+> +      results when decoding. Although the decoder must handle that case =
+without
+> +      a crash or a fatal decode error, the client must not expect a sens=
+ible
+> +      decode output.
+> +
+> +      If the hardware can detect such corrupted decoded frames, then
+> +      corresponding buffers will be returned to the client with the
+> +      V4L2_BUF_FLAG_ERROR set. See the `Decoding` section for further
+> +      description of decode error reporting.
+> +
+> +4. After a resume point is found, the decoder will start returning ``CAP=
+TURE``
+> +   buffers containing decoded frames.
+> +
+> +.. important::
+> +
+> +   A seek may result in the `Dynamic resolution change` sequence being
+> +   initiated, due to the seek target having decoding parameters differen=
+t from
+> +   the part of the stream decoded before the seek. The sequence must be =
+handled
+> +   as per normal decoder operation.
+> +
+> +.. warning::
+> +
+> +   It is not specified when the ``CAPTURE`` queue starts producing buffe=
+rs
+> +   containing decoded data from the ``OUTPUT`` buffers queued after the =
+seek,
+> +   as it operates independently from the ``OUTPUT`` queue.
+> +
+> +   The decoder may return a number of remaining ``CAPTURE`` buffers cont=
+aining
+> +   decoded frames originating from the ``OUTPUT`` buffers queued before =
+the
+> +   seek sequence is performed.
+> +
+> +   The ``VIDIOC_STREAMOFF`` operation discards any remaining queued
+> +   ``OUTPUT`` buffers, which means that not all of the ``OUTPUT`` buffer=
+s
+> +   queued before the seek sequence may have matching ``CAPTURE`` buffers
+> +   produced.  For example, given the sequence of operations on the
+> +   ``OUTPUT`` queue:
+> +
+> +     QBUF(A), QBUF(B), STREAMOFF(), STREAMON(), QBUF(G), QBUF(H),
+> +
+> +   any of the following results on the ``CAPTURE`` queue is allowed:
+> +
+> +     {A=E2=80=99, B=E2=80=99, G=E2=80=99, H=E2=80=99}, {A=E2=80=99, G=E2=
+=80=99, H=E2=80=99}, {G=E2=80=99, H=E2=80=99}.
+> +
+> +   To determine the CAPTURE buffer containing the first decoded frame af=
+ter the
+> +   seek, the client may observe the timestamps to match the CAPTURE and =
+OUTPUT
+> +   buffers or use V4L2_DEC_CMD_STOP and V4L2_DEC_CMD_START to drain the
+> +   decoder.
+> +
+> +.. note::
+> +
+> +   To achieve instantaneous seek, the client may restart streaming on th=
+e
+> +   ``CAPTURE`` queue too to discard decoded, but not yet dequeued buffer=
+s.
+> +
+> +Dynamic resolution change
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> +
+> +Streams that include resolution metadata in the bitstream may require sw=
+itching
+> +to a different resolution during the decoding.
+> +
+> +The sequence starts when the decoder detects a coded frame with one or m=
+ore of
+> +the following parameters different from those previously established (an=
+d
+> +reflected by corresponding queries):
+> +
+> +* coded resolution (``OUTPUT`` width and height),
+> +
+> +* visible resolution (selection rectangles),
+> +
+> +* the minimum number of buffers needed for decoding.
+> +
+> +Whenever that happens, the decoder must proceed as follows:
+> +
+> +1.  After encountering a resolution change in the stream, the decoder se=
+nds a
+> +    ``V4L2_EVENT_SOURCE_CHANGE`` event with ``changes`` set to
+> +    ``V4L2_EVENT_SRC_CH_RESOLUTION``.
 
-*** ERRORS ***
+What about a format changes that does now affect the resolution, like a
+pixel format change ? Also, what about changes that don't require a
+reallocation ? Like a change in the colorimetry parameters ? I don't
+think the spec need to initially cover it all, but we need to make sure
+there is a mechanism for userspace to know at which frames to read back
+the new format (G_FMT). Maybe we need both an event and a buffer flag
+to mark it ?
 
-1 error regressions:
-  + error: "devm_ioremap" [drivers/counter/ftm-quaddec.ko] undefined!:  => N/A
+> +
+> +    .. important::
+> +
+> +       Any client query issued after the decoder queues the event will r=
+eturn
+> +       values applying to the stream after the resolution change, includ=
+ing
+> +       queue formats, selection rectangles and controls.
+> +
+> +2.  The decoder will then process and decode all remaining buffers from =
+before
+> +    the resolution change point.
+> +
+> +    * The last buffer from before the change must be marked with the
+> +      ``V4L2_BUF_FLAG_LAST`` flag, similarly to the `Drain` sequence abo=
+ve.
+> +
+> +    .. warning::
+> +
+> +       The last buffer may be empty (with :c:type:`v4l2_buffer` ``bytesu=
+sed``
+> +       =3D 0) and in that case it must be ignored by the client, as it d=
+oes not
+> +       contain a decoded frame.
+> +
+> +    .. note::
+> +
+> +       Any attempt to dequeue more ``CAPTURE`` buffers beyond the buffer=
+ marked
+> +       with ``V4L2_BUF_FLAG_LAST`` will result in a -EPIPE error from
+> +       :c:func:`VIDIOC_DQBUF`.
+> +
+> +The client must continue the sequence as described below to continue the
+> +decoding process.
+> +
+> +1.  Dequeue the source change event.
+> +
+> +    .. important::
+> +
+> +       A source change triggers an implicit decoder drain, similar to th=
+e
+> +       explicit `Drain` sequence. The decoder is stopped after it comple=
+tes.
+> +       The decoding process must be resumed with either a pair of calls =
+to
+> +       :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
+> +       ``CAPTURE`` queue, or a call to :c:func:`VIDIOC_DECODER_CMD` with=
+ the
+> +       ``V4L2_DEC_CMD_START`` command.
+> +
+> +2.  Continue with the `Capture setup` sequence.
+> +
+> +.. note::
+> +
+> +   During the resolution change sequence, the ``OUTPUT`` queue must rema=
+in
+> +   streaming. Calling :c:func:`VIDIOC_STREAMOFF` on the ``OUTPUT`` queue=
+ would
+> +   abort the sequence and initiate a seek.
+> +
+> +   In principle, the ``OUTPUT`` queue operates separately from the ``CAP=
+TURE``
+> +   queue and this remains true for the duration of the entire resolution=
+ change
+> +   sequence as well.
+> +
+> +   The client should, for best performance and simplicity, keep queuing/=
+dequeuing
+> +   buffers to/from the ``OUTPUT`` queue even while processing this seque=
+nce.
+> +
+> +Drain
+> +=3D=3D=3D=3D=3D
+> +
+> +To ensure that all queued ``OUTPUT`` buffers have been processed and rel=
+ated
+> +``CAPTURE`` buffers are given to the client, the client must follow the =
+drain
+> +sequence described below. After the drain sequence ends, the client has
+> +received all decoded frames for all ``OUTPUT`` buffers queued before the
+> +sequence was started.
+> +
+> +1. Begin drain by issuing :c:func:`VIDIOC_DECODER_CMD`.
+> +
+> +   * **Required fields:**
+> +
+> +     ``cmd``
+> +         set to ``V4L2_DEC_CMD_STOP``.
+> +
+> +     ``flags``
+> +         set to 0.
+> +
+> +     ``pts``
+> +         set to 0.
+> +
+> +   .. warning::
+> +
+> +      The sequence can be only initiated if both ``OUTPUT`` and ``CAPTUR=
+E``
+> +      queues are streaming. For compatibility reasons, the call to
+> +      :c:func:`VIDIOC_DECODER_CMD` will not fail even if any of the queu=
+es is
+> +      not streaming, but at the same time it will not initiate the `Drai=
+n`
+> +      sequence and so the steps described below would not be applicable.
+> +
+> +2. Any ``OUTPUT`` buffers queued by the client before the
+> +   :c:func:`VIDIOC_DECODER_CMD` was issued will be processed and decoded=
+ as
+> +   normal. The client must continue to handle both queues independently,
+> +   similarly to normal decode operation. This includes:
+> +
+> +   * handling any operations triggered as a result of processing those b=
+uffers,
+> +     such as the `Dynamic resolution change` sequence, before continuing=
+ with
+> +     the drain sequence,
+> +
+> +   * queuing and dequeuing ``CAPTURE`` buffers, until a buffer marked wi=
+th the
+> +     ``V4L2_BUF_FLAG_LAST`` flag is dequeued,
+> +
+> +     .. warning::
+> +
+> +        The last buffer may be empty (with :c:type:`v4l2_buffer`
+> +        ``bytesused`` =3D 0) and in that case it must be ignored by the =
+client,
+> +        as it does not contain a decoded frame.
+> +
+> +     .. note::
+> +
+> +        Any attempt to dequeue more ``CAPTURE`` buffers beyond the buffe=
+r
+> +        marked with ``V4L2_BUF_FLAG_LAST`` will result in a -EPIPE error=
+ from
+> +        :c:func:`VIDIOC_DQBUF`.
+> +
+> +   * dequeuing processed ``OUTPUT`` buffers, until all the buffers queue=
+d
+> +     before the ``V4L2_DEC_CMD_STOP`` command are dequeued,
+> +
+> +   * dequeuing the ``V4L2_EVENT_EOS`` event, if the client subscribed to=
+ it.
+> +
+> +   .. note::
+> +
+> +      For backwards compatibility, the decoder will signal a ``V4L2_EVEN=
+T_EOS``
+> +      event when the last frame has been decoded and all frames are read=
+y to be
+> +      dequeued. It is a deprecated behavior and the client must not rely=
+ on it.
+> +      The ``V4L2_BUF_FLAG_LAST`` buffer flag should be used instead.
+> +
+> +3. Once all the ``OUTPUT`` buffers queued before the ``V4L2_DEC_CMD_STOP=
+`` call
+> +   are dequeued and the last ``CAPTURE`` buffer is dequeued, the decoder=
+ is
+> +   stopped and it will accept, but not process, any newly queued ``OUTPU=
+T``
+> +   buffers until the client issues any of the following operations:
+> +
+> +   * ``V4L2_DEC_CMD_START`` - the decoder will not be reset and will res=
+ume
+> +     operation normally, with all the state from before the drain,
+> +
+> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` =
+on the
+> +     ``CAPTURE`` queue - the decoder will resume the operation normally,
+> +     however any ``CAPTURE`` buffers still in the queue will be returned=
+ to the
+> +     client,
+> +
+> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` =
+on the
+> +     ``OUTPUT`` queue - any pending source buffers will be returned to t=
+he
+> +     client and the `Seek` sequence will be triggered.
+> +
+> +.. note::
+> +
+> +   Once the drain sequence is initiated, the client needs to drive it to
+> +   completion, as described by the steps above, unless it aborts the pro=
+cess by
+> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPT=
+URE``
+> +   queues.  The client is not allowed to issue ``V4L2_DEC_CMD_START`` or
+> +   ``V4L2_DEC_CMD_STOP`` again while the drain sequence is in progress a=
+nd they
+> +   will fail with -EBUSY error code if attempted.
+> +
+> +   Although mandatory, the availability of decoder commands may be queri=
+ed
+> +   using :c:func:`VIDIOC_TRY_DECODER_CMD`.
+> +
+> +End of stream
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +If the decoder encounters an end of stream marking in the stream, the de=
+coder
+> +will initiate the `Drain` sequence, which the client must handle as desc=
+ribed
+> +above, skipping the initial :c:func:`VIDIOC_DECODER_CMD`.
+> +
+> +Commit points
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Setting formats and allocating buffers trigger changes in the behavior o=
+f the
+> +decoder.
+> +
+> +1. Setting the format on the ``OUTPUT`` queue may change the set of form=
+ats
+> +   supported/advertised on the ``CAPTURE`` queue. In particular, it also=
+ means
+> +   that the ``CAPTURE`` format may be reset and the client must not rely=
+ on the
+> +   previously set format being preserved.
+> +
+> +2. Enumerating formats on the ``CAPTURE`` queue always returns only form=
+ats
+> +   supported for the current ``OUTPUT`` format.
+> +
+> +3. Setting the format on the ``CAPTURE`` queue does not change the list =
+of
+> +   formats available on the ``OUTPUT`` queue. An attempt to set a ``CAPT=
+URE``
+> +   format that is not supported for the currently selected ``OUTPUT`` fo=
+rmat
+> +   will result in the decoder adjusting the requested ``CAPTURE`` format=
+ to a
+> +   supported one.
+> +
+> +4. Enumerating formats on the ``OUTPUT`` queue always returns the full s=
+et of
+> +   supported coded formats, irrespectively of the current ``CAPTURE`` fo=
+rmat.
+> +
+> +5. While buffers are allocated on any of the ``OUTPUT`` or ``CAPTURE`` q=
+ueues,
+> +   the client must not change the format on the ``OUTPUT`` queue. Driver=
+s will
+> +   return the -EBUSY error code for any such format change attempt.
+> +
+> +To summarize, setting formats and allocation must always start with the
+> +``OUTPUT`` queue and the ``OUTPUT`` queue is the master that governs the
+> +set of supported formats for the ``CAPTURE`` queue.
+> diff --git a/Documentation/media/uapi/v4l/dev-mem2mem.rst b/Documentation=
+/media/uapi/v4l/dev-mem2mem.rst
+> index 67a980818dc8..caa05f5f6380 100644
+> --- a/Documentation/media/uapi/v4l/dev-mem2mem.rst
+> +++ b/Documentation/media/uapi/v4l/dev-mem2mem.rst
+> @@ -39,4 +39,10 @@ file handle is visible through another file handle).
+>  One of the most common memory-to-memory device is the codec. Codecs
+>  are more complicated than most and require additional setup for
+>  their codec parameters. This is done through codec controls.
+> -See :ref:`mpeg-controls`.
+> +See :ref:`mpeg-controls`. More details on how to use codec memory-to-mem=
+ory
+> +devices are given in the following sections.
+> +
+> +.. toctree::
+> +    :maxdepth: 1
+> +
+> +    dev-decoder
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation=
+/media/uapi/v4l/pixfmt-v4l2.rst
+> index 71eebfc6d853..caf14e440447 100644
+> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> @@ -39,6 +39,11 @@ Single-planar format structure
+>  	to a multiple of the scale factor of any smaller planes. For
+>  	example when the image format is YUV 4:2:0, ``width`` and
+>  	``height`` must be multiples of two.
+> +
+> +	For compressed formats that contain the resolution information encoded
+> +	inside the stream, when fed to a stateful mem2mem decoder, the fields
+> +	may be zero to rely on the decoder to detect the right values. For more
+> +	details see :ref:`decoder` and format descriptions.
+>      * - __u32
+>        - ``pixelformat``
+>        - The pixel format or type of compression, set by the application.
+> diff --git a/Documentation/media/uapi/v4l/v4l2.rst b/Documentation/media/=
+uapi/v4l/v4l2.rst
+> index 004ec00db6bd..97015b9b40b8 100644
+> --- a/Documentation/media/uapi/v4l/v4l2.rst
+> +++ b/Documentation/media/uapi/v4l/v4l2.rst
+> @@ -60,6 +60,10 @@ Authors, in alphabetical order:
+> =20
+>    - Original author of the V4L2 API and documentation.
+> =20
+> +- Figa, Tomasz <tfiga@chromium.org>
+> +
+> +  - Documented the memory-to-memory decoder interface.
+> +
+>  - H Schimek, Michael <mschimek@gmx.at>
+> =20
+>    - Original author of the V4L2 API and documentation.
+> @@ -68,6 +72,10 @@ Authors, in alphabetical order:
+> =20
+>    - Documented the Digital Video timings API.
+> =20
+> +- Osciak, Pawel <posciak@chromium.org>
+> +
+> +  - Documented the memory-to-memory decoder interface.
+> +
+>  - Osciak, Pawel <pawel@osciak.com>
+> =20
+>    - Designed and documented the multi-planar API.
+> @@ -92,7 +100,7 @@ Authors, in alphabetical order:
+> =20
+>    - Designed and documented the VIDIOC_LOG_STATUS ioctl, the extended co=
+ntrol ioctls, major parts of the sliced VBI API, the MPEG encoder and decod=
+er APIs and the DV Timings API.
+> =20
+> -**Copyright** |copy| 1999-2016: Bill Dirks, Michael H. Schimek, Hans Ver=
+kuil, Martin Rubli, Andy Walls, Muralidharan Karicheri, Mauro Carvalho Cheh=
+ab, Pawel Osciak, Sakari Ailus & Antti Palosaari.
+> +**Copyright** |copy| 1999-2018: Bill Dirks, Michael H. Schimek, Hans Ver=
+kuil, Martin Rubli, Andy Walls, Muralidharan Karicheri, Mauro Carvalho Cheh=
+ab, Pawel Osciak, Sakari Ailus & Antti Palosaari, Tomasz Figa
+> =20
+>  Except when explicitly stated as GPL, programming examples within this
+>  part can be used and distributed without restrictions.
+> diff --git a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst b/Docume=
+ntation/media/uapi/v4l/vidioc-decoder-cmd.rst
+> index ccf83b05afa7..57f0066f4cff 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+> @@ -56,14 +56,16 @@ The ``cmd`` field must contain the command code. Some=
+ commands use the
+> =20
+>  A :ref:`write() <func-write>` or :ref:`VIDIOC_STREAMON`
+>  call sends an implicit START command to the decoder if it has not been
+> -started yet.
+> +started yet. Applies to both queues of mem2mem decoders.
+> =20
+>  A :ref:`close() <func-close>` or :ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON=
+>`
+>  call of a streaming file descriptor sends an implicit immediate STOP
+> -command to the decoder, and all buffered data is discarded.
+> +command to the decoder, and all buffered data is discarded. Applies to b=
+oth
+> +queues of mem2mem decoders.
+> =20
+> -These ioctls are optional, not all drivers may support them. They were
+> -introduced in Linux 3.3.
+> +In principle, these ioctls are optional, not all drivers may support the=
+m. They were
+> +introduced in Linux 3.3. They are, however, mandatory for stateful mem2m=
+em decoders
+> +(as further documented in :ref:`decoder`).
+> =20
+> =20
+>  .. tabularcolumns:: |p{1.1cm}|p{2.4cm}|p{1.2cm}|p{1.6cm}|p{10.6cm}|
+> @@ -167,26 +169,32 @@ introduced in Linux 3.3.
+>  	``V4L2_DEC_CMD_RESUME`` for that. This command has one flag:
+>  	``V4L2_DEC_CMD_START_MUTE_AUDIO``. If set, then audio will be
+>  	muted when playing back at a non-standard speed.
+> +
+> +	For a device implementing the :ref:`decoder`, once the drain sequence
+> +	is initiated with the ``V4L2_DEC_CMD_STOP`` command, it must be driven
+> +	to completion before this command can be invoked.  Any attempt to
+> +	invoke the command while the drain sequence is in progress will trigger
+> +	an ``EBUSY`` error code.  The command may be also used to restart the
+> +	decoder in case of an implicit stop initiated by the decoder itself,
+> +	without the ``V4L2_DEC_CMD_STOP`` being called explicitly. See
+> +	:ref:`decoder` for more details.
+>      * - ``V4L2_DEC_CMD_STOP``
+>        - 1
+>        - Stop the decoder. When the decoder is already stopped, this
+>  	command does nothing. This command has two flags: if
+>  	``V4L2_DEC_CMD_STOP_TO_BLACK`` is set, then the decoder will set
+>  	the picture to black after it stopped decoding. Otherwise the last
+> -	image will repeat. mem2mem decoders will stop producing new frames
+> -	altogether. They will send a ``V4L2_EVENT_EOS`` event when the
+> -	last frame has been decoded and all frames are ready to be
+> -	dequeued and will set the ``V4L2_BUF_FLAG_LAST`` buffer flag on
+> -	the last buffer of the capture queue to indicate there will be no
+> -	new buffers produced to dequeue. This buffer may be empty,
+> -	indicated by the driver setting the ``bytesused`` field to 0. Once
+> -	the ``V4L2_BUF_FLAG_LAST`` flag was set, the
+> -	:ref:`VIDIOC_DQBUF <VIDIOC_QBUF>` ioctl will not block anymore,
+> -	but return an ``EPIPE`` error code. If
+> +	image will repeat. If
+>  	``V4L2_DEC_CMD_STOP_IMMEDIATELY`` is set, then the decoder stops
+>  	immediately (ignoring the ``pts`` value), otherwise it will keep
+>  	decoding until timestamp >=3D pts or until the last of the pending
+>  	data from its internal buffers was decoded.
+> +
+> +	For a device implementing the :ref:`decoder`, the command will initiate
+> +	the drain sequence as documented in :ref:`decoder`.  No flags or other
+> +	arguments are accepted in this case. Any attempt to invoke the command
+> +	again before the sequence completes will trigger an ``EBUSY`` error
+> +	code.
+>      * - ``V4L2_DEC_CMD_PAUSE``
+>        - 2
+>        - Pause the decoder. When the decoder has not been started yet, th=
+e
+> @@ -209,6 +217,11 @@ On success 0 is returned, on error -1 and the ``errn=
+o`` variable is set
+>  appropriately. The generic error codes are described at the
+>  :ref:`Generic Error Codes <gen-errors>` chapter.
+> =20
+> +EBUSY
+> +    A drain sequence of a device implementing the :ref:`decoder` is stil=
+l in
+> +    progress. It is not allowed to issue another decoder command until i=
+t
+> +    completes.
+> +
+>  EINVAL
+>      The ``cmd`` field is invalid.
+> =20
 
+--=-OknBN+gaimL8cCxWIoDu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-*** WARNINGS ***
+-----BEGIN PGP SIGNATURE-----
 
-148 warning regressions:
-  + /kisskb/src/arch/s390/include/asm/uaccess.h: warning: 'rc' may be used uninitialized in this function [-Wuninitialized]:  => 143:2, 113:2
-  + /kisskb/src/arch/um/os-Linux/signal.c: warning: the frame size of 2960 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 93:1, 51:1
-  + /kisskb/src/arch/um/os-Linux/signal.c: warning: the frame size of 2960 bytes is larger than 2048 bytes [-Wframe-larger-than=]:  => 93:1
-  + /kisskb/src/arch/um/os-Linux/signal.c: warning: the frame size of 2976 bytes is larger than 2048 bytes [-Wframe-larger-than=]:  => 51:1
-  + /kisskb/src/crypto/sha512_generic.c: warning: the frame size of 1184 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 149:1
-  + /kisskb/src/crypto/sha512_generic.c: warning: the frame size of 1188 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 149:1
-  + /kisskb/src/drivers/block/ps3vram.c: warning: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'sector_t' [-Wformat]:  => 770:2
-  + /kisskb/src/drivers/crypto/ccree/cc_cipher.c: warning: the frame size of 1136 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 465:1
-  + /kisskb/src/drivers/crypto/chelsio/chtls/chtls_cm.c: warning: 'wait_for_states.constprop.27' uses dynamic stack allocation [enabled by default]:  => 406:1
-  + /kisskb/src/drivers/gpu/drm/nouveau/nvkm/subdev/bus/hwsq.c: warning: 'head_sync' may be used uninitialized in this function [-Wuninitialized]:  => 162:16
-  + /kisskb/src/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c: warning: 'head_sync' may be used uninitialized in this function [-Wuninitialized]:  => 154:40
-  + /kisskb/src/drivers/hwmon/f71805f.c: warning: 'address' may be used uninitialized in this function [-Wuninitialized]:  => 1626:26
-  + /kisskb/src/drivers/hwmon/w83627hf.c: warning: 'address' may be used uninitialized in this function [-Wuninitialized]:  => 1980:27
-  + /kisskb/src/drivers/hwtracing/intel_th/msu.c: warning: unused variable 'i' [-Wunused-variable]:  => 863:6, 783:21
-  + /kisskb/src/drivers/iommu/fsl_pamu_domain.c: warning: 'ret' may be used uninitialized in this function [-Wuninitialized]:  => 90:9
-  + /kisskb/src/drivers/lightnvm/core.c: warning: 't' may be used uninitialized in this function [-Wuninitialized]:  => 496:5
-  + /kisskb/src/drivers/misc/habanalabs/habanalabs_ioctl.c: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]:  => 143:23
-  + /kisskb/src/drivers/net/ethernet/aurora/nb8800.h: warning: "TCR_DIE" redefined [enabled by default]:  => 92:0
-  + /kisskb/src/drivers/net/ethernet/aurora/nb8800.h: warning: "TCR_DIE" redefined:  => 92
-  + /kisskb/src/drivers/net/ethernet/marvell/mvpp2/mvpp2.h: warning: overflow in conversion from 'long unsigned int' to 'int' changes value from '18446744073709551584' to '-32' [-Woverflow]:  => 614:2
-  + /kisskb/src/drivers/net/wireless/realtek/rtw88/phy.c: warning: array subscript is above array bounds [-Warray-bounds]:  => 430:26
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/core.c: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'long long int' [-Wformat=]:  => 149:36
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/core.c: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'long long int' [-Wformat]:  => 149:9
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/fileops.c: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 75:1
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/fileops.c: warning: the frame size of 1056 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 75:1
-  + /kisskb/src/drivers/staging/kpc2000/kpc2000/fileops.c: warning: the frame size of 1064 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 75:1
-  + /kisskb/src/drivers/staging/kpc2000/kpc_dma/fileops.c: warning: format '%ld' expects argument of type 'long int', but argument 7 has type 'size_t {aka unsigned int}' [-Wformat=]:  => 58:35
-  + /kisskb/src/drivers/staging/kpc2000/kpc_dma/fileops.c: warning: format '%ld' expects argument of type 'long int', but argument 7 has type 'size_t' [-Wformat]:  => 58:2
-  + /kisskb/src/drivers/staging/kpc2000/kpc_dma/fileops.c: warning: format '%ld' expects argument of type 'long int', but argument 7 has type 'size_t' {aka 'unsigned int'} [-Wformat=]:  => 58:35
-  + /kisskb/src/fs/btrfs/props.c: warning: 'num_bytes' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 389:4
-  + /kisskb/src/fs/cifs/smb2pdu.c: warning: 'in_data_buf' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 2581:19
-  + /kisskb/src/fs/cifs/smb2pdu.c: warning: 'in_data_buf' may be used uninitialized in this function [-Wuninitialized]:  => 2581:19
-  + /kisskb/src/include/linux/list.h: warning: 'head' may be used uninitialized in this function [-Wuninitialized]:  => 93:12
-  + /kisskb/src/include/linux/rhashtable.h: warning: 'next' may be used uninitialized in this function [-Wuninitialized]:  => 110:10
-  + /kisskb/src/kernel/futex.c: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 1645:17
-  + /kisskb/src/kernel/futex.c: warning: 'oldval' may be used uninitialized in this function [-Wuninitialized]:  => 1655:3, 1645:3
-  + /kisskb/src/kernel/locking/lockdep.c: warning: 'print_lock_trace' defined but not used [-Wunused-function]:  => 2821:13
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 3c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 500>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 820>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U f00>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1000>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U10a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U11e0>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1280>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1320>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2280>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U28c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2c80>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3140>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U31e0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3500>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34, 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U41e0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4b40>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5460>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U55a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5820>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5aa0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5b40>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5e60>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U6140>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U6780>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U6c80>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32, 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8320>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U85a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9280>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U95a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9e60>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ua640>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ua8c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uae60>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uaf00>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ubc80>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ubf00>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uc5a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uc640>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ucb40>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uce60>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ucf00>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud0a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud5a0>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud820>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Udaa0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ude60>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ue000>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ue3c0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ue6e0>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uec80>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
-  + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uf500>]' may be used uninitialized in this function [-Wuninitialized]:  => 140:32
-  + /kisskb/src/lib/test_kasan.c: warning: 'kasan_alloca_oob_left' uses dynamic stack allocation:  => 491:1
-  + /kisskb/src/lib/test_kasan.c: warning: 'kasan_alloca_oob_right' uses dynamic stack allocation:  => 501:1
-  + /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.47' uses dynamic stack allocation [enabled by default]:  => 2177:1
-  + /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.49' uses dynamic stack allocation [enabled by default]:  => 1884:1
-  + /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.48' uses dynamic stack allocation [enabled by default]:  => 2245:1
-  + /kisskb/src/mm/vmalloc.c: warning: 'lva' may be used uninitialized in this function [-Wuninitialized]:  => 976:28
-  + /kisskb/src/net/core/devlink.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]: 4304:6 => 4321:6, 4390:6
-  + /kisskb/src/net/ipv4/fib_semantics.c: warning: 'err' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 1023:12
-  + /kisskb/src/net/ipv4/fib_semantics.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]:  => 1023:12
-  + /kisskb/src/net/sched/sch_cake.c: warning: the frame size of 1504 bytes is larger than 1280 bytes [-Wframe-larger-than=]:  => 2905:1
-  + /kisskb/src/net/xfrm/xfrm_policy.c: warning: array subscript is above array bounds [-Warray-bounds]:  => 3495:15
-  + /kisskb/src/sound/soc/fsl/imx-audmix.c: warning: 'capture_dai_name' may be used uninitialized in this function [-Wuninitialized]:  => 277:45
-  + warning: "copy_page" [drivers/md/dm-integrity.ko] has no CRC!:  => N/A
-  + warning: 140 bad relocations:  => N/A
-  + warning: 141 bad relocations:  => N/A
-  + warning: You need at least binutils >= 2.19 to build a CONFIG_RELOCATABLE kernel:  => N/A
-  + warning: arch/powerpc/oprofile/oprofile.o (.PPC.EMB.apuinfo): unexpected non-allocatable section.:  => N/A
-  + warning: same module names found::  => N/A
-  + warning: vmlinux.o(.text+0x2f2a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x2f3c): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x302a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x30ba): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3128): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x312a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3164): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel():  => N/A
-  + warning: vmlinux.o(.text+0x322a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x325ec): Section mismatch in reference from the function setup_scache() to the function .init.text:loongson3_sc_init():  => N/A
-  + warning: vmlinux.o(.text+0x340c): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x3474): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x3484): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x352a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3628): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x362a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3664): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel():  => N/A
-  + warning: vmlinux.o(.text+0x3734): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3770): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel():  => N/A
-  + warning: vmlinux.o(.text+0x37794): Section mismatch in reference from the function mips_sc_init() to the function .init.text:mips_sc_probe_cm3():  => N/A
-  + warning: vmlinux.o(.text+0x3a14): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init():  => N/A
-  + warning: vmlinux.o(.text+0x3c34): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x3c70): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel():  => N/A
-  + warning: vmlinux.o(.text+0x3dc6): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x40e): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x42c6): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x51a): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup():  => N/A
-  + warning: vmlinux.o(.text+0x5f878): Section mismatch in reference from the function .fsl_add_bridge() to the function .init.text:.setup_pci_cmd():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x20): Section mismatch in reference from the function populate_initrd_image() to the variable .init.ramfs.info:__initramfs_size:  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x24c84): Section mismatch in reference from the function __integrity_init_keyring() to the function .init.text:set_platform_trusted_keys():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x308): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:set_reset_devices():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x30c): Section mismatch in reference from the function populate_initrd_image() to the variable .init.ramfs.info:__initramfs_size:  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x32c): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:set_reset_devices():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x36cc): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x36e4): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x38cc): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x3914): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x3928): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x3b58): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0x52): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:unpack_to_rootfs():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0xb2): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:xwrite():  => N/A
-  + warning: vmlinux.o(.text.unlikely+0xe704): Section mismatch in reference from the function __integrity_init_keyring() to the function .init.text:set_platform_trusted_keys():  => N/A
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXP61jAAKCRBxUwItrAao
+HHxqAJ9+hpqTOCNXbuoi8gjDw5LS8J4bWACgkT279JzPBlbDd/MpiL9tatCScoA=
+=yTTR
+-----END PGP SIGNATURE-----
 
-112 warning improvements:
-  - /kisskb/src/arch/arc/include/asm/cmpxchg.h: warning: value computed is not used [-Wunused-value]: 95:29 => 
-  - /kisskb/src/arch/arc/mm/tlb.c: warning: ISO C90 forbids variable length array 'pd0' [-Wvla]: 914:2 => 
-  - /kisskb/src/arch/arc/mm/tlb.c: warning: variable length array 'pd0' is used [-Wvla]: 914:2 => 
-  - /kisskb/src/arch/s390/mm/pgtable.c: warning: 'pmd_alloc_map' defined but not used [-Wunused-function]: 413:15 => 
-  - /kisskb/src/arch/sh/math-emu/math.c: warning: left shift count >= width of type [enabled by default]: 310:1 => 
-  - /kisskb/src/arch/sh/math-emu/math.c: warning: right shift count >= width of type [enabled by default]: 294:3, 296:3 => 
-  - /kisskb/src/arch/um/kernel/skas/uaccess.c: warning: unused variable 'buf' [-Wunused-variable]: 62:10 => 
-  - /kisskb/src/arch/um/os-Linux/umid.c: warning: ISO C90 forbids variable length array 'dir' [-Wvla]: 388:2 => 
-  - /kisskb/src/arch/um/os-Linux/umid.c: warning: ISO C90 forbids variable length array 'file' [-Wvla]: 213:2, 138:2 => 
-  - /kisskb/src/drivers/atm/ambassador.c: warning: passing argument 1 of 'virt_to_bus' discards 'volatile' qualifier from pointer target type [enabled by default]: 1762:3 => 
-  - /kisskb/src/drivers/crypto/chelsio/chtls/chtls_cm.c: warning: 'wait_for_states.constprop.23' uses dynamic stack allocation [enabled by default]: 406:1 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c: warning: (near initialization for 'stream_update.src') [-Wmissing-braces]: 5861:10 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c: warning: missing braces around initializer [-Wmissing-braces]: 5861:10 => 
-  - /kisskb/src/drivers/gpu/drm/arm/display/komeda/komeda_dev.c: warning: 'ret' may be used uninitialized in this function [-Wuninitialized]: 145:5 => 
-  - /kisskb/src/drivers/mtd/ubi/wl.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]: 1520:19 => 
-  - /kisskb/src/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c: warning: 'rc' may be used uninitialized in this function [-Wuninitialized]: 2962:6 => 
-  - /kisskb/src/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]: 845:5 => 
-  - /kisskb/src/drivers/net/wan/lmc/lmc_main.c: warning: passing argument 1 of 'virt_to_bus' discards 'volatile' qualifier from pointer target type [enabled by default]: 1875:5, 1860:9, 1873:9, 1851:9, 1876:5, 1862:5 => 
-  - /kisskb/src/drivers/scsi/myrs.c: warning: 'sshdr.sense_key' may be used uninitialized in this function [-Wmaybe-uninitialized]: 821:24 => 
-  - /kisskb/src/fs/btrfs/qgroup.c: warning: array subscript is below array bounds [-Warray-bounds]: 1720:18, 1721:17 => 
-  - /kisskb/src/fs/reiserfs/stree.c: warning: the frame size of 1052 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 812:1 => 
-  - /kisskb/src/include/linux/skbuff.h: warning: 'extra_uref' may be used uninitialized in this function [-Wuninitialized]: 1397:6 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U  a0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U 960>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U a00>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U be0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1460>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U16e0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U1be0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2000>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U20a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U21e0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2780>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U2aa0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3000>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U30a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3460>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U35a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U36e0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3c80>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U3d20>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4140>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4500>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U45a0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U4a00>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U5f00>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U66e0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U68c0>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U6960>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U7000>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U7b40>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8000>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8140>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8a00>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8b40>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U8c80>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9460>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9780>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9820>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U9c80>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ua320>]' may be used uninitialized in this function [-Wuninitialized]: 121:34, 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uadc0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ub460>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uc0a0>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uc500>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uca00>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud640>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ud960>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Udf00>]' may be used uninitialized in this function [-Wuninitialized]: 140:32 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ueb40>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uf780>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Uf960>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ufa00>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<Ufb40>]' may be used uninitialized in this function [-Wuninitialized]: 121:34 => 
-  - /kisskb/src/kernel/trace/trace_hwlat.c: warning: the frame size of 1696 bytes is larger than 1280 bytes [-Wframe-larger-than=]: 341:1 => 
-  - /kisskb/src/lib/rhashtable.c: warning: 'next' may be used uninitialized in this function [-Wuninitialized]: 264:2 => 
-  - /kisskb/src/mm/mprotect.c: warning: unused variable 'mm' [-Wunused-variable]: 42:20 => 
-  - /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.50' uses dynamic stack allocation [enabled by default]: 2185:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.52' uses dynamic stack allocation [enabled by default]: 1892:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.51' uses dynamic stack allocation [enabled by default]: 2253:1 => 
-  - /kisskb/src/net/ncsi/ncsi-manage.c: warning: 'vid' may be used uninitialized in this function [-Wuninitialized]: 676:19, 661:5 => 672:19
-  - /kisskb/src/net/netfilter/nf_nat_masquerade.c: warning: 'masq_refcnt6' defined but not used [-Wunused-variable]: 15:21 => 
-  - /kisskb/src/net/sched/sch_cake.c: warning: the frame size of 1480 bytes is larger than 1280 bytes [-Wframe-larger-than=]: 2904:1 => 
-  - arch/m68k/configs/multi_defconfig: warning: symbol value 'm' invalid for FS_ENCRYPTION: 534 => 
-  - arch/m68k/configs/multi_defconfig: warning: symbol value 'm' invalid for NET_DEVLINK: 333 => 
-  - arch/m68k/configs/sun3_defconfig: warning: symbol value 'm' invalid for FS_ENCRYPTION: 423 => 
-  - arch/m68k/configs/sun3_defconfig: warning: symbol value 'm' invalid for NET_DEVLINK: 306 => 
-  - warning: vmlinux.o(.text+0x2b3c): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x2d28): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup(): N/A => 
-  - warning: vmlinux.o(.text+0x2d5c): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
-  - warning: vmlinux.o(.text+0x2fac): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x3074): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x3084): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x3228): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup(): N/A => 
-  - warning: vmlinux.o(.text+0x325c): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
-  - warning: vmlinux.o(.text+0x3334): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup(): N/A => 
-  - warning: vmlinux.o(.text+0x3368): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
-  - warning: vmlinux.o(.text+0x339c8): Section mismatch in reference from the function setup_scache() to the function .init.text:loongson3_sc_init(): N/A => 
-  - warning: vmlinux.o(.text+0x35a4): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
-  - warning: vmlinux.o(.text+0x37c04): Section mismatch in reference from the function mips_sc_init() to the function .init.text:mips_sc_probe_cm3(): N/A => 
-  - warning: vmlinux.o(.text+0x3834): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:early_setup(): N/A => 
-  - warning: vmlinux.o(.text+0x3868): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
-  - warning: vmlinux.o(.text+0x3d9430): Section mismatch in reference from the function .devm_memremap_pages_release() to the function .meminit.text:.arch_remove_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x3d9a98): Section mismatch in reference from the function .devm_memremap_pages() to the function .meminit.text:.arch_add_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x3e0c10): Section mismatch in reference from the function .devm_memremap_pages_release() to the function .meminit.text:.arch_remove_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x3e1278): Section mismatch in reference from the function .devm_memremap_pages() to the function .meminit.text:.arch_add_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x458810): Section mismatch in reference from the function .devm_memremap_pages_release() to the function .meminit.text:.arch_remove_memory(): N/A => 
-  - warning: vmlinux.o(.text+0x458e78): Section mismatch in reference from the function .devm_memremap_pages() to the function .meminit.text:.arch_add_memory(): N/A => 
-  - warning: vmlinux.o(.text.unlikely+0x2e18): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
-  - warning: vmlinux.o(.text.unlikely+0x2e84): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
-  - warning: vmlinux.o(.text.unlikely+0x2f90): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
-  - warning: vmlinux.o(.text.unlikely+0x30a8): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
+--=-OknBN+gaimL8cCxWIoDu--
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
