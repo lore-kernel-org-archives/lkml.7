@@ -2,112 +2,144 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AB9C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF3AC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAF720859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:53:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="n3Fu5kN6"
+	by mail.kernel.org (Postfix) with ESMTP id 4BFA520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390069AbfFJMxz (ORCPT
+        id S2390078AbfFJMze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 08:53:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40862 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388373AbfFJMxz (ORCPT
+        Mon, 10 Jun 2019 08:55:34 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:11582 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388373AbfFJMze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 08:53:55 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p11so9065486wre.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 05:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8T69aUvAi+maIZ8yBvTWOJzaeXiOR3Dqg9+a+MoRXDA=;
-        b=n3Fu5kN6wdtGKh9YWexo8ZjfsnSBwADVRCC+C4XPOPSXHT5eKEAqT5i79KL9bKa4wd
-         c0hqIJpI7gTWCxibbx6XId2oyRuITeCfXqD/vuxY73kQof26ZidBERPABjLwlljWAlZv
-         /RaBmnpuINADHE0WgkCb9CXCUgwj4Yxvz2Ql+sdrVda1v3DhaMUlSuiQFVX9hxE2M59c
-         2v8lzULQ5grpGHh307iNtaYcW5R1JoPcHlI5ob+LjUqV8Yn8AMYEPWaBB5TBDRQZQhyb
-         tXVbYg6wQvy59GmMAsTdVK+sHPTjGUCBNjYtFOVx9d4p2BBvJ5leqMnY4TuY0XvTNUme
-         i8Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8T69aUvAi+maIZ8yBvTWOJzaeXiOR3Dqg9+a+MoRXDA=;
-        b=ULW72hJOkfd433s/WRbb8105P+Hko97CJ5Bji8dksxHhU5mUAc/VrFIZaKR5umfhBr
-         xqFT6zZYv3UOruVMfgUmeHT2ISpAYy8DNcx1n956rZ2XVPD7jGJXGSKXzs8YuKWPAbJ+
-         NNuQQyr+Ai49mLibQ8RYDdduA2rPsaueq3s82X3SYljk7w6pR9xwy+xI4G1rmPjDK1wN
-         fAhh2PFrPpeRzFP4GMRBQ/R18P84uQbWUeYfjibQ9ZBLNfqauyM3kNAT2jVLxmbACn5k
-         5nt1ZaWzwJ5NiTd1NhVKRw1Pi4GiyssCWjHz1lbkAk5n1TJ28PWQXb1vGE6mTgeMSRgt
-         2YOQ==
-X-Gm-Message-State: APjAAAUDV6i0Vf1vkQNXdj93rpT71ZPNeKXaOtD91dgpe7tXuExJjC0k
-        FX3nOm5+k4Wxj+H9EmnsKkRj+A==
-X-Google-Smtp-Source: APXvYqyF38CXjmJlFWQvmC/4HOPRMLGbV8IW7oGgE73werPfKioCG3d1XJdAyRcyyO0juNIRqqCB+Q==
-X-Received: by 2002:adf:9267:: with SMTP id 94mr22877356wrj.338.1560171233499;
-        Mon, 10 Jun 2019 05:53:53 -0700 (PDT)
-Received: from boomer.local ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
-        by smtp.googlemail.com with ESMTPSA id 135sm11871603wmb.28.2019.06.10.05.53.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 05:53:53 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH] ASoC: meson: axg-card: fix null pointer dereference in clean up
-Date:   Mon, 10 Jun 2019 14:53:44 +0200
-Message-Id: <20190610125344.18221-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 10 Jun 2019 08:55:34 -0400
+X-UUID: 0f8b3c3012ee4ecdbcaf3f9f98dc6452-20190610
+X-UUID: 0f8b3c3012ee4ecdbcaf3f9f98dc6452-20190610
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 11014908; Mon, 10 Jun 2019 20:55:30 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 10 Jun 2019 20:55:29 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 10 Jun 2019 20:55:28 +0800
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
+        <yong.wu@mediatek.com>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>
+Subject: [PATCH v2 00/12] Clean up "mediatek,larb" after adding device_link
+Date:   Mon, 10 Jun 2019 20:55:01 +0800
+Message-ID: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using modern dai_link style, we must first make sure the
-struct snd_soc_dai_link_component exists before accessing its members.
+MediaTek IOMMU block diagram always like below:
 
-In case of early probe deferral, some of the '.cpus' or '.codecs' may not
-have been allocated yet. Check this before calling of_node_put() on the
-structure member.
+        M4U
+         |
+    smi-common
+         |
+  -------------
+  |         |  ...
+  |         |
+larb1     larb2
+  |         |
+vdec       venc
 
-Fixes: c84836d7f650 ("ASoC: meson: axg-card: use modern dai_link style")
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/axg-card.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+All the consumer connect with smi-larb, then connect with smi-common.
 
-diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
-index fb03258d00ae..70bb0cbad233 100644
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -115,9 +115,11 @@ static void axg_card_clean_references(struct axg_card *priv)
- 
- 	if (card->dai_link) {
- 		for_each_card_prelinks(card, i, link) {
--			of_node_put(link->cpus->of_node);
-+			if (link->cpus)
-+				of_node_put(link->cpus->of_node);
- 			for_each_link_codecs(link, j, codec)
--				of_node_put(codec->of_node);
-+				if (codec)
-+					of_node_put(codec->of_node);
- 		}
- 	}
- 
+MediaTek IOMMU don't have its power-domain. When the consumer works,
+it should enable the smi-larb's power which also need enable the smi-common's
+power firstly.
+
+Thus, Firstly, use the device link connect the consumer and the
+smi-larbs. then add device link between the smi-larb and smi-common.
+
+After adding the device_link, then "mediatek,larb" property can be removed.
+the iommu consumer don't need call the mtk_smi_larb_get/put to enable
+the power and clock of smi-larb and smi-common.
+
+This patchset depends on "MT8183 IOMMU SUPPORT"[1].
+
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2019-June/036552.html
+
+Change notes:
+v2:
+   1) rebase on v5.2-rc1.
+   2) Move adding device_link between the consumer and smi-larb into
+iommu_add_device from Robin.
+   3) add DL_FLAG_AUTOREMOVE_CONSUMER even though the smi is built-in from Evan.
+   4) Remove the shutdown callback in iommu.   
+
+v1: https://lists.linuxfoundation.org/pipermail/iommu/2019-January/032387.html
+
+Yong Wu (12):
+  dt-binding: mediatek: Get rid of mediatek,larb for multimedia HW
+  iommu/mediatek: Add probe_defer for smi-larb
+  iommu/mediatek: Add device_link between the consumer and the larb
+    devices
+  memory: mtk-smi: Add device-link between smi-larb and smi-common
+  media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
+  media: mtk-mdp: Get rid of mtk_smi_larb_get/put
+  media: mtk-vcodec: Get rid of mtk_smi_larb_get/put
+  drm/mediatek: Get rid of mtk_smi_larb_get/put
+  memory: mtk-smi: Get rid of mtk_smi_larb_get/put
+  iommu/mediatek: Use builtin_platform_driver
+  arm: dts: mediatek: Get rid of mediatek,larb for MM nodes
+  arm64: dts: mediatek: Get rid of mediatek,larb for MM nodes
+
+ .../bindings/display/mediatek/mediatek,disp.txt    |  9 -----
+ .../bindings/media/mediatek-jpeg-decoder.txt       |  4 --
+ .../devicetree/bindings/media/mediatek-mdp.txt     |  8 ----
+ .../devicetree/bindings/media/mediatek-vcodec.txt  |  4 --
+ arch/arm/boot/dts/mt2701.dtsi                      |  1 -
+ arch/arm/boot/dts/mt7623.dtsi                      |  1 -
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 15 -------
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            | 11 -----
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 26 ------------
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  1 -
+ drivers/iommu/mtk_iommu.c                          | 45 +++++++--------------
+ drivers/iommu/mtk_iommu_v1.c                       | 39 +++++++-----------
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 22 ----------
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  2 -
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c      | 38 -----------------
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.h      |  2 -
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |  1 -
+ .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c  | 21 ----------
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |  3 --
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c |  1 -
+ .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c  | 47 ----------------------
+ drivers/memory/mtk-smi.c                           | 31 ++++----------
+ include/soc/mediatek/smi.h                         | 20 ---------
+ 23 files changed, 36 insertions(+), 316 deletions(-)
+
 -- 
-2.20.1
+1.9.1 
 
