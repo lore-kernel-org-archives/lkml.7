@@ -2,141 +2,144 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93E8C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B636C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F484207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hYhK3OgV"
+	by mail.kernel.org (Postfix) with ESMTP id 1ED5D207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391082AbfFJPHQ (ORCPT
+        id S2391090AbfFJPLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:07:16 -0400
-Received: from mail-eopbgr790044.outbound.protection.outlook.com ([40.107.79.44]:34854
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389368AbfFJPHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:07:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LlGbTDK0vCLS7MgntYsuF/kp19ce2eRMINisNYYRO6E=;
- b=hYhK3OgVmpN6LoXdxxZNXDxZmEcp1MUz9TsT/u6uH4cjJ8Kor00/gtFsWBrbpI2HULiglAN9aSj8FxOvSS/M+CWU/JjcMf6kfuV5kYngWJJ4v4Ntd7T06tDV9xMf9YtYY1Yz0aVIhioO65YRDnncfbqdTh3JpwWYoxuJqDcyROQ=
-Received: from BL0PR02CA0082.namprd02.prod.outlook.com (2603:10b6:208:51::23)
- by DM6PR02MB6233.namprd02.prod.outlook.com (2603:10b6:5:1d1::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.12; Mon, 10 Jun
- 2019 15:07:12 +0000
-Received: from CY1NAM02FT063.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::208) by BL0PR02CA0082.outlook.office365.com
- (2603:10b6:208:51::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.12 via Frontend
- Transport; Mon, 10 Jun 2019 15:07:11 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- CY1NAM02FT063.mail.protection.outlook.com (10.152.75.161) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1965.12
- via Frontend Transport; Mon, 10 Jun 2019 15:07:11 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:51802 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1haLt8-0006nT-MQ; Mon, 10 Jun 2019 08:07:10 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1haLt3-0007JQ-KN; Mon, 10 Jun 2019 08:07:05 -0700
-Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x5AF70ek027439;
-        Mon, 10 Jun 2019 08:07:00 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1haLsy-0007HS-Io; Mon, 10 Jun 2019 08:07:00 -0700
-Subject: Re: [PATCH 1/2] serial: xilinx_uartps: Fix warnings in the driver
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, johan@kernel.org,
-        Nava kishore Manne <nava.manne@xilinx.com>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <c6753260caf8b20cc002b15fcbf22b759c91d760.1560156294.git.michal.simek@xilinx.com>
- <20190610144425.GC31086@kroah.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <888c7d0a-28dc-978c-662a-e96ee3863c41@xilinx.com>
-Date:   Mon, 10 Jun 2019 17:06:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 11:11:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:44552 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390081AbfFJPLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:11:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BA69344;
+        Mon, 10 Jun 2019 08:11:39 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 207BC3F246;
+        Mon, 10 Jun 2019 08:11:38 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 16:11:36 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     syzbot <syzbot+7008b8b8ba7df475fdc8@syzkaller.appspotmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        David Howells <dhowells@redhat.com>
+Subject: Re: BUG: Dentry still in use [unmount of tmpfs tmpfs]
+Message-ID: <20190610151135.GC16989@lakrids.cambridge.arm.com>
+References: <000000000000456245058adf33a4@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190610144425.GC31086@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(376002)(39860400002)(2980300002)(199004)(189003)(426003)(9786002)(65826007)(486006)(54906003)(26005)(70206006)(76176011)(186003)(70586007)(4326008)(478600001)(230700001)(305945005)(446003)(36386004)(44832011)(2906002)(476003)(336012)(11346002)(126002)(2616005)(50466002)(47776003)(6246003)(106002)(8676002)(229853002)(81156014)(31686004)(31696002)(81166006)(5660300002)(65806001)(63266004)(14444005)(2486003)(52146003)(23676004)(77096007)(316002)(6666004)(356004)(65956001)(8936002)(4744005)(64126003)(36756003)(58126008)(110136005)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB6233;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cd0c7092-6051-4d85-cc11-08d6edb55094
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM6PR02MB6233;
-X-MS-TrafficTypeDiagnostic: DM6PR02MB6233:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <DM6PR02MB62332E6009940D3ECE150114C6130@DM6PR02MB6233.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
-X-Forefront-PRVS: 0064B3273C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: UDPpF2P9o2aYYqT9NtViTB4m4sUyOp1dNh+hSgBQyemya+F/gOVmWnLyNslU/uPmarkLIrG2MuTfAiI9WdKHYbbVp6fA35fl1kCzObKSlukGl5h47/vUPNEsL0W5phFF+VA6E4kvrqeajTLcXWqWaeSOPRBad+LbhhNWjSod82h2SFfqCqk3GwuwPb3Gujp2JvEFk0uYBV0jtEXZA7FyqjR6fIEaB2DxSxQU6uj8TJ1G001tZ6ddE/s0M5EaF19m2Re4xwf3NmxrRMbQzmtR26SJ27SsRi5TraUKp5IrRi5cvar3Yv7SsqoIm/CoWRkyFQU5pFKYpBImCVHorz/bCP5w0zNXDzyWcJNwDZfrmQfrusg6h8vdOoM+j4erBskNhFHsWwyD4BxTIsIh2OaiFbwDQ5qjug1hgZcTz3IR5ao=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2019 15:07:11.1819
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd0c7092-6051-4d85-cc11-08d6edb55094
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6233
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000456245058adf33a4@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10. 06. 19 16:44, Greg KH wrote:
-> On Mon, Jun 10, 2019 at 10:44:55AM +0200, Michal Simek wrote:
->> From: Nava kishore Manne <nava.manne@xilinx.com>
->>
->> This patch fixes the below warning
->>
->>         -->Symbolic permissions 'S_IRUGO' are not preferred.
->>            Consider using octal permissions '0444'.
->>         -->macros should not use a trailing semicolon.
->>         -->line over 80 characters.
->>         -->void function return statements are not generally useful.
->>         -->Prefer 'unsigned int' to bare use of 'unsigned'.
->>
->> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->> Happy to split it if needed.
+On Sun, Jun 09, 2019 at 12:42:06AM -0700, syzbot wrote:
+> Hello,
 > 
-> Please split.  Do not do more than one "logical thing" per patch.
+> syzbot found the following crash on:
 > 
-> And the subject is not correct, there are no general "warnings", these
-> are all checkpatch warnings, not a build issue.
+> HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16eacf36a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7008b8b8ba7df475fdc8
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
 
-ok. Will do. Any issue with second patch?
+I suspect that this is the same issue I reported at:
+
+  https://lore.kernel.org/lkml/20190605135401.GB30925@lakrids.cambridge.arm.com/
+
+... which has a C reproducer hand-minimized from Syzkaller's
+auto-generated repro.
 
 Thanks,
-Michal
+Mark.
+
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+7008b8b8ba7df475fdc8@syzkaller.appspotmail.com
+> 
+> BUG: Dentry 00000000c5e232d4{i=15d04,n=/}  still in use (2) [unmount of
+> tmpfs tmpfs]
+> WARNING: CPU: 0 PID: 22126 at fs/dcache.c:1529 umount_check fs/dcache.c:1520
+> [inline]
+> WARNING: CPU: 0 PID: 22126 at fs/dcache.c:1529 umount_check.cold+0xe9/0x10a
+> fs/dcache.c:1510
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 22126 Comm: syz-executor.5 Not tainted 5.2.0-rc3+ #16
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  panic+0x2cb/0x744 kernel/panic.c:219
+>  __warn.cold+0x20/0x4d kernel/panic.c:576
+>  report_bug+0x263/0x2b0 lib/bug.c:186
+>  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+>  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+>  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> RIP: 0010:umount_check fs/dcache.c:1529 [inline]
+> RIP: 0010:umount_check.cold+0xe9/0x10a fs/dcache.c:1510
+> Code: 89 ff e8 50 62 f0 ff 48 81 c3 68 06 00 00 45 89 e8 4c 89 e1 53 4d 8b
+> 0f 4c 89 f2 4c 89 e6 48 c7 c7 c0 ff 75 87 e8 31 d4 a1 ff <0f> 0b 58 e9 bd 2a
+> ff ff e8 20 62 f0 ff e9 29 ff ff ff 45 31 f6 e9
+> RSP: 0018:ffff8880659d7bf8 EFLAGS: 00010286
+> RAX: 0000000000000054 RBX: ffff8880934748a8 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff815ac976 RDI: ffffed100cb3af71
+> RBP: ffff8880659d7c28 R08: 0000000000000054 R09: ffffed1015d06011
+> R10: ffffed1015d06010 R11: ffff8880ae830087 R12: ffff88808fa10840
+> R13: 0000000000000002 R14: 0000000000015d04 R15: ffffffff88c21260
+>  d_walk+0x194/0x950 fs/dcache.c:1264
+>  do_one_tree+0x28/0x40 fs/dcache.c:1536
+>  shrink_dcache_for_umount+0x72/0x170 fs/dcache.c:1552
+>  generic_shutdown_super+0x6d/0x370 fs/super.c:443
+>  kill_anon_super+0x3e/0x60 fs/super.c:1137
+>  kill_litter_super+0x50/0x60 fs/super.c:1146
+>  deactivate_locked_super+0x95/0x100 fs/super.c:331
+>  deactivate_super fs/super.c:362 [inline]
+>  deactivate_super+0x1b2/0x1d0 fs/super.c:358
+>  cleanup_mnt+0xbf/0x160 fs/namespace.c:1120
+>  __cleanup_mnt+0x16/0x20 fs/namespace.c:1127
+>  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+>  tracehook_notify_resume include/linux/tracehook.h:185 [inline]
+>  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:168
+>  prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
+>  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+>  do_syscall_64+0x58e/0x680 arch/x86/entry/common.c:304
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x412f61
+> Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48
+> 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89
+> c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+> RSP: 002b:00007fff7b2152c0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000412f61
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
+> RBP: 0000000000000001 R08: 00000000ea5b01f8 R09: ffffffffffffffff
+> R10: 00007fff7b2153a0 R11: 0000000000000293 R12: 0000000000760d58
+> R13: 0000000000077aaa R14: 0000000000077ad7 R15: 000000000075bf2c
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
