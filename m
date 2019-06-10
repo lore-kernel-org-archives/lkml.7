@@ -2,156 +2,127 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DC0C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D60C468BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B0C2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itjfuEoX"
+	by mail.kernel.org (Postfix) with ESMTP id E1B4D20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387955AbfFJIOn (ORCPT
+        id S2388055AbfFJIQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:14:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35445 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387824AbfFJIOm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:14:42 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m3so8194022wrv.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:14:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FoeVTYzF5ZDi2tID72FryeJ/j+o8r81eaeVqgETUoko=;
-        b=itjfuEoXOvXwxbRwuF6HrhTmMzpt6ljGh0o24LPk+N83H/V44mafKAvoTtxvdP14KI
-         LJFlVdi880AiwQnNR9viKWtZQ/ad5i6A238QtGDRjDfySmXGFr6sRkq82+fKocOAZg5N
-         4FziCyWxT7dEY3/oADWNFmOvqND8lybwrvWtQqEOafXloTjd6s9k1YaLHjevxD08LR1U
-         kDfqayPy7cM7+IajIExVAVT7g1tOUDCkmPYDVnR1yGcu5rH0JH6gGpihkAiIv3xsatlv
-         isLSXUYnVtLdBH7SmW7QVjYbO/Md30vYrs7/2WQEtnGwzMYCg1yf40HuHbDIHbr5Q6Pu
-         IzoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FoeVTYzF5ZDi2tID72FryeJ/j+o8r81eaeVqgETUoko=;
-        b=pyi7TRajwEijQ90t3K/F2fcgnrCVHp52S0IqDRUzzo0o1n12+gyHIM68raDVa4hmgK
-         s5SUT/6Xmd/22cvF0tnB3G7w8HYg4qoEiTgAZaxb1n5t3dMAdK0fwDE2QbZGB5sVlKG/
-         /7R1VXK1AG2aibpi1yG+8Rcn3z7nWmIl+KkRv3D18GlKK5uTS795zgTOZ4njtgAcxPlJ
-         UdHgdBphg1Ij77pmh2Q1G+/3SlYHskcoeGv1K2aXflrJMoVTbt2yxHhHlXVSFNo3iRIF
-         N++LafPg2qoPqvPxPWO2z5VMQ5tUbxApjfuhb3ecMqRKNuagGPBz6cAceNwo+axH3VZ6
-         NHLA==
-X-Gm-Message-State: APjAAAWAFn2HRg8jRTfZgOC8CVZj3CJlXxGnlon+ZumRx5Xi8GDzgr/j
-        /CAHWEXSrXYsZX3c2pXbw92YpdfHVlHz4g==
-X-Google-Smtp-Source: APXvYqy9NQENDTf7h9IM9Fr1WLtg2wN5q3OPNu/X/z7kY2UX4lC5AHdyFIKS7VcslrPFuacPBM++HA==
-X-Received: by 2002:adf:e2c3:: with SMTP id d3mr16647979wrj.314.1560154480327;
-        Mon, 10 Jun 2019 01:14:40 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id f2sm17310279wrq.48.2019.06.10.01.14.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 01:14:39 -0700 (PDT)
-Subject: Re: [RFC PATCH 5/6] dt-bindings: soundwire: add bindings for Qcom
- controller
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
- <20190607085643.932-6-srinivas.kandagatla@linaro.org>
- <20190610045150.GJ9160@vkoul-mobl.Dlink>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <f1e68207-caa2-02e0-19af-ac5763c86e41@linaro.org>
-Date:   Mon, 10 Jun 2019 09:14:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190610045150.GJ9160@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Jun 2019 04:16:24 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:36684 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387824AbfFJIQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:23 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C4C11A07AF;
+        Mon, 10 Jun 2019 10:16:20 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0FC271A07AC;
+        Mon, 10 Jun 2019 10:16:12 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0DAE4402FB;
+        Mon, 10 Jun 2019 16:16:01 +0800 (SGT)
+From:   yibin.gong@nxp.com
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
+        festevam@gmail.com, vkoul@kernel.org, dan.j.williams@intel.com,
+        u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com,
+        l.stach@pengutronix.de, will.deacon@arm.com
+Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v5 00/15] add ecspi ERR009165 for i.mx6/7 soc family
+Date:   Mon, 10 Jun 2019 16:17:38 +0800
+Message-Id: <20190610081753.11422-1-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Robin Gong <yibin.gong@nxp.com>
 
+  There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+transfer to be send twice in DMA mode. Please get more information from:
+https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+new sdma ram script which works in XCH  mode as PIO inside sdma instead
+of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+exist on all legacy i.mx6/7 soc family before i.mx6ul.
+  NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+or not.
+  The first two reverted patches should be the same issue, though, it
+seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+have the chance to test this patch set if could fix their issues.
+  Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+on i.mx8mm because the event id is zero.
 
-On 10/06/2019 05:51, Vinod Koul wrote:
-> On 07-06-19, 09:56, Srinivas Kandagatla wrote:
->> This patch adds bindings for Qualcomm soundwire controller.
->>
->> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
->> either integrated as part of WCD audio codecs via slimbus or
->> as part of SOC I/O.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../bindings/soundwire/qcom,swr.txt           | 62 +++++++++++++++++++
-> 
-> So I was expecting to see bus support patches for OF first. I think you
-> have missed those changes. Please do include those in v2 with bindings
-> and OF support for bus.
+PS:
+   Please get sdma firmware from below linux-firmware and copy it to your
+local rootfs /lib/firmware/imx/sdma.
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-I was planning to post bus bindings along with soundwire slave bindings 
-of WSA881x driver!
-I will be sending this soon!
+v2:
+  1.Add commit log for reverted patches.
+  2.Add comment for 'ecspi_fixed' in sdma driver.
+  3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+    rather than remove.
+v3:
+  1.Confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
+    /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+    Correct dts related dts patch in v2.
+  2.Clean eratta information in binding doc and new 'tx_glitch_fixed' flag
+    in spi-imx driver to state ERR009165 fixed or not.
+  3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+    errata workaroud, thus improve performance as possible.
+v4:
+  1.add Ack tag from Mark and Vinod
+  2. remove checking 'event_id1' zero as 'event_id0'.
+v5:
+  1.Add another patch for compatible with the current uart driver which
+    using rom script, so both uart ram script and rom script supported
+    in latest firmware, by default uart rom script used. UART driver
+    will be broken without this patch. Latest sdma firmware has been
+    already updated in linux-firmware. 
 
-> 
->>   1 file changed, 62 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,swr.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soundwire/qcom,swr.txt b/Documentation/devicetree/bindings/soundwire/qcom,swr.txt
->> new file mode 100644
->> index 000000000000..eb84d0f4f36f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soundwire/qcom,swr.txt
->> @@ -0,0 +1,62 @@
->> +Qualcomm SoundWire Controller
->> +
->> +This binding describes the Qualcomm SoundWire Controller Bindings.
->> +
->> +Required properties:
->> +
->> +- compatible:		Must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
->> +	 		example:
->> +			"qcom,soundwire-v1.3.0"
->> +			"qcom,soundwire-v1.5.0"
->> +			"qcom,soundwire-v1.6.0"
->> +- reg:			SoundWire controller address space.
->> +- interrupts:		SoundWire controller interrupt.
->> +- clock-names:		Must contain "iface".
->> +- clocks:		Interface clocks needed for controller.
->> +- #sound-dai-cells:	Must be 1 for digital audio interfaces on the controllers.
->> +- #address-cells:	Must be 1 for SoundWire devices;
->> +- #size-cells:		Must be <0> as SoundWire addresses have no size component.
->> +- qcom,dout-ports: 	Must be count of data out ports
->> +- qcom,din-ports: 	Must be count of data in ports
-> 
-> On these I think we should have specified dpn properties as specified in
-> DisCo, but then looking at spec we do not define that for master, but
-> bus seems to have it.
-> 
-> Pierre do you why master does not have dpn properties in DisCo?
-> 
->> +- qcom,ports-offset1:	Must be frame offset1 of each data port.
->> +			Out followed by In. Used for Block size calculation.
->> +- qcom,ports-offset2: 	Must be frame offset2 of each data port.
->> +			Out followed by In. Used for Block size calculation.
->> +- qcom,ports-sinterval-low: Must be sample interval low of each data port.
->> +			Out followed by In. Used for Sample Interval calculation.
-> 
-> These are software so do not belong here
-These are board-specfic properties w.r.t this controller ports 
-configuration.
-I don't see any other option to specify this?
-Do you have any alternative suggestions?
+Robin Gong (15):
+  Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+  Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+  Revert "dmaengine: imx-sdma: refine to load context only once"
+  dmaengine: imx-sdma: remove dupilicated sdma_load_context
+  dmaengine: imx-sdma: add mcu_2_ecspi script
+  spi: imx: fix ERR009165
+  spi: imx: remove ERR009165 workaround on i.mx6ul
+  spi: imx: add new i.mx6ul compatible name in binding doc
+  dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+  dma: imx-sdma: add i.mx6ul/6sx compatible name
+  dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+  ARM: dts: imx6ul: add dma support on ecspi
+  ARM: dts: imx6sll: correct sdma compatible
+  arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+  dmaengine: imx-sdma: add uart rom script
 
---srini
-> 
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  2 +
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+ arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +-
+ arch/arm/boot/dts/imx6sll.dtsi                     |  2 +-
+ arch/arm/boot/dts/imx6ul.dtsi                      |  8 ++
+ arch/arm64/configs/defconfig                       |  3 +
+ drivers/dma/imx-sdma.c                             | 88 ++++++++++++++++------
+ drivers/spi/spi-imx.c                              | 61 ++++++++++++---
+ include/linux/platform_data/dma-imx-sdma.h         | 11 ++-
+ 10 files changed, 145 insertions(+), 41 deletions(-)
+
+-- 
+2.7.4
+
