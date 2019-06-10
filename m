@@ -2,203 +2,141 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37514C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39172C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEF920859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="abcOHs1o"
+	by mail.kernel.org (Postfix) with ESMTP id 04A4C20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560151527;
+	bh=wu4ufzhepp5a61PnVAmbtYOPDerdxY/PIVog+ksjNtg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MY66EVLHfwiTsd1DJ8xtNI2+VmzJ4LnPdoj7z5uU045P34h3y/HkWF7sjKNSXtbrB
+	 KhKdE3hy6aXXpQKcyhtb8laINqvb/ksTrCHgmGwqoyll8gVZ5EumM+fp1aWbN/334O
+	 ky0zHtkwJrW2uysLYJh9YDxOZrmv97j5iPKU6mEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387972AbfFJHWu (ORCPT
+        id S2387976AbfFJHZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 03:22:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34331 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387893AbfFJHWu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:22:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e16so8040522wrn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 00:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jbLxpWuUonBzNVgnD/xYkcw7GrDlHMS37R/RDa4E2Kg=;
-        b=abcOHs1oSH8mEsGUMSJzy5b1RaEKPt7RkL3pIvcDpv2/Oh1dFwoc/BMA9x2X7NGuaU
-         8BakLflGRhZ+v7Y2Sai9DDGqdZCjRGFLOaU7hwveLAXKQ2dSBTr+7P9N2dQlWWMx3fMw
-         6FnwUAfnPZa8o8RPcbm3PRlnj+nvkvPfHYD0hbiSX2lafD7Q641AJSoxEAnYBOscYGlD
-         ZgU4LxAwRd8A20yrnIphC2fra/0ugdtvIuay4c+RJ+ABZ64movos5GBB2Fm+D1Tf5VkN
-         MySvEsSsERbcPD6s4EOyp9rdNyA3RjB5HHhv+Bz7cSxLEG9/5FqmI0MZEcZQIK8e5wyR
-         2I4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jbLxpWuUonBzNVgnD/xYkcw7GrDlHMS37R/RDa4E2Kg=;
-        b=YnthWai0QCxN1UU0sNxayc9RGCRhpniNld1SI+73VPn3GWth3zz7jskyPjzPRGkcZD
-         92Rk7x45ZiWNk7SDBS3FK4+P79kiTbOReDoOSN7vOo1PzgEeTkpZoiHtEVSTbneMLvnY
-         Qw1zl4Ccm0/kAzJByqqKzTJAwN9UWz++dhEkSCP8b+1q6d8y9tpH5N2nZP1l+KxUv4rT
-         ogvH0lMRp9dKeJhoBQa79dqHA3QwWkd3vxKcCoZA62dp21N1/x+Buha/WKdW1y2KS56n
-         HsWdUAEFWCSlNSomU2sU8DPTSNCxjVqvyaR92Hyod+m0Wx2vpxu4R6fxzft40yVsAE+s
-         FeOQ==
-X-Gm-Message-State: APjAAAW2pYe7tHGRNnJCkF2LvJToj2vWQaYy9GSZUc6n7vSX2T+CMdw0
-        IQeYoDsvm0kfcW+Z0HRWsufzZg==
-X-Google-Smtp-Source: APXvYqzQEDfQc3vaIs3W803X6//9nQHYTuEqtlawE9U0l12vpy7sFBz3r42F3OHypKgv/d6CvaTDFA==
-X-Received: by 2002:a5d:4cc3:: with SMTP id c3mr17499958wrt.259.1560151367402;
-        Mon, 10 Jun 2019 00:22:47 -0700 (PDT)
-Received: from localhost.localdomain (233.red-79-146-84.dynamicip.rima-tde.net. [79.146.84.233])
-        by smtp.gmail.com with ESMTPSA id y9sm12587654wma.1.2019.06.10.00.22.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 10 Jun 2019 00:22:46 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, broonie@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        khasim.mohammed@linaro.org
-Subject: [PATCH] spi: qup: fix PIO/DMA transfers.
-Date:   Mon, 10 Jun 2019 09:22:43 +0200
-Message-Id: <20190610072243.19710-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Mon, 10 Jun 2019 03:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387541AbfFJHZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 03:25:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997A7207E0;
+        Mon, 10 Jun 2019 07:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560151525;
+        bh=wu4ufzhepp5a61PnVAmbtYOPDerdxY/PIVog+ksjNtg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ffnUIqbY5OY7dIM1A+KJOm1E+oFvKHKlywaEu+ZoAhlavVbft5swhILTYUxkhc41u
+         /j8ZodhhA7uRmIFiAN/tVJGsX9n93Dyo5JxKnlNcvojLViW1jU1KILJGB1Ogz/OBS6
+         R0bZelg/GdFwzPi8AzBaCiccVKgfQI3DmGszkaXY=
+Date:   Mon, 10 Jun 2019 09:25:21 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     devel@driverdev.osuosl.org, benniciemanuel78@gmail.com,
+        linux-kernel@vger.kernel.org, hardiksingh.k@gmail.com
+Subject: Re: [PATCH] staging: rtl8723bs: core: rtw_mlme_ext.c: Remove unused
+ variables
+Message-ID: <20190610072521.GA20470@kroah.com>
+References: <20190607071123.28193-1-nishkadg.linux@gmail.com>
+ <20190609110206.GD30671@kroah.com>
+ <74fd5a83-0f60-baae-a65f-bbc0cd9f4ad0@gmail.com>
+ <20190610054927.GA13124@kroah.com>
+ <7554e171-360f-f0a8-5742-9a60e4a1cc2d@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7554e171-360f-f0a8-5742-9a60e4a1cc2d@gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- DMA/PIO:
-  If an error IRQ occurred during PIO or DMA mode make sure to log it so
-on completion the transfer can be marked as an error.
+On Mon, Jun 10, 2019 at 12:44:05PM +0530, Nishka Dasgupta wrote:
+> On 10/06/19 11:19 AM, Greg KH wrote:
+> > On Mon, Jun 10, 2019 at 10:08:21AM +0530, Nishka Dasgupta wrote:
+> > > On 09/06/19 4:32 PM, Greg KH wrote:
+> > > > On Fri, Jun 07, 2019 at 12:41:23PM +0530, Nishka Dasgupta wrote:
+> > > > > Remove variables that are declared and assigned values but not otherwise
+> > > > > used.
+> > > > > Issue found with Coccinelle.
+> > > > > 
+> > > > > Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> > > > > ---
+> > > > >    drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 9 ---------
+> > > > >    1 file changed, 9 deletions(-)
+> > > > 
+> > > > You sent me 8 patches for this driver, yet only 2 were ordered in a
+> > > > series.  I have no idea what order to apply these in :(
+> > > > 
+> > > > Please resend them _all_ in a numbered patch series so I have a chance
+> > > > to get this correct.
+> > > 
+> > > Yes, I can do that. Who do I send the patch series to in that case? The
+> > > maintainers list is slightly different for each file, and most of the
+> > > patches in this driver are for different and unrelated files (except, I
+> > > think, the two that I did send as a patch series). Do I combine the
+> > > maintainers lists and send the entire patch series to everyone listed as a
+> > > maintainer for any one of the patches in it?
+> > 
+> > The maintainer and mailing list is the same for all of the files in a
+> > single driver.  If not, then something is wrong.
+> 
+> I'm using get_maintainers.pl with no arguments, and for rtl8723bs, I am
+> getting a lot of different mailing lists.
+> E.g
+> For core/rtw_ieee80211.c, I'm getting the following list:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Michael Straube <straube.linux@gmail.com>
+> Andy Shevchenko <andy.shevchenko@gmail.com>
+> Hardik Singh Rathore <hardiksingh.k@gmail.com>
+> Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>
+> Nishka Dasgupta <nishkadg.linux@gmail.com>
+> devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM)
+> linux-kernel@vger.kernel.org (open list)
+> 
+> Which is not the same as for core/rtw_mlme_ext.c (the current patch).
+> 
+> > And yes, you can combine the list of people if you wish but be sure you
+> > are not just randomly including people who happened to touch the driver
+> > "last".
+> 
+> Okay, I'll combine then. But is there any metric I should be using to filter
+> the output of get_maintainer.pl? Currently I'm running it with no arguments
+> and just adding everyone.
 
-- PIO:
-  Do not complete a transaction until all data has been transferred or
-an error IRQ was flagged.
+Look at the "role" that each person has.  Here is the output of
+get_maintainer.pl when I run it on the first file above:
 
-1) If there was no error IRQ, ignore the done flag IRQ
-(QUP_OP_MAX_INPUT_DONE_FLAG) until all data for the transfer has been
-processed: not doing so risks completing the transfer returning
-uninitialized data in the buffers.
+$ ./scripts/get_maintainer.pl --file drivers/staging/rtl8723bs/core/rtw_ieee80211.c
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> (supporter:STAGING SUBSYSTEM,commit_signer:16/16=100%)
+Michael Straube <straube.linux@gmail.com> (commit_signer:14/16=88%,authored:14/16=88%,added_lines:43/59=73%,removed_lines:114/130=88%)
+Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com> (commit_signer:1/16=6%,authored:1/16=6%,added_lines:3/59=5%)
+Hardik Singh Rathore <hardiksingh.k@gmail.com> (commit_signer:1/16=6%,authored:1/16=6%,added_lines:13/59=22%,removed_lines:13/130=10%)
+Andy Shevchenko <andy.shevchenko@gmail.com> (commit_signer:1/16=6%)
+devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM)
+linux-kernel@vger.kernel.org (open list)
 
-2) Under stress testing we have identified the need to
-protect read/write operations against spurious IN/OUT service events.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- drivers/spi/spi-qup.c | 51 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 6 deletions(-)
+That shows that "Greg Kroah-Hartman" is a reviewer for this subsystem,
+Michael and Payal and Hardik and Andy have all submitted patches
+"recently", and then devel@ is the mailing list for the patches to be
+sent to.
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 974a8ce58b68..0a2ffd2f968a 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -281,6 +281,9 @@ static void spi_qup_read(struct spi_qup *controller, u32 *opflags)
- 		writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
- 			       controller->base + QUP_OPERATIONAL);
- 
-+		if (!remainder)
-+			goto exit;
-+
- 		if (is_block_mode) {
- 			num_words = (remainder > words_per_block) ?
- 					words_per_block : remainder;
-@@ -310,11 +313,13 @@ static void spi_qup_read(struct spi_qup *controller, u32 *opflags)
- 	 * to refresh opflags value because MAX_INPUT_DONE_FLAG may now be
- 	 * present and this is used to determine if transaction is complete
- 	 */
--	*opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
--	if (is_block_mode && *opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
--		writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
--			       controller->base + QUP_OPERATIONAL);
--
-+exit:
-+	if (!remainder) {
-+		*opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
-+		if (is_block_mode && *opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
-+			writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
-+				       controller->base + QUP_OPERATIONAL);
-+	}
- }
- 
- static void spi_qup_write_to_fifo(struct spi_qup *controller, u32 num_words)
-@@ -362,6 +367,10 @@ static void spi_qup_write(struct spi_qup *controller)
- 		writel_relaxed(QUP_OP_OUT_SERVICE_FLAG,
- 			       controller->base + QUP_OPERATIONAL);
- 
-+		/* make sure the interrupt is valid */
-+		if (!remainder)
-+			return;
-+
- 		if (is_block_mode) {
- 			num_words = (remainder > words_per_block) ?
- 				words_per_block : remainder;
-@@ -575,10 +584,24 @@ static int spi_qup_do_pio(struct spi_device *spi, struct spi_transfer *xfer,
- 	return 0;
- }
- 
-+static bool spi_qup_data_pending(struct spi_qup *controller)
-+{
-+	unsigned int remainder_tx, remainder_rx;
-+
-+	remainder_tx = DIV_ROUND_UP(spi_qup_len(controller) -
-+				    controller->tx_bytes, controller->w_size);
-+
-+	remainder_rx = DIV_ROUND_UP(spi_qup_len(controller) -
-+				    controller->rx_bytes, controller->w_size);
-+
-+	return remainder_tx || remainder_rx;
-+}
-+
- static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
- {
- 	struct spi_qup *controller = dev_id;
- 	u32 opflags, qup_err, spi_err;
-+	unsigned long flags;
- 	int error = 0;
- 
- 	qup_err = readl_relaxed(controller->base + QUP_ERROR_FLAGS);
-@@ -610,6 +633,11 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
- 		error = -EIO;
- 	}
- 
-+	spin_lock_irqsave(&controller->lock, flags);
-+	if (!controller->error)
-+		controller->error = error;
-+	spin_unlock_irqrestore(&controller->lock, flags);
-+
- 	if (spi_qup_is_dma_xfer(controller->mode)) {
- 		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
- 	} else {
-@@ -618,11 +646,22 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
- 
- 		if (opflags & QUP_OP_OUT_SERVICE_FLAG)
- 			spi_qup_write(controller);
-+
-+		if (!spi_qup_data_pending(controller))
-+			complete(&controller->done);
- 	}
- 
--	if ((opflags & QUP_OP_MAX_INPUT_DONE_FLAG) || error)
-+	if (error)
- 		complete(&controller->done);
- 
-+	if (opflags & QUP_OP_MAX_INPUT_DONE_FLAG) {
-+		if (!spi_qup_is_dma_xfer(controller->mode)) {
-+			if (spi_qup_data_pending(controller))
-+				return IRQ_HANDLED;
-+		}
-+		complete(&controller->done);
-+	}
-+
- 	return IRQ_HANDLED;
- }
- 
--- 
-2.21.0
+So, just include the maintainer and the mailing list and you will be
+fine.  No need to bother lkml with staging patches, nor the people who
+last sent cleanup patches.
 
+hope this helps,
+
+greg k-h
