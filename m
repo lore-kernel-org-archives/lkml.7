@@ -2,65 +2,116 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04155C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD29C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6FC20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8376F20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:36:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="EzDNFDJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387770AbfFJGfK (ORCPT
+        id S2387772AbfFJGgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 02:35:10 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:35336 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387464AbfFJGfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 02:35:10 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1haDta-0001Fq-1k; Mon, 10 Jun 2019 14:35:06 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1haDtV-00031s-R4; Mon, 10 Jun 2019 14:35:01 +0800
-Date:   Mon, 10 Jun 2019 14:35:01 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Kalyani Akula <kalyania@xilinx.com>
-Cc:     Stephan Mueller <smueller@chronox.de>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sarat Chand Savitala <saratcha@xilinx.com>
-Subject: Re: [RFC PATCH 4/5] crypto: Adds user space interface for
- ALG_SET_KEY_TYPE
-Message-ID: <20190610063501.u3q2k2vgytvknxs3@gondor.apana.org.au>
-References: <1547708541-23730-1-git-send-email-kalyani.akula@xilinx.com>
- <18759853.IUaQuE38eh@tauon.chronox.de>
- <SN6PR02MB5135CE53C3E3FB34CA5E6BA8AF320@SN6PR02MB5135.namprd02.prod.outlook.com>
- <2554415.t45IJDmies@tauon.chronox.de>
- <BN7PR02MB5124A7E685AC0F59AFBEFC8DAF130@BN7PR02MB5124.namprd02.prod.outlook.com>
+        Mon, 10 Jun 2019 02:36:51 -0400
+Received: from mail-eopbgr50128.outbound.protection.outlook.com ([40.107.5.128]:51546
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387464AbfFJGgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 02:36:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l8BQdb3SRazE1QSjIFxhl2w5hJ6E6pSiALoKrKWE4qQ=;
+ b=EzDNFDJOR5e/cywrrvOFyEuMyS9aR8UJfANp9J0CzfcH604rv5g9ngC/2Ud6NrXKN2fpm79sUbKE219kH45cbT0oc99xqNUGR7gkiX80rwGcXWK1jwK3ar0PCuoWGQGOgfAWiYRIANi40L6ogJxTQBAuHW4iMKFfLGtZDDhRI/8=
+Received: from VI1PR0701MB2752.eurprd07.prod.outlook.com (10.173.81.136) by
+ VI1PR0701MB2351.eurprd07.prod.outlook.com (10.168.137.146) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.8; Mon, 10 Jun 2019 06:36:46 +0000
+Received: from VI1PR0701MB2752.eurprd07.prod.outlook.com
+ ([fe80::f477:e7f8:c964:4d06]) by VI1PR0701MB2752.eurprd07.prod.outlook.com
+ ([fe80::f477:e7f8:c964:4d06%7]) with mapi id 15.20.1987.008; Mon, 10 Jun 2019
+ 06:36:46 +0000
+From:   "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH] hwmon: pmbus: protect read-modify-write with lock
+Thread-Topic: [PATCH] hwmon: pmbus: protect read-modify-write with lock
+Thread-Index: AQHVFTTnFHDIhjzuaE2NtFtr8sxEU6aQ11AAgAOr/YA=
+Date:   Mon, 10 Jun 2019 06:36:46 +0000
+Message-ID: <20190610063639.GA18981@localhost.localdomain>
+References: <20190528090746.GA31184@localhost.localdomain>
+ <20190607223217.GE869@kunai>
+In-Reply-To: <20190607223217.GE869@kunai>
+Accept-Language: pl-PL, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0238.eurprd05.prod.outlook.com
+ (2603:10a6:3:fb::14) To VI1PR0701MB2752.eurprd07.prod.outlook.com
+ (2603:10a6:801:a::8)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=krzysztof.adamski@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [131.228.2.15]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8a592131-282a-454e-21eb-08d6ed6e028a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0701MB2351;
+x-ms-traffictypediagnostic: VI1PR0701MB2351:
+x-microsoft-antispam-prvs: <VI1PR0701MB2351F57A1A7EF3D5ED00BE4AEF130@VI1PR0701MB2351.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(396003)(346002)(366004)(39860400002)(189003)(199004)(478600001)(66446008)(53936002)(73956011)(54906003)(66556008)(64756008)(66476007)(66946007)(386003)(6916009)(76176011)(6506007)(68736007)(33656002)(99286004)(102836004)(52116002)(316002)(14454004)(305945005)(7736002)(14444005)(3846002)(6116002)(4744005)(8676002)(81156014)(81166006)(1076003)(2906002)(6436002)(6486002)(229853002)(86362001)(9686003)(66066001)(6512007)(256004)(11346002)(25786009)(476003)(71190400001)(71200400001)(4326008)(186003)(26005)(5660300002)(446003)(61506002)(8936002)(6246003)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2351;H:VI1PR0701MB2752.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MgFrVsws+qjhTmuwmiZzhGT79MnqJBxQK8qu1v4xQGEiBHbfVk3LJnDrhqqlgUHwxxqTvl2ZgQLkCARSuCJDmNsjZGg24HMdd5KaqCKJv6W+p0kAT7ifS17spYvk2VqzvRKD7NvwrKTwan+3rjZYOJq9Aum3WV78bBdR/I9yFpZc2fSDWAVaJ+5YH4GPdIAcF+FQh4AdArMKJCcImVKpOtSuZ9YSXqvYBseXw9alA/2VEpQiMg+gb7t4RqoiWwOo52diPvX/IMK6piRqXfa6OrU/EP1UCgjAuAZUhMYB6ZQLQO3CdcQ1uGpPDf62ZLgm5nho24u4iR9WhczlVaC67MprDJLvTRsk87MhAHmzdHTrCkflTkKDvmkygB/eDBg+JInkeyljKKL5P5B23o5r48dwbZJ0tOu6SwQqEAto7Bc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <405DED71A7499E42BD0DDDC2705F4D70@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN7PR02MB5124A7E685AC0F59AFBEFC8DAF130@BN7PR02MB5124.namprd02.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a592131-282a-454e-21eb-08d6ed6e028a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 06:36:46.7198
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: krzysztof.adamski@nokia.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2351
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 05:20:58AM +0000, Kalyani Akula wrote:
-> Ping!!
+On Sat, Jun 08, 2019 at 12:32:18AM +0200, Wolfram Sang wrote:
+>On Tue, May 28, 2019 at 09:08:21AM +0000, Adamski, Krzysztof (Nokia - PL/W=
+roclaw) wrote:
+>> The operation done in the pmbus_update_fan() function is a
+>> read-modify-write operation but it lacks any kind of lock protection
+>> which may cause problems if run more than once simultaneously. This
+>> patch uses an existing update_lock mutex to fix this problem.
+>>
+>> Signed-off-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+>
+>Please use get_maintainer to find the people responsible for this file.
+>It is not my realm.
+>
+>> +out:
+>> +	mutex_lock(&data->update_lock);
+>
+>Despite the above, have you tested the code? This likely should be
+>mutex_unlock?
+>
 
-We already have existing drivers supporting hardware keys.  Please
-check out how they're handling this.  You can grep for paes under
-drivers/crypto.
+Sorry for that, I made a mistake and used wrong command to generate the
+patch and send it to the wrong list of people. You can ignore this
+patchset, it was resent to the proper mailing list instead.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Krzysztof
