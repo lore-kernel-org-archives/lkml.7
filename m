@@ -2,181 +2,109 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54356C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD2C4321B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C73C2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:12:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY1+wvJK"
+	by mail.kernel.org (Postfix) with ESMTP id 78FF0207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388724AbfFJSM1 (ORCPT
+        id S1728309AbfFJSRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:12:27 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44684 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388309AbfFJSM0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:12:26 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k18so8867192ljc.11;
-        Mon, 10 Jun 2019 11:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m4IicXmHL+piZ9OJ4E7oQZcLcDU6vLsCg4k119cayko=;
-        b=IY1+wvJKprjqmACc+45BoI+/W6BTEuaoh087ueM67xoxK1L8Av+H6QcyQHH4Xj6096
-         rOoFYVhZL2Nyi4E6VpFKl6sVjALsZ7c3vFAG7mwSnVyz9sltElJI5laKvjHqdvCcd4e1
-         nmkyjQRBmdQ8V9/RhX/IGWjSiEVp50SglLTUBAUNmqd+GW0QXZbCRjL9gM0Pw6ShGph5
-         gGOy0bSa5dF1ShBFP3LM/+zOgh51utmJtJ/z2PrP+biQ98UW+zNzVV2uOpfAIvqSMjjp
-         iZbm6r96ffqXCd12dSmqzddQI3oT5bKFnbHaeFMY0OOqNLhETYgSjlcta1ncXcEMnw+W
-         B2GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m4IicXmHL+piZ9OJ4E7oQZcLcDU6vLsCg4k119cayko=;
-        b=mUWjUMdHsGY666L6JB+2z0nulTVmTDEPWYyIXK5mfNZORHJ5+ZhBHpWUbyRMreaoDw
-         KdglErBf+T3jJT+45rHDEe4/8xwTqcgfJPDVhLU+hqCMmQgwN2sr5c5jckxc9UPSCMP8
-         fYgO4OrTjh3GptVpyOCPimh5MBikHFTmlmrLS9LBLp1axTSeh19wOIiCN7Np//m9x+TC
-         nbzUHZnPJ+zkOx71EYjfiZkwz7f+RJO0rWcHqNFGO0RCHE2WtvtvY6H2nuRwUrBjSr6z
-         vYAEzvejtB6VeOhQSejcLrcKq/0wNCHTEDxlSdgcwKHSnD6s5fpY9iJ4yvZvjjx7fAkI
-         TfSg==
-X-Gm-Message-State: APjAAAX4VljPXbLx99az6OHUwUoaw2efH2VwnBZVzuL2G0CYql6scG5L
-        895BagatPqcnKAenidRX/x0=
-X-Google-Smtp-Source: APXvYqwaayRXWK8Ozv+7Emttxy6k6eTTEr5onHP+e5W8bGJ1iOoHAbNoR3LCbqs0pbXVL/JHhy9LDg==
-X-Received: by 2002:a2e:989a:: with SMTP id b26mr7891942ljj.31.1560190344354;
-        Mon, 10 Jun 2019 11:12:24 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id p27sm2119121lfh.8.2019.06.10.11.12.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 11:12:23 -0700 (PDT)
-Subject: Re: [PATCH V4 6/6] i2c: tegra: remove BUG, BUG_ON
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560186515-30797-1-git-send-email-bbiswas@nvidia.com>
- <1560186515-30797-6-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <06ab30b6-bf79-c628-0a04-d0307511a06f@gmail.com>
-Date:   Mon, 10 Jun 2019 21:12:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 10 Jun 2019 14:17:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45636 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726214AbfFJSRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 14:17:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 11:17:45 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Jun 2019 11:17:44 -0700
+Date:   Mon, 10 Jun 2019 11:17:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v2 2/5] x86/sgx: Require userspace to define enclave
+ pages' protection bits
+Message-ID: <20190610181744.GH15995@linux.intel.com>
+References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+ <20190606021145.12604-3-sean.j.christopherson@intel.com>
+ <20190610152717.GB3752@linux.intel.com>
+ <20190610161532.GC15995@linux.intel.com>
+ <20190610174506.GB13732@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1560186515-30797-6-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610174506.GB13732@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.06.2019 20:08, Bitan Biswas пишет:
-> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
-> as needed. Remove BUG() and make Rx and Tx case handling
-> similar.
+On Mon, Jun 10, 2019 at 08:45:06PM +0300, Jarkko Sakkinen wrote:
+> On Mon, Jun 10, 2019 at 09:15:33AM -0700, Sean Christopherson wrote:
+> > > 'flags' should would renamed as 'secinfo_flags_mask' even if the name is
+> > > longish. It would use the same values as the SECINFO flags. The field in
+> > > struct sgx_encl_page should have the same name. That would express
+> > > exactly relation between SECINFO and the new field. I would have never
+> > > asked on last iteration why SECINFO is not enough with a better naming.
+> > 
+> > No, these flags do not impact the EPCM protections in any way.  Userspace
+> > can extend the EPCM protections without going through the kernel.  The
+> > protection flags for an enclave page impact VMA/PTE protection bits.
+> > 
+> > IMO, it is best to treat the EPCM as being completely separate from the
+> > kernel's EPC management.
 > 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+> It is a clumsy API if permissions are not taken in the same format for
+> everything. There is no reason not to do it. The way mprotect() callback
+> just interprets the field is as VMA permissions.
 
-Looks that this is still not correct. What if it transfer-complete flag
-is set and buffer is full on RX? In this case the transfer will succeed
-while it was a failure.
+They are two entirely different things.  The explicit protection bits are
+consumed by the kernel, while SECINFO.flags is consumed by the CPU.  The
+intent is to have the protection flags be analogous to mprotect(), the
+fact that they have a similar/identical format to SECINFO is irrelevant.
 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 4dfb4c1..30619d6 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -515,7 +515,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	 * prevent overwriting past the end of buf
->  	 */
->  	if (rx_fifo_avail > 0 && buf_remaining > 0) {
-> -		BUG_ON(buf_remaining > 3);
+Calling the field secinfo_flags_mask is straight up wrong on SGX2, as 
+userspace can use EMODPE to set SECINFO after the page is added.  It's
+also wrong on SGX1 when adding TCS pages since SECINFO.RWX bits for TCS
+pages are forced to zero by hardware.
 
-Actually error should be returned here since out-of-bounds memory
-accesses must be avoided, hence:
+> It would also be more future-proof just to have a mask covering all bits
+> of the SECINFO flags field.
 
-	if (WARN_ON_ONCE(buf_remaining > 3))
-		return -EINVAL;
-
->  		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
->  		val = cpu_to_le32(val);
->  		memcpy(buf, &val, buf_remaining);
-> @@ -523,7 +522,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->  		rx_fifo_avail--;
->  	}
->  
-> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
-
-Better not to ignore this as well:
-
-	if (WARN_ON_ONCE(rx_fifo_avail > 0 &&
-			 buf_remaining > 0))
-		return -EINVAL;
-
->  	i2c_dev->msg_buf_remaining = buf_remaining;
->  	i2c_dev->msg_buf = buf;
->  
-> @@ -581,7 +579,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	 * boundary and fault.
->  	 */
->  	if (tx_fifo_avail > 0 && buf_remaining > 0) {
-> -		BUG_ON(buf_remaining > 3);
-
-And here, cause this will corrupt stack:
-
-		if (WARN_ON_ONCE(buf_remaining > 3))
-			return -EINVAL;
-
->  		memcpy(&val, buf, buf_remaining);
->  		val = le32_to_cpu(val);
->  
-> @@ -850,7 +847,8 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->  			if (i2c_dev->msg_buf_remaining)
->  				tegra_i2c_empty_rx_fifo(i2c_dev);
->  			else
-> -				BUG();
-> +				tegra_i2c_mask_irq(i2c_dev,
-> +						   I2C_INT_RX_FIFO_DATA_REQ);
-
-Then here:
-
-	if (WARN_ON_ONCE(!i2c_dev->msg_buf_remaining) ||
-	    tegra_i2c_empty_rx_fifo(i2c_dev)) {
-		i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
-		goto err;
-	}
-
->  		}
->  
->  		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-> @@ -876,7 +874,10 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->  	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->  		if (i2c_dev->is_curr_dma_xfer)
->  			i2c_dev->msg_buf_remaining = 0;
-> -		BUG_ON(i2c_dev->msg_buf_remaining);
-> +		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
-> +			i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
-> +			goto err;
-> +		}
->  		complete(&i2c_dev->msg_complete);
->  	}
->  	goto done;
-> 
-
+This simply doesn't work, e.g. the PENDING, MODIFIED and PR flags in the
+SECINFO are read-only from a software perspective.
