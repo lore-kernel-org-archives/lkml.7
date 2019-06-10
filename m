@@ -2,105 +2,97 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAC2C31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5128C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E2A207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8CA20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560187294;
+	bh=Lm5P1ceVLbTYoNroDvHEIRxfS8FyHNbcWWxeUeBhtcE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wEIPY4B9/CrsZUJa/PE4uU69Xs7jSKa0FEPcwkOk1hzqCnymN1982Yw/bEVtCPaat
+	 ++/jFr1I5s8F3SqS0uemRnCyWifhRGltmnjdeaIkGPxaN6/9PVa7BwdTZxFa/TS19I
+	 mjos87hjDMRk/qK6PbrA2hziXE7ltmS8OIBkd0e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387631AbfFJRU3 (ORCPT
+        id S1728308AbfFJRVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:20:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46746 "EHLO mx1.redhat.com"
+        Mon, 10 Jun 2019 13:21:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfFJRU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:20:29 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726514AbfFJRVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:21:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6EF9067F;
-        Mon, 10 Jun 2019 17:19:49 +0000 (UTC)
-Received: from treble (ovpn-121-189.rdu2.redhat.com [10.10.121.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A521919C59;
-        Mon, 10 Jun 2019 17:19:31 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 12:19:29 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nadav Amit <namit@vmware.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 11/15] static_call: Add inline static call infrastructure
-Message-ID: <20190610171929.3xemvsykvkswcvya@treble>
-References: <20190605130753.327195108@infradead.org>
- <20190605131945.193241464@infradead.org>
- <37CFAEC1-6D36-4A6D-8C44-F85FCFA053AA@vmware.com>
- <20190607083756.GW3419@hirez.programming.kicks-ass.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F6C0207E0;
+        Mon, 10 Jun 2019 17:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560187292;
+        bh=Lm5P1ceVLbTYoNroDvHEIRxfS8FyHNbcWWxeUeBhtcE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jYg/+tbHWAcMQf5Ibun/J5I53WSAWyTQiHowEJRVRTjQxQeys7V5lSFOOEtNliLuP
+         1y9tGkGpsPT3aAtgOb8nhtKeSq/PKBdzP68ldDWOuhEDUnKNrZexoluxbU8+/bwGO/
+         G58Cq4O01hTLul3ElmnoMXqk8rQ2MyAbatDnQkqM=
+Date:   Mon, 10 Jun 2019 19:21:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] firmware: Add support for loading compressed files
+Message-ID: <20190610172130.GA28902@kroah.com>
+References: <20190520092647.8622-1-tiwai@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190607083756.GW3419@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 10 Jun 2019 17:20:27 +0000 (UTC)
+In-Reply-To: <20190520092647.8622-1-tiwai@suse.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 10:37:56AM +0200, Peter Zijlstra wrote:
-> > > +}
-> > > +
-> > > +static int static_call_module_notify(struct notifier_block *nb,
-> > > +				     unsigned long val, void *data)
-> > > +{
-> > > +	struct module *mod = data;
-> > > +	int ret = 0;
-> > > +
-> > > +	cpus_read_lock();
-> > > +	static_call_lock();
-> > > +
-> > > +	switch (val) {
-> > > +	case MODULE_STATE_COMING:
-> > > +		module_disable_ro(mod);
-> > > +		ret = static_call_add_module(mod);
-> > > +		module_enable_ro(mod, false);
-> > 
-> > Doesn’t it cause some pages to be W+X ?
-
-How so?
-
->> Can it be avoided?
+On Mon, May 20, 2019 at 11:26:42AM +0200, Takashi Iwai wrote:
+> Hi,
 > 
-> I don't know why it does this, jump_labels doesn't seem to need this,
-> and I'm not seeing what static_call needs differently.
+> this is a patch set to add the support for loading compressed firmware
+> files.
+> 
+> The primary motivation is to reduce the storage size; e.g. currently
+> the amount of /lib/firmware on my machine counts up to 419MB, and this
+> can be reduced to 130MB file compression.  No bad deal.
+> 
+> The feature adds only fallback to the compressed file, so it should
+> work as it was as long as the normal firmware file is present.  The
+> f/w loader decompresses the content, so that there is no change needed
+> in the caller side.
+> 
+> Currently only XZ format is supported.  A caveat is that the kernel XZ
+> helper code supports only CRC32 (or none) integrity check type, so
+> you'll have to compress the files via xz -C crc32 option.
+> 
+> The patch set begins with a few other improvements and refactoring,
+> followed by the compression support.
+> 
+> In addition to this, dracut needs a small fix to deal with the *.xz
+> files.
+> 
+> Also, the latest patchset is found in topic/fw-decompress branch of my
+> sound.git tree:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
 
-I forgot why I did this, but it's probably for the case where there's a
-static call site in module init code.  It deserves a comment.
+I've applied the first 3 patches to my tree, as they were sane and good
+cleanups.
 
-Theoretically, jump labels need this to.
+I'll wait for a test-case and a resend of the second two before taking
+them {hint} :)
 
-BTW, there's a change coming that will require the text_mutex before
-calling module_{disable,enable}_ro().
+thanks,
 
--- 
-Josh
+greg k-h
