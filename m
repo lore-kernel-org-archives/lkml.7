@@ -2,106 +2,112 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45781C28EBD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 02:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B898DC28EBD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 02:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1802020840
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 02:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E8A20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 02:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zj8WbwXA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fawIqtj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbfFJCXa (ORCPT
+        id S1730347AbfFJCeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 22:23:30 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46333 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387400AbfFJCXa (ORCPT
+        Sun, 9 Jun 2019 22:34:04 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46220 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730278AbfFJCeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 22:23:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id h21so8901475qtn.13
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 19:23:30 -0700 (PDT)
+        Sun, 9 Jun 2019 22:34:04 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h10so12124744edi.13
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 19:34:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4zBkMGLED9l3FmX17OsaydHaK4tKEhb0w4jXMZi0ccg=;
-        b=Zj8WbwXAV390RUM8igQnwN61lwTTn/QbFvp7GcZyBuJTSfCO9v8ItH0DUz5AJwZKsL
-         yjsuCAo5jnkIuAgHavR0/2yY+KjqQFuhtBlgScpFJIGNHxNuOfFQzvysVmLkKjN8l8kc
-         E2U0AJGuEI/Hh15D86vvyGuVN5avU22QMBAZzMnkvdX/ft3/mmqouRkdh6z8j6W+zYJX
-         T0EWFI1oel+e2/ez/t+bhwWIR4bTVslecnKGaJ4/XMKs7na+Rr0QGCfBh0RPG+Jdew7J
-         uzi52nr3Fcmn66ktZ4fin9On0w8vICKx6gtvErIui78HM40zjdNKhIGHKArloFA9MWld
-         AT+g==
+        bh=afKgTHmsyagHLmYfWGsSLRAHwZWSCleIZNkXxK90uPY=;
+        b=fawIqtj7htmk9JLOUC28S3iKNbxX4HMtjGN+MuVQUAVuCjMhYUz6VWwQ727OC2TTt4
+         W5z42Nj1T8lmxR/j7JX2G/xkWIznAEh54U6SciR/Py1AiQQ97VIHcIfNhg7M+zqeL7gK
+         izRcmPWT4FC06S8MN1aWWe825DOKTmxJM7433UVz2/MiCaj8Sz4LpRPzK7PDdPsyVETN
+         QR4AJ6dqdo+Lu1gSRb3uPqLcByPZNMcPQHqBtKIumdmVs7248ruDEZxzggK8rE72NPxk
+         oCxocsJ0+FYyrkeVnrDf1c2D/DC+TFx/SVnL9hSuiS3a/m0iWaGSv3k+BBZlFXVajXAB
+         JwBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4zBkMGLED9l3FmX17OsaydHaK4tKEhb0w4jXMZi0ccg=;
-        b=dWJKAorwOLUkU/Sjz9xb7UHiIweIfKE2rRYjvd+0NIqoWzwilmMw2pHktDVisLzkrA
-         /FDgZe+BYBBtqKISET1ngKEYQUx91Toe8sSV+3CdN9V6asuwU5Qv/TpMEkVgarGoqXlk
-         6nr47z6hI+/fFf8XfaXX14bi9rmJ9Yw6UejsCXZelbf0EPwx8FDZN58++KE14NN2gdJ7
-         Kpc9Fl8ifEVEjn1XrYIsFBf5SMzFdZ0YRFGV3EI5nq7Z5l0gipzdu+CGu8J298rtj8Ba
-         tY1myP7xoLuh78zELT1k+j2PQop2yJpHfdadgIja8tnUCgFGu4XIPaqQJObBo0cmY6gs
-         gPnw==
-X-Gm-Message-State: APjAAAXnartV7jiEegrwjvcsG9av6Te5C3sAmCaaNb7X/FPGx4l/EHwD
-        tJx7YIz2AgLNogHW+RX2oxaTPRGXEKYRWjTAjnO+FEkG940=
-X-Google-Smtp-Source: APXvYqzBnLgtfH/jTIbc9mlUXwmH0geVF9fRd/xlU6Yr9cEj5fr+msC3D6w//Icba3eeagHGlzEfVC5sFpKCinCZowk=
-X-Received: by 2002:a0c:a8d1:: with SMTP id h17mr24478187qvc.117.1560133409793;
- Sun, 09 Jun 2019 19:23:29 -0700 (PDT)
+        bh=afKgTHmsyagHLmYfWGsSLRAHwZWSCleIZNkXxK90uPY=;
+        b=dmia+S/jMn+xZqT2D2ylUbLZooAjZqBa7ybPOMKVNsu2xQYALfshN2aHZqRevx+i1C
+         TQt67e+WulgciQc9j5S5Np2tLcmtj7QXVYdzAlm6CA/mFtjovuJVrfLmDUPJHvviWGp/
+         ABEuRmp/wMWab9pEWY8GjrMShjDZ3rkDYbWRLJAlIWoBa61SQqITk4TBIbf3yU7msrYj
+         2nWJ3itbwmPYXYD8iILrEoGwfs3vo+4L5jI+/RIbg3Zlb7yel5Y1uq0RyL1h/jLOWT/V
+         4quFB72HLhJqHEkJ9VOCbrJTJkGNaH44W/TYz7R2nNxOIw+Zv4e7pdWuQqp+vq2Rpdw/
+         69sw==
+X-Gm-Message-State: APjAAAWfssKVxwfXCPqAIV1S67OJ8m8IySlF/eYdqyWq3FdMLdKNyuk6
+        294YXDyxXhZlSJqeQyIofHFkeqdp0nTiP+z46wFNXQ==
+X-Google-Smtp-Source: APXvYqyZ4zJSQrjpclg/tB88jotg/Lr0qMzgyhbyLXcOThxD7RIRBMYssHeHhkPCoz1e8x5WG9KYWcH5HQbN/vEAUJ0=
+X-Received: by 2002:a50:ec1a:: with SMTP id g26mr71250547edr.174.1560134042811;
+ Sun, 09 Jun 2019 19:34:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559855690.6132.50.camel@lca.pw> <CAHttsrYCD1xvL6hf6dXZ_6rB2pEra0HDZ+m5n8EMQr3+5AShnQ@mail.gmail.com>
- <1559916886.6132.52.camel@lca.pw>
-In-Reply-To: <1559916886.6132.52.camel@lca.pw>
-From:   Yuyang Du <duyuyang@gmail.com>
-Date:   Mon, 10 Jun 2019 10:23:18 +0800
-Message-ID: <CAHttsrZN09-_GXujv2H5gAORLHcO2onrotFND5GrDXRGRtFpJQ@mail.gmail.com>
-Subject: Re: "locking/lockdep: Consolidate lock usage bit initialization" is buggy
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190605111412.3461-1-zhang.chunyan@linaro.org> <20190606010857.GF29739@sasha-vm>
+In-Reply-To: <20190606010857.GF29739@sasha-vm>
+From:   Chunyan Zhang <zhang.chunyan@linaro.org>
+Date:   Mon, 10 Jun 2019 10:33:51 +0800
+Message-ID: <CAG2=9p_6Rk4oUu0hWKdzHNxRg=Hsboz=vYwsmfagmuCHzEKMOg@mail.gmail.com>
+Subject: Re: [BACKPORT 4.4.y] PM / sleep: prohibit devices probing during suspend/hibernation
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.Strashko@ti.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the further validation.
-
-On Fri, 7 Jun 2019 at 22:14, Qian Cai <cai@lca.pw> wrote:
-> Reverted the commit on the top of linux-next fixed the issue.
+On Thu, 6 Jun 2019 at 09:08, Sasha Levin <sashal@kernel.org> wrote:
 >
-> With the commit (triggering the warning
-> DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused)),
+> On Wed, Jun 05, 2019 at 07:14:12PM +0800, Chunyan Zhang wrote:
+> >From: "Strashko, Grygorii" <grygorii.strashko@ti.com>
+> >
+> >[ Upstream commit 013c074f8642d8e815ad670601f8e27155a74b57 ]
+> >
+> >It is unsafe [1] if probing of devices will happen during suspend or
+> >hibernation and system behavior will be unpredictable in this case.
+> >So, let's prohibit device's probing in dpm_prepare() and defer their
+> >probing instead. The normal behavior will be restored in
+> >dpm_complete().
+> >
+> >This patch introduces new DD core APIs:
+> > device_block_probing()
+> >   It will disable probing of devices and defer their probes instead.
+> > device_unblock_probing()
+> >   It will restore normal behavior and trigger re-probing of deferred
+> >   devices.
+> >
+> >[1] https://lkml.org/lkml/2015/9/11/554
+> >
+> >Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> >Acked-by: Pavel Machek <pavel@ucw.cz>
+> >Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
 >
-> # cat /proc/lockdep_stats
-> lock-classes:                         1110 [max: 8192]
-> stack-trace entries:                     0 [max: 524288]
-> combined max dependencies:               1
-> uncategorized locks:                     0
-> unused locks:                         1110
-> max locking depth:                      14
-> debug_locks:                             0
+> This patch had to be fixed a few times (see 015bb5e134 and 9a2a5a638f8),
+> we can't just take it as is.
 >
-> Without the commit (no warning),
+> It might be just simpler to move to a newer kernel at this point.
+
+Thanks for the information and suggestion!
+
+Chunyan
+
 >
-> # cat /proc/lockdep_stats
-> lock-classes:                         1110 [max: 8192]
-> stack-trace entries:                  9932 [max: 524288]
-> combined max dependencies:               1
-> uncategorized locks:                  1113
-> unused locks:                            0
-> max locking depth:                      14
-> debug_locks:                             1
-
-Then it is obviously we are talking on different things; then it is
-obviously a configuration problem. Fix will be posted soon.
-
-Sorry the bug.
-
-Thanks,
-Yuyang
+> --
+> Thanks,
+> Sasha
