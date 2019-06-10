@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141E9C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95DFC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB0B207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0986207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 07:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388210AbfFJH3x (ORCPT
+        id S2388113AbfFJH3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 03:29:53 -0400
+        Mon, 10 Jun 2019 03:29:32 -0400
 Received: from mga01.intel.com ([192.55.52.88]:14549 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388136AbfFJH3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:29:34 -0400
+        id S2388098AbfFJH33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 03:29:29 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 00:29:34 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 00:29:29 -0700
 X-ExtLoop1: 1
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
-  by orsmga006.jf.intel.com with ESMTP; 10 Jun 2019 00:29:33 -0700
+  by orsmga006.jf.intel.com with ESMTP; 10 Jun 2019 00:29:26 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/11] perf intel-pt: Add xmm registers to synthesized PEBS sample
-Date:   Mon, 10 Jun 2019 10:28:00 +0300
-Message-Id: <20190610072803.10456-9-adrian.hunter@intel.com>
+Subject: [PATCH 05/11] perf intel-pt: Factor out common sample preparation for re-use
+Date:   Mon, 10 Jun 2019 10:27:57 +0300
+Message-Id: <20190610072803.10456-6-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610072803.10456-1-adrian.hunter@intel.com>
 References: <20190610072803.10456-1-adrian.hunter@intel.com>
@@ -41,68 +41,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add xmm register information from PEBS data in the Intel PT trace to the
-synthesized PEBS sample.
+Factor out common sample preparation for re-use when synthesizing PEBS
+samples.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/intel-pt.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ tools/perf/util/intel-pt.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 3a6d5af6a71b..0175a4ec248f 100644
+index 389ec4612f86..1f5520f964ab 100644
 --- a/tools/perf/util/intel-pt.c
 +++ b/tools/perf/util/intel-pt.c
-@@ -1499,6 +1499,31 @@ static u64 *intel_pt_add_gp_regs(struct regs_dump *intr_regs, u64 *pos,
- 	return pos;
+@@ -1078,28 +1078,37 @@ static inline bool intel_pt_skip_event(struct intel_pt *pt)
+ 	       pt->num_events++ < pt->synth_opts.initial_skip;
  }
  
-+#ifndef PERF_REG_X86_XMM0
-+#define PERF_REG_X86_XMM0 32
-+#endif
-+
-+static void intel_pt_add_xmm(struct regs_dump *intr_regs, u64 *pos,
-+			     const struct intel_pt_blk_items *items,
-+			     u64 regs_mask)
++static void intel_pt_prep_a_sample(struct intel_pt_queue *ptq,
++				   union perf_event *event,
++				   struct perf_sample *sample)
 +{
-+	u32 mask = items->has_xmm & (regs_mask >> PERF_REG_X86_XMM0);
-+	const u64 *xmm = items->xmm;
++	event->sample.header.type = PERF_RECORD_SAMPLE;
++	event->sample.header.size = sizeof(struct perf_event_header);
 +
-+	/*
-+	 * If there are any XMM registers, then there should be all of them.
-+	 * Nevertheless, follow the logic to add only registers that were
-+	 * requested (i.e. 'regs_mask') and that were provided (i.e. 'mask'),
-+	 * and update the resulting mask (i.e. 'intr_regs->mask') accordingly.
-+	 */
-+	intr_regs->mask |= (u64)mask << PERF_REG_X86_XMM0;
-+
-+	for (; mask; mask >>= 1, xmm++) {
-+		if (mask & 1)
-+			*pos++ = *xmm;
-+	}
++	sample->pid = ptq->pid;
++	sample->tid = ptq->tid;
++	sample->cpu = ptq->cpu;
++	sample->insn_len = ptq->insn_len;
++	memcpy(sample->insn, ptq->insn, INTEL_PT_INSN_BUF_SZ);
 +}
 +
- static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
+ static void intel_pt_prep_b_sample(struct intel_pt *pt,
+ 				   struct intel_pt_queue *ptq,
+ 				   union perf_event *event,
+ 				   struct perf_sample *sample)
  {
- 	const struct intel_pt_blk_items *items = &ptq->state->items;
-@@ -1553,13 +1578,16 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
- 	    items->mask[INTEL_PT_GP_REGS_POS]) {
- 		u64 regs[sizeof(sample.intr_regs.mask)];
- 		u64 regs_mask = evsel->attr.sample_regs_intr;
-+		u64 *pos;
- 
- 		sample.intr_regs.abi = items->is_32_bit ?
- 				       PERF_SAMPLE_REGS_ABI_32 :
- 				       PERF_SAMPLE_REGS_ABI_64;
- 		sample.intr_regs.regs = regs;
- 
--		intel_pt_add_gp_regs(&sample.intr_regs, regs, items, regs_mask);
-+		pos = intel_pt_add_gp_regs(&sample.intr_regs, regs, items, regs_mask);
++	intel_pt_prep_a_sample(ptq, event, sample);
 +
-+		intel_pt_add_xmm(&sample.intr_regs, pos, items, regs_mask);
- 	}
+ 	if (!pt->timeless_decoding)
+ 		sample->time = tsc_to_perf_time(ptq->timestamp, &pt->tc);
  
- 	return intel_pt_deliver_synth_event(pt, ptq, event, &sample, sample_type);
+ 	sample->ip = ptq->state->from_ip;
+ 	sample->cpumode = intel_pt_cpumode(pt, sample->ip);
+-	sample->pid = ptq->pid;
+-	sample->tid = ptq->tid;
+ 	sample->addr = ptq->state->to_ip;
+ 	sample->period = 1;
+-	sample->cpu = ptq->cpu;
+ 	sample->flags = ptq->flags;
+-	sample->insn_len = ptq->insn_len;
+-	memcpy(sample->insn, ptq->insn, INTEL_PT_INSN_BUF_SZ);
+ 
+-	event->sample.header.type = PERF_RECORD_SAMPLE;
+ 	event->sample.header.misc = sample->cpumode;
+-	event->sample.header.size = sizeof(struct perf_event_header);
+ }
+ 
+ static int intel_pt_inject_event(union perf_event *event,
 -- 
 2.17.1
 
