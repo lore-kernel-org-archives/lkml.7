@@ -2,98 +2,163 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11828C31E42
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AA1C31E41
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91B5206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967D7206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391160AbfFJP13 (ORCPT
+        id S2391200AbfFJP2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:27:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21589 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390177AbfFJP12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:27:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 08:27:28 -0700
-X-ExtLoop1: 1
-Received: from agusev-mobl.ger.corp.intel.com (HELO localhost) ([10.249.46.248])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Jun 2019 08:27:17 -0700
-Date:   Mon, 10 Jun 2019 18:27:17 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
+        Mon, 10 Jun 2019 11:28:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35334 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390177AbfFJP2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:28:04 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5AFRgj6030524
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:28:03 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t1rsd313x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:27:53 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <leonardo@linux.ibm.com>;
+        Mon, 10 Jun 2019 16:27:23 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 10 Jun 2019 16:27:16 +0100
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5AFREZv35914148
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jun 2019 15:27:14 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8F287112061;
+        Mon, 10 Jun 2019 15:27:14 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 834D3112062;
+        Mon, 10 Jun 2019 15:27:07 +0000 (GMT)
+Received: from LeoBras (unknown [9.80.212.30])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Jun 2019 15:27:07 +0000 (GMT)
+Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
+ kprobe_page_fault()
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Michal Hocko <mhocko@suse.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>, x86@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
-        Shay Katz-zamir <shay.katz-zamir@intel.com>,
-        Haitao Huang <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai Svahn <kai.svahn@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai Huang <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        William Roberts <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v2 2/5] x86/sgx: Require userspace to define enclave
- pages' protection bits
-Message-ID: <20190610152717.GB3752@linux.intel.com>
-References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
- <20190606021145.12604-3-sean.j.christopherson@intel.com>
+        linux-arm-kernel@lists.infradead.org,
+        Tony Luck <tony.luck@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Mon, 10 Jun 2019 12:27:02 -0300
+In-Reply-To: <97e9c9b3-89c8-d378-4730-841a900e6800@arm.com>
+References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+         <ec764ff4-f68a-fce5-ac1e-a4664e1123c7@c-s.fr>
+         <97e9c9b3-89c8-d378-4730-841a900e6800@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-5Zy/vH+sEK4zQeyqr1da"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606021145.12604-3-sean.j.christopherson@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19061015-0060-0000-0000-0000034E9532
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011243; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01216003; UDB=6.00639329; IPR=6.00997102;
+ MB=3.00027253; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-10 15:27:23
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061015-0061-0000-0000-000049B7F47B
+Message-Id: <8dd6168592437378ff4a7c204e0f2962d002b44f.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=631 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906100106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 07:11:42PM -0700, Sean Christopherson wrote:
-> [SNAP]
 
-Same general criticism as for the previous patch: try to say things as
-they are without anything extra.
+--=-5Zy/vH+sEK4zQeyqr1da
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> A third alternative would be to pull the protection bits from the page's
-> SECINFO, i.e. make decisions based on the protections enforced by
-> hardware.  However, with SGX2, userspace can extend the hardware-
-> enforced protections via ENCLU[EMODPE], e.g. can add a page as RW and
-> later convert it to RX.  With SGX2, making a decision based on the
-> initial protections would either create a security hole or force SGX to
-> dynamically track "dirty" pages (see first alternative above).
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+On Mon, 2019-06-10 at 08:09 +0530, Anshuman Khandual wrote:
+> > > +    /*
+> > > +     * To be potentially processing a kprobe fault and to be allowed
+> > > +     * to call kprobe_running(), we have to be non-preemptible.
+> > > +     */
+> > > +    if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
+> > > +        if (kprobe_running() && kprobe_fault_handler(regs, trap))
+> >=20
+> > don't need an 'if A if B', can do 'if A && B'
+>=20
+> Which will make it a very lengthy condition check.
 
-'flags' should would renamed as 'secinfo_flags_mask' even if the name is
-longish. It would use the same values as the SECINFO flags. The field in
-struct sgx_encl_page should have the same name. That would express
-exactly relation between SECINFO and the new field. I would have never
-asked on last iteration why SECINFO is not enough with a better naming.
+Well, is there any problem line-breaking the if condition?
 
-The same field can be also used to cage page type to a subset of values.
+if (A && B && C &&
+    D && E )
 
-/Jarkko
+Also, if it's used only to decide the return value, maybe would be fine
+to do somethink like that:
+
+return (A && B && C &&
+        D && E );=20
+
+Regards,
+
+--=-5Zy/vH+sEK4zQeyqr1da
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAlz+dsYACgkQlQYWtz9S
+ttTfRQ/7BnCF2Sm8vpCKt6ji0Aq2vGhwsM6ISA+Vx72iI70yBg1jdV88yhko7lp4
+xOwZejel20zp4V3f2xXCpyVnjbg0RNSBBHjkSsWJTHPQd+dVYqoLkR98Q8WrV1Q+
+o0LxhoGGEpJwQanH1WL/P1t1crvBt4Htbg9wXfdbJGiFKDvsocC/fBuNkbijcGl2
+JvLF8LFak6qojcDxLu4xvBIIrEuL60RklTTRwlZyKi3z4hfZUPLuUkpv4BYexDKU
+mbJMxgJ/IgrCWmteuPXuVZHgK80UpvJUM6jacPRWdiIDQ0zG2NbJRh8o7WS4ZtaA
+mShCl/Y72OZ9INtiP9ZTHItZyksARvwzFalnkyNkpdigr0FgLYy9tjYlD6ex6Z6W
+qWrJSWPsUGDvcE5iy0tfRp/Vq03w1YNbofrg0eIo995y3VW8BM4rR72OrFMWeSuM
+x7/4o4EvjYwVK9GTJWECK6wNH/+V3DUgMOJk9SFCde5Qdkg2i9Xpl9prxij8YMFc
+AUDqw6hStj1Sb/XfJXIwpHflJsfTK2pozWISJInBkyxFnEIpNpQAHUPn1I1l26LQ
+pDL47J1Wn/zM1EtAIgDOEATxWPyRqJN4nFniwAVhMslHB44MAS+XY3KPAr24zSM2
++t+VW/uhJw9igsLPPpyhzQa34M6O+tvw/pHV/IrJCm2vzNBdu9E=
+=oA4R
+-----END PGP SIGNATURE-----
+
+--=-5Zy/vH+sEK4zQeyqr1da--
+
