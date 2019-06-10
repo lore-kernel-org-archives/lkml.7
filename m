@@ -2,119 +2,118 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228D0C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C541C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1C120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560185821;
-	bh=Ku45DsFsSW6Nx4/T3Iaod9jAGJ7GfFk1QsaBQp7GquY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KmpATL7uMgat7flttzO5HS3s0g1wyk3LgOFiSiWZun5+jaMKEt1oekFuhj/ysTghm
-	 6DhAEkh9LAxrTZzGHJlHzzaHUnkk5LvZDaJ0eSW4IsIciqghHCQTCXzn8bfdLIXZHF
-	 eG41+aP2549vQNlD4OSDtWzD+eGFtl3/leY9lRq0=
+	by mail.kernel.org (Postfix) with ESMTP id 574F520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbfFJQ47 (ORCPT
+        id S2387538AbfFJQ5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:56:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 12:57:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:46232 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbfFJQ47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:56:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 080BC2085A;
-        Mon, 10 Jun 2019 16:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560185818;
-        bh=Ku45DsFsSW6Nx4/T3Iaod9jAGJ7GfFk1QsaBQp7GquY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aSysJpT+ReitGRznERDODZvymLSPUCPXShKWUjpDXAhp7AJfKaRip+OUGHAhV0KYW
-         X9mxI1YJNi7oqEd9y/IH3VhHXCxXz5XpSgif5keZ81Rs60+9nrkm2Hq5sSc59aN/8G
-         On66EdAj//oWbh91mdv9MJ3kEFqAX2OzqrFFkEkM=
-Date:   Mon, 10 Jun 2019 18:56:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sugaya Taichi <sugaya.taichi@socionext.com>
-Cc:     Jiri Slaby <jslaby@suse.com>,
-        Takao Orito <orito.takao@socionext.com>,
-        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH] serial: Fix an invalid comparing statement
-Message-ID: <20190610165655.GA397@kroah.com>
-References: <1558933288-30023-1-git-send-email-sugaya.taichi@socionext.com>
+        id S1727648AbfFJQ5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:57:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 027D7337;
+        Mon, 10 Jun 2019 09:57:37 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B75A3F246;
+        Mon, 10 Jun 2019 09:57:33 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 17:57:31 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
+Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
+ ELF file
+Message-ID: <20190610165730.GM28398@e103592.cambridge.arm.com>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+ <20190606200646.3951-23-yu-cheng.yu@intel.com>
+ <20190607180115.GJ28398@e103592.cambridge.arm.com>
+ <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558933288-30023-1-git-send-email-sugaya.taichi@socionext.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 02:01:27PM +0900, Sugaya Taichi wrote:
-> Drop the if-statement which refers to 8th bit field of u8 variable.
-> The bit field is no longer used.
+On Mon, Jun 10, 2019 at 09:29:04AM -0700, Yu-cheng Yu wrote:
+> On Fri, 2019-06-07 at 19:01 +0100, Dave Martin wrote:
+> > On Thu, Jun 06, 2019 at 01:06:41PM -0700, Yu-cheng Yu wrote:
+> > > An ELF file's .note.gnu.property indicates features the executable file
+> > > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+> > > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+> > > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
+> > > 
+> > > With this patch, if an arch needs to setup features from ELF properties,
+> > > it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
+> > > arch_setup_property().
+> > > 
+> > > For example, for X86_64:
+> > > 
+> > > int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
+> > > {
+> > > 	int r;
+> > > 	uint32_t property;
+> > > 
+> > > 	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
+> > > 			     &property);
+> > > 	...
+> > > }
+> > 
+> > Although this code works for the simple case, I have some concerns about
+> > some aspects of the implementation here.  There appear to be some bounds
+> > checking / buffer overrun issues, and the code seems quite complex.
+> > 
+> > Maybe this patch tries too hard to be compatible with toolchains that do
+> > silly things such as embedding huge notes in an executable, or mixing
+> > NT_GNU_PROPERTY_TYPE_0 in a single PT_NOTE with a load of junk not
+> > relevant to the loader.  I wonder whether Linux can dictate what
+> > interpretation(s) of the ELF specs it is prepared to support, rather than
+> > trying to support absolutely anything.
 > 
-> Fixes: ba44dc043004 ("serial: Add Milbeaut serial control")
-> Reported-by: Colin Ian King <colin.king@canonical.com>
-> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-> ---
->  drivers/tty/serial/milbeaut_usio.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
+> To me, looking at PT_GNU_PROPERTY and not trying to support anything is a
+> logical choice.  And it breaks only a limited set of toolchains.
 > 
-> diff --git a/drivers/tty/serial/milbeaut_usio.c b/drivers/tty/serial/milbeaut_usio.c
-> index 949ab7e..d7207ab 100644
-> --- a/drivers/tty/serial/milbeaut_usio.c
-> +++ b/drivers/tty/serial/milbeaut_usio.c
-> @@ -56,7 +56,6 @@
->  #define MLB_USIO_SSR_FRE		BIT(4)
->  #define MLB_USIO_SSR_PE			BIT(5)
->  #define MLB_USIO_SSR_REC		BIT(7)
-> -#define MLB_USIO_SSR_BRK		BIT(8)
->  #define MLB_USIO_FCR_FE1		BIT(0)
->  #define MLB_USIO_FCR_FE2		BIT(1)
->  #define MLB_USIO_FCR_FCL1		BIT(2)
-> @@ -180,18 +179,14 @@ static void mlb_usio_rx_chars(struct uart_port *port)
->  		if (status & MLB_USIO_SSR_ORE)
->  			port->icount.overrun++;
->  		status &= port->read_status_mask;
-> -		if (status & MLB_USIO_SSR_BRK) {
-> -			flag = TTY_BREAK;
-> +		if (status & MLB_USIO_SSR_PE) {
-> +			flag = TTY_PARITY;
->  			ch = 0;
->  		} else
-> -			if (status & MLB_USIO_SSR_PE) {
-> -				flag = TTY_PARITY;
-> +			if (status & MLB_USIO_SSR_FRE) {
-> +				flag = TTY_FRAME;
->  				ch = 0;
-> -			} else
-> -				if (status & MLB_USIO_SSR_FRE) {
-> -					flag = TTY_FRAME;
-> -					ch = 0;
-> -				}
-> +			}
->  		if (flag)
->  			uart_insert_char(port, status, MLB_USIO_SSR_ORE,
->  					 ch, flag);
+> I will simplify the parser and leave this patch as-is for anyone who wants to
+> back-port.  Are there any objections or concerns?
 
-While the code never actually supported Break, you are explicitly
-removing that logic now.  So shouldn't you instead _fix_ break handling?
-The code before and after your change does not work any differently, so
-this patch isn't really needed at this point.
+No objection from me ;)  But I'm biased.
 
-thanks,
+Hopefully this change should allow substantial simplification.  For one
+thing, PT_GNU_PROPERTY tells its file offset and size directly in its
+phdrs entry.  That should save us a lot of effort on the kernel side.
 
-greg k-h
+Cheers
+---Dave
