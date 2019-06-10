@@ -2,30 +2,29 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254E0C4321B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5C2C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA24920859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A109207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388893AbfFJSwA (ORCPT
+        id S2389022AbfFJSwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:52:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:47578 "EHLO foss.arm.com"
+        Mon, 10 Jun 2019 14:52:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:47606 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388435AbfFJSv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:51:57 -0400
+        id S2388882AbfFJSv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 14:51:59 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87738C1D;
-        Mon, 10 Jun 2019 11:51:55 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D804ADA7;
+        Mon, 10 Jun 2019 11:51:58 -0700 (PDT)
 Received: from ostrya.cambridge.arm.com (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F0EBB3F246;
-        Mon, 10 Jun 2019 11:51:53 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 68A3C3F246;
+        Mon, 10 Jun 2019 11:51:57 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 To:     will.deacon@arm.com
 Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
@@ -33,9 +32,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         eric.auger@redhat.com
-Subject: [PATCH 4/8] iommu/arm-smmu-v3: Add support for Substream IDs
-Date:   Mon, 10 Jun 2019 19:47:10 +0100
-Message-Id: <20190610184714.6786-5-jean-philippe.brucker@arm.com>
+Subject: [PATCH 6/8] iommu/arm-smmu-v3: Support auxiliary domains
+Date:   Mon, 10 Jun 2019 19:47:12 +0100
+Message-Id: <20190610184714.6786-7-jean-philippe.brucker@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
 References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
@@ -46,440 +45,475 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment, the SMMUv3 driver implements only one stage-1 or stage-2
-page directory per device. However SMMUv3 allows more than one address
-space for some devices, by providing multiple stage-1 page directories. In
-addition to the Stream ID (SID), that identifies a device, we can now have
-Substream IDs (SSID) identifying an address space. In PCIe, SID is called
-Requester ID (RID) and SSID is called Process Address-Space ID (PASID).
+In commit a3a195929d40 ("iommu: Add APIs for multiple domains per
+device"), the IOMMU API gained the concept of auxiliary domains (AUXD),
+which allows to control the PASID-tagged address spaces of a device. With
+AUXD the PASID address space are not shared with the CPU, but are instead
+modified with iommu_map() and iommu_unmap() calls on auxiliary domains.
 
-Prepare the driver for SSID support, by adding context descriptor tables
-in STEs (previously a single static context descriptor). A complete
-stage-1 walk is now performed like this by the SMMU:
+Add auxiliary domain support to the SMMUv3 driver. Device drivers allocate
+an unmanaged IOMMU domain with iommu_domain_alloc(), and attach it to the
+device with iommu_aux_attach_domain().
 
-      Stream tables          Ctx. tables          Page tables
-        +--------+   ,------->+-------+   ,------->+-------+
-        :        :   |        :       :   |        :       :
-        +--------+   |        +-------+   |        +-------+
-   SID->|  STE   |---'  SSID->|  CD   |---'  IOVA->|  PTE  |--> IPA
-        +--------+            +-------+            +-------+
-        :        :            :       :            :       :
-        +--------+            +-------+            +-------+
+The AUXD API is fairly permissive, and allows to attach an IOMMU domain in
+both normal and auxiliary mode at the same time - one device can be
+attached to the domain normally, and another device can be attached
+through one of its PASIDs. To avoid excessive complexity in the SMMU
+implementation we pose some restrictions on supported AUXD usage:
 
-Implement a single level of context descriptor table for now, but as with
-stream and page tables, an SSID can be split to index multiple levels of
-tables.
+* A domain is either in auxiliary mode or normal mode. And that state is
+  sticky. Once detached the domain has to be re-attached in the same mode.
 
-In all stream table entries, we set S1DSS=SSID0 mode, making translations
-without an SSID use context descriptor 0. Although it would be possible by
-setting S1DSS=BYPASS, we don't currently support SSID when user selects
-iommu.passthrough.
+* An auxiliary domain can have a single parent domain. Two devices can be
+  attached to the same auxiliary domain only if they are attached to the
+  same parent domain.
+
+In practice these shouldn't be problematic, since we have the same kind of
+restriction on normal domains and users have been able to cope so far: at
+the moment a domain cannot be attached to two devices behind different
+SMMUs. When VFIO puts two such devices in the same container, it simply
+falls back to allocating two separate IOMMU domains.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 ---
- drivers/iommu/arm-smmu-v3.c | 238 +++++++++++++++++++++++++++++-------
- 1 file changed, 192 insertions(+), 46 deletions(-)
+ drivers/iommu/Kconfig       |   1 +
+ drivers/iommu/arm-smmu-v3.c | 276 +++++++++++++++++++++++++++++++++---
+ 2 files changed, 260 insertions(+), 17 deletions(-)
 
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index 9b45f70549a7..d326fef3d3a6 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -393,6 +393,7 @@ config ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT
+ config ARM_SMMU_V3
+ 	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+ 	depends on ARM64
++	select IOASID
+ 	select IOMMU_API
+ 	select IOMMU_IO_PGTABLE_LPAE
+ 	select GENERIC_MSI_IRQ_DOMAIN
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 3254f473e681..d90eb604b65d 100644
+index 326b71793336..633d829f246f 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -219,6 +219,11 @@
- #define STRTAB_STE_0_S1CTXPTR_MASK	GENMASK_ULL(51, 6)
- #define STRTAB_STE_0_S1CDMAX		GENMASK_ULL(63, 59)
- 
-+#define STRTAB_STE_1_S1DSS		GENMASK_ULL(1, 0)
-+#define STRTAB_STE_1_S1DSS_TERMINATE	0x0
-+#define STRTAB_STE_1_S1DSS_BYPASS	0x1
-+#define STRTAB_STE_1_S1DSS_SSID0	0x2
-+
- #define STRTAB_STE_1_S1C_CACHE_NC	0UL
- #define STRTAB_STE_1_S1C_CACHE_WBRA	1UL
- #define STRTAB_STE_1_S1C_CACHE_WT	2UL
-@@ -305,6 +310,7 @@
- #define CMDQ_PREFETCH_1_SIZE		GENMASK_ULL(4, 0)
- #define CMDQ_PREFETCH_1_ADDR_MASK	GENMASK_ULL(63, 12)
- 
-+#define CMDQ_CFGI_0_SSID		GENMASK_ULL(31, 12)
- #define CMDQ_CFGI_0_SID			GENMASK_ULL(63, 32)
- #define CMDQ_CFGI_1_LEAF		(1UL << 0)
- #define CMDQ_CFGI_1_RANGE		GENMASK_ULL(4, 0)
-@@ -421,8 +427,11 @@ struct arm_smmu_cmdq_ent {
- 
- 		#define CMDQ_OP_CFGI_STE	0x3
- 		#define CMDQ_OP_CFGI_ALL	0x4
-+		#define CMDQ_OP_CFGI_CD		0x5
-+		#define CMDQ_OP_CFGI_CD_ALL	0x6
- 		struct {
- 			u32			sid;
-+			u32			ssid;
- 			union {
- 				bool		leaf;
- 				u8		span;
-@@ -506,16 +515,25 @@ struct arm_smmu_strtab_l1_desc {
- 	dma_addr_t			l2ptr_dma;
+@@ -19,6 +19,7 @@
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+ #include <linux/io-pgtable.h>
++#include <linux/ioasid.h>
+ #include <linux/iommu.h>
+ #include <linux/iopoll.h>
+ #include <linux/init.h>
+@@ -641,6 +642,7 @@ struct arm_smmu_master {
+ 	unsigned int			num_sids;
+ 	unsigned int			ssid_bits;
+ 	bool				ats_enabled		:1;
++	bool				auxd_enabled		:1;
  };
  
-+struct arm_smmu_cd_table {
-+	__le64				*ptr;
-+	dma_addr_t			ptr_dma;
-+};
+ /* SMMU private data for an IOMMU domain */
+@@ -666,8 +668,14 @@ struct arm_smmu_domain {
+ 
+ 	struct iommu_domain		domain;
+ 
++	/* Unused in aux domains */
+ 	struct list_head		devices;
+ 	spinlock_t			devices_lock;
 +
-+struct arm_smmu_ctx_desc {
-+	u16				asid;
-+	u64				ttbr;
-+	u64				tcr;
-+	u64				mair;
-+};
-+
- struct arm_smmu_s1_cfg {
--	__le64				*cdptr;
--	dma_addr_t			cdptr_dma;
--
--	struct arm_smmu_ctx_desc {
--		u16	asid;
--		u64	ttbr;
--		u64	tcr;
--		u64	mair;
--	}				cd;
-+	u8				s1fmt;
-+	u8				s1cdmax;
-+	struct arm_smmu_cd_table	table;
-+
-+	/* Context descriptor 0, when substreams are disabled or s1dss = 0b10 */
-+	struct arm_smmu_ctx_desc	cd;
++	/* Auxiliary domain stuff */
++	struct arm_smmu_domain		*parent;
++	ioasid_t			ssid;
++	unsigned long			aux_nr_devs;
  };
  
- struct arm_smmu_s2_cfg {
-@@ -811,10 +829,16 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
- 		cmd[1] |= FIELD_PREP(CMDQ_PREFETCH_1_SIZE, ent->prefetch.size);
- 		cmd[1] |= ent->prefetch.addr & CMDQ_PREFETCH_1_ADDR_MASK;
- 		break;
-+	case CMDQ_OP_CFGI_CD:
-+		cmd[0] |= FIELD_PREP(CMDQ_CFGI_0_SSID, ent->cfgi.ssid);
-+		/* Fallthrough */
- 	case CMDQ_OP_CFGI_STE:
- 		cmd[0] |= FIELD_PREP(CMDQ_CFGI_0_SID, ent->cfgi.sid);
- 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_LEAF, ent->cfgi.leaf);
- 		break;
-+	case CMDQ_OP_CFGI_CD_ALL:
-+		cmd[0] |= FIELD_PREP(CMDQ_CFGI_0_SID, ent->cfgi.sid);
-+		break;
- 	case CMDQ_OP_CFGI_ALL:
- 		/* Cover the entire SID range */
- 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
-@@ -1045,6 +1069,63 @@ static int arm_smmu_cmdq_issue_sync(struct arm_smmu_device *smmu)
+ struct arm_smmu_option_prop {
+@@ -675,6 +683,8 @@ struct arm_smmu_option_prop {
+ 	const char *prop;
+ };
+ 
++static DECLARE_IOASID_SET(private_ioasid);
++
+ static struct arm_smmu_option_prop arm_smmu_options[] = {
+ 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
+ 	{ ARM_SMMU_OPT_PAGE0_REGS_ONLY, "cavium,cn9900-broken-page1-regspace"},
+@@ -696,6 +706,15 @@ static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+ 	return container_of(dom, struct arm_smmu_domain, domain);
  }
  
- /* Context descriptor manipulation functions */
-+static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
-+			     int ssid, bool leaf)
++static struct arm_smmu_master *dev_to_master(struct device *dev)
 +{
-+	size_t i;
-+	unsigned long flags;
-+	struct arm_smmu_master *master;
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	struct arm_smmu_cmdq_ent cmd = {
-+		.opcode	= CMDQ_OP_CFGI_CD,
-+		.cfgi	= {
-+			.ssid	= ssid,
-+			.leaf	= leaf,
-+		},
-+	};
++	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
 +
-+	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-+	list_for_each_entry(master, &smmu_domain->devices, domain_head) {
-+		for (i = 0; i < master->num_sids; i++) {
-+			cmd.cfgi.sid = master->sids[i];
-+			arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-+		}
-+	}
-+	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-+
-+	arm_smmu_cmdq_issue_sync(smmu);
++	if (!fwspec)
++		return NULL;
++	return fwspec->iommu_priv;
 +}
 +
-+static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
-+					struct arm_smmu_cd_table *table,
-+					size_t num_entries)
-+{
-+	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
-+
-+	table->ptr = dmam_alloc_coherent(smmu->dev, size, &table->ptr_dma,
-+					 GFP_KERNEL | __GFP_ZERO);
-+	if (!table->ptr) {
-+		dev_warn(smmu->dev,
-+			 "failed to allocate context descriptor table\n");
-+		return -ENOMEM;
-+	}
-+	return 0;
-+}
-+
-+static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
-+					struct arm_smmu_cd_table *table,
-+					size_t num_entries)
-+{
-+	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
-+
-+	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
-+}
-+
-+static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_s1_cfg *cfg, u32 ssid)
-+{
-+	return cfg->table.ptr + ssid * CTXDESC_CD_DWORDS;
-+}
-+
- static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
+ static void parse_driver_options(struct arm_smmu_device *smmu)
  {
- 	u64 val = 0;
-@@ -1062,33 +1143,90 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
- 	return val;
+ 	int i = 0;
+@@ -1776,13 +1795,19 @@ static int arm_smmu_atc_inv_master(struct arm_smmu_master *master,
  }
  
--static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
--				    struct arm_smmu_s1_cfg *cfg)
-+static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-+				   int ssid, struct arm_smmu_ctx_desc *cd)
+ static int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
+-				   int ssid, unsigned long iova, size_t size)
++				   unsigned long iova, size_t size)
  {
- 	u64 val;
-+	bool cd_live;
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
+ 	int ret = 0;
++	unsigned int ssid = 0;
+ 	unsigned long flags;
+ 	struct arm_smmu_cmdq_ent cmd;
+ 	struct arm_smmu_master *master;
  
- 	/*
--	 * We don't need to issue any invalidation here, as we'll invalidate
--	 * the STE when installing the new entry anyway.
-+	 * This function handles the following cases:
-+	 *
-+	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
-+	 * (2) Install a secondary CD, for SID+SSID traffic.
-+	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
-+	 *     CD, then invalidate the old entry and mappings.
-+	 * (4) Remove a secondary CD.
- 	 */
--	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
-+
-+	if (!cdptr)
-+		return -ENOMEM;
-+
-+	val = le64_to_cpu(cdptr[0]);
-+	cd_live = !!(val & CTXDESC_CD_0_V);
-+
-+	if (!cd) { /* (4) */
-+		cdptr[0] = 0;
-+	} else if (cd_live) { /* (3) */
-+		val &= ~CTXDESC_CD_0_ASID;
-+		val |= FIELD_PREP(CTXDESC_CD_0_ASID, cd->asid);
-+
-+		cdptr[0] = cpu_to_le64(val);
-+		/*
-+		 * Until CD+TLB invalidation, both ASIDs may be used for tagging
-+		 * this substream's traffic
-+		 */
-+	} else { /* (1) and (2) */
-+		cdptr[1] = cpu_to_le64(cd->ttbr & CTXDESC_CD_1_TTB0_MASK);
-+		cdptr[2] = 0;
-+		cdptr[3] = cpu_to_le64(cd->mair);
-+
-+		/*
-+		 * STE is live, and the SMMU might fetch this CD at any
-+		 * time. Ensure that it observes the rest of the CD before we
-+		 * enable it.
-+		 */
-+		arm_smmu_sync_cd(smmu_domain, ssid, true);
-+
-+		val = arm_smmu_cpu_tcr_to_cd(cd->tcr) |
- #ifdef __BIG_ENDIAN
--	      CTXDESC_CD_0_ENDI |
-+			CTXDESC_CD_0_ENDI |
- #endif
--	      CTXDESC_CD_0_R | CTXDESC_CD_0_A | CTXDESC_CD_0_ASET |
--	      CTXDESC_CD_0_AA64 | FIELD_PREP(CTXDESC_CD_0_ASID, cfg->cd.asid) |
--	      CTXDESC_CD_0_V;
-+			CTXDESC_CD_0_R | CTXDESC_CD_0_A | CTXDESC_CD_0_ASET |
-+			CTXDESC_CD_0_AA64 |
-+			FIELD_PREP(CTXDESC_CD_0_ASID, cd->asid) |
-+			CTXDESC_CD_0_V;
-+
-+		/* STALL_MODEL==0b10 && CD.S==0 is ILLEGAL */
-+		if (smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
-+			val |= CTXDESC_CD_0_S;
-+
-+		cdptr[0] = cpu_to_le64(val);
++	if (smmu_domain->parent) {
++		ssid = smmu_domain->ssid;
++		smmu_domain = smmu_domain->parent;
 +	}
- 
--	/* STALL_MODEL==0b10 && CD.S==0 is ILLEGAL */
--	if (smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
--		val |= CTXDESC_CD_0_S;
-+	arm_smmu_sync_cd(smmu_domain, ssid, true);
-+	return 0;
-+}
 +
-+static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain,
-+				    struct arm_smmu_master *master)
-+{
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+ 	if (!(smmu_domain->smmu->features & ARM_SMMU_FEAT_ATS))
+ 		return 0;
  
--	cfg->cdptr[0] = cpu_to_le64(val);
-+	cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
-+	cfg->s1cdmax = master->ssid_bits;
-+	return arm_smmu_alloc_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
-+}
- 
--	val = cfg->cd.ttbr & CTXDESC_CD_1_TTB0_MASK;
--	cfg->cdptr[1] = cpu_to_le64(val);
-+static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
-+{
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
- 
--	cfg->cdptr[3] = cpu_to_le64(cfg->cd.mair);
-+	arm_smmu_free_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
- }
- 
- /* Stream table manipulation functions */
-@@ -1210,6 +1348,7 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
- 	if (s1_cfg) {
- 		BUG_ON(ste_live);
- 		dst[1] = cpu_to_le64(
-+			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
- 			 FIELD_PREP(STRTAB_STE_1_S1CIR, STRTAB_STE_1_S1C_CACHE_WBRA) |
- 			 FIELD_PREP(STRTAB_STE_1_S1COR, STRTAB_STE_1_S1C_CACHE_WBRA) |
- 			 FIELD_PREP(STRTAB_STE_1_S1CSH, ARM_SMMU_SH_ISH) |
-@@ -1219,8 +1358,10 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
- 		   !(smmu->features & ARM_SMMU_FEAT_STALL_FORCE))
- 			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
- 
--		val |= (s1_cfg->cdptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
--			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS);
-+		val |= (s1_cfg->table.ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
-+			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS) |
-+			FIELD_PREP(STRTAB_STE_0_S1CDMAX, s1_cfg->s1cdmax) |
-+			FIELD_PREP(STRTAB_STE_0_S1FMT, s1_cfg->s1fmt);
- 	}
- 
- 	if (s2_cfg) {
-@@ -1674,12 +1815,8 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+@@ -1935,10 +1960,12 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
  	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
  		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
  
--		if (cfg->cdptr) {
--			dmam_free_coherent(smmu_domain->smmu->dev,
--					   CTXDESC_CD_DWORDS << 3,
--					   cfg->cdptr,
--					   cfg->cdptr_dma);
--
-+		if (cfg->table.ptr) {
-+			arm_smmu_free_cd_tables(smmu_domain);
+-		if (cfg->tables) {
++		if (cfg->tables)
+ 			arm_smmu_free_cd_tables(smmu_domain);
++		if (cfg->cd.asid)
  			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
- 		}
+-		}
++		if (smmu_domain->ssid)
++			ioasid_free(smmu_domain->ssid);
  	} else {
-@@ -1692,6 +1829,7 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+ 		struct arm_smmu_s2_cfg *cfg = &smmu_domain->s2_cfg;
+ 		if (cfg->vmid)
+@@ -1948,11 +1975,10 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+ 	kfree(smmu_domain);
  }
  
- static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
-+				       struct arm_smmu_master *master,
+-static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
++static int arm_smmu_domain_finalise_cd(struct arm_smmu_domain *smmu_domain,
+ 				       struct arm_smmu_master *master,
  				       struct io_pgtable_cfg *pgtbl_cfg)
  {
- 	int ret;
-@@ -1703,27 +1841,29 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+-	int ret;
+ 	int asid;
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+ 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+@@ -1961,16 +1987,30 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
  	if (asid < 0)
  		return asid;
  
--	cfg->cdptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
--					 &cfg->cdptr_dma,
--					 GFP_KERNEL | __GFP_ZERO);
--	if (!cfg->cdptr) {
--		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
--		ret = -ENOMEM;
-+	ret = arm_smmu_alloc_cd_tables(smmu_domain, master);
-+	if (ret)
- 		goto out_free_asid;
--	}
- 
+-	ret = arm_smmu_alloc_cd_tables(smmu_domain, master);
+-	if (ret)
+-		goto out_free_asid;
+-
  	cfg->cd.asid	= (u16)asid;
  	cfg->cd.ttbr	= pgtbl_cfg->arm_lpae_s1_cfg.ttbr[0];
  	cfg->cd.tcr	= pgtbl_cfg->arm_lpae_s1_cfg.tcr;
  	cfg->cd.mair	= pgtbl_cfg->arm_lpae_s1_cfg.mair[0];
++	return 0;
++}
 +
-+	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &smmu_domain->s1_cfg.cd);
++static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
++				       struct arm_smmu_master *master,
++				       struct io_pgtable_cfg *pgtbl_cfg)
++{
++	int ret;
++	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
++
++	ret = arm_smmu_domain_finalise_cd(smmu_domain, master, pgtbl_cfg);
 +	if (ret)
-+		goto out_free_table;
- 	return 0;
++		return ret;
++
++	ret = arm_smmu_alloc_cd_tables(smmu_domain, master);
++	if (ret)
++		goto out_free_asid;
  
-+out_free_table:
-+	arm_smmu_free_cd_tables(smmu_domain);
+-	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &smmu_domain->s1_cfg.cd);
++	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &cfg->cd);
+ 	if (ret)
+ 		goto out_free_table;
+ 	return 0;
+@@ -1978,7 +2018,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+ out_free_table:
+ 	arm_smmu_free_cd_tables(smmu_domain);
  out_free_asid:
- 	arm_smmu_bitmap_free(smmu->asid_map, asid);
+-	arm_smmu_bitmap_free(smmu->asid_map, asid);
++	arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
  	return ret;
  }
  
- static int arm_smmu_domain_finalise_s2(struct arm_smmu_domain *smmu_domain,
-+				       struct arm_smmu_master *master,
- 				       struct io_pgtable_cfg *pgtbl_cfg)
+@@ -2031,7 +2071,10 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain,
+ 		ias = min_t(unsigned long, ias, VA_BITS);
+ 		oas = smmu->ias;
+ 		fmt = ARM_64_LPAE_S1;
+-		finalise_stage_fn = arm_smmu_domain_finalise_s1;
++		if (smmu_domain->parent)
++			finalise_stage_fn = arm_smmu_domain_finalise_cd;
++		else
++			finalise_stage_fn = arm_smmu_domain_finalise_s1;
+ 		break;
+ 	case ARM_SMMU_DOMAIN_NESTED:
+ 	case ARM_SMMU_DOMAIN_S2:
+@@ -2177,15 +2220,13 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
  {
- 	int vmid;
-@@ -1740,7 +1880,8 @@ static int arm_smmu_domain_finalise_s2(struct arm_smmu_domain *smmu_domain,
- 	return 0;
- }
- 
--static int arm_smmu_domain_finalise(struct iommu_domain *domain)
-+static int arm_smmu_domain_finalise(struct iommu_domain *domain,
-+				    struct arm_smmu_master *master)
- {
- 	int ret;
- 	unsigned long ias, oas;
-@@ -1748,6 +1889,7 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain)
- 	struct io_pgtable_cfg pgtbl_cfg;
- 	struct io_pgtable_ops *pgtbl_ops;
- 	int (*finalise_stage_fn)(struct arm_smmu_domain *,
-+				 struct arm_smmu_master *,
- 				 struct io_pgtable_cfg *);
+ 	int ret = 0;
+ 	unsigned long flags;
+-	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	struct arm_smmu_device *smmu;
++	struct arm_smmu_master *master = dev_to_master(dev);
  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
-@@ -1804,7 +1946,7 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain)
- 	domain->geometry.aperture_end = (1UL << pgtbl_cfg.ias) - 1;
- 	domain->geometry.force_aperture = true;
+-	struct arm_smmu_master *master;
  
--	ret = finalise_stage_fn(smmu_domain, &pgtbl_cfg);
-+	ret = finalise_stage_fn(smmu_domain, master, &pgtbl_cfg);
- 	if (ret < 0) {
- 		free_io_pgtable_ops(pgtbl_ops);
- 		return ret;
-@@ -1932,7 +2074,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+-	if (!fwspec)
++	if (!master)
+ 		return -ENOENT;
  
- 	if (!smmu_domain->smmu) {
- 		smmu_domain->smmu = smmu;
--		ret = arm_smmu_domain_finalise(domain);
-+		ret = arm_smmu_domain_finalise(domain, master);
- 		if (ret) {
- 			smmu_domain->smmu = NULL;
- 			goto out_unlock;
-@@ -1944,6 +2086,13 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 			dev_name(smmu->dev));
- 		ret = -ENXIO;
+-	master = fwspec->iommu_priv;
+ 	smmu = master->smmu;
+ 
+ 	arm_smmu_detach_dev(master);
+@@ -2213,6 +2254,10 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 			smmu_domain->s1_cfg.s1cdmax, master->ssid_bits);
+ 		ret = -EINVAL;
  		goto out_unlock;
-+	} else if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1 &&
-+		   master->ssid_bits != smmu_domain->s1_cfg.s1cdmax) {
-+		dev_err(dev,
-+			"cannot attach to incompatible domain (%u SSID bits != %u)\n",
-+			smmu_domain->s1_cfg.s1cdmax, master->ssid_bits);
++	} else if (smmu_domain->parent) {
++		dev_err(dev, "cannot attach auxiliary domain\n");
 +		ret = -EINVAL;
 +		goto out_unlock;
  	}
  
  	master->domain = smmu_domain;
-@@ -1955,9 +2104,6 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	if (smmu_domain->stage != ARM_SMMU_DOMAIN_BYPASS)
- 		arm_smmu_enable_ats(master);
+@@ -2252,7 +2297,7 @@ arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova, size_t size)
+ 		return 0;
  
--	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1)
--		arm_smmu_write_ctx_desc(smmu, &smmu_domain->s1_cfg);
--
- 	arm_smmu_install_ste_for_dev(master);
- out_unlock:
- 	mutex_unlock(&smmu_domain->init_mutex);
+ 	ret = ops->unmap(ops, iova, size);
+-	if (ret && arm_smmu_atc_inv_domain(smmu_domain, 0, iova, size))
++	if (ret && arm_smmu_atc_inv_domain(smmu_domain, iova, size))
+ 		return 0;
+ 
+ 	return ret;
+@@ -2521,6 +2566,194 @@ static void arm_smmu_put_resv_regions(struct device *dev,
+ 		kfree(entry);
+ }
+ 
++static bool arm_smmu_dev_has_feature(struct device *dev,
++				     enum iommu_dev_features feat)
++{
++	struct arm_smmu_master *master = dev_to_master(dev);
++
++	if (!master)
++		return false;
++
++	switch (feat) {
++	case IOMMU_DEV_FEAT_AUX:
++		return master->ssid_bits != 0;
++	default:
++		return false;
++	}
++}
++
++static bool arm_smmu_dev_feature_enabled(struct device *dev,
++					 enum iommu_dev_features feat)
++{
++	struct arm_smmu_master *master = dev_to_master(dev);
++
++	if (!master)
++		return false;
++
++	switch (feat) {
++	case IOMMU_DEV_FEAT_AUX:
++		return master->auxd_enabled;
++	default:
++		return false;
++	}
++}
++
++static int arm_smmu_dev_enable_feature(struct device *dev,
++				       enum iommu_dev_features feat)
++{
++	struct arm_smmu_master *master = dev_to_master(dev);
++
++	if (!arm_smmu_dev_has_feature(dev, feat))
++		return -ENODEV;
++
++	if (arm_smmu_dev_feature_enabled(dev, feat))
++		return -EBUSY;
++
++	switch (feat) {
++	case IOMMU_DEV_FEAT_AUX:
++		master->auxd_enabled = true;
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int arm_smmu_dev_disable_feature(struct device *dev,
++					enum iommu_dev_features feat)
++{
++	struct arm_smmu_master *master = dev_to_master(dev);
++
++	if (!arm_smmu_dev_feature_enabled(dev, feat))
++		return -EINVAL;
++
++	switch (feat) {
++	case IOMMU_DEV_FEAT_AUX:
++		/* TODO: check if aux domains are still attached? */
++		master->auxd_enabled = false;
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int arm_smmu_aux_attach_dev(struct iommu_domain *domain, struct device *dev)
++{
++	int ret;
++	struct iommu_domain *parent_domain;
++	struct arm_smmu_domain *parent_smmu_domain;
++	struct arm_smmu_master *master = dev_to_master(dev);
++	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
++
++	if (!arm_smmu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX))
++		return -EINVAL;
++
++	parent_domain = iommu_get_domain_for_dev(dev);
++	if (!parent_domain)
++		return -EINVAL;
++	parent_smmu_domain = to_smmu_domain(parent_domain);
++
++	mutex_lock(&smmu_domain->init_mutex);
++	if (smmu_domain->stage != ARM_SMMU_DOMAIN_S1 ||
++	    parent_smmu_domain->stage != ARM_SMMU_DOMAIN_S1) {
++		ret = -EINVAL;
++		goto out_unlock;
++	} else if (smmu_domain->s1_cfg.tables) {
++		/* Already attached as a normal domain */
++		dev_err(dev, "cannot attach domain in auxiliary mode\n");
++		ret = -EINVAL;
++		goto out_unlock;
++	} else if (!smmu_domain->smmu) {
++		ioasid_t ssid = ioasid_alloc(&private_ioasid, 1,
++					     (1UL << master->ssid_bits) - 1,
++					     NULL);
++		if (ssid == INVALID_IOASID) {
++			ret = -EINVAL;
++			goto out_unlock;
++		}
++		smmu_domain->smmu = master->smmu;
++		smmu_domain->parent = parent_smmu_domain;
++		smmu_domain->ssid = ssid;
++
++		ret = arm_smmu_domain_finalise(domain, master);
++		if (ret) {
++			smmu_domain->smmu = NULL;
++			smmu_domain->ssid = 0;
++			smmu_domain->parent = NULL;
++			ioasid_free(ssid);
++			goto out_unlock;
++		}
++	} else if (smmu_domain->parent != parent_smmu_domain) {
++		/* Additional restriction: an aux domain has a single parent */
++		dev_err(dev, "cannot attach aux domain with different parent\n");
++		ret = -EINVAL;
++		goto out_unlock;
++	}
++
++	if (!smmu_domain->aux_nr_devs++)
++		arm_smmu_write_ctx_desc(parent_smmu_domain, smmu_domain->ssid,
++					&smmu_domain->s1_cfg.cd);
++	/*
++	 * Note that all other devices attached to the parent domain can now
++	 * access this context as well.
++	 */
++
++out_unlock:
++	mutex_unlock(&smmu_domain->init_mutex);
++	return ret;
++}
++
++static void arm_smmu_aux_detach_dev(struct iommu_domain *domain, struct device *dev)
++{
++	struct iommu_domain *parent_domain;
++	struct arm_smmu_domain *parent_smmu_domain;
++	struct arm_smmu_master *master = dev_to_master(dev);
++	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
++
++	if (!arm_smmu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX))
++		return;
++
++	parent_domain = iommu_get_domain_for_dev(dev);
++	if (!parent_domain)
++		return;
++	parent_smmu_domain = to_smmu_domain(parent_domain);
++
++	mutex_lock(&smmu_domain->init_mutex);
++	if (!smmu_domain->aux_nr_devs)
++		goto out_unlock;
++
++	if (!--smmu_domain->aux_nr_devs) {
++		arm_smmu_write_ctx_desc(parent_smmu_domain, smmu_domain->ssid,
++					NULL);
++		/*
++		 * TLB doesn't need invalidation since accesses from the device
++		 * can't use this domain's ASID once the CD is clear.
++		 *
++		 * Sadly that doesn't apply to ATCs, which are PASID tagged.
++		 * Invalidate all other devices as well, because even though
++		 * they weren't 'officially' attached to the auxiliary domain,
++		 * they could have formed ATC entries.
++		 */
++		arm_smmu_atc_inv_domain(smmu_domain, 0, 0);
++	} else {
++		struct arm_smmu_cmdq_ent cmd;
++
++		/* Invalidate only this device's ATC */
++		if (master->ats_enabled) {
++			arm_smmu_atc_inv_to_cmd(smmu_domain->ssid, 0, 0, &cmd);
++			arm_smmu_atc_inv_master(master, &cmd);
++		}
++	}
++out_unlock:
++	mutex_unlock(&smmu_domain->init_mutex);
++}
++
++static int arm_smmu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
++{
++	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
++
++	return smmu_domain->ssid ?: -EINVAL;
++}
++
+ static struct iommu_ops arm_smmu_ops = {
+ 	.capable		= arm_smmu_capable,
+ 	.domain_alloc		= arm_smmu_domain_alloc,
+@@ -2539,6 +2772,13 @@ static struct iommu_ops arm_smmu_ops = {
+ 	.of_xlate		= arm_smmu_of_xlate,
+ 	.get_resv_regions	= arm_smmu_get_resv_regions,
+ 	.put_resv_regions	= arm_smmu_put_resv_regions,
++	.dev_has_feat		= arm_smmu_dev_has_feature,
++	.dev_feat_enabled	= arm_smmu_dev_feature_enabled,
++	.dev_enable_feat	= arm_smmu_dev_enable_feature,
++	.dev_disable_feat	= arm_smmu_dev_disable_feature,
++	.aux_attach_dev		= arm_smmu_aux_attach_dev,
++	.aux_detach_dev		= arm_smmu_aux_detach_dev,
++	.aux_get_pasid		= arm_smmu_aux_get_pasid,
+ 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+ };
+ 
+@@ -3332,6 +3572,8 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 	smmu->dev = dev;
++	/* Reserve ASID 0 for validity check */
++	set_bit(0, smmu->asid_map);
+ 
+ 	if (dev->of_node) {
+ 		ret = arm_smmu_device_dt_probe(pdev, smmu);
 -- 
 2.21.0
 
