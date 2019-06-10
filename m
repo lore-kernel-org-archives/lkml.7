@@ -2,109 +2,87 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED86C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD38DC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50246208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC74C208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560203104;
-	bh=/OAK+wgX00BvEO/5xuEo21p7PZVrq3kJQYAtsMVK2cQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dBia82KeNjCLVR7OL17pllOUIjK8te/oxmXbuj6rxlGchFemESGm9+uuvXlutT/s+
-	 W6muV027O95K+OLpiixz6FO9P6of+p+fd8sWlpUnRulJshxCMCX0zxyrFLoVj+K0TA
-	 bwyzg00HHpKOVfyaz5at+4df67EPhe7M+LCjfdWo=
+	s=default; t=1560203208;
+	bh=t97ur+9GQx6INNRvH/SYTGaRmbEqYM3CkKHCIUu1fs8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=J4UW3iEN7d9hy5n32pspnJZrAuL1XZC8XBycryrYavQJ8UkouOxeY7O5j1D30aUGT
+	 Tj1VFJuM5ZL9Sh/Y0ue1ZtSBO3qEau6xj9hca/PGS4F/+SAogiBOksSV+MI1AoGhdw
+	 kOrku9nCeBxnVjGJbtFNfmGCXpTWP3X2ggTRJ1UQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388898AbfFJVpD (ORCPT
+        id S2389492AbfFJVqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 17:46:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387661AbfFJVpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:45:03 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        id S2387661AbfFJVqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 17:46:47 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8B4720859;
-        Mon, 10 Jun 2019 21:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C32FA2086A;
+        Mon, 10 Jun 2019 21:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560203103;
-        bh=/OAK+wgX00BvEO/5xuEo21p7PZVrq3kJQYAtsMVK2cQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aZBpwUbOWxSeH+0Pzbw2QR+lNr4UlyjDtx6P+G5vkqXUuy18EuVTVg05yDPIO/r+6
-         aCvLC10NDC+PJ6etbhLlDCy/h9Ov8rPw4w7W+AqIovjG2CYRqdM3C7Ob7q1PwTeAcd
-         eDRHLfo8wuQs4qMYHxAkLOt7oIeQap0GS6+DrsJM=
-Received: by mail-qt1-f181.google.com with SMTP id a15so12139768qtn.7;
-        Mon, 10 Jun 2019 14:45:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAXHoPIR1lHdHaDe+5b7S9xB8GEE3sy/qrMrE+YIq1UzWlMSXPm1
-        CS22NA6pa/kOb+Y/KErNUyjderDS4GCIMOAbzg==
-X-Google-Smtp-Source: APXvYqzP/smCdJM2r7zYkv6EMMywIyWDi0CbUbkg3kvV0vqRtj3TIU4OoDXxhmFWVdQID4xTkY3MYji0R7fjfCZZFaI=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr60371707qtb.224.1560203102240;
- Mon, 10 Jun 2019 14:45:02 -0700 (PDT)
+        s=default; t=1560203207;
+        bh=t97ur+9GQx6INNRvH/SYTGaRmbEqYM3CkKHCIUu1fs8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=uKzwmsXmdqNX+rTXBaTy4P3zmxdgjrQipOzwOPS3FBx8oEWayaKjTYd2C3eQD1af1
+         Je3GL6y2M8XpSZu1byCvolPkDH8yikuXQvrXsZQxTfP34ZVCfN83juaaUoeY7icyEa
+         4p9PhNZZHVFkQc2fFGIYc2U0UbkhLMf61FBZOMLM=
+Subject: Re: [PATCH 4.4 000/241] 4.4.181-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190609164147.729157653@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <0cf24cea-4e85-6ed8-1a4c-e3ce00c9f418@kernel.org>
+Date:   Mon, 10 Jun 2019 15:46:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-3-paul.walmsley@sifive.com>
-In-Reply-To: <20190602080500.31700-3-paul.walmsley@sifive.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 10 Jun 2019 15:44:51 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Lx+SBZ7_+0tCYJs+oA2zR9c+q2XdmFbEtpWxoLXVibg@mail.gmail.com>
-Message-ID: <CAL_Jsq+Lx+SBZ7_+0tCYJs+oA2zR9c+q2XdmFbEtpWxoLXVibg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: riscv: sifive: add YAML documentation
- for the SiFive FU540
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, Paul Walmsley <paul@pwsan.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 2:05 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> Add YAML DT binding documentation for the SiFive FU540 SoC.  This
-> SoC is documented at:
->
->     https://static.dev.sifive.com/FU540-C000-v1.0.pdf
->
-> Passes dt-doc-validate, as of yaml-bindings commit 4c79d42e9216.
->
-> This second version incorporates review feedback from Rob Herring
-> <robh@kernel.org>.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  .../devicetree/bindings/riscv/sifive.yaml     | 25 +++++++++++++++++++
->  MAINTAINERS                                   |  9 +++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/riscv/sifive.yaml
+On 6/9/19 10:39 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.181 release.
+> There are 241 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue 11 Jun 2019 04:39:53 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.181-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Compiled and booted on my test system. No dmesg regressions.
 
->
-> diff --git a/Documentation/devicetree/bindings/riscv/sifive.yaml b/Documentation/devicetree/bindings/riscv/sifive.yaml
-> new file mode 100644
-> index 000000000000..ce7ca191789e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/riscv/sifive.yaml
-> @@ -0,0 +1,25 @@
-> +# SPDX-License-Identifier: GPL-2.0
+thanks,
+-- Shuah
 
-Note that the preference for new bindings (or old ones you have
-ownership of) is to dual license GPL-2.0 and BSD-2-Clause.
-
-Rob
