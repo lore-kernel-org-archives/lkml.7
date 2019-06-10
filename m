@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D497C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78425C4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357822086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502012089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 22:16:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oiEyUrF9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VLiBuzt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390224AbfFJWQf (ORCPT
+        id S2390250AbfFJWQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 18:16:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53036 "EHLO
+        Mon, 10 Jun 2019 18:16:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53346 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390192AbfFJWQd (ORCPT
+        with ESMTP id S2390192AbfFJWQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 18:16:33 -0400
+        Mon, 10 Jun 2019 18:16:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=C4SI1FY60nHM9WI3SinoYDutxba0iN08JIEwzLdROHQ=; b=oiEyUrF9IL6rgPxNWJeKLxV3Vy
-        A8cdnaU0V5jZiFy3sqNuhMbp91le0IAXzEcVclX9d5PaW1wff2o6pTA2bVm2UN/onTrJQeQHryhSB
-        nnUPnH7xpOvpXmaxOwDz5rOGqBMRMR9NOBhqyJ7XBHdXPfiNQ7Mrhp+9f29lQk9Y2BTdGyyJaPI6q
-        TVeAWffkUc/loManhERDhHXfQFG0B8mzkFQcnNPbAmCYplm8rVef85/v60iq+c5KwdSp2mrl3onW7
-        9J84YrKSW1WBeNpq/YL/fl/gqcugODpbtY3JYypgfqN8/G4+0fyb15o3i+3K2HQTTcFQgDpiCsyvL
-        jnUhjrDQ==;
+        bh=vOVF1bL6OtEC3ny1W9eKFWhCTN+KLHMSW/CBbgd+PKs=; b=VLiBuzt/vCbOSNdVx6os79JBD6
+        vHnKMpAQlL5AlNNNY6kUIEWo3mmYqMBif4P0/ZHxfLKNTWQE6L38hwoB6FM1F0ZA1KeO9BEaW6pY3
+        mBFPUsqKlrtVvcfV6lhyDH/+kpOVNYu2XTmKzyeQOZJaVctSjzYIB/HsBFT04XhYZJ+yQHtRutUyY
+        rlgjDy+3bo1jIA+zRDuX+K3H/XbszJ2OvhsNR50E2XE9haoeTXtRJ4q+QHlPLGvTWXWkeubhxn6eT
+        LE8gxz8rM992Eh6JzZVeQKH71lO4dlkg6DVCB3M1WB/+EcR9ZHteJP6TUm4Mdw5IqZYEOLkf0fSOg
+        zKJUUySQ==;
 Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1haSad-0002pA-7n; Mon, 10 Jun 2019 22:16:31 +0000
+        id 1haSag-0002rx-26; Mon, 10 Jun 2019 22:16:34 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Palmer Dabbelt <palmer@sifive.com>
 Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, uclinux-dev@uclinux.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/17] mm/nommu: fix the MAP_UNINITIALIZED flag
-Date:   Tue, 11 Jun 2019 00:16:07 +0200
-Message-Id: <20190610221621.10938-4-hch@lst.de>
+Subject: [PATCH 04/17] irqchip/sifive-plic: set max threshold for ignored handlers
+Date:   Tue, 11 Jun 2019 00:16:08 +0200
+Message-Id: <20190610221621.10938-5-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190610221621.10938-1-hch@lst.de>
 References: <20190610221621.10938-1-hch@lst.de>
@@ -57,73 +57,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can't expose UAPI symbols differently based on CONFIG_ symbols, as
-userspace won't have them available.  Instead always define the flag,
-but only repsect it based on the config option.
+When running in M-mode we still the S-mode plic handlers in the DT.
+Ignore them by setting the maximum threshold.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/xtensa/include/uapi/asm/mman.h    | 6 +-----
- include/uapi/asm-generic/mman-common.h | 8 +++-----
- mm/nommu.c                             | 4 +++-
- 3 files changed, 7 insertions(+), 11 deletions(-)
+ drivers/irqchip/irq-sifive-plic.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/xtensa/include/uapi/asm/mman.h b/arch/xtensa/include/uapi/asm/mman.h
-index be726062412b..ebbb48842190 100644
---- a/arch/xtensa/include/uapi/asm/mman.h
-+++ b/arch/xtensa/include/uapi/asm/mman.h
-@@ -56,12 +56,8 @@
- #define MAP_STACK	0x40000		/* give out an address that is best suited for process/thread stacks */
- #define MAP_HUGETLB	0x80000		/* create a huge page mapping */
- #define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
--#ifdef CONFIG_MMAP_ALLOW_UNINITIALIZED
--# define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
-+#define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
- 					 * uninitialized */
--#else
--# define MAP_UNINITIALIZED 0x0		/* Don't support this flag */
--#endif
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index cf755964f2f8..c72c036aea76 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -244,6 +244,7 @@ static int __init plic_init(struct device_node *node,
+ 		struct plic_handler *handler;
+ 		irq_hw_number_t hwirq;
+ 		int cpu, hartid;
++		u32 threshold = 0;
  
- /*
-  * Flags for msync
-diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-index abd238d0f7a4..cb556b430e71 100644
---- a/include/uapi/asm-generic/mman-common.h
-+++ b/include/uapi/asm-generic/mman-common.h
-@@ -19,15 +19,13 @@
- #define MAP_TYPE	0x0f		/* Mask for type of mapping */
- #define MAP_FIXED	0x10		/* Interpret addr exactly */
- #define MAP_ANONYMOUS	0x20		/* don't use a file */
--#ifdef CONFIG_MMAP_ALLOW_UNINITIALIZED
--# define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be uninitialized */
--#else
--# define MAP_UNINITIALIZED 0x0		/* Don't support this flag */
--#endif
+ 		if (of_irq_parse_one(node, i, &parent)) {
+ 			pr_err("failed to parse parent for context %d.\n", i);
+@@ -266,10 +267,16 @@ static int __init plic_init(struct device_node *node,
+ 			continue;
+ 		}
  
- /* 0x0100 - 0x80000 flags are defined in asm-generic/mman.h */
- #define MAP_FIXED_NOREPLACE	0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
++		/*
++		 * When running in M-mode we need to ignore the S-mode handler.
++		 * Here we assume it always comes later, but that might be a
++		 * little fragile.
++		 */
+ 		handler = per_cpu_ptr(&plic_handlers, cpu);
+ 		if (handler->present) {
+ 			pr_warn("handler already present for context %d.\n", i);
+-			continue;
++			threshold = 0xffffffff;
++			goto done;
+ 		}
  
-+#define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
-+					 * uninitialized */
-+
- /*
-  * Flags for mlock
-  */
-diff --git a/mm/nommu.c b/mm/nommu.c
-index d8c02fbe03b5..ec75a0dffd4f 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -1349,7 +1349,9 @@ unsigned long do_mmap(struct file *file,
- 	add_nommu_region(region);
+ 		handler->present = true;
+@@ -279,8 +286,9 @@ static int __init plic_init(struct device_node *node,
+ 		handler->enable_base =
+ 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
  
- 	/* clear anonymous mappings that don't ask for uninitialized data */
--	if (!vma->vm_file && !(flags & MAP_UNINITIALIZED))
-+	if (!vma->vm_file &&
-+	    (!IS_ENABLED(CONFIG_MMAP_ALLOW_UNINITIALIZED) ||
-+	     !(flags & MAP_UNINITIALIZED)))
- 		memset((void *)region->vm_start, 0,
- 		       region->vm_end - region->vm_start);
- 
++done:
+ 		/* priority must be > threshold to trigger an interrupt */
+-		writel(0, handler->hart_base + CONTEXT_THRESHOLD);
++		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+ 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
+ 			plic_toggle(handler, hwirq, 0);
+ 		nr_handlers++;
 -- 
 2.20.1
 
