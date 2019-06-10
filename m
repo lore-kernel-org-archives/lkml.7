@@ -2,41 +2,42 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E0DC28CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92345C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38EE720862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5477520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 13:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="CXp4CrS9"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="VTQ7lpF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390479AbfFJNph (ORCPT
+        id S2390506AbfFJNpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 09:45:37 -0400
-Received: from mail-eopbgr690083.outbound.protection.outlook.com ([40.107.69.83]:23526
+        Mon, 10 Jun 2019 09:45:42 -0400
+Received: from mail-eopbgr690042.outbound.protection.outlook.com ([40.107.69.42]:17633
         "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390063AbfFJNpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 09:45:36 -0400
+        id S2390063AbfFJNpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 09:45:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5WTcnahE9Bf26wwVOrdEslO2oNVEO8Mo9D3bqPeUZ78=;
- b=CXp4CrS9U0Cwq0iIocqeXqODbqt3Tpk3zNk0NrxtGDff1lD3W4svPlSq3g9IB2RfLTwZVY3/HGIjpg+3aJDlFRkSiTC1LpBYQeMNUj1wvnQ9wzl/RVUPGDeBAwiWKcW5AfruK+a+EldQ4qiBDs3ZAJJZUG6rtJC45xK9tS/rtgM=
+ bh=OKUnyAGVOBwCjqCCOyaCMEvRa5Iy0nPjSo/g5nwJUCw=;
+ b=VTQ7lpF1X17orO2Pfdv60FBY3hBTqtOkMdPalPkp+TSQzVDRyxSXszovHiWGPJRYdVKPg/oUB+3nxa5xVw9TZj1ZW97y6llbw/xGgMgAIqpJKzj5N2eGqPyxCX63i5tpsc+KnSilLcirFeaS+Pe3t23jp5/xcUCsO9RGEHh23Es=
 Received: from MWHPR0201CA0021.namprd02.prod.outlook.com
- (2603:10b6:301:74::34) by CY4PR02MB2677.namprd02.prod.outlook.com
- (2603:10b6:903:11a::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14; Mon, 10 Jun
- 2019 13:45:33 +0000
+ (2603:10b6:301:74::34) by DM6PR02MB6235.namprd02.prod.outlook.com
+ (2603:10b6:5:1d1::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.12; Mon, 10 Jun
+ 2019 13:45:35 +0000
 Received: from BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
  (2a01:111:f400:7e46::202) by MWHPR0201CA0021.outlook.office365.com
  (2603:10b6:301:74::34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.15 via Frontend
- Transport; Mon, 10 Jun 2019 13:45:32 +0000
+ Transport; Mon, 10 Jun 2019 13:45:35 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.80.198)
  smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
  header.d=none;arndb.de; dmarc=bestguesspass action=none
@@ -47,7 +48,7 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
 Received: from xir-pvapexch01.xlnx.xilinx.com (149.199.80.198) by
  BL2NAM02FT036.mail.protection.outlook.com (10.152.77.154) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.1965.12 via Frontend Transport; Mon, 10 Jun 2019 13:45:32 +0000
+ 15.20.1965.12 via Frontend Transport; Mon, 10 Jun 2019 13:45:34 +0000
 Received: from xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) by
  xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -68,7 +69,7 @@ Envelope-to: arnd@arndb.de,
 Received: from [149.199.110.15] (port=49286 helo=xirdraganc40.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <dragan.cvetic@xilinx.com>)
-        id 1haKc7-00074r-9G; Mon, 10 Jun 2019 14:45:31 +0100
+        id 1haKc7-00074r-C7; Mon, 10 Jun 2019 14:45:31 +0100
 From:   Dragan Cvetic <dragan.cvetic@xilinx.com>
 To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
         <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>,
@@ -77,173 +78,312 @@ To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
 CC:     <linux-kernel@vger.kernel.org>,
         Dragan Cvetic <dragan.cvetic@xilinx.com>,
         Derek Kiernan <derek.kiernan@xilinx.com>
-Subject: [PATCH V6 00/11] misc: xilinx sd-fec drive
-Date:   Mon, 10 Jun 2019 14:45:03 +0100
-Message-ID: <1560174314-124649-1-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V6 03/11] misc: xilinx_sdfec: Add CCF support
+Date:   Mon, 10 Jun 2019 14:45:06 +0100
+Message-ID: <1560174314-124649-4-git-send-email-dragan.cvetic@xilinx.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1560174314-124649-1-git-send-email-dragan.cvetic@xilinx.com>
+References: <1560174314-124649-1-git-send-email-dragan.cvetic@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(136003)(39860400002)(2980300002)(199004)(189003)(54534003)(7636002)(107886003)(71366001)(70206006)(44832011)(70586007)(126002)(486006)(14444005)(6306002)(426003)(28376004)(336012)(48376002)(2201001)(956004)(186003)(9786002)(50466002)(36756003)(2616005)(76130400001)(305945005)(476003)(54906003)(26005)(110136005)(47776003)(16586007)(356004)(478600001)(106002)(26826003)(2906002)(50226002)(316002)(5660300002)(36906005)(6666004)(7696005)(4326008)(246002)(8936002)(60926002)(8676002)(966005)(51416003)(102446001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2677;H:xir-pvapexch01.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(39850400004)(2980300002)(199004)(189003)(106002)(36756003)(50466002)(246002)(305945005)(71366001)(48376002)(5660300002)(47776003)(50226002)(8676002)(70206006)(70586007)(478600001)(76130400001)(26826003)(8936002)(36906005)(186003)(51416003)(6666004)(4326008)(28376004)(2906002)(76176011)(107886003)(7696005)(316002)(26005)(14444005)(956004)(7636002)(9786002)(11346002)(60926002)(356004)(476003)(2616005)(126002)(44832011)(486006)(446003)(110136005)(16586007)(426003)(54906003)(2201001)(336012)(102446001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB6235;H:xir-pvapexch01.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0bc5d394-6c9b-4c4b-2c09-08d6eda9e870
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CY4PR02MB2677;
-X-MS-TrafficTypeDiagnostic: CY4PR02MB2677:
-X-MS-Exchange-PUrlCount: 6
+X-MS-Office365-Filtering-Correlation-Id: ce34d0e2-f323-416e-e8f6-08d6eda9e9df
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM6PR02MB6235;
+X-MS-TrafficTypeDiagnostic: DM6PR02MB6235:
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <CY4PR02MB26775D8D637D1605B1ED6302CB130@CY4PR02MB2677.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
+X-Microsoft-Antispam-PRVS: <DM6PR02MB62359A6CDB81AEE901E2ABADCB130@DM6PR02MB6235.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:390;
 X-Forefront-PRVS: 0064B3273C
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: WBYQWaRI1NhxkSAIvUvwoZLhy1I5JF6coe5pwLxlJxm1NM08JdGDA+yNP1wL5IlfOJf6t7ipA7qL+V0VxnF+qv6nlkHtF85Fq72/Qy9E/V+yjQT/4rlVgoW41SHPmCyUXiuK0SikwmU+zkoyza0ZPqRNrCK+K7dYHxiKbufezKudbMSNXkWrOaaMaxbtBZbxKTt+upJlK4vqQMOhP9OEaSmPHXqhbhHjd8sRFpk7+rX8xHEmksDClpBVQ3HjlZjCj3yPBlkg0CMK2IXmHUpLgGPssq0Q3qAk3N4+JcQYjaYuYKE7wf4kmdxgA5h2JP4mDATXXrIW2CatTa2RpkKT2lrrOSs9LQfwyuFBRG1c5h6X83GyAA8y68QCADzskbHo6Uu1YhN2ZUnCLjpH+CJVhhDoug8rpQnjHPvvsDptPiQ=
+X-Microsoft-Antispam-Message-Info: 9MrWcay4t5umZx2pF0KwjZtbdAKA7aKdK6QmvT1IWk61Ns5XjQkuXoTh1hFjtN8LA8LLQcQ89YPxIQwzGFUAh4KD2B1xWd3FNdnjiM0ylw7M8CeeX3mHnxyVKfGg+WHFHALPojY9Lq5syhyC5w8Tf42z3WmO46W3XKpExxp6Qrd1YWuXSuHmdBmEyWAQHDPbWtYwObcG6Bpm+1XRTkC3NHxwgyDxRhkZx5+Bp6ylzUzcDO/6KSPiU8xwhR/27v/p3/DYtoZWo3dOGYqA/QaRFhOKO8fpjl7pE8LKvH36jdyuiYndK9UOvJizF71Piv5R88/2k8tVzyLp03hs7otvVzmxJpG7D34rNAWgKgFDBerlmPVnlk5IQ5SeDAIfM5ojqfxYuE3SpI3BLhpCUb1MPAKnIgEUwNOBg2gs8eCoZh8=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2019 13:45:32.2813
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2019 13:45:34.6923
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0bc5d394-6c9b-4c4b-2c09-08d6eda9e870
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce34d0e2-f323-416e-e8f6-08d6eda9e9df
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.80.198];Helo=[xir-pvapexch01.xlnx.xilinx.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2677
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6235
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset is adding the full Soft Decision Forward Error
-Correction (SD-FEC) driver implementation, driver DT binding and
-driver documentation.
+Add the support for Linux Clock Control Framework (CCF).
+Registers and enables clocks with the Clock Control
+Framework (CCF), to prevent shared clocks from been
+disabled.
 
-Forward Error Correction (FEC) codes such as Low Density Parity
-Check (LDPC) and turbo codes provide a means to control errors in
-data transmissions over unreliable or noisy communication
-channels. The SD-FEC Integrated Block is an optimized block for
-soft-decision decoding of these codes. Fixed turbo codes are
-supported directly, whereas custom and standardized LDPC codes
-are supported through the ability to specify the parity check
-matrix through an AXI4-Lite bus or using the optional programmable
-(PL)-based support logic. For the further information see
-https://www.xilinx.com/support/documentation/ip_documentation/
-sd_fec/v1_1/pg256-sdfec-integrated-block.pdf
-
-This driver is a platform device driver which supports SDFEC16
-(16nm) IP. SD-FEC driver supports LDPC decoding and encoding and
-Turbo code decoding. LDPC codes can be specified on
-a codeword-by-codeword basis, also a custom LDPC code can be used.
-
-The SD-FEC driver exposes a char device interface and supports
-file operations: open(), close(), poll() and ioctl(). The driver
-allows only one usage of the device, open() limits the number of
-driver instances. The driver also utilize Common Clock Framework
-(CCF).
-
-The control and monitoring is supported over ioctl system call.
-The features supported by ioctl():
-- enable or disable data pipes to/from device
-- configure the FEC algorithm parameters
-- set the order of data
-- provide a control of a SDFEC bypass option
-- activates/deactivates SD-FEC
-- collect and provide statistical data
-- enable/disable interrupt mode
-
-Poll can be utilized to detect errors on IRQ trigger rather than
-using looping status and stats ioctl's.
-
-Tested-by: Santhosh Dyavanapally <SDYAVANA@xilinx.com>
-Tested by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+---
+ drivers/misc/xilinx_sdfec.c | 193 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 188 insertions(+), 5 deletions(-)
 
-Changes V1 -> V2:
-- Removed unnecesary comenting from the commit messages.
-- Removed error log messages which can be triggered from user space.
-- Corrected the SDFEC table end addresses.
-- Removed casting between user pointer and kernel pointer.
-- Corrected definition of ioctl command code, used a corect type for
-size parameters.
-- Changes to declarations of IOCTL that pass structures, i.e. do not
-use pointers for sizeof as prevents compile time checks
-- IOCTL size fix, using a paging to manage a memory. Implemented a big
-tables transfer from user to kernel with get_user_pages_fast().
-- Removed unnecessary check after container_of.
-- Removed not needed ioctl code checkes inside ioctl handler.
-- Implemented compat_ioctl.
-- Updated reviewer and tester lists.
-- Updated documentation, added Limitation chapter related to fork()
-and dup().
-
-Link to V1 patch series:
-https://lore.kernel.org/lkml/1552997064-432700-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V2 -> V3:
-- Corrected a licence in xilinx_sdfec.h changed to uapi licence format.
-- Corrected driver variable data types into user space data types.
-
-Link to V2 patch series:
-https://lore.kernel.org/lkml/1554804414-206099-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V3 -> V4:
-- Migrate to simplier misc driver
-- Fix DT example
-- Remove helper function
-- Remove unused open_count variable
-- Remove some logs
-- Change log level to dev_dbg in the most logs
-- Change spin lock to spin_lock_irqsave/spin_lock_irqrestore
-- Correct a licence date in xilinx_sdfec.c
-- Add PTR_ERR in clock handling
-
-Link to V3 patch series:
-https://lore.kernel.org/lkml/1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V4 -> V5:
-- change atomic variables to c type variables
-- align spinlock name to better description
-- correct a logicla error in LDPC algorithm
-- remove log messages
-- remove useless if statements
-- remove not needed fec_id variable
-- squash commit 4 with 6
-
-Link to V4 patch series:
-https://lore.kernel.org/lkml/1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Changes V5 -> V6:
-- the kernle/user space variables convert enums to __u32
-- put device ID under IDR
-
-Link to V5 patch series:
-https://lore.kernel.org/lkml/1560038656-380620-1-git-send-email-dragan.cvetic@xilinx.com/
-
-Dragan Cvetic (11):
-  dt-bindings: xilinx-sdfec: Add SDFEC binding
-  misc: xilinx-sdfec: add core driver
-  misc: xilinx_sdfec: Add CCF support
-  misc: xilinx_sdfec: Store driver config and state
-  misc: xilinx_sdfec: Add ability to configure turbo
-  misc: xilinx_sdfec: Add ability to configure LDPC
-  misc: xilinx_sdfec: Add ability to get/set config
-  misc: xilinx_sdfec: Support poll file operation
-  misc: xilinx_sdfec: Add stats & status ioctls
-  Docs: misc: xilinx_sdfec: Add documentation
-  MAINTAINERS: add maintainer for SD-FEC
-
- .../devicetree/bindings/misc/xlnx,sd-fec.txt       |   58 +
- Documentation/misc-devices/index.rst               |    1 +
- Documentation/misc-devices/xilinx_sdfec.rst        |  291 ++++
- MAINTAINERS                                        |   11 +
- drivers/misc/Kconfig                               |   12 +
- drivers/misc/Makefile                              |    1 +
- drivers/misc/xilinx_sdfec.c                        | 1516 ++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h                   |  448 ++++++
- 8 files changed, 2338 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/xlnx,sd-fec.txt
- create mode 100644 Documentation/misc-devices/xilinx_sdfec.rst
- create mode 100644 drivers/misc/xilinx_sdfec.c
- create mode 100644 include/uapi/misc/xilinx_sdfec.h
-
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index ff0704b..f257d38 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -26,11 +26,34 @@ static struct idr dev_idr;
+ static struct mutex dev_idr_lock;
+ 
+ /**
++ * struct xsdfec_clks - For managing SD-FEC clocks
++ * @core_clk: Main processing clock for core
++ * @axi_clk: AXI4-Lite memory-mapped clock
++ * @din_words_clk: DIN Words AXI4-Stream Slave clock
++ * @din_clk: DIN AXI4-Stream Slave clock
++ * @dout_clk: DOUT Words AXI4-Stream Slave clock
++ * @dout_words_clk: DOUT AXI4-Stream Slave clock
++ * @ctrl_clk: Control AXI4-Stream Slave clock
++ * @status_clk: Status AXI4-Stream Slave clock
++ */
++struct xsdfec_clks {
++	struct clk *core_clk;
++	struct clk *axi_clk;
++	struct clk *din_words_clk;
++	struct clk *din_clk;
++	struct clk *dout_clk;
++	struct clk *dout_words_clk;
++	struct clk *ctrl_clk;
++	struct clk *status_clk;
++};
++
++/**
+  * struct xsdfec_dev - Driver data for SDFEC
+  * @regs: device physical base address
+  * @dev: pointer to device struct
+  * @miscdev: Misc device handle
+  * @error_data_lock: Error counter and states spinlock
++ * @clks: Clocks managed by the SDFEC driver
+  * @dev_name: Device name
+  * @dev_id: Device ID
+  *
+@@ -42,6 +65,7 @@ struct xsdfec_dev {
+ 	struct miscdevice miscdev;
+ 	/* Spinlock to protect state_updated and stats_updated */
+ 	spinlock_t error_data_lock;
++	struct xsdfec_clks clks;
+ 	char dev_name[DEV_NAME_LEN];
+ 	int dev_id;
+ };
+@@ -50,6 +74,159 @@ static const struct file_operations xsdfec_fops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static int xsdfec_clk_init(struct platform_device *pdev,
++			   struct xsdfec_clks *clks)
++{
++	int err;
++
++	clks->core_clk = devm_clk_get(&pdev->dev, "core_clk");
++	if (IS_ERR(clks->core_clk)) {
++		dev_err(&pdev->dev, "failed to get core_clk");
++		return PTR_ERR(clks->core_clk);
++	}
++
++	clks->axi_clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
++	if (IS_ERR(clks->axi_clk)) {
++		dev_err(&pdev->dev, "failed to get axi_clk");
++		return PTR_ERR(clks->axi_clk);
++	}
++
++	clks->din_words_clk = devm_clk_get(&pdev->dev, "s_axis_din_words_aclk");
++	if (IS_ERR(clks->din_words_clk)) {
++		if (PTR_ERR(clks->din_words_clk) != -ENOENT) {
++			err = PTR_ERR(clks->din_words_clk);
++			return err;
++		}
++		clks->din_words_clk = NULL;
++	}
++
++	clks->din_clk = devm_clk_get(&pdev->dev, "s_axis_din_aclk");
++	if (IS_ERR(clks->din_clk)) {
++		if (PTR_ERR(clks->din_clk) != -ENOENT) {
++			err = PTR_ERR(clks->din_clk);
++			return err;
++		}
++		clks->din_clk = NULL;
++	}
++
++	clks->dout_clk = devm_clk_get(&pdev->dev, "m_axis_dout_aclk");
++	if (IS_ERR(clks->dout_clk)) {
++		if (PTR_ERR(clks->dout_clk) != -ENOENT) {
++			err = PTR_ERR(clks->dout_clk);
++			return err;
++		}
++		clks->dout_clk = NULL;
++	}
++
++	clks->dout_words_clk =
++		devm_clk_get(&pdev->dev, "s_axis_dout_words_aclk");
++	if (IS_ERR(clks->dout_words_clk)) {
++		if (PTR_ERR(clks->dout_words_clk) != -ENOENT) {
++			err = PTR_ERR(clks->dout_words_clk);
++			return err;
++		}
++		clks->dout_words_clk = NULL;
++	}
++
++	clks->ctrl_clk = devm_clk_get(&pdev->dev, "s_axis_ctrl_aclk");
++	if (IS_ERR(clks->ctrl_clk)) {
++		if (PTR_ERR(clks->ctrl_clk) != -ENOENT) {
++			err = PTR_ERR(clks->ctrl_clk);
++			return err;
++		}
++		clks->ctrl_clk = NULL;
++	}
++
++	clks->status_clk = devm_clk_get(&pdev->dev, "m_axis_status_aclk");
++	if (IS_ERR(clks->status_clk)) {
++		if (PTR_ERR(clks->status_clk) != -ENOENT) {
++			err = PTR_ERR(clks->status_clk);
++			return err;
++		}
++		clks->status_clk = NULL;
++	}
++
++	err = clk_prepare_enable(clks->core_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable core_clk (%d)", err);
++		return err;
++	}
++
++	err = clk_prepare_enable(clks->axi_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable axi_clk (%d)", err);
++		goto err_disable_core_clk;
++	}
++
++	err = clk_prepare_enable(clks->din_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable din_clk (%d)", err);
++		goto err_disable_axi_clk;
++	}
++
++	err = clk_prepare_enable(clks->din_words_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable din_words_clk (%d)", err);
++		goto err_disable_din_clk;
++	}
++
++	err = clk_prepare_enable(clks->dout_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable dout_clk (%d)", err);
++		goto err_disable_din_words_clk;
++	}
++
++	err = clk_prepare_enable(clks->dout_words_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable dout_words_clk (%d)",
++			err);
++		goto err_disable_dout_clk;
++	}
++
++	err = clk_prepare_enable(clks->ctrl_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable ctrl_clk (%d)", err);
++		goto err_disable_dout_words_clk;
++	}
++
++	err = clk_prepare_enable(clks->status_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable status_clk (%d)\n", err);
++		goto err_disable_ctrl_clk;
++	}
++
++	return err;
++
++err_disable_ctrl_clk:
++	clk_disable_unprepare(clks->ctrl_clk);
++err_disable_dout_words_clk:
++	clk_disable_unprepare(clks->dout_words_clk);
++err_disable_dout_clk:
++	clk_disable_unprepare(clks->dout_clk);
++err_disable_din_words_clk:
++	clk_disable_unprepare(clks->din_words_clk);
++err_disable_din_clk:
++	clk_disable_unprepare(clks->din_clk);
++err_disable_axi_clk:
++	clk_disable_unprepare(clks->axi_clk);
++err_disable_core_clk:
++	clk_disable_unprepare(clks->core_clk);
++
++	return err;
++}
++
++static void xsdfec_disable_all_clks(struct xsdfec_clks *clks)
++{
++	clk_disable_unprepare(clks->status_clk);
++	clk_disable_unprepare(clks->ctrl_clk);
++	clk_disable_unprepare(clks->dout_words_clk);
++	clk_disable_unprepare(clks->dout_clk);
++	clk_disable_unprepare(clks->din_words_clk);
++	clk_disable_unprepare(clks->din_clk);
++	clk_disable_unprepare(clks->core_clk);
++	clk_disable_unprepare(clks->axi_clk);
++}
++
+ static void xsdfec_idr_remove(struct xsdfec_dev *xsdfec)
+ {
+ 	mutex_lock(&dev_idr_lock);
+@@ -71,12 +248,16 @@ static int xsdfec_probe(struct platform_device *pdev)
+ 	xsdfec->dev = &pdev->dev;
+ 	spin_lock_init(&xsdfec->error_data_lock);
+ 
++	err = xsdfec_clk_init(pdev, &xsdfec->clks);
++	if (err)
++		return err;
++
+ 	dev = xsdfec->dev;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	xsdfec->regs = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(xsdfec->regs)) {
+ 		err = PTR_ERR(xsdfec->regs);
+-		return err;
++		goto err_xsdfec_dev;
+ 	}
+ 
+ 	/* Save driver private data */
+@@ -86,7 +267,7 @@ static int xsdfec_probe(struct platform_device *pdev)
+ 	err = idr_alloc(&dev_idr, xsdfec->dev_name, 0, 0, GFP_KERNEL);
+ 	mutex_unlock(&dev_idr_lock);
+ 	if (err < 0)
+-		goto err_xsddev_idr;
++		goto err_xsdfec_dev;
+ 	xsdfec->dev_id = err;
+ 
+ 	snprintf(xsdfec->dev_name, DEV_NAME_LEN, "xsdfec%d", xsdfec->dev_id);
+@@ -97,13 +278,14 @@ static int xsdfec_probe(struct platform_device *pdev)
+ 	err = misc_register(&xsdfec->miscdev);
+ 	if (err) {
+ 		dev_err(dev, "error:%d. Unable to register device", err);
+-		return err;
++		goto err_xsdfec_idr;
+ 	}
+ 	return 0;
+ 
+-err_xsddev_idr:
++err_xsdfec_idr:
+ 	xsdfec_idr_remove(xsdfec);
+-
++err_xsdfec_dev:
++	xsdfec_disable_all_clks(&xsdfec->clks);
+ 	return err;
+ }
+ 
+@@ -114,6 +296,7 @@ static int xsdfec_remove(struct platform_device *pdev)
+ 	xsdfec = platform_get_drvdata(pdev);
+ 	misc_deregister(&xsdfec->miscdev);
+ 	xsdfec_idr_remove(xsdfec);
++	xsdfec_disable_all_clks(&xsdfec->clks);
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
 
