@@ -2,111 +2,98 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE718C31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11828C31E42
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE21208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560180346;
-	bh=ZW4R91QDmRfH9azlM/uSwSTSj7wDQXeKgtSkREaj4cY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WNhjDJShz1Qet9LJzFnOnyK+JUQxtYscO1FsS3c3J8+IYe2rV5V8reROZl2r3cCNE
-	 56LY/8FleVEyTpFoG+eMGAwqkg/BlSqZmEyLSR/MJ4cihqKOr7R37qfravFcIvxdCt
-	 sGkup5mtIk9NnXWQLiCFdAdC1zH/S+Rz1A+YizCo=
+	by mail.kernel.org (Postfix) with ESMTP id E91B5206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390222AbfFJPZp (ORCPT
+        id S2391160AbfFJP13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40578 "EHLO mail.kernel.org"
+        Mon, 10 Jun 2019 11:27:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:21589 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389293AbfFJPZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:25:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A253206C3;
-        Mon, 10 Jun 2019 15:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560180344;
-        bh=ZW4R91QDmRfH9azlM/uSwSTSj7wDQXeKgtSkREaj4cY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WVetzT/qmHeSi5jL/NUgUVF5GujCXMUHqbQc30TGaB/FBxlcH+3FrnLFsox20AmtV
-         410GCw8chUJfN0QGMLJ/kHPVwCMvNvqQD0eE+CxYbVPkmNwbYu2KfsKaVqeCR8HdJy
-         Ytt3zq0sHN6fhILygA/Rz8FnTJwCZtTEfcPpmXFQ=
-Date:   Mon, 10 Jun 2019 17:25:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Ivan Babrou <ivan@cloudflare.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Subject: Re: Linux 4.19 and GCC 9
-Message-ID: <20190610152542.GA4132@kroah.com>
-References: <20190517050931.GB32367@kroah.com>
- <20190517073813.GB2589@hirez.programming.kicks-ass.net>
- <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
- <20190517085126.GA3249@kroah.com>
- <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
- <20190517152200.GI8945@kernel.org>
- <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
- <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org>
- <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
- <20190610151407.GS21245@kernel.org>
+        id S2390177AbfFJP12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 11:27:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 08:27:28 -0700
+X-ExtLoop1: 1
+Received: from agusev-mobl.ger.corp.intel.com (HELO localhost) ([10.249.46.248])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Jun 2019 08:27:17 -0700
+Date:   Mon, 10 Jun 2019 18:27:17 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v2 2/5] x86/sgx: Require userspace to define enclave
+ pages' protection bits
+Message-ID: <20190610152717.GB3752@linux.intel.com>
+References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+ <20190606021145.12604-3-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610151407.GS21245@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190606021145.12604-3-sean.j.christopherson@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 12:14:07PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jun 10, 2019 at 12:21:51AM -0700, Ivan Babrou escreveu:
-> > Looks like 4.19.49 received some patches for GCC 9+, but unfortunately
-> > perf still doesn't want to compile:
-> > 
-> > [07:15:32]In file included from /usr/include/string.h:635,
-> > [07:15:32] from util/debug.h:7,
-> > [07:15:32] from builtin-help.c:15:
-> > [07:15:32]In function 'strncpy',
-> > [07:15:32] inlined from 'add_man_viewer' at builtin-help.c:192:2,
-> > [07:15:32] inlined from 'perf_help_config' at builtin-help.c:284:3:
-> > [07:15:32]/usr/include/x86_64-linux-gnu/bits/string3.h:126:10: error:
-> > '__builtin_strncpy' output truncated before terminating nul copying as
-> > many bytes from a string as its length [-Werror=stringop-truncation]
-> > [07:15:32] 126 | return __builtin___strncpy_chk (__dest, __src, __len,
-> > __bos (__dest));
-> > [07:15:32] | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > [07:15:32]builtin-help.c: In function 'perf_help_config':
-> > [07:15:32]builtin-help.c:187:15: note: length computed here
-> > [07:15:32] 187 | size_t len = strlen(name);
-> > [07:15:32] | ^~~~~~~~~~~~
-> > [07:15:32]cc1: all warnings being treated as errors
+On Wed, Jun 05, 2019 at 07:11:42PM -0700, Sean Christopherson wrote:
+> [SNAP]
+
+Same general criticism as for the previous patch: try to say things as
+they are without anything extra.
+
+> A third alternative would be to pull the protection bits from the page's
+> SECINFO, i.e. make decisions based on the protections enforced by
+> hardware.  However, with SGX2, userspace can extend the hardware-
+> enforced protections via ENCLU[EMODPE], e.g. can add a page as RW and
+> later convert it to RX.  With SGX2, making a decision based on the
+> initial protections would either create a security hole or force SGX to
+> dynamically track "dirty" pages (see first alternative above).
 > 
-> The patch below should've taken care of that, and it has a Fixes: tag,
-> i.e. the stable scripts should've noticed that, and it was noticed with
-> gcc 8.2.
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-No, stable scripts do not always pick up the "Fixes:" tag, they are only
-guaranteed to pick up the "cc: stable@" tag.  Sometimes we catch the
-fixes ones too, but not always by far.
+'flags' should would renamed as 'secinfo_flags_mask' even if the name is
+longish. It would use the same values as the SECINFO flags. The field in
+struct sgx_encl_page should have the same name. That would express
+exactly relation between SECINFO and the new field. I would have never
+asked on last iteration why SECINFO is not enough with a better naming.
 
-Anyway, I'll queue this patch up after this next round of kernels are
-released, thanks!
+The same field can be also used to cage page type to a subset of values.
 
-greg k-h
+/Jarkko
