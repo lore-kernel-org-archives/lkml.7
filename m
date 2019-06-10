@@ -2,151 +2,125 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7DBC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64529C28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E92A2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCz67vUq"
+	by mail.kernel.org (Postfix) with ESMTP id 3CD72206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:39:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560163190;
+	bh=VTwgLXfF83Mn6JXooLjce/55tge+9zMU3zcuVQhaDTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qk5RhYYyYsPOWQoLQGA1dquBd+maJSXqrN7iVMIZoPUwfTC3MN7lX1HhO/fpyov6K
+	 +JeY0KDW3ksZWR7lg/Etlc2jpxMkX3GShxUavYRIhjBhsEhZ8H9grLrdFh/t9FJEs+
+	 Nw8bZDA7qRfxMqwAw7tiIyEwTmf+I1WszxO91rmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389541AbfFJKjE (ORCPT
+        id S2389546AbfFJKjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:39:04 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41433 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389217AbfFJKjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:39:03 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s21so7455398lji.8;
-        Mon, 10 Jun 2019 03:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Hp7w9EcTH4KoMgfbV9O4tF43GQhl8J4iWH4CNXKJYUo=;
-        b=bCz67vUq0UCl9uUSJrNhDdwSkJLYFfbl268PifQuzXtVXxfgDyJVbRClyy5PXaRs5J
-         ipGnjD1Hwd0RO6VkPm9FzQ49WQcUqTjoEW4NfzFAqsBO3hZwvvBwmLHZLRrtTzlBNS7p
-         Oi5PRq59hOqwbyf/BRIiAS1QgmK6mLVTuJ+UEo9lUkzjfaDQVw5l1SNRp9mdvLzOdNxU
-         Lfza/Y/R5u97oHI/Cu5Y6VsGMRgoFUSXiTd8+TzVAzbO0b4U1FCMAOrqpTyuNdatyNnw
-         YlwiehFgqtkWrDWQJ20GpEMj+fsHUZkF93KryKwdBI4mYDn0I7x5kmog1IUImaRuAL3+
-         1EMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hp7w9EcTH4KoMgfbV9O4tF43GQhl8J4iWH4CNXKJYUo=;
-        b=ByJ+XviRe64Qt+3shlBXx5sE4wRmgzbYLlBwUIj3bWTLjtnbrZDws9MqKC1DczY9A1
-         9KvBL9Buh5V+prBlRvscBufoJASlsiSZLDAtOasmgV2ZOyFa1QHBb5bjlzWrW7BWPYLz
-         VKqrYoKpDIRR6Wv5G1Y6KugSYxxEk6UiiUZfqLqKNtuFyJYvlh627Omylbg/afW/sjdR
-         EYwAqxmqXnrQjbf2dC0YJjs2ZP8wJQe22HaY6de68zII1YHyKtsevwRM/690BI92P13+
-         aeYhkFnnIQAGMGcPjYiA1SWxgjhlljO1MSp6236eoq7al36161UY2U4UeYqggd4xVetM
-         /+HQ==
-X-Gm-Message-State: APjAAAX3oBBQAFLY5IT6T0DiYM/8Rjk6BgSmwTT4BI8hL9MBg9gg4lNO
-        KCS4i9Oli1DtXZZJGFSj1vHV1b+v
-X-Google-Smtp-Source: APXvYqy6dE+w/d1u45lfinXgUoGU2kUiYOqHJEz/yVSwhrUuWmGw17GdIvpO9ivXBlM6KbjC+6tfPQ==
-X-Received: by 2002:a2e:5b5b:: with SMTP id p88mr26490359ljb.192.1560163141834;
-        Mon, 10 Jun 2019 03:39:01 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id z6sm1391557ljk.57.2019.06.10.03.39.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 03:39:01 -0700 (PDT)
-Subject: Re: [PATCH v1 1/3] clocksource/drivers/tegra: Remove duplicated use
- of per_cpu_ptr
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190609192730.29459-1-digetx@gmail.com>
- <20190609192730.29459-2-digetx@gmail.com>
- <4e1f1389-afde-3994-2ccc-4e57e9ad78d1@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <479f97eb-f695-31d8-d12b-4b577b90f4d0@gmail.com>
-Date:   Mon, 10 Jun 2019 13:39:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 10 Jun 2019 06:39:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58772 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388396AbfFJKjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 06:39:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DA37DAFAB;
+        Mon, 10 Jun 2019 10:39:46 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 12:39:46 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@kernel.org,
+        Wu Fangsuo <fangsuowu@asrmicro.com>,
+        Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+Subject: Re: [PATCH] mm: fix trying to reclaim unevicable LRU page
+Message-ID: <20190610103946.GE30967@dhcp22.suse.cz>
+References: <20190524071114.74202-1-minchan@kernel.org>
+ <20190528151407.GE1658@dhcp22.suse.cz>
+ <20190530024229.GF229459@google.com>
+ <20190604122806.GH4669@dhcp22.suse.cz>
+ <20190610094222.GA55602@google.com>
 MIME-Version: 1.0
-In-Reply-To: <4e1f1389-afde-3994-2ccc-4e57e9ad78d1@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610094222.GA55602@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.06.2019 11:11, Daniel Lezcano пишет:
+On Mon 10-06-19 18:42:22, Minchan Kim wrote:
+> On Tue, Jun 04, 2019 at 02:28:06PM +0200, Michal Hocko wrote:
+> > On Thu 30-05-19 11:42:29, Minchan Kim wrote:
+> > > On Tue, May 28, 2019 at 05:14:07PM +0200, Michal Hocko wrote:
+> > > > [Cc Pankaj Suryawanshi who has reported a similar problem
+> > > > http://lkml.kernel.org/r/SG2PR02MB309806967AE91179CAFEC34BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com]
+> > > > 
+> > > > On Fri 24-05-19 16:11:14, Minchan Kim wrote:
+> > > > > There was below bugreport from Wu Fangsuo.
+> > > > > 
+> > > > > 7200 [  680.491097] c4 7125 (syz-executor) page:ffffffbf02f33b40 count:86 mapcount:84 mapping:ffffffc08fa7a810 index:0x24
+> > > > > 7201 [  680.531186] c4 7125 (syz-executor) flags: 0x19040c(referenced|uptodate|arch_1|mappedtodisk|unevictable|mlocked)
+> > > > > 7202 [  680.544987] c0 7125 (syz-executor) raw: 000000000019040c ffffffc08fa7a810 0000000000000024 0000005600000053
+> > > > > 7203 [  680.556162] c0 7125 (syz-executor) raw: ffffffc009b05b20 ffffffc009b05b20 0000000000000000 ffffffc09bf3ee80
+> > > > > 7204 [  680.566860] c0 7125 (syz-executor) page dumped because: VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page))
+> > > > > 7205 [  680.578038] c0 7125 (syz-executor) page->mem_cgroup:ffffffc09bf3ee80
+> > > > > 7206 [  680.585467] c0 7125 (syz-executor) ------------[ cut here ]------------
+> > > > > 7207 [  680.592466] c0 7125 (syz-executor) kernel BUG at /home/build/farmland/adroid9.0/kernel/linux/mm/vmscan.c:1350!
+> > > > > 7223 [  680.603663] c0 7125 (syz-executor) Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> > > > > 7224 [  680.611436] c0 7125 (syz-executor) Modules linked in:
+> > > > > 7225 [  680.616769] c0 7125 (syz-executor) CPU: 0 PID: 7125 Comm: syz-executor Tainted: G S              4.14.81 #3
+> > > > > 7226 [  680.626826] c0 7125 (syz-executor) Hardware name: ASR AQUILAC EVB (DT)
+> > > > > 7227 [  680.633623] c0 7125 (syz-executor) task: ffffffc00a54cd00 task.stack: ffffffc009b00000
+> > > > > 7228 [  680.641917] c0 7125 (syz-executor) PC is at shrink_page_list+0x1998/0x3240
+> > > > > 7229 [  680.649144] c0 7125 (syz-executor) LR is at shrink_page_list+0x1998/0x3240
+> > > > > 7230 [  680.656303] c0 7125 (syz-executor) pc : [<ffffff90083a2158>] lr : [<ffffff90083a2158>] pstate: 60400045
+> > > > > 7231 [  680.666086] c0 7125 (syz-executor) sp : ffffffc009b05940
+> > > > > ..
+> > > > > 7342 [  681.671308] c0 7125 (syz-executor) [<ffffff90083a2158>] shrink_page_list+0x1998/0x3240
+> > > > > 7343 [  681.679567] c0 7125 (syz-executor) [<ffffff90083a3dc0>] reclaim_clean_pages_from_list+0x3c0/0x4f0
+> > > > > 7344 [  681.688793] c0 7125 (syz-executor) [<ffffff900837ed64>] alloc_contig_range+0x3bc/0x650
+> > > > > 7347 [  681.717421] c0 7125 (syz-executor) [<ffffff90084925cc>] cma_alloc+0x214/0x668
+> > > > > 7348 [  681.724892] c0 7125 (syz-executor) [<ffffff90091e4d78>] ion_cma_allocate+0x98/0x1d8
+> > > > > 7349 [  681.732872] c0 7125 (syz-executor) [<ffffff90091e0b20>] ion_alloc+0x200/0x7e0
+> > > > > 7350 [  681.740302] c0 7125 (syz-executor) [<ffffff90091e154c>] ion_ioctl+0x18c/0x378
+> > > > > 7351 [  681.747738] c0 7125 (syz-executor) [<ffffff90084c6824>] do_vfs_ioctl+0x17c/0x1780
+> > > > > 7352 [  681.755514] c0 7125 (syz-executor) [<ffffff90084c7ed4>] SyS_ioctl+0xac/0xc0
+> > > > > 
+> > > > > Wu found it's due to [1]. Before that, unevictable page goes to cull_mlocked
+> > > > > routine so that it couldn't reach the VM_BUG_ON_PAGE line.
+> > > > > 
+> > > > > To fix the issue, this patch filter out unevictable LRU pages
+> > > > > from the reclaim_clean_pages_from_list in CMA.
+> > > > 
+> > > > The changelog is rather modest on details and I have to confess I have
+> > > > little bit hard time to understand it. E.g. why do not we need to handle
+> > > > the regular reclaim path?
+> > > 
+> > > No need to pass unevictable pages into regular reclaim patch if we are
+> > > able to know in advance.
+> > 
+> > I am sorry to be dense here. So what is the difference in the CMA path?
+> > Am I right that the pfn walk (CMA) rather than LRU isolation (reclaim)
+> > is the key differentiator?
 > 
-> Hi Dmitry,
-> 
-> 
-> On 09/06/2019 21:27, Dmitry Osipenko wrote:
->> It was left unnoticed by accident, which means that the code could be
->> cleaned up a tad more.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/clocksource/timer-tegra.c | 40 +++++++++++++++++++------------
->>  1 file changed, 25 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
->> index 9406855781ff..6da169de47f9 100644
->> --- a/drivers/clocksource/timer-tegra.c
->> +++ b/drivers/clocksource/timer-tegra.c
->> @@ -216,6 +216,19 @@ static inline unsigned int tegra_irq_idx_for_cpu(int cpu, bool tegra20)
->>  	return TIMER10_IRQ_IDX + cpu;
->>  }
->>  
->> +static inline unsigned long tegra_rate_for_timer(struct timer_of *to,
->> +						 bool tegra20)
->> +{
->> +	/*
->> +	 * TIMER1-9 are fixed to 1MHz, TIMER10-13 are running off the
->> +	 * parent clock.
->> +	 */
->> +	if (tegra20)
->> +		return 1000000;
-> 
-> Mind to take the opportunity to convert the literal value to a constant?
+> Yes.
+> We could isolate unevictable LRU pages from the pfn waker to migrate and
+> could discard clean file-backed pages to reduce migration latency in CMA
+> path.
 
-Sure!
+Please be explicit about that in the changelog. The fact that this is
+not possible from the regular reclaim path is really important and not
+obvious from the first glance.
 
->> +
->> +	return to->of_clk.rate;
->> +}
->> +
->>  static int __init tegra_init_timer(struct device_node *np, bool tegra20,
->>  				   int rating)
->>  {
->> @@ -268,30 +281,27 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
->>  
->>  	for_each_possible_cpu(cpu) {
->>  		struct timer_of *cpu_to = per_cpu_ptr(&tegra_to, cpu);
->> +		unsigned long flags = IRQF_TIMER | IRQF_NOBALANCING;
->> +		unsigned long rate = tegra_rate_for_timer(&tegra_to, tegra20);
+Thanks!
 
-Oh, this actually shall be (to, tegra20). Will correct this in v2!
-
->>  		unsigned int base = tegra_base_for_cpu(cpu, tegra20);
->>  		unsigned int idx = tegra_irq_idx_for_cpu(cpu, tegra20);
->> +		unsigned int irq = irq_of_parse_and_map(np, idx);
->>  
->> -		/*
->> -		 * TIMER1-9 are fixed to 1MHz, TIMER10-13 are running off the
->> -		 * parent clock.
->> -		 */
->> -		if (tegra20)
->> -			cpu_to->of_clk.rate = 1000000;
-
-I also spotted that there is a bug here that I introduced in a previous
-patch. The of_clk.rate is initialized only for the first per-cpu
-clocksource and then we need to replicate it for the rest of CPU's in a
-case of T210. I'll add an explicit fixup for this.
+-- 
+Michal Hocko
+SUSE Labs
