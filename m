@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5C9C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94BAC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32CC20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9267E20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KPlC0asT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ErpuCgIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388551AbfFJImY (ORCPT
+        id S2388606AbfFJIm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:42:24 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40883 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388430AbfFJImV (ORCPT
+        Mon, 10 Jun 2019 04:42:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40116 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388430AbfFJImZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:42:21 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p11so8254719wre.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:42:20 -0700 (PDT)
+        Mon, 10 Jun 2019 04:42:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so7280444wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:42:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/JaaoIAXOHk6r3bUaQxdq6m85g1r1iKBVjxqAQyHOKY=;
-        b=KPlC0asTsYkXAfvDqUgZ/ZaGrDo+NxM0SUTauF0UbE0oVpuEWnIjRW0d4d4eK3voTD
-         pge6GUVTA/fOzY986+f87X1ppOF9lBX/SJnB6PLo3ZBMUM4btr9ZgT52VrVoUYg6DjxP
-         GDwl2RYwc3KZFbYYOUO3ZrWlaGx5HYX4zfLwpGSgW/2GTQ7xbl0Alf4DCt3G1sYvnqSW
-         2Av4JLFjVKf7QTkUgs1H7ADEuNQ5LzdMzUJaFzpVBAtRA/8TYBBSW9Q0lsFsJos8ocay
-         nmgNOyF2wm1/PaAVAYW9o9Jr1cxdmnCAS9Qj9m/op6h7efURq90aW+ZwaKXNAbnSK7wP
-         aIWA==
+        bh=FalRLEADzMPtGyW8NIPAA0F5olxzxXGnPVoGFb+myak=;
+        b=ErpuCgIKx7tdIhXc0Vgq27YYh5IdzYS8ZROzqkhZo992Lvnn19vfhbIqZzxfQ10161
+         q/yb5S3UOlu7jVewR6gPOHtopPzH2mIm47P8H5DIDXJkkAvu/fVLeYL+XDHodIfbmI/Q
+         CKa9e4AABXjZuSQiUwSxAL/oBnskNHq1jEInWN4Q5Tp+sQdhRKsiH2TxkMt482GTBNR7
+         aY1rlYW3/QXDuFLndlbV2tpu9/XuFDuowc7j5gTlPoBAZBoUbY32p3JHHxZM6+39iUMi
+         I88QsPzhpoQOgqfRr4ELN1VJv09S0GcBFZHzKYKYqObfTb0uzFEHbnk2tmqKPOZqSUBm
+         gHPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/JaaoIAXOHk6r3bUaQxdq6m85g1r1iKBVjxqAQyHOKY=;
-        b=BwXnQpx29vb8g0wsmqv3sC1KyJfz9lbaMkohytfsyZ5GhGwaLElje1Fru0n98AlXsr
-         HzeRDrylJH9byn2Kk0PP+gV2KqcasayZlHX8PEl/vGeaXEJJUEtOmTRa6CADqUAGoxmm
-         QLd/P7C/DbntbvIWaT/Zrhbdb5aloougKlfj5E19XZF4xaZu99NMF1OKl6ayxpQQLkHx
-         xbDhBJZbqpWSyATQR6hE8VI+hJhqwXBArNRxAIoVrTt0l+AGEoOZhcDnCLnAZyuZI7TG
-         QT3QlJ47xtE83x3aCEZ63LqhsuNhIJp+5hiHGSNnkBLuZRplVXGYxJNG+y3JXZQi319L
-         xtfA==
-X-Gm-Message-State: APjAAAVU45aWLAXtixJJXq0BmD7wiPav8wFXKZ43Hc8I3IzQejZHgJti
-        5sPd6sbq8VYwwRE3a3hEfPgZAw==
-X-Google-Smtp-Source: APXvYqzQZOiDnuYFcAlCqVwbD8w92qHikrlYd/QR16F3PP1kyMO+vT8BZ4gvbN767L0PA0e6vy3+bQ==
-X-Received: by 2002:adf:e5d2:: with SMTP id a18mr30727001wrn.212.1560156139427;
-        Mon, 10 Jun 2019 01:42:19 -0700 (PDT)
+        bh=FalRLEADzMPtGyW8NIPAA0F5olxzxXGnPVoGFb+myak=;
+        b=Ex6dGnHx1kiXkPhSYzjDklpUJYmlB8QBbofxqYVN7O/n5KAsNIKzNtTfXQgeNkCoFk
+         5UTrQER+6tOgWrXBqKGKWoTpV/JmuDVGn2g2JJNzcBpAAco93oJCS8gUgwyeu8d/2KEB
+         UCe1Hx8Wt2/y6429le1tQtTXy89WLbQWYtMtp0USXY0xtmwzA4u7dUFrLrcjdE2GqnLm
+         ZqmVSIRkJXyOrAFi7C5uxXfp2a46nFC5gpJrJHstFFz/FazPcCJj2sdH5J/cI/AmwFnq
+         kI/Y+Af12F1Qpu3C8/CRrVPAkqSUYw3qNGopJWOx2UCHKcyU98mYXFNhQhL2X5z6+caU
+         2sGg==
+X-Gm-Message-State: APjAAAVV9J9p7KsXZXQb+50A877uItfZQJOw6IwdDX1nT5r8Tjdbv7+d
+        aUo6td+wGMJtUymUYnvYMylB3g==
+X-Google-Smtp-Source: APXvYqyC2APpf/zAbitrU/BjHOuyVW/f2vbj2/AUhh+FVA31orPg+ghJwVZnl4+ZvUlYkGglrWpA1w==
+X-Received: by 2002:a1c:35c9:: with SMTP id c192mr12941297wma.147.1560156143556;
+        Mon, 10 Jun 2019 01:42:23 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id a125sm9929670wmf.42.2019.06.10.01.42.18
+        by smtp.gmail.com with ESMTPSA id a125sm9929670wmf.42.2019.06.10.01.42.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 01:42:19 -0700 (PDT)
+        Mon, 10 Jun 2019 01:42:23 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     alokc@codeaurora.org, andy.gross@linaro.org,
         david.brown@linaro.org, wsa+renesas@sang-engineering.com,
@@ -65,9 +65,9 @@ To:     alokc@codeaurora.org, andy.gross@linaro.org,
         linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-Date:   Mon, 10 Jun 2019 09:42:09 +0100
-Message-Id: <20190610084213.1052-4-lee.jones@linaro.org>
+Subject: [PATCH v3 8/8] usb: dwc3: qcom: Improve error handling
+Date:   Mon, 10 Jun 2019 09:42:13 +0100
+Message-Id: <20190610084213.1052-8-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610084213.1052-1-lee.jones@linaro.org>
 References: <20190610084213.1052-1-lee.jones@linaro.org>
@@ -76,112 +76,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch provides basic support for booting with ACPI instead
-of the currently supported Device Tree.  When doing so there are a
-couple of differences which we need to taken into consideration.
+dwc3_qcom_clk_init() is called with of_count_phandle_with_args() as an
+argument.  If of_count_phandle_with_args() returns an error, the number
+of clocks will be a negative value and will lead to undefined behaviour.
 
-Firstly, the SDM850 ACPI tables omit information pertaining to the
-4 reserved GPIOs on the platform.  If Linux attempts to touch/
-initialise any of these lines, the firmware will restart the
-platform.
-
-Secondly, when booting with ACPI, it is expected that the firmware
-will set-up things like; Regulators, Clocks, Pin Functions, etc in
-their ideal configuration.  Thus, the possible Pin Functions
-available to this platform are not advertised when providing the
-higher GPIOD/Pinctrl APIs with pin information.
+Ensure we check for an error before attempting to blindly use the value.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/pinctrl/qcom/Kconfig          |  2 +-
- drivers/pinctrl/qcom/pinctrl-sdm845.c | 36 ++++++++++++++++++++++++++-
- 2 files changed, 36 insertions(+), 2 deletions(-)
+ drivers/usb/dwc3/dwc3-qcom.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index 2e66ab72c10b..aafbe932424f 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -168,7 +168,7 @@ config PINCTRL_SDM660
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 55ba04254e38..e4dac82abd7d 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -409,6 +409,9 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
+ 	if (!np || !count)
+ 		return 0;
  
- config PINCTRL_SDM845
-        tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
--       depends on GPIOLIB && OF
-+       depends on GPIOLIB && (OF || ACPI)
-        select PINCTRL_MSM
-        help
-          This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index c97f20fca5fd..98a438dba711 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-  */
++	if (count < 0)
++		return count;
++
+ 	qcom->num_clocks = count;
  
-+#include <linux/acpi.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
- 	UFS_RESET(ufs_reset, 0x99f000),
- };
- 
-+static const int sdm845_acpi_reserved_gpios[] = {
-+	0, 1, 2, 3, 81, 82, 83, 84, -1
-+};
-+
- static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.pins = sdm845_pins,
- 	.npins = ARRAY_SIZE(sdm845_pins),
-@@ -1287,11 +1292,39 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.ngpios = 150,
- };
- 
-+static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
-+	.pins = sdm845_pins,
-+	.npins = ARRAY_SIZE(sdm845_pins),
-+	.groups = sdm845_groups,
-+	.ngroups = ARRAY_SIZE(sdm845_groups),
-+	.reserved_gpios = sdm845_acpi_reserved_gpios,
-+	.ngpios = 150,
-+};
-+
- static int sdm845_pinctrl_probe(struct platform_device *pdev)
- {
--	return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
-+	int ret;
-+
-+	if (pdev->dev.of_node) {
-+		ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
-+	} else if (has_acpi_companion(&pdev->dev)) {
-+		ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
-+	} else {
-+		dev_err(&pdev->dev, "DT and ACPI disabled\n");
-+		return -EINVAL;
-+	}
-+
-+	return ret;
- }
- 
-+#if CONFIG_ACPI
-+static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
-+	{ "QCOM0217"},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
-+#endif
-+
- static const struct of_device_id sdm845_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sdm845-pinctrl", },
- 	{ },
-@@ -1302,6 +1335,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
- 		.name = "sdm845-pinctrl",
- 		.pm = &msm_pinctrl_dev_pm_ops,
- 		.of_match_table = sdm845_pinctrl_of_match,
-+		.acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
- 	},
- 	.probe = sdm845_pinctrl_probe,
- 	.remove = msm_pinctrl_remove,
+ 	qcom->clks = devm_kcalloc(dev, qcom->num_clocks,
 -- 
 2.17.1
 
