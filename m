@@ -2,187 +2,153 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93433C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8865C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545092086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20D52086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/LFxbrX"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="KUSlqCLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390783AbfFKABi (ORCPT
+        id S2390831AbfFKACN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 20:01:38 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35573 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390647AbfFKABi (ORCPT
+        Mon, 10 Jun 2019 20:02:13 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37989 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390788AbfFKACN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 20:01:38 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x25so5088084ljh.2;
-        Mon, 10 Jun 2019 17:01:35 -0700 (PDT)
+        Mon, 10 Jun 2019 20:02:13 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f97so4280201plb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 17:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ml73Kr2VziKROWSuyXgL+Ty4Irk7/WJ5+ykuDE3N0mw=;
-        b=I/LFxbrXGYfpcNHxrBVjycKepERrVEp783/i/UzEWgFNMRjqYXe0djS66zBugx5DX2
-         mhDGWelUWZEFUbswawHfpSH4D0UwEx3kDCBqDwwGcc9t/yALjM3xxX6mP5wTEgqRIZAj
-         Akj8GH3VDmASdxmJkd6pChBd7Xg/jgGgpD/KnSmth5le/ZTv8XvSE/LnseRPEWrHxXq5
-         PyQH6LwNK4EABSTPlj1OJbfF/RUS6iKma2V0WE998dnyJidMVYRIxtGhgyWzMD2cse/c
-         Myppm3RQLdaly+Ed4IQWrOvzx0r4HebCJNE2fKutoteGg7IoqY2fUTt2oTNUIMPFoCz4
-         s+zw==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=A82/ddxx3F+ATI2rZx3wBjeD0ledFHTBqnLAZuECLx4=;
+        b=KUSlqCLfKiAiQnRELAl1ZV0yc0U5pUCd2gUMULJ3+ELMQm4Hla5QTfxrOBk5YUAEyu
+         zW+4qpHpO2pgrjwgBMY+GyzEKHtIpxIVIplITWILvwph3AhY3ZYZWBenMnOPLdgHgItc
+         NASjKKHiq2Hn0b+lJstWbgAFaxZx+Q19bWrYD0MV/lo569q87MTUIUBTXXTdPUk5YO6X
+         xX1aqotPQG/nM1VygMeR6ruhR81K6olk429urDbudQJ8MQFwV4AvFmmENPQSNEANXtPI
+         rjLcJiMHLk1wWtRIhQGnKvHy69UpH1crAMAFqgxmbLBgi7aTQybSq/PyiQyATqDXbiNT
+         5WVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ml73Kr2VziKROWSuyXgL+Ty4Irk7/WJ5+ykuDE3N0mw=;
-        b=oiCfPDmf0KPL1jeDh8ldhpS5Da3geS9KTUnIDw1U+ELS673EuPL9d20O8h3axP50kY
-         Ss+Bdu6SOq+61sB7S9UDgkKM9b7ck2J8RVyVSaV2JeavwMKsBPz+rvLbeXuepGWoy6R3
-         DMQbG6sWE+x7b2ClfaWxVTC/6Tj/cp+KnBcbx9o8BBS3PPomL8usZdJ8KB9QnZnIDI8+
-         B9oezsGdv9SodpiCo3oDBK8v+eFeQFWUBR76GSRX9Dfc4NgK5gd6dayqgAFp11HqU2qq
-         8MEp2gd0ZD87cMkpNIG03cXa7QNu8JeSCfBIKFbw1iINf1xY4lXw8OGVXrLRq9eVdmvt
-         TZLw==
-X-Gm-Message-State: APjAAAXByZFJhg8qPwrzlYi45kCSZQQBTclFEyKEsywDTk+d8Kz2zTwZ
-        YG1ftP9kxR4rKdH9I4u89XVmEeEH
-X-Google-Smtp-Source: APXvYqy/5sHIjAbRTHEeDlyxlg3CMA/rPQ0LREVE4ANJxVyLEUwvYAvp2Oc1ysij0n8O37kBgwqdVA==
-X-Received: by 2002:a2e:1510:: with SMTP id s16mr9449302ljd.19.1560211294559;
-        Mon, 10 Jun 2019 17:01:34 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id v7sm2272996ljj.3.2019.06.10.17.01.33
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=A82/ddxx3F+ATI2rZx3wBjeD0ledFHTBqnLAZuECLx4=;
+        b=hDnm8CJkJkUZpHryT0EChTXfQadyA/18iZG5GKy0bwN7ZdfrFbvKrnb+I5twq85znG
+         Yvo6zAVJbQM1LY+cBfvWCHUFGHQDJ9zlrko6lVIlHQnX/fZd9Bi7bOozWt/cQ1jtZaPA
+         uHt3qCl64j1pwm/VQDP1fHx/ZgTbCmpBtv50QLJ7xlmtM17E7LxmaKqFYG3o9siMv8ze
+         nK0Fs17LheuEEBhilBv1D9dD6wgCxSaAUGGpxX+WKDJi+3xhTpm4tnb9SwkxUWyhYR//
+         gsZDAx13lA8A8jDxN9uL53mdQfAzascM+xITFuIlryDjbiWO3EEIWufgx3OKpd5yTX98
+         Fzpw==
+X-Gm-Message-State: APjAAAXf0AVFsBLW5Vqo+v8JI0YB8uq7RGt7qeM/Q1ORSUtov4zhpJh3
+        YTr1uxV/+SjfHNNaQkrjObbW1A==
+X-Google-Smtp-Source: APXvYqwMeZAM5HN0tbtrDv+73zByg9xRCVQtCgh3nPGiZ8vukjVY4hHdmPlqsE6Qi2SoTZcEbcYFYw==
+X-Received: by 2002:a17:902:4181:: with SMTP id f1mr70400039pld.22.1560211332156;
+        Mon, 10 Jun 2019 17:02:12 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b04b:ab5e:d9b1:bcf9:898:128e? ([2600:1010:b04b:ab5e:d9b1:bcf9:898:128e])
+        by smtp.gmail.com with ESMTPSA id a18sm579563pjq.0.2019.06.10.17.02.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 17:01:33 -0700 (PDT)
-Subject: Re: [PATCH v3 0/8] memory: tegra: Introduce Tegra30 EMC driver
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190524172353.29087-1-digetx@gmail.com>
-Message-ID: <ba4c6423-0a20-daad-4b04-e990aec4c4e6@gmail.com>
-Date:   Tue, 11 Jun 2019 03:01:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190524172353.29087-1-digetx@gmail.com>
+        Mon, 10 Jun 2019 17:02:10 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
+Date:   Mon, 10 Jun 2019 16:54:52 -0700
+Message-Id: <BBBF82D3-EE21-49E1-92A4-713C7729E6AD@amacapital.net>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com> <20190606200926.4029-4-yu-cheng.yu@intel.com>
+ <20190607080832.GT3419@hirez.programming.kicks-ass.net> <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+ <20190607174336.GM3436@hirez.programming.kicks-ass.net> <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+ <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net> <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+ <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net> <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
+ <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com> <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
+ <0665416d-9999-b394-df17-f2a5e1408130@intel.com> <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
+ <ac9a20a6-170a-694e-beeb-605a17195034@intel.com> <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
+ <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com> <1b961c71d30e31ecb22da2c5401b1a81cb802d86.camel@intel.com>
+ <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+In-Reply-To: <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+X-Mailer: iPhone Mail (16F203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.05.2019 20:23, Dmitry Osipenko пишет:
-> Hello,
-> 
-> This series introduces driver for the External Memory Controller (EMC)
-> found on Tegra30 chips, it controls the external DRAM on the board. The
-> purpose of this driver is to program memory timing for external memory on
-> the EMC clock rate change. The driver was tested using the ACTMON devfreq
-> driver that performs memory frequency scaling based on memory-usage load.
-> 
-> Changelog:
-> 
-> v3: - Addressed review comments that were made by Stephen Boyd to v2 by
->       adding explicit typing for the callback variable, by including
->       "clk-provider.h" directly in the code and by dropping __clk_lookup
->       usage where possible.
-> 
->       Added more patches into this series:
-> 
->         memory: tegra20-emc: Drop setting EMC rate to max on probe
->         memory: tegra20-emc: Adapt for clock driver changes
->         memory: tegra20-emc: Include io.h instead of iopoll.h
->         memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
-> 
->       Initially I was going to include these patches into other patchset,
->       but changed my mind after rearranging things a tad. The "Adapt for
->       clock driver changes" patch is directly related to the clock changes
->       done in the first patch of this series, the rest are minor cleanups
->       that are fine to include here as well.
-> 
->       Added some more words to the commit message of "Add binding for NVIDIA
->       Tegra30 External Memory Controller" patch, clarifying why common DDR
->       timing device-tree form isn't suitable for Tegra30.
-> 
->       The Tegra30 EMC driver now explicitly selects the registers access
->       mode (EMC_DBG mux), not relying on the setting left from bootloader.
-> 
-> v2: - Added support for changing MC clock diver configuration based on
->       Memory Controller (MC) configuration which is part of the memory
->       timing.
-> 
->     - Merged the "Add custom EMC clock implementation" patch into this
->       series because the "Introduce Tegra30 EMC driver" patch directly
->       depends on it. Please note that Tegra20 EMC driver will need to be
->       adapted for the clock changes as well, I'll send out the Tegra20
->       patches after this series will be applied because of some other
->       dependencies (devfreq) and because the temporary breakage won't
->       be critical (driver will just error out on probe).
-> 
->     - EMC driver now performs MC configuration validation by checking
->       that the number of MC / EMC timings matches and that the timings
->       rate is the same.
-> 
->     - EMC driver now supports timings that want to change the MC clock
->       configuration.
-> 
->     - Other minor prettifying changes of the code.
-> 
-> Dmitry Osipenko (8):
->   clk: tegra20/30: Add custom EMC clock implementation
->   memory: tegra20-emc: Drop setting EMC rate to max on probe
->   memory: tegra20-emc: Adapt for clock driver changes
->   memory: tegra20-emc: Include io.h instead of iopoll.h
->   memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
->   dt-bindings: memory: Add binding for NVIDIA Tegra30 External Memory
->     Controller
->   memory: tegra: Introduce Tegra30 EMC driver
->   ARM: dts: tegra30: Add External Memory Controller node
-> 
->  .../memory-controllers/nvidia,tegra30-emc.txt |  249 ++++
->  arch/arm/boot/dts/tegra30.dtsi                |   11 +
->  drivers/clk/tegra/Makefile                    |    2 +
->  drivers/clk/tegra/clk-tegra20-emc.c           |  299 +++++
->  drivers/clk/tegra/clk-tegra20.c               |   55 +-
->  drivers/clk/tegra/clk-tegra30.c               |   38 +-
->  drivers/clk/tegra/clk.h                       |    6 +
->  drivers/memory/tegra/Kconfig                  |   10 +
->  drivers/memory/tegra/Makefile                 |    1 +
->  drivers/memory/tegra/mc.c                     |    3 -
->  drivers/memory/tegra/mc.h                     |   30 +-
->  drivers/memory/tegra/tegra20-emc.c            |   94 +-
->  drivers/memory/tegra/tegra30-emc.c            | 1165 +++++++++++++++++
->  drivers/memory/tegra/tegra30.c                |   44 +
->  include/linux/clk/tegra.h                     |   14 +
->  15 files changed, 1903 insertions(+), 118 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-emc.txt
->  create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
->  create mode 100644 drivers/memory/tegra/tegra30-emc.c
-> 
 
-Hello Peter,
 
-Do you have any comments on the clk/emc bits? It looks to me that this
-series basically needs yours, Stephen's and Rob's acks, after which
-Thierry could pick it up once everything is arranged. Stephen and Rob
-already made some comments to the previous versions of the series that
-hopefully are addressed now. Maybe you also have something to say?
-Otherwise just an ack will be also very appreciated. Thanks in advance!
+> On Jun 10, 2019, at 3:59 PM, Dave Hansen <dave.hansen@intel.com> wrote:
+>=20
+>> On 6/10/19 3:40 PM, Yu-cheng Yu wrote:
+>> Ok, we will go back to do_mmap() with MAP_PRIVATE, MAP_NORESERVE and
+>> VM_DONTDUMP.  The bitmap will cover only 48-bit address space.
+>=20
+> Could you make sure to discuss the downsides of only doing a 48-bit
+> address space?
+>=20
+> What are the reasons behind and implications of VM_DONTDUMP?
+>=20
+>> We then create PR_MARK_CODE_AS_LEGACY.  The kernel will set the bitmap, b=
+ut it
+>> is going to be slow.
+>=20
+> Slow compared to what?  We're effectively adding one (quick) system call
+> to a path that, today, has at *least* half a dozen syscalls and probably
+> a bunch of page faults.  Heck, we can probably avoid the actual page
+> fault to populate the bitmap if we're careful.  That alone would put a
+> syscall on equal footing with any other approach.  If the bit setting
+> crossed a page boundary it would probably win.
+>=20
+>> Perhaps we still let the app fill the bitmap?
+>=20
+> I think I'd want to see some performance data on it first.
 
-Actually just noticed that I accidentally missed to CC Stephen directly
-for this series, but hopefully it's not a problem since he is reading
-the CLK ML. Stephen, please let me know otherwise, I could re-send it
-all if needed.
+Trying to summarize:
+
+If we manage the whole thing in user space, we are basically committing to o=
+nly covering 48 bits =E2=80=94 otherwise the whole model falls apart in quit=
+e a few ways. We gain some simplicity in the kernel.
+
+If we do it in the kernel, we still have to decide how much address space to=
+ cover. We get to play games like allocating the bitmap above 2^48, but then=
+ we might have CRIU issues if we migrate to a system with fewer BA bits.
+
+I doubt that the performance matters much one way or another. I just don=E2=80=
+=99t expect any of this to be a bottleneck.
+
+Another benefit of kernel management: we could plausibly auto-clear the bits=
+ corresponding to munmapped regions. Is this worth it?
+
+And a maybe-silly benefit: if we manage it in the kernel, we could optimize t=
+he inevitable case where the bitmap contains pages that are all ones :). If i=
+t=E2=80=99s in userspace, KSM could do the, but that will be inefficient at b=
+est.=
