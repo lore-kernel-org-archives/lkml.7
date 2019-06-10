@@ -2,123 +2,69 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87611C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7801C28D16
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5761520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:31:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cXohEkVc"
+	by mail.kernel.org (Postfix) with ESMTP id AB1D320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389963AbfFJMba (ORCPT
+        id S2389899AbfFJMdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 08:31:30 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34970 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389167AbfFJMb3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 08:31:29 -0400
-Received: by mail-oi1-f194.google.com with SMTP id y6so6089945oix.2;
-        Mon, 10 Jun 2019 05:31:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nFynJG6GkMrt4lyp8IC+dRaN8zX6LxP0uU9NEUWvbzI=;
-        b=cXohEkVc0ZP8pvQlDl8p6OE4YZbfDSAvS5aWQeuKTLlZqlj7v78cTJ15xSpsOzjR22
-         xqW8m8BQQTHBCyUybgg4cjc9zpHtLHToZBnVKwVpPrd2gMNZEaQEY+U2aASQmhONplHu
-         xCN+NI806+E9j8cNzavcdXo5PAqDEEspH4deJbZqbsj2prDFodwaiUI3/We1XgFxezKC
-         nUwyXdytL8UYR+4FW0gFx5nL4COz2G9KZnTvc6tRryCozSSCylWM6PxbPnrrKKLOPF4y
-         QKkBohVJzmnYPPPYwQEoIC2AXqhhVVwSaWDLT5t/w7U2D7lWdPCdL9uK58kqqA82/8t4
-         vL2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nFynJG6GkMrt4lyp8IC+dRaN8zX6LxP0uU9NEUWvbzI=;
-        b=mQ5EYUbQkMQ9gvxu8OEZCmkvjE0x8ntIetK5Qnud+8/shwOD4FgUdyIIHqssXjnkw+
-         Tood+m2WpuwslX6QPXTnFyQtEGVs8LUJ52W494XtN7+H455z2I1YZEic/u6sEqZXf7Uq
-         hiXE/ElgtGA1vVRrL2wG/V9LMl1QR+Jz2KMC9ztC01d2hTsEhV3ja6dByzcToH7bWJ5d
-         5uVC28j3aNiIwD5WAhkJGidcpgVAIEzRRwCcSYD3ftqEQ/UeYMKZlhB5m3IBX3mLTf/e
-         X4Y0eP19JxZBAJLnaPqW9oXevMXbPWb3PJU4q4zgOwq6Gv/ljs1LHGvtZ60dRQRTYOPL
-         z0LA==
-X-Gm-Message-State: APjAAAXKIfJ8F7ixw9CUmfM9Hp/zs30bnuRdrkSyqTrfJy1pAtAiAA0t
-        zYibsdpjskFM0zjCe4s52KK9723TnUsB3Ir00Lw=
-X-Google-Smtp-Source: APXvYqxpBiHP08OPhwvFiE1hD4gx+oq+4oIRwCJaMPkj/6FYkD61ABAJqXsC6FpliWoKBw4Uc0ZVvhgV6HFS3Jve/S4=
-X-Received: by 2002:aca:51cf:: with SMTP id f198mr10179250oib.140.1560169888423;
- Mon, 10 Jun 2019 05:31:28 -0700 (PDT)
+        Mon, 10 Jun 2019 08:33:45 -0400
+Received: from ms.lwn.net ([45.79.88.28]:43790 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388373AbfFJMdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 08:33:44 -0400
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 059399B0;
+        Mon, 10 Jun 2019 12:33:43 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 06:33:40 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of
+ AutoReporter
+Message-ID: <20190610063340.051ee13b@lwn.net>
+In-Reply-To: <20190610074840.GB24746@kroah.com>
+References: <20190607153849.101321647@linuxfoundation.org>
+        <20190607153855.717899507@linuxfoundation.org>
+        <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
+        <20190610073119.GB20470@kroah.com>
+        <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
+        <20190610074840.GB24746@kroah.com>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609204510.GB8247@lunn.ch> <20190610114700.tymqzzax334ahtz4@flea>
-In-Reply-To: <20190610114700.tymqzzax334ahtz4@flea>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 10 Jun 2019 14:31:17 +0200
-Message-ID: <CAFBinCCs5pa1QmaV32Dk9rOADKGXXFpZsSK=LUk4CGWMrG5VUQ@mail.gmail.com>
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On Mon, 10 Jun 2019 09:48:40 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-On Mon, Jun 10, 2019 at 1:47 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi Andrew,
->
-> On Sun, Jun 09, 2019 at 10:45:10PM +0200, Andrew Lunn wrote:
-> > > Patch #1 and #4 are minor cleanups which follow the boyscout rule:
-> > > "Always leave the campground cleaner than you found it."
-> >
-> > > I
-> > > am also looking for suggestions how to handle these cross-tree changes
-> > > (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
-> > > go through the net-next tree. I will re-send patch #5 separately as
-> > > this should go through Kevin's linux-amlogic tree).
-> >
-> > Patches 1 and 4 don't seem to have and dependencies. So i would
-> > suggest splitting them out and submitting them to netdev for merging
-> > independent of the rest.
->
-> Jumping on the occasion of that series. These properties have been
-> defined to deal with phy reset, while it seems that the PHY core can
-> now handle that pretty easily through generic properties.
->
-> Wouldn't it make more sense to just move to that generic properties
-> that already deals with the flags properly?
-thank you for bringing this up!
-if anyone else (just like me) doesn't know about it, there are generic
-bindings defined here: [0]
+> Hm, 2.1 here:
+> 	Running Sphinx v2.1.0
+> perhaps Tumbleweed needs to update?  :)
 
-I just tested this on my X96 Max by defining the following properties
-inside the PHY node:
-  reset-delay-us = <10000>;
-  reset-assert-us = <10000>;
-  reset-deassert-us = <10000>;
-  reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+Heh...trying 2.1 is still on my list of things to do ... :)
 
-that means I don't need any stmmac patches which seems nice.
-instead I can submit a patch to mark the snps,reset-gpio properties in
-the dt-bindings deprecated (and refer to the generic bindings instead)
-what do you think?
+> Anyway, this should not be breaking, if Jon doesn't have any ideas, I'll
+> just drop these changes.
 
+The fix for that is 551bd3368a7b (drm/i915: Maintain consistent
+documentation subsection ordering) which was also marked for stable.  Jiri,
+do you somehow not have that one?
 
-Martin
+Thanks,
 
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/phy.txt?id=b54dd90cab00f5b64ed8ce533991c20bf781a3cd#n58
+jon
