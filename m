@@ -2,116 +2,180 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD29C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1948C468C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8376F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A88F2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="EzDNFDJO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fbB32089"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387772AbfFJGgv (ORCPT
+        id S2387793AbfFJGir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 02:36:51 -0400
-Received: from mail-eopbgr50128.outbound.protection.outlook.com ([40.107.5.128]:51546
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387464AbfFJGgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 02:36:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l8BQdb3SRazE1QSjIFxhl2w5hJ6E6pSiALoKrKWE4qQ=;
- b=EzDNFDJOR5e/cywrrvOFyEuMyS9aR8UJfANp9J0CzfcH604rv5g9ngC/2Ud6NrXKN2fpm79sUbKE219kH45cbT0oc99xqNUGR7gkiX80rwGcXWK1jwK3ar0PCuoWGQGOgfAWiYRIANi40L6ogJxTQBAuHW4iMKFfLGtZDDhRI/8=
-Received: from VI1PR0701MB2752.eurprd07.prod.outlook.com (10.173.81.136) by
- VI1PR0701MB2351.eurprd07.prod.outlook.com (10.168.137.146) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.8; Mon, 10 Jun 2019 06:36:46 +0000
-Received: from VI1PR0701MB2752.eurprd07.prod.outlook.com
- ([fe80::f477:e7f8:c964:4d06]) by VI1PR0701MB2752.eurprd07.prod.outlook.com
- ([fe80::f477:e7f8:c964:4d06%7]) with mapi id 15.20.1987.008; Mon, 10 Jun 2019
- 06:36:46 +0000
-From:   "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH] hwmon: pmbus: protect read-modify-write with lock
-Thread-Topic: [PATCH] hwmon: pmbus: protect read-modify-write with lock
-Thread-Index: AQHVFTTnFHDIhjzuaE2NtFtr8sxEU6aQ11AAgAOr/YA=
-Date:   Mon, 10 Jun 2019 06:36:46 +0000
-Message-ID: <20190610063639.GA18981@localhost.localdomain>
-References: <20190528090746.GA31184@localhost.localdomain>
- <20190607223217.GE869@kunai>
-In-Reply-To: <20190607223217.GE869@kunai>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0238.eurprd05.prod.outlook.com
- (2603:10a6:3:fb::14) To VI1PR0701MB2752.eurprd07.prod.outlook.com
- (2603:10a6:801:a::8)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=krzysztof.adamski@nokia.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [131.228.2.15]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8a592131-282a-454e-21eb-08d6ed6e028a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0701MB2351;
-x-ms-traffictypediagnostic: VI1PR0701MB2351:
-x-microsoft-antispam-prvs: <VI1PR0701MB2351F57A1A7EF3D5ED00BE4AEF130@VI1PR0701MB2351.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(396003)(346002)(366004)(39860400002)(189003)(199004)(478600001)(66446008)(53936002)(73956011)(54906003)(66556008)(64756008)(66476007)(66946007)(386003)(6916009)(76176011)(6506007)(68736007)(33656002)(99286004)(102836004)(52116002)(316002)(14454004)(305945005)(7736002)(14444005)(3846002)(6116002)(4744005)(8676002)(81156014)(81166006)(1076003)(2906002)(6436002)(6486002)(229853002)(86362001)(9686003)(66066001)(6512007)(256004)(11346002)(25786009)(476003)(71190400001)(71200400001)(4326008)(186003)(26005)(5660300002)(446003)(61506002)(8936002)(6246003)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2351;H:VI1PR0701MB2752.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MgFrVsws+qjhTmuwmiZzhGT79MnqJBxQK8qu1v4xQGEiBHbfVk3LJnDrhqqlgUHwxxqTvl2ZgQLkCARSuCJDmNsjZGg24HMdd5KaqCKJv6W+p0kAT7ifS17spYvk2VqzvRKD7NvwrKTwan+3rjZYOJq9Aum3WV78bBdR/I9yFpZc2fSDWAVaJ+5YH4GPdIAcF+FQh4AdArMKJCcImVKpOtSuZ9YSXqvYBseXw9alA/2VEpQiMg+gb7t4RqoiWwOo52diPvX/IMK6piRqXfa6OrU/EP1UCgjAuAZUhMYB6ZQLQO3CdcQ1uGpPDf62ZLgm5nho24u4iR9WhczlVaC67MprDJLvTRsk87MhAHmzdHTrCkflTkKDvmkygB/eDBg+JInkeyljKKL5P5B23o5r48dwbZJ0tOu6SwQqEAto7Bc=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <405DED71A7499E42BD0DDDC2705F4D70@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 10 Jun 2019 02:38:47 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33982 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387485AbfFJGiq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 02:38:46 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y198so5802087lfa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 23:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iGn/q4Q13MqrWMeqZokMUPss3YZHlZJtlTRMPfjLiIY=;
+        b=fbB32089b8xODi1bWnjv3D9hBBDfgRHCl1D0DOTyOSsc5RLsAFg4sUNXLqxyjnOXmG
+         4rozgAKJQ/h3fr8uKBBl/5dz5Nz0nQWxje7RWmqcyHHZI5NGiFacYB7AE7ED8yORg1kr
+         g7MQG1SIj2NYXX9Sth+ySfdDqFnhtjeCE+cnxmM8tpvwbyKb2ciDq1uzseGbwLGq1mQG
+         uzJ1K+NdBrs11whKNDY9hwbmIX6ltVD9gTGlX75H4Etkud0WYJVr0xY4Vz9Lf/8zA7VV
+         1XZSQMtLmHxzqBCmLP9/U4ITK5v+O/qxhqXZO9W+MsVBrOopCvlW9CLMgecWuzHMjTwl
+         FH2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iGn/q4Q13MqrWMeqZokMUPss3YZHlZJtlTRMPfjLiIY=;
+        b=VqCjQhqB5Soc7dp4+8z7MTpJY2esMQyQncsuA0dWQwF5Iy1r0Fsu+11+3nCYrHse6o
+         EqiJ0OvtM4udePJBeKV1CeRA3o4+5dAxUNU2XaSGKDH21UcXu60a3lFW4GGNwYR4uQl+
+         sOFUksM8/as+J2j+R+S+ZCTzK3Ql2yC99sv51kkjRwUWY7n+ptfdg71I1iTTbQxGD55S
+         8t+ypnnfM2M55Sq5a1wyx7Z9UDua97LpP+3PJfmlNdx2TiTPstrA/J+z+Ippve1+nXws
+         014kfTgGP67gv69nBvwlB5HF1l+RkWBdHRZk1kDfhPUa5jtUESlSuem1uwbRstTX7ewL
+         naCQ==
+X-Gm-Message-State: APjAAAVl5HiQ81qjtzqTvGa2D6zNfB5CrmMQodqGfMBhTU0Cde81DbWA
+        ppbiE4UirGwbkLRJyN2futC79oXSmo3dzewHLdn1RA==
+X-Google-Smtp-Source: APXvYqxS3niahYH9+6KRwhteHPEaD44LmaEn8dwnw8ls++OMsyuE6ADCaaqnR33cTk8e9h5OBV/3CqBnFMCoPeZq/Bc=
+X-Received: by 2002:a19:ed0c:: with SMTP id y12mr31981224lfy.191.1560148724912;
+ Sun, 09 Jun 2019 23:38:44 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a592131-282a-454e-21eb-08d6ed6e028a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 06:36:46.7198
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: krzysztof.adamski@nokia.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2351
+References: <20190609164127.843327870@linuxfoundation.org>
+In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 10 Jun 2019 12:08:33 +0530
+Message-ID: <CA+G9fYtf1oB_31eJ44S63X8skoNoNmjngKTG7yKtJXKGMtXk6Q@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/83] 4.9.181-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 12:32:18AM +0200, Wolfram Sang wrote:
->On Tue, May 28, 2019 at 09:08:21AM +0000, Adamski, Krzysztof (Nokia - PL/W=
-roclaw) wrote:
->> The operation done in the pmbus_update_fan() function is a
->> read-modify-write operation but it lacks any kind of lock protection
->> which may cause problems if run more than once simultaneously. This
->> patch uses an existing update_lock mutex to fix this problem.
->>
->> Signed-off-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+On Sun, 9 Jun 2019 at 22:22, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
->Please use get_maintainer to find the people responsible for this file.
->It is not my realm.
+> This is the start of the stable review cycle for the 4.9.181 release.
+> There are 83 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
->> +out:
->> +	mutex_lock(&data->update_lock);
+> Responses should be made by Tue 11 Jun 2019 04:39:58 PM UTC.
+> Anything received after that time might be too late.
 >
->Despite the above, have you tested the code? This likely should be
->mutex_unlock?
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.181-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
 >
+> thanks,
+>
+> greg k-h
 
-Sorry for that, I made a mistake and used wrong command to generate the
-patch and send it to the wrong list of people. You can ignore this
-patchset, it was resent to the proper mailing list instead.
 
-Krzysztof
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+NOTE:
+selftest sources version updated to 5.1
+LTP version upgrade to 20190517
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.181-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 4fcf72df7bc71264d86e616874a0a0cd382f1b12
+git describe: v4.9.180-84-g4fcf72df7bc7
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.180-84-g4fcf72df7bc7
+
+No regressions (compared to build v4.9.180)
+
+No fixes (compared to build v4.9.180)
+
+Ran 23615 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
