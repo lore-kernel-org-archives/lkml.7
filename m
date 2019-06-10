@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5C2C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D017BC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A109207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA412054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 18:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389022AbfFJSwP (ORCPT
+        id S2388792AbfFJSvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 14:52:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:47606 "EHLO foss.arm.com"
+        Mon, 10 Jun 2019 14:51:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:47524 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388882AbfFJSv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 14:51:59 -0400
+        id S2387643AbfFJSvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 14:51:51 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D804ADA7;
-        Mon, 10 Jun 2019 11:51:58 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E83B346;
+        Mon, 10 Jun 2019 11:51:50 -0700 (PDT)
 Received: from ostrya.cambridge.arm.com (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 68A3C3F246;
-        Mon, 10 Jun 2019 11:51:57 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F3F623F246;
+        Mon, 10 Jun 2019 11:51:48 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 To:     will.deacon@arm.com
 Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
@@ -32,9 +32,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         eric.auger@redhat.com
-Subject: [PATCH 6/8] iommu/arm-smmu-v3: Support auxiliary domains
-Date:   Mon, 10 Jun 2019 19:47:12 +0100
-Message-Id: <20190610184714.6786-7-jean-philippe.brucker@arm.com>
+Subject: [PATCH 1/8] iommu: Add I/O ASID allocator
+Date:   Mon, 10 Jun 2019 19:47:07 +0100
+Message-Id: <20190610184714.6786-2-jean-philippe.brucker@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
 References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
@@ -45,475 +45,281 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit a3a195929d40 ("iommu: Add APIs for multiple domains per
-device"), the IOMMU API gained the concept of auxiliary domains (AUXD),
-which allows to control the PASID-tagged address spaces of a device. With
-AUXD the PASID address space are not shared with the CPU, but are instead
-modified with iommu_map() and iommu_unmap() calls on auxiliary domains.
+Some devices might support multiple DMA address spaces, in particular
+those that have the PCI PASID feature. PASID (Process Address Space ID)
+allows to share process address spaces with devices (SVA), partition a
+device into VM-assignable entities (VFIO mdev) or simply provide
+multiple DMA address space to kernel drivers. Add a global PASID
+allocator usable by different drivers at the same time. Name it I/O ASID
+to avoid confusion with ASIDs allocated by arch code, which are usually
+a separate ID space.
 
-Add auxiliary domain support to the SMMUv3 driver. Device drivers allocate
-an unmanaged IOMMU domain with iommu_domain_alloc(), and attach it to the
-device with iommu_aux_attach_domain().
+The IOASID space is global. Each device can have its own PASID space,
+but by convention the IOMMU ended up having a global PASID space, so
+that with SVA, each mm_struct is associated to a single PASID.
 
-The AUXD API is fairly permissive, and allows to attach an IOMMU domain in
-both normal and auxiliary mode at the same time - one device can be
-attached to the domain normally, and another device can be attached
-through one of its PASIDs. To avoid excessive complexity in the SMMU
-implementation we pose some restrictions on supported AUXD usage:
-
-* A domain is either in auxiliary mode or normal mode. And that state is
-  sticky. Once detached the domain has to be re-attached in the same mode.
-
-* An auxiliary domain can have a single parent domain. Two devices can be
-  attached to the same auxiliary domain only if they are attached to the
-  same parent domain.
-
-In practice these shouldn't be problematic, since we have the same kind of
-restriction on normal domains and users have been able to cope so far: at
-the moment a domain cannot be attached to two devices behind different
-SMMUs. When VFIO puts two such devices in the same container, it simply
-falls back to allocating two separate IOMMU domains.
+The allocator is primarily used by IOMMU subsystem but in rare occasions
+drivers would like to allocate PASIDs for devices that aren't managed by
+an IOMMU, using the same ID space as IOMMU.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/iommu/Kconfig       |   1 +
- drivers/iommu/arm-smmu-v3.c | 276 +++++++++++++++++++++++++++++++++---
- 2 files changed, 260 insertions(+), 17 deletions(-)
+The most recent discussion on this patch was at:
+https://lkml.kernel.org/lkml/1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com/
+I fixed it up a bit following comments in that series, and removed the
+definitions for the custom allocator for now.
+
+There also is a new version that includes the custom allocator into this
+patch, but is currently missing the RCU fixes, at:
+https://lore.kernel.org/lkml/1560087862-57608-13-git-send-email-jacob.jun.pan@linux.intel.com/
+---
+ drivers/iommu/Kconfig  |   4 ++
+ drivers/iommu/Makefile |   1 +
+ drivers/iommu/ioasid.c | 150 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/ioasid.h |  49 ++++++++++++++
+ 4 files changed, 204 insertions(+)
+ create mode 100644 drivers/iommu/ioasid.c
+ create mode 100644 include/linux/ioasid.h
 
 diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 9b45f70549a7..d326fef3d3a6 100644
+index 83664db5221d..9b45f70549a7 100644
 --- a/drivers/iommu/Kconfig
 +++ b/drivers/iommu/Kconfig
-@@ -393,6 +393,7 @@ config ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT
- config ARM_SMMU_V3
- 	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
- 	depends on ARM64
-+	select IOASID
- 	select IOMMU_API
- 	select IOMMU_IO_PGTABLE_LPAE
- 	select GENERIC_MSI_IRQ_DOMAIN
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 326b71793336..633d829f246f 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -19,6 +19,7 @@
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/io-pgtable.h>
+@@ -3,6 +3,10 @@
+ config IOMMU_IOVA
+ 	tristate
+ 
++# The IOASID library may also be used by non-IOMMU_API users
++config IOASID
++	tristate
++
+ # IOMMU_API always gets selected by whoever wants it.
+ config IOMMU_API
+ 	bool
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 8c71a15e986b..0efac6f1ec73 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
+ obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
++obj-$(CONFIG_IOASID) += ioasid.o
+ obj-$(CONFIG_IOMMU_IOVA) += iova.o
+ obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
+ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+new file mode 100644
+index 000000000000..bbb771214fa9
+--- /dev/null
++++ b/drivers/iommu/ioasid.c
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * I/O Address Space ID allocator. There is one global IOASID space, split into
++ * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
++ * free IOASIDs with ioasid_alloc and ioasid_free.
++ */
 +#include <linux/ioasid.h>
- #include <linux/iommu.h>
- #include <linux/iopoll.h>
- #include <linux/init.h>
-@@ -641,6 +642,7 @@ struct arm_smmu_master {
- 	unsigned int			num_sids;
- 	unsigned int			ssid_bits;
- 	bool				ats_enabled		:1;
-+	bool				auxd_enabled		:1;
- };
- 
- /* SMMU private data for an IOMMU domain */
-@@ -666,8 +668,14 @@ struct arm_smmu_domain {
- 
- 	struct iommu_domain		domain;
- 
-+	/* Unused in aux domains */
- 	struct list_head		devices;
- 	spinlock_t			devices_lock;
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/xarray.h>
 +
-+	/* Auxiliary domain stuff */
-+	struct arm_smmu_domain		*parent;
-+	ioasid_t			ssid;
-+	unsigned long			aux_nr_devs;
- };
- 
- struct arm_smmu_option_prop {
-@@ -675,6 +683,8 @@ struct arm_smmu_option_prop {
- 	const char *prop;
- };
- 
-+static DECLARE_IOASID_SET(private_ioasid);
++struct ioasid_data {
++	ioasid_t id;
++	struct ioasid_set *set;
++	void *private;
++	struct rcu_head rcu;
++};
 +
- static struct arm_smmu_option_prop arm_smmu_options[] = {
- 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
- 	{ ARM_SMMU_OPT_PAGE0_REGS_ONLY, "cavium,cn9900-broken-page1-regspace"},
-@@ -696,6 +706,15 @@ static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
- 	return container_of(dom, struct arm_smmu_domain, domain);
- }
- 
-+static struct arm_smmu_master *dev_to_master(struct device *dev)
++static DEFINE_XARRAY_ALLOC(ioasid_xa);
++
++/**
++ * ioasid_set_data - Set private data for an allocated ioasid
++ * @ioasid: the ID to set data
++ * @data:   the private data
++ *
++ * For IOASID that is already allocated, private data can be set
++ * via this API. Future lookup can be done via ioasid_find.
++ */
++int ioasid_set_data(ioasid_t ioasid, void *data)
 +{
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
++	struct ioasid_data *ioasid_data;
++	int ret = 0;
 +
-+	if (!fwspec)
-+		return NULL;
-+	return fwspec->iommu_priv;
-+}
++	xa_lock(&ioasid_xa);
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
++	if (ioasid_data)
++		rcu_assign_pointer(ioasid_data->private, data);
++	else
++		ret = -ENOENT;
++	xa_unlock(&ioasid_xa);
 +
- static void parse_driver_options(struct arm_smmu_device *smmu)
- {
- 	int i = 0;
-@@ -1776,13 +1795,19 @@ static int arm_smmu_atc_inv_master(struct arm_smmu_master *master,
- }
- 
- static int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
--				   int ssid, unsigned long iova, size_t size)
-+				   unsigned long iova, size_t size)
- {
- 	int ret = 0;
-+	unsigned int ssid = 0;
- 	unsigned long flags;
- 	struct arm_smmu_cmdq_ent cmd;
- 	struct arm_smmu_master *master;
- 
-+	if (smmu_domain->parent) {
-+		ssid = smmu_domain->ssid;
-+		smmu_domain = smmu_domain->parent;
-+	}
-+
- 	if (!(smmu_domain->smmu->features & ARM_SMMU_FEAT_ATS))
- 		return 0;
- 
-@@ -1935,10 +1960,12 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
- 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
- 		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
- 
--		if (cfg->tables) {
-+		if (cfg->tables)
- 			arm_smmu_free_cd_tables(smmu_domain);
-+		if (cfg->cd.asid)
- 			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
--		}
-+		if (smmu_domain->ssid)
-+			ioasid_free(smmu_domain->ssid);
- 	} else {
- 		struct arm_smmu_s2_cfg *cfg = &smmu_domain->s2_cfg;
- 		if (cfg->vmid)
-@@ -1948,11 +1975,10 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
- 	kfree(smmu_domain);
- }
- 
--static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
-+static int arm_smmu_domain_finalise_cd(struct arm_smmu_domain *smmu_domain,
- 				       struct arm_smmu_master *master,
- 				       struct io_pgtable_cfg *pgtbl_cfg)
- {
--	int ret;
- 	int asid;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
- 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
-@@ -1961,16 +1987,30 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
- 	if (asid < 0)
- 		return asid;
- 
--	ret = arm_smmu_alloc_cd_tables(smmu_domain, master);
--	if (ret)
--		goto out_free_asid;
--
- 	cfg->cd.asid	= (u16)asid;
- 	cfg->cd.ttbr	= pgtbl_cfg->arm_lpae_s1_cfg.ttbr[0];
- 	cfg->cd.tcr	= pgtbl_cfg->arm_lpae_s1_cfg.tcr;
- 	cfg->cd.mair	= pgtbl_cfg->arm_lpae_s1_cfg.mair[0];
-+	return 0;
-+}
-+
-+static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
-+				       struct arm_smmu_master *master,
-+				       struct io_pgtable_cfg *pgtbl_cfg)
-+{
-+	int ret;
-+	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+
-+	ret = arm_smmu_domain_finalise_cd(smmu_domain, master, pgtbl_cfg);
-+	if (ret)
-+		return ret;
-+
-+	ret = arm_smmu_alloc_cd_tables(smmu_domain, master);
-+	if (ret)
-+		goto out_free_asid;
- 
--	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &smmu_domain->s1_cfg.cd);
-+	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &cfg->cd);
- 	if (ret)
- 		goto out_free_table;
- 	return 0;
-@@ -1978,7 +2018,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
- out_free_table:
- 	arm_smmu_free_cd_tables(smmu_domain);
- out_free_asid:
--	arm_smmu_bitmap_free(smmu->asid_map, asid);
-+	arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
- 	return ret;
- }
- 
-@@ -2031,7 +2071,10 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain,
- 		ias = min_t(unsigned long, ias, VA_BITS);
- 		oas = smmu->ias;
- 		fmt = ARM_64_LPAE_S1;
--		finalise_stage_fn = arm_smmu_domain_finalise_s1;
-+		if (smmu_domain->parent)
-+			finalise_stage_fn = arm_smmu_domain_finalise_cd;
-+		else
-+			finalise_stage_fn = arm_smmu_domain_finalise_s1;
- 		break;
- 	case ARM_SMMU_DOMAIN_NESTED:
- 	case ARM_SMMU_DOMAIN_S2:
-@@ -2177,15 +2220,13 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- {
- 	int ret = 0;
- 	unsigned long flags;
--	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct arm_smmu_device *smmu;
-+	struct arm_smmu_master *master = dev_to_master(dev);
- 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
--	struct arm_smmu_master *master;
- 
--	if (!fwspec)
-+	if (!master)
- 		return -ENOENT;
- 
--	master = fwspec->iommu_priv;
- 	smmu = master->smmu;
- 
- 	arm_smmu_detach_dev(master);
-@@ -2213,6 +2254,10 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 			smmu_domain->s1_cfg.s1cdmax, master->ssid_bits);
- 		ret = -EINVAL;
- 		goto out_unlock;
-+	} else if (smmu_domain->parent) {
-+		dev_err(dev, "cannot attach auxiliary domain\n");
-+		ret = -EINVAL;
-+		goto out_unlock;
- 	}
- 
- 	master->domain = smmu_domain;
-@@ -2252,7 +2297,7 @@ arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova, size_t size)
- 		return 0;
- 
- 	ret = ops->unmap(ops, iova, size);
--	if (ret && arm_smmu_atc_inv_domain(smmu_domain, 0, iova, size))
-+	if (ret && arm_smmu_atc_inv_domain(smmu_domain, iova, size))
- 		return 0;
- 
- 	return ret;
-@@ -2521,6 +2566,194 @@ static void arm_smmu_put_resv_regions(struct device *dev,
- 		kfree(entry);
- }
- 
-+static bool arm_smmu_dev_has_feature(struct device *dev,
-+				     enum iommu_dev_features feat)
-+{
-+	struct arm_smmu_master *master = dev_to_master(dev);
-+
-+	if (!master)
-+		return false;
-+
-+	switch (feat) {
-+	case IOMMU_DEV_FEAT_AUX:
-+		return master->ssid_bits != 0;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool arm_smmu_dev_feature_enabled(struct device *dev,
-+					 enum iommu_dev_features feat)
-+{
-+	struct arm_smmu_master *master = dev_to_master(dev);
-+
-+	if (!master)
-+		return false;
-+
-+	switch (feat) {
-+	case IOMMU_DEV_FEAT_AUX:
-+		return master->auxd_enabled;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static int arm_smmu_dev_enable_feature(struct device *dev,
-+				       enum iommu_dev_features feat)
-+{
-+	struct arm_smmu_master *master = dev_to_master(dev);
-+
-+	if (!arm_smmu_dev_has_feature(dev, feat))
-+		return -ENODEV;
-+
-+	if (arm_smmu_dev_feature_enabled(dev, feat))
-+		return -EBUSY;
-+
-+	switch (feat) {
-+	case IOMMU_DEV_FEAT_AUX:
-+		master->auxd_enabled = true;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int arm_smmu_dev_disable_feature(struct device *dev,
-+					enum iommu_dev_features feat)
-+{
-+	struct arm_smmu_master *master = dev_to_master(dev);
-+
-+	if (!arm_smmu_dev_feature_enabled(dev, feat))
-+		return -EINVAL;
-+
-+	switch (feat) {
-+	case IOMMU_DEV_FEAT_AUX:
-+		/* TODO: check if aux domains are still attached? */
-+		master->auxd_enabled = false;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int arm_smmu_aux_attach_dev(struct iommu_domain *domain, struct device *dev)
-+{
-+	int ret;
-+	struct iommu_domain *parent_domain;
-+	struct arm_smmu_domain *parent_smmu_domain;
-+	struct arm_smmu_master *master = dev_to_master(dev);
-+	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-+
-+	if (!arm_smmu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX))
-+		return -EINVAL;
-+
-+	parent_domain = iommu_get_domain_for_dev(dev);
-+	if (!parent_domain)
-+		return -EINVAL;
-+	parent_smmu_domain = to_smmu_domain(parent_domain);
-+
-+	mutex_lock(&smmu_domain->init_mutex);
-+	if (smmu_domain->stage != ARM_SMMU_DOMAIN_S1 ||
-+	    parent_smmu_domain->stage != ARM_SMMU_DOMAIN_S1) {
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	} else if (smmu_domain->s1_cfg.tables) {
-+		/* Already attached as a normal domain */
-+		dev_err(dev, "cannot attach domain in auxiliary mode\n");
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	} else if (!smmu_domain->smmu) {
-+		ioasid_t ssid = ioasid_alloc(&private_ioasid, 1,
-+					     (1UL << master->ssid_bits) - 1,
-+					     NULL);
-+		if (ssid == INVALID_IOASID) {
-+			ret = -EINVAL;
-+			goto out_unlock;
-+		}
-+		smmu_domain->smmu = master->smmu;
-+		smmu_domain->parent = parent_smmu_domain;
-+		smmu_domain->ssid = ssid;
-+
-+		ret = arm_smmu_domain_finalise(domain, master);
-+		if (ret) {
-+			smmu_domain->smmu = NULL;
-+			smmu_domain->ssid = 0;
-+			smmu_domain->parent = NULL;
-+			ioasid_free(ssid);
-+			goto out_unlock;
-+		}
-+	} else if (smmu_domain->parent != parent_smmu_domain) {
-+		/* Additional restriction: an aux domain has a single parent */
-+		dev_err(dev, "cannot attach aux domain with different parent\n");
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	}
-+
-+	if (!smmu_domain->aux_nr_devs++)
-+		arm_smmu_write_ctx_desc(parent_smmu_domain, smmu_domain->ssid,
-+					&smmu_domain->s1_cfg.cd);
 +	/*
-+	 * Note that all other devices attached to the parent domain can now
-+	 * access this context as well.
++	 * Wait for readers to stop accessing the old private data, so the
++	 * caller can free it.
 +	 */
++	if (!ret)
++		synchronize_rcu();
 +
-+out_unlock:
-+	mutex_unlock(&smmu_domain->init_mutex);
 +	return ret;
 +}
++EXPORT_SYMBOL_GPL(ioasid_set_data);
 +
-+static void arm_smmu_aux_detach_dev(struct iommu_domain *domain, struct device *dev)
++/**
++ * ioasid_alloc - Allocate an IOASID
++ * @set: the IOASID set
++ * @min: the minimum ID (inclusive)
++ * @max: the maximum ID (inclusive)
++ * @private: data private to the caller
++ *
++ * Allocate an ID between @min and @max. The @private pointer is stored
++ * internally and can be retrieved with ioasid_find().
++ *
++ * Return: the allocated ID on success, or %INVALID_IOASID on failure.
++ */
++ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
++		      void *private)
 +{
-+	struct iommu_domain *parent_domain;
-+	struct arm_smmu_domain *parent_smmu_domain;
-+	struct arm_smmu_master *master = dev_to_master(dev);
-+	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
++	u32 id = INVALID_IOASID;
++	struct ioasid_data *data;
 +
-+	if (!arm_smmu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX))
-+		return;
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return INVALID_IOASID;
 +
-+	parent_domain = iommu_get_domain_for_dev(dev);
-+	if (!parent_domain)
-+		return;
-+	parent_smmu_domain = to_smmu_domain(parent_domain);
++	data->set = set;
++	data->private = private;
 +
-+	mutex_lock(&smmu_domain->init_mutex);
-+	if (!smmu_domain->aux_nr_devs)
-+		goto out_unlock;
-+
-+	if (!--smmu_domain->aux_nr_devs) {
-+		arm_smmu_write_ctx_desc(parent_smmu_domain, smmu_domain->ssid,
-+					NULL);
-+		/*
-+		 * TLB doesn't need invalidation since accesses from the device
-+		 * can't use this domain's ASID once the CD is clear.
-+		 *
-+		 * Sadly that doesn't apply to ATCs, which are PASID tagged.
-+		 * Invalidate all other devices as well, because even though
-+		 * they weren't 'officially' attached to the auxiliary domain,
-+		 * they could have formed ATC entries.
-+		 */
-+		arm_smmu_atc_inv_domain(smmu_domain, 0, 0);
-+	} else {
-+		struct arm_smmu_cmdq_ent cmd;
-+
-+		/* Invalidate only this device's ATC */
-+		if (master->ats_enabled) {
-+			arm_smmu_atc_inv_to_cmd(smmu_domain->ssid, 0, 0, &cmd);
-+			arm_smmu_atc_inv_master(master, &cmd);
-+		}
++	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
++		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
++		goto exit_free;
 +	}
-+out_unlock:
-+	mutex_unlock(&smmu_domain->init_mutex);
-+}
++	data->id = id;
 +
-+static int arm_smmu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
++exit_free:
++	if (id == INVALID_IOASID) {
++		kfree(data);
++		return INVALID_IOASID;
++	}
++	return id;
++}
++EXPORT_SYMBOL_GPL(ioasid_alloc);
++
++/**
++ * ioasid_free - Free an IOASID
++ * @ioasid: the ID to remove
++ */
++void ioasid_free(ioasid_t ioasid)
 +{
-+	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
++	struct ioasid_data *ioasid_data;
 +
-+	return smmu_domain->ssid ?: -EINVAL;
++	ioasid_data = xa_erase(&ioasid_xa, ioasid);
++
++	kfree_rcu(ioasid_data, rcu);
++}
++EXPORT_SYMBOL_GPL(ioasid_free);
++
++/**
++ * ioasid_find - Find IOASID data
++ * @set: the IOASID set
++ * @ioasid: the IOASID to find
++ * @getter: function to call on the found object
++ *
++ * The optional getter function allows to take a reference to the found object
++ * under the rcu lock. The function can also check if the object is still valid:
++ * if @getter returns false, then the object is invalid and NULL is returned.
++ *
++ * If the IOASID has been allocated for this set, return the private pointer
++ * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
++ * if the IOASID is not found or does not belong to the set.
++ */
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++		  bool (*getter)(void *))
++{
++	void *priv = NULL;
++	struct ioasid_data *ioasid_data;
++
++	rcu_read_lock();
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
++	if (!ioasid_data) {
++		priv = ERR_PTR(-ENOENT);
++		goto unlock;
++	}
++	if (set && ioasid_data->set != set) {
++		/* data found but does not belong to the set */
++		priv = ERR_PTR(-EACCES);
++		goto unlock;
++	}
++	/* Now IOASID and its set is verified, we can return the private data */
++	priv = rcu_dereference(ioasid_data->private);
++	if (getter && !getter(priv))
++		priv = NULL;
++unlock:
++	rcu_read_unlock();
++
++	return priv;
++}
++EXPORT_SYMBOL_GPL(ioasid_find);
++
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+new file mode 100644
+index 000000000000..940212422b8f
+--- /dev/null
++++ b/include/linux/ioasid.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_IOASID_H
++#define __LINUX_IOASID_H
++
++#include <linux/types.h>
++
++#define INVALID_IOASID ((ioasid_t)-1)
++typedef unsigned int ioasid_t;
++
++struct ioasid_set {
++	int dummy;
++};
++
++#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
++
++#if IS_ENABLED(CONFIG_IOASID)
++ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
++		      void *private);
++void ioasid_free(ioasid_t ioasid);
++
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++		  bool (*getter)(void *));
++
++int ioasid_set_data(ioasid_t ioasid, void *data);
++
++#else /* !CONFIG_IOASID */
++static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
++				    ioasid_t max, void *private)
++{
++	return INVALID_IOASID;
 +}
 +
- static struct iommu_ops arm_smmu_ops = {
- 	.capable		= arm_smmu_capable,
- 	.domain_alloc		= arm_smmu_domain_alloc,
-@@ -2539,6 +2772,13 @@ static struct iommu_ops arm_smmu_ops = {
- 	.of_xlate		= arm_smmu_of_xlate,
- 	.get_resv_regions	= arm_smmu_get_resv_regions,
- 	.put_resv_regions	= arm_smmu_put_resv_regions,
-+	.dev_has_feat		= arm_smmu_dev_has_feature,
-+	.dev_feat_enabled	= arm_smmu_dev_feature_enabled,
-+	.dev_enable_feat	= arm_smmu_dev_enable_feature,
-+	.dev_disable_feat	= arm_smmu_dev_disable_feature,
-+	.aux_attach_dev		= arm_smmu_aux_attach_dev,
-+	.aux_detach_dev		= arm_smmu_aux_detach_dev,
-+	.aux_get_pasid		= arm_smmu_aux_get_pasid,
- 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
- };
- 
-@@ -3332,6 +3572,8 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 	smmu->dev = dev;
-+	/* Reserve ASID 0 for validity check */
-+	set_bit(0, smmu->asid_map);
- 
- 	if (dev->of_node) {
- 		ret = arm_smmu_device_dt_probe(pdev, smmu);
++static inline void ioasid_free(ioasid_t ioasid)
++{
++}
++
++static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++				bool (*getter)(void *))
++{
++	return NULL;
++}
++
++static inline int ioasid_set_data(ioasid_t ioasid, void *data)
++{
++	return -ENODEV;
++}
++
++#endif /* CONFIG_IOASID */
++#endif /* __LINUX_IOASID_H */
 -- 
 2.21.0
 
