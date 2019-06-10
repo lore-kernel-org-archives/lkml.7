@@ -2,151 +2,119 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F0EC31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EF1C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB9420862
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCBfA3Km"
+	by mail.kernel.org (Postfix) with ESMTP id 67B77208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403994AbfFJPzR (ORCPT
+        id S2404006AbfFJPzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:55:17 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33614 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391357AbfFJPzQ (ORCPT
+        Mon, 10 Jun 2019 11:55:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60284 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391326AbfFJPzn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:55:16 -0400
-Received: by mail-vs1-f67.google.com with SMTP id m8so5692356vsj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 08:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eJ960EUK4M88NTDJHb1rKy4PnhRaQvW8Nj+C4ov1eV0=;
-        b=vCBfA3KmfrlpdkfwvUkrPRXgpjj0KDLsG7IqaJiYABwd5Pcyt+37mq5KWs4wPSGqMb
-         8ZgO+v9HFp5+yUBCsWM3EzZH87jxKU3TpzYbeFbOOK7m8bhdQ1VpJzZg2LQ3MfAea/mO
-         eIND2griYlCH1pm58X4Ot68AJrGmrqHsHx/39nYjlnDkDZjrdt6+jVL/CSvvh9a4M0lm
-         RTE6Tl9praUVHc0Tmaeiz3dcU4blbB0iDAGmXz+xY0nJeRKi3vN6nhssHg1abNM+4se2
-         nc4Ba32motZk89uankg8NcXb2RU99K3kViAN47xvTlR682A9KwMEfT3SmCv+tcveqfdQ
-         +O7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eJ960EUK4M88NTDJHb1rKy4PnhRaQvW8Nj+C4ov1eV0=;
-        b=EYqlGpmIAUsuZejgqS3RuGhbYC9q8QfZNqmzzj/Ck7iim2550NuG4bxxSj6CW885x/
-         U55Qd/PQyOA/R9OgA8uVOHrLgNXfeKDN8b+ci3JOJBnEsXrg8GaMnivsrbftoRWNgh53
-         sKJRT6px3L2ZSxPnDrTvffW9ma3fFmooIf56M+L33tI+2HqJb0BERkErsWiih+Ee5eD0
-         1MBNala3ma9nSCeLBe1TIjXrkUhsLaV5qA1z3hnz9k5O5XAeknLmQO9CeF+vq9DRo56K
-         mvnn4hMEhew74HAtyw5GI0h3yQ0H5i+d4T3JgmgsRMEaKhhozipHwg6nv1BMzoJEKHCU
-         yDuQ==
-X-Gm-Message-State: APjAAAX0WAAe0Ant9iltW6c2A2G/95L2pkSDOAI1dWv8py4PGdrPLoeu
-        pqvkyYbvXoST5AvGLjiPquuf6vHYJ4HIY7JgrovzEg==
-X-Google-Smtp-Source: APXvYqyKa1UWfLl1PSfzv6wP9x21u1pRGC0+qtdGCuyShRG80yR2Bgm8tFZ6P+m7SezHV6nB/wuI1N1s+r9iik+R06c=
-X-Received: by 2002:a67:706:: with SMTP id 6mr20519578vsh.200.1560182115587;
- Mon, 10 Jun 2019 08:55:15 -0700 (PDT)
+        Mon, 10 Jun 2019 11:55:43 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5AFlYrJ070102
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:55:41 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t1rynky8p-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 11:55:41 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Mon, 10 Jun 2019 16:55:39 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 10 Jun 2019 16:55:34 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5AFtXs559965666
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jun 2019 15:55:33 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE8A1AE051;
+        Mon, 10 Jun 2019 15:55:33 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 34469AE055;
+        Mon, 10 Jun 2019 15:55:33 +0000 (GMT)
+Received: from osiris (unknown [9.145.162.214])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 10 Jun 2019 15:55:33 +0000 (GMT)
+Date:   Mon, 10 Jun 2019 17:55:31 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v3 00/33] Convert files to ReST - part 1
+References: <cover.1560045490.git.mchehab+samsung@kernel.org>
+ <20190609091642.GA3705@osiris>
+ <20190609092940.5e34e3b0@recife.lan>
 MIME-Version: 1.0
-References: <20190513192300.653-1-ulf.hansson@linaro.org> <CAJZ5v0gbK3AFCVC1b9LyXeMOM8fKR1=ECXZwaeSYRSqcK0UgYA@mail.gmail.com>
- <CAPDyKFpU3u248Gi+FnrVdY-EWXJQuu14uNV9d3Xs0W-K-EMEhg@mail.gmail.com>
- <20190607154210.GJ15577@e107155-lin> <20190607193407.GB24059@builder> <20190610103225.GA26602@e107155-lin>
-In-Reply-To: <20190610103225.GA26602@e107155-lin>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 10 Jun 2019 17:54:39 +0200
-Message-ID: <CAPDyKFr31SwmHHAREbR3dWMQ55LzzUyTc4M5FZvNsqWfX7SE8Q@mail.gmail.com>
-Subject: Re: [PATCH 00/18] ARM/ARM64: Support hierarchical CPU arrangement for PSCI
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190609092940.5e34e3b0@recife.lan>
+X-TM-AS-GCONF: 00
+x-cbid: 19061015-0008-0000-0000-000002F1FB8D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061015-0009-0000-0000-0000225EF2D2
+Message-Id: <20190610155531.GC4031@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906100108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 at 12:32, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Fri, Jun 07, 2019 at 12:34:07PM -0700, Bjorn Andersson wrote:
-> > On Fri 07 Jun 08:42 PDT 2019, Sudeep Holla wrote:
-> >
-> > > On Tue, May 14, 2019 at 10:58:04AM +0200, Ulf Hansson wrote:
-> > > > On Tue, 14 May 2019 at 10:08, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > >
-> > > > > On Mon, May 13, 2019 at 9:23 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> > > > > >
-> > > > > > This series enables support for hierarchical CPU arrangement, managed by PSCI
-> > > > > > for ARM/ARM64. It's based on using the generic PM domain (genpd), which
-> > > > > > recently was extended to manage devices belonging to CPUs.
-> > > > >
-> > > > > ACK for the patches touching cpuidle in this series (from the
-> > > > > framework perspective), but I'm assuming it to be taken care of by
-> > > > > ARM/ARM64 maintainers.
-> > > >
-> > > > Thanks for the ack! Yes, this is for PSCI/ARM maintainers.
-> > > >
-> > > > BTW, apologize for sending this in the merge window, but wanted to
-> > > > take the opportunity for people to have a look before OSPM Pisa next
-> > > > week.
-> > > >
-> > >
-> > > I will start looking at this series. But I would request PSCI/other
-> > > maintainers to wait until we see some comparison data before we merge.
-> >
-> > What comparison are you asking for here? Do you want to see the
-> > improvement this series gives or are you hoping to compare it with some
-> > other mechanism?
-> >
->
-> OK, I have mentioned this many times already, let me repeat it again.
-> This series adds an alternative to the existing PC mode of CPU idle
-> management. And it's clear that the main reason for the same is the
-> improvement OSI mode offers vs the PC mode. I am asking the comparison
-> for the same. And yes we need to compare apples with apples and not
-> oranges here.
+On Sun, Jun 09, 2019 at 09:29:40AM -0300, Mauro Carvalho Chehab wrote:
+> Em Sun, 9 Jun 2019 11:16:43 +0200
+> > Will there be a web page (e.g. kernel.org), which contains always the
+> > latest upstream version?
+> 
+> Yes:
+> 
+> 	https://www.kernel.org/doc/html/latest/
+> 
+> I guess this one is based on Linus tree.
+> 
+> Jon also maintains a version at:
+> 
+> 	https://static.lwn.net/kerneldoc/
+> 
+> I guess that one is based on docs-next branch from the Docs tree.
+> 
+> Btw, if you want to build it for yourself, you could use:
+> 
+> 	make htmldocs
 
-In the cover letter you see the two main reasons behind this series.
-Yeah, OSI support is a part of the series, but OSI or PC mode is
-orthogonal to the overall changes this series implements.
+Thanks a lot!
 
-When it comes to comparing OSI mode vs PC mode, let's try to avoid
-that tiring discussion again, please. :-)
+> > I can pick these up for s390. Or do you want to send the whole series
+> > in one go upstream?
+> 
+> Yeah, feel free to pick them via the s390 tree.
 
-My summary from the earlier ones, is that because the PSCI spec
-includes support for OSI, we should also support it in the kernel (and
-ATF). In a discussion offlist, Lorenzo agreed that it's okay to add,
-without an apple to apple comparison. Maybe Lorenzo can fill in and
-state this publicly, to save us all some time?
+Ok, applied! :)
 
-My final point in regards to the OSI mode support, it's a minor part
-of the series. I don't see how that should hurt from a maintenance
-point of view, or perhaps I am wrong? In any case, I offer my help
-with review/maintenance in any form as you may see need/fit.
-
-[...]
-
-Kind regards
-Uffe
