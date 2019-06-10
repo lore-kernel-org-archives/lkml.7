@@ -2,224 +2,171 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE76C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1938C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855BC2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:55:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TLJxZMAG"
+	by mail.kernel.org (Postfix) with ESMTP id 8D9B52082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388789AbfFJIzu (ORCPT
+        id S2388801AbfFJI4z convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:55:50 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45152 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388777AbfFJIzq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:55:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so8279719wre.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=GpySo1g8LDVz9k5a5vKZQ7sUTfsxzgZnBVStPDXVsTE=;
-        b=TLJxZMAGuxy/AarP67BjcpuFCdXmgR43IKr0+QKdb6Ol6EwjkgW464DzS62DwAo+dO
-         4l3D0glt/AANh00dpOKeX5lgOGgnaHX5MLKI65hRHi1lyXRAlxo+62OuFKkD2ZaRQmV/
-         rI8WIiHsmp51LUX4YV67upchYnpEWrPy/SORxZ7qXCtZ2qHX3OSg2GFqUgV0Qmye4QRn
-         vHth3Dz6FslHlbL0Hr2s3SDTPwXw4Rw1HdBy85K9V5tOqQ5Vt0wKY5E3wp4wLIRhsXug
-         FNL3oCKSL/XBHtVjEY+6D6WgGpP7i050rJ6/+HHW2jGvqbrA7bIIrN60uwfYlIt2VUPj
-         LJcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=GpySo1g8LDVz9k5a5vKZQ7sUTfsxzgZnBVStPDXVsTE=;
-        b=QOnVsTHuGbhI/RY3rtIK2liXLb0bYC4+LOSnsihoDKhYzB+rTkKIAJDp5R4ZgZWUNj
-         O67eTgYA+yGmZJ33vyJ9M7aw9wLq3muhMO1MgjkYKAjFv/UcpZJvPWr9x7VV9TkK+t91
-         LqlUaC3M+qZ5v3LVnaAHowyOELS+3jEhIkhI7fDW4Ky/+zsOcxVjlohKhmIiqOsPImdm
-         87i7NELJLjP1SZiZrCz1IToEQrHwYxQsUbUe7mwf7A48Pr3Wi8vWkHR0PQSNv89Qr0gB
-         8P7Zw4TjrfHXDuegIJWo+8ZKGADBU+dYRWRrnaN+03WMBCOSM7UxlEx1NN6eGjAcdNWg
-         vT+A==
-X-Gm-Message-State: APjAAAX/UXTSsQKQDoXMx65WA65pvdZdkw1zy927VodFHwvwst15YmaB
-        pe99GeZR3ZEigEbWWQNmmOzdkw==
-X-Google-Smtp-Source: APXvYqyjQYjI9vIrm/FNhIBXPO/+5VtKCSvydqLfAPGAnBQLd3gOIGqGaZYrgEZEfWBncvk0AvMC2A==
-X-Received: by 2002:adf:aa09:: with SMTP id p9mr23598944wrd.59.1560156944579;
-        Mon, 10 Jun 2019 01:55:44 -0700 (PDT)
-Received: from dell ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id x129sm13809283wmg.44.2019.06.10.01.55.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 01:55:44 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 09:55:42 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        wsa+renesas@sang-engineering.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-Message-ID: <20190610085542.GL4797@dell>
-References: <20190610084213.1052-1-lee.jones@linaro.org>
- <20190610084213.1052-4-lee.jones@linaro.org>
- <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
+        Mon, 10 Jun 2019 04:56:55 -0400
+Received: from mga11.intel.com ([192.55.52.93]:20077 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387890AbfFJI4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:56:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 01:56:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,573,1557212400"; 
+   d="scan'208";a="183356562"
+Received: from irsmsx109.ger.corp.intel.com ([163.33.3.23])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Jun 2019 01:56:50 -0700
+Received: from irsmsx106.ger.corp.intel.com ([169.254.8.159]) by
+ IRSMSX109.ger.corp.intel.com ([169.254.13.115]) with mapi id 14.03.0415.000;
+ Mon, 10 Jun 2019 09:56:49 +0100
+From:   "Hunter, Adrian" <adrian.hunter@intel.com>
+To:     Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>
+CC:     "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        "briannorris@chromium.org" <briannorris@chromium.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "Naveen Gupta" <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        "mka@chromium.org" <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "brcm80211-dev-list@cypress.com" <brcm80211-dev-list@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Madhan Mohan R <MadhanMohan.R@cypress.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around
+ commands expected to fail
+Thread-Topic: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around
+ commands expected to fail
+Thread-Index: AQHVHYGgpJQnscIJM0Sp+tedAd/IWaaUmKDA
+Date:   Mon, 10 Jun 2019 08:56:48 +0000
+Message-ID: <363DA0ED52042842948283D2FC38E4649C52F8A0@IRSMSX106.ger.corp.intel.com>
+References: <20190607223716.119277-1-dianders@chromium.org>
+ <20190607223716.119277-4-dianders@chromium.org>
+In-Reply-To: <20190607223716.119277-4-dianders@chromium.org>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDI2YzI0OTgtNzI3MS00MjMzLWI1Y2ItM2UzYmQzMmNjNjI5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibXJTOFJGTDUyRTNsdUtXRHErakU5XC96bWhJYkZ6SERVekJnaDZtK3ZjWnF2YlM3ejQ1YlRhdHlKcnZvbERXSFEifQ==
+x-originating-ip: [163.33.239.181]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
-
-> On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > This patch provides basic support for booting with ACPI instead
-> > of the currently supported Device Tree.  When doing so there are a
-> > couple of differences which we need to taken into consideration.
-> >
-> > Firstly, the SDM850 ACPI tables omit information pertaining to the
-> > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
-> > initialise any of these lines, the firmware will restart the
-> > platform.
-> >
-> > Secondly, when booting with ACPI, it is expected that the firmware
-> > will set-up things like; Regulators, Clocks, Pin Functions, etc in
-> > their ideal configuration.  Thus, the possible Pin Functions
-> > available to this platform are not advertised when providing the
-> > higher GPIOD/Pinctrl APIs with pin information.
-> >
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> -----Original Message-----
+> From: Douglas Anderson [mailto:dianders@chromium.org]
+> Sent: Saturday, June 8, 2019 1:37 AM
+> To: Ulf Hansson <ulf.hansson@linaro.org>; Kalle Valo
+> <kvalo@codeaurora.org>; Hunter, Adrian <adrian.hunter@intel.com>; Arend
+> van Spriel <arend.vanspriel@broadcom.com>
+> Cc: brcm80211-dev-list.pdl@broadcom.com; linux-
+> rockchip@lists.infradead.org; Double Lo <double.lo@cypress.com>;
+> briannorris@chromium.org; linux-wireless@vger.kernel.org; Naveen Gupta
+> <naveen.gupta@cypress.com>; Madhan Mohan R
+> <madhanmohan.r@cypress.com>; mka@chromium.org; Wright Feng
+> <wright.feng@cypress.com>; Chi-Hsien Lin <chi-hsien.lin@cypress.com>;
+> netdev@vger.kernel.org; brcm80211-dev-list@cypress.com; Douglas
+> Anderson <dianders@chromium.org>; Franky Lin
+> <franky.lin@broadcom.com>; linux-kernel@vger.kernel.org; Madhan Mohan
+> R <MadhanMohan.R@cypress.com>; Hante Meuleman
+> <hante.meuleman@broadcom.com>; YueHaibing
+> <yuehaibing@huawei.com>; David S. Miller <davem@davemloft.net>
+> Subject: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around
+> commands expected to fail
 > 
-> For the ACPI probing boilerplate:
-> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> There are certain cases, notably when transitioning between sleep and active
+> state, when Broadcom SDIO WiFi cards will produce errors on the SDIO bus.
+> This is evident from the source code where you can see that we try
+> commands in a loop until we either get success or we've tried too many
+> times.  The comment in the code reinforces this by saying "just one write
+> attempt may fail"
 > 
-> *However*, I really don't like hardcoding reserved GPIOs like this.
-> What guarantee do we have that each and every ACPI system
-> incorporating the QCOM0217 device has the exact same list of reserved
-> GPIOs?
+> Unfortunately these failures sometimes end up causing an "-EILSEQ"
+> back to the core which triggers a retuning of the SDIO card and that blocks all
+> traffic to the card until it's done.
+> 
+> Let's disable retuning around the commands we expect might fail.
+> 
+> Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Expect errors for all of brcmf_sdio_kso_control() (Adrian).
+> 
+> Changes in v2: None
+> 
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> index 4a750838d8cd..4040aae1f9ed 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/mmc/sdio_ids.h>
+>  #include <linux/mmc/sdio_func.h>
+>  #include <linux/mmc/card.h>
+> +#include <linux/mmc/core.h>
 
-This is SDM845 specific, so the chances are reduced.
+SDIO function drivers should not really include linux/mmc/core.h
+(Also don't know why linux/mmc/card.h is included)
 
-However, if another SDM845 variant does crop up, also lacking the
-"gpios" property, we will have to find another differentiating factor
-between them and conduct some matching.  What else can you do with
-platforms supporting non-complete/non-forthcoming ACPI tables?
+>  #include <linux/semaphore.h>
+>  #include <linux/firmware.h>
+>  #include <linux/module.h>
+> @@ -667,6 +668,8 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool
+> on)
+> 
+>  	brcmf_dbg(TRACE, "Enter: on=%d\n", on);
+> 
+> +	mmc_expect_errors_begin(bus->sdiodev->func1->card->host);
+> +
+>  	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
+>  	/* 1st KSO write goes to AOS wake up core if device is asleep  */
+>  	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR,
+> wr_val, &err); @@ -727,6 +730,8 @@ brcmf_sdio_kso_control(struct
+> brcmf_sdio *bus, bool on)
+>  	if (try_cnt > MAX_KSO_ATTEMPTS)
+>  		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+> 
+> +	mmc_expect_errors_end(bus->sdiodev->func1->card->host);
+> +
+>  	return err;
+>  }
+> 
+> --
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
 
-> > ---
-> >  drivers/pinctrl/qcom/Kconfig          |  2 +-
-> >  drivers/pinctrl/qcom/pinctrl-sdm845.c | 36 ++++++++++++++++++++++++++-
-> >  2 files changed, 36 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-> > index 2e66ab72c10b..aafbe932424f 100644
-> > --- a/drivers/pinctrl/qcom/Kconfig
-> > +++ b/drivers/pinctrl/qcom/Kconfig
-> > @@ -168,7 +168,7 @@ config PINCTRL_SDM660
-> >
-> >  config PINCTRL_SDM845
-> >         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
-> > -       depends on GPIOLIB && OF
-> > +       depends on GPIOLIB && (OF || ACPI)
-> >         select PINCTRL_MSM
-> >         help
-> >           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > index c97f20fca5fd..98a438dba711 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> > @@ -3,6 +3,7 @@
-> >   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-> >   */
-> >
-> > +#include <linux/acpi.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/platform_device.h>
-> > @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
-> >         UFS_RESET(ufs_reset, 0x99f000),
-> >  };
-> >
-> > +static const int sdm845_acpi_reserved_gpios[] = {
-> > +       0, 1, 2, 3, 81, 82, 83, 84, -1
-> > +};
-> > +
-> >  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
-> >         .pins = sdm845_pins,
-> >         .npins = ARRAY_SIZE(sdm845_pins),
-> > @@ -1287,11 +1292,39 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
-> >         .ngpios = 150,
-> >  };
-> >
-> > +static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
-> > +       .pins = sdm845_pins,
-> > +       .npins = ARRAY_SIZE(sdm845_pins),
-> > +       .groups = sdm845_groups,
-> > +       .ngroups = ARRAY_SIZE(sdm845_groups),
-> > +       .reserved_gpios = sdm845_acpi_reserved_gpios,
-> > +       .ngpios = 150,
-> > +};
-> > +
-> >  static int sdm845_pinctrl_probe(struct platform_device *pdev)
-> >  {
-> > -       return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
-> > +       int ret;
-> > +
-> > +       if (pdev->dev.of_node) {
-> > +               ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
-> > +       } else if (has_acpi_companion(&pdev->dev)) {
-> > +               ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
-> > +       } else {
-> > +               dev_err(&pdev->dev, "DT and ACPI disabled\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       return ret;
-> >  }
-> >
-> > +#if CONFIG_ACPI
-> > +static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
-> > +       { "QCOM0217"},
-> > +       { },
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
-> > +#endif
-> > +
-> >  static const struct of_device_id sdm845_pinctrl_of_match[] = {
-> >         { .compatible = "qcom,sdm845-pinctrl", },
-> >         { },
-> > @@ -1302,6 +1335,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
-> >                 .name = "sdm845-pinctrl",
-> >                 .pm = &msm_pinctrl_dev_pm_ops,
-> >                 .of_match_table = sdm845_pinctrl_of_match,
-> > +               .acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
-> >         },
-> >         .probe = sdm845_pinctrl_probe,
-> >         .remove = msm_pinctrl_remove,
-> >
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
