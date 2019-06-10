@@ -2,224 +2,96 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD66CC31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C598C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C05E206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:11:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UkbcdtV1"
+	by mail.kernel.org (Postfix) with ESMTP id 5A036206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391491AbfFJQLg (ORCPT
+        id S2391494AbfFJQNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:11:36 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40146 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391436AbfFJQLf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:11:35 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so3851823pla.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=QET9pg+wg4oBG+Qp5Q1cj6O60aOdmHNnSi9zeIidUAw=;
-        b=UkbcdtV1H7m1I0gRKzsmcd6Znvvr4WjHTOqLxmQpJdxVjeRm7Wicg3zXZm6YupWk1j
-         cun43ZADHgOP6ggmqFg60lZfwvSO5MXKFTvFw0TRR0WfG2y9dypk517rd/2oJvXU/J5E
-         sKPo9mZF4qdBLlUNuZGELaTpcM2GyzwQVmK46iJ+kqInACxc88sScLfgvE05VFDIH4Vz
-         Bt6Ln5rCnz5Z0mBvxYns3xkVaMayygOxI55YjBX8w0hexmbY0+Ry37/8nIgI8Op41Ixn
-         3HKnTZoQzqIQo7H97TINZI6yh44gqpm6eVzlVjAKw1bRVO9fEy0dHbprol7ldHvDMvgH
-         g8QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=QET9pg+wg4oBG+Qp5Q1cj6O60aOdmHNnSi9zeIidUAw=;
-        b=I5kElATuSwEgAV9Q34hGoYBG2zZo3dt4iFhVxMBEUJ2oQcHowYFSNlhTUiSJTGPmW3
-         G7DmsdT65k7RCnN6/JHyl6AkH3Tc7sserPo+FZOaGPeE/4L1C3Ir3I641kUsOIPm/oUR
-         8l4uyXN2RPg+Vgvchu9mzGx3WVzVTi6DaZpReKL8/z1P916aKgfbrc2azUm5o6RU+C34
-         HiVdGS/XmQI3a2nWOPADAE4WMVeyrLAaQBaDVBGW213rPRf//cet/UTp+bbX2gogFSWO
-         D41wqAO2PDScWDhIX7y3L554p7yHBl+Vms7t3r0UkY6Uujvk8FqiP8jwv0KQ9tfNLJ2U
-         XBBA==
-X-Gm-Message-State: APjAAAWAiuA2ukUoKeR1yDOK5sCMVc7SU3a6jHxTBOwDi1b/kIWRJd9U
-        oZY70iV2xuXgqO2LnkypOXtlusK0FBb2
-X-Google-Smtp-Source: APXvYqy3Ql2jZPLLK7tXmhrVL1GGBblVr3ED1gm9qp676tSVKbCk6HseyNK9zBGjo0G0pvapjBsw8w==
-X-Received: by 2002:a17:902:d915:: with SMTP id c21mr4568605plz.335.1560183094968;
-        Mon, 10 Jun 2019 09:11:34 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id 26sm11070938pfi.147.2019.06.10.09.11.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 09:11:34 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 21:41:28 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        thomas.liau@actions-semi.com, linux-actions@lists.infradead.org,
-        linus.walleij@linaro.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH 4/7] arm64: dts: actions: Add uSD and eMMC support for
- Bubblegum96
-Message-ID: <20190610161128.GC31461@mani>
-References: <20190608195317.6336-1-manivannan.sadhasivam@linaro.org>
- <20190608195317.6336-5-manivannan.sadhasivam@linaro.org>
- <1381305a-8585-9dcf-6b43-34e852e785ab@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1381305a-8585-9dcf-6b43-34e852e785ab@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 10 Jun 2019 12:13:21 -0400
+Received: from mga09.intel.com ([134.134.136.24]:55102 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388850AbfFJQNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:13:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 09:13:20 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Jun 2019 09:13:19 -0700
+Message-ID: <5dc357f5858f8036cad5847cfe214401bb9138bf.camel@intel.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Mon, 10 Jun 2019 09:05:13 -0700
+In-Reply-To: <f6de9073-9939-a20d-2196-25fa223cf3fc@intel.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+         <20190606200926.4029-4-yu-cheng.yu@intel.com>
+         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
+         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
+         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+         <4b448cde-ee4e-1c95-0f7f-4fe694be7db6@intel.com>
+         <0e505563f7dae3849b57fb327f578f41b760b6f7.camel@intel.com>
+         <f6de9073-9939-a20d-2196-25fa223cf3fc@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Andreas,
-
-On Mon, Jun 10, 2019 at 04:08:26PM +0200, Andreas Färber wrote:
-> Hi Mani,
-> 
-> Am 08.06.19 um 21:53 schrieb Manivannan Sadhasivam:
-> > Add uSD and eMMC support for Bubblegum96 board based on Actions Semi
-> > Owl SoC.
-> 
-> What information does "based on Actions Semi Owl SoC" give us? :)
-> The board name should be unique enough - Owl is a family of SoCs,
-> "actions:" is in the subject and "s900-" is in the filename.
-> 
-
-Makes sense!
-
-> > SD0 is connected to uSD slot and SD2 is connected to eMMC.
-> 
-> Suggest to add that as comments above the two nodes instead.
-> 
-
-Okay.
-
-> > Since there is no PMIC support added yet, fixed regulator has been
-> > used as a regulator node.
-> 
-> Fine with me - maybe add a comment and make sure it's aligned with the
-> schematics naming wrt PMIC.
-> 
-
-Okay.
-
+On Fri, 2019-06-07 at 14:09 -0700, Dave Hansen wrote:
+> On 6/7/19 1:06 PM, Yu-cheng Yu wrote:
+> > > Huh, how does glibc know about all possible past and future legacy code
+> > > in the application?
 > > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../boot/dts/actions/s900-bubblegum-96.dts    | 50 +++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
+> > When dlopen() gets a legacy binary and the policy allows that, it will
+> > manage
+> > the bitmap:
 > > 
-> > diff --git a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> > index 732daaa6e9d3..3b596d72de25 100644
-> > --- a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> > +++ b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> > @@ -13,6 +13,9 @@
-> >  
-> >  	aliases {
-> >  		serial5 = &uart5;
-> > +		mmc0 = &mmc0;
-> > +		mmc1 = &mmc1;
-> > +		mmc2 = &mmc2;
+> >   If a bitmap has not been created, create one.
+> >   Set bits for the legacy code being loaded.
 > 
-> Sort them alphabetically?
-> 
+> I was thinking about code that doesn't go through GLIBC like JITs.
 
-Ack.
+If JIT manages the bitmap, it knows where it is.
+It can always read the bitmap again, right?
 
-> >  	};
-> >  
-> >  	chosen {
-> > @@ -23,6 +26,14 @@
-> >  		device_type = "memory";
-> >  		reg = <0x0 0x0 0x0 0x80000000>;
-> >  	};
-> > +
-> > +	reg_3p1v: regulator-3p1v {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "fixed-3.1V";
-> > +		regulator-min-microvolt = <3100000>;
-> > +		regulator-max-microvolt = <3100000>;
-> > +		regulator-always-on;
-> > +	};
-> >  };
-> >  
-> >  &i2c0 {
-> > @@ -241,6 +252,45 @@
-> >  			bias-pull-up;
-> >  		};
-> >  	};
-> > +
-> > +	mmc0_default: mmc0_default {
-> > +		pinmux {
-> > +			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-> > +				 "sd0_cmd_mfp", "sd0_clk_mfp";
-> > +			function = "sd0";
-> > +		};
-> > +	};
-> > +
-> > +	mmc2_default: mmc2_default {
-> > +		pinmux {
-> > +			groups = "nand0_d0_ceb3_mfp";
-> > +			function = "sd2";
-> > +		};
-> > +	};
-> 
-> Wouldn't it make more sense to move these and the below pinctrl-* to
-> s900.dtsi for sharing with other theoretical boards? I really dislike
-> the imx model where pin muxing is duplicated into each individual board.
-> 
-
-Matter of taste. IMO pinctrl config belongs to the board design and I don't
-wanna dump all combinations in the soc dtsi.
-
-Thanks,
-Mani
-
-> Regards,
-> Andreas
-> 
-> > +};
-> > +
-> > +&mmc0 {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&mmc0_default>;
-> > +	no-sdio;
-> > +	no-mmc;
-> > +	no-1-8-v;
-> > +	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-> > +	bus-width = <4>;
-> > +	vmmc-supply = <&reg_3p1v>;
-> > +	vqmmc-supply = <&reg_3p1v>;
-> > +};
-> > +
-> > +&mmc2 {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&mmc2_default>;
-> > +	no-sdio;
-> > +	no-sd;
-> > +	non-removable;
-> > +	bus-width = <8>;
-> > +	vmmc-supply = <&reg_3p1v>;
-> >  };
-> >  
-> >  &timer {
-> 
-> -- 
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-> GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-> HRB 21284 (AG Nürnberg)
+Yu-cheng
