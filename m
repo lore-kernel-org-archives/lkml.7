@@ -2,77 +2,137 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DB3C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6412C43218
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28424208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:02:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ez3peKs1"
+	by mail.kernel.org (Postfix) with ESMTP id 86B4C2089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389849AbfFJVC3 (ORCPT
+        id S2389876AbfFJVCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:02:29 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47290 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388311AbfFJVC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:02:29 -0400
-Received: from zn.tnic (p200300EC2F052B00B9C6921F36B00F7C.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:2b00:b9c6:921f:36b0:f7c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D33841EC050B;
-        Mon, 10 Jun 2019 23:02:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560200548;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=My/zaqfQUlS2rX5wnUfgdlwdaINpHGxw4O8r+u5i85Y=;
-        b=ez3peKs1TG9g5MkZZozkUhc9z/WiNs6pgSZnJTEwwjm9Z66Pg7bxuXSV/H5lG/iMdNkmb0
-        oiZrr6lBve06AD1dY7G0PQfZUQ8yXkTXWtBzBXmMCBhLTIUAkY5fqLN2X9OVuUBbKS2nN4
-        nDI8GBHtEw4YhXTKYvZcx0x0YjekZl4=
-Date:   Mon, 10 Jun 2019 23:02:20 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>, Marco Elver <elver@google.com>
-Cc:     "jbaron@akamai.com" <jbaron@akamai.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] EDAC, ie31200: Reformat PCI device table
-Message-ID: <20190610210220.GJ5488@zn.tnic>
-References: <20190610191422.177931-1-elver@google.com>
- <20190610191422.177931-2-elver@google.com>
- <3908561D78D1C84285E8C5FCA982C28F7E996B42@ORSMSX104.amr.corp.intel.com>
+        Mon, 10 Jun 2019 17:02:33 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59378 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388311AbfFJVCd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 17:02:33 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id F023027FD62
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Doug Anderson <dianders@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Brian Norris <briannorris@google.com>,
+        Guenter Roeck <groeck@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <819ecbcd-18e3-0f6b-6121-67cb363df440@collabora.com>
+ <20190610203928.GA137143@google.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <c8992414-8067-f82a-55f0-74fe9c2e1b3e@collabora.com>
+Date:   Mon, 10 Jun 2019 23:02:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190610203928.GA137143@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7E996B42@ORSMSX104.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 08:13:42PM +0000, Luck, Tony wrote:
-> > Reformat device table after Coffee Lake additions to be more readable.
-> 
-> I like that you put the reformat second ... if some old version needs a backport
-> to get Coffee Lake support they can just take part 1 to get the functionality
-> and then decide whether or not to take part 2.
-> 
-> Both parts:
-> 
-> Acked-by: Tony Luck <tony.luck@intel.com>
+Hi Matthias,
 
-Queued, thanks.
+On 10/6/19 22:39, Matthias Kaehlcke wrote:
+> Hi Enric
+> 
+> On Mon, Jun 10, 2019 at 12:00:02PM +0200, Enric Balletbo i Serra wrote:
+>> Hi Matthias,
+>>
+>> On 8/6/19 23:02, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>>> +	 * Note that this method is based on empirical testing on different
+>>>>> +	 * devices with PWM of 8 and 16 bits of resolution.
+>>>>> +	 */
+>>>>> +	n = period;
+>>>>> +	while (n) {
+>>>>> +		counter += n % 2;
+>>>>> +		n >>= 1;
+>>>>> +	}
+>>>>
+>>>> I don't quite follow the heuristics above. Are you sure the number of
+>>>> PWM bits can be infered from the period? What if the period value (in
+>>>> ns) doesn't directly correspond to a register value? And even if it
+>>>> did, counting the number of set bits (the above loops is a
+>>>> re-implementation of ffs()) doesn't really result in the dividers
+>>>> mentioned in the comment. E.g. a period of 32768 ns (0x8000) results
+>>>> in a divider of 1, i.e. 32768 brighness levels.
+>>>>
+>>
+>> Right, I think that only works on the cases that we only have one pwm cell, and
+>> looks like during my tests I did only tests on devices with one pwm cell :-(
+>>
+>> And as you point the code is broken for other cases (pwm-cells > 1)
+>>
+>>>> On veyron minnie the period is 1000000 ns, which results in 142858
+>>>> levels (1000000 / 7)!
+>>>>
+>>>> Not sure if there is a clean solution using heuristics, a DT property
+>>>> specifying the number of levels could be an alternative. This could
+>>>> also be useful to limit the number of (mostly) redundant levels, even
+>>>> the intended max of 4096 seems pretty high.
+>>>>
+>>
+>> Looking again looks like we _can not_ deduce the number of bits of a pwm, it is
+>> not exposed at all, so I think we will need to end adding a property to specify
+>> this. Something similar to what leds-pwm binding does, it has:
+>>
+>> max-brightness : Maximum brightness possible for the LED
+> 
+> Thanks for the confirmation that I didn't just miss some clever trick.
+> 
+> I also think that some kind of DT property is needed, I'll try to come
+> up with a reasonable name, keeping in mind that some devices might not
+> want to use the entire range of levels.
+> 
 
--- 
-Regards/Gruss,
-    Boris.
+Note that, If I remember correctly, the original idea behind all these patches
+was provide a default curve with enough points following the  CIE 1931 formula
+(which describes how we perceive light). When default doesn't work for your
+hardware, you could play and define your own curve using the
+num-interpolated-steps property I.e:
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+ brightness-levels = <0 2048 4096 8192 16384 65535>;
+ num-interpolated-steps = <2048>;
+ default-brightness-level = <4096>;
+
+Or even expose all the possible levels, like you do with your chromeos kernel.
+
+ brightness-levels = <0 65535>;
+ num-interpolated-steps = <65535>;
+ default-brightness-level = <4096>;
+
+The above should work independently of the bug found (that of course needs to be
+fixed)
+
+Enric
