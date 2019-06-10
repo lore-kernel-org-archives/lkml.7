@@ -2,238 +2,176 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81644C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15260C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4515020820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8AB20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 05:21:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=newmedia-net.de header.i=@newmedia-net.de header.b="zVCfIp4c"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="IkGwJFsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387610AbfFJFLW (ORCPT
+        id S2387574AbfFJFVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 01:11:22 -0400
-Received: from webmail.newmedia-net.de ([185.84.6.166]:57982 "EHLO
-        webmail.newmedia-net.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbfFJFLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 01:11:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=newmedia-net.de; s=mikd;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject; bh=vHvqO36rgNxEIk194ajJnKV4ToM132hVV+XGxAFMsGg=;
-        b=zVCfIp4chS2BFHy8dYiYHRBCQG94hshNGbr34qw8Yqa7ed+EkbGvLiAF2KhVgdKVGnYlHVyA2nD5K+IxM1gW5DpdEeol9crFT+O+f7x2X8LhXxtAEJ4RmbU4kSJbBezy5AGszDaRTurW6AF3qyHUbtCjDQshBMLrs73ChITkNPw=;
-Subject: possible fix for broken cmac crypto support
-From:   Sebastian Gottschall <s.gottschall@newmedia-net.de>
-To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc:     Ryder Lee <ryder.lee@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
-        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Chih-Min Chen <chih-min.Chen@mediatek.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
- <ade7ef01-8b06-ec7d-4caf-e581f4033819@newmedia-net.de>
- <CAJ0CqmVBogQrqf4Gckr5gQ6tCrdZG=p60ZiC+-WW-yxt93+40Q@mail.gmail.com>
- <0eea6d21-1de2-abc3-93f4-70ed04dac3df@newmedia-net.de>
-Message-ID: <e6b4bd01-58d3-6616-6d06-620ca7cdc19c@newmedia-net.de>
-Date:   Mon, 10 Jun 2019 07:11:15 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 01:21:03 -0400
+Received: from mail-eopbgr810051.outbound.protection.outlook.com ([40.107.81.51]:30931
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387457AbfFJFVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 01:21:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S9jPIrjrGwR9dzSGc3epmEvjkVYqRndp3RJZWukVrUU=;
+ b=IkGwJFsM4dBLFbWfZtFiFOSw3BgFXviTDtg4COoLQh9FeB8MfFlAeRfAuks7LAOMojE3Ncd5Glg8CvQbOhqdGMzc6xhbCEmvffzhmBi5ZDi7rGmdHC/BsQdAP3pwF141nV1X+OLVgCtkSr+IwxWfYyYBboJaSBAlRwO0ZBMjE6Y=
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com (20.176.26.153) by
+ BN7PR02MB4146.namprd02.prod.outlook.com (52.132.223.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Mon, 10 Jun 2019 05:20:58 +0000
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::a56f:7a30:7488:ff99]) by BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::a56f:7a30:7488:ff99%4]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
+ 05:20:58 +0000
+From:   Kalyani Akula <kalyania@xilinx.com>
+To:     Stephan Mueller <smueller@chronox.de>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>
+CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sarat Chand Savitala <saratcha@xilinx.com>
+Subject: RE: [RFC PATCH 4/5] crypto: Adds user space interface for
+ ALG_SET_KEY_TYPE
+Thread-Topic: [RFC PATCH 4/5] crypto: Adds user space interface for
+ ALG_SET_KEY_TYPE
+Thread-Index: AQHUrjLRC0KQY4vUUEiutylzuXEA7qWzVM+AgJUjQyCAA8MlgIAVaNiQgBkBuACAGpYxMA==
+Date:   Mon, 10 Jun 2019 05:20:58 +0000
+Message-ID: <BN7PR02MB5124A7E685AC0F59AFBEFC8DAF130@BN7PR02MB5124.namprd02.prod.outlook.com>
+References: <1547708541-23730-1-git-send-email-kalyani.akula@xilinx.com>
+ <18759853.IUaQuE38eh@tauon.chronox.de>
+ <SN6PR02MB5135CE53C3E3FB34CA5E6BA8AF320@SN6PR02MB5135.namprd02.prod.outlook.com>
+ <2554415.t45IJDmies@tauon.chronox.de>
+In-Reply-To: <2554415.t45IJDmies@tauon.chronox.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kalyania@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5d97bf42-987c-4e46-cecb-08d6ed636be5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN7PR02MB4146;
+x-ms-traffictypediagnostic: BN7PR02MB4146:
+x-microsoft-antispam-prvs: <BN7PR02MB414604F0DE79EA6CBC5CCFACAF130@BN7PR02MB4146.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(366004)(346002)(396003)(13464003)(189003)(199004)(486006)(2906002)(7736002)(54906003)(110136005)(316002)(305945005)(14444005)(256004)(5660300002)(476003)(71200400001)(71190400001)(86362001)(33656002)(2501003)(74316002)(52536014)(11346002)(446003)(14454004)(76116006)(66946007)(66446008)(64756008)(66556008)(66476007)(26005)(53936002)(7696005)(66066001)(73956011)(68736007)(186003)(76176011)(102836004)(6116002)(3846002)(6506007)(9686003)(6436002)(53546011)(55016002)(229853002)(478600001)(25786009)(8676002)(81166006)(99286004)(8936002)(4326008)(107886003)(6246003)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4146;H:BN7PR02MB5124.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: beHgnN2MCG+T/IWkn39JiLZgGCdx8nxM7zZveUbGy53tjJryiIXOIk0PDeUaJlzL8xNt4G4luAF6Emw8k4KOfZw4DBQK0onIF3Bvor1X1bEKVM2XsIaEN1UN1bkmkxtzLHyXTmCq1ijzkU1WN/5rXi8Mc+jBb0Z0tn1kSncULUGxy29Z3Hftml2APWknfT+pxkm2ZqZlK+KxIo1CozNHLckD0TnnosfFhN1ack/1UC0Vnr/nFM/ynXRBYMr+WhpJYOGqk0KDY8E3JLF1NmAKX1eT2YrkJkAeSqLNssdiVkEQEnmpcJbE6C1xxttEfn2Ih93nD+HzSIvdCK4C9ETvNVST+G5venqFq3Ue6ctzxUgikCFxgV457Wrd9y4fLkVRulT60MGXo+yAqvvwEA10UbwjceQbnl/FEesxrvtZbSM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <0eea6d21-1de2-abc3-93f4-70ed04dac3df@newmedia-net.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Received:  from [2003:c9:3f05:3a00:f095:7be4:6d09:fd49]
-        by webmail.newmedia-net.de with esmtpsa (TLSv1:AES128-SHA:128)
-        (Exim 4.72)
-        (envelope-from <s.gottschall@newmedia-net.de>)
-        id 1haCab-0007AN-4P; Mon, 10 Jun 2019 07:11:25 +0200
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d97bf42-987c-4e46-cecb-08d6ed636be5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 05:20:58.6922
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kalyania@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this is no real patch for this mailing list since i havent cloned yet a 
-git tree. take it as a hint
-this fixes the BUG WARN if SAE encryption is used (mandatory for mesh / 
-802.11s crypto)
-that will not fix that mesh is not working (likelly just with other 
-vendors), but it will fix crypto at least
+Ping!!
 
-Sebastian
+> -----Original Message-----
+> From: Stephan Mueller <smueller@chronox.de>
+> Sent: Friday, May 24, 2019 12:50 PM
+> To: Kalyani Akula <kalyania@xilinx.com>; keyrings@vger.kernel.org
+> Cc: herbert@gondor.apana.org.au; davem@davemloft.net; linux-
+> crypto@vger.kernel.org; linux-kernel@vger.kernel.org; Sarat Chand Savital=
+a
+> <saratcha@xilinx.com>
+> Subject: Re: [RFC PATCH 4/5] crypto: Adds user space interface for
+> ALG_SET_KEY_TYPE
+>=20
+> Am Mittwoch, 8. Mai 2019, 11:31:08 CEST schrieb Kalyani Akula:
+>=20
+> Hi Kalyani,
+>=20
+> > Hi Stephan,
+> >
+> > Keyrings is in-kernel key-management and retention facility. User can
+> > use it to manage keys used for applications.
+> >
+> > Xilinx cryptographic hardware has a mechanism to store keys in its
+> > internal hardware and do not have mechanism to read it back due to secu=
+rity
+> reasons.
+> > It stores key internally in different forms like simple key, key
+> > encrypted with unique hardware DNA, key encrypted with hardware family
+> > key, key stored in eFUSEs/BBRAM etc.
+> > Based on security level expected, user can select one of the key for
+> > AES operation. Since AES hardware internally has access to these keys,
+> > user do not require to provide key to hardware, but need to tell which
+> > internal hardware key user application like to use for AES operation.
+> >
+> > Basic need is to pass information to AES hardware about which internal
+> > hardware key to be used for AES operation.
+> >
+> > I agree that from general use case perspective we are not selecting
+> > key type but selecting internal hardware keys provided by user. How
+> > about providing option to select custom hardware keys provided by
+> > hardware (AES_SEL_HW_KEY)?
+>=20
+> I am not intimately familiary with the keyring facility. Thus, let us ask=
+ the experts
+> at the keyring mailing list :-)
+>=20
+> >
+> > Thanks
+> > kalyani
+> >
+> > > -----Original Message-----
+> > > From: Stephan Mueller <smueller@chronox.de>
+> > > Sent: Thursday, April 25, 2019 12:01 AM
+> > > To: Kalyani Akula <kalyania@xilinx.com>
+> > > Cc: herbert@gondor.apana.org.au; davem@davemloft.net; linux-
+> > > crypto@vger.kernel.org; linux-kernel@vger.kernel.org
+> > > Subject: Re: [RFC PATCH 4/5] crypto: Adds user space interface for
+> > > ALG_SET_KEY_TYPE
+> > >
+> > > Am Montag, 22. April 2019, 11:17:55 CEST schrieb Kalyani Akula:
+> > >
+> > > Hi Kalyani,
+> > >
+> > > > > Besides, seem to be more a key handling issue. Wouldn't it make
+> > > > > sense to rather have such issue solved with key rings than in
+> > > > > the kernel crypto API?
+> > > >
+> > > > [kalyani] Can you please elaborate on this further ?
+> > >
+> > > The kernel has a keyring support in security/keys which has a user
+> > > space interface with keyutils. That interface is commonly used for
+> > > any sort of key manipulation.
+> > >
+> > > Ciao
+> > > Stephan
+>=20
+>=20
+>=20
+> Ciao
+> Stephan
+>=20
 
-Index: main.c
-===================================================================
---- main.c      (revision 4584)
-+++ main.c      (revision 4585)
-@@ -180,6 +180,20 @@ static int mt7615_set_key(struct ieee80211_hw *hw,
-             !(key->flags & IEEE80211_KEY_FLAG_PAIRWISE))
-                 return -EOPNOTSUPP;
-
-+       switch (key->cipher) {
-+       case WLAN_CIPHER_SUITE_WEP40:
-+       case WLAN_CIPHER_SUITE_WEP104:
-+       case WLAN_CIPHER_SUITE_TKIP:
-+       case WLAN_CIPHER_SUITE_CCMP:
-+       case WLAN_CIPHER_SUITE_CCMP_256:
-+       case WLAN_CIPHER_SUITE_GCMP:
-+       case WLAN_CIPHER_SUITE_GCMP_256:
-+       case WLAN_CIPHER_SUITE_SMS4:
-+               break;
-+       default:
-+               return -EOPNOTSUPP;
-+       }
-+
-         if (cmd == SET_KEY) {
-                 key->hw_key_idx = wcid->idx;
-                 wcid->hw_key_idx = idx;
-
-Am 09.06.2019 um 16:36 schrieb Sebastian Gottschall:
-> by the way. this big fat kernel warning exists in all operation modes 
-> unless anything else but aes-128 ccmp is used. since the chipset is 
-> capable of doing gcmp etc. as well
-> it would be nice if this issue can be fixed. otherwise encryption 
-> support can be defined as "broken" for mt7615
->
-> Am 06.06.2019 um 18:19 schrieb Lorenzo Bianconi:
->>> i tested your patch against a qca 9984 chipset using SAE and without
->>> encryption. both did not work. the devices are connecting, but no data
->>> connection is possible
->> Hi Sebastian,
->>
->> I tested Ryder's patch using mt76x2 as mesh peer and it works fine 
->> for me.
->> Could you please provide some more info?
->>
->> Regards,
->> Lorenzo
->>
->>>
->>> Sebastian
->>>
->>> Am 03.06.2019 um 08:08 schrieb Ryder Lee:
->>>> Enable NL80211_IFTYPE_MESH_POINT and update its path.
->>>>
->>>> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
->>>> ---
->>>> Changes since v3 - fix a wrong expression
->>>> Changes since v2 - remove unused definitions
->>>> ---
->>>>    drivers/net/wireless/mediatek/mt76/mt7615/init.c | 6 ++++++
->>>>    drivers/net/wireless/mediatek/mt76/mt7615/main.c | 1 +
->>>>    drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 4 +++-
->>>>    drivers/net/wireless/mediatek/mt76/mt7615/mcu.h  | 6 ------
->>>>    4 files changed, 10 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c 
->>>> b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
->>>> index 59f604f3161f..f860af6a42da 100644
->>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
->>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
->>>> @@ -133,6 +133,9 @@ static const struct ieee80211_iface_limit 
->>>> if_limits[] = {
->>>>        {
->>>>                .max = MT7615_MAX_INTERFACES,
->>>>                .types = BIT(NL80211_IFTYPE_AP) |
->>>> +#ifdef CONFIG_MAC80211_MESH
->>>> +                      BIT(NL80211_IFTYPE_MESH_POINT) |
->>>> +#endif
->>>>                         BIT(NL80211_IFTYPE_STATION)
->>>>        }
->>>>    };
->>>> @@ -195,6 +198,9 @@ int mt7615_register_device(struct mt7615_dev *dev)
->>>>        dev->mt76.antenna_mask = 0xf;
->>>>
->>>>        wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
->>>> +#ifdef CONFIG_MAC80211_MESH
->>>> + BIT(NL80211_IFTYPE_MESH_POINT) |
->>>> +#endif
->>>>                                 BIT(NL80211_IFTYPE_AP);
->>>>
->>>>        ret = mt76_register_device(&dev->mt76, true, mt7615_rates,
->>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c 
->>>> b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->>>> index b0bb7cc12385..585e67fa2728 100644
->>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->>>> @@ -37,6 +37,7 @@ static int get_omac_idx(enum nl80211_iftype type, 
->>>> u32 mask)
->>>>
->>>>        switch (type) {
->>>>        case NL80211_IFTYPE_AP:
->>>> +     case NL80211_IFTYPE_MESH_POINT:
->>>>                /* ap use hw bssid 0 and ext bssid */
->>>>                if (~mask & BIT(HW_BSSID_0))
->>>>                        return HW_BSSID_0;
->>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c 
->>>> b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
->>>> index 43f70195244c..e82297048449 100644
->>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
->>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
->>>> @@ -754,6 +754,7 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev 
->>>> *dev,
->>>>
->>>>        switch (vif->type) {
->>>>        case NL80211_IFTYPE_AP:
->>>> +     case NL80211_IFTYPE_MESH_POINT:
->>>>                tx_wlan_idx = mvif->sta.wcid.idx;
->>>>                conn_type = CONNECTION_INFRA_AP;
->>>>                break;
->>>> @@ -968,7 +969,7 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, 
->>>> struct ieee80211_vif *vif,
->>>>                .rx_wtbl = {
->>>>                        .tag = cpu_to_le16(WTBL_RX),
->>>>                        .len = cpu_to_le16(sizeof(struct wtbl_rx)),
->>>> -                     .rca1 = vif->type != NL80211_IFTYPE_AP,
->>>> +                     .rca1 = vif->type == NL80211_IFTYPE_STATION,
->>>>                        .rca2 = 1,
->>>>                        .rv = 1,
->>>>                },
->>>> @@ -1042,6 +1043,7 @@ static void sta_rec_convert_vif_type(enum 
->>>> nl80211_iftype type, u32 *conn_type)
->>>>    {
->>>>        switch (type) {
->>>>        case NL80211_IFTYPE_AP:
->>>> +     case NL80211_IFTYPE_MESH_POINT:
->>>>                if (conn_type)
->>>>                        *conn_type = CONNECTION_INFRA_STA;
->>>>                break;
->>>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h 
->>>> b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
->>>> index e96efb13fa4d..0915cb735699 100644
->>>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
->>>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
->>>> @@ -105,25 +105,19 @@ enum {
->>>>    #define STA_TYPE_STA                BIT(0)
->>>>    #define STA_TYPE_AP         BIT(1)
->>>>    #define STA_TYPE_ADHOC              BIT(2)
->>>> -#define STA_TYPE_TDLS                BIT(3)
->>>>    #define STA_TYPE_WDS                BIT(4)
->>>>    #define STA_TYPE_BC         BIT(5)
->>>>
->>>>    #define NETWORK_INFRA               BIT(16)
->>>>    #define NETWORK_P2P         BIT(17)
->>>>    #define NETWORK_IBSS                BIT(18)
->>>> -#define NETWORK_MESH         BIT(19)
->>>> -#define NETWORK_BOW          BIT(20)
->>>>    #define NETWORK_WDS         BIT(21)
->>>>
->>>>    #define CONNECTION_INFRA_STA        (STA_TYPE_STA | NETWORK_INFRA)
->>>>    #define CONNECTION_INFRA_AP (STA_TYPE_AP | NETWORK_INFRA)
->>>>    #define CONNECTION_P2P_GC   (STA_TYPE_STA | NETWORK_P2P)
->>>>    #define CONNECTION_P2P_GO   (STA_TYPE_AP | NETWORK_P2P)
->>>> -#define CONNECTION_MESH_STA  (STA_TYPE_STA | NETWORK_MESH)
->>>> -#define CONNECTION_MESH_AP   (STA_TYPE_AP | NETWORK_MESH)
->>>>    #define CONNECTION_IBSS_ADHOC       (STA_TYPE_ADHOC | NETWORK_IBSS)
->>>> -#define CONNECTION_TDLS              (STA_TYPE_STA | NETWORK_INFRA 
->>>> | STA_TYPE_TDLS)
->>>>    #define CONNECTION_WDS              (STA_TYPE_WDS | NETWORK_WDS)
->>>>    #define CONNECTION_INFRA_BC (STA_TYPE_BC | NETWORK_INFRA)
->>>>
->
