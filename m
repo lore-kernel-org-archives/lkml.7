@@ -2,117 +2,144 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A84C31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E99DC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A65E206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0279F206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNaUhZ4J"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NS6I1EfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387801AbfFJQsm (ORCPT
+        id S2387444AbfFJQuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:48:42 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43336 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbfFJQs0 (ORCPT
+        Mon, 10 Jun 2019 12:50:23 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35445 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727648AbfFJQuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:48:26 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w33so15396293edb.10;
-        Mon, 10 Jun 2019 09:48:24 -0700 (PDT)
+        Mon, 10 Jun 2019 12:50:22 -0400
+Received: by mail-io1-f65.google.com with SMTP id m24so7441030ioo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RNaE+JyTMbe3vWyJjoPXuE9tx9E7XgUahA0r4EQDpWk=;
-        b=UNaUhZ4J26e1YN0E5HgpidahdbTAdrZZAE74lVVCvMFAkthT7xS4FQjXqjcWYxowzV
-         YFn4c2Yl06QJFUIdlkRMsOFqI9l4bDJwRVc5vB+WS9L1XPONYnbQG0ifRADi7tcsIlVD
-         Jl+YF0lzUxt1hG8JFipYQ23QNrIXzAfDQI7KWjJCZeZHVeWpHyiYMNTUrdhE7K6y8U5/
-         MaBwZsm/I2iYHWJaZWjAO3rxvJ28C4NkUrdAfG3gaOPuZrA4KIOOMffaBiRz9iy59ZeY
-         XMNsUAAG+DsTkjxvX/t/bGMwxeNEnhLIe1oMh7XQVj0pqULa22CpbYQEFF/IX4GV19rW
-         5nTA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jigJfFRZkdX+fDWDB3Z6i7DXek+TxEO+iFMi0ontPyI=;
+        b=NS6I1EfOS4Qln6O21W/qaWiFUMqu8lDW/jqsVurVgncwNQNmgiZ7ryVM5WNjFbA1tg
+         6okpyEoD7k4sfn32wuY4Hw3AvMOSF+FH1cyzQTqePdpEc4PxU4V1MR7kC4tb8xOzYBLB
+         9dcsOIODkMVEkDakGWmtbuSR/ZtezbmGzY+/k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RNaE+JyTMbe3vWyJjoPXuE9tx9E7XgUahA0r4EQDpWk=;
-        b=CZCbLG11/bIuQ5sk3hfBSMt/W1EBU9+euiCEq4NAqbHofYlUZe56lOL9DCvlaKANkk
-         2ie1FHwva551/68p0KQ6wrHn4UXSjdd1gPha1kuG4Wjfff83EUnzk1I6Q0CqijbnnPIU
-         iVZP8Y2MClFTNQWGtoESr41z+Cwfb2GU4alP/hcg2MCZHaLFlMg1GXpI+Srr3Zmnpbl6
-         gf+TpKitCN8KXJKmB6+VFYO7QqWfpIcRADB3Qj7J5VX2Fn8sG3mx3bua1pfBy1c6JPOF
-         CL4YmzJGw1ePn+pqYvOBMSltN04hj5jLHk97tgA0Cb9Ky39h6+v7HyYqGFSKs/jlbnna
-         p5GA==
-X-Gm-Message-State: APjAAAX6PfcKxaRWS3BWl+dp3P6O3q+OlM6VN5P9er+8FDnG6VdBiV6d
-        hD9oIsxyjzDNQ5WJCromjcbU+WbC
-X-Google-Smtp-Source: APXvYqzrc8u6mQ+GuOk68KhLmwetYvKai4YQWu7MPs8Supql0qozPF1RQWyfBAR4OVbjVtjW2cuvig==
-X-Received: by 2002:a17:906:d154:: with SMTP id br20mr5543813ejb.76.1560185304079;
-        Mon, 10 Jun 2019 09:48:24 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id a9sm3075799edc.44.2019.06.10.09.48.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 09:48:23 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/6] clocksource/drivers/tegra: Set and use timer's period
-Date:   Mon, 10 Jun 2019 19:43:57 +0300
-Message-Id: <20190610164400.11830-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190610164400.11830-1-digetx@gmail.com>
-References: <20190610164400.11830-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jigJfFRZkdX+fDWDB3Z6i7DXek+TxEO+iFMi0ontPyI=;
+        b=Fu7GkzLgEthB6+n4DTpETC/Vgcf66BWVTCOIJAkAuQykkGHZTHV2TR4jQiYKO+B6cN
+         /YgR3z4MyMIS69Syza6o3YSmyHr8W/G83oAB6+wE/UcVuWye0ccrf5ckbztE7EofEojV
+         yRVMG7Q6m7nrGccnrqR5jekf6H1f1OdNYnUieJnyjSgZW/aYU1ZS+W33pKFYdbw55cmC
+         E82z8AAEC4I5sRTEEacFi5YogEBd5JnT6iekV8fvB7frXc28qZJUdmVM46APGjWKEcUB
+         YVvc/nGeEAnXYdDckLq+g/AoCcYLRSeC9IpEYWrqJyJGc+YtWa8s77VwVVvXPVuhl/ed
+         W3NQ==
+X-Gm-Message-State: APjAAAVgadgFRkD2jHlWV5kd+8vJtfKaoEkIQMX0SZ75hxWqXCJMzf8E
+        DIRjyEZO4hxX4wd+OT3+UvWedHDgkFg=
+X-Google-Smtp-Source: APXvYqwXL7a7Wcn4wiXf2O/2ZACFP297WuyPZWUN/PRvfmbHQo7QUlNm+WOsj5n/VX3F4MxaJjd+bg==
+X-Received: by 2002:a6b:8e4a:: with SMTP id q71mr41532593iod.298.1560185421514;
+        Mon, 10 Jun 2019 09:50:21 -0700 (PDT)
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com. [209.85.166.47])
+        by smtp.gmail.com with ESMTPSA id a7sm3840022iok.19.2019.06.10.09.50.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 09:50:20 -0700 (PDT)
+Received: by mail-io1-f47.google.com with SMTP id k20so7401537ios.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 09:50:20 -0700 (PDT)
+X-Received: by 2002:a6b:b642:: with SMTP id g63mr8234768iof.142.1560185419663;
+ Mon, 10 Jun 2019 09:50:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190607223716.119277-1-dianders@chromium.org>
+ <20190607223716.119277-4-dianders@chromium.org> <363DA0ED52042842948283D2FC38E4649C52F8A0@IRSMSX106.ger.corp.intel.com>
+In-Reply-To: <363DA0ED52042842948283D2FC38E4649C52F8A0@IRSMSX106.ger.corp.intel.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 10 Jun 2019 09:50:06 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U8eo78Ee9xjhGXJMv=8YF9o89KLX024GH3iBRnRjCRvQ@mail.gmail.com>
+Message-ID: <CAD=FV=U8eo78Ee9xjhGXJMv=8YF9o89KLX024GH3iBRnRjCRvQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around
+ commands expected to fail
+To:     "Hunter, Adrian" <adrian.hunter@intel.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        "briannorris@chromium.org" <briannorris@chromium.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        "mka@chromium.org" <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "brcm80211-dev-list@cypress.com" <brcm80211-dev-list@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The of_clk structure has a period field that is set up initially by
-timer_of_clk_init(), that period value need to be adjusted for a case of
-TIMER1-9 that are running at a fixed rate that doesn't match the clock's
-rate. Note that the period value is currently used only by some of the
-clocksource drivers internally and hence this is just a minor cleanup
-change that doesn't fix anything.
+Hi,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clocksource/timer-tegra.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On Mon, Jun 10, 2019 at 1:56 AM Hunter, Adrian <adrian.hunter@intel.com> wrote:
+>
+> > --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> > +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/mmc/sdio_ids.h>
+> >  #include <linux/mmc/sdio_func.h>
+> >  #include <linux/mmc/card.h>
+> > +#include <linux/mmc/core.h>
+>
+> SDIO function drivers should not really include linux/mmc/core.h
+> (Also don't know why linux/mmc/card.h is included)
 
-diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
-index 810b4e7435cf..646b3530c2d2 100644
---- a/drivers/clocksource/timer-tegra.c
-+++ b/drivers/clocksource/timer-tegra.c
-@@ -71,9 +71,9 @@ static int tegra_timer_shutdown(struct clock_event_device *evt)
- static int tegra_timer_set_periodic(struct clock_event_device *evt)
- {
- 	void __iomem *reg_base = timer_of_base(to_timer_of(evt));
-+	unsigned long period = timer_of_period(to_timer_of(evt));
- 
--	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER |
--		       ((timer_of_rate(to_timer_of(evt)) / HZ) - 1),
-+	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER | (period - 1),
- 		       reg_base + TIMER_PTV);
- 
- 	return 0;
-@@ -297,6 +297,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
- 		cpu_to->clkevt.rating = rating;
- 		cpu_to->clkevt.cpumask = cpumask_of(cpu);
- 		cpu_to->of_base.base = timer_reg_base + base;
-+		cpu_to->of_clk.period = DIV_ROUND_UP(rate, HZ);
- 		cpu_to->of_clk.rate = rate;
- 
- 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
--- 
-2.21.0
+OK, so I guess you're requesting an extra level of "sdio_" wrappers
+for all the functions I need to call.  I don't think the wrappers buy
+us a ton other than to abstract things a little bit and make it look
+prettier.  :-)  ...but certainly I can code that up if that's what
+everyone wants.
 
+Just to make sure, I looked in "drivers/net/wireless/" and I do see
+quite a few instances of "mmc_" functions being used.  That doesn't
+mean all these instances are correct but it does appear to be
+commonplace.  Selected examples:
+
+drivers/net/wireless/ath/ath10k/sdio.c:
+  ret = mmc_hw_reset(ar_sdio->func->card->host);
+
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:
+  mmc_set_data_timeout(md, func->card);
+  mmc_wait_for_req(func->card->host, mr);
+
+drivers/net/wireless/marvell/mwifiex/sdio.c:
+  mmc_hw_reset(func->card->host);
+
+drivers/net/wireless/rsi/rsi_91x_sdio.c:
+  err = mmc_wait_for_cmd(host, &cmd, 3);
+
+
+...anyway, I'll give it a few days and if nobody else chimes in then
+I'll assume you indeed want "sdio_" wrappers for things and I'll post
+a v4.  If patch #1 happens to land in the meantime then I won't
+object.  ;-)
+
+
+-Doug
