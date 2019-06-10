@@ -2,135 +2,159 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07364C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8DAC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4303208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EB120859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 23:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQq46nLU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ia88klZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390593AbfFJXVa (ORCPT
+        id S2390632AbfFJXVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 19:21:30 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45538 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390500AbfFJXV3 (ORCPT
+        Mon, 10 Jun 2019 19:21:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37897 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390500AbfFJXVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 19:21:29 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m206so7523917oib.12;
-        Mon, 10 Jun 2019 16:21:29 -0700 (PDT)
+        Mon, 10 Jun 2019 19:21:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v11so5820132pgl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:21:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZaE9J9S5+4tokzmlUvtvROgLbYm6CbLOjAt2bzs6+ko=;
-        b=XQq46nLUk1w0so/Oo7f4Obzwh/o1q87LWsXwXUYuy18n6wtiBRK2ftGBmxm0auLw3C
-         2yYiVAkdcv6+/IVh7X6QrM0UoSGQyitdM1QDCifV12RE9hSZfSNyJQrEQfP2SMg4enWZ
-         9LDHi3uZQaqUAoUSQ0q3cxiPm+2hhlnnol/CR7tdZmeUtkO7SxOTVDda6RZ80MibiTWD
-         lnM9MHvgLA0qymLGPVIp3eSUnd1KmStoOEVcrMnZzpgJDMBk/K3h1H5rHaQxobmMSEsZ
-         7xq5E1OCNHUfIZU9DJSeMtA0aMcMep/1d7coTjVhV//p15VgmmRXrPIBHbhiOyr1iHtd
-         A5xA==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:cc:subject:to:user-agent:date;
+        bh=plP4lWzyc7KaP3+pJsQZD0STOQAjwlX5Lih5GcMmDJ4=;
+        b=Ia88klZiLqqn+j77ynmisXpWoRAoBA5Tnwyh4ijmhp1xxV5oj/ZHXH5U4RrplyPA6+
+         Z+mqWkKamnG/AIiu28TZklif0bd8WbDTYKsy8jZzAna1LBBoyo+m03ej5AWiXoXSyVSa
+         NFATkigEqY6q686cS9NUJNWt83mNDeVPPI5x8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZaE9J9S5+4tokzmlUvtvROgLbYm6CbLOjAt2bzs6+ko=;
-        b=luuLNQQfplYtfLVJ44OyRDTbHQm4hNDi/FzsHr9LXKoIF9pnXXjIAqVgqxPfySUvMA
-         0Bf/4bgcxBFmzcKBOsI+57msF4o4SpbLQAk3zCIvY4Rbf0zaZ+wqrOJcivFFgcgFUg40
-         yZQwwxV2Ml/79TNGR11xnzdZ/VMyuWqV5B4NRC0FL1eGWmPlICp5bLn1U2PIW+OfWs1L
-         f3yOa6mJc6c/aGhfpVpNX3by1wzHOPw92R1habqATxfopdsUtjGynVJRLbTMGELrm5xH
-         w8nXC1Hu5a56FJTryL0XDmFD+rhonVJltjJzYmG9KWBPEzIGNFbc8EuEXautXYXX7wm6
-         i85A==
-X-Gm-Message-State: APjAAAWIt247kDgRRxUTz31YkXSUK5XnK/Jtk65KlFPO++agY00yH8BD
-        2i/LK1vRobbWYomsxQV0WAP59zHQQFEnFceNlZ0=
-X-Google-Smtp-Source: APXvYqzb5bNwl6WsntXoXRG9f925hb0b4zMvZ1roOsKlf05inct+tI9izH6k+IgRME05YsAxf20EyAgYGYpegeQTvhQ=
-X-Received: by 2002:aca:c508:: with SMTP id v8mr13855096oif.104.1560208888753;
- Mon, 10 Jun 2019 16:21:28 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:cc:subject:to
+         :user-agent:date;
+        bh=plP4lWzyc7KaP3+pJsQZD0STOQAjwlX5Lih5GcMmDJ4=;
+        b=kF5Amj5jc13ZtAoSa8yD6QrvH7wFnLzGIZTaXkxNRK0jy1zeG1bYjUMUmWLIpHC5vt
+         8ORCO6U4IZfupNFfqZofgqDbMCM8ejz64JQkvdbd3jXpmT/fw1PaNN2QMvklrNfVmwtd
+         bcfTSNsxfMCOm+kLP0zs3PZ4zIzuqGK+pTJpREnw78QoWaadbarTDPJHlGkjmAyqIUn6
+         em0z8YqND/YA8iRN4lqkac9XTSYXsGjzQkWjB64nFA86eL2mO5IdPY8xD9DfbJxQozBz
+         GTvX5jbtOF5/spoJ9bN4NT03rOfSaWDACdbS7JU/PkVykFv1AjVz0j4ie3Q6zW3WZU1d
+         oimQ==
+X-Gm-Message-State: APjAAAWpYRAQvqc2RyTg63rnBVPmwBGsjwZ1LoFUsm6UlVsNjjbxRYBg
+        hOCRAOAL9IJqZoituF5v0wg9Yw==
+X-Google-Smtp-Source: APXvYqzSvKTSLb5deeAUwGfek6GUKMKTsYrNks5Xjyq7zYVzKqmuGUE+s2P4LvkW270Mqa8KPtKdcQ==
+X-Received: by 2002:a62:2ec4:: with SMTP id u187mr75848316pfu.84.1560208907972;
+        Mon, 10 Jun 2019 16:21:47 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id c6sm18136367pfm.163.2019.06.10.16.21.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 16:21:46 -0700 (PDT)
+Message-ID: <5cfee60a.1c69fb81.584d9.cf12@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com> <20190606200926.4029-4-yu-cheng.yu@intel.com>
- <20190607080832.GT3419@hirez.programming.kicks-ass.net> <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
- <20190607174336.GM3436@hirez.programming.kicks-ass.net> <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
- <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net> <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
- <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net> <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
- <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com> <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
- <0665416d-9999-b394-df17-f2a5e1408130@intel.com> <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
- <ac9a20a6-170a-694e-beeb-605a17195034@intel.com> <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
- <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com> <1b961c71d30e31ecb22da2c5401b1a81cb802d86.camel@intel.com>
- <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
-In-Reply-To: <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Mon, 10 Jun 2019 16:20:52 -0700
-Message-ID: <CAMe9rOqLxNxE-gGX9ozX=emW9iQ+gOeUiS3ec5W4jmF6wk6cng@mail.gmail.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFp+6iE8FUXxexKbYy=ak+se-pj1XXUZxTu5o=hJvg66V6+Rzw@mail.gmail.com>
+References: <20190604222939.195471-1-swboyd@chromium.org> <20190604223700.GE4814@minitux> <5cf6f4bb.1c69fb81.c39da.5496@mx.google.com> <CAFp+6iHZeawnz7Vfk3=Oox-GN_y6c-E9wMwc-qdp1bTOXgqjFQ@mail.gmail.com> <5cf82c6f.1c69fb81.9e342.dbda@mx.google.com> <CAFp+6iE8FUXxexKbYy=ak+se-pj1XXUZxTu5o=hJvg66V6+Rzw@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add iommus property to qup1
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 10 Jun 2019 16:21:45 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 3:59 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> > We then create PR_MARK_CODE_AS_LEGACY.  The kernel will set the bitmap, but it
-> > is going to be slow.
->
-> Slow compared to what?  We're effectively adding one (quick) system call
-> to a path that, today, has at *least* half a dozen syscalls and probably
-> a bunch of page faults.  Heck, we can probably avoid the actual page
-> fault to populate the bitmap if we're careful.  That alone would put a
-> syscall on equal footing with any other approach.  If the bit setting
-> crossed a page boundary it would probably win.
->
-> > Perhaps we still let the app fill the bitmap?
->
-> I think I'd want to see some performance data on it first.
+Quoting Vivek Gautam (2019-06-06 04:17:16)
+> Hi Stephen,
+>=20
+> On Thu, Jun 6, 2019 at 2:27 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Vivek Gautam (2019-06-04 21:55:26)
+> >
+> > >
+> > > Cheza will throw faults for anything that is programmed with TZ on mtp
+> > > as all of that should be handled in HLOS. The firmwares of all these
+> > > peripherals assume that the SID reservation is done (whether in TZ or=
+ HLOS).
+> > >
+> > > I am inclined to moving the iommus property for all 'TZ' to board dts=
+ files.
+> > > MTP wouldn't need those SIDs. So, the SOC level dtsi will have just t=
+he
+> > > HLOS SIDs.
+> >
+> > So you're saying you'd like to have the SID be <&apps_smmu 0x6c3 0x0> in
+> > the sdm845.dtsi file and then override this on Cheza because our SID is
+> > different (possibly because we don't use GSI)? Why can't we program the
+> > SID in Cheza firmware to match the "HLOS" SID of 0x6c3?
+>=20
+> Sorry my bad, I missed the overriding part.
+> May be we add the lists of SIDs in board dts only. So, cheza dts will
+> have all these SIDs -
+> <&apps_smmu 0x6c0 0x3>   // for both 0x6c0 (TZ) and 0x6c3 (HLOS)
+> <&apps_smmu 0x6d6 0x0>   // if we want to use the GSI dma.
+> and
+> MTP will have
+> <&apps_smmu 0x6c3 0x0>
+> <&apps_smmu 0x6d6 0x0>
+> WDUT?
 
-Updating legacy bitmap in user space from kernel requires
+I'd prefer to fix the firmware so that the HLOS SID is used even on this
+board. Making Cheza use something different from MTP doesn't sound so
+good. Do you know how that works? Is there some configuration register
+or something that I should be looking for to see why the SID is not the
+HLOS one? It's definitely generating SIDs for the TZ SID (0x6c0), but
+I'd like to make sure that we can't change it because it's tied to some
+hardware signal like the NS bit and/or the Execution Level. Hopefully
+it's a config and then our difference from MTP can be minimized.
 
-long q;
+As far as I can tell, HLOS on SDM845 has always used GPI (yet another
+DMA engine) to do the DMA transfers. And the GPI is the hardware block
+that uses the SID of 0x6d6 above, so putting that into iommus for the
+geniqup doesn't make any sense given that GPI is another node. Can you
+confirm this is the case? Furthermore, the SID of 0x6c3 sounds untested?
+Has it ever been generated on SDM845 MTP?
 
-get_user(q, ...);
-q |= mask;
-put_user(q, ...);
+If we ever support GPI, I'd expect to see something like this in DT:
 
-instead of
+	gpi_dma: gpi@a00000 {
+		reg =3D <0x00a00000 0x60000>;
+		iommus =3D <&apps_smmu 0x6d6 0x0>;
+		...
+	};
 
-*p |= mask;
+	geniqup@ac0000 {
+		reg =3D <0x00ac0000 0x6000>;
+		iommus =3D <&apps_smmu 0x6c3 0x0>;
 
-get_user + put_user was quite slow when we tried before.
+		i2c@....{
 
--- 
-H.J.
+			dmas =3D <&gpi_dma ....>;
+		};
+
+But now I'm worried that the geniqup needs the proper geniqup wrapper
+clks to talk to it. Most likely the GPI is embedded inside the geniqup
+wrapper and sits right next to the bus to do bus DMA mastering. From the
+DT side, it means we should either put it inside the geniqup node, or we
+should add the wrapper clks to the GPI node and hope things work out
+with regards to clks and shared resources being used at the right time.
+
+If we're left with trying to figure out how to express the different
+SIDs depending on the CPU execution state then it may be easier to push
+for GPI upstreaming and use that dma engine to "fold" the SID
+numberspace into one SID for the GPI. This would avoid having to deal
+with the HLOS vs. TZ SID problem by adding a whole other driver. Or we
+could just rip out the non-GPI DMA support in this driver because the
+SID is all confused.
+
