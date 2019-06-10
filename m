@@ -2,207 +2,145 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343DFC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BA9C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECAC220833
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4F520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 08:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QZwvNMH5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ILTcYwTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388316AbfFJIBc (ORCPT
+        id S2388345AbfFJIDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 04:01:32 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:12140 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387781AbfFJIBc (ORCPT
+        Mon, 10 Jun 2019 04:03:05 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39496 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388235AbfFJIDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:01:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfe0e580001>; Mon, 10 Jun 2019 01:01:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 10 Jun 2019 01:01:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 10 Jun 2019 01:01:29 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Jun
- 2019 08:01:27 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
- <d0db90e3-3d05-dfba-8768-28511d9ee3ac@ti.com>
- <5208a50a-9ca0-8f24-9ad0-d7503ec53f1c@nvidia.com>
- <ba845a19-5dfb-a891-719f-43821b2dd412@nvidia.com>
- <e67a2d7c-5bd1-93ad-fe75-afcab38bc17c@ti.com>
- <a65f2b07-4a3a-7f83-e21f-8b374844a4b9@nvidia.com>
- <56aa6f45-cfd8-7f1e-9392-628ceb58093f@ti.com>
- <68e72598-8d53-115c-14a2-9d3042165aff@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4526f63f-8e77-334d-7656-ae1c7bc57d3b@nvidia.com>
-Date:   Mon, 10 Jun 2019 09:01:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 04:03:03 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z23so7160328wma.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 01:03:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=u82TTwb8ixlFfrNUJnFoGiqW7vUPbpvM9WdQFkW0Sgo=;
+        b=ILTcYwTEN0sqsAHKFcmwrFWMuSfyNM1NchlalYVj8bFmYmVu6fm/AHxWHvy+r5vmfm
+         0D/FGWCMsEkO/oOofk0C0YtrlvwLhDhYC6an9C7JRnbAARt2r2tBQZXsQqDKGziDxVjc
+         Z/aZhho0FcHYIrxyszQIHhvUw5nWnk2+Epw+hO8WzVSlHagZmy+fE4XxMeN0HLfY1fQa
+         YcPAqgiPJxAsz78MsL6jn7fb3aAuGThiJ1jBNR2QdIz2RihvMb2NwDFsB9DqgMnDwIB3
+         ZzJ3nTCgumg+ALD2kzR59+lC7LqoxXgFTJvASWAsgttbe5X+Qgz1Nff8floBpqRHbNKG
+         jVQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=u82TTwb8ixlFfrNUJnFoGiqW7vUPbpvM9WdQFkW0Sgo=;
+        b=KwvsBVfuAOQ5c4sQAsU4C0lca8j4J9aOOog/5LceUTTwQs9xz1BtbEg8J3LfBW5+d9
+         DnCU7dbTqmva8XF/jQbtqWlGy2XExfW10pUG+0CZ4O08srOqH7P5jaE+6iPcXTO93ypB
+         Y027lksLm2tPaL9W0mp8onWsr9tby1ZPx3/CUPPYcoSqknGExByMt03x5vBaEEc3aCTv
+         1EX81NzveuPn8R4IQppMGXk1JxWqF9OfGnM8vm45UkFUE3j4OqQx+FzoMA/VzM5505s4
+         p8DFewCGs52gr1l/lhJh5q1/hd8XMz159f4INKwv6ktl/xGX/DHUNF2ziwiOLtjAEiui
+         p2NA==
+X-Gm-Message-State: APjAAAXP8LfCvN6jewx9W/Lj3+V2bbIyQn4yFRxnIHAf0CkBisAB2Wl6
+        4nWmiofn3f+xs5SEP0TwEr6V0w==
+X-Google-Smtp-Source: APXvYqz65id5SFfU8rn9yGZIaRt4Ct2BsHn+rIV/wkq2ik8juXBU/IcNLZAF70j8d/PFOU51TXB9nQ==
+X-Received: by 2002:a1c:8a:: with SMTP id 132mr9007662wma.44.1560153780728;
+        Mon, 10 Jun 2019 01:03:00 -0700 (PDT)
+Received: from dell ([2.31.167.229])
+        by smtp.gmail.com with ESMTPSA id s8sm16879674wra.55.2019.06.10.01.02.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2019 01:03:00 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 09:02:58 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
+        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
+        linus.walleij@linaro.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, jlhugo@gmail.com,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/8] pinctrl: msm: Add ability for drivers to supply a
+ reserved GPIO list
+Message-ID: <20190610080258.GI4797@dell>
+References: <20190605114302.22509-1-lee.jones@linaro.org>
+ <20190605114302.22509-3-lee.jones@linaro.org>
+ <20190608040610.GJ24059@builder>
 MIME-Version: 1.0
-In-Reply-To: <68e72598-8d53-115c-14a2-9d3042165aff@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560153688; bh=J6mu682EDtgVy1AkOKuHMBhb1MvhvrxrmHSYVdgfyu0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=QZwvNMH57JHS9D83nppsjdvlOAZnb4X5DZhNZW9mrWofRmO44rMUvM925DOc+wlUv
-         49YAPOWXa4ZYOZ1907WDID+ovFQLi7NJAuOipzpeKfysNmrhuIj1FeA8KQIO0sYWew
-         pTvEvAKjwQFi0C1X6qn1NmJLVqhBi7rNp+NfM9qSCv2Lhs2sPSC3gEbae6+ncTN804
-         52DhV+w/vwX//9EDSFyzNLbL8Qbg9GI5F2cIQEtEa1WfMt1cjhD0frxh8jlYq+Jh8x
-         7Sh13Sd6eQBFDDfa/fadlfZSASPwpjFDXUGpOW9wIj9tvCPnyBSBOkMEa/qALeVr6c
-         EfTmGtG6txxIg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190608040610.GJ24059@builder>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 07 Jun 2019, Bjorn Andersson wrote:
 
-On 07/06/2019 21:53, Dmitry Osipenko wrote:
-> 07.06.2019 16:35, Peter Ujfalusi =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->>
->> On 07/06/2019 15.58, Jon Hunter wrote:
->>>> Imho if you can explain it without using 'HACK' in the sentences it
->>>> might be OK, but it does not feel right.
->>>
->>> I don't perceive this as a hack. Although from looking at the
->>> description of the src/dst_maxburst these are burst size with regard to
->>> the device, so maybe it is a stretch.
->>>
->>>> However since your ADMA and ADMIF is highly coupled and it does needs
->>>> special maxburst information (burst and allocated FIFO depth) I would
->>>> rather use src_maxburst/dst_maxburst alone for DEV_TO_MEM/MEM_TO_DEV:
->>>>
->>>> ADMA_BURST_SIZE(maxburst)	((maxburst) & 0xff)
->>>> ADMA_FIFO_SIZE(maxburst)	(((maxburst) >> 8) & 0xffffff)
->>>>
->>>> So lower 1 byte is the burst value you want from ADMA
->>>> the other 3 bytes are the allocated FIFO size for the given ADMAIF cha=
-nnel.
->>>>
->>>> Sure, you need a header for this to make sure there is no
->>>> misunderstanding between the two sides.
->>>
->>> I don't like this because as I mentioned to Dmitry, the ADMA can perfor=
-m
->>> memory-to-memory transfers where such encoding would not be applicable.
->>
->> mem2mem does not really use dma_slave_config, it is for used by
->> is_slave_direction() =3D=3D true type of transfers.
->>
->> But true, if you use ADMA against anything other than ADMAIF then this
->> might be not right for non cyclic transfers.
->>
->>> That does not align with the description in the
->>> include/linux/dmaengine.h either.
->>
->> True.
->>
->>>> Or pass the allocated FIFO size via maxburst and then the ADMA driver
->>>> will pick a 'good/safe' burst value for it.
->>>>
->>>> Or new member, but do you need two of them for src/dst? Probably
->>>> fifo_depth is better word for it, or allocated_fifo_depth.
->>>
->>> Right, so looking at the struct dma_slave_config we have ...
->>>
->>> u32 src_maxburst;
->>> u32 dst_maxburst;
->>> u32 src_port_window_size;
->>> u32 dst_port_window_size;
->>>
->>> Now if we could make these window sizes a union like the following this
->>> could work ...
->>>
->>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
->>> index 8fcdee1c0cf9..851251263527 100644
->>> --- a/include/linux/dmaengine.h
->>> +++ b/include/linux/dmaengine.h
->>> @@ -360,8 +360,14 @@ struct dma_slave_config {
->>>         enum dma_slave_buswidth dst_addr_width;
->>>         u32 src_maxburst;
->>>         u32 dst_maxburst;
->>> -       u32 src_port_window_size;
->>> -       u32 dst_port_window_size;
->>> +       union {
->>> +               u32 port_window_size;
->>> +               u32 port_fifo_size;
->>> +       } src;
->>> +       union {
->>> +               u32 port_window_size;
->>> +               u32 port_fifo_size;
->>> +       } dst;
->>
->> What if in the future someone will have a setup where they would need bo=
-th?
->>
->> So not sure. Your problems are coming from a split DMA setup where the
->> two are highly coupled, but sits in a different place and need to be
->> configured as one device.
->>
->> I think xilinx_dma is facing with similar issues and they have a custom
->> API to set parameters which does not fit or is peripheral specific:
->> include/linux/dma/xilinx_dma.h
->>
->> Not sure if that is an acceptable solution.
->=20
-> If there are no other drivers with the exactly same requirement, then
-> the custom API is an a good variant given that there is a precedent
-> already. It is always possible to convert to a common thing later on
-> since that's all internal to kernel.
->=20
-> Jon / Sameer, you should check all the other drivers thoroughly to find
-> anyone who is doing the same thing as you need in order to achieve
-> something that is really common. I'm also wondering if it will be
-> possible to make dma_slave_config more flexible in order to start
-> accepting vendor specific properties in a somewhat common fashion, maybe
-> Vinod and Dan already have some thoughts on it? Apparently there is
-> already a need for the customization and people are just starting to
-> invent their own thing, but maybe that's fine too. That's really up to
-> subsys maintainer to decide in what direction to steer.
+> On Wed 05 Jun 04:42 PDT 2019, Lee Jones wrote:
+> 
+> > When booting MSM based platforms with Device Tree or some ACPI
+> > implementations, it is possible to provide a list of reserved pins
+> > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
+> > However some ACPI tables are not populated with this information,
+> > thus it has to come from a knowledgable device driver instead.
+> > 
+> > Here we provide the MSM common driver with additional support to
+> > parse this informtion and correctly populate the widely used
+> > 'valid_mask'.
+> > 
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/pinctrl/qcom/pinctrl-msm.c | 18 ++++++++++++++++++
+> >  drivers/pinctrl/qcom/pinctrl-msm.h |  1 +
+> >  2 files changed, 19 insertions(+)
+> > 
+> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> > index ee8119879c4c..3ac740b36508 100644
+> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> > @@ -607,8 +607,23 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip)
+> >  	int ret;
+> >  	unsigned int len, i;
+> >  	unsigned int max_gpios = pctrl->soc->ngpios;
+> > +	const int *reserved = pctrl->soc->reserved_gpios;
+> >  	u16 *tmp;
+> >  
+> > +	/* Driver provided reserved list overrides DT and ACPI */
+> > +	if (reserved) {
+> > +		bitmap_fill(chip->valid_mask, max_gpios);
+> > +		for (i = 0; reserved[i] >= 0; i++) {
+> > +			if (i >= max_gpios || reserved[i] >= max_gpios) {
+> 
+> reserved is a list of GPIOs to reserve, I don't see a reason to check
+> if that list is longer than the number of GPIOs (i.e. the first half of
+> the condition).
+> 
+> It wouldn't make sense to be, but there's no logical issue with it and I
+> had to read the conditional a few extra times to be sure what was going
+> on.
 
-I am not a fan of having custom APIs, however, I would agree that
-extending the dma_slave_config to allow a DMA specific structure to be
-passed with additional configuration would be useful in this case as
-well as the Xilinx case.
+If nothing else, it's an early hard stop in case someone forgot to
+terminate the reserved array.
 
-Cheers
-Jon
+> Apart from that you have my
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
---=20
-nvpublic
+Thanks Bjorn.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
