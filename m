@@ -2,657 +2,193 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AA7C31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82986C31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 356822082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C942082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTpaYcFy"
+	dkim=pass (1024-bit key) header.d=aampusa.onmicrosoft.com header.i=@aampusa.onmicrosoft.com header.b="PQRIH20c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388207AbfFJRjF (ORCPT
+        id S2388254AbfFJRke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:39:05 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42211 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfFJRjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:39:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id s184so6846109oie.9;
-        Mon, 10 Jun 2019 10:39:04 -0700 (PDT)
+        Mon, 10 Jun 2019 13:40:34 -0400
+Received: from mail-eopbgr700137.outbound.protection.outlook.com ([40.107.70.137]:1605
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726781AbfFJRke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:40:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7bKdEVL+h8j/JpQsast/zu7c4K4e59AmfWXb+kluewI=;
-        b=YTpaYcFyXMmASnPBHJzzwYOHTqw6WBJeo/f0GJzVVQYqQRo67CZaZesrdHFiUQXBm1
-         le5ykxJWz/PGyGxp2TtPQxoeuyey4g5+dUILt+iGoMyuoEW2JakAzppWSQycuyzirVKU
-         2uUn97YF6gUJIlCm36WJGwmCTLIq27EunBRD3YduOXcvm5NsKoAm3rR6GakVmUzkJEjx
-         135SJ1zpuLPryoVJYonhPCdp4hlLaf0InABcTzYWb783nPQgGQamstnm0F7kwGLC/R2E
-         xBSeOdIMl47Vuw6fuXMtsalPeQpzfy/1bAMasCnWTkNiugO0QOS4DSXLjpi0BTxakeX9
-         uCuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=7bKdEVL+h8j/JpQsast/zu7c4K4e59AmfWXb+kluewI=;
-        b=gApsWqNrC5i17/lkE3XOfCjY+xAqPu5OBcncsEwstQu62zJ9U6tlRNjFa+Bul4jdrb
-         3VMI/oBaICX5I09EjvqlLXVv9PndLnLskBTl/kMtCaQ4deS5YHKGhq44fjZD0PP6pdMM
-         wlF1mer1lHBz+5U6+/dSRBQwJwNZUleyp7qsGua04BmuFx3/hgj+ZuT9I5FEf5yGWSvi
-         tj8hGqIz5KDuzyvnF0fWCrFebV9RMvDXWer0IXxrocOGWf0buvN7ATHo0IQLMA0rgXHP
-         sJM3w9N9hBX6yoKKIKMEA5nLDM5MqbrKPBGWQZ2wkryLjhboNr9Q5Oid9oHRLYZ8wkUQ
-         V7Qw==
-X-Gm-Message-State: APjAAAVkGilmn+XJ9x5aq1zYU7LoG3slKESCk+JSxHiylswaJJxcMQe1
-        EOT1YGgvCK+AphzLV3e/ijrr1mE=
-X-Google-Smtp-Source: APXvYqy3/SHfLibZP517HR0+LSWugd86233/KxjwsI4epdLTgvVPH9EKCMJ0rOGzkF9VTb43WEr5Fw==
-X-Received: by 2002:aca:3944:: with SMTP id g65mr254135oia.24.1560188343629;
-        Mon, 10 Jun 2019 10:39:03 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id n95sm3775707otn.65.2019.06.10.10.39.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 10:39:02 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:38f9:6c72:91f7:4c73])
-        by serve.minyard.net (Postfix) with ESMTPSA id 24B701800CD;
-        Mon, 10 Jun 2019 17:39:02 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 12:39:00 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Asmaa Mnebhi <Asmaa@mellanox.com>
-Cc:     wsa@the-dreams.de, vadimp@mellanox.com, michaelsh@mellanox.com,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v11 1/1] Add support for IPMB driver
-Message-ID: <20190610173900.GA5545@minyard.net>
-Reply-To: minyard@acm.org
-References: <cover.1560177127.git.Asmaa@mellanox.com>
- <6c41569e8a8611db62a69d777042a8ea6b57464f.1560177127.git.Asmaa@mellanox.com>
+ d=aampusa.onmicrosoft.com; s=selector2-aampusa-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fj1uFECfJDHl4P+EL66v5LSDyE1EngzM6NHQX1Kvycg=;
+ b=PQRIH20ctWFhU25O4aNH/GMMf0i1rYVLIdDZDZGuMraj/2C6OpQ0Hx1CkWfjQqNqnODI9Wtm3fJW3Jpsvdbbronxz6Kh7j8R1994flZv7OPzgabo1By6yZTpG6mmsOpc1Kmjv3wsmHBF90buFIP4lnTuyO0XbWFE3l394f8xF7w=
+Received: from BL0PR07MB4115.namprd07.prod.outlook.com (52.132.10.149) by
+ BL0PR07MB5523.namprd07.prod.outlook.com (20.177.242.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.17; Mon, 10 Jun 2019 17:40:29 +0000
+Received: from BL0PR07MB4115.namprd07.prod.outlook.com
+ ([fe80::f064:5129:63c6:d3e]) by BL0PR07MB4115.namprd07.prod.outlook.com
+ ([fe80::f064:5129:63c6:d3e%6]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
+ 17:40:29 +0000
+From:   Ken Sloat <KSloat@aampglobal.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
+        "alexandre.belloni@free-electrons.com" 
+        <alexandre.belloni@free-electrons.com>,
+        "wim@iguana.be" <wim@iguana.be>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ken Sloat <KSloat@aampglobal.com>
+Subject: RE: [RFE]: watchdog: atmel: atmel-sama5d4-wdt
+Thread-Topic: [RFE]: watchdog: atmel: atmel-sama5d4-wdt
+Thread-Index: AdUfoOr5PB/8HxffRU28PtnqCbe4YAACJOOAAAJHDgA=
+Date:   Mon, 10 Jun 2019 17:40:29 +0000
+Message-ID: <BL0PR07MB4115CEC4D8CB4A9610E0EA78AD130@BL0PR07MB4115.namprd07.prod.outlook.com>
+References: <BL0PR07MB41152EDB169FE9ED1AD3B4C9AD130@BL0PR07MB4115.namprd07.prod.outlook.com>
+ <20190610162811.GA11270@roeck-us.net>
+In-Reply-To: <20190610162811.GA11270@roeck-us.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=KSloat@aampglobal.com; 
+x-originating-ip: [100.3.71.115]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c862fada-eca5-4257-b50d-08d6edcabb04
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR07MB5523;
+x-ms-traffictypediagnostic: BL0PR07MB5523:
+x-microsoft-antispam-prvs: <BL0PR07MB5523F3FB39E752F78FB80D2AAD130@BL0PR07MB5523.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(136003)(376002)(39840400004)(346002)(13464003)(189003)(199004)(66556008)(68736007)(14454004)(64756008)(53546011)(66476007)(486006)(476003)(7696005)(5660300002)(74316002)(2906002)(4326008)(14444005)(66446008)(256004)(71190400001)(6116002)(66946007)(186003)(55016002)(71200400001)(54906003)(6506007)(3846002)(52536014)(229853002)(9686003)(478600001)(86362001)(76176011)(81166006)(81156014)(8936002)(33656002)(7736002)(80792005)(73956011)(72206003)(8676002)(11346002)(26005)(305945005)(99286004)(76116006)(25786009)(6436002)(102836004)(6916009)(66066001)(316002)(107886003)(6246003)(53936002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR07MB5523;H:BL0PR07MB4115.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: aampglobal.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /jJVmP2t/m5S4mnwzTOR2ZQHpSbuLhyVU2KEu4EKGBz4nuAR1FEpqU6Y6PITgY8M4JJtSL9ookqf/WkWFCc8PPCwgN673zOzRyQfEYsFMAP5BuL1at00EAH/I3lFC8YNXNVQCwtiC75kJwR3tJoEFKtCvIKuKpY2elTRStd22mIKek2ZkM8l8Eeo9USKnxgF5k14eCN4bOLDT5YcnLgeLx99OWS7WDGzTJgRnNvy9rv9nI2chWi5R1Nq2wV/hhjB5J0hhURhHtvbZtTX9aPVErfUArPx/iZMlC3gNF3+SB4e9//mDB0YhmYqaq3XctdYL6SNm9MRcX6XRxpo2gO61mcKqoCMZNEncPOIpkxe98vw8q9R4lPP3yelw9IVIA5TaOCnjWAFsRmaONCXHUgjt44+ImX9SXFgSyN59v712hY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c41569e8a8611db62a69d777042a8ea6b57464f.1560177127.git.Asmaa@mellanox.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: aampglobal.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c862fada-eca5-4257-b50d-08d6edcabb04
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 17:40:29.4829
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e20e3a66-8b9e-46e9-b859-cb654c1ec6ea
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ken.sloat@aampglobal.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5523
+X-MS-Exchange-CrossPremises-AuthAs: Internal
+X-MS-Exchange-CrossPremises-AuthMechanism: 04
+X-MS-Exchange-CrossPremises-AuthSource: BL0PR07MB4115.namprd07.prod.outlook.com
+X-MS-Exchange-CrossPremises-TransportTrafficType: Email
+X-MS-Exchange-CrossPremises-TransportTrafficSubType: 
+X-MS-Exchange-CrossPremises-SCL: 1
+X-MS-Exchange-CrossPremises-messagesource: StoreDriver
+X-MS-Exchange-CrossPremises-BCC: 
+X-MS-Exchange-CrossPremises-originalclientipaddress: 100.3.71.115
+X-MS-Exchange-CrossPremises-transporttraffictype: Email
+X-MS-Exchange-CrossPremises-transporttrafficsubtype: 
+X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
+X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
+X-OrganizationHeadersPreserved: BL0PR07MB5523.namprd07.prod.outlook.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:38:39AM -0400, Asmaa Mnebhi wrote:
-> Support receiving IPMB requests on a Satellite MC from the BMC.
-> Once a response is ready, this driver will send back a response
-> to the BMC via the IPMB channel.
+> -----Original Message-----
+> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
+> Sent: Monday, June 10, 2019 12:28 PM
+> To: Ken Sloat <KSloat@aampglobal.com>
+> Cc: Nicolas.Ferre@microchip.com; alexandre.belloni@free-electrons.com;
+> wim@iguana.be; linux-arm-kernel@lists.infradead.org; linux-
+> watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [RFE]: watchdog: atmel: atmel-sama5d4-wdt
+>=20
+> [This is an EXTERNAL EMAIL]
+> ________________________________
+>=20
+> On Mon, Jun 10, 2019 at 03:51:52PM +0000, Ken Sloat wrote:
+> > Hello Nicolas,
+> >
+> > I wanted to open a discussion proposing new functionality to allow
+> > disabling of the watchdog timer upon entering suspend in the SAMA5D2/4.
+> >
+> > Typical use case of a hardware watchdog timer in the kernel is a
+> > userspace application opens the watchdog timer and periodically
+> > "kicks" it. If the application hits a deadlock somewhere and is no
+> > longer able to kick it, then the watchdog intervenes and often resets
+> > the processor. Such is the case for the Atmel driver (which also
+> > allows a watchdog interrupt to be asserted in lieu of a system reset). =
+In
+> most use cases, upon entering a low power/suspend state, the application
+> will no longer be able to "kick" the watchdog. If the watchdog is not dis=
+abled
+> or kicked via another method, then it will reset the system. This is the =
+current
+> behavior of the Atmel driver as of today.
+> >
+> > The watchdog peripheral itself does have a "WDIDLEHLT" bit however,
+> > and this is enabled via the "atmel,idle-halt" dt property. However,
+> > this is not very useful, as it literally only makes the watchdog count
+> > when the CPU is active. This results in non-deterministic triggering
+> > of the WDT and means that if a critical application were to crash, it
+> > may be quite a long time before the WDT would ever trigger. Below is a
+> > similar statement made in the device-tree doc for this
+> > peripheral:
+> >
+> > - atmel,idle-halt: present if you want to stop the watchdog when the CP=
+U is
+> >                  in idle state.
+> >       CAUTION: This property should be used with care, it actually make=
+s the
+> >       watchdog not counting when the CPU is in idle state, therefore th=
+e
+> >       watchdog reset time depends on mean CPU usage and will not reset =
+at
+> all
+> >       if the CPU stop working while it is in idle state, which is proba=
+bly
+> >       not what you want.
+> >
+> > It seems to me, that it would be logical and useful to introduce a new
+> > property that would cause the Atmel WDT to disable on suspend and
+> > re-enable on resume. It also appears that the WDT is re-initialized any=
+ways
+> upon resume, so the only piece missing here would really be a dt flag and=
+ a
+> call to disable.
+> >
+Hello Guenter,
 
-I should have responded to you earlier email sooner.
+> Wondering - why would this need a dt property ? That would be quite
+> unusual. Is there a condition where one would _not_ want the watchdog to
+> stop on suspend ?
 
-On the reference_rq_sa[], thing, I just think it is a bad idea.
-It means you can only ever respond to the first device that has
-sent you a message.  There's nothing in the IPMI or IPMB spec
-that has this requirement, and there are known systems out
-there that don't work this way.
+Good point, not sure there would be.
 
-It may be that this saves things on the IPMB from arbitrarily
-sending messages to other things on the IPMB, but that can still
-happen in this case, it could just only send them to one place.
-As long as the response bit is set, these messages really can't
-be harmful, anyway.  And if you really wanted to go all the way
-with the restriction, why not just not respond at all unless the
-request was from 0x20?
+> If anything I would suggest to drop atmel,idle-halt completely; it really=
+ looks
+> like it would make the watchdog unreliable.
+>=20
+I agree, while it is a function of the SAMA5, it seems to me that it is not=
+ very=20
+useful in Linux, unless I am missing something. I will wait for Nicolas to =
+chime=20
+in before I submit anything. I can certainly submit separate patches for ea=
+ch,
+I already have something working for this.
 
-Plus, the way it is implemented, it will still deliver the
-message to userland, userland will process it, do a write, and
-the write will fail.  That's really not a very good idea.
+> Thanks,
+> Guenter
 
-So I am against this implementation.
-
-I would be ok with checking that the response bit is set in
-writes.  That should provide plenty of protection against
-arbitrary commands being issued through this interface, and
-is in line with the specification.
-
--corey
-
-> 
-> Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
-> Acked-by: vadimp@mellanox.com
-> ---
->  Documentation/IPMB.txt           | 103 +++++++++++
->  drivers/char/ipmi/Kconfig        |   8 +
->  drivers/char/ipmi/Makefile       |   1 +
->  drivers/char/ipmi/ipmb_dev_int.c | 383 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 495 insertions(+)
->  create mode 100644 Documentation/IPMB.txt
->  create mode 100644 drivers/char/ipmi/ipmb_dev_int.c
-> 
-> diff --git a/Documentation/IPMB.txt b/Documentation/IPMB.txt
-> new file mode 100644
-> index 0000000..7160d53
-> --- /dev/null
-> +++ b/Documentation/IPMB.txt
-> @@ -0,0 +1,103 @@
-> +==============================
-> +IPMB Driver for a Satellite MC
-> +==============================
-> +
-> +The Intelligent Platform Management Bus or IPMB, is an
-> +I2C bus that provides a standardized interconnection between
-> +different boards within a chassis. This interconnection is
-> +between the baseboard management (BMC) and chassis electronics.
-> +IPMB is also associated with the messaging protocol through the
-> +IPMB bus.
-> +
-> +The devices using the IPMB are usually management
-> +controllers that perform management functions such as servicing
-> +the front panel interface, monitoring the baseboard,
-> +hot-swapping disk drivers in the system chassis, etc...
-> +
-> +When an IPMB is implemented in the system, the BMC serves as
-> +a controller to give system software access to the IPMB. The BMC
-> +sends IPMI requests to a device (usually a Satellite Management
-> +Controller or Satellite MC) via IPMB and the device
-> +sends a response back to the BMC.
-> +
-> +For more information on IPMB and the format of an IPMB message,
-> +refer to the IPMB and IPMI specifications.
-> +
-> +IPMB driver for Satellite MC
-> +----------------------------
-> +
-> +ipmb-dev-int - This is the driver needed on a Satellite MC to
-> +receive IPMB messages from a BMC and send a response back.
-> +This driver works with the I2C driver and a userspace
-> +program such as OpenIPMI:
-> +
-> +1) It is an I2C slave backend driver. So, it defines a callback
-> +function to set the Satellite MC as an I2C slave.
-> +This callback function handles the received IPMI requests.
-> +
-> +2) It defines the read and write functions to enable a user
-> +space program (such as OpenIPMI) to communicate with the kernel.
-> +
-> +
-> +Load the IPMB driver
-> +--------------------
-> +
-> +The driver needs to be loaded at boot time or manually first.
-> +First, make sure you have the following in your config file:
-> +CONFIG_IPMB_DEVICE_INTERFACE=y
-> +
-> +1) If you want the driver to be loaded at boot time:
-> +
-> +a) Add this entry to your ACPI table, under the appropriate SMBus:
-> +
-> +Device (SMB0) // Example SMBus host controller
-> +{
-> +  Name (_HID, "<Vendor-Specific HID>") // Vendor-Specific HID
-> +  Name (_UID, 0) // Unique ID of particular host controller
-> +  :
-> +  :
-> +    Device (IPMB)
-> +    {
-> +      Name (_HID, "IPMB0001") // IPMB device interface
-> +      Name (_UID, 0) // Unique device identifier
-> +    }
-> +}
-> +
-> +b) Example for device tree:
-> +
-> +&i2c2 {
-> +         status = "okay";
-> + 
-> +         ipmb@10 {
-> +                 compatible = "ipmb-dev";
-> +                 reg = <0x10>;
-> +         };
-> +};
-> +
-> +2) Manually from Linux:
-> +modprobe ipmb-dev-int
-> +
-> +
-> +Instantiate the device
-> +----------------------
-> +
-> +After loading the driver, you can instantiate the device as
-> +described in 'Documentation/i2c/instantiating-devices'.
-> +If you have multiple BMCs, each connected to your Satellite MC via
-> +a different I2C bus, you can instantiate a device for each of
-> +those BMCs.
-> +The name of the instantiated device contains the I2C bus number
-> +associated with it as follows:
-> +
-> +BMC1 ------ IPMB/I2C bus 1 ---------|   /dev/ipmb-1
-> +				Satellite MC
-> +BMC1 ------ IPMB/I2C bus 2 ---------|   /dev/ipmb-2
-> +
-> +For instance, you can instantiate the ipmb-dev-int device from
-> +user space at the 7 bit address 0x10 on bus 2:
-> +
-> +  # echo ipmb-dev 0x1010 > /sys/bus/i2c/devices/i2c-2/new_device
-> +
-> +This will create the device file /dev/ipmb-2, which can be accessed
-> +by the user space program. The device needs to be instantiated
-> +before running the user space program.
-> diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
-> index caac5d2..811fccb 100644
-> --- a/drivers/char/ipmi/Kconfig
-> +++ b/drivers/char/ipmi/Kconfig
-> @@ -75,6 +75,14 @@ config IPMI_SSIF
->  	 have a driver that must be accessed over an I2C bus instead of a
->  	 standard interface.  This module requires I2C support.
->  
-> +config IPMB_DEVICE_INTERFACE
-> +       tristate 'IPMB Interface handler'
-> +       depends on I2C_SLAVE
-> +       help
-> +         Provides a driver for a device (Satellite MC) to
-> +         receive requests and send responses back to the BMC via
-> +         the IPMB interface. This module requires I2C support.
-> +
->  config IPMI_POWERNV
->         depends on PPC_POWERNV
->         tristate 'POWERNV (OPAL firmware) IPMI interface'
-> diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
-> index 3f06b20..0822adc 100644
-> --- a/drivers/char/ipmi/Makefile
-> +++ b/drivers/char/ipmi/Makefile
-> @@ -26,3 +26,4 @@ obj-$(CONFIG_IPMI_KCS_BMC) += kcs_bmc.o
->  obj-$(CONFIG_ASPEED_BT_IPMI_BMC) += bt-bmc.o
->  obj-$(CONFIG_ASPEED_KCS_IPMI_BMC) += kcs_bmc_aspeed.o
->  obj-$(CONFIG_NPCM7XX_KCS_IPMI_BMC) += kcs_bmc_npcm7xx.o
-> +obj-$(CONFIG_IPMB_DEVICE_INTERFACE) += ipmb_dev_int.o
-> diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
-> new file mode 100644
-> index 0000000..7241206
-> --- /dev/null
-> +++ b/drivers/char/ipmi/ipmb_dev_int.c
-> @@ -0,0 +1,383 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * IPMB driver to receive a request and send a response
-> + *
-> + * Copyright (C) 2018 Mellanox Techologies, Ltd.
-> + *
-> + * This was inspired by Brendan Higgins' ipmi-bmc-bt-i2c driver.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/poll.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/wait.h>
-> +
-> +#define MAX_MSG_LEN		128
-> +#define IPMB_REQUEST_LEN_MIN	7
-> +#define NETFN_RSP_BIT_MASK	0x4
-> +#define REQUEST_QUEUE_MAX_LEN	256
-> +
-> +#define IPMB_MSG_LEN_IDX	0
-> +#define RQ_SA_8BIT_IDX		1
-> +#define NETFN_LUN_IDX		2
-> +
-> +#define GET_7BIT_ADDR(addr_8bit)	(addr_8bit >> 1)
-> +#define GET_8BIT_ADDR(addr_7bit)	((addr_7bit << 1) & 0xff)
-> +
-> +#define IPMB_MSG_PAYLOAD_LEN_MAX (MAX_MSG_LEN - IPMB_REQUEST_LEN_MIN - 1)
-> +
-> +#define SMBUS_MSG_HEADER_LENGTH	2
-> +#define SMBUS_MSG_IDX_OFFSET	(SMBUS_MSG_HEADER_LENGTH + 1)
-> +
-> +#define GET_8BIT_ADDR(addr_7bit) ((addr_7bit << 1) & 0xff)
-> +
-> +#define UNPOPULATED_RQ_SA	0xff
-> +#define MAX_I2C_BUS		128
-> +
-> +/* Reference 7-bit rq_sa */
-> +static u8 reference_rq_sa[MAX_I2C_BUS];
-> +
-> +struct ipmb_msg {
-> +	u8 len;
-> +	u8 rs_sa;
-> +	u8 netfn_rs_lun;
-> +	u8 checksum1;
-> +	u8 rq_sa;
-> +	u8 rq_seq_rq_lun;
-> +	u8 cmd;
-> +	u8 payload[IPMB_MSG_PAYLOAD_LEN_MAX];
-> +	/* checksum2 is included in payload */
-> +} __packed;
-> +
-> +struct ipmb_request_elem {
-> +	struct list_head list;
-> +	struct ipmb_msg request;
-> +};
-> +
-> +struct ipmb_dev {
-> +	struct i2c_client *client;
-> +	struct miscdevice miscdev;
-> +	struct ipmb_msg request;
-> +	struct list_head request_queue;
-> +	atomic_t request_queue_len;
-> +	size_t msg_idx;
-> +	spinlock_t lock;
-> +	wait_queue_head_t wait_queue;
-> +	struct mutex file_mutex;
-> +};
-> +
-> +static inline struct ipmb_dev *to_ipmb_dev(struct file *file)
-> +{
-> +	return container_of(file->private_data, struct ipmb_dev, miscdev);
-> +}
-> +
-> +static ssize_t ipmb_read(struct file *file, char __user *buf, size_t count,
-> +			loff_t *ppos)
-> +{
-> +	struct ipmb_dev *ipmb_dev = to_ipmb_dev(file);
-> +	struct ipmb_request_elem *queue_elem;
-> +	struct ipmb_msg msg;
-> +	ssize_t ret;
-> +	int bus;
-> +
-> +	memset(&msg, 0, sizeof(msg));
-> +
-> +	spin_lock_irq(&ipmb_dev->lock);
-> +
-> +	while (list_empty(&ipmb_dev->request_queue)) {
-> +		spin_unlock_irq(&ipmb_dev->lock);
-> +
-> +		if (file->f_flags & O_NONBLOCK)
-> +			return -EAGAIN;
-> +
-> +		ret = wait_event_interruptible(ipmb_dev->wait_queue,
-> +				!list_empty(&ipmb_dev->request_queue));
-> +		if (ret)
-> +			return ret;
-> +
-> +		spin_lock_irq(&ipmb_dev->lock);
-> +	}
-> +
-> +	queue_elem = list_first_entry(&ipmb_dev->request_queue,
-> +					struct ipmb_request_elem, list);
-> +	memcpy(&msg, &queue_elem->request, sizeof(msg));
-> +	list_del(&queue_elem->list);
-> +	kfree(queue_elem);
-> +	atomic_dec(&ipmb_dev->request_queue_len);
-> +
-> +	spin_unlock_irq(&ipmb_dev->lock);
-> +
-> +	count = min_t(size_t, count, msg.len + 1);
-> +	if (copy_to_user(buf, &msg, count))
-> +		ret = -EFAULT;
-> +
-> +	bus = ipmb_dev->client->adapter->nr;
-> +	if (bus >= MAX_I2C_BUS)
-> +		ret = -EINVAL;
-> +
-> +	if (reference_rq_sa[bus] == UNPOPULATED_RQ_SA)
-> +		reference_rq_sa[bus] = GET_7BIT_ADDR(msg.rq_sa);
-> +
-> +	return ret < 0 ? ret : count;
-> +}
-> +
-> +static ssize_t ipmb_write(struct file *file, const char __user *buf,
-> +			size_t count, loff_t *ppos)
-> +{
-> +	struct ipmb_dev *ipmb_dev = to_ipmb_dev(file);
-> +	u8 rq_sa, netf_rq_lun, msg_len;
-> +	struct i2c_client rq_client;
-> +	u8 msg[MAX_MSG_LEN];
-> +	ssize_t ret;
-> +	int bus;
-> +
-> +	if (count > sizeof(msg))
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(&msg, buf, count))
-> +		return -EFAULT;
-> +
-> +	if (count < msg[0])
-> +		return -EINVAL;
-> +
-> +	bus = ipmb_dev->client->adapter->nr;
-> +	rq_sa = GET_7BIT_ADDR(msg[RQ_SA_8BIT_IDX]);
-> +	if (rq_sa != reference_rq_sa[bus])
-> +		return -EINVAL;
-> +
-> +	netf_rq_lun = msg[NETFN_LUN_IDX];
-> +	/*
-> +	 * subtract rq_sa and netf_rq_lun from the length of the msg passed to
-> +	 * i2c_smbus_write_block_data_local
-> +	 */
-> +	msg_len = msg[IPMB_MSG_LEN_IDX] - SMBUS_MSG_HEADER_LENGTH;
-> +
-> +	strcpy(rq_client.name, "ipmb_requester");
-> +	rq_client.adapter = ipmb_dev->client->adapter;
-> +	rq_client.flags = ipmb_dev->client->flags;
-> +	rq_client.addr = rq_sa;
-> +
-> +	ret = i2c_smbus_write_block_data(&rq_client, netf_rq_lun, msg_len,
-> +					msg + SMBUS_MSG_IDX_OFFSET);
-> +
-> +	return ret ? : count;
-> +}
-> +
-> +static unsigned int ipmb_poll(struct file *file, poll_table *wait)
-> +{
-> +	struct ipmb_dev *ipmb_dev = to_ipmb_dev(file);
-> +	unsigned int mask = POLLOUT;
-> +
-> +	mutex_lock(&ipmb_dev->file_mutex);
-> +	poll_wait(file, &ipmb_dev->wait_queue, wait);
-> +
-> +	if (atomic_read(&ipmb_dev->request_queue_len))
-> +		mask |= POLLIN;
-> +	mutex_unlock(&ipmb_dev->file_mutex);
-> +
-> +	return mask;
-> +}
-> +
-> +static const struct file_operations ipmb_fops = {
-> +	.owner	= THIS_MODULE,
-> +	.read	= ipmb_read,
-> +	.write	= ipmb_write,
-> +	.poll	= ipmb_poll,
-> +};
-> +
-> +/* Called with ipmb_dev->lock held. */
-> +static void ipmb_handle_request(struct ipmb_dev *ipmb_dev)
-> +{
-> +	struct ipmb_request_elem *queue_elem;
-> +
-> +	if (atomic_read(&ipmb_dev->request_queue_len) >=
-> +			REQUEST_QUEUE_MAX_LEN)
-> +		return;
-> +
-> +	queue_elem = kmalloc(sizeof(*queue_elem), GFP_ATOMIC);
-> +	if (!queue_elem)
-> +		return;
-> +
-> +	memcpy(&queue_elem->request, &ipmb_dev->request,
-> +		sizeof(struct ipmb_msg));
-> +	list_add(&queue_elem->list, &ipmb_dev->request_queue);
-> +	atomic_inc(&ipmb_dev->request_queue_len);
-> +	wake_up_all(&ipmb_dev->wait_queue);
-> +}
-> +
-> +static u8 ipmb_verify_checksum1(struct ipmb_dev *ipmb_dev, u8 rs_sa)
-> +{
-> +	/* The 8 lsb of the sum is 0 when the checksum is valid */
-> +	return (rs_sa + ipmb_dev->request.netfn_rs_lun +
-> +		ipmb_dev->request.checksum1);
-> +}
-> +
-> +static bool is_ipmb_request(struct ipmb_dev *ipmb_dev, u8 rs_sa)
-> +{
-> +	if (ipmb_dev->msg_idx >= IPMB_REQUEST_LEN_MIN) {
-> +		if (ipmb_verify_checksum1(ipmb_dev, rs_sa))
-> +			return false;
-> +
-> +		/*
-> +		 * Check whether this is an IPMB request or
-> +		 * response.
-> +		 * The 6 MSB of netfn_rs_lun are dedicated to the netfn
-> +		 * while the remaining bits are dedicated to the lun.
-> +		 * If the LSB of the netfn is cleared, it is associated
-> +		 * with an IPMB request.
-> +		 * If the LSB of the netfn is set, it is associated with
-> +		 * an IPMB response.
-> +		 */
-> +		if (!(ipmb_dev->request.netfn_rs_lun & NETFN_RSP_BIT_MASK))
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
-> +/*
-> + * The IPMB protocol only supports I2C Writes so there is no need
-> + * to support I2C_SLAVE_READ* events.
-> + * This i2c callback function only monitors IPMB request messages
-> + * and adds them in a queue, so that they can be handled by
-> + * receive_ipmb_request.
-> + */
-> +static int ipmb_slave_cb(struct i2c_client *client,
-> +			enum i2c_slave_event event, u8 *val)
-> +{
-> +	struct ipmb_dev *ipmb_dev = i2c_get_clientdata(client);
-> +	u8 *buf = (u8 *)&ipmb_dev->request;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&ipmb_dev->lock, flags);
-> +	switch (event) {
-> +	case I2C_SLAVE_WRITE_REQUESTED:
-> +		memset(&ipmb_dev->request, 0, sizeof(ipmb_dev->request));
-> +		ipmb_dev->msg_idx = 0;
-> +
-> +		/*
-> +		 * At index 0, ipmb_msg stores the length of msg,
-> +		 * skip it for now.
-> +		 * The len will be populated once the whole
-> +		 * buf is populated.
-> +		 *
-> +		 * The I2C bus driver's responsibility is to pass the
-> +		 * data bytes to the backend driver; it does not
-> +		 * forward the i2c slave address.
-> +		 * Since the first byte in the IPMB message is the
-> +		 * address of the responder, it is the responsibility
-> +		 * of the IPMB driver to format the message properly.
-> +		 * So this driver prepends the address of the responder
-> +		 * to the received i2c data before the request message
-> +		 * is handled in userland.
-> +		 */
-> +		buf[++ipmb_dev->msg_idx] = GET_8BIT_ADDR(client->addr);
-> +		break;
-> +
-> +	case I2C_SLAVE_WRITE_RECEIVED:
-> +		if (ipmb_dev->msg_idx >= sizeof(struct ipmb_msg))
-> +			break;
-> +
-> +		buf[++ipmb_dev->msg_idx] = *val;
-> +		break;
-> +
-> +	case I2C_SLAVE_STOP:
-> +		ipmb_dev->request.len = ipmb_dev->msg_idx;
-> +
-> +		if (is_ipmb_request(ipmb_dev, GET_8BIT_ADDR(client->addr)))
-> +			ipmb_handle_request(ipmb_dev);
-> +		break;
-> +
-> +	default:
-> +		break;
-> +	}
-> +	spin_unlock_irqrestore(&ipmb_dev->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipmb_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct ipmb_dev *ipmb_dev;
-> +	int ret;
-> +
-> +	ipmb_dev = devm_kzalloc(&client->dev, sizeof(*ipmb_dev),
-> +					GFP_KERNEL);
-> +	if (!ipmb_dev)
-> +		return -ENOMEM;
-> +
-> +	spin_lock_init(&ipmb_dev->lock);
-> +	init_waitqueue_head(&ipmb_dev->wait_queue);
-> +	atomic_set(&ipmb_dev->request_queue_len, 0);
-> +	INIT_LIST_HEAD(&ipmb_dev->request_queue);
-> +
-> +	mutex_init(&ipmb_dev->file_mutex);
-> +
-> +	ipmb_dev->miscdev.minor = MISC_DYNAMIC_MINOR;
-> +
-> +	ipmb_dev->miscdev.name = devm_kasprintf(&client->dev, GFP_KERNEL,
-> +						"%s%d", "ipmb-",
-> +						client->adapter->nr);
-> +	ipmb_dev->miscdev.fops = &ipmb_fops;
-> +	ipmb_dev->miscdev.parent = &client->dev;
-> +	ret = misc_register(&ipmb_dev->miscdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ipmb_dev->client = client;
-> +	i2c_set_clientdata(client, ipmb_dev);
-> +	ret = i2c_slave_register(client, ipmb_slave_cb);
-> +	if (ret) {
-> +		misc_deregister(&ipmb_dev->miscdev);
-> +		return ret;
-> +	}
-> +
-> +	reference_rq_sa[client->adapter->nr] = UNPOPULATED_RQ_SA;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipmb_remove(struct i2c_client *client)
-> +{
-> +	struct ipmb_dev *ipmb_dev = i2c_get_clientdata(client);
-> +
-> +	i2c_slave_unregister(client);
-> +	misc_deregister(&ipmb_dev->miscdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id ipmb_id[] = {
-> +	{ "ipmb-dev", 0 },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ipmb_id);
-> +
-> +static const struct acpi_device_id acpi_ipmb_id[] = {
-> +	{ "IPMB0001", 0 },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, acpi_ipmb_id);
-> +
-> +static struct i2c_driver ipmb_driver = {
-> +	.driver = {
-> +		.owner = THIS_MODULE,
-> +		.name = "ipmb-dev",
-> +		.acpi_match_table = ACPI_PTR(acpi_ipmb_id),
-> +	},
-> +	.probe = ipmb_probe,
-> +	.remove = ipmb_remove,
-> +	.id_table = ipmb_id,
-> +};
-> +module_i2c_driver(ipmb_driver);
-> +
-> +MODULE_AUTHOR("Mellanox Technologies");
-> +MODULE_DESCRIPTION("IPMB driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.1.2
-> 
+Thanks,
+Ken Sloat
