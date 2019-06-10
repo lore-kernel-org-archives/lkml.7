@@ -2,103 +2,114 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9B9C43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE1AC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE4A2089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:05:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="LURtpcrR"
+	by mail.kernel.org (Postfix) with ESMTP id 4BC952089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 21:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389731AbfFJVFP (ORCPT
+        id S2389829AbfFJVGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 17:05:15 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43096 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388342AbfFJVFP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 17:05:15 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w79so7303189oif.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 14:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oSQd/dSw9k2CrxkKH2qz7mRm8NK534f/ZzuWAbekOrY=;
-        b=LURtpcrReLRABUoMAIwSom5ga/OKgTe0xfdabX/kdRy9Rm7RCH5sAzwzDhmTkEKnH1
-         IUCzTbXO68bH57ix5kN28ABttmSEFv4JeZLTQnqkq/s8K2j5PQrtePsBpaN8KN8csrYK
-         RJR/syXc8cefiQ4U/QNL86rZLegUZ628MfkNe9PhFHuWcnLI+4oOFFxMLqwrrVmByY8K
-         MnU4gBRBR52HaQHUgomf8H5XrpVPDSZC1EhTLLCs63UVe9quEay6lPuwybaLuBAYETIb
-         xqS+39iZgiXEyEga76eFd4XzW8I6f4fHc4pBbPFaq4HYv6fXzAZW02avChLkdlf5FdZk
-         qmTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oSQd/dSw9k2CrxkKH2qz7mRm8NK534f/ZzuWAbekOrY=;
-        b=rHegYeWfB+JHwDkFbeXwWk8Jn/BL6AmNSdZIseu8ROMY0Ha95GDtvX1TU0OYvHqDwv
-         bE6FzmzuuzX1WKBqbeVDYf7vmOUuDtsdWccJyPwK7w8UaW8kDQN9mgDJObKEMAehjLdS
-         zXz25ADFDRb3hc7JFxitSxLQ9v1QZ9Ry7xrcA5s8NHeJQ0w9qLfCYNo/Jt3s7vDMIZz0
-         Jec6zofr+pyVxgzdbyu7kWNOwAg2iBTlFvC5/I2h0Y3immKf8FBQYklnd95yICM/URB6
-         kyuA58NocUULnAw5DLESM9wqxJCpujLAnLMft4AMgB2mNekWO8Gc6xbHFNyDy2YhKVNH
-         GWJw==
-X-Gm-Message-State: APjAAAW4PD8xS1Wv8ick3j2lofFSK9AilxyfIvOr8x8/dABwDj62IBlw
-        G0MfEPvj39NkjYljqgrMxY5yNw==
-X-Google-Smtp-Source: APXvYqzoUEQI9eCBkBS8xmW/CfZpKBfLzCJjJsS97rILi72k6uSNDleje2blyLFm/Je8nshzhc0rVA==
-X-Received: by 2002:aca:ec0f:: with SMTP id k15mr12966767oih.13.1560200714329;
-        Mon, 10 Jun 2019 14:05:14 -0700 (PDT)
-Received: from [192.168.1.5] (072-182-052-210.res.spectrum.com. [72.182.52.210])
-        by smtp.googlemail.com with ESMTPSA id d21sm4644203oih.21.2019.06.10.14.05.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 14:05:13 -0700 (PDT)
-Subject: Re: [PATCH 0/7] TTY Keyboard Status Request
-To:     Arseny Maslennikov <ar@cs.msu.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Cc:     "Vladimir D . Seleznev" <vseleznv@altlinux.org>
-References: <20190605081906.28938-1-ar@cs.msu.ru>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <0db56bba-96fd-ab99-aa54-360ab171b703@landley.net>
-Date:   Mon, 10 Jun 2019 16:06:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190605081906.28938-1-ar@cs.msu.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 10 Jun 2019 17:06:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:38294 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388342AbfFJVGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 17:06:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 14:06:10 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by orsmga002.jf.intel.com with ESMTP; 10 Jun 2019 14:06:08 -0700
+Message-ID: <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Mon, 10 Jun 2019 13:58:01 -0700
+In-Reply-To: <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+         <20190606200926.4029-4-yu-cheng.yu@intel.com>
+         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
+         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
+         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+         <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
+         <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
+         <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
+         <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
+         <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
+         <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
+         <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/19 3:18 AM, Arseny Maslennikov wrote:
-> This patch series introduces TTY keyboard status request, a feature of
-> the n_tty line discipline that reserves a character in struct termios
-> (^T by default) and reacts to it by printing a short informational line
-> to the terminal and sending a Unix signal to the tty's foreground
-> process group. The processes may, in response to the signal, output a
-> textual description of what they're doing.
+On Mon, 2019-06-10 at 13:43 -0700, Dave Hansen wrote:
+> On 6/10/19 1:27 PM, Yu-cheng Yu wrote:
+> > > > If the loader cannot allocate a big bitmap to cover all 5-level
+> > > > address space (the bitmap will be large), it can put all legacy lib's
+> > > > at lower address.  We cannot do these easily in the kernel.
+> > > 
+> > > This is actually an argument to do it in the kernel.  The kernel can
+> > > always allocate the virtual space however it wants, no matter how large.
+> > >  If we hide the bitmap behind a kernel API then we can put it at high
+> > > 5-level user addresses because we also don't have to worry about the
+> > > high bits confusing userspace.
+> > 
+> > We actually tried this.  The kernel needs to reserve the bitmap space in the
+> > beginning for every CET-enabled app, regardless of actual needs. 
+> 
+> I don't think this is a problem.  In fact, I think reserving the space
+> is actually the only sane behavior.  If you don't reserve it, you
+> fundamentally limit where future legacy instructions can go.
+> 
+> One idea is that we always size the bitmap for the 48-bit addressing
+> systems.  Legacy code probably doesn't _need_ to go in the new address
+> space, and if we do this we don't have to worry about the gigantic
+> 57-bit address space bitmap.
+> 
+> > On each memory request, the kernel then must consider a percentage of
+> > allocated space in its calculation, and on systems with less memory
+> > this quickly becomes a problem.
+> 
+> I'm not sure what you're referring to here?  Are you referring to our
+> overcommit limits?
 
-I had a long twitter thread about this with some BSD developers,
-https://twitter.com/landley/status/1127148250430152704
-asked on the toybox list for opinions,
-http://lists.landley.net/pipermail/toybox-landley.net/2019-May/010461.html
-and became aware of this patch set when the android bionic maintainer pointed me
-at news coverage of it
-http://lists.landley.net/pipermail/toybox-landley.net/2019-June/010536.html
-
-So there would appear to at least be interest in the concept.
-
-(The conclusion I came to looking at it last month is is it can't be done
-without kernel support, but if such support _does_ arrive I want to add it to
-toybox.)
-
-Rob
+Yes.
