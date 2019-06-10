@@ -2,177 +2,210 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67866C4321A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF47CC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416E02082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560199620;
-	bh=yOaPojV03VlR5PRPjQCd0Dcv4xItWM/yJTZWCGgRFRw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=km9LeqgkcIUT6uf6FsdTg8wTw2kpqVtlP6o5nOeVMLvvFuuKG8h5rSoYNW6IwF+yb
-	 juXBm49i2YNKrwdyhaUfb8b5Bz7nSA2PfOyJQp6iQIE1tSGBdkFhjFPShRCwrn3w43
-	 PEPKhCLGq4cmQ4raK1yjB5E2rQjPWzCnwwzM+g8U=
+	by mail.kernel.org (Postfix) with ESMTP id 637DF2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:47:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="CMVN92Z9";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="DLHcxTp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389797AbfFJUq7 (ORCPT
+        id S2389842AbfFJUrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:46:59 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35354 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389653AbfFJUq6 (ORCPT
+        Mon, 10 Jun 2019 16:47:22 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:59284 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389653AbfFJUrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:46:58 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a25so7635775lfg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3dZjFALioLfmWT2gX0OovbSYoNZY24tjNWFjpsEzRZY=;
-        b=OW2Dex0kC9JUsK1CtK5L0J10uoGXFqGOUG1VA+0wauSzJMHtqZFtHeg4zvU9maNl4n
-         OZW+g4o0pnDdCxvJBdZHVHjOtF90nTXwp8sBsSG1/heY+cBzcFDob/dNI51E/aFazn/e
-         Q0imxrIBOzeOvg0igH+hFLwCY647B83Q0fqew=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3dZjFALioLfmWT2gX0OovbSYoNZY24tjNWFjpsEzRZY=;
-        b=EuV4H91v5lfLHpxQG9xg9aOEmC4ccyUOsdle4TjZr9qCWkoPJBKaAIDb/teaxTSGjT
-         7tvTAC3senYEsRyjiRg8RUun00q6/0ftjxohhIwmfF6oEBNwTOEmwlO8tKuJpw62ShWc
-         laIp2pHIVKAvQX71FYvZNBXosuwap+YFpWz1rcvfFoxwIe3SoSDGZrbzKl5ih6Jo22iQ
-         w/JMdp/mSQ0foko8EFDaJ5IOYlzrdZUJpF2tuEziWES7IEo82OQNTLvqq3OG/Air8L2n
-         QNnvRXLoVGZqmpUXqJtZdMQbraAlAMed+5V5cYGaYoRHERbr6DS6JrUU67U82wWnrWt7
-         fZzQ==
-X-Gm-Message-State: APjAAAUmDfk6pwG3ta+XotpWDkC4lPDRxcSMFa66RN/0t44nntqVI3lE
-        agDjrhtELRkmOmza42vBCPvE+myEmNA=
-X-Google-Smtp-Source: APXvYqxFCrVako86+cB+eUHIFPQHvqTj8gVVDcRXr6nlicNAu4kS7MtS2CmoedMxUKm/y1CoH5CcmQ==
-X-Received: by 2002:a19:750b:: with SMTP id y11mr22798270lfe.16.1560199615520;
-        Mon, 10 Jun 2019 13:46:55 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id w8sm2192791lfq.62.2019.06.10.13.46.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 13:46:52 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id a25so7635653lfg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:46:52 -0700 (PDT)
-X-Received: by 2002:a19:ae01:: with SMTP id f1mr34920353lfc.29.1560199612181;
- Mon, 10 Jun 2019 13:46:52 -0700 (PDT)
+        Mon, 10 Jun 2019 16:47:22 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5AKZ1Mw007632;
+        Mon, 10 Jun 2019 13:46:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=9NroLIhSzcJKpeMrtwemhF+MHU+S+0EktciGfgBDRQQ=;
+ b=CMVN92Z9QX9oJAQ1/m1v583ol54Gs3ZL5P18xQ2EzCs6ABcUfEjxckpE9VPII9oybdcZ
+ /uF0/8W9sFKEnYah3WPIjQL+fnXGljYGpnJ8+KqVJJIrc1jsahlJQDQNO4K9PRmYqjpn
+ TGPahGQjs2WryOLpUkR4BAzNS60VBwge6SQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t1u3n0vqh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 10 Jun 2019 13:46:53 -0700
+Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 10 Jun 2019 13:46:52 -0700
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 10 Jun 2019 13:46:52 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 10 Jun 2019 13:46:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9NroLIhSzcJKpeMrtwemhF+MHU+S+0EktciGfgBDRQQ=;
+ b=DLHcxTp1eoqcpMXgJkmMIbHTaD7YHZGYrHk0HZdboEVO5h2oNznujt9Lpsj0MZZj3QlMWIs5hVrzFUN1eIbJTAnk3oYq5SsKrP4AV5upZLe3rRy1UdgjlkD0AS6sfMD+nDxgD//igC2qQHER/RRv8xKQxjn+h9d67F1IIzYRJ4k=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB2627.namprd15.prod.outlook.com (20.179.137.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.17; Mon, 10 Jun 2019 20:46:47 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::251b:ff54:1c67:4e5f]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::251b:ff54:1c67:4e5f%7]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
+ 20:46:47 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Vladimir Davydov <vdavydov.dev@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v6 07/10] mm: synchronize access to kmem_cache dying flag
+ using a spinlock
+Thread-Topic: [PATCH v6 07/10] mm: synchronize access to kmem_cache dying flag
+ using a spinlock
+Thread-Index: AQHVG0i1Wx1jT2Odq02KGn1J823cf6aTaX8AgAH7JwA=
+Date:   Mon, 10 Jun 2019 20:46:47 +0000
+Message-ID: <20190610204639.GA5838@tower.DHCP.thefacebook.com>
+References: <20190605024454.1393507-1-guro@fb.com>
+ <20190605024454.1393507-8-guro@fb.com>
+ <20190609143132.cv7b4w5caghuhi53@esperanza>
+In-Reply-To: <20190609143132.cv7b4w5caghuhi53@esperanza>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR10CA0003.namprd10.prod.outlook.com (2603:10b6:301::13)
+ To BN8PR15MB2626.namprd15.prod.outlook.com (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:2dcb]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28efd7d9-5125-4c60-be9d-08d6ede4c181
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB2627;
+x-ms-traffictypediagnostic: BN8PR15MB2627:
+x-microsoft-antispam-prvs: <BN8PR15MB2627CE5DE6C7C4B504FD4A33BE130@BN8PR15MB2627.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 0064B3273C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(396003)(346002)(366004)(136003)(199004)(189003)(52314003)(46003)(14444005)(81166006)(6486002)(52116002)(229853002)(186003)(305945005)(76176011)(6916009)(71190400001)(9686003)(6506007)(256004)(8936002)(81156014)(6512007)(386003)(99286004)(25786009)(478600001)(6436002)(4326008)(71200400001)(86362001)(7736002)(54906003)(14454004)(33656002)(68736007)(1076003)(5660300002)(486006)(6116002)(316002)(8676002)(476003)(446003)(2906002)(66556008)(66476007)(102836004)(53936002)(6246003)(11346002)(73956011)(66446008)(66946007)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2627;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VPTPz4jHuQIzYFcauPESUVEdEVniCKbM+XvxLep67k/nYDfKvdujMjQlTLgdWw3IiJRYiqeaQYPCJiFBbo+h7D0sNI+N3HczEsxIqeWgLMyyzW+G6/amQQOaLrOAGojAQ8v7qE7FBzILTprNMPoPPqZ39jvAdKVEtA0BXIZoy+5+siSWiBvhk5tKLpttrPPDsZBqj7+ZZBBVIO8Ltw6lDPGGMCgvLkl5S3/ASrVQfK8mJENDpQWCK7mX5+5IHKIbXo8tfLWJHvLV32lRtuosyVvhiNxtPhmdPDhVmjFX3dGW+4uW/oF6HbFykW0dWfwoxtiwikF1gkoMv0OO3qYou8UzzcwH33JDvFCSVEA4xtP6sNkDeMpyXHS/kDJVVYOktYGtcYoYrHiCkC69qu1N1Qkdg7RPiPTV18FEJlYUDsA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <201585CDF61E2A45A240C0AB98B05E04@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
-In-Reply-To: <20190610191420.27007-1-kent.overstreet@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 10 Jun 2019 10:46:35 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
-Message-ID: <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
-Subject: Re: bcachefs status update (it's done cooking; let's get this sucker merged)
-To:     Kent Overstreet <kent.overstreet@gmail.com>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-bcache@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Zach Brown <zach.brown@ni.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28efd7d9-5125-4c60-be9d-08d6ede4c181
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 20:46:47.7414
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2627
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906100139
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 9:14 AM Kent Overstreet
-<kent.overstreet@gmail.com> wrote:
->
-> So. Here's my bcachefs-for-review branch - this has the minimal set of patches
-> outside of fs/bcachefs/. My master branch has some performance optimizations for
-> the core buffered IO paths, but those are fairly tricky and invasive so I want
-> to hold off on those for now - this branch is intended to be more or less
-> suitable for merging as is.
+On Sun, Jun 09, 2019 at 05:31:32PM +0300, Vladimir Davydov wrote:
+> On Tue, Jun 04, 2019 at 07:44:51PM -0700, Roman Gushchin wrote:
+> > Currently the memcg_params.dying flag and the corresponding
+> > workqueue used for the asynchronous deactivation of kmem_caches
+> > is synchronized using the slab_mutex.
+> >=20
+> > It makes impossible to check this flag from the irq context,
+> > which will be required in order to implement asynchronous release
+> > of kmem_caches.
+> >=20
+> > So let's switch over to the irq-save flavor of the spinlock-based
+> > synchronization.
+> >=20
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > ---
+> >  mm/slab_common.c | 19 +++++++++++++++----
+> >  1 file changed, 15 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > index 09b26673b63f..2914a8f0aa85 100644
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -130,6 +130,7 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, g=
+fp_t flags, size_t nr,
+> >  #ifdef CONFIG_MEMCG_KMEM
+> > =20
+> >  LIST_HEAD(slab_root_caches);
+> > +static DEFINE_SPINLOCK(memcg_kmem_wq_lock);
+> > =20
+> >  void slab_init_memcg_params(struct kmem_cache *s)
+> >  {
+> > @@ -629,6 +630,7 @@ void memcg_create_kmem_cache(struct mem_cgroup *mem=
+cg,
+> >  	struct memcg_cache_array *arr;
+> >  	struct kmem_cache *s =3D NULL;
+> >  	char *cache_name;
+> > +	bool dying;
+> >  	int idx;
+> > =20
+> >  	get_online_cpus();
+> > @@ -640,7 +642,13 @@ void memcg_create_kmem_cache(struct mem_cgroup *me=
+mcg,
+> >  	 * The memory cgroup could have been offlined while the cache
+> >  	 * creation work was pending.
+> >  	 */
+> > -	if (memcg->kmem_state !=3D KMEM_ONLINE || root_cache->memcg_params.dy=
+ing)
+> > +	if (memcg->kmem_state !=3D KMEM_ONLINE)
+> > +		goto out_unlock;
+> > +
+> > +	spin_lock_irq(&memcg_kmem_wq_lock);
+> > +	dying =3D root_cache->memcg_params.dying;
+> > +	spin_unlock_irq(&memcg_kmem_wq_lock);
+> > +	if (dying)
+> >  		goto out_unlock;
+>=20
+> I do understand why we need to sync setting dying flag for a kmem cache
+> about to be destroyed in flush_memcg_workqueue vs checking the flag in
+> kmemcg_cache_deactivate: this is needed so that we don't schedule a new
+> deactivation work after we flush RCU/workqueue. However, I don't think
+> it's necessary to check the dying flag here, in memcg_create_kmem_cache:
+> we can't schedule a new cache creation work after kmem_cache_destroy has
+> started, because one mustn't allocate from a dead kmem cache; since we
+> flush the queue before getting to actual destruction, no cache creation
+> work can be pending. Yeah, it might happen that a cache creation work
+> starts execution while flush_memcg_workqueue is in progress, but I don't
+> see any point in optimizing this case - after all, cache destruction is
+> a very cold path. Since checking the flag in memcg_create_kmem_cache
+> raises question, I suggest to simply drop this check.
 
-Honestly, it really isn't.
+Yeah, I came to the same conclusion (in a thread with Johannes),
+that this check is not required. I'll drop it in a separate patch.
 
-There are obvious things wrong with it - like the fact that you've
-rebased it so that the original history is gone, yet you've not
-actually *fixed* the history, so you find things like reverts of
-commits that should simply have been removed, and fixes for things
-that should just have been fixed in the original commit the fix is
-for.
+>=20
+> Anyway, it would be nice to see some comment in the code explaining why
+> we check dying flag under a spin lock in kmemcg_cache_deactivate.
 
-And this isn't just "if you rebase, just fix things". You have actual
-bogus commit messages as a result of this all.
+Sure, will add some.
 
-So to point at the revert, for example. The commit message is
-
-    This reverts commit 36f389604294dfc953e6f5624ceb683818d32f28.
-
-which is wrong to begin with - you should always explain *why* the
-revert was done, not just state that it's a revert.
-
-But since you rebased things, that commit 36f3896042 doesn't exist any
-more to begin with.  So now you have a revert commit that doesn't
-explain why it reverts things, but the only thing it *does* say is
-simply wrong and pointless.
-
-Some of the "fixes" commits have the exact same issue - they say things like
-
-    gc lock must be held while invalidating buckets - fixes
-    "1f7a95698e bcachefs: Invalidate buckets when writing to alloc btree"
-
-and
-
-    fixes b0f3e786995cb3b12975503f963e469db5a4f09b
-
-both of which are dead and stale git object pointers since the commits
-in question got rebased and have some other hash these days.
-
-But note that the cleanup should go further than just fix those kinds
-of technical issues. If you rebase, and you have fixes in your tree
-for things you rebase, just fix things as you rewrite history anyway
-(there are cases where the fix may be informative in itself and it's
-worth leaving around, but that's rare).
-
-Anyway, aside from that, I only looked at the non-bcachefs parts. Some
-of those are not acceptable either, like
-
-    struct pagecache_lock add_lock
-        ____cacheline_aligned_in_smp; /* protects adding new pages */
-
-in 'struct address_space', which is completely bogus, since that
-forces not only a potentially huge amount of padding, it also requires
-alignment that that struct simply fundamentally does not have, and
-_will_ not have.
-
-You can only use ____cacheline_aligned_in_smp for top-level objects,
-and honestly, it's almost never a win. That lock shouldn't be so hot.
-
-That lock is somewhat questionable in the first place, and no, we
-don't do those hacky recursive things anyway. A recursive lock is
-almost always a buggy and mis-designed one.
-
-Why does the regular page lock (at a finer granularity) not suffice?
-
-And no, nobody has ever cared. The dio people just don't care about
-page cache anyway. They have their own thing going.
-
-Similarly, no, we're not starting to do vmalloc in non-process context. Stop it.
-
-And the commit comments are very sparse. And not always signed off.
-
-I also get the feeling that the "intent" part of the six-locks could
-just be done as a slight extension of the rwsem, where an "intent" is
-the same as a write-lock, but without waiting for existing readers,
-and then the write-lock part is just the "wait for readers to be
-done".
-
-Have you talked to Waiman Long about that?
-
-                    Linus
+Btw, thank you very much for reviewing the series!
