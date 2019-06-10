@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547AFC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24CAC31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D50120820
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8820920820
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bk/jLN7J"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GR8KXJRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbfFJRNX (ORCPT
+        id S2387903AbfFJRN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:13:23 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44604 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbfFJRNU (ORCPT
+        Mon, 10 Jun 2019 13:13:29 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57916 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbfFJRNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 13:13:20 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHDBKD121923;
-        Mon, 10 Jun 2019 12:13:11 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHD9vn057230;
+        Mon, 10 Jun 2019 12:13:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560186791;
-        bh=SNBUl0AgT9mDHDFh2idiGb/Cxs8x27UMIHDIZ9dVyA0=;
+        s=ti-com-17Q1; t=1560186789;
+        bh=65y0Cnd2F217f0FjndQy2sPV2LzXGcSYmUp9Flgkgvs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=bk/jLN7JU0Xwhpv1oxdpoIqxrYHN0mmIkWOUuyHSkPnX7Iy0b/CX2pdRKgdZJlo9X
-         iUOG/vnrJTs8sX/Sh+CH9BAWQVbHcmbFOFQ8+9FkkKMogcmkmr29K/cZ+jWNYHwRsa
-         GDzxciiiJaBIMTr3GcIgfKh0sPrpGkDm+CZ74HLw=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHDA4b047205
+        b=GR8KXJRKBvhp2lPNPS8xTmEhlBQuiy4e3Loyz7HTGdIJ7ybj46XcFQjkmQIzvyrhv
+         nN3yjQZiPuu4UqRHuq56Gn78a6s15Iw1aOMYFwzkncexdyaLpou+3qwiV8MuZhZqmR
+         QljzPb5a9l2WL9kTMmMz5RGMtlLhqBIGAjW5/k9s=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHD9bu014309
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Jun 2019 12:13:10 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 10 Jun 2019 12:13:09 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
- Jun 2019 12:13:10 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2019 12:13:09 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 10 Jun 2019 12:13:10 -0500
+ Frontend Transport; Mon, 10 Jun 2019 12:13:08 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHD9fs052679;
-        Mon, 10 Jun 2019 12:13:10 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHD8UR052649;
+        Mon, 10 Jun 2019 12:13:08 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Russell King <rmk@arm.linux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -58,9 +58,9 @@ CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH-next 20/20] gpio: gpio-omap: clean up register access in omap2_set_gpio_debounce()
-Date:   Mon, 10 Jun 2019 20:11:03 +0300
-Message-ID: <20190610171103.30903-21-grygorii.strashko@ti.com>
+Subject: [PATCH-next 19/20] gpio: gpio-omap: irq_startup() must not return error codes
+Date:   Mon, 10 Jun 2019 20:11:02 +0300
+Message-ID: <20190610171103.30903-20-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610171103.30903-1-grygorii.strashko@ti.com>
 References: <20190610171103.30903-1-grygorii.strashko@ti.com>
@@ -74,34 +74,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Russell King <rmk+kernel@armlinux.org.uk>
 
+The irq_startup() method returns an unsigned int, but in __irq_startup()
+it is assigned to an int.  However, nothing checks for errors, so any
+error that is returned is ignored.
+
+Remove the check for GPIO-input mode and the error return.
+
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/gpio/gpio-omap.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpio/gpio-omap.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 94b10dfbff3f..52592eac0895 100644
+index 61e32c7e6670..94b10dfbff3f 100644
 --- a/drivers/gpio/gpio-omap.c
 +++ b/drivers/gpio/gpio-omap.c
-@@ -181,7 +181,6 @@ static inline void omap_gpio_dbck_disable(struct gpio_bank *bank)
- static int omap2_set_gpio_debounce(struct gpio_bank *bank, unsigned offset,
- 				   unsigned debounce)
- {
--	void __iomem		*reg;
- 	u32			val;
- 	u32			l;
- 	bool			enable = !!debounce;
-@@ -198,8 +197,7 @@ static int omap2_set_gpio_debounce(struct gpio_bank *bank, unsigned offset,
- 	l = BIT(offset);
+@@ -635,8 +635,6 @@ static unsigned int omap_gpio_irq_startup(struct irq_data *d)
  
- 	clk_enable(bank->dbck);
--	reg = bank->base + bank->regs->debounce;
--	writel_relaxed(debounce, reg);
-+	writel_relaxed(debounce, bank->base + bank->regs->debounce);
+ 	if (!LINE_USED(bank->mod_usage, offset))
+ 		omap_set_gpio_direction(bank, offset, 1);
+-	else if (!omap_gpio_is_input(bank, offset))
+-		goto err;
+ 	omap_enable_gpio_module(bank, offset);
+ 	bank->irq_usage |= BIT(offset);
  
- 	val = omap_gpio_rmw(bank->base + bank->regs->debounce_en, l, enable);
- 	bank->dbck_enable_mask = val;
+@@ -644,9 +642,6 @@ static unsigned int omap_gpio_irq_startup(struct irq_data *d)
+ 	omap_gpio_unmask_irq(d);
+ 
+ 	return 0;
+-err:
+-	raw_spin_unlock_irqrestore(&bank->lock, flags);
+-	return -EINVAL;
+ }
+ 
+ static void omap_gpio_irq_shutdown(struct irq_data *d)
 -- 
 2.17.1
 
