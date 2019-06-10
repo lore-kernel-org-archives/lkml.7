@@ -2,213 +2,494 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FE9C31E41
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658EAC31E42
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF6420859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369C320859
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 15:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4gJaN/ei"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dRox7VQ0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GaUQuf0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391248AbfFJPmy (ORCPT
+        id S2391251AbfFJPpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 11:42:54 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:35292 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390454AbfFJPmx (ORCPT
+        Mon, 10 Jun 2019 11:45:35 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50680 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390230AbfFJPpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 11:42:53 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5AFdYQh181982;
-        Mon, 10 Jun 2019 15:41:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=hwAMwagac6Yi0afPfWltWIF0pd2yRFxuWvj33N/Nr+0=;
- b=4gJaN/eiXIY+aw+Q6HR4ak8yWFhBOv3LOxXnlrJFHtAXJwuhBrSTOB56BPNaAI26NVbw
- VH/aaPrnJZXx+Ra6Qgm3tkQzYm3V9tFHKsxVMrKwkxnw0Sqmsyl0ZyQ2dI+yg1yaxV42
- ti+kNw5mGuWn2NgwHEGdDRTodebgb1ei22MVzAOTudlgNA8fnKYBufikKvK1StfBnRWG
- KLRNBLE7QdHY93P9MDwlX1UmTlnxS3JSbRSXUCwoxZ3hXkr7xQYB1ZS/+9Ebno3RHV/i
- fllnLHowwewnxfc+LBEVR0XbAc8xvehTEQAAf2pWvwpsZqpncQ0qOOFqhw2Rj+gLL0nN Kw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2t02hefv9c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Jun 2019 15:41:28 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5AFfEdN079190;
-        Mon, 10 Jun 2019 15:41:27 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2t024tw7ts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Jun 2019 15:41:27 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5AFfIXg006946;
-        Mon, 10 Jun 2019 15:41:19 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Jun 2019 08:41:18 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 80A556A00FC; Mon, 10 Jun 2019 11:42:41 -0400 (EDT)
-Date:   Mon, 10 Jun 2019 11:42:41 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/9] iommu: Bounce page for untrusted devices
-Message-ID: <20190610154241.GS28796@char.us.oracle.com>
-References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
+        Mon, 10 Jun 2019 11:45:34 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1D61E60275; Mon, 10 Jun 2019 15:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560181533;
+        bh=JLkeq82w7WKXfiw+H9jdcNpXmDI145eAKRmA3feEAeU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dRox7VQ03BzZZt9n8e+czaNKqicjCTGoyPmgb67fOXCWu/nR53/Y6L2K7XCASG4gg
+         jUy8yVAaIa0ovVh1xSkdUfzhLy6ZOP7ZfA1tNlAggiZUkRxut8qGbviLXTJmJKVhpz
+         IcfpvVxsLWNXQ9ST+JNpHd98DVySeQEoLc8bkhM0=
+Received: from [192.168.1.6] (unknown [171.60.244.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C24C060213;
+        Mon, 10 Jun 2019 15:45:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560181531;
+        bh=JLkeq82w7WKXfiw+H9jdcNpXmDI145eAKRmA3feEAeU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GaUQuf0o1Jem/Hq3U+CRNQ6OcnLIbVZ8RBw9wb66XqGcfQn/AITy8H6QhXQAN481x
+         gZ4FtBh6v7xiE1qfAFm+yfbVCpFh0Ih4gl83bY2U5R1wQelXVlY35ZPJ0qrJmF488p
+         2E1LyMUyZJ2nj/kD6z1eVWa3eVPMo/90g+PIKbvs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C24C060213
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org,
+        agross@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-6-git-send-email-sricharan@codeaurora.org>
+ <20190608034835.GH24059@builder>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <048a25c0-3a2c-3906-84d4-5eb67f3ce2ef@codeaurora.org>
+Date:   Mon, 10 Jun 2019 21:15:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603011620.31999-1-baolu.lu@linux.intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=551
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906100107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=601 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906100107
+In-Reply-To: <20190608034835.GH24059@builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 09:16:11AM +0800, Lu Baolu wrote:
-> The Thunderbolt vulnerabilities are public and have a nice
-> name as Thunderclap [1] [3] nowadays. This patch series aims
-> to mitigate those concerns.
-> 
-> An external PCI device is a PCI peripheral device connected
-> to the system through an external bus, such as Thunderbolt.
-> What makes it different is that it can't be trusted to the
-> same degree as the devices build into the system. Generally,
-> a trusted PCIe device will DMA into the designated buffers
-> and not overrun or otherwise write outside the specified
-> bounds. But it's different for an external device.
-> 
-> The minimum IOMMU mapping granularity is one page (4k), so
-> for DMA transfers smaller than that a malicious PCIe device
-> can access the whole page of memory even if it does not
-> belong to the driver in question. This opens a possibility
-> for DMA attack. For more information about DMA attacks
-> imposed by an untrusted PCI/PCIe device, please refer to [2].
-> 
-> This implements bounce buffer for the untrusted external
-> devices. The transfers should be limited in isolated pages
-> so the IOMMU window does not cover memory outside of what
-> the driver expects. Previously (v3 and before), we proposed
-> an optimisation to only copy the head and tail of the buffer
-> if it spans multiple pages, and directly map the ones in the
-> middle. Figure 1 gives a big picture about this solution.
-> 
->                                 swiotlb             System
->                 IOVA          bounce page           Memory
->              .---------.      .---------.        .---------.
->              |         |      |         |        |         |
->              |         |      |         |        |         |
-> buffer_start .---------.      .---------.        .---------.
->              |         |----->|         |*******>|         |
->              |         |      |         | swiotlb|         |
->              |         |      |         | mapping|         |
->  IOMMU Page  '---------'      '---------'        '---------'
->   Boundary   |         |                         |         |
->              |         |                         |         |
->              |         |                         |         |
->              |         |------------------------>|         |
->              |         |    IOMMU mapping        |         |
->              |         |                         |         |
->  IOMMU Page  .---------.                         .---------.
->   Boundary   |         |                         |         |
->              |         |                         |         |
->              |         |------------------------>|         |
->              |         |     IOMMU mapping       |         |
->              |         |                         |         |
->              |         |                         |         |
->  IOMMU Page  .---------.      .---------.        .---------.
->   Boundary   |         |      |         |        |         |
->              |         |      |         |        |         |
->              |         |----->|         |*******>|         |
->   buffer_end '---------'      '---------' swiotlb'---------'
->              |         |      |         | mapping|         |
->              |         |      |         |        |         |
->              '---------'      '---------'        '---------'
->           Figure 1: A big view of iommu bounce page 
-> 
-> As Robin Murphy pointed out, this ties us to using strict mode for
-> TLB maintenance, which may not be an overall win depending on the
-> balance between invalidation bandwidth vs. memcpy bandwidth. If we
-> use standard SWIOTLB logic to always copy the whole thing, we should
-> be able to release the bounce pages via the flush queue to allow
-> 'safe' lazy unmaps. So since v4 we start to use the standard swiotlb
-> logic.
-> 
->                                 swiotlb             System
->                 IOVA          bounce page           Memory
-> buffer_start .---------.      .---------.        .---------.
->              |         |      |         |        |         |
->              |         |      |         |        |         |
->              |         |      |         |        .---------.physical
->              |         |----->|         | ------>|         |_start  
->              |         |iommu |         | swiotlb|         |
->              |         | map  |         |   map  |         |
->  IOMMU Page  .---------.      .---------.        '---------'
+Hi Bjorn,
 
-The prior picture had 'buffer_start' at an offset in the page. I am
-assuming you meant that here in as well?
 
-Meaning it starts at the same offset as 'physical_start' in the right
-side box?
-
->   Boundary   |         |      |         |        |         |
->              |         |      |         |        |         |
->              |         |----->|         |        |         |
->              |         |iommu |         |        |         |
->              |         | map  |         |        |         |
->              |         |      |         |        |         |
->  IOMMU Page  .---------.      .---------.        .---------.
->   Boundary   |         |      |         |        |         |
->              |         |----->|         |        |         |
->              |         |iommu |         |        |         |
->              |         | map  |         |        |         |
->              |         |      |         |        |         |
->  IOMMU Page  |         |      |         |        |         |
->   Boundary   .---------.      .---------.        .---------.
->              |         |      |         |------->|         |
->   buffer_end '---------'      '---------' swiotlb|         |
->              |         |----->|         |   map  |         |
->              |         |iommu |         |        |         |
->              |         | map  |         |        '---------' physical
->              |         |      |         |        |         | _end    
->              '---------'      '---------'        '---------'
->           Figure 2: A big view of simplified iommu bounce page 
+On 6/8/2019 9:18 AM, Bjorn Andersson wrote:
+> On Wed 05 Jun 10:16 PDT 2019, Sricharan R wrote:
 > 
-> The implementation of bounce buffers for untrusted devices
-> will cause a little performance overhead, but we didn't see
-> any user experience problems. The users could use the kernel
+>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+>> CP01 evaluation board.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> 
+> Please fix the order of these (or add a Co-developed-by).
+> 
 
-What kind of devices did you test it with?
+ ok
 
-Thank you for making this awesome cover letter btw!
+>> ---
+>>  arch/arm64/boot/dts/qcom/Makefile            |   1 +
+>>  arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  35 ++++
+>>  arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 231 +++++++++++++++++++++++++++
+>>  3 files changed, 267 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>>  create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index 21d548f..ac22dbb 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -2,6 +2,7 @@
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+> 
+> Sort order.
+> 
+
+ ok
+
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>> new file mode 100644
+>> index 0000000..ac7cb22
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+>> @@ -0,0 +1,35 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * IPQ6018 CP01 board device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "ipq6018.dtsi"
+>> +
+>> +/ {
+>> +	#address-cells = <0x2>;
+>> +	#size-cells = <0x2>;
+> 
+> This is a count, write it in base 10..
+> 
+
+ ok
+
+>> +	model = "Qualcomm Technologies, Inc. IPQ6018/AP-CP01-C1";
+>> +	compatible = "qcom,ipq6018-cp01", "qcom,ipq6018";
+>> +	interrupt-parent = <&intc>;
+> 
+> Changing #address-cells, #size-cells and interrupt-parent will break the
+> dtsi, so I think you should specify them there.
+> 
+
+ ok, will move it to the dtsi.
+
+>> +};
+>> +
+>> +&tlmm {
+> 
+> Please sort your nodes based on address, then node name, then label.
+> 
+
+ ok
+
+>> +	uart_pins: uart_pins {
+>> +		mux {
+>> +			pins = "gpio44", "gpio45";
+>> +			function = "blsp2_uart";
+>> +			drive-strength = <8>;
+>> +			bias-pull-down;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&blsp1_uart3 {
+>> +	pinctrl-0 = <&uart_pins>;
+>> +	pinctrl-names = "default";
+>> +	status = "ok";
+>> +};
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>> new file mode 100644
+>> index 0000000..79cccdd
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>> @@ -0,0 +1,231 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * IPQ6018 SoC device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+>> +
+>> +/ {
+>> +	model = "Qualcomm Technologies, Inc. IPQ6018";
+>> +	compatible = "qcom,ipq6018";
+> 
+> No need for model and compatible in the dtsi, these should always be
+> specified by the including file.
+> 
+
+ ok, will move it to the dts.
+
+>> +
+>> +	chosen {
+>> +		bootargs = "console=ttyMSM0,115200,n8 rw init=/init";
+> 
+> Do you really need console? Can't you use stdout-path?
+> 
+
+ ok, will change.
+
+> And there's no need to specify init=/init.
+> 
+
+ ok.
+
+>> +		bootargs-append = " swiotlb=1 clk_ignore_unused";
+> 
+> I'm hoping that you will work on removing the need for
+> clk_ignore_unused.
+> 
+
+ hmm, should not be required even now. will remove that.
+
+>> +	};
+>> +
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		tz:tz@48500000 {
+> 
+> Space after :
+> 
+
+ ok.
+
+>> +			no-map;
+>> +			reg = <0x0 0x48500000 0x0 0x00200000>;
+> 
+> I would prefer to have the reg first in these nodes, then the region's
+> properties.
+> 
+
+ ok.
+
+>> +		};
+>> +	};
+>> +
+>> +	soc: soc {
+>> +		#address-cells = <0x1>;
+>> +		#size-cells = <0x1>;
+>> +		ranges = <0 0 0 0xffffffff>;
+>> +		dma-ranges;
+>> +		compatible = "simple-bus";
+>> +
+>> +		intc: interrupt-controller@b000000 {
+> 
+> As described above, please sort your nodes based on address, node name
+> and lastly label name.
+> 
+
+ ok.
+
+>> +			compatible = "qcom,msm-qgic2";
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <0x3>;
+>> +			reg = <0xb000000 0x1000>, <0xb002000 0x1000>;
+>> +		};
+>> +
+>> +		timer {
+>> +			compatible = "arm,armv8-timer";
+>> +			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>> +		};
+>> +
+>> +		timer@b120000 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
+>> +			compatible = "arm,armv7-timer-mem";
+>> +			reg = <0xb120000 0x1000>;
+> 
+> Please pad addresses in reg to 8 digits, to make them faster to compare.
+> 
+
+ ok.
+
+>> +			clock-frequency = <19200000>;
+>> +
+>> +			frame@b120000 {
+>> +				frame-number = <0>;
+>> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+>> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb121000 0x1000>,
+>> +				      <0xb122000 0x1000>;
+>> +			};
+>> +
+>> +			frame@b123000 {
+>> +				frame-number = <1>;
+>> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb123000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b124000 {
+>> +				frame-number = <2>;
+>> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb124000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b125000 {
+>> +				frame-number = <3>;
+>> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb125000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b126000 {
+>> +				frame-number = <4>;
+>> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb126000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b127000 {
+>> +				frame-number = <5>;
+>> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb127000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b128000 {
+>> +				frame-number = <6>;
+>> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+>> +				reg = <0xb128000 0x1000>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +
+>> +		gcc: gcc@1800000 {
+>> +			compatible = "qcom,gcc-ipq6018";
+>> +			reg = <0x1800000 0x80000>;
+>> +			#clock-cells = <0x1>;
+> 
+> This is a count, use base 10.
+> 
+
+ ok.
+
+>> +			#reset-cells = <0x1>;
+>> +		};
+>> +
+>> +		blsp1_uart3: serial@78b1000 {
+>> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+>> +			reg = <0x78b1000 0x200>;
+>> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
+>> +				<&gcc GCC_BLSP1_AHB_CLK>;
+>> +			clock-names = "core", "iface";
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		tlmm: pinctrl@1000000 {
+>> +			compatible = "qcom,ipq6018-pinctrl";
+>> +			reg = <0x1000000 0x300000>;
+>> +			interrupts = <GIC_SPI 0xd0 IRQ_TYPE_NONE>;
+>> +			gpio-controller;
+>> +			#gpio-cells = <0x2>;
+> 
+> gpio-ranges = <&tlmm 0 80>;
+> 
+
+ ok.
+
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <0x2>;
+>> +
+>> +			uart_pins: uart_pins {
+>> +				pins = "gpio44", "gpio45";
+>> +				function = "blsp2_uart";
+>> +				drive-strength = <8>;
+>> +				bias-pull-down;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	psci: psci {
+>> +		compatible = "arm,psci-1.0";
+>> +		method = "smc";
+>> +	};
+>> +
+>> +	cpus: cpus {
+>> +		#address-cells = <0x1>;
+>> +		#size-cells = <0x0>;
+>> +
+>> +		CPU0: cpu@0 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a53";
+>> +			reg = <0x0>;
+>> +			enable-method = "psci";
+>> +			next-level-cache = <&L2_0>;
+>> +		};
+>> +
+>> +		CPU1: cpu@1 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a53";
+>> +			enable-method = "psci";
+>> +			reg = <0x1>;
+>> +			next-level-cache = <&L2_0>;
+>> +		};
+>> +
+>> +		CPU2: cpu@2 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a53";
+>> +			enable-method = "psci";
+>> +			reg = <0x2>;
+>> +			next-level-cache = <&L2_0>;
+>> +		};
+>> +
+>> +		CPU3: cpu@3 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a53";
+>> +			enable-method = "psci";
+>> +			reg = <0x3>;
+>> +			next-level-cache = <&L2_0>;
+>> +		};
+>> +
+>> +		L2_0: l2-cache {
+>> +			compatible = "cache";
+>> +			cache-level = <0x2>;
+>> +		};
+>> +	};
+>> +
+>> +	pmuv8: pmu {
+>> +		compatible = "arm,armv8-pmuv3";
+>> +		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
+>> +					 IRQ_TYPE_LEVEL_HIGH)>;
+>> +	};
+>> +
+>> +	clocks {
+>> +		sleep_clk: sleep_clk {
+> 
+> Don't use _ in the node names.
+> 
+
+ ok.
+
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <32000>;
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		xo: xo {
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <24000000>;
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		bias_pll_cc_clk {
+> 
+> Please give this a label and reference it from the node that uses it
+> (regardless of the implementation matching by clock name).
+> 
+ ok, in that case, so might have to remove these for now, till we add
+ the corresponding users.
+
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <300000000>;
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		bias_pll_nss_noc_clk {
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <416500000>;
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		usb3phy_0_cc_pipe_clk {
+> 
+> This should come from the PHY.
+
+  ok, will remove it here and add it later when adding USB node
+
+Regards,
+ Sricharan  
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
