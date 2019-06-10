@@ -2,81 +2,188 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED37CC282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A42C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6220207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36F02082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 09:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="OLK5H1IT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ngq5TC24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389052AbfFJJfR (ORCPT
+        id S2389054AbfFJJhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 05:35:17 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:57670 "EHLO
-        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389030AbfFJJfO (ORCPT
+        Mon, 10 Jun 2019 05:37:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44115 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388511AbfFJJhW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 05:35:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=D3RBY8TIHtG5Pkuqx3E5W7zI7qjnd6MB9Gprngg5/i4=; b=OLK5H1IT1rEt2tLy4eGXNqedt
-        K7BKI6OvbDwSJuyOV8HVr8BsLOnlWwH47Mm13W/fiLWpqpCZo8i5PE9UIsu+7d98BlVKfOjkWrO4e
-        8m08hWwR3Ha4tyLIO2w1GDqhoCUYsHMeHBj3nOC2kI9g/O9pxrpudmVTC0+Bec/lwOiOA=;
-Received: from merlot.physics.ox.ac.uk ([163.1.241.98] helo=merlot)
-        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <huw@codeweavers.com>)
-        id 1haGfB-0003dE-8i; Mon, 10 Jun 2019 04:32:26 -0500
-Received: from daviesh by merlot with local (Exim 4.90_1)
-        (envelope-from <huw@codeweavers.com>)
-        id 1haGeY-00039s-FG; Mon, 10 Jun 2019 10:31:46 +0100
-Date:   Mon, 10 Jun 2019 10:31:46 +0100
-From:   Huw Davies <huw@codeweavers.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v6 02/19] kernel: Define gettimeofday vdso common code
-Message-ID: <20190610093146.GB11076@merlot.physics.ox.ac.uk>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-3-vincenzo.frascino@arm.com>
+        Mon, 10 Jun 2019 05:37:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b17so8411297wrq.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 02:37:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=YmUQOBR/GJq7UaPzUNV4Rf8Mf+3yYG+dn3tRrCjRgF0=;
+        b=Ngq5TC241NWWOhW2wlmQgnfzQHe0pGNYYuPzePTgUZGjgqvK5wXoeSeRykP/JazfaD
+         8pH5UBa+KTIJYQ8tqZzStHpWFhGnc+wfqZENECv3w62t2RQf95+LJl2qwxTXS76w4l0I
+         JCZWrB7S001YzldoGJy2f7gqPhrdcJzIA1jelI0zp1Oq++2kF4LKd6MTyFrKwDIMJmmb
+         RhOJDOU/pUKounO3J7i9QKYSLzzeBUlPCZWbM1C/ImUSykTs56CTg8tvGe6bcB1iG7UA
+         x9YxV9KGhaWiRZ8DZSMZ2drVegOnHZWyIp6WsvicK/ECb08DbSwlzbL4N2IAHuX5QGdq
+         C7hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=YmUQOBR/GJq7UaPzUNV4Rf8Mf+3yYG+dn3tRrCjRgF0=;
+        b=lm92jhLrmmpl8pEh1zhEy/shdr8J3LsFaO4I9ad0VMm4ynMrjq+gNgSRltul0Oolbd
+         X1/NDW6kDLyb8hIRCdG9HfI5+CQ2AcBFVV+Qnhst6Pg9vqMbMWXhDIxITus4WoEnbNrH
+         /U+3p1KkI6PJpOQemVRkJn/SiIYjfkUHHs+nfCgaHAtObYrr2/CSu30/eaOoMidNR0dh
+         3RqqatKXYRVgS2fKpUhlAHGl30+Nd0M7PAkaFVWJdnIJP67R18mgJg5Q2w5y8oqVZrU9
+         bAp9CSmRfTqIkSMEJpc9kt5yRhZAdYA7IZSmjA80H/EjTLBVW9iaWXvHof1Ga15W5nqf
+         QhgA==
+X-Gm-Message-State: APjAAAWhqkR3fHUV3WgflI4s4ly5EBpQ3IPTaBWLZg9aieHitBVAe7wO
+        86X+dViUe1FRXvbaaH/M7+o51g==
+X-Google-Smtp-Source: APXvYqxkgrvxz7l9kXQsr8B6DVhFVzZ7aagx1lJLoxS4N3XnngCqcHBVUgnOJxELFpFwwO0m7VwIjg==
+X-Received: by 2002:a5d:498a:: with SMTP id r10mr44569262wrq.28.1560159439366;
+        Mon, 10 Jun 2019 02:37:19 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id a125sm10149177wmf.42.2019.06.10.02.37.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 02:37:18 -0700 (PDT)
+Message-ID: <6394b7e46a7967f4a5a6f77215e670e3e7a7ef10.camel@baylibre.com>
+Subject: Re: [PATCH] clk: fix clock global name usage.
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        mturquette@baylibre.com
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        baylibre-upstreaming@groups.io
+Date:   Mon, 10 Jun 2019 11:37:16 +0200
+In-Reply-To: <20190606225438.F175A2089E@mail.kernel.org>
+References: <20190524072745.27398-1-amergnat@baylibre.com>
+         <20190524143355.5586D2133D@mail.kernel.org>
+         <c89ecb6f328014ce22ae5d6c634e5337dbbf3ea2.camel@baylibre.com>
+         <20190524174454.8043420879@mail.kernel.org>
+         <5795a73002f2c787b545308585f0437eb5aa2f72.camel@baylibre.com>
+         <20190606225438.F175A2089E@mail.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530141531.43462-3-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 03:15:14PM +0100, Vincenzo Frascino wrote:
-> In the last few years we assisted to an explosion of vdso
-> implementations that mostly share similar code.
+On Thu, 2019-06-06 at 15:54 -0700, Stephen Boyd wrote:
+> > > > Do you think we could come up with a priority order which makes the first
+> > > > example work ?
+> > > 
+> > > Maybe? I'm open to suggestions.
+> > > 
+> > > > Something like:
+> > > > 
+> > > > if (hw) {
+> > > >          /* use pointer */
+> > > > } else if (name) {
+> > > >          /* use legacy global names */
+> > > 
+> > > I don't imagine we can get rid of legacy name for a long time, so this
+> > > can't be in this order. Otherwise we'll try to lookup the legacy name
+> > > before trying the DT lookup and suffer performance hits doing a big
+> > > global search while also skipping the DT lookup that we want drivers to
+> > > use if they're more modern.
+> > 
+> > You'll try to look up the legacy name only if it is defined, in which case you
+> > know you this is what you want to use, so I don't see the penalty.  Unless ...
+> 
+> We'll only try the legacy name if all else fails. We're hoping that
+> .fw_name or .hw is used instead because those are faster than string
+> comparisons on the entire tree.
+> 
+> > Are trying to support case where multiple fields among hw, name, fw_name, index
+> > would be defined simultaneously ??
+> 
+> Yes.
 
-This doesn't make much sense.  Perhaps: "In the last few years we
-have seen an explosion in vdso..." ?
+Then this where we have different views ont he matter. I think this makes the
+logic a lot more complex.
 
-Huw.
+A controller should *know* if a clock is coming from 'somewhere else' and how.
+I think we should not try multiple methods hoping one will eventually work.
+
+I has already caught us now and I'm willing to bet we won't be the last.
+
+> 
+> > IMO, it would be weird and very confusing.
+> 
+> Let's expand the table.
+> 
+>     .fw_name   |  .index |  .name      | DT lookup? | fallback to legacy? 
+>    +-----------+---------+-------------+----+----------------------------
+>  1 | NULL      |    >= 0 |  NULL       |    Y       |         N
+>  2 | NULL      |    -1   |  NULL       |    N       |         N
+>  3 | non-NULL  |    -1   |  NULL       |    Y       |         N
+>  4 | non-NULL  |    >= 0 |  NULL       |    Y       |         N
+>  5 | NULL      |    >= 0 |  non-NULL   |    Y       |         Y
+>  6 | NULL      |    -1   |  non-NULL   |    N       |         Y
+>  7 | non-NULL  |    -1   |  non-NULL   |    Y       |         Y
+>  8 | non-NULL  |    >= 0 |  non-NULL   |    Y       |         Y
+> 
+> And then if .hw is set we just don't even try to use the above table.
+> 
+> You want case #5 to skip the DT lookup because .fw_name is NULL, but the
+> index is 0. I stared at this for a few minutes and I think you're
+> arguing that we should only do the DT lookup when index is 0 if we can't
+> fallback to a legacy lookup.
+> 
+> Initially that sounds OK, but then we'll get stuck with legacy lookups
+> forever if someone doesn't put a matching .fw_name into the
+> 'clock-names' property. We don't want that to happen. We want to get off
+> legacy and into the new world where either .fw_name or .index is used to
+> specify a parent.
+> 
+> From my perspective you're suffering from static initializers setting
+> everything to 0 and that making the index 0 and "valid" for a DT lookup
+> hitting up against not wanting to set anything in the structure
+> unnecessarily. While at the same time, it's great that .fw_name is set
+> to NULL by the static initializer, so it's a case of wanting the same
+> thing to do different things.
+
+Sure ... but we are also suffering from the complexity of the logic behind this
+(and the table above)
+
+When I define .hw, I don't need to initialize the rest but when I define .name I
+must define (at least) .index to a specific value ... This is at least tricky,
+and IMO, inconsistent.
+
+> 
+> If we would have made it so the DT index started at 1 then this wouldn't
+> be a problem, but that's not possible. Or if we would have made a new
+> clk flag that said CLK_USE_INDEX_FOR_DT then it could have gotten over
+> this problem but that's basically the same as making the inverse set of
+> drivers use -1 for the index to indicate they don't want a DT lookup.
+> 
+> I still believe the large majority of clk drivers will either use .hw or
+> .fw_name to find parents, while falling back to the .name for legacy
+> reasons. The .index field won't see much use, but we'll support it for
+> the firmwares out there that don't use "clock-names". Similarly, we'll
+> have only a handful of drivers that only want to specify .name and
+> nothing else, and those few drivers can use .index = -1 to overcome
+> this.
+
+I'm sorry, I still find all this very confusing just to add a fallback
+mechanism. It would be simpler to ask people to choose the method they.
+
+The transition to DT can be done submitting DT part first and submitting the
+clock driver part later on
+
+Anyway, we'll define index to -1 since this how it is supposed to be. Thx for
+your explanation
+
+
