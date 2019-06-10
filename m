@@ -2,118 +2,217 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF5CC43218
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D141CC4321A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF622082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:33:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="xzuzhYxw"
+	by mail.kernel.org (Postfix) with ESMTP id AC9AB2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 20:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389570AbfFJUdu (ORCPT
+        id S2389624AbfFJUeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 16:33:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37237 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389331AbfFJUdu (ORCPT
+        Mon, 10 Jun 2019 16:34:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37048 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389577AbfFJUeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:33:50 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so5113607pfa.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 13:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QntknNlUMZ8JI/1goGczbuHi72H8zQ1C3B8XCCIqc74=;
-        b=xzuzhYxwoNBu8erHlLCrxSF6MyfWGF1hKTX+tKC7Hnyu/qw9Tj+eRX3C62ggnJnCN4
-         tg1sy2avRP+ogUk9rkB6oxWVwW96l1plZ/wS2FgBg9ov5ZHfQD01osPiIMw9+s45gWyY
-         GGXQZoJP/K2EQ4oq1dCL3nRh6zdkvZtN3sDwEjTz28wEzhHh0solkY3gANj5poClnBQT
-         XSIBZ/r7EK9XzaDLWHwvHR99AFFP1HcBQWTc/qlpPiE93EVyQJHzrAVsG5nJX8onEPlp
-         pOyyL1FTk0PCBlHw5ymm1gYsRTCXcT0eaXT0qFfdhfKjR67fqwACSYKwOZWVE2hRWy1F
-         wgxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QntknNlUMZ8JI/1goGczbuHi72H8zQ1C3B8XCCIqc74=;
-        b=ZscyPCt4HdlWfF7D0FSYl8XsaUlxA247TEWZ/FUFunWHwoVJWiDU7fG5beOJnk6p85
-         q0U+mPNpyqnmwf6gqwpTpdqp7kkrY3UkgZWc7MsEDfDS8gRrwM0ZxEG2Y8DEoyJW1/MZ
-         Vgn3sVUR3CAWn9JbZUBNhpIUCyPgLwBu8+yRPcGFxEaZmYtdcwUaAkyf4l8EbSlM5Zey
-         jBDdGgpnHCud3D61kxi4IlnkyOwSvdbOHOrlSmFlNsNIUkVQIl4rrQri5SlQfihamOFS
-         jsKa2aO6a0f3rzJrZ+1XZD3wabHQzDFIJyD7FrpfUtbGG0HhtyvbVbjyvc1/a4SsroP2
-         QhXg==
-X-Gm-Message-State: APjAAAUlN8XeLrbI+TwJGG+1QbinVfPaAjg/T1Lt5Ma7xKX8gSbj3Cpq
-        vF7SftFhcH/KBGs7TQM2hsb0Hq3QExM=
-X-Google-Smtp-Source: APXvYqycry2VoGdYVSIQMIzoqz01wpBKdkO8o/o7K8OkM2VlKWAUhszB+cuq+ZnAXmc4MT74TSv4Yg==
-X-Received: by 2002:a62:6145:: with SMTP id v66mr75694199pfb.144.1560198827276;
-        Mon, 10 Jun 2019 13:33:47 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:8cbd])
-        by smtp.gmail.com with ESMTPSA id v4sm14441747pff.45.2019.06.10.13.33.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 13:33:46 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 16:33:44 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Shakeel Butt <shakeelb@google.com>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v6 01/10] mm: add missing smp read barrier on getting
- memcg kmem_cache pointer
-Message-ID: <20190610203344.GA7789@cmpxchg.org>
-References: <20190605024454.1393507-1-guro@fb.com>
- <20190605024454.1393507-2-guro@fb.com>
- <20190609121052.kge3w3hv3t5u5bb3@esperanza>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190609121052.kge3w3hv3t5u5bb3@esperanza>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Mon, 10 Jun 2019 16:34:10 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5AKWJst074088
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:34:09 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t1v6sd51n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 16:34:08 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Mon, 10 Jun 2019 21:34:06 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 10 Jun 2019 21:34:03 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5AKY2V328508348
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jun 2019 20:34:02 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF50F11C05C;
+        Mon, 10 Jun 2019 20:34:01 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0725C11C050;
+        Mon, 10 Jun 2019 20:34:00 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.85.139.99])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Jun 2019 20:33:59 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v3 0/3] powerpc: Enabling IMA arch specific secure boot policies
+Date:   Mon, 10 Jun 2019 16:33:54 -0400
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19061020-4275-0000-0000-0000034111B2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061020-4276-0000-0000-000038511F92
+Message-Id: <1560198837-18857-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-10_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906100139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 03:10:52PM +0300, Vladimir Davydov wrote:
-> On Tue, Jun 04, 2019 at 07:44:45PM -0700, Roman Gushchin wrote:
-> > Johannes noticed that reading the memcg kmem_cache pointer in
-> > cache_from_memcg_idx() is performed using READ_ONCE() macro,
-> > which doesn't implement a SMP barrier, which is required
-> > by the logic.
-> > 
-> > Add a proper smp_rmb() to be paired with smp_wmb() in
-> > memcg_create_kmem_cache().
-> > 
-> > The same applies to memcg_create_kmem_cache() itself,
-> > which reads the same value without barriers and READ_ONCE().
-> > 
-> > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > ---
-> >  mm/slab.h        | 1 +
-> >  mm/slab_common.c | 3 ++-
-> >  2 files changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/slab.h b/mm/slab.h
-> > index 739099af6cbb..1176b61bb8fc 100644
-> > --- a/mm/slab.h
-> > +++ b/mm/slab.h
-> > @@ -260,6 +260,7 @@ cache_from_memcg_idx(struct kmem_cache *s, int idx)
-> >  	 * memcg_caches issues a write barrier to match this (see
-> >  	 * memcg_create_kmem_cache()).
-> >  	 */
-> > +	smp_rmb();
-> >  	cachep = READ_ONCE(arr->entries[idx]);
-> 
-> Hmm, we used to have lockless_dereference() here, but it was replaced
-> with READ_ONCE some time ago. The commit message claims that READ_ONCE
-> has an implicit read barrier in it.
+This patch set, previously named "powerpc: Enabling secure boot on powernv
+systems - Part 1", is part of a series that implements secure boot on
+PowerNV systems.
 
-Thanks for catching this Vladimir. I wasn't aware of this change to
-the memory model. Indeed, we don't need to change anything here.
+In order to verify the OS kernel on PowerNV, secure boot requires X.509
+certificates trusted by the platform, the secure boot modes, and several
+other pieces of information. These are stored in secure variables
+controlled by OPAL, also known as OPAL secure variables.
+
+The IMA architecture specific policy support on POWER is dependent on OPAL
+runtime services to access secure variables. OPAL APIs in skiboot are
+modified to define generic interface compatible to any backend. This
+patchset is consequently updated to be compatible with new OPAL API
+interface. This has cleaned up any EFIsms in the arch specific code.
+Further, the ima arch specific policies are updated to be able to support
+appended signatures. They also now use per policy template.
+
+Exposing the OPAL secure variables to userspace will be posted as a
+separate patch set, allowing the IMA architecture specific policy on POWER
+to be upstreamed independently.
+
+This patch set adds the following features:
+
+1. Add support for OPAL Runtime API to access secure variables controlled
+by OPAL.
+2. Define IMA arch-specific policies based on the secure boot state and
+mode of the system. On secure boot enabled PowerNV systems, the OS kernel
+signature will be verified by IMA appraisal.
+
+Pre-requisites for this patchset are:
+1. OPAL APIs in Skiboot[1]
+2. Appended signature support in IMA [2]
+3. Per policy template support in IMA [3]
+
+[1] https://patchwork.ozlabs.org/project/skiboot/list/?series=112868 
+[2] https://patchwork.ozlabs.org/cover/1087361/. Updated version will be
+posted soon
+[3] Repo: https://kernel.googlesource.com/pub/scm/linux/kernel/git/zohar/linux-integrity
+Branch: next-queued-testing. Commit: f241bb1f42aa95
+
+----------------------------------------------------------------------------------
+
+Original Cover Letter:
+
+This patch set is part of a series that implements secure boot on PowerNV
+systems.
+
+In order to verify the OS kernel on PowerNV, secure boot requires X.509
+certificates trusted by the platform, the secure boot modes, and several
+other pieces of information. These are stored in secure variables
+controlled by OPAL, also known as OPAL secure variables.
+
+The IMA architecture specific policy support on Power is dependent on OPAL
+runtime services to access secure variables. Instead of directly accessing
+the OPAL runtime services, version 3 of this patch set relied upon the
+EFI hooks. This version drops that dependency and calls the OPAL runtime
+services directly. Skiboot OPAL APIs are due to be posted soon.
+
+Exposing the OPAL secure variables to userspace will be posted as a
+separate patch set, allowing the IMA architecture specific policy on Power
+to be upstreamed independently.
+
+This patch set adds the following features:
+
+1. Add support for OPAL Runtime API to access secure variables controlled
+by OPAL.
+2. Define IMA arch-specific policies based on the secure boot state and
+mode of the system. On secure boot enabled powernv systems, the OS kernel
+signature will be verified by IMA appraisal.
+
+[1] https://patchwork.kernel.org/cover/10882149/
+
+Changelog:
+
+v3:
+* OPAL APIs in Patch 1 are updated to provide generic interface based on
+key/keylen. This patchset updates kernel OPAL APIs to be compatible with
+generic interface.
+* Patch 2 is cleaned up to use new OPAL APIs. 
+* Since OPAL can support different types of backend which can vary in the
+variable interpretation, the Patch 2 is updated to add a check for the
+backend version
+* OPAL API now expects consumer to first check the supported backend version
+before calling other secvar OPAL APIs. This check is now added in patch 2.
+* IMA policies in Patch 3 is updated to specify appended signature and
+per policy template.
+* The patches now are free of any EFIisms.
+
+v2:
+
+* Removed Patch 1: powerpc/include: Override unneeded early ioremap
+functions
+* Updated Subject line and patch description of the Patch 1 of this series
+* Removed dependency of OPAL_SECVAR on EFI, CPU_BIG_ENDIAN and UCS2_STRING
+* Changed OPAL APIs from static to non-static. Added opal-secvar.h for the
+same
+* Removed EFI hooks from opal_secvar.c
+* Removed opal_secvar_get_next(), opal_secvar_enqueue() and
+opal_query_variable_info() function
+* get_powerpc_sb_mode() in secboot.c now directly calls OPAL Runtime API
+rather than via EFI hooks.
+* Fixed log messages in get_powerpc_sb_mode() function.
+* Added dependency for PPC_SECURE_BOOT on configs PPC64 and OPAL_SECVAR
+* Replaced obj-$(CONFIG_IMA) with obj-$(CONFIG_PPC_SECURE_BOOT) in
+arch/powerpc/kernel/Makefile
+
+Claudio Carvalho (1):
+  powerpc/powernv: Add OPAL API interface to get secureboot state
+
+Nayna Jain (2):
+  powerpc/powernv: detect the secure boot mode of the system
+  powerpc: Add support to initialize ima policy rules
+
+ arch/powerpc/Kconfig                         | 14 ++++
+ arch/powerpc/include/asm/opal-api.h          |  4 +-
+ arch/powerpc/include/asm/opal-secvar.h       | 23 ++++++
+ arch/powerpc/include/asm/opal.h              |  6 ++
+ arch/powerpc/include/asm/secboot.h           | 21 +++++
+ arch/powerpc/kernel/Makefile                 |  1 +
+ arch/powerpc/kernel/ima_arch.c               | 54 +++++++++++++
+ arch/powerpc/platforms/powernv/Kconfig       |  6 ++
+ arch/powerpc/platforms/powernv/Makefile      |  2 +
+ arch/powerpc/platforms/powernv/opal-call.c   |  2 +
+ arch/powerpc/platforms/powernv/opal-secvar.c | 85 ++++++++++++++++++++
+ arch/powerpc/platforms/powernv/secboot.c     | 61 ++++++++++++++
+ include/linux/ima.h                          |  3 +-
+ 13 files changed, 280 insertions(+), 2 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/opal-secvar.h
+ create mode 100644 arch/powerpc/include/asm/secboot.h
+ create mode 100644 arch/powerpc/kernel/ima_arch.c
+ create mode 100644 arch/powerpc/platforms/powernv/opal-secvar.c
+ create mode 100644 arch/powerpc/platforms/powernv/secboot.c
+
+-- 
+2.20.1
+
