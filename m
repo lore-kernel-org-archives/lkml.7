@@ -2,120 +2,89 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46DDC31E43
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34CAC31E40
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8984B207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hKs2ui5x"
+	by mail.kernel.org (Postfix) with ESMTP id 726B4207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 17:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560186788;
+	bh=sT/rZSZYEkVXc+vfxxISMm6Asd7SJoGF8UinSixDpnE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UWqG9RuDkBiVim7IUn8Xva10Cz6Puc/pRtFv+n2g2RTWPJJ/CZzBhFKRQ9rrTb10F
+	 pDwqUVybp9q3wYTjMJkBUxMejeirQ494z4twQDoyc6yXXq0ILCnD8J5Rea5lbqV9a5
+	 omYlWhexJr1VUU+t2X7TZy5P+E7PMwH2+/SGYQHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387486AbfFJRND (ORCPT
+        id S2388614AbfFJRNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 13:13:03 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44568 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387500AbfFJRNC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 13:13:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5AHCqad121864;
-        Mon, 10 Jun 2019 12:12:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560186772;
-        bh=xjRoLjnZEnJ71XstATMS/Qw07MjkUWg7z73ux8r3eP4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hKs2ui5xVlE0RGBLpR5vSl8TSEXRTmLazxkxMa6607ZggvtbLK+6GpS+rd1qDHsLQ
-         EfxfuJq/2pG+85yrxvFltTycXKGIX0/2MJTDD7VUWCfeIFPlYTT2EZOdJHvIvJa+pU
-         SGB1S2vPr6j/B1YgbMegGZIbaAyQz6/xUc0tAEl8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5AHCqSO011507
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Jun 2019 12:12:52 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
- Jun 2019 12:12:52 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 10 Jun 2019 12:12:52 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5AHCp2L067873;
-        Mon, 10 Jun 2019 12:12:52 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Russell King <rmk@arm.linux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH-next 15/20] gpio: gpio-omap: remove dataout variation in context handling
-Date:   Mon, 10 Jun 2019 20:10:58 +0300
-Message-ID: <20190610171103.30903-16-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190610171103.30903-1-grygorii.strashko@ti.com>
-References: <20190610171103.30903-1-grygorii.strashko@ti.com>
+        Mon, 10 Jun 2019 13:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387500AbfFJRNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 13:13:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41AE5207E0;
+        Mon, 10 Jun 2019 17:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560186785;
+        bh=sT/rZSZYEkVXc+vfxxISMm6Asd7SJoGF8UinSixDpnE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1bSwVDIRlZNG9xrSaFEIuayW/tn8kHGx1Y+QO1S18vHPPtZ9tJlabLj8ZLJC6+Tz2
+         y8zMJ6kOVtka73LQLBRNh+BCMJSvcylXJPydtkd+yOr2W2daDYUUczRmRC32TVuVqy
+         9Ynq/LYS1yDKhy4KOLZhtUGXm2SmfunmUR5jtq2A=
+Date:   Mon, 10 Jun 2019 19:13:03 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, johan@kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] serial: uartps: Use the same dynamin major number
+ for all ports
+Message-ID: <20190610171303.GA14134@kroah.com>
+References: <c6753260caf8b20cc002b15fcbf22b759c91d760.1560156294.git.michal.simek@xilinx.com>
+ <381ea608440345a4424d24296666b2451b1a20ee.1560156294.git.michal.simek@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <381ea608440345a4424d24296666b2451b1a20ee.1560156294.git.michal.simek@xilinx.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+On Mon, Jun 10, 2019 at 10:44:56AM +0200, Michal Simek wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> 
+> Let kernel to find out major number dynamically for the first device and
+> then reuse it for other instances.
+> This fixes the issue that each uart is registered with a
+> different major number.
+> 
+> After the patch:
+> crw-------    1 root     root      253,   0 Jun 10 08:31 /dev/ttyPS0
+> crw--w----    1 root     root      253,   1 Jan  1  1970 /dev/ttyPS1
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+>  drivers/tty/serial/xilinx_uartps.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-When a GPIO block has the set/clear dataout registers implemented, it
-also has the normal dataout register implemented. Reading this register
-reads the current GPIO output state, and writing it sets the GPIOs to
-the explicit state. This is the behaviour that we want when saving and
-restoring the context, so use the dataout register exclusively.
+Does not apply without patch 1/2, so dropping it from my queue.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/gpio/gpio-omap.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+Which is ALWAYS a good reason why you should submit bug fixes or other
+things before code cleanup patches.
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index a90e27d7ce5e..c24a91b2df97 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1087,11 +1087,7 @@ static void omap_gpio_init_context(struct gpio_bank *p)
- 	p->context.fallingdetect = readl_relaxed(base + regs->fallingdetect);
- 	p->context.irqenable1	= readl_relaxed(base + regs->irqenable);
- 	p->context.irqenable2	= readl_relaxed(base + regs->irqenable2);
--
--	if (regs->set_dataout && p->regs->clr_dataout)
--		p->context.dataout = readl_relaxed(base + regs->set_dataout);
--	else
--		p->context.dataout = readl_relaxed(base + regs->dataout);
-+	p->context.dataout	= readl_relaxed(base + regs->dataout);
- 
- 	p->context_valid = true;
- }
-@@ -1109,11 +1105,7 @@ static void omap_gpio_restore_context(struct gpio_bank *bank)
- 				bank->base + bank->regs->risingdetect);
- 	writel_relaxed(bank->context.fallingdetect,
- 				bank->base + bank->regs->fallingdetect);
--	if (bank->regs->set_dataout && bank->regs->clr_dataout)
--		writel_relaxed(bank->context.dataout,
--				bank->base + bank->regs->set_dataout);
--	else
--		writel_relaxed(bank->context.dataout,
-+	writel_relaxed(bank->context.dataout,
- 				bank->base + bank->regs->dataout);
- 	writel_relaxed(bank->context.oe, bank->base + bank->regs->direction);
- 
--- 
-2.17.1
+thanks,
 
+greg k-h
