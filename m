@@ -2,128 +2,176 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD971C468C1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ACFC468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 998C9208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B571207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 06:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="LOqs1Qpc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s1WMdgKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387778AbfFJGDE (ORCPT
+        id S2387787AbfFJGD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 02:03:04 -0400
-Received: from mail-eopbgr1410139.outbound.protection.outlook.com ([40.107.141.139]:58632
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387614AbfFJGDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 02:03:04 -0400
+        Mon, 10 Jun 2019 02:03:57 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39635 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387728AbfFJGD4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 02:03:56 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v18so6758054ljh.6
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 23:03:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DPkBGpmyFclYIDk0FkFQ18gqVAHuXBvRU4a92Wd0olM=;
- b=LOqs1QpcnblaYTAaIXBTriMNjzAgxX/hV5GHZtf2nbnkhh+At7QiC/x7F+lJu3O6YuGY0bOpcG8pr7vArxQJqrS5c67ynD73RDbaw9IRI6FyjyBOYG9jZWrHNBeyhmIjZKGWwrPWhP9K0dMhWrtrG83Vd06+9LgSXCttAdrYBB0=
-Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com (52.134.247.150) by
- OSAPR01MB2337.jpnprd01.prod.outlook.com (52.134.248.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Mon, 10 Jun 2019 06:02:59 +0000
-Received: from OSAPR01MB3089.jpnprd01.prod.outlook.com
- ([fe80::19ad:b6ce:a287:dc85]) by OSAPR01MB3089.jpnprd01.prod.outlook.com
- ([fe80::19ad:b6ce:a287:dc85%7]) with mapi id 15.20.1965.017; Mon, 10 Jun 2019
- 06:02:59 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v2] phy: renesas: rcar-gen3-usb2: fix imbalance powered
- flag
-Thread-Topic: [PATCH v2] phy: renesas: rcar-gen3-usb2: fix imbalance powered
- flag
-Thread-Index: AQHVHRjIO6KREcmvc0O2wL/9DKckHqaQLhiAgAQ67vA=
-Date:   Mon, 10 Jun 2019 06:02:59 +0000
-Message-ID: <OSAPR01MB3089681C9E1AC1FA4D548300D8130@OSAPR01MB3089.jpnprd01.prod.outlook.com>
-References: <1559901734-23540-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdVwdb1J8j4JaeHhCmkSF4ozWN+EVh7f01MSaGOkSb9W0w@mail.gmail.com>
-In-Reply-To: <CAMuHMdVwdb1J8j4JaeHhCmkSF4ozWN+EVh7f01MSaGOkSb9W0w@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [118.238.235.108]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9276dfec-4a13-43d1-292a-08d6ed694a5a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:OSAPR01MB2337;
-x-ms-traffictypediagnostic: OSAPR01MB2337:
-x-microsoft-antispam-prvs: <OSAPR01MB23376B6D4A77F7EBAA9BFCA4D8130@OSAPR01MB2337.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(396003)(366004)(376002)(51914003)(189003)(199004)(8676002)(486006)(74316002)(7696005)(73956011)(305945005)(5660300002)(11346002)(2906002)(476003)(26005)(102836004)(6506007)(53546011)(66446008)(64756008)(66556008)(66476007)(76116006)(66946007)(446003)(186003)(3846002)(6116002)(71190400001)(71200400001)(14444005)(256004)(99286004)(68736007)(76176011)(4326008)(229853002)(6436002)(6246003)(52536014)(66066001)(81166006)(81156014)(25786009)(6916009)(8936002)(54906003)(316002)(55016002)(14454004)(33656002)(53936002)(86362001)(9686003)(478600001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB2337;H:OSAPR01MB3089.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qOgwKj98siITivYfx7iAOg3++9pt1wze1qZTvM2f5jzYfmaiM0ZBnK/96Z9m071Xq3vVQIhzRCJjSsr+QsxKqYRgcW6RIZT0rBk4tij7Jujm7eYLCMqgWHYtX38sa1P8k0Xa8PGTh3+/K7hJgV7z6N5Wnn2GozpDUnBNup9R4DkAIJCapZPTE0w+wZeCkkQ80bQDp89x8ba0SOeC+uuqO2c8Izr+QETYDCzXojmZ0QGHGKEfuP0ppECek45+gmJeMGin8R9nWslhNuKeQMxG0d7O3gjLUjrZzoCfktPMAAf8IS+g0zum2F32LV8cbEHm4ofjfnt37s+vIgibZo/6uoVHoEbDgjYJZXb4fEZNv6xWq2Aa6pl96P8Os5uSyAX5SaJ99qr4rwxHqL0e2pWwpggMs63ThnM0nlO3QMV7ItU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0Dm0JUHmNbBa06Nkd0nXLcKO7Ns6LtQgelo6VtXT2CY=;
+        b=s1WMdgKlsVp4rFa+3bC516UluZ4qt1B/E6S+JzOfuYhyUzmKvVX0Kpxclg4qYYQIs3
+         s2lsFrInQEHMA93PgySiXHETr3IBHnpIpYVDysaie23Y6hPMzPOtqh8oU0JdUaEKdHwp
+         +ZBel3bP46oLjZRmq+koulsSzqq1/Zq2NVGpukJSjjw7viMPVcgvGr8m6y388JO83XRC
+         uqfHdACnLklIGoWes5dO8mSeKM60kD9dnKD0E7kcTtM2guk2mhIVysFYVdPz4HgTW3QH
+         I+sXW6akKVe8x4oEY+C4Mgmlgq71aeaFZGpQrY1xH4dY0QMHad52C1Kp9PlXD3DjQIKN
+         Mu/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0Dm0JUHmNbBa06Nkd0nXLcKO7Ns6LtQgelo6VtXT2CY=;
+        b=XvZpTU/8MRft8yWxm52H496gNT8ky+X2rKfDYXw2eBwoE7Uw2VlrY4szO//vHQ6AEP
+         9uX8CW+1XlChpLMLAm2D6wa6spUEWoeYsSzAYn2bx0zsG5NuHs8L4DPEY3x/b+8FEqi2
+         P5PDS3gP/U/V3orGfa9I2Ql9sKiskBOsE/P54kpaasuGympXqJtfhstJo2bM9R4hW2q9
+         fOad9PUBWo6NR6pX+aKDLzleDN2n7Zek9+cuAEor8LXsLar17Rq3EjPlHkNSbvpT/m9O
+         rJlePYQhL37DJC8nIev/3YRjilUEQ4xbj96j7dd/yWS8qGN91bSgXwdpoFuOhPppPAnu
+         dRlw==
+X-Gm-Message-State: APjAAAWeVnMkNzLYAnYFxFqZ7CaDRnC62pr1Y1JIFeev2Qhp7uYrb31M
+        olqjtuHKhdZ1GCE1ThZMLKLj8hjkvc89GWXobtKj+w==
+X-Google-Smtp-Source: APXvYqzozS3RG8xkvD+3vVuLQoV4yxg+CI1GakigpKK4AKmL+ZCUNxNT4TKM5eUEBkLh4kTil+mk89HCugrTQUWYYqQ=
+X-Received: by 2002:a2e:2b11:: with SMTP id q17mr35483218lje.23.1560146634750;
+ Sun, 09 Jun 2019 23:03:54 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9276dfec-4a13-43d1-292a-08d6ed694a5a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 06:02:59.3036
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2337
+References: <20190609164127.541128197@linuxfoundation.org>
+In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 10 Jun 2019 11:33:43 +0530
+Message-ID: <CA+G9fYuxGDX0pX0BROB7mJqJuCPYRshzae+cTnb_xQXEtBpgXA@mail.gmail.com>
+Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogRnJpZGF5
-LCBKdW5lIDcsIDIwMTkgMTA6MjMgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gVGhh
-bmtzIGZvciB0aGUgdXBkYXRlIQ0KPiANCj4gT24gRnJpLCBKdW4gNywgMjAxOSBhdCAxMjowNyBQ
-TSBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+
-IHdyb3RlOg0KPiA+IFRoZSBwb3dlcmVkIGZsYWcgc2hvdWxkIGJlIHNldCBmb3IgYW55IG90aGVy
-IHBoeXMgYW55d2F5LiBBbHNvDQo+ID4gdGhlIGZsYWcgc2hvdWxkIGJlIGxvY2tlZCBieSB0aGUg
-Y2hhbm5lbC4gT3RoZXJ3aXNlLCBhZnRlciB3ZSBoYXZlDQo+ID4gcmV2aXNlZCB0aGUgZGV2aWNl
-IHRyZWUgZm9yIHRoZSB1c2IgcGh5LCB0aGUgZm9sbG93aW5nIHdhcm5pbmcNCj4gPiBoYXBwZW5l
-ZCBkdXJpbmcgYSBzZWNvbmQgc3lzdGVtIHN1c3BlbmQuIEFuZCBpZiB0aGUgZHJpdmVyIGRvZXNu
-J3QNCj4gPiBsb2NrIHRoZSBmbGFnLCBlbmFibGluZyB0aGUgcmVndWxhdG9yIGlzIHBvc3NpYmxl
-IHRvIGJlIGltYmFsYW5jZQ0KPiANCj4gSSB0aGluayBpdCByZWFkcyBiZXR0ZXIgYXM6DQo+IA0K
-PiAuLi4sIGFuIGltYmFsYW5jZSBpcyBwb3NzaWJsZSB3aGVuIGVuYWJsaW5nIHRoZSByZWd1bGF0
-b3IgLi4uDQoNClRoYW5rIHlvdSBmb3IgeW91ciBzdWdnZXN0aW9uISBJJ2xsIHJldmlzZSBpdCBv
-biB2My4NCg0KPiA+IGR1cmluZyBzeXN0ZW0gcmVzdW1lLiBTbywgdGhpcyBwYXRjaCBmaXhlcyB0
-aGUgaXNzdWVzLg0KPiANCj4gPiAtLS0gYS9kcml2ZXJzL3BoeS9yZW5lc2FzL3BoeS1yY2FyLWdl
-bjMtdXNiMi5jDQo+ID4gKysrIGIvZHJpdmVycy9waHkvcmVuZXNhcy9waHktcmNhci1nZW4zLXVz
-YjIuYw0KPiANCj4gPiBAQCAtMTA2LDYgKzEwNyw3IEBAIHN0cnVjdCByY2FyX2dlbjNfY2hhbiB7
-DQo+ID4gICAgICAgICBzdHJ1Y3QgcmNhcl9nZW4zX3BoeSBycGh5c1tOVU1fT0ZfUEhZU107DQo+
-ID4gICAgICAgICBzdHJ1Y3QgcmVndWxhdG9yICp2YnVzOw0KPiA+ICAgICAgICAgc3RydWN0IHdv
-cmtfc3RydWN0IHdvcms7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbXV0ZXggbG9jazsNCj4gDQo+IEl0
-IGlzIGFsd2F5cyBhIGdvb2QgaWRlYSB0byBkb2N1bWVudCB3aGF0IGlzIHByb3RlY3RlZCBieSB0
-aGUgbXV0ZXg6DQo+IA0KPiAgICAgICAgIHN0cnVjdCBtdXRleCBsb2NrOyAgICAvKiBwcm90ZWN0
-cyBycGh5c1suLi5dLnBvd2VyZWQgKi8NCg0KSSBnb3QgaXQuDQoNCj4gQ2hlY2twYXRjaCBkb2Vz
-IGhhdmUgYSBjaGVjayBmb3IgdGhpcywgYnV0IHVuZm9ydHVuYXRlbHkgaXQgaXMgZW5hYmxlZCBm
-b3INCj4gZHJpdmVycy9uZXQvLCBuZXQvLCBhbmQgZHJpdmVycy9zdGFnaW5nLyBvbmx5Og0KPiAN
-Cj4gICAgIENIRUNLOiBzdHJ1Y3QgbXV0ZXggZGVmaW5pdGlvbiB3aXRob3V0IGNvbW1lbnQNCg0K
-T2gsIEkgZGlkbid0IGtub3cgdGhhdC4gVGhhbmsgeW91IGZvciB5b3VyIGluZm9ybWF0aW9uLg0K
-DQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVy
-LmJlPg0KPiANCj4gYW5kIHRoZSBpbWJhbGFuY2UgaXMgZ29uZToNCj4gVGVzdGVkLWJ5OiBHZWVy
-dCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KDQpUaGFuayB5b3UgdmVy
-eSBtdWNoIGZvciB5b3VyIFJldmlld2VkLWJ5IGFuZCBUZXN0ZWQtYnkgdGFncyENCg0KQmVzdCBy
-ZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+
-IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0
-dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBs
-aW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2hu
-aWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxr
-aW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBs
-aWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9y
-dmFsZHMNCg==
+On Sun, 9 Jun 2019 at 22:15, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.1.9 release.
+> There are 70 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.1.9-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.1.9-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.1.y
+git commit: 5b3d375b3838a28e769a56fdcb67d5422579d53b
+git describe: v5.1.7-157-g5b3d375b3838
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/bui=
+ld/v5.1.7-157-g5b3d375b3838
+
+No regressions (compared to build v5.1.7)
+
+No fixes (compared to build v5.1.7)
+
+Ran 24361 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-fs-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
