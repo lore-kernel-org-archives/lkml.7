@@ -2,69 +2,127 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7801C28D16
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E61AC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1D320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E9320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 12:36:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIxAT7fp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389899AbfFJMdp (ORCPT
+        id S2389978AbfFJMgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 08:33:45 -0400
-Received: from ms.lwn.net ([45.79.88.28]:43790 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388373AbfFJMdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 08:33:44 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 059399B0;
-        Mon, 10 Jun 2019 12:33:43 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 06:33:40 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.cz>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 56/85] doc: Cope with the deprecation of
- AutoReporter
-Message-ID: <20190610063340.051ee13b@lwn.net>
-In-Reply-To: <20190610074840.GB24746@kroah.com>
-References: <20190607153849.101321647@linuxfoundation.org>
-        <20190607153855.717899507@linuxfoundation.org>
-        <1fbb40df-d420-9f10-34a9-340b3156eb7c@suse.cz>
-        <20190610073119.GB20470@kroah.com>
-        <f20b3005-53f8-607a-e995-741836b3f5f0@suse.cz>
-        <20190610074840.GB24746@kroah.com>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 10 Jun 2019 08:36:22 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37542 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389905AbfFJMgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 08:36:21 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 22so7999891wmg.2;
+        Mon, 10 Jun 2019 05:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7PM6uoWZ78ckqebs+NRho2n2G33fUn82Yyi1MIgn2mw=;
+        b=QIxAT7fpDsh3nectz0zZqalSAhl36Rky2FXeXgy2/bzfrvwVuGLKcCR9fZ4F1e8Hu/
+         6k0l9qUoRdX3AXMeuUdOCJbyorA5YULhbXDTfx7kholMZj/h9HCGK0QwlCqObOntPEST
+         s7UfLTwUJL+c4C7mvuB3yV3qKVidYgwO3tiXCknk/3ds3moCHqIaFfyTS70yOrgV5g3W
+         9mthIoFEkJ1Jgo3Q1G+EQdlTn6gaIo5g9pqSkwaBsUvFZWxq1/73MVXNtxF12chy6/2e
+         cLhAZhapZWy7EDOKQxfaoB99R6Frlr4RniMSwcEPn8GNRNgIBD0asEqm1weduHhIsuyM
+         jFBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7PM6uoWZ78ckqebs+NRho2n2G33fUn82Yyi1MIgn2mw=;
+        b=JZluYXjt9ZuGJrna0waQBwdeOnJ16sJZonmpaX+kgZwQgWkoUmbWAXSuV498mXFFJv
+         /V3j9LvqlYPmmE8Et6xzReEewv3s0Lrctk0w7lTGP4hdWZstetabm7nZydZhs0kmXZww
+         +oCSnLR9V/XdTYSZoCEpvgjAMfkL7KDyqFTQ/1RMz06sCbp6ye+Faqzrtj5efU9piclY
+         RfkIKozZTuWYbWEaiCxA0SCJNGxB+mKQbddxS5nmpN7ASLtVWCl5/99+kPlh70afejvf
+         Vdf8eaVFwyQTt9FtolRNDLQMqbg246YZGxHWJDv3EcCnwi42U5PmHIOGobj8YLt3GOLs
+         5jCg==
+X-Gm-Message-State: APjAAAXtuu1r4Muv9PcxFW4iI9wKGem+SeSpEGkzo4eME+cu7YO4ZiLX
+        uiMG5i7NI6L8NySKhQg5BIdCZVnUQfJgrQ==
+X-Google-Smtp-Source: APXvYqyvfc7vIEw7b/PkaFTeK+1lqhxcoZe4J8TJ4kFnOvqR0bwXoivUKMz4jKA8bJXRqf+TioJLCg==
+X-Received: by 2002:a1c:f314:: with SMTP id q20mr12291063wmq.74.1560170179320;
+        Mon, 10 Jun 2019 05:36:19 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id f204sm13850147wme.18.2019.06.10.05.36.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 05:36:18 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 13:36:17 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, stefanha@redhat.com
+Subject: Re: [PATCH 0/2] scsi: add support for request batching
+Message-ID: <20190610123617.GK14257@stefanha-x1.localdomain>
+References: <20190530112811.3066-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GvuyDaC2GNSBQusT"
+Content-Disposition: inline
+In-Reply-To: <20190530112811.3066-1-pbonzini@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 09:48:40 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-> Hm, 2.1 here:
-> 	Running Sphinx v2.1.0
-> perhaps Tumbleweed needs to update?  :)
+--GvuyDaC2GNSBQusT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Heh...trying 2.1 is still on my list of things to do ... :)
+On Thu, May 30, 2019 at 01:28:09PM +0200, Paolo Bonzini wrote:
+> This allows a list of requests to be issued, with the LLD only writing
+> the hardware doorbell when necessary, after the last request was prepared.
+> This is more efficient if we have lists of requests to issue, particularly
+> on virtualized hardware, where writing the doorbell is more expensive than
+> on real hardware.
+>=20
+> This applies to any HBA, either singlequeue or multiqueue; the second
+> patch implements it for virtio-scsi.
+>=20
+> Paolo
+>=20
+> Paolo Bonzini (2):
+>   scsi_host: add support for request batching
+>   virtio_scsi: implement request batching
+>=20
+>  drivers/scsi/scsi_lib.c    | 37 ++++++++++++++++++++++---
+>  drivers/scsi/virtio_scsi.c | 55 +++++++++++++++++++++++++++-----------
+>  include/scsi/scsi_cmnd.h   |  1 +
+>  include/scsi/scsi_host.h   | 16 +++++++++--
+>  4 files changed, 89 insertions(+), 20 deletions(-)
+>=20
+> --=20
+> 2.21.0
+>=20
 
-> Anyway, this should not be breaking, if Jon doesn't have any ideas, I'll
-> just drop these changes.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-The fix for that is 551bd3368a7b (drm/i915: Maintain consistent
-documentation subsection ordering) which was also marked for stable.  Jiri,
-do you somehow not have that one?
+--GvuyDaC2GNSBQusT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-jon
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlz+TsEACgkQnKSrs4Gr
+c8gE+QgAwWdqWzwfL6+Ow3hy/qynLLmeQ94GdokspoNxkJ+GvFFTuq51OaFQyMeH
+dE+3n2QBm0p57kO1c6doG6CWuOGeMN9pd5PGgLyl+QOaSc1u2LO/kWUJ8Re3Ggyz
+QICTZseq3Z4NVerKLZY5Mx53YZfRMbePKVSrfWUR4okHtwSojMIh6bDaIf1HvHU/
+vcsEDFOUEle1nu2ypocOoVP6E15tYRlIlYlvnhoeM2Dv1A9+VazFnOkavn2wnEi9
+H0ELaaWbRibQFXfIuWf7s8VyLufh1EoGtVAUF4Dza3y/tRg5rVbTEgO3/1S+m1PV
+qqPghgKwdjpLkaF2vXeKWBoC2SqiKw==
+=IMS9
+-----END PGP SIGNATURE-----
+
+--GvuyDaC2GNSBQusT--
