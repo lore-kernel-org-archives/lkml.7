@@ -2,105 +2,88 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A58FC31E40
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2170DC31E43
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B7F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005D42086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 16:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbfFJQ4M (ORCPT
+        id S1728370AbfFJQ4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 12:56:12 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51664 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727648AbfFJQ4L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:56:11 -0400
-Received: from [123.118.212.23] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1haNaZ-0007lt-1m; Mon, 10 Jun 2019 16:56:07 +0000
-Subject: Re: [PATCH 1/2] Input: synaptics-rmi4 - clear irqs before set irqs
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cheiny@synaptics.com, aduggan@synaptics.com,
-        benjamin.tissoires@redhat.com
-References: <20190220164200.31044-1-aaron.ma@canonical.com>
- <20190609165551.GB90002@dtor-ws>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <7da443d0-f433-c5a5-5194-707362eb2ee5@canonical.com>
-Date:   Tue, 11 Jun 2019 00:55:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 10 Jun 2019 12:56:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57588 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727648AbfFJQ4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:56:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C303FAC3A;
+        Mon, 10 Jun 2019 16:56:46 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 18:56:43 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v3 10/11] mm/memory_hotplug: Make
+ unregister_memory_block_under_nodes() never fail
+Message-ID: <20190610165642.GB5643@linux>
+References: <20190527111152.16324-1-david@redhat.com>
+ <20190527111152.16324-11-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190609165551.GB90002@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527111152.16324-11-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 6/10/19 12:55 AM, Dmitry Torokhov wrote:
-> Hi Aaron,
+On Mon, May 27, 2019 at 01:11:51PM +0200, David Hildenbrand wrote:
+> We really don't want anything during memory hotunplug to fail.
+> We always pass a valid memory block device, that check can go. Avoid
+> allocating memory and eventually failing. As we are always called under
+> lock, we can use a static piece of memory. This avoids having to put
+> the structure onto the stack, having to guess about the stack size
+> of callers.
 > 
-> On Wed, Feb 20, 2019 at 05:41:59PM +0100, Aaron Ma wrote:
->> rmi4 got spam data after S3 resume on some ThinkPads.
->> Then TrackPoint lost when be detected by psmouse.
->> Clear irqs status before set irqs will make TrackPoint back.
-> Could you please give me an idea as to what this spam data is?
+> Patch inspired by a patch from Oscar Salvador.
 > 
-
-It should be some data 0 during suspend/resume.
-Actually I don't know how these data 0 is produced.
-Not all synaptics touchpads have this issue.
-
-> In F03 probe we clear all pending data before enabling the function,
-
-Yes we did, but not after resume.
-
-> maybe the same needs to be done on resume, instead of changing the way
-> we handle IRQ bits?
-
-This patch is supposed to clear irq status like it in fn probe. Not
-changing IRQ bits.
-
-Thanks,
-Aaron
-
+> In the future, there might be no need to iterate over nodes at all.
+> mem->nid should tell us exactly what to remove. Memory block devices
+> with mixed nodes (added during boot) should properly fenced off and never
+> removed.
 > 
-> Thanks,
-> 
-> -- Dmitry
-> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+-- 
+Oscar Salvador
+SUSE L3
