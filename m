@@ -2,112 +2,123 @@ Return-Path: <SRS0=f7FU=UJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C519C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482C4C468C1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 717FD206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BDB22082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Jun 2019 10:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmjeWb38"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kcgbprTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389557AbfFJKnO (ORCPT
+        id S2389566AbfFJKvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 06:43:14 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40764 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389426AbfFJKnO (ORCPT
+        Mon, 10 Jun 2019 06:51:52 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33477 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389550AbfFJKvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 06:43:14 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so19624wmj.5;
-        Mon, 10 Jun 2019 03:43:13 -0700 (PDT)
+        Mon, 10 Jun 2019 06:51:52 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k187so4351006pga.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 03:51:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=4X5BVYduqqhkfrUdD8uPwIHjHoHTW0DOqj7pcTji4ds=;
-        b=MmjeWb38tYAVr0X4P+VQMcjoxY7H4NRBgapwwg5TO1ubz44Vwgk+rfoKSOPceAvsjj
-         sEBzyNi2ee6CUA7BRaxtnXUoEF+NswhINA2W23ijkjEmguFhsq9qbmmEm6DiD1o+Rxa9
-         a1UyF6Qaudbf9pgRavTSJCt+sLKesrSEZdkQeSYgAsBy0UJ3g9dsaUrmv2VCGIpoasGs
-         12PEmha9SSAfPr2pc7n+v0qPWly+BBg1F7ohYii7NJ+Pi3ANHmzZ9FxwdkyZ1+RHIHGU
-         Tch8A7J5TUxdHFeLd31NCDSqMCjdqyW9LwD1NRcZG+8IlB3ttbgtT5o+oZ1HOUZ+2qsE
-         bS2A==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4nrRXRZLGYNCevB7P9G3OypvWpceLIiQ3ZsEEykg2uo=;
+        b=kcgbprTvW7V6ti9e2eqMCTo+r0IkcXNP3aoI3bJr+vpxKG+hZGfrsF0QSplUGzrwhp
+         1hYixkVbW/8RDdREbEjyH9YJhd4IaqEOTSw7d6xsjNLU1vmIbUdhVafW6PHj7jJEuy6G
+         D9zC/DPQBUzyhzTb7Lt+YgG7+YJXTozze7YjSvSQ3r/gy31bFfbXIJrbgnulgLqLIEn2
+         Vy7H4zYXdhAgTdqSn174uwtPI64/2dEj9dydKFIIvo17BE0sGuxjyag/dj7mX+b2L4ZC
+         PZs6ufhW5SkDVK4ygXKSkxzmIc8efcnz0IsMSGDPXVEcX7R3NNesnOBojR1dShR0bn29
+         bVcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=4X5BVYduqqhkfrUdD8uPwIHjHoHTW0DOqj7pcTji4ds=;
-        b=OhKcHjtjqylfpSYP18djmZlEmOdfX8QQWab7vYAGJJBKcejdSyMvfYIWiRsviunIe5
-         D3vM1WWAKlm66A6yCFEGK19p6jujNs1bN5BAH7w6LNx+gO3l2ex6uE5PZogvFCiMvhLO
-         IrzFGAQrUuYwPF+P6ZkW8rKCqK/shdWKF8cgXyVXq8v6hKgaxzws3FXzxvukDKl8wb9b
-         WVSJAs3qm2uutI+gnYFmFLSJ72Guc2i+uot6EqATPO0m8+DDby2F+nRLC4ytIw0dXkTr
-         kmcP+kEgRzoKlaW7ZUQ8uEqfjanM0MIex5T8zWUAcIPUeP5rayFprlp0xgEFhngJrzEo
-         PBMA==
-X-Gm-Message-State: APjAAAXBiOrApZlhHS6qdGV0cmkwqyRzv8mGBVp8/upoEkGa/6hjxQfb
-        JLxIvq61V+50IA3PEhegxbCxcEjXLJg=
-X-Google-Smtp-Source: APXvYqxE2lcrbWL6CzVWGM91R+jiI+w/lbi80NOpyRVk5mPpNOrcPvlp/G7MVx/7dJ8gmGNA7HXAjg==
-X-Received: by 2002:a1c:1bc9:: with SMTP id b192mr12880619wmb.152.1560163392455;
-        Mon, 10 Jun 2019 03:43:12 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id x6sm10097421wrr.11.2019.06.10.03.43.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 03:43:11 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 12:43:10 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
-Cc:     XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
-        Naoki Saito <naoki.saito@alpsalpine.com>,
-        Hideo Kawase <hideo.kawase@alpsalpine.com>
-Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRD?= =?utf-8?Q?H?=
- =?utf-8?Q?=5D?= input: alps-fix the issue alps cs19 trackstick do not work.
-Message-ID: <20190610104310.qa5snt7jpcljodfv@pali>
-References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
- <20190527100913.sgxrjrmphsjfmcdb@pali>
- <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190528071824.jimhixhtsynzwixe@pali>
- <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4nrRXRZLGYNCevB7P9G3OypvWpceLIiQ3ZsEEykg2uo=;
+        b=SmPmgdBogd/22+XesYQ8AmteG+gzM93F1rAtdm6dFXV1i8hOiSVcfdLU2CGiJYVwHB
+         +QB7NQL2cMXYUV1/9vcJURRyaSFzIJYtSYrQWByxV8a0KvJRk+yoiFibFlhyqNGF5LX8
+         kBIzpAKQYQFBTdWVKTkIrzbNCFwb2A6WSRGpbmrzHwF1bP1tsTB8KGWjmqRqgCeh8zuW
+         oe4zEHl31RmnYHKa77uJjyIM/LeZQLKbUvp6vVs1fOyCAuG+2aa9mfZ2CpHQrmFmnEi5
+         mh3SyPLdOZaIwiUqSGptsOS6kT1C2FlmS1iIcD6vFz8b5EEiwgjbnRxxlyFZlz/f6q8u
+         +fLA==
+X-Gm-Message-State: APjAAAWqKK8e9oQIiSApkl2v39Qpp3DLkUwCmLkPnOTy6443WMKgVdSu
+        YpAMIVuDHszvLeoG39UErh2Ovw==
+X-Google-Smtp-Source: APXvYqyGlVDir430MCaqbMXQr7mk1OEzFBHQegeaPhz5iaPiwEcmW4FtmltmprADvphfod21ZvUIbg==
+X-Received: by 2002:a17:90a:a785:: with SMTP id f5mr20588788pjq.4.1560163911094;
+        Mon, 10 Jun 2019 03:51:51 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id y22sm5484067pfm.70.2019.06.10.03.51.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 03:51:50 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Qais.Yousef@arm.com, mka@chromium.org, juri.lelli@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3 0/5] cpufreq: Use QoS layer to manage freq-constraints
+Date:   Mon, 10 Jun 2019 16:21:31 +0530
+Message-Id: <cover.1560163748.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 10 June 2019 10:03:51 Xiaoxiao Liu wrote:
-> Hi Pali,
+Hello,
 
-Hi!
+This patchset attempts to manage CPU frequency constraints using the PM
+QoS framework. It only does the basic stuff right now and moves the
+userspace constraints to use the QoS infrastructure.
 
-> We register our CS19 device as ALPS_ONLY_TRACKSTICK device.
-> And let the V8 protocol function support the process of ALPS_ONLY_TRACKSTICK device. 
-> 
-> I want to confirm if this solution OK?
+Todo:
+- Migrate all users to the QoS framework and get rid of cpufreq specific
+  notifiers.
+- Make PM QoS learn about the relation of CPUs in a policy, so a single
+  list of constraints is managed for all of them instead of per-cpu
+  constraints.
 
-Yes, it is fine. Just make sure that touchapad input device is not
-registered when this ALPS_ONLY_TRACKSTICK flag is set. So userspace
-would not see any fake/unavailable touchpad input device.
+V2->V3:
+- Add a comment in cpufreq.c as suggested by Qais.
+- Rebased on latest pm/linux-next.
 
-> Xiaoxiao.Liu
+V1->V2:
+- The previous version introduced a completely new framework, this one
+  moves to PM QoS instead.
+- Lots of changes because of this.
+
+--
+viresh
+
+Viresh Kumar (5):
+  PM / QOS: Pass request type to dev_pm_qos_{add|remove}_notifier()
+  PM / QOS: Pass request type to dev_pm_qos_read_value()
+  PM / QoS: Add support for MIN/MAX frequency constraints
+  cpufreq: Register notifiers with the PM QoS framework
+  cpufreq: Add QoS requests for userspace constraints
+
+ Documentation/power/pm_qos_interface.txt |  12 +-
+ drivers/base/power/domain.c              |   8 +-
+ drivers/base/power/domain_governor.c     |   4 +-
+ drivers/base/power/qos.c                 | 115 +++++++++++--
+ drivers/base/power/runtime.c             |   2 +-
+ drivers/cpufreq/cpufreq.c                | 203 ++++++++++++++++-------
+ drivers/cpuidle/governor.c               |   2 +-
+ include/linux/cpufreq.h                  |  12 +-
+ include/linux/pm_qos.h                   |  71 ++++++--
+ 9 files changed, 325 insertions(+), 104 deletions(-)
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.21.0.rc0.269.g1a574e7a288b
+
