@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4803C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F29C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89582173B
+	by mail.kernel.org (Postfix) with ESMTP id D3C752173C
 	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:23:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="evokIjR4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f8RsE3S/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390839AbfFKAXL (ORCPT
+        id S2390910AbfFKAXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 20:23:11 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45419 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390734AbfFKAXJ (ORCPT
+        Mon, 10 Jun 2019 20:23:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46714 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390825AbfFKAXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 20:23:09 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w34so5875308pga.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 17:23:09 -0700 (PDT)
+        Mon, 10 Jun 2019 20:23:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 81so6219998pfy.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 17:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7l9eJCs2PeowUasvujNxJ+tq7unRBQcTxAKWiz4JMIE=;
-        b=evokIjR4FgyjQ4UFLo9iswsV8vW4ne5f+ymL6lDggG9PK5MCubFk6GC/cJ93jctYsM
-         VaPiJo+Rs9owKBfAdgdm9x/Qx065hL6/VManLQv5fJsFUhQWa5CSgM5J7VV5u4PffOoj
-         05Sca9TKhk3F9uLQLzI9BpVrtyH3VMUHP7vWk=
+        bh=M8dK47yPhynvSehskkuhR0uoKpp2uUP0x/D6+OPbrUg=;
+        b=f8RsE3S/kfdDH6v5icBqkYxG44gp7sMpthCwyaqeVVv/htgQ5HpcDI6Wv0iU/zWNcb
+         oatVGJ4axZtIjvktwE9gYtDNHp4sChejjwJoasvq2NwX71M8H6s0JQby/OGPhBngYau6
+         PLZre9cxMKoOn5+neuim6KE3BHgm+44DhuGtg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7l9eJCs2PeowUasvujNxJ+tq7unRBQcTxAKWiz4JMIE=;
-        b=EtThea7FtfhsftSqSrwPlcJn4BDRjcyzdx5Ut4TEvcu0GcD/rZzuBerEWL6Itbp8U/
-         hF5iChKrWbU8hygBLluVvY6gui183C2gEtESznBNLhrTJv/JScsWpXvNNeE5e4FrXN20
-         AXrcAyXeLXrhQwRh8XPIH95nJ6jLRcoJLLcdFOeruNsFBAJnDI1Dm6Hv4FkiYOG5W8g2
-         l7x2FlY1dkOamI6DnrK2Azi4Va0wxD8/02yAWYfhRy8CODZeS4ltwsnZwx7BANLETLm4
-         /dUZM63n3K6J7bMldYq9M4DdDt7I1suUvtJZL1AV3nmWEZRqeDBRUg3B1v1evjQ4R2kQ
-         MK5w==
-X-Gm-Message-State: APjAAAXhqRa8Rbxfh56pd6Xbdo+jm4FGpc0AWNmZd1jaZkg7STluy61j
-        OaHqJZV1nSCea0duu3f7j6R45VaTnKg=
-X-Google-Smtp-Source: APXvYqxXrwREiReNGSD5SzpOTe3czQMpgGRjtIlULxAPe0ldReXT1NS+YN+qsMaBOSYIsfxHYJn70A==
-X-Received: by 2002:a62:2f87:: with SMTP id v129mr78643128pfv.9.1560212588496;
-        Mon, 10 Jun 2019 17:23:08 -0700 (PDT)
+        bh=M8dK47yPhynvSehskkuhR0uoKpp2uUP0x/D6+OPbrUg=;
+        b=FOZVgj3p5TuvX3rEk+X3f4yfqfg4csM4uUfw668n1aFEzf2qOEQU9SLCYB6g09kjSW
+         pKWmrCPIezFDf7I0rvPIfNhB0/TF9zSxiUUbm3st7oMTrlODbnjBpdI3B2qcdzruHOwR
+         T+97wO7uKc0Mmd1oDu3Tzpat+S0r8jPYtGaGbTsKtMV2HPFYYuKFUV9dt1GdzXGxUfsG
+         QWHUw0xWU1Ik1MqRJqs0G6EBQwAsSzcNvmQ6sxTewkaIBSXft1iWdrjwYM6qQg9zOrHZ
+         +9BPQlyWvW9xtis2Se4Qbl3zwp8CVbKRHO7MEe1oQ4fhDJfZ7RR3e3WnlPX7t2cYt5BI
+         XOBw==
+X-Gm-Message-State: APjAAAVbhr/H4aDb+UkngT9d1I5dbuHhGP/Y6qHQUfd0Ut5AS7LDFTIm
+        JjyTSLEA8TJv3iXvKehi/2D09wAd5m8=
+X-Google-Smtp-Source: APXvYqxgskg5maq+JeiMbuvV7nLdRyi6nn4eQ55SV9Rs1d3bhqZcPjSw0Twk7BzvTbHKQzN5RyBSvg==
+X-Received: by 2002:a63:8249:: with SMTP id w70mr15859377pgd.33.1560212590903;
+        Mon, 10 Jun 2019 17:23:10 -0700 (PDT)
 Received: from exogeni.mtv.corp.google.com ([2620:15c:202:1:5be8:f2a6:fd7b:7459])
-        by smtp.gmail.com with ESMTPSA id t4sm540317pjq.19.2019.06.10.17.23.07
+        by smtp.gmail.com with ESMTPSA id t4sm540317pjq.19.2019.06.10.17.23.09
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 17:23:07 -0700 (PDT)
+        Mon, 10 Jun 2019 17:23:10 -0700 (PDT)
 From:   Derek Basehore <dbasehore@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
@@ -65,9 +65,9 @@ Cc:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org,
         Derek Basehore <dbasehore@chromium.org>
-Subject: [PATCH 3/5] drm/panel: Add attach/detach callbacks
-Date:   Mon, 10 Jun 2019 17:22:54 -0700
-Message-Id: <20190611002256.186969-4-dbasehore@chromium.org>
+Subject: [PATCH 5/5] drm/mtk: add panel orientation property
+Date:   Mon, 10 Jun 2019 17:22:56 -0700
+Message-Id: <20190611002256.186969-6-dbasehore@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 In-Reply-To: <20190611002256.186969-1-dbasehore@chromium.org>
 References: <20190611002256.186969-1-dbasehore@chromium.org>
@@ -78,79 +78,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the attach/detach callbacks. These are for setting up
-internal state for the connector/panel pair that can't be done at
-probe (since the connector doesn't exist) and which don't need to be
-repeatedly done for every get/modes, prepare, or enable callback.
-Values such as the panel orientation, and display size can be filled
-in for the connector.
+This inits the panel orientation property for the mediatek dsi driver
+if the panel orientation (connector.display_info.panel_orientation) is
+not DRM_MODE_PANEL_ORIENTATION_UNKNOWN.
 
 Signed-off-by: Derek Basehore <dbasehore@chromium.org>
 ---
- drivers/gpu/drm/drm_panel.c | 14 ++++++++++++++
- include/drm/drm_panel.h     |  4 ++++
- 2 files changed, 18 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-index 3b689ce4a51a..72f67678d9d5 100644
---- a/drivers/gpu/drm/drm_panel.c
-+++ b/drivers/gpu/drm/drm_panel.c
-@@ -104,12 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
-  */
- int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
- {
-+	int ret;
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 4a0b9150a7bb..08ffdc7526dd 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -782,10 +782,18 @@ static int mtk_dsi_create_connector(struct drm_device *drm, struct mtk_dsi *dsi)
+ 			DRM_ERROR("Failed to attach panel to drm\n");
+ 			goto err_connector_cleanup;
+ 		}
 +
- 	if (panel->connector)
- 		return -EBUSY;
- 
- 	panel->connector = connector;
- 	panel->drm = connector->dev;
- 
-+	if (panel->funcs->attach) {
-+		ret = panel->funcs->attach(panel);
-+		if (ret < 0) {
-+			panel->connector = NULL;
-+			panel->drm = NULL;
-+			return ret;
++		ret = drm_connector_init_panel_orientation_property(&dsi->conn);
++		if (ret) {
++			DRM_ERROR("Failed to init panel orientation\n");
++			goto err_panel_detach;
 +		}
-+	}
-+
- 	return 0;
- }
- EXPORT_SYMBOL(drm_panel_attach);
-@@ -128,6 +139,9 @@ EXPORT_SYMBOL(drm_panel_attach);
-  */
- int drm_panel_detach(struct drm_panel *panel)
- {
-+	if (panel->funcs->detach)
-+		panel->funcs->detach(panel);
-+
- 	panel->connector = NULL;
- 	panel->drm = NULL;
+ 	}
  
-diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-index 13631b2efbaa..e136e3a3c996 100644
---- a/include/drm/drm_panel.h
-+++ b/include/drm/drm_panel.h
-@@ -37,6 +37,8 @@ struct display_timing;
-  * struct drm_panel_funcs - perform operations on a given panel
-  * @disable: disable panel (turn off back light, etc.)
-  * @unprepare: turn off panel
-+ * @detach: detach panel->connector (clear internal state, etc.)
-+ * @attach: attach panel->connector (update internal state, etc.)
-  * @prepare: turn on panel and perform set up
-  * @enable: enable panel (turn on back light, etc.)
-  * @get_modes: add modes to the connector that the panel is attached to and
-@@ -70,6 +72,8 @@ struct display_timing;
- struct drm_panel_funcs {
- 	int (*disable)(struct drm_panel *panel);
- 	int (*unprepare)(struct drm_panel *panel);
-+	void (*detach)(struct drm_panel *panel);
-+	int (*attach)(struct drm_panel *panel);
- 	int (*prepare)(struct drm_panel *panel);
- 	int (*enable)(struct drm_panel *panel);
- 	int (*get_modes)(struct drm_panel *panel);
+ 	return 0;
+ 
++err_panel_detach:
++	drm_panel_detach(dsi->panel);
+ err_connector_cleanup:
+ 	drm_connector_cleanup(&dsi->conn);
+ 	return ret;
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
