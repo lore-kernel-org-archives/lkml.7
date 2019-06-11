@@ -2,208 +2,138 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81303C31E45
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFE4C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CCB21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7BE20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oIUVz20N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407669AbfFKVh5 (ORCPT
+        id S2407687AbfFKViF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:37:57 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43104 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404005AbfFKVh5 (ORCPT
+        Tue, 11 Jun 2019 17:38:05 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38691 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407675AbfFKViF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:37:57 -0400
-Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id a0bf96c09c547816; Tue, 11 Jun 2019 23:37:54 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH] PCI: PM: Avoid possible suspend-to-idle issue
-Date:   Tue, 11 Jun 2019 23:37:53 +0200
-Message-ID: <1612033.SWpHOFZInD@kreacher>
-In-Reply-To: <1583084.Q78GrOSehU@kreacher>
-References: <2315917.ZGeXE6pBFC@kreacher> <527F9B70-68AC-4CD4-A3C2-576EA09187DD@canonical.com> <1583084.Q78GrOSehU@kreacher>
+        Tue, 11 Jun 2019 17:38:05 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f97so5671431plb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 14:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=c/V5azhQK0NKG3CgTrOQr2YdB5nv03TCL7KtVGmmTnE=;
+        b=oIUVz20NxztwZIHdK3k65o0Fojj8X3TmNQgvsbpNbh+NJFEE9FTzcALPGexsN2u0lV
+         R4N/0/VHL69lIgdJo/Mavd44QxzYFnGkGyNM5SqP5YDejiSLqcxh4/bWKonb2Q9Rk44g
+         4lfQgqfTvNf3GlM1jKlbf4K51OOFbRZUH6njQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c/V5azhQK0NKG3CgTrOQr2YdB5nv03TCL7KtVGmmTnE=;
+        b=SAPhLP/CZjTs7HAXJVDjhRZO9iLKG5bAxu2twGFVkHRFecw7QfYghjeuJXEbQI0xLh
+         /mCnYtbXOn/rn+4ZI8ho1RSNUW0D2tpw203uE832YZzPL/IJyPp+bYk8JciXIzTfZvXd
+         hdQoqwex/m54fEebkikkQYmTF5WTzSBEo7ByOkoXoTpeMeZpChZPHRMx67l0TzxLNmjl
+         jx/Gjk8qX8qGIOBLsBmTeVVOShdUdZAJtrE3uK4cpOGUb6oEdA9GAe0GMd1XxnNricTX
+         Xah20RbaPbUctjrTWTUBK3Oy9ekG+3EEN6nGgqnVzEbCEgC445SRbWeqqYfShosKRsBT
+         nkvg==
+X-Gm-Message-State: APjAAAU38KZ03fEdsyZoqr07MdVeoC6tfivMRou0cb/V+7I/0d+WGgsq
+        7I+zHmqgJZ+GukgymHpLBUpCaQ==
+X-Google-Smtp-Source: APXvYqw7YuxbYKqsmcBwdCJJBrsNVyyiE8CmkHa4T0LQVEl29ePKAtTry61J448brFzrtjCg2vAB6Q==
+X-Received: by 2002:a17:902:d695:: with SMTP id v21mr62285877ply.342.1560289084363;
+        Tue, 11 Jun 2019 14:38:04 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id b128sm15771434pfa.165.2019.06.11.14.38.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 14:38:03 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 14:38:01 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm-backlight: Add 'max-brightness'
+ property
+Message-ID: <20190611213801.GE137143@google.com>
+References: <20190610233739.29477-1-mka@chromium.org>
+ <20190611102851.GA16611@ulmo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190611102851.GA16611@ulmo>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 11, 2019 11:34:36 PM CEST Rafael J. Wysocki wrote:
-> On Tuesday, June 11, 2019 10:39:44 AM CEST Kai-Heng Feng wrote:
-> > Hi Rafael,
+Hi Thierry,
+
+On Tue, Jun 11, 2019 at 12:28:51PM +0200, Thierry Reding wrote:
+> On Mon, Jun 10, 2019 at 04:37:38PM -0700, Matthias Kaehlcke wrote:
+> > Add an optional 'max-brightness' property, which is used to specify
+> > the number of brightness levels (max-brightness + 1) when the node
+> > has no 'brightness-levels' table.
 > > 
-> > at 19:02, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> >  .../devicetree/bindings/leds/backlight/pwm-backlight.txt       | 3 +++
+> >  1 file changed, 3 insertions(+)
 > > 
-> > > On Friday, May 17, 2019 11:08:50 AM CEST Rafael J. Wysocki wrote:
-> > >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >>
-> > >> If a PCI driver leaves the device handled by it in D0 and calls
-> > >> pci_save_state() on the device in its ->suspend() or ->suspend_late()
-> > >> callback, it can expect the device to stay in D0 over the whole
-> > >> s2idle cycle.  However, that may not be the case if there is a
-> > >> spurious wakeup while the system is suspended, because in that case
-> > >> pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
-> > >> which calls pci_restore_state(), via pci_pm_default_resume_early(),
-> > >> so state_saved is cleared and the second iteration of
-> > >> pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
-> > >> may change the power state of the device.
-> > >>
-> > >> To avoid that, add a new internal flag, skip_bus_pm, that will be set
-> > >> by pci_pm_suspend_noirq() when it runs for the first time during the
-> > >> given system suspend-resume cycle if the state of the device has
-> > >> been saved already and the device is still in D0.  Setting that flag
-> > >> will cause the next iterations of pci_pm_suspend_noirq() to set
-> > >> state_saved for pci_pm_resume_noirq(), so that it always restores the
-> > >> device state from the originally saved data, and avoid calling
-> > >> pci_prepare_to_sleep() for the device.
-> > >>
-> > >> Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from  
-> > >> suspend-to-idle")
-> > >> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > 
-> > I just found out this patch has a chance to freeze or reboot the system  
-> > during suspend cycles.
-> >
-> > What information do you need to debug?
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > index 64fa2fbd98c9..98f4ba626054 100644
+> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > @@ -27,6 +27,9 @@ Optional properties:
+> >                              resolution pwm duty cycle can be used without
+> >                              having to list out every possible value in the
+> >                              brightness-level array.
+> > +  - max-brightness: Maximum brightness value. Used to specify the number of
+> > +                    brightness levels (max-brightness + 1) when the node
+> > +                    has no 'brightness-levels' table.
 > 
-> A few things are missing from your report, like which kernel you have tested
-> and how exactly you have arrived at the conclusion that this particular commit
-> is the source of the problem.
+> Back at the time when these bindings were defined we specifically didn't
+> add this because it was deemed impractical. That is, no real hardware is
+> actually capable of achieving useful results with a simplified
+> description like this.
 > 
-> Care to provide some details on the above?
+> Besides, we already have the num-interpolated-steps property which
+> should allow you to achieve the same thing:
 > 
-> Anyway, there are a couple of things that can be done to improve the code
-> on top of 5.2-rc4.  The appended patch is one of them, so can you please test
-> it and let me know if it makes any difference?
-> 
-> The rationale here is that firmware in some devices may be confused by attempts
-> to put the device into D0 if it already is in that power state, so it is better to avoid
-> doing so.
-> 
-> ---
->  drivers/pci/pci-driver.c |   20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-> 
-> Index: linux-pm/drivers/pci/pci-driver.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci-driver.c
-> +++ linux-pm/drivers/pci/pci-driver.c
-> @@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
->  	pci_power_up(pci_dev);
->  	pci_restore_state(pci_dev);
->  	pci_pme_restore(pci_dev);
-> -	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  }
->  
->  /*
-> @@ -844,14 +843,12 @@ static int pci_pm_suspend_noirq(struct d
->  		/*
->  		 * The function is running for the second time in a row without
->  		 * going through full resume, which is possible only during
-> -		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-> -		 * device was originally left in D0, so its power state should
-> -		 * not be changed here and the device register values saved
-> -		 * originally should be restored on resume again.
-> +		 * suspend-to-idle in a spurious wakeup case.  The device should
-> +		 * be in D0 at this point.
->  		 */
-> -		pci_dev->state_saved = true;
-> +		;
->  	} else if (pci_dev->state_saved) {
-> -		if (pci_dev->current_state == PCI_D0)
-> +		if (pci_dev->current_state == PCI_D0 && !pm_suspend_via_firmware())
->  			pci_dev->skip_bus_pm = true;
->  	} else {
->  		pci_save_state(pci_dev);
-> @@ -862,6 +859,9 @@ static int pci_pm_suspend_noirq(struct d
->  	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
->  		pci_power_name(pci_dev->current_state));
->  
-> +	if (pci_dev->skip_bus_pm)
-> +		goto Fixup;
-> +
->  	pci_pm_set_unknown_state(pci_dev);
->  
->  	/*
-> @@ -909,7 +909,10 @@ static int pci_pm_resume_noirq(struct de
->  	if (dev_pm_smart_suspend_and_suspended(dev))
->  		pm_runtime_set_active(dev);
->  
-> -	pci_pm_default_resume_early(pci_dev);
-> +	if (!pci_dev->skip_bus_pm)
-> +		pci_pm_default_resume_early(pci_dev);
-> +
-> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
-> @@ -1200,6 +1203,7 @@ static int pci_pm_restore_noirq(struct d
->  	}
->  
->  	pci_pm_default_resume_early(pci_dev);
-> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
-> 
+> 	brightness-levels = <0 255>;
+> 	default-brightness-level = <1>;
+> 	num-interpolated-steps = <255>;
 
-And on top of the patch above, it may be a good idea to leave bridges above the
-devices left in D0 alone, which is taken care of by the appended patch.
+It doesn't achieve the same. With this configuration the device would
+have a table with 256 linearly increasing values, the intended use of
+the property is to provide the number of brightness levels to be used
+by the CIE 1931 algorithm to compute a brightness scale that is
+perceived as linear by the human eye. We could possibly treat a
+'brightness-levels' table with only two levels as special case and
+get the number of levels from it.
 
-Please test it (on top of the above one) and let me know how that goes.
+In any case from the discussion on "backlight: pwm_bl: Get number of
+brightness levels for CIE 1931 from the device tree" it might not be
+necessary to specify the number of levels in the DT.
 
----
- drivers/pci/pci-driver.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -841,15 +841,24 @@ static int pci_pm_suspend_noirq(struct d
- 
- 	if (pci_dev->skip_bus_pm) {
- 		/*
--		 * The function is running for the second time in a row without
-+		 * Either the device is a bridge with a child in D0 below it, or
-+		 * the function is running for the second time in a row without
- 		 * going through full resume, which is possible only during
- 		 * suspend-to-idle in a spurious wakeup case.  The device should
- 		 * be in D0 at this point.
- 		 */
- 		;
- 	} else if (pci_dev->state_saved) {
--		if (pci_dev->current_state == PCI_D0 && !pm_suspend_via_firmware())
-+		if (pci_dev->current_state == PCI_D0 && !pm_suspend_via_firmware()) {
-+			struct pci_dev *bridge = pci_dev->bus->self;
-+
- 			pci_dev->skip_bus_pm = true;
-+
-+			while (bridge) {
-+				bridge->skip_bus_pm = true;
-+				bridge = bridge->bus->self;
-+			}
-+		}
- 	} else {
- 		pci_save_state(pci_dev);
- 		if (pci_power_manageable(pci_dev))
-
+> Though given the original discussion that we had around how backlight
+> hardware behaves, that doesn't seem like a good choice.
 
 
