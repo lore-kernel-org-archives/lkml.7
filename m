@@ -2,158 +2,122 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C13C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C34C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683B5206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B732173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:36:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RBMXNht1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391332AbfFKIgO convert rfc822-to-8bit (ORCPT
+        id S2391356AbfFKIgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:36:14 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41295 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391272AbfFKIgO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:36:14 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 136so8628386lfa.8;
-        Tue, 11 Jun 2019 01:36:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GUp8qliVx03zllgkYDK8ocvKtbFURF4tyvvuVMWSXJU=;
-        b=DGjVijvJhxsU9XOJsZTqixJOUCUjQ+JG5IjSEQrgnGNBYwBdAmAei3xqdoXsNZcJQ1
-         NCSZEFGO4T32PyXbefXgNBNvI3q44nT5vcMnZ8j2pktOH1Se4HXoj0gy/a4H51aC811T
-         lY54O97LjYqyTtIApbt+uGockin1RuxXmS1N49Q6mq5qdFVlmrTIyxsGuK+Kxu7AQrYt
-         tvIyK2ledWM8+WTYC+TINbgcx+birrKT9CZf/I0VrjfsPGK8+zZ74zJDySntKSKmv9BI
-         luL4yPcZ+LPjTrDfAJ76gdZFdNTOCTc2qItjmmfTY4yynm+U6b2xiKGDDwmX5SmtcOGE
-         MXiQ==
-X-Gm-Message-State: APjAAAVpcH8UtE5hEA0HG07mxEUQC4cgKcPVMPJZq1mOx/9gaODUbfxR
-        jIcjr5Ph0bQ8v8XEhGjMofr7bJITouJPChwoif0=
-X-Google-Smtp-Source: APXvYqwd/QOgBJwyleqHVMRIDIpSd3upHGdxLIZdMQ2+GlhKJ5bW8QObXfMjmP33hbygmeS7kdgIlsZS8CVKSZyz6fA=
-X-Received: by 2002:ac2:546a:: with SMTP id e10mr37353204lfn.75.1560242171986;
- Tue, 11 Jun 2019 01:36:11 -0700 (PDT)
+        Tue, 11 Jun 2019 04:36:55 -0400
+Received: from mail-eopbgr60072.outbound.protection.outlook.com ([40.107.6.72]:11059
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391272AbfFKIgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 04:36:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7lK2MUaoyrUfKVctNJy5kA4pdqQxlgdqLXtUfuyt4z4=;
+ b=RBMXNht1svF3miDhSkFi/KjOZRaeJEiXzLulLYu21uB4lgWDs7Jo2X9gDp6ZLbPxVWhTWNJHOY8J7waN0HWgXcFH4rR15ZVH6dszNRuDYuQlvTry6g/zjs4P08xNoIzq89fIIECXR6tm4PtT+r53x6bxArqfAXGPhkbxcGAcEvw=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5810.eurprd04.prod.outlook.com (20.178.117.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.13; Tue, 11 Jun 2019 08:36:52 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::6090:1f0b:b85b:8015]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::6090:1f0b:b85b:8015%3]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 08:36:52 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: linux-next: Fixes tag needs some work in the imx-mxs tree
+Thread-Topic: linux-next: Fixes tag needs some work in the imx-mxs tree
+Thread-Index: AQHVHLFm4+M1Nb0Br0ijahXpQNE+6aaPVUEAgAbSoGA=
+Date:   Tue, 11 Jun 2019 08:36:52 +0000
+Message-ID: <AM0PR04MB44817EB65913F29630453E1A88ED0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190607074652.4b3d0c97@canb.auug.org.au>
+ <20190607002407.GY29853@dragon>
+In-Reply-To: <20190607002407.GY29853@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7207be81-e401-4dcf-38fb-08d6ee47f3ed
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5810;
+x-ms-traffictypediagnostic: AM0PR04MB5810:
+x-microsoft-antispam-prvs: <AM0PR04MB5810B6454B7159C79B1347B488ED0@AM0PR04MB5810.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(346002)(136003)(366004)(189003)(199004)(53754006)(52536014)(5660300002)(6246003)(33656002)(99286004)(71190400001)(74316002)(7736002)(305945005)(66556008)(76116006)(66476007)(81166006)(71200400001)(66446008)(64756008)(66946007)(81156014)(68736007)(73956011)(86362001)(478600001)(8936002)(8676002)(4744005)(256004)(476003)(66066001)(486006)(7696005)(2906002)(4326008)(9686003)(6116002)(186003)(44832011)(3846002)(76176011)(26005)(55016002)(14454004)(6506007)(53936002)(6436002)(11346002)(229853002)(54906003)(446003)(102836004)(316002)(110136005)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5810;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Bng48ruAX0z789kgZWfbm4RA88eSEPbzZtUValHLzO+/xUSOqu8qpOXhZwSOKeEWp/6+GvHXELUY0kWaeKi59XZHoHTP0GjB/hB5ulMccNoZh8oqJcnsiNjifUBZsYylBKHXR2SvoX0v3kdIhT7XeZCViViP1mQfrjHt78XS9t6NA8Forn79RtuFN5W9ww7eJ0/hBBXBiq0qtrV/Ih95MuYzlB5vORmbQGeTwcYGDMrW7kTxH53Uqmw/CvHr0SN9Z70TXQQM6D7d+Wa2BXFX6Rv1jjrfVNRImdzCiIFz7DvuY4LhUJiJdM23+bJvQXTPe5oOF2Jlqzf5sgzBCD8bPw79Mkvx9PuANV/9Pg7TdimAsUfjkPhxMhhwZ5qGstwEjCcP9BGP+t2nRsJL8W6VSU0OIM487u5jCsi0kukeqIE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <c57fe97b-ad4a-874e-663f-7f3a737824c9@microchip.com> <20190610062351.24405-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20190610062351.24405-1-tudor.ambarus@microchip.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 11 Jun 2019 10:35:59 +0200
-Message-ID: <CAMuHMdW3=fzFvt+ZmC2B6qf0zEwfvV--HVEoxa06Tk=a=Q1cWA@mail.gmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: use 16-bit WRR command when QE is set on
- spansion flashes
-To:     Tudor Ambarus <Tudor.Ambarus@microchip.com>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        "R, Vignesh" <vigneshr@ti.com>, Jonas Bonn <jonas@norrbonn.se>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7207be81-e401-4dcf-38fb-08d6ee47f3ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 08:36:52.1213
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5810
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor,
+Hi Shawn, Stephen
+> Subject: Re: linux-next: Fixes tag needs some work in the imx-mxs tree
+>=20
+> On Fri, Jun 07, 2019 at 07:46:52AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > In commit
+> >
+> >   f6a8ff82ce68 ("clk: imx: imx8mm: correct audio_pll2_clk to
+> > audio_pll2_out")
+> >
+> > Fixes tag
+> >
+> >   Fixes: ba5625c3e27 ("clk: imx: Add clock driver support for imx8mm")
+> >
+> > has these problem(s):
+> >
+> >   - SHA1 should be at least 12 digits long
+> >     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.=
+11
+> >     or later) just making sure it is not set (or set to "auto").
+>=20
+> Hi Stephen,
+>=20
+> Thanks for reporting.  I just got it fixed, will be more careful about th=
+at in the
+> future.
+>=20
+> @Peng, please check your git configuration as suggested above, thanks.
 
-On Mon, Jun 10, 2019 at 8:24 AM <Tudor.Ambarus@microchip.com> wrote:
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
->
-> SPI memory devices from different manufacturers have widely
-> different configurations for Status, Control and Configuration
-> registers. JEDEC 216C defines a new map for these common register
-> bits and their functions, and describes how the individual bits may
-> be accessed for a specific device. For the JEDEC 216B compliant
-> flashes, we can partially deduce Status and Configuration registers
-> functions by inspecting the 16th DWORD of BFPT. Older flashes that
-> don't declare the SFDP tables (SPANSION FL512SAIFG1 311QQ063 A ©11
-> SPANSION) let the software decide how to interact with these registers.
->
-> The commit dcb4b22eeaf4 ("spi-nor: s25fl512s supports region locking")
-> uncovered a probe error for s25fl512s, when the QUAD bit CR[1] was set
-> in the bootloader. When this bit is set, only the Write Register
-> WRR command format with 16 data bits may be used, WRR with 8 bits
-> is not recognized and hence the error when trying to clear the block
-> protection bits.
->
-> Fix the above by using 16-bits WRR command when Quad bit is set.
->
-> Backward compatibility should be fine. The newly introduced
-> spi_nor_spansion_clear_sr_bp() is tightly coupled with the
-> spansion_quad_enable() function. Both assume that the Write Register
-> with 16 bits, together with the Read Configuration Register (35h)
-> instructions are supported.
->
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> ---
-> Geert, Jonas,
->
-> This patch is compile-tested only. I don't have the flash, I need your
-> help for testing this.
+Sorry for this. Do I need to resend the patch?
 
-Thanks, this revives access to the s25fl512s on Koelsch.
+Thanks,
+Peng.
 
-Fixes: dcb4b22eeaf44f91 ("spi-nor: s25fl512s supports region locking")
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>Hi Tudor,
-
-Two questions below...
-
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-
-> +static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
-> +{
-
-[...]
-
-> +        * When the configuration register QUAD bit CR[1] is 1, only
-> +        * the WRR command format with 16 data bits may be used.
-
-s/WRR/WRSR/?
-
-> +        */
-> +       if (ret & CR_QUAD_EN_SPAN) {
-> +               sr_cr[1] = ret;
-> +
-> +               ret = read_sr(nor);
-> +               if (ret < 0) {
-> +                       dev_err(nor->dev,
-> +                               "error while reading status register\n");
-> +                       return ret;
-> +               }
-> +               sr_cr[0] = ret & ~mask;
-> +
-> +               ret = write_sr_cr(nor, sr_cr);
-> +               if (ret)
-> +                       dev_err(nor->dev, "16-bit write register failed\n");
-> +               return ret;
-> +       }
-> +
-> +       /* If quad bit is not set, use 8-bit WRR command. */
-
-Likewise.
-
-> +       return spi_nor_clear_sr_bp(nor);
-> +}
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>=20
+> Shawn
