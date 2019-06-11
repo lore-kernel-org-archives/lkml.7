@@ -2,104 +2,101 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DF7C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BCEC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14D420896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D45206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:09:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnbqCKr3"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jML3hjYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390113AbfFKMGJ (ORCPT
+        id S2404499AbfFKMJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:06:09 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38750 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387538AbfFKMGJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:06:09 -0400
-Received: by mail-lj1-f195.google.com with SMTP id o13so11353678lji.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 05:06:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lZXirDOut9vTqPwIy2+NlkcxYvoX0FlWKfU61yeOlXc=;
-        b=YnbqCKr3jMbW1jUhQ7uQsXIvK/YeDj1P1hgI7tJ+yc2M760ar+rV2fnGcMxMFQx1wT
-         FiO54DDsoHx/hhRaCgxZ2iqXcQKCL8fvsP8wrc4ZlWO47rqYOxJV6vilfqgBx9UaGc19
-         dusFW2VjVyYmmklpJOfiOsnPGkzLf8G4gxxQDFLdU2qryMV3Dp23bEQWkd06axjVSiXG
-         ducOaewG12zHLktAQRNFRqdfSdzNduv62pfY/+nKDqAcU+Ks3v/7V+8z3F6IOcsKN0Kl
-         +u7KB2SOYLU957Xzo3/dkqbsKM9+yCMXUHiGWah/opMPIJTsTSPnF4iDDTXkDov3Ulvu
-         u+9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lZXirDOut9vTqPwIy2+NlkcxYvoX0FlWKfU61yeOlXc=;
-        b=XtAUbrq4IHJ649FJaP32mJ/PeNQvh9nQyyazf17R0ViEImmbLc47jwE+KfgRBZ4BBg
-         rj+n895fCyrc0xe4K4JuKlwCifxNfsiVhEDZxOCuu4tUNp/DfaizyJ9sUOcbWbe7CYEh
-         CpIS1pC9Ag6YoBfhVFK7YGEeHG6H6dxTLG9rAF+eD7bZqNfC6jTY0+KvqSG/aeGzapOn
-         7bGl9HeYz9yiZM4kinsDrmJ1JJsVuPT8esaw6DjmizAI5SGv6ZGKc2s78PXKj7zUNvfF
-         eMGWtrKaYOZ+2p8tOXa06cNI8PnwMlPLUgiAnF6IxWNrB0UFMhw++sthmJyw0PjoM3f1
-         /RPg==
-X-Gm-Message-State: APjAAAW2BJzpvfPwGDqwpdEVz5wB/VhR7DDhvxCu+NZ34II2+URFFauH
-        PTkL1ALWQ805S8sB75rS4PS7oGy35t7Hq0bzfbo=
-X-Google-Smtp-Source: APXvYqyNbKW8MLdfiFF2bBbCPn6JlewYUZ4cSvk+vV6vxfgRu10IAU5IRNihSdhfyXPovuQjMfLgF6htx5YUpU9HpCk=
-X-Received: by 2002:a2e:a318:: with SMTP id l24mr27777904lje.36.1560254767023;
- Tue, 11 Jun 2019 05:06:07 -0700 (PDT)
+        Tue, 11 Jun 2019 08:09:05 -0400
+Received: from mail-eopbgr30046.outbound.protection.outlook.com ([40.107.3.46]:59362
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404372AbfFKMJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 08:09:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1nkCMlyKo3b55Ogy6E62bnSFHT86nMrEF8Qvq9yreLo=;
+ b=jML3hjYSG80fR2ODfruswGH7QnR4QMRVMkTdBwNfcGrLmIVpheVk2og5NWNkJxCFcW73WzzADOch1o9s1Au2eAVI+rjkoSXhURm3tPVj546AMiNDGDiNPOYuYBrK0UjXLGxxw8zpxeZdgxusyfh65YjOZLCZ0P8IcMsYb/aAGfo=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.17.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Tue, 11 Jun 2019 12:09:01 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 12:09:01 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v1 0/5] Additional fixes on Talitos driver
+Thread-Topic: [PATCH v1 0/5] Additional fixes on Talitos driver
+Thread-Index: AQHVHFtn4C4BXEoEK02U37UKYcQLNA==
+Date:   Tue, 11 Jun 2019 12:09:01 +0000
+Message-ID: <VI1PR0402MB34852D74119140ADDD4F4DF198ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <cover.1559819372.git.christophe.leroy@c-s.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f1d95a0c-1ccd-4f36-2a9d-08d6ee659708
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB3918;
+x-ms-traffictypediagnostic: VI1PR0402MB3918:
+x-microsoft-antispam-prvs: <VI1PR0402MB3918217BA9EBE0716729F13098ED0@VI1PR0402MB3918.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(346002)(366004)(396003)(39860400002)(136003)(376002)(189003)(199004)(44832011)(316002)(99286004)(52536014)(6246003)(33656002)(478600001)(53936002)(14454004)(4326008)(74316002)(55016002)(86362001)(71190400001)(81166006)(6436002)(9686003)(2906002)(229853002)(54906003)(486006)(4744005)(81156014)(110136005)(8676002)(71200400001)(5660300002)(68736007)(7736002)(476003)(64756008)(66066001)(305945005)(8936002)(66476007)(66946007)(66446008)(3846002)(25786009)(26005)(66556008)(53546011)(6506007)(6116002)(256004)(446003)(76176011)(7696005)(186003)(76116006)(102836004)(73956011)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3918;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6Xk5VxfME+muF3MNbCpOkKYI/I7IW9dFjhRzWKUyDyOHBX75yBfeoCdfIVpaprnA6ExYHx+TPw3qhU9EUGsiEAnbyz9N5OOSDXMDtF1zyDnZrRsL49WtGQhBQsDVB5dgAmeIP0MY9qpsTLkN7YK4B4DyfIfHzIik/H5dj3ODfC7vQMlATMCmWzOm7jjbc+6W45YmA+a5BrJdW4J4tSa8wkS4hEPNUVWheKqq1AypKMg0oJl6cjmFcPJTP+Rn8j6z+Mmhq87wYlGlCQX4F7IZcAiJ+v1Ug/NRMzzEL2WbgyJLUE/U5iJs3tdvGY2KK3RcUjJf3ZIWPcJLq4zRXhsMme20VRqwLsBBk7FxAxreL4ppyJ7sHvni2NUJlALc86C/fNUOnmgk+nh2nyMOcG6dSbKQw3Xoh9G6/rlCdgJEyWs=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190610175234.196844-1-dianders@chromium.org> <CAMavQKLRm8uYu3O=co5Ui7YjkK0hKHAd=+TA0oExfqnLc+TLFA@mail.gmail.com>
-In-Reply-To: <CAMavQKLRm8uYu3O=co5Ui7YjkK0hKHAd=+TA0oExfqnLc+TLFA@mail.gmail.com>
-From:   Erico Nunes <nunes.erico@gmail.com>
-Date:   Tue, 11 Jun 2019 14:05:55 +0200
-Message-ID: <CAK4VdL0jph-LzkRai=6nLahgrvG0cFNt5N3GNGjKAE-G0jc38A@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge/synopsys: dw-hdmi: Fix unwedge crash when no
- pinctrl entries
-To:     Sean Paul <sean@poorly.run>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1d95a0c-1ccd-4f36-2a9d-08d6ee659708
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 12:09:01.1047
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3918
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:51 PM Sean Paul <sean@poorly.run> wrote:
->
-> On Mon, Jun 10, 2019 at 1:52 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > In commit 50f9495efe30 ("drm/bridge/synopsys: dw-hdmi: Add "unwedge"
-> > for ddc bus") I stupidly used IS_ERR() to check for whether we have an
-> > "unwedge" pinctrl state even though on most flows through the driver
-> > the unwedge state will just be NULL.
-> >
-> > Fix it so that we consistently use NULL for no unwedge state.
-> >
-> > Fixes: 50f9495efe30 ("drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc bus")
-> > Reported-by: Erico Nunes <nunes.erico@gmail.com>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->
-> Thanks Erico for the report, and Doug for fixing this up quickly, I've applied
-> the patch to drm-misc-next
-
-It does fix the issue. Thank you for the quick fix.
-
-Erico
+On 6/6/2019 2:31 PM, Christophe Leroy wrote:=0A=
+> This series is the last set of fixes for the Talitos driver.=0A=
+> =0A=
+> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and=0A=
+> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:=0A=
+> =0A=
+I get failures, probably due to patch 1/5:=0A=
+=0A=
+alg: skcipher: cbc-aes-talitos encryption test failed (wrong result) on tes=
+t vector 0, cfg=3D"in-place"=0A=
+alg: skcipher: cbc-des-talitos encryption test failed (wrong result) on tes=
+t vector 0, cfg=3D"in-place"=0A=
+alg: skcipher: cbc-3des-talitos encryption test failed (wrong result) on te=
+st vector 0, cfg=3D"in-place"=0A=
+=0A=
+Horia=0A=
