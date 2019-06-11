@@ -2,240 +2,128 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82103C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB3BC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4932120673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC1C212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:27:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="R7bSMphe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390757AbfFKM0q (ORCPT
+        id S2387538AbfFKM1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:26:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48298 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390603AbfFKM0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:26:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 06CE1B030;
-        Tue, 11 Jun 2019 12:26:36 +0000 (UTC)
-From:   Takashi Iwai <tiwai@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH v2.5 3/3] selftests: firmware: Add compressed firmware tests
-Date:   Tue, 11 Jun 2019 14:26:26 +0200
-Message-Id: <20190611122626.28059-4-tiwai@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190611122626.28059-1-tiwai@suse.de>
-References: <20190611122626.28059-1-tiwai@suse.de>
+        Tue, 11 Jun 2019 08:27:01 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49093 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389325AbfFKM0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 08:26:02 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BCPmiL026689;
+        Tue, 11 Jun 2019 14:25:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=Psif9qopZgVPe8dWo9XocFzMybtKO3gMouXdNYlMSBI=;
+ b=R7bSMphe5F7ioVle8OyoWIwgQ41esdzxVd5DveQWEPH5ED5EjP5eY82uxHp7rpkOOT5l
+ 7r5/oMMyr6Hp3c2qcGMnLqDVfjvQdWr0Uw9Lo+I2ZrFr5WCXZK7PiF5Be/QUviDSFheu
+ 6ihYgdzSkjy8T3d3nSN7DtLIIyVvG4TM/ExUuts+ymydjdLPSXqBSyQJA8wyy6rYlB40
+ 0rKeVifcFilL2511Ew4vBHGpdyOZ/kaadapV3DmWuD8Rk2l8ZanBlPsQx0qZKtixLZVQ
+ d/cEnYoPk8WkD38q5ubi38cDOndZN0iyccY4EMwmxJqxANmg3QtRm/DglZleM7So7ZFe xw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2t26rm9vbv-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 11 Jun 2019 14:25:48 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 025DD3F;
+        Tue, 11 Jun 2019 12:25:43 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BD8B92A2C;
+        Tue, 11 Jun 2019 12:25:43 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 14:25:43 +0200
+Received: from localhost (10.201.23.31) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun 2019 14:25:42
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>
+CC:     <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        "Fabrice Gasnier" <fabrice.gasnier@st.com>,
+        Bich Hemon <bich.hemon@st.com>
+Subject: [PATCH v2 02/10] dt-bindings: serial: add optional pinctrl states
+Date:   Tue, 11 Jun 2019 14:25:22 +0200
+Message-ID: <1560255930-22554-3-git-send-email-erwan.leray@st.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1560255930-22554-1-git-send-email-erwan.leray@st.com>
+References: <1560255930-22554-1-git-send-email-erwan.leray@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.31]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the test cases for checking compressed firmware load.
-Two more cases are added to fw_filesystem.sh:
-- Both a plain file and an xz file are present, and load the former
-- Only an xz file is present, and load without '.xz' suffix
+From: Bich Hemon <bich.hemon@st.com>
 
-The tests are enabled only when CONFIG_FW_LOADER_COMPRESS is enabled
-and xz program is installed.
+Add options for pinctrl states:
+- "sleep" for low power
+- "idle" for low power and wakeup capabilities enabled
+- "no_console_suspend" for enabling console messages in low power
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- tools/testing/selftests/firmware/fw_filesystem.sh | 73 +++++++++++++++++++----
- tools/testing/selftests/firmware/fw_lib.sh        |  7 +++
- tools/testing/selftests/firmware/fw_run_tests.sh  |  1 +
- 3 files changed, 71 insertions(+), 10 deletions(-)
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
-index a4320c4b44dc..f901076aa2ea 100755
---- a/tools/testing/selftests/firmware/fw_filesystem.sh
-+++ b/tools/testing/selftests/firmware/fw_filesystem.sh
-@@ -153,13 +153,18 @@ config_set_read_fw_idx()
+diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+index 5ec80c1..64a5ea9 100644
+--- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
++++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+@@ -13,7 +13,14 @@ Required properties:
+ - clocks: The input clock of the USART instance
  
- read_firmwares()
- {
-+	if [ "$1" = "xzonly" ]; then
-+		fwfile="${FW}-orig"
-+	else
-+		fwfile="$FW"
-+	fi
- 	for i in $(seq 0 3); do
- 		config_set_read_fw_idx $i
- 		# Verify the contents are what we expect.
- 		# -Z required for now -- check for yourself, md5sum
- 		# on $FW and DIR/read_firmware will yield the same. Even
- 		# cmp agrees, so something is off.
--		if ! diff -q -Z "$FW" $DIR/read_firmware 2>/dev/null ; then
-+		if ! diff -q -Z "$fwfile" $DIR/read_firmware 2>/dev/null ; then
- 			echo "request #$i: firmware was not loaded" >&2
- 			exit 1
- 		fi
-@@ -246,17 +251,17 @@ test_request_firmware_nowait_custom_nofile()
+ Optional properties:
+-- pinctrl: The reference on the pins configuration
++- pinctrl-names: Set to "default". An additional "sleep" state can be defined
++  to set pins in sleep state when in low power. In case the device is used as
++  a wakeup source, "idle" state is defined in order to keep RX pin active.
++  For a console device, an optional state "no_console_suspend" can be defined
++  to enable console messages during suspend. Typically, "no_console_suspend" and
++  "default" states can refer to the same pin configuration.
++- pinctrl-n: Phandle(s) pointing to pin configuration nodes.
++  For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
+ - st,hw-flow-ctrl: bool flag to enable hardware flow control.
+ - rs485-rts-delay, rs485-rx-during-tx, rs485-rts-active-low,
+   linux,rs485-enabled-at-boot-time: see rs485.txt.
+@@ -31,8 +38,11 @@ usart4: serial@40004c00 {
+ 	reg = <0x40004c00 0x400>;
+ 	interrupts = <52>;
+ 	clocks = <&clk_pclk1>;
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "sleep", "idle", "no_console_suspend";
+ 	pinctrl-0 = <&pinctrl_usart4>;
++	pinctrl-1 = <&pinctrl_usart4_sleep>;
++	pinctrl-2 = <&pinctrl_usart4_idle>;
++	pinctrl-3 = <&pinctrl_usart4>;
+ };
  
- test_batched_request_firmware()
- {
--	echo -n "Batched request_firmware() try #$1: "
-+	echo -n "Batched request_firmware() $2 try #$1: "
- 	config_reset
- 	config_trigger_sync
--	read_firmwares
-+	read_firmwares $2
- 	release_all_firmware
- 	echo "OK"
- }
- 
- test_batched_request_firmware_direct()
- {
--	echo -n "Batched request_firmware_direct() try #$1: "
-+	echo -n "Batched request_firmware_direct() $2 try #$1: "
- 	config_reset
- 	config_set_sync_direct
- 	config_trigger_sync
-@@ -266,7 +271,7 @@ test_batched_request_firmware_direct()
- 
- test_request_firmware_nowait_uevent()
- {
--	echo -n "Batched request_firmware_nowait(uevent=true) try #$1: "
-+	echo -n "Batched request_firmware_nowait(uevent=true) $2 try #$1: "
- 	config_reset
- 	config_trigger_async
- 	release_all_firmware
-@@ -275,11 +280,16 @@ test_request_firmware_nowait_uevent()
- 
- test_request_firmware_nowait_custom()
- {
--	echo -n "Batched request_firmware_nowait(uevent=false) try #$1: "
-+	echo -n "Batched request_firmware_nowait(uevent=false) $2 try #$1: "
- 	config_reset
- 	config_unset_uevent
- 	RANDOM_FILE_PATH=$(setup_random_file)
- 	RANDOM_FILE="$(basename $RANDOM_FILE_PATH)"
-+	if [ "$2" = "both" ]; then
-+		xz -9 -C crc32 -k $RANDOM_FILE_PATH
-+	elif [ "$2" = "xzonly" ]; then
-+		xz -9 -C crc32 $RANDOM_FILE_PATH
-+	fi
- 	config_set_name $RANDOM_FILE
- 	config_trigger_async
- 	release_all_firmware
-@@ -294,19 +304,19 @@ test_config_present
- echo
- echo "Testing with the file present..."
- for i in $(seq 1 5); do
--	test_batched_request_firmware $i
-+	test_batched_request_firmware $i normal
- done
- 
- for i in $(seq 1 5); do
--	test_batched_request_firmware_direct $i
-+	test_batched_request_firmware_direct $i normal
- done
- 
- for i in $(seq 1 5); do
--	test_request_firmware_nowait_uevent $i
-+	test_request_firmware_nowait_uevent $i normal
- done
- 
- for i in $(seq 1 5); do
--	test_request_firmware_nowait_custom $i
-+	test_request_firmware_nowait_custom $i normal
- done
- 
- # Test for file not found, errors are expected, the failure would be
-@@ -329,4 +339,47 @@ for i in $(seq 1 5); do
- 	test_request_firmware_nowait_custom_nofile $i
- done
- 
-+test "$HAS_FW_LOADER_COMPRESS" != "yes" && exit 0
-+
-+# test with both files present
-+xz -9 -C crc32 -k $FW
-+config_set_name $NAME
-+echo
-+echo "Testing with both plain and xz files present..."
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware $i both
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_direct $i both
-+done
-+
-+for i in $(seq 1 5); do
-+	test_request_firmware_nowait_uevent $i both
-+done
-+
-+for i in $(seq 1 5); do
-+	test_request_firmware_nowait_custom $i both
-+done
-+
-+# test with only xz file present
-+mv "$FW" "${FW}-orig"
-+echo
-+echo "Testing with only xz file present..."
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware $i xzonly
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_direct $i xzonly
-+done
-+
-+for i in $(seq 1 5); do
-+	test_request_firmware_nowait_uevent $i xzonly
-+done
-+
-+for i in $(seq 1 5); do
-+	test_request_firmware_nowait_custom $i xzonly
-+done
-+
- exit 0
-diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
-index 1cbb12e284a6..f236cc295450 100755
---- a/tools/testing/selftests/firmware/fw_lib.sh
-+++ b/tools/testing/selftests/firmware/fw_lib.sh
-@@ -50,6 +50,7 @@ check_setup()
- {
- 	HAS_FW_LOADER_USER_HELPER="$(kconfig_has CONFIG_FW_LOADER_USER_HELPER=y)"
- 	HAS_FW_LOADER_USER_HELPER_FALLBACK="$(kconfig_has CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y)"
-+	HAS_FW_LOADER_COMPRESS="$(kconfig_has CONFIG_FW_LOADER_COMPRESS=y)"
- 	PROC_FW_IGNORE_SYSFS_FALLBACK="0"
- 	PROC_FW_FORCE_SYSFS_FALLBACK="0"
- 
-@@ -84,6 +85,12 @@ check_setup()
- 	fi
- 
- 	OLD_FWPATH="$(cat /sys/module/firmware_class/parameters/path)"
-+
-+	if [ "$HAS_FW_LOADER_COMPRESS" = "yes" ]; then
-+		if ! which xz 2> /dev/null > /dev/null; then
-+			HAS_FW_LOADER_COMPRESS=""
-+		fi
-+	fi
- }
- 
- verify_reqs()
-diff --git a/tools/testing/selftests/firmware/fw_run_tests.sh b/tools/testing/selftests/firmware/fw_run_tests.sh
-index cffdd4eb0a57..8e14d555c197 100755
---- a/tools/testing/selftests/firmware/fw_run_tests.sh
-+++ b/tools/testing/selftests/firmware/fw_run_tests.sh
-@@ -11,6 +11,7 @@ source $TEST_DIR/fw_lib.sh
- 
- export HAS_FW_LOADER_USER_HELPER=""
- export HAS_FW_LOADER_USER_HELPER_FALLBACK=""
-+export HAS_FW_LOADER_COMPRESS=""
- 
- run_tests()
- {
+ usart2: serial@40004400 {
 -- 
-2.16.4
+1.9.1
 
