@@ -2,137 +2,136 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD5BC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45899C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300CA2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199502089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wYreh9jM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IA3uBOyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfFKMRQ (ORCPT
+        id S1729177AbfFKMRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:17:16 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60314 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbfFKMRQ (ORCPT
+        Tue, 11 Jun 2019 08:17:21 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41895 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbfFKMRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:17:16 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5BCHBRn079570;
-        Tue, 11 Jun 2019 07:17:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560255431;
-        bh=Ei7/kusf0DKtFGr5yCgtc2sRG6+/0j75KPNwiUUozVs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wYreh9jMavyAXrUj81MzhvXZhlNCzekJOtu1ss7PfKYQ7WiUKyVQ1b+Frc/MHGJwc
-         8lrCHJagrSPoVq4JDawlMYpg+Idt2qBJ43RB/sJLQ+OzHJd6TDsb2bR9kDwBG1gHoQ
-         S9HHJoPw0c6VqlEnELOGuz8tWXrjvYJyhKh8lFio=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5BCHBK1042554
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Jun 2019 07:17:11 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 11
- Jun 2019 07:17:11 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 11 Jun 2019 07:17:11 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5BCHALV102129;
-        Tue, 11 Jun 2019 07:17:10 -0500
-Subject: Re: [PATCH v6 0/5] LM36274 Introduction
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>
-CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190605125634.7042-1-dmurphy@ti.com>
- <cb41fea8-4cc6-bf0d-8006-6441ba8f2213@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <d6f3a1d9-5198-917c-8313-ef2036472ce9@ti.com>
-Date:   Tue, 11 Jun 2019 07:17:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <cb41fea8-4cc6-bf0d-8006-6441ba8f2213@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 11 Jun 2019 08:17:20 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 83so6877407pgg.8;
+        Tue, 11 Jun 2019 05:17:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=VstETx0bfm7UURKplBatSb5BNYNyEd5qFU1Sx8kI+P8=;
+        b=IA3uBOyzTPBq9pCogzGKvaZOhjtmYw/hCBMQOC3HoqTGKt9x/zMu2vwp8APhrTCqdD
+         QjFs0B+8JrRHRKqMiB5P+OWsH+7GOZuj0n5fR1fM6qBcWWxjwelRiiJZOYYtLr5UEeDk
+         K/rA/WLlK4txuJ9Ice/Efj1GG/nuJnI6qrAF5fpnQ46gTEK1J0t4pzh3bLBZW0TPiQ3g
+         tqo3LjqFEuLz0d+3niWnCP/6OGEuqjE8q38qmoxSd3ZFpthsutrk+phrMWWShtzBZpe9
+         zBkOD/bRCYDLiwapO4p+JhBZpstmd9OA/VTxWSyYVsnxPxwfdYjbK0/S07c6fBBnEbZQ
+         4p4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VstETx0bfm7UURKplBatSb5BNYNyEd5qFU1Sx8kI+P8=;
+        b=Ovh7Gr2sF5ITMaQ7gJzRE1ySnXpsGLjahGKxeuq0HOmLTP86HBPg1sH1Fxy5O65FV+
+         aIOyGAC+4F36EJl71ewVx/BZViblElkzjyJlrzk2wzYnXeeIU5skrww+TPqiZx7Yxhh/
+         vLu818/u6r5/JipUBLWjUZCtI6KI9KVmqjESz/43sONDMfdJxEcXjmbkm27JLEcELdtE
+         +wz7n2xHfTJILnyBt9a3lGrtEp9b7cdQeGtS3D9S0QaLfJXVviuhm0X49FHncw9jO9y4
+         39Jh9wNwkVw+LMBD34ACravjb70wQlG74/H6GmyHRWERarLzjTXSIs/J+ZH6Q2SzuW44
+         qivA==
+X-Gm-Message-State: APjAAAU00w5s7oA6WRN/OVH+YXVrci+7zAn5To/+RYNy/9heStfTKI8h
+        54lVPzD9KH9KVSIRb3h3hh/dIpIE
+X-Google-Smtp-Source: APXvYqznf4FbDIT4rjVPKKrufi3F7ndvwcmyiiuN8AKVEPO92qX3naFifYMC1DO4mMs/6uA9pzG2Cw==
+X-Received: by 2002:aa7:9203:: with SMTP id 3mr81570451pfo.123.1560255439322;
+        Tue, 11 Jun 2019 05:17:19 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id v4sm19649478pff.45.2019.06.11.05.17.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 11 Jun 2019 05:17:18 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v3 0/4] KVM: LAPIC: Implement Exitless Timer
+Date:   Tue, 11 Jun 2019 20:17:05 +0800
+Message-Id: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Dedicated instances are currently disturbed by unnecessary jitter due 
+to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+There is no hardware virtual timer on Intel for guest like ARM. Both 
+programming timer in guest and the emulated timer fires incur vmexits.
+This patchset tries to avoid vmexit which is incurred by the emulated 
+timer fires in dedicated instance scenario. 
 
-Reviewed and tested the updated branch.  Looks good to me.
+When nohz_full is enabled in dedicated instances scenario, the unpinned 
+timer will be moved to the nearest busy housekeepers after commit 444969223c8
+("sched/nohz: Fix affine unpinned timers mess"). However, KVM always makes 
+lapic timer pinned to the pCPU which vCPU residents, the reason is explained 
+by commit 61abdbe0 (kvm: x86: make lapic hrtimer pinned). Actually, these 
+emulated timers can be offload to the housekeeping cpus since APICv 
+is really common in recent years. The guest timer interrupt is injected by 
+posted-interrupt which is delivered by housekeeping cpu once the emulated 
+timer fires. 
 
-Dan
+The host admin should fine tuned, e.g. dedicated instances scenario w/ 
+nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
+for housekeeping, disable mwait/hlt/pause vmexits to occupy the pCPUs, 
+fortunately preemption timer is disabled after mwait is exposed to 
+guest which makes emulated timer offload can be possible. 
+~3% redis performance benefit can be observed on Skylake server.
 
-On 6/5/19 2:31 PM, Jacek Anaszewski wrote:
-> Hi Dan,
->
-> Thank you for the v6.
->
-> Patches 4/5 and 5/5 don't contain amendments I made to
-> the respective patches on the ib-leds-mfd-regulator branch
-> (that address issues raised by Pavel), so I just kept those
-> unchanged. Besides that I updated the remaining ones.
->
-> Please check the ib-leds-mfd-regulator branch. I'll create a pull
-> request once I get a confirmation from you saying that everything
-> is as expected.
->
-> Best regards,
-> Jacek Anaszewski
->
-> On 6/5/19 2:56 PM, Dan Murphy wrote:
->> Hello
->>
->> The v5 patchset missed adding in the new validation code.
->> Patch 1 of the v5 series was squashed into patch 4 of the v5 series.
->> So this will reduce the patchset by 1.
->>
->> Sorry for the extra noise on the patchsets.  The change was lost when 
->> I converted
->> the patches from the mainline branch to the LED branch.
->>
->> This change was made on top of the branch
->>
->> repo: 
->> https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
->> branch: ti-lmu-led-drivers
->>
->>
->> Dan Murphy (5):
->>    dt-bindings: mfd: Add lm36274 bindings to ti-lmu
->>    mfd: ti-lmu: Add LM36274 support to the ti-lmu
->>    regulator: lm363x: Add support for LM36274
->>    dt-bindings: leds: Add LED bindings for the LM36274
->>    leds: lm36274: Introduce the TI LM36274 LED driver
->>
->>   .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
->>   .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
->>   drivers/leds/Kconfig                          |   8 +
->>   drivers/leds/Makefile                         |   1 +
->>   drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
->>   drivers/mfd/Kconfig                           |   5 +-
->>   drivers/mfd/ti-lmu.c                          |  14 ++
->>   drivers/regulator/Kconfig                     |   2 +-
->>   drivers/regulator/lm363x-regulator.c          |  78 +++++++-
->>   include/linux/mfd/ti-lmu-register.h           |  23 +++
->>   include/linux/mfd/ti-lmu.h                    |   4 +
->>   11 files changed, 437 insertions(+), 8 deletions(-)
->>   create mode 100644 
->> Documentation/devicetree/bindings/leds/leds-lm36274.txt
->>   create mode 100644 drivers/leds/leds-lm36274.c
->>
->
+w/o patchset:
+
+            VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
+
+EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
+
+w/ patchset:
+
+            VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
+
+EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
+
+
+v2 -> v3:
+ * disarming the vmx preemption timer when posted_interrupt_inject_timer_enabled()
+ * check kvm_hlt_in_guest instead
+
+v1 -> v2:
+ * check vcpu_halt_in_guest
+ * move module parameter from kvm-intel to kvm
+ * add housekeeping_enabled
+ * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
+
+
+Wanpeng Li (4):
+  KVM: LAPIC: Make lapic timer unpinned when timer is injected by pi
+  KVM: LAPIC: lapic timer interrupt is injected by posted interrupt
+  KVM: LAPIC: Ignore timer migration when lapic timer is injected by pi
+  KVM: LAPIC: add advance timer support to pi_inject_timer
+
+ arch/x86/kvm/lapic.c            | 61 +++++++++++++++++++++++++++++++----------
+ arch/x86/kvm/lapic.h            |  3 +-
+ arch/x86/kvm/svm.c              |  2 +-
+ arch/x86/kvm/vmx/vmx.c          |  5 ++--
+ arch/x86/kvm/x86.c              |  5 ++++
+ arch/x86/kvm/x86.h              |  2 ++
+ include/linux/sched/isolation.h |  2 ++
+ kernel/sched/isolation.c        |  6 ++++
+ 8 files changed, 68 insertions(+), 18 deletions(-)
+
+-- 
+2.7.4
+
