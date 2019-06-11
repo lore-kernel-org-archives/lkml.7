@@ -2,202 +2,109 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0DAC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53579C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8764208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:37:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FaR8YuUF"
+	by mail.kernel.org (Postfix) with ESMTP id 30371208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391380AbfFKIhh (ORCPT
+        id S2391387AbfFKIjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:37:37 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33402 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391357AbfFKIhg (ORCPT
+        Tue, 11 Jun 2019 04:39:11 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42939 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391146AbfFKIjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:37:36 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h9so18826334edr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:37:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TbZbC+Sp2SPAwZltpEl7T+4dxXkbBpcXlsNbpfrSndo=;
-        b=FaR8YuUFdDSfIP8hmPLLVMQ6SPKxLejrbqP75LhgLkqsJQOK4tyqQ4OY8OHSmc2+cB
-         qk7BbUbMljJQAhtPYJlgu8QH+ZCqtwPvKyEGtNhlWgCsdAEL2j0M3nlmPgsiknjOvajc
-         HorK2f0x9ImvVUoOoyFCMD1ZLZA0vQYfD4fSI=
+        Tue, 11 Jun 2019 04:39:10 -0400
+Received: by mail-ed1-f68.google.com with SMTP id z25so18802692edq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:39:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=TbZbC+Sp2SPAwZltpEl7T+4dxXkbBpcXlsNbpfrSndo=;
-        b=EmjeeoAnjJSTqeXgXizwfOTGGr2ZXNP13ScCecuzxFEAaTyzBvm0gvFFSGN5+RM86x
-         FhWqd4rWSG7jqPvXERJO2B8tC/UFG6qMzqN8HazgYxgfkMUO0kmeS8f4UahgP9HWmENQ
-         533M230X55PuaGYQz7EuaLfGf1m3DKGzj6Gber5JeK53YZHFlCKbZHESJF/AtUFrF+sQ
-         drQSNmkoIWdaZWXSDp95B31CIT4mCWsJyMu85maG6DTctOP6eDQojFJrqplR8UJEuRZ6
-         s5Ja/krq+ORJEotONx1HYTYP/Iu06ZSZrPmsx7Ne0NalC3/itBNvD+zmlARpfVKejf3O
-         DMlw==
-X-Gm-Message-State: APjAAAVS/vCvOdtTDRtjHW2glwvKK7c9uSYrNjM5VITt5FLTPaZBiE6T
-        6v+BNhYYnxGnBuJIwCqlqwmAOg==
-X-Google-Smtp-Source: APXvYqwoHe+yWqlwWu+bfE6C9rrYPikgvhQ9xXtuj59UwLinYDko2BQBXR4dv1ZhUliGJnvW+jDHcg==
-X-Received: by 2002:a17:906:45d7:: with SMTP id z23mr12879082ejq.54.1560242254472;
-        Tue, 11 Jun 2019 01:37:34 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id i21sm2162159ejd.76.2019.06.11.01.37.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 01:37:33 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 10:37:31 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 33/33] docs: EDID/HOWTO.txt: convert it and rename to
- howto.rst
-Message-ID: <20190611083731.GS21222@phenom.ffwll.local>
-Mail-Followup-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org
-References: <cover.1560045490.git.mchehab+samsung@kernel.org>
- <74bec0b5b7c32c8d84adbaf9ff208803475198e5.1560045490.git.mchehab+samsung@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EZPJDu0+5poRi+ob6FAvc4kTQEKHJCev1SL/oyf3pzs=;
+        b=DmPfvWtPV7JWe5FpYjp0naZf+x3bUT1P69aSCeVfgS+E2OLSSFy6J3rsyi9B3RI10E
+         Vn0IlB2+JwnUL/KcbIi2eHfN5dE9bGs7c1wwSy0hJrMgBYd9buys19/ZbH6g78UvPI0H
+         Rpe0RNXWTFdN/j4YCuyTd5AL8TOt4DMs+FDN1mvP5cM3di0VAO6X3jpmUohw8vxzaxzH
+         s4kvbHa16E7SFAjRqlAOBtgwfULEHJwbIYoHW+qjz3YxeDy4bnE+q0ar2PzlA1dgZE6K
+         bI8KSENfl/dg4Heia8EvhR4x/5HQPfXmqh2ko0H1sbDKN7dc+mAKAMrRTJdbGJZfStRa
+         48+w==
+X-Gm-Message-State: APjAAAWmL/0MxsxPM3k2SUzXvhOXScPiKIUc58LYg3P8Pw7OWd4yZxTy
+        TW9uSp8g5zoZJHtUpfciTRV5i0LuDz8=
+X-Google-Smtp-Source: APXvYqzMOTMnChDp4MCNUi3VgsI57hmj7rstuSGCuRXwJHHWKOgudtaqqrkWi6cuF6Jc+SPJDa0aoQ==
+X-Received: by 2002:a50:9451:: with SMTP id q17mr16035952eda.119.1560242349441;
+        Tue, 11 Jun 2019 01:39:09 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id b25sm666371eda.38.2019.06.11.01.39.08
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 01:39:08 -0700 (PDT)
+Subject: Re: [PATCH -next] HID: logitech-dj: fix return value of
+ logi_dj_recv_query_hidpp_devices
+To:     Yuehaibing <yuehaibing@huawei.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, jkosina@suse.cz
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <20190525140908.2804-1-yuehaibing@huawei.com>
+ <50800f5e-867d-ded9-235c-b9c2db1c41ef@huawei.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c9510bce-525a-c4d4-531c-7cf55e141754@redhat.com>
+Date:   Tue, 11 Jun 2019 10:39:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <74bec0b5b7c32c8d84adbaf9ff208803475198e5.1560045490.git.mchehab+samsung@kernel.org>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <50800f5e-867d-ded9-235c-b9c2db1c41ef@huawei.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 11:27:23PM -0300, Mauro Carvalho Chehab wrote:
-> Sphinx need to know when a paragraph ends. So, do some adjustments
-> at the file for it to be properly parsed.
+Hi,
+
+On 11-06-19 05:00, Yuehaibing wrote:
+> Hi all,
 > 
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
+> Friendly ping...
 > 
-> that's said, I believe that this file should be moved to the
-> GPU/DRM documentation.
+> On 2019/5/25 22:09, YueHaibing wrote:
+>> We should return 'retval' as the correct return value
+>> instead of always zero.
+>>
+>> Fixes: 74808f9115ce ("HID: logitech-dj: add support for non unifying receivers")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Yes, but there's a bit a twist: This is definitely end-user documentation,
-so maybe should be in admin-guide?
+Patch looks good to me:
 
-Atm all we have in Documentation/gpu/ is internals for drivers + some
-beginnings of uapi documentation for userspace developers.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Jon, what's your recommendation here for subsystem specific
-end-user/adming docs?
+Regards,
 
-Thanks, Daniel
+Hans
 
+
+
+>> ---
+>>   drivers/hid/hid-logitech-dj.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
+>> index 41baa4dbbfcc..7f8db602eec0 100644
+>> --- a/drivers/hid/hid-logitech-dj.c
+>> +++ b/drivers/hid/hid-logitech-dj.c
+>> @@ -1133,7 +1133,7 @@ static int logi_dj_recv_query_hidpp_devices(struct dj_receiver_dev *djrcv_dev)
+>>   				    HID_REQ_SET_REPORT);
+>>   
+>>   	kfree(hidpp_report);
+>> -	return 0;
+>> +	return retval;
+>>   }
+>>   
+>>   static int logi_dj_recv_query_paired_devices(struct dj_receiver_dev *djrcv_dev)
+>>
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  Documentation/EDID/{HOWTO.txt => howto.rst}   | 31 ++++++++++++-------
->  .../admin-guide/kernel-parameters.txt         |  2 +-
->  drivers/gpu/drm/Kconfig                       |  2 +-
->  3 files changed, 22 insertions(+), 13 deletions(-)
->  rename Documentation/EDID/{HOWTO.txt => howto.rst} (83%)
-> 
-> diff --git a/Documentation/EDID/HOWTO.txt b/Documentation/EDID/howto.rst
-> similarity index 83%
-> rename from Documentation/EDID/HOWTO.txt
-> rename to Documentation/EDID/howto.rst
-> index 539871c3b785..725fd49a88ca 100644
-> --- a/Documentation/EDID/HOWTO.txt
-> +++ b/Documentation/EDID/howto.rst
-> @@ -1,3 +1,9 @@
-> +:orphan:
-> +
-> +====
-> +EDID
-> +====
-> +
->  In the good old days when graphics parameters were configured explicitly
->  in a file called xorg.conf, even broken hardware could be managed.
->  
-> @@ -34,16 +40,19 @@ Makefile. Please note that the EDID data structure expects the timing
->  values in a different way as compared to the standard X11 format.
->  
->  X11:
-> -HTimings:  hdisp hsyncstart hsyncend htotal
-> -VTimings:  vdisp vsyncstart vsyncend vtotal
-> +  HTimings:
-> +    hdisp hsyncstart hsyncend htotal
-> +  VTimings:
-> +    vdisp vsyncstart vsyncend vtotal
->  
-> -EDID:
-> -#define XPIX hdisp
-> -#define XBLANK htotal-hdisp
-> -#define XOFFSET hsyncstart-hdisp
-> -#define XPULSE hsyncend-hsyncstart
-> +EDID::
->  
-> -#define YPIX vdisp
-> -#define YBLANK vtotal-vdisp
-> -#define YOFFSET vsyncstart-vdisp
-> -#define YPULSE vsyncend-vsyncstart
-> +  #define XPIX hdisp
-> +  #define XBLANK htotal-hdisp
-> +  #define XOFFSET hsyncstart-hdisp
-> +  #define XPULSE hsyncend-hsyncstart
-> +
-> +  #define YPIX vdisp
-> +  #define YBLANK vtotal-vdisp
-> +  #define YOFFSET vsyncstart-vdisp
-> +  #define YPULSE vsyncend-vsyncstart
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 3d072ca532bb..3faf37b8b001 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -930,7 +930,7 @@
->  			edid/1680x1050.bin, or edid/1920x1080.bin is given
->  			and no file with the same name exists. Details and
->  			instructions how to build your own EDID data are
-> -			available in Documentation/EDID/HOWTO.txt. An EDID
-> +			available in Documentation/EDID/howto.rst. An EDID
->  			data set will only be used for a particular connector,
->  			if its name and a colon are prepended to the EDID
->  			name. Each connector may use a unique EDID data
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index 6b34949416b1..c3a6dd284c91 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -141,7 +141,7 @@ config DRM_LOAD_EDID_FIRMWARE
->  	  monitor are unable to provide appropriate EDID data. Since this
->  	  feature is provided as a workaround for broken hardware, the
->  	  default case is N. Details and instructions how to build your own
-> -	  EDID data are given in Documentation/EDID/HOWTO.txt.
-> +	  EDID data are given in Documentation/EDID/howto.rst.
->  
->  config DRM_DP_CEC
->  	bool "Enable DisplayPort CEC-Tunneling-over-AUX HDMI support"
-> -- 
-> 2.21.0
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
