@@ -2,104 +2,127 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC79C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AA7C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3FF22173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:52:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560282740;
-	bh=PXcELeAh7QnqgZv7oPtcpKm3982RnbLiEHV9NuK+rp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V0KxxOZlraX1KWRodFvdHPTAmFLpoX2mZCe3uPajVN4BWu0k6RqU7jU/4laXDOqiA
-	 ZWhl/0m8lElv/daB8qzC9MjPhV3G0Y3DSIncywf6t7TzXEld/wZm4KKmVoshP6G6Vp
-	 Rci+pInJX7uc+JLnSPJV/CILwf4khKX7uYV1+zIQ=
+	by mail.kernel.org (Postfix) with ESMTP id B3B5820883
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406301AbfFKTwP (ORCPT
+        id S2406331AbfFKTxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:52:15 -0400
-Received: from mail-pl1-f175.google.com ([209.85.214.175]:33231 "EHLO
-        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405039AbfFKTwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:52:14 -0400
-Received: by mail-pl1-f175.google.com with SMTP id g21so5580039plq.0;
-        Tue, 11 Jun 2019 12:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cHQwQdsrkTpqJAyug+FT0E9rG91BoWa0X7Lnvcu63U0=;
-        b=sf4Wv0oOKP6ccpJ9YkQOGUDhSjYMBG+KudnxXTcqLAYPTss2vsI1fbeHmcwPPphcXk
-         eATLNIRLct9/VRTkALmNlWMYfZd4ArOl2dDKv2RD398ontULghP25qT50pgbWNv4RPRF
-         77gUEK//iTYsdIcrlUK0eU8HjK4D6OkpZM4MQ+WSPhskB0w41UOsJhrx8kG0Sn5KXqpg
-         W30qKAytIPB0KJaNA2/a92tHIIvpb7rkfdOzP2u/VtulBlUvKeF5aRsPWlUK4K9CTGn2
-         50YrHtyYEwlfXxS0bAkqes8kZlPigVckJQmBPYD/bHVUi4pGGlu4cvhg22lMAOvYaJt0
-         lHAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cHQwQdsrkTpqJAyug+FT0E9rG91BoWa0X7Lnvcu63U0=;
-        b=LNHBBXb4OIglVDkIc11t3Z2Kq5sg/xnML8Ds5skZnVguwuVE9XsAAjuR1y+SZwOCSg
-         8J+4E7voiM/HYiKcei1zrtm0REK3k7TihYnYVpJcvWAi7o4Xg4/PzUKHhhz6S0CjkWAA
-         WEHmAIqGTEXSmuw9DgfMa4Ybfv0rVFN0Op0CQjziOEYABX3HUvGI/+sRF+/JAF1fK2kq
-         3/IwhyFk8hYxE9JXbaIdNYZiWQT69BpHjQdJYOFzj+TvvseIrbID7HiKoEpsZboAbtIu
-         Tt/enagBPidZrxEJ9SOI8B0Y9dIjeyc+5Pc+FsL6ZwlQZ5CbSyPOyxmmzqRPuf/61w4l
-         MtdA==
-X-Gm-Message-State: APjAAAUk2FFtwNnKCanztpHT85FZqOP6RyDrDT+2wf9oQ9S7CGJIzr0x
-        dirtrBkJPUvuE0hUp8AoXBA=
-X-Google-Smtp-Source: APXvYqwtr7AdbQtXCjzK5M7+YTkrqbJhHbXBQ3iF70ArYweFUb7ISFWWhnZBb2Wk9bDXh3r0GQsgfw==
-X-Received: by 2002:a17:902:b592:: with SMTP id a18mr52750895pls.278.1560282733634;
-        Tue, 11 Jun 2019 12:52:13 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:1677])
-        by smtp.gmail.com with ESMTPSA id d4sm18814972pfc.149.2019.06.11.12.52.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 12:52:12 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 12:52:10 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, hannes@cmpxchg.org,
-        jiangshanlai@gmail.com, lizefan@huawei.com, bsd@redhat.com,
-        dan.j.williams@intel.com, dave.hansen@intel.com,
-        juri.lelli@redhat.com, mhocko@kernel.org, peterz@infradead.org,
-        steven.sistare@oracle.com, tglx@linutronix.de,
-        tom.hromatka@oracle.com, vdavydov.dev@gmail.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC v2 0/5] cgroup-aware unbound workqueues
-Message-ID: <20190611195210.GK3341036@devbig004.ftw2.facebook.com>
-References: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
- <20190605135319.GK374014@devbig004.ftw2.facebook.com>
- <20190606061525.GD23056@rapoport-lnx>
+        Tue, 11 Jun 2019 15:53:35 -0400
+Received: from ja.ssi.bg ([178.16.129.10]:52482 "EHLO ja.ssi.bg"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404282AbfFKTxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:53:34 -0400
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x5BJqsE6005588;
+        Tue, 11 Jun 2019 22:52:54 +0300
+Date:   Tue, 11 Jun 2019 22:52:54 +0300 (EEST)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     syzbot <syzbot+7e2e50c8adfccd2e5041@syzkaller.appspotmail.com>,
+        coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        horms@verge.net.au, kadlec@blackhole.kfki.hu,
+        linux-kernel@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
+        wensong@linux-vs.org
+Subject: Re: memory leak in start_sync_thread
+In-Reply-To: <20190611010612.GD220379@gmail.com>
+Message-ID: <alpine.LFD.2.21.1906112239410.3387@ja.home.ssi.bg>
+References: <0000000000006d7e520589f6d3a9@google.com> <20190611010612.GD220379@gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606061525.GD23056@rapoport-lnx>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On Thu, Jun 06, 2019 at 09:15:26AM +0300, Mike Rapoport wrote:
-> > Can you please go into more details on the use cases?
+	Hello,
+
+On Mon, 10 Jun 2019, Eric Biggers wrote:
+
+> On Tue, May 28, 2019 at 11:28:05AM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    cd6c84d8 Linux 5.2-rc2
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=132bd44aa00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=64479170dcaf0e11
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=7e2e50c8adfccd2e5041
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=114b1354a00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b7ad26a00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+7e2e50c8adfccd2e5041@syzkaller.appspotmail.com
+> > 
+> > d started: state = MASTER, mcast_ifn = syz_tun, syncid = 0, id = 0
+> > BUG: memory leak
+> > unreferenced object 0xffff8881206bf700 (size 32):
+> >   comm "syz-executor761", pid 7268, jiffies 4294943441 (age 20.470s)
+> >   hex dump (first 32 bytes):
+> >     00 40 7c 09 81 88 ff ff 80 45 b8 21 81 88 ff ff  .@|......E.!....
+> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >   backtrace:
+> >     [<0000000057619e23>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:55 [inline]
+> >     [<0000000057619e23>] slab_post_alloc_hook mm/slab.h:439 [inline]
+> >     [<0000000057619e23>] slab_alloc mm/slab.c:3326 [inline]
+> >     [<0000000057619e23>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+> >     [<0000000086ce5479>] kmalloc include/linux/slab.h:547 [inline]
+> >     [<0000000086ce5479>] start_sync_thread+0x5d2/0xe10
+> > net/netfilter/ipvs/ip_vs_sync.c:1862
+> >     [<000000001a9229cc>] do_ip_vs_set_ctl+0x4c5/0x780
+> > net/netfilter/ipvs/ip_vs_ctl.c:2402
+> >     [<00000000ece457c8>] nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
+> >     [<00000000ece457c8>] nf_setsockopt+0x4c/0x80
+> > net/netfilter/nf_sockopt.c:115
+> >     [<00000000942f62d4>] ip_setsockopt net/ipv4/ip_sockglue.c:1258 [inline]
+> >     [<00000000942f62d4>] ip_setsockopt+0x9b/0xb0 net/ipv4/ip_sockglue.c:1238
+> >     [<00000000a56a8ffd>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2616
+> >     [<00000000fa895401>] sock_common_setsockopt+0x38/0x50
+> > net/core/sock.c:3130
+> >     [<0000000095eef4cf>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
+> >     [<000000009747cf88>] __do_sys_setsockopt net/socket.c:2089 [inline]
+> >     [<000000009747cf88>] __se_sys_setsockopt net/socket.c:2086 [inline]
+> >     [<000000009747cf88>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+> >     [<00000000ded8ba80>] do_syscall_64+0x76/0x1a0
+> > arch/x86/entry/common.c:301
+> >     [<00000000893b4ac8>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
 > 
-> If I remember correctly, the original Bandan's work was about using
-> workqueues instead of kthreads in vhost. 
+> The bug is that ownership of some memory is passed to a kthread started by
+> kthread_run(), but the kthread can be stopped before it actually executes the
+> threadfn.  See the code in kernel/kthread.c:
+> 
+>         ret = -EINTR;
+>         if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
+>                 cgroup_kthread_ready();
+>                 __kthread_parkme(self);
+>                 ret = threadfn(data);
+>         }
+> 
+> So, apparently the thread parameters must always be owned by the owner of the
+> kthread, not by the kthread itself.  It seems like this would be a common
+> mistake in kernel code; I'm surprised this doesn't come up more...
 
-For vhosts, I think it might be better to stick with kthread or
-kthread_worker given that they can consume lots of cpu cycles over a
-long period of time and we want to keep persistent track of scheduling
-states.
+	Thanks! It explains the problem. It was not obvious from the
+fact that only tinfo was reported as a leak, nothing for tinfo->sock.
 
-Thanks.
+	Moving sock_release to owner complicates the locking but
+I'll try to fix it in the following days...
 
--- 
-tejun
+Regards
+
+--
+Julian Anastasov <ja@ssi.bg>
