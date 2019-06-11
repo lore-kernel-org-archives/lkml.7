@@ -2,102 +2,212 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F97C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F9DC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088252063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gCNOKqz+"
+	by mail.kernel.org (Postfix) with ESMTP id DB6DA20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391188AbfFKFOB (ORCPT
+        id S2391210AbfFKFPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 01:14:01 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60420 "EHLO mail.skyhub.de"
+        Tue, 11 Jun 2019 01:15:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:53006 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390539AbfFKFOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 01:14:00 -0400
-Received: from zn.tnic (p200300EC2F0A6800B9C6921F36B00F7C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:b9c6:921f:36b0:f7c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5F38C1EC0982;
-        Tue, 11 Jun 2019 07:13:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560230039;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=/4qpiIwUDNEVZoOIA+81jIxl/aQaH5UW2wmLcI0lJNI=;
-        b=gCNOKqz+iDg5I9ne62GUb0I8Z9rBvZfwBX0dZ85/lH5d6XyuyBJYQeKxeM4UcopWn/aiNu
-        rYlatEt03HGZ2EPUm9eHtzFw8oDVkrE+zozxje6MEUf8IBZvMG5UdiDfYD9qIeFjNGirDF
-        YxjUWHUseHF5ysZVmxtukbjF2xb+yQA=
-Date:   Tue, 11 Jun 2019 07:13:54 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
- hardware
-Message-ID: <20190611051354.GA31772@zn.tnic>
-References: <20190517172648.GA18164@agluck-desk>
- <20190517174817.GG13482@zn.tnic>
- <20190517180607.GA21710@agluck-desk>
- <20190517193431.GI13482@zn.tnic>
- <SN6PR12MB2639C5427366AC3004C35CC0F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190517200225.GK13482@zn.tnic>
- <SN6PR12MB26390759DB43763D3A482918F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190527232849.GC8209@cz.tnic>
- <SN6PR12MB263998ECCDF1E345FEB0869AF8100@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190607163723.GG20269@zn.tnic>
+        id S2390492AbfFKFPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 01:15:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55CCB344;
+        Mon, 10 Jun 2019 22:15:19 -0700 (PDT)
+Received: from [10.162.43.135] (p8cg001049571a15.blr.arm.com [10.162.43.135])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A7FF3F73C;
+        Mon, 10 Jun 2019 22:15:11 -0700 (PDT)
+Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
+ kprobe_page_fault()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+ <ec764ff4-f68a-fce5-ac1e-a4664e1123c7@c-s.fr>
+ <97e9c9b3-89c8-d378-4730-841a900e6800@arm.com>
+ <f6d295c8-574d-3e64-79ae-2f7d3ff4c9f0@c-s.fr>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <1875ab7a-204e-4150-c7cc-d282f69da724@arm.com>
+Date:   Tue, 11 Jun 2019 10:45:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <f6d295c8-574d-3e64-79ae-2f7d3ff4c9f0@c-s.fr>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190607163723.GG20269@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 06:37:23PM +0200, Borislav Petkov wrote:
-> On Fri, Jun 07, 2019 at 02:49:42PM +0000, Ghannam, Yazen wrote:
-> > Would you mind if the function name stayed the same? The reason is
-> > that MCA_CTL is written here, which is the "init" part, and MCA_STATUS
-> > is cleared.
-> >
-> > I can use another name for the check, e.g. __mcheck_cpu_check_banks()
-> > or __mcheck_cpu_banks_check_init().
+
+
+On 06/11/2019 10:16 AM, Christophe Leroy wrote:
 > 
-> Nevermind, leave it as is. I'll fix it up ontop. I don't like that
-> "__mcheck_cpu_init" prefixing there which is a mouthful and should
-> simply be "mce_cpu_<do_stuff>" to denote that it is a function which is
-> run on a CPU to setup stuff.
+> 
+> Le 10/06/2019 à 04:39, Anshuman Khandual a écrit :
+>>
+>>
+>> On 06/07/2019 09:01 PM, Christophe Leroy wrote:
+>>>
+>>>
+>>> Le 07/06/2019 à 12:34, Anshuman Khandual a écrit :
+>>>> Very similar definitions for notify_page_fault() are being used by multiple
+>>>> architectures duplicating much of the same code. This attempts to unify all
+>>>> of them into a generic implementation, rename it as kprobe_page_fault() and
+>>>> then move it to a common header.
+>>>>
+>>>> kprobes_built_in() can detect CONFIG_KPROBES, hence new kprobe_page_fault()
+>>>> need not be wrapped again within CONFIG_KPROBES. Trap number argument can
+>>>> now contain upto an 'unsigned int' accommodating all possible platforms.
+>>>>
+>>>> kprobe_page_fault() goes the x86 way while dealing with preemption context.
+>>>> As explained in these following commits the invoking context in itself must
+>>>> be non-preemptible for kprobes processing context irrespective of whether
+>>>> kprobe_running() or perhaps smp_processor_id() is safe or not. It does not
+>>>> make much sense to continue when original context is preemptible. Instead
+>>>> just bail out earlier.
+>>>>
+>>>> commit a980c0ef9f6d
+>>>> ("x86/kprobes: Refactor kprobes_fault() like kprobe_exceptions_notify()")
+>>>>
+>>>> commit b506a9d08bae ("x86: code clarification patch to Kprobes arch code")
+>>>>
+>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>> Cc: linux-ia64@vger.kernel.org
+>>>> Cc: linuxppc-dev@lists.ozlabs.org
+>>>> Cc: linux-s390@vger.kernel.org
+>>>> Cc: linux-sh@vger.kernel.org
+>>>> Cc: sparclinux@vger.kernel.org
+>>>> Cc: x86@kernel.org
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>> Cc: Matthew Wilcox <willy@infradead.org>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>>>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+>>>> Cc: Andrey Konovalov <andreyknvl@google.com>
+>>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>>> Cc: Paul Mackerras <paulus@samba.org>
+>>>> Cc: Russell King <linux@armlinux.org.uk>
+>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>> Cc: Will Deacon <will.deacon@arm.com>
+>>>> Cc: Tony Luck <tony.luck@intel.com>
+>>>> Cc: Fenghua Yu <fenghua.yu@intel.com>
+>>>> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+>>>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>>>> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+>>>> Cc: "David S. Miller" <davem@davemloft.net>
+>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>> Cc: Ingo Molnar <mingo@redhat.com>
+>>>> Cc: Andy Lutomirski <luto@kernel.org>
+>>>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>>>>
+>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>> ---
+>>>> Testing:
+>>>>
+>>>> - Build and boot tested on arm64 and x86
+>>>> - Build tested on some other archs (arm, sparc64, alpha, powerpc etc)
+>>>>
+>>>> Changes in RFC V3:
+>>>>
+>>>> - Updated the commit message with an explaination for new preemption behaviour
+>>>> - Moved notify_page_fault() to kprobes.h with 'static nokprobe_inline' per Matthew
+>>>> - Changed notify_page_fault() return type from int to bool per Michael Ellerman
+>>>> - Renamed notify_page_fault() as kprobe_page_fault() per Peterz
+>>>>
+>>>> Changes in RFC V2: (https://patchwork.kernel.org/patch/10974221/)
+>>>>
+>>>> - Changed generic notify_page_fault() per Mathew Wilcox
+>>>> - Changed x86 to use new generic notify_page_fault()
+>>>> - s/must not/need not/ in commit message per Matthew Wilcox
+>>>>
+>>>> Changes in RFC V1: (https://patchwork.kernel.org/patch/10968273/)
+>>>>
+>>>>    arch/arm/mm/fault.c      | 24 +-----------------------
+>>>>    arch/arm64/mm/fault.c    | 24 +-----------------------
+>>>>    arch/ia64/mm/fault.c     | 24 +-----------------------
+>>>>    arch/powerpc/mm/fault.c  | 23 ++---------------------
+>>>>    arch/s390/mm/fault.c     | 16 +---------------
+>>>>    arch/sh/mm/fault.c       | 18 ++----------------
+>>>>    arch/sparc/mm/fault_64.c | 16 +---------------
+>>>>    arch/x86/mm/fault.c      | 21 ++-------------------
+>>>>    include/linux/kprobes.h  | 16 ++++++++++++++++
+>>>>    9 files changed, 27 insertions(+), 155 deletions(-)
+>>>>
+>>>
+>>> [...]
+>>>
+>>>> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+>>>> index 443d980..064dd15 100644
+>>>> --- a/include/linux/kprobes.h
+>>>> +++ b/include/linux/kprobes.h
+>>>> @@ -458,4 +458,20 @@ static inline bool is_kprobe_optinsn_slot(unsigned long addr)
+>>>>    }
+>>>>    #endif
+>>>>    +static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+>>>> +                          unsigned int trap)
+>>>> +{
+>>>> +    int ret = 0;
+>>>
+>>> ret is pointless.
+>>>
+>>>> +
+>>>> +    /*
+>>>> +     * To be potentially processing a kprobe fault and to be allowed
+>>>> +     * to call kprobe_running(), we have to be non-preemptible.
+>>>> +     */
+>>>> +    if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
+>>>> +        if (kprobe_running() && kprobe_fault_handler(regs, trap))
+>>>
+>>> don't need an 'if A if B', can do 'if A && B'
+>>
+>> Which will make it a very lengthy condition check.
+> 
+> Yes. But is that a problem at all ?
 
-So I'm staring at this and I can't say that I'm getting any good ideas:
+Probably not.
 
-I wanna get rid of that ugly "__mcheck_cpu_" prefix but the replacements
-I can think of right now, are crap:
+> 
+> For me the following would be easier to read.
+> 
+> if (kprobes_built_in() && !preemptible() && !user_mode(regs) &&
+>     kprobe_running() && kprobe_fault_handler(regs, trap))
+>     ret = 1;
 
-* I can call them all "cpu_<bla>" but then they look like generic
-cpu-setup functions which come from kernel/cpu.c or so.
-
-* I can prefix them with "mce_cpu" but when you do them all, it becomes
-a block of "mce_cpu_" stuff which ain't more readable either. And
-besides, those are static functions so they shouldn't need the prefix.
-But I'd like the naming to denote that they're doing per-CPU setup
-stuff. Which brings me to the previous point.
-
-So no, don't have a good idea yet...
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+As mentioned before will stick with current x86 implementation. 
