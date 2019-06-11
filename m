@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7776C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A160C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B914212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D785C20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1Mlh6SJc"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="E2aNMVXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404925AbfFKJEP (ORCPT
+        id S2404934AbfFKJEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:04:15 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25288 "EHLO
+        Tue, 11 Jun 2019 05:04:38 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35788 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404702AbfFKJEP (ORCPT
+        by vger.kernel.org with ESMTP id S2404619AbfFKJEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:04:15 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5B8u8HA021898;
-        Tue, 11 Jun 2019 11:03:08 +0200
+        Tue, 11 Jun 2019 05:04:37 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5B8vAwF002977;
+        Tue, 11 Jun 2019 11:03:29 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Yp0bFSnxg47LGWXkCBcDsGAcLvPwKkpEg+xTLQR3KdE=;
- b=1Mlh6SJcPGRysv+LFfRyuf1T5VyHPL+wjsmK+mt02SK6UGOm5FkF7zC3O5Ywfz1WZzcb
- 92P0lKQQYhJvnaBNpwOZsZCh/DlU5o2EQL+jT7UI3PrOPFkJDaPSsPd+Z8ljSv6YimJO
- JCd0OE0IbB+hfngdKTAzFCxssDiaBV+48bSQ4nJzcdnVpR/eBD4YAFecYZQtb8J3SK1a
- h3Jzm3hlDd0LWNuUF/c+Ix9eWXtQDs0xkWJOpPrJMk0fV1zseotMnFXXnraQ/CQo+MLq
- d7fMJSgoWy+DcfGGgkZRuIybqL8uLfiNACVkoCHWvZymSb+HXpnxuUPv0VmbufWImRQG zQ== 
+ bh=6eMZguSYGIl1IRLc2AkseWpMUjpjvve1Wq0sb9wlb0g=;
+ b=E2aNMVXSZm1ZntLe1lqTr9D0r93sdVXzsD37o10ZG0mvLeTB31r1eaIlbLii3e9opYWS
+ ci3h3wyt+9s2IK1tEYLH1keuZv72kFHya8UdR/yDWahclY0hOmWFHupUmqBt254dWWmK
+ Q8zpT+vgeJckVLhymgqUThmPlUm5cClj7yGf2/Nu81NwsJQpl2XY66zLlMkqxLYa5Dnq
+ ujRnBIgjkAQBd4+RYqJR+f14R7jpgRRY3b4jhK8kqLFRfypekgrnfQz+t1pNLcda1Ibd
+ 95A9wnGFz60fY4Ph3EXIhaP684JpXtNnTfOXbhZaDYThUJs84VvS3JY2swsG25N0wFs4 dw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t26rp8vsx-1
+        by mx08-00178001.pphosted.com with ESMTP id 2t26rkgvub-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 11 Jun 2019 11:03:08 +0200
+        Tue, 11 Jun 2019 11:03:29 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D909D4A;
-        Tue, 11 Jun 2019 09:03:07 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C049B256F;
-        Tue, 11 Jun 2019 09:03:07 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 11:03:07 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C0A4C3F;
+        Tue, 11 Jun 2019 09:03:22 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ACEBB256F;
+        Tue, 11 Jun 2019 09:03:22 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 11:03:22 +0200
 Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun 2019 11:03:06
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun 2019 11:03:22
  +0200
 From:   Hugues Fruchet <hugues.fruchet@st.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -58,62 +58,95 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
 CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Hugues Fruchet" <hugues.fruchet@st.com>,
         Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH 1/3] media: st-mipid02: add support of RGB565
-Date:   Tue, 11 Jun 2019 11:02:47 +0200
-Message-ID: <1560243769-17510-2-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH 3/3] media: st-mipid02: add support of JPEG
+Date:   Tue, 11 Jun 2019 11:02:49 +0200
+Message-ID: <1560243769-17510-4-git-send-email-hugues.fruchet@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560243769-17510-1-git-send-email-hugues.fruchet@st.com>
 References: <1560243769-17510-1-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.201.23.19]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_03:,,
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_04:,,
  signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support of RGB565 pixel format.
+Add support of JPEG pixel format.
+This requires auto detection of data type from CSI-2 stream.
 
 Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- drivers/media/i2c/st-mipid02.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/media/i2c/st-mipid02.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
-index 9369f38..76a9f52 100644
+index 35946ad..cd275d7 100644
 --- a/drivers/media/i2c/st-mipid02.c
 +++ b/drivers/media/i2c/st-mipid02.c
-@@ -61,7 +61,8 @@ static const u32 mipid02_supported_fmt_codes[] = {
- 	MEDIA_BUS_FMT_SGRBG10_1X10, MEDIA_BUS_FMT_SRGGB10_1X10,
- 	MEDIA_BUS_FMT_SBGGR12_1X12, MEDIA_BUS_FMT_SGBRG12_1X12,
- 	MEDIA_BUS_FMT_SGRBG12_1X12, MEDIA_BUS_FMT_SRGGB12_1X12,
--	MEDIA_BUS_FMT_UYVY8_1X16, MEDIA_BUS_FMT_BGR888_1X24
-+	MEDIA_BUS_FMT_UYVY8_1X16, MEDIA_BUS_FMT_BGR888_1X24,
-+	MEDIA_BUS_FMT_RGB565_2X8_LE, MEDIA_BUS_FMT_RGB565_2X8_BE,
+@@ -64,6 +64,7 @@ static const u32 mipid02_supported_fmt_codes[] = {
+ 	MEDIA_BUS_FMT_UYVY8_1X16, MEDIA_BUS_FMT_BGR888_1X24,
+ 	MEDIA_BUS_FMT_RGB565_2X8_LE, MEDIA_BUS_FMT_RGB565_2X8_BE,
+ 	MEDIA_BUS_FMT_YUYV8_2X8, MEDIA_BUS_FMT_UYVY8_2X8,
++	MEDIA_BUS_FMT_JPEG_1X8
  };
  
  /* regulator supplies */
-@@ -128,6 +129,8 @@ static int bpp_from_code(__u32 code)
- 	case MEDIA_BUS_FMT_SRGGB12_1X12:
- 		return 12;
- 	case MEDIA_BUS_FMT_UYVY8_1X16:
-+	case MEDIA_BUS_FMT_RGB565_2X8_LE:
-+	case MEDIA_BUS_FMT_RGB565_2X8_BE:
+@@ -101,6 +102,7 @@ struct mipid02_dev {
+ 		u8 data_lane1_reg1;
+ 		u8 mode_reg1;
+ 		u8 mode_reg2;
++		u8 data_selection_ctrl;
+ 		u8 data_id_rreg;
+ 		u8 pix_width_ctrl;
+ 		u8 pix_width_ctrl_emb;
+@@ -134,6 +136,7 @@ static int bpp_from_code(__u32 code)
+ 	case MEDIA_BUS_FMT_UYVY8_2X8:
+ 	case MEDIA_BUS_FMT_RGB565_2X8_LE:
+ 	case MEDIA_BUS_FMT_RGB565_2X8_BE:
++	case MEDIA_BUS_FMT_JPEG_1X8:
  		return 16;
  	case MEDIA_BUS_FMT_BGR888_1X24:
  		return 24;
-@@ -158,6 +161,9 @@ static u8 data_type_from_code(__u32 code)
- 		return 0x1e;
- 	case MEDIA_BUS_FMT_BGR888_1X24:
- 		return 0x24;
-+	case MEDIA_BUS_FMT_RGB565_2X8_LE:
-+	case MEDIA_BUS_FMT_RGB565_2X8_BE:
-+		return 0x22;
- 	default:
- 		return 0;
- 	}
+@@ -463,6 +466,7 @@ static int mipid02_configure_from_tx(struct mipid02_dev *bridge)
+ {
+ 	struct v4l2_fwnode_endpoint *ep = &bridge->tx;
+ 
++	bridge->r.data_selection_ctrl = SELECTION_MANUAL_WIDTH;
+ 	bridge->r.pix_width_ctrl = ep->bus.parallel.bus_width;
+ 	bridge->r.pix_width_ctrl_emb = ep->bus.parallel.bus_width;
+ 	if (ep->bus.parallel.flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+@@ -478,10 +482,15 @@ static int mipid02_configure_from_code(struct mipid02_dev *bridge)
+ 	u8 data_type;
+ 
+ 	bridge->r.data_id_rreg = 0;
+-	data_type = data_type_from_code(bridge->fmt.code);
+-	if (!data_type)
+-		return -EINVAL;
+-	bridge->r.data_id_rreg = data_type;
++
++	if (bridge->fmt.code != MEDIA_BUS_FMT_JPEG_1X8) {
++		bridge->r.data_selection_ctrl |= SELECTION_MANUAL_DATA;
++
++		data_type = data_type_from_code(bridge->fmt.code);
++		if (!data_type)
++			return -EINVAL;
++		bridge->r.data_id_rreg = data_type;
++	}
+ 
+ 	return 0;
+ }
+@@ -565,7 +574,7 @@ static int mipid02_stream_enable(struct mipid02_dev *bridge)
+ 	if (ret)
+ 		goto error;
+ 	ret = mipid02_write_reg(bridge, MIPID02_DATA_SELECTION_CTRL,
+-		SELECTION_MANUAL_DATA | SELECTION_MANUAL_WIDTH);
++		bridge->r.data_selection_ctrl);
+ 	if (ret)
+ 		goto error;
+ 	ret = mipid02_write_reg(bridge, MIPID02_PIX_WIDTH_CTRL,
 -- 
 2.7.4
 
