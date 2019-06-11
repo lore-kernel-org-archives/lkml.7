@@ -2,92 +2,152 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C38C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCAFC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06952086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D4112080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQQshxw4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aNfZmQbN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406468AbfFKUQv (ORCPT
+        id S2406484AbfFKUTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:16:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39679 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406133AbfFKUQu (ORCPT
+        Tue, 11 Jun 2019 16:19:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43658 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406133AbfFKUTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:16:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so11782597wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 13:16:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rdnkv68QQM90C5QWNTYgPjC6Dj76JDdVz07nlfyP5ZQ=;
-        b=hQQshxw4L8UXE+gz40O8iQyiPXXifPlINYxKfWzOe8AeWC02uo7i7QWZ39sq37D8ox
-         DDFyHZaImSkOCvk42zIhCjfsfF1n74QVSxkBNuxgqHGbaGYMsME3e21yDuAdX/vkVLHS
-         g3/R/MWsmyTknKHVPTLQYwK0loQOj1jSvH9d8Zgsf8EiFfh+QzFk37z1/yOXMWVPWKNa
-         PXgFoQNEEdTSQDcyqlaAh9+PyExrNFRcCFAIHuX7g5cma0yDci3SRryO2Kk9qOuFOmbb
-         pyC9s8iPb+GfljNG+GTpKBoNBxhPoz/UdJs7sHGl/0MG1pewPhj1HKtwTf8tCbqid4vG
-         ntGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rdnkv68QQM90C5QWNTYgPjC6Dj76JDdVz07nlfyP5ZQ=;
-        b=XgmhkLDjMO+NMOd6fHMUlSIdf4ipd2ZWMRjQrhybe5XHQXV1bj8NtWl4SNxkWxQOwv
-         dItgcTWRm27JiV8lGhifNbZH+HHb4DGJTo1pZyAyHBpYf6//JkrcR8X7bNUpBEodXlS6
-         5XoKauf3GESbwCHsZfRwTQW+22er3WAF/R8o9TVHTjRCTbawNSEgfrjAx6HPD2EZcMOH
-         UCGhe7ATuJxa5ijpBx/6tv6g392pNwO39UDQd79Zd3tZPesFjm5mFejcHSksArB916Zx
-         sP0jSBgM67EbbJsC95bT79rXFQIQd1bclbOx54Hi2a+ZaNK7JkV4JzJUwbYzKklUsC/m
-         u2Pg==
-X-Gm-Message-State: APjAAAVAiHvUSQd6Oq/3hwz8t80QbALMbSM4qfBg4Ix4jhVqUcjf5nn5
-        oalmY6OUnkE+OIZxT/Np/OhLfDy+aU67UEMp7XE=
-X-Google-Smtp-Source: APXvYqw9zQWawZNBHmOZsCkDsL6jKqCMRayKffZHiF0OiFQ6eYUoHK9eVpmVK9vgG42NhaHXEfAmRCbZ+FTcS1ZnoHQ=
-X-Received: by 2002:adf:f14a:: with SMTP id y10mr37882612wro.183.1560284208310;
- Tue, 11 Jun 2019 13:16:48 -0700 (PDT)
+        Tue, 11 Jun 2019 16:19:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BKIG4j188569;
+        Tue, 11 Jun 2019 20:18:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=pbmzGiYbk5X7Ese6X3ZnPOdFp3xt858d68MV4hL41o8=;
+ b=aNfZmQbNP69ST1fFgutdWgNsoHsdTrxkUj7frUiu18XSvo5ty/Pn14NuvBXeongSeXs5
+ W+/X6Zg80mFm1wMWd+zVCPCrQRP9QFtEH+cG0F7+uHlQwGnz+OWpR52bZNKpwSlJXUqv
+ nMKBQhJ5HrsIVS6xiQg2bgHXLgu1p42NoCzZ/6Z08/cyHiS+fbUmTJNnXs/64PEUCVDy
+ LuWVBuquORM9Cl3ljZsvAUUgUitqLMYyHC0GQkhfk1XGzvDOaXFduSfm+GFL8dwtAmDt
+ oSfpqPsaE2SKGUeznCaVKxrCypUl2tuyIAul53FQXJZOqETR2JQgxWtw699nf/W05RQb Uw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t04etqhfn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 20:18:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BKIAf4177892;
+        Tue, 11 Jun 2019 20:18:28 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2t04hyj648-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 20:18:28 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5BKIMpX015673;
+        Tue, 11 Jun 2019 20:18:23 GMT
+Received: from [10.154.187.61] (/10.154.187.61)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 11 Jun 2019 13:18:22 -0700
+Subject: Re: [PATCH v16 04/16] mm: untag user pointers in do_pages_move
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <e410843d00a4ecd7e525a7a949e605ffc6c394c4.1559580831.git.andreyknvl@google.com>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+Message-ID: <d0dffcf8-d7bf-a7b4-5766-3a6f87437851@oracle.com>
+Date:   Tue, 11 Jun 2019 14:18:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1558024913-26502-1-git-send-email-kdasu.kdev@gmail.com>
- <1558024913-26502-2-git-send-email-kdasu.kdev@gmail.com> <CAFLxGvyZCpKthJevFHjjBQXo=j5f-FUip0MAsLy0HaoJzLZ2rA@mail.gmail.com>
- <CAC=U0a2UxMG2SuVCjv=TLzMs7Dg3yqJdxW6ft2tSQgEKj0C6ZQ@mail.gmail.com> <CAC=U0a3co4Ju94pEp4exDYNz=G7YnEztjdZWSjOBKTL+C_7g8Q@mail.gmail.com>
-In-Reply-To: <CAC=U0a3co4Ju94pEp4exDYNz=G7YnEztjdZWSjOBKTL+C_7g8Q@mail.gmail.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Tue, 11 Jun 2019 22:16:36 +0200
-Message-ID: <CAFLxGvzMhDwoP5wqLFq-SUyDsyPNCMmiNgSr=FXFL6ee1uA4dw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] mtd: nand: raw: brcmnand: When oops in progress
- use pio and interrupt polling
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     MTD Maling List <linux-mtd@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e410843d00a4ecd7e525a7a949e605ffc6c394c4.1559580831.git.andreyknvl@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906110131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906110130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:03 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
->
-> Richard,
->
-> You have any other review comments/concerns with this patch, if not
-> can you please sign off on it.
+On 6/3/19 10:55 AM, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow=
+ to
+> pass tagged user pointers (with the top byte set to something else othe=
+r
+> than 0x00) as syscall arguments.
+>=20
+> do_pages_move() is used in the implementation of the move_pages syscall=
+=2E
+>=20
+> Untag user pointers in this function.
+>=20
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  mm/migrate.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index f2ecc2855a12..3930bb6fa656 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1617,6 +1617,7 @@ static int do_pages_move(struct mm_struct *mm, no=
+demask_t task_nodes,
+>  		if (get_user(node, nodes + i))
+>  			goto out_flush;
+>  		addr =3D (unsigned long)p;
+> +		addr =3D untagged_addr(addr);
 
-I'm fine with that approach.
-I hoped to get some input from other MTD folks too :-(
+Why not just "addr =3D (unsigned long)untagged_addr(p);"
 
--- 
-Thanks,
-//richard
+--
+Khalid
+
