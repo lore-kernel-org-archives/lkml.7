@@ -2,237 +2,225 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B68C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D8DC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9D02080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF7E2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ANnVaIBD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NdcQpHpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404989AbfFKPdV (ORCPT
+        id S2405041AbfFKPfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:33:21 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50920 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404969AbfFKPdT (ORCPT
+        Tue, 11 Jun 2019 11:35:38 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:43432 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404969AbfFKPfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:33:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c66so3457135wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FmwHZkaa1R0JoHSUEfjn8cTTt9MbvZmF4XV1+i5dOJs=;
-        b=ANnVaIBDr6Rb5Xsy1nMlf077F1PNYlhLezpJGfv7aBrYbK22g3kJp6XwGIux1Kh8n6
-         V7ZOcLfjxLSjhmpy9ZfRr4eDyLiQxBKFVgdMtC9ojjT3tceGUlFRWriQP3cOyOQA2vlm
-         GMYqOabbuikmafaZWNZ8njzM1O0vfh4ZLrt7JRPZjPr+TQH8N6d9O3Q7NxhbTFMXtEdP
-         Jl1/zTxFFKlLoH999beuymasml+5nggdIFRQs6ud2BqCAb8h+uro7JnWsTuLOJIN3EOP
-         VmEbBti4O3KodEQEXhxcn/8dUFgrxd+cgGJpJf3A8AR3428B8ltO2mTuZ+qYNQhW0Afl
-         8ITg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FmwHZkaa1R0JoHSUEfjn8cTTt9MbvZmF4XV1+i5dOJs=;
-        b=RL/czLdJs6WSO3JC8jFKl0w/VjDEWcFeKRkMgaOM1lRGifj/qo557OdeUgkpOx24NT
-         4b+VHv1ug++M0dA8exlKYkpCaOZp6C+yPRuMpndt4m+WspMFGnK/nyPS8Rtp4eVtiR+W
-         0iRq6fNzwl0dwnU5m7c4PNKo+L+Bt4gvw0nsOacqVrWNQ60KsDSGu/axlkJjntsL+Yvm
-         t0EdUxj2GNj1NRgjg5j4TrWV0eSU4u2QfKCbrnYGOEFAYkykZlZMTpQ5eT9X+FuRCfmC
-         iP9Kf7QhEeQLfvUBIruttRRErTCMeXHOFT/rsksEjQnDOJp/VO/gHGI9EOk3bVVBrnEL
-         fpVA==
-X-Gm-Message-State: APjAAAV7IP4hZn1VDacsHcsMtFG8aagMDAOVNzwEPt2PzoXJ703QIyQM
-        mofFCINAzol9GWCl6hr8Hwx2hQ==
-X-Google-Smtp-Source: APXvYqydNj7AmRzG+3Qq8PgQaX6j7i/7O6nhWJxUKhU1e4OKdBd242MaaJf6tFbi0H/lTqVYqTGtUA==
-X-Received: by 2002:a7b:c455:: with SMTP id l21mr18854700wmi.114.1560267196506;
-        Tue, 11 Jun 2019 08:33:16 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id u25sm3379121wmc.3.2019.06.11.08.33.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 08:33:15 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 16:33:14 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 2/2] backlight: pwm_bl: Get number of brightness levels
- for CIE 1931 from the device tree
-Message-ID: <20190611153314.cj6j6l4kcl4kk4t2@holly.lan>
-References: <20190610233739.29477-1-mka@chromium.org>
- <20190610233739.29477-2-mka@chromium.org>
+        Tue, 11 Jun 2019 11:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x0ONBcm1rMiSU9BG1M5184+3qrW5ub0HPsmd59faX8g=; b=NdcQpHpLgtNnDBxuhIWYR8tSG
+        8+d/kk9T87DpvX8aed+YtrqeYjPFxj40r8xMI4wkDTVDLRWdmccmQXdc7gaSy/1TTsFtTQaYk89TI
+        J5p+rUOcpYRq0iK8sgQOuZLYeMGXxmmmZwrRxrroK1E5/6NX855FVQCgL3rHvofkCeVm1wbXt8I2a
+        cGlu/sv2PJ+NDgDHHAO9DM5arV1gKHOR8DkszzUK2JjNk46AmIUTp0+rOxmCk+s/IkfAkwWdPXQSN
+        NFWZ2s+rzXvuRadlVAtS84TXe1FBaYe6w9q7Jf97g6KRINhHVUaNx9W02AxzxVIg1T84ZjRkBn9CK
+        aiahP+Mrw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52956)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1haio9-0006QU-EU; Tue, 11 Jun 2019 16:35:33 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1haio6-0007xo-0x; Tue, 11 Jun 2019 16:35:30 +0100
+Date:   Tue, 11 Jun 2019 16:35:29 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net-next 2/3] net: stmmac: Start adding phylink support
+Message-ID: <20190611153529.z6hlkhtrnd5ksx2n@shell.armlinux.org.uk>
+References: <cover.1560266175.git.joabreu@synopsys.com>
+ <7daa1ac5cf56152b9d6c969c24603bc82e0b7d55.1560266175.git.joabreu@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610233739.29477-2-mka@chromium.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <7daa1ac5cf56152b9d6c969c24603bc82e0b7d55.1560266175.git.joabreu@synopsys.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 04:37:39PM -0700, Matthias Kaehlcke wrote:
-> Commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
-> linearly to human eye") uses pwm_period / hweight32(pwm_period) as
-> as heuristic to determine the number of brightness levels when the DT
-> doesn't provide a brightness level table. This heuristic is broken
-> and can result in excessively large brightness tables.
+On Tue, Jun 11, 2019 at 05:18:46PM +0200, Jose Abreu wrote:
+> Start adding the phylink callbacks.
 > 
-> Instead of using the heuristic try to retrieve the number of
-> brightness levels from the device tree (property 'max-brightness'
-> + 1). If the value is not specified use a default of 256 levels.
-
-I'll look at the code tomorrow but why 256?
-
-To me it feels simultaneously too big for a simple 8-bit PWM and too
-small for animated backlight effects.
-
-I certainly agree that an override could be useful but I'm not clear why
-deriving a default based on the period is bogus (and the description is
-merely concerned about uselessly big tables).
-
-/*
- * Once we have 4096 levels there's little point going much higher...
- * neither interactive sliders nor animation benefits from having
- * more values in the table.
- */
-max_brightness = min(DIV_ROUND_UP(period, ffs(period), 4096);
-
-
-Daniel.
-
-> 
-> Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
 > ---
->  drivers/video/backlight/pwm_bl.c | 59 ++++++++++++--------------------
->  1 file changed, 21 insertions(+), 38 deletions(-)
+>  drivers/net/ethernet/stmicro/stmmac/Kconfig   |  1 +
+>  drivers/net/ethernet/stmicro/stmmac/stmmac.h  |  4 ++
+>  .../net/ethernet/stmicro/stmmac/stmmac_main.c | 48 +++++++++++++++++++
+>  3 files changed, 53 insertions(+)
 > 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index fb45f866b923..2913cbe9cfcb 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -194,38 +194,19 @@ int pwm_backlight_brightness_default(struct device *dev,
->  				     struct platform_pwm_backlight_data *data,
->  				     unsigned int period)
->  {
-> -	unsigned int counter = 0;
-> -	unsigned int i, n;
-> +	unsigned int i;
-> +	unsigned int nlevels = data->max_brightness + 1;
->  	u64 retval;
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> index 0b5c8d74c683..cf0c9f4f347a 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> @@ -4,6 +4,7 @@ config STMMAC_ETH
+>  	depends on HAS_IOMEM && HAS_DMA
+>  	select MII
+>  	select PHYLIB
+> +	select PHYLINK
+
+Please replace PHYLIB with PHYLINK here, there's no need to select both.
+
+>  	select CRC32
+>  	imply PTP_1588_CLOCK
+>  	select RESET_CONTROLLER
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+> index a16ada8b8507..b8386778f6c6 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/stmmac.h>
+>  #include <linux/phy.h>
+> +#include <linux/phylink.h>
+
+linux/phy.h is unnecessary when you include phylink.h
+
+>  #include <linux/pci.h>
+>  #include "common.h"
+>  #include <linux/ptp_clock_kernel.h>
+> @@ -155,6 +156,9 @@ struct stmmac_priv {
+>  	struct mii_bus *mii;
+>  	int mii_irq[PHY_MAX_ADDR];
 >  
-> -	/*
-> -	 * Count the number of bits needed to represent the period number. The
-> -	 * number of bits is used to calculate the number of levels used for the
-> -	 * brightness-levels table, the purpose of this calculation is have a
-> -	 * pre-computed table with enough levels to get linear brightness
-> -	 * perception. The period is divided by the number of bits so for a
-> -	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
-> -	 * we have 65535 / 16 = 4096 brightness levels.
-> -	 *
-> -	 * Note that this method is based on empirical testing on different
-> -	 * devices with PWM of 8 and 16 bits of resolution.
-> -	 */
-> -	n = period;
-> -	while (n) {
-> -		counter += n % 2;
-> -		n >>= 1;
-> -	}
-> -
-> -	data->max_brightness = DIV_ROUND_UP(period, counter);
-> -	data->levels = devm_kcalloc(dev, data->max_brightness,
-> +	data->levels = devm_kcalloc(dev, nlevels,
->  				    sizeof(*data->levels), GFP_KERNEL);
->  	if (!data->levels)
->  		return -ENOMEM;
->  
->  	/* Fill the table using the cie1931 algorithm */
-> -	for (i = 0; i < data->max_brightness; i++) {
-> +	for (i = 0; i < nlevels; i++) {
->  		retval = cie1931((i * PWM_LUMINANCE_SCALE) /
-> -				 data->max_brightness, PWM_LUMINANCE_SCALE) *
-> +				 nlevels, PWM_LUMINANCE_SCALE) *
->  				 period;
->  		retval = DIV_ROUND_CLOSEST_ULL(retval, PWM_LUMINANCE_SCALE);
->  		if (retval > UINT_MAX)
-> @@ -233,8 +214,7 @@ int pwm_backlight_brightness_default(struct device *dev,
->  		data->levels[i] = (unsigned int)retval;
->  	}
->  
-> -	data->dft_brightness = data->max_brightness / 2;
-> -	data->max_brightness--;
-> +	data->dft_brightness = nlevels / 2;
->  
->  	return 0;
->  }
-> @@ -272,8 +252,13 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  	 * set a default table of brightness levels will be used.
->  	 */
->  	prop = of_find_property(node, "brightness-levels", &length);
-> -	if (!prop)
-> +	if (!prop) {
-> +		if (of_property_read_u32(node, "max-brightness",
-> +					 &data->max_brightness))
-> +			data->max_brightness = 255;
+> +	struct phylink_config phylink_config;
+> +	struct phylink *phylink;
 > +
->  		return 0;
+>  	struct stmmac_extra_stats xstats ____cacheline_aligned_in_smp;
+>  	struct stmmac_safety_stats sstats;
+>  	struct plat_stmmacenet_data *plat;
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 6a2f072c0ce3..e2e69cb08fef 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -45,6 +45,7 @@
+>  #include <linux/seq_file.h>
+>  #endif /* CONFIG_DEBUG_FS */
+>  #include <linux/net_tstamp.h>
+> +#include <linux/phylink.h>
+>  #include <net/pkt_cls.h>
+>  #include "stmmac_ptp.h"
+>  #include "stmmac.h"
+> @@ -848,6 +849,39 @@ static void stmmac_mac_flow_ctrl(struct stmmac_priv *priv, u32 duplex)
+>  			priv->pause, tx_cnt);
+>  }
+>  
+> +static void stmmac_validate(struct phylink_config *config,
+> +			    unsigned long *supported,
+> +			    struct phylink_link_state *state)
+> +{
+> +	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
+> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+> +	int tx_cnt = priv->plat->tx_queues_to_use;
+> +	int max_speed = priv->plat->max_speed;
+> +
+> +	/* Cut down 1G if asked to */
+> +	if ((max_speed > 0) && (max_speed < 1000)) {
+> +		phylink_set(mask, 1000baseT_Full);
+> +		phylink_set(mask, 1000baseX_Full);
 > +	}
+> +
+> +	/* Half-Duplex can only work with single queue */
+> +	if (tx_cnt > 1) {
+> +		phylink_set(mask, 10baseT_Half);
+> +		phylink_set(mask, 100baseT_Half);
+> +		phylink_set(mask, 1000baseT_Half);
+> +	}
+
+The logic here looks a little weird - if max_speed is less than 1000, we
+can end up with 1000baseT-HD enabled.  Surely this is not desirable.
+
+> +
+> +	bitmap_andnot(supported, supported, mask, __ETHTOOL_LINK_MODE_MASK_NBITS);
+> +	bitmap_andnot(state->advertising, state->advertising, mask,
+> +		      __ETHTOOL_LINK_MODE_MASK_NBITS);
+> +}
+> +
+> +static int stmmac_mac_link_state(struct phylink_config *config,
+> +				 struct phylink_link_state *state)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+>  static void stmmac_mac_config(struct net_device *dev)
+>  {
+>  	struct stmmac_priv *priv = netdev_priv(dev);
+> @@ -900,6 +934,11 @@ static void stmmac_mac_config(struct net_device *dev)
+>  	writel(ctrl, priv->ioaddr + MAC_CTRL_REG);
+>  }
 >  
->  	data->max_brightness = length / sizeof(u32);
+> +static void stmmac_mac_an_restart(struct phylink_config *config)
+> +{
+> +	/* Not Supported */
+> +}
+> +
+>  static void stmmac_mac_link_down(struct net_device *dev, bool autoneg)
+>  {
+>  	struct stmmac_priv *priv = netdev_priv(dev);
+> @@ -914,6 +953,15 @@ static void stmmac_mac_link_up(struct net_device *dev, bool autoneg)
+>  	stmmac_mac_set(priv, priv->ioaddr, true);
+>  }
 >  
-> @@ -565,13 +550,10 @@ static int pwm_backlight_probe(struct platform_device *pdev)
->  
->  			pb->levels = data->levels;
->  		}
-> -	} else if (!data->max_brightness) {
-> +	} else if (node) {
->  		/*
-> -		 * If no brightness levels are provided and max_brightness is
-> -		 * not set, use the default brightness table. For the DT case,
-> -		 * max_brightness is set to 0 when brightness levels is not
-> -		 * specified. For the non-DT case, max_brightness is usually
-> -		 * set to some value.
-> +		 * If no brightness levels are provided use the default
-> +		 * brightness table.
->  		 */
->  
->  		/* Get the PWM period (in nanoseconds) */
-> @@ -591,12 +573,13 @@ static int pwm_backlight_probe(struct platform_device *pdev)
->  
->  			pb->levels = data->levels;
->  		}
-> -	} else {
-> -		/*
-> -		 * That only happens for the non-DT case, where platform data
-> -		 * sets the max_brightness value.
-> -		 */
-> +	} else if (data->max_brightness) {
-> +		/* non-DT case, max_brightness value set in platform data. */
->  		pb->scale = data->max_brightness;
-> +	} else {
-> +		dev_err(&pdev->dev, "max brightness is not specified\n");
-> +		ret = -EINVAL;
-> +		goto err_alloc;
->  	}
->  
->  	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
+> +static const struct phylink_mac_ops __maybe_unused stmmac_phylink_mac_ops = {
+> +	.validate = stmmac_validate,
+> +	.mac_link_state = stmmac_mac_link_state,
+> +	.mac_config = NULL, /* TO BE FILLED */
+> +	.mac_an_restart = stmmac_mac_an_restart,
+> +	.mac_link_down = NULL, /* TO BE FILLED */
+> +	.mac_link_up = NULL, /* TO BE FILLED */
+> +};
+> +
+
+If this is not used, I don't really see the point of splitting this from
+the rest of the patch.  Also, I don't see the point of all those NULL
+initialisers either.
+
+>  /**
+>   * stmmac_adjust_link - adjusts the link parameters
+>   * @dev: net device structure
 > -- 
-> 2.22.0.rc2.383.gf4fbbf30c2-goog
+> 2.21.0
 > 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
