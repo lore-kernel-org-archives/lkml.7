@@ -2,119 +2,145 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1481FC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76713C06508
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20D92064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D5321744
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:49:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZdeA2rc/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSB2gUM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392058AbfFKSrv (ORCPT
+        id S2392082AbfFKStK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:47:51 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55156 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392030AbfFKSru (ORCPT
+        Tue, 11 Jun 2019 14:49:10 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37647 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389470AbfFKStK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:47:50 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BIhxEf102338;
-        Tue, 11 Jun 2019 18:47:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=iGKDVV/BwgaHNmFqdmDqIdqAkhZ2JTEOnwjGqvNBXfQ=;
- b=ZdeA2rc/ZN9bG+KTOqrNWC6lC5QUnAwAIv0X3Qi2fBBLUveDcyLyUM1OnHdHTF9pC3Zr
- BoWa1eTWUU+iqnB/878HYNBl9Mx6Aqjm/MGO5PGaiZ/XXh2Jwn6/VLn/4mrRVVsh1Rcc
- uSRREXLHfQUZI8ua80XOHHDLaUGXxmVT8/NoQ2ahw7SbIXvjE1EjFUNLP6RoGmBd0jO0
- uOeKbJdKgoo0dLIFt8kyRknguoGdrqYf2t5nLw8X4xqTVt8m7erdkRp9JsO+lHm9Eavz
- FrEnc2saVwgiWW2ehJtYst4KzM2YpLRUr1atY+gKE/gKJSj3cht3Vh4/FuMcpS2gt138 6w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t04etq3hu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 18:47:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BIknow091194;
-        Tue, 11 Jun 2019 18:47:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2t1jphkvbk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 18:47:22 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5BIlBa5018032;
-        Tue, 11 Jun 2019 18:47:12 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Jun 2019 11:47:11 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 00C246A0116; Tue, 11 Jun 2019 14:48:34 -0400 (EDT)
-Date:   Tue, 11 Jun 2019 14:48:34 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 0/2] swiotlb: Cleanup and consistency fix
-Message-ID: <20190611184834.GD12859@char.us.oracle.com>
-References: <20190611175825.572-1-f.fainelli@gmail.com>
+        Tue, 11 Jun 2019 14:49:10 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r10so12937223otd.4;
+        Tue, 11 Jun 2019 11:49:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dz7olQKnFjj7omxNegzsPSUMtfyoczAclzprO/pRrIY=;
+        b=iSB2gUM+ptPC8s0fS0yg8bC2jBrbkuG0brKiZ4ngrjTHi+relJzZSSVPJM7dV94t4l
+         gU3KxxHGPU01Yx9AGtudkpc9rU439Z9qNm3rbjoR5B/7iJeXRxqHwfcr5IZ5SzddM02Z
+         KFRpUqromvZR6N5vo4caAUKNaf/cIIjAM5oIYD3ofGrEBW3cvf0nloSJTi5gamBihAiv
+         FzelkkfRr6VNAb86okmqCnZj+o+BTjCDQj5h9tZYGKgI0cXtUrf8gfFpchkWy7HNq+iw
+         Cyuqx6i0a88zbJDV9n7NKk+saN6/gz2eWAgEsIJEic7/Fsq1u7zC5GPzYX4zGn3XlKfY
+         OUyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dz7olQKnFjj7omxNegzsPSUMtfyoczAclzprO/pRrIY=;
+        b=OL5iXDPyZkqwlIa9GsGDeQFXHEYsC7gyK3YBuH8brfM+r4a0QeiFTzWyH7W5fGgYf3
+         +9h3GtbTieRqNZGSmSBwahxWNi0xckovOunBMdeosDkPNIspmegnqKRc4W7PQW5XmRIT
+         clxKc9orK/6dJS5KF6v0WFC5KeVSHZhtDGc/OJgMvMyM2KBb8Ym0pw4Xq30jJFvC38Bt
+         scJfTgN0LZDFJKBazyYCSIqNxXGryNu15JY7yIMh7Q2bUfK243WdAbOcQHbXtxFCjIxH
+         fYlSlkiq5DX/FffVX8ZQMtsvVC7rPGvc2zzAjtEVqW+WSz9OGRhc2xDAxqOJBu55htCe
+         VYdQ==
+X-Gm-Message-State: APjAAAWouTOPTmlq3Yo5scWq1UpHpT+A6+fbenATqG3lO+gJK/OqdM9b
+        5QyMRxXdxnwz9NL+MdMP6MFXnGewIBDH28LButcEAQ==
+X-Google-Smtp-Source: APXvYqzkhILMzkowVhwzSSm9im2xIoXr2H9SzdfAW6Yt/vy3tjIAvRSX0L7L/0gRotVLYOYkXaULmE+GUytAFw0YSBc=
+X-Received: by 2002:a9d:7245:: with SMTP id a5mr36283933otk.232.1560278949767;
+ Tue, 11 Jun 2019 11:49:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611175825.572-1-f.fainelli@gmail.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110120
+References: <20190607002330.2999-1-prsriva02@gmail.com> <1560267426.4464.173.camel@linux.ibm.com>
+In-Reply-To: <1560267426.4464.173.camel@linux.ibm.com>
+From:   prakhar srivastava <prsriva02@gmail.com>
+Date:   Tue, 11 Jun 2019 11:48:58 -0700
+Message-ID: <CAEFn8q+RgSnJaWAJT+xN-CZWCsaOVqrPunT3icd_ua2bpkp_SQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] add new ima hook ima_kexec_cmdline to measure
+ kexec boot cmdline args
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>, vgoyal@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:58:23AM -0700, Florian Fainelli wrote:
-> Hi Christoph,
+On Tue, Jun 11, 2019 at 8:37 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> Hi Prakhar,
+>
+> The patch/patch set title in the Subject line should not explain "how"
+> you add a new feature.  In this case an appropriate patch set title
+> would be, "Add support for measuring the boot command line".
+>  Similarly, the first patch in this patch set could be named "Define a
+> new IMA hook to measure the boot command line arguments".
+>
+> On Thu, 2019-06-06 at 17:23 -0700, Prakhar Srivastava wrote:
+> > The motive behind the patch series is to measure the boot cmdline args
+> > used for soft reboot/kexec case.
+>
+> When mentoring, I suggest starting out with a simple status statement
+> (eg. "The kexec boot command line arguments are not currently being
+> measured."), followed by the problem statement in the first paragraph.
+>
+> >
+> > For secure boot attestation, it is necessary to measure the kernel
+>
+> Secure boot enforces local file data integrity.  The term here should
+> be "trusted boot attestation".
+>
+> > command line and the kernel version.
+>
+> The original version of this patch set included the kernel version.
+> This version is just measuring the boot command line arguments.
+>
+Sorry missed it while updating the cover letter.
+<snip>
 
-I pulled the patches in my tree. 
-> 
-> Still with my contrived memory layout where there is no physical memory
-> the kernel can use below 4GB, it was possible to fail swiotlb_init(),
-> but still not hit swiotlb_map_single() since all peripherals have a
-> DMA_BIT_MASK() that is within the remaining addressable physical memory.
-> 
-> The second path could be backported to stable, but for the same reasons
-> as the one we had just discussed before, this requires a very contrived
-> test case that is not necessarily realistic or would warrant a stable
-> backport IMHO.
-> 
-> Thanks!
-> 
-> Florian Fainelli (2):
->   swiotlb: Group identical cleanup in swiotlb_cleanup()
->   swiotlb: Return consistent SWIOTLB segments/nr_tbl
-> 
->  kernel/dma/swiotlb.c | 26 ++++++++++++++------------
->  1 file changed, 14 insertions(+), 12 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+> > The ima logs need to be carried over to the next kernel, which will be followed
+> > up by other patchsets for x86_64 and arm64.
+> >
+> > The kexec cmdline hash
+>
+> ^stored in the "d-ng" field of the template data
+>
+I will add another template-name for ima-buf
+> > can be verified using
+>
+> > sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements |
+> >   grep  kexec-cmdline | cut -d' ' -f 6 | xxd -r -p | sha256sum
+>
+> Until per policy template field rule support is added, a template name
+> needs to be defined.  Please define "ima-buf" as:
+> {.name = "ima-buf", .fmt = "d-ng|n-ng|buf"}
+>
+> I'm still seeing some scripts/checkpatch "WARNING: line over 80
+> characters".  scripts/Lindent should provide the correct way of
+> formatting these lines.
+>
+> Some people feel that references to Lindent should be removed, but I
+> tend to agree with the Documentation/hwmon/submitting-patches.rst
+> comment pertaining to scripts/Lindent.
+>
+> "* Running your patch or driver file(s) through checkpatch does not
+> mean its formatting is clean. If unsure about formatting in your new
+> driver, run it through Lindent. Lindent is not perfect, and you may
+> have to do some minor cleanup, but it is a good start."
+>
+I will double check fix the issues.
+> Examples of where the line formatting is off is the call to
+> ima_get_action() in process_buffer_measurement() and the call to
+> process_buffer_measurement() in ima_kexec_cmdline().
+>
+Thanks,
+Prakhar Srivastava
+> thanks,
+>
+> Mimi
+<snip>
