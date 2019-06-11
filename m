@@ -2,122 +2,82 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D722DC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C3CC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB79F206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:26:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QTsKv6O+"
+	by mail.kernel.org (Postfix) with ESMTP id 8B15020896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389253AbfFKO0t (ORCPT
+        id S2389995AbfFKO1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:26:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41668 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387551AbfFKO0s (ORCPT
+        Tue, 11 Jun 2019 10:27:39 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:54807 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388676AbfFKO1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:26:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ujK9xvqc/Khwr/vA4mMnQS5gEEU74b5dyLkwMVnQPDY=; b=QTsKv6O+qNziL76M31WriMxyG
-        PFfkMgwSeSdMilX9+E4LG9LiS3v3bMfIif8HUK6xYHuzU7qhoOVBmLr9TpDte4+VEXUTkepIcTesL
-        77fcy/NM7Wg4wjCAn7UOvujV4t3NgUDn5RGKkanJi+3e4MZ42BUIE35ESnUm439LZCg9/o+fVzmf0
-        /j5bd1szS4WHD80KMA5Q1f0uBTbS26GyPPZYyqWjST/WDgbONwrud6FeFXqTBIpMd/GrJ6AmCvo3e
-        Mtb1H7WqBhMLT/PrD8wKAHSNgf519a+4Okcf4P2t6B1DHX5GsrJtn8Oz7jdJQpAnlArlQqzBCVe8t
-        q1CMWvFeg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hahjZ-0004ZB-4A; Tue, 11 Jun 2019 14:26:45 +0000
-Date:   Tue, 11 Jun 2019 07:26:45 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-bcache@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: bcachefs status update (it's done cooking; let's get this sucker
- merged)
-Message-ID: <20190611142644.GC32656@bombadil.infradead.org>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel>
- <CAHk-=wizTF+NbMrSRG-bc-LyuT7PUJ1QRAR8q_anOd6mY+9Z4A@mail.gmail.com>
+        Tue, 11 Jun 2019 10:27:38 -0400
+Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N63NW-1gUNeI3ip6-016NZw; Tue, 11 Jun 2019 16:27:34 +0200
+Subject: Re: [PATCH] pinctrl: lantiq: Switch to SPDX header
+To:     Lubomir Rintel <lkundrak@v3.sk>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     John Crispin <john@phrozen.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190611072004.2978373-1-lkundrak@v3.sk>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <9c4a0f59-1e3a-0c72-b9e7-a7978753a52b@metux.net>
+Date:   Tue, 11 Jun 2019 16:27:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wizTF+NbMrSRG-bc-LyuT7PUJ1QRAR8q_anOd6mY+9Z4A@mail.gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <20190611072004.2978373-1-lkundrak@v3.sk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:PussVQk4+Tim9l3yHxtaW/xw3MAu2tJSQHgBiXBjwyJn3td4qd5
+ DzAmcgkXFaVD5bU0mAirWCzHLXaqkq2nPJSDKP0Caf/anqMydAtp209jXXgXlbA4wqpTrk7
+ qiASHhasELWfF9ZPOi0PPAlCgkxwuULwLUONBm4+CNeiV2/wD39EJq7g93H9u7X7gK16NOV
+ uX8LfEAFqGpnUKrxEFt+Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gNwBp84gseg=:6NaPQe9wBqiSo3CYlIqCTa
+ Mxv22qGmczPYNPO/hSeVlxSDRXIdPXhHnCeBjh3T3gO9PsU5AWp68fH8FDHNtH44ukkyAq8/l
+ ZchOcpV8eIFE3nHmaLyBoF2kEYPSGhGEA79FG/prDr4nAJ6MdkNqFS55njmekO9x1PNpF3vBT
+ cD/ab686Ul/+UJLt0FtblFYACWSadLdamMcdEZA28RGxaOvlYfAfyNkjd5/ViFNh5ZwTWJuhy
+ 0O3UC/4wOKxOjS7rbK34lyjs/d6LQ09PdSRaD7B5R4pFX5ky0I5NY8cmOkDSzyrIYiUU+QMws
+ whD5BMmlwzNhws3nqvly3+sO9w8V1Ai1cUhaNebsfrai98BJ6evUjaXQmOaxNFeGNLoZ4koli
+ B5PNYCHR2KfOgZtoWhCd1Qqon8eb+rnjsZcf+Buytn1tSKFkTWYZkveAPWz1/rfSe4jYk1XC+
+ qDLF2cWgh4Ksjjx8s07jbmguq3bMm2S8BeFAuUGOhRSg2yFY6IrpHusEZ4LMourHUgA7dSXrs
+ fpQl+QI6T7GokdCTpHzYl/o/bUjiu/I2zYPXsLmWVK3ARGrVFmYdbcNdNwFS2OgVbWMa7Vn2Q
+ k2wEq99B4WvON/qjA4dP/hopb2PKeBP9EVUCOIV37P6akLSHJDMewPzkdv/d2f2Vn/fMNb+Kp
+ A4PBlU6XCcbD3hauSZYHRHvpsEINOWaASm+dNvjjoE6w1aH/8KNwZwTxPPJI9UqOn8w5iASPU
+ FOMbT2f5650NJWq/mtNCvudq4xeLEpUMZ1JSKHmiFMM+bchkgd3pmI/0j2DznXsyKzQXWxh8c
+ Ma+I5of
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 06:55:15PM -1000, Linus Torvalds wrote:
-> On Mon, Jun 10, 2019 at 3:17 PM Kent Overstreet
-> <kent.overstreet@gmail.com> wrote:
-> > > Why does the regular page lock (at a finer granularity) not suffice?
-> >
-> > Because the lock needs to prevent pages from being _added_ to the page cache -
-> > to do it with a page granularity lock it'd have to be part of the radix tree,
-> 
-> No, I understand that part, but I still think we should be able to do
-> the locking per-page rather than over the whole mapping.
-> 
-> When doing dio, you need to iterate over old existing pages anyway in
-> that range (otherwise the "no _new_ pages" part is kind of pointless
-> when there are old pages there), so my gut feel is that you might as
-> well at that point also "poison" the range you are doin dio on. With
-> the xarray changes, we might be better at handling ranges. That was
-> one of the arguments for the xarrays over the old radix tree model,
-> after all.
+On 11.06.19 09:20, Lubomir Rintel wrote:
+> The original license text had a typo ("publishhed") which would be
+> likely to confuse automated licensing auditing tools. Let's just switch
+> to SPDX instead of fixing the wording.
 
-We could do that -- if there are pages (or shadow entries) in the XArray,
-replace them with "lock entries".  I think we'd want the behaviour of
-faults / buffered IO be to wait on those entries being removed.  I think
-the DAX code is just about ready to switch over to lock entries instead
-of having a special DAX lock bit.
+Reviewed-By: Enrico Weigelt <info@metux.net>
 
-The question is what to do when there are _no_ pages in the tree for a
-range that we're about to do DIO on.  This should be the normal case --
-as you say, DIO users typically have their own schemes for caching in
-userspace, and rather resent the other users starting to cache their
-file in the kernel.
+BTW: are you aware that there's a separate project for cleaning up
+those things ?
 
-Adding lock entries in the page cache for every DIO starts to look pretty
-painful in terms of allocating radix tree nodes.  And it gets worse when
-you have sub-page-size DIOs -- do we embed a count in the lock entry?
-Or delay DIOs which hit in the same page as an existing DIO?
+maillist: linux-spdx@vger.kernel.org
 
-And then I start to question the whole reasoning behind how we do mixed
-DIO and buffered IO; if there's a page in the page cache, why are we
-writing it out, then doing a direct IO instead of doing a memcpy to the
-page first, then writing the page back?
 
-IOW, move to a model where:
+--mtx
 
- - If i_dio_count is non-zero, buffered I/O waits for i_dio_count to
-   drop to zero before bringing pages in.
- - If i_pages is empty, DIOs increment i_dio_count, do the IO and
-   decrement i_dio_count.
- - If i_pages is not empty, DIO is implemented by doing buffered I/O
-   and waiting for the pages to finish writeback.
-
-(needs a slight tweak to ensure that new DIOs can't hold off a buffered
-I/O indefinitely)
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
