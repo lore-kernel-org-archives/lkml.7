@@ -2,251 +2,141 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99CFC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6F1C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C0220866
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C65421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CFAPmI/L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GiGCJBrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407042AbfFKSW7 (ORCPT
+        id S2407055AbfFKSXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:22:59 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10936 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405802AbfFKSW6 (ORCPT
+        Tue, 11 Jun 2019 14:23:44 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45888 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405802AbfFKSXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:22:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfff1800000>; Tue, 11 Jun 2019 11:22:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 11 Jun 2019 11:22:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 11 Jun 2019 11:22:55 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Jun
- 2019 18:22:52 +0000
-Subject: Re: [PATCH V4 6/6] i2c: tegra: remove BUG, BUG_ON
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560186515-30797-1-git-send-email-bbiswas@nvidia.com>
- <1560186515-30797-6-git-send-email-bbiswas@nvidia.com>
- <06ab30b6-bf79-c628-0a04-d0307511a06f@gmail.com>
- <851d7837-5b98-228e-d8c9-3c41be1fb2e0@nvidia.com>
- <e733bcb0-ea8c-61d1-e6b5-cee8b7696c70@gmail.com>
- <fe0a0cb2-73e3-8f5c-8115-f99c150bd5df@nvidia.com>
- <d29804b9-d3be-9eb2-ba06-f4de2aad3764@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <acb7970e-b1b2-ce14-d822-fc74ca7751fb@nvidia.com>
-Date:   Tue, 11 Jun 2019 11:22:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 14:23:44 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w34so7408384pga.12;
+        Tue, 11 Jun 2019 11:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RUaqGS6QUgdTDoLllogq970LN7Ava4NDdFpVFqXYY/M=;
+        b=GiGCJBrmLCcwdoXR/hfEWhxRxVXP0yUu9sUUZqvg4wVFwA5vVS81R3w7B/Hws02GBs
+         bQf5m5LzSY2evhzZIaPcrTxdlRnOKG6JcgzyoPlFQaOBfdx4zG/zxciv5YgK+lrLTrxM
+         cYO9J/gPwcAT2TpewnRYZ31E6KAMbCy2diEh13IEFyvzxVtxzxo7VvptCqzuA/hlCovh
+         ZjKXMOGRmPvdeF+5XJnjjjFZqUja5TFKSjRPTAWJT6DPCrYdGGCmiq3H5dJ2O/MfvLXb
+         zKyrSiVi+o3Z7jKpHKP2VcOUjPmBH9gPMgDgTzpANCDXfrsR2Ml+cEgzRas33f/OlAYk
+         2KbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RUaqGS6QUgdTDoLllogq970LN7Ava4NDdFpVFqXYY/M=;
+        b=a4rfAAxg0jllo/QKU8pgoIIbLO0XeL21wlXCWdXccyzINLgktHVvPeNPIAbYHo0NqZ
+         RMEkXkRKdmbad1TNtQ2+xis082vNVg/TEmpVUSYP+Md5a7ePy4KFbkvgfLg1D765cToC
+         o3g+b0ICuvopsCQ99//TegC2LRF1xdqNi3cHDQVI/1+nMaBkk7ZCM+A/EXVrRHGOTaaI
+         dMtTR9tywTiE0vlIEtdxKlV43poEuqAKUcXdowj8z12C5mHaK6UuAkYiUZIC5q2MbkxX
+         2uyM6hRswjexKiR8I0sYvqL0L52blMsEBfweHXHHQVA0Rh5j9Vx0B4ezxWeBYxeVusrp
+         zcSA==
+X-Gm-Message-State: APjAAAUf/AE30PGBwe+HkthjSMwyzaW2o8+0iRKG1/rV22F+mPPBCjJ9
+        0Oz71rQZz8u7wm1Vyb140WqPiUlYZ1L0EbQo0Hg=
+X-Google-Smtp-Source: APXvYqz0tqszhCDpzjSzH68sStNjjm2tLdRCgCOXbFIcDIoXYykPNvT0ZevAXzhMLOzrGgeFEbCuT5n6tl8XXCDe+dk=
+X-Received: by 2002:a17:90b:d8b:: with SMTP id bg11mr28168554pjb.30.1560277423232;
+ Tue, 11 Jun 2019 11:23:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d29804b9-d3be-9eb2-ba06-f4de2aad3764@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560277377; bh=Siey2IXCghQc1b+HjTOt8qDeeFID6nmkd3olmUxb5OY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CFAPmI/LgnAHMDhGQvW+GWcfzeKIqHr0L1N4KWE3LW3eDvTvuPSsYe/P3n6Ab6Bi6
-         HP7+K+pq7ve+uhbweTMadJIobofaeVy7C0qhihGdqfNWF5Uo+9vn/hCMKyf7UibQHp
-         ryJo7D8GqWOUuYKoJGYyeQfGGErtWgtIiY41Q6/jEp9bjCWR0wvU47BHkxpVIZIU3n
-         FN5e/xEeBY7sFM9JQPXABUbCv46fcHbPb+LokUQ1SAau0yMyhJMkCgypkg3ykHpN+7
-         CTfBK3A6DucXwvU8N2ByYGBfW1N+TI3jhFg48fn+gRZi9FBA81U8ZyaFAP/LbgcEMh
-         DDRbDHtVpyraA==
+References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+ <0bea1c7c4fc06c7edabbf3185c0cbbc6e85eafd0.1559933665.git.mchehab+samsung@kernel.org>
+ <CAHp75VfTNJOGZx-PoUXLRvzghqf6bVUdJ+yFjE9hNtDLCQ1=UA@mail.gmail.com> <20190611140501.11ba091b@coco.lan>
+In-Reply-To: <20190611140501.11ba091b@coco.lan>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 11 Jun 2019 21:23:32 +0300
+Message-ID: <CAHp75VcdMXHf=hz_m5ySZ-=fBU=qkFxry9Q-Dos9Jx0qoyHCXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 06/20] docs: mark orphan documents as such
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        dri-devel@lists.freedesktop.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 11, 2019 at 8:05 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> Em Tue, 11 Jun 2019 19:52:04 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> escreveu:
+>
+> > On Fri, Jun 7, 2019 at 10:04 PM Mauro Carvalho Chehab
+> > <mchehab+samsung@kernel.org> wrote:
+> > > Sphinx doesn't like orphan documents:
+> >
+> > >     Documentation/laptops/lg-laptop.rst: WARNING: document isn't included in any toctree
+> >
+> > >  Documentation/laptops/lg-laptop.rst             | 2 ++
+> >
+> > > diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/laptops/lg-laptop.rst
+> > > index aa503ee9b3bc..f2c2ffe31101 100644
+> > > --- a/Documentation/laptops/lg-laptop.rst
+> > > +++ b/Documentation/laptops/lg-laptop.rst
+> > > @@ -1,5 +1,7 @@
+> > >  .. SPDX-License-Identifier: GPL-2.0+
+> > >
+> > > +:orphan:
+> > > +
+> > >  LG Gram laptop extra features
+> > >  =============================
+> > >
+> >
+> > Can we rather create a toc tree there?
+> > It was a first document in reST format in that folder.
+>
+> Sure, but:
+>
+> 1) I have a patch converting the other files on this dir to rst:
+>
+>         https://git.linuxtv.org/mchehab/experimental.git/commit/?h=convert_rst_renames_v4.1&id=abc13233035fdfdbc5ef2f2fbd3d127a1ab15530
+>
+> 2) It probably makes sense to move the entire dir to
+> Documentation/admin-guide.
+>
+> So, I would prefer to have the :orphan: here while (1) is not merged.
 
+Fine to me as long as you will drop it by the mentioned effort.
 
-On 6/11/19 4:34 AM, Dmitry Osipenko wrote:
-> 11.06.2019 10:38, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->>
->> On 6/10/19 2:00 PM, Dmitry Osipenko wrote:
->>> 10.06.2019 22:41, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>
->>>>
->>>> On 6/10/19 11:12 AM, Dmitry Osipenko wrote:
->>>>> 10.06.2019 20:08, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
->>>>>> as needed. Remove BUG() and make Rx and Tx case handling
->>>>>> similar.
->>>>>>
->>>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->>>>>> ---
->>>>>>  =C2=A0=C2=A0 drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
->>>>>>  =C2=A0=C2=A0 1 file changed, 6 insertions(+), 5 deletions(-)
->>>>>
->>>>> Looks that this is still not correct. What if it transfer-complete fl=
-ag
->>>>> is set and buffer is full on RX? In this case the transfer will succe=
-ed
->>>>> while it was a failure.
->>>>>
->>>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
->>>>>> b/drivers/i2c/busses/i2c-tegra.c
->>>>>> index 4dfb4c1..30619d6 100644
->>>>>> --- a/drivers/i2c/busses/i2c-tegra.c
->>>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
->>>>>> @@ -515,7 +515,6 @@ static int tegra_i2c_empty_rx_fifo(struct
->>>>>> tegra_i2c_dev *i2c_dev)
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * prevent overwriting pa=
-st the end of buf
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rx_fifo_avail > 0 && buf_r=
-emaining > 0) {
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(buf_remaining > 3=
-);
->>>>>
->>>>> Actually error should be returned here since out-of-bounds memory
->>>>> accesses must be avoided, hence:
->>>>>
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (WARN_ON_ONCE(buf_remaining > 3))
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>>> buf_remaining will be less than equal to 3 because of the expression
->>>> earlier
->>>> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2=
-c-tegra.c#L520
->>>>
->>>>
->>>
->>> Ah yes, indeed!
->>>
->> I see that I am wrong and buf_remaining > 3 needs to be prevented at
->>
->> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-=
-tegra.c#L528
->>
->>
->> because of word_to_transfer is limited to rx_fifo_avail:
->>
->> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-=
-tegra.c#L515
->>
->>
->> I shall add the check for less than 3 in both RX and TX cases in a
->> separate patch in this series.
->=20
-> When word_to_transfer is more than rx_fifo_avail, then the rx_fifo_avail
-> becomes zero and hence the nibbles won't be copied. Please take a closer
-> look, the current code is correct, but the buf_remaining > 3 is unneeded
-> because it can't ever happen.
->=20
-> The code is structured the way that it's difficult to follow, apparently
-> the person who added the BUG_ON check in the first place couldn't follow
-> it either. Maybe it's worth to invest some more effort into refactoring
-> at least that part of the code. At minimum a clarifying comments would
-> be helpful.
->=20
-I shall try to add some comments near the BUG_ON check.
-
-> [snip]
->=20
->>>>> Then here:
->>>>>
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (WARN_ON_ONCE(!i2c_dev->msg_buf_rem=
-aining) ||
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_i2c_empty_rx_=
-fifo(i2c_dev)) {
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i2c_dev->msg_err |=
-=3D I2C_ERR_UNKNOWN_INTERRUPT;
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err;
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
->>>>>
->>>> Can you please elaborate why the condition needs to be as follows
->>>> instead of " if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) " ?
->>>>
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(!i2c_dev->msg_buf_re=
-maining) ||
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_i2c_emp=
-ty_rx_fifo(i2c_dev)) {
->>>
->>> Because this is a "receive" transfer and hence it is a error condition
->>> if the data-message was already fully received and then there is anothe=
-r
->>> request from hardware to receive more data. So
->>> "!i2c_dev->msg_buf_remaining" is the error condition here because there
->>> is no more space in the buffer.
->>>
->>> Looking at this again, seems checking for "if
->>> (WARN_ON_ONCE(rx_fifo_avail))" in the above hunk [1] will be already
->>> enough since a not fully drained RX FIFO means that there is no enough
->>> space in the buffer. Then it could be:
->>>
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (tegra_i2c_empty_r=
-x_fifo(i2c_dev)) {
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 i2c_dev->msg_err |=3D I2C_ERR_UNKNOWN_INTERRUPT=
-;
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err;
->>>  =C2=A0=C2=A0=C2=A0=C2=A0}
->>>
->> In the case "if (status & I2C_INT_PACKET_XFER_COMPLETE) {" , we do not
->> have any tegra_i2c_empty_rx_fifo call today. In this current driver I do
->> not see any code that checks for the buffer space and prevents RX FIFO
->> from being drained. The transfer complete when seen must have already
->> consumed all bytes of msg_buf_remaining in the call at the line
->>
->> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-=
-tegra.c#L860
->>
->>
->> So we can put the "WARN_ON_ONCE(i2c_dev->msg_buf_remaining) with msg_err
->> assignment and goto err" to confirm if some corner case is not handled.
->>
->> Planning to share updated patch.
->=20
-> There are two possible error conditions:
->=20
-> 1) Underflow: the XFER_COMPLETE happens before message is fully sent.
->=20
-> 2) Overflow: message is fully sent, but there is no XFER_COMPLETE and
-> then hardware asks to transfer more.
->=20
-> We are addressing the second case here, while you seems are confusing it
-> with the first case.
->=20
-Is the Overflow case pointed above corresponding to when=20
-msg_buf_remaining is zero? If no, what indicates that message is fully=20
-sent? I see that if msg_buf_remaining is already zero, the call=20
-tegra_i2c_empty_rx_fifo will not do any copy of the bytes from FIFO to buf.
-
-One more point that is not clear to me is are the above suggestions you=20
-made is corresponding to replacing below line in linux-next ?
-
-https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-teg=
-ra.c#L888
-
-Can you please also review the newly added patch "V5 6/7 "that was newly=20
-posted? I think it is needed.
-
-
--regards,
-  Bitan
-
+-- 
+With Best Regards,
+Andy Shevchenko
