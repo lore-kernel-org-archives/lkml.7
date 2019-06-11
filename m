@@ -6,131 +6,169 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9261AC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037C4C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9152145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD4420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404472AbfFKJma (ORCPT
+        id S2404798AbfFKJoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:42:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55520 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391206AbfFKJma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:42:30 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DE189CF4700FAD13C19D;
-        Tue, 11 Jun 2019 17:42:27 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Jun 2019
- 17:42:26 +0800
-Date:   Tue, 11 Jun 2019 10:42:14 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-CC:     <will.deacon@arm.com>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <robh+dt@kernel.org>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/8] iommu/arm-smmu-v3: Support platform SSID
-Message-ID: <20190611104214.00001f2c@huawei.com>
-In-Reply-To: <20190610184714.6786-4-jean-philippe.brucker@arm.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
-        <20190610184714.6786-4-jean-philippe.brucker@arm.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 11 Jun 2019 05:44:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:56628 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391206AbfFKJoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 05:44:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA080337;
+        Tue, 11 Jun 2019 02:44:17 -0700 (PDT)
+Received: from [10.1.29.141] (e121487-lin.cambridge.arm.com [10.1.29.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9EE73F73C;
+        Tue, 11 Jun 2019 02:45:58 -0700 (PDT)
+Subject: Re: [PATCH 01/15] binfmt_flat: remove flat_reloc_valid
+To:     Christoph Hellwig <hch@lst.de>, Greg Ungerer <gerg@linux-m68k.org>
+Cc:     uclinux-h8-devel@lists.sourceforge.jp,
+        linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
+        linux-c6x-dev@linux-c6x.org, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190610212015.9157-1-hch@lst.de>
+ <20190610212015.9157-2-hch@lst.de>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <885910f9-9153-4ea6-d060-996b099c520d@arm.com>
+Date:   Tue, 11 Jun 2019 10:44:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20190610212015.9157-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 19:47:09 +0100
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
-
-> For platform devices that support SubstreamID (SSID), firmware provides
-> the number of supported SSID bits. Restrict it to what the SMMU supports
-> and cache it into master->ssid_bits.
+On 6/10/19 10:20 PM, Christoph Hellwig wrote:
+> This helper is the same for all architectures, open code it in the only
+> caller.
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-
-Missing kernel-doc.
-
-Thanks,
-
-Jonathan
-
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  drivers/iommu/arm-smmu-v3.c | 11 +++++++++++
->  drivers/iommu/of_iommu.c    |  6 +++++-
->  include/linux/iommu.h       |  1 +
->  3 files changed, 17 insertions(+), 1 deletion(-)
+>  arch/arm/include/asm/flat.h        | 1 -
+>  arch/c6x/include/asm/flat.h        | 1 -
+>  arch/h8300/include/asm/flat.h      | 1 -
+>  arch/m68k/include/asm/flat.h       | 1 -
+>  arch/microblaze/include/asm/flat.h | 1 -
+>  arch/sh/include/asm/flat.h         | 1 -
+>  arch/xtensa/include/asm/flat.h     | 1 -
+>  fs/binfmt_flat.c                   | 2 +-
+>  8 files changed, 1 insertion(+), 8 deletions(-)
+
+For ARM bits:
+
+Tested-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
+
+
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 4d5a694f02c2..3254f473e681 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -604,6 +604,7 @@ struct arm_smmu_master {
->  	struct list_head		domain_head;
->  	u32				*sids;
->  	unsigned int			num_sids;
-> +	unsigned int			ssid_bits;
->  	bool				ats_enabled		:1;
->  };
+> diff --git a/arch/arm/include/asm/flat.h b/arch/arm/include/asm/flat.h
+> index f0c75ddeea23..10cce9ecf151 100644
+> --- a/arch/arm/include/asm/flat.h
+> +++ b/arch/arm/include/asm/flat.h
+> @@ -10,7 +10,6 @@
 >  
-> @@ -2097,6 +2098,16 @@ static int arm_smmu_add_device(struct device *dev)
->  		}
->  	}
+>  #define	flat_argvp_envp_on_stack()		1
+>  #define	flat_old_ram_flag(flags)		(flags)
+> -#define	flat_reloc_valid(reloc, size)		((reloc) <= (size))
 >  
-> +	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
-> +
-> +	/*
-> +	 * If the SMMU doesn't support 2-stage CD, limit the linear
-> +	 * tables to a reasonable number of contexts, let's say
-> +	 * 64kB / sizeof(ctx_desc) = 1024 = 2^10
-> +	 */
-> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
-> +		master->ssid_bits = min(master->ssid_bits, 10U);
-> +
->  	group = iommu_group_get_for_dev(dev);
->  	if (!IS_ERR(group)) {
->  		iommu_group_put(group);
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index f04a6df65eb8..04f4f6b95d82 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -206,8 +206,12 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->  			if (err)
->  				break;
->  		}
-> -	}
+>  static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>  					u32 *addr, u32 *persistent)
+> diff --git a/arch/c6x/include/asm/flat.h b/arch/c6x/include/asm/flat.h
+> index 76fd0bb962a3..ecc6aea6606c 100644
+> --- a/arch/c6x/include/asm/flat.h
+> +++ b/arch/c6x/include/asm/flat.h
+> @@ -6,7 +6,6 @@
 >  
-> +		fwspec = dev_iommu_fwspec_get(dev);
-> +		if (!err && fwspec)
-> +			of_property_read_u32(master_np, "pasid-num-bits",
-> +					     &fwspec->num_pasid_bits);
-> +	}
+>  #define flat_argvp_envp_on_stack()			0
+>  #define flat_old_ram_flag(flags)			(flags)
+> -#define flat_reloc_valid(reloc, size)			((reloc) <= (size))
+>  static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>  					u32 *addr, u32 *persistent)
+>  {
+> diff --git a/arch/h8300/include/asm/flat.h b/arch/h8300/include/asm/flat.h
+> index f4cdfcbdd2ba..dcc7775115dd 100644
+> --- a/arch/h8300/include/asm/flat.h
+> +++ b/arch/h8300/include/asm/flat.h
+> @@ -10,7 +10,6 @@
 >  
->  	/*
->  	 * Two success conditions can be represented by non-negative err here:
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 519e40fb23ce..b91df613385f 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -536,6 +536,7 @@ struct iommu_fwspec {
->  	struct fwnode_handle	*iommu_fwnode;
->  	void			*iommu_priv;
->  	u32			flags;
-> +	u32			num_pasid_bits;
-
-This structure has kernel doc so you need to add something for this.
-
->  	unsigned int		num_ids;
->  	u32			ids[1];
->  };
-
+>  #define	flat_argvp_envp_on_stack()		1
+>  #define	flat_old_ram_flag(flags)		1
+> -#define	flat_reloc_valid(reloc, size)		((reloc) <= (size))
+>  #define	flat_set_persistent(relval, p)		0
+>  
+>  /*
+> diff --git a/arch/m68k/include/asm/flat.h b/arch/m68k/include/asm/flat.h
+> index 4f1d1e373420..a631caf5e18f 100644
+> --- a/arch/m68k/include/asm/flat.h
+> +++ b/arch/m68k/include/asm/flat.h
+> @@ -10,7 +10,6 @@
+>  
+>  #define	flat_argvp_envp_on_stack()		1
+>  #define	flat_old_ram_flag(flags)		(flags)
+> -#define	flat_reloc_valid(reloc, size)		((reloc) <= (size))
+>  static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>  					u32 *addr, u32 *persistent)
+>  {
+> diff --git a/arch/microblaze/include/asm/flat.h b/arch/microblaze/include/asm/flat.h
+> index 3d2747d4c967..34be5ed011be 100644
+> --- a/arch/microblaze/include/asm/flat.h
+> +++ b/arch/microblaze/include/asm/flat.h
+> @@ -15,7 +15,6 @@
+>  
+>  #define	flat_argvp_envp_on_stack()	0
+>  #define	flat_old_ram_flag(flags)	(flags)
+> -#define	flat_reloc_valid(reloc, size)	((reloc) <= (size))
+>  #define	flat_set_persistent(relval, p)		0
+>  
+>  /*
+> diff --git a/arch/sh/include/asm/flat.h b/arch/sh/include/asm/flat.h
+> index 843d458b8329..8f2929b32f2e 100644
+> --- a/arch/sh/include/asm/flat.h
+> +++ b/arch/sh/include/asm/flat.h
+> @@ -13,7 +13,6 @@
+>  
+>  #define	flat_argvp_envp_on_stack()		0
+>  #define	flat_old_ram_flag(flags)		(flags)
+> -#define	flat_reloc_valid(reloc, size)		((reloc) <= (size))
+>  static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>  					u32 *addr, u32 *persistent)
+>  {
+> diff --git a/arch/xtensa/include/asm/flat.h b/arch/xtensa/include/asm/flat.h
+> index b8532d7877b3..6ee5a35eb0ec 100644
+> --- a/arch/xtensa/include/asm/flat.h
+> +++ b/arch/xtensa/include/asm/flat.h
+> @@ -6,7 +6,6 @@
+>  
+>  #define flat_argvp_envp_on_stack()			0
+>  #define flat_old_ram_flag(flags)			(flags)
+> -#define flat_reloc_valid(reloc, size)			((reloc) <= (size))
+>  static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>  					u32 *addr, u32 *persistent)
+>  {
+> diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+> index 82a48e830018..afddea583999 100644
+> --- a/fs/binfmt_flat.c
+> +++ b/fs/binfmt_flat.c
+> @@ -345,7 +345,7 @@ calc_reloc(unsigned long r, struct lib_info *p, int curid, int internalp)
+>  	start_code = p->lib_list[id].start_code;
+>  	text_len = p->lib_list[id].text_len;
+>  
+> -	if (!flat_reloc_valid(r, start_brk - start_data + text_len)) {
+> +	if (r > start_brk - start_data + text_len) {
+>  		pr_err("reloc outside program 0x%lx (0 - 0x%lx/0x%lx)",
+>  		       r, start_brk-start_data+text_len, text_len);
+>  		goto failed;
+> 
 
