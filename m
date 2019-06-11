@@ -2,64 +2,202 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A3EC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73106C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AB92145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1BF212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:18:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ODhUns9U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvUUJzsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbfFKPRz (ORCPT
+        id S2404630AbfFKPSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:17:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48132 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfFKPRz (ORCPT
+        Tue, 11 Jun 2019 11:18:45 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35596 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727601AbfFKPSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:17:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eVgOWDgLR7upfxnSi0/pPEtmnURMeK6qO9i2y3dCEiY=; b=ODhUns9UlpGQitCQA9RkQL2Jy
-        i1FreyI7EgQ7P+ic2LLzUo6tC8GrCd9bZ5mbTHSiWZXdfZlHAsmZq/BB3YeqXh4/mKl0yrSujQrgS
-        Y9dNPvpMaYnpbC2PmDu9xUa7deeVKZVG9G9fHJM5fR9FIWgtvzEZkh7Q/peJbnufAM+7Q/hAgl5Ml
-        UE9vD6qJcKFpvo4aRTl8GVwB/1s6Hjttl8WCXc5xU4dZPpi+9It3siDXxW/Up4l3xNFQHOdTph4Qj
-        fVgUCJ834WlgPgqGybCEDhME2Af/6fDouq+C0EZCMY93i8Ih39fFHmaC5KfijOMuC4he2Xin1uIyh
-        eK/sGMgYA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1haiX3-00037l-SL; Tue, 11 Jun 2019 15:17:53 +0000
-Date:   Tue, 11 Jun 2019 08:17:53 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Oded Gabbay <oded.gabbay@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
-Message-ID: <20190611151753.GA11404@infradead.org>
-References: <20190611092144.11194-1-oded.gabbay@gmail.com>
- <20190611095857.GB24058@kroah.com>
+        Tue, 11 Jun 2019 11:18:45 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d126so7645994pfd.2;
+        Tue, 11 Jun 2019 08:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nWL90qXjUuK8w+rtJZaynRsIXMY+sEETNIVgozGcpYY=;
+        b=hvUUJzscbqBqMtPEpSRuAuTno/JL6vDZa4C3VZHRLut01wds25WxWaiXi0hBAIpkoW
+         jNcMfBqsrcp1KT/6fFkHImK4/emdBsRF+jFmEr6+pSE0WauLpXCwJpzIS5kG+A5VrGq/
+         W0eVkzBzeXBocol9+uzyekHrXBcENDbMtU/K5kDYtuza2TY+BCp1rEJ8s6XH4txjDOu4
+         yiUov03zBYKi5wZF5PIkOJqHM5skau1sl1KO2/H1KUszXuzVpHVsdnoGmCrkvTVpGqSD
+         vyn7IeTeti0gOcYDKUr3kCgRrVoSwZLFOR3mVzBfCkGxgMQVStXP26RRWD7KQ8Jizg2l
+         wCsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWL90qXjUuK8w+rtJZaynRsIXMY+sEETNIVgozGcpYY=;
+        b=BIY+Zi3KSfyGcWOvpfAlWP5tEeuSGMS59RORMBK4XIZKiAjm8yJApUGrIp9PxshBxL
+         avwveUi3Pod2/YURksznobG8IXJ4+HqE/6Pe1zDX20dJWtPcouflxWL5xOhI3t+xNhA0
+         KHxddx7ILU7VngS5suDe6A3mAsSrS0gGXp9gkjBiYivnDqmmTmxnhV1PbHUcYPYKTt92
+         2QeAEd6nJdeMArJOrdbyRj+QaqbvW6pQwGmqUqUpckfEDjAjJKTt4U89BFDnLBFz7b0L
+         1++565bxEZlRXPtcZ1ma4ytZ6uz2Ef/IQMP26MtrDYjBZVx0Yz9I1rYdLo7xsT1KATGt
+         vvLw==
+X-Gm-Message-State: APjAAAXT4/tfBxDgnNwv+GycPyQfw5CJlmPQbB1uM4pKIvtMC9supmjF
+        ZH+yuMZesMiaBv30arsMwyY=
+X-Google-Smtp-Source: APXvYqzqf8kgGYBTPaIZ1SBTEBOIIkVoUdOeKbbH7LVXNmxiy2I3a6qFL2H3o2/OGR3G+E5S/h5toA==
+X-Received: by 2002:a63:1657:: with SMTP id 23mr19568964pgw.98.1560266324025;
+        Tue, 11 Jun 2019 08:18:44 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id d6sm12660100pgv.4.2019.06.11.08.18.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 08:18:43 -0700 (PDT)
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up
+ of_find_device_by_node()
+To:     Rob Herring <robh+dt@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+References: <20190604003218.241354-1-saravanak@google.com>
+ <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
+Date:   Tue, 11 Jun 2019 08:18:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611095857.GB24058@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 11:58:57AM +0200, Greg KH wrote:
-> That feels like a big hack.  ppc doesn't have any "what arch am I
-> running on?" runtime call?  Did you ask on the ppc64 mailing list?  I'm
-> ok to take this for now, but odds are you need a better fix for this
-> sometime...
+Hi Saravana,
 
-That isn't the worst part of it.  The whole idea of checking what I'm
-running to set a dma mask just doesn't make any sense at all.
+On 6/10/19 10:36 AM, Rob Herring wrote:
+> Why are you resending this rather than replying to Frank's last
+> comments on the original?
+
+Adding on a different aspect...  The independent replies from three different
+maintainers (Rob, Mark, myself) pointed out architectural issues with the
+patch series.  There were also some implementation issues brought out.
+(Although I refrained from bringing up most of my implementation issues
+as they are not relevant until architecture issues are resolved.)
+
+When three maintainers say the architecture has issues, you should step
+back and think hard.  (Not to say maintainers are always correct...)
+
+My suggestion at this point is that you need to go back to the drawing board
+and re-think how to address the use case.
+
+-Frank
+
+> 
+> On Mon, Jun 3, 2019 at 6:32 PM Saravana Kannan <saravanak@google.com> wrote:
+>>
+>> Add a pointer from device tree node to the device created from it.
+>> This allows us to find the device corresponding to a device tree node
+>> without having to loop through all the platform devices.
+>>
+>> However, fallback to looping through the platform devices to handle
+>> any devices that might set their own of_node.
+>>
+>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>> ---
+>>  drivers/of/platform.c | 20 +++++++++++++++++++-
+>>  include/linux/of.h    |  3 +++
+>>  2 files changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 04ad312fd85b..1115a8d80a33 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
+>>         return dev->of_node == data;
+>>  }
+>>
+>> +static DEFINE_SPINLOCK(of_dev_lock);
+>> +
+>>  /**
+>>   * of_find_device_by_node - Find the platform_device associated with a node
+>>   * @np: Pointer to device tree node
+>> @@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+>>  {
+>>         struct device *dev;
+>>
+>> -       dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
+>> +       /*
+>> +        * Spinlock needed to make sure np->dev doesn't get freed between NULL
+>> +        * check inside and kref count increment inside get_device(). This is
+>> +        * achieved by grabbing the spinlock before setting np->dev = NULL in
+>> +        * of_platform_device_destroy().
+>> +        */
+>> +       spin_lock(&of_dev_lock);
+>> +       dev = get_device(np->dev);
+>> +       spin_unlock(&of_dev_lock);
+>> +       if (!dev)
+>> +               dev = bus_find_device(&platform_bus_type, NULL, np,
+>> +                                     of_dev_node_match);
+>>         return dev ? to_platform_device(dev) : NULL;
+>>  }
+>>  EXPORT_SYMBOL(of_find_device_by_node);
+>> @@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
+>>                 platform_device_put(dev);
+>>                 goto err_clear_flag;
+>>         }
+>> +       np->dev = &dev->dev;
+>>
+>>         return dev;
+>>
+>> @@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
+>>         if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
+>>                 device_for_each_child(dev, NULL, of_platform_device_destroy);
+>>
+>> +       /* Spinlock is needed for of_find_device_by_node() to work */
+>> +       spin_lock(&of_dev_lock);
+>> +       dev->of_node->dev = NULL;
+>> +       spin_unlock(&of_dev_lock);
+>>         of_node_clear_flag(dev->of_node, OF_POPULATED);
+>>         of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+>>
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 0cf857012f11..f2b4912cbca1 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -48,6 +48,8 @@ struct property {
+>>  struct of_irq_controller;
+>>  #endif
+>>
+>> +struct device;
+>> +
+>>  struct device_node {
+>>         const char *name;
+>>         phandle phandle;
+>> @@ -68,6 +70,7 @@ struct device_node {
+>>         unsigned int unique_id;
+>>         struct of_irq_controller *irq_trans;
+>>  #endif
+>> +       struct device *dev;             /* Device created from this node */
+>>  };
+>>
+>>  #define MAX_PHANDLE_ARGS 16
+>> --
+>> 2.22.0.rc1.257.g3120a18244-goog
+>>
+> .
+> 
+
