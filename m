@@ -2,120 +2,99 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F8BC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7703EC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFF92089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4736B21726
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TYyrZ/Rn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405157AbfFKKDy (ORCPT
+        id S2404889AbfFKKGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:03:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:57280 "EHLO foss.arm.com"
+        Tue, 11 Jun 2019 06:06:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:57065 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404889AbfFKKDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:03:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3292A337;
-        Tue, 11 Jun 2019 03:03:53 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1B7C3F73C;
-        Tue, 11 Jun 2019 03:05:33 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 11:03:49 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Qian Cai <cai@lca.pw>, rppt@linux.ibm.com
-Cc:     Will Deacon <will.deacon@arm.com>, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
-        mhocko@kernel.org, linux-mm@kvack.org, vdavydov.dev@gmail.com,
-        hannes@cmpxchg.org, cgroups@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
-Message-ID: <20190611100348.GB26409@lakrids.cambridge.arm.com>
-References: <1559656836-24940-1-git-send-email-cai@lca.pw>
- <20190604142338.GC24467@lakrids.cambridge.arm.com>
- <20190610114326.GF15979@fuggles.cambridge.arm.com>
- <1560187575.6132.70.camel@lca.pw>
+        id S1728937AbfFKKGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:06:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NQcj5fd0z9sDX;
+        Tue, 11 Jun 2019 20:05:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560247558;
+        bh=7U/XVQfmfn8ksgJsWS+ntJglSV9GfB0NOkUJ1PR2ASU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TYyrZ/RnmVdu8hnXhHmtS6Yw2EJ8C2Gsoiwha8KT+17ar9qtTPkN83ccTxdsTBDwo
+         EtRD00u1vRBtP+bkHD3EgbFx5XCbs+7Pvm7IQqzd+OP3XXKpli1MrkppVqhqepXaEZ
+         iLCkQ4rnaUG9y0w/26CrFiWedDmazHtMVlvy5cKOrbkbfWBII7uisz5I/eb7d3uXLx
+         tGnpB9zF5eI7+HxX1AW1sjIQRGTrIRWH0dQFP5GU+lrPQ3wDhE5eXt01U5OA3T3M85
+         z/LkQ6oDWnV4Y5MrrPaMpgaarb+XmDnbZSdjWTvYOuEPuVv85R5+qHLIpM4AombThv
+         JdWSjm8XmUf0g==
+Date:   Tue, 11 Jun 2019 20:05:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the bpf tree
+Message-ID: <20190611200556.4a09514d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560187575.6132.70.camel@lca.pw>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/7xsX+2aY0ikNJvTtDD9/vld"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 01:26:15PM -0400, Qian Cai wrote:
-> On Mon, 2019-06-10 at 12:43 +0100, Will Deacon wrote:
-> > On Tue, Jun 04, 2019 at 03:23:38PM +0100, Mark Rutland wrote:
-> > > On Tue, Jun 04, 2019 at 10:00:36AM -0400, Qian Cai wrote:
-> > > > The commit "arm64: switch to generic version of pte allocation"
-> > > > introduced endless failures during boot like,
-> > > > 
-> > > > kobject_add_internal failed for pgd_cache(285:chronyd.service) (error:
-> > > > -2 parent: cgroup)
-> > > > 
-> > > > It turns out __GFP_ACCOUNT is passed to kernel page table allocations
-> > > > and then later memcg finds out those don't belong to any cgroup.
-> > > 
-> > > Mike, I understood from [1] that this wasn't expected to be a problem,
-> > > as the accounting should bypass kernel threads.
-> > > 
-> > > Was that assumption wrong, or is something different happening here?
-> > > 
-> > > > 
-> > > > backtrace:
-> > > >   kobject_add_internal
-> > > >   kobject_init_and_add
-> > > >   sysfs_slab_add+0x1a8
-> > > >   __kmem_cache_create
-> > > >   create_cache
-> > > >   memcg_create_kmem_cache
-> > > >   memcg_kmem_cache_create_func
-> > > >   process_one_work
-> > > >   worker_thread
-> > > >   kthread
-> > > > 
-> > > > Signed-off-by: Qian Cai <cai@lca.pw>
-> > > > ---
-> > > >  arch/arm64/mm/pgd.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
-> > > > index 769516cb6677..53c48f5c8765 100644
-> > > > --- a/arch/arm64/mm/pgd.c
-> > > > +++ b/arch/arm64/mm/pgd.c
-> > > > @@ -38,7 +38,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
-> > > >  	if (PGD_SIZE == PAGE_SIZE)
-> > > >  		return (pgd_t *)__get_free_page(gfp);
-> > > >  	else
-> > > > -		return kmem_cache_alloc(pgd_cache, gfp);
-> > > > +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_KERNEL);
-> > > 
-> > > This is used to allocate PGDs for both user and kernel pagetables (e.g.
-> > > for the efi runtime services), so while this may fix the regression, I'm
-> > > not sure it's the right fix.
-> > > 
-> > > Do we need a separate pgd_alloc_kernel()?
-> > 
-> > So can I take the above for -rc5, or is somebody else working on a different
-> > fix to implement pgd_alloc_kernel()?
-> 
-> The offensive commit "arm64: switch to generic version of pte allocation" is not
-> yet in the mainline, but only in the Andrew's tree and linux-next, and I doubt
-> Andrew will push this out any time sooner given it is broken.
+--Sig_/7xsX+2aY0ikNJvTtDD9/vld
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'd assumed that Mike would respin these patches to implement and use
-pgd_alloc_kernel() (or take gfp flags) and the updated patches would
-replace these in akpm's tree.
+Hi all,
 
-Mike, could you confirm what your plan is? I'm happy to review/test
-updated patches for arm64.
+In commit
 
-Thanks,
-Mark.
+  605465dd0c27 ("bpf: lpm_trie: check left child of last leftmost node for =
+NULL")
+
+Fixes tag
+
+  Fixes: b471f2f1de8 ("bpf: implement MAP_GET_NEXT_KEY command for LPM_TRIE=
+")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7xsX+2aY0ikNJvTtDD9/vld
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/fQQACgkQAVBC80lX
+0Gw7Wgf+NtaIzPwZpz/rKY47PD9aCIfaKCLRcxWh1n6vDHtaVi9uVFDOI3GTkO0z
+vffYFAo5iVot9EEt0kA4sgPs2s6dMXzD2BHpTuxeHb5hpX8twkOoFqTOSfjoINvz
+fCRzX6EgJ2z3ympwYDvDZ+PdEj5sAYOg7xF2su4qCAbTM9CBmTgMLIrlnvaURPUF
+ayTypYQ3OMzm4A4oop9McAnn+ku7/xIUfyLrMfOgY+sXZGCE/hQrEZvjAvVYX/1E
+hluUVGmdHmba/fCzsPIUorFrGVCEbI8nKOpo3axeBdhnaWTlDTncYmnu7TqOPq6e
+D/guwtPY9vuzOfIFuJsxEofV1N36Ng==
+=oDUu
+-----END PGP SIGNATURE-----
+
+--Sig_/7xsX+2aY0ikNJvTtDD9/vld--
