@@ -2,113 +2,120 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37459C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F8BC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108282086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:03:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="sSKqCYAW"
+	by mail.kernel.org (Postfix) with ESMTP id 2EFF92089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404943AbfFKKDe (ORCPT
+        id S2405157AbfFKKDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:03:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35780 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728937AbfFKKDd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:03:33 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x25so6373605ljh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 03:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D1U2C9g+Bn7fkKn6QJKsmlU0kk4+d2eQYyM+C8yfSRs=;
-        b=sSKqCYAW9cYne1BgtwQIccsCBxTMI1ws+LxwuzGTMzxOoez3TrFBOA83sqjp8tUred
-         fjbue8+legI2MXiYWtb3zY0X/Hv8sdq4yjifCr7BKcCJQF7Ho1P+TNrB8imYB+Aubx4h
-         YA5kjQ58ss2+8Ie8SNJ22wtKIBX0RQR0QkzXdFhu27YmuRcBXXRrFEpE8c5I/b1SBxbr
-         fNbkN1EnzcoikW1zqdAE2FrZMwswk2lhhyhl0E6VdzsoZ7MCCQdUdWHdzhQ8YWNR/HMt
-         l3wMbqyKnl2oNyncfD5wXyKwqWYryf3/+Woac2v7EGek5fa1TRahsXD2KEbBKXIsT7hJ
-         pFww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D1U2C9g+Bn7fkKn6QJKsmlU0kk4+d2eQYyM+C8yfSRs=;
-        b=S8SaRdIKyXTnAe0Jz81OGWJxYo3p9ZxWuOOU4cfcHpZ+8FW5Dp0vS1AWXwODprof0Q
-         9lRLCaD/VzDDnzm46C1LX7tBs3i0TvMvU68sfEFRY5TDKCDzTMyxBLOnpicUjMvTDjHB
-         lgkD06U51qxB5vGnreua78/oFDWbzVS37xIo9aITLhbiaxuhyW0i5lCQA/OPeOfnLsBN
-         FiBT42V4Rb2ZN0I0gVGDPxLl7VfJ7ep1icxFVCRLQ16+Gl7wq2g1zJFlJ8Kq9xu8BYQ/
-         P/G6AX1D+o9mxZiA8erdV8/76uKhDZ/KDy6XwHPWvsTwAPndgDJqY3mC27bVImY0RdpN
-         emTA==
-X-Gm-Message-State: APjAAAULLrX4V9YSzC3MyKAI2wEu2LZeHxlsZ7i3fgwrB4EcV8GA+QRM
-        IFafKOHNQ+TUZEJqr/zKM9q2kg7Yegs=
-X-Google-Smtp-Source: APXvYqxvSxZxJ844lX9B8OhaWiKW5KxExfU5Kjz0dPieaKjSzc3z3mG2nPF0Pjc96WBjmcG1YlQQnw==
-X-Received: by 2002:a2e:8591:: with SMTP id b17mr28946871lji.71.1560247410437;
-        Tue, 11 Jun 2019 03:03:30 -0700 (PDT)
-Received: from mimer.lan (h-29-16.A159.priv.bahnhof.se. [79.136.29.16])
-        by smtp.gmail.com with ESMTPSA id e12sm2444755lfb.66.2019.06.11.03.03.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 03:03:29 -0700 (PDT)
-From:   Jonas Bonn <jonas@norrbonn.se>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jonas Bonn <jonas@norrbonn.se>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Subject: [PATCH 1/1] Address regression in inet6_validate_link_af
-Date:   Tue, 11 Jun 2019 12:03:27 +0200
-Message-Id: <20190611100327.16551-1-jonas@norrbonn.se>
-X-Mailer: git-send-email 2.20.1
+        Tue, 11 Jun 2019 06:03:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:57280 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404889AbfFKKDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:03:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3292A337;
+        Tue, 11 Jun 2019 03:03:53 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1B7C3F73C;
+        Tue, 11 Jun 2019 03:05:33 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 11:03:49 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Qian Cai <cai@lca.pw>, rppt@linux.ibm.com
+Cc:     Will Deacon <will.deacon@arm.com>, akpm@linux-foundation.org,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        mhocko@kernel.org, linux-mm@kvack.org, vdavydov.dev@gmail.com,
+        hannes@cmpxchg.org, cgroups@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
+Message-ID: <20190611100348.GB26409@lakrids.cambridge.arm.com>
+References: <1559656836-24940-1-git-send-email-cai@lca.pw>
+ <20190604142338.GC24467@lakrids.cambridge.arm.com>
+ <20190610114326.GF15979@fuggles.cambridge.arm.com>
+ <1560187575.6132.70.camel@lca.pw>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560187575.6132.70.camel@lca.pw>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 7dc2bccab0ee37ac28096b8fcdc390a679a15841 introduces a regression
-with systemd 241.  In that revision, systemd-networkd fails to pass the
-required flags early enough.  This appears to be addressed in later
-versions of systemd, but for users of version 241 where systemd-networkd
-nonetheless worked with earlier kernels, the strict check introduced by
-the patch causes a regression in behaviour.
+On Mon, Jun 10, 2019 at 01:26:15PM -0400, Qian Cai wrote:
+> On Mon, 2019-06-10 at 12:43 +0100, Will Deacon wrote:
+> > On Tue, Jun 04, 2019 at 03:23:38PM +0100, Mark Rutland wrote:
+> > > On Tue, Jun 04, 2019 at 10:00:36AM -0400, Qian Cai wrote:
+> > > > The commit "arm64: switch to generic version of pte allocation"
+> > > > introduced endless failures during boot like,
+> > > > 
+> > > > kobject_add_internal failed for pgd_cache(285:chronyd.service) (error:
+> > > > -2 parent: cgroup)
+> > > > 
+> > > > It turns out __GFP_ACCOUNT is passed to kernel page table allocations
+> > > > and then later memcg finds out those don't belong to any cgroup.
+> > > 
+> > > Mike, I understood from [1] that this wasn't expected to be a problem,
+> > > as the accounting should bypass kernel threads.
+> > > 
+> > > Was that assumption wrong, or is something different happening here?
+> > > 
+> > > > 
+> > > > backtrace:
+> > > >   kobject_add_internal
+> > > >   kobject_init_and_add
+> > > >   sysfs_slab_add+0x1a8
+> > > >   __kmem_cache_create
+> > > >   create_cache
+> > > >   memcg_create_kmem_cache
+> > > >   memcg_kmem_cache_create_func
+> > > >   process_one_work
+> > > >   worker_thread
+> > > >   kthread
+> > > > 
+> > > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > > ---
+> > > >  arch/arm64/mm/pgd.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
+> > > > index 769516cb6677..53c48f5c8765 100644
+> > > > --- a/arch/arm64/mm/pgd.c
+> > > > +++ b/arch/arm64/mm/pgd.c
+> > > > @@ -38,7 +38,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+> > > >  	if (PGD_SIZE == PAGE_SIZE)
+> > > >  		return (pgd_t *)__get_free_page(gfp);
+> > > >  	else
+> > > > -		return kmem_cache_alloc(pgd_cache, gfp);
+> > > > +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_KERNEL);
+> > > 
+> > > This is used to allocate PGDs for both user and kernel pagetables (e.g.
+> > > for the efi runtime services), so while this may fix the regression, I'm
+> > > not sure it's the right fix.
+> > > 
+> > > Do we need a separate pgd_alloc_kernel()?
+> > 
+> > So can I take the above for -rc5, or is somebody else working on a different
+> > fix to implement pgd_alloc_kernel()?
+> 
+> The offensive commit "arm64: switch to generic version of pte allocation" is not
+> yet in the mainline, but only in the Andrew's tree and linux-next, and I doubt
+> Andrew will push this out any time sooner given it is broken.
 
-This patch converts the failure to supply the required flags from an
-error into a warning.  With this, systemd-networkd version 241 once
-again is able to bring up the link, albeit not quite as intended and
-thereby with a warning in the kernel log.
+I'd assumed that Mike would respin these patches to implement and use
+pgd_alloc_kernel() (or take gfp flags) and the updated patches would
+replace these in akpm's tree.
 
-CC: Maxim Mikityanskiy <maximmi@mellanox.com>
-CC: David S. Miller <davem@davemloft.net>
-CC: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-CC: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
----
- net/ipv6/addrconf.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Mike, could you confirm what your plan is? I'm happy to review/test
+updated patches for arm64.
 
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index 081bb517e40d..e2477bf92e12 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -5696,7 +5696,8 @@ static int inet6_validate_link_af(const struct net_device *dev,
- 		return err;
- 
- 	if (!tb[IFLA_INET6_TOKEN] && !tb[IFLA_INET6_ADDR_GEN_MODE])
--		return -EINVAL;
-+		net_warn_ratelimited(
-+			"required link flag omitted: TOKEN/ADDR_GEN_MODE\n");
- 
- 	if (tb[IFLA_INET6_ADDR_GEN_MODE]) {
- 		u8 mode = nla_get_u8(tb[IFLA_INET6_ADDR_GEN_MODE]);
--- 
-2.20.1
-
+Thanks,
+Mark.
