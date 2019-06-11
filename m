@@ -2,288 +2,136 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6ADC06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF55FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D82F2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="CiI0glvB"
+	by mail.kernel.org (Postfix) with ESMTP id 9E44B21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391573AbfFKQW6 (ORCPT
+        id S2391626AbfFKQXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 12:22:58 -0400
-Received: from sonic314-26.consmr.mail.ne1.yahoo.com ([66.163.189.152]:46580
-        "EHLO sonic314-26.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405597AbfFKQW5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:22:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1560270174; bh=apc4Fo0+veY52B1Qizn/6BnH8QD+lHxZsEhsdPjZou4=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=CiI0glvBHl0000qda+QQa8Z6AumjbbilqW5O5LrVO1cB1d3ad55aGZGMjZL5i68McXVlgi7rXOw4QzWjPp63CNpdyZUTa87lPgk1KR7RjKzDoNOXMkM03lTSLEoHI/oLE2tYhJQ9qOpgfXug7jj5y2Fc0Cdu+/5q4+tWcjZDrVTLH8h5A4xqJD8IakZKVCe41JNFnpqg0hX3+gCg/QfRsIViQ+bZXvc4or+r2atmOloNEBaopsMWZ1c0B72CfmZGp03vn5faSe5DRmQEMjWB5zuTdmkKMHEzd7IaCZGsmkGaT6Cxgi/dqL1rHQoodc3Q22QabXkwrv8DKsSkh+JNcA==
-X-YMail-OSG: u59wP2cVM1kRzBmTzHGO41iF3i24SYEQDgx2CmzOyqoxIGvgn6j.W.mB0AzWJ8H
- M3d1f4GksdinoY6dByskH766M1Dj4qP02Zv1yGDTgsC9MJu8GTqdP_uklS_zACuSZ_nYWKeeGGQK
- JTCULXFWg5Gy3rcODWLUy2SolxvUBdye9TMTwCI1Vtjo39EMWnt.9fHAh7ZqX.jm_1Ey1GPc39Us
- lL7j_fI39dlO7WsRoZLFmgJOqAGmQGkfihTAo.jauGocr52aEOdyKy8I3YE1_5xX8N8RIivg0zcM
- _JIgU840_4PYptYeTccihSmSaMx8jWu_7h4tyTfF0ESq6FA3nRa3gS8Tu6AyL7GhP.i1nNWHH5Qw
- 0tsdGPIiRxbELuCIOy3B2AkFA8efGPnOXMqIEvh78PuC6V9UDfM7TL8N40IknEYZUO6LxWMi11q2
- M0VqI.qwFbkKuQqLoZeWWpPv.JWiKvOOBzO3lqnry5t9cH9IgXEOAZ4.YBowqb8fkh7dcvOm4Lcn
- wME3BHr434fNYq734Z3mb6UrdTairE7tR9obGChnjovirG5vM.zbULG9XAihGkznugVYexB88Wjs
- 2O7G93TSpIBH8CulPx.s0RcLt5JDQ_6LzVocmXkshoHU5Hlk8t7_grKWW.QOGOcnX2FbV78mTra1
- 7xwXqFwkWk_b1SVhcIiJqj1invbMmIjY1KhbQAWKUMD1n9usg2VcOYwCiZkzK8qQcxe.7ntPEUeD
- OKwNgNZ_vWs3nopYNID.8EWYZj.hwrBgMBoLY6C4sPNgLPinqrgVF79W.JmCtzIo99U4zhTz3fNg
- 3M1hOHsKzw3B7OoXZCvTDgZbJm210adlW5lF0htD39KhvxilzZLNbcYgfpWTXYsRgX1bVc.m1Cny
- M6l0aINZ58R.vlQp14jgAu1LQKAHLrIM3Av4pP6acUfsPLUN3zKnhvOUe7nO0.aqzwYRU_ogNW5U
- q0CzRFSRN9uG8FVVJJDELHLEQjVruUOpzo99oaMATMn2BTXfaVqVd2jy0KjHYx.BPEE.vl_H3dNs
- bj_u15yvbbJbjpY3FLTw6jSREJoPFVxsUcIFwlhP5Z9lxIxLqjnbs7FiE8cmUUemk0rGJkfBWqMR
- NxIT2QwVkbGIKYjItoXb9vZ3KPX17oPKtbaEaQEaJxCso98f5Ix5PdwyPTUbFySmVrHzG03L7ja6
- PqcZVGbdOLZ2FZyEnNzKjv5tRNAIcWt7HAPlUKjFhXZ8cgyNrApDWSPJh5MuSreJD0glAayaAZWQ
- VQ5QsZQzj0AIhqR8snw--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Tue, 11 Jun 2019 16:22:54 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp402.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 8b7547272b6a849d9e3f57a9223ff0ec;
-          Tue, 11 Jun 2019 16:22:50 +0000 (UTC)
-Subject: Re: What do LSMs *actually* need for checks on notifications?
-To:     David Howells <dhowells@redhat.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     viro@zeniv.linux.org.uk, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        casey@schaufler-ca.com
-References: <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
- <31009.1560262869@warthog.procyon.org.uk>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <9c41cd56-af21-f17d-ab54-66615802f30e@schaufler-ca.com>
-Date:   Tue, 11 Jun 2019 09:22:49 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 12:23:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58644 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391562AbfFKQXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:23:19 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3184D90254F032FD5765;
+        Wed, 12 Jun 2019 00:23:16 +0800 (CST)
+Received: from [127.0.0.1] (10.210.166.43) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
+ 00:22:44 +0800
+Subject: Re: [PATCH 2/5] perf pmu: Support more complex PMU event aliasing
+To:     Jiri Olsa <jolsa@redhat.com>
+References: <1560160772-210844-1-git-send-email-john.garry@huawei.com>
+ <1560160772-210844-3-git-send-email-john.garry@huawei.com>
+ <20190611161023.GD18242@krava>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
+        <tmricht@linux.ibm.com>, <brueckner@linux.ibm.com>,
+        <kan.liang@linux.intel.com>, <ben@decadent.org.uk>,
+        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
+        <will.deacon@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <zhangshaokun@hisilicon.com>, <ak@linux.intel.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <9c3ba12c-0621-0e28-ddeb-e1ebeb1674a5@huawei.com>
+Date:   Tue, 11 Jun 2019 17:22:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <31009.1560262869@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+In-Reply-To: <20190611161023.GD18242@krava>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.166.43]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/2019 7:21 AM, David Howells wrote:
-> To see if we can try and make progress on this, can we try and come at =
-this
-> from another angle: what do LSMs *actually* need to do this?  And I gra=
-nt that
-> each LSM might require different things.
+On 11/06/2019 17:10, Jiri Olsa wrote:
+> On Mon, Jun 10, 2019 at 05:59:29PM +0800, John Garry wrote:
+>> The jevent "Unit" field is used for uncore PMU alias definition.
+>>
+>> The form uncore_pmu_example_X is supported, where "X" is a wildcard,
+>> to support multiple instances of the same PMU in a system.
+>>
+>> Unfortunately this format not suitable for all uncore PMUs; take the Hisi
+>> DDRC uncore PMU for example, where the name is in the form
+>> hisi_scclX_ddrcY.
+>>
+>> For the current jevent parsing, we would be required to hardcode an uncore
+>> alias translation for each possible value of X. This is not scalable.
+>>
+>> Instead, add support for "Unit" field in the form "hisi_sccl,ddrc", where
+>> we can match by hisi_scclX and ddrcY. Tokens in Unit field
+>> are delimited by ','.
+>>
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> ---
+>>  tools/perf/util/pmu.c | 45 ++++++++++++++++++++++++++++++++++++++-----
+>>  1 file changed, 40 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 036047f56efa..f00cae750086 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -700,6 +700,44 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
+>>  	return map;
+>>  }
+>>
+>> +static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+>> +{
+>> +	/*
+>> +	 * uncore alias may be from different PMU
+>> +	 * with common prefix
+>> +	 */
+>> +	if (!strncmp(pmu_name, name, strlen(pmu_name)))
+>> +		return true;
+>> +
+>> +	/* match strings with delimiter, ',' */
+>> +	while (1) {
+>> +		const char *delimiter;
+>> +		char token[256] = {};
+>> +		const char *found_token;
+>> +		int token_len;
+>> +
+>> +		delimiter = strchr(pmu_name, ',');
+>> +		if (delimiter) {
+>> +			token_len = delimiter - pmu_name;
+>> +		} else {
+>> +			token_len = strlen(pmu_name);
+>> +		}
+>> +
+>> +		memcpy(token, pmu_name, token_len);
+>> +
+>> +		found_token = strstr(name, token);
+>> +		if (!found_token)
+>> +			return false;
+>> +
+>> +		/* No more delimiters, so we must be a match */
+>> +		if (!delimiter)
+>> +			return true;
+>> +
+>> +		pmu_name += token_len + 1;
+>> +		name = found_token + token_len;
+>> +	}
 >
-> -~-
+> hum, would this be easier with strtok_r?
+
+Yes, I think so.
+
+Cheers,
+
 >
-> [A] There are a bunch of things available, some of which may be coincid=
-ent,
-> depending on the context:
+> jirka
 >
->  (1) The creds of the process that created a watch_queue (ie. opened
->      /dev/watch_queue).
-
-Smack needs this for the filesystem access required to open /dev/watch_qu=
-eue.
-
->  (2) The creds of the process that set a watch (ie. called watch_sb,
->      KEYCTL_NOTIFY, ...);
-
-Smack needs this to set a watch on any named object (file, key, ...).
-Smack needs this as the object information for event delivery.
-
->  (3) The creds of the process that tripped the event (which might be th=
-e
->      system).
-
-Smack needs this as the subject information for the event delivery.
-
->  (4) The security attributes of the object on which the watch was set (=
-uid,
->      gid, mode, labels).
-
-Smack needs this to set a watch on the named object (file, key, ...).
-I am going to say that if you can't access an object you can't watch it.
-I think that read access is sufficient provided that no one else can
-see what watches I've created.
-=C2=A0
-
->  (5) The security attributes of the object on which the event was tripp=
-ed.
-
-Smack does not need these for the event mechanism as that object isn't
-involved in the event delivery, except as may be required by (4).
-
->  (6) The security attributes of all the objects between the object in (=
-5) and
->      the object in (4), assuming we work from (5) towards (4) if the tw=
-o
->      aren't coincident (WATCH_INFO_RECURSIVE).
-
-Smack needs these only as they would apply to (4).
-
-> At the moment, when post_one_notification() wants to write a notificati=
-on into
-> a queue, it calls security_post_notification() to ask if it should be a=
-llowed
-> to do so.  This is passed (1) and (3) above plus the notification recor=
-d.
-
-Is "current" (2)? Smack needs (2) for the event delivery access check.
-
-> [B] There are a number of places I can usefully potentially add hooks:
+> .
 >
->  (a) The point at which a watch queue is created (ie. /dev/watch_queue =
-is
->      opened).
 
-Smack would not need a new check as the filesystem checks should suffice.=
-
-
->  (b) The point at which a watch is set (ie. watch_sb).
-
-Smack would need a check to ensure the watcher has access
-in cases where what is being watched is an object.
-
->  (c) The point at which a notification is generated (ie. an automount p=
-oint is
->      tripped).
-
-Smack does not require an explicit check here.
-
->  (d) The point at which a notification is delivered (ie. we write the m=
-essage
->      into the queue).
-
-Smack requires a check here. (2) as the object and (3) as the subject.
-
->  (e) All the points at which we walk over an object in a chain from (c)=
- to
->      find the watch on which we can effect (d) (eg. we walk rootwards f=
-rom a
->      mountpoint to find watches on a branch in the mount topology).
-
-Smack does not require anything beyond existing checks.
-
-> [C] Problems that need to be resolved:
->
->  (x) Do I need to put a security pointer in struct watch for the active=
- LSM to
->      fill in?  If so, I presume this would need passing to
->      security_post_notification().
-
-Smack does not need this.
-
->  (y) What checks should be done on object destruction after final put a=
-nd what
->      contexts need to be supplied?
-
-Classically there is no such thing as filesystem object deletion.
-By making it possible to set a watch on that you've inadvertently
-added a security relevant action to the security model. :o
-
->      This one is made all the harder because the creds that are in forc=
-e when
->      close(), exit(), exec(), dup2(), etc. close a file descriptor migh=
-t need
->      to be propagated to deferred-fput, which must in turn propagate th=
-em to
->      af_unix-cleanup, and thence back to deferred-fput and thence to im=
-plicit
->      unmount (dissolve_on_fput()[*]).
->
->      [*] Though it should be noted that if this happens, the subtree ca=
-nnot be
->      	 attached to the root of a namespace.
->
->      Further, if several processes are sharing a file object, it's not
->      predictable as to which process the final notification will come f=
-rom.
-
-How about we don't add filesystem object deletion to the security model?
-
-If what you really care about is removal of last filesystem reference
-(last unlink) this shouldn't be any harder than any other watched change
-(e.g. chmod) to the object.
-
-If, on the other hand, you really want to watch for the last inode
-reference and actual destruction of the thing I will suggest an
-argument based on the model itself. If all of the directory entries
-are unlinked the object no longer exists in the filesystem namespace.
-If all of the fd's are closed (by whatever mechanism, we don't really
-care) it no longer exists in any process space. At that point it has
-no names, and is no longer a named object. No process (subject) deletes
-it. They can't. They don't have access to it without a name. The
-deletion is a system event, like setting the clock. There is no policy
-that says when or even if the destruction occurs.
-
-If and when the system gets around to cleaning up what has become
-nothing more than system resources any outstanding watches can be
-triggered using the system credential.
-
->  (z) Do intermediate objects, say in a mount topology notification, act=
-ually
->      need to be checked against the watcher's creds?  For a mount topol=
-ogy
->      notification, would this require calling inode_permission() for ea=
-ch
->      intervening directory?
-
-Smack would not require this. Paths are an illusion.
-
->      Doing that might be impractical as it would probably have to be do=
-ne
->      outside of of the RCU read lock and the filesystem ->permission() =
-hooks
->      might want to sleep (to touch disk or talk to a server).
->
-> David
 
