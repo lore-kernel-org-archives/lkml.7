@@ -2,143 +2,62 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D334C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6185C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCF120652
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:37:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ajuzvxq1"
+	by mail.kernel.org (Postfix) with ESMTP id AC74D20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390798AbfFKBhr (ORCPT
+        id S2390674AbfFKBjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:37:47 -0400
-Received: from ozlabs.org ([203.11.71.1]:41077 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390721AbfFKBhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:37:47 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NCLG4dpPz9sNT;
-        Tue, 11 Jun 2019 11:37:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560217063;
-        bh=LEOXqMuOHS2LA/cnmJMRJ7jSXtfuT+TEE6bdqoeclC0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Ajuzvxq1hnrwQN6rmDPfF+EKLFst46z9s4lN0MFdY8uuvOxR7dsbMHSaLXlj8tBeQ
-         4iSTgyiaIW/kZPXaDE4emoT58gVODPzrCoilwGCyLLU8AG6TxU+Q4mftQhUQkmcQcU
-         HG+W7BdAOia17C3IfWofSvxm2VGfkrg56g7QQn1jnFrvgbuN9J215qWVCrlfTpRG2n
-         gLM1kWND67PSBSrD890KDjv3g63kxybcj2ZLHrKJuvzIb92p9MpClKmChchM4d4cjD
-         j0Dan/HpA5JMfQe+LrEW0u2AP7W7rxpThNBdNB3SC2mNRP2fWTn+G88aB5D1jpxQiX
-         6lBx5c0Dn69yA==
-Date:   Tue, 11 Jun 2019 11:37:41 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Lawrence Brakmo <brakmo@fb.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190611113741.366093ba@canb.auug.org.au>
+        Mon, 10 Jun 2019 21:39:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59248 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389168AbfFKBjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:39:40 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CF0A0C220EA37034A070;
+        Tue, 11 Jun 2019 09:39:37 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 09:39:31 +0800
+Subject: Re: [PATCH 2/2] staging: erofs: rename data_mapping_mode to datamode
+To:     Gao Xiang <gaoxiang25@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190610093640.96705-1-gaoxiang25@huawei.com>
+ <20190610093640.96705-2-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <15407b2f-3224-0a88-004a-06a9eca67fdb@huawei.com>
+Date:   Tue, 11 Jun 2019 09:39:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/v=mIhK8JgwY4S9K1YwYlg.2"; protocol="application/pgp-signature"
+In-Reply-To: <20190610093640.96705-2-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/v=mIhK8JgwY4S9K1YwYlg.2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2019/6/10 17:36, Gao Xiang wrote:
+> data_mapping_mode is too long as a member name of erofs_vnode,
+> datamode is straight-forward enough.
+> 
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-Hi all,
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Today's linux-next merge of the net-next tree got a conflict in:
-
-  kernel/bpf/verifier.c
-
-between commit:
-
-  983695fa6765 ("bpf: fix unconnected udp hooks")
-
-from the net tree and commit:
-
-  5cf1e9145630 ("bpf: cgroup inet skb programs can return 0 to 3")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This is
-now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your
-tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc kernel/bpf/verifier.c
-index a5c369e60343,5c2cb5bd84ce..000000000000
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@@ -5353,12 -5513,13 +5505,16 @@@ static int check_return_code(struct bpf
-  	struct tnum range =3D tnum_range(0, 1);
- =20
-  	switch (env->prog->type) {
- +	case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
- +		if (env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP4_RECVMSG ||
- +		    env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP6_RECVMSG)
- +			range =3D tnum_range(1, 1);
-  	case BPF_PROG_TYPE_CGROUP_SKB:
-+ 		if (env->prog->expected_attach_type =3D=3D BPF_CGROUP_INET_EGRESS) {
-+ 			range =3D tnum_range(0, 3);
-+ 			enforce_attach_type_range =3D tnum_range(2, 3);
-+ 		}
-  	case BPF_PROG_TYPE_CGROUP_SOCK:
- -	case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
-  	case BPF_PROG_TYPE_SOCK_OPS:
-  	case BPF_PROG_TYPE_CGROUP_DEVICE:
-  	case BPF_PROG_TYPE_CGROUP_SYSCTL:
-@@@ -5385,9 -5546,13 +5541,13 @@@
-  			verbose(env, "has unknown scalar value");
-  		}
-  		tnum_strn(tn_buf, sizeof(tn_buf), range);
- -		verbose(env, " should have been %s\n", tn_buf);
- +		verbose(env, " should have been in %s\n", tn_buf);
-  		return -EINVAL;
-  	}
-+=20
-+ 	if (!tnum_is_unknown(enforce_attach_type_range) &&
-+ 	    tnum_in(enforce_attach_type_range, reg->var_off))
-+ 		env->prog->enforce_expected_attach_type =3D 1;
-  	return 0;
-  }
- =20
-
---Sig_/v=mIhK8JgwY4S9K1YwYlg.2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/BeUACgkQAVBC80lX
-0GxZ0gf/X1ty+iSl/RyRPkDHBjW72t/r0ovp1qii6DzPG/0GFCnQehj1jLn/uhQc
-WxgXqyuAK1tAtbj0tLadC+Byalyx0SLLC8Yo1atTtfKhttPyAAvKUJcZzC9EgKQu
-IOqXxNTegMtzY/24iVzjZWPTw8GXxIBIsfIsBeTLR1i4w5zYgASXECr3XbLXtTc/
-oFlrtUgNECWJws/qkX/ocr5VRTcxId2ChxOF9n9K4qDrylc1CtnJyF7QgfWxsmfh
-7Qi9ISppY6b5vJ07Ov52HBdYpVz85tTsFYJBCICWsX6XHk3zKWjzIBgqviLvJVq/
-ojwyzCafG1HeK9oolqaK4fa7vtWEWw==
-=EPPT
------END PGP SIGNATURE-----
-
---Sig_/v=mIhK8JgwY4S9K1YwYlg.2--
+Thanks,
