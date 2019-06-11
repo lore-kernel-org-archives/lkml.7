@@ -2,150 +2,196 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DC2C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D89C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8E721734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:40:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fxr+p7sg"
+	by mail.kernel.org (Postfix) with ESMTP id 1F22221734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:40:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408262AbfFKXkZ (ORCPT
+        id S2408276AbfFKXk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 19:40:25 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44129 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408242AbfFKXkX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 19:40:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t7so3165579plr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 16:40:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vrcKiJncQCvJeYdovjwcGHLQkpFI9UFvyKLS0tgyyJA=;
-        b=fxr+p7sgq0hHqMWtLVWiiVUmwvCK2K9niwmP89I8eDAL9RbspWdO1Z1sQG60RUq0Jh
-         T2MZsogyjVAyLqkT3ee99gA8N013logxMHyCVkL7mI3YgQv2TKxq/hfKC0YKDOW0Tejm
-         rPOIm4epv87XbkFyGuS0bvymTWIYvDCh+1NrywAgLDi61i8nwyH0pvvPXN+tS0oTBppj
-         21RpX2SJBsR0PDumQJSP7tyvgCg+e7HUPC5gc46suhRZBioDhD1l7sO+GOgTaRyKmgCJ
-         5DYz2JA/jf2MVMgTV5F8Sm7cG6RQ5CQdljOJ1kjjHo3+2itX5/elS5w8RqMKPWEOBokX
-         zYSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vrcKiJncQCvJeYdovjwcGHLQkpFI9UFvyKLS0tgyyJA=;
-        b=JVxkYXq/elM8sIbWNXqvOyjOqBxE8xE/63YHK1SglZul2+0rSRLlXJfrnQNP3BKtv1
-         0QaU4H9ZRHaH3nhzpqNQhHY2SS3+ZCfeaBjTOGScbTAKhCtJi1fXTk5sByk/z6b1pZvq
-         0mOhbL1CdnmTnXTgc9xfECP/sso6bURFfg4vk7TVy1IAE76FLlKgRsTTasR7PcOV3IOP
-         ulSrLeP1jIwFe++LF9aBYhYljDuqGUnMHicWn/ZuOhmkKyC/rlwF7eJBrBaFPZYVQthe
-         5Jsp7lVYHZJpmhbn14X9FS0FJYwANSwQyX1D425EvadPBE5vVduGftX0xMX4UaRWaEwB
-         9LuQ==
-X-Gm-Message-State: APjAAAUZbZTUXcX6siQQRxcsKqGavKS8n/edNsCk9XKAO/ob/xBTbwHF
-        JvN7T++Ic3gPalhzAdEC7RCRUg==
-X-Google-Smtp-Source: APXvYqwVvSeKZ9+8pgl/U+yQv0XwTRD+oXRVoAp/CkKUZM51Vh73fYHUpTMj6hpKkhxVYtdA9svC7A==
-X-Received: by 2002:a17:902:d915:: with SMTP id c21mr11863733plz.335.1560296422678;
-        Tue, 11 Jun 2019 16:40:22 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h11sm17090333pfn.170.2019.06.11.16.40.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 16:40:22 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 16:40:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] arm64: dts: qcs404: Add interconnect provider DT
- nodes
-Message-ID: <20190611234020.GX4814@minitux>
-References: <20190611164157.24656-1-georgi.djakov@linaro.org>
- <20190611164157.24656-6-georgi.djakov@linaro.org>
+        Tue, 11 Jun 2019 19:40:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35765 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408263AbfFKXk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 19:40:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 16:40:27 -0700
+X-ExtLoop1: 1
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jun 2019 16:40:26 -0700
+Subject: [PATCH 5/6] libnvdimm/bus: Fix wait_nvdimm_bus_probe_idle() ABBA
+ deadlock
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+        peterz@infradead.org, linux-kernel@vger.kernel.org
+Date:   Tue, 11 Jun 2019 16:26:10 -0700
+Message-ID: <156029557026.419799.1378625476581339382.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <156029554317.419799.1324389595953183385.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <156029554317.419799.1324389595953183385.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611164157.24656-6-georgi.djakov@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 11 Jun 09:41 PDT 2019, Georgi Djakov wrote:
+A multithreaded namespace creation/destruction stress test currently
+deadlocks with the following lockup signature:
 
-> Add the DT nodes for the network-on-chip interconnect buses found
-> on qcs404-based platforms.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> 
-> v3:
-> - Updated according to the new binding: added reg property and moved under the
->   "soc" node.
-> 
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index ffedf9640af7..07ff592233b6 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  // Copyright (c) 2018, Linaro Limited
->  
-> +#include <dt-bindings/interconnect/qcom,qcs404.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/clock/qcom,gcc-qcs404.h>
->  #include <dt-bindings/clock/qcom,rpmcc.h>
-> @@ -411,6 +412,33 @@
->  			#interrupt-cells = <4>;
->  		};
->  
-> +		bimc: interconnect@400000 {
+    INFO: task ndctl:2924 blocked for more than 122 seconds.
+          Tainted: G           OE     5.2.0-rc4+ #3382
+    "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+    ndctl           D    0  2924   1176 0x00000000
+    Call Trace:
+     ? __schedule+0x27e/0x780
+     schedule+0x30/0xb0
+     wait_nvdimm_bus_probe_idle+0x8a/0xd0 [libnvdimm]
+     ? finish_wait+0x80/0x80
+     uuid_store+0xe6/0x2e0 [libnvdimm]
+     kernfs_fop_write+0xf0/0x1a0
+     vfs_write+0xb7/0x1b0
+     ksys_write+0x5c/0xd0
+     do_syscall_64+0x60/0x240
 
-Please maintain sort order of address, node name, label name. So this
-should go between rng@e3000 and remoteproc@b00000.
+     INFO: task ndctl:2923 blocked for more than 122 seconds.
+           Tainted: G           OE     5.2.0-rc4+ #3382
+     "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+     ndctl           D    0  2923   1175 0x00000000
+     Call Trace:
+      ? __schedule+0x27e/0x780
+      ? __mutex_lock+0x489/0x910
+      schedule+0x30/0xb0
+      schedule_preempt_disabled+0x11/0x20
+      __mutex_lock+0x48e/0x910
+      ? nvdimm_namespace_common_probe+0x95/0x4d0 [libnvdimm]
+      ? __lock_acquire+0x23f/0x1710
+      ? nvdimm_namespace_common_probe+0x95/0x4d0 [libnvdimm]
+      nvdimm_namespace_common_probe+0x95/0x4d0 [libnvdimm]
+      __dax_pmem_probe+0x5e/0x210 [dax_pmem_core]
+      ? nvdimm_bus_probe+0x1d0/0x2c0 [libnvdimm]
+      dax_pmem_probe+0xc/0x20 [dax_pmem]
+      nvdimm_bus_probe+0x90/0x2c0 [libnvdimm]
+      really_probe+0xef/0x390
+      driver_probe_device+0xb4/0x100
 
-Other than that:
+In this sequence an 'nd_dax' device is being probed and trying to take
+the lock on its backing namespace to validate that the 'nd_dax' device
+indeed has exclusive access to the backing namespace. Meanwhile, another
+thread is trying to update the uuid property of that same backing
+namespace. So one thread is in the probe path trying to acquire the
+lock, and the other thread has acquired the lock and tries to flush the
+probe path.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fix this deadlock by not holding the namespace device_lock over the
+wait_nvdimm_bus_probe_idle() synchronization step. In turn this requires
+the device_lock to be held on entry to wait_nvdimm_bus_probe_idle() and
+subsequently dropped internally to wait_nvdimm_bus_probe_idle().
 
-Regards,
-Bjorn
-> +			reg = <0x00400000 0x80000>;
-> +			compatible = "qcom,qcs404-bimc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-> +				<&rpmcc RPM_SMD_BIMC_A_CLK>;
-> +		};
-> +
-> +		pcnoc: interconnect@500000 {
-> +			reg = <0x00500000 0x15080>;
-> +			compatible = "qcom,qcs404-pcnoc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
-> +				<&rpmcc RPM_SMD_PNOC_A_CLK>;
-> +		};
-> +
-> +		snoc: interconnect@580000 {
-> +			reg = <0x00580000 0x23080>;
-> +			compatible = "qcom,qcs404-snoc";
-> +			#interconnect-cells = <1>;
-> +			clock-names = "bus_clk", "bus_a_clk";
-> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-> +				<&rpmcc RPM_SMD_SNOC_A_CLK>;
-> +		};
-> +
->  		sdcc1: sdcc@7804000 {
->  			compatible = "qcom,sdhci-msm-v5";
->  			reg = <0x07804000 0x1000>, <0x7805000 0x1000>;
+Cc: <stable@vger.kernel.org>
+Fixes: bf9bccc14c05 ("libnvdimm: pmem label sets and namespace instantiation")
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/nvdimm/bus.c         |   17 +++++++++++------
+ drivers/nvdimm/region_devs.c |    4 ++++
+ 2 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index dfb93228d6a7..c1d26fca9c4c 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -887,10 +887,12 @@ void wait_nvdimm_bus_probe_idle(struct device *dev)
+ 	do {
+ 		if (nvdimm_bus->probe_active == 0)
+ 			break;
+-		nvdimm_bus_unlock(&nvdimm_bus->dev);
++		nvdimm_bus_unlock(dev);
++		device_unlock(dev);
+ 		wait_event(nvdimm_bus->wait,
+ 				nvdimm_bus->probe_active == 0);
+-		nvdimm_bus_lock(&nvdimm_bus->dev);
++		device_lock(dev);
++		nvdimm_bus_lock(dev);
+ 	} while (true);
+ }
+ 
+@@ -1017,7 +1019,7 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		case ND_CMD_ARS_START:
+ 		case ND_CMD_CLEAR_ERROR:
+ 		case ND_CMD_CALL:
+-			dev_dbg(&nvdimm_bus->dev, "'%s' command while read-only.\n",
++			dev_dbg(dev, "'%s' command while read-only.\n",
+ 					nvdimm ? nvdimm_cmd_name(cmd)
+ 					: nvdimm_bus_cmd_name(cmd));
+ 			return -EPERM;
+@@ -1088,7 +1090,8 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		goto out;
+ 	}
+ 
+-	nvdimm_bus_lock(&nvdimm_bus->dev);
++	device_lock(dev);
++	nvdimm_bus_lock(dev);
+ 	rc = nd_cmd_clear_to_send(nvdimm_bus, nvdimm, func, buf);
+ 	if (rc)
+ 		goto out_unlock;
+@@ -1103,7 +1106,8 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		nvdimm_account_cleared_poison(nvdimm_bus, clear_err->address,
+ 				clear_err->cleared);
+ 	}
+-	nvdimm_bus_unlock(&nvdimm_bus->dev);
++	nvdimm_bus_unlock(dev);
++	device_unlock(dev);
+ 
+ 	if (copy_to_user(p, buf, buf_len))
+ 		rc = -EFAULT;
+@@ -1112,7 +1116,8 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 	return rc;
+ 
+  out_unlock:
+-	nvdimm_bus_unlock(&nvdimm_bus->dev);
++	nvdimm_bus_unlock(dev);
++	device_unlock(dev);
+  out:
+ 	vfree(buf);
+ 	return rc;
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index 4fed9ce9c2fe..a15276cdec7d 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -422,10 +422,12 @@ static ssize_t available_size_show(struct device *dev,
+ 	 * memory nvdimm_bus_lock() is dropped, but that's userspace's
+ 	 * problem to not race itself.
+ 	 */
++	device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	available = nd_region_available_dpa(nd_region);
+ 	nvdimm_bus_unlock(dev);
++	device_unlock(dev);
+ 
+ 	return sprintf(buf, "%llu\n", available);
+ }
+@@ -437,10 +439,12 @@ static ssize_t max_available_extent_show(struct device *dev,
+ 	struct nd_region *nd_region = to_nd_region(dev);
+ 	unsigned long long available = 0;
+ 
++	device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	available = nd_region_allocatable_dpa(nd_region);
+ 	nvdimm_bus_unlock(dev);
++	device_unlock(dev);
+ 
+ 	return sprintf(buf, "%llu\n", available);
+ }
+
