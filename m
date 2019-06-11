@@ -2,111 +2,130 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C09C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551B7C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C0C20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352722080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391654AbfFKPCX (ORCPT
+        id S2404282AbfFKPFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:02:23 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.109]:16946 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389125AbfFKPCW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:02:22 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id BD261323A2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:02:21 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id aiI1hrXx7dnCeaiI1hTwcg; Tue, 11 Jun 2019 10:02:21 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.75.107] (port=32898 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1haiI0-004HDS-1e; Tue, 11 Jun 2019 10:02:20 -0500
-Date:   Tue, 11 Jun 2019 10:02:19 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Sathya Prakash <sathya.prakash@broadcom.com>,
-        Chaitra P B <chaitra.basappa@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] scsi: mpt3sas: Mark expected switch fall-through
-Message-ID: <20190611150219.GA19152@embeddedor>
+        Tue, 11 Jun 2019 11:05:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389125AbfFKPFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:05:18 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7F49930BBE98;
+        Tue, 11 Jun 2019 15:04:52 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 08DB05DA2E;
+        Tue, 11 Jun 2019 15:04:28 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 11:04:27 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     cohuck@redhat.com, jack@suse.cz, kvm@vger.kernel.org,
+        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
+        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+        dm-devel@redhat.com, adilger kernel <adilger.kernel@dilger.ca>,
+        zwisler@kernel.org, aarcange@redhat.com,
+        dave jiang <dave.jiang@intel.com>, jstaron@google.com,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        kilobyte@angband.pl, rdunlap@infradead.org, riel@surriel.com,
+        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
+        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
+Subject: Re: [PATCH v11 4/7] dm: enable synchronous dax
+Message-ID: <20190611150427.GA29288@redhat.com>
+References: <20190610090730.8589-1-pagupta@redhat.com>
+ <20190610090730.8589-5-pagupta@redhat.com>
+ <20190610192803.GA29002@redhat.com>
+ <1206355816.34396746.1560258658768.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.75.107
-X-Source-L: No
-X-Exim-ID: 1haiI0-004HDS-1e
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.75.107]:32898
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <1206355816.34396746.1560258658768.JavaMail.zimbra@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 11 Jun 2019 15:05:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-where we are expecting to fall through.
+On Tue, Jun 11 2019 at  9:10am -0400,
+Pankaj Gupta <pagupta@redhat.com> wrote:
 
-This patch fixes the following warning:
+> Hi Mike,
+> 
+> Thanks for the review Please find my reply inline.
+> 
+> > 
+> > dm_table_supports_dax() is called multiple times (from
+> > dm_table_set_restrictions and dm_table_determine_type).  It is strange
+> > to have a getter have a side-effect of being a setter too.  Overloading
+> > like this could get you in trouble in the future.
+> > 
+> > Are you certain this is what you want?
+> 
+> I agree with you.
+> 
+> > 
+> > Or would it be better to refactor dm_table_supports_dax() to take an
+> > iterate_devices_fn arg and have callers pass the appropriate function?
+> > Then have dm_table_set_restrictions() caller do:
+> > 
+> >      if (dm_table_supports_dax(t, device_synchronous, NULL))
+> >                set_dax_synchronous(t->md->dax_dev);
+> > 
+> > (NULL arg implies dm_table_supports_dax() refactoring would take a int
+> > *data pointer rather than int type).
+> > 
+> > Mike
+> > 
+> 
+> I am sending below patch as per your suggestion. Does it look
+> near to what you have in mind?
 
-drivers/scsi/mpt3sas/mpt3sas_base.c: In function ‘_base_update_ioc_page1_inlinewith_perf_mode’:
-drivers/scsi/mpt3sas/mpt3sas_base.c:4510:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (ioc->high_iops_queues) {
-      ^
-drivers/scsi/mpt3sas/mpt3sas_base.c:4530:2: note: here
-  case MPT_PERF_MODE_LATENCY:
-  ^~~~
+Yes, it does.. just one nit I noticed inlined below.
 
-Warning level 3 was used: -Wimplicit-fallthrough=3
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index 350cf0451456..8d89acc8b8c2 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
 
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
+...
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/scsi/mpt3sas/mpt3sas_base.c | 1 +
- 1 file changed, 1 insertion(+)
+> @@ -1910,8 +1919,13 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+>         }
+>         blk_queue_write_cache(q, wc, fua);
+> 
+> -       if (dm_table_supports_dax(t, PAGE_SIZE))
+> +       if (dm_table_supports_dax(t, device_supports_dax, &page_size)) {
+> +
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index e6377ec07f6c..9fefcd1e9c97 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -4527,6 +4527,7 @@ _base_update_ioc_page1_inlinewith_perf_mode(struct MPT3SAS_ADAPTER *ioc)
- 			ioc_info(ioc, "performance mode: balanced\n");
- 			return;
- 		}
-+		/* Fall through */
- 	case MPT_PERF_MODE_LATENCY:
- 		/*
- 		 * Enable interrupt coalescing on all reply queues
--- 
-2.21.0
+No need for an empty newline here ^
 
+>                 blk_queue_flag_set(QUEUE_FLAG_DAX, q);
+> +               if (dm_table_supports_dax(t, device_synchronous, NULL))
+> +                       set_dax_synchronous(t->md->dax_dev);
+> +       }
+>         else
+>                 blk_queue_flag_clear(QUEUE_FLAG_DAX, q);
+> 
+
+Thanks,
+Mike
