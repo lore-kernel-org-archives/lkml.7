@@ -2,182 +2,117 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF72C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964F3C4646D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3F420896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F61320896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TczzrgYM"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="fCnawsru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405946AbfFKRQh (ORCPT
+        id S2405960AbfFKRQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:16:37 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55828 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405226AbfFKRQe (ORCPT
+        Tue, 11 Jun 2019 13:16:50 -0400
+Received: from mail-pf1-f175.google.com ([209.85.210.175]:38716 "EHLO
+        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405263AbfFKRQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:16:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BHDdFH022687;
-        Tue, 11 Jun 2019 17:16:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=FRXVWJIPkmJFeMjoY+ciz/9M1AcGX3oAGMSsEXsUQc4=;
- b=TczzrgYMbt3/n5gl6dsdWiKXYMRRdAJ/TsGM2YoyeVTLRirZjvoIH55EQDebk9A4vZBo
- Gq4LZkULh8VT8TmOOrq5+z4VAP7WjGXqWzx9p7J6UB1CEzyAC8DNK9Xts3W7JEdvj1S5
- FEcGtlf2arGiRuhTj8iBaejwGnmtQ3VXddxzHCST9EC/uBcP4a8BqyOy3P6i16iLWn8b
- 9Vti0heHbzqC40I65qNuwdJS1kzl0kbooJaQRHO9CnEzXo7ENuNfMEhmKaheJfrrTtQ6
- x+MdJtd0eRPHIYSpYI2z4yYyuCAhqEDjCOfxfEVtwAk5+D717638fA9LovnemDtSr3DN Bw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t04etpm98-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 17:16:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BHErDd138550;
-        Tue, 11 Jun 2019 17:16:20 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t04hyfmnw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 17:16:07 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5BHG54t024839;
-        Tue, 11 Jun 2019 17:16:05 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Jun 2019 10:16:04 -0700
-Subject: Re: [PATCH v2 2/2] mm: hugetlb: soft-offline:
- dissolve_free_huge_page() return zero on !PageHuge
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        xishi.qiuxishi@alibaba-inc.com,
-        "Chen, Jerry T" <jerry.t.chen@intel.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, linux-kernel@vger.kernel.org
-References: <1560154686-18497-1-git-send-email-n-horiguchi@ah.jp.nec.com>
- <1560154686-18497-3-git-send-email-n-horiguchi@ah.jp.nec.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <039dd97d-83f5-f71a-e78f-a451b0064903@oracle.com>
-Date:   Tue, 11 Jun 2019 10:16:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 11 Jun 2019 13:16:50 -0400
+Received: by mail-pf1-f175.google.com with SMTP id a186so7830673pfa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:16:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=NP0gA1ABckvdSxnswrfwtyDrSN1dU2orYg+qwnAaWU0=;
+        b=fCnawsruKXMsyZtdZkLLbAjxXjcWO7UUBt6Go6jNPSUFC0x6uMTddfjQjosUqRo3cO
+         Jc0jXjHQrSrU42XNdeRKNRnGLYlRL4ojHXgGpbQbQ2qKmZdFzo/4AHYalAdrhYHi7C3U
+         DIE8zAxwbLxyv3krKFvNGd5ECXkYPMKwYaTKLgpvNZ29I7kb9E+A7gnrB2sDf9UTInwx
+         bGNgHFFd2sThfwGOP0ESd+1aNMgcut0JC8e11UOnxvAr+PmZX4AE8NB21aH/ZEZeYhZX
+         oJWJJ0nyehTcFjqj1YeRUYHo64MDB75LhR3TZucrAmzzKZMykDbkrd4HHajGzSZKqdPB
+         BAog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=NP0gA1ABckvdSxnswrfwtyDrSN1dU2orYg+qwnAaWU0=;
+        b=OtrvArJoK4+CzjMQfN7jijy1ep5r8xFZhpJb4Oek/duLGqozKfh7HQN6avEYoVkn4E
+         h4YJZJMOCrkcvQKlbzEivQuTV0Cqa9EGy92m1v0pNUE4HrRSFDpSXUulbGKT1REpRuwV
+         7dz18Y0fnlsHtjUuWPzBk6ZOOphJCGmTqHyqwbMdiv47x6fsteMPvIKHDkLyBSUV6MDZ
+         PdIJ/29TAc7MKMGra7/YDtUiynMfgrgmwdIvHkV1hkO3dArh9MB0wYzuP2IZcv3qjppX
+         xzZ28242xg6VIrlcfVyDSfUDvyQhHk91vBceAwxKYWnf2yZ7hNiBWo/CqRaJ3saeZ0j0
+         NKUg==
+X-Gm-Message-State: APjAAAX1XaFcSWeiiwbkeDg52B45JDw+Q8232FOks3PI6nGenJr4hLL9
+        XTuKf8Lzzr6hLewIwmWCOc5Mrw==
+X-Google-Smtp-Source: APXvYqxtEattJ3/+CA3rv8tUikfccZabdw+tyfqO2UmRi4gT3U9+ViUAnX/16vxoTmntuqCAWtc2sg==
+X-Received: by 2002:a63:4813:: with SMTP id v19mr14934308pga.124.1560273409434;
+        Tue, 11 Jun 2019 10:16:49 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id j37sm13040375pgj.58.2019.06.11.10.16.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 10:16:49 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 10:16:44 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+06537213db7ba2745c4a@syzkaller.appspotmail.com>,
+        aviadye@mellanox.com, borisp@mellanox.com,
+        Daniel Borkmann <daniel@iogearbox.net>, davejwatson@fb.com,
+        David Miller <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        bpf <bpf@vger.kernel.org>, Eric Biggers <ebiggers@kernel.org>
+Subject: Re: memory leak in create_ctx
+Message-ID: <20190611101644.267d8e9c@cakuba.netronome.com>
+In-Reply-To: <CACT4Y+YX4biKo1nEKh32pJoS9ANNV06hQp5=+w+3GpWQB1worg@mail.gmail.com>
+References: <20190609025641.11448-1-hdanton@sina.com>
+        <CACT4Y+YX4biKo1nEKh32pJoS9ANNV06hQp5=+w+3GpWQB1worg@mail.gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <1560154686-18497-3-git-send-email-n-horiguchi@ah.jp.nec.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 1:18 AM, Naoya Horiguchi wrote:
-> madvise(MADV_SOFT_OFFLINE) often returns -EBUSY when calling soft offline
-> for hugepages with overcommitting enabled. That was caused by the suboptimal
-> code in current soft-offline code. See the following part:
-> 
->     ret = migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL,
->                             MIGRATE_SYNC, MR_MEMORY_FAILURE);
->     if (ret) {
->             ...
->     } else {
->             /*
->              * We set PG_hwpoison only when the migration source hugepage
->              * was successfully dissolved, because otherwise hwpoisoned
->              * hugepage remains on free hugepage list, then userspace will
->              * find it as SIGBUS by allocation failure. That's not expected
->              * in soft-offlining.
->              */
->             ret = dissolve_free_huge_page(page);
->             if (!ret) {
->                     if (set_hwpoison_free_buddy_page(page))
->                             num_poisoned_pages_inc();
->             }
->     }
->     return ret;
-> 
-> Here dissolve_free_huge_page() returns -EBUSY if the migration source page
-> was freed into buddy in migrate_pages(), but even in that case we actually
-> has a chance that set_hwpoison_free_buddy_page() succeeds. So that means
-> current code gives up offlining too early now.
-> 
-> dissolve_free_huge_page() checks that a given hugepage is suitable for
-> dissolving, where we should return success for !PageHuge() case because
-> the given hugepage is considered as already dissolved.
-> 
-> This change also affects other callers of dissolve_free_huge_page(),
-> which are cleaned up together.
-> 
-> Reported-by: Chen, Jerry T <jerry.t.chen@intel.com>
-> Tested-by: Chen, Jerry T <jerry.t.chen@intel.com>
-> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> Fixes: 6bc9b56433b76 ("mm: fix race on soft-offlining")
-> Cc: <stable@vger.kernel.org> # v4.19+
-> ---
->  mm/hugetlb.c        | 15 +++++++++------
->  mm/memory-failure.c |  5 +----
->  2 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git v5.2-rc3/mm/hugetlb.c v5.2-rc3_patched/mm/hugetlb.c
-> index ac843d3..048d071 100644
-> --- v5.2-rc3/mm/hugetlb.c
-> +++ v5.2-rc3_patched/mm/hugetlb.c
-> @@ -1519,7 +1519,12 @@ int dissolve_free_huge_page(struct page *page)
+On Tue, 11 Jun 2019 13:45:11 +0200, Dmitry Vyukov wrote:
+> Do you see the bug? Jakub said he can't repro.
+> The repro has these suspicious bpf syscalls and there is currently
+> some nasty bpf bug that plagues us and leads to random assorted
+> splats.
 
-Please update the function description for dissolve_free_huge_page() as
-well.  It currently says, "Returns -EBUSY if the dissolution fails because
-a give page is not a free hugepage" which is no longer true as a result of
-this change.
+Ah, must be the BPF interaction indeed :S The reproducer text uses
+incorrect names:
 
->  	int rc = -EBUSY;
->  
->  	spin_lock(&hugetlb_lock);
-> -	if (PageHuge(page) && !page_count(page)) {
-> +	if (!PageHuge(page)) {
-> +		rc = 0;
-> +		goto out;
-> +	}
-> +
-> +	if (!page_count(page)) {
->  		struct page *head = compound_head(page);
->  		struct hstate *h = page_hstate(head);
->  		int nid = page_to_nid(head);
-> @@ -1564,11 +1569,9 @@ int dissolve_free_huge_pages(unsigned long start_pfn, unsigned long end_pfn)
->  
->  	for (pfn = start_pfn; pfn < end_pfn; pfn += 1 << minimum_order) {
->  		page = pfn_to_page(pfn);
-> -		if (PageHuge(page) && !page_count(page)) {
-> -			rc = dissolve_free_huge_page(page);
-> -			if (rc)
-> -				break;
-> -		}
+bpf$MAP_CREATE(0x0, &(0x7f0000000280)={0xf, 0x4, 0x4, 0x400, 0x0, 0x1}, 0x3c)
 
-We may want to consider keeping at least the PageHuge(page) check before
-calling dissolve_free_huge_page().  dissolve_free_huge_pages is called as
-part of memory offline processing.  We do not know if the memory to be offlined
-contains huge pages or not.  With your changes, we are taking hugetlb_lock
-on each call to dissolve_free_huge_page just to discover that the page is
-not a huge page.
+# ^ this is a map create SOCKMAP
 
-You 'could' add a PageHuge(page) check to dissolve_free_huge_page before
-taking the lock.  However, you would need to check again after taking the
-lock.
--- 
-Mike Kravetz
+socket$rxrpc(0x21, 0x2, 0x800000000a)
+r0 = socket$inet6_tcp(0xa, 0x1, 0x0)
+setsockopt$inet6_tcp_int(r0, 0x6, 0x13, &(0x7f00000000c0)=0x100000001, 0x1d4)
+connect$inet6(r0, &(0x7f0000000140), 0x1c)
+bpf$MAP_CREATE(0x0, &(0x7f0000000000)={0x5, 0x0, 0x0, 0x0, 0x80}, 0x3c)
+
+# ^ another map create (perf event array?)
+
+bpf$MAP_CREATE(0x2, &(0x7f0000003000)={0x3, 0x0, 0x77fffb, 0x0, 0x10020000000, 0x0}, 0x2c)
+
+# ^ but this is MAP_UPDATE, not MAP_CREATE, it probably inserts the r0
+#   into the map
+
+setsockopt$inet6_tcp_TCP_ULP(r0, 0x6, 0x1f, &(0x7f0000000040)='tls\x00', 0x4)
+
+
+That threw me off.
+
+> I've run the repro as "./syz-execprog -repeat=0 -procs=6 repro"  and
+> in 10 mins I got the following splat, which indeed suggests a bpf bug.
+> But we of course can have both bpf stack overflow and a memory leak in tls.
