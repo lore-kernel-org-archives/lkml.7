@@ -2,240 +2,244 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C4DC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82234C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5752086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:17:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NH8BTFMu"
+	by mail.kernel.org (Postfix) with ESMTP id 5176A2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390428AbfFKBRm (ORCPT
+        id S2390443AbfFKBVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:17:42 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41212 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388845AbfFKBRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:17:42 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 33so4461232qtr.8;
-        Mon, 10 Jun 2019 18:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IulWEaCWAQM3Cjwx89zXNg6z6p75qc/OA1Nxr0QmTOo=;
-        b=NH8BTFMunaTHtT1SKVQ6VMTAtj5z1w7MXjGz7uzUjkM85xBkzloO5tzhXdPigVU8oK
-         byjVctvHsZtAFY0vreBGmr5y3lj/sUsZUNMAbB0eWQaJlEaHFuzkacomu6LVj45wi3H6
-         FwesPhemL9XfAwxzdcpSTb6Nic9VHbSPBAoGRdBa+oZ46ox+vjJqp0V8wXSBBI6nG3zv
-         ITVvLFXbfsMmT/Qh9wTBS5TgT+SzOobETmhtnQRLOk9PTykhok/BUxncj/FTB4SvYum5
-         m9D8RF/SU5jDbBTCxLha3Zd1YOCLUM7izvwwzII2339OBxWj7iFGi150Y161Anqocvn6
-         x6mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IulWEaCWAQM3Cjwx89zXNg6z6p75qc/OA1Nxr0QmTOo=;
-        b=pvcpFLz2/CVLWswkkKWKvpbTdTrKJkCxhwUu4Zzmif8kEak/sJnFpSJv5jCAACAJcL
-         lwxtXvtq2C4KvdekjOBtnp2tLOT4qpql8dHEjTBLg5Or1o+8e0ktimJGjlCdO1PlS2yH
-         IyndUeIO14VGcSmbA0WywqOuyUspUBliUGzWbfme57nHAQlslNvnLEg5CX1qfjBlJtQw
-         xgozl4NFLvkLzmyp2+cCdlO+hYTRrHYdJ3Iv1SYcrx2AeRGLvKJxnN6CefdlEA+PfTDo
-         JpmiCGXzH8NPZ4vlfBu7ZLk4dcjSBKLDy4GsTPGVDkie5WwhujwJROTBf1kgL1eqL845
-         ZdVg==
-X-Gm-Message-State: APjAAAUIcqnu6bNLc/HVNVN9nWBTk1VCZdsDZ/464M21O/s8bJthAmXK
-        f+NVB3080/ujc/9Kk1EqTQ==
-X-Google-Smtp-Source: APXvYqzmPMG7S1PfKfkheAjAKiUao8BKijZwElki5K0T2BfvZR+gVv7w2Vhd7gBITayGS3aQFQDJQA==
-X-Received: by 2002:aed:2a85:: with SMTP id t5mr41081868qtd.26.1560215860587;
-        Mon, 10 Jun 2019 18:17:40 -0700 (PDT)
-Received: from kmo-pixel (c-71-234-172-214.hsd1.vt.comcast.net. [71.234.172.214])
-        by smtp.gmail.com with ESMTPSA id m5sm7210292qke.25.2019.06.10.18.17.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 18:17:39 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 21:17:37 -0400
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-bcache@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: bcachefs status update (it's done cooking; let's get this sucker
- merged)
-Message-ID: <20190611011737.GA28701@kmo-pixel>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+        Mon, 10 Jun 2019 21:21:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2574 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388845AbfFKBVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:21:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 18:21:18 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Jun 2019 18:21:18 -0700
+Date:   Mon, 10 Jun 2019 18:21:18 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v2 1/2] KVM: LAPIC: Optimize timer latency consider world
+ switch time
+Message-ID: <20190611012118.GC24835@linux.intel.com>
+References: <1559284814-20378-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1559284814-20378-1-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:46:35AM -1000, Linus Torvalds wrote:
-> On Mon, Jun 10, 2019 at 9:14 AM Kent Overstreet
-> <kent.overstreet@gmail.com> wrote:
-> >
-> > So. Here's my bcachefs-for-review branch - this has the minimal set of patches
-> > outside of fs/bcachefs/. My master branch has some performance optimizations for
-> > the core buffered IO paths, but those are fairly tricky and invasive so I want
-> > to hold off on those for now - this branch is intended to be more or less
-> > suitable for merging as is.
+On Fri, May 31, 2019 at 02:40:13PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> Honestly, it really isn't.
-
-Heh, I suppose that's what review is for :)
-
-> There are obvious things wrong with it - like the fact that you've
-> rebased it so that the original history is gone, yet you've not
-> actually *fixed* the history, so you find things like reverts of
-> commits that should simply have been removed, and fixes for things
-> that should just have been fixed in the original commit the fix is
-> for.
-
-Yeah, I suppose I have dropped the ball on that lately. 
- 
-> But note that the cleanup should go further than just fix those kinds
-> of technical issues. If you rebase, and you have fixes in your tree
-> for things you rebase, just fix things as you rewrite history anyway
-> (there are cases where the fix may be informative in itself and it's
-> worth leaving around, but that's rare).
-
-Yeah that has historically been my practice, I've just been moving away from
-that kind of history editing as bcachefs has been getting more users. Hence the
-in-between, worst of both workflows state of the current tree.
-
-But, I can certainly go through and clean things up like that one last time and
-make everything bisectable again - I'll go through and write proper commit
-messages too. Unless you'd be ok with just squashing most of the history down to
-one commit - which would you prefer?
-
-> Anyway, aside from that, I only looked at the non-bcachefs parts. Some
-> of those are not acceptable either, like
+> Advance lapic timer tries to hidden the hypervisor overhead between the
+> host emulated timer fires and the guest awares the timer is fired. However,
+> even though after more sustaining optimizations, kvm-unit-tests/tscdeadline_latency 
+> still awares ~1000 cycles latency since we lost the time between the end of 
+> wait_lapic_expire and the guest awares the timer is fired. There are 
+> codes between the end of wait_lapic_expire and the world switch, furthermore, 
+> the world switch itself also has overhead. Actually the guest_tsc is equal 
+> to the target deadline time in wait_lapic_expire is too late, guest will
+> aware the latency between the end of wait_lapic_expire() and after vmentry 
+> to the guest. This patch takes this time into consideration. 
 > 
->     struct pagecache_lock add_lock
->         ____cacheline_aligned_in_smp; /* protects adding new pages */
+> The vmentry_lapic_timer_advance_ns module parameter should be well tuned by 
+> host admin, setting bit 0 to 1 to finally cache parameter in KVM. This patch 
+> can reduce average cyclictest latency from 3us to 2us on Skylake server. 
+> (guest w/ nohz=off, idle=poll, host w/ preemption_timer=N, the cyclictest 
+> latency is not too sensitive when preemption_timer=Y for this optimization in 
+> my testing), kvm-unit-tests/tscdeadline_latency can reach 0.
 > 
-> in 'struct address_space', which is completely bogus, since that
-> forces not only a potentially huge amount of padding, it also requires
-> alignment that that struct simply fundamentally does not have, and
-> _will_ not have.
-
-Oh, good point.
-
-> You can only use ____cacheline_aligned_in_smp for top-level objects,
-> and honestly, it's almost never a win. That lock shouldn't be so hot.
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> NOTE: rebase on https://lkml.org/lkml/2019/5/20/449
+> v1 -> v2:
+>  * rename get_vmentry_advance_delta to get_vmentry_advance_cycles
+>  * cache vmentry_advance_cycles by setting param bit 0 
+>  * add param max limit 
 > 
-> That lock is somewhat questionable in the first place, and no, we
-> don't do those hacky recursive things anyway. A recursive lock is
-> almost always a buggy and mis-designed one.
-
-You're preaching to the choir there, I still feel dirty about that code and I'd
-love nothing more than for someone else to come along and point out how stupid
-I've been with a much better way of doing it. 
-
-> Why does the regular page lock (at a finer granularity) not suffice?
-
-Because the lock needs to prevent pages from being _added_ to the page cache -
-to do it with a page granularity lock it'd have to be part of the radix tree, 
-
-> And no, nobody has ever cared. The dio people just don't care about
-> page cache anyway. They have their own thing going.
-
-It's not just dio, it's even worse with the various fallocate operations. And
-the xfs people care, but IIRC even they don't have locking for pages being
-faulted in. This is an issue I've talked to other filesystem people quite a bit
-about - especially Dave Chinner, maybe we can get him to weigh in here.
-
-And this inconsistency does result in _real_ bugs. It goes something like this:
- - dio write shoots down the range of the page cache for the file it's writing
-   to, using invalidate_inode_pages_range2
- - After the page cache shoot down, but before the write actually happens,
-   another process pulls those pages back in to the page cache
- - Now the write happens: if that write was e.g. an allocating write, you're
-   going to have page cache state (buffer heads) that say that page doesn't have
-   anything on disk backing it, but it actually does because of the dio write.
-
-xfs has additional locking (that the vfs does _not_ do) around both the buffered
-and dio IO paths to prevent this happening because of a buffered read pulling
-the pages back in, but no one has a solution for pages getting _faulted_ back in
-- either because of mmap or gup().
-
-And there are some filesystem people who do know about this race, because at
-some point the dio code has been changed to shoot down the page cache _again_
-after the write completes. But that doesn't eliminate the race, it just makes it
-harder to trigger.
-
-And dio writes actually aren't the worst of it, it's even worse with fallocate
-FALLOC_FL_INSERT_RANGE/COLLAPSE_RANGE. Last time I looked at the ext4 fallocate
-code, it looked _completely_ broken to me - the code seemed to think it was
-using the same mechanism truncate uses for shooting down the page cache and
-keeping pages from being readded - but that only works for truncate because it's
-changing i_size and shooting down pages above i_size. Fallocate needs to shoot
-down pages that are still within i_size, so... yeah...
-
-The recursiveness is needed because otherwise, if you mmap a file, then do a dio
-write where you pass the address you mmapped to pwrite(), gup() from the dio
-write path will be trying to fault in the exact pages it's blocking from being
-added.
-
-A better solution would be for gup() to detect that and return an error, so we
-can just fall back to buffered writes. Or just return an error to userspace
-because fuck anyone who would actually do that.
-
-But I fear plumbing that through gup() is going to be a hell of a lot uglier
-than this patch.
-
-I would really like Dave to weigh in here.
-
-> Similarly, no, we're not starting to do vmalloc in non-process context. Stop it.
-
-I don't want to do vmalloc in non process context - but I do need to call
-vmalloc when reading in btree nodes, from the filesystem IO path.
-
-But I just learned today about this new memalloc_nofs_save() thing, so if that
-works I'm more than happy to drop that patch.
-
-> And the commit comments are very sparse. And not always signed off.
-
-Yeah, I'll fix that.
-
-> I also get the feeling that the "intent" part of the six-locks could
-> just be done as a slight extension of the rwsem, where an "intent" is
-> the same as a write-lock, but without waiting for existing readers,
-> and then the write-lock part is just the "wait for readers to be
-> done".
+>  arch/x86/kvm/lapic.c   | 38 +++++++++++++++++++++++++++++++++++---
+>  arch/x86/kvm/lapic.h   |  3 +++
+>  arch/x86/kvm/vmx/vmx.c |  2 +-
+>  arch/x86/kvm/x86.c     |  9 +++++++++
+>  arch/x86/kvm/x86.h     |  2 ++
+>  5 files changed, 50 insertions(+), 4 deletions(-)
 > 
-> Have you talked to Waiman Long about that?
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index fcf42a3..60587b5 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1531,6 +1531,38 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+>  	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+>  }
+>  
+> +#define MAX_VMENTRY_ADVANCE_NS 1000
+> +
+> +u64 compute_vmentry_advance_cycles(struct kvm_vcpu *vcpu)
 
-No, I haven't, but I'm adding him to the list.
+This can be static, unless get_vmentry_advance_cycles() is moved to
+lapic.h, in which case compute_vmentry_advance_cycles() would need to be
+exported.
 
-I really hate the idea of adding these sorts of special case features to the
-core locking primitives though - I mean, look what's happened to the mutex code,
-and the intent state isn't the only special feature they have. As is, they're
-small and clean and they do their job well, I'd really prefer to have them just
-remain their own thing instead of trying to cram it all into the the hyper
-optimized rw semaphore code.
+> +{
+> +	u64 cycles;
+> +	struct kvm_lapic *apic = vcpu->arch.apic;
+> +	u64 val = min_t(u32, vmentry_lapic_timer_advance_ns, MAX_VMENTRY_ADVANCE_NS);
+> +
+> +	cycles = (val & ~1ULL) * vcpu->arch.virtual_tsc_khz;
+> +	do_div(cycles, 1000000);
+> +
+> +	/* setting bit 0 locks the value, it is cached */
+> +	if (val & 1)
+> +		apic->lapic_timer.vmentry_advance_cycles = cycles;
+> +
+> +	return cycles;
+> +}
+> +
+> +inline u64 get_vmentry_advance_cycles(struct kvm_vcpu *vcpu)
 
-Also, six locks used to be in fs/bcachefs/, but last time I was mailing stuff
-out for review Peter Zijlstra was dead set against exporting the osq lock stuff
-- moving six locks to kernel/locking/ was actually his idea. 
+This shouldn't be 'inline' since it's exported from a C file.  That being
+said, I think it's short enough to define as a 'static inline' in lapic.h.
 
-I can say more about six locks tomorrow when I'm less sleep deprived, if you're
-still not convinced.
-
-Cheers.
+> +{
+> +	struct kvm_lapic *apic = vcpu->arch.apic;
+> +
+> +	if (!vmentry_lapic_timer_advance_ns)
+> +		return 0;
+> +
+> +	if (likely(apic->lapic_timer.vmentry_advance_cycles))
+> +		return apic->lapic_timer.vmentry_advance_cycles;
+> +
+> +	return compute_vmentry_advance_cycles(vcpu);
+> +}
+> +EXPORT_SYMBOL_GPL(get_vmentry_advance_cycles);
+> +
+>  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+>  {
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+> @@ -1544,7 +1576,7 @@ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+>  
+>  	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
+>  	apic->lapic_timer.expired_tscdeadline = 0;
+> -	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+> +	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc()) + get_vmentry_advance_cycles(vcpu);
+>  	apic->lapic_timer.advance_expire_delta = guest_tsc - tsc_deadline;
+>  
+>  	if (guest_tsc < tsc_deadline)
+> @@ -1572,7 +1604,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
+>  	local_irq_save(flags);
+>  
+>  	now = ktime_get();
+> -	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+> +	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc()) + get_vmentry_advance_cycles(vcpu);
+>  
+>  	ns = (tscdeadline - guest_tsc) * 1000000ULL;
+>  	do_div(ns, this_tsc_khz);
+> @@ -2329,7 +2361,7 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+>  		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+>  		apic->lapic_timer.timer_advance_adjust_done = true;
+>  	}
+> -
+> +	apic->lapic_timer.vmentry_advance_cycles = 0;
+>  
+>  	/*
+>  	 * APIC is created enabled. This will prevent kvm_lapic_set_base from
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index f974a3d..70854a9 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -33,6 +33,7 @@ struct kvm_timer {
+>  	u64 expired_tscdeadline;
+>  	u32 timer_advance_ns;
+>  	s64 advance_expire_delta;
+> +	u64 vmentry_advance_cycles;
+>  	atomic_t pending;			/* accumulated triggered timers */
+>  	bool hv_timer_in_use;
+>  	bool timer_advance_adjust_done;
+> @@ -221,6 +222,8 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
+>  bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
+>  
+>  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
+> +u64 compute_vmentry_advance_cycles(struct kvm_vcpu *vcpu);
+> +inline u64 get_vmentry_advance_cycles(struct kvm_vcpu *vcpu);
+>  
+>  bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
+>  			struct kvm_vcpu **dest_vcpu);
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index a341663..255b5d5 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7047,7 +7047,7 @@ static int vmx_set_hv_timer(struct kvm_vcpu *vcpu, u64 guest_deadline_tsc,
+>  
+>  	vmx = to_vmx(vcpu);
+>  	tscl = rdtsc();
+> -	guest_tscl = kvm_read_l1_tsc(vcpu, tscl);
+> +	guest_tscl = kvm_read_l1_tsc(vcpu, tscl) + get_vmentry_advance_cycles(vcpu);
+>  	delta_tsc = max(guest_deadline_tsc, guest_tscl) - guest_tscl;
+>  	lapic_timer_advance_cycles = nsec_to_cycles(vcpu,
+>  						    ktimer->timer_advance_ns);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 69c3672e..0d4eb27 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -145,6 +145,13 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
+>  static int __read_mostly lapic_timer_advance_ns = -1;
+>  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
+>  
+> +/*
+> + * lapic timer vmentry advance (tscdeadline mode only) in nanoseconds. Setting
+> + * bit 0 to 1 after well manually tuning to cache vmentry advance time.
+> + */
+> +u32 __read_mostly vmentry_lapic_timer_advance_ns = 0;
+> +module_param(vmentry_lapic_timer_advance_ns, uint, S_IRUGO | S_IWUSR);
+> +
+>  static bool __read_mostly vector_hashing = true;
+>  module_param(vector_hashing, bool, S_IRUGO);
+>  
+> @@ -1592,6 +1599,8 @@ static int kvm_set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz)
+>  	kvm_get_time_scale(user_tsc_khz * 1000LL, NSEC_PER_SEC,
+>  			   &vcpu->arch.virtual_tsc_shift,
+>  			   &vcpu->arch.virtual_tsc_mult);
+> +	if (vcpu->arch.apic && user_tsc_khz != vcpu->arch.virtual_tsc_khz)
+> +		compute_vmentry_advance_cycles(vcpu);
+>  	vcpu->arch.virtual_tsc_khz = user_tsc_khz;
+>  
+>  	/*
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 275b3b6..b0a3b84 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -294,6 +294,8 @@ extern u64 kvm_supported_xcr0(void);
+>  
+>  extern unsigned int min_timer_period_us;
+>  
+> +extern unsigned int vmentry_lapic_timer_advance_ns;
+> +
+>  extern bool enable_vmware_backdoor;
+>  
+>  extern struct static_key kvm_no_apic_vcpu;
+> -- 
+> 2.7.4
+> 
