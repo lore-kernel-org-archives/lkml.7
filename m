@@ -2,107 +2,114 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D871C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33EBC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F204F2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D092173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vsAEGERk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407544AbfFKTjo (ORCPT
+        id S2405684AbfFKTkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:39:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:3339 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407028AbfFKTjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:39:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 12:39:43 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jun 2019 12:39:42 -0700
-Message-ID: <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
- ELF file
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Martin <Dave.Martin@arm.com>,
-        Florian Weimer <fweimer@redhat.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Date:   Tue, 11 Jun 2019 12:31:34 -0700
-In-Reply-To: <20190611114109.GN28398@e103592.cambridge.arm.com>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
-         <20190606200646.3951-23-yu-cheng.yu@intel.com>
-         <20190607180115.GJ28398@e103592.cambridge.arm.com>
-         <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
-         <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
-         <20190611114109.GN28398@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 15:40:53 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41216 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391080AbfFKTkx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:40:53 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 83so7522458pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 12:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Tl9Z0NsfgrApufoe2WUbK2OeIisauNIixsAGf/fSmk=;
+        b=vsAEGERkAaoThhFQXBii705fmbt72E/99Uu7FZajp8SUf8GTc9LlYBfAC9HjBDp5sL
+         4EKL6GI9Rp7rOn2WJp0TItbwY1VpF5bcED6xmFO6HO1yjnxBmgJQRVff+Szsd7nDo52k
+         o1KbxC6jfKkSBlesArxZfIgVWHOPkeVNKjzoOo2dLBfe0tMVlsJMNhicCRnqqzah4M1p
+         nQ+X+wveo4NUY1wN8RdZqJ6VXO8ZpGZsQhfe115nX9JanaBCN6VcbYPC8c0LrFdvg90V
+         DNFLgkX/ED/WENER8nOIEnsilSeYqIY4TNFJg1PXRtIJq4SgPMjABUQl+T2ZO2lY8t8G
+         +ndA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Tl9Z0NsfgrApufoe2WUbK2OeIisauNIixsAGf/fSmk=;
+        b=UONft3txat0VxlsNcME3YBdr3igBziNbK1Ohiq4i8/04tBUikXizQZtXI1C34mVOim
+         QwMl6T3BvooTkM7eW+GJqSYMuWDCcJu3/R65Q3DjBd3yGx9D15QHK/y53JlLwPaWvS9+
+         NuGJbMhJKXKVLRy8lsqE+mzIj/Zbt42r+SVsIocGuutNvAiM41XwvAVb50qDqZ/Cw7x+
+         nMjxObHzTrTCbybC3vmRHNWswHzeuJZuL81uY25eArgwS0vQO5CeJF3MNGiktXsP9Q7P
+         0J2BIjwPqRsmVJ7KiNbWu7ot3j8MvDYp3y2jhqc5+cxxdCK0YOds9L4c6uO7gxfX5kYt
+         gnFg==
+X-Gm-Message-State: APjAAAXdvAOr1klwc6La8uklcMsBsRqejZQ7gHEif0Xt4H8Cmj40Xi/E
+        dHnffqzRVoO29T/vBYZk+ccf3Q==
+X-Google-Smtp-Source: APXvYqzXVcc6fXXOJJq5bogayd4145zzm/qfoD7KDrsL3o2QfDRsySAjhmLpJFJJtPni27dVTOe/2Q==
+X-Received: by 2002:a62:2a0a:: with SMTP id q10mr77972329pfq.79.1560282051640;
+        Tue, 11 Jun 2019 12:40:51 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c133sm18710319pfb.111.2019.06.11.12.40.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 12:40:51 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 12:40:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
+        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
+        linus.walleij@linaro.org, balbi@kernel.org,
+        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
+        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/8] i2c: i2c-qcom-geni: Signify successful driver
+ probe
+Message-ID: <20190611194048.GR4814@minitux>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190610084213.1052-2-lee.jones@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610084213.1052-2-lee.jones@linaro.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 12:41 +0100, Dave Martin wrote:
-> On Mon, Jun 10, 2019 at 07:24:43PM +0200, Florian Weimer wrote:
-> > * Yu-cheng Yu:
-> > 
-> > > To me, looking at PT_GNU_PROPERTY and not trying to support anything is a
-> > > logical choice.  And it breaks only a limited set of toolchains.
-> > > 
-> > > I will simplify the parser and leave this patch as-is for anyone who wants
-> > > to
-> > > back-port.  Are there any objections or concerns?
-> > 
-> > Red Hat Enterprise Linux 8 does not use PT_GNU_PROPERTY and is probably
-> > the largest collection of CET-enabled binaries that exists today.
-> 
-> For clarity, RHEL is actively parsing these properties today?
-> 
-> > My hope was that we would backport the upstream kernel patches for CET,
-> > port the glibc dynamic loader to the new kernel interface, and be ready
-> > to run with CET enabled in principle (except that porting userspace
-> > libraries such as OpenSSL has not really started upstream, so many
-> > processes where CET is particularly desirable will still run without
-> > it).
-> > 
-> > I'm not sure if it is a good idea to port the legacy support if it's not
-> > part of the mainline kernel because it comes awfully close to creating
-> > our own private ABI.
-> 
-> I guess we can aim to factor things so that PT_NOTE scanning is
-> available as a fallback on arches for which the absence of
-> PT_GNU_PROPERTY is not authoritative.
+On Mon 10 Jun 01:42 PDT 2019, Lee Jones wrote:
 
-We can probably check PT_GNU_PROPERTY first, and fallback (based on ld-linux
-version?) to PT_NOTE scanning?
+> The Qualcomm Geni I2C driver currently probes silently which can be
+> confusing when debugging potential issues.  Add a low level (INFO)
+> print when each I2C controller is successfully initially set-up.
+> 
 
-Yu-cheng
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  drivers/i2c/busses/i2c-qcom-geni.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 9e3b8a98688d..a89bfce5388e 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -596,6 +596,8 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	dev_dbg(&pdev->dev, "Geni-I2C adaptor successfully added\n");
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
