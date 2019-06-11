@@ -2,320 +2,106 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676AAC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBFBC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2759920896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE312212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tcCqahQK"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pnpCqfjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390050AbfFKL4Z (ORCPT
+        id S2390098AbfFKL4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:56:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53845 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389499AbfFKL4Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:56:24 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so2624854wmj.3;
-        Tue, 11 Jun 2019 04:56:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=/1MOR3QrJTEFCWZFdMC/DEmdNjlMHoHLCzjdZO2gpas=;
-        b=tcCqahQKRNFhSuKKuHrTgh9xgWvINKKr8cpRQhx4Hpyyd/GqIFYa8WYkfhryWCySGV
-         fXpSxyEUYa0GTYifC3QOrFgE7O2aykspKEIhLGjdVPQIxijuhkP5erdLaqg0/8T+3YTZ
-         SGcI0Wo0yFCpV9uhSmch6O1dUkBakEXXfc93hjViYyPp/68ElEYh+Oq2YXlcLCrvNHS/
-         Y5u6OoYTTKHrASe/hvFVEtRhPoEEmG2n1pFaH5x3wn1KIZcap5NdLvQHcez/Syl3bfX7
-         /D6Kq+S0ev02u9kU/fluZWdvIpLkDjqks1Fgytrdmh2b4HTuw82vc6JXlR/aEaIRr8fJ
-         1cIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
-        bh=/1MOR3QrJTEFCWZFdMC/DEmdNjlMHoHLCzjdZO2gpas=;
-        b=W03zY5E6+J/Ci77uFCn1E2xYInGocIhOHS/XSlI9EoekFut5NOVht98cFV6oVunqnh
-         xcd5usnozjAckU7e6UElPhQXi2DfGVR3wMTSZKVAgPgu1C8xC1Y8DqJC2BbkzIJjafqo
-         Bxmu3OZPDaDAOPIhF4i5v4/hxRf+WQOAuZmglUT/X79NDRq8TDZgPFLNWlZdVKheWJ32
-         9r0gqjITJKMA3W/GEts8ZCX4cfX/F9clW68x6/tztmN+C0ebaZ5/eyr7u8Asyk4Mu4pH
-         k1TiXGNEqUsIIO6ZC9FJUHYC2h9teH/Wu0kqY95KFinsMUswjTJ8YyARugua4Vr9BKRI
-         J0+Q==
-X-Gm-Message-State: APjAAAU/3cx4Yr9g9w7/VLK58IO+ycUQmu8KygY+Dm0vECFCYlrYBXjg
-        V6PRWqvTCFvxjzAe3l9snSzoMQnaiYU=
-X-Google-Smtp-Source: APXvYqxKri0XmDaxau9DHr8vE7hTxWlAaPas+KdgSz6qoWEf0HDsPLpL8qzdgKkW6IuAvF6QL7KoxA==
-X-Received: by 2002:a1c:630a:: with SMTP id x10mr13608161wmb.113.1560254182345;
-        Tue, 11 Jun 2019 04:56:22 -0700 (PDT)
-Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
-        by smtp.gmail.com with ESMTPSA id f10sm22568606wrg.24.2019.06.11.04.56.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 04:56:21 -0700 (PDT)
-References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com> <20190606153825.8183-2-sebastien.szymanski@armadeus.com> <m34l4xpweh.fsf@gmail.com> <722336d1-c7f7-1796-95d5-7bba1fac7968@armadeus.com> <m3zhmo1mux.fsf@gmail.com> <df32fe2e-d9b1-8b09-686c-7f6970aa8e0c@armadeus.com>
-User-agent: mu4e 1.2.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     =?utf-8?Q?S=C3=A9bastien?= Szymanski 
-        <sebastien.szymanski@armadeus.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/3] media: imx7-media-csi: add i.MX6UL support
-In-reply-to: <df32fe2e-d9b1-8b09-686c-7f6970aa8e0c@armadeus.com>
-Date:   Tue, 11 Jun 2019 12:56:19 +0100
-Message-ID: <m3wohs1gkc.fsf@gmail.com>
+        Tue, 11 Jun 2019 07:56:54 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35390 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389499AbfFKL4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:56:54 -0400
+Received: from zn.tnic (p200300EC2F0A6800DC92A88D55C2D513.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:dc92:a88d:55c2:d513])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CC9F21EC0467;
+        Tue, 11 Jun 2019 13:56:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560254211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=QukcMNGwZckUnii5x0hqUwmjRq1rlJQHMCtyQ0Z8UYY=;
+        b=pnpCqfjp/JTTeaGIsxUClj6wZjVmlGUmmX/r6HmRNnoLGEWgqXFfkDNSEqoXl1CwLtGWmG
+        3WXVYFeZWUgZdYROGprUTVIKezGTXxbqmTGfBYosVD6Xdf7H7DMDa0qHJYsVn7+MkJCOsn
+        bbSOc4P5r72saQcFPaXyQ50MzJz0mxU=
+Date:   Tue, 11 Jun 2019 13:56:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190611115651.GD31772@zn.tnic>
+References: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+ <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+ <20190531051400.GA2275@cz.tnic>
+ <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+ <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+ <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+ <20190608090556.GA32464@zn.tnic>
+ <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+ <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastien,
-On Tue 11 Jun 2019 at 11:03, S=C3=A9bastien Szymanski wrote:
-> On 6/11/19 11:40 AM, Rui Miguel Silva wrote:
->> Hi Sebastien,
->> On Tue 11 Jun 2019 at 09:16, S=C3=A9bastien Szymanski wrote:
->>> Hi Rui,
->>>
->>> thanks for the review!
->>>
->>> On 6/10/19 12:28 PM, Rui Miguel Silva wrote:
->>>> Hi Sebastien,
->>>> Thanks for the patch.
->>>>
->>>> On Thu 06 Jun 2019 at 16:38, S=C3=A9bastien Szymanski wrote:
->>>>> i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L su=
-pport
->>>>> to imx7-media-csi driver.
->>>>>
->>>>> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus=
-.com>
->>>>> ---
->>>>>
->>>>> Changes for v2:
->>>>>  - rebase on top of linuxtv/master
->>>>>  - mention i.MX6UL/L in header and Kconfig help text
->>>>>  - rename csi_type to csi_soc_id
->>>>>
->>>>>  drivers/staging/media/imx/Kconfig          |  4 +-
->>>>>  drivers/staging/media/imx/imx7-media-csi.c | 62 ++++++++++++++++----=
---
->>>>>  2 files changed, 49 insertions(+), 17 deletions(-)
->>>>>
->>>>> diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/medi=
-a/imx/Kconfig
->>>>> index ad3d7df6bb3c..8b6dc42c39e0 100644
->>>>> --- a/drivers/staging/media/imx/Kconfig
->>>>> +++ b/drivers/staging/media/imx/Kconfig
->>>>> @@ -22,11 +22,11 @@ config VIDEO_IMX_CSI
->>>>>  	  A video4linux camera sensor interface driver for i.MX5/6.
->>>>>
->>>>>  config VIDEO_IMX7_CSI
->>>>> -	tristate "i.MX7 Camera Sensor Interface driver"
->>>>> +	tristate "i.MX6UL/L / i.MX7 Camera Sensor Interface driver"
->>>>>  	depends on VIDEO_IMX_MEDIA && VIDEO_DEV && I2C
->>>>>  	default y
->>>>>  	help
->>>>>  	  Enable support for video4linux camera sensor interface driver for
->>>>> -	  i.MX7.
->>>>> +	  i.MX6UL/L or i.MX7.
->>>>>  endmenu
->>>>>  endif
->>>>> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/sta=
-ging/media/imx/imx7-media-csi.c
->>>>> index 9101566f3f67..902bdce594cf 100644
->>>>> --- a/drivers/staging/media/imx/imx7-media-csi.c
->>>>> +++ b/drivers/staging/media/imx/imx7-media-csi.c
->>>>> @@ -1,6 +1,6 @@
->>>>>  // SPDX-License-Identifier: GPL-2.0
->>>>>  /*
->>>>> - * V4L2 Capture CSI Subdev for Freescale i.MX7 SOC
->>>>> + * V4L2 Capture CSI Subdev for Freescale i.MX6UL/L / i.MX7 SOC
->>>>>   *
->>>>>   * Copyright (c) 2019 Linaro Ltd
->>>>>   *
->>>>> @@ -152,6 +152,11 @@
->>>>>  #define CSI_CSICR18		0x48
->>>>>  #define CSI_CSICR19		0x4c
->>>>>
->>>>> +enum csi_soc_id {
->>>>> +	IMX7,
->>>>> +	IMX6UL
->>>>> +};
->>>>> +
->>>>>  struct imx7_csi {
->>>>>  	struct device *dev;
->>>>>  	struct v4l2_subdev sd;
->>>>> @@ -191,6 +196,7 @@ struct imx7_csi {
->>>>>  	bool is_init;
->>>>>  	bool is_streaming;
->>>>>  	bool is_csi2;
->>>>> +	enum csi_soc_id soc_id;
->>>>>
->>>>>  	struct completion last_eof_completion;
->>>>>  };
->>>>> @@ -548,6 +554,14 @@ static int imx7_csi_pad_link_validate(struct v4l=
-2_subdev *sd,
->>>>>  	if (ret)
->>>>>  		return ret;
->>>>>
->>>>> +	if (csi->soc_id =3D=3D IMX6UL) {
->>>>> +		mutex_lock(&csi->lock);
->>>>> +		csi->is_csi2 =3D false;
->>>>> +		mutex_unlock(&csi->lock);
->>>>> +
->>>>> +		return 0;
->>>>> +	}
->>>>> +
->>>>>  	ret =3D imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
->>>>>  	if (ret) {
->>>>>  		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
->>>>> @@ -757,6 +771,7 @@ static int imx7_csi_configure(struct imx7_csi *cs=
-i)
->>>>>  	struct v4l2_pix_format *out_pix =3D &vdev->fmt.fmt.pix;
->>>>>  	__u32 in_code =3D csi->format_mbus[IMX7_CSI_PAD_SINK].code;
->>>>>  	u32 cr1, cr18;
->>>>> +	int width =3D out_pix->width;
->>>>>
->>>>>  	if (out_pix->field =3D=3D V4L2_FIELD_INTERLACED) {
->>>>>  		imx7_csi_deinterlace_enable(csi, true);
->>>>> @@ -766,15 +781,27 @@ static int imx7_csi_configure(struct imx7_csi *=
-csi)
->>>>>  		imx7_csi_buf_stride_set(csi, 0);
->>>>>  	}
->>>>>
->>>>> -	imx7_csi_set_imagpara(csi, out_pix->width, out_pix->height);
->>>>> +	cr18 =3D imx7_csi_reg_read(csi, CSI_CSICR18);
->>>>> +
->>>>> +	if (!csi->is_csi2) {
->>>>> +		if (out_pix->pixelformat =3D=3D V4L2_PIX_FMT_UYVY ||
->>>>> +		    out_pix->pixelformat =3D=3D V4L2_PIX_FMT_YUYV)
->>>>> +			width *=3D 2;
->>>>> +
->>>>> +		imx7_csi_set_imagpara(csi, width, out_pix->height);
->>>>> +
->>>>> +		cr18 |=3D (BIT_BASEADDR_SWITCH_EN | BIT_BASEADDR_SWITCH_SEL |
->>>>> +			BIT_BASEADDR_CHG_ERR_EN);
->>>>> +		imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
->>>>>
->>>>> -	if (!csi->is_csi2)
->>>>>  		return 0;
->>>>> +	}
->>>>> +
->>>>> +	imx7_csi_set_imagpara(csi, width, out_pix->height);
->>>>>
->>>>>  	cr1 =3D imx7_csi_reg_read(csi, CSI_CSICR1);
->>>>>  	cr1 &=3D ~BIT_GCLK_MODE;
->>>>>
->>>>> -	cr18 =3D imx7_csi_reg_read(csi, CSI_CSICR18);
->>>>>  	cr18 &=3D BIT_MIPI_DATA_FORMAT_MASK;
->>>>>  	cr18 |=3D BIT_DATA_FROM_MIPI;
->>>>>
->>>>> @@ -809,11 +836,9 @@ static void imx7_csi_enable(struct imx7_csi *csi)
->>>>>  {
->>>>>  	imx7_csi_sw_reset(csi);
->>>>>
->>>>> -	if (csi->is_csi2) {
->>>>> -		imx7_csi_dmareq_rff_enable(csi);
->>>>> -		imx7_csi_hw_enable_irq(csi);
->>>>> -		imx7_csi_hw_enable(csi);
->>>>> -	}
->>>>> +	imx7_csi_dmareq_rff_enable(csi);
->>>>> +	imx7_csi_hw_enable_irq(csi);
->>>>> +	imx7_csi_hw_enable(csi);
->>>>>  }
->>>>>
->>>>>  static void imx7_csi_disable(struct imx7_csi *csi)
->>>>> @@ -1166,19 +1191,32 @@ static int imx7_csi_parse_endpoint(struct dev=
-ice *dev,
->>>>>  	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
->>>>>  }
->>>>>
->>>>> +static const struct of_device_id imx7_csi_of_match[] =3D {
->>>>> +	{ .compatible =3D "fsl,imx7-csi", .data =3D (void *)IMX7 },
->>>>> +	{ .compatible =3D "fsl,imx6ul-csi", .data =3D (void *)IMX6UL },
->>>>
->>>> looking at this again I think we can do this is a different way.
->>>> Instead data being the soc_id, just set here if it is_csi2 or not.
->>>>
->>>> This would avoid to add a soc_id  to the struct that it really it
->>>> is used only to setup the is_csi2 var. I think this will make this
->>>> patch a lot simpler.
->>>
->>> Well, I have added this soc_id because imx7_csi_get_upstream_endpoint in
->>> imx7_csi_pad_link_validate fails:
->>>
->>> [  366.549768] csi: failed to find upstream endpoint
->>> [  366.556274] csi: pipeline start failed with -19
->>>
->>
->> I think this fails because you do not define any endpoint for the
->> csi in your board dts file. I see in patch 1/3 the setup of csi,
->> disabled, but not the endpoint connecting csi with the ov5640 in
->> your board file (see the connection between mipi imx7 and ov2680
->> in the imx7-warp.dts, or the ov5640.txt file).
->
-> I actually do, in the device tree of my board I have:
+On Tue, Jun 11, 2019 at 05:21:39PM +1000, Benjamin Herrenschmidt wrote:
+> So looking again ... all the registration/removal of edac devices seem
+> to already be protected by mutexes, so that's not a problem.
+> 
+> Tell me more about what specific races you think we might have here,
+> I'm not sure I follow...
 
-Yeah, I thought you did this, because if not it did not work in
-the first place. I will take a look at why the fetch of the
-upstream endpoint is not working. it should :).
+Well, as I said "it might work or it might set your cat on fire." For
+example, one of the error logging paths is edac_mc_handle_error() and
+that thing mostly operates using the *mci pointer which should be ok
+but then it calls the "trace_mc_event" tracepoint and I'd suppose that
+tracepoints can do lockless but I'm not sure.
 
-Thanks for the feedback. I will let you know.
+So what needs to happen is for paths which weren't called by multiple
+EDAC agents in parallel but need to get called in parallel now due to
+ARM drivers wanting to do that, to get audited that they're safe.
 
----
-Cheers,
-	Rui
+Situation is easy if you have one platform driver where you can
+synchronize things in the driver but since you guys need to do separate
+drivers for whatever reason, then that would need to be done prior.
 
->
-> &csi {
-> 	pinctrl-names =3D "default";
-> 	pinctrl-0 =3D <&pinctrl_csi>;
-> 	status =3D "okay";
->
-> 	port {
-> 		csi_ep: endpoint {
-> 			remote-endpoint =3D <&ov5640_ep>;
-> 			bus-type =3D <5>; // V4L2_FWNODE_BUS_TYPE_PARALLEL
-> 		};
-> 	};
-> };
->
-> and
->
-> &i2c2 {
-> ..
-> 	ov5640: camera@3c {
-> 		...
-> 		port {
->                         ov5640_ep: endpoint {
->                                 remote-endpoint =3D <&csi_ep>;
->                                 bus-width =3D <8>;
->                                 data-shift =3D <2>; /* lines 9:2 are used=
- */
->                                 hsync-active =3D <0>;
->                                 vsync-active =3D <1>;
->                                 pclk-sample =3D <0>;
->                         };
->                 };
-> 	};
-> };
->
-> Regards,
+Makes more sense?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
