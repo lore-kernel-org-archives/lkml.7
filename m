@@ -2,79 +2,167 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAA9C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA16C4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9402089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC9D21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:12:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405266AbfFKKLp (ORCPT
+        id S2405273AbfFKKMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:11:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:57536 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404501AbfFKKLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:11:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCF88337;
-        Tue, 11 Jun 2019 03:11:44 -0700 (PDT)
-Received: from [10.1.29.141] (e121487-lin.cambridge.arm.com [10.1.29.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A4193F557;
-        Tue, 11 Jun 2019 03:13:26 -0700 (PDT)
-Subject: Re: [PATCH 01/17] mm: provide a print_vma_addr stub for !CONFIG_MMU
-To:     Christoph Hellwig <hch@lst.de>, Palmer Dabbelt <palmer@sifive.com>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, uclinux-dev@uclinux.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20190610221621.10938-1-hch@lst.de>
- <20190610221621.10938-2-hch@lst.de>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <e5827553-0924-28ee-3c8a-d29b4c01defd@arm.com>
-Date:   Tue, 11 Jun 2019 11:11:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 06:12:17 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:32827 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404501AbfFKKMR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:12:17 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id D7E9580239; Tue, 11 Jun 2019 12:12:03 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 12:12:13 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Zhang Rui <rui.zhang@intel.com>, daniel.lezcano@linaro.org
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org
+Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
+ speed, thermal related?
+Message-ID: <20190611101213.GA4256@amd>
+References: <20190609111732.GA2885@amd>
+ <20190609112340.GA9966@amd>
+ <20190609121212.GA4520@amd>
+ <1560089580.2363.10.camel@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190610221621.10938-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Content-Disposition: inline
+In-Reply-To: <1560089580.2363.10.camel@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 11:16 PM, Christoph Hellwig wrote:
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/mm.h | 6 ++++++
->  1 file changed, 6 insertions(+)
 
-FWIW:
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Hi!
 
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index dd0b5f4e1e45..69843ee0c5f8 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2756,7 +2756,13 @@ extern int randomize_va_space;
->  #endif
->  
->  const char * arch_vma_name(struct vm_area_struct *vma);
-> +#ifdef CONFIG_MMU
->  void print_vma_addr(char *prefix, unsigned long rip);
-> +#else
-> +static inline void print_vma_addr(char *prefix, unsigned long rip)
-> +{
-> +}
-> +#endif
->  
->  void *sparse_buffer_alloc(unsigned long size);
->  struct page *sparse_mem_map_populate(unsigned long pnum, int nid,
-> 
+I'm trying to provide all the required info below. Any ideas?
 
+> > > > The CPU is Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz . I guess it
+> > > > means
+> > > > it should be able to sustain both cores running at 2.5GHz?
+> > > >=20
+> > > > Any ideas? Were there any recent changes in that area?
+> > > I tried kernel compile. It keeps both cores at 3GHz, temperature
+> > > goes
+> > > up over 95C, and then cpus start going down to 2.3GHz... and then
+> > > down
+> > > to 2GHz... and down to 1.9GHz.
+
+> what temperature does coretemp report?
+> can you please provide the sensors output in 4.6 during kernel
+> compiling?
+>=20
+> can you attach the output of "grep . /sys/class/thermal/thermal*/*"
+> when the temperature goes high in both kernels?
+
+v5.2:
+bash -c sensors;  cat /proc/cpuinfo
+
+thinkpad-isa-0000
+Adapter: ISA adapter
+fan1:        4493 RPM
+
+coretemp-isa-0000
+Adapter: ISA adapter
+Package id 0:  +97.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+Core 0:        +97.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+Core 1:        +94.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+
+cpu MHz         : 2351.857
+cpu MHz         : 2351.920
+cpu MHz         : 2351.980
+cpu MHz         : 2352.036
+pavel@duo:~$ cat /sys/devices/system/cpu/*/cpufreq/scaling_governor
+powersave
+powersave
+powersave
+powersave
+pavel@duo:~$ grep . /sys/class/thermal/thermal*/* 2> /dev/null
+/sys/class/thermal/thermal_zone0/available_policies:step_wise
+/sys/class/thermal/thermal_zone0/mode:enabled
+/sys/class/thermal/thermal_zone0/passive:0
+/sys/class/thermal/thermal_zone0/policy:step_wise
+/sys/class/thermal/thermal_zone0/temp:96000
+/sys/class/thermal/thermal_zone0/trip_point_0_temp:99000
+/sys/class/thermal/thermal_zone0/trip_point_0_type:critical
+/sys/class/thermal/thermal_zone0/type:acpitz
+pavel@duo:~$
+
+v4.6:
+
+acpitz-virtual-0
+Adapter: Virtual device
+temp1:        +96.0=B0C  (crit =3D +99.0=B0C)
+
+coretemp-isa-0000
+Adapter: ISA adapter
+Physical id 0:  +97.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+Core 0:         +97.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+Core 1:         +94.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
+
+thinkpad-isa-0000
+Adapter: ISA adapter
+fan1:        4493 RPM
+
+cpu MHz         : 2501.000
+cpu MHz         : 2501.000
+cpu MHz         : 2501.000
+cpu MHz         : 2501.000
+
+pavel@duo:~$ cat /sys/devices/system/cpu/*/cpufreq/scaling_governor
+ondemand
+ondemand
+ondemand
+ondemand
+
+pavel@duo:~$ grep . /sys/class/thermal/thermal*/* 2> /dev/null
+/sys/class/thermal/thermal_zone0/available_policies:step_wise
+/sys/class/thermal/thermal_zone0/mode:enabled
+/sys/class/thermal/thermal_zone0/passive:0
+/sys/class/thermal/thermal_zone0/policy:step_wise
+/sys/class/thermal/thermal_zone0/temp:96000
+/sys/class/thermal/thermal_zone0/trip_point_0_temp:99000
+/sys/class/thermal/thermal_zone0/trip_point_0_type:critical
+/sys/class/thermal/thermal_zone0/type:acpitz
+pavel@duo:~$
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlz/fn0ACgkQMOfwapXb+vI4/gCfZWiuM7gFaEDRrpqBP6EStUri
+xDgAn08/m/jp6q40tYmFk9yCgh87jXvd
+=U8fN
+-----END PGP SIGNATURE-----
+
+--PNTmBPCT7hxwcZjr--
