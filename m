@@ -2,147 +2,242 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E8DC06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB2AC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF9221743
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3CB21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="CRAEEdTt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=vmwopensource.org header.i=@vmwopensource.org header.b="vl6XdSWY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407071AbfFKS1R (ORCPT
+        id S2407060AbfFKS1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:27:17 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34395 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406910AbfFKS1Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Jun 2019 14:27:16 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m29so15753662qtu.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=XTSl1X3TVusNnBwvpfSKetQ7KFSoxgL/x9tvPN4y51Q=;
-        b=CRAEEdTtEd/R/ClPRCAiQrGs353d6Tbo3jIKj42fETxvxpoFht2citqwCizu+33E4B
-         +JP4HyZtGaV+ojzUSANo2JTxN9uZJuVTCIdB5VDwxaajMa4IdsmZqr2iMOOdkQug4CPO
-         D4HrAY5X+k+OfpDZIqflFncGBPA/BYEeK5fkJKZiTpnIXjHJE8C8C9Gw1Q1r6y0ZsMer
-         1ih33ubjy3e80OUbS/QmPjKW+iqSeJzTiyB7yn2brAaZZSQ4KGgtAKsJl2SBbVAm0zAB
-         P37irrMi8CrkU4pwyEi6yC+kFXGeOXHQbZXEfQdwkhvBSLzQ4z71mRd4ouAld+i1/yRN
-         EZRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=XTSl1X3TVusNnBwvpfSKetQ7KFSoxgL/x9tvPN4y51Q=;
-        b=QaJ0IRO+RBp+2YBr917xQBtxg7qNGMEhU0qAZc3w3IammDcxtV4GIaB8u2QnQvYCQa
-         xX/R+g1mzC0Yp3GWDL6hRoN9pf19rvFRzGEbnAyN8kYWJiKfmkzHL2bJJDzgg8lxrAtU
-         6hiFSuh42WruLbQUg8W2882aUBVz3LnzLJXbeh7ZCR0QPWrJU2+/VACx6HN3BVevk+HR
-         vZiErEpvEtIaO2ATJ7fEnbW00PeDDJLGTsiAzrTW30pu0v6C6RuNFYPlrkVypHH9hC2Y
-         hwbxXru6aTUuVtxMXrL9eWdAuYVkG5G8C2Jb0Ok4zMivo1pjYIvSFUJD3jMm8kocVtHR
-         opmw==
-X-Gm-Message-State: APjAAAVB71Wbpg/5+DKSpk/D06H+8217n4SMVt4inqwG7dLjQJugkRdi
-        cBojqNpS7ANz+7/ZryVsq7+RrQ==
-X-Google-Smtp-Source: APXvYqxOJlQrkKCKNeZVMer/ppqUM3GcMD8BwtnZWk7n591FH4TR2dpB9T5BB74xMJinUiXzrdjheA==
-X-Received: by 2002:ac8:7545:: with SMTP id b5mr56892127qtr.234.1560277635418;
-        Tue, 11 Jun 2019 11:27:15 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id u7sm6731244qkm.62.2019.06.11.11.27.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 11:27:15 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 11:27:10 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Subject: Re: [PATCH net] net: ethtool: Allow matching on vlan CFI bit
-Message-ID: <20190611112710.211e218b@cakuba.netronome.com>
-In-Reply-To: <20190611155456.15360-1-maxime.chevallier@bootlin.com>
-References: <20190611155456.15360-1-maxime.chevallier@bootlin.com>
-Organization: Netronome Systems, Ltd.
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:15842 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405802AbfFKS1P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:27:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id B3A2940D6F;
+        Tue, 11 Jun 2019 20:27:07 +0200 (CEST)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=vl6XdSWY;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id smfTGIN7o__R; Tue, 11 Jun 2019 20:26:58 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id B2F543F86C;
+        Tue, 11 Jun 2019 20:26:57 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 198C3361A96;
+        Tue, 11 Jun 2019 20:26:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=vmwopensource.org;
+        s=mail; t=1560277617;
+        bh=l3W/AqRf84wNp6P4sWXjTRud8TI0AhrSO/bC0PKM5fg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=vl6XdSWYGKdFQN7iy2I6478NTemupw3IjgYmmFrjGfarW9AUCkwCHczkOJHx4UA/2
+         L1Dz4hmwgBEYT3Z08isg+RMbIw9Oui5bwMskWFMMLeuhAIytZWixxGvFKerujCko3C
+         0o5dD+7XGLhFoCpoAA3Z0Lw4LMccKlNHHMGaNQt0=
+Subject: Re: [PATCH v4 3/9] mm: Add write-protect and clean utilities for
+ address space ranges
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-graphics-maintainer@vmware.com,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
+References: <20190611122454.3075-1-thellstrom@vmwopensource.org>
+ <20190611122454.3075-4-thellstrom@vmwopensource.org>
+ <1CDAE797-4686-4041-938F-DE0456FFF451@gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thellstrom@vmwopensource.org>
+Organization: VMware Inc.
+Message-ID: <ac0b0ef5-8f76-5e55-2be2-f1860878841a@vmwopensource.org>
+Date:   Tue, 11 Jun 2019 20:26:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1CDAE797-4686-4041-938F-DE0456FFF451@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 17:54:56 +0200, Maxime Chevallier wrote:
-> Using ethtool, users can specify a classification action matching on the
-> full vlan tag, which includes the CFI bit.
->=20
-> However, when converting the ethool_flow_spec to a flow_rule, we use
-> dissector keys to represent the matching patterns.
->=20
-> Since the vlan dissector key doesn't include the CFI bit, this
-> information was silently discarded when translating the ethtool
-> flow spec in to a flow_rule.
->=20
-> This commit adds the CFI bit into the vlan dissector key, and allows
-> propagating the information to the driver when parsing the ethtool flow
-> spec.
->=20
-> Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule stru=
-cture translator")
-> Reported-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
-> Hi all,
->=20
-> Although this prevents information to be silently discarded when parsing
-> an ethtool_flow_spec, this information doesn't seem to be used by any
-> driver that converts an ethtool_flow_spec to a flow_rule, hence I'm not
-> sure this is suitable for -net.
->=20
-> Thanks,
->=20
-> Maxime
->=20
->  include/net/flow_dissector.h | 1 +
->  net/core/ethtool.c           | 5 +++++
->  2 files changed, 6 insertions(+)
->=20
-> diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
-> index 7c5a8d9a8d2a..9d2e395c6568 100644
-> --- a/include/net/flow_dissector.h
-> +++ b/include/net/flow_dissector.h
-> @@ -46,6 +46,7 @@ struct flow_dissector_key_tags {
-> =20
->  struct flow_dissector_key_vlan {
->  	u16	vlan_id:12,
-> +		vlan_cfi:1,
->  		vlan_priority:3;
->  	__be16	vlan_tpid;
->  };
-> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> index d08b1e19ce9c..43df34c1ebe1 100644
-> --- a/net/core/ethtool.c
-> +++ b/net/core/ethtool.c
-> @@ -3020,6 +3020,11 @@ ethtool_rx_flow_rule_create(const struct ethtool_r=
-x_flow_spec_input *input)
->  			match->mask.vlan.vlan_id =3D
->  				ntohs(ext_m_spec->vlan_tci) & 0x0fff;
-> =20
-> +			match->key.vlan.vlan_cfi =3D
-> +				!!(ntohs(ext_h_spec->vlan_tci) & 0x1000);
-> +			match->mask.vlan.vlan_cfi =3D
-> +				!!(ntohs(ext_m_spec->vlan_tci) & 0x1000);
+Hi, Nadav,
 
-nit: since you're only using the output as a boolean, you can apply the
-     byteswap to the constant and have it performed at build time.
-     Another option is be16_get_bits() from linux/bitfield.h.
+On 6/11/19 7:21 PM, Nadav Amit wrote:
+>> On Jun 11, 2019, at 5:24 AM, Thomas Hellström (VMware) <thellstrom@vmwopensource.org> wrote:
+>>
+>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>
+> [ snip ]
+>
+>> +/**
+>> + * apply_pt_wrprotect - Leaf pte callback to write-protect a pte
+>> + * @pte: Pointer to the pte
+>> + * @token: Page table token, see apply_to_pfn_range()
+>> + * @addr: The virtual page address
+>> + * @closure: Pointer to a struct pfn_range_apply embedded in a
+>> + * struct apply_as
+>> + *
+>> + * The function write-protects a pte and records the range in
+>> + * virtual address space of touched ptes for efficient range TLB flushes.
+>> + *
+>> + * Return: Always zero.
+>> + */
+>> +static int apply_pt_wrprotect(pte_t *pte, pgtable_t token,
+>> +			      unsigned long addr,
+>> +			      struct pfn_range_apply *closure)
+>> +{
+>> +	struct apply_as *aas = container_of(closure, typeof(*aas), base);
+>> +	pte_t ptent = *pte;
+>> +
+>> +	if (pte_write(ptent)) {
+>> +		pte_t old_pte = ptep_modify_prot_start(aas->vma, addr, pte);
+>> +
+>> +		ptent = pte_wrprotect(old_pte);
+>> +		ptep_modify_prot_commit(aas->vma, addr, pte, old_pte, ptent);
+>> +		aas->total++;
+>> +		aas->start = min(aas->start, addr);
+>> +		aas->end = max(aas->end, addr + PAGE_SIZE);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/**
+>> + * struct apply_as_clean - Closure structure for apply_as_clean
+>> + * @base: struct apply_as we derive from
+>> + * @bitmap_pgoff: Address_space Page offset of the first bit in @bitmap
+>> + * @bitmap: Bitmap with one bit for each page offset in the address_space range
+>> + * covered.
+>> + * @start: Address_space page offset of first modified pte relative
+>> + * to @bitmap_pgoff
+>> + * @end: Address_space page offset of last modified pte relative
+>> + * to @bitmap_pgoff
+>> + */
+>> +struct apply_as_clean {
+>> +	struct apply_as base;
+>> +	pgoff_t bitmap_pgoff;
+>> +	unsigned long *bitmap;
+>> +	pgoff_t start;
+>> +	pgoff_t end;
+>> +};
+>> +
+>> +/**
+>> + * apply_pt_clean - Leaf pte callback to clean a pte
+>> + * @pte: Pointer to the pte
+>> + * @token: Page table token, see apply_to_pfn_range()
+>> + * @addr: The virtual page address
+>> + * @closure: Pointer to a struct pfn_range_apply embedded in a
+>> + * struct apply_as_clean
+>> + *
+>> + * The function cleans a pte and records the range in
+>> + * virtual address space of touched ptes for efficient TLB flushes.
+>> + * It also records dirty ptes in a bitmap representing page offsets
+>> + * in the address_space, as well as the first and last of the bits
+>> + * touched.
+>> + *
+>> + * Return: Always zero.
+>> + */
+>> +static int apply_pt_clean(pte_t *pte, pgtable_t token,
+>> +			  unsigned long addr,
+>> +			  struct pfn_range_apply *closure)
+>> +{
+>> +	struct apply_as *aas = container_of(closure, typeof(*aas), base);
+>> +	struct apply_as_clean *clean = container_of(aas, typeof(*clean), base);
+>> +	pte_t ptent = *pte;
+>> +
+>> +	if (pte_dirty(ptent)) {
+>> +		pgoff_t pgoff = ((addr - aas->vma->vm_start) >> PAGE_SHIFT) +
+>> +			aas->vma->vm_pgoff - clean->bitmap_pgoff;
+>> +		pte_t old_pte = ptep_modify_prot_start(aas->vma, addr, pte);
+>> +
+>> +		ptent = pte_mkclean(old_pte);
+>> +		ptep_modify_prot_commit(aas->vma, addr, pte, old_pte, ptent);
+>> +
+>> +		aas->total++;
+>> +		aas->start = min(aas->start, addr);
+>> +		aas->end = max(aas->end, addr + PAGE_SIZE);
+>> +
+>> +		__set_bit(pgoff, clean->bitmap);
+>> +		clean->start = min(clean->start, pgoff);
+>> +		clean->end = max(clean->end, pgoff + 1);
+>> +	}
+>> +
+>> +	return 0;
+> Usually, when a PTE is write-protected, or when a dirty-bit is cleared, the
+> TLB flush must be done while the page-table lock for that specific table is
+> taken (i.e., within apply_pt_clean() and apply_pt_wrprotect() in this case).
+>
+> Otherwise, in the case of apply_pt_clean() for example, another core might
+> shortly after (before the TLB flush) write to the same page whose PTE was
+> changed. The dirty-bit in such case might not be set, and the change get
+> lost.
 
->  			match->key.vlan.vlan_priority =3D
->  				(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
->  			match->mask.vlan.vlan_priority =3D
+Hmm. Let's assume that was the case, we have two possible situations:
+
+A: pt_clean
+
+1. That core's TLB entry is invalid. It will set the PTE dirty bit and 
+continue. The dirty bit will probably remain set after the TLB flush.
+2. That core's TLB entry is valid. It will just continue. The dirty bit 
+will remain clear after the TLB flush.
+
+But I fail to see how having the TLB flush within the page table lock 
+would help in this case. Since the writing core will never attempt to 
+take it? In any case, if such a race occurs, the corresponding bit in 
+the bitmap would have been set and we've recorded that the page is dirty.
+
+B: wrprotect situation, the situation is a bit different:
+
+1. That core's TLB entry is invalid. It will read the PTE, cause a fault 
+and block in mkwrite() on an external address space lock which is held 
+over this operation. (Is it this situation that is your main concern?)
+2. That core's TLB entry is valid. It will just continue regardless of 
+any locks.
+
+For both mkwrite() and dirty() if we act on the recorded pages *after* 
+the TLB flush, we're OK. The difference is that just after the TLB flush 
+there should be no write-enabled PTEs in the write-protect case, but 
+there may be dirty PTEs in the pt_clean case. Something that is 
+mentioned in the docs already.
+
+>
+> Does this function regards a certain use-case in which deferring the TLB
+> flushes is fine? If so, assertions and documentation of the related
+> assumption would be useful.
+
+If I understand your comment correctly, the page table lock is sometimes 
+used as the lock in B1, blocking a possible software fault until the TLB 
+flush has happened.  Here we assume an external address space lock taken 
+both around the wrprotect operation and in mkwrite(). Would it be OK if 
+I add comments about the necessity of an external lock to the doc? Ok 
+with a follow-up patch?
+
+Thanks,
+Thomas
+
+
