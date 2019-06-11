@@ -2,150 +2,183 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF60DC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C09AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8FE206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cHdSLiwd"
+	by mail.kernel.org (Postfix) with ESMTP id 7005521734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406967AbfFKSIo (ORCPT
+        id S2406890AbfFKSKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:08:44 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35556 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406685AbfFKSIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:08:43 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j19so12824335otq.2;
-        Tue, 11 Jun 2019 11:08:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O89jlWqoEX7q/G6CiVxiDDmlI/FOM0sB6BHEXW+0fFM=;
-        b=cHdSLiwdTyZbPGVz/qYnZJJCYplwKEbE0QdVdYmjqez+GGasa8TA9GEaZeZf+/Q/yc
-         8TIaqOiIijHlpQPN+b0BBZvmxtMd47x/uYK7Vk5XPD8mYxbl+yUPaIuF7vI0M7QzRtm0
-         HNeafuVGHu/sa/BCqZcATKXmtS7Eag+BS6pOHP7N3/7dY0uWHKLKUSLT34TY6AzMuvGD
-         Nr42TPWl2pxEfX5qbCwSGwJadJSQJ9gNcRUKKGUG7vKQZCsm/m8sJ9YWSh2bYRWL5CwC
-         TqB5iiaGNo0Yp7KTmdwXVV/+fDhjaVwXeP064+XZo1StqFJ682mO7SEdwmnKHz22qWhC
-         eMcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O89jlWqoEX7q/G6CiVxiDDmlI/FOM0sB6BHEXW+0fFM=;
-        b=VaYzh+rozdbOrVD40m3Udl774Bu1PnUio0GMtKQJveIg/k7Fka3tIiD8hRng1TeFPV
-         G0fJcU4XvCbdqaItEhjSzfyNO5CMzL9OH7wreiX1baW6jMHNxN13OZiQ8pyJaD54AQ03
-         3CoK5KsXTPfXP6iYOyskBylqma3iV4qABmS6MaOcVCKN7lfQV9I+wwE77f1p+4Wuqb1T
-         pZgmnWbuwL627zCNGilzqKanShPo2jEKGF/YMU5gDpnOTx74PTvVLR7fM5xRx9euZrUs
-         h5UtxUPUfawn2YWyhri/3AzAYYyG+Z5RIwRax1RLYAoVPmSTdt770oB7Ha6Xmrra4wov
-         cDWw==
-X-Gm-Message-State: APjAAAUvq3/opwI7sGMhDp1iUQui+g/X70Ma5DTjVz0tN1PT1jRKMJaq
-        sRJaMxZdagKzWYxTE0N9RFHvorBT9CKV6Xa5ork=
-X-Google-Smtp-Source: APXvYqx6SoLuddvsSFbGwWXlHsKKnRFjZOzVnVqvxNNOkTK4cQ1P337c36bckWzk3tAMnUuN46R+aOyOVrxZcNZhBbc=
-X-Received: by 2002:a9d:32a6:: with SMTP id u35mr36300662otb.81.1560276522291;
- Tue, 11 Jun 2019 11:08:42 -0700 (PDT)
+        Tue, 11 Jun 2019 14:10:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:44341 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406685AbfFKSKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:10:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 11:10:25 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga007.jf.intel.com with ESMTP; 11 Jun 2019 11:10:25 -0700
+Date:   Tue, 11 Jun 2019 11:13:33 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, robh+dt@kernel.org,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
+Message-ID: <20190611111333.425ce809@jacob-builder>
+In-Reply-To: <62d1f310-0cba-4d55-0f16-68bba3c64927@arm.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+        <20190610184714.6786-2-jean-philippe.brucker@arm.com>
+        <20190611103625.00001399@huawei.com>
+        <62d1f310-0cba-4d55-0f16-68bba3c64927@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190611135842.8396-1-narmstrong@baylibre.com>
-In-Reply-To: <20190611135842.8396-1-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 11 Jun 2019 20:08:31 +0200
-Message-ID: <CAFBinCAkwjf9oDV6AGPi2PzzQ2KNTXXDHW6FTfN3kXpDT6cFpg@mail.gmail.com>
-Subject: Re: [PATCH] usb: dwc3: meson-g12a: Add support for IRQ based OTG switching
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     balbi@kernel.org, linux-amlogic@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Tue, 11 Jun 2019 15:35:22 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-On Tue, Jun 11, 2019 at 3:58 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Add support for the OTG ID change interrupt to switch between Host
-> and Device mode.
->
-> Tested on the Hardkernel Odroid-N2 board.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-with the three questions/comments below answered/addressed:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> On 11/06/2019 10:36, Jonathan Cameron wrote:
+> >> +/**
+> >> + * ioasid_alloc - Allocate an IOASID
+> >> + * @set: the IOASID set
+> >> + * @min: the minimum ID (inclusive)
+> >> + * @max: the maximum ID (inclusive)
+> >> + * @private: data private to the caller
+> >> + *
+> >> + * Allocate an ID between @min and @max. The @private pointer is
+> >> stored
+> >> + * internally and can be retrieved with ioasid_find().
+> >> + *
+> >> + * Return: the allocated ID on success, or %INVALID_IOASID on
+> >> failure.
+> >> + */
+> >> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+> >> ioasid_t max,
+> >> +		      void *private)
+> >> +{
+> >> +	u32 id = INVALID_IOASID;
+> >> +	struct ioasid_data *data;
+> >> +
+> >> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> >> +	if (!data)
+> >> +		return INVALID_IOASID;
+> >> +
+> >> +	data->set = set;
+> >> +	data->private = private;
+> >> +
+> >> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max),
+> >> GFP_KERNEL)) {
+> >> +		pr_err("Failed to alloc ioasid from %d to %d\n",
+> >> min, max);
+> >> +		goto exit_free;
+> >> +	}
+> >> +	data->id = id;
+> >> +
+> >> +exit_free:  
+> > 
+> > This error flow is perhaps a little more confusing than it needs to
+> > be?
+> > 
+> > My assumption (perhaps wrong) is that we only have an id ==
+> > INVALID_IOASID if the xa_alloc fails, and that we will always have
+> > such an id value if it does (I'm not totally sure this second
+> > element is true in __xa_alloc).
+> > 
+> > If I'm missing something perhaps a comment on how else we'd get
+> > here.  
+> 
+> Yes we can simplify this:
+> 
+> 		return id;
+> 	exit_free:
+> 		kfree(data)
+> 		return INVALID_IOASID;
+> 	}
+> 
+> The XA API doesn't say that @id passed to xa_alloc() won't be modified
+> in case of error. It's true in the current implementation, but won't
+> necessarily stay that way. On the other hand I think it's safe to
+> expect @id to always be set when xa_alloc() succeeds.
+> 
+the flow with custom allocator is slightly different, but you are right
+I can simplify it as you suggested.
+Jonathan, I will add you to the cc list in next version. If you could
+also review the current version, it would be greatly appreciated.
 
-> ---
->  drivers/usb/dwc3/dwc3-meson-g12a.c | 32 ++++++++++++++++++++++++++++--
->  1 file changed, 30 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-> index 2aec31a2eacb..e5c5ad0d529e 100644
-> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-the comment block at the start of the driver file also contains a
-"TOFIX" which points to the missing IRQ handling
-can you please also drop that TOFIX comment in lines 15/16?
+https://lore.kernel.org/lkml/1560087862-57608-13-git-send-email-jacob.jun.pan@linux.intel.com/
 
-> @@ -348,6 +348,22 @@ static enum usb_role dwc3_meson_g12a_role_get(struct device *dev)
->                 USB_ROLE_HOST : USB_ROLE_DEVICE;
->  }
->
-> +static irqreturn_t dwc3_meson_g12a_irq_thread(int irq, void *data)
-> +{
-> +       struct dwc3_meson_g12a *priv = data;
-> +       enum phy_mode otg_id;
-> +
-> +       otg_id = dwc3_meson_g12a_get_id(priv);
-> +       if (otg_id != priv->otg_phy_mode) {
-> +               if (dwc3_meson_g12a_otg_mode_set(priv, otg_id))
-> +                       dev_warn(priv->dev, "Failed to switch OTG mode\n");
-> +       }
-> +
-> +       regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_IRQ, 0);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
->  static struct device *dwc3_meson_g12_find_child(struct device *dev,
->                                                 const char *compatible)
->  {
-> @@ -374,7 +390,7 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
->         void __iomem *base;
->         struct resource *res;
->         enum phy_mode otg_id;
-> -       int ret, i;
-> +       int ret, i, irq;
->
->         priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->         if (!priv)
-> @@ -436,6 +452,19 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
->         /* Get dr_mode */
->         priv->otg_mode = usb_get_dr_mode(dev);
->
-> +       if (priv->otg_mode == USB_DR_MODE_OTG) {
-> +               /* Ack irq before registering */
-> +               regmap_update_bits(priv->regmap, USB_R5,
-> +                                  USB_R5_ID_DIG_IRQ, 0);
-I assume that either the IRQ line is:
-- always enabled
-- enabled when (USB_R5_ID_DIG_EN_0 | USB_R5_ID_DIG_EN_1 |
-USB_R5_ID_DIG_TH_MASK) are set (which we already do in
-dwc3_meson_g12a_usb_init)
+> >> +/**
+> >> + * ioasid_find - Find IOASID data
+> >> + * @set: the IOASID set
+> >> + * @ioasid: the IOASID to find
+> >> + * @getter: function to call on the found object
+> >> + *
+> >> + * The optional getter function allows to take a reference to the
+> >> found object
+> >> + * under the rcu lock. The function can also check if the object
+> >> is still valid:
+> >> + * if @getter returns false, then the object is invalid and NULL
+> >> is returned.
+> >> + *
+> >> + * If the IOASID has been allocated for this set, return the
+> >> private pointer
+> >> + * passed to ioasid_alloc. Private data can be NULL if not set.
+> >> Return an error
+> >> + * if the IOASID is not found or does not belong to the set.  
+> > 
+> > Perhaps should make it clear that @set can be null.  
+> 
+> Indeed. But I'm not sure allowing @set to be NULL is such a good idea,
+> because the data type associated to an ioasid depends on its set. For
+> example SVA will put an mm_struct in there, and auxiliary domains use
+> some structure private to the IOMMU domain.
+> 
+I am not sure we need to count on @set to decipher data type. Whoever
+does the allocation and owns the IOASID should knows its own data type.
+My thought was that @set is only used to group IDs, permission check
+etc.
 
-> +               irq = platform_get_irq(pdev, 0);
-do we need to check the IRQ before trying to request it?
-drivers/gpu/drm/meson/meson_dw_hdmi.c and drivers/usb/dwc3/host.c for
-example error out if irq number is lower than 0
+> Jacob, could me make @set mandatory, or do you see a use for a global
+> search? If @set is NULL, then callers can check if the return pointer
+> is NULL, but will run into trouble if they try to dereference it.
+> 
+A global search use case can be for PRQ. IOMMU driver gets a IOASID
+(first interrupt then retrieve from a queue), it has no idea which
+@set it belongs to. But the data types are the same for all IOASIDs
+used by the IOMMU.
+If @set is NULL, the search does not check set match. It is separate
+from return pointer. Sorry i am not seeing the problems here.
 
-(it's great to see that this only required a small patch to make it work :))
+> >   
+> >> + */
+> >> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> >> +		  bool (*getter)(void *))
+> >> +{
+> >> +	void *priv = NULL;  
+> > 
+> > Set in all paths, so does need to be set here.  
+> 
+> Right
+> 
+> Thanks,
+> Jean
 
-
-Martin
+[Jacob Pan]
