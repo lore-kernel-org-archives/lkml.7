@@ -2,109 +2,175 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53579C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A4C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30371208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5F9208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391387AbfFKIjL (ORCPT
+        id S2391397AbfFKIjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:39:11 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42939 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391146AbfFKIjK (ORCPT
+        Tue, 11 Jun 2019 04:39:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41533 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728825AbfFKIjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:39:10 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z25so18802692edq.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:39:10 -0700 (PDT)
+        Tue, 11 Jun 2019 04:39:51 -0400
+Received: from mail-pf1-f200.google.com ([209.85.210.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hacJp-0004W6-12
+        for linux-kernel@vger.kernel.org; Tue, 11 Jun 2019 08:39:49 +0000
+Received: by mail-pf1-f200.google.com with SMTP id x18so9164290pfj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:39:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EZPJDu0+5poRi+ob6FAvc4kTQEKHJCev1SL/oyf3pzs=;
-        b=DmPfvWtPV7JWe5FpYjp0naZf+x3bUT1P69aSCeVfgS+E2OLSSFy6J3rsyi9B3RI10E
-         Vn0IlB2+JwnUL/KcbIi2eHfN5dE9bGs7c1wwSy0hJrMgBYd9buys19/ZbH6g78UvPI0H
-         Rpe0RNXWTFdN/j4YCuyTd5AL8TOt4DMs+FDN1mvP5cM3di0VAO6X3jpmUohw8vxzaxzH
-         s4kvbHa16E7SFAjRqlAOBtgwfULEHJwbIYoHW+qjz3YxeDy4bnE+q0ar2PzlA1dgZE6K
-         bI8KSENfl/dg4Heia8EvhR4x/5HQPfXmqh2ko0H1sbDKN7dc+mAKAMrRTJdbGJZfStRa
-         48+w==
-X-Gm-Message-State: APjAAAWmL/0MxsxPM3k2SUzXvhOXScPiKIUc58LYg3P8Pw7OWd4yZxTy
-        TW9uSp8g5zoZJHtUpfciTRV5i0LuDz8=
-X-Google-Smtp-Source: APXvYqzMOTMnChDp4MCNUi3VgsI57hmj7rstuSGCuRXwJHHWKOgudtaqqrkWi6cuF6Jc+SPJDa0aoQ==
-X-Received: by 2002:a50:9451:: with SMTP id q17mr16035952eda.119.1560242349441;
-        Tue, 11 Jun 2019 01:39:09 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id b25sm666371eda.38.2019.06.11.01.39.08
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 01:39:08 -0700 (PDT)
-Subject: Re: [PATCH -next] HID: logitech-dj: fix return value of
- logi_dj_recv_query_hidpp_devices
-To:     Yuehaibing <yuehaibing@huawei.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, jkosina@suse.cz
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-References: <20190525140908.2804-1-yuehaibing@huawei.com>
- <50800f5e-867d-ded9-235c-b9c2db1c41ef@huawei.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c9510bce-525a-c4d4-531c-7cf55e141754@redhat.com>
-Date:   Tue, 11 Jun 2019 10:39:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <50800f5e-867d-ded9-235c-b9c2db1c41ef@huawei.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=rVsUekWgO9PjOQAYkWEsmmAT3npgK55j5LYcU+/1NsI=;
+        b=h6tdyN1biQzzNRPZx8qNejtzU+gSBgLuqVAsf9bvsR2j+LscSM9te1VMaWiNYsUVvO
+         vnfGO1gc6t0FrbOCJ8OPHefrcmmRbYkeShtsQCBR1b7fAOZaoS7ZTYHWdOzjyj71lQxk
+         PdXEypv8jUokUu9EOeUvurlyROGDzzMzvdj6LfwCopOoUbqIpfkP23CIKmKSCCD8EdlE
+         cSFoIIzLl9oz7TLQ7jKxnnDQPgznlmq33semVmVNXLIG3rRWzOcqi56qnxZiNmceIo2q
+         iWoQp8HNMfTPipqJkZDwW3FNjhtGMMm5pI69uHljEIxgXm7JDuw8lnE6nFPW3xZ6XLx9
+         5hNg==
+X-Gm-Message-State: APjAAAU2ZLDi8cGxsi3mRR9D4cCWWAzc0N1SkTrQqTIk+jeymQTBVDn5
+        lpuY6OKxZ1LnVjPEsHaIVbrhjagnMOyMwXJPN55YoQ7uPDxfqZSDyhpqzt6tXdXi8kD3CfI7r6y
+        bWQrYEO86s7P5usrhgf/KYSCRaOrCKpdkjFYX+Cwl1w==
+X-Received: by 2002:a65:4209:: with SMTP id c9mr19842584pgq.111.1560242387639;
+        Tue, 11 Jun 2019 01:39:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzuYF3piJnyOda/rKez83uueSPcHG0dOaccY61HirK/Mbwuke30Y6uhXpd7ba0xGBMR7UtJkw==
+X-Received: by 2002:a65:4209:: with SMTP id c9mr19842567pgq.111.1560242387238;
+        Tue, 11 Jun 2019 01:39:47 -0700 (PDT)
+Received: from 2001-b011-380f-115a-95b8-0536-80ef-496a.dynamic-ip6.hinet.net (2001-b011-380f-115a-95b8-0536-80ef-496a.dynamic-ip6.hinet.net. [2001:b011:380f:115a:95b8:536:80ef:496a])
+        by smtp.gmail.com with ESMTPSA id b7sm12905627pgq.71.2019.06.11.01.39.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 01:39:46 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] PCI: PM: Avoid possible suspend-to-idle issue
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <10983642.dUqMSvAAlD@kreacher>
+Date:   Tue, 11 Jun 2019 16:39:44 +0800
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>
 Content-Transfer-Encoding: 7bit
+Message-Id: <527F9B70-68AC-4CD4-A3C2-576EA09187DD@canonical.com>
+References: <2315917.ZGeXE6pBFC@kreacher> <10983642.dUqMSvAAlD@kreacher>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Rafael,
 
-On 11-06-19 05:00, Yuehaibing wrote:
-> Hi all,
-> 
-> Friendly ping...
-> 
-> On 2019/5/25 22:09, YueHaibing wrote:
->> We should return 'retval' as the correct return value
->> instead of always zero.
+at 19:02, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+
+> On Friday, May 17, 2019 11:08:50 AM CEST Rafael J. Wysocki wrote:
+>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 >>
->> Fixes: 74808f9115ce ("HID: logitech-dj: add support for non unifying receivers")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> If a PCI driver leaves the device handled by it in D0 and calls
+>> pci_save_state() on the device in its ->suspend() or ->suspend_late()
+>> callback, it can expect the device to stay in D0 over the whole
+>> s2idle cycle.  However, that may not be the case if there is a
+>> spurious wakeup while the system is suspended, because in that case
+>> pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
+>> which calls pci_restore_state(), via pci_pm_default_resume_early(),
+>> so state_saved is cleared and the second iteration of
+>> pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
+>> may change the power state of the device.
+>>
+>> To avoid that, add a new internal flag, skip_bus_pm, that will be set
+>> by pci_pm_suspend_noirq() when it runs for the first time during the
+>> given system suspend-resume cycle if the state of the device has
+>> been saved already and the device is still in D0.  Setting that flag
+>> will cause the next iterations of pci_pm_suspend_noirq() to set
+>> state_saved for pci_pm_resume_noirq(), so that it always restores the
+>> device state from the originally saved data, and avoid calling
+>> pci_prepare_to_sleep() for the device.
+>>
+>> Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from  
+>> suspend-to-idle")
+>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Patch looks good to me:
+I just found out this patch has a chance to freeze or reboot the system  
+during suspend cycles.
+What information do you need to debug?
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
+Kai-Heng
 
 >> ---
->>   drivers/hid/hid-logitech-dj.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>  drivers/pci/pci-driver.c |   17 ++++++++++++++++-
+>>  include/linux/pci.h      |    1 +
+>>  2 files changed, 17 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
->> index 41baa4dbbfcc..7f8db602eec0 100644
->> --- a/drivers/hid/hid-logitech-dj.c
->> +++ b/drivers/hid/hid-logitech-dj.c
->> @@ -1133,7 +1133,7 @@ static int logi_dj_recv_query_hidpp_devices(struct dj_receiver_dev *djrcv_dev)
->>   				    HID_REQ_SET_REPORT);
->>   
->>   	kfree(hidpp_report);
->> -	return 0;
->> +	return retval;
->>   }
->>   
->>   static int logi_dj_recv_query_paired_devices(struct dj_receiver_dev *djrcv_dev)
+>> Index: linux-pm/drivers/pci/pci-driver.c
+>> ===================================================================
+>> --- linux-pm.orig/drivers/pci/pci-driver.c
+>> +++ linux-pm/drivers/pci/pci-driver.c
+>> @@ -734,6 +734,8 @@ static int pci_pm_suspend(struct device
+>>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+>>  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
 >>
-> 
+>> +	pci_dev->skip_bus_pm = false;
+>> +
+>>  	if (pci_has_legacy_pm_support(pci_dev))
+>>  		return pci_legacy_suspend(dev, PMSG_SUSPEND);
+>>
+>> @@ -827,7 +829,20 @@ static int pci_pm_suspend_noirq(struct d
+>>  		}
+>>  	}
+>>
+>> -	if (!pci_dev->state_saved) {
+>> +	if (pci_dev->skip_bus_pm) {
+>> +		/*
+>> +		 * The function is running for the second time in a row without
+>> +		 * going through full resume, which is possible only during
+>> +		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
+>> +		 * device was originally left in D0, so its power state should
+>> +		 * not be changed here and the device register values saved
+>> +		 * originally should be restored on resume again.
+>> +		 */
+>> +		pci_dev->state_saved = true;
+>> +	} else if (pci_dev->state_saved) {
+>> +		if (pci_dev->current_state == PCI_D0)
+>> +			pci_dev->skip_bus_pm = true;
+>> +	} else {
+>>  		pci_save_state(pci_dev);
+>>  		if (pci_power_manageable(pci_dev))
+>>  			pci_prepare_to_sleep(pci_dev);
+>> Index: linux-pm/include/linux/pci.h
+>> ===================================================================
+>> --- linux-pm.orig/include/linux/pci.h
+>> +++ linux-pm/include/linux/pci.h
+>> @@ -344,6 +344,7 @@ struct pci_dev {
+>>  						   D3cold, not set for devices
+>>  						   powered on/off by the
+>>  						   corresponding bridge */
+>> +	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
+>>  	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
+>>  	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
+>>  						      controlled exclusively by
+>
+> Bjorn, I've assumed no concerns or objections from you regarding this one  
+> and
+> queued it up.
+>
+> If that assumption is incorrect, please let me know.
+
+
