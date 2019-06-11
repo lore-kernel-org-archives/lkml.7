@@ -2,90 +2,199 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C489C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB90C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083792089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Wh/KHVsQ"
+	by mail.kernel.org (Postfix) with ESMTP id A4C98212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404477AbfFKL7F (ORCPT
+        id S2404399AbfFKMBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:59:05 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35744 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404428AbfFKL7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:59:02 -0400
-Received: from zn.tnic (p200300EC2F0A6800DC92A88D55C2D513.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:dc92:a88d:55c2:d513])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4C0E71EC0467;
-        Tue, 11 Jun 2019 13:59:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560254341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=iNnk9/6P7T/k8AQINyRXHk11cIEx6L8h2+DPPx0wO4k=;
-        b=Wh/KHVsQ9bUOqeaAcjfDSYJrPs6waIC5LKKAZgTKFGpx5aodC12tnPE3PmoKXn+DbZKdc/
-        5n/CBZtHFU+xjx1sDfC3fi7bI1/M+HNYB9Jz5cbxW7SuPjhVHFUzCoOLzs9sDzvnO9PhAf
-        qlxABdtvKtyG0nO5+z6d0smeY1zEY2E=
-Date:   Tue, 11 Jun 2019 13:59:00 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Hawa, Hanna" <hhhawa@amazon.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        James Morse <james.morse@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190611115900.GE31772@zn.tnic>
-References: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
- <20190608090556.GA32464@zn.tnic>
- <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <07977a4a-0927-3427-e102-5a850b2f6dce@amazon.com>
+        Tue, 11 Jun 2019 08:01:37 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:64534 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404218AbfFKMBg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 08:01:36 -0400
+X-UUID: 1f96f75078614a5b9e1f0250f0a67e06-20190611
+X-UUID: 1f96f75078614a5b9e1f0250f0a67e06-20190611
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1348057515; Tue, 11 Jun 2019 20:01:15 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 11 Jun 2019 20:01:14 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 11 Jun 2019 20:01:14 +0800
+Message-ID: <1560254473.29153.16.camel@mtksdccf07>
+Subject: Re: [PATCH v2] kasan: add memory corruption identification for
+ software tag-based mode
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Miles Chen =?UTF-8?Q?=28=E9=99=B3=E6=B0=91=E6=A8=BA=29?= 
+        <Miles.Chen@mediatek.com>, kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Tue, 11 Jun 2019 20:01:13 +0800
+In-Reply-To: <CACT4Y+bNQCa_h158Hhug_DgF3X-8Uoc6Ar7p5vFvHE7uThQmjg@mail.gmail.com>
+References: <1559651172-28989-1-git-send-email-walter-zh.wu@mediatek.com>
+         <CACT4Y+Y9_85YB8CCwmKerDWc45Z00hMd6Pc-STEbr0cmYSqnoA@mail.gmail.com>
+         <1560151690.20384.3.camel@mtksdccf07>
+         <CACT4Y+aetKEM9UkfSoVf8EaDNTD40mEF0xyaRiuw=DPEaGpTkQ@mail.gmail.com>
+         <1560236742.4832.34.camel@mtksdccf07>
+         <CACT4Y+YNG0OGT+mCEms+=SYWA=9R3MmBzr8e3QsNNdQvHNt9Fg@mail.gmail.com>
+         <1560249891.29153.4.camel@mtksdccf07>
+         <CACT4Y+aXqjCMaJego3yeSG1eR1+vkJkx5GB+xsy5cpGvAtTnDA@mail.gmail.com>
+         <CACT4Y+bNQCa_h158Hhug_DgF3X-8Uoc6Ar7p5vFvHE7uThQmjg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <07977a4a-0927-3427-e102-5a850b2f6dce@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:29:55AM +0300, Hawa, Hanna wrote:
-> In the near future we plan to push EDAC drivers for L1/L2 and memory
-> controller. There's no common resources/shared data between them.
+On Tue, 2019-06-11 at 13:39 +0200, Dmitry Vyukov wrote:
+> I should have been asked this earlier, but: what is your use-case?
+We need KASAN to help us to detect memory corruption at mobile phone. It
+is powerful tool.
 
-Ok, you should be safe then. If you need to do more involved interaction
-in the future, you know what the issues are.
+> Could you use CONFIG_KASAN_GENERIC instead? Why not?
+> CONFIG_KASAN_GENERIC already has quarantine.
+> 
+We hope to use tag-based KASAN, because it consumes more less
+memory(1/16) than generic KASAN(1/8), but we also hope the tag-based
+KASAN report is easy read and able to identify the use-after-free or
+out-of-bound.
 
--- 
-Regards/Gruss,
-    Boris.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> On Tue, Jun 11, 2019 at 1:32 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Tue, Jun 11, 2019 at 12:44 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > >
+> > > On Tue, 2019-06-11 at 10:47 +0200, Dmitry Vyukov wrote:
+> > > > On Tue, Jun 11, 2019 at 9:05 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > > >
+> > > > > On Mon, 2019-06-10 at 13:46 +0200, Dmitry Vyukov wrote:
+> > > > > > On Mon, Jun 10, 2019 at 9:28 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > > > > >
+> > > > > > > On Fri, 2019-06-07 at 21:18 +0800, Dmitry Vyukov wrote:
+> > > > > > > > > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> > > > > > > > > index b40ea104dd36..be0667225b58 100644
+> > > > > > > > > --- a/include/linux/kasan.h
+> > > > > > > > > +++ b/include/linux/kasan.h
+> > > > > > > > > @@ -164,7 +164,11 @@ void kasan_cache_shutdown(struct kmem_cache *cache);
+> > > > > > > > >
+> > > > > > > > >  #else /* CONFIG_KASAN_GENERIC */
+> > > > > > > > >
+> > > > > > > > > +#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> > > > > > > > > +void kasan_cache_shrink(struct kmem_cache *cache);
+> > > > > > > > > +#else
+> > > > > > > >
+> > > > > > > > Please restructure the code so that we don't duplicate this function
+> > > > > > > > name 3 times in this header.
+> > > > > > > >
+> > > > > > > We have fixed it, Thank you for your reminder.
+> > > > > > >
+> > > > > > >
+> > > > > > > > >  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
+> > > > > > > > > +#endif
+> > > > > > > > >  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
+> > > > > > > > >
+> > > > > > > > >  #endif /* CONFIG_KASAN_GENERIC */
+> > > > > > > > > diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> > > > > > > > > index 9950b660e62d..17a4952c5eee 100644
+> > > > > > > > > --- a/lib/Kconfig.kasan
+> > > > > > > > > +++ b/lib/Kconfig.kasan
+> > > > > > > > > @@ -134,6 +134,15 @@ config KASAN_S390_4_LEVEL_PAGING
+> > > > > > > > >           to 3TB of RAM with KASan enabled). This options allows to force
+> > > > > > > > >           4-level paging instead.
+> > > > > > > > >
+> > > > > > > > > +config KASAN_SW_TAGS_IDENTIFY
+> > > > > > > > > +       bool "Enable memory corruption idenitfication"
+> > > > > > > >
+> > > > > > > > s/idenitfication/identification/
+> > > > > > > >
+> > > > > > > I should replace my glasses.
+> > > > > > >
+> > > > > > >
+> > > > > > > > > +       depends on KASAN_SW_TAGS
+> > > > > > > > > +       help
+> > > > > > > > > +         Now tag-based KASAN bug report always shows invalid-access error, This
+> > > > > > > > > +         options can identify it whether it is use-after-free or out-of-bound.
+> > > > > > > > > +         This will make it easier for programmers to see the memory corruption
+> > > > > > > > > +         problem.
+> > > > > > > >
+> > > > > > > > This description looks like a change description, i.e. it describes
+> > > > > > > > the current behavior and how it changes. I think code comments should
+> > > > > > > > not have such, they should describe the current state of the things.
+> > > > > > > > It should also mention the trade-off, otherwise it raises reasonable
+> > > > > > > > questions like "why it's not enabled by default?" and "why do I ever
+> > > > > > > > want to not enable it?".
+> > > > > > > > I would do something like:
+> > > > > > > >
+> > > > > > > > This option enables best-effort identification of bug type
+> > > > > > > > (use-after-free or out-of-bounds)
+> > > > > > > > at the cost of increased memory consumption for object quarantine.
+> > > > > > > >
+> > > > > > > I totally agree with your comments. Would you think we should try to add the cost?
+> > > > > > > It may be that it consumes about 1/128th of available memory at full quarantine usage rate.
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > I don't understand the question. We should not add costs if not
+> > > > > > necessary. Or you mean why we should add _docs_ regarding the cost? Or
+> > > > > > what?
+> > > > > >
+> > > > > I mean the description of option. Should it add the description for
+> > > > > memory costs. I see KASAN_SW_TAGS and KASAN_GENERIC options to show the
+> > > > > memory costs. So We originally think it is possible to add the
+> > > > > description, if users want to enable it, maybe they want to know its
+> > > > > memory costs.
+> > > > >
+> > > > > If you think it is not necessary, we will not add it.
+> > > >
+> > > > Full description of memory costs for normal KASAN mode and
+> > > > KASAN_SW_TAGS should probably go into
+> > > > Documentation/dev-tools/kasan.rst rather then into config description
+> > > > because it may be too lengthy.
+> > > >
+> > > Thanks your reminder.
+> > >
+> > > > I mentioned memory costs for this config because otherwise it's
+> > > > unclear why would one ever want to _not_ enable this option. If it
+> > > > would only have positive effects, then it should be enabled all the
+> > > > time and should not be a config option at all.
+> > >
+> > > Sorry, I don't get your full meaning.
+> > > You think not to add the memory costs into the description of config ?
+> > > or need to add it? or make it not be a config option(default enabled)?
+> >
+> > Yes, I think we need to include mention of additional cost into _this_
+> > new config.
+
+
