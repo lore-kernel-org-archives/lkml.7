@@ -2,87 +2,99 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CD2C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1E9C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568792145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:21:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560237713;
-	bh=fLu1hpslSz6m7EpFnbEn6tLDYatqy6ymCd8Apolhonw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cTuhGv3IFzjClGdRz1NtnE8OOxvaRANTbB4hARrqGP+AVQmY9LedhdwpEYCRXoFKE
-	 zhKoMeWOPqCGVr52u9Yj7ix3iOuHOxtMeyEGwxXmybahJ814siJOEDuYfUQGUi68jG
-	 hq0XIu9Y8LslYBhrDrfURfg7jG01D1c/QrOgqlWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0DF442086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404410AbfFKHVw (ORCPT
+        id S2404326AbfFKHWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:21:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53306 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 03:22:12 -0400
+Received: from gate.crashing.org ([63.228.1.57]:40104 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404144AbfFKHVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:21:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96F2E2086D;
-        Tue, 11 Jun 2019 07:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560237712;
-        bh=fLu1hpslSz6m7EpFnbEn6tLDYatqy6ymCd8Apolhonw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yj8uuboaPFnzK7h6DjT4oWkDww5eixMUfBzqqg9wLK93JeZYuvsxeNKnZzvYsGfJY
-         1XpvsvQVW+AQquYwwGVw37f5tmTaHUwpRiCS+wJtRxZGPg4Lu+djH6nbc0W1tY3mCs
-         2kqWi6nrVIi5ToJ+aKNVc8d69p/SQ9WkkDmvxKzM=
-Date:   Tue, 11 Jun 2019 09:21:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/70] 5.1.9-stable review
-Message-ID: <20190611072149.GB10581@kroah.com>
-References: <20190609164127.541128197@linuxfoundation.org>
- <6708fcff-8a84-5756-bc68-0de47397ab91@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6708fcff-8a84-5756-bc68-0de47397ab91@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        id S2404144AbfFKHWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 03:22:12 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5B7LdBB000541;
+        Tue, 11 Jun 2019 02:21:40 -0500
+Message-ID: <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Date:   Tue, 11 Jun 2019 17:21:39 +1000
+In-Reply-To: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+         <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+         <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+         <20190531051400.GA2275@cz.tnic>
+         <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+         <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+         <20190608090556.GA32464@zn.tnic>
+         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 04:01:41PM -0600, shuah wrote:
-> On 6/9/19 10:41 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.9 release.
-> > There are 70 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Tue, 2019-06-11 at 15:50 +1000, Benjamin Herrenschmidt wrote:
+> On Sat, 2019-06-08 at 11:05 +0200, Borislav Petkov wrote:
+> > On Sat, Jun 08, 2019 at 10:16:11AM +1000, Benjamin Herrenschmidt wrote:
+> > > Those IP blocks don't need any SW coordination at runtime. The drivers
+> > > don't share data nor communicate with each other. There is absolultely
+> > > no reason to go down that path.
 > > 
-> > Responses should be made by Tue 11 Jun 2019 04:40:04 PM UTC.
-> > Anything received after that time might be too late.
+> > Let me set one thing straight: the EDAC "subsystem" if you will - or
+> > that pile of code which does error counting and reporting - has its
+> > limitations in supporting one EDAC driver per platform. And whenever we
+> > have two drivers loadable on a platform, we have to do dirty hacks like
 > > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.9-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
+> >   301375e76432 ("EDAC: Add owner check to the x86 platform drivers")
 > > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
+> > What that means is, that if you need to call EDAC logging routines or
+> > whatnot from two different drivers, there's no locking, no nothing. So
+> > it might work or it might set your cat on fire.
 > 
-> Compiled and booted on my test system. No dmesg regressions.
+> Should we fix that then instead ? What are the big issues with adding
+> some basic locking ? being called from NMIs ?
+> 
+> If the separate drivers operate on distinct counters I don't see a big
+> problem there.
 
-Thanks for testing all of these and letting me know.
+So looking again ... all the registration/removal of edac devices seem
+to already be protected by mutexes, so that's not a problem.
 
-greg k-h
+Tell me more about what specific races you think we might have here,
+I'm not sure I follow...
+
+Cheers,
+Ben.
+
+
