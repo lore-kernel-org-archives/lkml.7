@@ -2,266 +2,150 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06069C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05CDC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA44321874
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560279826;
-	bh=429IScMO/Io5oeRatFJB21UoaJS0hAHMwwSu2wH52ss=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vEB/st7Y7y3jg3nKat9M/6XkvJpbYtCQXffcz6bSJc4v28KNJanlUipANN4mo0mDN
-	 rRKc0YBthEwDtjEO4Vnv2Nmw7kPTdnXHsiO2Y5wK5f21nwUuOfPP1GtkNm7OJ19riI
-	 WL+yInFIhaREGgWrU824UsSb+7Xo7tXm2L3Quhp0=
+	by mail.kernel.org (Postfix) with ESMTP id 6FC3621871
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KA9NWr5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405348AbfFKTDq (ORCPT
+        id S2405400AbfFKTDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405138AbfFKTDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:03:44 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90D2E2184E;
-        Tue, 11 Jun 2019 19:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279823;
-        bh=429IScMO/Io5oeRatFJB21UoaJS0hAHMwwSu2wH52ss=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTrzAu9QJaHmFsMtw/dvGHtJf/TwCeJJMmZoL/oCDA/mnvHaJ6TVmYiW7ryzgmZUN
-         w7cqDXSFIRFRnKuvYS3A0+VdzHOmpTuTkAO6eLhXu0jnwyoTspfhwqUAMKkH4rKoD1
-         Li57H01XzVf4AZr+HqNfK61F9H/wDB7CsI9uN4N8=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 60/85] perf cs-etm: Properly set the value of 'old' and 'head' in snapshot mode
-Date:   Tue, 11 Jun 2019 15:58:46 -0300
-Message-Id: <20190611185911.11645-61-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
-References: <20190611185911.11645-1-acme@kernel.org>
+        Tue, 11 Jun 2019 15:03:48 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33398 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405041AbfFKTDr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:03:47 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g21so5530879plq.0;
+        Tue, 11 Jun 2019 12:03:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+QbRljIgJwWBCzWz9e7i8YONsVM1yUd4G7aQc2LYOeY=;
+        b=KA9NWr5iz/A4jsEJ5AhARMgh4T+UpkqjqJScqAcDG8v7nBlWcBgURc6KT+/PgUSCnZ
+         M2a6GpogN88X5FwqHoYdH/ayMg2/+yQxwR+MRIPai5lz8UNvM1Y/BZGKN/tLk9H9e8OX
+         YUhgcFrLj1rraz7ESB6QInR7wgqKpLFp/kThW4h70qzOIV3tQk4PTXQuPmR71/ZB1IrV
+         06ZymkBmp2BF49v1bzsA7TsmnF/1rriUiO8GUAzIeCO2guljtlJ0VpLyiX33aSxPGaZX
+         AvD9Ee3LWAVYHx7bwyHIsBazojz5xrlBLd8htP6r5OuvQBh97wSr3WoHAvUsZ0zzkCbT
+         mw0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+QbRljIgJwWBCzWz9e7i8YONsVM1yUd4G7aQc2LYOeY=;
+        b=qYB39Mx7x+pQrB5sihDrsdfpUpBgkgAWSldyUbLW40FxJtq6ghAnQ5vjM9ld6q4J5M
+         7P2px2BTTdN2nXIxjxTfu0hWWZEeoSmT6dxaUYOOA+wM51AtRlQaJQ8PpGpJM8IbZh+h
+         d7Ky9NcZxov+9IARgW++VBitCpEnL8azwrzAjuWCjkKuoIiINfjeLB7GonjvzTuROn8m
+         GXVrXnfLJ5hybuUK1MBSRspP1+bPn0umgY6xR6KG8Z7oRLI3wGOG1dvTyPXZmauJ47Z2
+         QFo2gj2d1R25qGJLq6tG178ZbWtvgFAzUeoJp9y49Z1tnz2OL2pDQHNxCrxW4mxp02xN
+         S1bw==
+X-Gm-Message-State: APjAAAU8gHbnPYcrjOpXkosqUur941nBLXNRWudKISoAIbYIyVtwW5P5
+        YlreT3CJE4JdWtrEk3pPbo4=
+X-Google-Smtp-Source: APXvYqxh+O8fngACzCZvf/EiUwldMGLtMTvUx+/ODjcXz0khddZweOpl0aIOTJZal4YiWoFsmIKA3A==
+X-Received: by 2002:a17:902:d701:: with SMTP id w1mr71539969ply.12.1560279826423;
+        Tue, 11 Jun 2019 12:03:46 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j14sm16520690pfe.10.2019.06.11.12.03.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 12:03:44 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 12:03:43 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Fredrik Noring <noring@nocrew.org>
+Cc:     laurentiu.tudor@nxp.com, hch@lst.de, stern@rowland.harvard.edu,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        marex@denx.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, JuergenUrban@gmx.de
+Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
+ memory
+Message-ID: <20190611190343.GA18459@roeck-us.net>
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+ <20190529102843.13174-4-laurentiu.tudor@nxp.com>
+ <20190605214622.GA22254@roeck-us.net>
+ <20190611133223.GA30054@roeck-us.net>
+ <20190611172654.GA2602@sx9>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611172654.GA2602@sx9>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Tue, Jun 11, 2019 at 07:26:54PM +0200, Fredrik Noring wrote:
+> Hi Guenter,
+> 
+> > > This patch results in usb access failures when trying to boot from the
+> > > sm501-usb controller on sh4 with qemu.
+> > > 
+> > > usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+> > > sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+> > > sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 08 7c 00 00 f0 00
+> > > print_req_error: I/O error, dev sda, sector 2172 flags 80700
+> > > usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+> > > sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+> > > sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 01 da 00 00 f0 00
+> > > print_req_error: I/O error, dev sda, sector 474 flags 84700
+> > > usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+> > > sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+> > > sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 02 da 00 00 f0 00
+> > > print_req_error: I/O error, dev sda, sector 730 flags 84700
+> > > usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+> > > sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+> > > sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 0b 50 00 00 f0 00
+> > > print_req_error: I/O error, dev sda, sector 2896 flags 84700
+> > > 
+> > > Qemu command line is:
+> > > 
+> > > The qemu command line is:
+> > > 
+> > > qemu-system-sh4 -M r2d \
+> > >         -kernel ./arch/sh/boot/zImage \
+> > > 	-snapshot \
+> > > 	-usb -device usb-storage,drive=d0 \
+> > > 	-drive file=rootfs.ext2,if=none,id=d0,format=raw \
+> > > 	-append 'panic=-1 slub_debug=FZPUA root=/dev/sda rootwait console=ttySC1,115200 earlycon=scif,mmio16,0xffe80000 noiotrap' \
+> > > 	-serial null -serial stdio \
+> > > 	-net nic,model=rtl8139 -net user -nographic -monitor null
+> > > 
+> > > Reverting this patch as well as "USB: drop HCD_LOCAL_MEM flag" fixes the
+> > > problem. Reverting "USB: drop HCD_LOCAL_MEM flag" alone does not help.
+> > > 
+> > 
+> > This problem is still seen in next-20190611.
+> > Has anyone actually tested this code ?
+> 
+> I tested patches 1, 2 and 5 with v5.0.19. Perhaps yet another part of the
+> OHCI subsystem allocates memory from the wrong pool? With some luck it is
+> relatively easy to trace backwards from the error messages to the point
+> where the memory is being allocated. One way to establish this is to
+> sprinkle printk around if-statements. There may be 10-20 levels of calls
+> including one or two indirect calls via pointers. Would you be able to do
+> that?
+> 
 
-This patch adds the necessary intelligence to properly compute the value
-of 'old' and 'head' when operating in snapshot mode.  That way we can
-get the latest information in the AUX buffer and be compatible with the
-generic AUX ring buffer mechanic.
+I don't think I'll have time to do that anytime soon. Not that I know what
+exactly to look for in the first place.
 
-Tester notes:
+Can you do that debugging yourself ? All you would need is a cross-compiler
+(eg from kernel.org), qemu, and a working configuration (the root file
+system doesn't really matter since the code doesn't get to the point of
+loading it, but you can use [1]). For the configuration file, you can use
+rts7751r2dplus_defconfig with CONFIG_CMDLINE and CONFIG_CMDLINE_OVERWRITE
+removed.
 
-> Leo, have you had the chance to test/review this one? Suzuki?
+Thanks,
+Guenter
 
-Sure.  I applied this patch on the perf/core branch (with latest
-commit 3e4fbf36c1e3 'perf augmented_raw_syscalls: Move reading
-filename to the loop') and passed testing with below steps:
-
-  # perf record -e cs_etm/@tmc_etr0/ -S -m,64 --per-thread ./sort &
-  [1] 19097
-  Bubble sorting array of 30000 elements
-
-  # kill -USR2 19097
-  # kill -USR2 19097
-  # kill -USR2 19097
-  [ perf record: Woken up 4 times to write data ]
-  [ perf record: Captured and wrote 0.753 MB perf.data ]
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190605161633.12245-1-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 127 +++++++++++++++++++++++++++++-
- 1 file changed, 123 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index cc7f1cd23b14..279c69caef91 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -31,6 +31,8 @@ struct cs_etm_recording {
- 	struct auxtrace_record	itr;
- 	struct perf_pmu		*cs_etm_pmu;
- 	struct perf_evlist	*evlist;
-+	int			wrapped_cnt;
-+	bool			*wrapped;
- 	bool			snapshot_mode;
- 	size_t			snapshot_size;
- };
-@@ -684,16 +686,131 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
- 	return 0;
- }
- 
--static int cs_etm_find_snapshot(struct auxtrace_record *itr __maybe_unused,
-+static int cs_etm_alloc_wrapped_array(struct cs_etm_recording *ptr, int idx)
-+{
-+	bool *wrapped;
-+	int cnt = ptr->wrapped_cnt;
-+
-+	/* Make @ptr->wrapped as big as @idx */
-+	while (cnt <= idx)
-+		cnt++;
-+
-+	/*
-+	 * Free'ed in cs_etm_recording_free().  Using realloc() to avoid
-+	 * cross compilation problems where the host's system supports
-+	 * reallocarray() but not the target.
-+	 */
-+	wrapped = realloc(ptr->wrapped, cnt * sizeof(bool));
-+	if (!wrapped)
-+		return -ENOMEM;
-+
-+	wrapped[cnt - 1] = false;
-+	ptr->wrapped_cnt = cnt;
-+	ptr->wrapped = wrapped;
-+
-+	return 0;
-+}
-+
-+static bool cs_etm_buffer_has_wrapped(unsigned char *buffer,
-+				      size_t buffer_size, u64 head)
-+{
-+	u64 i, watermark;
-+	u64 *buf = (u64 *)buffer;
-+	size_t buf_size = buffer_size;
-+
-+	/*
-+	 * We want to look the very last 512 byte (chosen arbitrarily) in
-+	 * the ring buffer.
-+	 */
-+	watermark = buf_size - 512;
-+
-+	/*
-+	 * @head is continuously increasing - if its value is equal or greater
-+	 * than the size of the ring buffer, it has wrapped around.
-+	 */
-+	if (head >= buffer_size)
-+		return true;
-+
-+	/*
-+	 * The value of @head is somewhere within the size of the ring buffer.
-+	 * This can be that there hasn't been enough data to fill the ring
-+	 * buffer yet or the trace time was so long that @head has numerically
-+	 * wrapped around.  To find we need to check if we have data at the very
-+	 * end of the ring buffer.  We can reliably do this because mmap'ed
-+	 * pages are zeroed out and there is a fresh mapping with every new
-+	 * session.
-+	 */
-+
-+	/* @head is less than 512 byte from the end of the ring buffer */
-+	if (head > watermark)
-+		watermark = head;
-+
-+	/*
-+	 * Speed things up by using 64 bit transactions (see "u64 *buf" above)
-+	 */
-+	watermark >>= 3;
-+	buf_size >>= 3;
-+
-+	/*
-+	 * If we find trace data at the end of the ring buffer, @head has
-+	 * been there and has numerically wrapped around at least once.
-+	 */
-+	for (i = watermark; i < buf_size; i++)
-+		if (buf[i])
-+			return true;
-+
-+	return false;
-+}
-+
-+static int cs_etm_find_snapshot(struct auxtrace_record *itr,
- 				int idx, struct auxtrace_mmap *mm,
--				unsigned char *data __maybe_unused,
-+				unsigned char *data,
- 				u64 *head, u64 *old)
- {
-+	int err;
-+	bool wrapped;
-+	struct cs_etm_recording *ptr =
-+			container_of(itr, struct cs_etm_recording, itr);
-+
-+	/*
-+	 * Allocate memory to keep track of wrapping if this is the first
-+	 * time we deal with this *mm.
-+	 */
-+	if (idx >= ptr->wrapped_cnt) {
-+		err = cs_etm_alloc_wrapped_array(ptr, idx);
-+		if (err)
-+			return err;
-+	}
-+
-+	/*
-+	 * Check to see if *head has wrapped around.  If it hasn't only the
-+	 * amount of data between *head and *old is snapshot'ed to avoid
-+	 * bloating the perf.data file with zeros.  But as soon as *head has
-+	 * wrapped around the entire size of the AUX ring buffer it taken.
-+	 */
-+	wrapped = ptr->wrapped[idx];
-+	if (!wrapped && cs_etm_buffer_has_wrapped(data, mm->len, *head)) {
-+		wrapped = true;
-+		ptr->wrapped[idx] = true;
-+	}
-+
- 	pr_debug3("%s: mmap index %d old head %zu new head %zu size %zu\n",
- 		  __func__, idx, (size_t)*old, (size_t)*head, mm->len);
- 
--	*old = *head;
--	*head += mm->len;
-+	/* No wrap has occurred, we can just use *head and *old. */
-+	if (!wrapped)
-+		return 0;
-+
-+	/*
-+	 * *head has wrapped around - adjust *head and *old to pickup the
-+	 * entire content of the AUX buffer.
-+	 */
-+	if (*head >= mm->len) {
-+		*old = *head - mm->len;
-+	} else {
-+		*head += mm->len;
-+		*old = *head - mm->len;
-+	}
- 
- 	return 0;
- }
-@@ -734,6 +851,8 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
- {
- 	struct cs_etm_recording *ptr =
- 			container_of(itr, struct cs_etm_recording, itr);
-+
-+	zfree(&ptr->wrapped);
- 	free(ptr);
- }
- 
--- 
-2.20.1
+[1] https://github.com/groeck/linux-build-test/blob/master/rootfs/sh/rootfs.ext2.gz
 
