@@ -2,114 +2,112 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F29C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4049C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C752173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7C420896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f8RsE3S/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hse6Mnlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390910AbfFKAXP (ORCPT
+        id S2390513AbfFKAZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 20:23:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46714 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390825AbfFKAXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 20:23:11 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 81so6219998pfy.13
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 17:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=M8dK47yPhynvSehskkuhR0uoKpp2uUP0x/D6+OPbrUg=;
-        b=f8RsE3S/kfdDH6v5icBqkYxG44gp7sMpthCwyaqeVVv/htgQ5HpcDI6Wv0iU/zWNcb
-         oatVGJ4axZtIjvktwE9gYtDNHp4sChejjwJoasvq2NwX71M8H6s0JQby/OGPhBngYau6
-         PLZre9cxMKoOn5+neuim6KE3BHgm+44DhuGtg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=M8dK47yPhynvSehskkuhR0uoKpp2uUP0x/D6+OPbrUg=;
-        b=FOZVgj3p5TuvX3rEk+X3f4yfqfg4csM4uUfw668n1aFEzf2qOEQU9SLCYB6g09kjSW
-         pKWmrCPIezFDf7I0rvPIfNhB0/TF9zSxiUUbm3st7oMTrlODbnjBpdI3B2qcdzruHOwR
-         T+97wO7uKc0Mmd1oDu3Tzpat+S0r8jPYtGaGbTsKtMV2HPFYYuKFUV9dt1GdzXGxUfsG
-         QWHUw0xWU1Ik1MqRJqs0G6EBQwAsSzcNvmQ6sxTewkaIBSXft1iWdrjwYM6qQg9zOrHZ
-         +9BPQlyWvW9xtis2Se4Qbl3zwp8CVbKRHO7MEe1oQ4fhDJfZ7RR3e3WnlPX7t2cYt5BI
-         XOBw==
-X-Gm-Message-State: APjAAAVbhr/H4aDb+UkngT9d1I5dbuHhGP/Y6qHQUfd0Ut5AS7LDFTIm
-        JjyTSLEA8TJv3iXvKehi/2D09wAd5m8=
-X-Google-Smtp-Source: APXvYqxgskg5maq+JeiMbuvV7nLdRyi6nn4eQ55SV9Rs1d3bhqZcPjSw0Twk7BzvTbHKQzN5RyBSvg==
-X-Received: by 2002:a63:8249:: with SMTP id w70mr15859377pgd.33.1560212590903;
-        Mon, 10 Jun 2019 17:23:10 -0700 (PDT)
-Received: from exogeni.mtv.corp.google.com ([2620:15c:202:1:5be8:f2a6:fd7b:7459])
-        by smtp.gmail.com with ESMTPSA id t4sm540317pjq.19.2019.06.10.17.23.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 10 Jun 2019 17:23:10 -0700 (PDT)
-From:   Derek Basehore <dbasehore@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        thierry.reding@gmail.com, sam@ravnborg.org,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, ck.hu@mediatek.com, p.zabel@pengutronix.de,
-        matthias.bgg@gmail.com, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Derek Basehore <dbasehore@chromium.org>
-Subject: [PATCH 5/5] drm/mtk: add panel orientation property
-Date:   Mon, 10 Jun 2019 17:22:56 -0700
-Message-Id: <20190611002256.186969-6-dbasehore@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-In-Reply-To: <20190611002256.186969-1-dbasehore@chromium.org>
-References: <20190611002256.186969-1-dbasehore@chromium.org>
+        Mon, 10 Jun 2019 20:25:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53843 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389362AbfFKAZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 20:25:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45N9l05HPNz9s4V;
+        Tue, 11 Jun 2019 10:25:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560212734;
+        bh=+pjp9tVwLHzqbgYi/uUfHPvnEWCcuFtRtQJA6NxxeN8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hse6MnlkUZ2KuXzFjV5185JJSPaPhPPaAgEa+BCb+a0KYtOWxrLyInOZFDDxJamvE
+         P7snWhty1w9s7cZICncoKbbrZ/JwxOtUKdgIMKoQHIfTtFbt6EKBODU3qDdqbDLaN2
+         zJP7PpALgSUEsNhOFAJHTdr2LFZiS7/OGdjhz3w6hZEVtwD+tjUxB1uV2sYRnPNGu1
+         QJ3dN40a9UKRZ8+sRUYe1KlN7r965VXxG/zYydFAPqcOmIk+fzp97m9ILreif5KBhP
+         5XMxYl4fyHHvV6nXYroGstu2JibYI+SOYK/7T5s49iw3djcpeAS7l5WowWZ4LuSQmH
+         wjWzPuju9tAhQ==
+Date:   Tue, 11 Jun 2019 10:25:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ruslan Babayev <ruslan@babayev.com>,
+        Andrew de Quincey <adq_dvb@lidskialf.net>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>
+Subject: linux-next: build warning after merge of the i2c tree
+Message-ID: <20190611102528.44ad5783@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/rcpwq3iNIji=dyHbg3r+3Dg"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This inits the panel orientation property for the mediatek dsi driver
-if the panel orientation (connector.display_info.panel_orientation) is
-not DRM_MODE_PANEL_ORIENTATION_UNKNOWN.
+--Sig_/rcpwq3iNIji=dyHbg3r+3Dg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Derek Basehore <dbasehore@chromium.org>
----
- drivers/gpu/drm/mediatek/mtk_dsi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Hi Wolfram,
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 4a0b9150a7bb..08ffdc7526dd 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -782,10 +782,18 @@ static int mtk_dsi_create_connector(struct drm_device *drm, struct mtk_dsi *dsi)
- 			DRM_ERROR("Failed to attach panel to drm\n");
- 			goto err_connector_cleanup;
- 		}
-+
-+		ret = drm_connector_init_panel_orientation_property(&dsi->conn);
-+		if (ret) {
-+			DRM_ERROR("Failed to init panel orientation\n");
-+			goto err_panel_detach;
-+		}
- 	}
- 
- 	return 0;
- 
-+err_panel_detach:
-+	drm_panel_detach(dsi->panel);
- err_connector_cleanup:
- 	drm_connector_cleanup(&dsi->conn);
- 	return ret;
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
+After merging the i2c tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
+drivers/media/dvb-frontends/tua6100.c: In function 'tua6100_set_params':
+drivers/media/dvb-frontends/tua6100.c:71: warning: "_P" redefined
+ #define _P 32
+=20
+In file included from include/acpi/platform/aclinux.h:54,
+                 from include/acpi/platform/acenv.h:152,
+                 from include/acpi/acpi.h:22,
+                 from include/linux/acpi.h:21,
+                 from include/linux/i2c.h:17,
+                 from drivers/media/dvb-frontends/tua6100.h:22,
+                 from drivers/media/dvb-frontends/tua6100.c:24:
+include/linux/ctype.h:14: note: this is the location of the previous defini=
+tion
+ #define _P 0x10 /* punct */
+
+Exposed by commit
+
+  5213d7efc8ec ("i2c: acpi: export i2c_acpi_find_adapter_by_handle")
+
+Since that included <linux/acpi.h> from <linux/i2c.h>
+
+Originally introduced by commit
+
+  00be2e7c6415 ("V4L/DVB (4606): Add driver for TUA6100")
+
+The _P in <linux/ctype.h> has existed since before git.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/rcpwq3iNIji=dyHbg3r+3Dg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz+9PgACgkQAVBC80lX
+0GxZxQf7BUg/1oUdaJ2UcGAlyvb+0s7mMxJApFnoLBA9sC/ao2awXCbuyGy8BA7k
+Ff4AhQoHu5q/FOaUquOBftuRZ0JZVbhw6dVOY5ulmUXnUcdlNFFroKUfVD4UU3g1
+F8U9xYGeQ4ewGMzPsrMjPL5e9CAg7J0pfY7V7f/IjF48aJ/EFi4uA2rz4sCc2aoG
+Co2QQXHbsJ8fG/MrL6cyTYIWg8trHh5if6fukFHJeSS73DOH/2nDn9e6MquzCnSG
+daYXFeiJNyJDKOudw32+zbSQU4qH38p1hPvhUIpoKGKAHILAD20DK4gjd9It+nw9
+6c2JsRZSBau1PNnWSrAUHAgGrzTREQ==
+=u22Y
+-----END PGP SIGNATURE-----
+
+--Sig_/rcpwq3iNIji=dyHbg3r+3Dg--
