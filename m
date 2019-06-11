@@ -2,168 +2,111 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41153C0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C51DC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244E520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6569220896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560283256;
+	bh=s/Ht5+9CPxynHvmNGgca4LVS0zf0kgpTAEg3mLddkn0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M18H1EFYsLd2C9LE+RF8KxQl9ZvCn4dwC0FSUI4dWqsThB0CRji8Ineq1UFN915RT
+	 8+ByanK94rJw9MK6l6A28spbSK9mwQc4CXUB/PEKBm8oPqKxYeYwzkqr0Vci09e5W/
+	 nAUjWHwjmKKLLy4UrH2JBlbJ+1u9SKZZ7xIh9aD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406379AbfFKT67 (ORCPT
+        id S2406411AbfFKUAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:58:59 -0400
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:6993 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406025AbfFKT66 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:58:58 -0400
-Subject: Re: Linux 5.1.9 build failure with
- CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n
-To:     Sven Joachim <svenjoac@gmx.de>, Thomas Backlund <tmb@mageia.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        stable <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Airlie <airlied@redhat.com>
-References: <87k1dsjkdo.fsf@turtle.gmx.de> <20190611153656.GA5084@kroah.com>
- <CAKMK7uH_3P3pYkJ9Ua4hOFno5UiQ4p-rdWu9tPO75MxGCbyXSA@mail.gmail.com>
- <20190611174006.GB31662@kroah.com>
- <11b2d815-d0c0-1f68-557d-144166c4a1a7@mageia.org>
- <877e9rkiwb.fsf@turtle.gmx.de>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <6ddf2c2d-7078-ffab-ac8c-2b0295f8d12f@mageia.org>
-Date:   Tue, 11 Jun 2019 22:58:55 +0300
+        Tue, 11 Jun 2019 16:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405168AbfFKUAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 16:00:55 -0400
+Received: from earth.universe (unknown [185.62.205.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 130F120883;
+        Tue, 11 Jun 2019 20:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560283254;
+        bh=s/Ht5+9CPxynHvmNGgca4LVS0zf0kgpTAEg3mLddkn0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1UAFM7E6z32INie2ywpw1WxlvWw6gwAH+2ireN9vwA81UQSpOFkLHMVPrEzMmFQw2
+         UHWF+yTW2DbFptWnYRH5PbiVRaTx9FQ1l9HYpmzrVt3+fq0mqOTVo1ylBdok4j3RJR
+         0TsIk179NCnIeR/FUlhchmcMm98+HagiQBI57/Ko=
+Received: by earth.universe (Postfix, from userid 1000)
+        id C5AC53C0C77; Tue, 11 Jun 2019 22:00:43 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 22:00:43 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v15 0/7] support ROHM BD70528 PMIC
+Message-ID: <20190611200043.eib3g3acc7ilawsx@earth.universe>
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <877e9rkiwb.fsf@turtle.gmx.de>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-WatchGuard-Spam-ID: str=0001.0A0C0206.5D000802.0012,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.195
-X-WatchGuard-Mail-From: tmb@mageia.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qfajaxb2wnhwswu6"
+Content-Disposition: inline
+In-Reply-To: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Den 11-06-2019 kl. 22:43, skrev Sven Joachim:
-> On 2019-06-11 22:08 +0300, Thomas Backlund wrote:
->
->> Den 11-06-2019 kl. 20:40, skrev Greg Kroah-Hartman:
->>> On Tue, Jun 11, 2019 at 07:33:16PM +0200, Daniel Vetter wrote:
->>>> On Tue, Jun 11, 2019 at 5:37 PM Greg Kroah-Hartman
->>>> <gregkh@linuxfoundation.org> wrote:
->>>>> On Tue, Jun 11, 2019 at 03:56:35PM +0200, Sven Joachim wrote:
->>>>>> Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
->>>>>> legacy contexts. (v3)") has caused a build failure for me when I
->>>>>> actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
->>>>>>
->>>>>> ,----
->>>>>> | Kernel: arch/x86/boot/bzImage is ready  (#1)
->>>>>> |   Building modules, stage 2.
->>>>>> |   MODPOST 290 modules
->>>>>> | ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
->>>>>> | scripts/Makefile.modpost:91: recipe for target '__modpost' failed
->>>>>> `----
->>>> Calling drm_legacy_mmap is definitely not a great idea. I think either
->>>> we need a custom patch to remove that out on older kernels, or maybe
->>>> even #ifdef if you want to be super paranoid about breaking stuff ...
->>>>
->>>>>> Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
->>>>>> Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
->>>>>> drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
->>>>>> apply in 5.1.9.
->>>>>>
->>>>>> Most likely 4.19.50 and 4.14.125 are also affected, I haven't tested
->>>>>> them yet.
->>>>> They probably are.
->>>>>
->>>>> Should I just revert this patch in the stable tree, or add some other
->>>>> patch (like the one pointed out here, which seems an odd patch for
->>>>> stable...)
->>>> ... or backport the above patch, that should be save to do too. Not
->>>> sure what stable folks prefer?
->>> The above patch does not apply to all of the stable branches, so how
->>> about I just revert this?  People can live with this option not able to
->>> turn off for now, and if they really want it, they can use a newer
->>> kernel, right?
->>>
->> Or add the simple fix suggested by Daniel (if I understand correctly):
->>
->>
->> From: Thomas Backlund <tmb@mageia.org>
->>
->> Setting CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n (added by commit:
->> b30a43ac7132) causes the build to fail with:
->>
->> ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
->>
->> Fix that by adding check for CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT around
->> the code using drm_legacy_mmap()
->>
->> Fixes: b30a43ac7132 drm/nouveau: add kconfig option to turn off
->> nouveau legacy contexts. (v3)
->> Signed-off-by: Thomas Backlund <tmb@mageia.org>
->>
->> ---
->>   drivers/gpu/drm/nouveau/nouveau_ttm.c |    2 ++
->>   1 file changed, 2 insertions(+)
->>
->> --- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
->> +++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
->> @@ -168,8 +168,10 @@ nouveau_ttm_mmap(struct file *filp, stru
->>   	struct drm_file *file_priv = filp->private_data;
->>   	struct nouveau_drm *drm = nouveau_drm(file_priv->minor->dev);
->>
->> +#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
->>   	if (unlikely(vma->vm_pgoff < DRM_FILE_PAGE_OFFSET))
->>   		return drm_legacy_mmap(filp, vma);
->> +#endif
->>
->>   	return ttm_bo_mmap(filp, vma, &drm->ttm.bdev);
->>   }
-> That's not quite correct, I am afraid.  If
-> CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT is not defined, you still need to do
-> the test, but return -EINVAL.  Something along these lines:
->
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-> index 1543c2f8d3d3..05d513d54555 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-> @@ -169,7 +169,11 @@ nouveau_ttm_mmap(struct file *filp, struct vm_area_struct *vma)
->   	struct nouveau_drm *drm = nouveau_drm(file_priv->minor->dev);
->
->   	if (unlikely(vma->vm_pgoff < DRM_FILE_PAGE_OFFSET))
-> +#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
->   		return drm_legacy_mmap(filp, vma);
-> +#else
-> +		return -EINVAL;
-> +#endif
->
->   	return ttm_bo_mmap(filp, vma, &drm->ttm.bdev);
->   }
->
->
-> At least that builds for me, need to reboot to check whether it works.
->
-> Cheers,
->         Sven
+--qfajaxb2wnhwswu6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi,
 
-Ah, indeed. thats what basically all other drivers did before bed2dd8421 
-("drm/ttm:
-Quick-test mmap offset in ttm_bo_mmap()"), and in that commit the same 
-check
-was moved to drivers/gpu/drm/ttm/ttm_bo_vm.c
+On Mon, Jun 03, 2019 at 10:23:37AM +0300, Matti Vaittinen wrote:
+> Patch series introducing support for ROHM BD70528 PMIC
+> [...]
 
+I think all patches have been reviewed by the respective subsystem
+maintainers. Lee, can you provide an immutable branch with the MFD
+patches (1, 2, 4)? Looks like the other patches only depend on those
+and can go through their respective subsystems.
 
---
+-- Sebastian
 
-Thomas
+--qfajaxb2wnhwswu6
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0ACGsACgkQ2O7X88g7
++pqpvxAAiZzNy6zuuXZ4vjjMA7V17elDn9CTdWUe1RZBcvYxmFmOUWxTEPtRsmoC
+DSstvCVI3H0sOGanHoZ6WFe1R5cyV3jG4J9Xam7XQSQmVpWJPaQXSgQpSy4O6aMX
+3Hrs2E8Nv+zUuflVsm4yIOnX7avFBDxBdJlZzKNRzA2b3KOzmNvNr3Y/CbvS9IO4
+dTHBXDzcoo+XfrbOKD7Z/0LD6kPsVVkjI8qDiGMN0LCxVkkXV2IFFvMluaWzJHQl
+hDUheJRJkD1TXC6z1bCxHSzT4/DCDbWHXN191CnZSIeORMLeZxFFldSmKbYIvOV1
+DTJemYQUksIOl2usnvNvSl0GnxjrzZpw7PKbh3rXVlWaa52FEvRJJX++voIP3fNW
+zTHSYUTZrBqyLzC4Rp9AWeCy19ebFTrPjV3g3LZDIx0D37C3BeS71gNotRa9o91w
+aGBN/Um6Zm3PASbxAPk5TB9RIatlGSELFcVg4qa4of1Y7fY5+O/J5Civ/R1vQJkG
+iKE+ujAxYfKJkoUebhETYoHhonRh+naZuEgVC4yl9TsP2hGhz4rArD76kKTUnwNY
+g5rSpqb8LptHOkHdkP6ueQYIHavaNGfE6wJBfLqjG3uLU/8RU7YaOqZubQOH/WNT
+f2hxCJ76WfvTO5avZpYkykwOS0LwdP8MUoVz2tVnYLYm/q7DhB4=
+=2BRP
+-----END PGP SIGNATURE-----
+
+--qfajaxb2wnhwswu6--
