@@ -2,44 +2,49 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D180C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357F8C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349A1206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A717206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QkXQ7Fzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406948AbfFKSI3 (ORCPT
+        id S2406958AbfFKSIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:08:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34200 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406931AbfFKSI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:08:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 07B3EAD85;
-        Tue, 11 Jun 2019 18:08:26 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     stefan.wahren@i2se.com, linux-kernel@vger.kernel.org
-Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
-        sboyd@kernel.org, eric@anholt.net, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
-        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        mturquette@baylibre.com, linux-pm@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v3 7/7] arm64: defconfig: enable cpufreq support for RPi3
-Date:   Tue, 11 Jun 2019 19:58:46 +0200
-Message-Id: <20190611175839.28351-8-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190611175839.28351-1-nsaenzjulienne@suse.de>
-References: <20190611175839.28351-1-nsaenzjulienne@suse.de>
+        Tue, 11 Jun 2019 14:08:31 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60258 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406828AbfFKSIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:08:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1560276487; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XMGlnOY/mkdY5Ii1FMy4DJ7e5EuTwF3Oqoqtl6a7HkI=;
+        b=QkXQ7FzsBHcBdngAoE9Il9Z8h0/GwAfHYs6tP9oEGvVEb46S+H7VXS4oouIM+CFBiuMdPG
+        R+NntOWPNecdi7vo1+zPB/kpEMcIHUKnVanufwGM9kkG+ifmwqqBjRMBHG9AvjKM2zrQiu
+        kfVTNt2OBv1xyrZQ83/oaymcVBLZGf8=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     od@zcrc.me, linux-mips@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 2/5] clk: ingenic: Handle setting the Low-Power Mode bit
+Date:   Tue, 11 Jun 2019 20:07:54 +0200
+Message-Id: <20190611180757.32299-2-paul@crapouillou.net>
+In-Reply-To: <20190611180757.32299-1-paul@crapouillou.net>
+References: <20190611180757.32299-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,38 +52,237 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables both the new firmware clock driver and cpufreq driver
-available for the RPi3 family of boards.
+The Low-Power Mode, when enabled, will make the "wait" MIPS instruction
+suspend the system.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+This is not really clock-related, but this bit happens to be in the
+register set of the CGU.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
-Changes since v2:
-  - Build both drivers as modules
+Notes:
+    v2: Rebase on v5.2-rc4
 
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/ingenic/Makefile      |  2 +-
+ drivers/clk/ingenic/jz4725b-cgu.c |  3 +++
+ drivers/clk/ingenic/jz4740-cgu.c  |  3 +++
+ drivers/clk/ingenic/jz4770-cgu.c  | 33 ++---------------------
+ drivers/clk/ingenic/jz4780-cgu.c  |  3 +++
+ drivers/clk/ingenic/pm.c          | 45 +++++++++++++++++++++++++++++++
+ drivers/clk/ingenic/pm.h          | 12 +++++++++
+ 7 files changed, 69 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/clk/ingenic/pm.c
+ create mode 100644 drivers/clk/ingenic/pm.h
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index bb0705e1f52e..73fb2067a905 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -83,6 +83,7 @@ CONFIG_ACPI_CPPC_CPUFREQ=m
- CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
- CONFIG_ARM_SCPI_CPUFREQ=y
- CONFIG_ARM_IMX_CPUFREQ_DT=m
-+CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
- CONFIG_ARM_TEGRA186_CPUFREQ=y
- CONFIG_ARM_SCPI_PROTOCOL=y
- CONFIG_RASPBERRYPI_FIRMWARE=y
-@@ -652,6 +653,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
- CONFIG_COMMON_CLK_S2MPS11=y
- CONFIG_CLK_QORIQ=y
- CONFIG_COMMON_CLK_PWM=y
-+CONFIG_CLK_RASPBERRYPI=m
- CONFIG_CLK_IMX8MM=y
- CONFIG_CLK_IMX8MQ=y
- CONFIG_CLK_IMX8QXP=y
+diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
+index ab58a6a862a5..250570a809d3 100644
+--- a/drivers/clk/ingenic/Makefile
++++ b/drivers/clk/ingenic/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_INGENIC_CGU_COMMON)	+= cgu.o
++obj-$(CONFIG_INGENIC_CGU_COMMON)	+= cgu.o pm.o
+ obj-$(CONFIG_INGENIC_CGU_JZ4740)	+= jz4740-cgu.o
+ obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+= jz4725b-cgu.o
+ obj-$(CONFIG_INGENIC_CGU_JZ4770)	+= jz4770-cgu.o
+diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
+index 6e8bbf620c76..15055b118a44 100644
+--- a/drivers/clk/ingenic/jz4725b-cgu.c
++++ b/drivers/clk/ingenic/jz4725b-cgu.c
+@@ -10,6 +10,7 @@
+ #include <linux/of.h>
+ #include <dt-bindings/clock/jz4725b-cgu.h>
+ #include "cgu.h"
++#include "pm.h"
+ 
+ /* CGU register offsets */
+ #define CGU_REG_CPCCR		0x00
+@@ -226,5 +227,7 @@ static void __init jz4725b_cgu_init(struct device_node *np)
+ 	retval = ingenic_cgu_register_clocks(cgu);
+ 	if (retval)
+ 		pr_err("%s: failed to register CGU Clocks\n", __func__);
++
++	ingenic_cgu_register_syscore_ops(cgu);
+ }
+ CLK_OF_DECLARE(jz4725b_cgu, "ingenic,jz4725b-cgu", jz4725b_cgu_init);
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index 2deac19a8d04..efa893ee1de9 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -12,6 +12,7 @@
+ #include <dt-bindings/clock/jz4740-cgu.h>
+ #include <asm/mach-jz4740/clock.h>
+ #include "cgu.h"
++#include "pm.h"
+ 
+ /* CGU register offsets */
+ #define CGU_REG_CPCCR		0x00
+@@ -218,6 +219,8 @@ static void __init jz4740_cgu_init(struct device_node *np)
+ 	retval = ingenic_cgu_register_clocks(cgu);
+ 	if (retval)
+ 		pr_err("%s: failed to register CGU Clocks\n", __func__);
++
++	ingenic_cgu_register_syscore_ops(cgu);
+ }
+ CLK_OF_DECLARE(jz4740_cgu, "ingenic,jz4740-cgu", jz4740_cgu_init);
+ 
+diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
+index 42b2ee121642..12b1f57defb9 100644
+--- a/drivers/clk/ingenic/jz4770-cgu.c
++++ b/drivers/clk/ingenic/jz4770-cgu.c
+@@ -8,9 +8,9 @@
+ #include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+-#include <linux/syscore_ops.h>
+ #include <dt-bindings/clock/jz4770-cgu.h>
+ #include "cgu.h"
++#include "pm.h"
+ 
+ /*
+  * CPM registers offset address definition
+@@ -37,9 +37,6 @@
+ #define CGU_REG_MSC2CDR		0xA8
+ #define CGU_REG_BCHCDR		0xAC
+ 
+-/* bits within the LCR register */
+-#define LCR_LPM			BIT(0)		/* Low Power Mode */
+-
+ /* bits within the OPCR register */
+ #define OPCR_SPENDH		BIT(5)		/* UHC PHY suspend */
+ 
+@@ -406,30 +403,6 @@ static const struct ingenic_cgu_clk_info jz4770_cgu_clocks[] = {
+ 	},
+ };
+ 
+-#if IS_ENABLED(CONFIG_PM_SLEEP)
+-static int jz4770_cgu_pm_suspend(void)
+-{
+-	u32 val;
+-
+-	val = readl(cgu->base + CGU_REG_LCR);
+-	writel(val | LCR_LPM, cgu->base + CGU_REG_LCR);
+-	return 0;
+-}
+-
+-static void jz4770_cgu_pm_resume(void)
+-{
+-	u32 val;
+-
+-	val = readl(cgu->base + CGU_REG_LCR);
+-	writel(val & ~LCR_LPM, cgu->base + CGU_REG_LCR);
+-}
+-
+-static struct syscore_ops jz4770_cgu_pm_ops = {
+-	.suspend = jz4770_cgu_pm_suspend,
+-	.resume = jz4770_cgu_pm_resume,
+-};
+-#endif /* CONFIG_PM_SLEEP */
+-
+ static void __init jz4770_cgu_init(struct device_node *np)
+ {
+ 	int retval;
+@@ -443,9 +416,7 @@ static void __init jz4770_cgu_init(struct device_node *np)
+ 	if (retval)
+ 		pr_err("%s: failed to register CGU Clocks\n", __func__);
+ 
+-#if IS_ENABLED(CONFIG_PM_SLEEP)
+-	register_syscore_ops(&jz4770_cgu_pm_ops);
+-#endif
++	ingenic_cgu_register_syscore_ops(cgu);
+ }
+ 
+ /* We only probe via devicetree, no need for a platform driver */
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index 6d524e760180..afd7e9bd4fc4 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -11,6 +11,7 @@
+ #include <linux/of.h>
+ #include <dt-bindings/clock/jz4780-cgu.h>
+ #include "cgu.h"
++#include "pm.h"
+ 
+ /* CGU register offsets */
+ #define CGU_REG_CLOCKCONTROL	0x00
+@@ -720,5 +721,7 @@ static void __init jz4780_cgu_init(struct device_node *np)
+ 		pr_err("%s: failed to register CGU Clocks\n", __func__);
+ 		return;
+ 	}
++
++	ingenic_cgu_register_syscore_ops(cgu);
+ }
+ CLK_OF_DECLARE(jz4780_cgu, "ingenic,jz4780-cgu", jz4780_cgu_init);
+diff --git a/drivers/clk/ingenic/pm.c b/drivers/clk/ingenic/pm.c
+new file mode 100644
+index 000000000000..341752b640d2
+--- /dev/null
++++ b/drivers/clk/ingenic/pm.c
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
++ */
++
++#include "cgu.h"
++#include "pm.h"
++
++#include <linux/io.h>
++#include <linux/syscore_ops.h>
++
++#define CGU_REG_LCR		0x04
++
++#define LCR_LOW_POWER_MODE	BIT(0)
++
++static void __iomem * __maybe_unused ingenic_cgu_base;
++
++static int __maybe_unused ingenic_cgu_pm_suspend(void)
++{
++	u32 val = readl(ingenic_cgu_base + CGU_REG_LCR);
++
++	writel(val | LCR_LOW_POWER_MODE, ingenic_cgu_base + CGU_REG_LCR);
++
++	return 0;
++}
++
++static void __maybe_unused ingenic_cgu_pm_resume(void)
++{
++	u32 val = readl(ingenic_cgu_base + CGU_REG_LCR);
++
++	writel(val & ~LCR_LOW_POWER_MODE, ingenic_cgu_base + CGU_REG_LCR);
++}
++
++static struct syscore_ops __maybe_unused ingenic_cgu_pm_ops = {
++	.suspend = ingenic_cgu_pm_suspend,
++	.resume = ingenic_cgu_pm_resume,
++};
++
++void ingenic_cgu_register_syscore_ops(struct ingenic_cgu *cgu)
++{
++	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
++		ingenic_cgu_base = cgu->base;
++		register_syscore_ops(&ingenic_cgu_pm_ops);
++	}
++}
+diff --git a/drivers/clk/ingenic/pm.h b/drivers/clk/ingenic/pm.h
+new file mode 100644
+index 000000000000..fa7540407b6b
+--- /dev/null
++++ b/drivers/clk/ingenic/pm.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
++ */
++#ifndef DRIVERS_CLK_INGENIC_PM_H
++#define DRIVERS_CLK_INGENIC_PM_H
++
++struct ingenic_cgu;
++
++void ingenic_cgu_register_syscore_ops(struct ingenic_cgu *cgu);
++
++#endif /* DRIVERS_CLK_INGENIC_PM_H */
 -- 
-2.21.0
+2.21.0.593.g511ec345e18
 
