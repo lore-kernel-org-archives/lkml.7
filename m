@@ -2,197 +2,142 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D81C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB73C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E8B2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:38:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="DtMEEeQV"
+	by mail.kernel.org (Postfix) with ESMTP id C196621721
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:40:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560292847;
+	bh=qi+lq7t8JIbnXyTNR/LEqF3q2+6uj7r/1u/c3drgOwg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rhi6eUuW2uvEzGyHj05YaFK3iCOblj2LYhhrkuz4B7ywsosars1+m7kZpFi3Ma4M+
+	 sF+/Yba9Fey0WKHD4VgigW8AddgtFtpVux+CgPf289iLPFM8npKv0+cdZzixaFQh+b
+	 rHZheWKRoxeWnych4ctRR5ao9d7nCpj3UmAWzsGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407228AbfFKWi6 (ORCPT
+        id S2436839AbfFKWkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:38:58 -0400
-Received: from mx.cs.msu.ru ([188.44.42.42]:47180 "EHLO mail.cs.msu.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405174AbfFKWi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:38:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
-         s=dkim; h=Subject:In-Reply-To:Content-Type:MIME-Version:References:
-        Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GNE12vQTu4aqIFz7FyS4G9Pynhm5PGQdn9SLZmRERIA=; b=DtMEEeQVg/nre/6c89QcIuZG3q
-        /OB432/WUa4/x1RpAJ3mfYr/IJD0WpsHGCTToAUu8yIrHJm8hpBCdOI8F6PgXoiwhym3qM6ohbsU3
-        cz3zeVleCSw9fbjZLE7EuglmOOHOkbCQgdmC4GL/GTp1KJaCUJaSLDQymsR/+vS55t27KcnEwHzLx
-        rJMAHTC4V0f0uwKxiDaswdS+giqFcpyb3ymfVXEYQ76OXg7H7B71EZZvhL52w4QvcPMSM4Us8NOhS
-        Hg9SZqfCFFmNSGEMDq3Klfb38pvpIm4VM28BqmsPBDXCgwMPv4RVs2VwHNUbIg7eudzR/QutapgAu
-        O/k0tEqg==;
-Received: from [37.204.119.143] (port=45300 helo=cello)
-        by mail.cs.msu.ru with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92 (FreeBSD))
-        (envelope-from <ar@cs.msu.ru>)
-        id 1hapPC-000Kcl-Qe; Wed, 12 Jun 2019 01:38:15 +0300
-Date:   Wed, 12 Jun 2019 01:38:06 +0300
-From:   Arseny Maslennikov <ar@cs.msu.ru>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "Vladimir D . Seleznev" <vseleznv@altlinux.org>,
-        linux-api@vger.kernel.org
-Message-ID: <20190611223806.GA1112@cello>
-References: <20190605081906.28938-1-ar@cs.msu.ru>
- <20190605081906.28938-2-ar@cs.msu.ru>
- <87o933507j.fsf@xmission.com>
+        Tue, 11 Jun 2019 18:40:47 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39978 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbfFKWkq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:40:46 -0400
+Received: by mail-it1-f193.google.com with SMTP id q14so7500592itc.5;
+        Tue, 11 Jun 2019 15:40:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HI3rHUK26/S2B0LA3WlM09q3Q/jcQRPOrltE5Dys4vg=;
+        b=Dm9ERfhKIYwMTkOatw40rA3Cw/gkTrsdoub8QQTIgQZrR+NcOMaqGrrUagRiHG5ClT
+         IVIbBUNjelDB4ONk4R7S+ZTMvEqid5nSMTjTmEzBWoAAPD6WBM83iFGrRjx61x6yDdUo
+         RQpa/8YR1rhJYBMXfb7XsNumP4SiHOyvEj1B+8Ue8OswbL0U+xGtsk604y7borgK7Ub7
+         lx5P+NU+0R6yNWzU51z1//riCumr2uVnH+f6KFFB87tjC5Va8rMwTN2ccVNYiqhYLiIk
+         yh3OvcFqieJSyuTJug1h266+TezZrydNnKwA5GIVTVW+SrPaxEHNQTLhvXQ3I5O9FExl
+         L2og==
+X-Gm-Message-State: APjAAAVobYvlcbX9XPzmWR9Uoq6/2CJNhXOCCKjUgSpf+IGYEemQyTwM
+        IvleN2pb/fGhNPqL8Yy5xVj4VfQ=
+X-Google-Smtp-Source: APXvYqyYN7ZbEDoYi00MhHLqHL7FwPdCa2uF9Kv/WyYmja0MIBn3v9bIz1f2IeqAvvSfdbDWHNDRAg==
+X-Received: by 2002:a24:b303:: with SMTP id e3mr18466988itf.170.1560292845706;
+        Tue, 11 Jun 2019 15:40:45 -0700 (PDT)
+Received: from localhost (ip-174-149-252-64.englco.spcsdns.net. [174.149.252.64])
+        by smtp.gmail.com with ESMTPSA id p10sm5553716iob.54.2019.06.11.15.40.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 15:40:45 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 16:40:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
+        dri-devel@lists.freedesktop.org,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        cawa.cheng@mediatek.com,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        linux-arm-kernel@lists.infradead.org,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: [1/2] dt-bindngs: display: panel: Add BOE tv101wum-nl6 panel
+ bindings
+Message-ID: <20190611224041.GA407@bogus>
+References: <20190608070230.55381-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87o933507j.fsf@xmission.com>
-OpenPGP: url=http://grep.cs.msu.ru/~ar/pgp-key.asc
+In-Reply-To: <20190608070230.55381-1-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 37.204.119.143
-X-SA-Exim-Mail-From: ar@cs.msu.ru
-Subject: Re: [PATCH 1/7] signal.h: Define SIGINFO on all architectures
-X-SA-Exim-Version: 4.2
-X-SA-Exim-Scanned: Yes (on mail.cs.msu.ru)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jun 08, 2019 at 03:02:29PM +0800, Jitao Shi wrote:
+> Add documentation for boe tv101wum-n16 panel.
 
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Typo in the subject and checkpatch complains about trailing whitespace.
 
-On Tue, Jun 11, 2019 at 03:36:00PM -0500, Eric W. Biederman wrote:
-> Arseny Maslennikov <ar@cs.msu.ru> writes:
->=20
-> > This complementary patch defines SIGINFO as a synonym for SIGPWR
-> > on every architecture supported by the kernel.
-> > The particular signal number chosen does not really matter and is only
-> > required for the related tty functionality to work properly,
-> > so if it does not suite expectations, any suggestions are warmly
-> > welcome.
-> >
-> > SIGPWR looks like a nice candidate for this role, because it is
-> > defined on every supported arch; it is currently only used to inform
-> > PID 1 of power failures, and daemons that care about low-level
-> > events do not tend to have a controlling terminal.
-> >
-> > However, on sparcs SIGPWR is a synonym for SIGLOST, a signal unique
-> > to that architecture, with a narrow set of intended uses that do not
-> > combine well with interactively requesting status.
-> > SIGLOST is not used by any kernel code at the moment.
-> > I'm not sure there is a more reasonable alternative right now.
->=20
-> Is the name SIGINFO already well established.
->=20
-> It just is a little bit confusing with struct siginfo.
->=20
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../display/panel/boe,tv101wum-nl6.txt        | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+> new file mode 100644
+> index 000000000000..2a84735d742d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+> @@ -0,0 +1,34 @@
+> +Boe Corporation 10.1" WUXGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "boe,tv101wum"
+> +- reg: the virtual channel number of a DSI peripheral
+> +- enable-gpios: a GPIO spec for the enable pin
+> +- pp1800-supply: core voltage supply
+> +- avdd-supply: 
+> +- avee-supply: 
+> +- backlight: phandle of the backlight device attached to the panel
+> +
+> +The device node can contain one 'port' child node with one child
+> +'endpoint' node, according to the bindings defined in
+> +media/video-interfaces.txt. This node should describe panel's video bus.
+> +
+> +Example:
+> +&dsi {
+> +	...
+> +	panel@0 {
+> +		compatible = "boe,tv101wum-nl6";
+> +		reg = <0>;
+> +		enable-gpios = <&pio 45 0>;
+> +		avdd-supply = <&ppvarn_lcd>;
+> +		avee-supply = <&ppvarp_lcd>;
+> +		pp1800-supply = <&pp1800_lcd>;
+> +		backlight = <&backlight_lcd0>;
+> +		status = "okay";
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&dsi_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> \ No newline at end of file
 
-I thought about this, but the alternatives are clunkier.
-SIGKBINFO? Implies there actually is a keyboard, most ttys are
-virtual/software nowadays. Misplaced emphasis.
-SIGSTATUS? Too generic.
-SIGTINFO? This could work, like conveys the nature and all, but many
-applications already do #ifdef SIGINFO; if we reuse the name they will
-suddenly just work, and this helps adoption.
-SIGTINFO does decipher to "terminal info", this sounds too ambiguous.
-
-Fortunately, from UNIX tradition signal names are defined in caps, and
-given there is much more related written discussion than spoken, this
-stands out enough to my taste. I'd say, it stands out a lot.
-
-> At least on x86 it looks like we have signals 32 and 33 that are
-> reserved and not used for anything.  Is there a reason you have
-> not picked one of those?
-
-Quoting signal(7) from man-pages:
-       The Linux kernel supports a range of 33 different real-time
-       signals, numbered 32  to  64.   However,  the  glibc  POSIX
-       threads  implementation  internally  uses two (for NPTL) or
-       three   (for   LinuxThreads)   real-time    signals    (see
-       pthreads(7)),  and  adjusts  the value of SIGRTMIN suitably
-       (to 34 or 35).
-
-This excerpt gives the cue that signals 32 and 33 are not really unused,
-and I did not want to cause further adjustments to SIGRTMIN/SIGRTMAX,
-since this means we have to recompile the world with the new, changed
-SIGRTMIN/MAX...
-
-If we'd change RTMIN, this makes all the rt signal numbers shift to the
-right and can cause havoc if we do not recompile the world.
-
-We could probably go with decrementing RTMAX and reusing the value
-(effectively reserving a signal number from the end), but aliasing PWR
-seems much easier and less harmful, and easier for apps to adopt.
-If we find a strong reason not to reuse PWR, this may be considered as a
-plan B, but the idea to allocate even more precious signals seems too
-wasteful to me for now.
-
->=20
-> Also should this be a realtime signal with signal information
-> or a non-realtime signal?
-
-I see no requirement for this to be a realtime signal.
-
-Non-realtime signals like PWR or INT also have at least some signal
-information which can be accessed with handlers installed with
-sigaction(2). [1] has a small example.
-The most obvious piece of info is that signals sent by n_tty
-(si_code=3D=3DSI_KERNEL) are easy to distinguish from signals sent by
-processes (si_code=3D=3DSI_USER)
-
->=20
-> I don't expect there is much to encode except that the user is asking
-> for information.  I half wonder if it could be done as a different
-> si_code to SIGWINCH.  But of course that doesn't work because it is
-> not a real time signal so does not queue more than one siginfo. (Sigh).
->=20
-
-Signals are just a huge mess (not that this is news...)  :)
-
-> I just would like to see that we have a clear concept of how this new
-> signal plays into all of the signal handling bits.
->=20
-> Added linux-api because this is fundamentally extending the linux-api,
-> and we probably want man-page updates etc.
->=20
-> Eric
->=20
-
-[1]https://github.com/porrided/tty-kb-status-userspace/blob/d32028056c85b27=
-9cf8d5f43478b5419d090637c/siginfo-test/siginfo.c
-
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE56JD3UKTLEu/ddrm9dQjyAYL01AFAl0ALUkACgkQ9dQjyAYL
-01BW0hAAp16BV3hKnjc+iWwm3CkoMTcMZPMDaDJZmsfyjUIS1qqNiJ3NfKr/2LGv
-C9A7sX3VKE0GXijjJvxxnyfVhKsamQ4m0vaJawhYPKcWj9BGVqZoAilEo5Lf4eV8
-Mw2unvgdr0YW4aReAb83ocCYD1ZjqFy3VGz9uVZHx9tOCTGXiVT/gijiHuT9PV4G
-iaO/SZW+CT1aZ6L0m7XDR78vPFuBLMrJmrBri5yd4LmvGS/A3ldsQA3QEY4v1Shc
-usk7AV90llIuKCQCNDj3OLD8odeESSqefCdtAE39Zuaau9N/BqLsXe5h6qp37ZkB
-vYsYkR1Bw9Pat5itTzuCNGnPtO4pSiPmnesQkKL2P5bxtUOl11BJCKCFei20O7yE
-cQI91lPpcDZrBMWvxtDPUzemqhQxzPoUvI3XbVK8gogFmFsVrTeFc5IlCUf0j3Jr
-JkTYbxWbtYf/MK+Pju2jxj5zcmlgVA8CFaF2sYB9BBHNGAnjZPdxJ1NmarHKc4f+
-Z1EFGJasACMR1P3TVXV9sjqmBMUzlrgxPGvCqnc+7icXbKMaDc2Lm7cUJfGapGi1
-zagyCvwkqJrPydKUgy753Cr8druVfT9jMfnCl/FoPhTpeXjTpbCawh0HAFjMK2JH
-aEoNg2C6FwF6IzCMX2D6UGc2RNk9iMJTzvWsOxpvJ6W0L8VAMXk=
-=73jc
------END PGP SIGNATURE-----
-
---C7zPtVaVf+AK4Oqc--
+Fix this.
