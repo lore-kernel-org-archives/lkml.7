@@ -2,321 +2,101 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52604C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B83AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFBC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F40E2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:57:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Uy8vh+ff"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="T98xkkvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404290AbfFKL51 (ORCPT
+        id S2404340AbfFKL5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:57:27 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54758 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403877AbfFKL51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:57:27 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5BBuhEc126815;
-        Tue, 11 Jun 2019 06:56:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560254203;
-        bh=pMoVVapOIW2ESz+4jX391PkjziL8+0IUeCu70eJHeHk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Uy8vh+ffYjEzKlnXvhhiWl3bj6a50/A/pOhsK7C8eELDCVJqP1/wRMfAnscEl3z3A
-         tsUWoaq8X6AqazLycDMqrjqhWp1bioJ7poDLJO+N+/InYUTVIjPT3jt6b+ZZS4hZ/J
-         J8a+6BBPg2V2WG5gbwIhfXvoxMi2NaoiXoqCX/CI=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5BBuhXD014880
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Jun 2019 06:56:43 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 11
- Jun 2019 06:56:42 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 11 Jun 2019 06:56:42 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5BBubJx076305;
-        Tue, 11 Jun 2019 06:56:38 -0500
-Subject: Re: [PATCH v5 3/5] mtd: Add support for HyperBus memory devices
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-mtd@lists.infradead.org>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        <devicetree@vger.kernel.org>, Mason Yang <masonccyang@mxic.com.tw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190609103227.24875-1-vigneshr@ti.com>
- <20190609103227.24875-4-vigneshr@ti.com>
- <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <f47d4d57-afb2-3b39-fae9-3ed740a2b8a6@ti.com>
-Date:   Tue, 11 Jun 2019 17:27:25 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <58e9608d-35ff-0436-6075-b2e4ed4b8594@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 11 Jun 2019 07:57:38 -0400
+Received: from mail-eopbgr10067.outbound.protection.outlook.com ([40.107.1.67]:44869
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403877AbfFKL5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:57:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ECpbNgV8uOXKol9qXRMchw2RjsYH5zpamqfReQDkrCI=;
+ b=T98xkkvUq0WUQfmxcwwNI1B6CTHwaMAcrVcgupFEmA4kLbPoRyMe+fVVSUqz+TvdnrSVjJ348k5yvs/DLHwvmFDI3ddeGeuKMTZi98KKpCRmLtvXKuZLgFUNz2KyybnzUn/yONrKQOSWotLLFpjX5oq3xlVKNBRFnLn/VVabZ18=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3567.eurprd04.prod.outlook.com (52.134.4.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Tue, 11 Jun 2019 11:57:34 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 11:57:34 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v1 2/5] crypto: talitos - move struct talitos_edesc into
+ talitos.h
+Thread-Topic: [PATCH v1 2/5] crypto: talitos - move struct talitos_edesc into
+ talitos.h
+Thread-Index: AQHVHFtoqsM5u9K3R0ScM4yhQppwKQ==
+Date:   Tue, 11 Jun 2019 11:57:34 +0000
+Message-ID: <VI1PR0402MB3485848D81EF07419EB0128F98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <cover.1559819372.git.christophe.leroy@c-s.fr>
+ <108a23c4d2f0803b1302bc00c7321d799e42edc1.1559819372.git.christophe.leroy@c-s.fr>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf2f448c-c6da-41e7-b7ff-08d6ee63fdac
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3567;
+x-ms-traffictypediagnostic: VI1PR0402MB3567:
+x-microsoft-antispam-prvs: <VI1PR0402MB35674940D4D2FAF5F6CABB4498ED0@VI1PR0402MB3567.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(366004)(346002)(376002)(39860400002)(199004)(189003)(55016002)(6436002)(73956011)(54906003)(9686003)(110136005)(33656002)(486006)(66066001)(476003)(44832011)(186003)(316002)(66446008)(26005)(446003)(66556008)(66476007)(52536014)(2906002)(229853002)(99286004)(76116006)(66946007)(64756008)(7736002)(4326008)(81166006)(81156014)(8676002)(25786009)(14454004)(305945005)(74316002)(76176011)(478600001)(6506007)(53546011)(3846002)(6116002)(68736007)(71200400001)(6246003)(86362001)(71190400001)(4744005)(53936002)(102836004)(256004)(8936002)(7696005)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3567;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ti6L6IEyQbgh0KQhV11mQPOTAdRDAo7UUK/OjX9yWsuVCSEnlsnGYv90H24UM3wBdYept5c6Gr/+FrsmgD38ANFvGCH292Ef88EsWMyXvGft8JOljtLYdm9R0mubcWRKHOlOwwtj0YwPDnn1frSmp+Fx50VuE6kOkLTrMwaj/+fqP1Yzw7Gp3UNDUTVbftFctS/xUJHPVlZBPv7bGxgcj5btKFFGXWYNdSJqit6H7qn2Tk85z1yzQKS8W6lFSy1FJmAaxZrz2ES4jIr/SCPOkGgvGQIwdCt0+lg8fxuaF/9B2xMgWNKway74Fu/75rbZ4MYRbnRu7lG15ahGNPXzCqXGYrG4ndPU0yBO2/nVwutpjibmkJNgWos/ogNKExKmLJnkWo4iUTyXaxtRhQWih+E7lHilw7udVzk8mCfBIdQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf2f448c-c6da-41e7-b7ff-08d6ee63fdac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 11:57:34.3362
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3567
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/06/19 11:27 PM, Sergei Shtylyov wrote:
-> On 06/09/2019 01:32 PM, Vignesh Raghavendra wrote:
-> 
->> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
->> Bus interface between a host system master and one or more slave
->> interfaces. HyperBus is used to connect microprocessor, microcontroller,
->> or ASIC devices with random access NOR flash memory (called HyperFlash)
->> or self refresh DRAM (called HyperRAM).
->>
->> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->> signal and either Single-ended clock(3.0V parts) or Differential clock
->> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->> At bus level, it follows a separate protocol described in HyperBus
->> specification[1].
->>
->> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
->> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
->> HyperBus operates at >166MHz frequencies.
->> HyperRAM provides direct random read/write access to flash memory
->> array.
->>
->> But, HyperBus memory controllers seem to abstract implementation details
->> and expose a simple MMIO interface to access connected flash.
->>
->> Add support for registering HyperFlash devices with MTD framework. MTD
->> maps framework along with CFI chip support framework are used to support
->> communicating with flash.
->>
->> Framework is modelled along the lines of spi-nor framework. HyperBus
->> memory controller (HBMC) drivers calls hyperbus_register_device() to
->> register a single HyperFlash device. HyperFlash core parses MMIO access
->> information from DT, sets up the map_info struct, probes CFI flash and
->> registers it with MTD framework.
->>
->> Some HBMC masters need calibration/training sequence[3] to be carried
->> out, in order for DLL inside the controller to lock, by reading a known
->> string/pattern. This is done by repeatedly reading CFI Query
->> Identification String. Calibration needs to be done before trying to detect
->> flash as part of CFI flash probe.
->>
->> HyperRAM is not supported at the moment.
->>
->> HyperBus specification can be found at[1]
->> HyperFlash datasheet can be found at[2]
->>
->> [1] https://www.cypress.com/file/213356/download
->> [2] https://www.cypress.com/file/213346/download
->> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>     Table 12-5741. HyperFlash Access Sequence
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> [...]
->> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
->> new file mode 100644
->> index 000000000000..df1f75e10b1a
->> --- /dev/null
->> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
->> @@ -0,0 +1,191 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +//
->> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
->> +
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/mtd/hyperbus.h>
->> +#include <linux/mtd/map.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/cfi.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/types.h>
->> +
->> +#define HYPERBUS_CALIB_COUNT 25
-> 
->    Mhm, I think I've already protested about this being #define'd here...
-> 
-
-I thought you had agreed that default optional calibration routine can
-be part of core code and thus this #define.
-
-Anyways, what is your preference here? Drop the constant and use a local
-variable in hyperbus_calibrate()?
-Or are you suggesting to move hyperbus_calibrate() TI's specific driver?
-
-
-> [...]
->> +int hyperbus_register_device(struct hyperbus_device *hbdev)
->> +{
->> +	const struct hyperbus_ops *ops;
->> +	struct hyperbus_ctlr *ctlr;
->> +	struct device_node *np;
->> +	struct map_info *map;
->> +	struct resource res;
->> +	struct device *dev;
->> +	int ret;
->> +
->> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
->> +		pr_err("hyperbus: please fill all the necessary fields!\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	np = hbdev->np;
->> +	ctlr = hbdev->ctlr;
->> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
->> +		return -ENODEV;
->> +
->> +	hbdev->memtype = HYPERFLASH;
->> +
->> +	if (of_address_to_resource(np, 0, &res))
->> +		return -EINVAL;
-> 
->    Why not just propagate the error upstream (yeah, I've noticed that
-> it only can be -EINVAL)?
-> 
-
-Ok.
-
-> [...]
->> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
->> new file mode 100644
->> index 000000000000..ee2eefd822c9
->> --- /dev/null
->> +++ b/include/linux/mtd/hyperbus.h
->> @@ -0,0 +1,91 @@
->> +/* SPDX-License-Identifier: GPL-2.0
->> + *
->> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> + */
->> +
->> +#ifndef __LINUX_MTD_HYPERBUS_H__
->> +#define __LINUX_MTD_HYPERBUS_H__
->> +
->> +#include <linux/mtd/map.h>
->> +
->> +enum hyperbus_memtype {
->> +	HYPERFLASH,
->> +	HYPERRAM,
->> +};
->> +
->> +/**
->> + * struct hyperbus_device - struct representing HyperBus slave device
->> + * @map: map_info struct for accessing MMIO HyperBus flash memory
->> + * @np:	pointer to HyperBus slave device node
->           ^
->    Space needed here, not tab.
-> 
-
-Ok
-
->> + * @mtd: pointer to MTD struct
->> + * @ctlr: pointer to HyperBus controller struct
->> + * @memtype: type of memory device: HyperFlash or HyperRAM
->> + * @registered: flag to indicate whether device is registered with MTD core
->> + */
->> +
->> +struct hyperbus_device {
->> +	struct map_info map;
->> +	struct device_node *np;
->> +	struct mtd_info *mtd;
->> +	struct hyperbus_ctlr *ctlr;
->> +	enum hyperbus_memtype memtype;
->> +	bool registered;
->> +};
->> +
->> +/**
->> + * struct hyperbus_ops - struct representing custom HyperBus operations
->> + * @read16: read 16 bit of data, usually from register/ID-CFI space
->> + * @write16: write 16 bit of data, usually to register/ID-CFI space
-> 
->    Usually? How to differ the register/memory transfers if both are possible?
-> 
-
-CFI + map framework does not provide a way to differentiate b/w reg
-access vs memory access. read16()/write16() is used to either access
-registers or for sending various cmds like lock/unlock etc or for
-programming a single word.
-For regular read/writes copy_from() and copy_to() are used.
-
-Looking at HyperBus protocol, controllers would not need to
-differentiate b/w registers vs memory transfers for HyperFlash devices.
-So, I think I can drop read16/write16 and redirect these calls to
-copy_from()/copy_to()
-
-
-I mainly added these functions keeping HyperRAM in mind. Idea was
-drivers would look at hyperbus_device->memtype and set to register
-access mode for HyperRAM in case of write16()/read16(). Looks like the
-interface is not intuitive enough
-So, will drop these and add it back when adding HyperRAM support.
-
-Does that work for your HW as well?
-
->> + * @copy_from: copy data from flash memory
->> + * @copy_to: copy data to flash memory
->> + * @calibrate: calibrate HyperBus controller
->> + */
->> +
->> +struct hyperbus_ops {
->> +	u16 (*read16)(struct hyperbus_device *hbdev, unsigned long addr);
->> +	void (*write16)(struct hyperbus_device *hbdev,
->> +			unsigned long addr, u16 val);
->> +	void (*copy_from)(struct hyperbus_device *hbdev, void *to,
->> +			  unsigned long from, ssize_t len);
->> +	void (*copy_to)(struct hyperbus_device *dev, unsigned long to,
->> +			const void *from, ssize_t len);
->> +	int (*calibrate)(struct hyperbus_device *dev);
->> +};
->> +
->> +/**
->> + * struct hyperbus_ctlr - struct representing HyperBus controller
->> + * @calibrated: flag to indicate ctlr calibration sequence is complete
->> + * @ops: HyperBus controller ops
-> 
->    What about @dev?
-> 
-
-Will add.
-
->> + */
->> +struct hyperbus_ctlr {
->> +	struct device *dev;
->> +	bool calibrated;
->> +
->> +	const struct hyperbus_ops *ops;
->> +};
-> [...]
-> 
-> MBR, Sergei
-> 
-
--- 
-Regards
-Vignesh
+On 6/6/2019 2:31 PM, Christophe Leroy wrote:=0A=
+> Next patch will require struct talitos_edesc to be defined=0A=
+> earlier in talitos.c=0A=
+> =0A=
+> This patch moves it into talitos.h so that it can be used=0A=
+> from any place in talitos.c=0A=
+> =0A=
+> Fixes: 37b5e8897eb5 ("crypto: talitos - chain in buffered data for ahash =
+on SEC1")=0A=
+This isn't really a fix, so please drop the tag.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
