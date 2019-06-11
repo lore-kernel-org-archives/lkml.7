@@ -6,42 +6,44 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6489DC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D405EC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DAB2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DDA2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404347AbfFKHUh (ORCPT
+        id S2404360AbfFKHUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:20:37 -0400
-Received: from shell.v3.sk ([90.176.6.54]:60852 "EHLO shell.v3.sk"
+        Tue, 11 Jun 2019 03:20:41 -0400
+Received: from shell.v3.sk ([90.176.6.54]:60861 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404319AbfFKHUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:20:33 -0400
+        id S2404319AbfFKHUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 03:20:40 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id B6A85104F7E;
-        Tue, 11 Jun 2019 09:20:31 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id CA435104F75;
+        Tue, 11 Jun 2019 09:20:38 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id u2YoUcM1_rmB; Tue, 11 Jun 2019 09:20:12 +0200 (CEST)
+        with ESMTP id 5c8MQUV4Q-ou; Tue, 11 Jun 2019 09:20:23 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 56CC8104F75;
-        Tue, 11 Jun 2019 09:20:11 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id CC91B104F6E;
+        Tue, 11 Jun 2019 09:20:22 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id TwDhlqFSGqW1; Tue, 11 Jun 2019 09:20:09 +0200 (CEST)
+        with ESMTP id SOVTM4UIXexu; Tue, 11 Jun 2019 09:20:18 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id D1A02104F6E;
-        Tue, 11 Jun 2019 09:20:08 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 10294104F71;
+        Tue, 11 Jun 2019 09:20:18 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     John Crispin <john@phrozen.org>, linux-gpio@vger.kernel.org,
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>
+Cc:     John Crispin <john@phrozen.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] pinctrl: lantiq: Switch to SPDX header
-Date:   Tue, 11 Jun 2019 09:20:04 +0200
-Message-Id: <20190611072004.2978373-1-lkundrak@v3.sk>
+Subject: [PATCH] MIPS: ralink: Switch pinmux.h to SPDX header
+Date:   Tue, 11 Jun 2019 09:20:14 +0200
+Message-Id: <20190611072014.2978530-1-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -56,39 +58,17 @@ to SPDX instead of fixing the wording.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- drivers/pinctrl/pinctrl-lantiq.c | 5 +----
- drivers/pinctrl/pinctrl-lantiq.h | 5 +----
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ arch/mips/include/asm/mach-ralink/pinmux.h | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-lantiq.c b/drivers/pinctrl/pinctrl-l=
-antiq.c
-index 22e80613e269..029e0aecb8d8 100644
---- a/drivers/pinctrl/pinctrl-lantiq.c
-+++ b/drivers/pinctrl/pinctrl-lantiq.c
-@@ -1,11 +1,8 @@
+diff --git a/arch/mips/include/asm/mach-ralink/pinmux.h b/arch/mips/inclu=
+de/asm/mach-ralink/pinmux.h
+index ba8ac331af0c..33647f796140 100644
+--- a/arch/mips/include/asm/mach-ralink/pinmux.h
++++ b/arch/mips/include/asm/mach-ralink/pinmux.h
+@@ -1,8 +1,5 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  *  linux/drivers/pinctrl/pinctrl-lantiq.c
-  *  based on linux/drivers/pinctrl/pinctrl-pxa3xx.c
-  *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License version 2 as
-- *  publishhed by the Free Software Foundation.
-- *
-  *  Copyright (C) 2012 John Crispin <john@phrozen.org>
-  */
-=20
-diff --git a/drivers/pinctrl/pinctrl-lantiq.h b/drivers/pinctrl/pinctrl-l=
-antiq.h
-index 0e4308b8f235..d6530838fca8 100644
---- a/drivers/pinctrl/pinctrl-lantiq.h
-+++ b/drivers/pinctrl/pinctrl-lantiq.h
-@@ -1,11 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  *  linux/drivers/pinctrl/pinctrl-lantiq.h
-  *  based on linux/drivers/pinctrl/pinctrl-pxa3xx.h
-  *
 - *  This program is free software; you can redistribute it and/or modify
 - *  it under the terms of the GNU General Public License version 2 as
 - *  publishhed by the Free Software Foundation.
