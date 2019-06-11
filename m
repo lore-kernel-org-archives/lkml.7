@@ -2,379 +2,158 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A708AC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315DCC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAE320820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D8C20820
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Owvgti8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405467AbfFKK0I (ORCPT
+        id S2405382AbfFKK24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:26:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52300 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405432AbfFKK0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:26:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF457ADDD;
-        Tue, 11 Jun 2019 10:26:04 +0000 (UTC)
-Subject: Re: [PATCH 10/12] bcache: move closures to lib/
-To:     Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-bcache@vger.kernel.org
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <20190610191420.27007-11-kent.overstreet@gmail.com>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <3642ab83-d59f-4572-4cd6-3db946c8319f@suse.de>
-Date:   Tue, 11 Jun 2019 18:25:59 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Tue, 11 Jun 2019 06:28:56 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40166 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727390AbfFKK2z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:28:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p11so12392041wre.7;
+        Tue, 11 Jun 2019 03:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kRV64qOLk302VnydNwilJeJlw6qAsvjITuOu4JcewOI=;
+        b=Owvgti8ev0Q2Svwoc/QM7kP8DGSc2ws8wTrpIcXAUby3lM8o1qN83/uImt673botdy
+         VyMq/UO78Gau6FNAqve+9zmvGzP+kuVpnk3vEjnG2phg3fdoD/wQC+iizbOyNxMpX33d
+         4P/GF/+Stk3LsnUXjmuR0idSfj8jytar/Wi2JG8X67+NYznWs9W9Sd7/3rYL5NHlcwRY
+         2sxmHROdlk2DX8UyoASDZTf2K+pzzSNtp3ZGB7+8CfctOra4GxWTM5sR8GTcfhkjHoSm
+         iiCnyra78kjCJ4vfnUYIJA2qfJZLIA/7fQGKqsGBsJg4e6Y5r1J8F1Gzh8g5YAWlIT4q
+         o0sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kRV64qOLk302VnydNwilJeJlw6qAsvjITuOu4JcewOI=;
+        b=BDH+8x57lb5sTrR/OlROqYDMXIO/5Oe7ju2yFjye1aJnEtyepjl1iOzMVvG85LYiYr
+         qVxhc12GZdYvIWuxm8SYlt2JfObSDDFq+5P2+oA7mCwwrOzwfABg4mIdVZdInB/jELVM
+         n71Tvvr1QNh2VlyTCVR6qMhyrEquTwWQmzUmZCzZGE1634qt6fH2NJ/sm0790srJHk96
+         U5g13LGAZ/e4UrhGAKAC8PTXhhFEQnE/XPrMUzuGQVUbVPG3Jpu7B9cganXxKPXkmoHM
+         42hXdCGiWOQuNdlXaUg+VeBypqqD+v6AxzV98+c/VdosRPTDulm2iLH+kkIFNq16CNS7
+         LISA==
+X-Gm-Message-State: APjAAAVDr9awRHakKP8yh93HQIfTX2V0R6mlKBjaEW3JcESVql8NU27k
+        m0bJ7IpObH2VY9nEwnIRNFk=
+X-Google-Smtp-Source: APXvYqxYQSDvYU9Fh6rHXAZAfFkNW9UpmNYyFibITu3A7Iz68Yf8OmktlYaaG3dH818Rlqt4nABtWQ==
+X-Received: by 2002:adf:eb4e:: with SMTP id u14mr2276335wrn.168.1560248933055;
+        Tue, 11 Jun 2019 03:28:53 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id z14sm23673644wre.96.2019.06.11.03.28.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 03:28:52 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 12:28:51 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm-backlight: Add 'max-brightness'
+ property
+Message-ID: <20190611102851.GA16611@ulmo>
+References: <20190610233739.29477-1-mka@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190610191420.27007-11-kent.overstreet@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Disposition: inline
+In-Reply-To: <20190610233739.29477-1-mka@chromium.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/11 3:14 上午, Kent Overstreet wrote:
-> Prep work for bcachefs - being a fork of bcache it also uses closures
-> 
-> Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
 
-Acked-by: Coly Li <colyli@suse.de>
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
-
-Coly Li
-
-
+On Mon, Jun 10, 2019 at 04:37:38PM -0700, Matthias Kaehlcke wrote:
+> Add an optional 'max-brightness' property, which is used to specify
+> the number of brightness levels (max-brightness + 1) when the node
+> has no 'brightness-levels' table.
+>=20
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  drivers/md/bcache/Kconfig                     | 10 +------
->  drivers/md/bcache/Makefile                    |  6 ++--
->  drivers/md/bcache/bcache.h                    |  2 +-
->  drivers/md/bcache/super.c                     |  1 -
->  drivers/md/bcache/util.h                      |  3 +-
->  .../md/bcache => include/linux}/closure.h     | 17 ++++++-----
->  lib/Kconfig                                   |  3 ++
->  lib/Kconfig.debug                             |  9 ++++++
->  lib/Makefile                                  |  2 ++
->  {drivers/md/bcache => lib}/closure.c          | 28 ++++++-------------
->  10 files changed, 37 insertions(+), 44 deletions(-)
->  rename {drivers/md/bcache => include/linux}/closure.h (97%)
->  rename {drivers/md/bcache => lib}/closure.c (89%)
-> 
-> diff --git a/drivers/md/bcache/Kconfig b/drivers/md/bcache/Kconfig
-> index f6e0a8b3a6..3dd1d48987 100644
-> --- a/drivers/md/bcache/Kconfig
-> +++ b/drivers/md/bcache/Kconfig
-> @@ -2,6 +2,7 @@
->  config BCACHE
->  	tristate "Block device as cache"
->  	select CRC64
-> +	select CLOSURES
->  	help
->  	Allows a block device to be used as cache for other devices; uses
->  	a btree for indexing and the layout is optimized for SSDs.
-> @@ -16,12 +17,3 @@ config BCACHE_DEBUG
->  
->  	Enables extra debugging tools, allows expensive runtime checks to be
->  	turned on.
-> -
-> -config BCACHE_CLOSURES_DEBUG
-> -	bool "Debug closures"
-> -	depends on BCACHE
-> -	select DEBUG_FS
-> -	help
-> -	Keeps all active closures in a linked list and provides a debugfs
-> -	interface to list them, which makes it possible to see asynchronous
-> -	operations that get stuck.
-> diff --git a/drivers/md/bcache/Makefile b/drivers/md/bcache/Makefile
-> index d26b351958..2b790fb813 100644
-> --- a/drivers/md/bcache/Makefile
-> +++ b/drivers/md/bcache/Makefile
-> @@ -2,8 +2,8 @@
->  
->  obj-$(CONFIG_BCACHE)	+= bcache.o
->  
-> -bcache-y		:= alloc.o bset.o btree.o closure.o debug.o extents.o\
-> -	io.o journal.o movinggc.o request.o stats.o super.o sysfs.o trace.o\
-> -	util.o writeback.o
-> +bcache-y		:= alloc.o bset.o btree.o debug.o extents.o io.o\
-> +	journal.o movinggc.o request.o stats.o super.o sysfs.o trace.o util.o\
-> +	writeback.o
->  
->  CFLAGS_request.o	+= -Iblock
-> diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-> index fdf75352e1..ced9f1526c 100644
-> --- a/drivers/md/bcache/bcache.h
-> +++ b/drivers/md/bcache/bcache.h
-> @@ -180,6 +180,7 @@
->  
->  #include <linux/bcache.h>
->  #include <linux/bio.h>
-> +#include <linux/closure.h>
->  #include <linux/kobject.h>
->  #include <linux/list.h>
->  #include <linux/mutex.h>
-> @@ -192,7 +193,6 @@
->  
->  #include "bset.h"
->  #include "util.h"
-> -#include "closure.h"
->  
->  struct bucket {
->  	atomic_t	pin;
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index a697a3a923..da6803f280 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -2487,7 +2487,6 @@ static int __init bcache_init(void)
->  		goto err;
->  
->  	bch_debug_init();
-> -	closure_debug_init();
->  
->  	return 0;
->  err:
-> diff --git a/drivers/md/bcache/util.h b/drivers/md/bcache/util.h
-> index 00aab6abcf..8a75100c0b 100644
-> --- a/drivers/md/bcache/util.h
-> +++ b/drivers/md/bcache/util.h
-> @@ -4,6 +4,7 @@
->  #define _BCACHE_UTIL_H
->  
->  #include <linux/blkdev.h>
-> +#include <linux/closure.h>
->  #include <linux/errno.h>
->  #include <linux/kernel.h>
->  #include <linux/sched/clock.h>
-> @@ -13,8 +14,6 @@
->  #include <linux/workqueue.h>
->  #include <linux/crc64.h>
->  
-> -#include "closure.h"
-> -
->  #define PAGE_SECTORS		(PAGE_SIZE / 512)
->  
->  struct closure;
-> diff --git a/drivers/md/bcache/closure.h b/include/linux/closure.h
-> similarity index 97%
-> rename from drivers/md/bcache/closure.h
-> rename to include/linux/closure.h
-> index 376c5e659c..308e38028c 100644
-> --- a/drivers/md/bcache/closure.h
-> +++ b/include/linux/closure.h
-> @@ -155,7 +155,7 @@ struct closure {
->  
->  	atomic_t		remaining;
->  
-> -#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-> +#ifdef CONFIG_DEBUG_CLOSURES
->  #define CLOSURE_MAGIC_DEAD	0xc054dead
->  #define CLOSURE_MAGIC_ALIVE	0xc054a11e
->  
-> @@ -184,15 +184,13 @@ static inline void closure_sync(struct closure *cl)
->  		__closure_sync(cl);
->  }
->  
-> -#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-> +#ifdef CONFIG_DEBUG_CLOSURES
->  
-> -void closure_debug_init(void);
->  void closure_debug_create(struct closure *cl);
->  void closure_debug_destroy(struct closure *cl);
->  
->  #else
->  
-> -static inline void closure_debug_init(void) {}
->  static inline void closure_debug_create(struct closure *cl) {}
->  static inline void closure_debug_destroy(struct closure *cl) {}
->  
-> @@ -200,21 +198,21 @@ static inline void closure_debug_destroy(struct closure *cl) {}
->  
->  static inline void closure_set_ip(struct closure *cl)
->  {
-> -#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-> +#ifdef CONFIG_DEBUG_CLOSURES
->  	cl->ip = _THIS_IP_;
->  #endif
->  }
->  
->  static inline void closure_set_ret_ip(struct closure *cl)
->  {
-> -#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-> +#ifdef CONFIG_DEBUG_CLOSURES
->  	cl->ip = _RET_IP_;
->  #endif
->  }
->  
->  static inline void closure_set_waiting(struct closure *cl, unsigned long f)
->  {
-> -#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-> +#ifdef CONFIG_DEBUG_CLOSURES
->  	cl->waiting_on = f;
->  #endif
->  }
-> @@ -243,6 +241,7 @@ static inline void closure_queue(struct closure *cl)
->  	 */
->  	BUILD_BUG_ON(offsetof(struct closure, fn)
->  		     != offsetof(struct work_struct, func));
-> +
->  	if (wq) {
->  		INIT_WORK(&cl->work, cl->work.func);
->  		queue_work(wq, &cl->work);
-> @@ -255,7 +254,7 @@ static inline void closure_queue(struct closure *cl)
->   */
->  static inline void closure_get(struct closure *cl)
->  {
-> -#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-> +#ifdef CONFIG_DEBUG_CLOSURES
->  	BUG_ON((atomic_inc_return(&cl->remaining) &
->  		CLOSURE_REMAINING_MASK) <= 1);
->  #else
-> @@ -271,7 +270,7 @@ static inline void closure_get(struct closure *cl)
->   */
->  static inline void closure_init(struct closure *cl, struct closure *parent)
->  {
-> -	memset(cl, 0, sizeof(struct closure));
-> +	cl->fn = NULL;
->  	cl->parent = parent;
->  	if (parent)
->  		closure_get(parent);
-> diff --git a/lib/Kconfig b/lib/Kconfig
-> index a9e56539bd..09a25af0d0 100644
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -427,6 +427,9 @@ config ASSOCIATIVE_ARRAY
->  
->  	  for more information.
->  
-> +config CLOSURES
-> +	bool
-> +
->  config HAS_IOMEM
->  	bool
->  	depends on !NO_IOMEM
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index d5a4a4036d..6d97985e7e 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1397,6 +1397,15 @@ config DEBUG_CREDENTIALS
->  
->  source "kernel/rcu/Kconfig.debug"
->  
-> +config DEBUG_CLOSURES
-> +	bool "Debug closures (bcache async widgits)"
-> +	depends on CLOSURES
-> +	select DEBUG_FS
-> +	help
-> +	Keeps all active closures in a linked list and provides a debugfs
-> +	interface to list them, which makes it possible to see asynchronous
-> +	operations that get stuck.
-> +
->  config DEBUG_WQ_FORCE_RR_CPU
->  	bool "Force round-robin CPU selection for unbound work items"
->  	depends on DEBUG_KERNEL
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 18c2be516a..2003eda127 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -193,6 +193,8 @@ obj-$(CONFIG_ATOMIC64_SELFTEST) += atomic64_test.o
->  
->  obj-$(CONFIG_CPU_RMAP) += cpu_rmap.o
->  
-> +obj-$(CONFIG_CLOSURES) += closure.o
-> +
->  obj-$(CONFIG_CORDIC) += cordic.o
->  
->  obj-$(CONFIG_DQL) += dynamic_queue_limits.o
-> diff --git a/drivers/md/bcache/closure.c b/lib/closure.c
-> similarity index 89%
-> rename from drivers/md/bcache/closure.c
-> rename to lib/closure.c
-> index 73f5319295..46cfe4c382 100644
-> --- a/drivers/md/bcache/closure.c
-> +++ b/lib/closure.c
-> @@ -6,13 +6,12 @@
->   * Copyright 2012 Google, Inc.
->   */
->  
-> +#include <linux/closure.h>
->  #include <linux/debugfs.h>
-> -#include <linux/module.h>
-> +#include <linux/export.h>
->  #include <linux/seq_file.h>
->  #include <linux/sched/debug.h>
->  
-> -#include "closure.h"
-> -
->  static inline void closure_put_after_sub(struct closure *cl, int flags)
->  {
->  	int r = flags & CLOSURE_REMAINING_MASK;
-> @@ -127,7 +126,7 @@ void __sched __closure_sync(struct closure *cl)
->  }
->  EXPORT_SYMBOL(__closure_sync);
->  
-> -#ifdef CONFIG_BCACHE_CLOSURES_DEBUG
-> +#ifdef CONFIG_DEBUG_CLOSURES
->  
->  static LIST_HEAD(closure_list);
->  static DEFINE_SPINLOCK(closure_list_lock);
-> @@ -158,8 +157,6 @@ void closure_debug_destroy(struct closure *cl)
->  }
->  EXPORT_SYMBOL(closure_debug_destroy);
->  
-> -static struct dentry *closure_debug;
-> -
->  static int debug_seq_show(struct seq_file *f, void *data)
->  {
->  	struct closure *cl;
-> @@ -182,7 +179,7 @@ static int debug_seq_show(struct seq_file *f, void *data)
->  			seq_printf(f, " W %pS\n",
->  				   (void *) cl->waiting_on);
->  
-> -		seq_printf(f, "\n");
-> +		seq_puts(f, "\n");
->  	}
->  
->  	spin_unlock_irq(&closure_list_lock);
-> @@ -201,18 +198,11 @@ static const struct file_operations debug_ops = {
->  	.release	= single_release
->  };
->  
-> -void  __init closure_debug_init(void)
-> +static int __init closure_debug_init(void)
->  {
-> -	if (!IS_ERR_OR_NULL(bcache_debug))
-> -		/*
-> -		 * it is unnecessary to check return value of
-> -		 * debugfs_create_file(), we should not care
-> -		 * about this.
-> -		 */
-> -		closure_debug = debugfs_create_file(
-> -			"closures", 0400, bcache_debug, NULL, &debug_ops);
-> +	debugfs_create_file("closures", 0400, NULL, NULL, &debug_ops);
-> +	return 0;
->  }
-> -#endif
-> +late_initcall(closure_debug_init)
->  
-> -MODULE_AUTHOR("Kent Overstreet <koverstreet@google.com>");
-> -MODULE_LICENSE("GPL");
-> +#endif
-> 
+>  .../devicetree/bindings/leds/backlight/pwm-backlight.txt       | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlig=
+ht.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> index 64fa2fbd98c9..98f4ba626054 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> @@ -27,6 +27,9 @@ Optional properties:
+>                              resolution pwm duty cycle can be used without
+>                              having to list out every possible value in t=
+he
+>                              brightness-level array.
+> +  - max-brightness: Maximum brightness value. Used to specify the number=
+ of
+> +                    brightness levels (max-brightness + 1) when the node
+> +                    has no 'brightness-levels' table.
 
+Back at the time when these bindings were defined we specifically didn't
+add this because it was deemed impractical. That is, no real hardware is
+actually capable of achieving useful results with a simplified
+description like this.
 
--- 
+Besides, we already have the num-interpolated-steps property which
+should allow you to achieve the same thing:
 
-Coly Li
+	brightness-levels =3D <0 255>;
+	default-brightness-level =3D <1>;
+	num-interpolated-steps =3D <255>;
+
+Though given the original discussion that we had around how backlight
+hardware behaves, that doesn't seem like a good choice.
+
+Thierry
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz/gl4ACgkQ3SOs138+
+s6GSfxAAwY+qUwKq+54LHTg+9GjvcE4Uq0lDCHIfRvxHcE9LkoP6hO+howgYknDN
+8jhc8KUrHT4VgdE3gGokIwPssNaRzeEnGJ82WaIQ0s0PIhD1Vsa0gx81P+fDj4TT
+ByA5QlRiF1aaVDQLBlXDhTTjzl0xL/8/Q+gANrZVezWsDUBBCEwofvEQMoj0MJ+g
+NH+AdOPsjMZnY4QToqzPnEQ2WU3HrLB45MLKm+fxUdgEkN2h80tvjmXr5jgyBnQ1
+/dk8aOxFteV0kyvDJt+ZprHTGFvp43hZ5uvQqTLVZyEiW3pyt4snu1jnv8p9GTEV
+C3lP1/U3Xh+y+1CuZ4RCykHYBh1dr1YFrkbtebcAFFFuAI+qtbdPEym7IDOjKHhb
+o9XwM7j4EOpLyoaWdOE4IbdPMCsoCyZzNQklw1CfS6F+8Ei6qbFUq2302/RTPcZv
+NlgAHTQ0Ngh0rLBW5GaUE/Tb0zb3GksiVAnILi/lk2u+BhFxB8KCK0GgCVHY7I81
+iP+DiCXDciGi6r8+WkdFsz0577IntMoOVPqQ2OliC4snRnp6SJ6fJEAT5zAMB3id
+uc2LsElo8NT7VtTQzq6WRjtS2Yb+AexuVtpZDnwIWqO5U17Sdc9Li1YdV9s/p4eG
+Zbj2CZoWVjHVlv/7Fk4dY/ofFOPPcpgK/Aengy3NmXjIL4DxmcI=
+=qSIX
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
