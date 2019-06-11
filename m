@@ -2,188 +2,159 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D75C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5662C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD4320820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8DD20820
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sNPgEYMm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tRlj2zqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390949AbfFKDET (ORCPT
+        id S2391012AbfFKDE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 23:04:19 -0400
-Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:64830
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390817AbfFKDET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 23:04:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uw5rB/4vZe6ey0+JDJ38/4Uc0xPPuou7Ty8heKvxXuE=;
- b=sNPgEYMmSkPtG75gxmeEB//KmLvYU0jTW/IGYx9jWfVW/OOke75/VM4iVHkOGanQRtKwjvsIZrBKCVGTf5JBioQaDR+gj+bT7zFqe6e+xzPqYJovUKncqHVaFh0TTyUFcFguDFCXE0yPn3GM0E3kwwDO7G/DcN2TOLp3hsPVPQM=
-Received: from AM6PR04MB6630.eurprd04.prod.outlook.com (20.179.247.83) by
- AM6PR04MB4023.eurprd04.prod.outlook.com (52.135.161.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Tue, 11 Jun 2019 03:04:12 +0000
-Received: from AM6PR04MB6630.eurprd04.prod.outlook.com
- ([fe80::c066:9c0e:7eeb:f82c]) by AM6PR04MB6630.eurprd04.prod.outlook.com
- ([fe80::c066:9c0e:7eeb:f82c%7]) with mapi id 15.20.1965.011; Tue, 11 Jun 2019
- 03:04:12 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "vkoul@kernel.org" <vkoul@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v5 15/15] dmaengine: imx-sdma: add uart rom script
-Thread-Topic: [PATCH v5 15/15] dmaengine: imx-sdma: add uart rom script
-Thread-Index: AQHVH2TZ6KArzVJjCEKmpzk602iIRKaU2MsAgAF0OoA=
-Date:   Tue, 11 Jun 2019 03:04:12 +0000
-Message-ID: <1560251269.9731.41.camel@nxp.com>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
-         <20190610081753.11422-16-yibin.gong@nxp.com>
-         <20190610125534.GQ9160@vkoul-mobl.Dlink>
-In-Reply-To: <20190610125534.GQ9160@vkoul-mobl.Dlink>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4f67439f-20ad-45c8-69bd-08d6ee197b18
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB4023;
-x-ms-traffictypediagnostic: AM6PR04MB4023:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <AM6PR04MB4023A1D1ED7D02F38EB4DAC989ED0@AM6PR04MB4023.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2276;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(396003)(136003)(39860400002)(366004)(189003)(199004)(54906003)(76116006)(316002)(8936002)(91956017)(6916009)(76176011)(2351001)(26005)(186003)(66066001)(66476007)(99286004)(86362001)(53936002)(50226002)(102836004)(53546011)(6506007)(66946007)(73956011)(8676002)(1730700003)(66556008)(2501003)(5660300002)(64756008)(4326008)(6246003)(66446008)(25786009)(81156014)(81166006)(71190400001)(103116003)(71200400001)(68736007)(6486002)(229853002)(5640700003)(305945005)(2906002)(7416002)(7736002)(478600001)(966005)(6116002)(3846002)(6306002)(36756003)(476003)(6512007)(486006)(6436002)(256004)(2616005)(11346002)(14444005)(446003)(14454004)(45080400002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4023;H:AM6PR04MB6630.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: F/8AzZDq+wCR1Fms+sS9NZa27f75aozbrJ7iGIVJxnvozhj9/KCa5eOJHQeKzZDilGRCrU93WSPbEpXxtkGAf6LnvXqdgscWaCJAiBUReUvtVQ99WhP/YwClnUHEAV8t3ztEfY1QbdkjZyZ9WCS+cOg4E5xJbXKpmWbtjOw7Zn9z5OWvgSawlhmehtMLf1UfJJnV0aia55Odh6RVjQ4PRqN7M6Frx7FPsYggJHqHTCs44mCpSdaf9Y4tuFfcP/rUENpeaFPeGfzVAMAb0jt97YqKDgPPLUTR79WzY1SHcxngomt6KgKIqnGJduzhJndTCmY0NP7xCDQ5kmjsynhrkScY+7RWUJcQUGS9c4jLTm1xS4bybw9REmclTwgk3WOFE4Ke7KrGyUffCmdiqmNv07YXGNVa+aRvbduxaVqUo3c=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6D7E76014612004390E68113066BA45F@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 10 Jun 2019 23:04:27 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35463 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390817AbfFKDE0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 23:04:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d126so6456232pfd.2;
+        Mon, 10 Jun 2019 20:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o+PtWLak2dg1C3eGg2eDELkNRTG2GcRoWi74DwVXfWM=;
+        b=tRlj2zqJi3EkmGZuQqxxjp0WbWHqeZQcQP/nXQSlzQoiULcd5r1jVzUhtv7R99/oYc
+         lW/XlzXpm53OVUIp+sGZIRekiex3s21ixAJjKUYlhA4XMXEoe/Cqnxrxvr/FT/MHLz+8
+         LB6m1SkE7kuftutSLXGxdaVeOVi7i9+Xk0AbgnHzl8BdjiOwj6RWM2wiOS/J5wcSbbnF
+         rG7tjHjIugIBm93YWXTVUkHjzj50MgLG1bHTP9rI5a+ebhh9Nyu16lCCViDvO0J3FVcd
+         mkxy22+Z63ewIpJVvFpvmHV2XfYSi62AGdAtlLIR5jlM8VQ4ctVr5csivzzFvXgJraqS
+         v6AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o+PtWLak2dg1C3eGg2eDELkNRTG2GcRoWi74DwVXfWM=;
+        b=JAyNgUPpM4B+Ct6Ai8N6m557R+L2hUXbVDsP3lt7+Ize17R/O371YsiBnhs+SajvbF
+         xHWVUXlIJDOXuOrl7nutw35czTviVWZV2kYIXYaKuoUrf8+GuUhLZRC61LozylT6ZLzz
+         tmPaZyAcqwBj1vjgGto0c2zxXnRn11mM/5MKtz6rP0hIzWthaF2F0Y9JPS/sidbxTxF9
+         lmCmrdqNfJXG0IDISutxXUTwdbczvwaFpVDtfQjn4uXgnLBOLmPpFny+X5SZSWP3dZzq
+         XUhnyfSurRBl8ZZTuUcxcFvlsThgg53bdvGuIXrGQRoJP926jbXMleaUIf3lFWcg1nNJ
+         AcuQ==
+X-Gm-Message-State: APjAAAXS8TmjyryIIaZ6hNrh7QpTnMXVRHl08lho9W1L40PEGai0VH0G
+        iaosHKiijERD/iVPW0FMrcU=
+X-Google-Smtp-Source: APXvYqy/HcsULBNvRsdFwnXtNl6RcCaJssgVF/tEPpVMwZSYIlE2tJ9nEcarvWk61WhM+i3U8S4qSQ==
+X-Received: by 2002:a62:5e42:: with SMTP id s63mr75239163pfb.78.1560222265314;
+        Mon, 10 Jun 2019 20:04:25 -0700 (PDT)
+Received: from ubuntu ([104.192.108.9])
+        by smtp.gmail.com with ESMTPSA id f10sm12369152pfd.151.2019.06.10.20.04.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 20:04:24 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 20:04:18 -0700
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] selinux: lsm: fix a missing-check bug in
+ selinux_add_mnt_opt( )
+Message-ID: <20190611030417.GA4013@ubuntu>
+References: <20190606092342.GA21672@zhanggen-UX430UQ>
+ <CAFqZXNuricWOMH3fQiCbPZyz2qwf7Gw1zmx1o+wLeTELSF=CUQ@mail.gmail.com>
+ <20190607121134.GA3357@zhanggen-UX430UQ>
+ <CAHC9VhS8W8p+9FwB9OHBhfsxP45ckjpqsqt6p85U5PZY=N=rYg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f67439f-20ad-45c8-69bd-08d6ee197b18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 03:04:12.5035
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4023
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhS8W8p+9FwB9OHBhfsxP45ckjpqsqt6p85U5PZY=N=rYg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNi0xMCBhdCAxMjo1NSArMDAwMCwgVmlub2QgS291bCB3cm90ZToNCj4gT24gMTAt
-MDYtMTksIDE2OjE3LCB5aWJpbi5nb25nQG54cC5jb20gd3JvdGU6DQo+ID4gDQo+ID4gRnJvbTog
-Um9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KPiA+IA0KPiA+IEZvciB0aGUgY29tcGF0
-aWJpbGl0eSBvZiBOWFAgaW50ZXJuYWwgbGVnYWN5IGtlcm5lbCBiZWZvcmUgNC4xOQ0KPiA+IHdo
-aWNoDQo+ID4gaXMgYmFzZWQgb24gdWFydCByYW0gc2NyaXB0IGFuZCB1cHN0cmVhbWluZyBrZXJu
-ZWwgYmFzZWQgb24gdWFydA0KPiA+IHJvbQ0KPiA+IHNjcmlwdCwgYWRkIGJvdGggdWFydCByYW0v
-cm9tIHNjcmlwdCBpbiBsYXRlc3Qgc2RtYSBmaXJtd2FyZS4gQnkNCj4gPiBkZWZhdWx0DQo+ID4g
-dWFydCByb20gc2NyaXB0IHVzZWQuDQo+ID4gQmVzaWRlcywgYWRkIHR3byBtdWx0aS1maWZvIHNj
-cmlwdHMgZm9yIFNBSS9QRE0gb24gaS5teDhtLzhtbSBhbmQNCj4gPiBhZGQNCj4gPiBiYWNrIHFz
-cGkgc2NyaXB0IG1pc3MgZm9yIHY0KGkubXg3ZC84bS84bW0gZmFtaWx5LCBidXQgdjMgaXMgZm9y
-DQo+ID4gaS5teDYpLg0KPiA+IA0KPiA+IHJvbSBzY3JpcHQ6DQo+ID4gCXVhcnRfMl9tY3VfYWRk
-cg0KPiA+IAl1YXJ0c2hfMl9tY3VfYWRkciAvKiB0aHJvdWdoIHNwYmEgYnVzICovDQo+ID4gcmFt
-IHNjcmlwdDoNCj4gPiAJdWFydF8yX21jdV9yYW1fYWRkcg0KPiA+IAl1YXJ0c2hfMl9tY3VfcmFt
-X2FkZHIgLyogdGhyb3VnaCBzcGJhIGJ1cyAqLw0KPiA+IA0KPiA+IFBsZWFzZSBnZXQgbGF0ZXN0
-IHNkbWEgZmlybXdhcmUgZnJvbSB0aGUgYmVsb3cgYW5kIHB1dCB0aGVtIGludG8NCj4gPiB0aGUg
-cGF0aA0KPiA+ICgvbGliL2Zpcm13YXJlL2lteC9zZG1hLyk6DQo+ID4gaHR0cHM6Ly9ldXIwMS5z
-YWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGZw0KPiA+
-IGl0Lmtlcm5lbC5vcmclMkZwdWIlMkZzY20lMkZsaW51eCUyRmtlcm5lbCUyRmdpdCUyRmZpcm13
-YXJlJTJGbGludXgNCj4gPiAtZmlybXdhcmUuZ2l0JmFtcDtkYXRhPTAyJTdDMDElN0N5aWJpbi5n
-b25nJTQwbnhwLmNvbSU3QzZhNzgzM2U4YTA5DQo+ID4gMzQ0ZDk5NTFlMDhkNmVkYTM1ZmM1JTdD
-Njg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3Qw0KPiA+IDYzNjk1NzY4
-MzI3ODE5MDI3OSZhbXA7c2RhdGE9UkhleXBFT1JFaVBHbUt2ZWc2Z1lQeSUyRk1nOER6ejRKcGNI
-c20NCj4gPiAlMkJiZHhsem8lM0QmYW1wO3Jlc2VydmVkPTANCj4gPiAvdHJlZS9pbXgvc2RtYQ0K
-PiBIb3cgZG9lcyB0aGlzIHdvcmsgd2l0aCBmb2xrcyBoYXZlIG9sZGVyIGZpcm13YXJlPw0KVGhl
-IG9sZGVyIFNETUEgUkFNIHNjcmlwdChmaXJtd2FyZSkgd2lsbCBicmVhayB0aGUgdWFydCBkcml2
-ZXIgb2YNCnVwc3RyZWFtaW5nIGtlcm5lbCBmb3IgdGhlc2UgeWVhcnMsIHRoaXMgaXMgd2h5IEx1
-Y2FzIHJhaXNlIHVhcnQgZHJpdmVyDQpwYXRjaCAoY29tbWl0IDkwNWMwZGVjYWQyOCkgdG8gdXNl
-IFJPTSBzY3JpcHQgaW5zdGVhZC4gVGhlcmUgYXJlIHR3bw0Kd2F5cyB0byBmaXggdWFydCBpc3N1
-ZTogb25lIGlzIGNoZWNraW5nICdJZGxlIENvbmRpdGlvbg0KRGV0ZWN0aW9uJy8nQWdpbmcgdGlt
-ZXInIGluIFJBTSBzY3JpcHQgYW5kIGVuYWJsZSAnSURMRScgaW4gdWFydA0KZHJpdmVyLCBhbm90
-aGVyIGlzIG9ubHkgY2hlY2tpbmcgJ0FnaW5nIHRpbWVyJyBpbiBST00gc2NyaXB0IGFuZA0KYWRq
-dXN0aW5nIFJYIEZJRk8gYnVyc3QgbGVuZ3RoIG9uZSB3b3JkIGxlc3MgdG8gZW5zdXJlIGF0IGxl
-YXN0IG9uZQ0Kd29yZCBsZWZ0IGZvcmV2ZXIgaW4gUlggRklGTyB3aGljaCBpcyB0aGUgdHJpZ2dl
-ciByZXF1aXJlbWVudCBvZiAnQWdpbmcNCnRpbWVyJyhTbyBubyBuZWVkICdJRExFJywgJ0FnaW5n
-IHRpbWUnIGlzIGVub3VnaCkgLiBGU0wvTlhQIGludGVybmFsDQprZXJuZWwgZ28gd2l0aCB0aGUg
-Zmlyc3Qgb3B0aW9uLCB3aGlsZSB1cHN0cmVhbWluZyBrZXJuZWwgZ28gd2l0aCB0aGUNCnNlY29u
-ZC4gU2luY2UgTHVjYXMncyBwYXRjaCBhc3N1bWUgUk9NIHNjcmlwdCB1c2VkIGluIGtlcm5lbCBh
-bmQNCmRpc2FibGUgJ0lETEUnLCB1cHN0cmVhbWluZyBrZXJuZWwgYnJva2VuIGluIHVhcnQgZHJp
-dmVyIHdpdGggb2xkZXINCmZpcm13YXJlIGZvciB0aGVzZSB5ZWFycy4gU28gdGhpcyBwYXRjaCBp
-cyBqdXN0IGZvciBmaXggdGhpcw0KY29tcGF0aWJpbGl0eSBpc3N1ZSB3aXRoIHRoZSByYW0gc2Ny
-aXB0KG9sZGVyIGZpcm13YXJlKSB1cGRhdGVkIGluDQpsaW51eC1maXJtd2FyZShkb25lIGFscmVh
-ZHkuKSwgdGh1cyBib3RoIFJBTSBzY3JpcHQgYW5kIFJPTSBzY3JpcHQgY2FuDQp3b3JrIGluIGtl
-cm5lbC4gQmVzaWRlcywga2VybmVsIHdpdGggdGhlIGxhdGVzdCBSQU0gZmlybXdhcmUgYW5kIHRo
-aXMNCnBhdGNoIHNldCBjYW4gd29ya2Fyb3VuZCBlY3NwaSBpc3N1ZSB3aXRob3V0IGFueSBmdW5j
-dGlvbiBicmVhayB3aGljaA0KTHVjYXMgY29uY2VybmVkIGFib3V0Lg0KPiANCj4gPiANCj4gPiAN
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+ID4g
-LS0tDQo+ID4gwqBkcml2ZXJzL2RtYS9pbXgtc2RtYS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgfMKgwqA0ICsrLS0NCj4gPiDCoGluY2x1ZGUvbGludXgvcGxhdGZv
-cm1fZGF0YS9kbWEtaW14LXNkbWEuaCB8IDEwICsrKysrKysrLS0NCj4gPiDCoDIgZmlsZXMgY2hh
-bmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9kbWEvaW14LXNkbWEuYyBiL2RyaXZlcnMvZG1hL2lteC1zZG1hLmMNCj4g
-PiBpbmRleCBmN2MxNTBkLi5kZWVhOWFhIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZG1hL2lt
-eC1zZG1hLmMNCj4gPiArKysgYi9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jDQo+ID4gQEAgLTE3MzMs
-OCArMTczMyw4IEBAIHN0YXRpYyB2b2lkIHNkbWFfaXNzdWVfcGVuZGluZyhzdHJ1Y3QNCj4gPiBk
-bWFfY2hhbiAqY2hhbikNCj4gPiDCoA0KPiA+IMKgI2RlZmluZSBTRE1BX1NDUklQVF9BRERSU19B
-UlJBWV9TSVpFX1YxCTM0DQo+ID4gwqAjZGVmaW5lIFNETUFfU0NSSVBUX0FERFJTX0FSUkFZX1NJ
-WkVfVjIJMzgNCj4gPiAtI2RlZmluZSBTRE1BX1NDUklQVF9BRERSU19BUlJBWV9TSVpFX1YzCTQx
-DQo+ID4gLSNkZWZpbmUgU0RNQV9TQ1JJUFRfQUREUlNfQVJSQVlfU0laRV9WNAk0Mg0KPiA+ICsj
-ZGVmaW5lIFNETUFfU0NSSVBUX0FERFJTX0FSUkFZX1NJWkVfVjMJNDUNCj4gPiArI2RlZmluZSBT
-RE1BX1NDUklQVF9BRERSU19BUlJBWV9TSVpFX1Y0CTQ2DQo+ID4gwqANCj4gPiDCoHN0YXRpYyB2
-b2lkIHNkbWFfYWRkX3NjcmlwdHMoc3RydWN0IHNkbWFfZW5naW5lICpzZG1hLA0KPiA+IMKgCQlj
-b25zdCBzdHJ1Y3Qgc2RtYV9zY3JpcHRfc3RhcnRfYWRkcnMgKmFkZHIpDQo+ID4gZGlmZiAtLWdp
-dCBhL2luY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9kbWEtaW14LXNkbWEuaA0KPiA+IGIvaW5j
-bHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL2RtYS1pbXgtc2RtYS5oDQo+ID4gaW5kZXggZjc5NGZl
-ZS4uZTEyZDJlOCAxMDA2NDQNCj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RhdGEv
-ZG1hLWlteC1zZG1hLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RhdGEvZG1h
-LWlteC1zZG1hLmgNCj4gPiBAQCAtMjAsMTIgKzIwLDEyIEBAIHN0cnVjdCBzZG1hX3NjcmlwdF9z
-dGFydF9hZGRycyB7DQo+ID4gwqAJczMyIHBlcl8yX2ZpcmlfYWRkcjsNCj4gPiDCoAlzMzIgbWN1
-XzJfZmlyaV9hZGRyOw0KPiA+IMKgCXMzMiB1YXJ0XzJfcGVyX2FkZHI7DQo+ID4gLQlzMzIgdWFy
-dF8yX21jdV9hZGRyOw0KPiA+ICsJczMyIHVhcnRfMl9tY3VfcmFtX2FkZHI7DQo+ID4gwqAJczMy
-IHBlcl8yX2FwcF9hZGRyOw0KPiA+IMKgCXMzMiBtY3VfMl9hcHBfYWRkcjsNCj4gPiDCoAlzMzIg
-cGVyXzJfcGVyX2FkZHI7DQo+ID4gwqAJczMyIHVhcnRzaF8yX3Blcl9hZGRyOw0KPiA+IC0JczMy
-IHVhcnRzaF8yX21jdV9hZGRyOw0KPiA+ICsJczMyIHVhcnRzaF8yX21jdV9yYW1fYWRkcjsNCj4g
-PiDCoAlzMzIgcGVyXzJfc2hwX2FkZHI7DQo+ID4gwqAJczMyIG1jdV8yX3NocF9hZGRyOw0KPiA+
-IMKgCXMzMiBhdGFfMl9tY3VfYWRkcjsNCj4gPiBAQCAtNTIsNyArNTIsMTMgQEAgc3RydWN0IHNk
-bWFfc2NyaXB0X3N0YXJ0X2FkZHJzIHsNCj4gPiDCoAlzMzIgemNhbmZkXzJfbWN1X2FkZHI7DQo+
-ID4gwqAJczMyIHpxc3BpXzJfbWN1X2FkZHI7DQo+ID4gwqAJczMyIG1jdV8yX2Vjc3BpX2FkZHI7
-DQo+ID4gKwlzMzIgbWN1XzJfc2FpX2FkZHI7DQo+ID4gKwlzMzIgc2FpXzJfbWN1X2FkZHI7DQo+
-ID4gKwlzMzIgdWFydF8yX21jdV9hZGRyOw0KPiA+ICsJczMyIHVhcnRzaF8yX21jdV9hZGRyOw0K
-PiA+IMKgCS8qIEVuZCBvZiB2MyBhcnJheSAqLw0KPiA+ICsJczMyIG1jdV8yX3pxc3BpX2FkZHI7
-DQo+ID4gKwkvKiBFbmQgb2YgdjQgYXJyYXkgKi8NCj4gPiDCoH07DQo+ID4gwqANCj4gPiDCoC8q
-Kg0KPiA+IC0twqANCj4gPiAyLjcuNA==
+On Mon, Jun 10, 2019 at 03:31:50PM -0400, Paul Moore wrote:
+> On Fri, Jun 7, 2019 at 8:11 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+> >
+> > On Fri, Jun 07, 2019 at 10:39:05AM +0200, Ondrej Mosnacek wrote:
+> > > On Thu, Jun 6, 2019 at 11:23 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+> > > > In selinux_add_mnt_opt(), 'val' is allocated by kmemdup_nul(). It returns
+> > > > NULL when fails. So 'val' should be checked. And 'mnt_opts' should be
+> > > > freed when error.
+> > > >
+> > > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > > Fixes: 757cbe597fe8 ("LSM: new method: ->sb_add_mnt_opt()")
+> > > > ---
+> > > > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> > > > index 3ec702c..4e4c1c6 100644
+> > > > --- a/security/selinux/hooks.c
+> > > > +++ b/security/selinux/hooks.c
+> > > > @@ -1052,15 +1052,23 @@ static int selinux_add_mnt_opt(const char *option, const char *val, int len,
+> > > >         if (token == Opt_error)
+> > > >                 return -EINVAL;
+> > > >
+> > > > -       if (token != Opt_seclabel)
+> > > > -               val = kmemdup_nul(val, len, GFP_KERNEL);
+> > > > +       if (token != Opt_seclabel) {
+> > > > +                       val = kmemdup_nul(val, len, GFP_KERNEL);
+> > > > +                       if (!val) {
+> > > > +                               rc = -ENOMEM;
+> > > > +                               goto free_opt;
+> > > > +                       }
+> > > > +       }
+> > > >         rc = selinux_add_opt(token, val, mnt_opts);
+> > > >         if (unlikely(rc)) {
+> > > >                 kfree(val);
+> > > > -               if (*mnt_opts) {
+> > > > -                       selinux_free_mnt_opts(*mnt_opts);
+> > > > -                       *mnt_opts = NULL;
+> > > > -               }
+> > > > +               goto free_opt;
+> > > > +       }
+> > > > +       return rc;
+> > >
+> > > At this point rc is guaranteed to be 0, so you can just 'return 0' for
+> > > clarity. Also, I visually prefer an empty line between a return
+> > > statement and a goto label, but I'm not sure what is the
+> > > general/maintainer's preference.
+> >
+> > Am I supposed to revise and send a patch v4 for this, or let the
+> > maintainer do this? :-)
+> 
+> First a few things from my perspective: I don't really care too much
+> about the difference between returning "0" and "rc" here, one could
+> argue that "0" is cleaner and that "rc" is "safer".  To me it isn't a
+> big deal and generally isn't something I would even comment on unless
+> there was something else in the patch that needed addressing.  I care
+> a more about the style choice of having an empty line between the
+> return and the start of the goto targets (vertical whitespace before
+> the jump targets is good, please include it), but once again, I'm not
+> sure I would comment on that.  The patch subject line is a bit
+> confusing in that we already discussed when to use "selinux" and when
+> to use "lsm", but I imagine there might be some confusion about using
+> both so let me try and clear that up now: don't do it unless you have
+> a *really* good reason to do so :)  In this case it is all SELinux
+> code so there is no reason why you should be including the "lsm"
+> prefix.
+Thanks for your comments. I was uncertain of the meaning of "lsm". So I
+used"selinux: lsm:". I am aware of that now.
+
+Thanks
+Gen
+> 
+> You've been pretty responsive, so if you don't mind submitting a v4
+> with the changes mentioned above, that would be far more preferable to
+> me making the changes.  I have some other comments about maintainer
+> fixes to patches, but I'll save that for the other thread :)
+> 
+> -- 
+> paul moore
+> www.paul-moore.com
