@@ -2,170 +2,108 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EEBC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80BEC31E46
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14FB2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8084F20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/BOc2qi"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="Z4u6UOoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436770AbfFKWUP (ORCPT
+        id S2436782AbfFKWWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:20:15 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36759 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436755AbfFKWUP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:20:15 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r6so9212726oti.3;
-        Tue, 11 Jun 2019 15:20:14 -0700 (PDT)
+        Tue, 11 Jun 2019 18:22:07 -0400
+Received: from mail-eopbgr790124.outbound.protection.outlook.com ([40.107.79.124]:46880
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388875AbfFKWWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:22:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vfffTPwX82Idi1y/riGTFQzU5OrguyWB0uehUGHFMv4=;
-        b=b/BOc2qiPknWcS0qM4I1ROFqX2v2bn/BFdCQuZ0nURILM3EUTeeOCNms4U4wKZI917
-         yvKUXlUGmIs3dSGULT7FP45GMLEq3dngWO2Ik4gO3YK9HMArZJwUrncv8MoLfdYakNbn
-         bah0wvKoaJ5/3A5xUp03rnECtpX/Zb0f5h1VqnTIwBX1z57IZl4oSQv94bhW3mQ9Jej9
-         OSSVCyseEW4gYt/W7Sjvx5stNFHMvCZVWID8xlWbNJWYzkeiG0QPnno2By/wDFtKKELK
-         VeEFAEz0URsLSW+fkXIJpN/1TNGRbN/mJUHWQxMabMC6gs9g/QAUN1d7sE9pkBMlRhu9
-         uEGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vfffTPwX82Idi1y/riGTFQzU5OrguyWB0uehUGHFMv4=;
-        b=G5QVzcD1tHxsfaOds59uSlv3KgZYEDdfu1194ykTgz7IL/CGk8SIV6bB2GX74CVf7q
-         IWXDPz232J78TsqY+TSNeKtf+mLrTv0IEKJD10tuvnpMwTDOI9ZAqdhppUYRHebCXEPs
-         akhL11LmgW+d66Rbgeb26rBFxXYoB+5+RZh9OHOUuaRe7yzR42Vj7oZuYD7FQD9px1bn
-         8fYBX6Hfd8H37ubeUSv1MElkrzwik+9UB/J2W+uy9Xt8v23OtdYMD5FaNHCAopHoHIsz
-         V45dmrW4laHV7ioaemDn/0neR5HIz4YwHcHaIMpr5dOOnxez08FgFW7mpa5NJjPj0UV4
-         sQNw==
-X-Gm-Message-State: APjAAAV81fs3+Nhms3rGb2cM0HjRXeQxGOVcrb6uyPQ6JPHZ49EcTwXU
-        fAd2YnxHUwczc31zR56lUqrL+n8R
-X-Google-Smtp-Source: APXvYqwBXsNiPTo0yn/3zKEUnGFm4Ao1KrYIYiC3IG0c1gK/mb67+IOPk1NPjHn0OqAhRUhwh4+G2w==
-X-Received: by 2002:a9d:66c8:: with SMTP id t8mr19745696otm.94.1560291614292;
-        Tue, 11 Jun 2019 15:20:14 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id w140sm1977822oie.32.2019.06.11.15.20.12
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 15:20:13 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
- <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
- <20190607172902.GA8183@lst.de>
- <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
- <20190610081825.GA16534@lst.de>
- <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
- <20190611060521.GA19512@lst.de>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
-Date:   Tue, 11 Jun 2019 17:20:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190611060521.GA19512@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jEF0/6YRrQuQVDsC/LUq3vTX4iCJP/zqnEoMtQr5dtU=;
+ b=Z4u6UOoXVojazErlg7umafdQlfL3avZaAs6dNZjRU8EKciQvzQgS/k25/UoE3UtAvJ/Bb7smyxrIurDZvJysaHPI8HqnFYDBZIBCf9fDDI6i52BJE5EYpS7Ml7JWkTCQDO1JpenXmQ3MYZVl8ql/NhQ7sqQ27ZIq2gqWwny/P2M=
+Received: from CY4PR2201MB1272.namprd22.prod.outlook.com (10.171.214.23) by
+ CY4PR2201MB1367.namprd22.prod.outlook.com (10.171.217.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Tue, 11 Jun 2019 22:22:03 +0000
+Received: from CY4PR2201MB1272.namprd22.prod.outlook.com
+ ([fe80::d571:f49f:6a5c:4962]) by CY4PR2201MB1272.namprd22.prod.outlook.com
+ ([fe80::d571:f49f:6a5c:4962%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 22:22:03 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "od@zcrc.me" <od@zcrc.me>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: lb60: Fix pin mappings
+Thread-Topic: [PATCH] MIPS: lb60: Fix pin mappings
+Thread-Index: AQHVGvNR1qZ4gQD8hE2mZTClh06Tw6aXEkgA
+Date:   Tue, 11 Jun 2019 22:22:03 +0000
+Message-ID: <CY4PR2201MB1272B762656C4EFB45D0D026C1ED0@CY4PR2201MB1272.namprd22.prod.outlook.com>
+References: <20190604163311.19059-1-paul@crapouillou.net>
+In-Reply-To: <20190604163311.19059-1-paul@crapouillou.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR11CA0068.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::45) To CY4PR2201MB1272.namprd22.prod.outlook.com
+ (2603:10b6:910:6e::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ce5b07b3-7861-42d3-2dc1-08d6eebb3ab1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR2201MB1367;
+x-ms-traffictypediagnostic: CY4PR2201MB1367:
+x-microsoft-antispam-prvs: <CY4PR2201MB13675059F4E2458D78285E72C1ED0@CY4PR2201MB1367.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39850400004)(376002)(346002)(396003)(366004)(199004)(189003)(81156014)(446003)(2906002)(8676002)(81166006)(486006)(305945005)(7736002)(4744005)(6916009)(478600001)(476003)(11346002)(14454004)(44832011)(66446008)(5660300002)(66556008)(64756008)(66476007)(66946007)(68736007)(52536014)(8936002)(73956011)(6116002)(3846002)(74316002)(256004)(42882007)(71200400001)(71190400001)(26005)(9686003)(6246003)(4326008)(102836004)(99286004)(55016002)(25786009)(54906003)(52116002)(6436002)(53936002)(7696005)(316002)(186003)(76176011)(6506007)(386003)(229853002)(66066001)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1367;H:CY4PR2201MB1272.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4n9VVHNEk1u3ZLYYxQXW4Whr+OJtjUtzS0NtuVzTasCOjsh8ENXb93u8E2Nsdr7YCk4bElROKsTEo+ehVTbydlQbejE8ECyxROVu+1kszYUjPt8kamJp6DwXnT7rcoOLqsf5wO11GQZdkrV5P7n4K1nRnY59ynh9K42E6Trnj140WpzBj6R+TBkS9uLK8nkiBfEx4cpzun49QahUm30XGZtKoa3wHmTm19whkdKn0UqgaTbB75OtpUSJuIvEWVs8iowscYaumYnRCtQDB7PYnPmcPjzSiOn5rohqaoI1iPo/ihM5I13aj9t5jyp6+h2IN1zjPgq+XgH6ZXBfz26cjUfDzFh+fzEfpHvTtR3FCDzO0lM/r0gDK1NKxBq5FAF9NLB6PjJv58cF7gWvptLCImuGmXSV408DEE/ejap7t44=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce5b07b3-7861-42d3-2dc1-08d6eebb3ab1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 22:22:03.3991
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1367
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 1:05 AM, Christoph Hellwig wrote:
-> On Mon, Jun 10, 2019 at 11:09:47AM -0500, Larry Finger wrote:
-> 
-> What might be confusing in your output is that dev->dma_mask is a pointer,
-> and we are setting it in dma_set_mask.  That is before we only check
-> if the pointer is set, and later we override it.  Of course this doesn't
-> actually explain the failure.  But what is even more strange to me
-> is that you get a return value from dma_supported() that isn't 0 or 1,
-> as that function is supposed to return a boolean, and I really can't see
-> how mask >= __phys_to_dma(dev, min_mask), would return anything but 0
-> or 1.  Does the output change if you use the correct printk specifiers?
-> 
-> i.e. with a debug patch like this:
-> 
-> 
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 2c2772e9702a..9e5b30b12b10 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -378,6 +378,7 @@ EXPORT_SYMBOL(dma_direct_map_resource);
->   int dma_direct_supported(struct device *dev, u64 mask)
->   {
->   	u64 min_mask;
-> +	bool ret;
->   
->   	if (IS_ENABLED(CONFIG_ZONE_DMA))
->   		min_mask = DMA_BIT_MASK(ARCH_ZONE_DMA_BITS);
-> @@ -391,7 +392,12 @@ int dma_direct_supported(struct device *dev, u64 mask)
->   	 * use __phys_to_dma() here so that the SME encryption mask isn't
->   	 * part of the check.
->   	 */
-> -	return mask >= __phys_to_dma(dev, min_mask);
-> +	ret = (mask >= __phys_to_dma(dev, min_mask));
-> +	if (!ret)
-> +		dev_info(dev,
-> +			"%s: failed (mask = 0x%llx, min_mask = 0x%llx/0x%llx, dma bits = %d\n",
-> +			__func__, mask, min_mask, __phys_to_dma(dev, min_mask), ARCH_ZONE_DMA_BITS);
-> +	return ret;
->   }
->   
->   size_t dma_direct_max_mapping_size(struct device *dev)
-> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-> index f7afdadb6770..6c57ccdee2ae 100644
-> --- a/kernel/dma/mapping.c
-> +++ b/kernel/dma/mapping.c
-> @@ -317,8 +317,14 @@ void arch_dma_set_mask(struct device *dev, u64 mask);
->   
->   int dma_set_mask(struct device *dev, u64 mask)
->   {
-> -	if (!dev->dma_mask || !dma_supported(dev, mask))
-> +	if (!dev->dma_mask) {
-> +		dev_info(dev, "no DMA mask set!\n");
->   		return -EIO;
-> +	}
-> +	if (!dma_supported(dev, mask)) {
-> +		printk("DMA not supported\n");
-> +		return -EIO;
-> +	}
->   
->   	arch_dma_set_mask(dev, mask);
->   	dma_check_mask(dev, mask);
-> 
-
-After I got the correct formatting, the output with this patch only gives the 
-following in dmesg:
-
-b43-pci-bridge 0001:11:00.0: dma_direct_supported: failed (mask = 0x3fffffff, 
-min_mask = 0x5ffff000/0x5ffff000, dma bits = 0x1f
-DMA not supported
-b43legacy-phy0 ERROR: The machine/kernel does not support the required 30-bit 
-DMA mask
-
-Your first patch did not work as the configuration does not have 
-CONFIG_ZONE_DMA. As a result, the initial value of min_mask always starts at 32 
-bits and is taken down to 31 with the maximum pfn minimization. When I forced 
-the initial value of min_mask to 30 bits, the device worked.
-
-It is obvious that the case of a mask smaller than min_mask should be handled by 
-the IOMMU. In my system, CONFIG_IOMMU_SUPPORT is selected. All other CONFIG 
-variables containing IOMMU are not selected. When dma_direct_supported() fails, 
-should the system not try for an IOMMU solution? Is the driver asking for the 
-wrong type of memory? It is doing a dma_and_set_mask_coherent() call.
-
-Larry
+SGVsbG8sDQoNClBhdWwgQ2VyY3VlaWwgd3JvdGU6DQo+IFRoZSBwaW4gbWFwcGluZ3MgaW50cm9k
+dWNlZCBpbiBjb21taXQgNjM2ZjhiYTY3ZmI2DQo+ICgiTUlQUzogSlo0NzQwOiBRaSBMQjYwOiBB
+ZGQgcGluY3RybCBjb25maWd1cmF0aW9uIGZvciBzZXZlcmFsIGRyaXZlcnMiKQ0KPiBhcmUgY29t
+cGxldGVseSB3cm9uZy4gVGhlIHBpbmN0cmwgZHJpdmVyIG5hbWUgaXMgaW5jb3JyZWN0LCBhbmQg
+dGhlDQo+IGZ1bmN0aW9uIGFuZCBncm91cCBmaWVsZHMgYXJlIHN3YXBwZWQuDQo+IA0KPiBGaXhl
+czogNjM2ZjhiYTY3ZmI2ICgiTUlQUzogSlo0NzQwOiBRaSBMQjYwOiBBZGQgcGluY3RybCBjb25m
+aWd1cmF0aW9uIGZvciBzZXZlcmFsIGRyaXZlcnMiKQ0KPiBDYzogPHN0YWJsZUB2Z2VyLmtlcm5l
+bC5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3Uu
+bmV0Pg0KPiBSZXZpZXdlZC1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8u
+b3JnPg0KDQpBcHBsaWVkIHRvIG1pcHMtbmV4dC4NCg0KVGhhbmtzLA0KICAgIFBhdWwNCg0KWyBU
+aGlzIG1lc3NhZ2Ugd2FzIGF1dG8tZ2VuZXJhdGVkOyBpZiB5b3UgYmVsaWV2ZSBhbnl0aGluZyBp
+cyBpbmNvcnJlY3QNCiAgdGhlbiBwbGVhc2UgZW1haWwgcGF1bC5idXJ0b25AbWlwcy5jb20gdG8g
+cmVwb3J0IGl0LiBdDQo=
