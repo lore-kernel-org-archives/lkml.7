@@ -2,70 +2,168 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C48CC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A99C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4862145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C632089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ccbib.org header.i=@ccbib.org header.b="C4gL6ugj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389536AbfFKL3e (ORCPT
+        id S2389600AbfFKLaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:29:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:26011 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389269AbfFKL3c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:29:32 -0400
-X-UUID: 00cf766db56e430cb2740c1610c4526e-20190611
-X-UUID: 00cf766db56e430cb2740c1610c4526e-20190611
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <dehui.sun@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2043923710; Tue, 11 Jun 2019 19:29:25 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 11 Jun 2019 19:29:18 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 11 Jun 2019 19:29:18 +0800
-From:   Dehui Sun <dehui.sun@mediatek.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <erin.lo@mediatek.com>,
-        <weiyi.lu@mediatek.com>, <dehui.sun@mediatek.com>
-Subject: [PATCH v1 0/2] add systimer node for MT8183 SoC
-Date:   Tue, 11 Jun 2019 19:28:52 +0800
-Message-ID: <1560252534-11412-1-git-send-email-dehui.sun@mediatek.com>
-X-Mailer: git-send-email 2.1.0
+        Tue, 11 Jun 2019 07:30:52 -0400
+Received: from h1.radempa.de ([176.9.142.194]:60947 "EHLO mail.cosmopool.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389464AbfFKLav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:30:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.cosmopool.net (Postfix) with ESMTP id 4646B901F94;
+        Tue, 11 Jun 2019 13:30:47 +0200 (CEST)
+Received: from mail.cosmopool.net ([127.0.0.1])
+        by localhost (mail.b.radempa.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Ij_MrkGKdSO2; Tue, 11 Jun 2019 13:30:46 +0200 (CEST)
+Received: from stardust.g4.wien.funkfeuer.at (178.113.142.121.wireless.dyn.drei.com [178.113.142.121])
+        by mail.cosmopool.net (Postfix) with ESMTPSA id 6A17B901143;
+        Tue, 11 Jun 2019 13:30:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ccbib.org; s=201902;
+        t=1560252646; bh=ZCH0JvrbXKHoNEYNzHbRMZV18dizh1EGMEms6MyPm0o=;
+        h=From:To:cc:Subject:In-reply-to:References:Date:From;
+        b=C4gL6ugjg2d1rlwYB+annNS1964QANXtpmDwKUHEuXILo3M8a8SPCht5k9JbiLLc4
+         Nsc5LdxTZH5Z3MqBjAbIbMxCMLec/6RbTxHlsVB8fRT2pO7mXUi4Epw3mgQ4xeomYN
+         bJCH3Z0HDKaeGrYRmBSsu/sjh+VhJanetMqAilrw=
+Received: from lambda by stardust.g4.wien.funkfeuer.at with local (Exim 4.89)
+        (envelope-from <harald@ccbib.org>)
+        id 1haezD-0000WF-2x; Tue, 11 Jun 2019 13:30:43 +0200
+From:   Harald Geyer <harald@ccbib.org>
+To:     Shobhit Kukreti <shobhitkukreti@gmail.com>
+cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: humidity: Replace older GPIO APIs with GPIO Consumer APIs for the dht11 sensor
+In-reply-to: <20190611035554.GA20589@t-1000>
+References: <20190611035554.GA20589@t-1000>
+Comments: In-reply-to Shobhit Kukreti <shobhitkukreti@gmail.com>
+   message dated "Mon, 10 Jun 2019 20:55:57 -0700."
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1997.1560252642.1@stardust.g4.wien.funkfeuer.at>
+Date:   Tue, 11 Jun 2019 13:30:42 +0200
+Message-Id: <E1haezD-0000WF-2x@stardust.g4.wien.funkfeuer.at>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series are based on 5.2-rc1 and add systimer node for MT8183,
-and this timer will serve as a wakeup-up source for cpu-idle feature.
+Shobhit Kukreti writes:
+> The dht11 driver uses a single gpio to make measurements. It was
+> using the older global gpio numberspace. The patch replaces the
+> old gpio api with the new gpio descriptor based api.
+> 
+> Removed header files "linux/gpio.h" and "linux/of_gpio.h"
+>
+> Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
 
-Dehui Sun (2):
-  dt-bindings: mediatek: update bindings for MT8183 systimer
-  arm64: dts: mt8183: add systimer0 device node
+Acked-by: Harald Geyer <harald@ccbib.org>
 
- Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 1 +
- arch/arm64/boot/dts/mediatek/mt8183.dtsi                       | 9 +++++++++
- 2 files changed, 10 insertions(+)
+> ---
+>  drivers/iio/humidity/dht11.c | 28 ++++++++++------------------
+>  1 file changed, 10 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
+> index c815920..f5128d8 100644
+> --- a/drivers/iio/humidity/dht11.c
+> +++ b/drivers/iio/humidity/dht11.c
+> @@ -22,8 +22,7 @@
+>  #include <linux/completion.h>
+>  #include <linux/mutex.h>
+>  #include <linux/delay.h>
+> -#include <linux/gpio.h>
+> -#include <linux/of_gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/timekeeping.h>
+>  
+>  #include <linux/iio/iio.h>
+> @@ -72,7 +71,7 @@
+>  struct dht11 {
+>  	struct device			*dev;
+>  
+> -	int				gpio;
+> +	struct gpio_desc		*gpiod;
+>  	int				irq;
+>  
+>  	struct completion		completion;
+> @@ -179,7 +178,7 @@ static irqreturn_t dht11_handle_irq(int irq, void *data)
+>  	if (dht11->num_edges < DHT11_EDGES_PER_READ && dht11->num_edges >= 0) {
+>  		dht11->edges[dht11->num_edges].ts = ktime_get_boot_ns();
+>  		dht11->edges[dht11->num_edges++].value =
+> -						gpio_get_value(dht11->gpio);
+> +						gpiod_get_value(dht11->gpiod);
+>  
+>  		if (dht11->num_edges >= DHT11_EDGES_PER_READ)
+>  			complete(&dht11->completion);
+> @@ -217,12 +216,12 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+>  		reinit_completion(&dht11->completion);
+>  
+>  		dht11->num_edges = 0;
+> -		ret = gpio_direction_output(dht11->gpio, 0);
+> +		ret = gpiod_direction_output(dht11->gpiod, 0);
+>  		if (ret)
+>  			goto err;
+>  		usleep_range(DHT11_START_TRANSMISSION_MIN,
+>  			     DHT11_START_TRANSMISSION_MAX);
+> -		ret = gpio_direction_input(dht11->gpio);
+> +		ret = gpiod_direction_input(dht11->gpiod);
+>  		if (ret)
+>  			goto err;
+>  
+> @@ -294,10 +293,8 @@ MODULE_DEVICE_TABLE(of, dht11_dt_ids);
+>  static int dht11_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> -	struct device_node *node = dev->of_node;
+>  	struct dht11 *dht11;
+>  	struct iio_dev *iio;
+> -	int ret;
+>  
+>  	iio = devm_iio_device_alloc(dev, sizeof(*dht11));
+>  	if (!iio) {
+> @@ -307,18 +304,13 @@ static int dht11_probe(struct platform_device *pdev)
+>  
+>  	dht11 = iio_priv(iio);
+>  	dht11->dev = dev;
+> +	dht11->gpiod = devm_gpiod_get(dev, NULL, GPIOD_IN);
+> +	if (IS_ERR(dht11->gpiod))
+> +		return PTR_ERR(dht11->gpiod);
+>  
+> -	ret = of_get_gpio(node, 0);
+> -	if (ret < 0)
+> -		return ret;
+> -	dht11->gpio = ret;
+> -	ret = devm_gpio_request_one(dev, dht11->gpio, GPIOF_IN, pdev->name);
+> -	if (ret)
+> -		return ret;
+> -
+> -	dht11->irq = gpio_to_irq(dht11->gpio);
+> +	dht11->irq = gpiod_to_irq(dht11->gpiod);
+>  	if (dht11->irq < 0) {
+> -		dev_err(dev, "GPIO %d has no interrupt\n", dht11->gpio);
+> +		dev_err(dev, "GPIO %d has no interrupt\n", desc_to_gpio(dht11->gpiod));
+>  		return -EINVAL;
+>  	}
+>  
+> -- 
+> 2.7.4
+> 
 
 -- 
-2.1.0
-
+If you want to support my work:
+see http://friends.ccbib.org/harald/supporting/
+or donate via CLAM to xASPBtezLNqj4cUe8MT5nZjthRSEjrRQXN
+or via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
