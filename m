@@ -2,140 +2,99 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F72C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAC3C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D382145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260B821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e87CA4x8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389700AbfFKLdU (ORCPT
+        id S2389744AbfFKLe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:33:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35210 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389464AbfFKLdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:33:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0A70CAFF2;
-        Tue, 11 Jun 2019 11:33:18 +0000 (UTC)
-Message-ID: <5214eeef4c307c84d8510661af2d9fa2d4e527f3.camel@suse.de>
-Subject: Re: [PATCH] HID: input: fix a4tech horizontal wheel custom usage id
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Tue, 11 Jun 2019 13:33:11 +0200
-In-Reply-To: <CAO-hwJJzYFQs_Jxc+3zYHzjM9G8zdTfBqdpO27hpKXRBKytvQA@mail.gmail.com>
-References: <20190610185343.27614-1-nsaenzjulienne@suse.de>
-         <CAO-hwJJzYFQs_Jxc+3zYHzjM9G8zdTfBqdpO27hpKXRBKytvQA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-4rAVG0h4mBn3Gg+1TvFj"
-User-Agent: Evolution 3.32.2 
+        Tue, 11 Jun 2019 07:34:28 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46584 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389558AbfFKLe1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:34:27 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 203so8651213oid.13;
+        Tue, 11 Jun 2019 04:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x5rmiwyCLeKaoHJp17aHdkTJjyA6YPZC/WRbR5vMjpI=;
+        b=e87CA4x8A1PKtNjG2k6Scdr0xbId162DU6jQSXDhYLhWRm4Iqar9QhKyUwHijKDAPa
+         hAGpLYC2nBmYPzQAcLOtJJOitEd0IL/QiUD0/yZXIXdbg4X4hAAiMZdjjn8/dVPWZ2c8
+         3WvbMz8mdVQM0cj28sYVqPjUP0EdCA+AKQMV7PkL06zgSWyR5llbr0jmRou8JUuBrSto
+         gKGKS5UMF0Jaq/WT95feuerGdwNv+z5cDR1SHY7IO+2XKj0AoJ9VnhQZP/IQIankG28p
+         b9RmzdHEZAh3SjcEEmaO/murUhY7oYhyuMmT1eOUSBaqal/akF3K7HV9fBfhxuhrFw+X
+         l5bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x5rmiwyCLeKaoHJp17aHdkTJjyA6YPZC/WRbR5vMjpI=;
+        b=KbL9f8vrvCAS5HSVnnMWicIDwL0TSJKTopDbVQr/9Y7LIrqUFjKbphDxvK/BaD+STQ
+         6KOs2+864D4A6Ki6dHFwY3uZw5cBv+QnPx+9DzCNdZntXiUc6lr/9NenLeqmx9UyUIGu
+         +cWgzeCaY/VkX0qMitWXHNspTwVCH7myob17EuQZynrCOUFUSHFxAYCvk1ZJL8AT/2IZ
+         ReOCZdI5rh4cO/mijCuWwPudVwx0KzTz3avE5Oz3FW3Y8NlaR1s3EnWcE4Gav1DDf7dZ
+         ZCOcPApK1zMGigyJbGFwSLyDqjZs3rNLHQtGMN+jIjZAyPEJbOMR9ZYihpQzizC6c0Yt
+         5ceg==
+X-Gm-Message-State: APjAAAXC6tye56qXqujLzfwU+QuOGL5N3aRjsat0ugK1R6RifTvEqqq1
+        1sw+A5WAcmWaFJzLj1zfVUD1TL3YZCBtd4oUZ9s=
+X-Google-Smtp-Source: APXvYqxti6kF49QbOqX5rYkaYjy9reVlZ+JZCnE9g2R9uYNvjXjUgNkqe5qb1ON4m0HKHX8Vy++ZkYYPCd0+zxB09I4=
+X-Received: by 2002:aca:544b:: with SMTP id i72mr15419354oib.174.1560252867275;
+ Tue, 11 Jun 2019 04:34:27 -0700 (PDT)
 MIME-Version: 1.0
+References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
+ <1558418814-6822-2-git-send-email-wanpengli@tencent.com> <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
+ <CANRm+CyqH5ojNTcX3zfVjB8rayGHAW0Ex+fiGPnrO7bkmvr_4w@mail.gmail.com> <b30067df-2929-9ce9-221f-0f1a84dd1228@redhat.com>
+In-Reply-To: <b30067df-2929-9ce9-221f-0f1a84dd1228@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 11 Jun 2019 19:35:11 +0800
+Message-ID: <CANRm+Cy+BVHeXjfSPhPz=n7_Qg8oQEC8DdcpCzEV5v4qYXgJGw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] KVM: X86: Provide a capability to disable cstate
+ msr read intercepts
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 11 Jun 2019 at 19:09, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 11/06/19 09:38, Wanpeng Li wrote:
+> > MSR_CORE_C1_RES is unreadable except for ATOM platform, so I think we
+> > can avoid the complex logic to handle C1 now. :)
+>
+> I disagree.  Linux uses it on all platforms is available, and virtual
+> machines that don't pass mwait through _only_ have C1, so it would be
+> less useful to have deep C-state residency MSRs and not C1 residency.
+>
+> But turbostat can get the information from sysfs, so what are these MSRs
+> used for?
 
---=-4rAVG0h4mBn3Gg+1TvFj
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The sysfs is not accurate, the time which is accumulated in the
+function cpuidle_enter_state() is the expected cstate we hope to enter
+instead of the real cstate we finally enter. For example, we found
+several SKX/CLX models can't enter deeper cstates in non-root mode,
+Intel hardware team has been working on this according to our report
+recently. The bare-metal cstate residency msrs don't increase in
+non-root mode, however, the time under
+/sys/devices/system/cpu/cpux/cpuidle/statex/ increase gradually in the
+guest.
 
-On Tue, 2019-06-11 at 10:43 +0200, Benjamin Tissoires wrote:
-> Hi Nicolas,
->=20
-> On Mon, Jun 10, 2019 at 8:54 PM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > Some a4tech mice use the 'GenericDesktop.00b8' usage id to inform
-> > whether the previous wheel report was horizontal or vertical. Before
-> > c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key") this
-> > usage id was being mapped to 'Relative.Misc'. After the patch it's
-> > simply ignored (usage->type =3D=3D 0 & usage->code =3D=3D 0). Checking =
-the HID
-> > Usage Tables it turns out it's a reserved usage_id, so it makes sense t=
-o
-> > map it the way it was. Ultimately this makes hid-a4tech ignore the
-> > WHEEL/HWHEEL selection event, as it has no usage->type.
-> >=20
-> > The patch reverts the handling of the usage id back to it's previous
-> > behavior.
->=20
-> Hmm, if A4Tech is using a reserved usage, we shouldn't fix this in
-> hid-input.c but in hid-a4tech instead.
-> Because you won't know when someone else in the HID consortium will
-> remap this usage to some other random axis, and your mouse will be
-> broken again.
->=20
-> How about you add a .input_mapping callback in hid-a4tech and map this
-> usage there to your needs? This way you will be sure that such a
-> situation will not happen again.
-
-I agree it would be a cleaner solution.
-
-In summary the first report indicates the wheel relative value, the second =
-the
-orientation. The first report is already being mapped to REL_WHEEL and
-REL_WHEEL (or the high-res versions), but what would be a correct code for =
-the
-second report? The way I see it, we shouldn't map it to anything. And then
-catch both events in the custom driver to build the input_event() accordinl=
-gy
-(as it's almost being done already). Is this somewhat correct? I'll send a
-followup patch anyway so we have something more tangible comment on.
-
-> > Fixes: c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key=
-")
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  drivers/hid/hid-input.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-> > index 63855f275a38..6a956d5a195e 100644
-> > --- a/drivers/hid/hid-input.c
-> > +++ b/drivers/hid/hid-input.c
-> > @@ -671,7 +671,7 @@ static void hidinput_configure_usage(struct hid_inp=
-ut
-> > *hidinput, struct hid_fiel
-> >                 if ((usage->hid & 0xf0) =3D=3D 0xb0) {      /* SC - Dis=
-play */
-> >                         switch (usage->hid & 0xf) {
-> >                         case 0x05: map_key_clear(KEY_SWITCHVIDEOMODE);
-> > break;
-> > -                       default: goto ignore;
-> > +                       default: goto unknown;
-> >                         }
-> >                         break;
-> >                 }
-> > --
-> > 2.21.0
-> >=20
-
-
---=-4rAVG0h4mBn3Gg+1TvFj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz/kXcACgkQlfZmHno8
-x/7yNggAhChianjl/Aj2nDYja24vOxsTKbR2pRr9iV8RSrZ3PpMhssRedvqrRHIy
-cTiGA3vEAnk+y6dNWffoPTceDlMpRobfqMueEHC87fFURtAaG2wE10tAKYnRdUq6
-XmyNe34htcOxNtXrzoiJHo5gnv+S8K6YcfLiKIfn1wk3bSRII0I98nFpK9Du3FQD
-oaL/2R9P07uXvdUW/Qb4FfQ8nkn5JpJmuaFMR1LFIg3BoPobWZ3SP46Ppgdo30iF
-Kervp7QKAa1zGUaCsCZjgYRotX5oOKK1jxzPk9yzkA+mONVH2/bDX0vnfoz6c8qn
-ZfTPaApBRZYaUd9kJr3Pe7FUqXCxrw==
-=/mxz
------END PGP SIGNATURE-----
-
---=-4rAVG0h4mBn3Gg+1TvFj--
-
+Regards,
+Wanpeng Li
