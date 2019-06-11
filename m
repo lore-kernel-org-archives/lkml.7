@@ -2,70 +2,73 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6688CC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A46C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2368A20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6161520874
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2t4J6Ju"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uxCh8Pug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407711AbfFKVsL (ORCPT
+        id S2407732AbfFKVsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:48:11 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:47017 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407700AbfFKVsL (ORCPT
+        Tue, 11 Jun 2019 17:48:17 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36802 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407712AbfFKVsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:48:11 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h21so16420583qtn.13;
-        Tue, 11 Jun 2019 14:48:10 -0700 (PDT)
+        Tue, 11 Jun 2019 17:48:15 -0400
+Received: by mail-qt1-f193.google.com with SMTP id p15so9040756qtl.3;
+        Tue, 11 Jun 2019 14:48:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MCUxZBwXukN132TnqZmMCNqv44FmiO2Qpout6SxwNOk=;
-        b=U2t4J6JufLPs9LVQEuwGoIlft6Vut7WVTUtKXOa8XJY+r1QFdmI0+nJgzFB+1wyjKh
-         FMjaww5fpbkwLLDGEgKc4a/Fl0qhuZykErQ7aS5PJMHKkb8Y1Baf1ziVwUgiNG9SfxWi
-         KZkJAiiFX9t9hR48Ma1rOrXUm2jbLmrvB54B/FuUAIres2ehrkBe2YR4reZiFjLhzsl6
-         W0rnBYqhA06eRixvTcFyKz8KdwWRcUKWIpSZTJDhr2Rr9rMOwekUr4qiWQlL002I2ohH
-         urqBKcblPu74HjYd3SS8xEDiHTW1fpJAqLCeqVbU/BwKIsfsxZspgdIhme06UaE9kOPO
-         5fJg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PresJl7oJlXIEHHC/IExtDBOZnrpFJgCQRhAg3ApC4U=;
+        b=uxCh8Pugjb4tk3ieGWCto/bcWqHBA2VaCGGcw8kol7mD43R3w8INt4InkUJJMOw61d
+         RmPEt2pc5tJpHF1pH4kxH+TTWmUraNsCyBP6KsEuqmsCRc7lxwlS+snNPw5Fvc+76P1k
+         fQYOTcvJTe+uTi0/20Ev6c5Gd6nUpX7sbgdnidvwxSWDxxr4fPkCqDT2wV3BfK0ZcGZi
+         cq6NOh3OXD75DybtVJLErl0inSHHte8nxF1cGs/UM5tV36Gzl69jG0UR8Cd/1Snfmzh2
+         zrLM7nzyE33XrVAdDf62HW88kCvlFm24+U9MGGxR9ZiJvNVVUkRhCJYdRkwc4RKxOp5b
+         70eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MCUxZBwXukN132TnqZmMCNqv44FmiO2Qpout6SxwNOk=;
-        b=WUFBCWBJwUCxGpXND9lD9yeVo3m6+pkse8KlVUEpKL0CXzJ6GVEB0MYgdmh82d74hq
-         osLwQ7g5EnMDPbOkteeUjHBCgZsWjvdN7W8lwMSi5ti0jWiKfTokNPAt4di/Q2xLCWSe
-         6sS6vxheq6+MzQxsu56g4kn6PdqedJEiOeu376w+/r5jWgruETNBMiBrlvYHVEgGeH7g
-         pOrzHNL/HaG8elc2s8wwab9DgoaADvyyFqogMuFcBQjvCik74rRPOR54eY7JvWctJ5Gq
-         6/UuI0Fu5alJkKJWYdY889AOszUi61mVxWNI+6XNURQ4n/DNBb26SQrNWOyWA2wiNDDR
-         08UQ==
-X-Gm-Message-State: APjAAAUwkHtRMqbOXgaLF2C4VEphmMQfYGOb2QZAoTaKWZF5E0QeBf6Y
-        VDvznGUPr6hJlE0cYQoddQxtJNB3ly0=
-X-Google-Smtp-Source: APXvYqyfvR3qwy2LUpLrVFiimG3IolAimo2/QWdlN6oInYZgQEWvFcI6wyMUURihw8/hLQkYaXvvLw==
-X-Received: by 2002:ac8:17c1:: with SMTP id r1mr65120547qtk.41.1560289689721;
-        Tue, 11 Jun 2019 14:48:09 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PresJl7oJlXIEHHC/IExtDBOZnrpFJgCQRhAg3ApC4U=;
+        b=L15ipruIkVZHs1nSQ4eNNHF+FF3Ou7kgxV7nqzYFK6og4Wj81qvrihaO7svoHuGJQW
+         o6euPf0VdMn8AWf89kE4wIIJtNnVZH5AzlK8RqelNdFfFH+f4rD6/q7W0S9mDT2DBjsg
+         fw5LOzbzwZHTJ6qP2Jwc45HhhUMOi813riqPjmqYzblzuYc88yltq32t9qbEymYKxoKP
+         37RyysPFW5M9y9Ya7PW3lejX4XTQ03Vt3GBkZGqg2L0WPgVKmV6jXQfEOp+RZWHuWm60
+         Ab1fYrR4OCa4fB66AFTD0ZToydtRkQ6lNcIjr3gZ56Q3iZfhWh+OWrJVK2tgKcGgKe9l
+         eNEQ==
+X-Gm-Message-State: APjAAAXO074clqEVPu7tHVfHRhm4BfGfrx2lOfMlZPKx3ApImaqCX/0z
+        cfV1kzE5QQfZDESro8fxzOBWLK1KdVM=
+X-Google-Smtp-Source: APXvYqynBoW97Yhg6k90xh5WNliD1E+rqnvkhw23DLWGyfPeVC714W7xavm5WD1mBVYUICD5qzERZQ==
+X-Received: by 2002:ac8:19d8:: with SMTP id s24mr66656560qtk.44.1560289694747;
+        Tue, 11 Jun 2019 14:48:14 -0700 (PDT)
 Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id l6sm1438451qkc.89.2019.06.11.14.48.08
+        by smtp.gmail.com with ESMTPSA id f26sm1064392qtf.44.2019.06.11.14.48.14
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 14:48:08 -0700 (PDT)
+        Tue, 11 Jun 2019 14:48:14 -0700 (PDT)
 From:   Vivien Didelot <vivien.didelot@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>, f.fainelli@gmail.com,
         andrew@lunn.ch
-Subject: [PATCH net-next 0/4] net: dsa: use switchdev attr and obj handlers
-Date:   Tue, 11 Jun 2019 17:47:43 -0400
-Message-Id: <20190611214747.22285-1-vivien.didelot@gmail.com>
+Subject: [PATCH net-next 2/4] net: dsa: make cpu_dp non const
+Date:   Tue, 11 Jun 2019 17:47:45 -0400
+Message-Id: <20190611214747.22285-3-vivien.didelot@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190611214747.22285-1-vivien.didelot@gmail.com>
+References: <20190611214747.22285-1-vivien.didelot@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,25 +76,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series reduces boilerplate in the handling of switchdev attribute and
-object operations by using the switchdev_handle_* helpers, which check the
-targeted devices and recurse into their lower devices.
+A port may trigger operations on its dedicated CPU port, so using
+cpu_dp as const will raise warnings. Make cpu_dp non const.
 
-This also brings back the ability to inspect operations targeting the bridge
-device itself (where .orig_dev is the bridge device and .dev is the slave),
-even though that is of no use yet and skipped by this series.
+Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+---
+ include/net/dsa.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Vivien Didelot (4):
-  net: dsa: do not check orig_dev in vlan del
-  net: dsa: make cpu_dp non const
-  net: dsa: make dsa_slave_dev_check use const
-  net: dsa: use switchdev handle helpers
-
- include/net/dsa.h |  2 +-
- net/dsa/port.c    |  9 ------
- net/dsa/slave.c   | 81 ++++++++++++++++++++---------------------------
- 3 files changed, 36 insertions(+), 56 deletions(-)
-
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 82a2baa2dc48..1e8650fa8acc 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -181,7 +181,7 @@ struct dsa_port {
+ 	struct dsa_switch	*ds;
+ 	unsigned int		index;
+ 	const char		*name;
+-	const struct dsa_port	*cpu_dp;
++	struct dsa_port		*cpu_dp;
+ 	const char		*mac;
+ 	struct device_node	*dn;
+ 	unsigned int		ageing_time;
 -- 
 2.21.0
 
