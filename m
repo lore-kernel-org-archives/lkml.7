@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93298C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FACC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0CA20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300FF21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390018AbfFKOFA (ORCPT
+        id S2390170AbfFKOFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:05:00 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:55679 "EHLO
+        Tue, 11 Jun 2019 10:05:03 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:55710 "EHLO
         imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387704AbfFKOFA (ORCPT
+        with ESMTP id S2387778AbfFKOFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:05:00 -0400
+        Tue, 11 Jun 2019 10:05:01 -0400
 Received: from [167.98.27.226] (helo=happy.office.codethink.co.uk)
         by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hahOT-0003vU-5W; Tue, 11 Jun 2019 15:04:57 +0100
+        id 1hahOU-0003vU-ME; Tue, 11 Jun 2019 15:04:58 +0100
 From:   Michael Drake <michael.drake@codethink.co.uk>
 To:     Andrzej Hajda <a.hajda@samsung.com>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
@@ -34,9 +34,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-kernel@lists.codethink.co.uk,
         Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
-Subject: [PATCH v1 05/11] ti948: Add alive check function using schedule_delayed_work()
-Date:   Tue, 11 Jun 2019 15:04:06 +0100
-Message-Id: <20190611140412.32151-6-michael.drake@codethink.co.uk>
+Subject: [PATCH v1 08/11] dt-bindings: display/bridge: Add bindings for ti949
+Date:   Tue, 11 Jun 2019 15:04:09 +0100
+Message-Id: <20190611140412.32151-9-michael.drake@codethink.co.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611140412.32151-1-michael.drake@codethink.co.uk>
 References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
@@ -47,97 +47,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This simply runs the function once every 5 seconds, while the
-device is supposed to be active.  The alive check function is
-currently simply a stub, that logs it has been called, and
-re-inserts itself into the work queue.
+Adds device tree bindings for:
+
+  TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
+
+It supports instantiation via device tree / ACPI table.
+
+The device has the compatible string "ti,ds90ub949", and
+and allows an arrray of strings to be provided as regulator
+names to enable for operation of the device.
 
 Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
 Cc: Patrick Glaser <pglaser@tesla.com>
 Cc: Nate Case <ncase@tesla.com>
 ---
- drivers/gpu/drm/bridge/ti948.c | 37 +++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ .../bindings/display/bridge/ti,ds90ub949.txt  | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
 
-diff --git a/drivers/gpu/drm/bridge/ti948.c b/drivers/gpu/drm/bridge/ti948.c
-index 9cb37215f049..86daa3701b91 100644
---- a/drivers/gpu/drm/bridge/ti948.c
-+++ b/drivers/gpu/drm/bridge/ti948.c
-@@ -16,6 +16,7 @@
- 
- #include <linux/regulator/consumer.h>
- #include <linux/of_device.h>
-+#include <linux/workqueue.h>
- #include <linux/module.h>
- #include <linux/regmap.h>
- #include <linux/delay.h>
-@@ -25,6 +26,9 @@
- /* Number of times to try checking for device on bringup. */
- #define TI948_DEVICE_ID_TRIES 10
- 
-+/* Alive check every 5 seconds. */
-+#define TI948_ALIVE_CHECK_DELAY (5 * HZ)
+diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
+new file mode 100644
+index 000000000000..3ba3897d5e81
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
+@@ -0,0 +1,24 @@
++TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
++============================================================
 +
- /**
-  * enum ti948_reg - TI948 registers.
-  *
-@@ -374,9 +378,27 @@ static inline struct ti948_ctx *ti948_ctx_from_dev(struct device *dev)
- 	return i2c_get_clientdata(client);
- }
- 
-+static inline struct ti948_ctx *delayed_work_to_ti948_ctx(
-+		struct delayed_work *dwork)
-+{
-+	return container_of(dwork, struct ti948_ctx, alive_check);
-+}
++This is the binding for Texas Instruments DS90UB949-Q1 bridge serializer.
 +
-+static void ti948_alive_check(struct work_struct *work)
-+{
-+	struct delayed_work *dwork = to_delayed_work(work);
-+	struct ti948_ctx *ti948 = delayed_work_to_ti948_ctx(dwork);
++This device supports I2C only.
 +
-+	dev_info(&ti948->i2c->dev, "%s Alive check!\n", __func__);
++Required properties:
 +
-+	/* Reschedule ourself for the next check. */
-+	schedule_delayed_work(&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
-+}
++- compatible: "ti,ds90ub949"
 +
- static int ti948_pm_resume(struct device *dev)
- {
- 	struct ti948_ctx *ti948 = ti948_ctx_from_dev(dev);
-+	bool scheduled;
- 	int ret;
- 
- 	if (ti948 == NULL)
-@@ -386,7 +408,18 @@ static int ti948_pm_resume(struct device *dev)
- 	if (ret != 0)
- 		return ret;
- 
--	return ti948_write_config_seq(ti948);
-+	ret = ti948_write_config_seq(ti948);
-+	if (ret != 0)
-+		return ret;
++Optional properties:
 +
-+	INIT_DELAYED_WORK(&ti948->alive_check, ti948_alive_check);
++- regulators: List of regulator name strings to enable for operation of device.
 +
-+	scheduled = schedule_delayed_work(
-+			&ti948->alive_check, TI948_ALIVE_CHECK_DELAY);
-+	if (!scheduled)
-+		dev_warn(&ti948->i2c->dev, "Alive check already scheduled\n");
++Example
++-------
 +
-+	return 0;
- }
- 
- static int ti948_pm_suspend(struct device *dev)
-@@ -396,6 +429,8 @@ static int ti948_pm_suspend(struct device *dev)
- 	if (ti948 == NULL)
- 		return 0;
- 
-+	cancel_delayed_work_sync(&ti948->alive_check);
++ti949: ds90ub949@0 {
++	compatible = "ti,ds90ub949";
 +
- 	return ti948_power_off(ti948);
- }
- 
++	regulators: "vcc",
++	            "vcc_hdmi";
++};
 -- 
 2.20.1
 
