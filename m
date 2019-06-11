@@ -2,110 +2,99 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1577EC31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FA5C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AFE21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="hzo/7M2n"
+	by mail.kernel.org (Postfix) with ESMTP id 0267B2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407320AbfFKWuh (ORCPT
+        id S2407411AbfFKWx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:50:37 -0400
-Received: from mail-eopbgr730126.outbound.protection.outlook.com ([40.107.73.126]:14512
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391638AbfFKWug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:50:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uyT2XrMU4bdbnRm2CT2ytKqdkRyAcSjYROHEyXXGKQ0=;
- b=hzo/7M2nh/X1jQiXQXYRv9jZuZFm1w7fJdaX5dPO/JAt341TlujQOCBX93l/am4oGTDuAHWE7b/d/oDo41i6QB4spR6THl8qkRPpB7lFZqTMBh/icpAizHgGjnMCtYOFRWLZrx3SRWAwch0tG4sakP8HUF3R0dAyOkx4voG/Fg8=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1373.namprd22.prod.outlook.com (10.174.162.140) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Tue, 11 Jun 2019 22:50:16 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40%2]) with mapi id 15.20.1987.010; Tue, 11 Jun 2019
- 22:50:16 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, "od@zcrc.me" <od@zcrc.me>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/5] MIPS: Remove dead code
-Thread-Topic: [PATCH v2 5/5] MIPS: Remove dead code
-Thread-Index: AQHVIICnCC0E6RPYlEOSw1p5P/LHgKaXDw4A
-Date:   Tue, 11 Jun 2019 22:50:15 +0000
-Message-ID: <20190611225013.bkqmxczedrbg3nlk@pburton-laptop>
-References: <20190611180757.32299-1-paul@crapouillou.net>
- <20190611180757.32299-5-paul@crapouillou.net>
-In-Reply-To: <20190611180757.32299-5-paul@crapouillou.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0027.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::40) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5fd418ed-ddff-412e-d2d5-08d6eebf2b6e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1373;
-x-ms-traffictypediagnostic: MWHPR2201MB1373:
-x-microsoft-antispam-prvs: <MWHPR2201MB13730A7FCC2AEB989577EE31C1ED0@MWHPR2201MB1373.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(39840400004)(396003)(376002)(346002)(366004)(199004)(189003)(99286004)(76176011)(386003)(52116002)(6506007)(305945005)(8676002)(6512007)(9686003)(71200400001)(71190400001)(6486002)(81156014)(81166006)(1076003)(7736002)(229853002)(42882007)(6436002)(2906002)(3846002)(478600001)(186003)(102836004)(6916009)(11346002)(446003)(26005)(6116002)(14454004)(66476007)(64756008)(66946007)(476003)(6246003)(66446008)(73956011)(4326008)(44832011)(53936002)(66066001)(25786009)(486006)(58126008)(33716001)(68736007)(8936002)(7416002)(5660300002)(66556008)(256004)(54906003)(558084003)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1373;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8E7OdQeWsInO3p8XTAMKxDXMH/exr3E8NvZyDObbCa7Ire6CTSEZk0xxMVtbF6dLE+DPxUpgIudW4VskoUrHYWGUA7WAUSIVr5jrQpH7kbwDxg9t7JGvOA6RtiLj0tHj1qv3IRBfUTv9yE6yJsF36a+FWmclTJ3MxgW4UZARajmlt045Xb0rokqRFH4JF0NcUYi7sLNims8V2H9ZCyRPFakfP/5QnvWo1fqJAN7RVcg8Yh+6hz28bEldVLpzPhN5YasNvFWru4Radc5S+wmLqUnJma54pgsDDLKgZbbx/gdaXUIinKpCGByH7owlb5PkYCHkm+1zti5Njl169HRFiFsLHPmqM/WNvxatSqCAOV2n2O1/yETLbxyTo39mvtc4H5b+pg8ckBNvnYpg/Mt0nHgx/QecEkXxZaWEwLJuKdk=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1D8F45445836954CAB4CD679FBCC66DF@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fd418ed-ddff-412e-d2d5-08d6eebf2b6e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 22:50:15.9425
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1373
+        Tue, 11 Jun 2019 18:53:26 -0400
+Received: from gate.crashing.org ([63.228.1.57]:33554 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404048AbfFKWx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:53:26 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5BMr72S021573;
+        Tue, 11 Jun 2019 17:53:08 -0500
+Message-ID: <ca81ca5d56a3a12db5a92f5cf9745763a86572e8.camel@kernel.crashing.org>
+Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>, linuxppc-dev@ozlabs.org,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Russell Currey <ruscur@au1.ibm.com>
+Date:   Wed, 12 Jun 2019 08:53:07 +1000
+In-Reply-To: <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
+References: <20190611092144.11194-1-oded.gabbay@gmail.com>
+         <20190611095857.GB24058@kroah.com> <20190611151753.GA11404@infradead.org>
+         <20190611152655.GA3972@kroah.com>
+         <CAFCwf13A73AxKzaa7Dk3tU-1NDgTFs4+xCO2os7SuSyUHZ9Z3Q@mail.gmail.com>
+         <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Tue, 2019-06-11 at 20:22 +0300, Oded Gabbay wrote:
+> 
+> > So, to summarize:
+> > If I call pci_set_dma_mask with 48, then it fails on POWER9. However,
+> > in runtime, I don't know if its POWER9 or not, so upon failure I will
+> > call it again with 32, which makes our device pretty much unusable.
+> > If I call pci_set_dma_mask with 64, and do the dedicated configuration
+> > in Goya's PCIe controller, then it won't work on x86-64, because bit
+> > 59 will be set and the host won't like it (I checked it). In addition,
+> > I might get addresses above 50 bits, which my device can't generate.
+> > 
+> > I hope this makes things more clear. Now, please explain to me how I
+> > can call pci_set_dma_mask without any regard to whether I run on
+> > x86-64 or POWER9, considering what I wrote above ?
+> > 
+> > Thanks,
+> > Oded
+> 
+> Adding ppc mailing list.
 
-On Tue, Jun 11, 2019 at 08:07:57PM +0200, Paul Cercueil wrote:
-> Remove the unused <asm/mach-jz4740/clock.h> include.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+You can't. Your device is broken. Devices that don't support DMAing to
+the full 64-bit deserve to be added to the trash pile.
 
-Presuming this goes via the clk tree:
+As a result, getting it to work will require hacks. Some GPUs have
+similar issues and require similar hacks, it's unfortunate.
 
-    Acked-by: Paul Burton <paul.burton@mips.com>
+Added a couple of guys on CC who might be able to help get those hacks
+right.
 
-Thanks,
-    Paul
+It's still very fishy .. the idea is to detect the case where setting a
+64-bit mask will give your system memory mapped at a fixed high address
+(1 << 59 in our case) and program that in your chip in the "Fixed high
+bits" register that you seem to have (also make sure it doesn't affect
+MSIs or it will break them).
+
+This will only work as long as all of the system memory can be
+addressed at an offset from that fixed address that itself fits your
+device addressing capabilities (50 bits in this case). It may or may
+not be the case but there's no way to check since the DMA mask logic
+won't really apply.
+
+You might want to consider fixing your HW in the next iteration... This
+is going to bite you when x86 increases the max physical memory for
+example, or on other architectures.
+
+Cheers,
+Ben.
+
+
+
+
