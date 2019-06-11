@@ -2,168 +2,182 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DBDC0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B28AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A372086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:36:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Od5hsTWR"
+	by mail.kernel.org (Postfix) with ESMTP id 10B892177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560278302;
+	bh=op+unP1g+6aUGXSass0EO2pdGGP4Nq3gma2bxnFko7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UD9yXf4V9WCDloDnaEChlQI7+/JvTNizZWXeudPgWCYzsak2tAy8Bhh8Rq+dpGun3
+	 0xUZtHCdikz63biOs7bsR/Tfeb7cI7LKLhY+rEeRgCT/Awdk37aj4GZpqDKZ7fIWjl
+	 zSeDUqoqhM2NSPPTaVxQ24tOpmgozBgudcjexjCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391828AbfFKSgP (ORCPT
+        id S2391847AbfFKSiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:36:15 -0400
-Received: from mail-eopbgr680111.outbound.protection.outlook.com ([40.107.68.111]:54947
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388207AbfFKSgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:36:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=J7nbEttadHTm4ma/j+KuoYq9umE0Z4DAtEYo3tgjGoJfQ4VG2cjPO4wXf1x6I3yzSvay7moLeb1PVbuXj/L7+LE4XN1jeGCV2GODNXOSrUc7xYMP6oFiy0PLD9iosc4JhEzOjOeds84mPPUuJNTn+U0ikDZkYIPKHW50RKPdf4c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7wlqhkqq0jZD3+JaoDH8D68E1QIBI3F/Zx9Z7+2re7c=;
- b=AGcLKG/ilkXDulNIwHbMQk1G2OOH+Qxlp5+zrz9UY1cWEOmZEhz8cHrGE3HP4ZxvY6GrJJPXCG8rhB3ad6a92+MZnuehOJGAg1QyU8V+qjAsY/IHoD3O/DaiIPfXwFp9AXqilNNg5o3CvhtLz/VET4gNb7pGQI2YCUI2D+5Yxkc=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7wlqhkqq0jZD3+JaoDH8D68E1QIBI3F/Zx9Z7+2re7c=;
- b=Od5hsTWRZeBDyRNtaBgNYKvAH8XuQssp3m9bipP8EXEXNBKtRUdNCHaDUhaABkw9HqypqUBpSasJI1GUbPSpr9ZSevbDGFpeT2NHcawGQmK2k+EELQi7pI/1j2j6Vrk+j0sy+F9TsuI2mQWFuGRHFAquLPADROnnPCOdvLCGlaI=
-Received: from BYAPR21MB1303.namprd21.prod.outlook.com (2603:10b6:a03:10b::21)
- by BYAPR21MB1254.namprd21.prod.outlook.com (2603:10b6:a03:108::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.1; Tue, 11 Jun
- 2019 18:35:31 +0000
-Received: from BYAPR21MB1303.namprd21.prod.outlook.com
- ([fe80::d98:b97a:40fb:767b]) by BYAPR21MB1303.namprd21.prod.outlook.com
- ([fe80::d98:b97a:40fb:767b%8]) with mapi id 15.20.2008.002; Tue, 11 Jun 2019
- 18:35:31 +0000
-From:   Pavel Shilovskiy <pshilov@microsoft.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Christoph Probst <kernel@probst.it>,
-        Steven French <Steven.French@microsoft.com>
-Subject: RE: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and reduce
- raciness in smb21_set_oplock_level()
-Thread-Topic: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and reduce
- raciness in smb21_set_oplock_level()
-Thread-Index: AQHVHuRr/qIHTPIzFki/7touvMYvRaaVQkzQgADMHwCAALvpwA==
-Date:   Tue, 11 Jun 2019 18:35:31 +0000
-Message-ID: <BYAPR21MB1303F7B6A672A491068A9D38B6ED0@BYAPR21MB1303.namprd21.prod.outlook.com>
-References: <20190609164147.729157653@linuxfoundation.org>
- <20190609164148.958546130@linuxfoundation.org>
- <BYAPR21MB130347F749FFEC7025DA5710B6130@BYAPR21MB1303.namprd21.prod.outlook.com>
- <20190611072010.GA10581@kroah.com>
-In-Reply-To: <20190611072010.GA10581@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=pshilov@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-11T18:35:29.6162688Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8eeab497-ca9c-4ea4-9827-a4c6868db0cc;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pshilov@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:1:f059:bdc7:91b3:3685]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b884640e-34ff-4a21-13d7-08d6ee9b959f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR21MB1254;
-x-ms-traffictypediagnostic: BYAPR21MB1254:
-x-microsoft-antispam-prvs: <BYAPR21MB1254351D0E35693A30BCB69BB6ED0@BYAPR21MB1254.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:390;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(136003)(346002)(39860400002)(376002)(366004)(396003)(199004)(189003)(13464003)(54906003)(52396003)(6506007)(102836004)(6916009)(99286004)(7696005)(74316002)(10090500001)(53546011)(76176011)(5660300002)(8936002)(81166006)(81156014)(8676002)(71200400001)(71190400001)(66946007)(76116006)(64756008)(66446008)(66556008)(73956011)(66476007)(6436002)(9686003)(305945005)(8990500004)(7736002)(55016002)(46003)(68736007)(186003)(33656002)(229853002)(316002)(478600001)(86362001)(446003)(14454004)(476003)(2906002)(6246003)(107886003)(11346002)(22452003)(52536014)(486006)(10290500003)(25786009)(256004)(6116002)(4326008)(53936002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1254;H:BYAPR21MB1303.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2VsSBJ6D9I5EKG4brGvDLxeCgYBlNHCCunWCRPAs76kWYSQRwhPAouGFW2cepe/70wzzWC7lqEzH/z6smDUmjr4EZ6sjqFIGbXHo2rOAkA1fnqDOjBHEl8yykhstmawfKNwLtwqigLiMKIkpUUNxa+3xggcSztS4UEBAiVVCLmRcIDjM2S2gPqciRvNL3s52UUgnJ6IBDH4icJ59bjYwMNbnxgsj2IN304ut89g4NXmJeZd8tk3D6rsOx+sWOANFxemfZq3cqfYm8+erUnYzA4yX1gFABGHzE0nYCSD77cpP9bPadGJc+HR6apNJ3i3ZT1yPo5g7uUaC4RiLVMXeC6VgeFQVKaWh0JnGybKHgYktI5QaFdDK48P/QnbJ08iWG+mbPKM7+HiGLSO0VklzYzCJr3v6E/iSJMIhoEwXSmo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 11 Jun 2019 14:38:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388207AbfFKSiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:38:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 226E521743;
+        Tue, 11 Jun 2019 18:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560278299;
+        bh=op+unP1g+6aUGXSass0EO2pdGGP4Nq3gma2bxnFko7M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ly5kCkPTmC6TeT8l+bNynWgf3TWDMqnvP1eknwgLW7uAtDbNAowHDFBLz0B9qNPOQ
+         RFJb9anzu0k96SWyB9vx9S7QTWECzL5y+z61xdxYuf09TJgr0QyDAN8Cff8EIyp+lQ
+         dx7r2cIFusvTLn2NinOArGRBnwwlUfIQmY4AsKKk=
+Date:   Tue, 11 Jun 2019 20:38:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tomas Winkler <tomas.winkler@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mei: no need to check return value of debugfs_create
+ functions
+Message-ID: <20190611183816.GA952@kroah.com>
+References: <20190611183357.GA32008@kroah.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b884640e-34ff-4a21-13d7-08d6ee9b959f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 18:35:31.5197
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pshilov@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1254
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611183357.GA32008@kroah.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------Original Message-----
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>=20
-Sent: Tuesday, June 11, 2019 12:20 AM
-To: Pavel Shilovskiy <pshilov@microsoft.com>
-Cc: linux-kernel@vger.kernel.org; stable@vger.kernel.org; Christoph Probst =
-<kernel@probst.it>; Steven French <Steven.French@microsoft.com>
-Subject: Re: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and reduc=
-e raciness in smb21_set_oplock_level()
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
 
-On Mon, Jun 10, 2019 at 07:13:24PM +0000, Pavel Shilovskiy wrote:
->=20
-> -----Original Message-----
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Sent: Sunday, June 9, 2019 9:40 AM
-> To: linux-kernel@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>;=20
-> stable@vger.kernel.org; Christoph Probst <kernel@probst.it>; Pavel=20
-> Shilovskiy <pshilov@microsoft.com>; Steven French=20
-> <Steven.French@microsoft.com>
-> Subject: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and=20
-> reduce raciness in smb21_set_oplock_level()
->=20
-> From: Christoph Probst <kernel@probst.it>
->=20
-> commit 6a54b2e002c9d00b398d35724c79f9fe0d9b38fb upstream.
->=20
-> Change strcat to strncpy in the "None" case to fix a buffer overflow when=
- cinode->oplock is reset to 0 by another thread accessing the same cinode. =
-It is never valid to append "None" to any other message.
->=20
-> Consolidate multiple writes to cinode->oplock to reduce raciness.
->=20
-> Signed-off-by: Christoph Probst <kernel@probst.it>
-> Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-> Signed-off-by: Steve French <stfrench@microsoft.com>
-> CC: Stable <stable@vger.kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> --------------------------------
->=20
-> Hi Greg,
->=20
-> This patch has been queued for 4.4.y and has already been merged into=20
-> 5.1.y (5.1.5). Are you going to apply it to other stable kernels: 4.9,=20
-> 4.14, 4.19?
+Cc: Tomas Winkler <tomas.winkler@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v2: break the patch up properly
 
-It is already in the 4.9.179, 4.14.122, 4.19.46, 5.0.19, and 5.1.5 released=
- kernels.  So I don't think I can merge it into them again :)
+ drivers/misc/mei/debugfs.c | 47 +++++++++-----------------------------
+ drivers/misc/mei/main.c    |  8 +------
+ drivers/misc/mei/mei_dev.h |  7 ++----
+ 3 files changed, 14 insertions(+), 48 deletions(-)
 
-thanks,
+diff --git a/drivers/misc/mei/debugfs.c b/drivers/misc/mei/debugfs.c
+index 0970142bcace..df6bf8b81936 100644
+--- a/drivers/misc/mei/debugfs.c
++++ b/drivers/misc/mei/debugfs.c
+@@ -233,47 +233,22 @@ void mei_dbgfs_deregister(struct mei_device *dev)
+  *
+  * @dev: the mei device structure
+  * @name: the mei device name
+- *
+- * Return: 0 on success, <0 on failure.
+  */
+-int mei_dbgfs_register(struct mei_device *dev, const char *name)
++void mei_dbgfs_register(struct mei_device *dev, const char *name)
+ {
+-	struct dentry *dir, *f;
++	struct dentry *dir;
+ 
+ 	dir = debugfs_create_dir(name, NULL);
+-	if (!dir)
+-		return -ENOMEM;
+-
+ 	dev->dbgfs_dir = dir;
+ 
+-	f = debugfs_create_file("meclients", S_IRUSR, dir,
+-				dev, &mei_dbgfs_fops_meclients);
+-	if (!f) {
+-		dev_err(dev->dev, "meclients: registration failed\n");
+-		goto err;
+-	}
+-	f = debugfs_create_file("active", S_IRUSR, dir,
+-				dev, &mei_dbgfs_fops_active);
+-	if (!f) {
+-		dev_err(dev->dev, "active: registration failed\n");
+-		goto err;
+-	}
+-	f = debugfs_create_file("devstate", S_IRUSR, dir,
+-				dev, &mei_dbgfs_fops_devstate);
+-	if (!f) {
+-		dev_err(dev->dev, "devstate: registration failed\n");
+-		goto err;
+-	}
+-	f = debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
+-				&dev->allow_fixed_address,
+-				&mei_dbgfs_fops_allow_fa);
+-	if (!f) {
+-		dev_err(dev->dev, "allow_fixed_address: registration failed\n");
+-		goto err;
+-	}
+-	return 0;
+-err:
+-	mei_dbgfs_deregister(dev);
+-	return -ENODEV;
++	debugfs_create_file("meclients", S_IRUSR, dir, dev,
++			    &mei_dbgfs_fops_meclients);
++	debugfs_create_file("active", S_IRUSR, dir, dev,
++			    &mei_dbgfs_fops_active);
++	debugfs_create_file("devstate", S_IRUSR, dir, dev,
++			    &mei_dbgfs_fops_devstate);
++	debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
++			    &dev->allow_fixed_address,
++			    &mei_dbgfs_fops_allow_fa);
+ }
+ 
+diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
+index ad02097d7fee..f894d1f8a53e 100644
+--- a/drivers/misc/mei/main.c
++++ b/drivers/misc/mei/main.c
+@@ -984,16 +984,10 @@ int mei_register(struct mei_device *dev, struct device *parent)
+ 		goto err_dev_create;
+ 	}
+ 
+-	ret = mei_dbgfs_register(dev, dev_name(clsdev));
+-	if (ret) {
+-		dev_err(clsdev, "cannot register debugfs ret = %d\n", ret);
+-		goto err_dev_dbgfs;
+-	}
++	mei_dbgfs_register(dev, dev_name(clsdev));
+ 
+ 	return 0;
+ 
+-err_dev_dbgfs:
+-	device_destroy(mei_class, devno);
+ err_dev_create:
+ 	cdev_del(&dev->cdev);
+ err_dev_add:
+diff --git a/drivers/misc/mei/mei_dev.h b/drivers/misc/mei/mei_dev.h
+index fca832fcac57..f71a023aed3c 100644
+--- a/drivers/misc/mei/mei_dev.h
++++ b/drivers/misc/mei/mei_dev.h
+@@ -718,13 +718,10 @@ bool mei_hbuf_acquire(struct mei_device *dev);
+ bool mei_write_is_idle(struct mei_device *dev);
+ 
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+-int mei_dbgfs_register(struct mei_device *dev, const char *name);
++void mei_dbgfs_register(struct mei_device *dev, const char *name);
+ void mei_dbgfs_deregister(struct mei_device *dev);
+ #else
+-static inline int mei_dbgfs_register(struct mei_device *dev, const char *name)
+-{
+-	return 0;
+-}
++static inline void mei_dbgfs_register(struct mei_device *dev, const char *name) {}
+ static inline void mei_dbgfs_deregister(struct mei_device *dev) {}
+ #endif /* CONFIG_DEBUG_FS */
+ 
+-- 
+2.22.0
 
-greg k-h
----------------------------------
-
-You are right, I missed it somehow. Thanks for clarifying!
-
-Best regards,
-Pavel Shilovsky
