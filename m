@@ -2,101 +2,185 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B42EC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CEAC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8FD21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC942086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBV3XlkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406133AbfFKULV (ORCPT
+        id S2406463AbfFKUOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:11:21 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:59543 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405799AbfFKULU (ORCPT
+        Tue, 11 Jun 2019 16:14:18 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39702 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405476AbfFKUOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:11:20 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1han6o-0004fr-IZ; Tue, 11 Jun 2019 22:11:06 +0200
-Date:   Tue, 11 Jun 2019 22:11:04 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Don Zickus <dzickus@redhat.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Byungchul Park <byungchul.park@lge.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [RFC PATCH v4 12/21] watchdog/hardlockup/hpet: Adjust timer
- expiration on the number of monitored CPUs
-In-Reply-To: <1558660583-28561-13-git-send-email-ricardo.neri-calderon@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906112205170.2214@nanos.tec.linutronix.de>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-13-git-send-email-ricardo.neri-calderon@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 11 Jun 2019 16:14:18 -0400
+Received: by mail-it1-f195.google.com with SMTP id j204so6903538ite.4;
+        Tue, 11 Jun 2019 13:14:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L+hdHis2FMYQ2dbrl+iWFu+BV7L2wGuVMYJCOxZmRSE=;
+        b=ZBV3XlkJZUQqfqvsBwYFFl88g+4oBtiYmhE3BlzhravPym+yzJtprctRX/1mikMzln
+         KzniRicnupB+1F8X7myItexxVIMu0uJheHAUTyAROLBlMo1Q51aEFJ3rkKn7e5PV9a1C
+         aY1RKPxsJqEVb9oREftCM7lxJ2a8redwVCP0cOwjJd4so1Ooq3gNrABEwf87jYlv8YCV
+         0jRSiaqSA2XxpZgfNB5/xAYhYa2ofWSLqX4ue6Cs9dbu4RPDDgDUr3j0h/gg6PMkn01g
+         jgrTljRy93OFzzIpXeZZBjsUuEZ+lsh0R2H/+OpUMvpc/DXzPcNX/vFttkUchDS2+CxK
+         B3iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L+hdHis2FMYQ2dbrl+iWFu+BV7L2wGuVMYJCOxZmRSE=;
+        b=VyhA6rTGwSS+WWxwOEDDqhZ/ekbSZTufgR5Kdi0b5gfiIdxLi65E8/gZ8ma+Ajp8co
+         G3YpR3QIVrbRXDSCT13eWimU6A7hD3j/g94+eZ9BAWZ4HC2dyTI6y+NBvCWupR8Twsm6
+         SofhGQJaBKAd/7rX9e2RV24ss5ijYSa++tZ/3+XcDl37i6KkxAwTvdhxtul78ZKYwbAZ
+         E3qdXnfQwWpRcd59WuJ3vqDSuGh8Sst/YXtA003CdJgEleMXai4ZgDNWGJSzPHpgclig
+         xoZl1Y7WDpNVU3dLuctinwwH56C33SGRN0KoW5ikNqqVb1e1qec/EpWkCyEXjLj7no2J
+         xYFw==
+X-Gm-Message-State: APjAAAXOY51aAha8a2usURQyDgwoW5UfKiXQqhjKeu9o7IAV00xHgfFk
+        n54G7fcgZnw4k4v7ntRvSvatdhvkrGPw3JK57JtI0A==
+X-Google-Smtp-Source: APXvYqyfdZMEdhCtaaxfh+B4qCTNom6/c2BYMUWqh4DBKKCWWhDI9afd0Cgh5LUmSvFgpOVQYRLXpiyQLabQzng1VgU=
+X-Received: by 2002:a05:660c:343:: with SMTP id b3mr15010584itl.52.1560284056894;
+ Tue, 11 Jun 2019 13:14:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+ <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org> <20190607203838.1361E208C3@mail.kernel.org>
+ <CAOCk7NrnnUzaXtnRvH0pHyHha4sTQDQCRoVPPatHfgVuEPZr0Q@mail.gmail.com> <20190607231841.D101120825@mail.kernel.org>
+In-Reply-To: <20190607231841.D101120825@mail.kernel.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 11 Jun 2019 14:14:06 -0600
+Message-ID: <CAOCk7NpfG6bTj1E-_f+hXRJgiwe5V_w5Mdg2sYuRY9FHyGqEig@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        David Brown <david.brown@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019, Ricardo Neri wrote:
-> @@ -52,10 +59,10 @@ static void kick_timer(struct hpet_hld_data *hdata, bool force)
->  		return;
->  
->  	if (hdata->has_periodic)
-> -		period = watchdog_thresh * hdata->ticks_per_second;
-> +		period = watchdog_thresh * hdata->ticks_per_cpu;
->  
->  	count = hpet_readl(HPET_COUNTER);
-> -	new_compare = count + watchdog_thresh * hdata->ticks_per_second;
-> +	new_compare = count + watchdog_thresh * hdata->ticks_per_cpu;
->  	hpet_set_comparator(hdata->num, (u32)new_compare, (u32)period);
+On Fri, Jun 7, 2019 at 5:18 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Jeffrey Hugo (2019-06-07 14:31:13)
+> > On Fri, Jun 7, 2019 at 2:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Jeffrey Hugo (2019-05-21 07:52:28)
+> > > > On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
+> > > > > The multimedia clock controller (mmcc) is the main clock controller for
+> > > > > the multimedia subsystem and is required to enable things like display and
+> > > > > camera.
+> > > >
+> > > > Stephen, I think this series is good to go, and I have display/gpu stuff
+> > > > I'm polishing that will depend on this.  Would you kindly pickup patches
+> > > > 1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 and 6.
+> > > >
+> > >
+> > > If I apply patch 3 won't it break boot until patch 2 is also in the
+> > > tree? That seems to imply that I'll break bisection, and we have
+> > > kernelci boot testing clk-next so this will probably set off alarms
+> > > somewhere.
+> >
+> > Yes, it'll break boot.  Maybe you and Bjorn can make a deal?  (more below)
+> >
+> > Doesn't look like kernelci is running tests on 8998 anymore, so maybe
+> > no one will complain?  As far as I am aware, Marc, Lee, Bjorn, and I
+> > are the only ones whom care about 8998 presently, and I think we are
+> > all good with a temporary breakage in order to get this basic
+> > functionality in since the platform isn't really well supported yet.
+>
+> Ok.
+>
+> >
+> > >
+> > > I thought we had some code that got removed that was going to make the
+> > > transition "seamless" in the sense that it would search the tree for an
+> > > RPM clk controller and then not add the XO fixed factor clk somehow.
+> > > See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
+> > > clocks") for the code that we removed. So ideally we do something like
+> > > this too, but now we search for a property on the calling node to see if
+> > > the XO clk is there?
+> > >
+> >
+> > Trying to remember back a bit.
+> >
+> > I don't think its possible.  Maybe I'm wrong.  I didn't see a solution
+> > to the below:
+> >
+> > How does GCC know the following?
+> > -RPMCC is compiled in the build (I guess this can be assumed)
+>
+> This is the IS_ENABLED part.
 
-So with this you might get close to the point where you trip over the SMI
-induced madness where CPUs vanish for several milliseconds in some value
-add code. You really want to do a read back of the hpet to detect that. See
-the comment in the hpet code. RHEL 7/8 allow up to 768 logical CPUs....
+Eh, this would assume that someone hasn't compiled RPCC out of tree,
+but this is probably me being pedantic.
 
-Thanks,
+>
+> > -RPMCC has probed
+> > -RPMCC is not and will not be providing XO
+>
+> Presumably if it's enabled then it will be providing XO at some point in
+> the future. I'm not suggesting the probe defer logic is removed, just
+> that we don't get into a state where clk tree has merged all the patches
+> for clk driver side and that then relies on DT to provide the clk but it
+> doesn't do that.
+>
+> So the idea is to check if RPM is compiled in and also check the GCC DT
+> node for the clocks property having the xo clk there. Then we assume
+> that we have the clk patches in place for the RPM clk driver to provide
+> that clk and we skip inserting the fake clk that RPM is going to
+> provide.
 
-	tglx
+So, I thought about this, and I don't think it works.  This appears to be a
+solution for if RPM is not present.  If, in patch 3, I check for the clocks
+property in the gcc DT and don't see it, and I add the fake XO as a result,
+I'll end up with a namespace conflict with either GCC or RPMCC failing
+to register XO since both will attempt it.
+
+The issue is do we have RPM providing XO (ie patch 3) without a DT
+routing it to GCC (ie patch 2).  Since we have patch 3, we know RPM is
+going to provide XO.  We just might not have a handle to it to do the
+probe_defer logic.
+
+I think the solution is check the DT for the clocks property, if present use
+that to attempt to grab XO.  Otherwise, attempt to grab XO from the system
+map.  I'll try this in the next rev.
+
+>
+> This is also a "general" solution to GCC not depending on or selecting
+> the RPM clk driver. It may be better to just have a select statement in
+> GCC Kconfig so that we can't enable the GCC driver without also enabling
+> the RPM driver if it's an essential dependency to the clk tree working.
+> But if we do this design then we can make the clk tree keep working
+> regardless of RPM being there or not, which may be a good thing.
+>
+
+I'm not sure attempting to sidestep the RPM dependency is worthwhile.
+Its not just GCC, but every clock controller that depends on XO, and thus
+implicitly RPM.
+
+I suspect any real system is going to have to have the RPM, just by the
+nature of what the RPM controls that cannot be managed elsewhere,
+such as BIMC.  At some point, a system is going to want to ramp up the
+memory bus and DDR speeds to something more than the bare minimum.
+
+Putting in a bunch of code to try to avoid depending on the RPM seems
+like effort not well spent as its unlikely such code is going to be active.
