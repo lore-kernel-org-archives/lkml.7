@@ -2,96 +2,119 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2734C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9D0C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A64B72089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A65C2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:01:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAOJjUVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405109AbfFKKAw (ORCPT
+        id S2405142AbfFKKBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:00:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:57153 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfFKKAw (ORCPT
+        Tue, 11 Jun 2019 06:01:42 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44356 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727726AbfFKKBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:00:52 -0400
-Received: from 5HSWXM1 ([87.191.24.82]) by mrelayeu.kundenserver.de (mreue012
- [212.227.15.167]) with ESMTPSA (Nemesis) id 1M3mHT-1hZoET2Vdb-000vOE; Tue, 11
- Jun 2019 12:00:35 +0200
-Date:   Tue, 11 Jun 2019 12:00:25 +0200 (CEST)
-From:   Rolf Evers-Fischer <embedded24@evers-fischer.de>
-X-X-Sender: rolf@5HSWXM1
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-cc:     Rolf Evers-Fischer <embedded24@evers-fischer.de>,
-        ysato@users.sourceforge.jp, dalias@libc.org,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sh: dma: Add missing IS_ERR test
-In-Reply-To: <b731167e-6285-4fe0-e280-b2626b8efe44@cogentembedded.com>
-Message-ID: <alpine.LNX.2.21.99.1906111147340.3086@5HSWXM1>
-References: <20190607115404.4557-1-embedded24@evers-fischer.de> <b731167e-6285-4fe0-e280-b2626b8efe44@cogentembedded.com>
-User-Agent: Alpine 2.21.99 (LNX 239 2017-12-04)
+        Tue, 11 Jun 2019 06:01:42 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b7so11243163otl.11;
+        Tue, 11 Jun 2019 03:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cKHtlBUkMzjdH3r39CqknbOU+dh9l7ghGjhob+cHQvc=;
+        b=TAOJjUVoZBLoEepo69mKURKgJxIdic5W/v1b1jbZ9oRluEz6pU6mqurQzDLfzYlVp0
+         OlkC9Pun9ZN5ncordE+w5RYupYNJN4VTPzMIPBblgPLNHbQ4AeMjiz7TSfwfHdh/J2cW
+         D8RiYlRjEJi/1MKWS9oa9aGDXRBBlhCnSVOfSDwY4kT7XhWLgrjqwuMo7tdmKZTWjgn8
+         dUMI/UtDSOdnycaVhW6vWSaUhgCLUPISOIKvvZCwNx7VFXecEAreom7uT9QBIKRBydQr
+         pa3+ePq5te0zQ0iJqu6XPgGChiryPEpPHKwUZaJ+FgGIkdtUfOnLfHnr+gQM81s0nR/k
+         lgLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cKHtlBUkMzjdH3r39CqknbOU+dh9l7ghGjhob+cHQvc=;
+        b=Ri97DmgR/StqQxiFhlZHnXqFjqEHhimorLtXCTJGvFdTHc1CzBdKnMOBengv1Luu+B
+         TcG9ibURNAcYW2AcBDZjXZW93qJJJRNOIetcVq+onzcNSqD45HlMZfECXBM4vMpKHztw
+         wabfZQ7fXdengqLgX06o+c9RPt5zFmKqEPWjk4kB+6H9dd2x3GTW7Mwn3t8RQy0oLMU8
+         XQ1Yug1d01T5zfVqO5WVjB9wCJKtfSelwUH+R87M5htEMxv55aveQHIyNW893LVrDiuJ
+         M/tijse6G6uIYobT0R3V9l8UCs9O09jJjspDQ2kHiAoxUD3K++bOV4HNYGXK1Nz325/u
+         yXNg==
+X-Gm-Message-State: APjAAAWz4C2t6GJ//sJ+7Qcbqs4QpXA8QqTeFkGErKwoTkiIHQ0edfBe
+        /emedNeEIMdV3ama/BItvZ2LlPW7weOyB3u1QdU=
+X-Google-Smtp-Source: APXvYqxhkV+gvHla0N2YZgkW9d9FAdVI0LqmBRTy/1sioItcPZ602wJTcdJjOuPTo6CYxmRjnHa1uyPJuu56IMPtWxg=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr11883571oto.118.1560247301404;
+ Tue, 11 Jun 2019 03:01:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Provags-ID: V03:K1:SMRQfsP6ySGCjrUzxZeapgWewqu01yhxyR4JPwhyR9idNKE5J9g
- gJsAq56PtLA/sIPERp+6BeYhC+Zg9XAoK+TDim3gMybBh1wWYgC3VUwYZWHGU2MWfVDOzv+
- YWPY0dfo/TBl1ZBcvYVljABd8F3KqiBVwoypvMCqrnd6T00z5BWa741RzF1nilGPwY6t6lf
- XDXPKeu5uUeX2UGixuS1Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DNkZ+nYQJnM=:p3IBEqWC64tzRIcKnLqJBm
- ulUHtj7Ag1DlBH6MOgVd6RF7YNC2LQaejC7T16mzDHqH1ZqpYoDrcdsYLZUwJltSCQtXEvtql
- kVsHYtHFmg+NfnvnRvBFXOHYWKCGxd77cuf7QQ1maCQ3Yywu2M6JTKqJvUR4KXY9T6an9ySxD
- Ehoj6x0wtzvQAXyGx2HAfBy9koKMHCAwbM0F0sCczEBxm0isIeryfDIqLugT+qJjiRAoh8sy8
- cb99w8EMMuhz1bkzuSLrdSQElrtG1M8zVGRO6MGTdXTRH41OkRy+FOe2qVaKkIHWDXV2OTGqR
- jNpN2z1xTD5R0sF2mMvDoKDAru+adYc41oyGGnp0/WvDWOcphabcsNuJlXJAs+HTlcVxjpQje
- V5RAz4H4NcTDMh9jl0HNBWGc3HS5yCfdIxgWjS2xCwa4KcZ/Cef1OeBxUDvfSzeNYaJ4Z9Po3
- sSEriUC+vONGViLSdU+LhZa62tVtfgKXwdhZIMKsVacITU4EcSW25YMPWnl9SxHV+1sRG1ffY
- VbA7S3LN1ocwu2Vy6g38fy5NtTl1/9JBSFY8TzhbEsF/jzZWg+xlXVxh035VGNz1fOTQfO/Zm
- VS3NV35KbNOF81r/CsurSlF35NnCdoeXNJVrj2gNZMyOgheZgaLCI1hmFJ4XTr7lZXIbKfgQP
- 3wjGVMYREMDGIoBEG+A1Q2REJltlM5AKtjRLiC6jBSr5P0lYCRH9bdr6KdSfBjoZ2M5mNfGig
- Fe4SrtLXcEnM/9TVO+Jn2o5afuoH+hl1m7fF8lgIwNShX2EJCbCMXGW/XXILHwLUeiL0mEj1v
- TqfA7u6
+References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+ <20190610143420.GA6594@flask> <20190611011100.GB24835@linux.intel.com>
+ <CANRm+Cwv5jqxBW=Ss5nkX7kZM3_Y-Ucs66yx5+wN09=W4pUdzA@mail.gmail.com> <F136E492-5350-49EE-A856-FBAEDB12FF99@gmail.com>
+In-Reply-To: <F136E492-5350-49EE-A856-FBAEDB12FF99@gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 11 Jun 2019 18:02:25 +0800
+Message-ID: <CANRm+CyZcvuT80ixp9f0FNmjN+rTUtw8MshtBG0Uk4L1B1UjDw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sergei,
+On Tue, 11 Jun 2019 at 09:48, Nadav Amit <nadav.amit@gmail.com> wrote:
+>
+> > On Jun 10, 2019, at 6:45 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >
+> > On Tue, 11 Jun 2019 at 09:11, Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> >> On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 =
+wrote:
+> >>> 2019-05-30 09:05+0800, Wanpeng Li:
+> >>>> The idea is from Xen, when sending a call-function IPI-many to vCPUs=
+,
+> >>>> yield if any of the IPI target vCPUs was preempted. 17% performance
+> >>>> increasement of ebizzy benchmark can be observed in an over-subscrib=
+e
+> >>>> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-functio=
+n
+> >>>> IPI-many since call-function is not easy to be trigged by userspace
+> >>>> workload).
+> >>>
+> >>> Have you checked if we could gain performance by having the yield as =
+an
+> >>> extension to our PV IPI call?
+> >>>
+> >>> It would allow us to skip the VM entry/exit overhead on the caller.
+> >>> (The benefit of that might be negligible and it also poses a
+> >>> complication when splitting the target mask into several PV IPI
+> >>> hypercalls.)
+> >>
+> >> Tangetially related to splitting PV IPI hypercalls, are there any majo=
+r
+> >> hurdles to supporting shorthand?  Not having to generate the mask for
+> >> ->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy to way
+> >> shave cycles for affected flows.
+> >
+> > Not sure why shorthand is not used for native x2apic mode.
+>
+> Why do you say so? native_send_call_func_ipi() checks if allbutself
+> shorthand should be used and does so (even though the check can be more
+> efficient - I=E2=80=99m looking at that code right now=E2=80=A6)
 
-thanks for your feedback.
+Please continue to follow the apic/x2apic driver. Just apic_flat set
+APIC_DEST_ALLBUT/APIC_DEST_ALLINC to ICR.
 
-On Sat, 8 Jun 2019, Sergei Shtylyov wrote:
-
-> Hello!
-> 
-> On 07.06.2019 14:54, Rolf Evers-Fischer wrote:
-> 
-> > get_dma_channel may return ERR_PTR, so a check is added.
-> > 
-> > Signed-off-by: Rolf Evers-Fischer <embedded24@evers-fischer.de>
-> > ---
-> >   arch/sh/drivers/dma/dma-api.c   | 20 +++++++++++++++++++-
-> >   arch/sh/drivers/dma/dma-sysfs.c |  2 +-
-> >   2 files changed, 20 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/sh/drivers/dma/dma-api.c b/arch/sh/drivers/dma/dma-api.c
-> > index ab9170494dcc..5d6f1a46cc5e 100644
-> > --- a/arch/sh/drivers/dma/dma-api.c
-> > +++ b/arch/sh/drivers/dma/dma-api.c
-> > @@ -94,7 +94,7 @@ int get_dma_residue(unsigned int chan)
-> >   	struct dma_info *info = get_dma_info(chan);
-> >   	struct dma_channel *channel = get_dma_channel(chan);
-> >   -	if (info->ops->get_residue)
-> > +	if (!IS_ERR(channel) && (info->ops->get_residue))
-> 
->    Extra parens not needed here.
-> 
-> [...]
-
-I agree with you. They should better be removed.
-
-Kind regards,
- Rolf
+Regards,
+Wanpeng Li
