@@ -2,164 +2,96 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E2EC06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5D6C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3132173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560268031;
-	bh=ODzIca1G6HwE9DpSxb7ddhUfILHkfcmRba/4rBqVBxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XFDfC8Cgw7rXzCto9HxQJAwgPWJpGrEw4gncubXffYRtI3d2RStjgwinUOConKjr0
-	 vd2eHoKJ46fOzAsa+LyyXzScWDQhaXDXXDCZ/F5YgzQ6q9J/R7EHNzn4gHcOFwdHbh
-	 lH4Zgdf/evXJiIPTZxz5pILVBN+cICfqM8o7dB1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 9653C20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:47:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="bI7NTUW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405396AbfFKPrK (ORCPT
+        id S2405411AbfFKPrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:47:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 11:47:23 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:39280 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389302AbfFKPrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:47:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11BDC2080A;
-        Tue, 11 Jun 2019 15:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560268029;
-        bh=ODzIca1G6HwE9DpSxb7ddhUfILHkfcmRba/4rBqVBxQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e3yDQiYkifbMrkWt69XVzkQEu4k3E4TzQ+jgCbNCKbq3tFTul7bQtdb/ivvMASCIo
-         D2mWwf5Ja3ceey3cJW0djsE08rHo0qdxViwzpPcbvxzwfEMBWvI9klRn7dfe5Cu8NB
-         PopmPDk+qxIOQXhJWAo78I+DLxkacSjMXgngNke4=
-Date:   Tue, 11 Jun 2019 17:47:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Richard Gong <richard.gong@linux.intel.com>
-Cc:     Romain Izard <romain.izard.pro@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sen.li@intel.com, Richard Gong <richard.gong@intel.com>
-Subject: Re: A potential broken at platform driver?
-Message-ID: <20190611154706.GE5706@kroah.com>
-References: <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
- <20190528232224.GA29225@kroah.com>
- <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
- <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
- <20190603180255.GA18054@kroah.com>
- <20190604103241.GA4097@5WDYG62>
- <20190604142803.GA28355@kroah.com>
- <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
- <20190604170310.GC14605@kroah.com>
- <f484ce9f-a86e-ce33-686b-b42dc293beb8@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f484ce9f-a86e-ce33-686b-b42dc293beb8@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        id S2389302AbfFKPrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:47:23 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45NZBc2NN5z9v0FR;
+        Tue, 11 Jun 2019 17:47:20 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=bI7NTUW8; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id B7h4bXuV-81Y; Tue, 11 Jun 2019 17:47:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45NZBc0hwjz9v0FQ;
+        Tue, 11 Jun 2019 17:47:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560268040; bh=1fnYeG8GbpjnYF6TrsfmDTOmxu5dgndNejmbugqQbx8=;
+        h=From:Subject:To:Cc:Date:From;
+        b=bI7NTUW88Vx5QZFajwgZyStnlVOl6u4+b+RdZ95JenYNvgDN462Dclzmdg+Ob4seQ
+         nR9EWjUxHij/lbqFk2OpzV6SRucW26gHJ4nhgaegJvU36t82qnh+8q3JE5NNSkS3JY
+         JXpI+yxyVdLmrGD0cghtcOglJUQaFKID6V7MNUoA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 587AA8B7F8;
+        Tue, 11 Jun 2019 17:47:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id qgv5iWZpPYN7; Tue, 11 Jun 2019 17:47:21 +0200 (CEST)
+Received: from po16838vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E5E578B7F7;
+        Tue, 11 Jun 2019 17:47:20 +0200 (CEST)
+Received: by po16838vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B4CAB68D05; Tue, 11 Jun 2019 15:47:20 +0000 (UTC)
+Message-Id: <be07403806abc56ec027f6d47468411876e18bb5.1560267983.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/32s: fix initial setup of segment registers on
+ secondary CPU
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, erhard_f@mailbox.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 11 Jun 2019 15:47:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 09:10:05AM -0500, Richard Gong wrote:
-> 
-> Hi Greg,
-> 
-> On 6/4/19 12:03 PM, Greg KH wrote:
-> > On Tue, Jun 04, 2019 at 11:13:02AM -0500, Richard Gong wrote:
-> > > 
-> > > Hi Greg,
-> > > 
-> > > On 6/4/19 9:28 AM, Greg KH wrote:
-> > > > On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
-> > > > > On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
-> > > > > > > @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
-> > > > > > >    	.remove = stratix10_rsu_remove,
-> > > > > > >    	.driver = {
-> > > > > > >    		.name = "stratix10-rsu",
-> > > > > > > -		.groups = rsu_groups,
-> > > > > > > +//		.groups = rsu_groups,
-> > > > > > 
-> > > > > > Are you sure this is the correct pointer?  I think that might be
-> > > > > > pointing to the driver's attributes, not the device's attributes.
-> > > > > > 
-> > > > > > If platform drivers do not have a way to register groups properly, then
-> > > > > > that really needs to be fixed, as trying to register it by yourself as
-> > > > > > you are doing, is ripe for racing with userspace.
-> > > > > This is a very common issue with platform drivers, and it seems to me that
-> > > > > it is not possible to add device attributes when binding a device to a
-> > > > > driver without entering the race condition.
-> > > > > 
-> > > > > My understanding is the following one:
-> > > > > 
-> > > > > The root cause is that the device has already been created and reported
-> > > > > to the userspace with a KOBJ_ADD uevent before the device and the driver
-> > > > > are bound together. On receiving this event, userspace will react, and
-> > > > > it will try to read the device's attributes. In parallel the kernel will
-> > > > > try to find a matching driver. If a driver is found, the kernel will
-> > > > > call the probe function from the driver with the device as a parameter,
-> > > > > and if successful a KOBJ_BIND uevent will be sent to userspace, but this
-> > > > > is a recent addition.
-> > > > > 
-> > > > > Unfortunately, not all created devices will be bound to a driver, and the
-> > > > > existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
-> > > > > If new per-device attributes have been added to the device during the
-> > > > > binding stage userspace may or may not see them, depending on when userspace
-> > > > > tries to read the device's attributes.
-> > > > > 
-> > > > > I have this possible workaround, but I do not know if it is a good solution:
-> > > > > 
-> > > > > When binding the device and the driver together, create a new device as a
-> > > > > child to the current device, and fill its "groups" member to point to the
-> > > > > per-device attributes' group. As the device will be created with all the
-> > > > > attributes, it will not be affected by the race issues. The functions
-> > > > > handling the attributes will need to be modified to use the parents of their
-> > > > > "device" parameter, instead of the device itself. Additionnaly, the sysfs
-> > > > > location of the attributes will be different, as the child device will show
-> > > > > up in the sysfs path. But for a newly introduced device this will not be
-> > > > > a problem.
-> > > > > 
-> > > > > Is this a good compromise ?
-> > > > 
-> > > > Not really.  You just want the attributes on the platform device itself.
-> > > > 
-> > > > Given the horrible hack that platform devices are today, what's one more
-> > > > hack!
-> > > > 
-> > > > Here's a patch below of what should probably be done here.  Richard, can
-> > > > you change your code to use the new dev_groups pointer in the struct
-> > > > platform_driver and this patch and let me know if that works or not?
-> > > > 
-> > > > Note, I've only compiled this code, not tested it...
-> > > > 
-> > > 
-> > > Your patch works.
-> > > 
-> > > Many thanks for your help!
-> > 
-> > Nice!
-> > 
-> > I guess I need to turn it into a real patch now.  Let me do that tonight
-> > and see if I can convert some existing drivers to use it as well...
-> > 
-> 
-> Sorry for asking.
-> 
-> I haven't seen your patch, did you release that?
-> 
+The patch referenced below moved the loading of segment registers
+out of load_up_mmu() in order to do it earlier in the boot sequence.
+However, the secondary CPU still needs it to be done when loading up
+the MMU.
 
-I didn't post it yet, sorry.  I started on cleaning up the whole kernel
-tree, to show users of the new groups, and then got side-tracked.  The
-code is in a public branch, I'll clean it up this week and send it off,
-hopefully I'll have time over the next few days...
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Fixes: 215b823707ce ("powerpc/32s: set up an early static hash table for KASAN")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/head_32.S | 1 +
+ 1 file changed, 1 insertion(+)
 
-thanks,
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index 1d5f1bd0dacd..f255e22184b4 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -752,6 +752,7 @@ __secondary_start:
+ 	stw	r0,0(r3)
+ 
+ 	/* load up the MMU */
++	bl	load_segment_registers
+ 	bl	load_up_mmu
+ 
+ 	/* ptr to phys current thread */
+-- 
+2.13.3
 
-greg k-h
