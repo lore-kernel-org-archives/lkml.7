@@ -2,289 +2,131 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EE9C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73114C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F882086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DR6BhtQG"
+	by mail.kernel.org (Postfix) with ESMTP id 498452173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfFKESn (ORCPT
+        id S1728951AbfFKEW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 00:18:43 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:33622 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfFKESn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 00:18:43 -0400
-Received: by mail-yw1-f67.google.com with SMTP id k8so4715693ywh.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 21:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1x6+Y2pwnNkBGDLDQA27k+oCJGbUQsBRY2G4PLVMDls=;
-        b=DR6BhtQGonLnYvn7MNiu4oDO4frfF5lm0jDwdze6mJweZW2VPxmDkOqbWk7razp5gg
-         bdVvcrS0r8nubVk2zMqyBYVvwrxirqlTI9dqwRavbMDIBjq7eO3ad4f41WGSlivGQh42
-         eyB3OBY3gxo5JJ5cF0WT6BrH9Qqdv8c0KegfBux6R2jqEYvD1Nsgf5k7D45keJbUTQDp
-         FcVX1cWfyDGO0Yn+hNiDg9ZTtnZ7QH81HkIelZYJ5TD2GJOY46aX6QvU+X4b20scQAb0
-         LO4vYIs5ZVFeuB/4RdE8nwmK5PBo27o0/Umzezct2J7CzY2kxx+JCFZHeCnx3eSHiSA8
-         3KKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1x6+Y2pwnNkBGDLDQA27k+oCJGbUQsBRY2G4PLVMDls=;
-        b=RhGuSpb/ae09UTwvJE7HH+WbT3tYcHiuRZM4DxH7L5YHWhzY7NXxAFxS10dby2YArD
-         7VzoBM2JCV8yWVdrV9pO3g4bj/PZszxm+MW9+RTc8Stl15nH6X1dTXObswk6ssdm9Dwg
-         /mxCAm/Qq9qNJb5QvOhgyHQP30t9teGehn5pH4W+TK61t3Nob2oT24M/LA/6xGgabK1Y
-         pIWQvERF98NCSowvrAJv1Rs9sGa4/wmyzBwgbLwxEvFZQwZGm+uDV8ZrdRpI1Wv+GyFW
-         sshvZT9OvEEl0Qzt8ETkLSEX8EmuVFUtbZkTs57ygeintxfCwsRZmct89gf8otJsoqR1
-         dsSw==
-X-Gm-Message-State: APjAAAVIMNiVL7hRVUmc3Yd6yZnttz8ubLhuxSUxLgPktDj8qw0o16nO
-        eNOQXXHMnkAwVyUli3h68bm7UQ==
-X-Google-Smtp-Source: APXvYqxOsQ69YPJhEntFbAK3zQJ0QzYFDoPf9fvyE2C7QqmQ7Ih7XSXq6zrapPl2POLHDJeDNof+HQ==
-X-Received: by 2002:a81:3715:: with SMTP id e21mr11019981ywa.33.1560226721916;
-        Mon, 10 Jun 2019 21:18:41 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li1322-146.members.linode.com. [45.79.223.146])
-        by smtp.gmail.com with ESMTPSA id q63sm3769235ywq.17.2019.06.10.21.18.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2019 21:18:40 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 12:18:31 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] perf augmented_raw_syscalls: Support arm64 raw
- syscalls
-Message-ID: <20190611041831.GA3959@leoy-ThinkPad-X240s>
-References: <20190606094845.4800-1-leo.yan@linaro.org>
- <20190606094845.4800-4-leo.yan@linaro.org>
- <20190606133838.GC30166@kernel.org>
- <20190606141231.GC5970@leoy-ThinkPad-X240s>
- <20190606144412.GC21245@kernel.org>
- <20190607095831.GG5970@leoy-ThinkPad-X240s>
- <20190609131849.GB6357@leoy-ThinkPad-X240s>
- <20190610184754.GU21245@kernel.org>
+        Tue, 11 Jun 2019 00:22:29 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:6934 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726022AbfFKEW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 00:22:29 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 2B09EFC6017021BD9648;
+        Tue, 11 Jun 2019 12:22:26 +0800 (CST)
+Received: from dggeme754-chm.china.huawei.com (10.3.19.100) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 11 Jun 2019 12:22:25 +0800
+Received: from [127.0.0.1] (10.184.212.80) by dggeme754-chm.china.huawei.com
+ (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 11
+ Jun 2019 12:22:24 +0800
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>, <linux@armlinux.org.uk>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <will.deacon@arm.com>,
+        <arnd@arndb.de>, <longman@redhat.com>,
+        <linux-arch@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>,
+        <bp@alien8.de>, <hpa@zytor.com>, <x86@kernel.org>
+CC:     <dave.dice@oracle.com>, <rahul.x.yadav@oracle.com>,
+        <steven.sistare@oracle.com>, <daniel.m.jordan@oracle.com>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+From:   "liwei (GF)" <liwei391@huawei.com>
+Message-ID: <cc3eee8c-5212-7af5-c932-897ab8f3f8bf@huawei.com>
+Date:   Tue, 11 Jun 2019 12:22:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610184754.GU21245@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190329152006.110370-4-alex.kogan@oracle.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.212.80]
+X-ClientProxiedBy: dggeme714-chm.china.huawei.com (10.1.199.110) To
+ dggeme754-chm.china.huawei.com (10.3.19.100)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 03:47:54PM -0300, Arnaldo Carvalho de Melo wrote:
+Hi Alex,
 
-[...]
-
-> > > I tested with the lastest perf/core branch which contains the patch:
-> > > 'perf augmented_raw_syscalls: Tell which args are filenames and how
-> > > many bytes to copy' and got the error as below:
-> > > 
-> > > # perf trace -e string -e /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c
-> > > Error:  Invalid syscall access, chmod, chown, creat, futimesat, lchown, link, lstat, mkdir, mknod, newfstatat, open, readlink, rename,
-> > > rmdir, stat, statfs, symlink, truncate, unlink
+On 2019/3/29 23:20, Alex Kogan wrote:
+> In CNA, spinning threads are organized in two queues, a main queue for
+> threads running on the same node as the current lock holder, and a
+> secondary queue for threads running on other nodes. At the unlock time,
+> the lock holder scans the main queue looking for a thread running on
+> the same node. If found (call it thread T), all threads in the main queue
+> between the current lock holder and T are moved to the end of the
+> secondary queue, and the lock is passed to T. If such T is not found, the
+> lock is passed to the first node in the secondary queue. Finally, if the
+> secondary queue is empty, the lock is passed to the next thread in the
+> main queue. For more details, see https://arxiv.org/abs/1810.05600.
 > 
-> Humm, I think that we can just make the code that parses the
-> tools/perf/trace/strace/groups/string file to ignore syscalls it can't
-> find in the syscall_tbl, i.e. trace those if they exist in the arch.
-
-Agree.
-
-> > > Hint:   try 'perf list syscalls:sys_enter_*'
-> > > Hint:   and: 'man syscalls'
-> > > 
-> > > So seems mksyscalltbl has not included completely for syscalls, I
-> > > use below command to generate syscalltbl_arm64[] array and it don't
-> > > include related entries for access, chmod, chown, etc ...
+> Note that this variant of CNA may introduce starvation by continuously
+> passing the lock to threads running on the same node. This issue
+> will be addressed later in the series.
 > 
-> So, we need to investigate why is that these are missing, good thing we
-> have this 'strings' group :-)
+> Enabling CNA is controlled via a new configuration option
+> (NUMA_AWARE_SPINLOCKS), which is enabled by default if NUMA is enabled.
 > 
-> > > You could refer the generated syscalltbl_arm64 in:
-> > > http://paste.ubuntu.com/p/8Bj7Jkm2mP/
-> > 
-> > After digging into this issue on Arm64, below is summary info:
-> > 
-> > - arm64 uses the header include/uapi/linux/unistd.h to define system
-> >   call numbers, in this header some system calls are not defined (I
-> >   think the reason is these system calls are obsolete at the end) so the
-> >   corresponding strings are missed in the array syscalltbl_native,
-> >   for arm64 the array is defined in the file:
-> >   tools/perf/arch/arm64/include/generated/asm/syscalls.c.
+> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
+> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
+> ---
+>  arch/x86/Kconfig                      |  14 +++
+>  include/asm-generic/qspinlock_types.h |  13 +++
+>  kernel/locking/mcs_spinlock.h         |  10 ++
+>  kernel/locking/qspinlock.c            |  29 +++++-
+>  kernel/locking/qspinlock_cna.h        | 173 ++++++++++++++++++++++++++++++++++
+>  5 files changed, 236 insertions(+), 3 deletions(-)
+>  create mode 100644 kernel/locking/qspinlock_cna.h
 > 
-> Yeah, I looked at the 'access' case and indeed it is not present in
-> include/uapi/asm-generic/unistd.h, which is the place
-> include/uapi/linux/unistd.h ends up.
-> 
-> Ok please take a look at the patch at the end of this message, should be ok?
-> 
-> I tested it by changing the strace/gorups/string file to have a few
-> unknown syscalls, running it with -v we see:
-> 
-> [root@quaco perf]# perf trace -v -e string ls
-> Skipping unknown syscalls: access99, acct99, add_key99
-> <SNIP other verbose messages>
-> normal operation not considering those unknown syscalls.
+(SNIP)
+> +
+> +static __always_inline int get_node_index(struct mcs_spinlock *node)
+> +{
+> +	return decode_count(node->node_and_count++);
+When nesting level is > 4, it won't return a index >= 4 here and the numa node number
+is changed by mistake. It will go into a wrong way instead of the following branch.
 
-I did testing with the patch, but it failed after I added eBPF event
-with below command, I even saw segmentation fault; please see below
-inline comments.
 
-  perf --debug verbose=10 trace -e string -e \
-    /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c
+	/*
+	 * 4 nodes are allocated based on the assumption that there will
+	 * not be nested NMIs taking spinlocks. That may not be true in
+	 * some architectures even though the chance of needing more than
+	 * 4 nodes will still be extremely unlikely. When that happens,
+	 * we fall back to spinning on the lock directly without using
+	 * any MCS node. This is not the most elegant solution, but is
+	 * simple enough.
+	 */
+	if (unlikely(idx >= MAX_NODES)) {
+		while (!queued_spin_trylock(lock))
+			cpu_relax();
+		goto release;
+	}
 
-[...]
-
-> commit e0b34a78c4ed0a6422f5b2dafa0c8936e537ee41
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Mon Jun 10 15:37:45 2019 -0300
-> 
->     perf trace: Skip unknown syscalls when expanding strace like syscall groups
->     
->     We have $INSTALL_DIR/share/perf-core/strace/groups/string files with
->     syscalls that should be selected when 'string' is used, meaning, in this
->     case, syscalls that receive as one of its arguments a string, like a
->     pathname.
->     
->     But those were first selected and tested on x86_64, and end up failing
->     in architectures where some of those syscalls are not available, like
->     the 'access' syscall on arm64, which makes using 'perf trace -e string'
->     in such archs to fail.
->     
->     Since this the routine doing the validation is used only when reading
->     such files, do not fail when some syscall is not found in the
->     syscalltbl, instead just use pr_debug() to register that in case people
->     are suspicious of problems.
->     
->     Now using 'perf trace -e string' should work on arm64, selecting only
->     the syscalls that have a string and are available on that architecture.
->     
->     Reported-by: Leo Yan <leo.yan@linaro.org>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Alexei Starovoitov <ast@kernel.org>
->     Cc: Daniel Borkmann <daniel@iogearbox.net>
->     Cc: Jiri Olsa <jolsa@redhat.com>
->     Cc: Martin KaFai Lau <kafai@fb.com>
->     Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->     Cc: Mike Leach <mike.leach@linaro.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Song Liu <songliubraving@fb.com>
->     Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->     Cc: Yonghong Song <yhs@fb.com>
->     Link: https://lkml.kernel.org/n/tip-oa4c2x8p3587jme0g89fyg18@git.kernel.org
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 1a2a605cf068..eb70a4b71755 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1529,6 +1529,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
->  static int trace__validate_ev_qualifier(struct trace *trace)
->  {
->  	int err = 0, i;
-> +	bool printed_invalid_prefix = false;
->  	size_t nr_allocated;
->  	struct str_node *pos;
->  
-> @@ -1555,14 +1556,15 @@ static int trace__validate_ev_qualifier(struct trace *trace)
->  			if (id >= 0)
->  				goto matches;
->  
-> -			if (err == 0) {
-> -				fputs("Error:\tInvalid syscall ", trace->output);
-> -				err = -EINVAL;
-> +			if (!printed_invalid_prefix) {
-> +				pr_debug("Skipping unknown syscalls: ");
-> +				printed_invalid_prefix = true;
->  			} else {
-> -				fputs(", ", trace->output);
-> +				pr_debug(", ");
->  			}
->  
-> -			fputs(sc, trace->output);
-> +			pr_debug("%s", sc);
-> +			continue;
-
-Here adds 'continue' so that we want to let ev_qualifier_ids.entries
-to only store valid system call ids.  But this is not sufficient,
-because we have initialized ev_qualifier_ids.nr at the beginning of
-the function:
-
-  trace->ev_qualifier_ids.nr = strlist__nr_entries(trace->ev_qualifier);
-
-This sentence will set ids number to the string table's length; but
-actually some strings are not really supported; this leads to some
-items in trace->ev_qualifier_ids.entries[] will be not initialized
-properly.
-
-If we want to get neat entries and entry number, I suggest at the
-beginning of the function we use variable 'nr_allocated' to store
-string table length and use it to allocate entries:
-
-  nr_allocated = strlist__nr_entries(trace->ev_qualifier);
-  trace->ev_qualifier_ids.entries = malloc(nr_allocated *
-                                           sizeof(trace->ev_qualifier_ids.entries[0]));
-
-If we find any matched string, then increment the nr field under
-'matches' tag:
-
-matches:
-                trace->ev_qualifier_ids.nr++;
-                trace->ev_qualifier_ids.entries[i++] = id;
-
-This can ensure the entries[0..nr-1] has valid id and we can use
-ev_qualifier_ids.nr to maintain the valid system call numbers.
-
->  		}
->  matches:
->  		trace->ev_qualifier_ids.entries[i++] = id;
-> @@ -1591,15 +1593,14 @@ static int trace__validate_ev_qualifier(struct trace *trace)
->  		}
->  	}
->  
-> -	if (err < 0) {
-> -		fputs("\nHint:\ttry 'perf list syscalls:sys_enter_*'"
-> -		      "\nHint:\tand: 'man syscalls'\n", trace->output);
-> -out_free:
-> -		zfree(&trace->ev_qualifier_ids.entries);
-> -		trace->ev_qualifier_ids.nr = 0;
-> -	}
->  out:
-> +	if (printed_invalid_prefix)
-> +		pr_debug("\n");
->  	return err;
-> +out_free:
-> +	zfree(&trace->ev_qualifier_ids.entries);
-> +	trace->ev_qualifier_ids.nr = 0;
-> +	goto out;
-
-Nitpick: directly return err and 'goto out' is not necessary.
+> +}
+> +
+> +static __always_inline void release_mcs_node(struct mcs_spinlock *node)
+> +{
+> +	__this_cpu_dec(node->node_and_count);
+> +}
+> +
+> +static __always_inline void cna_init_node(struct mcs_spinlock *node, int cpuid,
+> +					  u32 tail)
+> +{
 
 Thanks,
-Leo Yan
+Wei
 
->  }
->  
->  /*
