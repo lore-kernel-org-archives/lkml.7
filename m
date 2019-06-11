@@ -2,132 +2,304 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8768C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3B8C4321D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971D72086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB2A212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403908AbfFKG23 (ORCPT
+        id S2403943AbfFKG3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 02:28:29 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57905 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbfFKG21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 02:28:27 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 23:28:26 -0700
-X-ExtLoop1: 1
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Jun 2019 23:28:23 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
-        linux-usb@vger.kernel.org, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/10] usb: Add USB subsystem notifications [ver #3]
-In-Reply-To: <Pine.LNX.4.44L0.1906071000260.1612-100000@iolanthe.rowland.org>
-References: <Pine.LNX.4.44L0.1906071000260.1612-100000@iolanthe.rowland.org>
-Date:   Tue, 11 Jun 2019 09:28:15 +0300
-Message-ID: <875zpcfxfk.fsf@linux.intel.com>
+        Tue, 11 Jun 2019 02:29:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41876 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728760AbfFKG3L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 02:29:11 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5B6RQ9E104260
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 02:29:10 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t25efbgcw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 02:29:09 -0400
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 11 Jun 2019 07:29:08 +0100
+Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 07:29:02 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5B6T0l922610362
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 06:29:00 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ABEE6C605D;
+        Tue, 11 Jun 2019 06:29:00 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1485C6055;
+        Tue, 11 Jun 2019 06:28:51 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.85.227.34])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jun 2019 06:28:51 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH v11 00/13] Appended signatures support for IMA appraisal
+Date:   Tue, 11 Jun 2019 03:28:04 -0300
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061106-0036-0000-0000-00000AC971EA
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011245; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01216304; UDB=6.00639510; IPR=6.00997403;
+ MB=3.00027259; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-11 06:29:06
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061106-0037-0000-0000-00004C2DD766
+Message-Id: <20190611062817.18412-1-bauerman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hello,
+
+Nothing big in this version. Noteworthy changes are:
+
+1. Fixes for two bugs in ima_appraise_measurements() which were spotted and
+resolved by Mimi Zohar. The changelog points them out.
+
+2. One bugfix in process_measurement() which would cause all files
+appraised with modsig to be measured as well, even if the policy didn't
+request it.
+
+3. Adapted to work with per policy rule template formats.
+
+Plus small cosmetic changes in some places. The changelog has the details.
+
+This has been tested with signed modules and with signed kernels loaded via
+kexec_file_load().
+
+Many thanks to Mimi Zohar for her help with the development of this patch
+series.
+
+The patches apply on today's linux-integrity/next-queued-testing.
+
+Original cover letter:
+
+On the OpenPOWER platform, secure boot and trusted boot are being
+implemented using IMA for taking measurements and verifying signatures.
+Since the kernel image on Power servers is an ELF binary, kernels are
+signed using the scripts/sign-file tool and thus use the same signature
+format as signed kernel modules.
+
+This patch series adds support in IMA for verifying those signatures.
+It adds flexibility to OpenPOWER secure boot, because it allows it to boot
+kernels with the signature appended to them as well as kernels where the
+signature is stored in the IMA extended attribute.
+
+Changes since v10:
+
+- Patch "MODSIGN: Export module signature definitions"
+  - Moved config MODULE_SIG_FORMAT definition before its use. Suggested by
+    Mimi Zohar.
+  - Added missing kerneldoc for @name parameter. Suggested by Mimi Zohar.
+
+- Patch "ima: Implement support for module-style appended signatures"
+  - Bugfix: don't check status variable when deciding whether to verify
+    modsig in ima_appraise_measurement(). Suggested by Mimi Zohar.
+  - Bugfix: verify the modsig in ima_appraise_measurement() if the xattr
+    contains a digest. Suggested by Mimi Zohar.
+
+- Patch "ima: Define ima-modsig template"
+  - Renamed ima_modsig_serialize() to ima_get_raw_modsig().
+  - Renamed check_current_template_modsig() to check_template_modsig().
+  - Fixed outdated comment in ima_eventmodsig_init(). Suggested by Mimi
+    Zohar.
+  - Check either the global or the per-rule template when an appraisal rule
+    allows modsig. Suggested by Mimi Zohar.
+
+- Patch "ima: Store the measurement again when appraising a modsig"
+  - Bugfix: Only re-measure file containing modsig if it was measured
+    before.
+  - Check for modsig-related fields in the template_desc obtained in
+    process_measurement() which can be a per-rule template. Suggested by Mimi
+    Zohar.
+
+- Patch "ima: Allow template= option for appraise rules as well"
+  - New patch. Suggested by Mimi Zohar.
+
+Changes since v9:
+
+- Patch "MODSIGN: Export module signature definitions"
+  - Moved mod_check_sig() to a new file so that CONFIG_IMA_APPRAISE_MODSIG
+    doesn't have to depend on CONFIG_MODULES.
+  - Changed scripts/Makefile to build sign-file if CONFIG_MODULE_SIG_FORMAT
+    is set.
+  - Removed Mimi's Reviewed-by because of the changes in this version.
+
+- Patch "PKCS#7: Refactor verify_pkcs7_signature()"
+  - Don't add function pkcs7_get_message_sig() anymore, since it's not
+    needed in the current version.
+
+- Patch "PKCS#7: Introduce pkcs7_get_digest()"
+  - Changed 'len' argument from 'u8 *' to 'u32 *'.
+  - Added 'hash_algo' argument to obtain the algo used for the digest.
+  - Don't check whether 'buf', 'len' and 'hash_algo' output arguments are NULL,
+    since the function's only caller always sets them.
+  - Removed Mimi's Reviewed-by because of the changes in this version.
+
+- Patch "integrity: Introduce asymmetric_sig_has_known_key()"
+  - Dropped.
+
+- Patch "integrity: Introduce integrity_keyring_from_id"
+  - Squashed into "ima: Implement support for module-style appended signatures"
+  - Changed integrity_keyring_from_id() to a static function (suggested by Mimi
+    Zohar).
+
+- Patch "ima: Introduce is_signed()"
+  - Dropped.
+
+- Patch "ima: Export func_tokens"
+  - Squashed into "ima: Implement support for module-style appended signatures"
+
+- Patch "ima: Use designated initializers for struct ima_event_data"
+  - New patch.
+
+- Patch "ima: Factor xattr_verify() out of ima_appraise_measurement()"
+  - New patch.
+
+- Patch "ima: Implement support for module-style appended signatures"
+  - Renamed 'struct modsig_hdr' to 'struct modsig'.
+  - Added integrity_modsig_verify() to integrity/digsig.c so that it's not
+    necessary to export integrity_keyring_from_id() (Suggested by Mimi Zohar).
+  - Don't add functions ima_xattr_sig_known_key() and
+    modsig_has_known_key() since they're not necessary anymore.
+  - Added modsig argument to ima_appraise_measurement().
+  - Verify modsig in a separate function called by ima_appraise_measurement().
+  - Renamed ima_read_collect_modsig() to ima_read_modsig(), with a separate
+    collect function added in patch "ima: Collect modsig" (suggested by Mimi
+    Zohar).
+  - In ima_read_modsig(), moved code saving of raw PKCS7 data to 'struct
+    modsig' to patch "ima: Collect modsig".
+  - In ima_read_modsig(), moved all parts related to the modsig hash to
+    patch "ima: Collect modsig".
+  - In ima_read_modsig(), don't check if the buf pointer is NULL since it's
+    never supposed to happen.
+  - Renamed ima_free_xattr_data() to ima_free_modsig().
+  - No need to check for modsig in ima_read_xattr() and
+    ima_inode_set_xattr() anymore.
+  - In ima_modsig_verify(), don't check if the modsig pointer is NULL since
+    it's not supposed to happen.
+  - Don't define IMA_MODSIG element in enum evm_ima_xattr_type.
+
+- Patch "ima: Collect modsig"
+  - New patch.
+
+- Patch "ima: Define ima-modsig template"
+  - Patch renamed from "ima: Add new "d-sig" template field"
+  - Renamed 'd-sig' template field to 'd-modsig'.
+  - Added 'modsig' template field.
+  - Added 'ima-modsig' defined template descriptor.
+  - Renamed ima_modsig_serialize_data() to ima_modsig_serialize().
+  - Renamed ima_get_modsig_hash() to ima_get_modsig_digest(). Also the
+    function is a lot simpler now since what it used to do is now done in
+    ima_collect_modsig() and pkcs7_get_digest().
+  - Added check for failed modsig collection in ima_eventdigest_modsig_init().
+  - Added modsig argument to ima_store_measurement().
+  - Added 'modsig' field to struct ima_event_data.
+  - Removed check for modsig == NULL in ima_get_modsig_digest() and in
+    ima_modsig_serialize_data() since their callers already performs that
+    check.
+  - Moved check_current_template_modsig() to this patch, previously was in
+    "ima: Store the measurement again when appraising a modsig".
+
+- Patch "ima: Store the measurement again when appraising a modsig"
+  - Renamed ima_template_has_sig() to ima_template_has_modsig().
+  - Added a change to ima_collect_measurement(), making it to call
+    ima_collect_modsig() even if IMA_COLLECT is set in iint->flags.
+  - Removed IMA_READ_MEASURE flag.
+  - Renamed template_has_sig global variable to template_has_modsig.
+  - Renamed find_sig_in_template() to find_modsig_in_template().
 
 
-Hi,
+Thiago Jung Bauermann (13):
+  MODSIGN: Export module signature definitions
+  PKCS#7: Refactor verify_pkcs7_signature()
+  PKCS#7: Introduce pkcs7_get_digest()
+  integrity: Introduce struct evm_xattr
+  integrity: Select CONFIG_KEYS instead of depending on it
+  ima: Use designated initializers for struct ima_event_data
+  ima: Add modsig appraise_type option for module-style appended
+    signatures
+  ima: Factor xattr_verify() out of ima_appraise_measurement()
+  ima: Implement support for module-style appended signatures
+  ima: Collect modsig
+  ima: Define ima-modsig template
+  ima: Store the measurement again when appraising a modsig
+  ima: Allow template= option for appraise rules as well
 
-Alan Stern <stern@rowland.harvard.edu> writes:
->> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->> > On Thu, Jun 06, 2019 at 10:55:24AM -0400, Alan Stern wrote:
->> >> On Thu, 6 Jun 2019, Greg Kroah-Hartman wrote:
->> >>=20
->> >> > On Thu, Jun 06, 2019 at 10:24:18AM -0400, Alan Stern wrote:
->> >> > > On Thu, 6 Jun 2019, David Howells wrote:
->> >> > >=20
->> >> > > > Add a USB subsystem notification mechanism whereby notification=
-s about
->> >> > > > hardware events such as device connection, disconnection, reset=
- and I/O
->> >> > > > errors, can be reported to a monitoring process asynchronously.
->> >> > >=20
->> >> > > USB I/O errors covers an awfully large and vague field.  Do we re=
-ally
->> >> > > want to include them?  I'm doubtful.
->> >> >=20
->> >> > See the other patch on the linux-usb list that wanted to start addi=
-ng
->> >> > KOBJ_CHANGE notifications about USB "i/o errors".
->> >>=20
->> >> That patch wanted to add notifications only for enumeration failures
->> >> (assuming you're talking about the patch from Eugeniu Rosca), not I/O
->> >> errors in general.
->> >
->> > Yes, sorry, I was thinking that as a "I/O failed in enumeration" :)
->> >
->> >> > So for "severe" issues, yes, we should do this, but perhaps not for=
- all
->> >> > of the "normal" things we see when a device is yanked out of the sy=
-stem
->> >> > and the like.
->> >>=20
->> >> Then what counts as a "severe" issue?  Anything besides enumeration=20
->> >> failure?
->> >
->> > Not that I can think of at the moment, other than the other recently
->> > added KOBJ_CHANGE issue.  I'm sure we have other "hard failure" issues
->> > in the USB stack that people will want exposed over time.
->>=20
->> From an XHCI standpoint, Transaction Errors might be one thing. They
->> happen rarely and are a strong indication that the bus itself is
->> bad. Either bad cable, misbehaving PHYs, improper power management, etc.
->
-> Don't you also get transaction errors if the user unplugs a device in=20
-> the middle of a transfer?  That's not the sort of thing we want to sent=20
-> notifications about.
+ Documentation/ABI/testing/ima_policy      |   6 +-
+ Documentation/security/IMA-templates.rst  |   7 +-
+ certs/system_keyring.c                    |  61 +++++--
+ crypto/asymmetric_keys/pkcs7_verify.c     |  33 ++++
+ include/crypto/pkcs7.h                    |   4 +
+ include/linux/module.h                    |   3 -
+ include/linux/module_signature.h          |  44 +++++
+ include/linux/verification.h              |  10 ++
+ init/Kconfig                              |   6 +-
+ kernel/Makefile                           |   1 +
+ kernel/module.c                           |   1 +
+ kernel/module_signature.c                 |  46 +++++
+ kernel/module_signing.c                   |  56 +-----
+ scripts/Makefile                          |   2 +-
+ security/integrity/Kconfig                |   2 +-
+ security/integrity/digsig.c               |  43 ++++-
+ security/integrity/evm/evm_main.c         |   8 +-
+ security/integrity/ima/Kconfig            |  13 ++
+ security/integrity/ima/Makefile           |   1 +
+ security/integrity/ima/ima.h              |  60 ++++++-
+ security/integrity/ima/ima_api.c          |  34 +++-
+ security/integrity/ima/ima_appraise.c     | 199 ++++++++++++++--------
+ security/integrity/ima/ima_init.c         |   4 +-
+ security/integrity/ima/ima_main.c         |  24 ++-
+ security/integrity/ima/ima_modsig.c       | 169 ++++++++++++++++++
+ security/integrity/ima/ima_policy.c       |  68 +++++++-
+ security/integrity/ima/ima_template.c     |  26 ++-
+ security/integrity/ima/ima_template_lib.c |  60 ++++++-
+ security/integrity/ima/ima_template_lib.h |   4 +
+ security/integrity/integrity.h            |  26 +++
+ 30 files changed, 840 insertions(+), 181 deletions(-)
+ create mode 100644 include/linux/module_signature.h
+ create mode 100644 kernel/module_signature.c
+ create mode 100644 security/integrity/ima/ima_modsig.c
 
-Mathias, do we get Transaction Error if user removes cable during a
-transfer? I thought we would just get Port Status Change with CC bit
-cleared, no?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlz/Sf8ACgkQzL64meEa
-mQYadA//auaAM9h9MprFzdErulkqH3HmHRaWdSU/kq9mtbaRLTuogqjRpvHqUc8p
-MTfNarWOJXGd5K8l8wjKT1LINfnFJSgcUOWE+bx3FFBbtistVC7KQ+ig9lb/+xj5
-TdkQa+9uZRkdFYkJrmPUTLjrnj74wNAnydPdqu5hPPcAHS+MCHF3KNTCN69h+s6g
-1F2nxcr9/6ZAPlIPtIHy3NW1wqDSvAKIM9nVWwTtT97B0pPAohAcu9/HrteyqyZ5
-53cqMqEn+8l430ehCn1IPNhQW9vIYFsxnaUdcRWpgUgEhkhmS8CBNPianolrMvf6
-VkWX0cfFSQeA/T/hrjqEfDAN+jaHlNGfBWScnqKupATHEOQtxobyxo/W9Pzsofqo
-k05eNr39pwAKaE0Fh+KOtrhnMKe9n3/ePAkYrYHdV30fuqF0WmtWhNw6btIYA30T
-2WHtHhJBP+yRu8VU0Y+EICyBF2L2gNO5sp3m2HsrpcQChescr1br7UYVGgXpxt8T
-/74wp8DlZB4NKSgrCrmwE3j1CfbgJCgf1KKsEXWUgF+zdVZTuoZVVOqo5G3iOxZg
-9Ry8nqLEA0Gz+HY/37wVmSG7hWS/Me7cpQg289uuEll9UXzpVal6oDaZrBFv3jeA
-pf6kOp99IqzbPVG/E16BGCdOgb5gwBNb+agM/Rj5jAn3f0BftoE=
-=gmf3
------END PGP SIGNATURE-----
---=-=-=--
