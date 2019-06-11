@@ -2,147 +2,98 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BBFC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A26C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5862145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:14:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tycewrRW"
+	by mail.kernel.org (Postfix) with ESMTP id E80F520866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405537AbfFKQN7 (ORCPT
+        id S2405548AbfFKQPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 12:13:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50574 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405393AbfFKQN7 (ORCPT
+        Tue, 11 Jun 2019 12:15:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40318 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404034AbfFKQPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:13:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mgjUIOuE6lFZru6+9Sgo5hmPnAT4/97wUViTUqViYnw=; b=tycewrRWO4OD4h6Fum9Stg++U
-        lDCe3ZQJP+6+kwqhc+ccLXpmABhDfS2AfwbflKkk56BQFtK42xkkezyYgJ6xodcVrimZBEjjuqhyL
-        eNdH8sd5SVtl5uyUCPwRQSAjOXglbOuuFvbdg6UVB+qsUKhNyBUySEtd4SgsESzb5bneDykAdXMus
-        W2gK7uXCsmUUUxuG1gyoe9pasC6b2EoTZGxfh5c0ezSp0zwvzG7dOtXyJZxA0PMk4P010Kpx+bsqZ
-        9/V7GLCo5NQ85yxsrq7TSLnH8ULmwo5jGe4Bop8SOWr+peHL8A9lAu+FqygbFZ1L2KG41FxQkg6+N
-        z3XW8gxfQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hajPK-0000Jy-7T; Tue, 11 Jun 2019 16:13:58 +0000
-Subject: Re: [PATCH v12 1/1] Add support for IPMB driver
-To:     Asmaa Mnebhi <Asmaa@mellanox.com>,
-        "minyard@acm.org" <minyard@acm.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Michael Shych <michaelsh@mellanox.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-References: <cover.1560192707.git.Asmaa@mellanox.com>
- <319690553a0da2a1e80b400941341081b383e5f1.1560192707.git.Asmaa@mellanox.com>
- <54f3c0e0-7aaa-9078-5328-50e8f709ebae@infradead.org>
- <VI1PR05MB62398E3DADCD067A23BBC53BDAED0@VI1PR05MB6239.eurprd05.prod.outlook.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6488312d-eb9a-381a-a529-c7cfa6f04ce6@infradead.org>
-Date:   Tue, 11 Jun 2019 09:13:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 12:15:43 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BGBJal054872
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 12:15:42 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t2fkbr8cu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 12:15:42 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Tue, 11 Jun 2019 17:15:40 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 17:15:37 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BGFaNx24576476
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 16:15:36 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E08C42052;
+        Tue, 11 Jun 2019 16:15:36 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE0C842045;
+        Tue, 11 Jun 2019 16:15:33 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.85.73.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jun 2019 16:15:33 +0000 (GMT)
+X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Pingfan Liu <kernelfans@gmail.com>, linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in get_user_pages_fast()
+In-Reply-To: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
+References: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
+Date:   Tue, 11 Jun 2019 21:45:31 +0530
 MIME-Version: 1.0
-In-Reply-To: <VI1PR05MB62398E3DADCD067A23BBC53BDAED0@VI1PR05MB6239.eurprd05.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19061116-0016-0000-0000-000002882CF6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061116-0017-0000-0000-000032E55CB2
+Message-Id: <87tvcwhzdo.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=461 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 6:28 AM, Asmaa Mnebhi wrote:
-> Hello Randy,
-> 
-> Please refer to the slave-interface linux documentation:
-> https://www.kernel.org/doc/Documentation/i2c/slave-interface
+Pingfan Liu <kernelfans@gmail.com> writes:
 
-OK, thanks.
+> As for FOLL_LONGTERM, it is checked in the slow path
+> __gup_longterm_unlocked(). But it is not checked in the fast path, which
+> means a possible leak of CMA page to longterm pinned requirement through
+> this crack.
 
-> Thanks.
-> Asmaa
-> 
-> -----Original Message-----
-> From: Randy Dunlap <rdunlap@infradead.org> 
-> Sent: Monday, June 10, 2019 5:56 PM
-> To: Asmaa Mnebhi <Asmaa@mellanox.com>; minyard@acm.org; wsa@the-dreams.de; Vadim Pasternak <vadimp@mellanox.com>; Michael Shych <michaelsh@mellanox.com>
-> Cc: linux-kernel@vger.kernel.org; linux-i2c@vger.kernel.org
-> Subject: Re: [PATCH v12 1/1] Add support for IPMB driver
-> 
-> On 6/10/19 11:57 AM, Asmaa Mnebhi wrote:
->> Support receiving IPMB requests on a Satellite MC from the BMC.
->> Once a response is ready, this driver will send back a response to the 
->> BMC via the IPMB channel.
->>
->> Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
->> Acked-by: vadimp@mellanox.com
->> ---
->>  Documentation/IPMB.txt           | 103 +++++++++++
->>  drivers/char/ipmi/Kconfig        |   8 +
->>  drivers/char/ipmi/Makefile       |   1 +
->>  drivers/char/ipmi/ipmb_dev_int.c | 364 
->> +++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 476 insertions(+)
->>  create mode 100644 Documentation/IPMB.txt  create mode 100644 
->> drivers/char/ipmi/ipmb_dev_int.c
->>
->> diff --git a/Documentation/IPMB.txt b/Documentation/IPMB.txt new file 
->> mode 100644 index 0000000..7160d53
->> --- /dev/null
->> +++ b/Documentation/IPMB.txt
->> @@ -0,0 +1,103 @@
-> 
-> [...]
-> 
->> +Instantiate the device
->> +----------------------
->> +
->> +After loading the driver, you can instantiate the device as described 
->> +in 'Documentation/i2c/instantiating-devices'.
->> +If you have multiple BMCs, each connected to your Satellite MC via a 
->> +different I2C bus, you can instantiate a device for each of those 
->> +BMCs.
->> +The name of the instantiated device contains the I2C bus number 
->> +associated with it as follows:
->> +
->> +BMC1 ------ IPMB/I2C bus 1 ---------|   /dev/ipmb-1
->> +				Satellite MC
->> +BMC1 ------ IPMB/I2C bus 2 ---------|   /dev/ipmb-2
->> +
->> +For instance, you can instantiate the ipmb-dev-int device from user 
->> +space at the 7 bit address 0x10 on bus 2:
->> +
->> +  # echo ipmb-dev 0x1010 > /sys/bus/i2c/devices/i2c-2/new_device
-> 
-> This is confusing.
-> 
-> Can you clarify how the 7-bit address is extracted from that hex number?
-> Is the 7-bit address repeated (duplicated)?
-> Is the 7-bit address the low order (low bits) 0x10 or the 0x10 at bits
-> 15-8 (or 14-8)?
-> 
->> +This will create the device file /dev/ipmb-2, which can be accessed 
->> +by the user space program. The device needs to be instantiated before 
->> +running the user space program.
-> 
-> thanks.
-> --
-> ~Randy
-> 
+Shouldn't we disallow FOLL_LONGTERM with get_user_pages fastpath? W.r.t
+dax check we need vma to ensure whether a long term pin is allowed or not.
+If FOLL_LONGTERM is specified we should fallback to slow path.
 
+-aneesh
 
--- 
-~Randy
