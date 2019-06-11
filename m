@@ -2,78 +2,115 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF6BC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330FDC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DB520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075DF20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560282912;
+	bh=2jeSb/OUEFUwExRaSwm27O/BgcQGHGrpHx+20YxbtuM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PfLo7JvGPhFMqDGynZMkXI7r1gYBBkI9DW/qaLjF6nV/0Iryg1lTJ2KgYlyqrUS9h
+	 is55sDthNe8bDbfZCKcqp1DspBNYYm7qx275O3dED3nxz5u+kECdv7kxSSiFBR9uPW
+	 iZsDAlEXZX6/xLVLlRCInOETq50R2DQjRvCTLumc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406349AbfFKTyn (ORCPT
+        id S2406357AbfFKTzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:54:43 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:59502 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404282AbfFKTyn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:54:43 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hamqg-0004OW-HW; Tue, 11 Jun 2019 21:54:26 +0200
-Date:   Tue, 11 Jun 2019 21:54:25 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH v4 05/21] x86/hpet: Reserve timer for the HPET
- hardlockup detector
-In-Reply-To: <1558660583-28561-6-git-send-email-ricardo.neri-calderon@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906112152430.2214@nanos.tec.linutronix.de>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-6-git-send-email-ricardo.neri-calderon@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 11 Jun 2019 15:55:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404282AbfFKTzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:55:10 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41EE82173C;
+        Tue, 11 Jun 2019 19:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560282909;
+        bh=2jeSb/OUEFUwExRaSwm27O/BgcQGHGrpHx+20YxbtuM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WTgRZYFURDZsQb5+TwkIswCl5Zg+MioxluX+zL+ZzZWomQHLpkKCnGCZBynVvT1qo
+         IhlX7pJGYmtDRJgSbcHGZDxgB6fAqtkxiqBUXeZBjaaLoX/Byz2TW4otC/3mkYhXpw
+         65X0hL2dZitOE6NFf3oTd8sboqXvP/dDOSreRQBg=
+Received: by mail-qk1-f180.google.com with SMTP id m14so8466957qka.10;
+        Tue, 11 Jun 2019 12:55:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAWtGlbF+oiyCNMLpRG50tYDM3e8ZC0c9vnLOXNr1iztlLJm/rg+
+        czWntOds4nHHjFQk/X07V0KvR2aB1AAHHvtbDQ==
+X-Google-Smtp-Source: APXvYqzDOaQFq9KRqVoTAyLrNcdmraacXiFjUvpNJC9DC1OsA19tDc1ngzzrggZx0+ae9yjZdwjNOgSx2r/OE2MEo4c=
+X-Received: by 2002:ae9:c208:: with SMTP id j8mr61663393qkg.264.1560282908475;
+ Tue, 11 Jun 2019 12:55:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190514005033.15593-1-robh@kernel.org> <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
+ <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
+In-Reply-To: <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 11 Jun 2019 13:54:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
+Message-ID: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019, Ricardo Neri wrote:
+On Mon, May 27, 2019 at 12:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 24-05-19, 13:38, Linus Walleij wrote:
+> > On Tue, May 14, 2019 at 2:50 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > > Convert the Arm PL061 GPIO controller binding to json-schema format.
+> > >
+> > > As I'm the author for all but the gpio-ranges line, make the schema dual
+> > > GPL/BSD license.
+> > >
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > Cc: linux-gpio@vger.kernel.org
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> >
+> > Patch applied. As you know I am already a big fan of this scheme.
+> >
+> > > This warns on a few platforms missing clocks, interrupt-controller
+> > > and/or #interrupt-cells. We could not make those required, but really
+> > > they should be IMO. OTOH, it's platforms like Spear and Calxeda which
+> > > aren't too active, so I don't know that we want to fix them.
+> >
+> > What works for you works for me.
+> >
+> > We could add dummy fixed clocks in the DTS files if
+> > we wanted I suppose. The #interrupt-cells and interrupt-controller
+> > things we can just fix, but I wonder what the maintainers of these
+> > platforms are up to? Isn't Calxeda yours, and could Viresh fix
+> > up the SPEAr?
 
-> HPET timer 2 will be used to drive the HPET-based hardlockup detector.
-> Reserve such timer to ensure it cannot be used by user space programs or
-> for clock events.
-> 
-> When looking for MSI-capable timers for clock events, skip timer 2 if
-> the HPET hardlockup detector is selected.
+I was hoping to delete Calxeda rather than fix. I'm pretty sure none
+of the distros are using the systems anymore and they were the main
+users for a while. Otherwise, I would have converted all the bindings
+it uses.
 
-Why? Both the changelog and the code change lack an explanation why this
-timer is actually touched after it got reserved for the platform. The
-reservation should make it inaccessible for other things.
+> I checked SPEAr and it is missing interrupt-controller at few places and clocks
+> everywhere. Missing clocks should be fine as SPEAr doesn't get clocks from DT.
 
-Thanks,
+Clocks not from DT was supposed to be a transitional thing...
 
-	tglx
+>
+> And interrupt-controller can be just added, I don't think there would be any
+> platform dependent side-affects ?
+
+There shouldn't be.
+
+Rob
