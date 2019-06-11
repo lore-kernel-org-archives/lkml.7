@@ -2,133 +2,164 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB96C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCA3C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01CB62063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isY0UqSM"
+	by mail.kernel.org (Postfix) with ESMTP id 1C331212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560260032;
+	bh=mtodXsL+vYdy+dQoc9hpdK+N5BRAnJKhn34N192VzYQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rcCu9ZRnmo1a5KxLs+WhANde6Zkrs+rS0nZp+oVYlqb1ocG8J+NdMjpZxKGv3rfXo
+	 /2rKA7O6ggzyNoAeqX4Y0+ZN7VpwYbzQohkuPdeBJJ3EFeE81WCLvab7DQhbLP3X5J
+	 IWCTSUDIuqjc82L0w55yjHw8VrB9b1Q3LW3u5ayc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390852AbfFKNc2 (ORCPT
+        id S2390986AbfFKNdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:32:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45478 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387683AbfFKNc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:32:27 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w34so6973459pga.12;
-        Tue, 11 Jun 2019 06:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o9Fzo35JippV1+onM33v00Qp5Y8cxbvuNyBylk/rwIE=;
-        b=isY0UqSM3MN0f0vbHrtxJK7GrAYz4XTlnUN1rn7Bqy1qZMwMD0/gJaLhxHEAdwnqRV
-         uC2e3GsKM6Sp0TnQXrZ+VuHVvJ/7nUmL/+jwB92wl8w/2orDthUlpEPyUfvhD7IMKhTk
-         wW6wVmoniu/4YM31UabwwMn/+AjtBKHuPcJbDh/1qB8MAcEmjMbLW/LaRODQskbq8ElN
-         UBLj4Qt2ROaYrESoLSAKCmwd1GAcSEYNOoXn3UXzfWcchnQmGm8wTdnJ041dSY1d7fFa
-         tN5ZT2p2rQfuDN1vAwwAXCvjtlALzuhAZJkmkpMyPN1No+ODNcSGfK2LL1cTS/4t1Aok
-         TRhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o9Fzo35JippV1+onM33v00Qp5Y8cxbvuNyBylk/rwIE=;
-        b=cN7+C3K/Omg/hpWM8glGaQ1JJecDFPuT+zkEjb528SUrG6GAqb5wn7gppuhs6lgfXa
-         t64TVzAN6vFULQ9SpUbojFW6oRyANxwiUG616g7Pzm3j4o1g4cTtggFYzLgP9J9MtXhY
-         fHMqgm58FBHymB5rjuyhdkHp/+J5DWo17n/oFuI9Ozpz8DXI9qoWfgoxjbcM2ynxSKke
-         xvRccw5tj/CkDiIRV1qvcucyNMiAZF8rPeYf4jiAVS/HvB65lL9QId8QVUtJSNW+8mPi
-         wnPWCzl0e7+LwTYrgBr5XIPkfIvJOfPQLPQq4j+Q8rfXRBgPBJ2cid0SULm3UIfdPMwI
-         bxQQ==
-X-Gm-Message-State: APjAAAUCBILzQlbjWtbcf6bz/PXwnIfrOW8WYjzdfeFHjKofKqL88u7d
-        DD6GZWITnUqF9dxKJr13Sus=
-X-Google-Smtp-Source: APXvYqzgM7j+1ULipofOzb+BHyeyPojALXL0hAC+L66dUnWLPRw9CPge0p8r/cA3bJc5I/UYVcpUKA==
-X-Received: by 2002:a63:c903:: with SMTP id o3mr8935810pgg.295.1560259946998;
-        Tue, 11 Jun 2019 06:32:26 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p6sm36249pgs.77.2019.06.11.06.32.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 06:32:25 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 06:32:23 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     laurentiu.tudor@nxp.com
-Cc:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, marex@denx.de, leoyang.li@nxp.com,
-        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
-        noring@nocrew.org, JuergenUrban@gmx.de
-Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
- memory
-Message-ID: <20190611133223.GA30054@roeck-us.net>
-References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
- <20190529102843.13174-4-laurentiu.tudor@nxp.com>
- <20190605214622.GA22254@roeck-us.net>
+        Tue, 11 Jun 2019 09:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387683AbfFKNdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:33:51 -0400
+Received: from linux-8ccs (ip5f5ade90.dynamic.kabel-deutschland.de [95.90.222.144])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D2962063F;
+        Tue, 11 Jun 2019 13:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560260029;
+        bh=mtodXsL+vYdy+dQoc9hpdK+N5BRAnJKhn34N192VzYQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TiJIujdeMjHRStoZkNO7OxmNEgAk6m8UVzJbVUzi88GzJMhyg5lYsRescW31p6828
+         Mft3VNQsHonsABPiVBYUtC0FoV1sPI5gxs6x9epIg7CxvbDzmXbyQbw4AgILxJXAok
+         9C6SpkvpQ4e74Y9dPzQma/Zuwx4bF4NCHpHVfy6M=
+Date:   Tue, 11 Jun 2019 15:33:45 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     gregkh@linuxfoundation.org, mbenes@suse.cz,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] kernel/module: Fix mem leak in
+ module_add_modinfo_attrs
+Message-ID: <20190611133344.GA9114@linux-8ccs>
+References: <20190530134304.4976-1-yuehaibing@huawei.com>
+ <20190603144554.18168-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190605214622.GA22254@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190603144554.18168-1-yuehaibing@huawei.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 02:46:22PM -0700, Guenter Roeck wrote:
-> On Wed, May 29, 2019 at 01:28:41PM +0300, laurentiu.tudor@nxp.com wrote:
-> > From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> > 
-> > In preparation for dropping the existing "coherent" dma mem declaration
-> > APIs, replace the current dma_declare_coherent_memory() based mechanism
-> > with the creation of a genalloc pool that will be used in the OHCI
-> > subsystem as replacement for the DMA APIs.
-> > 
-> > For context, see thread here: https://lkml.org/lkml/2019/4/22/357
-> > 
-> > Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> 
-> This patch results in usb access failures when trying to boot from the
-> sm501-usb controller on sh4 with qemu.
-> 
-> usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
-> sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
-> sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 08 7c 00 00 f0 00
-> print_req_error: I/O error, dev sda, sector 2172 flags 80700
-> usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
-> sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
-> sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 01 da 00 00 f0 00
-> print_req_error: I/O error, dev sda, sector 474 flags 84700
-> usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
-> sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
-> sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 02 da 00 00 f0 00
-> print_req_error: I/O error, dev sda, sector 730 flags 84700
-> usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
-> sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
-> sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 0b 50 00 00 f0 00
-> print_req_error: I/O error, dev sda, sector 2896 flags 84700
-> 
-> Qemu command line is:
-> 
-> The qemu command line is:
-> 
-> qemu-system-sh4 -M r2d \
->         -kernel ./arch/sh/boot/zImage \
-> 	-snapshot \
-> 	-usb -device usb-storage,drive=d0 \
-> 	-drive file=rootfs.ext2,if=none,id=d0,format=raw \
-> 	-append 'panic=-1 slub_debug=FZPUA root=/dev/sda rootwait console=ttySC1,115200 earlycon=scif,mmio16,0xffe80000 noiotrap' \
-> 	-serial null -serial stdio \
-> 	-net nic,model=rtl8139 -net user -nographic -monitor null
-> 
-> Reverting this patch as well as "USB: drop HCD_LOCAL_MEM flag" fixes the
-> problem. Reverting "USB: drop HCD_LOCAL_MEM flag" alone does not help.
-> 
++++ YueHaibing [03/06/19 22:45 +0800]:
+>In module_add_modinfo_attrs if sysfs_create_file
+>fails, we forget to free allocated modinfo_attrs
+>and roll back the sysfs files.
+>
+>Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
+>Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>---
+>v3: reuse module_remove_modinfo_attrs
+>v2: free from '--i' instead of 'i--'
+>---
+> kernel/module.c | 21 ++++++++++++++++-----
+> 1 file changed, 16 insertions(+), 5 deletions(-)
+>
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 80c7c09..c6b8912 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -1697,6 +1697,8 @@ static int add_usage_links(struct module *mod)
+> 	return ret;
+> }
+>
+>+static void module_remove_modinfo_attrs(struct module *mod, int end);
+>+
+> static int module_add_modinfo_attrs(struct module *mod)
+> {
+> 	struct module_attribute *attr;
+>@@ -1711,24 +1713,33 @@ static int module_add_modinfo_attrs(struct module *mod)
+> 		return -ENOMEM;
+>
+> 	temp_attr = mod->modinfo_attrs;
+>-	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
+>+	for (i = 0; (attr = modinfo_attrs[i]); i++) {
+> 		if (!attr->test || attr->test(mod)) {
+> 			memcpy(temp_attr, attr, sizeof(*temp_attr));
+> 			sysfs_attr_init(&temp_attr->attr);
+> 			error = sysfs_create_file(&mod->mkobj.kobj,
+> 					&temp_attr->attr);
+>+			if (error)
+>+				goto error_out;
+> 			++temp_attr;
+> 		}
+> 	}
+>+
+>+	return 0;
+>+
+>+error_out:
+>+	module_remove_modinfo_attrs(mod, --i);
 
-This problem is still seen in next-20190611.
-Has anyone actually tested this code ?
+Gah, I think there is another issue here - if sysfs_create_file()
+fails on the first iteration of the loop (so i = 0), then we will go
+to error_out and end up calling module_remove_modinfo_attrs(mod, -1),
+which, for i = 0, will call sysfs_remove_file() since attr->attr.name
+had already been set before the failed call to sysfs_create_file().
+Perhaps we need to check that i > 0 before calling
+module_remove_modinfo_attrs() under error_out?
 
-Guenter
+> 	return error;
+> }
+>
+>-static void module_remove_modinfo_attrs(struct module *mod)
+>+static void module_remove_modinfo_attrs(struct module *mod, int end)
+> {
+> 	struct module_attribute *attr;
+> 	int i;
+>
+> 	for (i = 0; (attr = &mod->modinfo_attrs[i]); i++) {
+>+		if (end >= 0 && i > end)
+>+			break;
+> 		/* pick a field to test for end of list */
+> 		if (!attr->attr.name)
+> 			break;
+>@@ -1816,7 +1827,7 @@ static int mod_sysfs_setup(struct module *mod,
+> 	return 0;
+>
+> out_unreg_modinfo_attrs:
+>-	module_remove_modinfo_attrs(mod);
+>+	module_remove_modinfo_attrs(mod, -1);
+> out_unreg_param:
+> 	module_param_sysfs_remove(mod);
+> out_unreg_holders:
+>@@ -1852,7 +1863,7 @@ static void mod_sysfs_fini(struct module *mod)
+> {
+> }
+>
+>-static void module_remove_modinfo_attrs(struct module *mod)
+>+static void module_remove_modinfo_attrs(struct module *mod, int end)
+> {
+> }
+>
+>@@ -1868,7 +1879,7 @@ static void init_param_lock(struct module *mod)
+> static void mod_sysfs_teardown(struct module *mod)
+> {
+> 	del_usage_links(mod);
+>-	module_remove_modinfo_attrs(mod);
+>+	module_remove_modinfo_attrs(mod, -1);
+> 	module_param_sysfs_remove(mod);
+> 	kobject_put(mod->mkobj.drivers_dir);
+> 	kobject_put(mod->holders_dir);
+>-- 
+>1.8.3.1
+>
+>
