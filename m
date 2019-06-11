@@ -2,47 +2,66 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAB1C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1920C4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A645420820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931EF208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391230AbfFKF1A (ORCPT
+        id S2391238AbfFKFcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 01:27:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:48116 "EHLO newverein.lst.de"
+        Tue, 11 Jun 2019 01:32:13 -0400
+Received: from namei.org ([65.99.196.166]:38356 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391044AbfFKF1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 01:27:00 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 0B2F968B02; Tue, 11 Jun 2019 07:26:31 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 07:26:30 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, akpm@linux-foundation.org,
-        alexey.skidanov@intel.com, olof@lixom.net, sjhuang@iluvatar.ai,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH] dma-remap: Avoid de-referencing NULL atomic_pool
-Message-ID: <20190611052630.GA19263@lst.de>
-References: <20190607234333.9776-1-f.fainelli@gmail.com> <20190610225437.10912-1-f.fainelli@gmail.com>
+        id S2390492AbfFKFcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 01:32:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x5B5VjUm008646;
+        Tue, 11 Jun 2019 05:31:45 GMT
+Date:   Tue, 11 Jun 2019 15:31:45 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Milan Broz <gmazyland@gmail.com>
+cc:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, scottsh@microsoft.com, ebiggers@google.com,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: Re: [RFC PATCH v3 1/1] Add dm verity root hash pkcs7 sig
+ validation
+In-Reply-To: <54170d18-31c7-463d-10b5-9af8b666df0f@gmail.com>
+Message-ID: <alpine.LRH.2.21.1906111524060.8305@namei.org>
+References: <20190607223140.16979-1-jaskarankhurana@linux.microsoft.com> <20190607223140.16979-2-jaskarankhurana@linux.microsoft.com> <54170d18-31c7-463d-10b5-9af8b666df0f@gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610225437.10912-1-f.fainelli@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me.  When did this start to show up?  Do we need
-to push it to Linus this cycle and cc stable?
+On Sat, 8 Jun 2019, Milan Broz wrote:
+
+> > Adds DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE: roothash signature *must* be
+> > specified for all dm verity volumes and verification must succeed prior
+> > to creation of device mapper block device.
+> 
+> AFAIK there are tools that use dm-verity internally (some container
+> functions in systemd can recognize and check dm-verity partitions) and with
+> this option we will just kill possibility to use it without signature.
+> 
+> Anyway, this is up to Mike and Mikulas, I guess generic distros will not
+> set this option.
+
+Right, I think this option would not be for a general purpose distro, but 
+for embedded systems and other cases where the user may want a more 
+tightly locked-down system.
+
+-- 
+James Morris
+<jmorris@namei.org>
+
