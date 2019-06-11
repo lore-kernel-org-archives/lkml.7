@@ -3,116 +3,197 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D9CC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DD5C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64ECE212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC9920896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403831AbfFKF7l (ORCPT
+        id S2391295AbfFKGEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 01:59:41 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:63325 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390485AbfFKF7l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 01:59:41 -0400
-X-UUID: 62c779248366490688a9b32f61fffd8e-20190611
-X-UUID: 62c779248366490688a9b32f61fffd8e-20190611
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1177027926; Tue, 11 Jun 2019 13:59:33 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 11 Jun
- 2019 13:59:32 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 11 Jun 2019 13:59:31 +0800
-Message-ID: <1560232771.8487.120.camel@mhfsdcap03>
-Subject: Re: [PATCH v6 09/10] usb: roles: add USB Type-B GPIO connector
- driver
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        "Badhri Jagan Sridharan" <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>
-Date:   Tue, 11 Jun 2019 13:59:31 +0800
-In-Reply-To: <9640aa29-bc96-ded1-e757-e885bda354a8@nvidia.com>
-References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1559115828-19146-10-git-send-email-chunfeng.yun@mediatek.com>
-         <9640aa29-bc96-ded1-e757-e885bda354a8@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 02:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391051AbfFKGEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 02:04:44 -0400
+Received: from [10.44.0.22] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90ED520679;
+        Tue, 11 Jun 2019 06:04:41 +0000 (UTC)
+Subject: Re: [PATCH 04/15] binfmt_flat: remove flat_old_ram_flag
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Michal Simek <monstr@monstr.eu>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org
+References: <20190610212015.9157-1-hch@lst.de>
+ <20190610212015.9157-5-hch@lst.de>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <b1ce6fc6-343c-7686-b4f4-35a305dc2adb@linux-m68k.org>
+Date:   Tue, 11 Jun 2019 16:04:39 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <20190610212015.9157-5-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-10 at 16:03 +0530, Nagarjuna Kristam wrote:
-> Tested-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Hi Christoph,
+
+On 11/6/19 7:20 am, Christoph Hellwig wrote:
+> Instead add a Kconfig variable that only h8300 selects.
 > 
-Thanks
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   arch/arm/include/asm/flat.h        | 1 -
+>   arch/c6x/include/asm/flat.h        | 1 -
+>   arch/h8300/Kconfig                 | 1 +
+>   arch/h8300/include/asm/flat.h      | 1 -
+>   arch/m68k/include/asm/flat.h       | 1 -
+>   arch/microblaze/include/asm/flat.h | 1 -
+>   arch/sh/include/asm/flat.h         | 1 -
+>   arch/xtensa/include/asm/flat.h     | 1 -
+>   fs/Kconfig.binfmt                  | 3 +++
+>   fs/binfmt_flat.c                   | 3 ++-
+>   10 files changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/flat.h b/arch/arm/include/asm/flat.h
+> index a185fe023b60..acf162111ee2 100644
+> --- a/arch/arm/include/asm/flat.h
+> +++ b/arch/arm/include/asm/flat.h
+> @@ -9,7 +9,6 @@
+>   #include <linux/uaccess.h>
+>   
+>   #define	flat_argvp_envp_on_stack()		1
+> -#define	flat_old_ram_flag(flags)		(flags)
+>   
+>   static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>   					u32 *addr, u32 *persistent)
+> diff --git a/arch/c6x/include/asm/flat.h b/arch/c6x/include/asm/flat.h
+> index c4d703b454c6..353e4d06e8c0 100644
+> --- a/arch/c6x/include/asm/flat.h
+> +++ b/arch/c6x/include/asm/flat.h
+> @@ -5,7 +5,6 @@
+>   #include <asm/unaligned.h>
+>   
+>   #define flat_argvp_envp_on_stack()			0
+> -#define flat_old_ram_flag(flags)			(flags)
+>   static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>   					u32 *addr, u32 *persistent)
+>   {
+> diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
+> index ecfc4b4b6373..d30e8727b02d 100644
+> --- a/arch/h8300/Kconfig
+> +++ b/arch/h8300/Kconfig
+> @@ -2,6 +2,7 @@
+>   config H8300
+>           def_bool y
+>   	select ARCH_32BIT_OFF_T
+> +	select BINFMT_FLAT_OLD_ALWAYS_RAM
+>   	select GENERIC_ATOMIC64
+>   	select HAVE_UID16
+>   	select VIRT_TO_BUS
+> diff --git a/arch/h8300/include/asm/flat.h b/arch/h8300/include/asm/flat.h
+> index 7ef7eefded3d..14cc928d5478 100644
+> --- a/arch/h8300/include/asm/flat.h
+> +++ b/arch/h8300/include/asm/flat.h
+> @@ -9,7 +9,6 @@
+>   #include <asm/unaligned.h>
+>   
+>   #define	flat_argvp_envp_on_stack()		1
+> -#define	flat_old_ram_flag(flags)		1
+>   
+>   /*
+>    * on the H8 a couple of the relocations have an instruction in the
+> diff --git a/arch/m68k/include/asm/flat.h b/arch/m68k/include/asm/flat.h
+> index 217fa89c8e34..7b1fb5c2809e 100644
+> --- a/arch/m68k/include/asm/flat.h
+> +++ b/arch/m68k/include/asm/flat.h
+> @@ -9,7 +9,6 @@
+>   #include <linux/uaccess.h>
+>   
+>   #define	flat_argvp_envp_on_stack()		1
+> -#define	flat_old_ram_flag(flags)		(flags)
+>   static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>   					u32 *addr, u32 *persistent)
+>   {
+> diff --git a/arch/microblaze/include/asm/flat.h b/arch/microblaze/include/asm/flat.h
+> index 846084fa7f04..1cd8d7f4cf12 100644
+> --- a/arch/microblaze/include/asm/flat.h
+> +++ b/arch/microblaze/include/asm/flat.h
+> @@ -14,7 +14,6 @@
+>   #include <asm/unaligned.h>
+>   
+>   #define	flat_argvp_envp_on_stack()	0
+> -#define	flat_old_ram_flag(flags)	(flags)
+>   
+>   /*
+>    * Microblaze works a little differently from other arches, because
+> diff --git a/arch/sh/include/asm/flat.h b/arch/sh/include/asm/flat.h
+> index 0d520b4cc5ea..015678d7b771 100644
+> --- a/arch/sh/include/asm/flat.h
+> +++ b/arch/sh/include/asm/flat.h
+> @@ -12,7 +12,6 @@
+>   #include <asm/unaligned.h>
+>   
+>   #define	flat_argvp_envp_on_stack()		0
+> -#define	flat_old_ram_flag(flags)		(flags)
+>   static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>   					u32 *addr, u32 *persistent)
+>   {
+> diff --git a/arch/xtensa/include/asm/flat.h b/arch/xtensa/include/asm/flat.h
+> index a1d88aa3ef8a..b215c1e66958 100644
+> --- a/arch/xtensa/include/asm/flat.h
+> +++ b/arch/xtensa/include/asm/flat.h
+> @@ -5,7 +5,6 @@
+>   #include <asm/unaligned.h>
+>   
+>   #define flat_argvp_envp_on_stack()			0
+> -#define flat_old_ram_flag(flags)			(flags)
+>   static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+>   					u32 *addr, u32 *persistent)
+>   {
+> diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+> index f87ddd1b6d72..5658e12ad944 100644
+> --- a/fs/Kconfig.binfmt
+> +++ b/fs/Kconfig.binfmt
+> @@ -97,6 +97,9 @@ config BINFMT_FLAT
+>   	help
+>   	  Support uClinux FLAT format binaries.
+>   
+> +config BINFMT_FLAT_OLD_ALWAYS_RAM
+> +	bool
+> +
+>   config BINFMT_ZFLAT
+>   	bool "Enable ZFLAT support"
+>   	depends on BINFMT_FLAT
+> diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+> index c0e4535dc1ec..18d82fd5f57c 100644
+> --- a/fs/binfmt_flat.c
+> +++ b/fs/binfmt_flat.c
+> @@ -488,7 +488,8 @@ static int load_flat_file(struct linux_binprm *bprm,
+>   	 * fix up the flags for the older format,  there were all kinds
+>   	 * of endian hacks,  this only works for the simple cases
+>   	 */
+> -	if (rev == OLD_FLAT_VERSION && flat_old_ram_flag(flags))
+> +	if (IS_ENABLED(CONFIG_BINFMT_FLAT_OLD_ALWAYS_RAM) &&
+> +	    rev == OLD_FLAT_VERSION)
 
-> On 29-05-2019 13:13, Chunfeng Yun wrote:
-> > Due to the requirement of usb-connector.txt binding, the old way
-> > using extcon to support USB Dual-Role switch is now deprecated
-> > when use Type-B connector.
-> > This patch introduces a driver of Type-B connector which typically
-> > uses an input GPIO to detect USB ID pin, and try to replace the
-> > function provided by extcon-usb-gpio driver
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> > v6 changes:
-> >   1. get usb-role-swtich by usb_role_switch_get()
-> > 
-> > v5 changes:
-> >   1. put usb_role_switch when error happens suggested by Biju
-> >   2. don't treat bype-B connector as a virtual device suggested by Rob
-> > 
-> > v4 changes:
-> >   1. remove linux/gpio.h suggested by Linus
-> >   2. put node when error happens
-> > 
-> > v3 changes:
-> >   1. treat bype-B connector as a virtual device;
-> >   2. change file name again
-> > 
-> > v2 changes:
-> >   1. file name is changed
-> >   2. use new compatible
-> > ---
-> >  drivers/usb/roles/Kconfig           |  11 ++
-> >  drivers/usb/roles/Makefile          |   1 +
-> >  drivers/usb/roles/typeb-conn-gpio.c | 286 ++++++++++++++++++++++++++++
-> >  3 files changed, 298 insertions(+)
-> >  create mode 100644 drivers/usb/roles/typeb-conn-gpio.c
-> > 
-> > diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
-> > index f8b31aa67526..d1156e18a81a 100644
-> > --- a/drivers/usb/roles/Kconfig
-> > +++ b/drivers/usb/roles/Kconfig
-> > 
+The flags are from the binary file header here, so this is going to lose
+that check for most platforms (except h8300 where it would always have
+been true).
 
+Regards
+Greg
 
