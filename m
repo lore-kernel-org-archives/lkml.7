@@ -2,101 +2,177 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BCEC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5179AC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D45206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D48206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jML3hjYS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K753bTah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404499AbfFKMJF (ORCPT
+        id S2404534AbfFKMJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:09:05 -0400
-Received: from mail-eopbgr30046.outbound.protection.outlook.com ([40.107.3.46]:59362
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404372AbfFKMJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:09:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1nkCMlyKo3b55Ogy6E62bnSFHT86nMrEF8Qvq9yreLo=;
- b=jML3hjYSG80fR2ODfruswGH7QnR4QMRVMkTdBwNfcGrLmIVpheVk2og5NWNkJxCFcW73WzzADOch1o9s1Au2eAVI+rjkoSXhURm3tPVj546AMiNDGDiNPOYuYBrK0UjXLGxxw8zpxeZdgxusyfh65YjOZLCZ0P8IcMsYb/aAGfo=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.17.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Tue, 11 Jun 2019 12:09:01 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 12:09:01 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v1 0/5] Additional fixes on Talitos driver
-Thread-Topic: [PATCH v1 0/5] Additional fixes on Talitos driver
-Thread-Index: AQHVHFtn4C4BXEoEK02U37UKYcQLNA==
-Date:   Tue, 11 Jun 2019 12:09:01 +0000
-Message-ID: <VI1PR0402MB34852D74119140ADDD4F4DF198ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <cover.1559819372.git.christophe.leroy@c-s.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f1d95a0c-1ccd-4f36-2a9d-08d6ee659708
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB3918;
-x-ms-traffictypediagnostic: VI1PR0402MB3918:
-x-microsoft-antispam-prvs: <VI1PR0402MB3918217BA9EBE0716729F13098ED0@VI1PR0402MB3918.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(346002)(366004)(396003)(39860400002)(136003)(376002)(189003)(199004)(44832011)(316002)(99286004)(52536014)(6246003)(33656002)(478600001)(53936002)(14454004)(4326008)(74316002)(55016002)(86362001)(71190400001)(81166006)(6436002)(9686003)(2906002)(229853002)(54906003)(486006)(4744005)(81156014)(110136005)(8676002)(71200400001)(5660300002)(68736007)(7736002)(476003)(64756008)(66066001)(305945005)(8936002)(66476007)(66946007)(66446008)(3846002)(25786009)(26005)(66556008)(53546011)(6506007)(6116002)(256004)(446003)(76176011)(7696005)(186003)(76116006)(102836004)(73956011)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3918;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6Xk5VxfME+muF3MNbCpOkKYI/I7IW9dFjhRzWKUyDyOHBX75yBfeoCdfIVpaprnA6ExYHx+TPw3qhU9EUGsiEAnbyz9N5OOSDXMDtF1zyDnZrRsL49WtGQhBQsDVB5dgAmeIP0MY9qpsTLkN7YK4B4DyfIfHzIik/H5dj3ODfC7vQMlATMCmWzOm7jjbc+6W45YmA+a5BrJdW4J4tSa8wkS4hEPNUVWheKqq1AypKMg0oJl6cjmFcPJTP+Rn8j6z+Mmhq87wYlGlCQX4F7IZcAiJ+v1Ug/NRMzzEL2WbgyJLUE/U5iJs3tdvGY2KK3RcUjJf3ZIWPcJLq4zRXhsMme20VRqwLsBBk7FxAxreL4ppyJ7sHvni2NUJlALc86C/fNUOnmgk+nh2nyMOcG6dSbKQw3Xoh9G6/rlCdgJEyWs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 11 Jun 2019 08:09:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53788 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387538AbfFKMJZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 08:09:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iADvzNHxrj3aEEZQS4BDjuzQUDhxOJwFwSW7vltHCTI=; b=K753bTahcHF+Rs2Eljx/ON3D5
+        qtvxcR8shCT1oenJwJac7IcRvDseDZxbjKGUqKFXIamb/iwBJ8Rkiio1UHxUCuJwUACaAcQijpxhA
+        oly/8SNCjSzJAuIk7dKxFJvMqmjvbzum7sWcvAfT0xXoabpPvkooZKmVWGtofOlfZAR7xE4S+fBaW
+        6FqyRpdqlC/ik6x7z5oI+icDWqtyZrrdCv3Hm6fMxLZY7pmUcU9WM4PFAvtOKIIx8gYkjVhPawB6s
+        jcK6Vfbl9bJO5oYrDC3rISd/wNNaU1tRI2quNbbVxcn7z2mU26AH6hwVne/G/8FspPHyESmf1X2Xo
+        wKiegod2w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hafZu-0004Le-2U; Tue, 11 Jun 2019 12:08:38 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 061F32022711C; Tue, 11 Jun 2019 14:08:35 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 14:08:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@aculab.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20190611120834.GG3463@hirez.programming.kicks-ass.net>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131945.005681046@infradead.org>
+ <20190608004708.7646b287151cf613838ce05f@kernel.org>
+ <20190607173427.GK3436@hirez.programming.kicks-ass.net>
+ <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net>
+ <20190611080307.GN3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1d95a0c-1ccd-4f36-2a9d-08d6ee659708
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 12:09:01.1047
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3918
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611080307.GN3436@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/2019 2:31 PM, Christophe Leroy wrote:=0A=
-> This series is the last set of fixes for the Talitos driver.=0A=
-> =0A=
-> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and=0A=
-> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:=0A=
-> =0A=
-I get failures, probably due to patch 1/5:=0A=
-=0A=
-alg: skcipher: cbc-aes-talitos encryption test failed (wrong result) on tes=
-t vector 0, cfg=3D"in-place"=0A=
-alg: skcipher: cbc-des-talitos encryption test failed (wrong result) on tes=
-t vector 0, cfg=3D"in-place"=0A=
-alg: skcipher: cbc-3des-talitos encryption test failed (wrong result) on te=
-st vector 0, cfg=3D"in-place"=0A=
-=0A=
-Horia=0A=
+On Tue, Jun 11, 2019 at 10:03:07AM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 07, 2019 at 11:10:19AM -0700, Andy Lutomirski wrote:
+
+> > I am surely missing some kprobe context, but is it really safe to use
+> > this mechanism to replace more than one instruction?
+> 
+> I'm not entirely up-to-scratch here, so Masami, please correct me if I'm
+> wrong.
+> 
+> So what happens is that arch_prepare_optimized_kprobe() <-
+> copy_optimized_instructions() copies however much of the instruction
+> stream is required such that we can overwrite the instruction at @addr
+> with a 5 byte jump.
+> 
+> arch_optimize_kprobe() then does the text_poke_bp() that replaces the
+> instruction @addr with int3, copies the rel jump address and overwrites
+> the int3 with jmp.
+> 
+> And I'm thinking the problem is with something like:
+> 
+> @addr: nop nop nop nop nop
+> 
+> We copy out the nops into the trampoline, overwrite the first nop with
+> an INT3, overwrite the remaining nops with the rel addr, but oops,
+> another CPU can still be executing one of those NOPs, right?
+> 
+> I'm thinking we could fix this by first writing INT3 into all relevant
+> instructions, which is going to be messy, given the current code base.
+
+Maybe not that bad; how's something like this?
+
+(completely untested)
+
+---
+ arch/x86/kernel/alternative.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 0d57015114e7..8f643dabea72 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -24,6 +24,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/io.h>
+ #include <asm/fixmap.h>
++#include <asm/insn.h>
+ 
+ int __read_mostly alternatives_patched;
+ 
+@@ -849,6 +850,7 @@ static void do_sync_core(void *info)
+ 
+ static bool bp_patching_in_progress;
+ static void *bp_int3_handler, *bp_int3_addr;
++static unsigned int bp_int3_length;
+ 
+ int poke_int3_handler(struct pt_regs *regs)
+ {
+@@ -867,7 +869,11 @@ int poke_int3_handler(struct pt_regs *regs)
+ 	if (likely(!bp_patching_in_progress))
+ 		return 0;
+ 
+-	if (user_mode(regs) || regs->ip != (unsigned long)bp_int3_addr)
++	if (user_mode(regs))
++		return 0;
++
++	if (regs->ip < (unsigned long)bp_int3_addr ||
++	    regs->ip >= (unsigned long)bp_int3_addr + bp_int3_length)
+ 		return 0;
+ 
+ 	/* set up the specified breakpoint handler */
+@@ -900,9 +906,12 @@ NOKPROBE_SYMBOL(poke_int3_handler);
+ void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
+ {
+ 	unsigned char int3 = 0xcc;
++	void *kaddr = addr;
++	struct insn insn;
+ 
+ 	bp_int3_handler = handler;
+ 	bp_int3_addr = (u8 *)addr + sizeof(int3);
++	bp_int3_length = len - sizeof(int3);
+ 	bp_patching_in_progress = true;
+ 
+ 	lockdep_assert_held(&text_mutex);
+@@ -913,7 +922,14 @@ void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
+ 	 */
+ 	smp_wmb();
+ 
+-	text_poke(addr, &int3, sizeof(int3));
++	do {
++		kernel_insn_init(&insn, kaddr, MAX_INSN_SIZE);
++		insn_get_length(&insn);
++
++		text_poke(kaddr, &int3, sizeof(int3));
++
++		kaddr += insn.length;
++	} while (kaddr < addr + len);
+ 
+ 	on_each_cpu(do_sync_core, NULL, 1);
+ 
