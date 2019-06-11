@@ -2,119 +2,51 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77659C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B5EC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52403212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673D62086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404629AbfFKILH (ORCPT
+        id S2404639AbfFKILp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:11:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18545 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404432AbfFKILH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:11:07 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 47CABB653578D8FD9F97;
-        Tue, 11 Jun 2019 16:04:57 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 16:04:49 +0800
-Subject: Re: [PATCH v8 1/1] f2fs: ioctl for removing a range from F2FS
-To:     sunqiuyang <sunqiuyang@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     <jaegeuk@kernel.org>
-References: <20190605033325.47628-1-sunqiuyang@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <fff6519a-17c7-35d3-19ff-37163cc0283a@huawei.com>
-Date:   Tue, 11 Jun 2019 16:04:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 11 Jun 2019 04:11:45 -0400
+Received: from verein.lst.de ([213.95.11.211]:49067 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404272AbfFKILp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 04:11:45 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id A40C568B02; Tue, 11 Jun 2019 10:11:17 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 10:11:17 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Vladimir Murzin <vladimir.murzin@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Greg Ungerer <gerg@linux-m68k.org>,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
+        linux-c6x-dev@linux-c6x.org, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: binfmt_flat cleanups and RISC-V support
+Message-ID: <20190611081117.GA22110@lst.de>
+References: <20190610212015.9157-1-hch@lst.de> <4f000219-4baf-b03e-9003-26482640d3de@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190605033325.47628-1-sunqiuyang@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f000219-4baf-b03e-9003-26482640d3de@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/5 11:33, sunqiuyang wrote:
-> From: Qiuyang Sun <sunqiuyang@huawei.com>
-> 
-> This ioctl shrinks a given length (aligned to sections) from end of the
-> main area. Any cursegs and valid blocks will be moved out before
-> invalidating the range.
-> 
-> This feature can be used for adjusting partition sizes online.
-> --
-> Changlog v1 ==> v2:
-> 
-> Sahitya Tummala:
->  - Add this ioctl for f2fs_compat_ioctl() as well.
->  - Fix debugfs status to reflect the online resize changes.
->  - Fix potential race between online resize path and allocate new data
->    block path or gc path.
-> 
-> Others:
->  - Rename some identifiers.
->  - Add some error handling branches.
->  - Clear sbi->next_victim_seg[BG_GC/FG_GC] in shrinking range.
-> --
-> Changelog v2 ==> v3:
-> Implement this interface as ext4's, and change the parameter from shrunk
-> bytes to new block count of F2FS.
-> --
-> Changelog v3 ==> v4:
->  - During resizing, force to empty sit_journal and forbid adding new
->    entries to it, in order to avoid invalid segno in journal after resize.
->  - Reduce sbi->user_block_count before resize starts.
->  - Commit the updated superblock first, and then update in-memory metadata
->    only when the former succeeds.
->  - Target block count must align to sections.
-> --
-> Changelog v4 ==> v5:
-> Write checkpoint before and after committing the new superblock, w/o
-> CP_FSCK_FLAG respectively, so that the FS can be fixed by fsck even if
-> resize fails after the new superblock is committed.
-> --
-> Changelog v5 ==> v6:
->  - In free_segment_range(), reduce granularity of gc_mutex.
->  - Add protection on curseg migration.
-> --
-> Changelog v6 ==> v7:
->  - Add freeze_bdev() and thaw_bdev() for resize fs.
->  - Remove CUR_MAIN_SECS and use MAIN_SECS directly for allocation.
->  - Recover super_block and FS metadata when resize fails.
-> --
-> Changelog v7 ==> v8:
->  - No need to clear CP_FSCK_FLAG in update_ckpt_flags().
->  - Clean up the sb and fs metadata update functions for resize_fs.
-> 
-> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+On Tue, Jun 11, 2019 at 09:05:45AM +0100, Vladimir Murzin wrote:
+> I'm wondering if you have a branch with these changes so I can give
+> it a try on ARM NOMMU platforms?
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Qiuyang, could you please add one f2fs individual testcase in fstest suit to do
-simple test with this ioctl.
-
-e.g.
-- mkfs & mount
-- fragment image
-- resizefs ioctl
-- check fs size via statfs
-- umount & fsck
-- maybe mount & check again
-
-Thanks,
+    git://git.infradead.org/users/hch/riscv.git riscv-flat
