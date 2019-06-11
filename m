@@ -2,133 +2,130 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB378C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D644C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A0920820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240D320820
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alpsgroup.onmicrosoft.com header.i=@alpsgroup.onmicrosoft.com header.b="qGmKCv0o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GY0W/W8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390986AbfFKDFW (ORCPT
+        id S2391016AbfFKDFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 23:05:22 -0400
-Received: from mail-eopbgr1400042.outbound.protection.outlook.com ([40.107.140.42]:35363
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390817AbfFKDFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 23:05:21 -0400
+        Mon, 10 Jun 2019 23:05:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40446 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390791AbfFKDFh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 23:05:37 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p184so3157991pfp.7;
+        Mon, 10 Jun 2019 20:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=alpsgroup.onmicrosoft.com; s=selector2-alpsgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FbQQWGnEyr9jjITUxvH9Gkklbz6TKHQJMSJhsn0dq4o=;
- b=qGmKCv0oKL67BglKhvcepjFo37FEb2iudONXN/nCXDdxjzXteZAyTaIXnPAB9RZkgjVL6JDmxSid1paz/wQJSZGDowyP+6jGU2NCLKcH2MXhG5frwPOb8CVblmjQG9tt5VfCtRX9KiJ7QMicoePMabArXyBKVN4pZIf8mf6mwFo=
-Received: from OSBPR01MB4855.jpnprd01.prod.outlook.com (20.179.180.211) by
- OSBPR01MB4696.jpnprd01.prod.outlook.com (20.179.183.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Tue, 11 Jun 2019 03:05:17 +0000
-Received: from OSBPR01MB4855.jpnprd01.prod.outlook.com
- ([fe80::b583:e4e6:93db:38cb]) by OSBPR01MB4855.jpnprd01.prod.outlook.com
- ([fe80::b583:e4e6:93db:38cb%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 03:05:16 +0000
-From:   Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
-To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>
-CC:     XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
-        Naoki Saito <naoki.saito@alpsalpine.com>,
-        Hideo Kawase <hideo.kawase@alpsalpine.com>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTogW1BBVENIXSBpbnB1dDogYWxwcy1m?=
- =?utf-8?Q?ix_the_issue_alps_cs19_trackstick_do_not_work.?=
-Thread-Topic: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW5wdXQ6IGFscHMtZml4IHRoZSBp?=
- =?utf-8?Q?ssue_alps_cs19_trackstick_do_not_work.?=
-Thread-Index: AQHVFHDIBpbm29Y830SbHnb/dbnRc6Z+v5aAgAD+tvCAAGPlAIAACjKQgBSAfaCAABHEQIAACxEAgAEIgSA=
-Date:   Tue, 11 Jun 2019 03:05:16 +0000
-Message-ID: <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
-References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
- <20190527100913.sgxrjrmphsjfmcdb@pali>
- <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190528071824.jimhixhtsynzwixe@pali>
- <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190610104310.qa5snt7jpcljodfv@pali>
-In-Reply-To: <20190610104310.qa5snt7jpcljodfv@pali>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaoxiao.liu-1@cn.alps.com; 
-x-originating-ip: [58.247.0.86]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f689e6f9-620d-4a6d-48a2-08d6ee19a172
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:OSBPR01MB4696;
-x-ms-traffictypediagnostic: OSBPR01MB4696:
-x-microsoft-antispam-prvs: <OSBPR01MB46969B67CCE70B5937A44168DAED0@OSBPR01MB4696.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(136003)(346002)(366004)(189003)(199004)(66446008)(66556008)(73956011)(66946007)(76116006)(33656002)(64756008)(26005)(85182001)(99286004)(316002)(68736007)(66476007)(256004)(7736002)(305945005)(224303003)(52536014)(81156014)(8936002)(81166006)(54906003)(6506007)(14444005)(4326008)(102836004)(71190400001)(14454004)(478600001)(71200400001)(86362001)(2906002)(107886003)(446003)(11346002)(53936002)(25786009)(6116002)(6436002)(66574012)(3846002)(74316002)(486006)(476003)(6916009)(9686003)(186003)(7696005)(5660300002)(76176011)(66066001)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:OSBPR01MB4696;H:OSBPR01MB4855.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: cn.alps.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dKLatEaEPSja0xLs6X9XsJfbGUxlRvjFpPWptQZmZuMkcI4Dbg0Fhr10Yi3y2Py8AGsDk2dkfJFX3bwyCPGVsweWvxHVxdh/tLDNonyXK1hIIjI3AtvKezg6fYCNoB81rRu5gnFQtJPF/f2rVospgTI4E8dwu6TDPOR14fF4IAQSSWukzRA6gSDL1DA1MduDAc0K9GzAjFb7cvN1rObMRINApc14Le9TNpjnqox5Tv73YrZzMnZPjjah4zoSQwxAtq2IahvD/NxFgEY4gli6CamXgmPZbZxfLXPRD6oNxsmlhVG4hvh6jH3Xsoo3H46MPz44UG3+F2mD/5HFuPx3C4poL011em42KQ3f0fYzCwxHf/EYax+gbqh/TpA2UIsflN1LxEWAXHdcst54gkXzIwuWcQyn24/BxiNMw1wR2fM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UyJgv7diIvsGV8yNapWATBHWh5ErPBRaSoIXVIecPDQ=;
+        b=GY0W/W8dLBHKkrHL2nfX4mjMoxYMJArz0NAt5yCD/WyI2puDS2djFJ2jCLOfYH/jD8
+         niMueqxfkKwcE7BpKxOkYGhkvVs3JytYpjtPwMuNZWAGNT11GzNEXoE+3ird/ChA4+Gb
+         pxu9tUmrxA1oETJAaluDL1qOFx0oVD0NTuw07YLPN40iCfDbPCFOhSlykJfvu4X5pO2g
+         z6WHaxiWh42LbjwYsrpr07d+xq7fZ4+OI5Kp9lbAtB3CkGirK5WJuvXW6uEx3HWsPJwg
+         l/wxqR9JNb4McHMv17tdEG9IdfEB7nFSTVW0UNCkHtvaxVeaCAi/h81kw36RAGB0JM6P
+         rNsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UyJgv7diIvsGV8yNapWATBHWh5ErPBRaSoIXVIecPDQ=;
+        b=ADOqRM8xrH2SYpTiB9jo2NlsBQS/EvTlOPxLziHq//S1xFQ2xbYW3rppOzr3cSx0dP
+         kxHMDTbl/ACw9aCo2bxaUeaZyyKAmSgS3d5r/9c4FufBrBFhC3K2bgJvo0pRSp5PphDS
+         OHW+VrDsU2yGNhOvWZS6LOs6IqDtoXud0csr5Q96lx6d5SHgk51dDAHr/AsoWnDLMw2K
+         SGMcH/2+19yS0WLMNTJsRhUKKNC2bwft4DOukd82w9KUl5WBMKngjE0iVpuOX+bIju6A
+         pjc4coyNi1AHZ8Ua5c3+jZRn+tEtOm8/4+hvrNFbDaSZQyujJLGqD9Roxn5xiHqEqcL9
+         pELw==
+X-Gm-Message-State: APjAAAW57bCIeK2OI7T3o4MjRpc/7LkAa+P3ffDEYxOnGzzn2EV/R2yr
+        p2ZGcKiIk4NKMcPYKpbQKfVyxPxeenl14w==
+X-Google-Smtp-Source: APXvYqxB1TznsG2txR630wRTasQQMNG3n9JBoWYroGId67CZHYM1NNMiNqlwx8hwZ71MmwNtaT5TKw==
+X-Received: by 2002:a17:90a:3a85:: with SMTP id b5mr8505271pjc.84.1560222337087;
+        Mon, 10 Jun 2019 20:05:37 -0700 (PDT)
+Received: from ubuntu ([104.192.108.10])
+        by smtp.gmail.com with ESMTPSA id r4sm781677pjd.25.2019.06.10.20.05.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 20:05:36 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 20:05:31 -0700
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] selinux: lsm: fix a missing-check bug in
+ selinux_sb_eat_lsm_o pts()
+Message-ID: <20190611030529.GB4013@ubuntu>
+References: <20190606085524.GA21119@zhanggen-UX430UQ>
+ <CAFqZXNvM94T2reUsn6Mwuz6GNGNCR=wUNBE8w4tcjNuhJ6rCeQ@mail.gmail.com>
+ <CAHC9VhT+e2Z+4=5P0g4B4F1g0w2SkQjwUnhQkmu5V+HvuZi8Cg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: cn.alps.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f689e6f9-620d-4a6d-48a2-08d6ee19a172
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 03:05:16.7839
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 57e76998-77bd-4b82-a424-198f46eb2254
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CHT1HTSH3197@gl.alps.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4696
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhT+e2Z+4=5P0g4B4F1g0w2SkQjwUnhQkmu5V+HvuZi8Cg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUGFsaSwNCg0KSSBkaXNjdXNzZWQgd2l0aCBvdXIgRlcgdGVhbSBhYm91dCB0aGlzIHByb2Js
-ZW0uDQpXZSB0aGluayB0aGUgVjggbWV0aG9kIG1lYW5zIGEgdG91Y2hwYWQgZmVhdHVyZSAgYW5k
-IGRvZXMgbm90IGZpdCB0aGUgQ1MxOSB0cmFja3BvaW50IGRldmljZS4gDQpDUzE5IFRyYWNrUG9p
-bnQgbmVlZG4ndCAgdXNlIGFueSBBYnNvbHV0ZSAoUmF3KSBtb2RlIGFuZCBpcyB1c3VhbGx5IHVz
-ZSBzdGFuZGFyZCBtb3VzZSBkYXRhLg0KQ1MxOSBUcmFja1BvaW50IGRldmljZSBpcyBhIGNvbXBs
-ZXRlbHkgZGlmZmVyZW50IGRldmljZSB3aXRoIER1YWxQb2ludCBkZXZpY2Ugb2YgRGVsbC9IUC4N
-CkNTMTkgVHJhY2tQb2ludCBkZXZpY2UgaXMgaW5kZXBlbmRlbnQgIG9mIFRvdWNocGFkLiAoVG91
-Y2hwYWQgaXMgY29ubmVjdGluZyBieSBJMkMsIFRyYWNrUG9pbnQgaXMgZGlyZWN0bHkgY29ubmVj
-dGluZyB3aXRoIFBTMiBwb3J0LikNCkFuZCBpdCBoYXMgY29tcGxldGVseSBhbm90aGVyIEZXLiAN
-Cg0KU28gd2UgdGhpbmsgaXQgaXMgYmV0dGVyIHRvIHVzZSB0aGUgbW91c2UgbW9kZSBmb3IgQ1Mx
-OSB0cmFja3BvaW50Lg0KDQpCZXN0IFJlZ2FyZHMNClNob25hDQotLS0tLemCruS7tuWOn+S7ti0t
-LS0tDQrlj5Hku7bkuro6IFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4gDQrlj5Hp
-gIHml7bpl7Q6IE1vbmRheSwgSnVuZSAxMCwgMjAxOSA2OjQzIFBNDQrmlLbku7bkuro6IOWKiSDm
-m4nmm4kgWGlhb3hpYW8gTGl1IDx4aWFveGlhby5saXUtMUBjbi5hbHBzLmNvbT4NCuaKhOmAgTog
-WGlhb1hpYW8gTGl1IDxzbGl1dXhpYW9ueGlhb0BnbWFpbC5jb20+OyBkbWl0cnkudG9yb2tob3ZA
-Z21haWwuY29tOyBwZXRlci5odXR0ZXJlckB3aG8tdC5uZXQ7IGh1aS53YW5nQGNhbm9uaWNhbC5j
-b207IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsg5pu5IOabieW7uiBYaWFvamlhbiBDYW8gPHhpYW9qaWFuLmNhb0Bjbi5hbHBzLmNvbT47
-IHpoYW5nZnAxQGxlbm92by5jb207IOaWieiXpCDnm7TmqLkgTmFva2kgU2FpdG8gPG5hb2tpLnNh
-aXRvQGFscHNhbHBpbmUuY29tPjsg5bed54CsIOiLseWkqyBIaWRlbyBLYXdhc2UgPGhpZGVvLmth
-d2FzZUBhbHBzYWxwaW5lLmNvbT4NCuS4u+mimDogUmU6IOetlOWkjTog562U5aSNOiBbUEFUQ0hd
-IGlucHV0OiBhbHBzLWZpeCB0aGUgaXNzdWUgYWxwcyBjczE5IHRyYWNrc3RpY2sgZG8gbm90IHdv
-cmsuDQoNCk9uIE1vbmRheSAxMCBKdW5lIDIwMTkgMTA6MDM6NTEgWGlhb3hpYW8gTGl1IHdyb3Rl
-Og0KPiBIaSBQYWxpLA0KDQpIaSENCg0KPiBXZSByZWdpc3RlciBvdXIgQ1MxOSBkZXZpY2UgYXMg
-QUxQU19PTkxZX1RSQUNLU1RJQ0sgZGV2aWNlLg0KPiBBbmQgbGV0IHRoZSBWOCBwcm90b2NvbCBm
-dW5jdGlvbiBzdXBwb3J0IHRoZSBwcm9jZXNzIG9mIEFMUFNfT05MWV9UUkFDS1NUSUNLIGRldmlj
-ZS4gDQo+IA0KPiBJIHdhbnQgdG8gY29uZmlybSBpZiB0aGlzIHNvbHV0aW9uIE9LPw0KDQpZZXMs
-IGl0IGlzIGZpbmUuIEp1c3QgbWFrZSBzdXJlIHRoYXQgdG91Y2hhcGFkIGlucHV0IGRldmljZSBp
-cyBub3QgcmVnaXN0ZXJlZCB3aGVuIHRoaXMgQUxQU19PTkxZX1RSQUNLU1RJQ0sgZmxhZyBpcyBz
-ZXQuIFNvIHVzZXJzcGFjZSB3b3VsZCBub3Qgc2VlIGFueSBmYWtlL3VuYXZhaWxhYmxlIHRvdWNo
-cGFkIGlucHV0IGRldmljZS4NCg0KPiBYaWFveGlhby5MaXUNCg0KLS0NClBhbGkgUm9ow6FyDQpw
-YWxpLnJvaGFyQGdtYWlsLmNvbQ0K
+On Mon, Jun 10, 2019 at 04:20:28PM -0400, Paul Moore wrote:
+> On Fri, Jun 7, 2019 at 4:41 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> >
+> > On Thu, Jun 6, 2019 at 10:55 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+> > > In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+> > > returns NULL when fails. So 'arg' should be checked. And 'mnt_opts'
+> > > should be freed when error.
+> > >
+> > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
+> >
+> > My comments about the subject and an empty line before label apply
+> > here as well, but Paul can fix both easily when applying ...
+> 
+> Since we've been discussing general best practices for submitting
+> patches in this thread (and the other related thread), I wanted to
+> (re)clarify my thoughts around maintainers fixing patches when merging
+> them upstream.
+> 
+> When in doubt, do not ever rely on the upstream maintainer fixing your
+> patch while merging it, and if problems do arise during review, it is
+> best to not ask the maintainer to fix them for you, but for you to fix
+> them instead (you are the patch author after all!).  Similarly, making
+> comments along the lines of "X can fix both easily when applying", is
+> also a bad thing to say when reviewing patches.  It's the patch
+> author's responsibility to fix the patch by address review comments,
+> not the maintainer.  I'll typically let you know if you don't need to
+> rework a patch(set).
+> 
+> That said, there are times when the maintainer will change the patch
+> during merging, most of which are due to resolving merge
+> conflicts/fuzz with changes already in the tree (that *is* the
+> maintainer's responsibility).  Speaking for myself, sometimes I will
+> also make some minor changes if the patch author is away, or
+> unreliable, or if there is a hard deadline near and I'm worried that
+> the updated patch might not be ready in time.  I'll also sometimes
+> make the changes directly if the patch is holding up a larger, more
+> important patch(set), but that is really rare.  I'm sure I've made
+> changes for other reasons in the past, and I'm sure I'll make changes
+> for other reasons in the future, but hopefully this will give you a
+> better idea of how the process works :)
+> 
+> -- 
+> paul moore
+> www.paul-moore.com
+Thanks for your comments. I will resend a patch after revising.
+
+Thanks
+Gen
