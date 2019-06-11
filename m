@@ -2,117 +2,202 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F3AC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BDBC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9A920657
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6393320657
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:57:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZiTDkJRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404810AbfFKI5L (ORCPT
+        id S2404820AbfFKI52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:57:11 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:55828 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2403860AbfFKI5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:57:11 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 34A3A1C63823ED2928D3;
-        Tue, 11 Jun 2019 16:57:08 +0800 (CST)
-Received: from dggeme714-chm.china.huawei.com (10.1.199.110) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 11 Jun 2019 16:56:58 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme714-chm.china.huawei.com (10.1.199.110) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 11 Jun 2019 16:56:57 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
- Tue, 11 Jun 2019 16:56:57 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     "pablo@netfilter.org" <pablo@netfilter.org>,
-        "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dsahern@gmail.com" <dsahern@gmail.com>
-CC:     Mingfangsen <mingfangsen@huawei.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjNdIG5ldDogbmV0ZmlsdGVyOiBGaXggcnBmaWx0?=
- =?utf-8?Q?er_dropping_vrf_packets_by_mistake?=
-Thread-Topic: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Index: AQHU+20EJBRdmfpcd0eT0vsD259sj6aWb9Ew
-Date:   Tue, 11 Jun 2019 08:56:57 +0000
-Message-ID: <b943dcae6dc447f4ba72d632736b5b4f@huawei.com>
-References: <212e4feb-39de-2627-9948-bbb117ff4d4e@huawei.com>
-In-Reply-To: <212e4feb-39de-2627-9948-bbb117ff4d4e@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 11 Jun 2019 04:57:28 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41271 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403860AbfFKI51 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 04:57:27 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p15so18863282eds.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:57:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bTkOEfoVS8xqoBdJMHWo3E+Rkaj2bpqidMUiZcDnoAk=;
+        b=ZiTDkJRVzn+jc565v456AsNS1x9g3BjkYr7za4w5jSGUMvN0zRkNbwrjz+WKcjgJ7G
+         nVEabfR7lwPxQPzOWNyhTaNeCZNmuZbiS/yoZmcFwLZx8+TklX/CEVM6W8dFxldKtroS
+         fKKE1lLtvvPaX/DCq4LqhJjtJN0r4j+0DpEZc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=bTkOEfoVS8xqoBdJMHWo3E+Rkaj2bpqidMUiZcDnoAk=;
+        b=D5Q93TUvX8FIbD7JzNd4JxmVTYLdIVZXWjefoWl5xw4tptx6ZNHoGiTAJcRHmslGS7
+         bgJ6sHdV0dholkYgYZIa0JPa1ll0fuNelmE9wMhJRBMfYmpDYqd69MUZFsfl3R8CJ19A
+         G4dg62nSHIsT0muFrm8GqRXvfupobi1IIRkTiVmWNK5DBq/warOhcC/pL5WPKyEzzo2O
+         sBiqrLz042qxuCrIn9odmN3jN/zeC+pcPR7RTgWWoIOHAWGdVa55PkTF70Fwxtz1SsIc
+         0jzqMDa39N4+NiofinKKw2tDtI9XasQL5YKe4Gupf2MZpmqHiAij86TMsuDMKUGYghi9
+         tiuw==
+X-Gm-Message-State: APjAAAU2qFI5gxL+fJ7Jep0o5sb7YlaVVmJ/h/2KlHPakSbopL9A33ll
+        aenl2/0ozF2/vc5iMNszn/xf3w==
+X-Google-Smtp-Source: APXvYqyYSiI8MCmhIFP5093eoXLHoiUXmUjorUOjoDyQgA+DoU3k97SYd9dqfm+MFflJC285PU1vqQ==
+X-Received: by 2002:a05:6402:8d7:: with SMTP id d23mr37696956edz.17.1560243445858;
+        Tue, 11 Jun 2019 01:57:25 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id m3sm3498364edi.33.2019.06.11.01.57.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 01:57:25 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 10:57:22 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Derek Basehore <dbasehore@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 3/5] drm/panel: Add attach/detach callbacks
+Message-ID: <20190611085722.GX21222@phenom.ffwll.local>
+Mail-Followup-To: Derek Basehore <dbasehore@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>, CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20190611040350.90064-1-dbasehore@chromium.org>
+ <20190611040350.90064-4-dbasehore@chromium.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611040350.90064-4-dbasehore@chromium.org>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJpZW5kbHkgcGluZy4NCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiBsaW51
-eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgta2VybmVsLW93bmVy
-QHZnZXIua2VybmVsLm9yZ10g5Luj6KGoIGxpbm1pYW9oZQ0K5Y+R6YCB5pe26Ze0OiAyMDE55bm0
-NOaciDI15pelIDIxOjQ0DQrmlLbku7bkuro6IHBhYmxvQG5ldGZpbHRlci5vcmc7IGthZGxlY0Bi
-bGFja2hvbGUua2ZraS5odTsgZndAc3RybGVuLmRlOyBkYXZlbUBkYXZlbWxvZnQubmV0OyBrdXpu
-ZXRAbXMyLmluci5hYy5ydTsgeW9zaGZ1amlAbGludXgtaXB2Ni5vcmc7IG5ldGZpbHRlci1kZXZl
-bEB2Z2VyLmtlcm5lbC5vcmc7IGNvcmV0ZWFtQG5ldGZpbHRlci5vcmc7IG5ldGRldkB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRzYWhlcm5AZ21haWwuY29t
-DQrmioTpgIE6IE1pbmdmYW5nc2VuIDxtaW5nZmFuZ3NlbkBodWF3ZWkuY29tPg0K5Li76aKYOiBb
-UEFUQ0ggdjNdIG5ldDogbmV0ZmlsdGVyOiBGaXggcnBmaWx0ZXIgZHJvcHBpbmcgdnJmIHBhY2tl
-dHMgYnkgbWlzdGFrZQ0KDQpGcm9tOiBNaWFvaGUgTGluIDxsaW5taWFvaGVAaHVhd2VpLmNvbT4N
-Cg0KV2hlbiBmaXJld2FsbGQgaXMgZW5hYmxlZCB3aXRoIGlwdjQvaXB2NiBycGZpbHRlciwgdnJm
-DQppcHY0L2lwdjYgcGFja2V0cyB3aWxsIGJlIGRyb3BwZWQgYmVjYXVzZSBpbiBkZXZpY2UgaXMg
-dnJmIGJ1dCBvdXQgZGV2aWNlIGlzIGFuIGVuc2xhdmVkIGRldmljZS4gU28gZmFpbGVkIHdpdGgg
-dGhlIGNoZWNrIG9mIHRoZSBycGZpbHRlci4NCg0KU2lnbmVkLW9mZi1ieTogTWlhb2hlIExpbiA8
-bGlubWlhb2hlQGh1YXdlaS5jb20+DQotLS0NCiBuZXQvaXB2NC9uZXRmaWx0ZXIvaXB0X3JwZmls
-dGVyLmMgIHwgIDEgKyAgbmV0L2lwdjYvbmV0ZmlsdGVyL2lwNnRfcnBmaWx0ZXIuYyB8IDEwICsr
-KysrKysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24o
-LSkNCg0KZGlmZiAtLWdpdCBhL25ldC9pcHY0L25ldGZpbHRlci9pcHRfcnBmaWx0ZXIuYyBiL25l
-dC9pcHY0L25ldGZpbHRlci9pcHRfcnBmaWx0ZXIuYw0KaW5kZXggMGIxMGQ4ODEyODI4Li42ZTA3
-Y2QwZWNiZWMgMTAwNjQ0DQotLS0gYS9uZXQvaXB2NC9uZXRmaWx0ZXIvaXB0X3JwZmlsdGVyLmMN
-CisrKyBiL25ldC9pcHY0L25ldGZpbHRlci9pcHRfcnBmaWx0ZXIuYw0KQEAgLTgxLDYgKzgxLDcg
-QEAgc3RhdGljIGJvb2wgcnBmaWx0ZXJfbXQoY29uc3Qgc3RydWN0IHNrX2J1ZmYgKnNrYiwgc3Ry
-dWN0IHh0X2FjdGlvbl9wYXJhbSAqcGFyKQ0KIAlmbG93LmZsb3dpNF9tYXJrID0gaW5mby0+Zmxh
-Z3MgJiBYVF9SUEZJTFRFUl9WQUxJRF9NQVJLID8gc2tiLT5tYXJrIDogMDsNCiAJZmxvdy5mbG93
-aTRfdG9zID0gUlRfVE9TKGlwaC0+dG9zKTsNCiAJZmxvdy5mbG93aTRfc2NvcGUgPSBSVF9TQ09Q
-RV9VTklWRVJTRTsNCisJZmxvdy5mbG93aTRfb2lmID0gbDNtZGV2X21hc3Rlcl9pZmluZGV4X3Jj
-dSh4dF9pbihwYXIpKTsNCg0KIAlyZXR1cm4gcnBmaWx0ZXJfbG9va3VwX3JldmVyc2UoeHRfbmV0
-KHBhciksICZmbG93LCB4dF9pbihwYXIpLCBpbmZvLT5mbGFncykgXiBpbnZlcnQ7ICB9IGRpZmYg
-LS1naXQgYS9uZXQvaXB2Ni9uZXRmaWx0ZXIvaXA2dF9ycGZpbHRlci5jIGIvbmV0L2lwdjYvbmV0
-ZmlsdGVyL2lwNnRfcnBmaWx0ZXIuYw0KaW5kZXggYzNjNmIwOWFjZGM0Li5hMjhjODEzMjIxNDgg
-MTAwNjQ0DQotLS0gYS9uZXQvaXB2Ni9uZXRmaWx0ZXIvaXA2dF9ycGZpbHRlci5jDQorKysgYi9u
-ZXQvaXB2Ni9uZXRmaWx0ZXIvaXA2dF9ycGZpbHRlci5jDQpAQCAtNTgsNyArNTgsOSBAQCBzdGF0
-aWMgYm9vbCBycGZpbHRlcl9sb29rdXBfcmV2ZXJzZTYoc3RydWN0IG5ldCAqbmV0LCBjb25zdCBz
-dHJ1Y3Qgc2tfYnVmZiAqc2tiLA0KIAlpZiAocnBmaWx0ZXJfYWRkcl9saW5rbG9jYWwoJmlwaC0+
-c2FkZHIpKSB7DQogCQlsb29rdXBfZmxhZ3MgfD0gUlQ2X0xPT0tVUF9GX0lGQUNFOw0KIAkJZmw2
-LmZsb3dpNl9vaWYgPSBkZXYtPmlmaW5kZXg7DQotCX0gZWxzZSBpZiAoKGZsYWdzICYgWFRfUlBG
-SUxURVJfTE9PU0UpID09IDApDQorCX0gZWxzZSBpZiAoKChmbGFncyAmIFhUX1JQRklMVEVSX0xP
-T1NFKSA9PSAwKSB8fA0KKwkJICAgKG5ldGlmX2lzX2wzX21hc3RlcihkZXYpKSB8fA0KKwkJICAg
-KG5ldGlmX2lzX2wzX3NsYXZlKGRldikpKQ0KIAkJZmw2LmZsb3dpNl9vaWYgPSBkZXYtPmlmaW5k
-ZXg7DQoNCiAJcnQgPSAodm9pZCAqKWlwNl9yb3V0ZV9sb29rdXAobmV0LCAmZmw2LCBza2IsIGxv
-b2t1cF9mbGFncyk7IEBAIC03Myw2ICs3NSwxMiBAQCBzdGF0aWMgYm9vbCBycGZpbHRlcl9sb29r
-dXBfcmV2ZXJzZTYoc3RydWN0IG5ldCAqbmV0LCBjb25zdCBzdHJ1Y3Qgc2tfYnVmZiAqc2tiLA0K
-IAkJZ290byBvdXQ7DQogCX0NCg0KKwlpZiAobmV0aWZfaXNfbDNfbWFzdGVyKGRldikpIHsNCisJ
-CWRldiA9IGRldl9nZXRfYnlfaW5kZXhfcmN1KGRldl9uZXQoZGV2KSwgSVA2Q0Ioc2tiKS0+aWlm
-KTsNCisJCWlmICghZGV2KQ0KKwkJCWdvdG8gb3V0Ow0KKwl9DQorDQogCWlmIChydC0+cnQ2aV9p
-ZGV2LT5kZXYgPT0gZGV2IHx8IChmbGFncyAmIFhUX1JQRklMVEVSX0xPT1NFKSkNCiAJCXJldCA9
-IHRydWU7DQogIG91dDoNCi0tDQoyLjE5LjENCg0KDQo=
+On Mon, Jun 10, 2019 at 09:03:48PM -0700, Derek Basehore wrote:
+> This adds the attach/detach callbacks. These are for setting up
+> internal state for the connector/panel pair that can't be done at
+> probe (since the connector doesn't exist) and which don't need to be
+> repeatedly done for every get/modes, prepare, or enable callback.
+> Values such as the panel orientation, and display size can be filled
+> in for the connector.
+> 
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  drivers/gpu/drm/drm_panel.c | 14 ++++++++++++++
+>  include/drm/drm_panel.h     |  4 ++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> index 3b689ce4a51a..72f67678d9d5 100644
+> --- a/drivers/gpu/drm/drm_panel.c
+> +++ b/drivers/gpu/drm/drm_panel.c
+> @@ -104,12 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
+>   */
+>  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
+>  {
+> +	int ret;
+> +
+>  	if (panel->connector)
+>  		return -EBUSY;
+>  
+>  	panel->connector = connector;
+>  	panel->drm = connector->dev;
+>  
+> +	if (panel->funcs->attach) {
+> +		ret = panel->funcs->attach(panel);
+> +		if (ret < 0) {
+> +			panel->connector = NULL;
+> +			panel->drm = NULL;
+> +			return ret;
+> +		}
+> +	}
+
+Why can't we just implement this in the drm helpers for everyone, by e.g.
+storing a dt node in drm_panel? Feels a bit overkill to have these new
+hooks here.
+
+Also, my understanding is that this dt stuff is supposed to be
+standardized, so this should work.
+-Daniel
+
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(drm_panel_attach);
+> @@ -128,6 +139,9 @@ EXPORT_SYMBOL(drm_panel_attach);
+>   */
+>  int drm_panel_detach(struct drm_panel *panel)
+>  {
+> +	if (panel->funcs->detach)
+> +		panel->funcs->detach(panel);
+> +
+>  	panel->connector = NULL;
+>  	panel->drm = NULL;
+>  
+> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> index 13631b2efbaa..e136e3a3c996 100644
+> --- a/include/drm/drm_panel.h
+> +++ b/include/drm/drm_panel.h
+> @@ -37,6 +37,8 @@ struct display_timing;
+>   * struct drm_panel_funcs - perform operations on a given panel
+>   * @disable: disable panel (turn off back light, etc.)
+>   * @unprepare: turn off panel
+> + * @detach: detach panel->connector (clear internal state, etc.)
+> + * @attach: attach panel->connector (update internal state, etc.)
+>   * @prepare: turn on panel and perform set up
+>   * @enable: enable panel (turn on back light, etc.)
+>   * @get_modes: add modes to the connector that the panel is attached to and
+> @@ -70,6 +72,8 @@ struct display_timing;
+>  struct drm_panel_funcs {
+>  	int (*disable)(struct drm_panel *panel);
+>  	int (*unprepare)(struct drm_panel *panel);
+> +	void (*detach)(struct drm_panel *panel);
+> +	int (*attach)(struct drm_panel *panel);
+>  	int (*prepare)(struct drm_panel *panel);
+>  	int (*enable)(struct drm_panel *panel);
+>  	int (*get_modes)(struct drm_panel *panel);
+> -- 
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
