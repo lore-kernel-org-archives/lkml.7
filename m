@@ -2,170 +2,96 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1E2C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDBDC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB53B21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4123820896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AdTA9RyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388330AbfFKMlc (ORCPT
+        id S2388183AbfFKMnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:41:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34104 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727733AbfFKMlb (ORCPT
+        Tue, 11 Jun 2019 08:43:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54306 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbfFKMnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:41:31 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BCW0NR123936
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:41:30 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t2bkv2umn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:41:29 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 11 Jun 2019 13:41:27 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Jun 2019 13:41:23 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BCfM8E56688832
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 12:41:22 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC6FB11C052;
-        Tue, 11 Jun 2019 12:41:22 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A368411C050;
-        Tue, 11 Jun 2019 12:41:21 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.204.69])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 11 Jun 2019 12:41:21 +0000 (GMT)
-Date:   Tue, 11 Jun 2019 15:41:19 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will.deacon@arm.com>,
-        akpm@linux-foundation.org, catalin.marinas@arm.com,
-        linux-kernel@vger.kernel.org, mhocko@kernel.org,
-        linux-mm@kvack.org, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
-        cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
-References: <1559656836-24940-1-git-send-email-cai@lca.pw>
- <20190604142338.GC24467@lakrids.cambridge.arm.com>
- <20190610114326.GF15979@fuggles.cambridge.arm.com>
- <1560187575.6132.70.camel@lca.pw>
- <20190611100348.GB26409@lakrids.cambridge.arm.com>
+        Tue, 11 Jun 2019 08:43:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Kp1pRRfoumgY4Up20rnCQcSt99FXk8xSho/xLyWE55U=; b=AdTA9RyM7eWaOsI2SHx4yq+J+
+        rQ+xaOkv9SClS4rtoCSqSWfHswNqwGONVngTCv9JhZEyxcyCvBv3RiW8Ggz+0TIrRJGh81Z4CdGrP
+        4m9yvmNHj02qf3WnCwGGeulWfD4jKlGvWfNDldXMWDEhfDCB4/gSClS+vzYXEh/1e4PbALkTEn5QY
+        E2zxChDB3zdImVaeHQAKnU3obf+8oDkiH/73osCNlhtle8w98vrjjrPQQ+q/MNLXAG2thJgRLgBBQ
+        mO6N+yofbrgzwo3/K+Le0kNTDdsQkm2zRWgYCsTEKDEeTr8/IicojwrRGlH5qgqnRGqfpmI7VRZeF
+        bNmUdPpUA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hag6s-0004Y7-ES; Tue, 11 Jun 2019 12:42:42 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E97F720224753; Tue, 11 Jun 2019 14:42:40 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 14:42:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@aculab.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20190611124240.GI3463@hirez.programming.kicks-ass.net>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131945.005681046@infradead.org>
+ <20190608004708.7646b287151cf613838ce05f@kernel.org>
+ <20190607173427.GK3436@hirez.programming.kicks-ass.net>
+ <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net>
+ <20190611080307.GN3436@hirez.programming.kicks-ass.net>
+ <20190611120834.GG3463@hirez.programming.kicks-ass.net>
+ <20190611123402.GH3463@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190611100348.GB26409@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19061112-0028-0000-0000-000003794EFF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061112-0029-0000-0000-000024393D13
-Message-Id: <20190611124118.GA4761@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=60 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906110086
+In-Reply-To: <20190611123402.GH3463@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 11:03:49AM +0100, Mark Rutland wrote:
-> On Mon, Jun 10, 2019 at 01:26:15PM -0400, Qian Cai wrote:
-> > On Mon, 2019-06-10 at 12:43 +0100, Will Deacon wrote:
-> > > On Tue, Jun 04, 2019 at 03:23:38PM +0100, Mark Rutland wrote:
-> > > > On Tue, Jun 04, 2019 at 10:00:36AM -0400, Qian Cai wrote:
-> > > > > The commit "arm64: switch to generic version of pte allocation"
-> > > > > introduced endless failures during boot like,
-> > > > > 
-> > > > > kobject_add_internal failed for pgd_cache(285:chronyd.service) (error:
-> > > > > -2 parent: cgroup)
-> > > > > 
-> > > > > It turns out __GFP_ACCOUNT is passed to kernel page table allocations
-> > > > > and then later memcg finds out those don't belong to any cgroup.
-> > > > 
-> > > > Mike, I understood from [1] that this wasn't expected to be a problem,
-> > > > as the accounting should bypass kernel threads.
-> > > > 
-> > > > Was that assumption wrong, or is something different happening here?
-> > > > 
-> > > > > 
-> > > > > backtrace:
-> > > > >   kobject_add_internal
-> > > > >   kobject_init_and_add
-> > > > >   sysfs_slab_add+0x1a8
-> > > > >   __kmem_cache_create
-> > > > >   create_cache
-> > > > >   memcg_create_kmem_cache
-> > > > >   memcg_kmem_cache_create_func
-> > > > >   process_one_work
-> > > > >   worker_thread
-> > > > >   kthread
-> > > > > 
-> > > > > Signed-off-by: Qian Cai <cai@lca.pw>
-> > > > > ---
-> > > > >  arch/arm64/mm/pgd.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
-> > > > > index 769516cb6677..53c48f5c8765 100644
-> > > > > --- a/arch/arm64/mm/pgd.c
-> > > > > +++ b/arch/arm64/mm/pgd.c
-> > > > > @@ -38,7 +38,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
-> > > > >  	if (PGD_SIZE == PAGE_SIZE)
-> > > > >  		return (pgd_t *)__get_free_page(gfp);
-> > > > >  	else
-> > > > > -		return kmem_cache_alloc(pgd_cache, gfp);
-> > > > > +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_KERNEL);
-> > > > 
-> > > > This is used to allocate PGDs for both user and kernel pagetables (e.g.
-> > > > for the efi runtime services), so while this may fix the regression, I'm
-> > > > not sure it's the right fix.
-> > > > 
-> > > > Do we need a separate pgd_alloc_kernel()?
-> > > 
-> > > So can I take the above for -rc5, or is somebody else working on a different
-> > > fix to implement pgd_alloc_kernel()?
-> > 
-> > The offensive commit "arm64: switch to generic version of pte allocation" is not
-> > yet in the mainline, but only in the Andrew's tree and linux-next, and I doubt
-> > Andrew will push this out any time sooner given it is broken.
+On Tue, Jun 11, 2019 at 02:34:02PM +0200, Peter Zijlstra wrote:
+
+> Bugger, this isn't right. It'll jump to the beginning of the trampoline,
+> even if it is multiple instructions in, which would lead to executing
+> instructions twice, which would be BAD.
 > 
-> I'd assumed that Mike would respin these patches to implement and use
-> pgd_alloc_kernel() (or take gfp flags) and the updated patches would
-> replace these in akpm's tree.
+> _maybe_, depending on what the slot looks like, we could do something
+> like:
 > 
-> Mike, could you confirm what your plan is? I'm happy to review/test
-> updated patches for arm64.
-
-Sorry for the delay, I'm mostly offline these days.
-
-I wanted to understand first what is the reason for the failure. I've tried
-to reproduce it with qemu, but I failed to find a bootable configuration
-that will have PGD_SIZE != PAGE_SIZE :(
-
-Qian Cai, can you share what is your environment and the kernel config?
- 
-> Thanks,
-> Mark.
+> 	offset = regs->ip - (unsigned long)bp_int3_addr;
+> 	regs->ip = bp_int3_handler + offset;
 > 
+> That is; jump into the slot at the same offset we hit the INT3, but this
+> is quickly getting yuck.
 
--- 
-Sincerely yours,
-Mike.
-
+Yeah, that won't work either... it needs something far more complex :/
