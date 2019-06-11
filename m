@@ -3,134 +3,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C60C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C37C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 598F321721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B39212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403809AbfFKIpY (ORCPT
+        id S2404182AbfFKIpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:45:24 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:5259 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391485AbfFKIpW (ORCPT
+        Tue, 11 Jun 2019 04:45:30 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33567 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391273AbfFKIpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:45:22 -0400
-X-UUID: 5215b05e58c0418e9e46f77c02ad13cf-20190611
-X-UUID: 5215b05e58c0418e9e46f77c02ad13cf-20190611
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1837293058; Tue, 11 Jun 2019 16:45:10 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 11 Jun 2019 16:45:08 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 11 Jun 2019 16:45:07 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH v7 04/10] dt-bindings: usb: mtu3: add properties about USB Role Switch
-Date:   Tue, 11 Jun 2019 16:44:34 +0800
-Message-ID: <1560242680-23844-5-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1560242680-23844-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1560242680-23844-1-git-send-email-chunfeng.yun@mediatek.com>
+        Tue, 11 Jun 2019 04:45:24 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y17so8661254lfe.0;
+        Tue, 11 Jun 2019 01:45:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y57jG1hTaYr//V6rbS7pGOghJQuFRY1IGCsOl42VTtw=;
+        b=sG+5h+hDch9dcy+V7HourwlMxNveon6WvUpYb9Kv/I2kr37d5scsZ6MhMy8eWoUrjp
+         4IxDSIAJddwRMIHfRUz0wadw/0hU/evqUnsc07C/zgUQRntRAzhw/kok91gIBJIFwFBT
+         sA6WPnLEHNZgMOHjBYQZ6NXnZXZVzlnE8JgjBBvToRJOKX+YSoFEkzydmuz8bokE84jT
+         1WpmnR/ov9p6X1LfR+mjS1VTesuZ2HlcFulbukFLRjGhjigNcZ5pCRszabvvskXT+oMH
+         NA0Q1ufHt7o9u7VL4iA3CdAAgwVZTJIp/aG7dZKRaIf/1Igxr4f4ikf0TG8c9cGYOztZ
+         XTfQ==
+X-Gm-Message-State: APjAAAWvp3500zZ/iGjzHVwGvB13dnABjf7QV3waxNv7vszoTxREEzzU
+        Tx8EeJhNYUbp3/7avocksiKPS0rijwjeG7ZPSFA=
+X-Google-Smtp-Source: APXvYqxdEI+m9gpVR9aDf6TiX8mC2NIvGhVvINnkOeatfGs/HFjyi0AXbZ47oirabwL+5YNhqaUJ8bMV5DqFEmGW2bE=
+X-Received: by 2002:ac2:5467:: with SMTP id e7mr13628892lfn.23.1560242721494;
+ Tue, 11 Jun 2019 01:45:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20190607172958.20745-1-erosca@de.adit-jv.com> <87tvcxncuq.fsf@codeaurora.org>
+ <20190610083012.GV5447@atomide.com>
+In-Reply-To: <20190610083012.GV5447@atomide.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 11 Jun 2019 10:45:08 +0200
+Message-ID: <CAMuHMdUOc17ocqmt=oNmyN1UT_K7_y=af1pwjwr5PTgQL2o2OQ@mail.gmail.com>
+Subject: Re: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
+ inverted IRQ
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>, eyalr@ti.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <Marc.Zyngier@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the USB Role Switch is supported, so add properties about it,
-and modify some description related.
+CC irqchip
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v7 no changes
-v6 no changes
+Original thread at
+https://lore.kernel.org/lkml/20190607172958.20745-1-erosca@de.adit-jv.com/
 
-v5 changes:
- 1. modify decription about extcon and vbus-supply properties
- 2. make this patch depend on [1]
+On Mon, Jun 10, 2019 at 10:30 AM Tony Lindgren <tony@atomide.com> wrote:
+> * Kalle Valo <kvalo@codeaurora.org> [190610 07:01]:
+> > Eugeniu Rosca <erosca@de.adit-jv.com> writes:
+> >
+> > > The wl1837mod datasheet [1] says about the WL_IRQ pin:
+> > >
+> > >  ---8<---
+> > > SDIO available, interrupt out. Active high. [..]
+> > > Set to rising edge (active high) on powerup.
+> > >  ---8<---
+> > >
+> > > That's the reason of seeing the interrupt configured as:
+> > >  - IRQ_TYPE_EDGE_RISING on HiKey 960/970
+> > >  - IRQ_TYPE_LEVEL_HIGH on a number of i.MX6 platforms
+> > >
+> > > We assert that all those platforms have the WL_IRQ pin connected
+> > > to the SoC _directly_ (confirmed on HiKey 970 [2]).
+> > >
+> > > That's not the case for R-Car Kingfisher extension target, which carries
+> > > a WL1837MODGIMOCT IC. There is an SN74LV1T04DBVR inverter present
+> > > between the WLAN_IRQ pin of the WL18* chip and the SoC, effectively
+> > > reversing the requirement quoted from [1]. IOW, in Kingfisher DTS
+> > > configuration we would need to use IRQ_TYPE_EDGE_FALLING or
+> > > IRQ_TYPE_LEVEL_LOW.
+> > >
+> > > Unfortunately, v4.2-rc1 commit bd763482c82ea2 ("wl18xx: wlan_irq:
+> > > support platform dependent interrupt types") made a special case out
+> > > of these interrupt types. After this commit, it is impossible to provide
+> > > an IRQ configuration via DTS which would describe an inverter present
+> > > between the WL18* chip and the SoC, generating the need for workarounds
+> > > like [3].
+> > >
+> > > Create a boolean OF property, called "invert-irq" to specify that
+> > > the WLAN_IRQ pin of WL18* is connected to the SoC via an inverter.
+> > >
+> > > This solution has been successfully tested on R-Car H3ULCB-KF-M06 using
+> > > the DTS configuration [4] combined with the "invert-irq" property.
+> > >
+> > > [1] http://www.ti.com/lit/ds/symlink/wl1837mod.pdf
+> > > [2] https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/
+> > > [3] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
+> > > [4] https://patchwork.kernel.org/patch/10895879/
+> > >     ("arm64: dts: ulcb-kf: Add support for TI WL1837")
+> > >
+> > > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> >
+> > Tony&Eyal, do you agree with this?
+>
+> Yeah if there's some hardware between the WLAN device and the SoC
+> inverting the interrupt, I don't think we have clear a way to deal
+> with it short of setting up a separate irqchip that does the
+> translation.
 
- [1]: [v3] dt-binding: usb: add usb-role-switch property
-      https://patchwork.kernel.org/patch/10934835/
+Yeah, inverting the interrupt type in DT works only for simple devices,
+that don't need configuration.
+A simple irqchip driver that just inverts the type sounds like a good
+solution to me. Does something like that already exists?
 
-v4 no changes
-v3 no changes
+> But in some cases we also do not want to invert the interrupt, so
+> I think this property should take IRQ_TYPE_EDGE_RISING and
+> IRQ_TYPE_EDGE_RISING values to override the setting for
+> the WLAN end of the hardware?
+>
+> Let's wait a bit longer for comments from Eyal too.
 
-v2 changes:
-  1. fix typo
-  2. refer new binding about connector property
----
- .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 3382b5cb471d..3a8300205cdb 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -28,8 +28,13 @@ Optional properties:
- 	parent's address space
-  - extcon : external connector for vbus and idpin changes detection, needed
- 	when supports dual-role mode.
-+	it's considered valid for compatibility reasons, not allowed for
-+	new bindings, and use "usb-role-switch" property instead.
-  - vbus-supply : reference to the VBUS regulator, needed when supports
- 	dual-role mode.
-+	it's considered valid for compatibility reasons, not allowed for
-+	new bindings, and put into a usb-connector node.
-+	see connector/usb-connector.txt.
-  - pinctrl-names : a pinctrl state named "default" is optional, and need be
- 	defined if auto drd switch is enabled, that means the property dr_mode
- 	is set as "otg", and meanwhile the property "mediatek,enable-manual-drd"
-@@ -39,6 +44,8 @@ Optional properties:
- 
-  - maximum-speed : valid arguments are "super-speed", "high-speed" and
- 	"full-speed"; refer to usb/generic.txt
-+ - usb-role-switch : use USB Role Switch to support dual-role switch, but
-+	not extcon; see usb/generic.txt.
-  - enable-manual-drd : supports manual dual-role switch via debugfs; usually
- 	used when receptacle is TYPE-A and also wants to support dual-role
- 	mode.
-@@ -61,6 +68,9 @@ The xhci should be added as subnode to mtu3 as shown in the following example
- if host mode is enabled. The DT binding details of xhci can be found in:
- Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
- 
-+The port would be added as subnode if use "usb-role-switch" property.
-+	see graph.txt
-+
- Example:
- ssusb: usb@11271000 {
- 	compatible = "mediatek,mt8173-mtu3";
+                        Geert
+
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
