@@ -2,34 +2,34 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE0CC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB8CC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D59420673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0160C2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbfFKMb3 (ORCPT
+        id S2387740AbfFKMbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:31:29 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:50372 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727796AbfFKMb0 (ORCPT
+        Tue, 11 Jun 2019 08:31:34 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:32826 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729436AbfFKMba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:31:26 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BCT7an012215;
-        Tue, 11 Jun 2019 07:31:02 -0500
+        Tue, 11 Jun 2019 08:31:30 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BCTCDA027111;
+        Tue, 11 Jun 2019 07:31:03 -0500
 Authentication-Results: ppops.net;
         spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from mail3.cirrus.com ([87.246.76.56])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2t0ae2v69s-1;
+        by mx0b-001ae601.pphosted.com with ESMTP id 2t09ep3xqf-1;
         Tue, 11 Jun 2019 07:31:02 -0500
 Received: from EDIEX01.ad.cirrus.com (ediex01.ad.cirrus.com [198.61.84.80])
-        by mail3.cirrus.com (Postfix) with ESMTP id D62B761408E8;
+        by mail3.cirrus.com (Postfix) with ESMTP id DB74461408FC;
         Tue, 11 Jun 2019 07:31:46 -0500 (CDT)
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
@@ -39,7 +39,7 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
  Transport; Tue, 11 Jun 2019 13:31:01 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 9017C2A1;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 8968A45;
         Tue, 11 Jun 2019 13:31:01 +0100 (BST)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
@@ -48,17 +48,15 @@ CC:     <jarkko.nikula@linux.intel.com>,
         <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH v4 1/7] i2c: core: Allow whole core to use i2c_dev_irq_from_resources
-Date:   Tue, 11 Jun 2019 13:30:55 +0100
-Message-ID: <20190611123101.25264-2-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v4 0/7] I2C IRQ Probe Improvements
+Date:   Tue, 11 Jun 2019 13:30:54 +0100
+Message-ID: <20190611123101.25264-1-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190611123101.25264-1-ckeepax@opensource.cirrus.com>
-References: <20190611123101.25264-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=654 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=927 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906110085
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,50 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the static from i2c_dev_irq_from _resources so that other parts
-of the core code can use this helper function.
+This series attempts to align as much IRQ handling into the
+probe path as possible. Note that I don't have a great setup
+for testing these patches so they are mostly just build tested
+and need careful review and testing before any of them are
+merged.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
-
-No changes since v3.
+The series brings the ACPI path inline with the way the device
+tree path handles the IRQ entirely at probe time. However,
+it still leaves any IRQ specified through the board_info as
+being handled at device time. In that case we need to cache
+something from the board_info until probe time, which leaves
+any alternative solution with something basically the same as
+the current handling although perhaps caching more stuff.
 
 Thanks,
 Charles
 
- drivers/i2c/i2c-core-base.c | 4 ++--
- drivers/i2c/i2c-core.h      | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+See previous discussions:
+ - https://lkml.org/lkml/2019/2/15/989
+ - https://www.spinics.net/lists/linux-i2c/msg39541.html
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 9e43508d4567d..67344586de913 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -679,8 +679,8 @@ static void i2c_dev_set_name(struct i2c_adapter *adap,
- 		     i2c_encode_flags_to_addr(client));
- }
- 
--static int i2c_dev_irq_from_resources(const struct resource *resources,
--				      unsigned int num_resources)
-+int i2c_dev_irq_from_resources(const struct resource *resources,
-+			       unsigned int num_resources)
- {
- 	struct irq_data *irqd;
- 	int i;
-diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
-index 851c11b4c0f3a..2a3b28bf826b1 100644
---- a/drivers/i2c/i2c-core.h
-+++ b/drivers/i2c/i2c-core.h
-@@ -19,6 +19,8 @@ extern struct list_head	__i2c_board_list;
- extern int		__i2c_first_dynamic_bus_num;
- 
- int i2c_check_7bit_addr_validity_strict(unsigned short addr);
-+int i2c_dev_irq_from_resources(const struct resource *resources,
-+			       unsigned int num_resources);
- 
- /*
-  * We only allow atomic transfers for very late communication, e.g. to send
+Charles Keepax (7):
+  i2c: core: Allow whole core to use i2c_dev_irq_from_resources
+  i2c: acpi: Use available IRQ helper functions
+  i2c: acpi: Factor out getting the IRQ from ACPI
+  i2c: core: Make i2c_acpi_get_irq available to the rest of the I2C core
+  i2c: core: Move ACPI IRQ handling to probe time
+  i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
+  i2c: core: Tidy up handling of init_irq
+
+ drivers/i2c/i2c-core-acpi.c | 58 ++++++++++++++++++++++++++++++++-------------
+ drivers/i2c/i2c-core-base.c | 11 +++++----
+ drivers/i2c/i2c-core.h      |  9 +++++++
+ 3 files changed, 56 insertions(+), 22 deletions(-)
+
 -- 
 2.11.0
 
