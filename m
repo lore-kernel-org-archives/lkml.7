@@ -2,62 +2,96 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D63CC31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6688CC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E42320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2368A20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:48:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2t4J6Ju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407695AbfFKVo1 (ORCPT
+        id S2407711AbfFKVsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:44:27 -0400
-Received: from namei.org ([65.99.196.166]:38582 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404730AbfFKVo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:44:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x5BLiHHk015933;
-        Tue, 11 Jun 2019 21:44:17 GMT
-Date:   Wed, 12 Jun 2019 07:44:17 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-cc:     serge@hallyn.com, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH -next] security: Make capability_hooks static
-In-Reply-To: <20190611134815.16612-1-yuehaibing@huawei.com>
-Message-ID: <alpine.LRH.2.21.1906120743490.12833@namei.org>
-References: <20190611134815.16612-1-yuehaibing@huawei.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Tue, 11 Jun 2019 17:48:11 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:47017 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407700AbfFKVsL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 17:48:11 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so16420583qtn.13;
+        Tue, 11 Jun 2019 14:48:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MCUxZBwXukN132TnqZmMCNqv44FmiO2Qpout6SxwNOk=;
+        b=U2t4J6JufLPs9LVQEuwGoIlft6Vut7WVTUtKXOa8XJY+r1QFdmI0+nJgzFB+1wyjKh
+         FMjaww5fpbkwLLDGEgKc4a/Fl0qhuZykErQ7aS5PJMHKkb8Y1Baf1ziVwUgiNG9SfxWi
+         KZkJAiiFX9t9hR48Ma1rOrXUm2jbLmrvB54B/FuUAIres2ehrkBe2YR4reZiFjLhzsl6
+         W0rnBYqhA06eRixvTcFyKz8KdwWRcUKWIpSZTJDhr2Rr9rMOwekUr4qiWQlL002I2ohH
+         urqBKcblPu74HjYd3SS8xEDiHTW1fpJAqLCeqVbU/BwKIsfsxZspgdIhme06UaE9kOPO
+         5fJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MCUxZBwXukN132TnqZmMCNqv44FmiO2Qpout6SxwNOk=;
+        b=WUFBCWBJwUCxGpXND9lD9yeVo3m6+pkse8KlVUEpKL0CXzJ6GVEB0MYgdmh82d74hq
+         osLwQ7g5EnMDPbOkteeUjHBCgZsWjvdN7W8lwMSi5ti0jWiKfTokNPAt4di/Q2xLCWSe
+         6sS6vxheq6+MzQxsu56g4kn6PdqedJEiOeu376w+/r5jWgruETNBMiBrlvYHVEgGeH7g
+         pOrzHNL/HaG8elc2s8wwab9DgoaADvyyFqogMuFcBQjvCik74rRPOR54eY7JvWctJ5Gq
+         6/UuI0Fu5alJkKJWYdY889AOszUi61mVxWNI+6XNURQ4n/DNBb26SQrNWOyWA2wiNDDR
+         08UQ==
+X-Gm-Message-State: APjAAAUwkHtRMqbOXgaLF2C4VEphmMQfYGOb2QZAoTaKWZF5E0QeBf6Y
+        VDvznGUPr6hJlE0cYQoddQxtJNB3ly0=
+X-Google-Smtp-Source: APXvYqyfvR3qwy2LUpLrVFiimG3IolAimo2/QWdlN6oInYZgQEWvFcI6wyMUURihw8/hLQkYaXvvLw==
+X-Received: by 2002:ac8:17c1:: with SMTP id r1mr65120547qtk.41.1560289689721;
+        Tue, 11 Jun 2019 14:48:09 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id l6sm1438451qkc.89.2019.06.11.14.48.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 14:48:08 -0700 (PDT)
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, f.fainelli@gmail.com,
+        andrew@lunn.ch
+Subject: [PATCH net-next 0/4] net: dsa: use switchdev attr and obj handlers
+Date:   Tue, 11 Jun 2019 17:47:43 -0400
+Message-Id: <20190611214747.22285-1-vivien.didelot@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019, YueHaibing wrote:
+This series reduces boilerplate in the handling of switchdev attribute and
+object operations by using the switchdev_handle_* helpers, which check the
+targeted devices and recurse into their lower devices.
 
-> Fix sparse warning:
-> 
-> security/commoncap.c:1347:27: warning:
->  symbol 'capability_hooks' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  security/commoncap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+This also brings back the ability to inspect operations targeting the bridge
+device itself (where .orig_dev is the bridge device and .dev is the slave),
+even though that is of no use yet and skipped by this series.
 
-Thanks!
+Vivien Didelot (4):
+  net: dsa: do not check orig_dev in vlan del
+  net: dsa: make cpu_dp non const
+  net: dsa: make dsa_slave_dev_check use const
+  net: dsa: use switchdev handle helpers
 
-Applied to
-git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-lsm
+ include/net/dsa.h |  2 +-
+ net/dsa/port.c    |  9 ------
+ net/dsa/slave.c   | 81 ++++++++++++++++++++---------------------------
+ 3 files changed, 36 insertions(+), 56 deletions(-)
 
 -- 
-James Morris
-<jmorris@namei.org>
+2.21.0
 
