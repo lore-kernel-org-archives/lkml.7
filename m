@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CDFC31E45
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BF4C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 991812054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311B92054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436875AbfFKWWZ (ORCPT
+        id S2391689AbfFKWWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:22:25 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:3288 "EHLO
+        Tue, 11 Jun 2019 18:22:45 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:3298 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436820AbfFKWWS (ORCPT
+        by vger.kernel.org with ESMTP id S2436796AbfFKWWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:22:18 -0400
+        Tue, 11 Jun 2019 18:22:21 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 11 Jun 2019 15:22:09 -0700
+ 15.0.1156.6; Tue, 11 Jun 2019 15:22:12 -0700
 Received: from rlwimi.localdomain (unknown [10.129.220.121])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 297B441BAB;
-        Tue, 11 Jun 2019 15:22:16 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id D536241BAF;
+        Tue, 11 Jun 2019 15:22:18 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 CC:     Ingo Molnar <mingo@kernel.org>,
@@ -33,9 +33,9 @@ CC:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [PATCH v2 07/13] recordmcount: Remove redundant cleanup() calls
-Date:   Tue, 11 Jun 2019 15:21:49 -0700
-Message-ID: <1a1bc8fc3b04c4d42aff0de5b7e78ebb8a9c4919.1560285597.git.mhelsley@vmware.com>
+Subject: [PATCH v2 11/13] objtool: recordmcount: Start using objtool's elf wrapper
+Date:   Tue, 11 Jun 2019 15:21:53 -0700
+Message-ID: <0e19d11de05d6d989c8f97d5afff713bf406a6eb.1560285597.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1560285597.git.mhelsley@vmware.com>
 References: <cover.1560285597.git.mhelsley@vmware.com>
@@ -49,163 +49,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Redundant cleanup calls were introduced when transitioning from
-the old error/success handling via setjmp/longjmp -- the longjmp
-ensured the cleanup() call only happened once but replacing
-the success_file()/fail_file() calls with cleanup() meant that
-multiple cleanup() calls can happen as we return from function
-calls.
+Use struct elf to grab the file descriptor. We will later
+move these calls into other functions as we expand the
+lifetime of the struct elf so that it can be passed to
+objtool elf.[ch] functions.
 
-In do_file(), looking just before and after the "goto out" jumps we
-can see that multiple cleanups() are being performed. We remove
-cleanup() calls from the nested functions because it makes the code
-easier to review -- the resources being cleaned up are generally
-allocated and initialized in the callers so freeing them there
-makes more sense.
+This creates the libelf/objcount data structures and gives
+us two separte ways to walk the ELF file -- the libelf/objtool
+way and the old recordmcount wrapper way which avoids these
+extra data structures by using indices, offsets, and pointers
+into the mmapped ELF file.
 
-Other redundant cleanup() calls:
-
-mmap_file() is only called from do_file() and, if mmap_file() fails,
-then we goto out and do cleanup() there too.
-
-write_file() is only called from do_file() and do_file()
-calls cleanup() unconditionally after returning from write_file()
-therefore the cleanup() calls in write_file() are not necessary.
-
-find_secsym_ndx(), called from do_func()'s for-loop, when we are
-cleaning up here it's obvious that we break out of the loop and
-do another cleanup().
-
-__has_rel_mcount() is called from two parts of do_func()
-and calls cleanup(). In theory we move them into do_func(), however
-these in turn prove redundant so another simplification step
-removes them as well.
+Subsequent patches will convert from the old recordmcount
+accessors to the libelf/objtool accessors.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- scripts/recordmcount.c | 13 -------------
- scripts/recordmcount.h |  2 --
- 2 files changed, 15 deletions(-)
+ tools/objtool/recordmcount.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 9ae975ccf2dc..111419c282d3 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -258,17 +258,14 @@ static void *mmap_file(char const *fname)
- 	fd_map = open(fname, O_RDONLY);
- 	if (fd_map < 0) {
- 		perror(fname);
--		cleanup();
- 		return NULL;
- 	}
- 	if (fstat(fd_map, &sb) < 0) {
- 		perror(fname);
--		cleanup();
- 		goto out;
- 	}
- 	if (!S_ISREG(sb.st_mode)) {
- 		fprintf(stderr, "not a regular file: %s\n", fname);
--		cleanup();
- 		goto out;
- 	}
- 	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
-@@ -314,13 +311,11 @@ static int write_file(const char *fname)
- 	fd_map = open(tmp_file, O_WRONLY | O_TRUNC | O_CREAT, sb.st_mode);
- 	if (fd_map < 0) {
- 		perror(fname);
--		cleanup();
- 		return -1;
- 	}
- 	n = write(fd_map, file_map, sb.st_size);
- 	if (n != sb.st_size) {
- 		perror("write");
--		cleanup();
- 		close(fd_map);
- 		return -1;
- 	}
-@@ -328,7 +323,6 @@ static int write_file(const char *fname)
- 		n = write(fd_map, file_append, file_append_size);
- 		if (n != file_append_size) {
- 			perror("write");
--			cleanup();
- 			close(fd_map);
- 			return -1;
- 		}
-@@ -336,7 +330,6 @@ static int write_file(const char *fname)
- 	close(fd_map);
- 	if (rename(tmp_file, fname) < 0) {
- 		perror(fname);
--		cleanup();
- 		return -1;
- 	}
- 	return 0;
-@@ -458,7 +451,6 @@ static int do_file(char const *const fname)
- 	default:
- 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
- 			ehdr->e_ident[EI_DATA], fname);
--		cleanup();
- 		goto out;
- 	case ELFDATA2LSB:
- 		if (*(unsigned char const *)&endian != 1) {
-@@ -491,7 +483,6 @@ static int do_file(char const *const fname)
- 	    w2(ehdr->e_type) != ET_REL ||
- 	    ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
- 		fprintf(stderr, "unrecognized ET_REL file %s\n", fname);
--		cleanup();
- 		goto out;
- 	}
+diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
+index 2de31e2913d1..61050b78d5a0 100644
+--- a/tools/objtool/recordmcount.c
++++ b/tools/objtool/recordmcount.c
+@@ -33,6 +33,8 @@
  
-@@ -500,7 +491,6 @@ static int do_file(char const *const fname)
- 	default:
- 		fprintf(stderr, "unrecognized e_machine %u %s\n",
- 			w2(ehdr->e_machine), fname);
--		cleanup();
- 		goto out;
- 	case EM_386:
- 		reltype = R_386_32;
-@@ -544,14 +534,12 @@ static int do_file(char const *const fname)
- 	default:
- 		fprintf(stderr, "unrecognized ELF class %d %s\n",
- 			ehdr->e_ident[EI_CLASS], fname);
--		cleanup();
- 		goto out;
- 	case ELFCLASS32:
- 		if (w2(ehdr->e_ehsize) != sizeof(Elf32_Ehdr)
- 		||  w2(ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
- 			fprintf(stderr,
- 				"unrecognized ET_REL file: %s\n", fname);
--			cleanup();
- 			goto out;
- 		}
- 		if (w2(ehdr->e_machine) == EM_MIPS) {
-@@ -567,7 +555,6 @@ static int do_file(char const *const fname)
- 		||  w2(ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
- 			fprintf(stderr,
- 				"unrecognized ET_REL file: %s\n", fname);
--			cleanup();
- 			goto out;
- 		}
- 		if (w2(ghdr->e_machine) == EM_S390) {
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 3198459f7431..b7348f1af758 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -468,7 +468,6 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
- 	}
- 	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
- 		txtndx, txtname);
--	cleanup();
- 	return missing_sym;
+ #include "builtin-mcount.h"
+ 
++#include "elf.h"
++
+ #ifndef EM_AARCH64
+ #define EM_AARCH64	183
+ #define R_AARCH64_NONE		0
+@@ -53,6 +55,8 @@ static void *file_ptr;	/* current file pointer location */
+ static void *file_append; /* added to the end of the file */
+ static size_t file_append_size; /* how much is added to end of file */
+ 
++static struct elf *lf;
++
+ /* Per-file resource cleanup when multiple files. */
+ static void file_append_cleanup(void)
+ {
+@@ -69,6 +73,9 @@ static void mmap_cleanup(void)
+ 	else
+ 		free(file_map);
+ 	file_map = NULL;
++	if (lf)
++		elf_close(lf);
++	lf = NULL;
  }
  
-@@ -487,7 +486,6 @@ static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
- 	if (strcmp("__mcount_loc", txtname) == 0) {
- 		fprintf(stderr, "warning: __mcount_loc already exists: %s\n",
- 			fname);
--		cleanup();
- 		return already_has_rel_mcount;
+ /* ulseek, uwrite, ...:  Check return value for errors. */
+@@ -166,11 +173,12 @@ static void *mmap_file(char const *fname)
+ 	file_updated = 0;
+ 	sb.st_size = 0;
+ 
+-	fd_map = open(fname, O_RDONLY);
+-	if (fd_map < 0) {
++	lf = elf_open(fname, O_RDONLY);
++	if (!lf) {
+ 		perror(fname);
+ 		return NULL;
  	}
- 	if (w(txthdr->sh_type) != SHT_PROGBITS ||
++	fd_map = lf->fd;
+ 	if (fstat(fd_map, &sb) < 0) {
+ 		perror(fname);
+ 		goto out;
+@@ -190,14 +198,14 @@ static void *mmap_file(char const *fname)
+ 		}
+ 		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
+ 			perror(fname);
+-			free(file_map);
+-			file_map = NULL;
++			mmap_cleanup();
+ 			goto out;
+ 		}
+ 	} else
+ 		mmap_failed = 0;
+ out:
+-	close(fd_map);
++	elf_close(lf);
++	lf = NULL;
+ 	fd_map = -1;
+ 
+ 	file_end = file_map + sb.st_size;
 -- 
 2.20.1
 
