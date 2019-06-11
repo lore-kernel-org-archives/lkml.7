@@ -2,138 +2,155 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFE4C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931A2C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7BE20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:38:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oIUVz20N"
+	by mail.kernel.org (Postfix) with ESMTP id 5FBFA21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407687AbfFKViF (ORCPT
+        id S2404748AbfFKVky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:38:05 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38691 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407675AbfFKViF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:38:05 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f97so5671431plb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 14:38:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c/V5azhQK0NKG3CgTrOQr2YdB5nv03TCL7KtVGmmTnE=;
-        b=oIUVz20NxztwZIHdK3k65o0Fojj8X3TmNQgvsbpNbh+NJFEE9FTzcALPGexsN2u0lV
-         R4N/0/VHL69lIgdJo/Mavd44QxzYFnGkGyNM5SqP5YDejiSLqcxh4/bWKonb2Q9Rk44g
-         4lfQgqfTvNf3GlM1jKlbf4K51OOFbRZUH6njQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c/V5azhQK0NKG3CgTrOQr2YdB5nv03TCL7KtVGmmTnE=;
-        b=SAPhLP/CZjTs7HAXJVDjhRZO9iLKG5bAxu2twGFVkHRFecw7QfYghjeuJXEbQI0xLh
-         /mCnYtbXOn/rn+4ZI8ho1RSNUW0D2tpw203uE832YZzPL/IJyPp+bYk8JciXIzTfZvXd
-         hdQoqwex/m54fEebkikkQYmTF5WTzSBEo7ByOkoXoTpeMeZpChZPHRMx67l0TzxLNmjl
-         jx/Gjk8qX8qGIOBLsBmTeVVOShdUdZAJtrE3uK4cpOGUb6oEdA9GAe0GMd1XxnNricTX
-         Xah20RbaPbUctjrTWTUBK3Oy9ekG+3EEN6nGgqnVzEbCEgC445SRbWeqqYfShosKRsBT
-         nkvg==
-X-Gm-Message-State: APjAAAU38KZ03fEdsyZoqr07MdVeoC6tfivMRou0cb/V+7I/0d+WGgsq
-        7I+zHmqgJZ+GukgymHpLBUpCaQ==
-X-Google-Smtp-Source: APXvYqw7YuxbYKqsmcBwdCJJBrsNVyyiE8CmkHa4T0LQVEl29ePKAtTry61J448brFzrtjCg2vAB6Q==
-X-Received: by 2002:a17:902:d695:: with SMTP id v21mr62285877ply.342.1560289084363;
-        Tue, 11 Jun 2019 14:38:04 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id b128sm15771434pfa.165.2019.06.11.14.38.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 14:38:03 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 14:38:01 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pwm-backlight: Add 'max-brightness'
- property
-Message-ID: <20190611213801.GE137143@google.com>
-References: <20190610233739.29477-1-mka@chromium.org>
- <20190611102851.GA16611@ulmo>
+        Tue, 11 Jun 2019 17:40:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37744 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404005AbfFKVky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 17:40:54 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7E495308A946;
+        Tue, 11 Jun 2019 21:40:48 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8737D5D705;
+        Tue, 11 Jun 2019 21:40:46 +0000 (UTC)
+Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, clemens@ladisch.de,
+        Sultan Alsawaf <sultan@kerneltoast.com>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
+ <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <fe48fc73-5b42-cbd3-7c73-8b0a2bd90164@redhat.com>
+Date:   Tue, 11 Jun 2019 17:40:46 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190611102851.GA16611@ulmo>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 11 Jun 2019 21:40:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
+On 6/11/19 5:09 PM, Thomas Gleixner wrote:
+> Jason,
+>
+> On Fri, 7 Jun 2019, Jason A. Donenfeld wrote:
+>
+> Adding a few more people on cc and keeping full context.
+>
+>> Hey Thomas,
+>>
+>> After some discussions here prior about the different clocks
+>> available, WireGuard uses ktime_get_boot_fast_ns() pretty extensively.
+>> The requirement is for a quasi-accurate monotonic counter that takes
+>> into account sleep time, and this seems to fit the bill pretty well.
+>> Sultan (CC'd) reported to me a non-reproducible bug he encountered in
+>> 4.19.47 (arch's linux-lts package), where the CPU was hung in
+>> read_hpet.
+>>
+>> CPU: 1 PID: 7927 Comm: kworker/1:3 Tainted: G           OE     4.19.47-1-lts #1
+>> Hardware name: Dell Inc. XPS 15 9570/02MJVY, BIOS 1.10.1 04/26/2019
+>> Workqueue: wg-crypt-interface wg_packet_tx_worker [wireguard]
+>> RIP: 0010:read_hpet+0x67/0xc0
+>> Code: c0 75 11 ba 01 00 00 00 f0 0f b1 15 a3 3d 1a 01 85 c0 74 37 48
+>> 89 cf 57 9d 0f 1f 44 00 00 48 c1 ee 20 eb 04 85 c9 74 12 f3 90 <49> 8b
+>> 08 48 89 ca 48 c1 ea 20 89 d0 39 f2 74 ea c3 48 8b 05 89 56
+>> RSP: 0018:ffffb8d382533e18 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
+>> RAX: 0000000018a4c89e RBX: 0000000000000000 RCX: 18a4c89e00000001
+>> RDX: 0000000018a4c89e RSI: 0000000018a4c89e RDI: ffffffffb8227980
+>> RBP: 000006c1c3f602a2 R08: ffffffffb8205040 R09: 0000000000000000
+>> R10: 000001d58fd28efc R11: 0000000000000000 R12: ffffffffb8259a80
+>> R13: 00000000ffffffff R14: 0000000518a0d8c4 R15: 000000000010fa5a
+>> FS:  0000000000000000(0000) GS:ffff9b90ac240000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 00003663b14d9ce8 CR3: 000000030f20a006 CR4: 00000000003606e0
+>> Call Trace:
+>>  ktime_get_mono_fast_ns+0x53/0xa0
+>>  ktime_get_boot_fast_ns+0x5/0x10
+>>  wg_packet_tx_worker+0x183/0x220 [wireguard]
+>>  process_one_work+0x1f4/0x3e0
+>>  worker_thread+0x2d/0x3e0
+>>  ? process_one_work+0x3e0/0x3e0
+>>  kthread+0x112/0x130
+>>  ? kthread_park+0x80/0x80
+>>  ret_from_fork+0x35/0x40
+>> watchdog: BUG: soft lockup - CPU#1 stuck for 23s! [kworker/1:3:7927]
+>>
+>> It looks like RIP is spinning in this loop in read_hpet:
+>>
+>> do {
+>>     cpu_relax();
+>>     new.lockval = READ_ONCE(hpet.lockval);
+>> } while ((new.value == old.value) && arch_spin_is_locked(&new.lock));
 
-On Tue, Jun 11, 2019 at 12:28:51PM +0200, Thierry Reding wrote:
-> On Mon, Jun 10, 2019 at 04:37:38PM -0700, Matthias Kaehlcke wrote:
-> > Add an optional 'max-brightness' property, which is used to specify
-> > the number of brightness levels (max-brightness + 1) when the node
-> > has no 'brightness-levels' table.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  .../devicetree/bindings/leds/backlight/pwm-backlight.txt       | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > index 64fa2fbd98c9..98f4ba626054 100644
-> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > @@ -27,6 +27,9 @@ Optional properties:
-> >                              resolution pwm duty cycle can be used without
-> >                              having to list out every possible value in the
-> >                              brightness-level array.
-> > +  - max-brightness: Maximum brightness value. Used to specify the number of
-> > +                    brightness levels (max-brightness + 1) when the node
-> > +                    has no 'brightness-levels' table.
-> 
-> Back at the time when these bindings were defined we specifically didn't
-> add this because it was deemed impractical. That is, no real hardware is
-> actually capable of achieving useful results with a simplified
-> description like this.
-> 
-> Besides, we already have the num-interpolated-steps property which
-> should allow you to achieve the same thing:
-> 
-> 	brightness-levels = <0 255>;
-> 	default-brightness-level = <1>;
-> 	num-interpolated-steps = <255>;
+The hang shouldn't happen unless the hpet_lock structure is somehow
+corrupted by another unrelated task. If someone inadvertently change the
+content of the lock word, live lock will happen.
 
-It doesn't achieve the same. With this configuration the device would
-have a table with 256 linearly increasing values, the intended use of
-the property is to provide the number of brightness levels to be used
-by the CIE 1931 algorithm to compute a brightness scale that is
-perceived as linear by the human eye. We could possibly treat a
-'brightness-levels' table with only two levels as special case and
-get the number of levels from it.
+>> I imagine this could be a bug in the hpet code, or a failure of the
+>> hpet hardware. But I thought it'd be most prudent to check, first,
+>> whether there are actually very particular conditions on when and
+>> where ktime_get_boot_fast_ns and friends can be called. In other
+>> words, maybe the bug is actually in my code. I was under the
+>> impression that invoking it from anywhere was fine, given the
+>> documentation says "NMI safe", but maybe there are still some
+>> requirements I should keep in mind?
+> I think your code is fine. Just 'fast' is relative with the HPET selected
+> as clocksource (it's actually aweful slow).
+>
+> It probably livelocks in the HPET optimization Waiman did for large
+> machines. I'm having a dejavu with that spinlock livelock we debugged last
+> year. Peter?
+>
+> Can you please ask the reporter to try the hack below?
+>
+> Thanks,
+>
+> 	tglx
+>
+> 8<---------------
+> diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+> index a0573f2e7763..0c9044698489 100644
+> --- a/arch/x86/kernel/hpet.c
+> +++ b/arch/x86/kernel/hpet.c
+> @@ -795,8 +795,7 @@ static u64 read_hpet(struct clocksource *cs)
+>  	/*
+>  	 * Read HPET directly if in NMI.
+>  	 */
+> -	if (in_nmi())
+> -		return (u64)hpet_readl(HPET_COUNTER);
 
-In any case from the discussion on "backlight: pwm_bl: Get number of
-brightness levels for CIE 1931 from the device tree" it might not be
-necessary to specify the number of levels in the DT.
+While at it, add:
 
-> Though given the original discussion that we had around how backlight
-> hardware behaves, that doesn't seem like a good choice.
++    WARN_ON(arch_spin_is_locked(&hpet.lock));
 
+> +	return (u64)hpet_readl(HPET_COUNTER);
+>  
+>  	/*
+>  	 * Read the current state of the lock and HPET value atomically.
+
+Cheers,
+Longman
 
