@@ -2,87 +2,141 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.8 required=3.0 tests=BITCOIN_SPAM_02,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9BEC31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E324AC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1D62086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560286115;
-	bh=y33lrlkQja7eoIovWsePDjdEdIHZ/RJoRj29PafhqOI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uAs8KFjaXxZrMVkfH+qTq7DdZeCL1f11cMmTDbA3QHVKfGBAO7il84dFtIh4MBDbN
-	 GtFvbAWjdFT+kIy2QiCjFDG9Nun7VHZbZdsaVGEEB8pC8vTWuVCTGD32URIkAb9nUw
-	 FBFWtjPSgNRYjOqIoKiLBavs81O2CKfMIu/4RaHY=
+	by mail.kernel.org (Postfix) with ESMTP id C0AFD20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406845AbfFKUse (ORCPT
+        id S2406901AbfFKUuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405881AbfFKUse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:48:34 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CE6320684;
-        Tue, 11 Jun 2019 20:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560286113;
-        bh=y33lrlkQja7eoIovWsePDjdEdIHZ/RJoRj29PafhqOI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UgyruavCsSZLLvbVGn/8Url9hdMFqD/vc6cS2xvCxVAaLGSpqRyO7wgSl3uYSlnrC
-         3+fJjYU9x+kvkKn62ONAnZk5QMPYKtIt9RU5V2bIySebdJX4pNazzbre4oO5OlK2mG
-         81xtH5C+HAjNqK8Itw5roVmiKtRcfGnYRZlw+kVk=
-Date:   Tue, 11 Jun 2019 13:48:31 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Shyam Saini <shyam.saini@amarulasolutions.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-ext4@vger.kernel.org,
-        devel@lists.orangefs.org, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, bpf@vger.kernel.org,
-        kvm@vger.kernel.org, mayhs11saini@gmail.com,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Subject: Re: [PATCH V2] include: linux: Regularise the use of FIELD_SIZEOF
- macro
-Message-Id: <20190611134831.a60c11f4b691d14d04a87e29@linux-foundation.org>
-In-Reply-To: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
-References: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 11 Jun 2019 16:50:24 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:47005 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406215AbfFKUuX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 16:50:23 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id aniihmt7M41bFanilhFqre; Tue, 11 Jun 2019 22:50:21 +0200
+Subject: Re: [PATCH 1/2] media: v4l2-core: Shifting signed 32-bit value by 31
+ bits error
+To:     Shuah Khan <skhan@linuxfoundation.org>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com,
+        niklas.soderlund+renesas@ragnatech.se, ezequiel@collabora.com,
+        paul.kocialkowski@bootlin.com
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1559764506.git.skhan@linuxfoundation.org>
+ <bac3ee3b10de409b6cdf7286e0e84737e63662ee.1559764506.git.skhan@linuxfoundation.org>
+ <8cc03625-f41d-6009-d50c-823e5f498dca@infradead.org>
+ <7819cae4-58e5-cbe1-ac9d-bca00d390066@xs4all.nl>
+ <d5aea86a-b556-aae4-0b97-9add8878f99f@linuxfoundation.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <6b4654b1-7cd5-8fea-8c08-472ade8f3ebb@xs4all.nl>
+Date:   Tue, 11 Jun 2019 22:50:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <d5aea86a-b556-aae4-0b97-9add8878f99f@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfDqPdampvam9t1IRzB0iFELc7nEPX5OR/TF9QssU3HBs2KYkud1TLt9b109GhAPvLE53p88JAm+woywM+u645zJD/YfA8UkYGOxZDLwgwjZweqeV0xO1
+ t5gaPWld559PAdtOK2f9oA26Mymc6A/ITMeypImIZb3FY769jcbWGPlZjE/tV/Z4XIU3sK4A9FNoKRBJBNFNOlr+7c/hFJ561VqKTuzDNqa+j8R91UHuWEFl
+ doRRN6I3zjythBcykNWoHsAITIHf4nNgzuxfQsI6jf6A77ZF34L7TvGGEqGiQxuafXQGfwHB8Tg6eol3yH7oxbfekZ4nQdmIzMR+J27eOMeD3nVRifH7kmEn
+ jeJh5QXZUenJSXYGSkdEO6pJnHLQviiM9YN0wvj8k2FwhEcFyJBl7kb3n98uiizXyM3umuIQgm//BGXm198n67sNhBqM0TGzirCufTaZWbYeb6PhNJVqByWR
+ 1/I4Ew74pZyYKub+QKawTMqZ/JKO0n9SXXfoDA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 01:08:36 +0530 Shyam Saini <shyam.saini@amarulasolutions.com> wrote:
-
-> Currently, there are 3 different macros, namely sizeof_field, SIZEOF_FIELD
-> and FIELD_SIZEOF which are used to calculate the size of a member of
-> structure, so to bring uniformity in entire kernel source tree lets use
-> FIELD_SIZEOF and replace all occurrences of other two macros with this.
+On 6/11/19 9:42 PM, Shuah Khan wrote:
+> On 6/6/19 12:33 AM, Hans Verkuil wrote:
+>> On 6/6/19 5:22 AM, Randy Dunlap wrote:
+>>> On 6/5/19 2:53 PM, Shuah Khan wrote:
+>>>> Fix the following cppcheck error:
+>>>>
+>>>> Checking drivers/media/v4l2-core/v4l2-ioctl.c ...
+>>>> [drivers/media/v4l2-core/v4l2-ioctl.c:1370]: (error) Shifting signed 32-bit value by 31 bits is undefined behaviour
+>>>>
+>>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>>>> ---
+>>>>   drivers/media/v4l2-core/v4l2-ioctl.c | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>> index 6859bdac86fe..333e387bafeb 100644
+>>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>> @@ -1364,7 +1364,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>>>>   					(char)((fmt->pixelformat >> 8) & 0x7f),
+>>>>   					(char)((fmt->pixelformat >> 16) & 0x7f),
+>>>>   					(char)((fmt->pixelformat >> 24) & 0x7f),
+>>>> -					(fmt->pixelformat & (1 << 31)) ? "-BE" : "");
+>>>> +					(fmt->pixelformat & BIT(31)) ? "-BE" : "");
+>>>>   			break;
+>>>>   		}
+>>>>   	}
+>>>>
+>>>
+>>> If this builds, I guess #define BIT(x) got pulled in indirectly
+>>> since bits.h nor bitops.h is currently #included in that source file.
+>>>
 > 
-> For this purpose, redefine FIELD_SIZEOF in include/linux/stddef.h and
-> tools/testing/selftests/bpf/bpf_util.h and remove its defination from
-> include/linux/kernel.h
+> It does build. You are right that I should have included bitops.h
 > 
-> In favour of FIELD_SIZEOF, this patch also deprecates other two similar
-> macros sizeof_field and SIZEOF_FIELD.
+>>> Documentation/process/submit-checklist.rst rule #1 says:
+>>> 1) If you use a facility then #include the file that defines/declares
+>>>     that facility.  Don't depend on other header files pulling in ones
+>>>     that you use.
+>>>
+>>> Please add #include <linux/bits or bitops.h>
+>>>
+>>
+>> I'm not sure about this patch. '1 << 31' is used all over in the kernel,
+>> including in public headers (e.g. media.h, videodev2.h).
+>>
+>> It seems arbitrary to change it only here, but not anywhere else.
+>>
 > 
-> For code compatibility reason, retain sizeof_field macro as a wrapper macro
-> to FIELD_SIZEOF
+> Right. We have several places in the kernel that do that.
+> 
+>> In this particular example for the fourcc handling I would prefer to just
+>> use '1U << 31', both in v4l2-ioctl.c and videodev2.h.
+>>
+> 
+> If you would like to take the patch, I can send v2 fixing it using
+> 1U << 31 - This is simpler since it doesn't nee additional includes.
 
-As Alexey has pointed out, C structs and unions don't have fields -
-they have members.  So this is an opportunity to switch everything to
-a new member_sizeof().
+I would like to have this cleaned up in the public media APIs. Those can be
+used by other compilers as well and it makes sense to me not to have
+undefined behavior in those headers.
 
-What do people think of that and how does this impact the patch footprint?
+> 
+>> A separate patch doing the same for MEDIA_ENT_ID_FLAG_NEXT in media.h would
+>> probably be a good idea either: that way the public API at least will do
+>> the right thing.
+>>
+> 
+> I should have explained it better. I wanted to start with one or two
+> places first to see if it is worth our time to fix these:
+> 
+> The full kernel cppcheck log for "Shifting signed 32-bit value by 31 
+> bits is undefined behaviour" can be found at:
+> 
+> https://drive.google.com/file/d/19Xu7UqBGJ7BpzxEp92ZQYb6F8UPrk3z3/view
+
+I don't think it makes sense to fix this for drivers. If gcc would do this
+wrong, we'd have noticed it ages ago.
+
+But I think it makes sense to fix this in public headers.
+
+Regards,
+
+	Hans
