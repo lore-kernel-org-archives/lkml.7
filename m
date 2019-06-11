@@ -2,106 +2,171 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBFBC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE656C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE312212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pnpCqfjp"
+	by mail.kernel.org (Postfix) with ESMTP id 9691E20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390098AbfFKL4y (ORCPT
+        id S2404252AbfFKL5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:56:54 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35390 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389499AbfFKL4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:56:54 -0400
-Received: from zn.tnic (p200300EC2F0A6800DC92A88D55C2D513.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:dc92:a88d:55c2:d513])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CC9F21EC0467;
-        Tue, 11 Jun 2019 13:56:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560254211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=QukcMNGwZckUnii5x0hqUwmjRq1rlJQHMCtyQ0Z8UYY=;
-        b=pnpCqfjp/JTTeaGIsxUClj6wZjVmlGUmmX/r6HmRNnoLGEWgqXFfkDNSEqoXl1CwLtGWmG
-        3WXVYFeZWUgZdYROGprUTVIKezGTXxbqmTGfBYosVD6Xdf7H7DMDa0qHJYsVn7+MkJCOsn
-        bbSOc4P5r72saQcFPaXyQ50MzJz0mxU=
-Date:   Tue, 11 Jun 2019 13:56:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190611115651.GD31772@zn.tnic>
-References: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
- <20190608090556.GA32464@zn.tnic>
- <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+        Tue, 11 Jun 2019 07:57:09 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45091 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403877AbfFKL5I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:57:08 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j19so14071085qtr.12;
+        Tue, 11 Jun 2019 04:57:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K3Sm1X+d2sov0ITQpzgk6HQiz/Phckwgb6KD7DQ+q/M=;
+        b=llBWdXc9ufcDn9VTjjDJIRoBqsPwIk2ZRp4tiC8CFA0r1N37TwKz0DFg1VJnA/Ci0B
+         AIASlCCnSBtNmD0vnnp9Uf8Qrb5Y+o4AF47XzKEutUSdM63zFJ6sKA5OrHss4YVf4a7h
+         Nw2X8po5gj7XsvO8TKbQJpe2LYtumG6dLw3D+6pqpxNCu1gcqnOVUzav05Swgq7CY4Re
+         Z259UXi3eEjCaQavakLv8mKadadS+rs9ZgYa0EqO1vuDjIYdtqAnoINY7gebx3jz3aZ0
+         7YkqT3ewCiyMiJSLN4m7sKToA0XWtCHNIuLUXjRoQ9x+I5hAM2PiDxlWb/+cocDsy0RH
+         xx8w==
+X-Gm-Message-State: APjAAAXawBW/+8+mShtA6q+NBSM8MbBcuyfjJIKiCURNabPQtNI3GDpM
+        f0hb4zwLS0EiIeGTBThBy0ITA0DQiPOsgsgs2PU=
+X-Google-Smtp-Source: APXvYqwirPrDDDsMco7I6kepiNjDwf87AqZbyPYaRT4gsoLYAygjHsKyh9v3e1zX7J05MHnONK4y+Dh0Ic32yh7e2fg=
+X-Received: by 2002:ac8:2dae:: with SMTP id p43mr45188807qta.304.1560254226737;
+ Tue, 11 Jun 2019 04:57:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org> <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+In-Reply-To: <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 11 Jun 2019 13:56:49 +0200
+Message-ID: <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
+        Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        Dan Williams <dcbw@redhat.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        syadagir@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 05:21:39PM +1000, Benjamin Herrenschmidt wrote:
-> So looking again ... all the registration/removal of edac devices seem
-> to already be protected by mutexes, so that's not a problem.
-> 
-> Tell me more about what specific races you think we might have here,
-> I'm not sure I follow...
+On Tue, Jun 11, 2019 at 10:12 AM Johannes Berg
+<johannes@sipsolutions.net> wrote:
 
-Well, as I said "it might work or it might set your cat on fire." For
-example, one of the error logging paths is edac_mc_handle_error() and
-that thing mostly operates using the *mci pointer which should be ok
-but then it calls the "trace_mc_event" tracepoint and I'd suppose that
-tracepoints can do lockless but I'm not sure.
+> > As I've made clear before, my work on this has been focused on the IPA transport,
+> > and some of this higher-level LTE architecture is new to me.  But it
+> > seems pretty clear that an abstracted WWAN subsystem is a good plan,
+> > because these devices represent a superset of what a "normal" netdev
+> > implements.
+>
+> I'm not sure I'd actually call it a superset. By themselves, these
+> netdevs are actually completely useless to the network stack, AFAICT.
+> Therefore, the overlap with netdevs you can really use with the network
+> stack is pretty small?
 
-So what needs to happen is for paths which weren't called by multiple
-EDAC agents in parallel but need to get called in parallel now due to
-ARM drivers wanting to do that, to get audited that they're safe.
+I think Alex meant the concept of having a type of netdev with a generic
+user space interface for wwan and similar to a wlan device, as I understood
+you had suggested as well, as opposed to a stacked device as in
+rmnet or those drivers it seems to be modeled after (vlan, ip tunnel, ...)/.
 
-Situation is easy if you have one platform driver where you can
-synchronize things in the driver but since you guys need to do separate
-drivers for whatever reason, then that would need to be done prior.
+> > HOWEVER I disagree with your suggestion that the IPA code should
+> > not be committed until after that is all sorted out.  In part it's
+> > for selfish reasons, but I think there are legitimate reasons to
+> > commit IPA now *knowing* that it will need to be adapted to fit
+> > into the generic model that gets defined and developed.  Here
+> > are some reasons why.
+>
+> I can't really argue with those, though I would point out that the
+> converse also holds - if we commit to this now, then we will have to
+> actually keep the API offered by IPA/rmnet today, so we cannot actually
+> remove the netdev again, even if we do migrate it to offer support for a
+> WWAN framework in the future.
 
-Makes more sense?
+Right. The interface to support rmnet might be simple enough to keep
+next to what becomes the generic interface, but it will always continue
+to be an annoyance.
 
--- 
-Regards/Gruss,
-    Boris.
+> > Second, the IPA code has been out for review recently, and has been
+> > the subject of some detailed discussion in the past few weeks.  Arnd
+> > especially has invested considerable time in review and discussion.
+> > Delaying things until after a better generic model is settled on
+> > (which I'm guessing might be on the order of months)
+>
+>
+> I dunno if it really has to be months. I think we can cobble something
+> together relatively quickly that addresses the needs of IPA more
+> specifically, and then extend later?
+>
+> But OTOH it may make sense to take a more paced approach and think
+> about the details more carefully than we have over in the other thread so far.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+I would hope that as soon as we can agree on a general approach, it
+would also be possible to merge a minimal implementation into the kernel
+along with IPA. Alex already mentioned that IPA in its current state does
+not actually support more than one data channel, so the necessary
+setup for it becomes even simpler.
+
+At the moment, the rmnet configuration in include/uapi/linux/if_link.h
+is almost trivial, with the three pieces of information needed being
+an IFLA_LINK to point to the real device (not needed if there is only
+one device per channel, instead of two), the IFLA_RMNET_MUX_ID
+setting the ID of the muxing channel (not needed if there is only
+one channel ?), a way to specify software bridging between channels
+(not useful if there is only one channel) and a few flags that I assume
+must match the remote end:
+
+#define RMNET_FLAGS_INGRESS_DEAGGREGATION         (1U << 0)
+#define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
+#define RMNET_FLAGS_INGRESS_MAP_CKSUMV4           (1U << 2)
+#define RMNET_FLAGS_EGRESS_MAP_CKSUMV4            (1U << 3)
+enum {
+        IFLA_RMNET_UNSPEC,
+        IFLA_RMNET_MUX_ID,
+        IFLA_RMNET_FLAGS,
+        __IFLA_RMNET_MAX,
+};
+#define IFLA_RMNET_MAX  (__IFLA_RMNET_MAX - 1)
+struct ifla_rmnet_flags {
+        __u32   flags;
+        __u32   mask;
+};
+
+> > Third, having the code upstream actually means the actual requirements
+> > for rmnet-over-IPA are clear and explicit.  This might not be a huge
+> > deal, but I think it's better to devise a generic WWAN scheme that
+> > can refer to actual code than to do so with assumptions about what
+> > will work with rmnet (and others).  As far as I know, the upstream
+> > rmnet has no other upstream back end; IPA will make it "real."
+>
+> Is that really true? I had previously been told that rmnet actually does
+> have use with a few existing drivers.
+>
+>
+> If true though, then I think this would be the killer argument *in
+> favour* of *not* merging this - because that would mean we *don't* have
+> to actually keep the rmnet API around for all foreseeable future.
+
+I would agree with that. From the code I can see no other driver
+including the rmnet protocol header (see the discussion about moving
+the header to include/linux in order to merge ipa), and I don't see
+any other driver referencing ETH_P_MAP either. My understanding
+is that any driver used by rmnet would require both, but they are
+all out-of-tree at the moment.
+
+        Arnd
