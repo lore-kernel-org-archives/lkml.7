@@ -2,47 +2,47 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08F3C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A57FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71572183F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D112177E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AtWq7JBO"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gLcApO+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407479AbfFKTVJ (ORCPT
+        id S2407494AbfFKTVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:21:09 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:37574 "EHLO
+        Tue, 11 Jun 2019 15:21:17 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:37604 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404789AbfFKTVI (ORCPT
+        by vger.kernel.org with ESMTP id S2404789AbfFKTVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:21:08 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        Tue, 11 Jun 2019 15:21:16 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 320AFC014E;
-        Tue, 11 Jun 2019 19:21:07 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1610FC014E;
+        Tue, 11 Jun 2019 19:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560280868; bh=zJxgoewnRS3428npvD4zrvQ1ZwW2ket2Gxy5yCj5CDY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AtWq7JBO/dTeSnt7uLt6+IbErp++i5RJeKjnmz9D6o9nNZqwrT9LJMe6HxBB9MWw7
-         nHXSYY716giBXIKCfHNvVOfZ28YpCHNpd+TcY95dUn+uee5oO5h3CerYehQ9Ws9PEM
-         vm/RiVgtA1xblQCZp/CCEi7g9f3NNyqiiSnG09+sjWZEOagELY/Q+sw6N/bJ/Lfx8W
-         uPHV8GErKVZlL2ctI4BI/p8kVVmR8vDk06FJkdnRrNZZ9qWFL96LsBUAAPgWFwDsKw
-         BwQ1PbYFVadppsuRa+tllYgoy/M4A9McxAUkQYRaXNN9WjRp/Jlo2ARuLVHgvuX4I8
-         /0/0umjb/HPTQ==
+        t=1560280876; bh=tHIJCAqTF+UPHZ5DtLIcgsUdC1LXsknXPaU2PJfFj5E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gLcApO+wN86rDTtu12tkhOzLIR/ojbxyBB39+/3vliFulgKmtv48gGR0k9IafoCM7
+         cVFQ4on43WaeutuTEU8zWRbLqC1oZy7dsne5SlcGatx37gNdRYEktZMmd9reRxlaVq
+         0o7bN/qKr/ee71pdjr0fivPjXK4NS17PhtwMoejCzgnT5DPgV36SW3CmGagHgjSwg5
+         e6dyQMwcISQgwdeZOP0LOKoMwu0IwzrqA1TFNmmeq99fcebMptoRQlVd0GvuK3dMJo
+         M9cJv+MW2NlffYV4Q/m9yS+h23g0QnzdUapVddKLl7lATnzLiOEsEmg3pOYi8uIQsU
+         x9qqekphIqOuA==
 Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 245F0A022F;
-        Tue, 11 Jun 2019 19:21:03 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6C18BA005D;
+        Tue, 11 Jun 2019 19:21:13 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id D16873F88F;
-        Tue, 11 Jun 2019 21:21:03 +0200 (CEST)
+        by de02.synopsys.com (Postfix) with ESMTP id 4AE9F3F896;
+        Tue, 11 Jun 2019 21:21:13 +0200 (CEST)
 From:   Luis Oliveira <Luis.Oliveira@synopsys.com>
 To:     mchehab@kernel.org, davem@davemloft.net,
         gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
@@ -51,76 +51,80 @@ To:     mchehab@kernel.org, davem@davemloft.net,
         devicetree@vger.kernel.org, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Joao.Pinto@synopsys.com, Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [v4 0/6] platform: dwc: Adding DesignWare MIPI CSI-2 Host and D-PHY
-Date:   Tue, 11 Jun 2019 21:20:49 +0200
-Message-Id: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+Subject: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2 Host
+Date:   Tue, 11 Jun 2019 21:20:50 +0200
+Message-Id: <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for Synopsys MIPI CSI-2 Host and MIPI D-PHY.
-The patch series include support for initialization/configuration of the
-DW MIPI CSI-2 controller and the DW MIPI D-PHY and both include a reference
-platform driver and the option to use platform data. The optional sysfs
-interface is used to re-configure the controller and the phy for
-prototyping purposes.
+From: Luis Oliveira <lolivei@synopsys.com>
 
-This series also documents the dt-bindings needed for the platform drivers.
-This will enable future SoCs to use this standard approach to Synopsys
-DesignWare CSI-2 and D-PHY and hopefully create a more clean environment.
+Add bindings for Synopsys DesignWare MIPI CSI-2 host.
 
-This series are following an old series submitted on v4.19.rc1 and are
-result of all the feedback received, please check the changelog per patch.
+Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+---
+Changelog
+v3-v4
+- remove "plat" from the block name @rob @laurent
+- remove "phy-names" when single-entry @rob
+- remove "snps,output-type" -> went to the driver config @laurent
 
-This was applied in: https://git.linuxtv.org/media_tree.git
-
-Luis Oliveira (6):
-  dt-bindings: media: Document bindings for DW MIPI CSI-2 Host
-  media: platform: dwc: Add MIPI CSI-2 controller driver
-  media: platform: dwc: Add MIPI CSI-2 platform data
-  dt-bindings: phy: Document the Synopsys MIPI DPHY Rx bindings
-  media: platform: dwc: Add DW MIPI DPHY Rx driver
-  media: platform: dwc: Add platform data support to D-Phy
-
- .../devicetree/bindings/media/snps,dw-csi.txt      |  41 ++
- .../devicetree/bindings/phy/snps,dw-dphy-rx.txt    |  29 +
- MAINTAINERS                                        |  11 +
- drivers/media/platform/Kconfig                     |   1 +
- drivers/media/platform/Makefile                    |   2 +
- drivers/media/platform/dwc/Kconfig                 |  41 ++
- drivers/media/platform/dwc/Makefile                |  15 +
- drivers/media/platform/dwc/dw-csi-plat.c           | 516 +++++++++++++++++
- drivers/media/platform/dwc/dw-csi-plat.h           |  97 ++++
- drivers/media/platform/dwc/dw-csi-sysfs.c          | 624 +++++++++++++++++++++
- drivers/media/platform/dwc/dw-dphy-plat.c          | 224 ++++++++
- drivers/media/platform/dwc/dw-dphy-rx.c            | 611 ++++++++++++++++++++
- drivers/media/platform/dwc/dw-dphy-rx.h            | 212 +++++++
- drivers/media/platform/dwc/dw-dphy-sysfs.c         | 232 ++++++++
- drivers/media/platform/dwc/dw-mipi-csi.c           | 569 +++++++++++++++++++
- drivers/media/platform/dwc/dw-mipi-csi.h           | 287 ++++++++++
- include/media/dwc/dw-csi-data.h                    |  26 +
- include/media/dwc/dw-dphy-data.h                   |  32 ++
- include/media/dwc/dw-mipi-csi-pltfrm.h             | 104 ++++
- 19 files changed, 3674 insertions(+)
+ .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi.txt
- create mode 100644 Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
- create mode 100644 drivers/media/platform/dwc/Kconfig
- create mode 100644 drivers/media/platform/dwc/Makefile
- create mode 100644 drivers/media/platform/dwc/dw-csi-plat.c
- create mode 100644 drivers/media/platform/dwc/dw-csi-plat.h
- create mode 100644 drivers/media/platform/dwc/dw-csi-sysfs.c
- create mode 100644 drivers/media/platform/dwc/dw-dphy-plat.c
- create mode 100644 drivers/media/platform/dwc/dw-dphy-rx.c
- create mode 100644 drivers/media/platform/dwc/dw-dphy-rx.h
- create mode 100644 drivers/media/platform/dwc/dw-dphy-sysfs.c
- create mode 100644 drivers/media/platform/dwc/dw-mipi-csi.c
- create mode 100644 drivers/media/platform/dwc/dw-mipi-csi.h
- create mode 100644 include/media/dwc/dw-csi-data.h
- create mode 100644 include/media/dwc/dw-dphy-data.h
- create mode 100644 include/media/dwc/dw-mipi-csi-pltfrm.h
 
+diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.txt b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+new file mode 100644
+index 0000000..613b7f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
+@@ -0,0 +1,41 @@
++Synopsys DesignWare CSI-2 Host controller
++
++Description
++-----------
++
++This HW block is used to receive image coming from an MIPI CSI-2 compatible
++camera.
++
++Required properties:
++- compatible		: shall be "snps,dw-csi"
++- reg			: physical base address and size of the device memory
++			  mapped registers;
++- interrupts		: DW CSI-2 Host interrupts
++- phys			: List of one PHY specifier (as defined in
++			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
++			  This PHY is a MIPI DPHY working in RX mode.
++- resets		: Reference to a reset controller (optional)
++
++The per-board settings:
++ - port sub-node describing a single endpoint connected to the camera as
++   described in video-interfaces.txt[1].
++
++Example:
++
++	csi2: csi2@3000 {
++		compatible = "snps,dw-csi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = < 0x03000 0x7FF>;
++		phys = <&mipi_dphy_rx>;
++		resets = <&dw_rst 1>;
++		interrupts = <2>;
++
++		port@0 {
++			reg = <0>;
++			csi_ep1: endpoint {
++				remote-endpoint = <&camera_1>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
 -- 
 2.7.4
 
