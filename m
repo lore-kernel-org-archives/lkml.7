@@ -2,182 +2,183 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B28AC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344A5C0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B892177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560278302;
-	bh=op+unP1g+6aUGXSass0EO2pdGGP4Nq3gma2bxnFko7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UD9yXf4V9WCDloDnaEChlQI7+/JvTNizZWXeudPgWCYzsak2tAy8Bhh8Rq+dpGun3
-	 0xUZtHCdikz63biOs7bsR/Tfeb7cI7LKLhY+rEeRgCT/Awdk37aj4GZpqDKZ7fIWjl
-	 zSeDUqoqhM2NSPPTaVxQ24tOpmgozBgudcjexjCs=
+	by mail.kernel.org (Postfix) with ESMTP id 0FAC0217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:39:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gtHTXVgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391847AbfFKSiV (ORCPT
+        id S2391880AbfFKSju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:38:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388207AbfFKSiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:38:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 226E521743;
-        Tue, 11 Jun 2019 18:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560278299;
-        bh=op+unP1g+6aUGXSass0EO2pdGGP4Nq3gma2bxnFko7M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ly5kCkPTmC6TeT8l+bNynWgf3TWDMqnvP1eknwgLW7uAtDbNAowHDFBLz0B9qNPOQ
-         RFJb9anzu0k96SWyB9vx9S7QTWECzL5y+z61xdxYuf09TJgr0QyDAN8Cff8EIyp+lQ
-         dx7r2cIFusvTLn2NinOArGRBnwwlUfIQmY4AsKKk=
-Date:   Tue, 11 Jun 2019 20:38:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tomas Winkler <tomas.winkler@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] mei: no need to check return value of debugfs_create
- functions
-Message-ID: <20190611183816.GA952@kroah.com>
-References: <20190611183357.GA32008@kroah.com>
+        Tue, 11 Jun 2019 14:39:50 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40310 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390376AbfFKSju (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:39:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so7440867pgm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:39:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zW6AynUQeh/d1MGikSw6rg9037amHgOpXgjZc/bYyo0=;
+        b=gtHTXVgSsCW+WzGSqP5jD5k72gd1VwNjkRGZ6kyTYVbl9OaWD2braqloLb++ZYFoaW
+         dbCaH+n3AgU4PKdA57lePWtbt4HHHDl1ElnATdqGqXSF9yVrYo76JPhNKS088vzV7GDN
+         1CJ9ag9coDwUukCnp8mQHRFG78or4KyQfmzxd4kqOkRAl4hT/CRoKK6A3i6xzLoNwdvE
+         62v61Cz/xHioGQvUIEttFjfCFwI47zsJvlj8yjxAo4u0cGbHPDcxEQxUy941mb/k5jTG
+         8Joplh3e5y46cHQeocodgZMMxMEeFdefwVPuwtV3pGGphvTDuMsWt0xAmXTH9035qn7M
+         KyYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zW6AynUQeh/d1MGikSw6rg9037amHgOpXgjZc/bYyo0=;
+        b=FUpjjH2adp89fEvLD4vhOAPBepHobcl7fiCUZ6pHT/I/rBe12ZIHkwXv0M6pJ+qmpe
+         5peJ4r5AG+OKWW76y3nN7JPjWM4d9ONvJYLVYCivmeDjSglGGGKYT8hdCuQIjgCbjIhG
+         Bi1SygSALC3iBmdxQFd9J2le8GhoiWqC9YVRI6w/1+mU3NYWltAs7dPtdkMgPwcWaoem
+         aocbE00Y5EJSz0ki77MLYp75HMxLnBo3d0CZedH2MD2/j3V+hoUWQT4KsHz+w0vDV+mB
+         /x9FqSYsQAFPxbHlWHqeCNbp9FB4Nh8bCq9EWL5w+PKeC/ePugasilQr0irXAnf7Lohb
+         igFg==
+X-Gm-Message-State: APjAAAWUyzIiqfi1TM7h7Rgz6BQwSjL90W3amBOCXYlyoB81fo81Ri/r
+        paqzmrF2LQ6pp/ShcNQa0ATQKQ==
+X-Google-Smtp-Source: APXvYqy9pS4xgDWNZze0LOrbLEksodwMGCOdwtad24aELFBqknW6/q8wGUEyNWy9Ls67LZYFBEhhgw==
+X-Received: by 2002:a62:e511:: with SMTP id n17mr73761345pff.181.1560278388728;
+        Tue, 11 Jun 2019 11:39:48 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y22sm23485517pfo.39.2019.06.11.11.39.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 11:39:48 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 11:39:45 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>, alokc@codeaurora.org,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        wsa+renesas@sang-engineering.com,
+        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Message-ID: <20190611183945.GP4814@minitux>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190610084213.1052-4-lee.jones@linaro.org>
+ <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
+ <20190610085542.GL4797@dell>
+ <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
+ <20190610092245.GN4797@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190611183357.GA32008@kroah.com>
+In-Reply-To: <20190610092245.GN4797@dell>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+On Mon 10 Jun 02:22 PDT 2019, Lee Jones wrote:
 
-Cc: Tomas Winkler <tomas.winkler@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v2: break the patch up properly
+> On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
+> 
+> > On Mon, 10 Jun 2019 at 10:55, Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > On Mon, 10 Jun 2019, Ard Biesheuvel wrote:
+> > >
+> > > > On Mon, 10 Jun 2019 at 10:42, Lee Jones <lee.jones@linaro.org> wrote:
+> > > > >
+> > > > > This patch provides basic support for booting with ACPI instead
+> > > > > of the currently supported Device Tree.  When doing so there are a
+> > > > > couple of differences which we need to taken into consideration.
+> > > > >
+> > > > > Firstly, the SDM850 ACPI tables omit information pertaining to the
+> > > > > 4 reserved GPIOs on the platform.  If Linux attempts to touch/
+> > > > > initialise any of these lines, the firmware will restart the
+> > > > > platform.
+> > > > >
+> > > > > Secondly, when booting with ACPI, it is expected that the firmware
+> > > > > will set-up things like; Regulators, Clocks, Pin Functions, etc in
+> > > > > their ideal configuration.  Thus, the possible Pin Functions
+> > > > > available to this platform are not advertised when providing the
+> > > > > higher GPIOD/Pinctrl APIs with pin information.
+> > > > >
+> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > >
+> > > > For the ACPI probing boilerplate:
+> > > > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > >
+> > > > *However*, I really don't like hardcoding reserved GPIOs like this.
+> > > > What guarantee do we have that each and every ACPI system
+> > > > incorporating the QCOM0217 device has the exact same list of reserved
+> > > > GPIOs?
+> > >
+> > > This is SDM845 specific, so the chances are reduced.
+> > 
+> > You don't know that.
+> 
+> All the evidence I have to hand tells me that this is the case.  Even
+> on very closely related variants Qualcomm uses different H/W blocks
+> for GPIO.
+> 
 
- drivers/misc/mei/debugfs.c | 47 +++++++++-----------------------------
- drivers/misc/mei/main.c    |  8 +------
- drivers/misc/mei/mei_dev.h |  7 ++----
- 3 files changed, 14 insertions(+), 48 deletions(-)
+I presume with this you mean that e.g. the 835 laptops doesn't sport a
+QCOM0217?
 
-diff --git a/drivers/misc/mei/debugfs.c b/drivers/misc/mei/debugfs.c
-index 0970142bcace..df6bf8b81936 100644
---- a/drivers/misc/mei/debugfs.c
-+++ b/drivers/misc/mei/debugfs.c
-@@ -233,47 +233,22 @@ void mei_dbgfs_deregister(struct mei_device *dev)
-  *
-  * @dev: the mei device structure
-  * @name: the mei device name
-- *
-- * Return: 0 on success, <0 on failure.
-  */
--int mei_dbgfs_register(struct mei_device *dev, const char *name)
-+void mei_dbgfs_register(struct mei_device *dev, const char *name)
- {
--	struct dentry *dir, *f;
-+	struct dentry *dir;
- 
- 	dir = debugfs_create_dir(name, NULL);
--	if (!dir)
--		return -ENOMEM;
--
- 	dev->dbgfs_dir = dir;
- 
--	f = debugfs_create_file("meclients", S_IRUSR, dir,
--				dev, &mei_dbgfs_fops_meclients);
--	if (!f) {
--		dev_err(dev->dev, "meclients: registration failed\n");
--		goto err;
--	}
--	f = debugfs_create_file("active", S_IRUSR, dir,
--				dev, &mei_dbgfs_fops_active);
--	if (!f) {
--		dev_err(dev->dev, "active: registration failed\n");
--		goto err;
--	}
--	f = debugfs_create_file("devstate", S_IRUSR, dir,
--				dev, &mei_dbgfs_fops_devstate);
--	if (!f) {
--		dev_err(dev->dev, "devstate: registration failed\n");
--		goto err;
--	}
--	f = debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
--				&dev->allow_fixed_address,
--				&mei_dbgfs_fops_allow_fa);
--	if (!f) {
--		dev_err(dev->dev, "allow_fixed_address: registration failed\n");
--		goto err;
--	}
--	return 0;
--err:
--	mei_dbgfs_deregister(dev);
--	return -ENODEV;
-+	debugfs_create_file("meclients", S_IRUSR, dir, dev,
-+			    &mei_dbgfs_fops_meclients);
-+	debugfs_create_file("active", S_IRUSR, dir, dev,
-+			    &mei_dbgfs_fops_active);
-+	debugfs_create_file("devstate", S_IRUSR, dir, dev,
-+			    &mei_dbgfs_fops_devstate);
-+	debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
-+			    &dev->allow_fixed_address,
-+			    &mei_dbgfs_fops_allow_fa);
- }
- 
-diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
-index ad02097d7fee..f894d1f8a53e 100644
---- a/drivers/misc/mei/main.c
-+++ b/drivers/misc/mei/main.c
-@@ -984,16 +984,10 @@ int mei_register(struct mei_device *dev, struct device *parent)
- 		goto err_dev_create;
- 	}
- 
--	ret = mei_dbgfs_register(dev, dev_name(clsdev));
--	if (ret) {
--		dev_err(clsdev, "cannot register debugfs ret = %d\n", ret);
--		goto err_dev_dbgfs;
--	}
-+	mei_dbgfs_register(dev, dev_name(clsdev));
- 
- 	return 0;
- 
--err_dev_dbgfs:
--	device_destroy(mei_class, devno);
- err_dev_create:
- 	cdev_del(&dev->cdev);
- err_dev_add:
-diff --git a/drivers/misc/mei/mei_dev.h b/drivers/misc/mei/mei_dev.h
-index fca832fcac57..f71a023aed3c 100644
---- a/drivers/misc/mei/mei_dev.h
-+++ b/drivers/misc/mei/mei_dev.h
-@@ -718,13 +718,10 @@ bool mei_hbuf_acquire(struct mei_device *dev);
- bool mei_write_is_idle(struct mei_device *dev);
- 
- #if IS_ENABLED(CONFIG_DEBUG_FS)
--int mei_dbgfs_register(struct mei_device *dev, const char *name);
-+void mei_dbgfs_register(struct mei_device *dev, const char *name);
- void mei_dbgfs_deregister(struct mei_device *dev);
- #else
--static inline int mei_dbgfs_register(struct mei_device *dev, const char *name)
--{
--	return 0;
--}
-+static inline void mei_dbgfs_register(struct mei_device *dev, const char *name) {}
- static inline void mei_dbgfs_deregister(struct mei_device *dev) {}
- #endif /* CONFIG_DEBUG_FS */
- 
--- 
-2.22.0
+> > > However, if another SDM845 variant does crop up, also lacking the
+> > > "gpios" property, we will have to find another differentiating factor
+> > > between them and conduct some matching.  What else can you do with
+> > > platforms supporting non-complete/non-forthcoming ACPI tables?
+> > >
+> > 
+> > Either we don't touch any pins at all if they are not referenced
+> > explicitly anywhere
+> 
+> I guess this would require an API change, which is out of scope of
+> this patch-set.  Happy to change this implementation later if the
+> subsystem allows for it though.
+> 
 
+Last time we discussed this the _only_ offender was the loop issuing a
+get_direction() on all descs towards the end of
+gpiochip_add_data_with_key()
+
+> > or we parse the PEP tables, which seem to cover
+> > some of this information (if Bjorn's analysis is correct)
+> 
+> Maybe someone can conduct some further work on this when we start to
+> enable or write a driver for the PEP (Windows-compatible System Power
+> Management Controller).  The tables for the PEP look pretty complex,
+> so this task would be extremely difficult if not impossible without
+> Qualcomm's help.  I wouldn't even know how to extrapolate this
+> information from the tables.
+> 
+
+Yeah that looks quite different, so I'm not sure how to tie that into
+the current driver. But I'm fine with adding this for now, if PEP brings
+a different approach we can always rip this out later.
+
+Regards,
+Bjorn
+
+> > (if Bjorn's analysis is correct)
+> 
+> Bjorn is about to provide his Reviewed-by for this implementation.
+> 
+> -- 
+> Lee Jones [?????????]
+> Linaro Services Technical Lead
+> Linaro.org ??? Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
