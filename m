@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5EFC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9EFC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0B221743
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4032208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BAPbViol"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HolacF8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404319AbfFKHe2 (ORCPT
+        id S2404399AbfFKHea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:34:28 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43226 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404100AbfFKHeY (ORCPT
+        Tue, 11 Jun 2019 03:34:30 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46477 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404276AbfFKHe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:34:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so6855289pfg.10;
-        Tue, 11 Jun 2019 00:34:24 -0700 (PDT)
+        Tue, 11 Jun 2019 03:34:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 81so6846676pfy.13;
+        Tue, 11 Jun 2019 00:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Oho9VDmi/+Ex8ie4fSltHPSm+wJ4YXOIowBWuLU3JVE=;
-        b=BAPbViolh2+1DB7kE8s+euWUARkmRMk/kCv8gbEO1jnhjQ8MpVl5pH8NqFG8vPO4fk
-         Vc8duC6GwAr3n++X1X4dwaESGagzKKSeAeUubRDU4nQD84hWsCZvusGveW2ioz0KSn2P
-         0eolLaXzIKIHEfcoTWOBGwbbWNYE+JEaD1pZrQ4ETutN1fv+dJRdl801pp48ObGrBDoT
-         1oVnvCvDb6Q3VF0NcmU3dIMtePvr5OSvkfjXUiiUWDKZAfLa1aDfvQVKLsUZnOM+2Xp7
-         BmRrS9TK74ZamR6OBe8Vggit8EkwoyvyURT4Gk3CWMPdQPeqeQYm36J2P454+oLooI21
-         BHxg==
+        bh=nkR2CGLhyvHwMw1SHqXyTIaVd8ya3H+LSY4Ah0z2vFw=;
+        b=HolacF8+aWi/c2mW5fFH3k2zm0ZhV9gAVHvPJCwLnkh0OQY1tOHbTZC1WkHcaBJbc6
+         fzUJX6lnIZT9bmJCQHQ+rg6OqeANyWZUmRCnpSLMwrZIqDw6O7nm6zf0ZBQ19oel8WAW
+         dpPaoLDsgBHjU0pHerFyNLgkj08SHbVn8XdgOhzmK3QF9EvQK1t6kdY2plmgAsd703KA
+         nk5FrQ3VkEEJAG/X5vQ/QZ2H60aDITLOfAiQL4QjC9BG4LmKZzete5lnqWEQiE3Y64Nk
+         ApD+ePC75PYKnLbk3OF2PuNY/R578NLEDfNQawS3ULhHd3Kiz7wWakrqLq2R9Ls1mlK2
+         SUaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Oho9VDmi/+Ex8ie4fSltHPSm+wJ4YXOIowBWuLU3JVE=;
-        b=FodrBAS64IPWZrwj3Vlwh8/djJHHRJ/ROHLad7Y1sG2iMKz+mDpWJjPS9OwKebPMe1
-         I7TBQoY6fSi1jXZjYjjZADGdL7qBjCjGaN0jvagCtAZzIAJrchAdyay8keK9W4CJbyk1
-         IImFCHZ82nJrOraM17nVejD+2BA+/KMo7g52YJa+AilGTSPuDaAb7DWBxGk2rlHBdoAG
-         yFcGCt6o5lxD4AUMarfSDa3uBQ11PKd1M6BzvIn7shY+VIeW3NU9uiD1Qi34iIN60BqD
-         z+2VEaARwJgdUyekJpPGTn1gPyFCfYWpzxcv572HMVtmjtJtkJahbRp8Zh/RnqmWPAdJ
-         lTOA==
-X-Gm-Message-State: APjAAAVnDlZlXSkGldEuUJLc0wu9oMQFTfrgXJGDYu34PPT00aqiUinC
-        58vM2jjEUlZ3+eOPvMnq3EfHvbGR
-X-Google-Smtp-Source: APXvYqyTx+O9CVxwMsBbFupmHAMhhliGcrexIjAX0dpC5QLSDkitY5tN3ZHDS06uBcxddhvBLylxeg==
-X-Received: by 2002:a63:5961:: with SMTP id j33mr2859406pgm.89.1560238463691;
-        Tue, 11 Jun 2019 00:34:23 -0700 (PDT)
+        bh=nkR2CGLhyvHwMw1SHqXyTIaVd8ya3H+LSY4Ah0z2vFw=;
+        b=cAg0DxqH4ji23qu+5biK4rP4JzxkgKAV6oDQrd/uP4r1qjXkd3NdXZZMFJha+b+mpk
+         ZNU9Q78FYij5+slBOGH5hwmMrT8m2WAWGSUl3+Ci3Rf+VB0RgnCEplmao4ZGuSsy62Dd
+         KsbjNL/Jk4e6ZSRnNlW+kZFV/FOkrb7ShIKAdZYfuwBRc0UUZ27xdEioOZ//7N+ksxWP
+         pXsBncdSBf6DlMKCwugO9A1fTnqbq2nISOvme1vay2rOENiIV5akGjOC4Gvvc25QnG8M
+         mXZavWJAnKkL+CopZm+O++8PKYP3RI2BCMENNCpBVIz6jaYdo+7zgSQ5EL/BLTqBE8c8
+         Lozg==
+X-Gm-Message-State: APjAAAUeyFiWHeHqoXlzCd7YU04bBi4tQnxDtjMHO/JRysiIohu2CN3D
+        zyNZfvIe93PmdRXcYHJi0X4+10S8
+X-Google-Smtp-Source: APXvYqwvFiG1DTuESxZ7KpM5wcg/He8219TzmlFZ/vrU0uwYMsYekV+CPwzGXhazqWtR8BrCOdWVGQ==
+X-Received: by 2002:a17:90a:a593:: with SMTP id b19mr5736300pjq.31.1560238467579;
+        Tue, 11 Jun 2019 00:34:27 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id 14sm6860800pfj.36.2019.06.11.00.34.21
+        by smtp.googlemail.com with ESMTPSA id 14sm6860800pfj.36.2019.06.11.00.34.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 11 Jun 2019 00:34:23 -0700 (PDT)
+        Tue, 11 Jun 2019 00:34:27 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH v2 1/5] KVM: X86: Dynamic allocate core residency msr state
-Date:   Tue, 11 Jun 2019 15:34:07 +0800
-Message-Id: <1560238451-19495-2-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH v2 3/5] KVM: X86: setup residency msrs during vCPU creation
+Date:   Tue, 11 Jun 2019 15:34:09 +0800
+Message-Id: <1560238451-19495-4-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560238451-19495-1-git-send-email-wanpengli@tencent.com>
 References: <1560238451-19495-1-git-send-email-wanpengli@tencent.com>
@@ -78,62 +78,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-Dynamic allocate core residency msr state. MSR_CORE_C1_RES is unreadable 
-except for ATOM platform, so it is ignore here.
+To setup core residency msrs during vCPU creation. Allowing guest reads 
+CORE cstate when exposing host CPU power management capabilities to the 
+guest. PKG cstate is restricted currently to avoid a guest to get the 
+whole package information in multi-tenant scenario.
 
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/include/asm/kvm_host.h | 11 +++++++++++
- arch/x86/kvm/vmx/vmx.c          |  5 +++++
- 2 files changed, 16 insertions(+)
+ arch/x86/kvm/vmx/vmx.c |  2 ++
+ arch/x86/kvm/x86.c     | 21 +++++++++++++++++++++
+ arch/x86/kvm/x86.h     |  5 +++++
+ 3 files changed, 28 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 15e973d..bd615ee 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -538,6 +538,15 @@ struct kvm_vcpu_hv {
- 	cpumask_t tlb_flush;
- };
- 
-+#define NR_CORE_RESIDENCY_MSRS 3
-+
-+struct kvm_residency_msr {
-+	s64 value;
-+	u32 index;
-+	bool delta_from_host;
-+	bool count_with_host;
-+};
-+
- struct kvm_vcpu_arch {
- 	/*
- 	 * rip and regs accesses must go through
-@@ -785,6 +794,8 @@ struct kvm_vcpu_arch {
- 
- 	/* AMD MSRC001_0015 Hardware Configuration */
- 	u64 msr_hwcr;
-+
-+	struct kvm_residency_msr *core_cstate_msrs;
- };
- 
- struct kvm_lpage_info {
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 0b241f4..4dc2459 100644
+index 4dc2459..2ebaa90 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6658,6 +6658,11 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
- 			goto free_vmcs;
- 	}
+@@ -6663,6 +6663,8 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	if (!vmx->vcpu.arch.core_cstate_msrs)
+ 		goto free_vmcs;
  
-+	vmx->vcpu.arch.core_cstate_msrs = kzalloc(sizeof(struct kvm_residency_msr) *
-+		NR_CORE_RESIDENCY_MSRS, GFP_KERNEL_ACCOUNT);
-+	if (!vmx->vcpu.arch.core_cstate_msrs)
-+		goto free_vmcs;
++	kvm_core_residency_setup(&vmx->vcpu);
 +
  	if (nested)
  		nested_vmx_setup_ctls_msrs(&vmx->nested.msrs,
  					   vmx_capability.ept,
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 841a794..36905cd 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1376,6 +1376,16 @@ void kvm_residency_write(struct kvm_vcpu *vcpu,
+ }
+ EXPORT_SYMBOL_GPL(kvm_residency_write);
+ 
++static void kvm_residency_setup(struct kvm_vcpu *vcpu, struct kvm_residency_msr *msr,
++		u16 index, bool count_with_host)
++{
++	/* Preserve value on calls after the first */
++	u64 value = msr->index ? kvm_residency_read(vcpu, msr->index) : 0;
++	msr->delta_from_host = msr->count_with_host = count_with_host;
++	msr->index = index;
++	kvm_residency_write(vcpu, msr->index, value);
++}
++
+ /*
+  * Writes msr value into into the appropriate "register".
+  * Returns 0 on success, non-0 otherwise.
+@@ -3311,6 +3321,17 @@ static bool need_emulate_wbinvd(struct kvm_vcpu *vcpu)
+ 	return kvm_arch_has_noncoherent_dma(vcpu->kvm);
+ }
+ 
++void kvm_core_residency_setup(struct kvm_vcpu *vcpu)
++{
++	kvm_residency_setup(vcpu, &vcpu->arch.core_cstate_msrs[0],
++		MSR_CORE_C3_RESIDENCY, kvm_mwait_in_guest(vcpu->kvm));
++	kvm_residency_setup(vcpu, &vcpu->arch.core_cstate_msrs[1],
++		MSR_CORE_C6_RESIDENCY, kvm_mwait_in_guest(vcpu->kvm));
++	kvm_residency_setup(vcpu, &vcpu->arch.core_cstate_msrs[2],
++		MSR_CORE_C7_RESIDENCY, kvm_mwait_in_guest(vcpu->kvm));
++}
++EXPORT_SYMBOL_GPL(kvm_core_residency_setup);
++
+ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ {
+ 	/* Address WBINVD may be executed by guest */
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index dc61dbd..123fc8d 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -284,6 +284,11 @@ bool kvm_vector_hashing_enabled(void);
+ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
+ 			    int emulation_type, void *insn, int insn_len);
+ 
++u64 kvm_residency_read(struct kvm_vcpu *vcpu, u32 msr_index);
++void kvm_residency_write(struct kvm_vcpu *vcpu,
++				u32 msr_index, u64 value);
++void kvm_core_residency_setup(struct kvm_vcpu *vcpu);
++
+ #define KVM_SUPPORTED_XCR0     (XFEATURE_MASK_FP | XFEATURE_MASK_SSE \
+ 				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
+ 				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
 -- 
 2.7.4
 
