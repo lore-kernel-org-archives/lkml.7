@@ -2,133 +2,121 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DFAC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FDAC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19867217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B77B21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560279821;
-	bh=gUArbViGRfQEMwvP3DCJGr920LUd5bo6dTd9erfL3Xk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uIYPh3TdrfbYCbJqNB5fLumK7Bu/bj4SjFoHKBJmJI9EUyPT6a2nRtmdN+nTWLRrJ
-	 GF8s9m2IlyECjuglofaY8gBOu9OZk9JCrWvFDtjSkUhaFxlBjJUPKzf/lZmG89GvMb
-	 P1x2SXh1rGCep/NwvlXa9ZGIf/VkWJ14BCtTShjA=
+	s=default; t=1560279824;
+	bh=cb4/dALfHRRtn6DS4HnGVSfPUKhRnIT/ZtIWLvfB6b4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WdyZNnGvoJYkjzOcqWocZ/OsAjWIkvBS76l2TfiDOSJ7zY6/txLq/1aCvLB+lrlIx
+	 p7LqGXRfkNOQvR8JgqBTrFoBHy1S5ZBvk7ChHBYCRbdC/p/IDd1tfpyJJDuLU1wrVz
+	 k/Z3gQrTVMK2EX+72Ipq9f6gviKFt9fEbhwjiXbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405086AbfFKTDk (ORCPT
+        id S2392591AbfFKTDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392579AbfFKTDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Jun 2019 15:03:39 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFF4F2184C;
-        Tue, 11 Jun 2019 19:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279819;
-        bh=gUArbViGRfQEMwvP3DCJGr920LUd5bo6dTd9erfL3Xk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILR3dHCl/lBVccYgCKrBaqiVkYrfZZL6DK0w3/f1dlwPxIVoHWPV43irFZk236Zvo
-         CRba+wZq51B2cFewNoijXgt/wldOe5RdfyLIzwSdGsCYen70RN0sWn8j8VUzzS9Yh8
-         Q464NITBvUxAXY6mdIpMyMLcjoAGW/7nOsANQC14=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 59/85] perf data: Fix perf.data documentation for HEADER_CPU_TOPOLOGY
-Date:   Tue, 11 Jun 2019 15:58:45 -0300
-Message-Id: <20190611185911.11645-60-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
-References: <20190611185911.11645-1-acme@kernel.org>
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44563 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392561AbfFKTDh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:03:37 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so7999645pfe.11;
+        Tue, 11 Jun 2019 12:03:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TINH5Zv9sdfI5yGkKfukd7zEs5gc5SFmFE6Rm33jogw=;
+        b=sTbvzg1IBs2bb8cjreY5cBasSaH+2pFI5pjQ35wagL+18kPnXLznCC9TyL/tH+M4hP
+         q8EzAGJHmuFs3cTKR1D9zefrPRRKJAU8/AOrhIRoejq49CWhnsGswe/IoyW+3pLcVrZA
+         idoBHD6D/SGQjCHVkxMcAuSa0qZ0UYf6PuryCCl6KxGiUpZO9zLoZB/vD1r7/EDrA+xH
+         AVkmXuIzCTP0+FrXVOmES1ohd6KLAjLFxCArXYNa/4QqLSZCec9i31IIvqj3lneR3rck
+         uR0BMYPVVBv3BGDTkrSUVMI/X2O/9KCPcGFl11pf9di+5Ug8qf/qOIO7Nn2RveaTofno
+         9dig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TINH5Zv9sdfI5yGkKfukd7zEs5gc5SFmFE6Rm33jogw=;
+        b=kJdY8QEZIURUZo4HI1IMAJ31YHhLhQOT0JyIu/z4oYMmnbIh1Ilp/5D9gBJ2+bbLqB
+         5Q22m9UZxg/2wjx18KoAlemA0HzDVaq3nVT+9VyDgdSYq1SK5N7ebdKeg+Rt1lMZzobi
+         hGcB+RMX6DktW7sarEbF71v5XQAxCVDAH8yz5fQK69APpzVbgkbK/ZA1O6BNM9zoRs6+
+         0hcoCcEr1vSsYC71cLuW5tIRcPV5oDbmICNsHFaZ0bez9YuMImM5ODYQz4uKJyzSb+ag
+         r5jSLR6nG3BjIJuDbVMpdpvVAzkhAyUntQu9wtLj+V1Fh3ZBp5SWZ7sANUrMk91gklD7
+         gzrA==
+X-Gm-Message-State: APjAAAVS0gNjm+B+VuYHMOfqp2tgCNkDmwHjfOTQ+qEzcxJQyzMSOBVO
+        WBXvuDv6lyEDMAXDFqdXWXg=
+X-Google-Smtp-Source: APXvYqyurkJYg+ONU24NoQH+aOpKIHaCcBkqNsSi7eK6I99H2KHZq5aZwOzTKoSX9JiYUzkROPsUWw==
+X-Received: by 2002:a62:6d47:: with SMTP id i68mr82880905pfc.189.1560279816496;
+        Tue, 11 Jun 2019 12:03:36 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:1677])
+        by smtp.gmail.com with ESMTPSA id y22sm12843821pgj.38.2019.06.11.12.03.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 12:03:35 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 12:03:32 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v3 05/33] docs: cgroup-v1: convert docs to ReST and
+ rename to *.rst
+Message-ID: <20190611190332.GI3341036@devbig004.ftw2.facebook.com>
+References: <cover.1560045490.git.mchehab+samsung@kernel.org>
+ <79865a4248ce5b042106e5ec69bb493292a8d392.1560045490.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79865a4248ce5b042106e5ec69bb493292a8d392.1560045490.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Sat, Jun 08, 2019 at 11:26:55PM -0300, Mauro Carvalho Chehab wrote:
+> Convert the cgroup-v1 files to ReST format, in order to
+> allow a later addition to the admin-guide.
+> 
+> The conversion is actually:
+>   - add blank lines and identation in order to identify paragraphs;
+>   - fix tables markups;
+>   - add some lists markups;
+>   - mark literal blocks;
+>   - adjust title markups.
+> 
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-The 'die' info isn't in the same array as core and socket ids, and we
-missed the 'dies' string list, that comes right after the 'core' +
-'socket' id variable length array, followed by the VLA for the dies.
+Acked-by: Tejun Heo <tj@kernel.org>
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: c9cb12c5ba08 ("perf header: Add die information in CPU topology")
-Link: https://lkml.kernel.org/n/tip-nubi6mxp2n8ofvlx7ph6k3h6@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- .../Documentation/perf.data-file-format.txt   | 29 ++++++++++++++-----
- 1 file changed, 22 insertions(+), 7 deletions(-)
+Please feel free to route with the rest of the series.  If you want
+the patch to be routed through the cgroup tree, please let me know.
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index de78183f6881..5f54feb19977 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -151,20 +151,35 @@ struct {
- 
- 	HEADER_CPU_TOPOLOGY = 13,
- 
--String lists defining the core and CPU threads topology.
--The string lists are followed by a variable length array
--which contains core_id, die_id (for x86) and socket_id of each cpu.
--The number of entries can be determined by the size of the
--section minus the sizes of both string lists.
--
- struct {
-+	/*
-+	 * First revision of HEADER_CPU_TOPOLOGY
-+	 *
-+	 * See 'struct perf_header_string_list' definition earlier
-+	 * in this file.
-+	 */
-+
-        struct perf_header_string_list cores; /* Variable length */
-        struct perf_header_string_list threads; /* Variable length */
-+
-+       /*
-+        * Second revision of HEADER_CPU_TOPOLOGY, older tools
-+        * will not consider what comes next
-+        */
-+
-        struct {
- 	      uint32_t core_id;
--	      uint32_t die_id;
- 	      uint32_t socket_id;
-        } cpus[nr]; /* Variable length records */
-+       /* 'nr' comes from previously processed HEADER_NRCPUS's nr_cpu_avail */
-+
-+        /*
-+	 * Third revision of HEADER_CPU_TOPOLOGY, older tools
-+	 * will not consider what comes next
-+	 */
-+
-+	struct perf_header_string_list dies; /* Variable length */
-+	uint32_t die_id[nr_cpus_avail]; /* from previously processed HEADER_NR_CPUS, VLA */
- };
- 
- Example:
+Thanks.
+
 -- 
-2.20.1
-
+tejun
