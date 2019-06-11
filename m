@@ -7,37 +7,40 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2172C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89A5C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39E220657
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0C220657
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RW9q9ajs"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JR9/49oV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387903AbfFKKxM (ORCPT
+        id S2387963AbfFKKyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:53:12 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:6089 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387489AbfFKKxM (ORCPT
+        Tue, 11 Jun 2019 06:54:20 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3975 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387489AbfFKKyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:53:12 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cff88180000>; Tue, 11 Jun 2019 03:53:12 -0700
+        Tue, 11 Jun 2019 06:54:20 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cff88580004>; Tue, 11 Jun 2019 03:54:17 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 11 Jun 2019 03:53:11 -0700
+  Tue, 11 Jun 2019 03:54:19 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 11 Jun 2019 03:53:11 -0700
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Jun
- 2019 10:51:44 +0000
+        by hqpgpgate102.nvidia.com on Tue, 11 Jun 2019 03:54:19 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Jun
+ 2019 10:52:37 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Jun
+ 2019 10:52:16 +0000
 Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
  (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 11 Jun 2019 10:51:44 +0000
+ Transport; Tue, 11 Jun 2019 10:51:55 +0000
 Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cff87a80004>; Tue, 11 Jun 2019 03:51:23 -0700
+        id <B5cff87b30001>; Tue, 11 Jun 2019 03:51:34 -0700
 From:   Bitan Biswas <bbiswas@nvidia.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Thierry Reding <treding@nvidia.com>,
@@ -49,10 +52,10 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
 CC:     Shardar Mohammed <smohammed@nvidia.com>,
         Sowjanya Komatineni <skomatineni@nvidia.com>,
         Mantravadi Karthik <mkarthik@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Subject: [PATCH V5 2/7] i2c: tegra: remove unnecessary variable init
-Date:   Tue, 11 Jun 2019 03:51:09 -0700
-Message-ID: <1560250274-18499-2-git-send-email-bbiswas@nvidia.com>
+        "Bitan Biswas" <bbiswas@nvidia.com>
+Subject: [PATCH V5 5/7] i2c: tegra: fix msleep warning
+Date:   Tue, 11 Jun 2019 03:51:12 -0700
+Message-ID: <1560250274-18499-5-git-send-email-bbiswas@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
 References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
@@ -60,61 +63,46 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560250392; bh=XYTp22GPT3LhHXj00jg3jwzFkyK0+QPueRkDH3BlZZQ=;
+        t=1560250457; bh=Qae36JSCpcTdcklRmVE7XBNUMoQSDDFmpYRBvHliYh0=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=RW9q9ajsUemikCAiNJ+g99D/dIfHmz/Tbcp1WJOSahyTlc7dyBa1KJKovJxMiB+Je
-         FK0KIYNGYAEzDU/ipditPUefalm/Z41cFvP3Pykyqljj9sRtwFkqzUgj9+wS55zMuQ
-         D9Yjn7yXAtahOqYXfmr6ceHtdcd5jxAgR9+MM6Ns5y2jzCPlpkmcX/rfJ2YiIV5pxH
-         CaBqabdJ4qI93d7gXCoQ9NRRpCUvfPLv6mCr6ZolszelbiMSahgAiJusTtfr5mqZbi
-         Kko3eq7Q3PaEQxHJn9fy0BD83bWkgcgijvySdQepO5T2bqddMQxgdrndZPBRESe9DP
-         XjOz5gYaaf6Ag==
+        b=JR9/49oVDCxWGSptD7JxMxVU1M7CXJt9lnlYu+2CIeFrMTbY6TEVyukW6Z/gzinOZ
+         //JIGXHY6VkutdF2U1wjrRxkMx3ESB9GTsQODS9dMgiQs1ZSZsb2jF+/baqK9+r2L3
+         D/x4Sktg4YxEAn/s0nuCOtG8kyDvqk0Rx33GNv0MFfd94s/HCE0D6dLIdQOVstycS7
+         aNEDZWw7Qkt67RP7PC07rwG8l8nvkcf5A0OgLacqMgjCM1eh1Y84PFucJU9zSsKstZ
+         Q8ur8dtxaYrOd4P3VPhqQh0YCeR+IMyPJL6zCvg6HJeJ3LSmjdlapMwC54HDI8llBQ
+         OqE0tIHy3CD9g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove variable initializations in functions that
-are followed by assignments before use
+Fix checkpatch.pl WARNING for delay of approximately 1msec
+in flush i2c FIFO polling loop by using usleep_range(1000, 2000):
+WARNING: msleep < 20ms can sleep for up to 20ms; see ...
+Documentation/timers/timers-howto.txt
++               msleep(1);
 
 Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
 Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 00692d8..f7116b7 100644
+index bececa6..4dfb4c1 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -689,7 +689,7 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
- 	u32 val;
- 	int err;
- 	u32 clk_divisor, clk_multiplier;
--	u32 tsu_thd = 0;
-+	u32 tsu_thd;
- 	u8 tlow, thigh;
- 
- 	err = pm_runtime_get_sync(i2c_dev->dev);
-@@ -1218,7 +1218,7 @@ static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
- {
- 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
- 	int i;
--	int ret = 0;
-+	int ret;
- 
- 	ret = pm_runtime_get_sync(i2c_dev->dev);
- 	if (ret < 0) {
-@@ -1489,7 +1489,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	void __iomem *base;
- 	phys_addr_t base_phys;
- 	int irq;
--	int ret = 0;
-+	int ret;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base_phys = res->start;
+@@ -476,7 +476,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ 			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
+ 			return -ETIMEDOUT;
+ 		}
+-		msleep(1);
++		usleep_range(1000, 2000);
+ 	}
+ 	return 0;
+ }
 -- 
 2.7.4
 
