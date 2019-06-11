@@ -2,124 +2,457 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9EDC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB108C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5646620673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:24:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4KwM3GL"
+	by mail.kernel.org (Postfix) with ESMTP id 8815320673
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389187AbfFKMYJ (ORCPT
+        id S2389330AbfFKMYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:24:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46803 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389014AbfFKMYC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:24:02 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 81so7326786pfy.13;
-        Tue, 11 Jun 2019 05:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jpK78n7EuwzwuUYa9uLDGGpmavtbv1Fbssm0HIpkmiA=;
-        b=V4KwM3GLF7HCRFJQBiPn0U0u3Yoq3BpbibnG1fmmwO4ZjhuKm5myUMGG1TFMWlClpo
-         P8JMYHtkcGHvWtDoTgrA8Kyze2rcwUkcgE3vzogbTcBG9+oHJqZFcaQmEJ7mW4FgQLqU
-         UpQkPWnK75g4Wx7sM9bBlItGeVBxl9U8IdYU53ZGmkl9eONwB88AwrvJ+/DegmNS+vnB
-         z/zRVEO89+JJ4m1g4zo6hk779nyb1gWqbQ5OFGFoOR7NWRSSOAte30ANIc3H8yKJRKUu
-         LrlqSgV6ngJ1MA/VMMQob1JnseU5xbbz0gpHBksces9aOZ95CWmmk/tcJ/faHr5Jx1Be
-         ifeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jpK78n7EuwzwuUYa9uLDGGpmavtbv1Fbssm0HIpkmiA=;
-        b=Z2qePusxNFkeu+gTgoq9Eb61TpE94riAzM2OuKYgnAFSIU0MvtOtShFBUv+nk6hQQ3
-         x9kyZ9N3ORf2AFj3Lb5gLZHaA5WPl8VCAH/knYRcFBBy9Q3hOqm4U1Li9mjrezBwcwxa
-         XVZvz9SRYOQ8vysDPIqIgkqq3ImPpJdpEs+0NL0jmQBAnUM88Th6HNLw0IEbHg7DcWbb
-         eIOIlhujvwoNqwfCcrKJuD+sVh13jzaY5JU1m8RJeOqdIH1zhnrATuQ16sekmTYNf/F1
-         6gx1ClfsQmpQymtSbZtpZqtKsnjPSjipdh9p6lHkH/1AOtDOKCTGvP40rD49Dd22LtDe
-         gfuQ==
-X-Gm-Message-State: APjAAAWi/jNICoS/2S0i9jRfoYHoM06F4SD1SKT6m0t1GNuGRzcII/8x
-        iHEfPi6b2wOsw1be10KD2+X018/Q
-X-Google-Smtp-Source: APXvYqwUCQThZamEpHtqoJvNjZFPGs7bzsmpbp1MOs9ez3BVKjK/e0lKZvGo0G0RX7J3ChoivEUPkA==
-X-Received: by 2002:a65:4b88:: with SMTP id t8mr20722333pgq.374.1560255841015;
-        Tue, 11 Jun 2019 05:24:01 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id 127sm14832271pfc.159.2019.06.11.05.23.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 11 Jun 2019 05:24:00 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v4 3/3] KVM: X86: Expose PV_SCHED_YIELD CPUID feature bit to guest
-Date:   Tue, 11 Jun 2019 20:23:50 +0800
-Message-Id: <1560255830-8656-4-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560255830-8656-1-git-send-email-wanpengli@tencent.com>
-References: <1560255830-8656-1-git-send-email-wanpengli@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 11 Jun 2019 08:24:11 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52554 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389121AbfFKMYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 08:24:08 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 634F6200A02;
+        Tue, 11 Jun 2019 14:24:05 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0A86D200A15;
+        Tue, 11 Jun 2019 14:23:55 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 66594402FB;
+        Tue, 11 Jun 2019 20:23:41 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        maxime.ripard@bootlin.com, olof@lixom.net,
+        horms+renesas@verge.net.au, jagan@amarulasolutions.com,
+        bjorn.andersson@linaro.org, leonard.crestez@nxp.com,
+        dinguyen@kernel.org, enric.balletbo@collabora.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 2/3] pinctrl: freescale: Add i.MX8MN pinctrl driver support
+Date:   Tue, 11 Jun 2019 20:25:34 +0800
+Message-Id: <20190611122535.23583-2-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190611122535.23583-1-Anson.Huang@nxp.com>
+References: <20190611122535.23583-1-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Expose PV_SCHED_YIELD feature bit to guest, the guest can check this
-feature bit before using paravirtualized sched yield.
+Add the pinctrl driver support for i.MX8MN.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- Documentation/virtual/kvm/cpuid.txt | 4 ++++
- arch/x86/kvm/cpuid.c                | 3 ++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+Changes since V1:
+	- Fix some nitpicks like sorting the change in alphabet order
+	  and improve the headfile included.
+---
+ drivers/pinctrl/freescale/Kconfig          |   7 +
+ drivers/pinctrl/freescale/Makefile         |   1 +
+ drivers/pinctrl/freescale/pinctrl-imx8mn.c | 348 +++++++++++++++++++++++++++++
+ 3 files changed, 356 insertions(+)
+ create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mn.c
 
-diff --git a/Documentation/virtual/kvm/cpuid.txt b/Documentation/virtual/kvm/cpuid.txt
-index 97ca194..1c39683 100644
---- a/Documentation/virtual/kvm/cpuid.txt
-+++ b/Documentation/virtual/kvm/cpuid.txt
-@@ -66,6 +66,10 @@ KVM_FEATURE_PV_SEND_IPI            ||    11 || guest checks this feature bit
-                                    ||       || before using paravirtualized
-                                    ||       || send IPIs.
- ------------------------------------------------------------------------------
-+KVM_FEATURE_PV_SHED_YIELD          ||    12 || guest checks this feature bit
-+                                   ||       || before using paravirtualized
-+                                   ||       || sched yield.
-+------------------------------------------------------------------------------
- KVM_FEATURE_CLOCKSOURCE_STABLE_BIT ||    24 || host will warn if no guest-side
-                                    ||       || per-cpu warps are expected in
-                                    ||       || kvmclock.
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 60f87ba..38fc653 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -653,7 +653,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 			     (1 << KVM_FEATURE_PV_UNHALT) |
- 			     (1 << KVM_FEATURE_PV_TLB_FLUSH) |
- 			     (1 << KVM_FEATURE_ASYNC_PF_VMEXIT) |
--			     (1 << KVM_FEATURE_PV_SEND_IPI);
-+			     (1 << KVM_FEATURE_PV_SEND_IPI) |
-+			     (1 << KVM_FEATURE_PV_SCHED_YIELD);
+diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+index aeab0d9..5f40580 100644
+--- a/drivers/pinctrl/freescale/Kconfig
++++ b/drivers/pinctrl/freescale/Kconfig
+@@ -130,6 +130,13 @@ config PINCTRL_IMX8MM
+ 	help
+ 	  Say Y here to enable the imx8mm pinctrl driver
  
- 		if (sched_info_on())
- 			entry->eax |= (1 << KVM_FEATURE_STEAL_TIME);
++config PINCTRL_IMX8MN
++	bool "IMX8MN pinctrl driver"
++	depends on ARCH_MXC && ARM64
++	select PINCTRL_IMX
++	help
++	  Say Y here to enable the imx8mn pinctrl driver
++
+ config PINCTRL_IMX8MQ
+ 	bool "IMX8MQ pinctrl driver"
+ 	depends on ARCH_MXC && ARM64
+diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale/Makefile
+index 02020a7..78e9140 100644
+--- a/drivers/pinctrl/freescale/Makefile
++++ b/drivers/pinctrl/freescale/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_PINCTRL_IMX6UL)	+= pinctrl-imx6ul.o
+ obj-$(CONFIG_PINCTRL_IMX7D)	+= pinctrl-imx7d.o
+ obj-$(CONFIG_PINCTRL_IMX7ULP)	+= pinctrl-imx7ulp.o
+ obj-$(CONFIG_PINCTRL_IMX8MM)	+= pinctrl-imx8mm.o
++obj-$(CONFIG_PINCTRL_IMX8MN)	+= pinctrl-imx8mn.o
+ obj-$(CONFIG_PINCTRL_IMX8MQ)	+= pinctrl-imx8mq.o
+ obj-$(CONFIG_PINCTRL_IMX8QM)	+= pinctrl-imx8qm.o
+ obj-$(CONFIG_PINCTRL_IMX8QXP)	+= pinctrl-imx8qxp.o
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mn.c b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
+new file mode 100644
+index 0000000..100ed8c
+--- /dev/null
++++ b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
+@@ -0,0 +1,348 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2018-2019 NXP
++ */
++
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/of.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/platform_device.h>
++
++#include "pinctrl-imx.h"
++
++enum imx8mn_pads {
++	MX8MN_PAD_RESERVE0 = 0,
++	MX8MN_PAD_RESERVE1 = 1,
++	MX8MN_PAD_RESERVE2 = 2,
++	MX8MN_PAD_RESERVE3 = 3,
++	MX8MN_PAD_RESERVE4 = 4,
++	MX8MN_PAD_RESERVE5 = 5,
++	MX8MN_PAD_RESERVE6 = 6,
++	MX8MN_PAD_RESERVE7 = 7,
++	MX8MN_IOMUXC_BOOT_MODE2 = 8,
++	MX8MN_IOMUXC_BOOT_MODE3 = 9,
++	MX8MN_IOMUXC_GPIO1_IO00 = 10,
++	MX8MN_IOMUXC_GPIO1_IO01 = 11,
++	MX8MN_IOMUXC_GPIO1_IO02 = 12,
++	MX8MN_IOMUXC_GPIO1_IO03 = 13,
++	MX8MN_IOMUXC_GPIO1_IO04 = 14,
++	MX8MN_IOMUXC_GPIO1_IO05 = 15,
++	MX8MN_IOMUXC_GPIO1_IO06 = 16,
++	MX8MN_IOMUXC_GPIO1_IO07 = 17,
++	MX8MN_IOMUXC_GPIO1_IO08 = 18,
++	MX8MN_IOMUXC_GPIO1_IO09 = 19,
++	MX8MN_IOMUXC_GPIO1_IO10 = 20,
++	MX8MN_IOMUXC_GPIO1_IO11 = 21,
++	MX8MN_IOMUXC_GPIO1_IO12 = 22,
++	MX8MN_IOMUXC_GPIO1_IO13 = 23,
++	MX8MN_IOMUXC_GPIO1_IO14 = 24,
++	MX8MN_IOMUXC_GPIO1_IO15 = 25,
++	MX8MN_IOMUXC_ENET_MDC = 26,
++	MX8MN_IOMUXC_ENET_MDIO = 27,
++	MX8MN_IOMUXC_ENET_TD3 = 28,
++	MX8MN_IOMUXC_ENET_TD2 = 29,
++	MX8MN_IOMUXC_ENET_TD1 = 30,
++	MX8MN_IOMUXC_ENET_TD0 = 31,
++	MX8MN_IOMUXC_ENET_TX_CTL = 32,
++	MX8MN_IOMUXC_ENET_TXC = 33,
++	MX8MN_IOMUXC_ENET_RX_CTL = 34,
++	MX8MN_IOMUXC_ENET_RXC = 35,
++	MX8MN_IOMUXC_ENET_RD0 = 36,
++	MX8MN_IOMUXC_ENET_RD1 = 37,
++	MX8MN_IOMUXC_ENET_RD2 = 38,
++	MX8MN_IOMUXC_ENET_RD3 = 39,
++	MX8MN_IOMUXC_SD1_CLK = 40,
++	MX8MN_IOMUXC_SD1_CMD = 41,
++	MX8MN_IOMUXC_SD1_DATA0 = 42,
++	MX8MN_IOMUXC_SD1_DATA1 = 43,
++	MX8MN_IOMUXC_SD1_DATA2 = 44,
++	MX8MN_IOMUXC_SD1_DATA3 = 45,
++	MX8MN_IOMUXC_SD1_DATA4 = 46,
++	MX8MN_IOMUXC_SD1_DATA5 = 47,
++	MX8MN_IOMUXC_SD1_DATA6 = 48,
++	MX8MN_IOMUXC_SD1_DATA7 = 49,
++	MX8MN_IOMUXC_SD1_RESET_B = 50,
++	MX8MN_IOMUXC_SD1_STROBE = 51,
++	MX8MN_IOMUXC_SD2_CD_B = 52,
++	MX8MN_IOMUXC_SD2_CLK = 53,
++	MX8MN_IOMUXC_SD2_CMD = 54,
++	MX8MN_IOMUXC_SD2_DATA0 = 55,
++	MX8MN_IOMUXC_SD2_DATA1 = 56,
++	MX8MN_IOMUXC_SD2_DATA2 = 57,
++	MX8MN_IOMUXC_SD2_DATA3 = 58,
++	MX8MN_IOMUXC_SD2_RESET_B = 59,
++	MX8MN_IOMUXC_SD2_WP = 60,
++	MX8MN_IOMUXC_NAND_ALE = 61,
++	MX8MN_IOMUXC_NAND_CE0 = 62,
++	MX8MN_IOMUXC_NAND_CE1 = 63,
++	MX8MN_IOMUXC_NAND_CE2 = 64,
++	MX8MN_IOMUXC_NAND_CE3 = 65,
++	MX8MN_IOMUXC_NAND_CLE = 66,
++	MX8MN_IOMUXC_NAND_DATA00 = 67,
++	MX8MN_IOMUXC_NAND_DATA01 = 68,
++	MX8MN_IOMUXC_NAND_DATA02 = 69,
++	MX8MN_IOMUXC_NAND_DATA03 = 70,
++	MX8MN_IOMUXC_NAND_DATA04 = 71,
++	MX8MN_IOMUXC_NAND_DATA05 = 72,
++	MX8MN_IOMUXC_NAND_DATA06 = 73,
++	MX8MN_IOMUXC_NAND_DATA07 = 74,
++	MX8MN_IOMUXC_NAND_DQS = 75,
++	MX8MN_IOMUXC_NAND_RE_B = 76,
++	MX8MN_IOMUXC_NAND_READY_B = 77,
++	MX8MN_IOMUXC_NAND_WE_B = 78,
++	MX8MN_IOMUXC_NAND_WP_B = 79,
++	MX8MN_IOMUXC_SAI5_RXFS = 80,
++	MX8MN_IOMUXC_SAI5_RXC = 81,
++	MX8MN_IOMUXC_SAI5_RXD0 = 82,
++	MX8MN_IOMUXC_SAI5_RXD1 = 83,
++	MX8MN_IOMUXC_SAI5_RXD2 = 84,
++	MX8MN_IOMUXC_SAI5_RXD3 = 85,
++	MX8MN_IOMUXC_SAI5_MCLK = 86,
++	MX8MN_IOMUXC_SAI1_RXFS = 87,
++	MX8MN_IOMUXC_SAI1_RXC = 88,
++	MX8MN_IOMUXC_SAI1_RXD0 = 89,
++	MX8MN_IOMUXC_SAI1_RXD1 = 90,
++	MX8MN_IOMUXC_SAI1_RXD2 = 91,
++	MX8MN_IOMUXC_SAI1_RXD3 = 92,
++	MX8MN_IOMUXC_SAI1_RXD4 = 93,
++	MX8MN_IOMUXC_SAI1_RXD5 = 94,
++	MX8MN_IOMUXC_SAI1_RXD6 = 95,
++	MX8MN_IOMUXC_SAI1_RXD7 = 96,
++	MX8MN_IOMUXC_SAI1_TXFS = 97,
++	MX8MN_IOMUXC_SAI1_TXC = 98,
++	MX8MN_IOMUXC_SAI1_TXD0 = 99,
++	MX8MN_IOMUXC_SAI1_TXD1 = 100,
++	MX8MN_IOMUXC_SAI1_TXD2 = 101,
++	MX8MN_IOMUXC_SAI1_TXD3 = 102,
++	MX8MN_IOMUXC_SAI1_TXD4 = 103,
++	MX8MN_IOMUXC_SAI1_TXD5 = 104,
++	MX8MN_IOMUXC_SAI1_TXD6 = 105,
++	MX8MN_IOMUXC_SAI1_TXD7 = 106,
++	MX8MN_IOMUXC_SAI1_MCLK = 107,
++	MX8MN_IOMUXC_SAI2_RXFS = 108,
++	MX8MN_IOMUXC_SAI2_RXC = 109,
++	MX8MN_IOMUXC_SAI2_RXD0 = 110,
++	MX8MN_IOMUXC_SAI2_TXFS = 111,
++	MX8MN_IOMUXC_SAI2_TXC = 112,
++	MX8MN_IOMUXC_SAI2_TXD0 = 113,
++	MX8MN_IOMUXC_SAI2_MCLK = 114,
++	MX8MN_IOMUXC_SAI3_RXFS = 115,
++	MX8MN_IOMUXC_SAI3_RXC = 116,
++	MX8MN_IOMUXC_SAI3_RXD = 117,
++	MX8MN_IOMUXC_SAI3_TXFS = 118,
++	MX8MN_IOMUXC_SAI3_TXC = 119,
++	MX8MN_IOMUXC_SAI3_TXD = 120,
++	MX8MN_IOMUXC_SAI3_MCLK = 121,
++	MX8MN_IOMUXC_SPDIF_TX = 122,
++	MX8MN_IOMUXC_SPDIF_RX = 123,
++	MX8MN_IOMUXC_SPDIF_EXT_CLK = 124,
++	MX8MN_IOMUXC_ECSPI1_SCLK = 125,
++	MX8MN_IOMUXC_ECSPI1_MOSI = 126,
++	MX8MN_IOMUXC_ECSPI1_MISO = 127,
++	MX8MN_IOMUXC_ECSPI1_SS0 = 128,
++	MX8MN_IOMUXC_ECSPI2_SCLK = 129,
++	MX8MN_IOMUXC_ECSPI2_MOSI = 130,
++	MX8MN_IOMUXC_ECSPI2_MISO = 131,
++	MX8MN_IOMUXC_ECSPI2_SS0 = 132,
++	MX8MN_IOMUXC_I2C1_SCL = 133,
++	MX8MN_IOMUXC_I2C1_SDA = 134,
++	MX8MN_IOMUXC_I2C2_SCL = 135,
++	MX8MN_IOMUXC_I2C2_SDA = 136,
++	MX8MN_IOMUXC_I2C3_SCL = 137,
++	MX8MN_IOMUXC_I2C3_SDA = 138,
++	MX8MN_IOMUXC_I2C4_SCL = 139,
++	MX8MN_IOMUXC_I2C4_SDA = 140,
++	MX8MN_IOMUXC_UART1_RXD = 141,
++	MX8MN_IOMUXC_UART1_TXD = 142,
++	MX8MN_IOMUXC_UART2_RXD = 143,
++	MX8MN_IOMUXC_UART2_TXD = 144,
++	MX8MN_IOMUXC_UART3_RXD = 145,
++	MX8MN_IOMUXC_UART3_TXD = 146,
++	MX8MN_IOMUXC_UART4_RXD = 147,
++	MX8MN_IOMUXC_UART4_TXD = 148,
++};
++
++/* Pad names for the pinmux subsystem */
++static const struct pinctrl_pin_desc imx8mn_pinctrl_pads[] = {
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE0),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE1),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE2),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE3),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE4),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE5),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE6),
++	IMX_PINCTRL_PIN(MX8MN_PAD_RESERVE7),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_BOOT_MODE2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_BOOT_MODE3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO00),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO01),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO02),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO03),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO04),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO05),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO06),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO07),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO08),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO09),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO10),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO11),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO12),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO13),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO14),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_GPIO1_IO15),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_MDC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_MDIO),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TX_CTL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_TXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RX_CTL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ENET_RD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_CLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_CMD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA4),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA5),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA6),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_DATA7),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_RESET_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD1_STROBE),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_CD_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_CLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_CMD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_DATA0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_DATA1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_DATA2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_DATA3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_RESET_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SD2_WP),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_ALE),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CE0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CE1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CE2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CE3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_CLE),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA00),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA01),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA02),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA03),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA04),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA05),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA06),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DATA07),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_DQS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_RE_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_READY_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_WE_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_NAND_WP_B),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_RXD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI5_MCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD4),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD5),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD6),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_RXD7),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD1),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD2),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD3),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD4),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD5),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD6),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_TXD7),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI1_MCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_RXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_RXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_TXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_TXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_TXD0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI2_MCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_RXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_RXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_TXFS),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_TXC),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_TXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SAI3_MCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SPDIF_TX),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SPDIF_RX),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_SPDIF_EXT_CLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI1_SCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI1_MOSI),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI1_MISO),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI1_SS0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI2_SCLK),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI2_MOSI),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI2_MISO),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_ECSPI2_SS0),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C1_SCL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C1_SDA),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C2_SCL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C2_SDA),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C3_SCL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C3_SDA),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C4_SCL),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_I2C4_SDA),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART1_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART1_TXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART2_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART2_TXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART3_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART3_TXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART4_RXD),
++	IMX_PINCTRL_PIN(MX8MN_IOMUXC_UART4_TXD),
++};
++
++static struct imx_pinctrl_soc_info imx8mn_pinctrl_info = {
++	.pins = imx8mn_pinctrl_pads,
++	.npins = ARRAY_SIZE(imx8mn_pinctrl_pads),
++	.gpr_compatible = "fsl,imx8mn-iomuxc-gpr",
++};
++
++static const struct of_device_id imx8mn_pinctrl_of_match[] = {
++	{ .compatible = "fsl,imx8mn-iomuxc", .data = &imx8mn_pinctrl_info, },
++	{ /* sentinel */ }
++};
++
++static int imx8mn_pinctrl_probe(struct platform_device *pdev)
++{
++	return imx_pinctrl_probe(pdev, &imx8mn_pinctrl_info);
++}
++
++static struct platform_driver imx8mn_pinctrl_driver = {
++	.driver = {
++		.name = "imx8mn-pinctrl",
++		.of_match_table = of_match_ptr(imx8mn_pinctrl_of_match),
++		.suppress_bind_attrs = true,
++	},
++	.probe = imx8mn_pinctrl_probe,
++};
++
++static int __init imx8mn_pinctrl_init(void)
++{
++	return platform_driver_register(&imx8mn_pinctrl_driver);
++}
++arch_initcall(imx8mn_pinctrl_init);
 -- 
 2.7.4
 
