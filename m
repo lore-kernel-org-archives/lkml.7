@@ -2,107 +2,134 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B552C31E45
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B41C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D90C205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37352205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzewXKZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392050AbfFKWCr (ORCPT
+        id S2392073AbfFKWCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:02:47 -0400
-Received: from mga03.intel.com ([134.134.136.65]:21062 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392014AbfFKWCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:02:47 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 15:02:45 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga006.fm.intel.com with ESMTP; 11 Jun 2019 15:02:44 -0700
-Date:   Tue, 11 Jun 2019 15:02:43 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Cedric Xing <cedric.xing@intel.com>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, luto@kernel.org,
-        jmorris@namei.org, serge@hallyn.com, paul@paul-moore.com,
-        eparis@parisplace.org, jethro@fortanix.com, dave.hansen@intel.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, nhorman@redhat.com,
-        pmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
-        bp@alien8.de, josh@joshtriplett.org, kai.huang@intel.com,
-        rientjes@google.com, william.c.roberts@intel.com,
-        philip.b.tricca@intel.com
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Message-ID: <20190611220243.GB3416@linux.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
+        Tue, 11 Jun 2019 18:02:55 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37768 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388229AbfFKWCz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:02:55 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y57so16521437qtk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 15:02:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R9swLzsJtifGzX/KGk8yeNVFbi1iTRDL+GJQQbSCuHo=;
+        b=pzewXKZ6WLt/gjWkMo/+YcX2d1aUC7pklyoJxUu8q3zKqxx1flMzy8jeb/7oZw//7e
+         n4tY5sJXhu7TuLgALjdbbafHpSOA+A2sioMhaWtNvsh4EllR9PPctlua829MgJu9hRG+
+         alLFj8zcOmCiLtrOZkf7HOrUmXYe99B8EN4AoGBwkI7swdcDtQmv3Hw6yPI2GlEZ5DXv
+         W8M6/qoZDCVWs/U+iZHan2LOUDYydc/m2Okkbn2NUW4J5DktIG7knHhnnED+j7UDZ9Os
+         buQJJZE5zjwDnO98adcxLv7JHOfwUgkcyajfv6gvSwEvnBHwx/UWYt6EKRhhTkyPdozS
+         qcnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R9swLzsJtifGzX/KGk8yeNVFbi1iTRDL+GJQQbSCuHo=;
+        b=hbypklSqYpWWQ7yPYTCTCRS8cAm1ErSWwYv5CRn9rRV0qalzWYfgXomx0utc7G3ZZF
+         4HvguYEb6FEFlPjwvWdV36PDYJ6mh2S3uIKqNcU9y/TqOVG5K0SX76C1SOkGrKF5GWxC
+         bgatmJJpJaoJx1Y9C98CdhCJ08Om8uXHIx9AcDlGaBWXdocZ65M/e9M3JTjxWwBl1JVI
+         TXB/TnV3sv6LomCUhDHwlfSItUWSo8Yszpxr49S7u5iGUdGuI0EakSCNHylRdNnqO7CM
+         kY1YtIQmSjlX8AYUBJIq2kpR3XovIyvFUCJljXu43ep6mzdcn0Sta/c4o9wMmFUGYqhN
+         6HjQ==
+X-Gm-Message-State: APjAAAWnPufH14jXlXjVhdolWsdM09iOHfSyKZo1JUYlrngqrjz3c+eu
+        VL8Z0dW0Met3WXevsaYJu/SvNTY=
+X-Google-Smtp-Source: APXvYqwOQtjfyFgAZmlFDKa9/7lOxef59kekI0Pll+EBAT2I25+2U68GqYPKoe6lJWSSeIJgeExygQ==
+X-Received: by 2002:ac8:1829:: with SMTP id q38mr48707241qtj.252.1560290574364;
+        Tue, 11 Jun 2019 15:02:54 -0700 (PDT)
+Received: from gabell (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id x10sm6172576qtc.34.2019.06.11.15.02.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Jun 2019 15:02:53 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 18:02:47 -0400
+From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org,
+        Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
+        Zhang Lei <zhang.lei@jp.fujitsu.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 1/2] arm64/mm: check cpu cache line size with
+ non-coherent device
+Message-ID: <20190611220246.lyhcqahsxyxuhqjk@gabell>
+References: <20190611151731.6135-1-msys.mizuma@gmail.com>
+ <20190611151731.6135-2-msys.mizuma@gmail.com>
+ <20190611180007.him7md7gdcjs5cg6@mbp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190611180007.him7md7gdcjs5cg6@mbp>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
-> I haven't looked at this code closely, but it feels like a lot of
-> SGX-specific logic embedded into SELinux that will have to be repeated or
-> reused for every security module.  Does SGX not track this state itself?
+On Tue, Jun 11, 2019 at 07:00:07PM +0100, Catalin Marinas wrote:
+> On Tue, Jun 11, 2019 at 11:17:30AM -0400, Masayoshi Mizuma wrote:
+> > --- a/arch/arm64/mm/dma-mapping.c
+> > +++ b/arch/arm64/mm/dma-mapping.c
+> > @@ -91,10 +91,6 @@ static int __swiotlb_mmap_pfn(struct vm_area_struct *vma,
+> >  
+> >  static int __init arm64_dma_init(void)
+> >  {
+> > -	WARN_TAINT(ARCH_DMA_MINALIGN < cache_line_size(),
+> > -		   TAINT_CPU_OUT_OF_SPEC,
+> > -		   "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
+> > -		   ARCH_DMA_MINALIGN, cache_line_size());
+> >  	return dma_atomic_pool_init(GFP_DMA32, __pgprot(PROT_NORMAL_NC));
+> >  }
+> >  arch_initcall(arm64_dma_init);
+> > @@ -473,6 +469,11 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
+> >  			const struct iommu_ops *iommu, bool coherent)
+> >  {
+> >  	dev->dma_coherent = coherent;
+> > +
+> > +	if (!coherent && (cache_line_size() > ARCH_DMA_MINALIGN))
+> > +		dev_WARN(dev, "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
+> > +				ARCH_DMA_MINALIGN, cache_line_size());
+> 
+> I'm ok in principle with this patch, with the minor issue that since
+> commit 7b8c87b297a7 ("arm64: cacheinfo: Update cache_line_size detected
+> from DT or PPTT") queued for 5.3 cache_line_size() gets the information
+> from DT or ACPI. The reason for this change is that the information is
+> used for performance tuning rather than DMA coherency.
+> 
+> You can go for a direct cache_type_cwg() check in here, unless Robin
+> (cc'ed) has a better idea.
 
-SGX does track equivalent state.
+Got it, thanks.
+I believe coherency_max_size is zero in case of coherent is false,
+so I'll modify the patch as following. Does it make sense?
 
-There are three proposals on the table (I think):
+@@ -57,6 +53,11 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
+                        const struct iommu_ops *iommu, bool coherent)
+ {
+        dev->dma_coherent = coherent;
++
++       if (!coherent && (cache_line_size() > ARCH_DMA_MINALIGN))
++               dev_WARN(dev, "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
++                               ARCH_DMA_MINALIGN, (4 << cache_type_cwg()));
++
+        if (iommu)
+                iommu_setup_dma_ops(dev, dma_base, size);
 
-  1. Require userspace to explicitly specificy (maximal) enclave page
-     permissions at build time.  The enclave page permissions are provided
-     to, and checked by, LSMs at enclave build time.
-
-     Pros: Low-complexity kernel implementation, straightforward auditing
-     Cons: Sullies the SGX UAPI to some extent, may increase complexity of
-           SGX2 enclave loaders.
-
-  2. Pre-check LSM permissions and dynamically track mappings to enclave
-     pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
-     based on the pre-checked permissions.
-
-     Pros: Does not impact SGX UAPI, medium kernel complexity
-     Cons: Auditing is complex/weird, requires taking enclave-specific
-           lock during mprotect() to query/update tracking.
-
-  3. Implement LSM hooks in SGX to allow LSMs to track enclave regions
-     from cradle to grave, but otherwise defer everything to LSMs.
-
-     Pros: Does not impact SGX UAPI, maximum flexibility, precise auditing
-     Cons: Most complex and "heaviest" kernel implementation of the three,
-           pushes more SGX details into LSMs.
-
-My RFC series[1] implements #1.  My understanding is that Andy (Lutomirski)
-prefers #2.  Cedric's RFC series implements #3.
-
-Perhaps the easiest way to make forward progress is to rule out the
-options we absolutely *don't* want by focusing on the potentially blocking
-issue with each option:
-
-  #1 - SGX UAPI funkiness
-
-  #2 - Auditing complexity, potential enclave lock contention
-
-  #3 - Pushing SGX details into LSMs and complexity of kernel implementation
-
-
-[1] https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherson@intel.com
+Thanks,
+Masa
