@@ -2,134 +2,136 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BAFC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A241AC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95266212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728642086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QT/b+tOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404023AbfFKFvN (ORCPT
+        id S2403929AbfFKFu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 01:51:13 -0400
-Received: from gate.crashing.org ([63.228.1.57]:36313 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403745AbfFKFvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 01:51:11 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5B5oe0m029024;
-        Tue, 11 Jun 2019 00:50:41 -0500
-Message-ID: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Date:   Tue, 11 Jun 2019 15:50:40 +1000
-In-Reply-To: <20190608090556.GA32464@zn.tnic>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
-         <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
-         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
-         <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
-         <20190531051400.GA2275@cz.tnic>
-         <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
-         <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
-         <20190608090556.GA32464@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 01:50:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40585 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403878AbfFKFux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 01:50:53 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so1380423wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 22:50:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=voAjz+VVGHYrojERg9drctVbrKhGApZsPWQIGZxxUR8=;
+        b=QT/b+tOYBTC8Knk6JZUD7V6taByi75hY2htN6Dv7kfW8hEjB6QwKo7depSMP2rf5F6
+         KltM1x2aEnX3uLydL4yak9JESjkB/jdK0qXNmRcHYjiYTtUOM9O3KBphm0EpDdUe8Nlx
+         vSKYQYeZrz2Q4rK23FtzyVKtJgWLXp4RxlFeLxO6fRzXJ7XVuo/2PDJSEds6D0YsoHJZ
+         rHQ87jPQgsMuYAYTMNqDYTyhl5SJpFUXhSkhQlhw5TYOMI6GJCSLQ7gPdJAQt16VOwfU
+         a6u1sWb8GmgJPU28tP+7CmFuBa3PWPJ2T4VEJCUqkEffjdr853XsjrBYvgCJXilvVPf8
+         dOaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=voAjz+VVGHYrojERg9drctVbrKhGApZsPWQIGZxxUR8=;
+        b=suf7Iyua/lib3cxPyjybG16EZYH9+JcWv2Pbu0K8nr9YbEdh0Pr0QRx30qWJL11Dl8
+         wwdvyFLSyoZH8jxltOWaqfbdxzoOOmLr3QZa6QBT7Ke4xIyOjlQKqPpNjuslyFINWKFn
+         dcpAk31bYvWCE5A3s8vd6e/NTvFai8G0frm9bkId/Edv8eURgNxsQ9A2P/N0qQhuyrfv
+         n+Xp23rQ8M8P/XfYMOUnZMaNCPqObAiwTZKT5fGPa2GO1zzafyShANtF9bCr0GqAJ2Ec
+         99pZZyq8JG//gGdmBwzPJd8K01lxYvoAG7+oNYkOxaOuoPBz3p/Cyh+PQrArCjELVi+4
+         HrMQ==
+X-Gm-Message-State: APjAAAV8s+MUrZCz5ZYus8f9CO8oYeAOzgGGQSZ/vvEC7v4NAzRk6Kj+
+        OxXlYiIz8gsav+rZ1kiEpz9j2pjNe34=
+X-Google-Smtp-Source: APXvYqzv3kvwrZH8uZquP054+VVxQrgw47bg1pSCJol/WXD8lwfLsussjhH862lGp5UTl7OSxY4YbQ==
+X-Received: by 2002:a7b:c842:: with SMTP id c2mr16086279wml.28.1560232251664;
+        Mon, 10 Jun 2019 22:50:51 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id j8sm11968056wrr.64.2019.06.10.22.50.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 22:50:51 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 3/8] habanalabs: initialize MMU context for driver
+Date:   Tue, 11 Jun 2019 08:50:40 +0300
+Message-Id: <20190611055045.15945-4-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190611055045.15945-1-oded.gabbay@gmail.com>
+References: <20190611055045.15945-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-06-08 at 11:05 +0200, Borislav Petkov wrote:
-> On Sat, Jun 08, 2019 at 10:16:11AM +1000, Benjamin Herrenschmidt wrote:
-> > Those IP blocks don't need any SW coordination at runtime. The drivers
-> > don't share data nor communicate with each other. There is absolultely
-> > no reason to go down that path.
-> 
-> Let me set one thing straight: the EDAC "subsystem" if you will - or
-> that pile of code which does error counting and reporting - has its
-> limitations in supporting one EDAC driver per platform. And whenever we
-> have two drivers loadable on a platform, we have to do dirty hacks like
-> 
->   301375e76432 ("EDAC: Add owner check to the x86 platform drivers")
-> 
-> What that means is, that if you need to call EDAC logging routines or
-> whatnot from two different drivers, there's no locking, no nothing. So
-> it might work or it might set your cat on fire.
+This patch initializes the MMU structures for the kernel context. This is
+needed before we can configure mappings for the kernel context.
 
-Should we fix that then instead ? What are the big issues with adding
-some basic locking ? being called from NMIs ?
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/context.c |  7 +++++++
+ drivers/misc/habanalabs/mmu.c     | 10 ++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-If the separate drivers operate on distinct counters I don't see a big
-problem there.
-
-> IOW, having multiple separate "drivers" or representations of RAS
-> functionality using EDAC facilities is something that hasn't been
-> done. Well, almost. highbank_mc_edac.c and highbank_l2_edac.c is one
-> example but they make sure they don't step on each other's toes by using
-> different EDAC pieces - a device vs a memory controller abstraction.
-
-That sounds like a reasonable requirement.
-
-> And now the moment all of a sudden you decide you want for those
-> separate "drivers" to synchronize on something, you need to do something
-> hacky like the amd_register_ecc_decoder() thing, for example, because we
-> need to call into the EDAC memory controller driver to decode a DRAM ECC
-> error properly, while the rest of the error types get decoded somewhere
-> else...
-> 
-> Then there comes the issue with code reuse - wouldn't it be great if a
-> memory controller driver can be shared between platform drivers instead of
-> copying it in both?
-> 
-> We already do that - see fsl_ddr_edac.c which gets shared between PPC
-> *and* ARM. drivers/edac/skx_common.c is another example for Intel chips.
-> 
-> Now, if you have a platform with 10 IP blocks which each have RAS
-> functionality, are you saying you'll do 10 different pieces called
-> 
-> <platform_name>_<ip_block#>_edac.c
-> 
-> ?
-> 
-> And if <next_platform> has an old IP block with the old RAS
-> functionality, you load <platform_name>_<ip_block>_edac.c on the new
-> platform too?
-
-I'n not sure why <platform_name> ...
-
-Anyway, let's get back to the specific case of our Amazon platform here
-since it's a concrete example.
-
-Hanna, can you give us a reasonably exhaustive list of how many such
-"drivers" we'll want in the EDAC subsystem and whether you envision any
-coordination requirement between them or not ?
-
-Cheers,
-Ben.
-
-
+diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
+index 280f4625e313..8682590e3f6e 100644
+--- a/drivers/misc/habanalabs/context.c
++++ b/drivers/misc/habanalabs/context.c
+@@ -36,6 +36,8 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
+ 
+ 		hl_vm_ctx_fini(ctx);
+ 		hl_asid_free(hdev, ctx->asid);
++	} else {
++		hl_mmu_ctx_fini(ctx);
+ 	}
+ }
+ 
+@@ -119,6 +121,11 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
+ 
+ 	if (is_kernel_ctx) {
+ 		ctx->asid = HL_KERNEL_ASID_ID; /* KMD gets ASID 0 */
++		rc = hl_mmu_ctx_init(ctx);
++		if (rc) {
++			dev_err(hdev->dev, "Failed to init mmu ctx module\n");
++			goto mem_ctx_err;
++		}
+ 	} else {
+ 		ctx->asid = hl_asid_alloc(hdev);
+ 		if (!ctx->asid) {
+diff --git a/drivers/misc/habanalabs/mmu.c b/drivers/misc/habanalabs/mmu.c
+index 87968f32e718..a80162c5c373 100644
+--- a/drivers/misc/habanalabs/mmu.c
++++ b/drivers/misc/habanalabs/mmu.c
+@@ -241,8 +241,9 @@ static int dram_default_mapping_init(struct hl_ctx *ctx)
+ 		hop2_pte_addr, hop3_pte_addr, pte_val;
+ 	int rc, i, j, hop3_allocated = 0;
+ 
+-	if (!hdev->dram_supports_virtual_memory ||
+-			!hdev->dram_default_page_mapping)
++	if ((!hdev->dram_supports_virtual_memory) ||
++			(!hdev->dram_default_page_mapping) ||
++			(ctx->asid == HL_KERNEL_ASID_ID))
+ 		return 0;
+ 
+ 	num_of_hop3 = prop->dram_size_for_default_page_mapping;
+@@ -340,8 +341,9 @@ static void dram_default_mapping_fini(struct hl_ctx *ctx)
+ 		hop2_pte_addr, hop3_pte_addr;
+ 	int i, j;
+ 
+-	if (!hdev->dram_supports_virtual_memory ||
+-			!hdev->dram_default_page_mapping)
++	if ((!hdev->dram_supports_virtual_memory) ||
++			(!hdev->dram_default_page_mapping) ||
++			(ctx->asid == HL_KERNEL_ASID_ID))
+ 		return;
+ 
+ 	num_of_hop3 = prop->dram_size_for_default_page_mapping;
+-- 
+2.17.1
 
