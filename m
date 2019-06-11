@@ -2,113 +2,92 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D7CC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CFCC46477
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C4421734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F89D2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="edQYTSnV"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AifJeYNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405327AbfFKWaj (ORCPT
+        id S2405478AbfFKWdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:30:39 -0400
-Received: from mail-eopbgr750118.outbound.protection.outlook.com ([40.107.75.118]:58352
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404718AbfFKWag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:30:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aHs4WCFJoCNWGVZh4UTOPAhGgp0lKw/NT9HamZ2eYeE=;
- b=edQYTSnVLCdJKoCsGS1OaIObW3Mx5FMuOdVSgzVDPZf6qAF5aSaz46lOzVJeWAh6XZvRkMHnX0hTicB6+l1FycWIF7tOblLGHRzvYaLoE5XrvWqc44ZG3kmTEqTCFQgmt/lDjEgqxM31j74desA3QsL85EPxVW1Kl11CZQvpBoA=
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com (10.171.214.23) by
- CY4PR2201MB1014.namprd22.prod.outlook.com (10.171.220.163) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Tue, 11 Jun 2019 22:30:33 +0000
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::d571:f49f:6a5c:4962]) by CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::d571:f49f:6a5c:4962%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 22:30:33 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH] MIPS: configs: Remove useless UEVENT_HELPER_PATH
-Thread-Topic: [PATCH] MIPS: configs: Remove useless UEVENT_HELPER_PATH
-Thread-Index: AQHVGqrQKwfEze7GG0KYKt5bg4AUGqaXFTiA
-Date:   Tue, 11 Jun 2019 22:30:33 +0000
-Message-ID: <CY4PR2201MB12726C7AAEE8A350CF777839C1ED0@CY4PR2201MB1272.namprd22.prod.outlook.com>
-References: <1559634891-20075-1-git-send-email-krzk@kernel.org>
-In-Reply-To: <1559634891-20075-1-git-send-email-krzk@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0034.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::47) To CY4PR2201MB1272.namprd22.prod.outlook.com
- (2603:10b6:910:6e::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1a16460c-18de-4239-ee4c-08d6eebc6a84
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CY4PR2201MB1014;
-x-ms-traffictypediagnostic: CY4PR2201MB1014:
-x-microsoft-antispam-prvs: <CY4PR2201MB10140D34688189A24DB0431FC1ED0@CY4PR2201MB1014.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(366004)(39840400004)(346002)(199004)(189003)(476003)(8676002)(446003)(486006)(4326008)(11346002)(7696005)(2906002)(6506007)(386003)(26005)(52116002)(102836004)(316002)(76176011)(66066001)(68736007)(6916009)(6116002)(99286004)(33656002)(3846002)(55016002)(44832011)(9686003)(186003)(6246003)(305945005)(66476007)(54906003)(52536014)(71200400001)(71190400001)(66556008)(64756008)(66946007)(7736002)(4744005)(66446008)(5660300002)(8936002)(25786009)(14454004)(73956011)(53936002)(74316002)(478600001)(42882007)(229853002)(81166006)(14444005)(81156014)(6436002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1014;H:CY4PR2201MB1272.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vEDoYPYD+YXaINEQFGvOYZccLuuwCOUIf+42CRmGjjLRJMT32Rj7+IReUg/0MZY2dmfAZtpRctDbe7Rdppj6O1tcgQn1p0JntI6CO/sgHXEZlhOJHvT2wwYUoPyo3jSO12UaNqDlRFLRTkuX3/wwsenhvo035gssIrDd2qwXUOUwEpLpmhlT77angUqo9z6TElMobW54efH5TWwD4BGfAojlPnHSaew+4UiB5Y9r3VdhHUYo7IqmWtIyB6ngxE/yWG++uXmtUyzTaIy41NH0Urjt01pMf0sqERJvmPNWYdwwyfQaJFk/sWF9C72ZTHQof849+CboHcZdX7dX7lNhSl1R6miRR5Ms1BBFzz6VFVjCLu76TWXRAwFbrrX4bPmm5ydFKVK+LGSUTXDHgTkCISWq7V2KkNdJIIgfxAchCkc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 11 Jun 2019 18:33:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:57987 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404099AbfFKWdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:33:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NlCT60Mgz9s7h;
+        Wed, 12 Jun 2019 08:33:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560292421;
+        bh=tJqum1akZ7Lu4aMUmDvYiICEGpxAbYk4hDY4i9k41wE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=AifJeYNI//Ty4Hsjpi6Lfd5QByPx++QJSb7ZrnsVhXDTIOVnEOiab1E3FckqRcBTy
+         MkWboSM2MLifswoqG/6dqBI4mLzSNRVJiHoYPhQ0IQNvXvLKr0QEQqeFeQG6UkeuyB
+         t26wz8dpiSFM7zqFNXxH2o3W86L6LHV/N/MhQCac+xI1hMZnnf92iV/tTgCrcyvVVy
+         +E3dKgx/a1FCLopZClY8oH+wx4Ll+Zi/ogBZBL3KIsrDdHgSixC1czxsw4zhHY2ffE
+         eQRQFndADbPj58IVbzIWZC78nXcDIF9kH4g5zsrlM//U7yG4uBJhX1SsVDcpUgBSYM
+         ekO2W08G6MvkA==
+Date:   Wed, 12 Jun 2019 08:33:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>
+Subject: linux-next: Signed-off-by missing for commits in the mips tree
+Message-ID: <20190612083340.1c84a0b7@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a16460c-18de-4239-ee4c-08d6eebc6a84
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 22:30:33.2086
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1014
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/QmAwlCBloiPAW6evq1L6Yj9"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCktyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+IFJlbW92ZSB0aGUgQ09ORklH
-X1VFVkVOVF9IRUxQRVJfUEFUSCBiZWNhdXNlOg0KPiAxLiBJdCBpcyBkaXNhYmxlZCBzaW5jZSBj
-b21taXQgMWJlMDFkNGE1NzE0ICgiZHJpdmVyOiBiYXNlOiBEaXNhYmxlDQo+IENPTkZJR19VRVZF
-TlRfSEVMUEVSIGJ5IGRlZmF1bHQiKSBhcyBpdHMgZGVwZW5kZW5jeSAoVUVWRU5UX0hFTFBFUikg
-d2FzDQo+IG1hZGUgZGVmYXVsdCB0byAnbicsDQo+IDIuIEl0IGlzIG5vdCByZWNvbW1lbmRlZCAo
-aGVscCBtZXNzYWdlOiAiVGhpcyBzaG91bGQgbm90IGJlIHVzZWQgdG9kYXkNCj4gWy4uLl0gY3Jl
-YXRlcyBhIGhpZ2ggc3lzdGVtIGxvYWQiKSBhbmQgd2FzIGtlcHQgb25seSBmb3IgYW5jaWVudA0K
-PiB1c2VybGFuZCwNCj4gMy4gQ2VydGFpbiB1c2VybGFuZCBzcGVjaWZpY2FsbHkgcmVxdWVzdHMg
-aXQgdG8gYmUgZGlzYWJsZWQgKHN5c3RlbWQNCj4gUkVBRE1FOiAiTGVnYWN5IGhvdHBsdWcgc2xv
-d3MgZG93biB0aGUgc3lzdGVtIGFuZCBjb25mdXNlcyB1ZGV2IikuDQo+IA0KPiBTaWduZWQtb2Zm
-LWJ5OiBLcnp5c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+DQo+IEFja2VkLWJ5OiBH
-ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KDQpBcHBsaWVkIHRv
-IG1pcHMtbmV4dC4NCg0KVGhhbmtzLA0KICAgIFBhdWwNCg0KWyBUaGlzIG1lc3NhZ2Ugd2FzIGF1
-dG8tZ2VuZXJhdGVkOyBpZiB5b3UgYmVsaWV2ZSBhbnl0aGluZyBpcyBpbmNvcnJlY3QNCiAgdGhl
-biBwbGVhc2UgZW1haWwgcGF1bC5idXJ0b25AbWlwcy5jb20gdG8gcmVwb3J0IGl0LiBdDQo=
+--Sig_/QmAwlCBloiPAW6evq1L6Yj9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Commits
+
+  5285b4d2be3a ("memory: jz4780-nemc: Reduce size of const array")
+  fb91216516a3 ("memory: jz4780_nemc: Add support for the JZ4740")
+  d1da6683d678 ("dt-bindings: memory: jz4780: Add compatible string for JZ4=
+740 SoC")
+  6ef12765520f ("memory: Kconfig: Drop dependency on MACH_JZ4780 for jz4780=
+")
+
+are missing a Signed-off-by from their committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/QmAwlCBloiPAW6evq1L6Yj9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ALEQACgkQAVBC80lX
+0GxSpgf9F1Fat4lofRFr995n8p9h/NOMtMgVlGOtRiPUVbLHP/EmuYjAxyfixk9h
+22yx2fzuYWlMIBaNeh9ErX17yXgQAT+u6LYKWwucGUNmTI8Ft6FMFk1m7hESxfPi
+fofLHb7vqkcqOGhGM34DvXGZ2t2t7aiuWfP2VTSs0akKq4DDhBo+16QlyHrFl7r3
+0QUiJlfMuoUSmO7O+HHV3TqJ8ZjdztmzC0zAoL45S+PdvvmN1PiC3LzuV/66dcxY
+Qs3eewFi3zvLsYnloASlK90TvBTk4pRwr5aSlKrMECS1+5FajwFwvLiV1OmxSmaX
+kYlrNCLLe12TyyFXFXiGhVB83M7Mbg==
+=2fXC
+-----END PGP SIGNATURE-----
+
+--Sig_/QmAwlCBloiPAW6evq1L6Yj9--
