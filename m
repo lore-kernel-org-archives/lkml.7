@@ -2,154 +2,157 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-21.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D11C31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C93C31E46
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B37720866
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B04C2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W5fommkp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lZodZ6j9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406952AbfFKVLO (ORCPT
+        id S2407046AbfFKVME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:11:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43584 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406681AbfFKVLN (ORCPT
+        Tue, 11 Jun 2019 17:12:04 -0400
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:49049 "EHLO
+        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406962AbfFKVMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:11:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BL8nZQ041453;
-        Tue, 11 Jun 2019 21:10:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=r4oU8QezePFqpSYiESryQs3UL8DYpfD9CLF3sY86YKg=;
- b=W5fommkpxEPMSUSkVfY8pwZefZojBn0xB2CG8mlaX+Xw8Hgm05RcUbft179SKF6cYNWm
- 0pxi29x0S8RghwTRE5muCQO1CYvZ+Nw8mYq1yR7wj2gj2ta+Vo7EoHat4vmSwwwi6tiS
- XO95cemCe4QcK4yj0sga3quvQOIEghDLIkT7vKYBl9PL9C6Fdpwm+piz1xSXkEZ7yvYu
- 1VHxxYrO5xwWLpsCNzy6MihKOgV0fMtsvHSCfgZs0x19Y+CPtpKS1kuaOeT0STLJhnnl
- jN4nnfQwcVFwy6Hxcrsm8bw9t7gAhpgYG3gxGAPf1jlDSlhaYauB36vDAQyly87SK4YZ Ag== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2t05nqqmr4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 21:10:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BLApJI032408;
-        Tue, 11 Jun 2019 21:10:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2t1jphntch-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 21:10:53 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5BLAoEe011760;
-        Tue, 11 Jun 2019 21:10:50 GMT
-Received: from [10.209.243.59] (/10.209.243.59)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Jun 2019 14:10:50 -0700
-Subject: Re: [PATCH] knav_qmss_queue: fix a missing-check bug in
- knav_pool_create()
-To:     Gen Zhang <blackgod016574@gmail.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     ssantosh@kernel.org, olof@lixom.net, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190530033949.GA8895@zhanggen-UX430UQ>
- <20190611093744.GA9783@ubuntu> <56a08bd2-6b94-457f-99f7-91ef3fca8804@arm.com>
- <20190611100819.GA10185@ubuntu>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <b1e3623f-b908-363c-041c-0b9fb96412d8@oracle.com>
-Date:   Tue, 11 Jun 2019 14:10:49 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190611100819.GA10185@ubuntu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110137
+        Tue, 11 Jun 2019 17:12:03 -0400
+Received: by mail-vs1-f74.google.com with SMTP id i6so4721899vsp.15
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 14:12:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5g9SgyaKPTySWfJg3LNPHAqceK/gsh7xBGRzfCQmGiE=;
+        b=lZodZ6j9kTTHdQSxiQl6HxxKgL64WvJ7YvP2tsykPRK/+DVTGrsuRNR3mDWaiyWUbZ
+         wn0ex2JyYe3PkQC03U8WnDTH5CQOkG/99uFtB5I6R/ybEZE2RX7hTvk3yaAexFFvTq7Y
+         bTrzPcRKMbrpjyU8/cyqeqbyqnSXpgNmTZwyyOjFRswu50VOeFk8T1QRtSTk6gShyYvY
+         yyynk+3kGhIOMGVFA+Fdg2f+NvY/5QY5HTgEveuEGdNI1dPFmJEUhDECWrDVvEKHAnEx
+         MTZJ4ulo/Yvy9cTMLMgC9FvwQO8KcJR+mJOZ7owzHccNoDT0RM8vgOqwBFcpPz8aTwXH
+         losw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5g9SgyaKPTySWfJg3LNPHAqceK/gsh7xBGRzfCQmGiE=;
+        b=hDwB8H70FGY2yZtXC5A6Bus9KTRJSY2U/3yQa1ywbRZGg5rCkb5Ut9/Yn3On8QE2WC
+         9EXNLUZCbFPOHcXhTL4sQYawO/wpSADUS3AXiDpxVpNj9tUEc/uYBj59WMszViyRNa/l
+         8G7wdZBbxvdz+8CmnbthfnRwCVzpg09M5Tt+VIPW4TSrGokwhnBsLYWjXLJG8VptOawB
+         i9zCpsqQbzB4Kz3zryr4gmDM04ZvnXWbC68VYcetcaGQo9CgvPsglDB9EmHO/t+qbv+f
+         y3lGdhDpPs685118QOoKYKY7LDeQEXaqUZZR8quQeTKjiNwSH9gKR54BC21hYTBDjiNC
+         13Sw==
+X-Gm-Message-State: APjAAAXqt19YKHie4k2RiyVaMcvIZc0l0i1zxG/aAv6BRRExp+lXLm7n
+        cfppnHvhE3NxeYSbgWOixpJlsY99Lg==
+X-Google-Smtp-Source: APXvYqwnBVTE2y+yCuUnSh2UkR+2gJYYnucwu2hfaq7zr1chGY37x8d+vTStgxxXq1D/CHRAzz2qSl0P1g==
+X-Received: by 2002:a67:ad07:: with SMTP id t7mr7944256vsl.214.1560287522570;
+ Tue, 11 Jun 2019 14:12:02 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 14:11:34 -0700
+Message-Id: <20190611211134.96159-1-nhuck@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+Subject: [PATCH] clk: qcom: Fix -Wunused-const-variable
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     agross@kernel.org, david.brown@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Clang produces the following warning
 
+drivers/clk/qcom/gcc-msm8996.c:133:32: warning: unused variable
+'gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map' [-Wunused-const-variable]
+static const struct
+parent_map gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map[] =
+{ ^drivers/clk/qcom/gcc-msm8996.c:141:27: warning: unused variable
+'gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div' [-Wunused-const-variable] static
+const char * const gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div[] = { ^
+drivers/clk/qcom/gcc-msm8996.c:187:32: warning: unused variable
+'gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map'
+[-Wunused-const-variable] static const struct parent_map
+gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map[] = { ^
+drivers/clk/qcom/gcc-msm8996.c:197:27: warning: unused variable
+'gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div'
+[-Wunused-const-variable] static const char * const
+gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div[] = {
 
-On 6/11/19 3:08 AM, Gen Zhang wrote:
-> On Tue, Jun 11, 2019 at 10:54:15AM +0100, Marc Zyngier wrote:
->> Hi Gen,
->>
->> No idea why I'm being cc'd on this but hey... ;-)
-> I copied email address ftom thid commit:-)
-> https://github.com/torvalds/linux/commit/832ad0e3da4510fd17f98804abe512ea9a747035#diff-f2a24befc247191f4b81af93e9336785
->>
->> On 11/06/2019 10:37, Gen Zhang wrote:
->>> On Thu, May 30, 2019 at 11:39:49AM +0800, Gen Zhang wrote:
->>>> In knav_pool_create(), 'pool->name' is allocated by kstrndup(). It
->>>> returns NULL when fails. So 'pool->name' should be checked. And free
->>>> 'pool' when error.
->>>>
->>>> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
->>>> ---
->>>> diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
->>>> index 8b41837..0f8cb28 100644
->>>> --- a/drivers/soc/ti/knav_qmss_queue.c
->>>> +++ b/drivers/soc/ti/knav_qmss_queue.c
->>>> @@ -814,6 +814,12 @@ void *knav_pool_create(const char *name,
->>>>   	}
->>>>   
->>>>   	pool->name = kstrndup(name, KNAV_NAME_SIZE - 1, GFP_KERNEL);
->>>> +	if (!pool->name) {
->>>> +		dev_err(kdev->dev, "failed to duplicate for pool(%s)\n",
->>>> +			name);
->>
->> There is no need to output anything, the kernel will be loud enough if
->> you run out of memory.
-> Thanks for your comments.
->>
->>>> +		ret = -ENOMEM;
->>>> +		goto err_name;
->>>> +	}
->>>>   	pool->kdev = kdev;
->>>>   	pool->dev = kdev->dev;
->>>>   
->>>> @@ -864,6 +870,7 @@ void *knav_pool_create(const char *name,
->>>>   	mutex_unlock(&knav_dev_lock);
->>>>   err:
->>>>   	kfree(pool->name);
->>>> +err_name:
->>
->> kfree(NULL) is perfectly valid, there is no need to create a second
->> label. Just branch to the existing error label.
-> Sure, better not to add redundant codes.
->>
->>>>   	devm_kfree(kdev->dev, pool);
->>>>   	return ERR_PTR(ret);
->>>>   }
->>> Can anyone look into this patch?
->>>
->>> Thanks
->>> Gen
->>>
->>
->> The real question is whether this is actually an error at all.
->> pool->name doesn't seem to be used for anything but debug information,
->> and the printing code can perfectly accommodate a NULL pointer.
-> That sounds reasonable. This patch just fixes a *theoretical* bug.
-> 
-Not even theoretical bug.
+It looks like these were never used.
+
+Fixes: b1e010c0730a ("clk: qcom: Add MSM8996 Global Clock Control (GCC) driver")
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/518
+Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+---
+ drivers/clk/qcom/gcc-msm8996.c | 36 ----------------------------------
+ 1 file changed, 36 deletions(-)
+
+diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
+index d2f39a972cad..d004cdaa0e39 100644
+--- a/drivers/clk/qcom/gcc-msm8996.c
++++ b/drivers/clk/qcom/gcc-msm8996.c
+@@ -130,22 +130,6 @@ static const char * const gcc_xo_gpll0_gpll4_gpll0_early_div[] = {
+ 	"gpll0_early_div"
+ };
+ 
+-static const struct parent_map gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map[] = {
+-	{ P_XO, 0 },
+-	{ P_GPLL0, 1 },
+-	{ P_GPLL2, 2 },
+-	{ P_GPLL3, 3 },
+-	{ P_GPLL0_EARLY_DIV, 6 }
+-};
+-
+-static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div[] = {
+-	"xo",
+-	"gpll0",
+-	"gpll2",
+-	"gpll3",
+-	"gpll0_early_div"
+-};
+-
+ static const struct parent_map gcc_xo_gpll0_gpll1_early_div_gpll1_gpll4_gpll0_early_div_map[] = {
+ 	{ P_XO, 0 },
+ 	{ P_GPLL0, 1 },
+@@ -184,26 +168,6 @@ static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll2_early_gpll0_early
+ 	"gpll0_early_div"
+ };
+ 
+-static const struct parent_map gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map[] = {
+-	{ P_XO, 0 },
+-	{ P_GPLL0, 1 },
+-	{ P_GPLL2, 2 },
+-	{ P_GPLL3, 3 },
+-	{ P_GPLL1, 4 },
+-	{ P_GPLL4, 5 },
+-	{ P_GPLL0_EARLY_DIV, 6 }
+-};
+-
+-static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div[] = {
+-	"xo",
+-	"gpll0",
+-	"gpll2",
+-	"gpll3",
+-	"gpll1",
+-	"gpll4",
+-	"gpll0_early_div"
+-};
+-
+ static struct clk_fixed_factor xo = {
+ 	.mult = 1,
+ 	.div = 1,
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
+
