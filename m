@@ -2,141 +2,143 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=BITCOIN_SPAM_02,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E324AC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4BAC31E46
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AFD20684
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D3720684
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="EsPllGjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406901AbfFKUuY (ORCPT
+        id S2406911AbfFKUvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:50:24 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:47005 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406215AbfFKUuX (ORCPT
+        Tue, 11 Jun 2019 16:51:46 -0400
+Received: from us-smtp-delivery-168.mimecast.com ([63.128.21.168]:37486 "EHLO
+        us-smtp-delivery-168.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406215AbfFKUvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:50:23 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id aniihmt7M41bFanilhFqre; Tue, 11 Jun 2019 22:50:21 +0200
-Subject: Re: [PATCH 1/2] media: v4l2-core: Shifting signed 32-bit value by 31
- bits error
-To:     Shuah Khan <skhan@linuxfoundation.org>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com,
-        niklas.soderlund+renesas@ragnatech.se, ezequiel@collabora.com,
-        paul.kocialkowski@bootlin.com
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1559764506.git.skhan@linuxfoundation.org>
- <bac3ee3b10de409b6cdf7286e0e84737e63662ee.1559764506.git.skhan@linuxfoundation.org>
- <8cc03625-f41d-6009-d50c-823e5f498dca@infradead.org>
- <7819cae4-58e5-cbe1-ac9d-bca00d390066@xs4all.nl>
- <d5aea86a-b556-aae4-0b97-9add8878f99f@linuxfoundation.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6b4654b1-7cd5-8fea-8c08-472ade8f3ebb@xs4all.nl>
-Date:   Tue, 11 Jun 2019 22:50:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <d5aea86a-b556-aae4-0b97-9add8878f99f@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 11 Jun 2019 16:51:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
+        s=mimecast20190405; t=1560286303;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tZJI8JGdaiRefhCxahVuZzeWNJpxVME+msCpQoaQ87U=;
+        b=EsPllGjfVGLilLLuZrN6tRKbPB/vhHc8ANG/KJcw8zwVMxABIFnjNzL2cKvW9p6vyePq6c
+        LylHxv4Y69YpahLvXkKnZJj1QumKKn/ap5PJQtwopAUIntZUbqCWbDradygFNw2duiYxd/
+        GynTsRVFbWTZJx2qeTnH6rNgv+4IZe8=
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com
+ (mail-bl2nam02lp2056.outbound.protection.outlook.com [104.47.38.56]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-bdqTYNRGMlySrZspClMRyw-1; Tue, 11 Jun 2019 16:45:35 -0400
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
+ MWHPR0601MB3673.namprd06.prod.outlook.com (10.167.236.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Tue, 11 Jun 2019 20:45:31 +0000
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::88d1:40e0:d1be:1daf]) by MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::88d1:40e0:d1be:1daf%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 20:45:31 +0000
+From:   Trent Piepho <tpiepho@impinj.com>
+To:     "festevam@gmail.com" <festevam@gmail.com>,
+        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>
+CC:     "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Linux-imx@nxp.com" <Linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "peng.fan@nxp.com" <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
+Thread-Topic: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
+Thread-Index: AQHVIB9pLfrzWsaWqUqp88lz3VFaBaaW6UGAgAADtgA=
+Date:   Tue, 11 Jun 2019 20:45:31 +0000
+Message-ID: <1560285930.2354.8.camel@impinj.com>
+References: <20190611063333.48501-1-Anson.Huang@nxp.com>
+         <20190611063333.48501-2-Anson.Huang@nxp.com>
+         <CAOMZO5BCuBKHs1jXkm3qFD84_xcB=0NSwE3SLJHx9kq4Stbd_A@mail.gmail.com>
+In-Reply-To: <CAOMZO5BCuBKHs1jXkm3qFD84_xcB=0NSwE3SLJHx9kq4Stbd_A@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDqPdampvam9t1IRzB0iFELc7nEPX5OR/TF9QssU3HBs2KYkud1TLt9b109GhAPvLE53p88JAm+woywM+u645zJD/YfA8UkYGOxZDLwgwjZweqeV0xO1
- t5gaPWld559PAdtOK2f9oA26Mymc6A/ITMeypImIZb3FY769jcbWGPlZjE/tV/Z4XIU3sK4A9FNoKRBJBNFNOlr+7c/hFJ561VqKTuzDNqa+j8R91UHuWEFl
- doRRN6I3zjythBcykNWoHsAITIHf4nNgzuxfQsI6jf6A77ZF34L7TvGGEqGiQxuafXQGfwHB8Tg6eol3yH7oxbfekZ4nQdmIzMR+J27eOMeD3nVRifH7kmEn
- jeJh5QXZUenJSXYGSkdEO6pJnHLQviiM9YN0wvj8k2FwhEcFyJBl7kb3n98uiizXyM3umuIQgm//BGXm198n67sNhBqM0TGzirCufTaZWbYeb6PhNJVqByWR
- 1/I4Ew74pZyYKub+QKawTMqZ/JKO0n9SXXfoDA==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [216.207.205.253]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53857865-7ec4-436d-3cd9-08d6eeadbecd
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR0601MB3673;
+x-ms-traffictypediagnostic: MWHPR0601MB3673:
+x-microsoft-antispam-prvs: <MWHPR0601MB367358AF176EFC206A27CFC8D3ED0@MWHPR0601MB3673.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(396003)(366004)(39850400004)(376002)(136003)(346002)(189003)(199004)(86362001)(6506007)(53546011)(8676002)(81166006)(81156014)(102836004)(25786009)(478600001)(6486002)(26005)(68736007)(186003)(316002)(256004)(229853002)(99286004)(76176011)(14444005)(66066001)(6512007)(5660300002)(14454004)(8936002)(53936002)(54906003)(110136005)(6246003)(2906002)(6436002)(66946007)(76116006)(66556008)(64756008)(91956017)(66476007)(73956011)(66446008)(3846002)(6116002)(7416002)(446003)(4326008)(103116003)(476003)(486006)(2616005)(11346002)(71190400001)(2501003)(71200400001)(7736002)(36756003)(305945005)(41533002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3673;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nFppgJnFMfNsTzT7QOgDM8RaEWMgvIXCTUG7RUzqPPzP2/6BlOV9gkZOnGVrO7z35ws9LrMY/tOJyPt653iw83mK4uVLEw2VEDb/4Gr8m1jeiV49zS+gJjm10ScxrCoBioK1ejd8x2oaJjBEBRzyH/tsmKCpTOKc8k/h6ZAZaf7V5xsnGsqVD1DFbCqqCMFseK+pzzi44zb2EpeMZ2oZWWS37rhFJgyPzVCuzFFiAnu0+Reup6Irc7M6pvDGVo0Q+uvZGvk7F1LaGNeQLzLavPyKgmxTaUoU1p/vb6m7vemuoQ4eeREnmNEA1bx9pLGfjuQ3MaR9TbuHVjvtc4Q7ldlnLwIMQNvKJSrFDPaLC/9vsqBo6ko8//n9ClFiV+8hTSx0O4za5G4W1uWLWIjPxqvUaT26ZLqyvIpZJHO5XY8=
+Content-ID: <DC1328CED465FC4189CCE1BF075530CC@namprd06.prod.outlook.com>
+MIME-Version: 1.0
+X-OriginatorOrg: impinj.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53857865-7ec4-436d-3cd9-08d6eeadbecd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 20:45:31.4759
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tpiepho@impinj.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3673
+X-MC-Unique: bdqTYNRGMlySrZspClMRyw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 9:42 PM, Shuah Khan wrote:
-> On 6/6/19 12:33 AM, Hans Verkuil wrote:
->> On 6/6/19 5:22 AM, Randy Dunlap wrote:
->>> On 6/5/19 2:53 PM, Shuah Khan wrote:
->>>> Fix the following cppcheck error:
->>>>
->>>> Checking drivers/media/v4l2-core/v4l2-ioctl.c ...
->>>> [drivers/media/v4l2-core/v4l2-ioctl.c:1370]: (error) Shifting signed 32-bit value by 31 bits is undefined behaviour
->>>>
->>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->>>> ---
->>>>   drivers/media/v4l2-core/v4l2-ioctl.c | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
->>>> index 6859bdac86fe..333e387bafeb 100644
->>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
->>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
->>>> @@ -1364,7 +1364,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
->>>>   					(char)((fmt->pixelformat >> 8) & 0x7f),
->>>>   					(char)((fmt->pixelformat >> 16) & 0x7f),
->>>>   					(char)((fmt->pixelformat >> 24) & 0x7f),
->>>> -					(fmt->pixelformat & (1 << 31)) ? "-BE" : "");
->>>> +					(fmt->pixelformat & BIT(31)) ? "-BE" : "");
->>>>   			break;
->>>>   		}
->>>>   	}
->>>>
->>>
->>> If this builds, I guess #define BIT(x) got pulled in indirectly
->>> since bits.h nor bitops.h is currently #included in that source file.
->>>
-> 
-> It does build. You are right that I should have included bitops.h
-> 
->>> Documentation/process/submit-checklist.rst rule #1 says:
->>> 1) If you use a facility then #include the file that defines/declares
->>>     that facility.  Don't depend on other header files pulling in ones
->>>     that you use.
->>>
->>> Please add #include <linux/bits or bitops.h>
->>>
->>
->> I'm not sure about this patch. '1 << 31' is used all over in the kernel,
->> including in public headers (e.g. media.h, videodev2.h).
->>
->> It seems arbitrary to change it only here, but not anywhere else.
->>
-> 
-> Right. We have several places in the kernel that do that.
-> 
->> In this particular example for the fourcc handling I would prefer to just
->> use '1U << 31', both in v4l2-ioctl.c and videodev2.h.
->>
-> 
-> If you would like to take the patch, I can send v2 fixing it using
-> 1U << 31 - This is simpler since it doesn't nee additional includes.
+T24gVHVlLCAyMDE5LTA2LTExIGF0IDE3OjMyIC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
+PiBIaSBBbnNvbiwNCj4gDQo+IE9uIFR1ZSwgSnVuIDExLCAyMDE5IGF0IDM6MzEgQU0gPEFuc29u
+Lkh1YW5nQG54cC5jb20+IHdyb3RlOg0KPiA+IA0KPiA+IEZyb206IEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KPiA+IA0KPiA+IGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgUlRDIGRy
+aXZlciBjYW4gc3VwcG9ydCBhbGwgaS5NWCBTb0NzDQo+ID4gd2l0aCBzeXN0ZW0gY29udHJvbGxl
+ciBpbnNpZGUsIHRoaXMgcGF0Y2ggbWFrZXMgdGhlIGNvbXBhdGlibGUNCj4gPiBzdHJpbmcgbW9y
+ZSBnZW5lcmljIHRvIHN1cHBvcnQgb3RoZXIgaS5NWCBTb0NzIHdpdGggc3lzdGVtDQo+ID4gY29u
+dHJvbGxlciBpbnNpZGUsIHN1Y2ggYXMgaS5NWDhRTSBldGMuLg0KPiA+IA0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBk
+cml2ZXJzL3J0Yy9ydGMtaW14LXNjLmMgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L3J0Yy9ydGMtaW14LXNjLmMgYi9kcml2ZXJzL3J0Yy9ydGMtaW14LXNjLmMNCj4gPiBpbmRleCBj
+OTMzMDQ1Li4zOGVmM2NhIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2Mu
+Yw0KPiA+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KPiA+IEBAIC0xNzgsNyArMTc4
+LDcgQEAgc3RhdGljIGludCBpbXhfc2NfcnRjX3Byb2JlKHN0cnVjdA0KPiA+IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikNCj4gPiAgfQ0KPiA+IA0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rl
+dmljZV9pZCBpbXhfc2NfZHRfaWRzW10gPSB7DQo+ID4gLSAgICAgICB7IC5jb21wYXRpYmxlID0g
+ImZzbCxpbXg4cXhwLXNjLXJ0YyIsIH0sDQo+ID4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gImZz
+bCxpbXgtc2MtcnRjIiwgfSwNCj4gDQo+IFdoYXQgaXMgd3Jvbmcgd2l0aCB0aGUgY3VycmVudCBj
+b21wYXRpYmxlIHN0cmluZz8NCj4gDQo+IElmIHlvdSB3YW50IHRvIHN1cHBvcnQgaS5NWDhRTSBq
+dXN0IGFkZCBpbiBpdHMgZHRzaToNCj4gDQo+IGNvbXBhdGlibGUgPSAiZnNsLGlteDhxbS1zYy1y
+dGMiLCAiZnNsLGlteDhxeHAtc2MtcnRjIg0KPiANCj4gYW5kIGFkZCBhIGR0LWJpbmRpbmdzIGVu
+dHJ5IGZvciAiZnNsLGlteDhxbS1zYy1ydGMiDQoNClllcywgSSB0aG91Z2h0IHRoaXMgaXMgKHdh
+cz8pIHRoZSByZWNvbW1lbmRlZCBwcmFjdGljZSBmb3IgSVAgYmxvY2tzIGluDQpTb0NzIHRoYXQg
+ZG9uJ3QgaGF2ZSB0aGVpciBvd24gdmVyc2lvbiAodnMgc29tZXRoaW5nIGxpa2UgYSBTeW5vcHNp
+cw0KYmxvY2sgdXNlZCBtYW55IHBsYWNlcyk6DQoNCiogVXNlIHRoZSBmaXJzdCBTb0MgdG8gaGF2
+ZSB0aGUgYmxvY2sgYXMgdGhlIGJhc2UgY29tcGF0aWJsZSBmb3IgdGhlDQpibG9jay4NCiogQWx3
+YXlzIGFkZCB0aGUgY3VycmVudCBTb0MsIGluIGFkZGl0aW9uYWwgdG8gdGhlIGJhc2UsIGluIHRo
+ZSBTb0Mncw0KZHRzJ3MgbGlzdCBvZiBjb21wYXRpYmxlcy4gIEV2ZW4gaWYgdW5uZWVkZWQgYXQg
+dGhlIHByZXNlbnQuDQoqIFRoZSBkcml2ZXIgd2lsbCBsaXN0IHRoZSBiYXNlIGNvbXBhdGlibGUg
+aW4gdGhlIG1hdGNoIHRhYmxlLCBhbmQgd2lsbA0KYWRkIG5ldyBvbmVzIGZvciBzcGVjaWZpYyBz
+b2NzIGlmL3doZW4gdGhlcmUgaXMgYSBuZWVkIGZvciBpdC4NCg==
 
-I would like to have this cleaned up in the public media APIs. Those can be
-used by other compilers as well and it makes sense to me not to have
-undefined behavior in those headers.
-
-> 
->> A separate patch doing the same for MEDIA_ENT_ID_FLAG_NEXT in media.h would
->> probably be a good idea either: that way the public API at least will do
->> the right thing.
->>
-> 
-> I should have explained it better. I wanted to start with one or two
-> places first to see if it is worth our time to fix these:
-> 
-> The full kernel cppcheck log for "Shifting signed 32-bit value by 31 
-> bits is undefined behaviour" can be found at:
-> 
-> https://drive.google.com/file/d/19Xu7UqBGJ7BpzxEp92ZQYb6F8UPrk3z3/view
-
-I don't think it makes sense to fix this for drivers. If gcc would do this
-wrong, we'd have noticed it ages ago.
-
-But I think it makes sense to fix this in public headers.
-
-Regards,
-
-	Hans
