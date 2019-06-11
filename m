@@ -2,234 +2,239 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C56C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF58C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEEB2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AAD2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WaIkLHsl"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="MHVS6Jn4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405494AbfFKP6K (ORCPT
+        id S2391865AbfFKP7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:58:10 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:52955 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404424AbfFKP6J (ORCPT
+        Tue, 11 Jun 2019 11:59:14 -0400
+Received: from ucol19pa11.eemsg.mail.mil ([214.24.24.84]:2984 "EHLO
+        UCOL19PA11.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388492AbfFKP7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:58:09 -0400
-Received: by mail-it1-f193.google.com with SMTP id l21so5796547ita.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:58:08 -0700 (PDT)
+        Tue, 11 Jun 2019 11:59:14 -0400
+X-EEMSG-check-017: 684741867|UCOL19PA11_EEMSG_MP9.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.63,362,1557187200"; 
+   d="scan'208";a="684741867"
+Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
+  by UCOL19PA11.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 11 Jun 2019 15:57:56 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QcBUhGZxr4QDNhrZySal9tBNdJxMbcOWcA1qAnQLKyg=;
-        b=WaIkLHsl+Z2pV41NF8G6xmRfgnHElT76MqnXYa+6n7SCVIGZF+NvqOostb3POKMptC
-         AAlgVdrn8CZpUIxHzBvEeL1ME9qtj5cR0B9IvzHat766PQhMz706X4kQIWNXAKkRtO0q
-         n9eR+TFGXCGu8SaIbPm5Q/nVrWWcDs/9gTfu3OoTZau1LDdxqTsy68LGLjK2zijGICqf
-         FzK4ViUV1+ec1dJyiI3pXH3IIgGG4UbR0r8Mv5cjqpVhvziaHnvSOLSOrkgedNxdX6LE
-         VqtEx1Qoy07wLfGG1Ougs7Q4VH6RWRKKwWrj5FvbYHVs2aofKWylSt5WZNzsiaID5CVC
-         ZEQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QcBUhGZxr4QDNhrZySal9tBNdJxMbcOWcA1qAnQLKyg=;
-        b=gVvk629EC+aLB3t/VQvLuKSfRdFTcPzhYKgTh4/ZkeJx7ggiJ5PMNlmYheRA0MIDw4
-         bPGNEXEql3xVOkWc/PszasYIwaYXwkScIGOuuUnEgE5ixT54EBMCQE8fxnOiyZmjx41E
-         ukz/BG2TqSSqrzD3Iqa7ig3opvLOVAWLNpifHmlKVWa9mQfPxXc6ZZbuACr8DffQUqvr
-         qkkDSR4bLAFoJHSfnu482rtbUAj2J3AQaovetf299RPqJUtloYVpPSjM9IT79TjVwudL
-         IWNR9hkcnZntlV3ZtAbn4iILPBOtO3Mgm8KLJ0EW61tNVcD8CB2DqdLl6O2mOsMQrwUX
-         sP+g==
-X-Gm-Message-State: APjAAAX9yM7nvMuJoE21zgv9PRxYcKU1SEduElosbgjW8MpwwOtBMEOf
-        sbS41HaUPe+Gfa0iRBL5k5TA36OFQs36yXVdrLyj1A==
-X-Google-Smtp-Source: APXvYqyTveQ3jOw5sZAO0BnHQaOY9wzwHK3f1gFn/Eb88+eCsIESvnVo6r5xbT5BjKuAwgEbLS7UQI6RGwIpl6mj8WQ=
-X-Received: by 2002:a24:14f:: with SMTP id 76mr18228211itk.115.1560268688329;
- Tue, 11 Jun 2019 08:58:08 -0700 (PDT)
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1560268676; x=1591804676;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ZoRzzwnUupnCbxMXe+I2jJc705um28RURpHG4yHU9FI=;
+  b=MHVS6Jn4gzTO7Igiz4EthK3bZyjvmzsyOlifP2p0pm7TTcmciKGbz3LK
+   8Baby3kt83WL97T0PkcfGf9PLCiQq8c4VV88YBmwdq8I9Pz1Ydow0oroH
+   tqz60g/AMCrfofWYXG3eA0To++wYpiqCEvQ943xTS025und9ro3eIuryp
+   WdrGdpXGS+gTcOvw/ArTb9g3iEtf6VmOA1YFQGjo4+ZpiPvi290KE4D4J
+   IBaqfdS7As3I0c/Z/UzokkxHJ/A3jmnWWunuw5BcDhgVtURgHlc6NeHgV
+   23ySv+xH8e1rp8a2+kv5HSCMLI5Z2GzwYhY42vw4LSdwg4CNIAn34Rsx8
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.63,362,1557187200"; 
+   d="scan'208";a="24617617"
+IronPort-PHdr: =?us-ascii?q?9a23=3ASlbgChyiyE8UgPTXCy+O+j09IxM/srCxBDY+r6?=
+ =?us-ascii?q?Qd0ukSLfad9pjvdHbS+e9qxAeQG9mCsrQd1red7P+ocFdDyK7JiGoFfp1IWk?=
+ =?us-ascii?q?1NouQttCtkPvS4D1bmJuXhdS0wEZcKflZk+3amLRodQ56mNBXdrXKo8DEdBA?=
+ =?us-ascii?q?j0OxZrKeTpAI7SiNm82/yv95HJbAhEmSexbalvIBi2rQjducsbjIl/Iast1x?=
+ =?us-ascii?q?XFpWdFdf5Lzm1yP1KTmBj85sa0/JF99ilbpuws+c1dX6jkZqo0VbNXAigoPG?=
+ =?us-ascii?q?Az/83rqALMTRCT6XsGU2UZiQRHDg7Y5xznRJjxsy/6tu1g2CmGOMD9UL45VS?=
+ =?us-ascii?q?i+46ptVRTlkzkMOSIn/27Li8xwlKNbrwynpxxj2I7ffYWZOONjcq/BYd8WQG?=
+ =?us-ascii?q?xMUchLVyxFH4iycY0BAeQcNupctoXwp18DoR64CAKxBu3g1yVIi2fr06Mk3e?=
+ =?us-ascii?q?QvEQLI0gIuEN0BsnvbsNr7ObwOUe231qTE0SnPYv1U1Dr79YPGcgohofaJXb?=
+ =?us-ascii?q?9obMTR1VcgFxvFjlqOr4zuIi6b1uEXvGif6+pvS+KugHMgpgFqvzev3dwhip?=
+ =?us-ascii?q?XJh40JylDE8j91wIAuJdKiUkJ7btmkEIVJuiycKoB4QdsiTnl1tCs1xbAKo5?=
+ =?us-ascii?q?62cDUQxJg5yBPTdeaLf5WO7xn+TuieOy14i2hgeL+nghay9lWvxfPkW8mv1V?=
+ =?us-ascii?q?ZKsjJFkt7RtnARzxDT6taISv96/kq5xTaAzRrT6uBZIUAvj6bbN54gzaIwlp?=
+ =?us-ascii?q?oUq0jDGDP5mF7qg6OMc0Uk++yo5/zmYrXguJCcK5d5hhzxP6khgMCyAfk0Ph?=
+ =?us-ascii?q?IQU2WU5+iwzqDv8VX8QLpQj/02lqfZsIrdJcQevqO5GBJa0p045hajDzapzN?=
+ =?us-ascii?q?QYnX4dIFJDYxKIlZLlO17JIPDmFfu/mUijkC93x/DaOb3sGojCLnjEkLbvY7?=
+ =?us-ascii?q?l970pcyBEowNBF+Z1bF7EBL+jvWkPrqNPYCRo5ORSuw+n7ENV9yp8eWWWXD6?=
+ =?us-ascii?q?CFKqzSqkGH5+I0LumXeIAVuCzyK+Ur5/7qk3A5g0YRcrWz0pcNdH+4GfFmKV?=
+ =?us-ascii?q?2DYXXwmtcBDXsKvg0mQezulV2CTTlTam2xX60i/DE7DpypDYPZSoCqmryB0z?=
+ =?us-ascii?q?+xHodKaWBeFlCMDXDoep2aW/cNciKSJdRskz0aWrinSo8hywuitAv7y7phM+?=
+ =?us-ascii?q?rV9TcUtZX51Nh6/eHTiBIy/yRuD8uBy2GNU310nmQQSj8y3aB/p1F9y1ia3a?=
+ =?us-ascii?q?hlmPxXDsde5+1GUggkL57Q1e96BM7oWgLHYNiJTEyqQtK8ATE+Vtgx2cMBY1?=
+ =?us-ascii?q?5hG9W+iRDOxy6qA74Tl7yWC50467nc0GbtKMZg0XbG1bUhjlk/TstKMm2pm7?=
+ =?us-ascii?q?N/9wzNCIPSjUWZmLildb4G0C7O6miD12yOs19cUAJqVqXFR38fbFPMrdvl/k?=
+ =?us-ascii?q?PCU6OuCbM/PwtFyM6CLLZKa9LwgVVIX/fsJcrRY3yvlGe0HhuI2LyMY5Twe2?=
+ =?us-ascii?q?kH3yXSFlIEkwYN8naCLwQ+AT2ho23GBjx0CV3ve1/s8fV5qH6jSk80zgeKb1?=
+ =?us-ascii?q?Bu1ras+R4am+acS/UN0bIAoyohtTp0E0in397MCNqPuRBhfKNCbtM5+ltH0n?=
+ =?us-ascii?q?jZtwMudqCneoxrmF8SOyRwoE7q0w4/XolAltcnqHcx5BB/JaKRzBVKcDbOmd?=
+ =?us-ascii?q?jbM6baOyHJ9xCmdqDS10uWhN2f4aoewO8zq1z+sgWkDA8p+jNs1NwDlzO14J?=
+ =?us-ascii?q?nbRC4PTZX0U1ws9Bky87XHfi4V5I7O03Bod66uvWmR9cguAb4e1hu4f9pZeJ?=
+ =?us-ascii?q?iBHQv2HtxSU9OiM8Q2ilOpaVQCJ+kU+6kqaZD1P8Ca0bKmab4z1Amtin5Ktc?=
+ =?us-ascii?q?UkjxOB?=
+X-IPAS-Result: =?us-ascii?q?A2BDBwBWzv9c/wHyM5BmHAEBAQQBAQcEAQGBZYFnKoE8M?=
+ =?us-ascii?q?oQ9kz8BAQEBAQEGgQgtiVGRCwkBAQEBAQEBAQE0AQIBAYRAAoJ+IzgTAQMBA?=
+ =?us-ascii?q?QEEAQEBAQMBAWwogjopAYJmAQEBAQIBIwQRPwIFCwsOCgICJgICVwYBDAgBA?=
+ =?us-ascii?q?YJTDD+BdwUPqVZ+M4VHgyqBRoEMKItdF3iBB4ERJ4JrPoQugyCCWASLSohEh?=
+ =?us-ascii?q?0mNWgmCEoIbkSQGG4IliwSJeY0WmE0hgVgrCAIYCCEPgyiCGheOPCMDgTYBA?=
+ =?us-ascii?q?Y9cAQE?=
+Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
+  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 11 Jun 2019 15:57:56 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x5BFvs7B007485;
+        Tue, 11 Jun 2019 11:57:55 -0400
+Subject: Re: What do LSMs *actually* need for checks on notifications?
+To:     David Howells <dhowells@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     viro@zeniv.linux.org.uk, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
+ <31009.1560262869@warthog.procyon.org.uk>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <05ddc1e6-78ba-b60e-73b1-ffe86de2f2f8@tycho.nsa.gov>
+Date:   Tue, 11 Jun 2019 11:57:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1560189762-5267-1-git-send-email-suzuki.poulose@arm.com>
-In-Reply-To: <1560189762-5267-1-git-send-email-suzuki.poulose@arm.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Tue, 11 Jun 2019 09:57:57 -0600
-Message-ID: <CANLsYkzEz6RvDQT-ua+NmV=H3y08TZUJ2RqutQCEXxpL+75_=g@mail.gmail.com>
-Subject: Re: [PATCH v2] Documentation: coresight: Update the generic device names
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leo Yan <leo.yan@linaro.org>, Jonathan Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <31009.1560262869@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 at 12:02, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> Update the documentation to reflect the new naming scheme with
-> latest changes.
->
-> Reported-by: Leo Yan <leo.yan@linaro.org>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
-> Changes since v1
->   - Add a section about the Device Naming scheme and add refer to
->     it in the examples.
-> ---
->  Documentation/trace/coresight.txt | 82 ++++++++++++++++++++++++++++++++-------
->  1 file changed, 67 insertions(+), 15 deletions(-)
->
-> diff --git a/Documentation/trace/coresight.txt b/Documentation/trace/coresight.txt
-> index efbc832..b027d61 100644
-> --- a/Documentation/trace/coresight.txt
-> +++ b/Documentation/trace/coresight.txt
-> @@ -188,6 +188,49 @@ specific to that component only.  "Implementation defined" customisations are
->  expected to be accessed and controlled using those entries.
->
->
-> +Device Naming scheme
-> +------------------------
-> +The devices that appear on the "coresight" bus were named the same as their
-> +parent devices, i.e, the real devices that appears on AMBA bus or the platform bus.
-> +Thus the names were based on the Linux Open Firmware layer naming convention,
-> +which follows the base physical address of the device followed by the device
-> +type. e.g:
-> +
-> +root:~# ls /sys/bus/coresight/devices/
-> + 20010000.etf  20040000.funnel      20100000.stm     22040000.etm
-> + 22140000.etm  230c0000.funnel      23240000.etm     20030000.tpiu
-> + 20070000.etr  20120000.replicator  220c0000.funnel
-> + 23040000.etm  23140000.etm         23340000.etm
-> +
-> +However, with the introduction of ACPI support, the names of the real
-> +devices are a bit cryptic and non-obvious. Thus, a new naming scheme was
-> +introduced to use more generic names based on the type of the device. The
-> +following rules apply:
-> +
-> +  1) Devices that are bound to CPUs, are named based on the CPU logical
-> +     number.
-> +
-> +     e.g, ETM bound to CPU0 is named "etm0"
-> +
-> +  2) All other devices follow a pattern, "<device_type_prefix>N", where :
-> +
-> +       <device_type_prefix>    - A prefix specific to the type of the device
-> +       N                       - a sequential number assigned based on the order
-> +                                 of probing.
-> +
-> +       e.g, tmc_etf0, tmc_etr0, funnel0, funnel1
-> +
-> +Thus, with the new scheme the devices could appear as :
-> +
-> +root:~# ls /sys/bus/coresight/devices/
-> + etm0     etm1     etm2         etm3  etm4      etm5      funnel0
-> + funnel1  funnel2  replicator0  stm0  tmc_etf0  tmc_etr0  tpiu0
+On 6/11/19 10:21 AM, David Howells wrote:
+> To see if we can try and make progress on this, can we try and come at this
+> from another angle: what do LSMs *actually* need to do this?  And I grant that
+> each LSM might require different things.
 
-This looks goo do me.  Jonathan, if you prefer to handle this via your tree:
+I think part of the problem here is that the discussion is too abstract 
+and not dealing with the specifics of the notifications in question. 
+Those details matter.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> 
+> -~-
+> 
+> [A] There are a bunch of things available, some of which may be coincident,
+> depending on the context:
+> 
+>   (1) The creds of the process that created a watch_queue (ie. opened
+>       /dev/watch_queue).
 
-Otherwise I'll pick it up.
+These will be used when checking permissions to open /dev/watch_queue.
 
-Thanks,
-Mathieu
+>   (2) The creds of the process that set a watch (ie. called watch_sb,
+>       KEYCTL_NOTIFY, ...);
 
-> +
-> +Some of the examples below might refer to old naming scheme and some
-> +to the newer scheme, to give a confirmation that what you see on your
-> +system is not unexpected. One must use the "names" as they appear on
-> +the system under specified locations.
-> +
->  How to use the tracer modules
->  -----------------------------
->
-> @@ -326,16 +369,25 @@ amount of processor cores), the "cs_etm" PMU will be listed only once.
->  A Coresight PMU works the same way as any other PMU, i.e the name of the PMU is
->  listed along with configuration options within forward slashes '/'.  Since a
->  Coresight system will typically have more than one sink, the name of the sink to
-> -work with needs to be specified as an event option.  Names for sink to choose
-> -from are listed in sysFS under ($SYSFS)/bus/coresight/devices:
-> +work with needs to be specified as an event option.
-> +On newer kernels the available sinks are listed in sysFS under:
-> +($SYSFS)/bus/event_source/devices/cs_etm/sinks/
->
-> -       root@linaro-nano:~# ls /sys/bus/coresight/devices/
-> -               20010000.etf   20040000.funnel  20100000.stm  22040000.etm
-> -               22140000.etm  230c0000.funnel  23240000.etm 20030000.tpiu
-> -               20070000.etr     20120000.replicator  220c0000.funnel
-> -               23040000.etm  23140000.etm     23340000.etm
-> +       root@localhost:/sys/bus/event_source/devices/cs_etm/sinks# ls
-> +       tmc_etf0  tmc_etr0  tpiu0
->
-> -       root@linaro-nano:~# perf record -e cs_etm/@20070000.etr/u --per-thread program
-> +On older kernels, this may need to be found from the list of coresight devices,
-> +available under ($SYSFS)/bus/coresight/devices/:
-> +
-> +       root:~# ls /sys/bus/coresight/devices/
-> +        etm0     etm1     etm2         etm3  etm4      etm5      funnel0
-> +        funnel1  funnel2  replicator0  stm0  tmc_etf0  tmc_etr0  tpiu0
-> +
-> +       root@linaro-nano:~# perf record -e cs_etm/@tmc_etr0/u --per-thread program
-> +
-> +As mentioned above in section "Device Naming scheme", the names of the devices could
-> +look different from what is used in the example above. One must use the device names
-> +as it appears under the sysFS.
->
->  The syntax within the forward slashes '/' is important.  The '@' character
->  tells the parser that a sink is about to be specified and that this is the sink
-> @@ -352,7 +404,7 @@ perf can be used to record and analyze trace of programs.
->  Execution can be recorded using 'perf record' with the cs_etm event,
->  specifying the name of the sink to record to, e.g:
->
-> -    perf record -e cs_etm/@20070000.etr/u --per-thread
-> +    perf record -e cs_etm/@tmc_etr0/u --per-thread
->
->  The 'perf report' and 'perf script' commands can be used to analyze execution,
->  synthesizing instruction and branch events from the instruction trace.
-> @@ -381,7 +433,7 @@ sort example is from the AutoFDO tutorial (https://gcc.gnu.org/wiki/AutoFDO/Tuto
->         Bubble sorting array of 30000 elements
->         5910 ms
->
-> -       $ perf record -e cs_etm/@20070000.etr/u --per-thread taskset -c 2 ./sort
-> +       $ perf record -e cs_etm/@tmc_etr0/u --per-thread taskset -c 2 ./sort
->         Bubble sorting array of 30000 elements
->         12543 ms
->         [ perf record: Woken up 35 times to write data ]
-> @@ -405,7 +457,7 @@ than the program flow through the code.
->  As with any other CoreSight component, specifics about the STM tracer can be
->  found in sysfs with more information on each entry being found in [1]:
->
-> -root@genericarmv8:~# ls /sys/bus/coresight/devices/20100000.stm
-> +root@genericarmv8:~# ls /sys/bus/coresight/devices/stm0
->  enable_source   hwevent_select  port_enable     subsystem       uevent
->  hwevent_enable  mgmt            port_select     traceid
->  root@genericarmv8:~#
-> @@ -413,14 +465,14 @@ root@genericarmv8:~#
->  Like any other source a sink needs to be identified and the STM enabled before
->  being used:
->
-> -root@genericarmv8:~# echo 1 > /sys/bus/coresight/devices/20010000.etf/enable_sink
-> -root@genericarmv8:~# echo 1 > /sys/bus/coresight/devices/20100000.stm/enable_source
-> +root@genericarmv8:~# echo 1 > /sys/bus/coresight/devices/tmc_etf0/enable_sink
-> +root@genericarmv8:~# echo 1 > /sys/bus/coresight/devices/stm0/enable_source
->
->  From there user space applications can request and use channels using the devfs
->  interface provided for that purpose by the generic STM API:
->
-> -root@genericarmv8:~# ls -l /dev/20100000.stm
-> -crw-------    1 root     root       10,  61 Jan  3 18:11 /dev/20100000.stm
-> +root@genericarmv8:~# ls -l /dev/stm0
-> +crw-------    1 root     root       10,  61 Jan  3 18:11 /dev/stm0
->  root@genericarmv8:~#
->
->  Details on how to use the generic STM API can be found here [2].
-> --
-> 2.7.4
->
+These will be used when checking permissions to set a watch.
+
+>   (3) The creds of the process that tripped the event (which might be the
+>       system).
+
+These will be used when checking permission to perform whatever 
+operation tripped the event (if the event is triggered by a userspace 
+operation).
+
+>   (4) The security attributes of the object on which the watch was set (uid,
+>       gid, mode, labels).
+
+These will be used when checking permissions to set the watch.
+
+>   (5) The security attributes of the object on which the event was tripped.
+
+These will be used when checking permission to perform whatever 
+operation tripped the event.
+
+>   (6) The security attributes of all the objects between the object in (5) and
+>       the object in (4), assuming we work from (5) towards (4) if the two
+>       aren't coincident (WATCH_INFO_RECURSIVE).
+
+Does this apply to anything other than mount notifications?  And for 
+mount notifications, isn't the notification actually for a change to the 
+mount namespace, not a change to any file?  Hence, the real "object" for 
+events that trigger mount notifications is the mount namespace, right? 
+The watched path is just a way of identifying a subtree of the mount 
+namespace for notifications - it isn't the real object being watched.
+
+> At the moment, when post_one_notification() wants to write a notification into
+> a queue, it calls security_post_notification() to ask if it should be allowed
+> to do so.  This is passed (1) and (3) above plus the notification record.
+
+Not convinced we need this.
+
+> [B] There are a number of places I can usefully potentially add hooks:
+> 
+>   (a) The point at which a watch queue is created (ie. /dev/watch_queue is
+>       opened).
+
+Already covered by existing hooks on opening files.
+
+>   (b) The point at which a watch is set (ie. watch_sb).
+
+Yes, this requires a hook and corresponding check.
+
+>   (c) The point at which a notification is generated (ie. an automount point is
+>       tripped).
+
+Preferably covered by existing hooks on object accesses that would 
+generate notifications.
+
+>   (d) The point at which a notification is delivered (ie. we write the message
+>       into the queue).
+
+Preferably not needed.
+
+>   (e) All the points at which we walk over an object in a chain from (c) to
+>       find the watch on which we can effect (d) (eg. we walk rootwards from a
+>       mountpoint to find watches on a branch in the mount topology).
+
+Not necessary if the real object of mount notifications is the mount 
+namespace and if we do not support recursive notifications on e.g. 
+directories or some other object where the two can truly diverge.
+
+> [C] Problems that need to be resolved:
+> 
+>   (x) Do I need to put a security pointer in struct watch for the active LSM to
+>       fill in?  If so, I presume this would need passing to
+>       security_post_notification().
+
+I don't see why or where it would get used.
+
+>   (y) What checks should be done on object destruction after final put and what
+>       contexts need to be supplied?
+
+IMHO, no.
+
+> 
+>       This one is made all the harder because the creds that are in force when
+>       close(), exit(), exec(), dup2(), etc. close a file descriptor might need
+>       to be propagated to deferred-fput, which must in turn propagate them to
+>       af_unix-cleanup, and thence back to deferred-fput and thence to implicit
+>       unmount (dissolve_on_fput()[*]).
+> 
+>       [*] Though it should be noted that if this happens, the subtree cannot be
+>       	 attached to the root of a namespace.
+> 
+>       Further, if several processes are sharing a file object, it's not
+>       predictable as to which process the final notification will come from.
+> 
+>   (z) Do intermediate objects, say in a mount topology notification, actually
+>       need to be checked against the watcher's creds?  For a mount topology
+>       notification, would this require calling inode_permission() for each
+>       intervening directory?
+
+I don't think so, because the real object is the mount namespace, not 
+the individual directories.
+
+> 
+>       Doing that might be impractical as it would probably have to be done
+>       outside of of the RCU read lock and the filesystem ->permission() hooks
+>       might want to sleep (to touch disk or talk to a server).
+
+
