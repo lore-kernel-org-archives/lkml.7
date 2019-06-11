@@ -2,153 +2,121 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8865C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D82C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20D52086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9CEB2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="KUSlqCLf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kmOt5FFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390831AbfFKACN (ORCPT
+        id S2390882AbfFKACe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 20:02:13 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37989 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390788AbfFKACN (ORCPT
+        Mon, 10 Jun 2019 20:02:34 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:44826 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390557AbfFKACd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 20:02:13 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so4280201plb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 17:02:12 -0700 (PDT)
+        Mon, 10 Jun 2019 20:02:33 -0400
+Received: by mail-pg1-f202.google.com with SMTP id a21so7889814pgh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 17:02:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=A82/ddxx3F+ATI2rZx3wBjeD0ledFHTBqnLAZuECLx4=;
-        b=KUSlqCLfKiAiQnRELAl1ZV0yc0U5pUCd2gUMULJ3+ELMQm4Hla5QTfxrOBk5YUAEyu
-         zW+4qpHpO2pgrjwgBMY+GyzEKHtIpxIVIplITWILvwph3AhY3ZYZWBenMnOPLdgHgItc
-         NASjKKHiq2Hn0b+lJstWbgAFaxZx+Q19bWrYD0MV/lo569q87MTUIUBTXXTdPUk5YO6X
-         xX1aqotPQG/nM1VygMeR6ruhR81K6olk429urDbudQJ8MQFwV4AvFmmENPQSNEANXtPI
-         rjLcJiMHLk1wWtRIhQGnKvHy69UpH1crAMAFqgxmbLBgi7aTQybSq/PyiQyATqDXbiNT
-         5WVQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=M35jpHh+HUdAc93UKOjDO7JbyHiHSckhQH2gYDGobXY=;
+        b=kmOt5FFcxJJcGbgX/KhbCPUkNJRtfC5SMHXTm1h8fiJNch0lsXUvnJM+rymoJnYK+M
+         /9i448oQsz9LkakuACRu2808YeoiGQWVOXnOaRsyISwhCPK8dP9o1miiBce5frGWE16z
+         eGHzXgV/sirfWV3aYlwKlCVRz8JLalQNNdlrgqf9Kk4okfh7+/qEmYCsVmvDyQQYCeq5
+         eHBMKdhUJ4uO5yV4bLwIo6RYC+dEkR71ldwMuJ4oc5OgIdl0EfB1YFOsZhanV9n4KLVA
+         PxmWWkH9kRJjk7Cph1crz80X/0wZ+pmtVZn24/1sSr59fSCDJU9Md8pOSeNyHY/QtHrB
+         lvsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=A82/ddxx3F+ATI2rZx3wBjeD0ledFHTBqnLAZuECLx4=;
-        b=hDnm8CJkJkUZpHryT0EChTXfQadyA/18iZG5GKy0bwN7ZdfrFbvKrnb+I5twq85znG
-         Yvo6zAVJbQM1LY+cBfvWCHUFGHQDJ9zlrko6lVIlHQnX/fZd9Bi7bOozWt/cQ1jtZaPA
-         uHt3qCl64j1pwm/VQDP1fHx/ZgTbCmpBtv50QLJ7xlmtM17E7LxmaKqFYG3o9siMv8ze
-         nK0Fs17LheuEEBhilBv1D9dD6wgCxSaAUGGpxX+WKDJi+3xhTpm4tnb9SwkxUWyhYR//
-         gsZDAx13lA8A8jDxN9uL53mdQfAzascM+xITFuIlryDjbiWO3EEIWufgx3OKpd5yTX98
-         Fzpw==
-X-Gm-Message-State: APjAAAXf0AVFsBLW5Vqo+v8JI0YB8uq7RGt7qeM/Q1ORSUtov4zhpJh3
-        YTr1uxV/+SjfHNNaQkrjObbW1A==
-X-Google-Smtp-Source: APXvYqwMeZAM5HN0tbtrDv+73zByg9xRCVQtCgh3nPGiZ8vukjVY4hHdmPlqsE6Qi2SoTZcEbcYFYw==
-X-Received: by 2002:a17:902:4181:: with SMTP id f1mr70400039pld.22.1560211332156;
-        Mon, 10 Jun 2019 17:02:12 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b04b:ab5e:d9b1:bcf9:898:128e? ([2600:1010:b04b:ab5e:d9b1:bcf9:898:128e])
-        by smtp.gmail.com with ESMTPSA id a18sm579563pjq.0.2019.06.10.17.02.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 17:02:10 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=M35jpHh+HUdAc93UKOjDO7JbyHiHSckhQH2gYDGobXY=;
+        b=hm91I0odM2v75B2eNWtCBmMDYgPsO7pMXFNBRdaVKqEfLBYIZvheLg+tpwVws1gp7i
+         ckzrv7fJMqM6mck/411+d70NGTBiBI9qihgGVTMad/WflbLybQ5LF9TN+YV0Br4MRj4e
+         gMzn9hdArAeMf9zMZ9myymZnUx2AVL9iyTZc/lr1rrWG5k95II7pN2XCQDkN7taeY5+r
+         N5kM6BRyXufvhs/GMhYonkLoXIBFRE7B+IH8M/1FFqaa5jbWybP1SHAUDeFZEJ+4zRS7
+         XWfDiL5yEVQ/AAexOmC2VQtv0gnDHGf4yJSUNb3mE/UXDOi3bvL6xXAm+VeDcEqougaw
+         J4oQ==
+X-Gm-Message-State: APjAAAXji0AgfESXC7IfYdTrWYKIPnhMS5x7T8xS8HJlJL3GUUcvoMsr
+        0MmS3QQhrSjEV434c8rGHRRyUuH8ydSM9CMbjzso9M7mriHazZUt0luah7OT4rF0xXvXd7u/J5t
+        0KhUJwHy14eSyrcCYKAlUBMOCAgSlPsLtEQ4V/Do0uD1Y9cNirKCPYNmYoV+MCwwuuAo=
+X-Google-Smtp-Source: APXvYqyfLWy8/cRwYnRZm5yHmhPI6BbqzCZmmDpXbOdd4TYiHsQMuSPBN5pfybvxaruojFUflETihkyrWA==
+X-Received: by 2002:a63:6105:: with SMTP id v5mr17769974pgb.312.1560211352554;
+ Mon, 10 Jun 2019 17:02:32 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 17:02:27 -0700
+Message-Id: <20190611000230.152670-1-fengc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+Subject: [RESEND PATCH v3 0/3] Improve the dma-buf tracking
+From:   Chenbo Feng <fengc@google.com>
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
-Date:   Mon, 10 Jun 2019 16:54:52 -0700
-Message-Id: <BBBF82D3-EE21-49E1-92A4-713C7729E6AD@amacapital.net>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com> <20190606200926.4029-4-yu-cheng.yu@intel.com>
- <20190607080832.GT3419@hirez.programming.kicks-ass.net> <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
- <20190607174336.GM3436@hirez.programming.kicks-ass.net> <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
- <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net> <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
- <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net> <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
- <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com> <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
- <0665416d-9999-b394-df17-f2a5e1408130@intel.com> <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
- <ac9a20a6-170a-694e-beeb-605a17195034@intel.com> <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
- <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com> <1b961c71d30e31ecb22da2c5401b1a81cb802d86.camel@intel.com>
- <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-In-Reply-To: <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-X-Mailer: iPhone Mail (16F203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, all dma-bufs share the same anonymous inode. While we can count
+how many dma-buf fds or mappings a process has, we can't get the size of
+the backing buffers or tell if two entries point to the same dma-buf. And
+in debugfs, we can get a per-buffer breakdown of size and reference count,
+but can't tell which processes are actually holding the references to each
+buffer.
 
+To resolve the issue above and provide better method for userspace to track
+the dma-buf usage across different processes, the following changes are
+proposed in dma-buf kernel side. First of all, replace the singleton inode
+inside the dma-buf subsystem with a mini-filesystem, and assign each
+dma-buf a unique inode out of this filesystem.  With this change, calling
+stat(2) on each entry gives the caller a unique ID (st_ino), the buffer's
+size (st_size), and even the number of pages assigned to each dma-buffer.
+Secoundly, add the inode information to /sys/kernel/debug/dma_buf/bufinfo
+so in the case where a buffer is mmap()ed into a process=E2=80=99s address =
+space
+but all remaining fds have been closed, we can still get the dma-buf
+information and try to accociate it with the process by searching the
+proc/pid/maps and looking for the corresponding inode number exposed in
+dma-buf debug fs. Thirdly, created an ioctl to assign names to dma-bufs
+which lets userspace assign short names (e.g., "CAMERA") to buffers. This
+information can be extremely helpful for tracking and accounting shared
+buffers based on their usage and original purpose. Last but not least, add
+dma-buf information to /proc/pid/fdinfo by adding a show_fdinfo() handler
+to dma_buf_file_operations. The handler will print the file_count and name
+of each buffer.
 
-> On Jun 10, 2019, at 3:59 PM, Dave Hansen <dave.hansen@intel.com> wrote:
->=20
->> On 6/10/19 3:40 PM, Yu-cheng Yu wrote:
->> Ok, we will go back to do_mmap() with MAP_PRIVATE, MAP_NORESERVE and
->> VM_DONTDUMP.  The bitmap will cover only 48-bit address space.
->=20
-> Could you make sure to discuss the downsides of only doing a 48-bit
-> address space?
->=20
-> What are the reasons behind and implications of VM_DONTDUMP?
->=20
->> We then create PR_MARK_CODE_AS_LEGACY.  The kernel will set the bitmap, b=
-ut it
->> is going to be slow.
->=20
-> Slow compared to what?  We're effectively adding one (quick) system call
-> to a path that, today, has at *least* half a dozen syscalls and probably
-> a bunch of page faults.  Heck, we can probably avoid the actual page
-> fault to populate the bitmap if we're careful.  That alone would put a
-> syscall on equal footing with any other approach.  If the bit setting
-> crossed a page boundary it would probably win.
->=20
->> Perhaps we still let the app fill the bitmap?
->=20
-> I think I'd want to see some performance data on it first.
+Change in v2:
+* Add a check to prevent changing dma-buf name when it is attached to
+  devices.
+* Fixed some compile warnings
 
-Trying to summarize:
+Change in v3:
+* Removed the GET_DMA_BUF_NAME ioctls, add the dma_buf pointer to dentry
+  d_fsdata so the name can be displayed in proc/pid/maps and
+  proc/pid/map_files.
 
-If we manage the whole thing in user space, we are basically committing to o=
-nly covering 48 bits =E2=80=94 otherwise the whole model falls apart in quit=
-e a few ways. We gain some simplicity in the kernel.
+Greg Hackmann (3):
+  dma-buf: give each buffer a full-fledged inode
+  dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
+  dma-buf: add show_fdinfo handler
 
-If we do it in the kernel, we still have to decide how much address space to=
- cover. We get to play games like allocating the bitmap above 2^48, but then=
- we might have CRIU issues if we migrate to a system with fewer BA bits.
+ drivers/dma-buf/dma-buf.c    | 122 +++++++++++++++++++++++++++++++++--
+ include/linux/dma-buf.h      |   5 +-
+ include/uapi/linux/dma-buf.h |   3 +
+ include/uapi/linux/magic.h   |   1 +
+ 4 files changed, 124 insertions(+), 7 deletions(-)
 
-I doubt that the performance matters much one way or another. I just don=E2=80=
-=99t expect any of this to be a bottleneck.
+--=20
+2.21.0.1020.gf2820cf01a-goog
 
-Another benefit of kernel management: we could plausibly auto-clear the bits=
- corresponding to munmapped regions. Is this worth it?
-
-And a maybe-silly benefit: if we manage it in the kernel, we could optimize t=
-he inevitable case where the bitmap contains pages that are all ones :). If i=
-t=E2=80=99s in userspace, KSM could do the, but that will be inefficient at b=
-est.=
