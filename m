@@ -2,140 +2,388 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DADC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF38FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E7E21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8EF20874
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:29:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="G40SQZo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406112AbfFKR3y (ORCPT
+        id S2406152AbfFKR36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 11 Jun 2019 13:29:58 -0400
+Received: from mail-eopbgr760055.outbound.protection.outlook.com ([40.107.76.55]:43727
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406080AbfFKR3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Jun 2019 13:29:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:38582 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405786AbfFKR3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:29:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE6E8337;
-        Tue, 11 Jun 2019 10:29:52 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AFF93F73C;
-        Tue, 11 Jun 2019 10:29:50 -0700 (PDT)
-Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
- MSI_FLAG_MULTI_PCI_MSI
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
- <20190611165935.GA22836@redmoon>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <3b883516-1d63-1504-bdc9-22ac9c6f2d46@arm.com>
-Date:   Tue, 11 Jun 2019 18:29:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OKUnyAGVOBwCjqCCOyaCMEvRa5Iy0nPjSo/g5nwJUCw=;
+ b=G40SQZo3yHcdJZ/TNbRl/dGlVNXrVqMo3KBajgmwgn2Elyn4oQslii33qkpItT2SSzC/IiMVPBb86PRzUt7xAnsoAOZpoeY5c5HSmj/5GgwYE7k0ac1ooYwEZJwu42hXyD0dKkHV1saYqbt71mvtIlsdgkOMaJ7qt06VvBJj4p8=
+Received: from BN6PR02CA0089.namprd02.prod.outlook.com (2603:10b6:405:60::30)
+ by BYAPR02MB4935.namprd02.prod.outlook.com (2603:10b6:a03:47::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.10; Tue, 11 Jun
+ 2019 17:29:50 +0000
+Received: from BL2NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::200) by BN6PR02CA0089.outlook.office365.com
+ (2603:10b6:405:60::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.12 via Frontend
+ Transport; Tue, 11 Jun 2019 17:29:50 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.80.198)
+ smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.80.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.80.198; helo=xir-pvapexch02.xlnx.xilinx.com;
+Received: from xir-pvapexch02.xlnx.xilinx.com (149.199.80.198) by
+ BL2NAM02FT035.mail.protection.outlook.com (10.152.77.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.1965.12 via Frontend Transport; Tue, 11 Jun 2019 17:29:49 +0000
+Received: from xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) by
+ xir-pvapexch02.xlnx.xilinx.com (172.21.17.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1531.3; Tue, 11 Jun 2019 18:29:48 +0100
+Received: from smtp.xilinx.com (172.21.105.198) by
+ xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server id
+ 15.1.1531.3 via Frontend Transport; Tue, 11 Jun 2019 18:29:48 +0100
+Envelope-to: arnd@arndb.de,
+ gregkh@linuxfoundation.org,
+ michal.simek@xilinx.com,
+ linux-arm-kernel@lists.infradead.org,
+ robh+dt@kernel.org,
+ mark.rutland@arm.com,
+ devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ dragan.cvetic@xilinx.com,
+ derek.kiernan@xilinx.com
+Received: from [149.199.110.15] (port=50346 helo=xirdraganc40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <dragan.cvetic@xilinx.com>)
+        id 1hakai-0002MF-Mj; Tue, 11 Jun 2019 18:29:48 +0100
+From:   Dragan Cvetic <dragan.cvetic@xilinx.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>
+Subject: [PATCH V7 03/11] misc: xilinx_sdfec: Add CCF support
+Date:   Tue, 11 Jun 2019 18:29:37 +0100
+Message-ID: <1560274185-264438-4-git-send-email-dragan.cvetic@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
+References: <1560274185-264438-1-git-send-email-dragan.cvetic@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <20190611165935.GA22836@redmoon>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(39860400002)(396003)(2980300002)(189003)(199004)(8676002)(7636002)(305945005)(71366001)(110136005)(54906003)(16586007)(316002)(60926002)(26826003)(246002)(478600001)(36906005)(50226002)(356004)(8936002)(6666004)(47776003)(5660300002)(50466002)(48376002)(14444005)(476003)(426003)(70586007)(126002)(36756003)(70206006)(486006)(446003)(11346002)(956004)(2616005)(336012)(76130400001)(76176011)(7696005)(51416003)(26005)(9786002)(4326008)(44832011)(186003)(2906002)(107886003)(2201001)(28376004)(106002)(102446001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4935;H:xir-pvapexch02.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 05474269-310a-4105-bcbf-08d6ee92681e
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BYAPR02MB4935;
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4935:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <BYAPR02MB49355309070489B0C516A217CBED0@BYAPR02MB4935.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:390;
+X-Forefront-PRVS: 006546F32A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: bSWt0/6qhvpoRor3vLU424iYabU3JK1WS6nAy65mpcsPj0oF0DH6luZ0KrjKsh6Z8SDjllobfPL3kUnNStxnVGJ3Gv1UlkapwWR+/BJimNDh3duT/yVMN4fgmgiY1ORrg4NrhAQQdymqC7LILTh77kL3C/7985aetc+31lr5iPnaTgMc6r7EHH5Xd4cLGTLJRnTKf7cgMkubmseBaNHb2Bx+uWDeUG5BPCNIxR0LwAYevYqC0otUYOKpwv5Pv3/0MyJJPaR8cRnFhgvUIj5Zt23xszkZc6eneU9Fo28MX0T6SfugKIvvdSbOkVVBzBlzOZpLhFIOrSzBgSjttMnxVqw7yOiIPrNCixF0H5mTkDFia3XFXOPI4HwghxkqQTKRlETuencv8QbBAFLVKBQYrc2Zlb01k8BpsnuXNgLUZEE=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2019 17:29:49.7373
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05474269-310a-4105-bcbf-08d6ee92681e
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.80.198];Helo=[xir-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4935
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06/2019 17:59, Lorenzo Pieralisi wrote:
-> On Fri, Apr 12, 2019 at 08:35:36AM +0000, Z.q. Hou wrote:
->> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->>
->> The current code does not support multiple MSIs, so remove
->> the corresponding flag from the msi_domain_info structure.
-> 
-> Please explain me what's the problem before removing multi MSI
-> support.
+Add the support for Linux Clock Control Framework (CCF).
+Registers and enables clocks with the Clock Control
+Framework (CCF), to prevent shared clocks from been
+disabled.
 
-The reason seems to be the following code in the allocator:
+Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+---
+ drivers/misc/xilinx_sdfec.c | 193 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 188 insertions(+), 5 deletions(-)
 
-        WARN_ON(nr_irqs != 1);
-        mutex_lock(&msi->lock);
-
-        bit = find_first_zero_bit(msi->msi_irq_in_use, msi->num_of_vectors);
-        if (bit >= msi->num_of_vectors) {
-                mutex_unlock(&msi->lock);
-                return -ENOSPC;
-        }
-
-        set_bit(bit, msi->msi_irq_in_use);
-
-So instead of fixing the allocator, the author prefers disabling
-the feature. I'm not sure whether that is an acceptable outcome...
-
-Thanks,
-
-	M.
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index ff0704b..f257d38 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -26,11 +26,34 @@ static struct idr dev_idr;
+ static struct mutex dev_idr_lock;
+ 
+ /**
++ * struct xsdfec_clks - For managing SD-FEC clocks
++ * @core_clk: Main processing clock for core
++ * @axi_clk: AXI4-Lite memory-mapped clock
++ * @din_words_clk: DIN Words AXI4-Stream Slave clock
++ * @din_clk: DIN AXI4-Stream Slave clock
++ * @dout_clk: DOUT Words AXI4-Stream Slave clock
++ * @dout_words_clk: DOUT AXI4-Stream Slave clock
++ * @ctrl_clk: Control AXI4-Stream Slave clock
++ * @status_clk: Status AXI4-Stream Slave clock
++ */
++struct xsdfec_clks {
++	struct clk *core_clk;
++	struct clk *axi_clk;
++	struct clk *din_words_clk;
++	struct clk *din_clk;
++	struct clk *dout_clk;
++	struct clk *dout_words_clk;
++	struct clk *ctrl_clk;
++	struct clk *status_clk;
++};
++
++/**
+  * struct xsdfec_dev - Driver data for SDFEC
+  * @regs: device physical base address
+  * @dev: pointer to device struct
+  * @miscdev: Misc device handle
+  * @error_data_lock: Error counter and states spinlock
++ * @clks: Clocks managed by the SDFEC driver
+  * @dev_name: Device name
+  * @dev_id: Device ID
+  *
+@@ -42,6 +65,7 @@ struct xsdfec_dev {
+ 	struct miscdevice miscdev;
+ 	/* Spinlock to protect state_updated and stats_updated */
+ 	spinlock_t error_data_lock;
++	struct xsdfec_clks clks;
+ 	char dev_name[DEV_NAME_LEN];
+ 	int dev_id;
+ };
+@@ -50,6 +74,159 @@ static const struct file_operations xsdfec_fops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static int xsdfec_clk_init(struct platform_device *pdev,
++			   struct xsdfec_clks *clks)
++{
++	int err;
++
++	clks->core_clk = devm_clk_get(&pdev->dev, "core_clk");
++	if (IS_ERR(clks->core_clk)) {
++		dev_err(&pdev->dev, "failed to get core_clk");
++		return PTR_ERR(clks->core_clk);
++	}
++
++	clks->axi_clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
++	if (IS_ERR(clks->axi_clk)) {
++		dev_err(&pdev->dev, "failed to get axi_clk");
++		return PTR_ERR(clks->axi_clk);
++	}
++
++	clks->din_words_clk = devm_clk_get(&pdev->dev, "s_axis_din_words_aclk");
++	if (IS_ERR(clks->din_words_clk)) {
++		if (PTR_ERR(clks->din_words_clk) != -ENOENT) {
++			err = PTR_ERR(clks->din_words_clk);
++			return err;
++		}
++		clks->din_words_clk = NULL;
++	}
++
++	clks->din_clk = devm_clk_get(&pdev->dev, "s_axis_din_aclk");
++	if (IS_ERR(clks->din_clk)) {
++		if (PTR_ERR(clks->din_clk) != -ENOENT) {
++			err = PTR_ERR(clks->din_clk);
++			return err;
++		}
++		clks->din_clk = NULL;
++	}
++
++	clks->dout_clk = devm_clk_get(&pdev->dev, "m_axis_dout_aclk");
++	if (IS_ERR(clks->dout_clk)) {
++		if (PTR_ERR(clks->dout_clk) != -ENOENT) {
++			err = PTR_ERR(clks->dout_clk);
++			return err;
++		}
++		clks->dout_clk = NULL;
++	}
++
++	clks->dout_words_clk =
++		devm_clk_get(&pdev->dev, "s_axis_dout_words_aclk");
++	if (IS_ERR(clks->dout_words_clk)) {
++		if (PTR_ERR(clks->dout_words_clk) != -ENOENT) {
++			err = PTR_ERR(clks->dout_words_clk);
++			return err;
++		}
++		clks->dout_words_clk = NULL;
++	}
++
++	clks->ctrl_clk = devm_clk_get(&pdev->dev, "s_axis_ctrl_aclk");
++	if (IS_ERR(clks->ctrl_clk)) {
++		if (PTR_ERR(clks->ctrl_clk) != -ENOENT) {
++			err = PTR_ERR(clks->ctrl_clk);
++			return err;
++		}
++		clks->ctrl_clk = NULL;
++	}
++
++	clks->status_clk = devm_clk_get(&pdev->dev, "m_axis_status_aclk");
++	if (IS_ERR(clks->status_clk)) {
++		if (PTR_ERR(clks->status_clk) != -ENOENT) {
++			err = PTR_ERR(clks->status_clk);
++			return err;
++		}
++		clks->status_clk = NULL;
++	}
++
++	err = clk_prepare_enable(clks->core_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable core_clk (%d)", err);
++		return err;
++	}
++
++	err = clk_prepare_enable(clks->axi_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable axi_clk (%d)", err);
++		goto err_disable_core_clk;
++	}
++
++	err = clk_prepare_enable(clks->din_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable din_clk (%d)", err);
++		goto err_disable_axi_clk;
++	}
++
++	err = clk_prepare_enable(clks->din_words_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable din_words_clk (%d)", err);
++		goto err_disable_din_clk;
++	}
++
++	err = clk_prepare_enable(clks->dout_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable dout_clk (%d)", err);
++		goto err_disable_din_words_clk;
++	}
++
++	err = clk_prepare_enable(clks->dout_words_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable dout_words_clk (%d)",
++			err);
++		goto err_disable_dout_clk;
++	}
++
++	err = clk_prepare_enable(clks->ctrl_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable ctrl_clk (%d)", err);
++		goto err_disable_dout_words_clk;
++	}
++
++	err = clk_prepare_enable(clks->status_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable status_clk (%d)\n", err);
++		goto err_disable_ctrl_clk;
++	}
++
++	return err;
++
++err_disable_ctrl_clk:
++	clk_disable_unprepare(clks->ctrl_clk);
++err_disable_dout_words_clk:
++	clk_disable_unprepare(clks->dout_words_clk);
++err_disable_dout_clk:
++	clk_disable_unprepare(clks->dout_clk);
++err_disable_din_words_clk:
++	clk_disable_unprepare(clks->din_words_clk);
++err_disable_din_clk:
++	clk_disable_unprepare(clks->din_clk);
++err_disable_axi_clk:
++	clk_disable_unprepare(clks->axi_clk);
++err_disable_core_clk:
++	clk_disable_unprepare(clks->core_clk);
++
++	return err;
++}
++
++static void xsdfec_disable_all_clks(struct xsdfec_clks *clks)
++{
++	clk_disable_unprepare(clks->status_clk);
++	clk_disable_unprepare(clks->ctrl_clk);
++	clk_disable_unprepare(clks->dout_words_clk);
++	clk_disable_unprepare(clks->dout_clk);
++	clk_disable_unprepare(clks->din_words_clk);
++	clk_disable_unprepare(clks->din_clk);
++	clk_disable_unprepare(clks->core_clk);
++	clk_disable_unprepare(clks->axi_clk);
++}
++
+ static void xsdfec_idr_remove(struct xsdfec_dev *xsdfec)
+ {
+ 	mutex_lock(&dev_idr_lock);
+@@ -71,12 +248,16 @@ static int xsdfec_probe(struct platform_device *pdev)
+ 	xsdfec->dev = &pdev->dev;
+ 	spin_lock_init(&xsdfec->error_data_lock);
+ 
++	err = xsdfec_clk_init(pdev, &xsdfec->clks);
++	if (err)
++		return err;
++
+ 	dev = xsdfec->dev;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	xsdfec->regs = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(xsdfec->regs)) {
+ 		err = PTR_ERR(xsdfec->regs);
+-		return err;
++		goto err_xsdfec_dev;
+ 	}
+ 
+ 	/* Save driver private data */
+@@ -86,7 +267,7 @@ static int xsdfec_probe(struct platform_device *pdev)
+ 	err = idr_alloc(&dev_idr, xsdfec->dev_name, 0, 0, GFP_KERNEL);
+ 	mutex_unlock(&dev_idr_lock);
+ 	if (err < 0)
+-		goto err_xsddev_idr;
++		goto err_xsdfec_dev;
+ 	xsdfec->dev_id = err;
+ 
+ 	snprintf(xsdfec->dev_name, DEV_NAME_LEN, "xsdfec%d", xsdfec->dev_id);
+@@ -97,13 +278,14 @@ static int xsdfec_probe(struct platform_device *pdev)
+ 	err = misc_register(&xsdfec->miscdev);
+ 	if (err) {
+ 		dev_err(dev, "error:%d. Unable to register device", err);
+-		return err;
++		goto err_xsdfec_idr;
+ 	}
+ 	return 0;
+ 
+-err_xsddev_idr:
++err_xsdfec_idr:
+ 	xsdfec_idr_remove(xsdfec);
+-
++err_xsdfec_dev:
++	xsdfec_disable_all_clks(&xsdfec->clks);
+ 	return err;
+ }
+ 
+@@ -114,6 +296,7 @@ static int xsdfec_remove(struct platform_device *pdev)
+ 	xsdfec = platform_get_drvdata(pdev);
+ 	misc_deregister(&xsdfec->miscdev);
+ 	xsdfec_idr_remove(xsdfec);
++	xsdfec_disable_all_clks(&xsdfec->clks);
+ 	return 0;
+ }
+ 
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
+
