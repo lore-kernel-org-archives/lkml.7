@@ -2,155 +2,149 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F63CC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA1CC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32124208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BCB214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391514AbfFKN5A (ORCPT
+        id S2391556AbfFKN5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:57:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40026 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391465AbfFKN46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:56:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F24F7AF0A;
-        Tue, 11 Jun 2019 13:56:55 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>
-Subject: [RFC 4/5] livepatch: Documentation of the new API for tracking system state changes
-Date:   Tue, 11 Jun 2019 15:56:26 +0200
-Message-Id: <20190611135627.15556-5-pmladek@suse.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190611135627.15556-1-pmladek@suse.com>
-References: <20190611135627.15556-1-pmladek@suse.com>
+        Tue, 11 Jun 2019 09:57:19 -0400
+Received: from mga14.intel.com ([192.55.52.115]:42646 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387835AbfFKN5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:57:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 06:57:18 -0700
+X-ExtLoop1: 1
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2019 06:57:16 -0700
+Subject: Re: A potential broken at platform driver?
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Romain Izard <romain.izard.pro@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sen.li@intel.com, Richard Gong <richard.gong@intel.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+ <20190603180255.GA18054@kroah.com> <20190604103241.GA4097@5WDYG62>
+ <20190604142803.GA28355@kroah.com>
+ <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
+ <20190604170310.GC14605@kroah.com>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <f484ce9f-a86e-ce33-686b-b42dc293beb8@linux.intel.com>
+Date:   Tue, 11 Jun 2019 09:10:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190604170310.GC14605@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation explaining the motivation, capabilities, and usage
-of the new API for tracking system state changes.
 
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- Documentation/livepatch/index.rst        |  1 +
- Documentation/livepatch/system-state.rst | 80 ++++++++++++++++++++++++++++++++
- 2 files changed, 81 insertions(+)
- create mode 100644 Documentation/livepatch/system-state.rst
+Hi Greg,
 
-diff --git a/Documentation/livepatch/index.rst b/Documentation/livepatch/index.rst
-index edd291d51847..94bbbc2c8993 100644
---- a/Documentation/livepatch/index.rst
-+++ b/Documentation/livepatch/index.rst
-@@ -9,6 +9,7 @@ Kernel Livepatching
- 
-     livepatch
-     callbacks
-+    system-state
-     cumulative-patches
-     module-elf-format
-     shadow-vars
-diff --git a/Documentation/livepatch/system-state.rst b/Documentation/livepatch/system-state.rst
-new file mode 100644
-index 000000000000..3a35073a0b80
---- /dev/null
-+++ b/Documentation/livepatch/system-state.rst
-@@ -0,0 +1,80 @@
-+====================
-+System State Changes
-+====================
-+
-+Some users are really reluctant to reboot a system. This brings the need
-+to provide more livepatches and maintain some compatibility between them.
-+
-+Maintaining more livepatches is much easier with cumulative livepatches.
-+Each new livepatch completely replaces any older one. It can keep,
-+add, and even remove fixes. And it is typically safe to replace any version
-+of the livepatch with any other one thanks to the atomic replace feature.
-+
-+The problems might come with shadow variables and callbacks. They might
-+change the system behavior or state so that it is not longer safe to
-+go back and use an older livepatch or the original kernel code. Also
-+any new livepatch must be able to detect what changes have already been
-+done by the already installed livepatches.
-+
-+This is where the livepatch system state tracking gets useful. It
-+allows to:
-+
-+  - store data needed to manipulate and restore the system state
-+
-+  - define compatibility between livepatches using a change id
-+    and version
-+
-+
-+1. Livepatch system state API
-+=============================
-+
-+The state of the system might get modified either by several livepatch callbacks
-+or by the newly used code. Also it must be possible to find changes done by
-+already installed livepatches.
-+
-+Each modified state is described by struct klp_state, see
-+include/linux/livepatch.h.
-+
-+Each livepatch defines an array of struct klp_states. They mention
-+all states that the livepatch modifies.
-+
-+The livepatch author must define the following two fields for each
-+struct klp_state:
-+
-+  - *id*
-+
-+    - Non-zero number used to identify the affected system state.
-+
-+  - *version*
-+
-+    - Number describing the variant of the system state change that
-+      is supported by the given livepatch.
-+
-+The state can be manipulated using two functions:
-+
-+  - *klp_get_state(patch, id)*
-+
-+    - Get struct klp_state associated with the given livepatch
-+      and state id.
-+
-+  - *klp_get_prev_state(id)*
-+
-+    - Get struct klp_state associated with the given feature id and
-+      already installed livepatches.
-+
-+1. Livepatch compatibility
-+==========================
-+
-+The system state version is used to prevent loading incompatible livepatches.
-+The check is done when the livepatch is enabled. The rules are:
-+
-+  - Any completely new system state modification is allowed.
-+
-+  - System state modifications with the same or higher version are allowed
-+    for already modified system states.
-+
-+  - Cumulative livepatches must handle all system state modifications from
-+    already installed livepatches.
-+
-+  - Non-cumulative livepatches are allowed to touch already modified
-+    system states.
--- 
-2.16.4
+On 6/4/19 12:03 PM, Greg KH wrote:
+> On Tue, Jun 04, 2019 at 11:13:02AM -0500, Richard Gong wrote:
+>>
+>> Hi Greg,
+>>
+>> On 6/4/19 9:28 AM, Greg KH wrote:
+>>> On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
+>>>> On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
+>>>>>> @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+>>>>>>    	.remove = stratix10_rsu_remove,
+>>>>>>    	.driver = {
+>>>>>>    		.name = "stratix10-rsu",
+>>>>>> -		.groups = rsu_groups,
+>>>>>> +//		.groups = rsu_groups,
+>>>>>
+>>>>> Are you sure this is the correct pointer?  I think that might be
+>>>>> pointing to the driver's attributes, not the device's attributes.
+>>>>>
+>>>>> If platform drivers do not have a way to register groups properly, then
+>>>>> that really needs to be fixed, as trying to register it by yourself as
+>>>>> you are doing, is ripe for racing with userspace.
+>>>> This is a very common issue with platform drivers, and it seems to me that
+>>>> it is not possible to add device attributes when binding a device to a
+>>>> driver without entering the race condition.
+>>>>
+>>>> My understanding is the following one:
+>>>>
+>>>> The root cause is that the device has already been created and reported
+>>>> to the userspace with a KOBJ_ADD uevent before the device and the driver
+>>>> are bound together. On receiving this event, userspace will react, and
+>>>> it will try to read the device's attributes. In parallel the kernel will
+>>>> try to find a matching driver. If a driver is found, the kernel will
+>>>> call the probe function from the driver with the device as a parameter,
+>>>> and if successful a KOBJ_BIND uevent will be sent to userspace, but this
+>>>> is a recent addition.
+>>>>
+>>>> Unfortunately, not all created devices will be bound to a driver, and the
+>>>> existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
+>>>> If new per-device attributes have been added to the device during the
+>>>> binding stage userspace may or may not see them, depending on when userspace
+>>>> tries to read the device's attributes.
+>>>>
+>>>> I have this possible workaround, but I do not know if it is a good solution:
+>>>>
+>>>> When binding the device and the driver together, create a new device as a
+>>>> child to the current device, and fill its "groups" member to point to the
+>>>> per-device attributes' group. As the device will be created with all the
+>>>> attributes, it will not be affected by the race issues. The functions
+>>>> handling the attributes will need to be modified to use the parents of their
+>>>> "device" parameter, instead of the device itself. Additionnaly, the sysfs
+>>>> location of the attributes will be different, as the child device will show
+>>>> up in the sysfs path. But for a newly introduced device this will not be
+>>>> a problem.
+>>>>
+>>>> Is this a good compromise ?
+>>>
+>>> Not really.  You just want the attributes on the platform device itself.
+>>>
+>>> Given the horrible hack that platform devices are today, what's one more
+>>> hack!
+>>>
+>>> Here's a patch below of what should probably be done here.  Richard, can
+>>> you change your code to use the new dev_groups pointer in the struct
+>>> platform_driver and this patch and let me know if that works or not?
+>>>
+>>> Note, I've only compiled this code, not tested it...
+>>>
+>>
+>> Your patch works.
+>>
+>> Many thanks for your help!
+> 
+> Nice!
+> 
+> I guess I need to turn it into a real patch now.  Let me do that tonight
+> and see if I can convert some existing drivers to use it as well...
+> 
 
+Sorry for asking.
+
+I haven't seen your patch, did you release that?
+
+Regards,
+Richard
+
+> thanks,
+> 
+> greg k-h
+> 
