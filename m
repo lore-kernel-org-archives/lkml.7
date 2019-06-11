@@ -2,118 +2,112 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB36C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93E5C0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D0A21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855642173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqnRKRIO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uz6bEiYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405670AbfFKRft (ORCPT
+        id S2406222AbfFKRgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:35:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34245 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387856AbfFKRft (ORCPT
+        Tue, 11 Jun 2019 13:36:24 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49648 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405785AbfFKRgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:35:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p10so1500051pgn.1;
-        Tue, 11 Jun 2019 10:35:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nYhGZL91pZw+wH1RPe0GlZnF8M2foOXuUczt27U5dP8=;
-        b=DqnRKRIOmgAUU9DYq9awpNFvAR+1a+jI5G4+R/gv7Ems6hGEu5Fuz0taCYNc0KgDN1
-         IXAEFjXvy1gbxjH21Yi+uQVZ6AVlmKUZI57YFHEy9RtCwcpTL6E3B1/pebgrazymsfWB
-         +/xVa6jWZiJfQgoW9f8uj4PP+4Y5Fm072JpjOIck5CP44w1I3sNdfnBzQYXjtYy39rN0
-         69Vg7y0In1JEkSnjteyfDDn11cqLYqKqCSVmx7qUs1+QkdB4ROiA3FHJt5zNjRtxBjw6
-         VTg5mb85nTtCWyjsc1t4DoQ10SJd8B7V7DLb7UKnI5FPuKsL4ODy5qektksH3paxnTLr
-         gBzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nYhGZL91pZw+wH1RPe0GlZnF8M2foOXuUczt27U5dP8=;
-        b=bIYAydmzh7u1dD4wo+y3qKU8Pv+0BCw2jaYvO4+QkQeRLb4inDqJVqv1HbSkmDOQdQ
-         cpenQD0ShnHxcKPM61fSDrHwegLDLD8qzajcjEtKE5tBRWjszegVAnvfQnQ/s9XTRWe2
-         Kl2li6V17B284E/BrgvDx/hx2b4tPRgzD0oc4baX/014cCLPal+sIWWeoypWSVZegOk3
-         CUWNM6fh3bY0mFz76BVXGlxJBZRZHD5Bp6Ox8OU4N72aiGzi6KM7UR6bU7pIMKf/nPSZ
-         3XuE9BAaWNChwJCO1gj06oyGsGlIghiDm5DNMkwxWdSISczaRddQzZX7Bymalm5qQO/5
-         cLdw==
-X-Gm-Message-State: APjAAAXIWJoL6XgF2Y/TSTit3gCu7NnvRnE9VdfHuGvjbhBIzCLug1F8
-        gB0E1tzDQX22bRMM/OXrzzxmbQXP
-X-Google-Smtp-Source: APXvYqwhewRkeVFc1BlluC31iaO31CKuTbUaMZOSKnyOru3oMgODyfr2eURNHDsOK1I2higlqvkQZw==
-X-Received: by 2002:a63:5c15:: with SMTP id q21mr7148352pgb.248.1560274547926;
-        Tue, 11 Jun 2019 10:35:47 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id x129sm17063765pfb.29.2019.06.11.10.35.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 10:35:47 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 10:35:45 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Aaron Ma <aaron.ma@canonical.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cheiny@synaptics.com, aduggan@synaptics.com,
-        benjamin.tissoires@redhat.com
-Subject: Re: [PATCH 1/2] Input: synaptics-rmi4 - clear irqs before set irqs
-Message-ID: <20190611173545.GE143729@dtor-ws>
-References: <20190220164200.31044-1-aaron.ma@canonical.com>
- <20190609165551.GB90002@dtor-ws>
- <7da443d0-f433-c5a5-5194-707362eb2ee5@canonical.com>
+        Tue, 11 Jun 2019 13:36:23 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5BHaGOi016378;
+        Tue, 11 Jun 2019 12:36:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560274576;
+        bh=+9areqRVfrK1YDO1ErJT+yPadNyrrPz0UtT91OB9eco=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uz6bEiYTEu+wbM4h0gy9oYVe067KIitfHz1K21YKP7kcGcMa5c7VPBuloz/j0mH43
+         7Uvw48L8Q+qOYREeZ2ljw3nKKvyeFAonqhSIhbuHYb1wTSkwaW0GO79+Vnswwx9b9Z
+         0Y8adOBK6D+g0AlLq7S5RFjLvyXdcyvBUmfka+24=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5BHaGet064775
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Jun 2019 12:36:16 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 11
+ Jun 2019 12:36:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 11 Jun 2019 12:36:16 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5BHaDYh090017;
+        Tue, 11 Jun 2019 12:36:13 -0500
+Subject: Re: [PATCH v1.1] firmware: ti_sci: Add resource management APIs for
+ ringacc, psi-l and udma
+To:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        <tony@atomide.com>
+References: <20190506123456.6777-2-peter.ujfalusi@ti.com>
+ <20190610091856.25502-1-peter.ujfalusi@ti.com>
+ <636f599a-cefa-ce70-d0ae-b5244edf14b2@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <2a755211-afd9-070c-954c-f6f2d931455b@ti.com>
+Date:   Tue, 11 Jun 2019 20:36:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7da443d0-f433-c5a5-5194-707362eb2ee5@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <636f599a-cefa-ce70-d0ae-b5244edf14b2@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 12:55:58AM +0800, Aaron Ma wrote:
+On 10/06/2019 12:41, Lokesh Vutla wrote:
 > 
-> On 6/10/19 12:55 AM, Dmitry Torokhov wrote:
-> > Hi Aaron,
-> > 
-> > On Wed, Feb 20, 2019 at 05:41:59PM +0100, Aaron Ma wrote:
-> >> rmi4 got spam data after S3 resume on some ThinkPads.
-> >> Then TrackPoint lost when be detected by psmouse.
-> >> Clear irqs status before set irqs will make TrackPoint back.
-> > Could you please give me an idea as to what this spam data is?
-> > 
 > 
-> It should be some data 0 during suspend/resume.
-> Actually I don't know how these data 0 is produced.
-> Not all synaptics touchpads have this issue.
+> On 10/06/19 2:48 PM, Peter Ujfalusi wrote:
+>> Configuration of NAVSS resource, like rings, UDMAP channels, flows
+>> and PSI-L thread management need to be done via TISCI.
+>>
+>> Add the needed structures and functions for NAVSS resource configuration of
+>> the following:
+>> Rings from Ring Accelerator
+>> PSI-L thread management
+>> UDMAP tchan, rchan and rflow configuration.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > 
-> > In F03 probe we clear all pending data before enabling the function,
+> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
 > 
-> Yes we did, but not after resume.
+> Thanks and regards,
+> Lokesh
+> 
 
-Yes, I understand that. The question I was asking: if we add code
-consuming all pending data to f03->suspend(), similarly to what we are
-doing at probe time, will it fix the issue with trackstick losing
-synchronization and attempting disconnect?
+Thanks, queuing this single patch up for 5.3.
 
-> 
-> > maybe the same needs to be done on resume, instead of changing the way
-> > we handle IRQ bits?
-> 
-> This patch is supposed to clear irq status like it in fn probe. Not
-> changing IRQ bits.
+Vinod, I am setting up an immutable branch if you need to pick this 
+patch up; basically if you are planning to merge the dma support for 
+5.3. Available as a tag here (I'll send a pull-req out for this in a bit):
 
-What I meant is changing how we enable IRQ bits. I would really prefer
-we did not lose IRQ state for other functions when we enable interrupts
-for given function.
+   git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux 
+tags/ti-sci-for-5.3
 
-Thanks.
+It is based on top of clock driver pull-request due to dependencies.
 
--- 
-Dmitry
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
