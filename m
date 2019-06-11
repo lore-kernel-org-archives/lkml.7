@@ -2,288 +2,208 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3E1C31E45
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81303C31E45
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5383920872
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61CCB21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436577AbfFKVgz (ORCPT
+        id S2407669AbfFKVh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:36:55 -0400
-Received: from mga17.intel.com ([192.55.52.151]:36483 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403793AbfFKVgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:36:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 14:36:54 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Jun 2019 14:36:53 -0700
-Date:   Tue, 11 Jun 2019 14:38:13 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 02/10] fs/locks: Export F_LAYOUT lease to user space
-Message-ID: <20190611213812.GC14336@iweiny-DESK2.sc.intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606014544.8339-3-ira.weiny@intel.com>
- <4e5eb31a41b91a28fbc83c65195a2c75a59cfa24.camel@kernel.org>
+        Tue, 11 Jun 2019 17:37:57 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43104 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404005AbfFKVh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 17:37:57 -0400
+Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id a0bf96c09c547816; Tue, 11 Jun 2019 23:37:54 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH] PCI: PM: Avoid possible suspend-to-idle issue
+Date:   Tue, 11 Jun 2019 23:37:53 +0200
+Message-ID: <1612033.SWpHOFZInD@kreacher>
+In-Reply-To: <1583084.Q78GrOSehU@kreacher>
+References: <2315917.ZGeXE6pBFC@kreacher> <527F9B70-68AC-4CD4-A3C2-576EA09187DD@canonical.com> <1583084.Q78GrOSehU@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e5eb31a41b91a28fbc83c65195a2c75a59cfa24.camel@kernel.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 09:00:24AM -0400, Jeff Layton wrote:
-> On Wed, 2019-06-05 at 18:45 -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
+On Tuesday, June 11, 2019 11:34:36 PM CEST Rafael J. Wysocki wrote:
+> On Tuesday, June 11, 2019 10:39:44 AM CEST Kai-Heng Feng wrote:
+> > Hi Rafael,
 > > 
-> > GUP longterm pins of non-pagecache file system pages (eg FS DAX) are
-> > currently disallowed because they are unsafe.
+> > at 19:02, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 > > 
-> > The danger for pinning these pages comes from the fact that hole punch
-> > and/or truncate of those files results in the pages being mapped and
-> > pinned by a user space process while DAX has potentially allocated those
-> > pages to other processes.
+> > > On Friday, May 17, 2019 11:08:50 AM CEST Rafael J. Wysocki wrote:
+> > >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >>
+> > >> If a PCI driver leaves the device handled by it in D0 and calls
+> > >> pci_save_state() on the device in its ->suspend() or ->suspend_late()
+> > >> callback, it can expect the device to stay in D0 over the whole
+> > >> s2idle cycle.  However, that may not be the case if there is a
+> > >> spurious wakeup while the system is suspended, because in that case
+> > >> pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
+> > >> which calls pci_restore_state(), via pci_pm_default_resume_early(),
+> > >> so state_saved is cleared and the second iteration of
+> > >> pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
+> > >> may change the power state of the device.
+> > >>
+> > >> To avoid that, add a new internal flag, skip_bus_pm, that will be set
+> > >> by pci_pm_suspend_noirq() when it runs for the first time during the
+> > >> given system suspend-resume cycle if the state of the device has
+> > >> been saved already and the device is still in D0.  Setting that flag
+> > >> will cause the next iterations of pci_pm_suspend_noirq() to set
+> > >> state_saved for pci_pm_resume_noirq(), so that it always restores the
+> > >> device state from the originally saved data, and avoid calling
+> > >> pci_prepare_to_sleep() for the device.
+> > >>
+> > >> Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from  
+> > >> suspend-to-idle")
+> > >> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > > 
-> > Most (All) users who are mapping FS DAX pages for long term pin purposes
-> > (such as RDMA) are not going to want to deallocate these pages while
-> > those pages are in use.  To do so would mean the application would lose
-> > data.  So the use case for allowing truncate operations of such pages
-> > is limited.
-> > 
-> > However, the kernel must protect itself and users from potential
-> > mistakes and/or malicious user space code.  Rather than disabling long
-> > term pins as is done now.   Allow for users who know they are going to
-> > be pinning this memory to alert the file system of this intention.
-> > Furthermore, allow users to be alerted such that they can react if a
-> > truncate operation occurs for some reason.
-> > 
-> > Example user space pseudocode for a user using RDMA and wanting to allow
-> > a truncate would look like this:
-> > 
-> > lease_break_sigio_handler() {
-> > ...
-> > 	if (sigio.fd == rdma_fd) {
-> > 		complete_rdma_operations(...);
-> > 		ibv_dereg_mr(mr);
-> > 		close(rdma_fd);
-> > 		fcntl(rdma_fd, F_SETLEASE, F_UNLCK);
-> > 	}
-> > }
-> > 
-> > setup_rdma_to_dax_file() {
-> > ...
-> > 	rdma_fd = open(...)
-> > 	fcntl(rdma_fd, F_SETLEASE, F_LAYOUT);
+> > I just found out this patch has a chance to freeze or reboot the system  
+> > during suspend cycles.
+> >
+> > What information do you need to debug?
 > 
-> I'm not crazy about this interface. F_LAYOUT doesn't seem to be in the
-> same category as F_RDLCK/F_WRLCK/F_UNLCK.
+> A few things are missing from your report, like which kernel you have tested
+> and how exactly you have arrived at the conclusion that this particular commit
+> is the source of the problem.
 > 
-> Maybe instead of F_SETLEASE, this should use new
-> F_SETLAYOUT/F_GETLAYOUT cmd values? There is nothing that would prevent
-> you from setting both a lease and a layout on a file, and indeed knfsd
-> can set both.
+> Care to provide some details on the above?
 > 
-> This interface seems to conflate the two.
-
-I've been feeling the same way.  This is why I was leaning toward a new lease
-type.  I called it "F_LONGTERM" but the name is not important.
-
-I think the concept of adding "exclusive" to the layout lease can fix this
-because the NFS lease is non-exclusive where the user space one (for the
-purpose of GUP pinning) would need to be.
-
-FWIW I have not worked out exactly what this new "exclusive" code will look
-like.  Jan said:
-
-	"There actually is support for locks that are not broken after given
-	timeout so there shouldn't be too many changes need."
-
-But I'm not seeing that for Lease code.  So I'm working on something for the
-lease code now.
-
-Ira
-
+> Anyway, there are a couple of things that can be done to improve the code
+> on top of 5.2-rc4.  The appended patch is one of them, so can you please test
+> it and let me know if it makes any difference?
 > 
-> > 	sigaction(SIGIO, ...  lease_break ...);
-> > 	ptr = mmap(rdma_fd, ...);
-> > 	mr = ibv_reg_mr(ptr, ...);
-> > 	do_rdma_stuff(...);
-> > }
-> > 
-> > Follow on patches implement the notification of the lease holder on
-> > truncate as well as failing the truncate if the GUP pin is not released.
-> > 
-> > This first patch exports the F_LAYOUT lease type and allows the user to set
-> > and get it.
-> > 
-> > After the complete series:
-> > 
-> > 1) Failure to obtain a F_LAYOUT lease on an open FS DAX file will result
-> >    in a failure to GUP pin any pages in that file.  An example of a call
-> >    which results in GUP pin is ibv_reg_mr().
-> > 2) While the GUP pin is in place (eg MR is in use) truncates of the
-> >    affected pages will fail.
-> > 3) If the user registers a sigaction they will be notified of the
-> >    truncate so they can react.  Failure to react will result in the
-> >    lease being revoked after <sysfs>/lease-break-time seconds.  After
-> >    this time new GUP pins will fail without a new lease being taken.
-> > 4) A truncate will work if the pages being truncated are not actively
-> >    pinned at the time of truncate.  Attempts to pin these pages after
-> >    will result in a failure.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  fs/locks.c                       | 36 +++++++++++++++++++++++++++-----
-> >  include/linux/fs.h               |  2 +-
-> >  include/uapi/asm-generic/fcntl.h |  3 +++
-> >  3 files changed, 35 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/fs/locks.c b/fs/locks.c
-> > index 0cc2b9f30e22..de9761c068de 100644
-> > --- a/fs/locks.c
-> > +++ b/fs/locks.c
-> > @@ -191,6 +191,8 @@ static int target_leasetype(struct file_lock *fl)
-> >  		return F_UNLCK;
-> >  	if (fl->fl_flags & FL_DOWNGRADE_PENDING)
-> >  		return F_RDLCK;
-> > +	if (fl->fl_flags & FL_LAYOUT)
-> > +		return F_LAYOUT;
-> >  	return fl->fl_type;
-> >  }
-> >  
-> > @@ -611,7 +613,8 @@ static const struct lock_manager_operations lease_manager_ops = {
-> >  /*
-> >   * Initialize a lease, use the default lock manager operations
-> >   */
-> > -static int lease_init(struct file *filp, long type, struct file_lock *fl)
-> > +static int lease_init(struct file *filp, long type, unsigned int flags,
-> > +		      struct file_lock *fl)
-> >  {
-> >  	if (assign_type(fl, type) != 0)
-> >  		return -EINVAL;
-> > @@ -621,6 +624,8 @@ static int lease_init(struct file *filp, long type, struct file_lock *fl)
-> >  
-> >  	fl->fl_file = filp;
-> >  	fl->fl_flags = FL_LEASE;
-> > +	if (flags & FL_LAYOUT)
-> > +		fl->fl_flags |= FL_LAYOUT;
-> >  	fl->fl_start = 0;
-> >  	fl->fl_end = OFFSET_MAX;
-> >  	fl->fl_ops = NULL;
-> > @@ -629,7 +634,8 @@ static int lease_init(struct file *filp, long type, struct file_lock *fl)
-> >  }
-> >  
-> >  /* Allocate a file_lock initialised to this type of lease */
-> > -static struct file_lock *lease_alloc(struct file *filp, long type)
-> > +static struct file_lock *lease_alloc(struct file *filp, long type,
-> > +				     unsigned int flags)
-> >  {
-> >  	struct file_lock *fl = locks_alloc_lock();
-> >  	int error = -ENOMEM;
-> > @@ -637,7 +643,7 @@ static struct file_lock *lease_alloc(struct file *filp, long type)
-> >  	if (fl == NULL)
-> >  		return ERR_PTR(error);
-> >  
-> > -	error = lease_init(filp, type, fl);
-> > +	error = lease_init(filp, type, flags, fl);
-> >  	if (error) {
-> >  		locks_free_lock(fl);
-> >  		return ERR_PTR(error);
-> > @@ -1588,7 +1594,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
-> >  	int want_write = (mode & O_ACCMODE) != O_RDONLY;
-> >  	LIST_HEAD(dispose);
-> >  
-> > -	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK);
-> > +	new_fl = lease_alloc(NULL, want_write ? F_WRLCK : F_RDLCK, 0);
-> >  	if (IS_ERR(new_fl))
-> >  		return PTR_ERR(new_fl);
-> >  	new_fl->fl_flags = type;
-> > @@ -1725,6 +1731,8 @@ EXPORT_SYMBOL(lease_get_mtime);
-> >   *
-> >   *	%F_UNLCK to indicate no lease is held.
-> >   *
-> > + *	%F_LAYOUT to indicate a layout lease is held.
-> > + *
-> >   *	(if a lease break is pending):
-> >   *
-> >   *	%F_RDLCK to indicate an exclusive lease needs to be
-> > @@ -2015,8 +2023,26 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
-> >  	struct file_lock *fl;
-> >  	struct fasync_struct *new;
-> >  	int error;
-> > +	unsigned int flags = 0;
-> > +
-> > +	/*
-> > +	 * NOTE on F_LAYOUT lease
-> > +	 *
-> > +	 * LAYOUT lease types are taken on files which the user knows that
-> > +	 * they will be pinning in memory for some indeterminate amount of
-> > +	 * time.  Such as for use with RDMA.  While we don't know what user
-> > +	 * space is going to do with the file we still use a F_RDLOCK level of
-> > +	 * lease.  This ensures that there are no conflicts between
-> > +	 * 2 users.  The conflict should only come from the File system wanting
-> > +	 * to revoke the lease in break_layout()  And this is done by using
-> > +	 * F_WRLCK in the break code.
-> > +	 */
-> > +	if (arg == F_LAYOUT) {
-> > +		arg = F_RDLCK;
-> > +		flags = FL_LAYOUT;
-> > +	}
-> >  
-> > -	fl = lease_alloc(filp, arg);
-> > +	fl = lease_alloc(filp, arg, flags);
-> >  	if (IS_ERR(fl))
-> >  		return PTR_ERR(fl);
-> >  
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index f7fdfe93e25d..9e9d8d35ee93 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -998,7 +998,7 @@ static inline struct file *get_file(struct file *f)
-> >  #define FL_DOWNGRADE_PENDING	256 /* Lease is being downgraded */
-> >  #define FL_UNLOCK_PENDING	512 /* Lease is being broken */
-> >  #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
-> > -#define FL_LAYOUT	2048	/* outstanding pNFS layout */
-> > +#define FL_LAYOUT	2048	/* outstanding pNFS layout or user held pin */
-> >  
-> >  #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
-> >  
-> > diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-> > index 9dc0bf0c5a6e..baddd54f3031 100644
-> > --- a/include/uapi/asm-generic/fcntl.h
-> > +++ b/include/uapi/asm-generic/fcntl.h
-> > @@ -174,6 +174,9 @@ struct f_owner_ex {
-> >  #define F_SHLCK		8	/* or 4 */
-> >  #endif
-> >  
-> > +#define F_LAYOUT	16      /* layout lease to allow longterm pins such as
-> > +				   RDMA */
-> > +
-> >  /* operations for bsd flock(), also used by the kernel implementation */
-> >  #define LOCK_SH		1	/* shared lock */
-> >  #define LOCK_EX		2	/* exclusive lock */
+> The rationale here is that firmware in some devices may be confused by attempts
+> to put the device into D0 if it already is in that power state, so it is better to avoid
+> doing so.
 > 
+> ---
+>  drivers/pci/pci-driver.c |   20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
+> 
+> Index: linux-pm/drivers/pci/pci-driver.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci-driver.c
+> +++ linux-pm/drivers/pci/pci-driver.c
+> @@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
+>  	pci_power_up(pci_dev);
+>  	pci_restore_state(pci_dev);
+>  	pci_pme_restore(pci_dev);
+> -	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+>  }
+>  
+>  /*
+> @@ -844,14 +843,12 @@ static int pci_pm_suspend_noirq(struct d
+>  		/*
+>  		 * The function is running for the second time in a row without
+>  		 * going through full resume, which is possible only during
+> -		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
+> -		 * device was originally left in D0, so its power state should
+> -		 * not be changed here and the device register values saved
+> -		 * originally should be restored on resume again.
+> +		 * suspend-to-idle in a spurious wakeup case.  The device should
+> +		 * be in D0 at this point.
+>  		 */
+> -		pci_dev->state_saved = true;
+> +		;
+>  	} else if (pci_dev->state_saved) {
+> -		if (pci_dev->current_state == PCI_D0)
+> +		if (pci_dev->current_state == PCI_D0 && !pm_suspend_via_firmware())
+>  			pci_dev->skip_bus_pm = true;
+>  	} else {
+>  		pci_save_state(pci_dev);
+> @@ -862,6 +859,9 @@ static int pci_pm_suspend_noirq(struct d
+>  	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
+>  		pci_power_name(pci_dev->current_state));
+>  
+> +	if (pci_dev->skip_bus_pm)
+> +		goto Fixup;
+> +
+>  	pci_pm_set_unknown_state(pci_dev);
+>  
+>  	/*
+> @@ -909,7 +909,10 @@ static int pci_pm_resume_noirq(struct de
+>  	if (dev_pm_smart_suspend_and_suspended(dev))
+>  		pm_runtime_set_active(dev);
+>  
+> -	pci_pm_default_resume_early(pci_dev);
+> +	if (!pci_dev->skip_bus_pm)
+> +		pci_pm_default_resume_early(pci_dev);
+> +
+> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+>  
+>  	if (pci_has_legacy_pm_support(pci_dev))
+>  		return pci_legacy_resume_early(dev);
+> @@ -1200,6 +1203,7 @@ static int pci_pm_restore_noirq(struct d
+>  	}
+>  
+>  	pci_pm_default_resume_early(pci_dev);
+> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+>  
+>  	if (pci_has_legacy_pm_support(pci_dev))
+>  		return pci_legacy_resume_early(dev);
+> 
+
+And on top of the patch above, it may be a good idea to leave bridges above the
+devices left in D0 alone, which is taken care of by the appended patch.
+
+Please test it (on top of the above one) and let me know how that goes.
+
+---
+ drivers/pci/pci-driver.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -841,15 +841,24 @@ static int pci_pm_suspend_noirq(struct d
+ 
+ 	if (pci_dev->skip_bus_pm) {
+ 		/*
+-		 * The function is running for the second time in a row without
++		 * Either the device is a bridge with a child in D0 below it, or
++		 * the function is running for the second time in a row without
+ 		 * going through full resume, which is possible only during
+ 		 * suspend-to-idle in a spurious wakeup case.  The device should
+ 		 * be in D0 at this point.
+ 		 */
+ 		;
+ 	} else if (pci_dev->state_saved) {
+-		if (pci_dev->current_state == PCI_D0 && !pm_suspend_via_firmware())
++		if (pci_dev->current_state == PCI_D0 && !pm_suspend_via_firmware()) {
++			struct pci_dev *bridge = pci_dev->bus->self;
++
+ 			pci_dev->skip_bus_pm = true;
++
++			while (bridge) {
++				bridge->skip_bus_pm = true;
++				bridge = bridge->bus->self;
++			}
++		}
+ 	} else {
+ 		pci_save_state(pci_dev);
+ 		if (pci_power_manageable(pci_dev))
+
+
+
