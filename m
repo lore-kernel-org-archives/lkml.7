@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AB5C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BD8C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2542D20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B8720896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390228AbfFKOTm (ORCPT
+        id S2390443AbfFKOTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:19:42 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:33446 "EHLO hermes.aosc.io"
+        Tue, 11 Jun 2019 10:19:44 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:33444 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388906AbfFKOTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388789AbfFKOTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Jun 2019 10:19:41 -0400
 Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id B6DF982298;
-        Tue, 11 Jun 2019 14:11:58 +0000 (UTC)
+        by hermes.aosc.io (Postfix) with ESMTPSA id DB191822A7;
+        Tue, 11 Jun 2019 14:12:51 +0000 (UTC)
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -30,10 +30,10 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 07/11] dt-bindings: vendor-prefixes: add SoChip
-Date:   Tue, 11 Jun 2019 22:09:36 +0800
-Message-Id: <20190611140940.14357-8-icenowy@aosc.io>
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v2 11/11] ARM: dts: sun8i: s3: add devicetree for Lichee zero plus w/ S3
+Date:   Tue, 11 Jun 2019 22:09:40 +0800
+Message-Id: <20190611140940.14357-12-icenowy@aosc.io>
 In-Reply-To: <20190611140940.14357-1-icenowy@aosc.io>
 References: <20190611140940.14357-1-icenowy@aosc.io>
 MIME-Version: 1.0
@@ -43,34 +43,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shenzhen SoChip Technology Co., Ltd. is a hardware vendor that produces
-EVBs with Allwinner chips. There's also a SoC named S3 that is developed
-by Allwinner (based on Allwinner V3/V3s) but branded SoChip.
+Lichee zero plus is a core board made by Sipeed, which includes on-board
+TF slot or SMT SD NAND, and optional SPI NOR or eMMC, a UART debug
+header, a microUSB slot and a gold finger connector for expansion. It
+can use either Sochip S3 or Allwinner S3L SoC.
 
-Add the vendor prefix for SoChip.
+Add the basic device tree for the core board, w/o optional onboard
+storage, and with S3 SoC.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes in v2:
-- Add the review tag by Rob.
+New patch in v2.
 
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/Makefile                    |  1 +
+ .../boot/dts/sun8i-s3-lichee-zero-plus.dts    |  8 ++++
+ .../dts/sun8i-s3-s3l-lichee-zero-plus.dtsi    | 39 +++++++++++++++++++
+ 3 files changed, 48 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 91a1338267db..2c8a8b195c07 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -803,6 +803,8 @@ patternProperties:
-     description: Standard Microsystems Corporation
-   "^snps,.*":
-     description: Synopsys, Inc.
-+  "^sochip,.*":
-+    description: Shenzhen SoChip Technology Co., Ltd.
-   "^socionext,.*":
-     description: Socionext Inc.
-   "^solidrun,.*":
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 5559028b770e..2b5e6a1d20ff 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1110,6 +1110,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-r16-nintendo-super-nes-classic.dtb \
+ 	sun8i-r16-parrot.dtb \
+ 	sun8i-r40-bananapi-m2-ultra.dtb \
++	sun8i-s3-lichee-zero-plus.dtb \
+ 	sun8i-t3-cqa3t-bv3.dtb \
+ 	sun8i-v3s-licheepi-zero.dtb \
+ 	sun8i-v3s-licheepi-zero-dock.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+new file mode 100644
+index 000000000000..7d2f6b145190
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-s3-lichee-zero-plus.dts
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
++ */
++
++/dts-v1/;
++#include "sun8i-s3.dtsi"
++#include "sun8i-s3-s3l-lichee-zero-plus.dtsi"
+diff --git a/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+new file mode 100644
+index 000000000000..bb148e796df7
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-s3-s3l-lichee-zero-plus.dtsi
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.io>
++ */
++
++#include "sunxi-common-regulators.dtsi"
++
++/ {
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&mmc0 {
++	broken-cd;
++	bus-width = <4>;
++	vmmc-supply = <&reg_vcc3v3>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-0 = <&uart0_pb_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbphy {
++	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
 -- 
 2.21.0
 
