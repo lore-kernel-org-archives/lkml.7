@@ -2,147 +2,181 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8220C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF44C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD893212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5D32145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB0y7JxU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="reminkYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404581AbfFKIqc (ORCPT
+        id S2391447AbfFKIrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:46:32 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43273 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391351AbfFKIqb (ORCPT
+        Tue, 11 Jun 2019 04:47:40 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:51199 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391273AbfFKIrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:46:31 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i8so11078439oth.10;
-        Tue, 11 Jun 2019 01:46:31 -0700 (PDT)
+        Tue, 11 Jun 2019 04:47:39 -0400
+Received: by mail-it1-f196.google.com with SMTP id j194so3591516ite.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:47:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ijkPdrXeX6Fz/gKpBalT5IMu3KLaHyuDjWll/dYwskM=;
-        b=fB0y7JxUBu68bn1OlQLIjzj3t15wwwxRvu7xtdYcWM3dGPE4h4ru9X3vqTxVTM15uQ
-         ZAYRALcEXp1mdW52i9AkRhaavQhOU7ToYp5INXoDBxuuB+pEZfF/Av2lhcO1CpdUSP4p
-         7CV/k/CtOxT2/DpCkV2Wyep6H5TXnzSpQPrwogISHCqXkAnSskKzMXRSQ3gp56D//jSz
-         0Av/YhyW3n59pinJ3t2zqlW6YGnQt9punzHDeVx1dYsDIm0BqS3OSqhaYLRW4UYNuHOg
-         oek7a1Vt4N231WJhjjGwaHqBWFZscnfpUAZ8oWuD2yHQdikAv/6S00kh33PTQ2UZ0aVY
-         yihQ==
+         :cc;
+        bh=VF1kGVddFpIAC2XDRsCvaPTsWd3oiEHLMIFP7bJNfAA=;
+        b=reminkYhknpgdw0v9vXBEw95OofOGqApJUgWcHaSh16CgrHXJXS8OtPV36w7Zq70cM
+         EmxlFXFUtrBEtCXunBLiYs8kz3hoHrk8fu9usuDrl4n8gSMZIhzmITSjQt7vL7WNLT9M
+         zcg0hyYUoXdPC+hessziNzI+NZexuBDumxKk1/MV67daWLoVCe117k1Umb5tsjif7rBu
+         0Cqs+UhO1mRfaYY4iANoRoOYkqYLUt5xwIBOI97pT7vweGbyT04VyL0rPXXIV8S6697t
+         eaANouGUse1HFf+IpSbgudkBFPxuTYG4PBtcQlvNDFYNBF+Tuj4RY9HsU8dExhxoBOpj
+         F/EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ijkPdrXeX6Fz/gKpBalT5IMu3KLaHyuDjWll/dYwskM=;
-        b=EReUB5UapjsZ9tRIRen1RbHyRc47JCW05su/4Wc4LH/ZiOsWCTZih+ocWoRyh0hYuM
-         kwMf7/krky1p+iByY5ISk9cfE7T7iNp6QYwn1S74L8AgQfgTLDIXFTSQaJt6PXkb6N7M
-         00lhtpw9xP9ddKMUl4C3oLJeTmyh/1iyqZpSahh7NDwBfrx4vqNRLmWpNgKhZm0c2vPr
-         0k7wyWvVHKS1u7EeDy4UM7r0alPZKbMPE4RNj+fsnnzylAbpYwUVFhOl/I/ISC4i5DlM
-         I/Wz+fx8oFpn2f+jjxkOe0A5m9GHyihciOErbgx7Ke2HbT4K2KNo+vuTawRfFKJS0ogG
-         2WEQ==
-X-Gm-Message-State: APjAAAUuJkZreEDQCtraPYWkEjAOvzoa7OTCohzoilYDsjpe4MAV59wH
-        /RlvDWsJ5D2u9wvKuNfgFr8dNfaxpV/OjJA+mzs=
-X-Google-Smtp-Source: APXvYqywuI6wFgrsQGHTLB1NysIvC+a8HIsD9HjKbcDFdKVzCuluDb4Lm+flneSL9irfE4h4TgHTZz1eHxxTFYXr4G8=
-X-Received: by 2002:a9d:2c47:: with SMTP id f65mr34287686otb.185.1560242790932;
- Tue, 11 Jun 2019 01:46:30 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=VF1kGVddFpIAC2XDRsCvaPTsWd3oiEHLMIFP7bJNfAA=;
+        b=X/U8a+coLEEvtas2ndpe1+Scov+EzQH3uhEyp43MDGXzLWUr2pA0G2RIKDunxoRsFp
+         dpJRMwMjya+TiXR6ww1GC5wRC1KM2lOq0TB2vAEAJCYsumZnPirm/1XK1HwubxFChtEQ
+         y5lnA798gOZaS1jmpq+/CfQn3rOtQ9DC703845WU55Vn0A9elgf/h7KOFdr8EYb9mGjh
+         yF4qUZBezwPsxlv+uDkBzEYmol4WdJMoHdYkExCuB9k3MJzmaEerFb+0H83A6D34OlGV
+         XRUXp1fuA8Wkam8WCtL+B0tWTWX0KhQDEXoFHjuQ2RVQNDaQzIrfS8HHQCaLCSjZ2SKA
+         bQ/Q==
+X-Gm-Message-State: APjAAAVqEu7BOVbmIfKPaBmfO8O6h1LEN1ZxAPLDPz/Wzw7yWs/PO4vY
+        D2oRAtmSeXBXBKebldnE7Aq1yBH6YQy9pXvjNrnJ4g==
+X-Google-Smtp-Source: APXvYqwF6zNmNcPE0CVkeRShHOR/TQk7tS5fBa3s4YV+C/yBlnq2caZY5W4qDsUYjoAoh/3qbdw2XofS9YrS5nYofTE=
+X-Received: by 2002:a24:4417:: with SMTP id o23mr18107239ita.88.1560242858490;
+ Tue, 11 Jun 2019 01:47:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
- <1559178307-6835-3-git-send-email-wanpengli@tencent.com> <20190610141717.GA6604@flask>
-In-Reply-To: <20190610141717.GA6604@flask>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 11 Jun 2019 16:47:15 +0800
-Message-ID: <CANRm+CyGZiEfWb4KaXU2LG1AMcFq+jmb6kfjnPkKeyG-zOQPAA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] KVM: X86: Implement PV sched yield hypercall
-To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
+References: <1559651172-28989-1-git-send-email-walter-zh.wu@mediatek.com>
+ <CACT4Y+Y9_85YB8CCwmKerDWc45Z00hMd6Pc-STEbr0cmYSqnoA@mail.gmail.com>
+ <1560151690.20384.3.camel@mtksdccf07> <CACT4Y+aetKEM9UkfSoVf8EaDNTD40mEF0xyaRiuw=DPEaGpTkQ@mail.gmail.com>
+ <1560236742.4832.34.camel@mtksdccf07>
+In-Reply-To: <1560236742.4832.34.camel@mtksdccf07>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 11 Jun 2019 10:47:27 +0200
+Message-ID: <CACT4Y+YNG0OGT+mCEms+=SYWA=9R3MmBzr8e3QsNNdQvHNt9Fg@mail.gmail.com>
+Subject: Re: [PATCH v2] kasan: add memory corruption identification for
+ software tag-based mode
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        =?UTF-8?B?TWlsZXMgQ2hlbiAo6Zmz5rCR5qi6KQ==?= 
+        <Miles.Chen@mediatek.com>, kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 at 22:17, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.c=
-om> wrote:
+On Tue, Jun 11, 2019 at 9:05 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
 >
-> 2019-05-30 09:05+0800, Wanpeng Li:
-> > From: Wanpeng Li <wanpengli@tencent.com>
+> On Mon, 2019-06-10 at 13:46 +0200, Dmitry Vyukov wrote:
+> > On Mon, Jun 10, 2019 at 9:28 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > >
+> > > On Fri, 2019-06-07 at 21:18 +0800, Dmitry Vyukov wrote:
+> > > > > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> > > > > index b40ea104dd36..be0667225b58 100644
+> > > > > --- a/include/linux/kasan.h
+> > > > > +++ b/include/linux/kasan.h
+> > > > > @@ -164,7 +164,11 @@ void kasan_cache_shutdown(struct kmem_cache *cache);
+> > > > >
+> > > > >  #else /* CONFIG_KASAN_GENERIC */
+> > > > >
+> > > > > +#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> > > > > +void kasan_cache_shrink(struct kmem_cache *cache);
+> > > > > +#else
+> > > >
+> > > > Please restructure the code so that we don't duplicate this function
+> > > > name 3 times in this header.
+> > > >
+> > > We have fixed it, Thank you for your reminder.
+> > >
+> > >
+> > > > >  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
+> > > > > +#endif
+> > > > >  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
+> > > > >
+> > > > >  #endif /* CONFIG_KASAN_GENERIC */
+> > > > > diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> > > > > index 9950b660e62d..17a4952c5eee 100644
+> > > > > --- a/lib/Kconfig.kasan
+> > > > > +++ b/lib/Kconfig.kasan
+> > > > > @@ -134,6 +134,15 @@ config KASAN_S390_4_LEVEL_PAGING
+> > > > >           to 3TB of RAM with KASan enabled). This options allows to force
+> > > > >           4-level paging instead.
+> > > > >
+> > > > > +config KASAN_SW_TAGS_IDENTIFY
+> > > > > +       bool "Enable memory corruption idenitfication"
+> > > >
+> > > > s/idenitfication/identification/
+> > > >
+> > > I should replace my glasses.
+> > >
+> > >
+> > > > > +       depends on KASAN_SW_TAGS
+> > > > > +       help
+> > > > > +         Now tag-based KASAN bug report always shows invalid-access error, This
+> > > > > +         options can identify it whether it is use-after-free or out-of-bound.
+> > > > > +         This will make it easier for programmers to see the memory corruption
+> > > > > +         problem.
+> > > >
+> > > > This description looks like a change description, i.e. it describes
+> > > > the current behavior and how it changes. I think code comments should
+> > > > not have such, they should describe the current state of the things.
+> > > > It should also mention the trade-off, otherwise it raises reasonable
+> > > > questions like "why it's not enabled by default?" and "why do I ever
+> > > > want to not enable it?".
+> > > > I would do something like:
+> > > >
+> > > > This option enables best-effort identification of bug type
+> > > > (use-after-free or out-of-bounds)
+> > > > at the cost of increased memory consumption for object quarantine.
+> > > >
+> > > I totally agree with your comments. Would you think we should try to add the cost?
+> > > It may be that it consumes about 1/128th of available memory at full quarantine usage rate.
 > >
-> > The target vCPUs are in runnable state after vcpu_kick and suitable
-> > as a yield target. This patch implements the sched yield hypercall.
+> > Hi,
 > >
-> > 17% performance increasement of ebizzy benchmark can be observed in an
-> > over-subscribe environment. (w/ kvm-pv-tlb disabled, testing TLB flush
-> > call-function IPI-many since call-function is not easy to be trigged
-> > by userspace workload).
+> > I don't understand the question. We should not add costs if not
+> > necessary. Or you mean why we should add _docs_ regarding the cost? Or
+> > what?
 > >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Liran Alon <liran.alon@oracle.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > @@ -7172,6 +7172,28 @@ void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *=
-vcpu)
-> >       kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
-> >  }
-> >
-> > +static void kvm_sched_yield(struct kvm *kvm, unsigned long dest_id)
-> > +{
-> > +     struct kvm_vcpu *target =3D NULL;
-> > +     struct kvm_apic_map *map =3D NULL;
-> > +
-> > +     rcu_read_lock();
-> > +     map =3D rcu_dereference(kvm->arch.apic_map);
-> > +
-> > +     if (unlikely(!map) || dest_id > map->max_apic_id)
-> > +             goto out;
-> > +
-> > +     if (map->phys_map[dest_id]->vcpu) {
+> I mean the description of option. Should it add the description for
+> memory costs. I see KASAN_SW_TAGS and KASAN_GENERIC options to show the
+> memory costs. So We originally think it is possible to add the
+> description, if users want to enable it, maybe they want to know its
+> memory costs.
 >
-> This should check for map->phys_map[dest_id].
+> If you think it is not necessary, we will not add it.
 
-Yeah, make a mistake here.
+Full description of memory costs for normal KASAN mode and
+KASAN_SW_TAGS should probably go into
+Documentation/dev-tools/kasan.rst rather then into config description
+because it may be too lengthy.
 
->
-> > +             target =3D map->phys_map[dest_id]->vcpu;
-> > +             rcu_read_unlock();
-> > +             kvm_vcpu_yield_to(target);
-> > +     }
-> > +
-> > +out:
-> > +     if (!target)
-> > +             rcu_read_unlock();
->
-> Also, I find the following logic clearer
->
->   {
->         struct kvm_vcpu *target =3D NULL;
->         struct kvm_apic_map *map;
->
->         rcu_read_lock();
->         map =3D rcu_dereference(kvm->arch.apic_map);
->
->         if (likely(map) && dest_id <=3D map->max_apic_id && map->phys_map=
-[dest_id])
->                 target =3D map->phys_map[dest_id]->vcpu;
->
->         rcu_read_unlock();
->
->         if (target)
->                 kvm_vcpu_yield_to(target);
->   }
-
-More better, thanks.
-
-Regards,
-Wanpeng Li
+I mentioned memory costs for this config because otherwise it's
+unclear why would one ever want to _not_ enable this option. If it
+would only have positive effects, then it should be enabled all the
+time and should not be a config option at all.
