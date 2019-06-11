@@ -2,331 +2,179 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F9DC468B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367ACC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF102175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03EC7204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:42:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="GzvjTqIc";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MEbgxtTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391973AbfFKUeN (ORCPT
+        id S2406615AbfFKUmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:34:13 -0400
-Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:41628 "EHLO
-        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391943AbfFKUeN (ORCPT
+        Tue, 11 Jun 2019 16:42:51 -0400
+Received: from mail180-16.suw31.mandrillapp.com ([198.2.180.16]:12613 "EHLO
+        mail180-16.suw31.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406596AbfFKUmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:34:13 -0400
-Received: from faui03f.informatik.uni-erlangen.de (faui03f.informatik.uni-erlangen.de [IPv6:2001:638:a000:4130:131:188:30:118])
-        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 2364F241863;
-        Tue, 11 Jun 2019 22:34:09 +0200 (CEST)
-Received: by faui03f.informatik.uni-erlangen.de (Postfix, from userid 30501)
-        id 19E82341CD4; Tue, 11 Jun 2019 22:34:09 +0200 (CEST)
-From:   Thomas Preisner <linux@tpreisner.de>
-Cc:     linux@tpreisner.de, Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ftrace: add simple oneshot function profiler
-Date:   Tue, 11 Jun 2019 22:33:12 +0200
-Message-Id: <20190611203312.13653-2-linux@tpreisner.de>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190529104552.146fa97c@oasis.local.home>
-References: <20190529104552.146fa97c@oasis.local.home>
+        Tue, 11 Jun 2019 16:42:50 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 16:42:47 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=NII9dUPZstPQzWQWcZ0kvkl2Xz8WPoKqKU56SNDW9Hs=;
+ b=GzvjTqIcZ125Ub5isuaXAIKqodlApvePh4Bspf+e682j5KT3otq9jxOKCKAzkHq3wOG4Xp//6+f4
+   NY5v9SOsqTWkm9WdjvoQl35Qe6g0tXx8Wcu88SxDHnP1A+nHw9Byo+m5aUUErkLJKoOywko215iq
+   xhsgVZOJEugLfHTHQ9k=
+Received: from pmta03.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail180-16.suw31.mandrillapp.com id h0094i22sc0u for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 20:27:45 +0000 (envelope-from <bounce-md_31050260.5d000ec1.v1-7459a9c6697c42bf984a4913fd56e64b@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560284865; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=NII9dUPZstPQzWQWcZ0kvkl2Xz8WPoKqKU56SNDW9Hs=; 
+ b=MEbgxtTSbSGFe7a+58AgNN2E4o66jr3WhidFffFm9oDd49y77yxriHce4lBS4P8S86IrbO
+ fft/+Rgci0P0gTneLV64xHjvfVR+mjqCl+7vyt6hGObB/zwxoxusPypzrHmFrYuMmGnIohJg
+ jPqoncGQWDWLdDhLk9fC4ZGtEOc1w=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: Linux 5.2-RC regression bisected, mounting glusterfs volumes fails after commit: fuse: require /dev/fuse reads to have enough buffer capacity
+Received: from [87.98.221.171] by mandrillapp.com id 7459a9c6697c42bf984a4913fd56e64b; Tue, 11 Jun 2019 20:27:45 +0000
+To:     Sander Eikelenboom <linux@eikelenboom.it>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>, <gluster-devel@gluster.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+Message-Id: <20190611202738.GA22556@deco.navytux.spb.ru>
+References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it> <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com>
+In-Reply-To: <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.7459a9c6697c42bf984a4913fd56e64b
+X-Mandrill-User: md_31050260
+Date:   Tue, 11 Jun 2019 20:27:45 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "oneshot" profiler records every address (ip, parent_ip) exactly once.
-As a result, "oneshot" can be used to efficiently create kernel function
-coverage/usage reports such as in undertaker-tailor[0].
+On Tue, Jun 11, 2019 at 01:52:14PM +0200, Miklos Szeredi wrote:
+> On Tue, Jun 11, 2019 at 1:03 PM Sander Eikelenboom <linux@eikelenboom.it> wrote:
+> >
+> > L.S.,
+> >
+> > While testing a linux 5.2 kernel I noticed it fails to mount my glusterfs volumes.
+> >
+> > It repeatedly fails with:
+> >    [2019-06-11 09:15:27.106946] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
+> >    [2019-06-11 09:15:27.106955] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
+> >    [2019-06-11 09:15:27.106963] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
+> >    [2019-06-11 09:15:27.106971] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
+> >    etc.
+> >    etc.
+> >
+> > Bisecting turned up as culprit:
+> >     commit d4b13963f217dd947da5c0cabd1569e914d21699: fuse: require /dev/fuse reads to have enough buffer capacity
+> >
+> > The glusterfs version i'm using is from Debian stable:
+> >     ii  glusterfs-client                3.8.8-1                      amd64        clustered file-system (client package)
+> >     ii  glusterfs-common                3.8.8-1                      amd64        GlusterFS common libraries and translator modules
+> >
+> >
+> > A 5.1.* kernel works fine, as does a 5.2-rc4 kernel with said commit reverted.
+> 
+> Thanks for the report, reverted the bad commit.
 
-In order to provide this functionality, "oneshot" uses a configurable
-hashset for blacklisting already recorded addresses. This way, no user
-space application is required to parse the function profilers's output
-and to deactivate functions after they have been recorded once.
-Additionally, the profilers's output is reduced to a bare mininum so
-that it can be passed directly to undertaker-tailor.
+First of all I'm sorry for breaking things here. The diff of the guilty
+commit is
 
-Further information regarding this one oneshot function tracer can also
-be found at [1].
+	--- a/fs/fuse/dev.c
+	+++ b/fs/fuse/dev.c
+	@@ -1317,6 +1317,16 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud, struct file *file,
+	        unsigned reqsize;
+	        unsigned int hash;
+	 
+	+       /*
+	+        * Require sane minimum read buffer - that has capacity for fixed part
+	+        * of any request header + negotated max_write room for data. If the
+	+        * requirement is not satisfied return EINVAL to the filesystem server
+	+        * to indicate that it is not following FUSE server/client contract.
+	+        * Don't dequeue / abort any request.
+	+        */
+	+       if (nbytes < max_t(size_t, FUSE_MIN_READ_BUFFER, 4096 + fc->max_write))
+	+               return -EINVAL;
+	+
+	  restart:
+	        spin_lock(&fiq->waitq.lock);
+	        err = -EAGAIN;
 
-[0]: https://i4gerrit.informatik.uni-erlangen.de/undertaker.git
-[1]: https://tpreisner.de/pub/ba-thesis.pdf
+and it was essentially requesting that the filesystem server provide
+4K+<negotiated_max_write> buffer for reads from /dev/fuse. That 4K was meant as
+space for FUSE request header, citing commit:
 
-Signed-off-by: Thomas Preisner <linux@tpreisner.de>
----
- kernel/trace/Kconfig         |  66 ++++++++++++++
- kernel/trace/Makefile        |   1 +
- kernel/trace/trace_oneshot.c | 165 +++++++++++++++++++++++++++++++++++
- 3 files changed, 232 insertions(+)
- create mode 100644 kernel/trace/trace_oneshot.c
+    Before getting into operation phase, FUSE filesystem server and kernel
+    client negotiate what should be the maximum write size the client will
+    ever issue. After negotiation the contract in between server/client is
+    that the filesystem server then should queue /dev/fuse sys_read calls with
+    enough buffer capacity to receive any client request - WRITE in
+    particular, while FUSE client should not, in particular, send WRITE
+    requests with > negotiated max_write payload. FUSE client in kernel and
+    libfuse historically reserve 4K for request header. This way the
+    contract is that filesystem server should queue sys_reads with
+    4K+max_write buffer.
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 5d965cef6c77..91c03881c4c7 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -279,6 +279,72 @@ config HWLAT_TRACER
- 	 file. Every time a latency is greater than tracing_thresh, it will
- 	 be recorded into the ring buffer.
- 
-+menuconfig ONESHOT_PROFILER
-+	bool "Oneshot Function Profiler"
-+	default n
-+	depends on HAVE_FUNCTION_TRACER
-+	select GENERIC_TRACER
-+	help
-+	  This profiler records every function call (and callee) exactly once per cpu
-+	  core by using a separate hashtable for each cpu core to keep track of
-+	  already recorded functions.
-+
-+	  Very useful for mostly automated kernel-tailoring in combination with the
-+	  undertaker toolchain as this tracer produces significantly less output in
-+	  comparison to the normal function tracer.
-+
-+	  If unsure, say N.
-+
-+if ONESHOT_PROFILER
-+
-+config ONESHOT_HASHTABLE_DYNAMIC_ALLOC
-+	bool "Dynamic Hashtable Allocation"
-+	default y
-+	help
-+	  When this is enabled (default) the oneshot profiler will try to allocate
-+	  memory for one hashtable per cpu. This method should always work but
-+	  might not be the most efficient way as vmalloc only allocates a
-+	  contiguous memory region in the virtual address space instead of the
-+	  physical one.
-+
-+	  When this is disabled the oneshot profiler will use static allocation to
-+	  allocate memory for NR_CPUS hashtables. Keep in mind that this will
-+	  drastically increase the size of the compiled kernel and may even succeed
-+	  the kernel size restrictions, thus failing the build. If that happens you
-+	  may decrease NR_CPUS to a more fitting value as it is not possible to
-+	  detect the exact amount of cpu cores beforehand.
-+
-+	  If unsure, say Y.
-+
-+config ONESHOT_HASHTABLE_BUCKET_COUNT
-+	int "Hashtable bucket count"
-+	default 24
-+	help
-+	  Sets the hashtable bucket count to be reserved for every cpu core.
-+
-+	  Be aware that this value represents magnitudes of 2 so increasing this
-+	  number results in a much higher memory usage.
-+
-+	  If unsure, keep the default.
-+
-+config ONESHOT_HASHTABLE_ELEMENT_COUNT
-+	int "Hashtable element count"
-+	default 500000
-+	help
-+	  Sets the hashtable element count to be reserved for every cpu core.
-+
-+	  Depending on how many kernel features you have selected it might be
-+	  useful to increase this number to be able to memorize more already
-+	  visited function to decrease the generated output.
-+
-+	  Be aware that this number determines a huge amount of memory to be
-+	  reserved for the hashtables so increasing this will result in a higher
-+	  memory usage.
-+
-+	  If unsure, keep the default.
-+
-+endif # ONESHOT_PROFILER
-+
- config ENABLE_DEFAULT_TRACERS
- 	bool "Trace process context switches and events"
- 	depends on !GENERIC_TRACER
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index c2b2148bb1d2..c3ef309bcbe1 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -56,6 +56,7 @@ obj-$(CONFIG_STACK_TRACER) += trace_stack.o
- obj-$(CONFIG_MMIOTRACE) += trace_mmiotrace.o
- obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += trace_functions_graph.o
- obj-$(CONFIG_TRACE_BRANCH_PROFILING) += trace_branch.o
-+obj-$(CONFIG_ONESHOT_PROFILER) += trace_oneshot.o
- obj-$(CONFIG_BLK_DEV_IO_TRACE) += blktrace.o
- obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += fgraph.o
- ifeq ($(CONFIG_BLOCK),y)
-diff --git a/kernel/trace/trace_oneshot.c b/kernel/trace/trace_oneshot.c
-new file mode 100644
-index 000000000000..b533c1b05632
---- /dev/null
-+++ b/kernel/trace/trace_oneshot.c
-@@ -0,0 +1,165 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * oneshot profiler
-+ *
-+ * Copyright (C) 2019 Thomas Preisner <linux@tpreisner.de>
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/ftrace.h>
-+#include <linux/hashtable.h>
-+#include <linux/percpu.h>
-+
-+#include "trace.h"
-+#include "trace_stat.h"
-+
-+#ifdef CONFIG_ONESHOT_PROFILER
-+
-+struct ip_entry {
-+	unsigned long address;
-+	struct hlist_node next;
-+};
-+
-+struct oneshot_hashtable {
-+	DECLARE_HASHTABLE(functions, CONFIG_ONESHOT_HASHTABLE_BUCKET_COUNT);
-+	int size;
-+	struct ip_entry elements[CONFIG_ONESHOT_HASHTABLE_ELEMENT_COUNT];
-+};
-+
-+static DEFINE_PER_CPU(struct oneshot_hashtable *, visited);
-+
-+#ifndef CONFIG_ONESHOT_HASHTABLE_DYNAMIC_ALLOC
-+static struct oneshot_hashtable visited_functions[NR_CPUS];
-+#endif /* CONFIG_ONESHOT_HASHTABLE_DYNAMIC_ALLOC */
-+
-+static struct oneshot_hashtable output_hashset;
-+
-+
-+static inline void
-+oneshot_insert(struct oneshot_hashtable *curr_visited,
-+			  unsigned long address)
-+{
-+	struct ip_entry *entry;
-+
-+	if (curr_visited->size >= CONFIG_ONESHOT_HASHTABLE_ELEMENT_COUNT)
-+		return;
-+
-+	hash_for_each_possible(curr_visited->functions, entry, next, address) {
-+		if (entry->address == address)
-+			return;
-+	}
-+
-+	entry = &curr_visited->elements[curr_visited->size++];
-+	entry->address = address;
-+
-+	hash_add(curr_visited->functions, &entry->next, address);
-+}
-+
-+static void
-+oneshot_profile_call(unsigned long ip, unsigned long parent_ip,
-+		    struct ftrace_ops *op, struct pt_regs *pt_regs)
-+{
-+	struct oneshot_hashtable *curr_visited;
-+
-+	preempt_disable_notrace();
-+	curr_visited = this_cpu_read(visited);
-+
-+	oneshot_insert(curr_visited, ip);
-+	oneshot_insert(curr_visited, parent_ip);
-+
-+	preempt_enable_notrace();
-+}
-+
-+static void *oneshot_stat_start(struct tracer_stat *trace)
-+{
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct oneshot_hashtable *tmp;
-+		int size;
-+		int i;
-+
-+		tmp = per_cpu(visited, cpu);
-+		size = tmp->size;
-+
-+		for (i = 0; i < size; i++) {
-+			oneshot_insert(&output_hashset,
-+				       tmp->elements[i].address);
-+		}
-+	}
-+
-+	if (output_hashset.size <= 0)
-+		return NULL;
-+
-+	return &output_hashset.elements[0].address;
-+}
-+
-+static void *oneshot_stat_next(void *prev, int idx)
-+{
-+	if (output_hashset.size <= idx)
-+		return NULL;
-+
-+	return &output_hashset.elements[idx].address;
-+}
-+
-+static int oneshot_stat_show(struct seq_file *s, void *entry)
-+{
-+	unsigned long ip = *(unsigned long *)entry;
-+	struct module *mod;
-+
-+	mod = __module_address(ip);
-+	if (mod) {
-+		unsigned long addr;
-+
-+		addr = ip - (unsigned long) mod->core_layout.base;
-+		seq_printf(s, "%lx %s\n", addr, mod->name);
-+	} else {
-+		seq_printf(s, "%lx\n", ip);
-+	}
-+	return 0;
-+}
-+
-+static struct tracer_stat oneshot_stats = {
-+	.name = "oneshot",
-+	.stat_start = oneshot_stat_start,
-+	.stat_next = oneshot_stat_next,
-+	.stat_show = oneshot_stat_show
-+};
-+
-+static struct ftrace_ops oneshot_profile_ops __read_mostly = {
-+	.func		= oneshot_profile_call,
-+	.flags		= FTRACE_OPS_FL_RECURSION_SAFE,
-+};
-+
-+static int init_oneshot_profile(void)
-+{
-+	int cpu;
-+	int ret;
-+
-+	for_each_possible_cpu(cpu) {
-+#ifdef CONFIG_ONESHOT_HASHTABLE_DYNAMIC_ALLOC
-+		struct oneshot_hashtable *tmp;
-+
-+		tmp = vmalloc(sizeof(struct oneshot_hashtable));
-+		if (!tmp)
-+			return -ENOMEM;
-+
-+		per_cpu(visited, cpu) = tmp;
-+#else
-+		per_cpu(visited, cpu) = &visited_functions[cpu];
-+#endif /* CONFIG_ONESHOT_HASHTABLE_DYNAMIC_ALLOC */
-+
-+		per_cpu(visited, cpu)->size = 0;
-+		hash_init(per_cpu(visited, cpu)->functions);
-+	}
-+
-+	ret = register_ftrace_function(&oneshot_profile_ops);
-+	if (ret)
-+		return ret;
-+
-+	return register_stat_tracer(&oneshot_stats);
-+}
-+
-+core_initcall(init_oneshot_profile);
-+#endif /* CONFIG_ONESHOT_PROFILER */
--- 
-2.19.1
+I could reproduce the problem and as it turns out what broke here is that
+glusterfs is using not 4K but a smaller room for header - 80 bytes for
+gluster-3.8 being `sizeof(fuse_in_header) + sizeof(fuse_write_in)`:
 
+https://github.com/gluster/glusterfs/blob/v3.8.15-0-gd174f021a/xlators/mount/fuse/src/fuse-bridge.c#L4894
+
+
+Since
+
+	`sizeof(fuse_in_header) + sizeof(fuse_write_in)` ==
+	`sizeof(fuse_in_header) + sizeof(fuse_read_in)`
+
+is the absolute minimum any sane filesystem should be using for header room, can
+we please restore the patch with that value instead of 4K?
+
+That patch was there in the first place to help diagnose stuck fuse
+servers much more easier, citing commit:
+
+    If the filesystem server does not follow this contract, what can happen
+    is that fuse_dev_do_read will see that request size is > buffer size,
+    and then it will return EIO to client who issued the request but won't
+    indicate in any way that there is a problem to filesystem server.
+    This can be hard to diagnose because for some requests, e.g. for
+    NOTIFY_REPLY which mimics WRITE, there is no client thread that is
+    waiting for request completion and that EIO goes nowhere, while on
+    filesystem server side things look like the kernel is not replying back
+    after successful NOTIFY_RETRIEVE request made by the server.
+
+    We can make the problem easy to diagnose if we indicate via error return to
+    filesystem server when it is violating the contract.  This should not
+    practically cause problems because if a filesystem server is using shorter
+    buffer, writes to it were already very likely to cause EIO, and if the
+    filesystem is read-only it should be too following FUSE_MIN_READ_BUFFER
+    minimum buffer size.
+
+    Please see [1] for context where the problem of stuck filesystem was hit
+    for real (because kernel client was incorrectly sending more than
+    max_write data with NOTIFY_REPLY; see also previous patch), how the
+    situation was traced and for more involving patch that did not make it
+    into the tree.
+
+    [1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+
+so it would be a pity to loose that property.
+
+Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` for
+header room change be accepted?
+
+Kirill
