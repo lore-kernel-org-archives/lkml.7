@@ -2,126 +2,109 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7738BC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28E1C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5541E20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A5720652
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:13:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mvO/ZCjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404697AbfFKINF (ORCPT
+        id S2404704AbfFKIN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:13:05 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:41602 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404512AbfFKIND (ORCPT
+        Tue, 11 Jun 2019 04:13:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51604 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404418AbfFKIN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:13:03 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1habtd-00061s-L7; Tue, 11 Jun 2019 10:12:45 +0200
-Message-ID: <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     elder@linaro.org
-Cc:     abhishek.esse@gmail.com, arnd@arndb.de, benchan@google.com,
-        bjorn.andersson@linaro.org, cpratapa@codeaurora.org,
-        davem@davemloft.net, dcbw@redhat.com, devicetree@vger.kernel.org,
-        ejcaruso@google.com, evgreen@chromium.org,
-        ilias.apalodimas@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-soc@vger.kernel.org, netdev@vger.kernel.org,
-        subashab@codeaurora.org, syadagir@codeaurora.org
-Date:   Tue, 11 Jun 2019 10:12:43 +0200
-In-Reply-To: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 04:13:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mkcpo7en8M+8P4XggtFvfO/k9/j7EcHlCovsQ/YQuOc=; b=mvO/ZCjoReANn7ODvkHLtCsKI
+        8ovgq1OSkphYUE1i6E4TrW5V4Zm7l2ZNIBcXMTy3rPKGYhidwVZcI1Y9EoIbu/6EhEIx8PlYywK72
+        kUmK5i2AK7J/k8js35P1wkeMWFWaUVi0JYyaZIZyVWRKFo4DUB2Da/hf2ZGpjGSnD6VHVhkfly9XQ
+        TrLOAiWNWbM/mjoV+vFAXmlRROP9miblQWLdSCXUhs08dLsqVG3V6sAy6ni8S944RnxYWe7a6uW+D
+        3IAughuaujqh6fWnopuBHkLIB+heDAKWy0mpip64qBuB6Au5bHBqW3iqduIyk8OjaWdvyjgUedaXv
+        /PsJYN7JA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1habtY-0003N7-L8; Tue, 11 Jun 2019 08:12:40 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C766A202173E0; Tue, 11 Jun 2019 10:12:37 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 10:12:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 03/15] x86/kprobes: Fix frame pointer annotations
+Message-ID: <20190611081237.GO3436@hirez.programming.kicks-ass.net>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131944.711054227@infradead.org>
+ <20190607220210.328ed88f2f7598e757c3564f@kernel.org>
+ <20190607133602.os7st57epo3otbc4@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607133602.os7st57epo3otbc4@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex, all,
+On Fri, Jun 07, 2019 at 09:36:02AM -0400, Josh Poimboeuf wrote:
+> On Fri, Jun 07, 2019 at 10:02:10PM +0900, Masami Hiramatsu wrote:
+> > On Wed, 05 Jun 2019 15:07:56 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > The kprobe trampolines have a FRAME_POINTER annotation that makes no
+> > > sense. It marks the frame in the middle of pt_regs, at the place of
+> > > saving BP.
+> > 
+> > commit ee213fc72fd67 introduced this code, and this is for unwinder which
+> > uses frame pointer. I think current code stores the address of previous
+> > (original context's) frame pointer into %rbp. So with that, if unwinder
+> > tries to decode frame pointer, it can get the original %rbp value,
+> > instead of &pt_regs from current %rbp.
 
-> > Exactly correct.  This is what Johannes is discussing in his "cellular
-> > modem APIs - take 2" thread about how this should all be organized at
-> > the driver level and I think we should figure that out before we commit
-> > to IPA-with-a-useless-netdev that requires rmnets to be created on top.
-> > That may end up being the solution but let's have that discussion.
+The way I read that code is that we'll put the value of SP into BP at
+the point where we've done 'PUSH BP', which is right in the middle of
+that PUSH sequence. So while it works for a FP based unwinder, it
+doesn't 'properly' identify the current frame.
+
+> > > Change it to mark the pt_regs frame as per the ENCODE_FRAME_POINTER
+> > > from the respective entry_*.S.
+> > > 
+> > 
+> > With this change, I think stack unwinder can not get the original %rbp
+> > value. Peter, could you check the above commit?
 > 
-> I looked at Johannes' message and the follow-on discussion.
+> The unwinder knows how to decode the encoded frame pointer.  So it can
+> find regs by decoding the new rbp value, and it also knows that regs->bp
+> is the original rbp value.
 
-Thanks :-)
-
-Sorry also, Dan had pointed me to this thread and the discussion, but I
-was travelling last week and not very reachable.
-
-> As I've
-> made clear before, my work on this has been focused on the IPA transport,
-> and some of this higher-level LTE architecture is new to me.  But it
-> seems pretty clear that an abstracted WWAN subsystem is a good plan,
-> because these devices represent a superset of what a "normal" netdev
-> implements.
-
-I'm not sure I'd actually call it a superset. By themselves, these
-netdevs are actually completely useless to the network stack, AFAICT.
-Therefore, the overlap with netdevs you can really use with the network
-stack is pretty small?
-
-> HOWEVER I disagree with your suggestion that the IPA code should
-> not be committed until after that is all sorted out.  In part it's
-> for selfish reasons, but I think there are legitimate reasons to
-> commit IPA now *knowing* that it will need to be adapted to fit
-> into the generic model that gets defined and developed.  Here
-> are some reasons why.
-
-I can't really argue with those, though I would point out that the
-converse also holds - if we commit to this now, then we will have to
-actually keep the API offered by IPA/rmnet today, so we cannot actually
-remove the netdev again, even if we do migrate it to offer support for a
-WWAN framework in the future.
-
-> Second, the IPA code has been out for review recently, and has been
-> the subject of some detailed discussion in the past few weeks.  Arnd
-> especially has invested considerable time in review and discussion.
-> Delaying things until after a better generic model is settled on
-> (which I'm guessing might be on the order of months)
-
-
-I dunno if it really has to be months. I think we can cobble something
-together relatively quickly that addresses the needs of IPA more
-specifically, and then extend later?
-
-But OTOH it may make sense to take a more paced approach and think about
-the details more carefully than we have over in the other thread so far.
-
-> Third, having the code upstream actually means the actual requirements
-> for rmnet-over-IPA are clear and explicit.  This might not be a huge
-> deal, but I think it's better to devise a generic WWAN scheme that
-> can refer to actual code than to do so with assumptions about what
-> will work with rmnet (and others).  As far as I know, the upstream
-> rmnet has no other upstream back end; IPA will make it "real."
-
-Is that really true? I had previously been told that rmnet actually does
-have use with a few existing drivers.
-
-
-If true though, then I think this would be the killer argument *in
-favour* of *not* merging this - because that would mean we *don't* have
-to actually keep the rmnet API around for all foreseeable future.
-
-
-> I support the idea of developing a generic WWAN framework, and I
-> can assure you I'll be involved enough to perhaps be one of the
-> first to implement a new generic scheme.
-
-Thanks!
-
-johannes
-
+Right, as Josh says the unwinder has a special case for this and it
+knows these 'odd' BP values (either MSB or LSB set) indicate a pt_regs
+set.
