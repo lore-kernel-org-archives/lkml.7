@@ -2,159 +2,113 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5B7C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B1C31E46
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126682173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:33:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QKzewkqq"
+	by mail.kernel.org (Postfix) with ESMTP id 470D221743
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405765AbfFKWdy (ORCPT
+        id S2407100AbfFKWfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:33:54 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33766 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405570AbfFKWdx (ORCPT
+        Tue, 11 Jun 2019 18:35:06 -0400
+Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:35276 "EHLO
+        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405174AbfFKWfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:33:53 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g21so5741189plq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 15:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rheF1XeHr+TBtp29Z8BqnMhDdcbdifoVvsMUnTVTQ0w=;
-        b=QKzewkqqr14aegyj9+KanpTXPALGWcAhgyKlFkPm+hIUpaiT5vfVCHwLDQjJnicRB4
-         jWOVMCSmyMs7lj97v8kBr5AIAjLEtAYARRhQvSIdJl6dY8M8BIMwu6hXtzBO/6hQAAVZ
-         R/3aJvCS5f1cpoXdCsmvWLdPJctFcP3gL7lhMRFa2f04l87qEV3sG+LctemNIIutyiz0
-         coO2IFn//1n30Y5C3x2psChDUceRjUq3sahJi0y3yAlHV+XXZsp9XT/sRIA/UjAFFgGJ
-         VuUO6M6OzU+lbVMu8QhXHbQzabAHnK3JcUwmnUhN5ilGVa3HtEDaHSJuGg4zy3T9ddsl
-         /2iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rheF1XeHr+TBtp29Z8BqnMhDdcbdifoVvsMUnTVTQ0w=;
-        b=C1o7kM19kes1yDSbkNmBG3WdZov4zQepcbFepcGzKRpyhgDpybIEgYj5+lE/adc2U1
-         GZpyKwbAJcGlvjZd7sRq66ZUYgmTDoBXuwoKxjHZKjJIQOl7C5v9VIZNhq4CjfeEwk5X
-         ZX66YzwxvCk2bU50KjaFTfMPgHoNE9XlnBQTqCc5JsjXK5Hv1Az2cDYC/JSu3E14CCYM
-         fDZaT2+AHZbQ38bdVGPeLu6DjGkr9h6wypd76kCZHLORz0aL8oNSqP8Wzrd0ORuxaGU6
-         QQHUdsLWvmc4DZT61YGtbB0lD2XxTS8qHBMNaIdSbsTcAgH5stwS82CRF1vyfxP8/VEJ
-         q2eA==
-X-Gm-Message-State: APjAAAVgqbxmB/IudgmqIgmzum38Nbfn0YXFGr9fPSjKFSfnxtZcZ2Lz
-        AQ4kc+OYPrPz+bOQAaWSA9a4ow==
-X-Google-Smtp-Source: APXvYqzOrGp2e1lCEgBy09sDw+6XFk1Cp1xh3ZSUOlQ7lXvCww/YU+McON7j6rpV8WQzMMdtV7Kusw==
-X-Received: by 2002:a17:902:42a5:: with SMTP id h34mr40878255pld.16.1560292432547;
-        Tue, 11 Jun 2019 15:33:52 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w4sm18222973pfw.97.2019.06.11.15.33.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 15:33:51 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 15:33:49 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
-        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
-        linus.walleij@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/8] usb: dwc3: qcom: Start USB in 'host mode' on the
- SDM845
-Message-ID: <20190611223349.GS4814@minitux>
-References: <20190610084213.1052-1-lee.jones@linaro.org>
- <20190610084213.1052-7-lee.jones@linaro.org>
+        Tue, 11 Jun 2019 18:35:06 -0400
+Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
+        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <srivatsa@csail.mit.edu>)
+        id 1hapM2-0004FG-TW; Tue, 11 Jun 2019 18:34:59 -0400
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
+ <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
+ <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
+ <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
+ <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
+ <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
+ <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
+ <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
+ <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
+ <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
+ <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
+ <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
+ <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
+ <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
+ <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
+ <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
+ <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
+ <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
+Message-ID: <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
+Date:   Tue, 11 Jun 2019 15:34:48 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610084213.1052-7-lee.jones@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 10 Jun 01:42 PDT 2019, Lee Jones wrote:
+On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
+> On 5/30/19 3:45 AM, Paolo Valente wrote:
+>>
+[...]
+>> At any rate, since you pointed out that you are interested in
+>> out-of-the-box performance, let me complete the context: in case
+>> low_latency is left set, one gets, in return for this 12% loss,
+>> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
+>> times of applications under load [1];
+>> b) 500-1000% higher throughput in multi-client server workloads, as I
+>> already pointed out [2].
+>>
+> 
+> I'm very happy that you could solve the problem without having to
+> compromise on any of the performance characteristics/features of BFQ!
+> 
+> 
+>> I'm going to prepare complete patches.  In addition, if ok for you,
+>> I'll report these results on the bug you created.  Then I guess we can
+>> close it.
+>>
+> 
+> Sounds great!
+>
 
-> When booting with Device Tree, the current default boot configuration
-> table option, the request to boot via 'host mode' comes from the
-> 'dr_mode' property.
+Hi Paolo,
 
-As I said in my previous review, the default mode for SDM845 is OTG. For
-the MTP specifically we specify the default mode to be peripheral (was
-host).
+Hope you are doing great!
 
+I was wondering if you got a chance to post these patches to LKML for
+review and inclusion... (No hurry, of course!)
 
-The remaining thing that worries me with this patch is that I do expect
-that at least one of the USB-C ports is OTG. But I am not able to
-conclude anything regarding this and host-only is a good default for
-this type of device, so I suggest that we merge this.
+Also, since your fixes address the performance issues in BFQ, do you
+have any thoughts on whether they can be adapted to CFQ as well, to
+benefit the older stable kernels that still support CFQ?
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Thank you!
 
 Regards,
-Bjorn
-
-> A property of the same name can be used inside
-> ACPI tables too.  However it is missing from the SDM845's ACPI tables
-> so we have to supply this information using Platform Device Properties
-> instead.
-> 
-> This does not change the behaviour of any currently supported devices.
-> The property is only set on ACPI enabled platforms, thus for H/W
-> booting DT, unless a 'dr_mode' property is present, the default is
-> still OTG (On-The-Go) as per [0].  Any new ACPI devices added will
-> also be able to over-ride this implementation by providing a 'dr_mode'
-> property in their ACPI tables.  In cases where 'dr_mode' is omitted
-> from the tables AND 'host mode' should not be the default (very
-> unlikely), then we will have to add some way of choosing between them
-> at run time - most likely by ACPI HID.
-> 
-> [0] Documentation/devicetree/bindings/usb/generic.txt
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/usb/dwc3/dwc3-qcom.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 1e1f12b7991d..55ba04254e38 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -444,6 +444,11 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
->  	return 0;
->  }
->  
-> +static const struct property_entry dwc3_qcom_acpi_properties[] = {
-> +	PROPERTY_ENTRY_STRING("dr_mode", "host"),
-> +	{}
-> +};
-> +
->  static int dwc3_qcom_acpi_register_core(struct platform_device *pdev)
->  {
->  	struct dwc3_qcom 	*qcom = platform_get_drvdata(pdev);
-> @@ -488,6 +493,13 @@ static int dwc3_qcom_acpi_register_core(struct platform_device *pdev)
->  		goto out;
->  	}
->  
-> +	ret = platform_device_add_properties(qcom->dwc3,
-> +					     dwc3_qcom_acpi_properties);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to add properties\n");
-> +		goto out;
-> +	}
-> +
->  	ret = platform_device_add(qcom->dwc3);
->  	if (ret)
->  		dev_err(&pdev->dev, "failed to add device\n");
-> -- 
-> 2.17.1
-> 
+Srivatsa
+VMware Photon OS
