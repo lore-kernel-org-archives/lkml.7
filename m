@@ -2,94 +2,155 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E19C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F63CC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16AD206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HdY/iNQY"
+	by mail.kernel.org (Postfix) with ESMTP id 32124208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391545AbfFKN5F (ORCPT
+        id S2391514AbfFKN5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:57:05 -0400
-Received: from mout.gmx.net ([212.227.15.19]:54903 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391441AbfFKN5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:57:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1560261397;
-        bh=rsCR40mf9mMX9OTUE4hY/u3f5j6qDwzHYmeBLXwW+0g=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=HdY/iNQYnqKPicbc36sCCLzN+LM7RDe1pnQtbvyNen0SjTexa87bULPQidahyaNzN
-         UJCzipRVMDPQk9ZboyAYhUtKyw4Cf95pgTocT/Shb1Tbbn7MUXfTTog7aYXoKnZSPH
-         3BtpibEhz317zFHIcyCYBtpbY8MueeP3+DAYouco=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.203.76.133]) by mail.gmx.com
- (mrgmx003 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 0Ld1CS-1gsWpB0NPs-00iABJ; Tue, 11 Jun 2019 15:56:37 +0200
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 0D69E800A7; Tue, 11 Jun 2019 15:56:36 +0200 (CEST)
-From:   Sven Joachim <svenjoac@gmx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>
-Subject: Linux 5.1.9 build failure with CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n
-Date:   Tue, 11 Jun 2019 15:56:35 +0200
-Message-ID: <87k1dsjkdo.fsf@turtle.gmx.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.50 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Provags-ID: V03:K1:MEHJRB92VqgtkP2e0+LD/esP6/ueg059df1Gfd1uVdqOvA+/8Gj
- 1ZPGL7mIOKjl2y0RPP2Q+fJlGkdxnAz46ii3N8Io8Js0e3OHLSi+ne5zR6FKa3CH0xfMtop
- qP+58jVB8XO6N/SJnZvn4/1vJSZ6KqyYsiNB3f2symgSgxYYWpSmnhk/VOcVNE9S4ztJISa
- oxhx+4a45oyjIM2w9k3Gw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:J8yHe74HEXM=:MssKmKylzaI2d/SNYn2tIQ
- pZ3GIpz94eHr8SVEatBV1Y+s0hTn3zwAcSAFuzO1jsET93qH1H9i8iWlYlz63sHO/r/Kpj4dB
- cSkK5gYGhndtnDB2i82AhGM8qk6HmueWWB1AkPnTT8jNE5s/Qwal5tmrFPypeUnQYBtC1C6v9
- M9ot6LYTM43t32KKOS859PcLyZN9phIAVvwuLCDs71M9baPo8JFfgDa9A3MLKE+wEiXej/hEm
- VwTf8cTW3bRicyYJERa6CnFfOIU/O9j5VxCfpKTRVa23db6V3RdUHQT8dMAeCbYGR3Ta+Pi5T
- NTG5rXKyoWoYT5hQZx9CGDqILsy3emMzW4+OvZ8HbNBRoK0D1+l9Ic0wmrPb4KumlvQJq9bab
- YmyKY1PJlUfzL1WeUz35FnwTtiw0yIt5Ksiu5SbTtHiX7NpGrmOl6A6XvUuPD0xrP9d6Zxddz
- 7hecvni5CTU9jbq8iaqh15+6t3UC1woa6WGYqb6bPoHonYBZmWAP/WABEOLhOAqeIuJwxdPSd
- zNqFY6YMFevjLTCZgyPNDibFG0mgywb8tFCHhGGNXhDhOaOVdbBspSHvba0fMA95NgapuYftp
- HXv1rKVI90SKN3L9mpA6ghFm4zo0AieRRPXAqFiYHZGNfsqlswV9bHeNJcKMrZd19T6W352PB
- FLQzjYaoQvWmkjwQdF4mLiNL4AO7WvwGje7y2NK31zVFYyaQvkK116/difhGBPzFkhGyfZspv
- XnLjmByM7v3fv4UP560MaFzINyvxVfY4iLP5QhHngfxuFPFj+Fo0Hb6WtRyaN6GKaRaWqSkye
- MMEzrAVEWrdx01cC8L1P7aL2qL4yYQiBvo7TZBKmSKVei85EHHV1ZtRfxyfODv6rTaEcjJJSW
- 0RLEKbbBr8j/h6h0CCqhMH3eioRurVVO98DR+28jjSjfDr0cAA0xoQY81Q5cnlhUIHCw8+hEf
- 5bP9eGPH5UTgcFovVK8x1B/051i4aBnAgUN3+PdO2OMMkng6WWzjY
+        Tue, 11 Jun 2019 09:57:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40026 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391465AbfFKN46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:56:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F24F7AF0A;
+        Tue, 11 Jun 2019 13:56:55 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Petr Mladek <pmladek@suse.com>
+Subject: [RFC 4/5] livepatch: Documentation of the new API for tracking system state changes
+Date:   Tue, 11 Jun 2019 15:56:26 +0200
+Message-Id: <20190611135627.15556-5-pmladek@suse.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190611135627.15556-1-pmladek@suse.com>
+References: <20190611135627.15556-1-pmladek@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
-legacy contexts. (v3)") has caused a build failure for me when I
-actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
+Documentation explaining the motivation, capabilities, and usage
+of the new API for tracking system state changes.
 
-,----
-| Kernel: arch/x86/boot/bzImage is ready  (#1)
-|   Building modules, stage 2.
-|   MODPOST 290 modules
-| ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-| scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-`----
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ Documentation/livepatch/index.rst        |  1 +
+ Documentation/livepatch/system-state.rst | 80 ++++++++++++++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
+ create mode 100644 Documentation/livepatch/system-state.rst
 
-Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
-Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
-drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
-apply in 5.1.9.
+diff --git a/Documentation/livepatch/index.rst b/Documentation/livepatch/index.rst
+index edd291d51847..94bbbc2c8993 100644
+--- a/Documentation/livepatch/index.rst
++++ b/Documentation/livepatch/index.rst
+@@ -9,6 +9,7 @@ Kernel Livepatching
+ 
+     livepatch
+     callbacks
++    system-state
+     cumulative-patches
+     module-elf-format
+     shadow-vars
+diff --git a/Documentation/livepatch/system-state.rst b/Documentation/livepatch/system-state.rst
+new file mode 100644
+index 000000000000..3a35073a0b80
+--- /dev/null
++++ b/Documentation/livepatch/system-state.rst
+@@ -0,0 +1,80 @@
++====================
++System State Changes
++====================
++
++Some users are really reluctant to reboot a system. This brings the need
++to provide more livepatches and maintain some compatibility between them.
++
++Maintaining more livepatches is much easier with cumulative livepatches.
++Each new livepatch completely replaces any older one. It can keep,
++add, and even remove fixes. And it is typically safe to replace any version
++of the livepatch with any other one thanks to the atomic replace feature.
++
++The problems might come with shadow variables and callbacks. They might
++change the system behavior or state so that it is not longer safe to
++go back and use an older livepatch or the original kernel code. Also
++any new livepatch must be able to detect what changes have already been
++done by the already installed livepatches.
++
++This is where the livepatch system state tracking gets useful. It
++allows to:
++
++  - store data needed to manipulate and restore the system state
++
++  - define compatibility between livepatches using a change id
++    and version
++
++
++1. Livepatch system state API
++=============================
++
++The state of the system might get modified either by several livepatch callbacks
++or by the newly used code. Also it must be possible to find changes done by
++already installed livepatches.
++
++Each modified state is described by struct klp_state, see
++include/linux/livepatch.h.
++
++Each livepatch defines an array of struct klp_states. They mention
++all states that the livepatch modifies.
++
++The livepatch author must define the following two fields for each
++struct klp_state:
++
++  - *id*
++
++    - Non-zero number used to identify the affected system state.
++
++  - *version*
++
++    - Number describing the variant of the system state change that
++      is supported by the given livepatch.
++
++The state can be manipulated using two functions:
++
++  - *klp_get_state(patch, id)*
++
++    - Get struct klp_state associated with the given livepatch
++      and state id.
++
++  - *klp_get_prev_state(id)*
++
++    - Get struct klp_state associated with the given feature id and
++      already installed livepatches.
++
++1. Livepatch compatibility
++==========================
++
++The system state version is used to prevent loading incompatible livepatches.
++The check is done when the livepatch is enabled. The rules are:
++
++  - Any completely new system state modification is allowed.
++
++  - System state modifications with the same or higher version are allowed
++    for already modified system states.
++
++  - Cumulative livepatches must handle all system state modifications from
++    already installed livepatches.
++
++  - Non-cumulative livepatches are allowed to touch already modified
++    system states.
+-- 
+2.16.4
 
-Most likely 4.19.50 and 4.14.125 are also affected, I haven't tested
-them yet.
-
-Cheers,
-       Sven
