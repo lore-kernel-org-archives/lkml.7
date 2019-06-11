@@ -2,179 +2,124 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367ACC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2C2C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EC7204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A2F204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="GzvjTqIc";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MEbgxtTS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YJdPFYUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406615AbfFKUmv (ORCPT
+        id S2406640AbfFKUn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:42:51 -0400
-Received: from mail180-16.suw31.mandrillapp.com ([198.2.180.16]:12613 "EHLO
-        mail180-16.suw31.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406596AbfFKUmu (ORCPT
+        Tue, 11 Jun 2019 16:43:59 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38131 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406514AbfFKUn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:42:50 -0400
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 16:42:47 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=NII9dUPZstPQzWQWcZ0kvkl2Xz8WPoKqKU56SNDW9Hs=;
- b=GzvjTqIcZ125Ub5isuaXAIKqodlApvePh4Bspf+e682j5KT3otq9jxOKCKAzkHq3wOG4Xp//6+f4
-   NY5v9SOsqTWkm9WdjvoQl35Qe6g0tXx8Wcu88SxDHnP1A+nHw9Byo+m5aUUErkLJKoOywko215iq
-   xhsgVZOJEugLfHTHQ9k=
-Received: from pmta03.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail180-16.suw31.mandrillapp.com id h0094i22sc0u for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 20:27:45 +0000 (envelope-from <bounce-md_31050260.5d000ec1.v1-7459a9c6697c42bf984a4913fd56e64b@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560284865; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=NII9dUPZstPQzWQWcZ0kvkl2Xz8WPoKqKU56SNDW9Hs=; 
- b=MEbgxtTSbSGFe7a+58AgNN2E4o66jr3WhidFffFm9oDd49y77yxriHce4lBS4P8S86IrbO
- fft/+Rgci0P0gTneLV64xHjvfVR+mjqCl+7vyt6hGObB/zwxoxusPypzrHmFrYuMmGnIohJg
- jPqoncGQWDWLdDhLk9fC4ZGtEOc1w=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: Linux 5.2-RC regression bisected, mounting glusterfs volumes fails after commit: fuse: require /dev/fuse reads to have enough buffer capacity
-Received: from [87.98.221.171] by mandrillapp.com id 7459a9c6697c42bf984a4913fd56e64b; Tue, 11 Jun 2019 20:27:45 +0000
-To:     Sander Eikelenboom <linux@eikelenboom.it>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>, <gluster-devel@gluster.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-Message-Id: <20190611202738.GA22556@deco.navytux.spb.ru>
-References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it> <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com>
-In-Reply-To: <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.7459a9c6697c42bf984a4913fd56e64b
-X-Mandrill-User: md_31050260
-Date:   Tue, 11 Jun 2019 20:27:45 +0000
+        Tue, 11 Jun 2019 16:43:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a186so8162724pfa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 13:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=J1eDHmgODZAwW/Fhw2Cp8ZhdVZsQA7q4YnUsS2FGTTA=;
+        b=YJdPFYULSEVttU+RZo1T4Y/muDKbVhhlMin96CvvKUlEIu3lxR/UoTH+vEqoNGYUr2
+         kA9n+9fmD/6UvtMGlV5Q+egXWtnQ0PEY6dALDF4H1V6FLq++ux1wwqMJVOKkeiBUyD7O
+         9vIpFTN0qMM2XPC1o7o4C8jhE962EDR5jsGxM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=J1eDHmgODZAwW/Fhw2Cp8ZhdVZsQA7q4YnUsS2FGTTA=;
+        b=Y41suOu8kUcizSq1bmmvBNE7xqCTFxW//LW/jNs927k9HkptGvi+B/yhO/ZS3yvvPp
+         VcAJR5mjV0JFULkzBPohRZqGSTam2pjvs/bJ7gHG3fmbRcon8y7fexiaUOhfDb21FIsJ
+         SlCgRvjfUreuSHWnK81R2hrIIk9V/LlkxebDCL8ZtiRQCl+hkOiGsHb5x2zbvvM9wzQm
+         bmVWOcOtEAay5YAn3Pl8YxmrfTSI4hZQ+s/9rX7KNaxi0Cr+M+S3S84IswALMEbphLUd
+         MQRSo0hj+v1bcVPytIAI/Ih5B++v0mCAPji+74vwy5H0DmHRQbHjmvdYY4h46NqJr/MD
+         Jbvw==
+X-Gm-Message-State: APjAAAUa+ayp+byrMLRM6tDVlWa71TG9wHnp3Yl90yKf9g/hf1ZslS3u
+        19bwrxDkgEY4el5Rj/1etdhJSg==
+X-Google-Smtp-Source: APXvYqw0UIfo+xmBEIt8T6Z6t+/+imewhUUV6dYQhB2DakOY+VStrXyTraU+owaNFXaIU0Ug+jT3gQ==
+X-Received: by 2002:a65:6648:: with SMTP id z8mr21605839pgv.303.1560285838473;
+        Tue, 11 Jun 2019 13:43:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 133sm15275978pfa.92.2019.06.11.13.43.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Jun 2019 13:43:57 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 13:43:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lkdtm: no need to check return value of debugfs_create
+ functions
+Message-ID: <201906111343.5961D3B@keescook>
+References: <20190611183213.GA31645@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611183213.GA31645@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 01:52:14PM +0200, Miklos Szeredi wrote:
-> On Tue, Jun 11, 2019 at 1:03 PM Sander Eikelenboom <linux@eikelenboom.it> wrote:
-> >
-> > L.S.,
-> >
-> > While testing a linux 5.2 kernel I noticed it fails to mount my glusterfs volumes.
-> >
-> > It repeatedly fails with:
-> >    [2019-06-11 09:15:27.106946] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
-> >    [2019-06-11 09:15:27.106955] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
-> >    [2019-06-11 09:15:27.106963] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
-> >    [2019-06-11 09:15:27.106971] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
-> >    etc.
-> >    etc.
-> >
-> > Bisecting turned up as culprit:
-> >     commit d4b13963f217dd947da5c0cabd1569e914d21699: fuse: require /dev/fuse reads to have enough buffer capacity
-> >
-> > The glusterfs version i'm using is from Debian stable:
-> >     ii  glusterfs-client                3.8.8-1                      amd64        clustered file-system (client package)
-> >     ii  glusterfs-common                3.8.8-1                      amd64        GlusterFS common libraries and translator modules
-> >
-> >
-> > A 5.1.* kernel works fine, as does a 5.2-rc4 kernel with said commit reverted.
+On Tue, Jun 11, 2019 at 08:32:13PM +0200, Greg Kroah-Hartman wrote:
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
 > 
-> Thanks for the report, reverted the bad commit.
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-First of all I'm sorry for breaking things here. The diff of the guilty
-commit is
+Acked-by: Kees Cook <keescook@chromium.org>
 
-	--- a/fs/fuse/dev.c
-	+++ b/fs/fuse/dev.c
-	@@ -1317,6 +1317,16 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud, struct file *file,
-	        unsigned reqsize;
-	        unsigned int hash;
-	 
-	+       /*
-	+        * Require sane minimum read buffer - that has capacity for fixed part
-	+        * of any request header + negotated max_write room for data. If the
-	+        * requirement is not satisfied return EINVAL to the filesystem server
-	+        * to indicate that it is not following FUSE server/client contract.
-	+        * Don't dequeue / abort any request.
-	+        */
-	+       if (nbytes < max_t(size_t, FUSE_MIN_READ_BUFFER, 4096 + fc->max_write))
-	+               return -EINVAL;
-	+
-	  restart:
-	        spin_lock(&fiq->waitq.lock);
-	        err = -EAGAIN;
+-Kees
 
-and it was essentially requesting that the filesystem server provide
-4K+<negotiated_max_write> buffer for reads from /dev/fuse. That 4K was meant as
-space for FUSE request header, citing commit:
+> ---
+>  drivers/misc/lkdtm/core.c | 13 ++-----------
+>  1 file changed, 2 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+> index 1972dad966f5..bae3b3763f3e 100644
+> --- a/drivers/misc/lkdtm/core.c
+> +++ b/drivers/misc/lkdtm/core.c
+> @@ -429,22 +429,13 @@ static int __init lkdtm_module_init(void)
+>  
+>  	/* Register debugfs interface */
+>  	lkdtm_debugfs_root = debugfs_create_dir("provoke-crash", NULL);
+> -	if (!lkdtm_debugfs_root) {
+> -		pr_err("creating root dir failed\n");
+> -		return -ENODEV;
+> -	}
+>  
+>  	/* Install debugfs trigger files. */
+>  	for (i = 0; i < ARRAY_SIZE(crashpoints); i++) {
+>  		struct crashpoint *cur = &crashpoints[i];
+> -		struct dentry *de;
+>  
+> -		de = debugfs_create_file(cur->name, 0644, lkdtm_debugfs_root,
+> -					 cur, &cur->fops);
+> -		if (de == NULL) {
+> -			pr_err("could not create crashpoint %s\n", cur->name);
+> -			goto out_err;
+> -		}
+> +		debugfs_create_file(cur->name, 0644, lkdtm_debugfs_root, cur,
+> +				    &cur->fops);
+>  	}
+>  
+>  	/* Install crashpoint if one was selected. */
+> -- 
+> 2.22.0
+> 
 
-    Before getting into operation phase, FUSE filesystem server and kernel
-    client negotiate what should be the maximum write size the client will
-    ever issue. After negotiation the contract in between server/client is
-    that the filesystem server then should queue /dev/fuse sys_read calls with
-    enough buffer capacity to receive any client request - WRITE in
-    particular, while FUSE client should not, in particular, send WRITE
-    requests with > negotiated max_write payload. FUSE client in kernel and
-    libfuse historically reserve 4K for request header. This way the
-    contract is that filesystem server should queue sys_reads with
-    4K+max_write buffer.
-
-I could reproduce the problem and as it turns out what broke here is that
-glusterfs is using not 4K but a smaller room for header - 80 bytes for
-gluster-3.8 being `sizeof(fuse_in_header) + sizeof(fuse_write_in)`:
-
-https://github.com/gluster/glusterfs/blob/v3.8.15-0-gd174f021a/xlators/mount/fuse/src/fuse-bridge.c#L4894
-
-
-Since
-
-	`sizeof(fuse_in_header) + sizeof(fuse_write_in)` ==
-	`sizeof(fuse_in_header) + sizeof(fuse_read_in)`
-
-is the absolute minimum any sane filesystem should be using for header room, can
-we please restore the patch with that value instead of 4K?
-
-That patch was there in the first place to help diagnose stuck fuse
-servers much more easier, citing commit:
-
-    If the filesystem server does not follow this contract, what can happen
-    is that fuse_dev_do_read will see that request size is > buffer size,
-    and then it will return EIO to client who issued the request but won't
-    indicate in any way that there is a problem to filesystem server.
-    This can be hard to diagnose because for some requests, e.g. for
-    NOTIFY_REPLY which mimics WRITE, there is no client thread that is
-    waiting for request completion and that EIO goes nowhere, while on
-    filesystem server side things look like the kernel is not replying back
-    after successful NOTIFY_RETRIEVE request made by the server.
-
-    We can make the problem easy to diagnose if we indicate via error return to
-    filesystem server when it is violating the contract.  This should not
-    practically cause problems because if a filesystem server is using shorter
-    buffer, writes to it were already very likely to cause EIO, and if the
-    filesystem is read-only it should be too following FUSE_MIN_READ_BUFFER
-    minimum buffer size.
-
-    Please see [1] for context where the problem of stuck filesystem was hit
-    for real (because kernel client was incorrectly sending more than
-    max_write data with NOTIFY_REPLY; see also previous patch), how the
-    situation was traced and for more involving patch that did not make it
-    into the tree.
-
-    [1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
-
-so it would be a pity to loose that property.
-
-Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` for
-header room change be accepted?
-
-Kirill
+-- 
+Kees Cook
