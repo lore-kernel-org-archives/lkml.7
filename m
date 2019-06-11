@@ -2,138 +2,102 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C04C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D51C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E862086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4732086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:49:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d+4GGBd3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PrtygVhs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390887AbfFKCnS (ORCPT
+        id S2390872AbfFKCtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 22:43:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44136 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390461AbfFKCnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 22:43:17 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 87F4069DBA60105D8B68;
-        Tue, 11 Jun 2019 10:43:15 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 10:43:06 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>, <stable@vger.kernel.org>
-Subject: [PATCH v2 1/2] staging: erofs: add requirements field in superblock
-Date:   Tue, 11 Jun 2019 10:42:19 +0800
-Message-ID: <20190611024220.86121-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Jun 2019 22:49:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59410 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390244AbfFKCtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 22:49:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2717A6077A; Tue, 11 Jun 2019 02:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560221353;
+        bh=w8yBBlzJMcdsXVSM0jRBIZSjIf9XdVzNZYd6aoDCNoA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d+4GGBd39eibRKM1sBEUZR+j3f5rdQlt46jo1eBDa9cy1mn1bnclpysBcKAS0wGMY
+         AWJRDq96UML+CG68PUHSYVOobtyBt4vGp7gVd7vYpFFGhzc6Nia4FloMju7Kx/3HN7
+         MDqOlX7WrWodGG2sbAt4X8UBIU51QW3QBEc2ET5o=
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E90DC607C6;
+        Tue, 11 Jun 2019 02:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560221352;
+        bh=w8yBBlzJMcdsXVSM0jRBIZSjIf9XdVzNZYd6aoDCNoA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PrtygVhsWRLs+CgjQ0oEXGUZVlwAwJsyk2ZMjT/VpXsqlPeCj1okGFUiTOHkouN1E
+         bpvoUzJP7mS9ubKn9+/3rv194g4QCmhzlZs/XDQ6kKJx9QV82AFTrWA/yvbrfQ6toB
+         LmmrpKJzPZKVX/Vut8wytc6wZNpOsLc48Hk9CtZk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E90DC607C6
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Received: by mail-ed1-f44.google.com with SMTP id k21so14229948edq.3;
+        Mon, 10 Jun 2019 19:49:11 -0700 (PDT)
+X-Gm-Message-State: APjAAAXOwtg0iRCB0itWEUx70CJgCnIzN4uBQCDBZcvM+6pCJR8QvHec
+        eDo0XTaDfNOXVFpREZH1WrRGBHp8xX3H4S4t9SU=
+X-Google-Smtp-Source: APXvYqxvPmnZwsBXrmtO8FQpzDanJon6A2pHK0HutU2cDmxEfYa0Q3JL20t0hmqIdlsI34/oPqzYKiIaSCXWVxcOHng=
+X-Received: by 2002:a17:906:2415:: with SMTP id z21mr44138407eja.211.1560221350698;
+ Mon, 10 Jun 2019 19:49:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+References: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
+In-Reply-To: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+Date:   Tue, 11 Jun 2019 08:18:58 +0530
+X-Gmail-Original-Message-ID: <CAEU1=Pk2HVHApjRkAtL0H1wa6GUejs4af3KodQ8TgJmJ6bh-Wg@mail.gmail.com>
+Message-ID: <CAEU1=Pk2HVHApjRkAtL0H1wa6GUejs4af3KodQ8TgJmJ6bh-Wg@mail.gmail.com>
+Subject: Re: [PATCH] cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending
+To:     Pavankumar Kondeti <pkondeti@codeaurora.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        iri Kosina <jkosina@suse.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>, linux-pm@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some backward incompatible features pending
-for months, mainly due to on-disk format expensions.
+Hi Rafael/Thomas,
 
-However, we should ensure that it cannot be mounted with
-old kernels. Otherwise, it will causes unexpected behaviors.
+On Mon, Jun 3, 2019 at 10:03 AM Pavankumar Kondeti
+<pkondeti@codeaurora.org> wrote:
+>
+> When "deep" suspend is enabled, all CPUs except the primary CPU
+> are hotplugged out. Since CPU hotplug is a costly operation,
+> check if we have to abort the suspend in between each CPU
+> hotplug. This would improve the system suspend abort latency
+> upon detecting a wakeup condition.
+>
 
-Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-change log v2:
- - update printed message
+Please let me know if you have any comments on this patch.
 
- drivers/staging/erofs/erofs_fs.h | 13 ++++++++++---
- drivers/staging/erofs/super.c    | 17 +++++++++++++++++
- 2 files changed, 27 insertions(+), 3 deletions(-)
+Thanks,
+Pavan
 
-diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
-index fa52898df006..8ddb2b3e7d39 100644
---- a/drivers/staging/erofs/erofs_fs.h
-+++ b/drivers/staging/erofs/erofs_fs.h
-@@ -17,10 +17,16 @@
- #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
- #define EROFS_SUPER_OFFSET      1024
- 
-+/*
-+ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
-+ * incompatible with this kernel version.
-+ */
-+#define EROFS_ALL_REQUIREMENTS  0
-+
- struct erofs_super_block {
- /*  0 */__le32 magic;           /* in the little endian */
- /*  4 */__le32 checksum;        /* crc32c(super_block) */
--/*  8 */__le32 features;
-+/*  8 */__le32 features;        /* (aka. feature_compat) */
- /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
- /* 13 */__u8 reserved;
- 
-@@ -34,9 +40,10 @@ struct erofs_super_block {
- /* 44 */__le32 xattr_blkaddr;
- /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
- /* 64 */__u8 volume_name[16];   /* volume name */
-+/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
- 
--/* 80 */__u8 reserved2[48];     /* 128 bytes */
--} __packed;
-+/* 84 */__u8 reserved2[44];
-+} __packed;                     /* 128 bytes */
- 
- /*
-  * erofs inode data mapping:
-diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
-index f580d4ef77a1..fdcf65b3e52d 100644
---- a/drivers/staging/erofs/super.c
-+++ b/drivers/staging/erofs/super.c
-@@ -71,6 +71,20 @@ static void free_inode(struct inode *inode)
- 	kmem_cache_free(erofs_inode_cachep, vi);
- }
- 
-+static bool check_layout_compatibility(struct super_block *sb,
-+				       struct erofs_super_block *layout)
-+{
-+	const unsigned int requirements = le32_to_cpu(layout->requirements);
-+
-+	/* check if current kernel meets all mandatory requirements */
-+	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
-+		errln("unidentified requirements %x, please upgrade kernel version",
-+		      requirements & ~EROFS_ALL_REQUIREMENTS);
-+		return false;
-+	}
-+	return true;
-+}
-+
- static int superblock_read(struct super_block *sb)
- {
- 	struct erofs_sb_info *sbi;
-@@ -104,6 +118,9 @@ static int superblock_read(struct super_block *sb)
- 		goto out;
- 	}
- 
-+	if (!check_layout_compatibility(sb, layout))
-+		goto out;
-+
- 	sbi->blocks = le32_to_cpu(layout->blocks);
- 	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
- #ifdef CONFIG_EROFS_FS_XATTR
 -- 
-2.17.1
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
+Linux Foundation Collaborative Project
