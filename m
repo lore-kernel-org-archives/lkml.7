@@ -2,93 +2,77 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69A1C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AEBC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADE6206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB8920652
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LsKUwIpu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tZm05BCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389585AbfFKOGv (ORCPT
+        id S2389798AbfFKOH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:06:51 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43186 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387637AbfFKOGv (ORCPT
+        Tue, 11 Jun 2019 10:07:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40148 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387683AbfFKOH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:06:51 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 955F2C0F51;
-        Tue, 11 Jun 2019 14:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560262007; bh=vMEPr50pYiB+tqjKzwXZ5iSJP43TFUpQmHn+ZkqTQqE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=LsKUwIpu89KGiUrigsB4YtoJon18DD8SBkwfVLIUfdzAap9VT3StDmzmHjsO4VKrE
-         OvXpH9yDo7xajpY4esqyciY2KEa3XXuilIa9T8MnP5ts6PWBjyk2xvFIJat57UsLPD
-         5s5AvGQacagSSWN5E6gszB4RYnLRdxOZz745GJrGxFqZdV/xentrxQ1M7dWmp9wWUk
-         apl3CLCy4UknQLYluQnxY+JAEJTS+YqJRzlByMgjgBi5gUUyDLBwPw07LQpHhQIBJK
-         DytAzaQilB0wT/ThR0wEQIYsu6UceCdbsHjTXr2rnc+id2yItCZKsBPGCBoroc+nCw
-         uVq6zczR0UYFQ==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 18F25A005C;
-        Tue, 11 Jun 2019 14:06:49 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id EBD213F594;
-        Tue, 11 Jun 2019 16:06:48 +0200 (CEST)
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     linux-i3c@lists.infradead.org
-Cc:     Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] i3c: dw: add limited bus mode support
-Date:   Tue, 11 Jun 2019 16:06:45 +0200
-Message-Id: <db0bc8a55c7d54d99e36226e34aefdb932c92515.1560261604.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1560261604.git.vitor.soares@synopsys.com>
-References: <cover.1560261604.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1560261604.git.vitor.soares@synopsys.com>
-References: <cover.1560261604.git.vitor.soares@synopsys.com>
+        Tue, 11 Jun 2019 10:07:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jwVSRVYpHoI+ZWo4MBq+1xKy3s947GP/tfP5zSWOihQ=; b=tZm05BCtFnROyHuy+UdTBO27s
+        nwZqB51QgVq3veDuwxxZ9RsTyvV9tu+goRJlRmvlfU7fBlfyJA0IfHb1sGIEw5Guo4RCLQeheW2Ng
+        +PmQXJ+uxE2ES1zCbmkTRCGNfA92g4nNmxQRcm+zI8DnUb3KD0nxOVHoUkdMMjWKhO8Krsf1h+u1m
+        L6cjG+1OygWSiNapaKwuyx3JRNNuv6zj+YG4WfqA11TD1sZvd6Im5yni3ST5F8tAEjpMdTzQ0dClU
+        wpxlbo2kBABvvoVl6XhSkKflygsn2wOz7Z780aeGhgDRi2OAEXZ3fpPnmmO7kIfI3WCpXJrtSE3/P
+        JSD/8VaIA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hahQr-0000sf-1G; Tue, 11 Jun 2019 14:07:25 +0000
+Date:   Tue, 11 Jun 2019 07:07:25 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linuxppc-dev@ozlabs.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Subject: Re: Question - check in runtime which architecture am I running on
+Message-ID: <20190611140725.GA28902@infradead.org>
+References: <CAFCwf11EM9+NDML9hQmk9-rPzSmDmAyVLW+qOfs6h62dGK6H9A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFCwf11EM9+NDML9hQmk9-rPzSmDmAyVLW+qOfs6h62dGK6H9A@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add limited bus mode support for DesignWare i3c master
+On Tue, Jun 11, 2019 at 03:30:08PM +0300, Oded Gabbay wrote:
+> Hello POWER developers,
+> 
+> I'm trying to find out if there is an internal kernel API so that a
+> PCI driver can call it to check if its PCI device is running inside a
+> POWER9 machine. Alternatively, if that's not available, if it is
+> running on a machine with powerpc architecture.
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
----
-Changes in v3:
-  None
+Your driver has absolutely not business knowing this.
 
-Changes in v2:
-  None
+> 
+> I need this information as my device (Goya AI accelerator)
+> unfortunately needs a slightly different configuration of its PCIe
+> controller in case of POWER9 (need to set bit 59 to be 1 in all
+> outbound transactions).
 
- drivers/i3c/master/dw-i3c-master.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 1d83c97..9612d93 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -599,6 +599,7 @@ static int dw_i3c_master_bus_init(struct i3c_master_controller *m)
- 
- 	switch (bus->mode) {
- 	case I3C_BUS_MODE_MIXED_FAST:
-+	case I3C_BUS_MODE_MIXED_LIMITED:
- 		ret = dw_i2c_clk_cfg(master);
- 		if (ret)
- 			return ret;
--- 
-2.7.4
-
+No, it doesn't.  You can query the output from dma_get_required_mask
+to optimize for the DMA addresses you get, and otherwise you simply
+set the maximum dma mask you support.  That is about the control you
+get, and nothing else is a drivers business.
