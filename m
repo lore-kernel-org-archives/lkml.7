@@ -2,149 +2,113 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA1CC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98A0C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BCB214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675D4206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=daktronics.com header.i=@daktronics.com header.b="Hs/UROba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391556AbfFKN5T (ORCPT
+        id S2391581AbfFKN5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:57:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:42646 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387835AbfFKN5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:57:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 06:57:18 -0700
-X-ExtLoop1: 1
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2019 06:57:16 -0700
-Subject: Re: A potential broken at platform driver?
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Romain Izard <romain.izard.pro@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sen.li@intel.com, Richard Gong <richard.gong@intel.com>
-References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
- <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
- <20190528232224.GA29225@kroah.com>
- <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
- <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
- <20190603180255.GA18054@kroah.com> <20190604103241.GA4097@5WDYG62>
- <20190604142803.GA28355@kroah.com>
- <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
- <20190604170310.GC14605@kroah.com>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <f484ce9f-a86e-ce33-686b-b42dc293beb8@linux.intel.com>
-Date:   Tue, 11 Jun 2019 09:10:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190604170310.GC14605@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 11 Jun 2019 09:57:35 -0400
+Received: from mail-eopbgr720072.outbound.protection.outlook.com ([40.107.72.72]:3807
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391557AbfFKN5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:57:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=daktronics.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HXwYd5rDPqfq54U2WqMVU3a3Bl6dswf0jyYrsWiLDN8=;
+ b=Hs/UROba4RVaY1VZnErJ53MCg2wW5/2yrCdbA9RWoK/1ISQyT3+xcqcCo7Sod5mx+MdMWcQZGpNlFPSDC/hbBH9QBztaroDvESd4Iw65XyYGTkavJhrP04S3djI3SPSXxTwdo07DBmfHmZ1ZLBFFiRCYonQUkWKpC6d0F7UVdlQ=
+Received: from SN6PR02MB4016.namprd02.prod.outlook.com (52.135.69.145) by
+ SN6PR02MB4814.namprd02.prod.outlook.com (52.135.114.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.13; Tue, 11 Jun 2019 13:57:30 +0000
+Received: from SN6PR02MB4016.namprd02.prod.outlook.com
+ ([fe80::f551:3180:ba2d:7c1f]) by SN6PR02MB4016.namprd02.prod.outlook.com
+ ([fe80::f551:3180:ba2d:7c1f%6]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 13:57:30 +0000
+From:   Matt Sickler <Matt.Sickler@daktronics.com>
+To:     Geordan Neukum <gneukum1@gmail.com>,
+        Hao Xu <haoxu.linuxkernel@gmail.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] staging: kpc2000: kpc_i2c: remove the macros inb_p and
+ outb_p
+Thread-Topic: [PATCH v2] staging: kpc2000: kpc_i2c: remove the macros inb_p
+ and outb_p
+Thread-Index: AQHVH2Dso4KgADC9a0e1F3CVK4xfcaaVuXWAgADA57A=
+Date:   Tue, 11 Jun 2019 13:57:30 +0000
+Message-ID: <SN6PR02MB40169CA0F341B5727B806607EEED0@SN6PR02MB4016.namprd02.prod.outlook.com>
+References: <1560152904-31894-1-git-send-email-haoxu.linuxkernel@gmail.com>
+ <20190611021933.GA915@arch-01.home>
+In-Reply-To: <20190611021933.GA915@arch-01.home>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Matt.Sickler@daktronics.com; 
+x-originating-ip: [2620:9b:8000:6046:1c1e:e54f:8af5:e89]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e6cb339b-bc5c-4039-6427-08d6ee74bec4
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR02MB4814;
+x-ms-traffictypediagnostic: SN6PR02MB4814:
+x-microsoft-antispam-prvs: <SN6PR02MB4814529B2FE4471FA863F17EEEED0@SN6PR02MB4814.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(376002)(39860400002)(189003)(199004)(13464003)(81156014)(53936002)(7696005)(8676002)(76176011)(72206003)(8936002)(25786009)(55016002)(102836004)(478600001)(86362001)(229853002)(9686003)(52536014)(99286004)(305945005)(14454004)(54906003)(6436002)(5660300002)(68736007)(2906002)(110136005)(6116002)(7736002)(6506007)(316002)(74316002)(4744005)(46003)(66556008)(64756008)(66446008)(33656002)(71190400001)(186003)(71200400001)(4326008)(486006)(66476007)(73956011)(81166006)(66946007)(6246003)(446003)(256004)(476003)(14444005)(11346002)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4814;H:SN6PR02MB4016.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: daktronics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: DdVAs975oqDT1Lfyr3il8WbBNn+2mS/6dv3H00sOeu3jKhXLDfAlB/T02A1P936Kw4njGn2OrsKcYFrNflXckEWIoSTzkG03C7W5JRM8TJiCh2BNvX7R7JYlXC8G27bO5hyG4wdfvIyagCnOmpDCf+MqX9xbdkXfnEjV/32UYYDxIwbsLBvLLPaMLZxrHPxKgbtxKLwmwwh2VjOmPMdhVzQOGRBkdwDdxEO2nsQnSi9T74hoERPcDvadIavxGS9jTLk7yNcEf3UrEVORAPfe824Il46+k6PalX1f/sHcH80Cx+dnqPdnW53mku2o+qsrdcSxeLZgl650X8f2llxACAdtritJQI5dEsMRbsb8SqvPoadH/zmv7q/FJ0mEI/UNbCDX5OqJqLBpJoFagdOuvIreoRXKaWZBo6KkNx9tesM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: daktronics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6cb339b-bc5c-4039-6427-08d6ee74bec4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 13:57:30.2243
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: be88af81-0945-42aa-a3d2-b122777351a2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: matt.sickler@daktronics.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4814
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>-----Original Message-----
+>From: devel <driverdev-devel-bounces@linuxdriverproject.org> On Behalf Of
+>Geordan Neukum
+>
+>This inb() call looks like a bug. We perform a 64-bit operation when
+>talking to this hardware register everywhere else in this driver. Anyone
+>have more insight into the hardware with which this driver interacts
+>such that they could shed some light on the subject?
 
-Hi Greg,
+That would be me.  I looked at the VHDL for the hardware.  The registers se=
+em to
+be aligned to 8 bytes but only use the LS byte of each.  So it probably doe=
+sn't
+matter whether the memory transactions are 64-bit or 8-bit.
+I know the hardware doesn't support byte-enables either, which is probably =
+why
+the registers were padded this way.   Probably also why the inb_p and outb_=
+p
+macros were redefined.
 
-On 6/4/19 12:03 PM, Greg KH wrote:
-> On Tue, Jun 04, 2019 at 11:13:02AM -0500, Richard Gong wrote:
->>
->> Hi Greg,
->>
->> On 6/4/19 9:28 AM, Greg KH wrote:
->>> On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
->>>> On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
->>>>>> @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
->>>>>>    	.remove = stratix10_rsu_remove,
->>>>>>    	.driver = {
->>>>>>    		.name = "stratix10-rsu",
->>>>>> -		.groups = rsu_groups,
->>>>>> +//		.groups = rsu_groups,
->>>>>
->>>>> Are you sure this is the correct pointer?  I think that might be
->>>>> pointing to the driver's attributes, not the device's attributes.
->>>>>
->>>>> If platform drivers do not have a way to register groups properly, then
->>>>> that really needs to be fixed, as trying to register it by yourself as
->>>>> you are doing, is ripe for racing with userspace.
->>>> This is a very common issue with platform drivers, and it seems to me that
->>>> it is not possible to add device attributes when binding a device to a
->>>> driver without entering the race condition.
->>>>
->>>> My understanding is the following one:
->>>>
->>>> The root cause is that the device has already been created and reported
->>>> to the userspace with a KOBJ_ADD uevent before the device and the driver
->>>> are bound together. On receiving this event, userspace will react, and
->>>> it will try to read the device's attributes. In parallel the kernel will
->>>> try to find a matching driver. If a driver is found, the kernel will
->>>> call the probe function from the driver with the device as a parameter,
->>>> and if successful a KOBJ_BIND uevent will be sent to userspace, but this
->>>> is a recent addition.
->>>>
->>>> Unfortunately, not all created devices will be bound to a driver, and the
->>>> existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
->>>> If new per-device attributes have been added to the device during the
->>>> binding stage userspace may or may not see them, depending on when userspace
->>>> tries to read the device's attributes.
->>>>
->>>> I have this possible workaround, but I do not know if it is a good solution:
->>>>
->>>> When binding the device and the driver together, create a new device as a
->>>> child to the current device, and fill its "groups" member to point to the
->>>> per-device attributes' group. As the device will be created with all the
->>>> attributes, it will not be affected by the race issues. The functions
->>>> handling the attributes will need to be modified to use the parents of their
->>>> "device" parameter, instead of the device itself. Additionnaly, the sysfs
->>>> location of the attributes will be different, as the child device will show
->>>> up in the sysfs path. But for a newly introduced device this will not be
->>>> a problem.
->>>>
->>>> Is this a good compromise ?
->>>
->>> Not really.  You just want the attributes on the platform device itself.
->>>
->>> Given the horrible hack that platform devices are today, what's one more
->>> hack!
->>>
->>> Here's a patch below of what should probably be done here.  Richard, can
->>> you change your code to use the new dev_groups pointer in the struct
->>> platform_driver and this patch and let me know if that works or not?
->>>
->>> Note, I've only compiled this code, not tested it...
->>>
->>
->> Your patch works.
->>
->> Many thanks for your help!
-> 
-> Nice!
-> 
-> I guess I need to turn it into a real patch now.  Let me do that tonight
-> and see if I can convert some existing drivers to use it as well...
-> 
+>Probably a separate issue, but I did notice it as a result of this patch.
+>
+>Thanks,
+>Geordan
 
-Sorry for asking.
-
-I haven't seen your patch, did you release that?
-
-Regards,
-Richard
-
-> thanks,
-> 
-> greg k-h
-> 
