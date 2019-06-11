@@ -2,104 +2,195 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB42C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA04C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAA32145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4821D212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="E5Ye+SZn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NcQkgXfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404126AbfFKHMJ (ORCPT
+        id S2404154AbfFKHMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:12:09 -0400
-Received: from mail-eopbgr30125.outbound.protection.outlook.com ([40.107.3.125]:14830
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2403812AbfFKHMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:12:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CLtl7q2l3/2/9qNqIpMF1Nd3boE+0rqK76h287Avmsk=;
- b=E5Ye+SZnzAjES46335VZoKbWgxVKeN+JdPzN/Djif0JKPsub4yki+t+ZEnig20z1pjgk3cVc4qoD63mxjGQ8qelxkXkjweHg0MuBuM+kpgzV/hyuR8xzzD+id4BFpsu1u7XVsegjB9tRH+gHKimFAcE/D5teMe7bMS7s9wrojqA=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3449.eurprd02.prod.outlook.com (52.134.70.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Tue, 11 Jun 2019 07:12:04 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 07:12:04 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: mux: Use struct_size() in devm_kzalloc()
-Thread-Topic: [PATCH] i2c: mux: Use struct_size() in devm_kzalloc()
-Thread-Index: AQHVFjppJkxbZTNnA02k/V7Ddxx96aaWHXiA
-Date:   Tue, 11 Jun 2019 07:12:04 +0000
-Message-ID: <a7851536-52dc-367e-ffc2-88f49f96bd00@axentia.se>
-References: <20190529162014.GA27389@embeddedor>
-In-Reply-To: <20190529162014.GA27389@embeddedor>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1P195CA0018.EURP195.PROD.OUTLOOK.COM (2603:10a6:3:fd::28)
- To DB3PR0202MB3434.eurprd02.prod.outlook.com (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ef84eb48-04a3-459b-7bc4-08d6ee3c1b11
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3449;
-x-ms-traffictypediagnostic: DB3PR0202MB3449:
-x-microsoft-antispam-prvs: <DB3PR0202MB34497C7673282A31A7AB6C1FBCED0@DB3PR0202MB3449.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(136003)(366004)(39830400003)(346002)(189003)(199004)(6116002)(2616005)(7736002)(229853002)(4744005)(65806001)(65956001)(5660300002)(71190400001)(53936002)(6246003)(3846002)(476003)(446003)(11346002)(68736007)(186003)(386003)(316002)(102836004)(6506007)(71200400001)(6486002)(6512007)(64126003)(6436002)(86362001)(486006)(66066001)(256004)(53546011)(31696002)(26005)(99286004)(66556008)(76176011)(74482002)(66446008)(64756008)(52116002)(73956011)(508600001)(36756003)(305945005)(31686004)(4326008)(66476007)(25786009)(54906003)(110136005)(65826007)(81156014)(81166006)(8936002)(8676002)(66946007)(14454004)(2906002)(58126008);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3449;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ip/IscYbMbIZa/IX08xVJUgxg6ynZUCnmDHoX0DS6Zhr6oCR7Sl71S5Yg5t72m+R/3cMTyHT1/jDHFFjl5JqnyEm1KJR8t2TV+T2DVsohNFq1Z1yui06W9XQ4WqVzgRnTDO+YeVV67WGrw97RCYJTz+2I3UJCjJWJg8Mt53mqztlGdjhrOTYaTrpl+Nl79DggYdDZ0ARCAjS+Z71M+QTFUSBrykaiNlu/lSyEiagZUnZnXhZ+DosxJTE7fW38RNEaxsZMbM2WP/FyrzoSxJZEpGpiSWpgfonevdXVvfTP/5rlUDxomPA2pdojkQ3jGiz3mYmm+93ChTEy/CIUWSuH46A3B+TcRvkCkoyxW+/qjNgvq6K4VYgv4lS6rCkK+eQq2GDEYA9HYz4eQgW1INs9AlwjBfyPnl+iTQjcRIXcGY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BB133A1904977940BF87507E3FC30B92@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 11 Jun 2019 03:12:53 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45552 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403812AbfFKHMx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 03:12:53 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w34so6408066pga.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 00:12:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2zflAisppPi3XH8PNGYAeS6Mc1+luPDWwoAOPJ/TYcg=;
+        b=NcQkgXfmzyNO0YSn/QeFYQVmDP4+ca/BNM9xc48Wx4NL49tHZMfhtks6eGJxrmsQJW
+         SbRL5ri918gaEOhJJFOxEUL8yGN/m8/VRRE4rYiq/0WGit68pfkZq4YgpX016b4qYV4E
+         F4k7D4NoAiMvBUC1y7fRot7PLitXBe3HVd8o8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2zflAisppPi3XH8PNGYAeS6Mc1+luPDWwoAOPJ/TYcg=;
+        b=EoC+kJMqVOUULfuoKEzXnpM221g7WKEZbpTd5rcVrtuXQMFG6IrSPwH0NkNJTre/Tx
+         OQKOh/WlaOmdanTut7B0umDHJjXerkQ/tRbW7xpwJKDQ/6ZcnDjEJI7TNrvkMSUJkYcE
+         6UgBkN9PvyV7WRXC9E2RBPNSrgEu7qB7GThlb2X8FU8IsBajXVsSYtoWXw8a1g3O+exG
+         uhni1LIyEvUlnWLYKvMRZSbC3bH5M6GY207K49OCGfr737c+R6Fb4P33Eic8h078D0Yn
+         DL3t5lOm6fvaOWemn8pfTV7+3IfpjeIw4w5Dbx8GUT22V3UOxWDEk9UTBC3/itHgbOkw
+         Sygw==
+X-Gm-Message-State: APjAAAX+YcJc+pILhkFV5PHghLU0zoitpSvmtl2oM3yBUPd3TSAWx2FX
+        Y0oCQVHaAd09/I7uhcGLz2KicA==
+X-Google-Smtp-Source: APXvYqyw4K4ehNs3kP90MsjbeU3jHXkIAVRqccZH3OYXIi8GpLrgJ+96LkyLEa6uULz8q6lzL5g6zg==
+X-Received: by 2002:a65:44c8:: with SMTP id g8mr18952381pgs.443.1560237172184;
+        Tue, 11 Jun 2019 00:12:52 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id m5sm1641345pjl.24.2019.06.11.00.12.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 00:12:51 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org
+Cc:     linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v6] mfd: cros_ec_dev: Register cros_ec_accel_legacy driver as a subdevice
+Date:   Tue, 11 Jun 2019 00:12:36 -0700
+Message-Id: <20190611071236.171518-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef84eb48-04a3-459b-7bc4-08d6ee3c1b11
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 07:12:04.3630
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3449
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNS0yOSAxODoyMCwgR3VzdGF2byBBLiBSLiBTaWx2YSB3cm90ZToNCj4gT25lIG9m
-IHRoZSBtb3JlIGNvbW1vbiBjYXNlcyBvZiBhbGxvY2F0aW9uIHNpemUgY2FsY3VsYXRpb25zIGlz
-IGZpbmRpbmcNCj4gdGhlIHNpemUgb2YgYSBzdHJ1Y3R1cmUgdGhhdCBoYXMgYSB6ZXJvLXNpemVk
-IGFycmF5IGF0IHRoZSBlbmQsIGFsb25nDQo+IHdpdGggbWVtb3J5IGZvciBzb21lIG51bWJlciBv
-ZiBlbGVtZW50cyBmb3IgdGhhdCBhcnJheS4gRm9yIGV4YW1wbGU6DQo+IA0KPiBzdHJ1Y3QgZm9v
-IHsNCj4gICAgIGludCBzdHVmZjsNCj4gICAgIHN0cnVjdCBib28gZW50cnlbXTsNCj4gfTsNCj4g
-DQo+IGluc3RhbmNlID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKHN0cnVjdCBmb28pICsgY291
-bnQgKiBzaXplb2Yoc3RydWN0IGJvbyksIEdGUF9LRVJORUwpOw0KPiANCj4gSW5zdGVhZCBvZiBs
-ZWF2aW5nIHRoZXNlIG9wZW4tY29kZWQgYW5kIHByb25lIHRvIHR5cGUgbWlzdGFrZXMsIHdlIGNh
-bg0KPiBub3cgdXNlIHRoZSBuZXcgc3RydWN0X3NpemUoKSBoZWxwZXI6DQo+IA0KPiBpbnN0YW5j
-ZSA9IGRldm1fa3phbGxvYyhkZXYsIHN0cnVjdF9zaXplKGluc3RhbmNlLCBlbnRyeSwgY291bnQp
-LCBHRlBfS0VSTkVMKTsNCj4gDQo+IFRoaXMgY29kZSB3YXMgZGV0ZWN0ZWQgd2l0aCB0aGUgaGVs
-cCBvZiBDb2NjaW5lbGxlLg0KDQpUaGFua3MsIHBhdGNoIGFwcGxpZWQgdG8gaTJjLW11eC9mb3It
-bmV4dA0KDQpDaGVlcnMsDQpQZXRlcg0K
+With this patch, the cros_ec_ctl driver will register the legacy
+accelerometer driver (named cros_ec_accel_legacy) if it fails to
+register sensors through the usual path cros_ec_sensors_register().
+This legacy device is present on Chromebook devices with older EC
+firmware only supporting deprecated EC commands:
+- Glimmer based devices [Intel SOC using LPC transport]
+- Veyron minnie devices [ARM SOC using SPI transport]
+
+Tested-by: Gwendal Grignou <gwendal@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+---
+Changes in v6:
+- Remove .id field in mfd_cell, PLATFORM_DEVID_AUTO is set to auto
+  assign ids.
+- Add support for ARM devices with older EC.
+
+Changes in v5:
+- Remove unnecessary white lines.
+
+Changes in v4:
+- [5/8] Nit: EC -> ECs (Lee Jones)
+- [5/8] Statically define cros_ec_accel_legacy_cells (Lee Jones)
+
+Changes in v3:
+- [5/8] Add the Reviewed-by Andy Shevchenko.
+
+Changes in v2:
+- [5/8] Add the Reviewed-by Gwendal.
+
+ drivers/mfd/cros_ec_dev.c | 69 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index 54a58df571b6..c2156b6086eb 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -376,6 +376,72 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+ 	kfree(msg);
+ }
+ 
++static struct cros_ec_sensor_platform sensor_platforms[] = {
++	{ .sensor_num = 0 },
++	{ .sensor_num = 1 }
++};
++
++static const struct mfd_cell cros_ec_accel_legacy_cells[] = {
++	{
++		.name = "cros-ec-accel-legacy",
++		.platform_data = &sensor_platforms[0],
++		.pdata_size = sizeof(struct cros_ec_sensor_platform),
++	},
++	{
++		.name = "cros-ec-accel-legacy",
++		.platform_data = &sensor_platforms[1],
++		.pdata_size = sizeof(struct cros_ec_sensor_platform),
++	}
++};
++
++static void cros_ec_accel_legacy_register(struct cros_ec_dev *ec)
++{
++	struct cros_ec_device *ec_dev = ec->ec_dev;
++	u8 status;
++	int ret;
++
++	/*
++	 * ECs that need legacy support are the main EC, directly connected to
++	 * the AP.
++	 */
++	if (ec->cmd_offset != 0)
++		return;
++
++	/*
++	 * Check if EC supports direct memory reads and if EC has
++	 * accelerometers.
++	 */
++	if (ec_dev->cmd_readmem) {
++		ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS, 1,
++					  &status);
++		if (ret < 0) {
++			dev_warn(ec->dev, "EC direct read error.\n");
++			return;
++		}
++
++		/* Check if EC has accelerometers. */
++		if (!(status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
++			dev_info(ec->dev, "EC does not have accelerometers.\n");
++			return;
++		}
++	}
++
++	/*
++	 * The device may still support accelerometers:
++	 * it would be an older ARM based device that do not suppor the
++	 * EC_CMD_GET_FEATURES command.
++	 *
++	 * Register 2 accelerometers, we will fail in the IIO driver if there
++	 * are no sensors.
++	 */
++	ret = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
++			      cros_ec_accel_legacy_cells,
++			      ARRAY_SIZE(cros_ec_accel_legacy_cells),
++			      NULL, 0, NULL);
++	if (ret)
++		dev_err(ec_dev->dev, "failed to add EC sensors\n");
++}
++
+ static const struct mfd_cell cros_ec_cec_cells[] = {
+ 	{ .name = "cros-ec-cec" }
+ };
+@@ -471,6 +537,9 @@ static int ec_device_probe(struct platform_device *pdev)
+ 	/* check whether this EC is a sensor hub. */
+ 	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE))
+ 		cros_ec_sensors_register(ec);
++	else
++		/* Workaroud for older EC firmware */
++		cros_ec_accel_legacy_register(ec);
+ 
+ 	/* Check whether this EC instance has CEC host command support */
+ 	if (cros_ec_check_features(ec, EC_FEATURE_CEC)) {
+-- 
+2.22.0.rc1.257.g3120a18244-goog
+
