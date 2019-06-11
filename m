@@ -2,41 +2,42 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382AEC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72530C4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029AB2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFD621721
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:42:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NooVa7od"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Elx6a7oB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391609AbfFKOlj (ORCPT
+        id S2391787AbfFKOmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:41:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37476 "EHLO
+        Tue, 11 Jun 2019 10:42:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37510 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390359AbfFKOlh (ORCPT
+        with ESMTP id S2391595AbfFKOlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:41:37 -0400
+        Tue, 11 Jun 2019 10:41:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=o2J4Gd6aGMYycQc2Cgd8ykATa6/NVo6qP3SsoSO5AUQ=; b=NooVa7odzLv7IOhiLuJXRzdAT
-        9847NXr6KbmlQQbCdm/roXtU733/1c0TujxJALV/CRskCxkSZJxIjTuvYje4Hu2HIx2/18lsT2IkT
-        V4S9ZLfKxOjzNiNdjE9YSFiOAuEFWncLCMqFlld9C8E0tZO1blw/UZUNEDSAKtGyMp1ujFWNiFfe7
-        bemGU+fEPeBzJVI3EYWYyNcNlr9PPjI0kHfUCTEX9tUwAnnuaSJSqAOCWqlHSD1idi9GIdvUa4nKM
-        oFIEUMzaP5Hxm/4DCKB8Fju5R0z5GUcY9hrj8tNMF/3Z6P45ZzjIK8YKFH6ozHQKYWGLVdntjkdeO
-        jfIDBIm1w==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=NpWcgZzp3PVAHx6KOALQeB51c2SoNPG0lnYZA6y2f1k=; b=Elx6a7oB+cG63hmgYxilqyyn8c
+        41Dy5+a7mSEbpr74nkmh4p8U4+Csa9fSuC+Gn2NIci0h+zE1AJ2oCVBGO13LLiFb0b5dtSmQVG46v
+        9u67LZN22/J37Gq6Pw0EdVcHmtYQmz4D+jPa3xzMxshR3N3w3jFih5D2yKc/uCU1s1tzAUO98HmhR
+        Eb4uYc9Q63+/RNoh85FinfAQMq2GbkMiPqDoguuctm3ABd08mxoDvUh7pRodjX/6Qrk1P4MO1lvCS
+        cb+WEkPCrmQqVuObuLcxvqmcclY+k9OvtBq6GcKL8ErofhZRUpsV0D0m18ViO9NmB/7DHIAQrxxoM
+        YaFeTNdQ==;
 Received: from mpp-cp1-natpool-1-037.ethz.ch ([82.130.71.37] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hahxS-0005NR-8l; Tue, 11 Jun 2019 14:41:06 +0000
+        id 1hahxi-0005Q5-7q; Tue, 11 Jun 2019 14:41:22 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -53,10 +54,12 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>,
         linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
         sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: switch the remaining architectures to use generic GUP v3
-Date:   Tue, 11 Jun 2019 16:40:46 +0200
-Message-Id: <20190611144102.8848-1-hch@lst.de>
+Subject: [PATCH 05/16] sh: add the missing pud_page definition
+Date:   Tue, 11 Jun 2019 16:40:51 +0200
+Message-Id: <20190611144102.8848-6-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190611144102.8848-1-hch@lst.de>
+References: <20190611144102.8848-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -65,23 +68,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus and maintainers,
+sh only had pud_page_vaddr, but not pud_page.
 
-below is a series to switch mips, sh and sparc64 to use the generic
-GUP code so that we only have one codebase to touch for further
-improvements to this code.  I don't have hardware for any of these
-architectures, and generally no clue about their page table
-management, so handle with care.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/sh/include/asm/pgtable-3level.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes since v2:
- - rebase to mainline to pick up the untagged_addr definition
- - fix the gup range check to be start <= end to catch the 0 length case
- - use pfn based version for the missing pud_page/pgd_page definitions
- - fix a wrong check in the sparc64 version of pte_access_permitted
+diff --git a/arch/sh/include/asm/pgtable-3level.h b/arch/sh/include/asm/pgtable-3level.h
+index 7d8587eb65ff..3c7ff20f3f94 100644
+--- a/arch/sh/include/asm/pgtable-3level.h
++++ b/arch/sh/include/asm/pgtable-3level.h
+@@ -37,6 +37,7 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
+ {
+ 	return pud_val(pud);
+ }
++#define pud_page(pud)		pfn_to_page(pud_pfn(pud))
+ 
+ #define pmd_index(address)	(((address) >> PMD_SHIFT) & (PTRS_PER_PMD-1))
+ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
+-- 
+2.20.1
 
-Changes since v1:
- - fix various issues found by the build bot
- - cherry pick and use the untagged_addr helper form Andrey
- - add various refactoring patches to share more code over architectures
- - move the powerpc hugepd code to mm/gup.c and sync it with the generic
-   hup semantics
