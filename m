@@ -2,137 +2,124 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D2AC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D5CC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9591212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:26:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lQ8v5ML7"
+	by mail.kernel.org (Postfix) with ESMTP id B9BDF2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404743AbfFKI0r (ORCPT
+        id S2404746AbfFKI2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:26:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40515 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403996AbfFKI0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:26:47 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NNQC5pVCz9sBp;
-        Tue, 11 Jun 2019 18:26:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560241604;
-        bh=PeRbKliT0EifnHfr0s140XpRtxDlY3OUvNTQHClWPPU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lQ8v5ML7hV3hen8t9DneukbifqX4mIMXzKEEZZ+6S8/ryhgGKaVyiR6P46BEpO0Z7
-         twa5225t327ZK5B6pCoPl5uVlKDrsO9AtMfTfmUUOrFogMLfvRGvQFUVINfrrtAaRd
-         NcrsMHqHkYUv1kqkgA9BXoyEE18k2WPe20OS+N5aJ2pr8lbwsTkDFQu5ZsdTJabmcz
-         Vk8Ig13k2eh8B3r/EAJ6Juspm+dIjT2mwYOT8JSpnPrZGRxDWxkAQp/rcgQzfZJ5L+
-         Xrsu4rUdxQJ4wiY+dpxW5d1+K9Fm5d8mlZ1V7jxpg0+e28CxTpkSQRy5oQ/6C4UQx8
-         uNARcOMz+bDxg==
-Date:   Tue, 11 Jun 2019 18:26:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190611182640.44a4a73d@canb.auug.org.au>
+        Tue, 11 Jun 2019 04:28:10 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:51675 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404567AbfFKI2J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 04:28:09 -0400
+X-Originating-IP: 90.88.159.246
+Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9B65EFF80D;
+        Tue, 11 Jun 2019 08:27:58 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 10:27:58 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 6/7] arm64: dts: allwinner: h6: Add DMA node
+Message-ID: <20190611082758.raznfgrshvbc7lh4@flea>
+References: <20190527201459.20130-1-peron.clem@gmail.com>
+ <20190527201459.20130-7-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/UoN_PsASjWyoilpmu=DVVDC"; protocol="application/pgp-signature"
+        protocol="application/pgp-signature"; boundary="hgbw2pta2w7pzljd"
+Content-Disposition: inline
+In-Reply-To: <20190527201459.20130-7-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UoN_PsASjWyoilpmu=DVVDC
-Content-Type: text/plain; charset=US-ASCII
+
+--hgbw2pta2w7pzljd
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi,
 
-After merging the net-next tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+I tried applying this patch, and it conflicts.
 
-drivers/net/ethernet/ti/cpts.c: In function 'cpts_of_mux_clk_setup':
-drivers/net/ethernet/ti/cpts.c:567:2: error: implicit declaration of functi=
-on 'of_clk_parent_fill'; did you mean 'of_clk_get_parent_name'? [-Werror=3D=
-implicit-function-declaration]
-  of_clk_parent_fill(refclk_np, parent_names, num_parents);
-  ^~~~~~~~~~~~~~~~~~
-  of_clk_get_parent_name
-drivers/net/ethernet/ti/cpts.c:575:11: error: implicit declaration of funct=
-ion 'clk_hw_register_mux_table'; did you mean 'clk_hw_register_clkdev'? [-W=
-error=3Dimplicit-function-declaration]
-  clk_hw =3D clk_hw_register_mux_table(cpts->dev, refclk_np->name,
-           ^~~~~~~~~~~~~~~~~~~~~~~~~
-           clk_hw_register_clkdev
-drivers/net/ethernet/ti/cpts.c:575:9: warning: assignment to 'struct clk_hw=
- *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-  clk_hw =3D clk_hw_register_mux_table(cpts->dev, refclk_np->name,
-         ^
-drivers/net/ethernet/ti/cpts.c:586:29: error: 'clk_hw_unregister_mux' undec=
-lared (first use in this function); did you mean 'clk_hw_register_clkdev'?
-            (void(*)(void *))clk_hw_unregister_mux,
-                             ^~~~~~~~~~~~~~~~~~~~~
-                             clk_hw_register_clkdev
-drivers/net/ethernet/ti/cpts.c:586:29: note: each undeclared identifier is =
-reported only once for each function it appears in
-drivers/net/ethernet/ti/cpts.c:593:8: error: implicit declaration of functi=
-on 'of_clk_add_hw_provider'; did you mean 'of_clk_get_from_provider'? [-Wer=
-ror=3Dimplicit-function-declaration]
-  ret =3D of_clk_add_hw_provider(refclk_np, of_clk_hw_simple_get, clk_hw);
-        ^~~~~~~~~~~~~~~~~~~~~~
-        of_clk_get_from_provider
-drivers/net/ethernet/ti/cpts.c:593:42: error: 'of_clk_hw_simple_get' undecl=
-ared (first use in this function); did you mean 'ida_simple_get'?
-  ret =3D of_clk_add_hw_provider(refclk_np, of_clk_hw_simple_get, clk_hw);
-                                          ^~~~~~~~~~~~~~~~~~~~
-                                          ida_simple_get
-drivers/net/ethernet/ti/cpts.c:598:29: error: 'of_clk_del_provider' undecla=
-red (first use in this function); did you mean 'of_clk_get_from_provider'?
-            (void(*)(void *))of_clk_del_provider,
-                             ^~~~~~~~~~~~~~~~~~~
-                             of_clk_get_from_provider
-cc1: some warnings being treated as errors
+There's also a minor issue that sohuld be fixed
 
-Caused by commit
+On Mon, May 27, 2019 at 10:14:58PM +0200, Cl=E9ment P=E9ron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+>
+> H6 has DMA controller which supports 16 channels.
+>
+> Add a node for it.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
+ot/dts/allwinner/sun50i-h6.dtsi
+> index 16c5c3d0fd81..f4ea596c82ce 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -208,6 +208,18 @@
+>  			reg =3D <0x03006000 0x400>;
+>  		};
+>
+> +		dma: dma-controller@3002000 {
+> +			compatible =3D "allwinner,sun50i-h6-dma";
+> +			reg =3D <0x03002000 0x1000>;
+> +			interrupts =3D <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
+> +			clock-names =3D "bus", "mbus";
+> +			dma-channels =3D <16>;
+> +			dma-requests =3D <46>;
+> +			resets =3D <&ccu RST_BUS_DMA>;
+> +			#dma-cells =3D <1>;
+> +		};
+> +
+>  		pio: pinctrl@300b000 {
+>  			compatible =3D "allwinner,sun50i-h6-pinctrl";
+>  			reg =3D <0x0300b000 0x400>;
 
-  a3047a81ba13 ("net: ethernet: ti: cpts: add support for ext rftclk select=
-ion")
+DT nodes are ordered by increasing physical addresses, so this node
+shouldn't be there.
 
-of_clk_parent_fill() and others above are only available if
-CONFIG_COMMON_CLK is set (which it is not for this build).
+Thanks!
+Maxime
 
-I have reverted that commit for today.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UoN_PsASjWyoilpmu=DVVDC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--hgbw2pta2w7pzljd
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/ZcEACgkQAVBC80lX
-0Gzb1wgAiRuZPnzj+RLpIckzkvD5xxGkj1ZRMBFklt6VwXSYKQfJJkYVcxYWWJAS
-zpXFWgRfjp4IDlGUnRz39vgorkOjb4NrVqn292X0Ln6xm5e4umA4XB6nKDMURKGd
-6bplOtuP8SgPum8Opny8jtpWYpoGW1xMi0kw2JTKgF1UVf+wBkiTYBzRJkZpw3UQ
-cB0g26fbhOOg4ZFxfo2Q86dsTS6YZPnH7CaPaz6Wk2/W8hbq3SsJKMbXHGgp2Kxs
-fbrulPXP6tGFuku7vsQhP4SfPEp6dU34HzZPP/9rnsgQQmO5KvUTGerI+2GANgEE
-8RsZBLLFc5plpC6gkR+K0yiV5qWNeQ==
-=rjZT
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXP9mDgAKCRDj7w1vZxhR
+xeglAPwIW36bLSAE8g46D6JILsJk6w6C0BIIbR0gS4UHeOmtswEAnm9PNial2hiQ
+BhIQ8CM9gowudS/CZB7KUSMsrInbXAo=
+=PF9a
 -----END PGP SIGNATURE-----
 
---Sig_/UoN_PsASjWyoilpmu=DVVDC--
+--hgbw2pta2w7pzljd--
