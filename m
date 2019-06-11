@@ -2,106 +2,157 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0B5C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1C0C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547DB20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560290159;
-	bh=d9lEGvRP+Vgue3cmiL6Pop1k22/seNQuJAFNwEk415E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JvwyGSBE8f3/GwIM/XGK6cxn5tbQHbgS2aP13o8wu5iTamDoHqifkkFZmlQV+v6IY
-	 pp+do8nmjTPhrAe1f1LXuMfT8FRmXvFabNbKl7EHf6AjeLeU45YUKCdVnzzkP4Jx4v
-	 1pIHVbLdS2kgRU6g83VQwoPd4DGg6jG02Z7zKeuc=
+	by mail.kernel.org (Postfix) with ESMTP id 40A4120866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:56:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddHrl3Ob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436691AbfFKVz6 (ORCPT
+        id S2407760AbfFKV4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:55:58 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38913 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436639AbfFKVz6 (ORCPT
+        Tue, 11 Jun 2019 17:56:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38151 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404770AbfFKV4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:55:58 -0400
-Received: by mail-qk1-f196.google.com with SMTP id i125so8695946qkd.6;
-        Tue, 11 Jun 2019 14:55:57 -0700 (PDT)
+        Tue, 11 Jun 2019 17:56:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d18so14656230wrs.5;
+        Tue, 11 Jun 2019 14:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QYmVu7Nh4W0MeolwVO7YM0xZrXFwuxo+MvNj54r5DFI=;
+        b=ddHrl3Ob1MwwesQ9Lb7sv7QG5RxFQr58YbdPnGNLr2VguSLZq+wb7bsvyLj/yMl6j1
+         r/YjIn/xqOeoL/c4MbZW7KDDQpOmOXBiX096bl7E7bchfr9gKeJ9e0v0PbWZzgU+rbHk
+         JWAneuyaI9kn1nso7MnFwAk6WNL6XtkFa5TyCpzo58RzXDJeCXd9CMMeEsr6euk9Am5r
+         0LW7MybI2MLsigiv73sZ1HTyFdeaeE+7+8MRM89HuGs3KroViSFNqTch6zj2xsW8X/lW
+         3H94oAGcxF92AVxs2awVp1mODvsoCnzBLuIGdJal2C0yg5ARmh8NRRGJV/UcBmukfd7k
+         YGMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sPtz3BqdiTBkbWwtR0/UrKDxgV+sZMQrD6twsVTFc4U=;
-        b=FO4jG95hIhQdH0bePJ1+glQ3RGN+XZEO2kRywb5ZBdGARGOV38zjVxdF3U/DxGWE1t
-         QL0jYu6Dt4nd9pIjKlimjCjVmt/qgmcDduZqXjVnE13em3bdjfKINC29oR61SPRPv4PU
-         Cycvbb8naO18x/Vvzb63NQvngmk/oCbMfKwX0qv5nKw72tJ++EoULEAEcoYYwFUSsRCo
-         R7PXi0bunWp4/wJnzrrPDI03UQAGf7zY9dYpom3l4EszkoCLGxIl1LxHCMo9vLxwfAES
-         71I8ZDn8UI6QCPuGYRziF/h84daxaNjadVB/eeaNbu2w3l9qAajnZ5BPsAKR41qpZ36i
-         TwrA==
-X-Gm-Message-State: APjAAAUwmQIMxymuZ5yBBRLDR55wP1oPFEY6BImGHbzOjfLAsaHMb3nw
-        V+0zQhf88dycukJzEd458Q==
-X-Google-Smtp-Source: APXvYqxzcnLdJ4B7Arm6EZke3/gqxzSlYdTwCd01UFloU9lha7IwBhMaG2twe1MNISi/vJK4eDe/aw==
-X-Received: by 2002:a37:e402:: with SMTP id y2mr42991762qkf.200.1560290157124;
-        Tue, 11 Jun 2019 14:55:57 -0700 (PDT)
-Received: from localhost ([64.188.179.199])
-        by smtp.gmail.com with ESMTPSA id i30sm5956849qtb.18.2019.06.11.14.55.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 14:55:56 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 15:55:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QYmVu7Nh4W0MeolwVO7YM0xZrXFwuxo+MvNj54r5DFI=;
+        b=i98ctkdap+Ku8YKLtPhVtlH4V9aBG5yn+UK8KrhLHKtmZeIwjLHpoJ+Ma+K379mP31
+         PQob8sQ7eumfml0HV5Pp2oB6eljGQ30tvRVzMJyOUZivs7lhBk724GqIedbxZPaFU9OO
+         /L+PYCkcEYbaKFte3JpzLLxfS20xtIfXY5lFFeRGK9/EhMgZwFDt30KRFCQEKMJXJojg
+         aJzwKZvKcfQLRxuJnLgnrSkjVwG0XlW1HeMJ7SHl4LKP5sFLCuuzfZWoKl5BlIqafGxV
+         Mj+x24RX4XGceyLEQK1b3bJXilH+i6rVH0J1vJXleHCBp1f8VmpTGgFSwBom0ext1JDh
+         hReQ==
+X-Gm-Message-State: APjAAAXXAfw/F81QJk0raeyPz2qISr+Hi/zHP8ChhEQfm9XJC3zu5OMi
+        GbeX1oOMbHfAjkyxkCBq+rzKz/FT
+X-Google-Smtp-Source: APXvYqwL3STV7J5dZZWydL6UrU1XrZf0Pxs+RTdYy0/asu5vS+Kcm2JGAW8//Hhkz5TNuEik3ItyIA==
+X-Received: by 2002:adf:ec4c:: with SMTP id w12mr32345017wrn.160.1560290181176;
+        Tue, 11 Jun 2019 14:56:21 -0700 (PDT)
+Received: from [10.67.49.123] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id t15sm7042149wrx.84.2019.06.11.14.56.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 14:56:20 -0700 (PDT)
+Subject: Re: [PATCH 5/7] ARM: dts: BCM63xx: Fix DTC W=1 warnings
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH v5 1/2] dt-bindings: Add doc for the Ingenic JZ47xx LCD
- controller driver
-Message-ID: <20190611215554.GA23791@bogus>
-References: <20190603152331.23160-1-paul@crapouillou.net>
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190528230134.27007-1-f.fainelli@gmail.com>
+ <20190528230134.27007-6-f.fainelli@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <7eb443ef-38d9-ceae-3eae-3e264fcd847b@gmail.com>
+Date:   Tue, 11 Jun 2019 14:56:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603152331.23160-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190528230134.27007-6-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Jun 2019 17:23:30 +0200, Paul Cercueil wrote:
-> Add documentation for the devicetree bindings of the LCD controller present in
-> the JZ47xx family of SoCs from Ingenic.
+On 5/28/19 4:01 PM, Florian Fainelli wrote:
+> Fix the bulk of the unit_address_vs_reg warnings and unnecessary
+> \#address-cells/#size-cells without "ranges" or child "reg" property
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
-> 
-> Notes:
->     v2: Remove ingenic,panel property.
->     
->     v3: - Rename compatible strings from ingenic,jz47XX-drm to ingenic,jz47XX-lcd
->         - The ingenic,lcd-mode property is now read from the panel node instead
->     	  of from the driver node
->     
->     v4: Remove ingenic,lcd-mode property completely.
->     
->     v5: No change
-> 
->  .../bindings/display/ingenic,lcd.txt          | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
-> 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Applied to devicetree/next, thanks!
+-- 
+Florian
