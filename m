@@ -2,114 +2,118 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A835AC06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB36C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8158F20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D0A21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YIOBu6r/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqnRKRIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406228AbfFKRd3 (ORCPT
+        id S2405670AbfFKRft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:33:29 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32917 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404408AbfFKRd2 (ORCPT
+        Tue, 11 Jun 2019 13:35:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34245 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387856AbfFKRft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:33:28 -0400
-Received: by mail-ot1-f66.google.com with SMTP id p4so9489436oti.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:33:28 -0700 (PDT)
+        Tue, 11 Jun 2019 13:35:49 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p10so1500051pgn.1;
+        Tue, 11 Jun 2019 10:35:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N8nzla2nhdrhp+/IZCs1+OTgK//WXZgK4kNyZnUr2Po=;
-        b=YIOBu6r/nImhIKSwlRcFGhLbbEem2jjbzfIQXh2YW0B/MeYaZ9NEnCchaYX1ftEUP7
-         WXu0ggkj2bWy6Wv8GeH6ZODRSthNZKVorXwVQJzuc0+Ta+11fr0FamnTgyc3a0tuqp+2
-         LL9xs08ntR78279L5hwL/2t4knnvPcLASo9js=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nYhGZL91pZw+wH1RPe0GlZnF8M2foOXuUczt27U5dP8=;
+        b=DqnRKRIOmgAUU9DYq9awpNFvAR+1a+jI5G4+R/gv7Ems6hGEu5Fuz0taCYNc0KgDN1
+         IXAEFjXvy1gbxjH21Yi+uQVZ6AVlmKUZI57YFHEy9RtCwcpTL6E3B1/pebgrazymsfWB
+         +/xVa6jWZiJfQgoW9f8uj4PP+4Y5Fm072JpjOIck5CP44w1I3sNdfnBzQYXjtYy39rN0
+         69Vg7y0In1JEkSnjteyfDDn11cqLYqKqCSVmx7qUs1+QkdB4ROiA3FHJt5zNjRtxBjw6
+         VTg5mb85nTtCWyjsc1t4DoQ10SJd8B7V7DLb7UKnI5FPuKsL4ODy5qektksH3paxnTLr
+         gBzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N8nzla2nhdrhp+/IZCs1+OTgK//WXZgK4kNyZnUr2Po=;
-        b=T539OtNnhLfj0Kp4YwIh66MyqxpCZCBCRNd4hcHUVW7hgDsPkxwzjRjwFAmigPcTEy
-         DVuFvtWa/9534CbyGz3gKSdpnZ5gvwruuEnSKFKuNfxaKnfbzuAHt6OzMDv4xAnogwXe
-         gFrtIH9pEFGbEAf8cbGfI2NY+fAeWPpco1gX19Vt0nTdwIN0B0AY/BsatdegnFK6T3qI
-         O50auU+F5j7xTXziWz7f+uQtp5k5Jps5PxTelgfAews9ujdz6drkKLAfTpjyUHPk+er5
-         smSR3rGDk49spROr9ON0tkDYFx5+e7Fc7RTpUb0C/zzHfW1inNHnDNCW5pB1tT2VseI8
-         +R+w==
-X-Gm-Message-State: APjAAAVl/I1HKoKX7UdhbVRY+TeIUHbhAulN0pRmXQ+RruFoalDOLSd5
-        Q7jBoHEQ/5DNVdB76KUu45Q0AIRoSYhIbOf4VNIXXg==
-X-Google-Smtp-Source: APXvYqxnz+b1dgfxUNemPnCVMNQTkUC3TiOTKiiZdSO87P9fj+aapXwt3TlYybkYT6OHd+4V0lFC7SthgjCLuoxomAs=
-X-Received: by 2002:a9d:7451:: with SMTP id p17mr4008898otk.204.1560274407636;
- Tue, 11 Jun 2019 10:33:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nYhGZL91pZw+wH1RPe0GlZnF8M2foOXuUczt27U5dP8=;
+        b=bIYAydmzh7u1dD4wo+y3qKU8Pv+0BCw2jaYvO4+QkQeRLb4inDqJVqv1HbSkmDOQdQ
+         cpenQD0ShnHxcKPM61fSDrHwegLDLD8qzajcjEtKE5tBRWjszegVAnvfQnQ/s9XTRWe2
+         Kl2li6V17B284E/BrgvDx/hx2b4tPRgzD0oc4baX/014cCLPal+sIWWeoypWSVZegOk3
+         CUWNM6fh3bY0mFz76BVXGlxJBZRZHD5Bp6Ox8OU4N72aiGzi6KM7UR6bU7pIMKf/nPSZ
+         3XuE9BAaWNChwJCO1gj06oyGsGlIghiDm5DNMkwxWdSISczaRddQzZX7Bymalm5qQO/5
+         cLdw==
+X-Gm-Message-State: APjAAAXIWJoL6XgF2Y/TSTit3gCu7NnvRnE9VdfHuGvjbhBIzCLug1F8
+        gB0E1tzDQX22bRMM/OXrzzxmbQXP
+X-Google-Smtp-Source: APXvYqwhewRkeVFc1BlluC31iaO31CKuTbUaMZOSKnyOru3oMgODyfr2eURNHDsOK1I2higlqvkQZw==
+X-Received: by 2002:a63:5c15:: with SMTP id q21mr7148352pgb.248.1560274547926;
+        Tue, 11 Jun 2019 10:35:47 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id x129sm17063765pfb.29.2019.06.11.10.35.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 10:35:47 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 10:35:45 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Aaron Ma <aaron.ma@canonical.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cheiny@synaptics.com, aduggan@synaptics.com,
+        benjamin.tissoires@redhat.com
+Subject: Re: [PATCH 1/2] Input: synaptics-rmi4 - clear irqs before set irqs
+Message-ID: <20190611173545.GE143729@dtor-ws>
+References: <20190220164200.31044-1-aaron.ma@canonical.com>
+ <20190609165551.GB90002@dtor-ws>
+ <7da443d0-f433-c5a5-5194-707362eb2ee5@canonical.com>
 MIME-Version: 1.0
-References: <87k1dsjkdo.fsf@turtle.gmx.de> <20190611153656.GA5084@kroah.com>
-In-Reply-To: <20190611153656.GA5084@kroah.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 11 Jun 2019 19:33:16 +0200
-Message-ID: <CAKMK7uH_3P3pYkJ9Ua4hOFno5UiQ4p-rdWu9tPO75MxGCbyXSA@mail.gmail.com>
-Subject: Re: Linux 5.1.9 build failure with CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sven Joachim <svenjoac@gmx.de>, stable <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7da443d0-f433-c5a5-5194-707362eb2ee5@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 5:37 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Tue, Jun 11, 2019 at 03:56:35PM +0200, Sven Joachim wrote:
-> > Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
-> > legacy contexts. (v3)") has caused a build failure for me when I
-> > actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
-> >
-> > ,----
-> > | Kernel: arch/x86/boot/bzImage is ready  (#1)
-> > |   Building modules, stage 2.
-> > |   MODPOST 290 modules
-> > | ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-> > | scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-> > `----
+On Tue, Jun 11, 2019 at 12:55:58AM +0800, Aaron Ma wrote:
+> 
+> On 6/10/19 12:55 AM, Dmitry Torokhov wrote:
+> > Hi Aaron,
+> > 
+> > On Wed, Feb 20, 2019 at 05:41:59PM +0100, Aaron Ma wrote:
+> >> rmi4 got spam data after S3 resume on some ThinkPads.
+> >> Then TrackPoint lost when be detected by psmouse.
+> >> Clear irqs status before set irqs will make TrackPoint back.
+> > Could you please give me an idea as to what this spam data is?
+> > 
+> 
+> It should be some data 0 during suspend/resume.
+> Actually I don't know how these data 0 is produced.
+> Not all synaptics touchpads have this issue.
+> 
+> > In F03 probe we clear all pending data before enabling the function,
+> 
+> Yes we did, but not after resume.
 
-Calling drm_legacy_mmap is definitely not a great idea. I think either
-we need a custom patch to remove that out on older kernels, or maybe
-even #ifdef if you want to be super paranoid about breaking stuff ...
+Yes, I understand that. The question I was asking: if we add code
+consuming all pending data to f03->suspend(), similarly to what we are
+doing at probe time, will it fix the issue with trackstick losing
+synchronization and attempting disconnect?
 
-> > Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
-> > Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
-> > drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
-> > apply in 5.1.9.
-> >
-> > Most likely 4.19.50 and 4.14.125 are also affected, I haven't tested
-> > them yet.
->
-> They probably are.
->
-> Should I just revert this patch in the stable tree, or add some other
-> patch (like the one pointed out here, which seems an odd patch for
-> stable...)
+> 
+> > maybe the same needs to be done on resume, instead of changing the way
+> > we handle IRQ bits?
+> 
+> This patch is supposed to clear irq status like it in fn probe. Not
+> changing IRQ bits.
 
-... or backport the above patch, that should be save to do too. Not
-sure what stable folks prefer?
--Daniel
+What I meant is changing how we enable IRQ bits. I would really prefer
+we did not lose IRQ state for other functions when we enable interrupts
+for given function.
 
->
-> thanks,
->
-> greg k-h
-
-
+Thanks.
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Dmitry
