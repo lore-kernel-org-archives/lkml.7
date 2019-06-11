@@ -2,175 +2,165 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC11C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECBBC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2462B20645
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CFD20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfFKKo5 (ORCPT
+        id S1728690AbfFKKp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:44:57 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:24058 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728264AbfFKKo4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:44:56 -0400
-X-UUID: 6438f1b0b6e14368a23e04b08d3231a8-20190611
-X-UUID: 6438f1b0b6e14368a23e04b08d3231a8-20190611
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1585980236; Tue, 11 Jun 2019 18:44:53 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 11 Jun 2019 18:44:51 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 11 Jun 2019 18:44:51 +0800
-Message-ID: <1560249891.29153.4.camel@mtksdccf07>
-Subject: Re: [PATCH v2] kasan: add memory corruption identification for
- software tag-based mode
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen =?UTF-8?Q?=28=E9=99=B3=E6=B0=91=E6=A8=BA=29?= 
-        <Miles.Chen@mediatek.com>, kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Tue, 11 Jun 2019 18:44:51 +0800
-In-Reply-To: <CACT4Y+YNG0OGT+mCEms+=SYWA=9R3MmBzr8e3QsNNdQvHNt9Fg@mail.gmail.com>
-References: <1559651172-28989-1-git-send-email-walter-zh.wu@mediatek.com>
-         <CACT4Y+Y9_85YB8CCwmKerDWc45Z00hMd6Pc-STEbr0cmYSqnoA@mail.gmail.com>
-         <1560151690.20384.3.camel@mtksdccf07>
-         <CACT4Y+aetKEM9UkfSoVf8EaDNTD40mEF0xyaRiuw=DPEaGpTkQ@mail.gmail.com>
-         <1560236742.4832.34.camel@mtksdccf07>
-         <CACT4Y+YNG0OGT+mCEms+=SYWA=9R3MmBzr8e3QsNNdQvHNt9Fg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 06:45:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18547 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726713AbfFKKp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:45:57 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6A2DE477F75B8C656581;
+        Tue, 11 Jun 2019 18:45:55 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Jun 2019
+ 18:45:52 +0800
+Date:   Tue, 11 Jun 2019 11:45:42 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+CC:     <will.deacon@arm.com>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <robh+dt@kernel.org>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 8/8] iommu/arm-smmu-v3: Add support for PCI PASID
+Message-ID: <20190611114542.000021f1@huawei.com>
+In-Reply-To: <20190610184714.6786-9-jean-philippe.brucker@arm.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+        <20190610184714.6786-9-jean-philippe.brucker@arm.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 10:47 +0200, Dmitry Vyukov wrote:
-> On Tue, Jun 11, 2019 at 9:05 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> >
-> > On Mon, 2019-06-10 at 13:46 +0200, Dmitry Vyukov wrote:
-> > > On Mon, Jun 10, 2019 at 9:28 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > >
-> > > > On Fri, 2019-06-07 at 21:18 +0800, Dmitry Vyukov wrote:
-> > > > > > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> > > > > > index b40ea104dd36..be0667225b58 100644
-> > > > > > --- a/include/linux/kasan.h
-> > > > > > +++ b/include/linux/kasan.h
-> > > > > > @@ -164,7 +164,11 @@ void kasan_cache_shutdown(struct kmem_cache *cache);
-> > > > > >
-> > > > > >  #else /* CONFIG_KASAN_GENERIC */
-> > > > > >
-> > > > > > +#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> > > > > > +void kasan_cache_shrink(struct kmem_cache *cache);
-> > > > > > +#else
-> > > > >
-> > > > > Please restructure the code so that we don't duplicate this function
-> > > > > name 3 times in this header.
-> > > > >
-> > > > We have fixed it, Thank you for your reminder.
-> > > >
-> > > >
-> > > > > >  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
-> > > > > > +#endif
-> > > > > >  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
-> > > > > >
-> > > > > >  #endif /* CONFIG_KASAN_GENERIC */
-> > > > > > diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> > > > > > index 9950b660e62d..17a4952c5eee 100644
-> > > > > > --- a/lib/Kconfig.kasan
-> > > > > > +++ b/lib/Kconfig.kasan
-> > > > > > @@ -134,6 +134,15 @@ config KASAN_S390_4_LEVEL_PAGING
-> > > > > >           to 3TB of RAM with KASan enabled). This options allows to force
-> > > > > >           4-level paging instead.
-> > > > > >
-> > > > > > +config KASAN_SW_TAGS_IDENTIFY
-> > > > > > +       bool "Enable memory corruption idenitfication"
-> > > > >
-> > > > > s/idenitfication/identification/
-> > > > >
-> > > > I should replace my glasses.
-> > > >
-> > > >
-> > > > > > +       depends on KASAN_SW_TAGS
-> > > > > > +       help
-> > > > > > +         Now tag-based KASAN bug report always shows invalid-access error, This
-> > > > > > +         options can identify it whether it is use-after-free or out-of-bound.
-> > > > > > +         This will make it easier for programmers to see the memory corruption
-> > > > > > +         problem.
-> > > > >
-> > > > > This description looks like a change description, i.e. it describes
-> > > > > the current behavior and how it changes. I think code comments should
-> > > > > not have such, they should describe the current state of the things.
-> > > > > It should also mention the trade-off, otherwise it raises reasonable
-> > > > > questions like "why it's not enabled by default?" and "why do I ever
-> > > > > want to not enable it?".
-> > > > > I would do something like:
-> > > > >
-> > > > > This option enables best-effort identification of bug type
-> > > > > (use-after-free or out-of-bounds)
-> > > > > at the cost of increased memory consumption for object quarantine.
-> > > > >
-> > > > I totally agree with your comments. Would you think we should try to add the cost?
-> > > > It may be that it consumes about 1/128th of available memory at full quarantine usage rate.
-> > >
-> > > Hi,
-> > >
-> > > I don't understand the question. We should not add costs if not
-> > > necessary. Or you mean why we should add _docs_ regarding the cost? Or
-> > > what?
-> > >
-> > I mean the description of option. Should it add the description for
-> > memory costs. I see KASAN_SW_TAGS and KASAN_GENERIC options to show the
-> > memory costs. So We originally think it is possible to add the
-> > description, if users want to enable it, maybe they want to know its
-> > memory costs.
-> >
-> > If you think it is not necessary, we will not add it.
-> 
-> Full description of memory costs for normal KASAN mode and
-> KASAN_SW_TAGS should probably go into
-> Documentation/dev-tools/kasan.rst rather then into config description
-> because it may be too lengthy.
-> 
-Thanks your reminder.
+On Mon, 10 Jun 2019 19:47:14 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-> I mentioned memory costs for this config because otherwise it's
-> unclear why would one ever want to _not_ enable this option. If it
-> would only have positive effects, then it should be enabled all the
-> time and should not be a config option at all.
+> Enable PASID for PCI devices that support it. Since the SSID tables are
+> allocated by arm_smmu_attach_dev(), PASID has to be enabled early enough.
+> arm_smmu_dev_feature_enable() would be too late, since by that time the
+> main DMA domain has already been attached. Do it in add_device() instead.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Nitpick in line.
 
-Sorry, I don't get your full meaning.
-You think not to add the memory costs into the description of config ?
-or need to add it? or make it not be a config option(default enabled)?
+Thanks,
+
+Jonathan
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 51 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 972bfb80f964..a8a516d9ff10 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2197,6 +2197,49 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
+>  	master->ats_enabled = false;
+>  }
+>  
+> +static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
+> +{
+> +	int ret;
+> +	int features;
+> +	int num_pasids;
+> +	struct pci_dev *pdev;
+> +
+> +	if (!dev_is_pci(master->dev))
+> +		return -ENOSYS;
+> +
+> +	pdev = to_pci_dev(master->dev);
+> +
+> +	features = pci_pasid_features(pdev);
+> +	if (features < 0)
+> +		return -ENOSYS;
+> +
+> +	num_pasids = pci_max_pasids(pdev);
+> +	if (num_pasids <= 0)
+> +		return -ENOSYS;
+> +
+> +	ret = pci_enable_pasid(pdev, features);
+> +	if (!ret)
+> +		master->ssid_bits = min_t(u8, ilog2(num_pasids),
+> +					  master->smmu->ssid_bits);
+> +	return ret;
+> +}
+> +
+> +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
+> +{
+> +	struct pci_dev *pdev;
+> +
+> +	if (!dev_is_pci(master->dev))
+> +		return;
+> +
+> +	pdev = to_pci_dev(master->dev);
+> +
+> +	if (!pdev->pasid_enabled)
+> +		return;
+> +
+> +	pci_disable_pasid(pdev);
+> +	master->ssid_bits = 0;
+
+If we are being really fussy about ordering, why have this set of
+ssid_bits after pci_disable_pasid rather than before (to reverse order
+of .._enable_pasid)?
+
+> +}
+> +
+>  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
+>  {
+>  	unsigned long flags;
+> @@ -2413,6 +2456,9 @@ static int arm_smmu_add_device(struct device *dev)
+>  
+>  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
+>  
+> +	/* Note that PASID must be enabled before, and disabled after ATS */
+> +	arm_smmu_enable_pasid(master);
+> +
+>  	/*
+>  	 * If the SMMU doesn't support 2-stage CD, limit the linear
+>  	 * tables to a reasonable number of contexts, let's say
+> @@ -2423,7 +2469,7 @@ static int arm_smmu_add_device(struct device *dev)
+>  
+>  	ret = iommu_device_link(&smmu->iommu, dev);
+>  	if (ret)
+> -		goto err_free_master;
+> +		goto err_disable_pasid;
+>  
+>  	group = iommu_group_get_for_dev(dev);
+>  	if (IS_ERR(group)) {
+> @@ -2436,6 +2482,8 @@ static int arm_smmu_add_device(struct device *dev)
+>  
+>  err_unlink:
+>  	iommu_device_unlink(&smmu->iommu, dev);
+> +err_disable_pasid:
+> +	arm_smmu_disable_pasid(master);
+>  err_free_master:
+>  	kfree(master);
+>  	fwspec->iommu_priv = NULL;
+> @@ -2456,6 +2504,7 @@ static void arm_smmu_remove_device(struct device *dev)
+>  	arm_smmu_detach_dev(master);
+>  	iommu_group_remove_device(dev);
+>  	iommu_device_unlink(&smmu->iommu, dev);
+> +	arm_smmu_disable_pasid(master);
+>  	kfree(master);
+>  	iommu_fwspec_free(dev);
+>  }
 
 
