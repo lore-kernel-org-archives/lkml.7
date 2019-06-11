@@ -2,119 +2,117 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A280BC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDFEC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0DC20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767DF20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:57:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rPZyIgvl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tf0kGDzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388484AbfFKK5X (ORCPT
+        id S2388548AbfFKK5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:57:23 -0400
-Received: from mail-eopbgr80072.outbound.protection.outlook.com ([40.107.8.72]:27342
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727278AbfFKK5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:57:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BlVe/9eQ+Z5lazLBd0+UsOdhBiyNOJNCpjks9cLFfH0=;
- b=rPZyIgvlqrCtpluTKXwFwKAT28c4nzokP6xZKT+cc/wTI8eXjOBnd+cKkEHpGPE6ebNDP7p3SDPaZ2poa54HUqJuSYQhxzFS1jkd0whOZwgDnPfII5/xfDNavudAUmzCrhmIjpIWweWCgC0q5rP53XKvSfi7RBziGV3Bx1N0gyc=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB6625.eurprd04.prod.outlook.com (20.179.255.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Tue, 11 Jun 2019 10:57:17 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::11e1:3bb9:156b:a3e4]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::11e1:3bb9:156b:a3e4%3]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 10:57:17 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
-Thread-Topic: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
-Thread-Index: AQHVIB9eLFB8Mq7xjEewJLm6jwQNUKaWSDkw
-Date:   Tue, 11 Jun 2019 10:57:17 +0000
-Message-ID: <AM0PR04MB4211DC4725A5FEBDC995560680ED0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190611063333.48501-1-Anson.Huang@nxp.com>
- <20190611063333.48501-2-Anson.Huang@nxp.com>
-In-Reply-To: <20190611063333.48501-2-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fd4e5133-3369-4a20-9834-08d6ee5b91d3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6625;
-x-ms-traffictypediagnostic: AM0PR04MB6625:
-x-microsoft-antispam-prvs: <AM0PR04MB662591CE4F207D035FAD8AC980ED0@AM0PR04MB6625.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:983;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(376002)(136003)(396003)(189003)(199004)(76116006)(71200400001)(6246003)(73956011)(81156014)(7736002)(66946007)(66066001)(486006)(316002)(26005)(68736007)(476003)(2501003)(110136005)(33656002)(44832011)(14454004)(53936002)(229853002)(74316002)(55016002)(186003)(81166006)(6436002)(8676002)(102836004)(2906002)(76176011)(6116002)(5660300002)(7696005)(2201001)(305945005)(66556008)(66446008)(66476007)(71190400001)(52536014)(25786009)(7416002)(14444005)(8936002)(4744005)(3846002)(9686003)(11346002)(4326008)(64756008)(99286004)(86362001)(6506007)(478600001)(256004)(446003)(41533002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6625;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XK32MEVhbAfX4NvBUcfMH98p3rM6OBgRcGIipMyAlDYDqppy185Prm0RxaexAv7lByfWG5zMaMLb1Ql9aBCxocYRXbBhw3Rr9cOq7N4sD3FOCQrpnJBhNp/vVeXgJw5WQtEGvAdEdYr+QENuZsUCgsnfCPkVSNXaCRzEf0hCPHWLHmRc21GcUnPzEL77Q/O45znpz8upNAbOkPIZtpZDpJ75SX3BSfpYCP5uX1L+Q8SCE0LtdupWwO7kVNGHoAp+apL3PS0upV9rKMp0CvBSIFEIN3Sm5VRZtXfc8HmRMcKxa42SMxRncySLkHrMO0GeiuccxmjMVYSHTD3Dt9qrevM0/ldth7SJz41hdYDc0s1STjwMyEqhLebGFKok9V7at+2e4xZ7xcpv6jgSGtEX7/8DmkMZfQB88+xzrhPEfAs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 11 Jun 2019 06:57:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36696 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388487AbfFKK5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:57:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f21so754783pgi.3;
+        Tue, 11 Jun 2019 03:57:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NTaC/S77N+wYOnB6ltXnK1NPB8xaQz3FUn5xkbGkDUE=;
+        b=tf0kGDzD4d9DW6cYr4GzUHjL43Qv448VyaoCqkh6aLb1dLuPlH4LnWC4zV+v0FM6KJ
+         XHZliyo+ZVMcR5h7a0s3zm9GMZ3hjW7eaHZixQh7FKR27XHF5Es6EI4ivLc9Io5iy/nZ
+         fflJOg4/NasnBDELNjEZ8t3MqJ5YzXLWxe6mfYGDzU8sydoqPpLxjpJIGhWI+RiQllWp
+         B//IygIHK4TWFgVcH43juR0OYxM8ciCl+u4sIuDOzyn1V0fPzKLDeCAaTFDXUeyC+bXL
+         fFpycW/QoNtfF3I8FxiYQqwRY8VaNjniMcfudR9rkChWd0AareHQSGyxmbGmhAvAzzLg
+         mGfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NTaC/S77N+wYOnB6ltXnK1NPB8xaQz3FUn5xkbGkDUE=;
+        b=d0bh9r09ultCO+aVMGsrGoUZILC+Dn/z427HWg0DTvTBaN/rWk7kxrudEW0h4t8EJ6
+         XxfPENm04SVRBxSMV2xmHu6lbS2bAiJjIPKBPoDEr1gHeHWpx4tN0LUXiP/msxsTjQj4
+         3H94Ei8iacbFpSf4OjUoilkQR8SkoQJedlhtaQfQFmQnLQo7Ke8reKwF+zwokasOWC2N
+         SBHmRP5c377kJNxubEeiFZ/esS3fuXkJShQB1FMSvbBmtbFZCqIL7cgpk5GPAtyQIdJi
+         tbzp99kCDUZNwGE6iGzyZ5O9Rb0vreikE74kJmy6OeSfIhffEe4rNUvxDj/prd8RhOc7
+         EvAw==
+X-Gm-Message-State: APjAAAXu64PEbNEgt9/lmWG3bcXkBZV9bmh439aOOKaxTNiQrmd0K9R1
+        zXcLzo43mevUmbmPk58f99OXJx8D
+X-Google-Smtp-Source: APXvYqwd6hTQb8b5qIav5oS0XelM/MKJ+RUEzzPMdD8olaaGc1NwQCgINyg+qjDh1QzxWJFOWXJfpA==
+X-Received: by 2002:a17:90a:dd45:: with SMTP id u5mr5481580pjv.109.1560250672123;
+        Tue, 11 Jun 2019 03:57:52 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g8sm1772700pjs.23.2019.06.11.03.57.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 03:57:51 -0700 (PDT)
+Subject: Re: [PATCH] hwmon: (ads7871) Switch to SPDX header
+To:     Lubomir Rintel <lkundrak@v3.sk>, Jean Delvare <jdelvare@suse.com>
+Cc:     Paul Thomas <pthomas8589@gmail.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190611071948.2978150-1-lkundrak@v3.sk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <c080938b-eb7e-c21f-52d1-a35a1150c82f@roeck-us.net>
+Date:   Tue, 11 Jun 2019 03:57:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd4e5133-3369-4a20-9834-08d6ee5b91d3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 10:57:17.4092
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6625
+In-Reply-To: <20190611071948.2978150-1-lkundrak@v3.sk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIFttYWlsdG86QW5zb24uSHVhbmdAbnhwLmNvbV0N
-Cj4gU2VudDogVHVlc2RheSwgSnVuZSAxMSwgMjAxOSAyOjM0IFBNDQo+IA0KPiBpLk1YIHN5c3Rl
-bSBjb250cm9sbGVyIFJUQyBkcml2ZXIgY2FuIHN1cHBvcnQgYWxsIGkuTVggU29DcyB3aXRoIHN5
-c3RlbQ0KPiBjb250cm9sbGVyIGluc2lkZSwgdGhpcyBwYXRjaCBtYWtlcyB0aGUgY29tcGF0aWJs
-ZSBzdHJpbmcgbW9yZSBnZW5lcmljIHRvDQo+IHN1cHBvcnQgb3RoZXIgaS5NWCBTb0NzIHdpdGgg
-c3lzdGVtIGNvbnRyb2xsZXIgaW5zaWRlLCBzdWNoIGFzIGkuTVg4UU0gZXRjLi4NCj4gDQo+IFNp
-Z25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KDQpSZXZpZXdl
-ZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVnYXJkcw0KRG9u
-ZyBBaXNoZW5nDQoNCj4gLS0tDQo+ICBkcml2ZXJzL3J0Yy9ydGMtaW14LXNjLmMgfCAyICstDQo+
-ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3J0Yy9ydGMtaW14LXNjLmMgYi9kcml2ZXJzL3J0Yy9ydGMtaW14
-LXNjLmMgaW5kZXgNCj4gYzkzMzA0NS4uMzhlZjNjYSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9y
-dGMvcnRjLWlteC1zYy5jDQo+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KPiBAQCAt
-MTc4LDcgKzE3OCw3IEBAIHN0YXRpYyBpbnQgaW14X3NjX3J0Y19wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlDQo+ICpwZGV2KSAgfQ0KPiANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2
-aWNlX2lkIGlteF9zY19kdF9pZHNbXSA9IHsNCj4gLQl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg4
-cXhwLXNjLXJ0YyIsIH0sDQo+ICsJeyAuY29tcGF0aWJsZSA9ICJmc2wsaW14LXNjLXJ0YyIsIH0s
-DQo+ICAJe30NCj4gIH07DQo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBpbXhfc2NfZHRfaWRz
-KTsNCj4gLS0NCj4gMi43LjQNCg0K
+On 6/11/19 12:19 AM, Lubomir Rintel wrote:
+> The original license text had a typo ("publishhed") which would be
+> likely to confuse automated licensing auditing tools. Let's just switch
+> to SPDX instead of fixing the wording.
+> 
+If you have a look into the upstream kernel, you may notice that
+this has already been done. Same for the other patch.
+
+Guenter
+
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>   drivers/hwmon/ads7871.c | 10 +---------
+>   1 file changed, 1 insertion(+), 9 deletions(-)
+> 
+> diff --git a/drivers/hwmon/ads7871.c b/drivers/hwmon/ads7871.c
+> index cd14c1501508..7ccc79f77f95 100644
+> --- a/drivers/hwmon/ads7871.c
+> +++ b/drivers/hwmon/ads7871.c
+> @@ -1,17 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+>   /*
+>    *  ads7871 - driver for TI ADS7871 A/D converter
+>    *
+>    *  Copyright (c) 2010 Paul Thomas <pthomas8589@gmail.com>
+>    *
+> - *  This program is distributed in the hope that it will be useful,
+> - *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> - *  GNU General Public License for more details.
+> - *
+> - *  This program is free software; you can redistribute it and/or modify
+> - *  it under the terms of the GNU General Public License version 2 or
+> - *  later as publishhed by the Free Software Foundation.
+> - *
+>    *	You need to have something like this in struct spi_board_info
+>    *	{
+>    *		.modalias	= "ads7871",
+> 
+
