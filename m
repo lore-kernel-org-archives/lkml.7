@@ -2,127 +2,137 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA1DC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D2AC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4370C20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9591212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:26:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lQ8v5ML7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404709AbfFKI0C (ORCPT
+        id S2404743AbfFKI0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:26:02 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34887 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404073AbfFKI0C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:26:02 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x25so6075214ljh.2;
-        Tue, 11 Jun 2019 01:26:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fRmoMIsZBSVoYdlrURu/R5LpVklxWrnPow9T+scl1c8=;
-        b=gIcU94J47mvP6GNPNcFwUM2EV2b2fBSARTihfnzPd0RqXmqXFVQo4ilCXChC250ICZ
-         8Xz088n+h9BBMxYQdXbCykA4V1H9dz3o2gscvTA4Vt5L5EswHH2WBNeeS90IXpNLX5Ul
-         7SasOEDNAViOksYq01t1xVc58F0Nf+EQr7uGgP6QPAlvicTVX6EIZkAXMMIya9UdSqrI
-         GFUmPH8QyChs2T/jM5ppO9Z+9a/kAFO0MpFhurQW9ZaVAuR1FBDZi4u7ydLmSQJ6eB1n
-         1bkZWpB4Wg0avUb26Qb2LeAGz5UAapqcLxHgHoPf+6/BR4HBUkmuFfi5SOtXZU2yA+jF
-         a6Kg==
-X-Gm-Message-State: APjAAAUXwD04mHrGNj3D75TJ+XSIo03T499CZT922SkQs71fsIQ5QaGA
-        rMsKp/XX+hkuvEjESFlJo5uQdlX29Zh6uLydFTw=
-X-Google-Smtp-Source: APXvYqz5wc/joiy06FOa5+5LASjye7tJKfWbnZfpusW+8Da+RGItpfdSQao+YuZntnzQUcnhkK8gdEsZWI/Z5YLEf6g=
-X-Received: by 2002:a2e:91c5:: with SMTP id u5mr28381055ljg.65.1560241559914;
- Tue, 11 Jun 2019 01:25:59 -0700 (PDT)
+        Tue, 11 Jun 2019 04:26:47 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40515 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403996AbfFKI0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 04:26:47 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NNQC5pVCz9sBp;
+        Tue, 11 Jun 2019 18:26:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560241604;
+        bh=PeRbKliT0EifnHfr0s140XpRtxDlY3OUvNTQHClWPPU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lQ8v5ML7hV3hen8t9DneukbifqX4mIMXzKEEZZ+6S8/ryhgGKaVyiR6P46BEpO0Z7
+         twa5225t327ZK5B6pCoPl5uVlKDrsO9AtMfTfmUUOrFogMLfvRGvQFUVINfrrtAaRd
+         NcrsMHqHkYUv1kqkgA9BXoyEE18k2WPe20OS+N5aJ2pr8lbwsTkDFQu5ZsdTJabmcz
+         Vk8Ig13k2eh8B3r/EAJ6Juspm+dIjT2mwYOT8JSpnPrZGRxDWxkAQp/rcgQzfZJ5L+
+         Xrsu4rUdxQJ4wiY+dpxW5d1+K9Fm5d8mlZ1V7jxpg0+e28CxTpkSQRy5oQ/6C4UQx8
+         uNARcOMz+bDxg==
+Date:   Tue, 11 Jun 2019 18:26:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: linux-next: build failure after merge of the net-next tree
+Message-ID: <20190611182640.44a4a73d@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190610212015.9157-1-hch@lst.de> <20190610212015.9157-8-hch@lst.de>
-In-Reply-To: <20190610212015.9157-8-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 11 Jun 2019 10:25:46 +0200
-Message-ID: <CAMuHMdXvbA=+=AQ6fYV2zRUc6CWtZ_GzEN7D5b8QNYwLEd6OjA@mail.gmail.com>
-Subject: Re: [PATCH 07/15] binfmt_flat: use __be32 for the on-disk format
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev@linux-c6x.org,
-        "moderated list:H8/300 ARCHITECTURE" 
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-riscv@lists.infradead.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/UoN_PsASjWyoilpmu=DVVDC"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+--Sig_/UoN_PsASjWyoilpmu=DVVDC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 10, 2019 at 11:21 PM Christoph Hellwig <hch@lst.de> wrote:
-> So far binfmt_flat has onl been supported on 32-bit platforms, so the
-> variable size of the fields didn't matter.  But the upcoming RISC-V
-> nommu port supports 64-bit CPUs, and we now have a conflict between
-> the elf2flt creation tool that always uses 32-bit fields and the kernel
-> that uses (unsigned) long field.  Switch to the userspace view as the
-> rest of the binfmt_flat format is completely architecture neutral,
-> and binfmt_flat isn't the right binary format for huge executables to
-> start with.
->
-> While we're at it also ensure these fields are using __be types as
-> they big endian and are byteswapped when loaded.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hi all,
 
-> --- a/include/linux/flat.h
-> +++ b/include/linux/flat.h
+After merging the net-next tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
 
-> @@ -67,19 +67,19 @@ struct flat_hdr {
->  #define OLD_FLAT_RELOC_TYPE_BSS                2
->
->  typedef union {
-> -       unsigned long   value;
-> +       u32             value;
->         struct {
->  # if defined(mc68000) && !defined(CONFIG_COLDFIRE)
-> -               signed long offset : 30;
-> -               unsigned long type : 2;
-> +               s32     offset : 30;
-> +               u32     type : 2;
->  #      define OLD_FLAT_FLAG_RAM    0x1 /* load program entirely into RAM */
->  # elif defined(__BIG_ENDIAN_BITFIELD)
-> -               unsigned long type : 2;
-> -               signed long offset : 30;
-> +               u32     type : 2;
-> +               s32     offset : 30;
->  #      define OLD_FLAT_FLAG_RAM    0x1 /* load program entirely into RAM */
->  # elif defined(__LITTLE_ENDIAN_BITFIELD)
-> -               signed long offset : 30;
-> -               unsigned long type : 2;
-> +               s32     offset : 30;
-> +               u32     type : 2;
->  #      define OLD_FLAT_FLAG_RAM    0x1 /* load program entirely into RAM */
+drivers/net/ethernet/ti/cpts.c: In function 'cpts_of_mux_clk_setup':
+drivers/net/ethernet/ti/cpts.c:567:2: error: implicit declaration of functi=
+on 'of_clk_parent_fill'; did you mean 'of_clk_get_parent_name'? [-Werror=3D=
+implicit-function-declaration]
+  of_clk_parent_fill(refclk_np, parent_names, num_parents);
+  ^~~~~~~~~~~~~~~~~~
+  of_clk_get_parent_name
+drivers/net/ethernet/ti/cpts.c:575:11: error: implicit declaration of funct=
+ion 'clk_hw_register_mux_table'; did you mean 'clk_hw_register_clkdev'? [-W=
+error=3Dimplicit-function-declaration]
+  clk_hw =3D clk_hw_register_mux_table(cpts->dev, refclk_np->name,
+           ^~~~~~~~~~~~~~~~~~~~~~~~~
+           clk_hw_register_clkdev
+drivers/net/ethernet/ti/cpts.c:575:9: warning: assignment to 'struct clk_hw=
+ *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  clk_hw =3D clk_hw_register_mux_table(cpts->dev, refclk_np->name,
+         ^
+drivers/net/ethernet/ti/cpts.c:586:29: error: 'clk_hw_unregister_mux' undec=
+lared (first use in this function); did you mean 'clk_hw_register_clkdev'?
+            (void(*)(void *))clk_hw_unregister_mux,
+                             ^~~~~~~~~~~~~~~~~~~~~
+                             clk_hw_register_clkdev
+drivers/net/ethernet/ti/cpts.c:586:29: note: each undeclared identifier is =
+reported only once for each function it appears in
+drivers/net/ethernet/ti/cpts.c:593:8: error: implicit declaration of functi=
+on 'of_clk_add_hw_provider'; did you mean 'of_clk_get_from_provider'? [-Wer=
+ror=3Dimplicit-function-declaration]
+  ret =3D of_clk_add_hw_provider(refclk_np, of_clk_hw_simple_get, clk_hw);
+        ^~~~~~~~~~~~~~~~~~~~~~
+        of_clk_get_from_provider
+drivers/net/ethernet/ti/cpts.c:593:42: error: 'of_clk_hw_simple_get' undecl=
+ared (first use in this function); did you mean 'ida_simple_get'?
+  ret =3D of_clk_add_hw_provider(refclk_np, of_clk_hw_simple_get, clk_hw);
+                                          ^~~~~~~~~~~~~~~~~~~~
+                                          ida_simple_get
+drivers/net/ethernet/ti/cpts.c:598:29: error: 'of_clk_del_provider' undecla=
+red (first use in this function); did you mean 'of_clk_get_from_provider'?
+            (void(*)(void *))of_clk_del_provider,
+                             ^~~~~~~~~~~~~~~~~~~
+                             of_clk_get_from_provider
+cc1: some warnings being treated as errors
 
-The definitions of OLD_FLAT_FLAG_RAM are identical, so could be
-factored out.
-However, they appear to be unused.
+Caused by commit
 
->  # else
->  #      error "Unknown bitfield order for flat files."
+  a3047a81ba13 ("net: ethernet: ti: cpts: add support for ext rftclk select=
+ion")
 
-Gr{oetje,eeting}s,
+of_clk_parent_fill() and others above are only available if
+CONFIG_COMMON_CLK is set (which it is not for this build).
 
-                        Geert
+I have reverted that commit for today.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--=20
+Cheers,
+Stephen Rothwell
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--Sig_/UoN_PsASjWyoilpmu=DVVDC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/ZcEACgkQAVBC80lX
+0Gzb1wgAiRuZPnzj+RLpIckzkvD5xxGkj1ZRMBFklt6VwXSYKQfJJkYVcxYWWJAS
+zpXFWgRfjp4IDlGUnRz39vgorkOjb4NrVqn292X0Ln6xm5e4umA4XB6nKDMURKGd
+6bplOtuP8SgPum8Opny8jtpWYpoGW1xMi0kw2JTKgF1UVf+wBkiTYBzRJkZpw3UQ
+cB0g26fbhOOg4ZFxfo2Q86dsTS6YZPnH7CaPaz6Wk2/W8hbq3SsJKMbXHGgp2Kxs
+fbrulPXP6tGFuku7vsQhP4SfPEp6dU34HzZPP/9rnsgQQmO5KvUTGerI+2GANgEE
+8RsZBLLFc5plpC6gkR+K0yiV5qWNeQ==
+=rjZT
+-----END PGP SIGNATURE-----
+
+--Sig_/UoN_PsASjWyoilpmu=DVVDC--
