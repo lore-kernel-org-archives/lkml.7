@@ -2,165 +2,80 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045C0C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B038C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D066020896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:38:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vFVLFZFy"
+	by mail.kernel.org (Postfix) with ESMTP id D436A20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391337AbfFKOii (ORCPT
+        id S2391380AbfFKOiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:38:38 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43305 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387486AbfFKOig (ORCPT
+        Tue, 11 Jun 2019 10:38:51 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:58340 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387486AbfFKOiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:38:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cl9so5201606plb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 07:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+Bb9evtnnpvJpDG7+k/xfmfwlxE7BAZZaECd7yQ/bgY=;
-        b=vFVLFZFyIF01TbjN+xeeME15qV8KkCRDccJHkbwPJnzYqntxAPPejl4UucLg68kkqb
-         BaObH7iQP83sFpaN8IH2/Yu4t4nwUDbwn3rb15fIHqVU7geywA3LRxp1p4GflSM3qTjJ
-         iWM19kJHA7FmF25W9uFiY1kMJbcO4WOESGJU61YywCA+i6Ylfs/3WF6YNj5xaMoYJ89L
-         XqlvBDrbDKlYUJNKkeiCJcKNhxFQvdK51GyYrA4cNM42eSbHTJc/2qrnnTIYWyQugg14
-         drUy2FSlkxzvJpoh5mj5M9w5F5osUe6J99CThZKFzYA/JvReekTQOE0mCFzBedDfUO6l
-         PqJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Bb9evtnnpvJpDG7+k/xfmfwlxE7BAZZaECd7yQ/bgY=;
-        b=Oa2jfrLDGa7pCGnIhICyrXCT4NR4BrR3O/F4RUmm0oXDPzywjLXBQHTjCrHuHEK4dw
-         dl44enVkp/1iFP7sL/H6xHfCHmGJclFsfIqHJgKMAviw+BDiloNPLaI7SySt5M0x/uJM
-         j+GHK51mhtxS5MIsCGOrRrX5XekC1Npuy04ANlVVlsA3ZEoflNkDx1hQMHVVh+FC5yB+
-         unI7RQHeK9BCksBAUPu2XSj7FXfQ8cRSk3OFPP6P6S59w+RRU8/m2zBHx4mc9NGP2rBO
-         zuZYq8gLE83uLD9BMM0PVNuuIU1jAloXG/erjUUUXRDEMEc15ljSljiGfoE7iGDV8OJO
-         tW9A==
-X-Gm-Message-State: APjAAAVxliiOZ/NDogAyKULRxZLy1+tH7trxL1/lM1iyGqLQi/DaY5V9
-        E8sqPviAimeASS3UTjvrcKuzsaYONlbdVwfr2UKy3A==
-X-Google-Smtp-Source: APXvYqyIzOH5zo/01pYiY/WLl0OLwpsCvaKKuk+vDciT43wSxP3iXzYy6GsWF4y5D8CeYcDREH0+OmLOdYtg4cNrux0=
-X-Received: by 2002:a17:902:1566:: with SMTP id b35mr78131643plh.147.1560263915764;
- Tue, 11 Jun 2019 07:38:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com> <51f44a12c4e81c9edea8dcd268f820f5d1fad87c.1559580831.git.andreyknvl@google.com>
- <201906072101.58C919E@keescook>
-In-Reply-To: <201906072101.58C919E@keescook>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 11 Jun 2019 16:38:24 +0200
-Message-ID: <CAAeHK+y8CH4P3vheUDCEnPAuO-2L6mc-sz6wMA_hT=wC1Cy3KQ@mail.gmail.com>
-Subject: Re: [PATCH v16 08/16] fs, arm64: untag user pointers in copy_mount_options
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
+        Tue, 11 Jun 2019 10:38:50 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hahvA-00052j-8k; Tue, 11 Jun 2019 16:38:44 +0200
+Date:   Tue, 11 Jun 2019 16:38:43 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Oleg Nesterov <oleg@redhat.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v4 2/4] x86: simplify _TIF_SYSCALL_EMU handling
+In-Reply-To: <20190523090618.13410-3-sudeep.holla@arm.com>
+Message-ID: <alpine.DEB.2.21.1906111633400.1662@nanos.tec.linutronix.de>
+References: <20190523090618.13410-1-sudeep.holla@arm.com> <20190523090618.13410-3-sudeep.holla@arm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 8, 2019 at 6:02 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Jun 03, 2019 at 06:55:10PM +0200, Andrey Konovalov wrote:
-> > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > pass tagged user pointers (with the top byte set to something else other
-> > than 0x00) as syscall arguments.
-> >
-> > In copy_mount_options a user address is being subtracted from TASK_SIZE.
-> > If the address is lower than TASK_SIZE, the size is calculated to not
-> > allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
-> > However if the address is tagged, then the size will be calculated
-> > incorrectly.
-> >
-> > Untag the address before subtracting.
-> >
-> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
->
-> One thing I just noticed in the commit titles... "arm64" is in the
-> prefix, but these are arch-indep areas. Should the ", arm64" be left
-> out?
->
-> I would expect, instead:
->
->         fs/namespace: untag user pointers in copy_mount_options
+On Thu, 23 May 2019, Sudeep Holla wrote:
 
-Hm, I've added the arm64 tag in all of the patches because they are
-related to changes in arm64 kernel ABI. I can remove it from all the
-patches that only touch common code if you think that it makes sense.
+$Subject: Please use the proper prefix and start the sentence with an upper
+case letter.
 
-Thanks!
+  x86/entry: Simplify _TIF_SYSCALL_EMU handling
 
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> -Kees
->
-> > ---
-> >  fs/namespace.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/namespace.c b/fs/namespace.c
-> > index b26778bdc236..2e85712a19ed 100644
-> > --- a/fs/namespace.c
-> > +++ b/fs/namespace.c
-> > @@ -2993,7 +2993,7 @@ void *copy_mount_options(const void __user * data)
-> >        * the remainder of the page.
-> >        */
-> >       /* copy_from_user cannot cross TASK_SIZE ! */
-> > -     size = TASK_SIZE - (unsigned long)data;
-> > +     size = TASK_SIZE - (unsigned long)untagged_addr(data);
-> >       if (size > PAGE_SIZE)
-> >               size = PAGE_SIZE;
-> >
-> > --
-> > 2.22.0.rc1.311.g5d7573a151-goog
-> >
->
-> --
-> Kees Cook
+> The usage of emulated/_TIF_SYSCALL_EMU flags in syscall_trace_enter
+> seems to be bit overcomplicated than required. Let's simplify it.
+
+s/seems to be bit overcomplicated/is more complicated/
+
+ Either you are sure that it is overengineered, then say so. If not, then
+ you should not touch the code at all.
+
+s/Let's simplify it.//
+
+ 'Let's do X.' is a popular, but technically useless phrase.
+
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+This is a nice simplification indeed! With the changelog fixed:
+
+     Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
