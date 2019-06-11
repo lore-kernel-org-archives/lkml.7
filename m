@@ -2,157 +2,250 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
+	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF09FC0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7417C06508
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A8B20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B999E2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:58:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="P1UKhIYg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NXabX8VK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406711AbfFKR6L (ORCPT
+        id S2406726AbfFKR6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:58:11 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35352 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406628AbfFKR6L (ORCPT
+        Tue, 11 Jun 2019 13:58:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36554 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406525AbfFKR6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:58:11 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j19so12789586otq.2;
-        Tue, 11 Jun 2019 10:58:10 -0700 (PDT)
+        Tue, 11 Jun 2019 13:58:38 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d21so5440035plr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VCk8yXyDlU45xhcdQhx1a6hD5bkWPN082lBz8bnOkUY=;
-        b=P1UKhIYgxM+XqSIsgTb87emPKNlNd6xALypb/TZzyRb+jBUnC8i5Nd+y9bqj8zezw1
-         PVLkE5srBChxTYeKSTiG/xzCtE2O39FMElMr++lFqkDifYYzZHHXxNVa6ZAUbKOpMyhe
-         u6PlXZNboq4L0jgn7AkxtSd28W736ruhkywHshY+jyCzZvIMs1O56l0gflaBZ7UqhwQL
-         x2RQMfu1NCl93I1mh4SAyT5fO5WxjcRqNVi6NdN2yKWoaWkd3acM80QLStmQWoTnX1v5
-         7M1JBXsMpTxCe4p9R78MjJh5v33YPLvhehDsyfHgqx7cuL09xlhmcldE4dAYPb/FmdZm
-         6TOw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ezWWyHmFr3D52R1hMjM3lFqjTF5qDUt/Gz8+w6Ybeeg=;
+        b=NXabX8VKhqlLINuoMQHbinmJIUbVH0BN+gV3EBZfeU2WCiSZGaL5z1BBk/58lNpSLk
+         6OZS/QBr9Xcqp8FLP0aoFzarQalnNz5o/W4LmU3plkkiz8px1w/b14QGZtx/LpELMViT
+         Cq0zGOdkG0bUXDxO/omwJpd2ykSJkUq6SnLNsOdyke4UAJxvvy6sJ2KCrvAjbWxYUAfv
+         mNi2NE/pq7hdDfUErhLVHQrN935jeqQID0v5d+Q6AZHeXiOFfmRa4pwDvFIRPShgom9k
+         +iiaBa56wRxxqOBXtYUg69RYV0vztcjvfpfAUcRMjGUqaocx9uX+ixG798K/4fglHZBe
+         neug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VCk8yXyDlU45xhcdQhx1a6hD5bkWPN082lBz8bnOkUY=;
-        b=i/EzGORW0GxMPsExG4+Uf3MGJGPLozly2hDQmUlb7QlXqbBr9bHMimkOXiUWmTzs+I
-         MlWZpXJTaZ5crgPd86XGPRMVNUAHVY0yfrMdoxQjNe766jS+92s7GPqhgo5x4yLIqvyF
-         Q4bUn/wflq05F0JHlVYAATv61ADPQOm/QPk5fq/ei0UJDCQ4xPD2VFpaE8baTthSlYt9
-         gmIL42VlT111KUPMbgQB84r13PblhNPiahU55Cu0UsR4x/lT+A1kc7ZZDn6G28RILoGf
-         U+xXh6KSQ0nNWmZPHriK2a3UJPBRAD1Jqm7OQTfL6uZv0uYSfkHJS+qY8BCGJCWJTar5
-         yqXg==
-X-Gm-Message-State: APjAAAWbQO+dIhyb8K9qkj3zAC6EvvIgeQYD6JzH1tPmTaR6NSOismuv
-        Jz6jH+gQMWndJW6s/D/KAXlh/xAicr8KHpMHad4=
-X-Google-Smtp-Source: APXvYqzoPj3Xa4uMgvBC9zsIyKzC4P0HF+b5cZAVaQucBLGJZkMH7tOH6JRC+xDDYFPIUVm3dwteObyR0yuyPX59K5A=
-X-Received: by 2002:a9d:32a6:: with SMTP id u35mr36257313otb.81.1560275890132;
- Tue, 11 Jun 2019 10:58:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ezWWyHmFr3D52R1hMjM3lFqjTF5qDUt/Gz8+w6Ybeeg=;
+        b=SlNOOdR/nfDa0A90420rNx16bYUPH8oB/retIgqt0TR3+hFSyTt2eHdVrrr8tGhYAA
+         Nnv9rLbpYhV038MDNaqxDAEXIQB9zIoxWf5wvUiHEbSm7czEDMwrdxuEU040d3YnTFHd
+         mSJ2UHJ0Dz/2WqtUWmSLIWzkmA59N2K0ebGyJN7PKmtN+5Y7WERmIxwbb8DvT43AFj+A
+         7DOge4nDbYan9Xufuua3G4gf5/tRdOdTl0BFzapJM8RMeasoH0gP45GohPHkXtPFUBZm
+         0hMTcCNaKmhDWEyCMYpDTlxCSx4kU3G8ItM4VaHVdq/xGCfnsjgq54kj4W8gqQRYEfM7
+         4ZAQ==
+X-Gm-Message-State: APjAAAWSSCcSS3XCoZIo8ZLD1/yPuGQrjnNFBLr0/SwZ92OmfOx5FJd2
+        +DcRDHULB3Uwo63joxHCqJgnpw==
+X-Google-Smtp-Source: APXvYqxLhXRMoy3niXLUf+3yjcR+oYOqDZdO4IrAaXbVjtaTgohrWX6P7B3Tnf00xa75XTTIUTknBA==
+X-Received: by 2002:a17:902:3341:: with SMTP id a59mr47725400plc.186.1560275916197;
+        Tue, 11 Jun 2019 10:58:36 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
+        by smtp.gmail.com with ESMTPSA id s64sm13222982pfb.160.2019.06.11.10.58.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 10:58:35 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 10:58:30 -0700
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Iurii Zaikin <yzaikin@google.com>, frowand.list@gmail.com,
+        gregkh@linuxfoundation.org, jpoimboe@redhat.com,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com
+Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for
+ sysctl.c:proc_dointvec()
+Message-ID: <20190611175830.GA236872@google.com>
+References: <20190514221711.248228-1-brendanhiggins@google.com>
+ <20190514221711.248228-18-brendanhiggins@google.com>
+ <20190517182254.548EA20815@mail.kernel.org>
+ <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com>
+ <20190607190047.C3E7A20868@mail.kernel.org>
 MIME-Version: 1.0
-References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-2-glaroque@baylibre.com>
- <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com> <d68aae23-f877-1f65-94a4-79e909ae111a@baylibre.com>
-In-Reply-To: <d68aae23-f877-1f65-94a4-79e909ae111a@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 11 Jun 2019 19:57:59 +0200
-Message-ID: <CAFBinCBCUxZjnrRxFHApp4iwPUCQQ+PU54V6zJew8Sr8La3u7w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
- Temperature Sensor
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Guillaume La Roque <glaroque@baylibre.com>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        khilman@baylibre.com, linux-kernel@vger.kernel.org,
-        jic23@kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607190047.C3E7A20868@mail.kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Fri, Jun 07, 2019 at 12:00:47PM -0700, Stephen Boyd wrote:
+> Quoting Iurii Zaikin (2019-06-05 18:29:42)
+> > On Fri, May 17, 2019 at 11:22 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Brendan Higgins (2019-05-14 15:17:10)
+> > > > diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+> > > > new file mode 100644
+> > > > index 0000000000000..fe0f2bae66085
+> > > > --- /dev/null
+> > > > +++ b/kernel/sysctl-test.c
+> > > > +
+> > > > +
+> > > > +static void sysctl_test_dointvec_happy_single_negative(struct kunit *test)
+> > > > +{
+> > > > +       struct ctl_table table = {
+> > > > +               .procname = "foo",
+> > > > +               .data           = &test_data.int_0001,
+> > > > +               .maxlen         = sizeof(int),
+> > > > +               .mode           = 0644,
+> > > > +               .proc_handler   = proc_dointvec,
+> > > > +               .extra1         = &i_zero,
+> > > > +               .extra2         = &i_one_hundred,
+> > > > +       };
+> > > > +       char input[] = "-9";
+> > > > +       size_t len = sizeof(input) - 1;
+> > > > +       loff_t pos = 0;
+> > > > +
+> > > > +       table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > > > +       KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
+> > > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
+> > > > +       KUNIT_EXPECT_EQ(test, -9, *(int *)table.data);
+> > >
+> > > Is the casting necessary? Or can the macro do a type coercion of the
+> > > second parameter based on the first type?
+> >  Data field is defined as void* so I believe casting is necessary to
+> > dereference it as a pointer to an array of ints. I don't think the
+> > macro should do any type coercion that == operator wouldn't do.
+> >  I did change the cast to make it more clear that it's a pointer to an
+> > array of ints being dereferenced.
+> 
+> Ok, I still wonder if we should make KUNIT_EXPECT_EQ check the types on
+> both sides and cause a build warning/error if the types aren't the same.
+> This would be similar to our min/max macros that complain about
+> mismatched types in the comparisons. Then if a test developer needs to
+> convert one type or the other they could do so with a
+> KUNIT_EXPECT_EQ_T() macro that lists the types to coerce both sides to
+> explicitly.
 
-On Tue, Jun 11, 2019 at 1:01 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 06/06/2019 21:16, Martin Blumenstingl wrote:
-> > Hi Guillaume,
-> >
-> > thank you for working on this!
-> >
-> > On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
-> >>
-> >> This adds the devicetree binding documentation for the Temperature
-> >> Sensor found in the Amlogic Meson G12 SoCs.
-> >> Currently only the G12A SoCs are supported.
-> > so G12B is not supported (yet)?
->
-> G12B is 95% similar as G12A, it will certainly use slighly different values.
-OK, thank you for clarifying this
-as far as I can tell Guillaume's code is already prepared for that (as
-there's a per-instance specific struct with settings for the specific
-instance) which is good to know
+Do you think it would be better to do a phony compare similar to how
+min/max used to work prior to 4.17, or to use the new __typecheck(...)
+macro? This might seem like a dumb question (and maybe it is), but Iurii
+and I thought the former created an error message that was a bit easier
+to understand, whereas __typecheck is obviously superior in terms of
+code reuse.
 
-> >
-> >> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> >> ---
-> >>  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
-> >>  1 file changed, 31 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> >> new file mode 100644
-> >> index 000000000000..d064db0e9cac
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> >> @@ -0,0 +1,31 @@
-> >> +* Amlogic Meson Temperature Sensor
-> >> +
-> >> +Required properties:
-> >> +- compatible:  depending on the SoC and the position of the sensor,
-> >> +               this should be one of:
-> >> +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
-> >> +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
-> >> +               followed by the common :
-> >> +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
-> >> +- reg:         the physical base address and length of the registers
-> >> +- interrupts:  the interrupt indicating end of sampling
-> >> +- clocks:      phandle identifier for the reference clock of temperature sensor
-> >> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
-> > have you considered using the thermal framework [0] instead of the iio
-> > framework (see below)?
->
-> Question: why thermal, and not hwmon ? what's the main difference ?
-this is what came to my mind why the thermal framework fits best (at
-least based on my current knowledge):
-a) the thermal-zones (see meson-gxm-khadas-vim2.dts for example) a
-"thermal-sensors" property. so for active (with a fan) or passive (by
-limiting the maximum frequency and thus the supply voltage) cooling we
-need a thermal device anyways
-b) the thermal bindings support multiple trip points. we can map them
-to one of the four interrupts which the IP block can generate
-c) defining a temperature where the chip will power off sounds like a
-use-case which may be implemented by other thermal IP blocks (in other
-words: maybe the thermal frameworks provides some generic property to
-replace the "amlogic,critical-temperature" property)
-d) as far as I know you can tell the thermal framework to create a
-hwmon device with only a couple (5?) lines of code
+This is what we are thinking right now; if you don't have any complaints
+I will squash it into the relevant commits on the next revision:
+---
+From: Iurii Zaikin <yzaikin@google.com>
 
-as Guillaume has already shown we can implement c) with a custom
-property, but that's not limited to the underlying framework (IIO,
-hwmon, thermal, ...)
+Adds a warning message when comparing values of different types similar
+to what min() / max() macros do.
 
-use-case d) is not a strong one because I'm using iio-hwmon to create
-a hwmon device on the 32-bit SoCs.
-however, together with case a) using an IIO driver is going to be more
-difficult because currently there's "only" a "generic-adc-thermal"
-binding (but not a "generic-iio-temperature-thermal" binding)
+Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+---
+ include/kunit/test.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-the initial driver version doesn't have to support everything I listed above.
-however, I believe with the thermal framework we don't limit ourselves
-to one use-case and can extend the driver in the future
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 511c9e85401a6..791e22fba5620 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -335,6 +335,13 @@ void __printf(3, 4) kunit_printk(const char *level,
+ #define kunit_err(test, fmt, ...) \
+ 		kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
+ 
++/*
++ * 'Unnecessary' cast serves to generate a compile-time warning in case
++ * of comparing incompatible types. Inspired by include/linux/kernel.h
++ */
++#define __kunit_typecheck(lhs, rhs) \
++	((void) (&(lhs) == &(rhs)))
++
+ static inline struct kunit_stream *kunit_expect_start(struct kunit *test,
+ 						      const char *file,
+ 						      const char *line)
+@@ -514,6 +521,7 @@ static inline void kunit_expect_ptr_binary(struct kunit *test,
+ #define KUNIT_EXPECT_BINARY(test, left, condition, right) do {		       \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
++	__kunit_typecheck(__left, __right);				       \
+ 	kunit_expect_binary(test,					       \
+ 			    (long long) __left, #left,			       \
+ 			    (long long) __right, #right,		       \
+@@ -524,6 +532,7 @@ static inline void kunit_expect_ptr_binary(struct kunit *test,
+ #define KUNIT_EXPECT_BINARY_MSG(test, left, condition, right, fmt, ...) do {   \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
++	__kunit_typecheck(__left, __right);				       \
+ 	kunit_expect_binary_msg(test,					       \
+ 				(long long) __left, #left,		       \
+ 				(long long) __right, #right,		       \
+@@ -538,6 +547,7 @@ static inline void kunit_expect_ptr_binary(struct kunit *test,
+ #define KUNIT_EXPECT_PTR_BINARY(test, left, condition, right) do {	       \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
++	__kunit_typecheck(__left, __right);				       \
+ 	kunit_expect_ptr_binary(test,					       \
+ 			    (void *) __left, #left,			       \
+ 			    (void *) __right, #right,			       \
+@@ -553,6 +563,7 @@ static inline void kunit_expect_ptr_binary(struct kunit *test,
+ 				    ...) do {				       \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
++	__kunit_typecheck(__left, __right);				       \
+ 	kunit_expect_ptr_binary_msg(test,				       \
+ 				    (void *) __left, #left,		       \
+ 				    (void *) __right, #right,		       \
+@@ -1013,6 +1024,7 @@ static inline void kunit_assert_ptr_binary(struct kunit *test,
+ #define KUNIT_ASSERT_BINARY(test, left, condition, right) do {		       \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
++	__kunit_typecheck(__left, __right);				       \
+ 	kunit_assert_binary(test,					       \
+ 			    (long long) __left, #left,			       \
+ 			    (long long) __right, #right,		       \
+@@ -1023,6 +1035,7 @@ static inline void kunit_assert_ptr_binary(struct kunit *test,
+ #define KUNIT_ASSERT_BINARY_MSG(test, left, condition, right, fmt, ...) do {   \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
++	__kunit_typecheck(__left, __right);				       \
+ 	kunit_assert_binary_msg(test,					       \
+ 				(long long) __left, #left,		       \
+ 				(long long) __right, #right,		       \
+@@ -1037,6 +1050,7 @@ static inline void kunit_assert_ptr_binary(struct kunit *test,
+ #define KUNIT_ASSERT_PTR_BINARY(test, left, condition, right) do {	       \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
++	__kunit_typecheck(__left, __right);				       \
+ 	kunit_assert_ptr_binary(test,					       \
+ 				(void *) __left, #left,			       \
+ 				(void *) __right, #right,		       \
+@@ -1051,6 +1065,7 @@ static inline void kunit_assert_ptr_binary(struct kunit *test,
+ 				    fmt, ...) do {			       \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
++	__kunit_typecheck(__left, __right);				       \
+ 	kunit_assert_ptr_binary_msg(test,				       \
+ 				    (void *) __left, #left,		       \
+ 				    (void *) __right, #right,		       \
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
 
-
-Martin
