@@ -2,292 +2,269 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA72AC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF8AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E05A2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WKdhki1j"
+	by mail.kernel.org (Postfix) with ESMTP id 021F12080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390953AbfFKPBF (ORCPT
+        id S2391311AbfFKPBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:01:05 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:44030 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390815AbfFKPBF (ORCPT
+        Tue, 11 Jun 2019 11:01:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56492 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390815AbfFKPBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:01:05 -0400
-Received: by mail-wr1-f51.google.com with SMTP id p13so3323705wru.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:01:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LS1+C4j2F7W6ilf2eBKpP0ZKig6OXeQOhXQaBYt1hck=;
-        b=WKdhki1juLhcCa5wpk1ESoCclWVrErpi/0yvDFp476eFD/E5kmbiOROhhMtzTfmJ1u
-         8uKiywQOCn4E8zh6Lp+1nErgGvALF2F3JwxMQjpT/md1xDCdGAdfbngCEVL8Bwl7uMcQ
-         lPmeDsIrz1wepOdKs5sxPwXE2kDw9tEQrdSmq54QyIX4L8AxUrde1HxyhpQxt2bqx8t9
-         85zi7idAVgMj8LMMZl/O6PX3sPVRx/qDKjJ6NRgUwdSEtiFX/Xtwa6c9MF9LYW30qnyJ
-         a1exKEPE75R+a+g1VqymEY99BQNWijLhuB4+Xm6wT18j/Q4o+KUWErRIyxY8tk0K8ymV
-         pzsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LS1+C4j2F7W6ilf2eBKpP0ZKig6OXeQOhXQaBYt1hck=;
-        b=rGHqq6kudnPGPor8uveNqStAWIU7TeYbRYbHMM9zQZ16bHIvnSbDe6hKRfKj4Z0nbv
-         v0triatlzXbYcah28wPNvC6Ahp85sWTPEu5oedlIInbSVCA1M2K0EsPkptVTMzgwZAxg
-         SPM1CxNcYaP/Og1earm1aGbpYsH2I+iJL/NATduTnexqSH5zrYunpkpJl/zKPtMqKEhE
-         RVZZQd97NU+EWIu3gjsMwP4tfO26AioxE9yBOHf6K87rzj7hmrKtQXt+CkKL5J4NuDDe
-         oCoXelXekhEqpc9BGgveWSPrtImayU6k7S48G6fhxk01uI7El593ggY4g/qAH83Qyd2R
-         WsQg==
-X-Gm-Message-State: APjAAAV2zCsWCm4DcjYWMPfoHAuBbj4CX8E1e0fkr6jeCb/DTmTr1F6p
-        +QK3X24wV3zFpjQAqTq5luz/cg==
-X-Google-Smtp-Source: APXvYqyErh566p9vxT/Qrd+SE/n9noin+Y3QQR9MYAqHTGhePIe+WMxEJJ1KiXbXUe0FbidyCKBISQ==
-X-Received: by 2002:adf:b643:: with SMTP id i3mr22720790wre.284.1560265263059;
-        Tue, 11 Jun 2019 08:01:03 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id p3sm17395635wrd.47.2019.06.11.08.01.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 11 Jun 2019 08:01:02 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com, jbrunet@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: meson-g12a-x96-max: add sound card
-Date:   Tue, 11 Jun 2019 17:01:01 +0200
-Message-Id: <20190611150101.30413-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 11 Jun 2019 11:01:18 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BEv5RH137921
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:01:17 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t2cpsxry8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:01:07 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 11 Jun 2019 16:00:34 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 16:00:31 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BF0TLv10420448
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 15:00:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01B8952071;
+        Tue, 11 Jun 2019 15:00:29 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.168])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 932505205A;
+        Tue, 11 Jun 2019 15:00:28 +0000 (GMT)
+Date:   Tue, 11 Jun 2019 17:00:27 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v9 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+In-Reply-To: <6bcb9a11-0a11-45c0-f0d6-f1fc43d7ee10@linux.ibm.com>
+References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+        <1558452877-27822-4-git-send-email-pmorel@linux.ibm.com>
+        <2ffee52b-5e7f-f52a-069f-0a43d6418341@linux.ibm.com>
+        <20190607162903.22fd959f.pasic@linux.ibm.com>
+        <6bcb9a11-0a11-45c0-f0d6-f1fc43d7ee10@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061115-0028-0000-0000-000003795CD0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061115-0029-0000-0000-000024394BA3
+Message-Id: <20190611170027.1c1c5c9d.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the sound card on the X96 Max, enabling HDMI output using the
-TDM interface B, being aligned on other boards sound cards.
-SPDI/F support is also enabled to the physical toslink port and to HDMI.
+On Tue, 11 Jun 2019 10:37:55 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-The internal DAC connected to the audio jack will be added later on, when
-driver support is added.
+> On 6/7/19 10:29 AM, Halil Pasic wrote:
+> > On Tue, 4 Jun 2019 15:38:51 -0400
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Tested by running:
-tinymix set "FRDDR_A SRC 1 EN Switch" 1
-tinymix set "FRDDR_A SINK 1 SEL" "OUT 1"
-tinymix set "FRDDR_B SRC 1 EN Switch" 1
-tinymix set "FRDDR_B SINK 1 SEL" "OUT 1"
-tinymix set "FRDDR_C SRC 1 EN Switch" 1
-tinymix set "FRDDR_C SINK 1 SEL" "OUT 1"
-tinymix set "TOHDMITX I2S SRC" "I2S B"
-tinymix set "TOHDMITX Switch" 1
+[..]
 
-then:
-tinymix set "TDMOUT_B SRC SEL" "IN 0"
-speaker-test -Dhw:0,0 -c2
+> >>> +static void vfio_ap_wait_for_irqclear(int apqn)
+> >>> +{
+> >>> +	struct ap_queue_status status;
+> >>> +	int retry = 5;
+> >>> +
+> >>> +	do {
+> >>> +		status = ap_tapq(apqn, NULL);
+> >>> +		switch (status.response_code) {
+> >>> +		case AP_RESPONSE_NORMAL:
+> >>> +		case AP_RESPONSE_RESET_IN_PROGRESS:
+> >>> +			if (!status.irq_enabled)
+> >>> +				return;
+> >>> +			/* Fall through */
+> >>> +		case AP_RESPONSE_BUSY:
+> >>> +			msleep(20);
+> >>> +			break;
+> >>> +		case AP_RESPONSE_Q_NOT_AVAIL:
+> >>> +		case AP_RESPONSE_DECONFIGURED:
+> >>> +		case AP_RESPONSE_CHECKSTOPPED:
+> >>> +		default:
+> >>> +			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
+> >>> +				  status.response_code, apqn);
+> >>> +			return;
+> >>
+> >> Why not just break out of the loop and just use the WARN_ONCE
+> >> outside of the loop?
+> >>
+> > 
+> > AFAIU the idea was to differentiate between got a strange response_code
+> > and ran out of retires.
+> 
+> In both cases, the response code is placed into the message, so one
+> should be able to discern the reason in either case. This is not
+> critical, just an observation.
+> 
 
-then:
-tinymix set "TDMOUT_B SRC SEL" "IN 1"
-speaker-test -Dhw:0,1 -c2
+I understand, but the message below does say 'could not clear' while
+the message above does not. One could infer that information, but I
+could not do it without digging. So I think keeping these separate does
+have a certain merit to it.
 
-then:
-tinymix set "TDMOUT_B SRC SEL" "IN 2"
-speaker-test -Dhw:0,2 -c2
+Let's keep it for now. We can change this later if we want.
 
-testing HDMI audio output from the all 3 ASoC playback interfaces.
+> > 
+> > Actually I suspect that we are fine in case of AP_RESPONSE_Q_NOT_AVAIL,
+> >   AP_RESPONSE_DECONFIGURED and AP_RESPONSE_CHECKSTOPPED in a sense that
+> > what should be the post-condition of this function is guaranteed to be
+> > reached. What do you think?
+> 
+> That would seem to be the case given those response codes indicate the
+> queue is not accessible.
+> 
+> > 
+> > While I think that we can do better here, I see this as something that
+> > should be done on top.
+> 
+> Are you talking about a patch on top? What do you think needs to be
+> addressed?
+> 
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 131 ++++++++++++++++++
- 1 file changed, 131 insertions(+)
+For starters, I'm not sure if the first warning is necessary or even
+appropriate. See the paragraph starting with 'Actually I suspect that we
+are fine in case ...'.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index 98bc56e650a0..d37868d21114 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -8,6 +8,7 @@
- #include "meson-g12a.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+> > 
+> >>> +		}
+> >>> +	} while (--retry);
+> >>> +
+> >>> +	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
+> >>> +		  __func__, status.response_code, apqn);
+> >>> +}
+> >>> +
+> >>> +/**
+> >>> + * vfio_ap_free_aqic_resources
+> >>> + * @q: The vfio_ap_queue
+> >>> + *
+> >>> + * Unregisters the ISC in the GIB when the saved ISC not invalid.
+> >>> + * Unpin the guest's page holding the NIB when it exist.
+> >>> + * Reset the saved_pfn and saved_isc to invalid values.
+> >>> + * Clear the pointer to the matrix mediated device.
+> >>> + *
+> >>> + */
+> > 
+> > [..]
+> > 
+> >>> +struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+> >>> +{
+> >>> +	struct ap_qirq_ctrl aqic_gisa = {};
+> >>> +	struct ap_queue_status status;
+> >>> +	int retries = 5;
+> >>> +
+> >>> +	do {
+> >>> +		status = ap_aqic(q->apqn, aqic_gisa, NULL);
+> >>> +		switch (status.response_code) {
+> >>> +		case AP_RESPONSE_OTHERWISE_CHANGED:
+> >>> +		case AP_RESPONSE_NORMAL:
+> >>> +			vfio_ap_wait_for_irqclear(q->apqn);
+> >>> +			goto end_free;
+> >>> +		case AP_RESPONSE_RESET_IN_PROGRESS:
+> >>> +		case AP_RESPONSE_BUSY:
+> >>> +			msleep(20);
+> >>> +			break;
+> >>> +		case AP_RESPONSE_Q_NOT_AVAIL:
+> >>> +		case AP_RESPONSE_DECONFIGURED:
+> >>> +		case AP_RESPONSE_CHECKSTOPPED:
+> >>> +		case AP_RESPONSE_INVALID_ADDRESS:
+> >>> +		default:
+> >>> +			/* All cases in default means AP not operational */
+> >>> +			WARN_ONCE(1, "%s: ap_aqic status %d\n", __func__,
+> >>> +				  status.response_code);
+> >>> +			goto end_free;
+> >>
+> >> Why not just break out of the loop instead of repeating the WARN_ONCE
+> >> message?
+> >>
+> > 
+> > I suppose the reason is same as above. I'm not entirely happy with this
+> > code myself. E.g. why do we do retries here -- shouldn't we just fail the
+> > aqic by the guest?
+> 
+> According to my reading of the code, it looks like the retries are for
+> response code AP_RESPONSE_BUSY. Why wouldn't we want to wait until the
+> queue was not busy anymore?
+> 
+
+Does HW/FW wait or does it present AP_RESPONSE_BUSY? (Rhetoric
+question.)  It is for the guest to decide if and how does it wish to
+wait or otherwise react to AP_RESPONSE_BUSY. Or am I missing something?
+
+> > 
+> > [..]
+> > 
+> >>> +static int handle_pqap(struct kvm_vcpu *vcpu)
+> >>> +{
+> >>> +	uint64_t status;
+> >>> +	uint16_t apqn;
+> >>> +	struct vfio_ap_queue *q;
+> >>> +	struct ap_queue_status qstatus = {
+> >>> +			       .response_code = AP_RESPONSE_Q_NOT_AVAIL, };
+> >>> +	struct ap_matrix_mdev *matrix_mdev;
+> >>> +
+> >>> +	/* If we do not use the AIV facility just go to userland */
+> >>> +	if (!(vcpu->arch.sie_block->eca & ECA_AIV))
+> >>> +		return -EOPNOTSUPP;
+> >>> +
+> >>> +	apqn = vcpu->run->s.regs.gprs[0] & 0xffff;
+> >>> +	mutex_lock(&matrix_dev->lock);
+> >>> +
+> >>> +	if (!vcpu->kvm->arch.crypto.pqap_hook)
+> >>
+> >> Wasn't this already checked in patch 2 prior to calling this
+> >> function? In fact, doesn't the hook point to this function?
+> >>
+> > 
+> > Let us benevolently call this defensive programming. We are actually
+> > in that callback AFAICT, so it sure was set a moment ago, and I guess
+> > the client code still holds the kvm.lock so it is guaranteed to stay
+> > so unless somebody is playing foul.
+> 
+> Defensive, but completely unnecessary; however, it doesn't negatively
+> affect the logic in the least.
+>
+
+I agree it is unnecessary. We can get rid of it later. I'm not too keen
+of altering somebody's patch without a really strong reason.
  
- / {
- 	compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
-@@ -17,6 +18,14 @@
- 		serial0 = &uart_AO;
- 		ethernet0 = &ethmac;
- 	};
-+
-+	spdif_dit: audio-codec-1 {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+		status = "okay";
-+		sound-name-prefix = "DIT";
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -123,6 +132,86 @@
- 		regulator-always-on;
- 	};
- 
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "G12A-X96-MAX";
-+		audio-aux-devs = <&tdmout_b>;
-+		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
-+				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
-+				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT",
-+				"SPDIFOUT IN 0", "FRDDR_A OUT 3",
-+				"SPDIFOUT IN 1", "FRDDR_B OUT 3",
-+				"SPDIFOUT IN 2", "FRDDR_C OUT 3";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_b>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
-+			};
-+		};
-+
-+		/* spdif hdmi or toslink interface */
-+		dai-link-4 {
-+			sound-dai = <&spdifout>;
-+
-+			codec-0 {
-+				sound-dai = <&spdif_dit>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&tohdmitx TOHDMITX_SPDIF_IN_A>;
-+			};
-+		};
-+
-+		/* spdif hdmi interface */
-+		dai-link-5 {
-+			sound-dai = <&spdifout_b>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_SPDIF_IN_B>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-6 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+
- 	wifi32k: wifi32k {
- 		compatible = "pwm-clock";
- 		#clock-cells = <0>;
-@@ -131,6 +220,10 @@
- 	};
- };
- 
-+&arb {
-+	status = "okay";
-+};
-+
- &cec_AO {
- 	pinctrl-0 = <&cec_ao_a_h_pins>;
- 	pinctrl-names = "default";
-@@ -145,12 +238,28 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&clkc_audio {
-+	status = "okay";
-+};
-+
- &cvbs_vdac_port {
- 	cvbs_vdac_out: endpoint {
- 		remote-endpoint = <&cvbs_connector_in>;
- 	};
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-@@ -287,3 +396,25 @@
- 	vmmc-supply = <&vcc_3v3>;
- 	vqmmc-supply = <&flash_1v8>;
- };
-+
-+&spdifout {
-+	pinctrl-0 = <&spdif_out_h_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&spdifout_b {
-+	status = "okay";
-+};
-+
-+&tdmif_b {
-+	status = "okay";
-+};
-+
-+&tdmout_b {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
--- 
-2.21.0
+> > 
+> > We can address this with a patch on top.
+> > 
+
+[..]
+
+Regards,
+Halil
 
