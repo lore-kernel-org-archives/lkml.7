@@ -2,99 +2,127 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FA5C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C076BC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0267B2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9701C2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560293638;
+	bh=stWnUbe+jaQuFau1PLVdqeZY8iwqhXyOVPXi0CRMm60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bpPH6C8pVIQuI8hBzNXsR1CcKQQmp4F36Bb31O2zvRzL+y2LSUrbTTRoMDAdk8IHc
+	 yYMKm7epvNcUOzd7afntpf8XGb2cvEiz/6sdmkXyrp5yeBHrgQJLIrbWLhaXOrWLmi
+	 Th19o5jbDLfl+HUlTlo4p7QLYJHXSLEknJebQrGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407411AbfFKWx0 (ORCPT
+        id S2436950AbfFKWx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:53:26 -0400
-Received: from gate.crashing.org ([63.228.1.57]:33554 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404048AbfFKWx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:53:26 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5BMr72S021573;
-        Tue, 11 Jun 2019 17:53:08 -0500
-Message-ID: <ca81ca5d56a3a12db5a92f5cf9745763a86572e8.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>, linuxppc-dev@ozlabs.org,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Russell Currey <ruscur@au1.ibm.com>
-Date:   Wed, 12 Jun 2019 08:53:07 +1000
-In-Reply-To: <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
-References: <20190611092144.11194-1-oded.gabbay@gmail.com>
-         <20190611095857.GB24058@kroah.com> <20190611151753.GA11404@infradead.org>
-         <20190611152655.GA3972@kroah.com>
-         <CAFCwf13A73AxKzaa7Dk3tU-1NDgTFs4+xCO2os7SuSyUHZ9Z3Q@mail.gmail.com>
-         <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 18:53:57 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:53852 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404048AbfFKWx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:53:57 -0400
+Received: by mail-it1-f195.google.com with SMTP id m187so7742084ite.3;
+        Tue, 11 Jun 2019 15:53:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iQPRF6XFm/QWEVO1CPfMz0EhoIEuoqt7VcGHt4YVR3s=;
+        b=bwzgGflXOQe5eP6WP6bnPoG5hVuqBAMFGVhnt6pOL42IxfwkdGrkJ2yelJHaSdxH4y
+         2HwasSizEfRa+XO3MMNcRLehBfehIuAOJEtOiN9yNeY44ivlEJPZ1+GwSuegddB7W4DG
+         uVxChXqaTKJS2PimQ3q+lCOnBlYEOM42U/F8/MVwBXT4TKR+iJ0WjObF4Lwvo/5wjmVA
+         8LTtSQk8ZXuFhbh45kH37/uvr0rvtcfy7BLCn58JHvMtQKg8AWUEyb+ry3S/JbLnIfuZ
+         I1QoU4w+kZcm4qiH1EjfshwroZxHbsV70PZAishX0Dwuhj4F9QNxXNHYOG/dEamKmK8t
+         sWqQ==
+X-Gm-Message-State: APjAAAUPzzgSNKXjKq5GBz+1YYQqe/mIi0F0x6YYzLjpsjXNiKiw8XkG
+        etHQzX9Ag/nWai+eDyPpLQ==
+X-Google-Smtp-Source: APXvYqzoe7kqFMLzrRy1dkQxZdck05wcc6WXp2uGdqhH5bgqiTrtunhGBZNVP2Qc9VtW1KcUeh7Ffg==
+X-Received: by 2002:a24:61d7:: with SMTP id s206mr19458252itc.133.1560293636578;
+        Tue, 11 Jun 2019 15:53:56 -0700 (PDT)
+Received: from localhost (ip-174-149-252-64.englco.spcsdns.net. [174.149.252.64])
+        by smtp.gmail.com with ESMTPSA id f4sm5155254iok.56.2019.06.11.15.53.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 15:53:55 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 16:53:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>, linux-crypto@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        wsd_upstream@mediatek.com, Crystal Guo <Crystal.Guo@mediatek.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: rng: update bindings for MediaTek
+ ARMv8 SoCs
+Message-ID: <20190611225351.GA17332@bogus>
+References: <1560162984-26104-1-git-send-email-neal.liu@mediatek.com>
+ <1560162984-26104-3-git-send-email-neal.liu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560162984-26104-3-git-send-email-neal.liu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 20:22 +0300, Oded Gabbay wrote:
+On Mon, Jun 10, 2019 at 06:36:23PM +0800, Neal Liu wrote:
+> Document the binding used by the MediaTek ARMv8 SoCs random
+> number generator with TrustZone enabled.
 > 
-> > So, to summarize:
-> > If I call pci_set_dma_mask with 48, then it fails on POWER9. However,
-> > in runtime, I don't know if its POWER9 or not, so upon failure I will
-> > call it again with 32, which makes our device pretty much unusable.
-> > If I call pci_set_dma_mask with 64, and do the dedicated configuration
-> > in Goya's PCIe controller, then it won't work on x86-64, because bit
-> > 59 will be set and the host won't like it (I checked it). In addition,
-> > I might get addresses above 50 bits, which my device can't generate.
-> > 
-> > I hope this makes things more clear. Now, please explain to me how I
-> > can call pci_set_dma_mask without any regard to whether I run on
-> > x86-64 or POWER9, considering what I wrote above ?
-> > 
-> > Thanks,
-> > Oded
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/rng/mtk-rng.txt |   15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> Adding ppc mailing list.
+> diff --git a/Documentation/devicetree/bindings/rng/mtk-rng.txt b/Documentation/devicetree/bindings/rng/mtk-rng.txt
+> index 2bc89f1..fb3dd59 100644
+> --- a/Documentation/devicetree/bindings/rng/mtk-rng.txt
+> +++ b/Documentation/devicetree/bindings/rng/mtk-rng.txt
+> @@ -3,9 +3,13 @@ found in MediaTek SoC family
+>  
+>  Required properties:
+>  - compatible	    : Should be
+> -			"mediatek,mt7622-rng", 	"mediatek,mt7623-rng" : for MT7622
+> -			"mediatek,mt7629-rng",  "mediatek,mt7623-rng" : for MT7629
+> -			"mediatek,mt7623-rng" : for MT7623
+> +			"mediatek,mt7622-rng", "mediatek,mt7623-rng" for MT7622
+> +			"mediatek,mt7629-rng", "mediatek,mt7623-rng" for MT7629
+> +			"mediatek,mt7623-rng" for MT7623
+> +			"mediatek,mtk-sec-rng" for MediaTek ARMv8 SoCs with
+> +			security RNG
 
-You can't. Your device is broken. Devices that don't support DMAing to
-the full 64-bit deserve to be added to the trash pile.
+Is there any commonality with the prior h/w? If not, make this a 
+separate binding doc.
 
-As a result, getting it to work will require hacks. Some GPUs have
-similar issues and require similar hacks, it's unfortunate.
+> +
+> +Optional properties:
+>  - clocks	    : list of clock specifiers, corresponding to
+>  		      entries in clock-names property;
+>  - clock-names	    : Should contain "rng" entries;
+> @@ -19,3 +23,8 @@ rng: rng@1020f000 {
+>  	clocks = <&infracfg CLK_INFRA_TRNG>;
+>  	clock-names = "rng";
+>  };
+> +
+> +/* secure RNG */
+> +hwrng: hwrng {
+> +	compatible = "mediatek,mtk-sec-rng";
 
-Added a couple of guys on CC who might be able to help get those hacks
-right.
+How does one access this? Seems like this should be part of a node for 
+firmware? What about other functions?
 
-It's still very fishy .. the idea is to detect the case where setting a
-64-bit mask will give your system memory mapped at a fixed high address
-(1 << 59 in our case) and program that in your chip in the "Fixed high
-bits" register that you seem to have (also make sure it doesn't affect
-MSIs or it will break them).
-
-This will only work as long as all of the system memory can be
-addressed at an offset from that fixed address that itself fits your
-device addressing capabilities (50 bits in this case). It may or may
-not be the case but there's no way to check since the DMA mask logic
-won't really apply.
-
-You might want to consider fixing your HW in the next iteration... This
-is going to bite you when x86 increases the max physical memory for
-example, or on other architectures.
-
-Cheers,
-Ben.
-
-
-
-
+> +};
+> -- 
+> 1.7.9.5
+> 
