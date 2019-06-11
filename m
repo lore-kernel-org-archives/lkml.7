@@ -2,110 +2,175 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A2C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F62FC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC5E208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF32212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403762AbfFKIn1 (ORCPT
+        id S2391465AbfFKIpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:43:27 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39856 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391322AbfFKIn1 (ORCPT
+        Tue, 11 Jun 2019 04:45:07 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:18706 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391273AbfFKIpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:43:27 -0400
-Received: by mail-qk1-f193.google.com with SMTP id i125so7116775qkd.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:43:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fAM2ZnplmXr9IFFiNeSowp8y01t03eeswE+odNZ6E9s=;
-        b=gT3JU24XQHzjYYRIhsPkENxa6mJpCHSNhr0iD9KJVKm7NpR2NlBJSx0lY9Oih/3HhX
-         rkWW0+a/IguHO+CbmrRDKyQIddWVXGSBczoQokDjQXEgwXsEWUCcSLkiD2bsBNRm+yfD
-         I0074LAistymtWbC1ELtIIyAE1qnS76UlCNOdxA3mLo1Nte21I1wyytWjC3S+1R4dQ4p
-         A/QXHM5+IB/edYTxbofhQuK2Vf/p1UmzzqhMaSNXiExVPerN4WjjNP1Q+nf3uBkR+hEJ
-         Rztl23EUOkN/TyHjogeuHV5nmOYE8pFn3x+a1OqycMSsSa7QCa9Zn5jiqqwbHkwf7xUv
-         LIzQ==
-X-Gm-Message-State: APjAAAUj9tltbjCjPsIfiCTRwK9beDxfiDA6bKNIfmPxSCFbQZt1cwj+
-        suvN/OxfpURiWbFqpeUznFnvN7Ev8YGHO8nx5b8oXzD8
-X-Google-Smtp-Source: APXvYqw1q0laWbp9i/uhwxQEKfuIRYv0WpOBz7X6AGZWrVWGLfI5PYVS4p5HqaMfLACNsj0LWVIWA+5OhadJGL7OKMk=
-X-Received: by 2002:a37:ea16:: with SMTP id t22mr59894613qkj.337.1560242606439;
- Tue, 11 Jun 2019 01:43:26 -0700 (PDT)
+        Tue, 11 Jun 2019 04:45:07 -0400
+X-UUID: 63e6c5a99f2b45189f951fca6e2977b2-20190611
+X-UUID: 63e6c5a99f2b45189f951fca6e2977b2-20190611
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1892895662; Tue, 11 Jun 2019 16:44:56 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 11 Jun 2019 16:44:54 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 11 Jun 2019 16:44:46 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Nagarjuna Kristam <nkristam@nvidia.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH v7 00/10] add USB Type-B GPIO connector driver
+Date:   Tue, 11 Jun 2019 16:44:30 +0800
+Message-ID: <1560242680-23844-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-References: <20190610185343.27614-1-nsaenzjulienne@suse.de>
-In-Reply-To: <20190610185343.27614-1-nsaenzjulienne@suse.de>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 11 Jun 2019 10:43:15 +0200
-Message-ID: <CAO-hwJJzYFQs_Jxc+3zYHzjM9G8zdTfBqdpO27hpKXRBKytvQA@mail.gmail.com>
-Subject: Re: [PATCH] HID: input: fix a4tech horizontal wheel custom usage id
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+Because the USB Connector is introduced and the requirement of
+usb-connector.txt binding, the old way using extcon to support
+USB Dual-Role switch is now deprecated, meanwhile there is no
+available common driver when use Type-B connector, typically
+using an input GPIO to detect USB ID pin.
+This patch series introduce a Type-B GPIO connector driver and try
+to replace the function provided by extcon-usb-gpio driver.
 
-On Mon, Jun 10, 2019 at 8:54 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Some a4tech mice use the 'GenericDesktop.00b8' usage id to inform
-> whether the previous wheel report was horizontal or vertical. Before
-> c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key") this
-> usage id was being mapped to 'Relative.Misc'. After the patch it's
-> simply ignored (usage->type == 0 & usage->code == 0). Checking the HID
-> Usage Tables it turns out it's a reserved usage_id, so it makes sense to
-> map it the way it was. Ultimately this makes hid-a4tech ignore the
-> WHEEL/HWHEEL selection event, as it has no usage->type.
->
-> The patch reverts the handling of the usage id back to it's previous
-> behavior.
+v7 changes:
+  1. [5/10]: add signed-off-by Chunfeng
+  2. [6/10]: add signed-off-by Chunfeng
+  3. [6/10]: depends on linux-next of Rafael's tree [1]
+  4. [7/10]: add signed-off-by Chunfeng and tested-by Biju
+  5. [9/10]: add tested-by Nagarjuna, and remove DEV_PMS_OPS suggested by Andy
 
-Hmm, if A4Tech is using a reserved usage, we shouldn't fix this in
-hid-input.c but in hid-a4tech instead.
-Because you won't know when someone else in the HID consortium will
-remap this usage to some other random axis, and your mouse will be
-broken again.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
 
-How about you add a .input_mapping callback in hid-a4tech and map this
-usage there to your needs? This way you will be sure that such a
-situation will not happen again.
+v6 changes:
+  1. merge [1] and [2] into this series
+  2. don't use graph anymore to find usb-role-switch
+  3. abandon [3] and introduce three patches (6, 7, 8 in this series)
+     to rebuild APIs getting usb-role-switch
 
-Cheers,
-Benjamin
+  [1]: [v3] dt-binding: usb: add usb-role-switch property
+       https://patchwork.kernel.org/patch/10934835/
+  [2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+       https://patchwork.kernel.org/patch/10909971/
 
->
-> Fixes: c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  drivers/hid/hid-input.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-> index 63855f275a38..6a956d5a195e 100644
-> --- a/drivers/hid/hid-input.c
-> +++ b/drivers/hid/hid-input.c
-> @@ -671,7 +671,7 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
->                 if ((usage->hid & 0xf0) == 0xb0) {      /* SC - Display */
->                         switch (usage->hid & 0xf) {
->                         case 0x05: map_key_clear(KEY_SWITCHVIDEOMODE); break;
-> -                       default: goto ignore;
-> +                       default: goto unknown;
->                         }
->                         break;
->                 }
-> --
-> 2.21.0
->
+  [3]: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+
+v5 changes:
+  1. remove linux/of.h and put usb_role_switch when error happens,
+     suggested by Biju
+  2. treat Type-B connector as USB controller's child, but not as
+     a virtual device, suggested by Rob
+  3. provide and use generic property "usb-role-switch", see [1],
+     suggested by Rob
+
+  Note: this series still depends on [2]
+
+  [1]: [v3] dt-binding: usb: add usb-role-switch property
+       https://patchwork.kernel.org/patch/10934835/
+  [2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+       https://patchwork.kernel.org/patch/10909971/
+
+v4 changes:
+  1. use switch_fwnode_match() to find fwnode suggested by Heikki
+  2. assign fwnode member of usb_role_switch struct suggested by Heikki
+  3. make [4/6] depend on [2]
+  3. remove linux/gpio.h suggested by Linus
+  4. put node when error happens
+
+  [4/6] usb: roles: add API to get usb_role_switch by node
+  [2] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+    https://patchwork.kernel.org/patch/10909971/
+
+v3 changes:
+  1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
+  2. rebuild fwnode_usb_role_switch_get() suggested by Andy and Heikki
+  3. treat the type-B connector as a virtual device;
+  4. change file name of driver again
+  5. select USB_ROLE_SWITCH in mtu3/Kconfig suggested by Heikki
+  6. rename ssusb_mode_manual_switch() to ssusb_mode_switch()
+
+v2 changes:
+ 1. make binding clear, and add a extra compatible suggested by Hans
+
+Chunfeng Yun (7):
+  dt-binding: usb: add usb-role-switch property
+  dt-bindings: connector: add optional properties for Type-B
+  dt-bindings: usb: add binding for Type-B GPIO connector driver
+  dt-bindings: usb: mtu3: add properties about USB Role Switch
+  usb: roles: get usb-role-switch from parent
+  usb: roles: add USB Type-B GPIO connector driver
+  usb: mtu3: register a USB Role Switch for dual role mode
+
+Heikki Krogerus (2):
+  device connection: Add fwnode_connection_find_match()
+  usb: roles: Add fwnode_usb_role_switch_get() function
+
+Yu Chen (1):
+  usb: roles: Introduce stubs for the exiting functions in role.h.
+
+ .../bindings/connector/usb-connector.txt      |  14 +
+ .../devicetree/bindings/usb/generic.txt       |   4 +
+ .../devicetree/bindings/usb/mediatek,mtu3.txt |  10 +
+ .../bindings/usb/typeb-conn-gpio.txt          |  31 ++
+ drivers/base/devcon.c                         |  43 ++-
+ drivers/usb/mtu3/Kconfig                      |   1 +
+ drivers/usb/mtu3/mtu3.h                       |   5 +
+ drivers/usb/mtu3/mtu3_debugfs.c               |   4 +-
+ drivers/usb/mtu3/mtu3_dr.c                    |  48 ++-
+ drivers/usb/mtu3/mtu3_dr.h                    |   6 +-
+ drivers/usb/mtu3/mtu3_plat.c                  |   3 +-
+ drivers/usb/roles/Kconfig                     |  11 +
+ drivers/usb/roles/Makefile                    |   1 +
+ drivers/usb/roles/class.c                     |  41 ++-
+ drivers/usb/roles/typeb-conn-gpio.c           | 284 ++++++++++++++++++
+ include/linux/device.h                        |  10 +-
+ include/linux/usb/role.h                      |  37 +++
+ 17 files changed, 529 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
+ create mode 100644 drivers/usb/roles/typeb-conn-gpio.c
+
+-- 
+2.21.0
+
