@@ -2,108 +2,100 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC30BC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190B3C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8BEA2086A
+	by mail.kernel.org (Postfix) with ESMTP id E518920896
 	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d4F1P2X1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f5ipcdNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390320AbfFKAUD (ORCPT
+        id S2390499AbfFKAXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 20:20:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48192 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388749AbfFKAUC (ORCPT
+        Mon, 10 Jun 2019 20:23:03 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41596 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388749AbfFKAXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 20:20:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B09Qak178531;
-        Tue, 11 Jun 2019 00:19:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=SN1DHavmoz1vQkJTLVb+wvWfnTmq3aQZzTCx5KVXGak=;
- b=d4F1P2X1cdzomcjxDD8rWoT8K4BELOdxfIPlPmW8bMauny6na8dpFxQ0mDkhCrEYuRrw
- FkmZvsbz3d2Y7Hc/dzhaVpLL4sXE4fQmHKq+ZeCRr30/Y735i+AjuxdAolrKfmuR3yRP
- nxGd5Z91iaIMAHXSWJ9TRGmQOV08dS0KRFsn1SEWuuV54ukLz+GMBo5kd3DaMVtAWhSU
- ryutHlUL3j1oGSqoNkuqFA439H5ECkXF1QsFZaWb76MqivRXDamIHR/WuQ+oaoqDiOe0
- JJefijaTqIN7ZNWUsCrmQv1Kusjse86kPgk9l/uxSxqE3i3kJ2wKDyXBVW5d4FADRWTB kA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t05nqhtk4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 00:19:51 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B0IEM0043654;
-        Tue, 11 Jun 2019 00:19:50 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t0p9r0a6x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 00:19:50 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5B0JlsJ032551;
-        Tue, 11 Jun 2019 00:19:47 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Jun 2019 17:19:46 -0700
-Subject: Re: [PATCH v2 1/2] mm: soft-offline: return -EBUSY if
- set_hwpoison_free_buddy_page() fails
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        xishi.qiuxishi@alibaba-inc.com,
-        "Chen, Jerry T" <jerry.t.chen@intel.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>, linux-kernel@vger.kernel.org
-References: <1560154686-18497-1-git-send-email-n-horiguchi@ah.jp.nec.com>
- <1560154686-18497-2-git-send-email-n-horiguchi@ah.jp.nec.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <8e8e6afc-cddb-9e79-c8ae-c2814b73cbe9@oracle.com>
-Date:   Mon, 10 Jun 2019 17:19:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 10 Jun 2019 20:23:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so5724116pff.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 17:23:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ys/QIuTzESKgIhK+4lqN2GBOgNe/RQ4XjHnrFVNq/bg=;
+        b=f5ipcdNBMgeYN6xIkspolGbToPlj9rnUy85L/384p3yAVGYdbKT3rIYX2R9DTVe5DZ
+         BYJNhX2Lc4MpUKIIZ8Uvygx+l7dI/iqp1tjbx6cPL9JzfUDgJZKWqECoYuYfsfw24UwA
+         BoOUkWOPjP/ynt3LEWf2YKuM3gT243RbvpPTQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ys/QIuTzESKgIhK+4lqN2GBOgNe/RQ4XjHnrFVNq/bg=;
+        b=RyfkEYDvk4lTNZlbSc7vgyM4T6gTWBMHT1KXIcpeLWnhSemr2AelyG0gDm2jVQ3eoU
+         PkoXydNLHFyWQ2mxfO87Di/Q2kzI0EKJL4HbLWnsDrW1o/n/nUK3GHwcGh8tp3dUo8ix
+         9C6PKwo8XIV02pSK8VVWeZ75ECCN8tkwBY5S24EJezOrviP6qJ9rRH687UJfZ6b3o/OW
+         Tn0nar67pOEPcwV28k3/xxEW6JiK7GfIoLT7JbjME7SWfFMGyZHtvCag6keyA0jRZhSV
+         nx1Q86EPdiOg+M9eaceaH1FKJT1x0vBuQTeLbtorMaIa2rH9ZpWhdB+30RiRXQpQ2R8v
+         II2w==
+X-Gm-Message-State: APjAAAUA06OfqfMREv3DEMwTvynlTxJXc3pqiXp0u1o3IGPdoj0WbRk8
+        PPdFwWkORETh2ACEE/ZEYqQHmwWxdlk=
+X-Google-Smtp-Source: APXvYqyFDNopqPX7XaEAu7EG9CwttGgKSVT073ogwDm3kj5G1I2Zurlp7yaWcrSslQANYBeJiel1uQ==
+X-Received: by 2002:a17:90a:25c8:: with SMTP id k66mr2852849pje.129.1560212582590;
+        Mon, 10 Jun 2019 17:23:02 -0700 (PDT)
+Received: from exogeni.mtv.corp.google.com ([2620:15c:202:1:5be8:f2a6:fd7b:7459])
+        by smtp.gmail.com with ESMTPSA id t4sm540317pjq.19.2019.06.10.17.23.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 10 Jun 2019 17:23:01 -0700 (PDT)
+From:   Derek Basehore <dbasehore@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
+        thierry.reding@gmail.com, sam@ravnborg.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, ck.hu@mediatek.com, p.zabel@pengutronix.de,
+        matthias.bgg@gmail.com, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Derek Basehore <dbasehore@chromium.org>
+Subject: [PATCH 0/5] Panel rotation patches
+Date:   Mon, 10 Jun 2019 17:22:51 -0700
+Message-Id: <20190611002256.186969-1-dbasehore@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 MIME-Version: 1.0
-In-Reply-To: <1560154686-18497-2-git-send-email-n-horiguchi@ah.jp.nec.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110000
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 1:18 AM, Naoya Horiguchi wrote:
-> The pass/fail of soft offline should be judged by checking whether the
-> raw error page was finally contained or not (i.e. the result of
-> set_hwpoison_free_buddy_page()), but current code do not work like that.
-> So this patch is suggesting to fix it.
-> 
-> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> Fixes: 6bc9b56433b76 ("mm: fix race on soft-offlining")
-> Cc: <stable@vger.kernel.org> # v4.19+
+This adds the plumbing for reading panel rotation from the devicetree
+and sets up adding a panel property for the panel orientation on
+Mediatek SoCs when a rotation is present.
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Derek Basehore (5):
+  drm/panel: Add helper for reading DT rotation
+  dt-bindings: display/panel: Expand rotation documentation
+  drm/panel: Add attach/detach callbacks
+  drm/connector: Split out orientation quirk detection
+  drm/mtk: add panel orientation property
 
-To follow-up on Andrew's comment/question about user visible effects.  Without
-this fix, there are cases where madvise(MADV_SOFT_OFFLINE) may not offline the
-original page and will not return an error.  Are there any other visible
-effects?
+ .../bindings/display/panel/panel.txt          | 32 +++++++++++
+ drivers/gpu/drm/drm_connector.c               | 16 ++----
+ drivers/gpu/drm/drm_panel.c                   | 55 +++++++++++++++++++
+ drivers/gpu/drm/i915/vlv_dsi.c                | 13 +++--
+ drivers/gpu/drm/mediatek/mtk_dsi.c            |  8 +++
+ include/drm/drm_connector.h                   |  2 +-
+ include/drm/drm_panel.h                       | 11 ++++
+ 7 files changed, 120 insertions(+), 17 deletions(-)
 
 -- 
-Mike Kravetz
+2.22.0.rc2.383.gf4fbbf30c2-goog
+
