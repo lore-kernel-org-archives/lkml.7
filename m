@@ -2,115 +2,144 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC1AC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB10BC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0F320896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtGsnv2y"
+	by mail.kernel.org (Postfix) with ESMTP id 8F96C20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560282954;
+	bh=JFVrfhjGfgw0DFim/nPlh43YpKZ3vGWW8uYdemgPMWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f4xD15sM+xguAPV1J4G7iZ0Q2lMk9DUIbgbLRGUrDdfuQbWtWkwQ5KX9OzFb0xg40
+	 ZTwanL/NYcc5+VCcqjOyum9NKPRTX+yndVn1gSaLvnyNaz/X3zAOwRMHFsZlnMo1+5
+	 lHi4ns3vvuRl17RViLEDrZDs1Lcl0rUrjl5Th2q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406378AbfFKTzP (ORCPT
+        id S2406383AbfFKTzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:55:15 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35776 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406242AbfFKTzN (ORCPT
+        Tue, 11 Jun 2019 15:55:53 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46721 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405886AbfFKTzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:55:13 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j19so13141798otq.2;
-        Tue, 11 Jun 2019 12:55:13 -0700 (PDT)
+        Tue, 11 Jun 2019 15:55:53 -0400
+Received: by mail-pl1-f194.google.com with SMTP id e5so5552178pls.13;
+        Tue, 11 Jun 2019 12:55:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2i3vf0rvzIrUcS429y9/vh3HAalX4Oc5g7401Bit/+o=;
-        b=dtGsnv2yPE5aM4SpEjmjnV37V3jfaNlPDNkHOKNFiuRUzfgMcy9gJ9TOZQuwsPdmlO
-         ccQnpyuLiAn+grFpsdWaMy5oDsPqnvdW6ydLhvWpG9YBBzBU5Ou8LuKUVEeefVrdyM5H
-         7Nv/HN7DOURw0JuLBj4ifWjs91K6mrHe2K9Z4xP7oDwEbSSgDDmrSi8hhsY92HoBjhUS
-         JbOrOLrkustJ2PbA9kr/3vfdpnml6BjuTxGfsVwo/f8fFZHWNBGb+M9ZepxmbDMMWm77
-         O9UwSNY1M20+PU7eGRCyEXQOeMc48xIW8IX9XiHJx7sMii+RKPjZ+aMORy3UDFUwovQJ
-         3Iog==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AwCIOFChcpLV9jmax1ImmjMnCxcc76+OXa2FfkpzRbI=;
+        b=M9Z4LDyf9SZZLX+d8CLiaU1622gjvuImt3hgOgTYF2aM+GSl0AKsuxaM4G0Of4fQYH
+         bV1tH5bOuSISTn6BvaZWTPMZ61j8tdlblPxANEmHu4dHb+K2/Nb8rXPQXf+d0yj/iA4G
+         zdZXb+Tavk9kH5/1IApep03ogPUtZ3a8dntz14yOU4tABUdlci1Etq2OELbaeHGQxhdt
+         0AhAsXZHBu3i5/EHAds23Y5tIy86tRFCy7esVxwHdzhzrZ1+5l8/WwVhL1qdEe/mOG5r
+         8olwrJbO9oO1VXfufZSI7X/eJtOdsyQWzv9g+iTH6uKOQHboVP4PlxGpynBp/2YzJ1ek
+         2GmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2i3vf0rvzIrUcS429y9/vh3HAalX4Oc5g7401Bit/+o=;
-        b=cK+2YUjBrZRLzSEFHz8YInA9FVIckSGy3I0ZLY/kOyM6vbcaJb4fzLkBnqz/N/grb9
-         hNcLIoGdULlqsFRukFxk6/4ThWVWt7D7J0aJyRXebfWp32q0jXsfKQ+xIOdqeP3LWS/4
-         VqKJ5O6psKmAgsQI6L8xQH6fiqh3+xRiN4ZdZDMrgxJUqnZf3NebO02uKf3YvRPtRsQQ
-         5Hji82KgGvmVUGTwz7yslSXCjJvzEux9Ye/eBrRGjJH2UzlxBrxMswzAiUlA7vVUQMCz
-         hZ+Abm6od4yLOvqOQHdHYwf8kh5YKqWcF1xt0IucbelefIlrO6vTW1VXDRvDwIEnptws
-         uMgw==
-X-Gm-Message-State: APjAAAWmixi+acmhOsMzzqDiDpFCRoKF65d/yP1+R7GgLaVNLB/sSGte
-        ULwXQGliRvcMyUamfR47GoV+3+S00u+XYHfHFfc=
-X-Google-Smtp-Source: APXvYqzsQM9kPsCqm9oHigjo0WuLHVlsFvcp2RFkRgadZQhoVDfqn8f7WCfVTe6ekcSET4BOaM8howSBFhMuozDOY8k=
-X-Received: by 2002:a9d:32a1:: with SMTP id u30mr35281383otb.371.1560282912579;
- Tue, 11 Jun 2019 12:55:12 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AwCIOFChcpLV9jmax1ImmjMnCxcc76+OXa2FfkpzRbI=;
+        b=Mf6PaulCnbbOiHu5+WaYQhY2wQYSAtj7KSTjELAcHqgevoZs6aT+j80fVurZHsesp7
+         URcOtUzqXaURgmdqmSq30dz+0Cy34qDIWXxQnF4mhhO++n2bzeQGpO0Bct6hfObiX61B
+         4axBuqaUncJRDHO2uDubTDuwO1u7cbWHdajl1thqI8RC7VZCwmbaGQfbA/n7ThpMROtg
+         TGCA4BJYY2wbtVTgpm7/2KdG/xZFY1ilg9jnZb3r0+GYo2M4qhX04MPAQ5cYAc2yif6z
+         h40aOMHZqhSxOrAckx8quvRhofkzs9hvah8WWJEjwOVhukvlqsB5THhzbryXtS57otwO
+         sABg==
+X-Gm-Message-State: APjAAAXfzz8+ilo3hUIksbYp6Ml8GVR6T7a2vJf8z5ivNiqhq6s/ZpKL
+        MSBBW5/BeYT+52zQWb7BRbU=
+X-Google-Smtp-Source: APXvYqzSML6oqxdWG8320UlbIzvjIXhb8GAWGH3LMdkVr7d+A1ePWy4coBXTLSk4rXZK+TEhlifpgQ==
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr76300723plf.246.1560282952464;
+        Tue, 11 Jun 2019 12:55:52 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:1677])
+        by smtp.gmail.com with ESMTPSA id d19sm2990693pjs.22.2019.06.11.12.55.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 12:55:51 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 12:55:49 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     hannes@cmpxchg.org, jiangshanlai@gmail.com, lizefan@huawei.com,
+        bsd@redhat.com, dan.j.williams@intel.com, dave.hansen@intel.com,
+        juri.lelli@redhat.com, mhocko@kernel.org, peterz@infradead.org,
+        steven.sistare@oracle.com, tglx@linutronix.de,
+        tom.hromatka@oracle.com, vdavydov.dev@gmail.com,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, shakeelb@google.com
+Subject: Re: [RFC v2 0/5] cgroup-aware unbound workqueues
+Message-ID: <20190611195549.GL3341036@devbig004.ftw2.facebook.com>
+References: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
+ <20190605135319.GK374014@devbig004.ftw2.facebook.com>
+ <20190605153229.nvxr6j7tdzffwkgj@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-References: <20190522052002.10411-1-anarsoul@gmail.com> <6BD1D3F7-E2F2-4B2D-9479-06E27049133C@holtmann.org>
- <7B7F362B-6C8B-4112-8772-FB6BC708ABF5@holtmann.org> <CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com>
-In-Reply-To: <CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Tue, 11 Jun 2019 12:56:02 -0700
-Message-ID: <CA+E=qVdLOS9smt-nBxg9Lon0iTZr87kONSp-XPKj9tqB4bvnqw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "Bluetooth: Align minimum encryption key size for
- LE and BR/EDR connections"
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605153229.nvxr6j7tdzffwkgj@ca-dmjordan1.us.oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg,
+Hello, Daniel.
 
-Can we get this revert merged into stable branches? Bluetooth HID has
-been broken for many devices for quite a while now and RFC patch that
-fixes the breakage hasn't seen any movement for almost a month.
+On Wed, Jun 05, 2019 at 11:32:29AM -0400, Daniel Jordan wrote:
+> Sure, quoting from the last ktask post:
+> 
+>   A single CPU can spend an excessive amount of time in the kernel operating
+>   on large amounts of data.  Often these situations arise during initialization-
+>   and destruction-related tasks, where the data involved scales with system size.
+>   These long-running jobs can slow startup and shutdown of applications and the
+>   system itself while extra CPUs sit idle.
+>       
+>   To ensure that applications and the kernel continue to perform well as core
+>   counts and memory sizes increase, harness these idle CPUs to complete such jobs
+>   more quickly.
+>       
+>   ktask is a generic framework for parallelizing CPU-intensive work in the
+>   kernel.  The API is generic enough to add concurrency to many different kinds
+>   of tasks--for example, zeroing a range of pages or evicting a list of
+>   inodes--and aims to save its clients the trouble of splitting up the work,
+>   choosing the number of threads to use, maintaining an efficient concurrency
+>   level, starting these threads, and load balancing the work between them.
 
-Regards,
-Vasily
+Yeah, that rings a bell.
 
-On Thu, May 23, 2019 at 7:52 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Wed, May 22, 2019 at 12:08 AM Marcel Holtmann <marcel@holtmann.org> wrote:
-> >
-> > Hi Vasily,
-> >
-> > >> This reverts commit d5bb334a8e171b262e48f378bd2096c0ea458265.
-> > >>
-> > >> This commit breaks some HID devices, see [1] for details
-> > >>
-> > >> https://bugzilla.kernel.org/show_bug.cgi?id=203643
-> > >>
-> > >> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > >> Cc: stable@vger.kernel.org
-> > >
-> > > let me have a look at this. Maybe there is a missing initialization for older HID devices that we need to handle. Do you happen to have the full btmon binary trace from controller initialization to connection attempt for me?
-> > >
-> > > Are both devices Bluetooth 2.1 or later device that are supporting Secure Simple Pairing? Or is one of them a Bluetooth 2.0 or earlier device?
-> >
-> > I am almost certain that you have a Bluetooth 2.0 mouse. I made a really stupid mistake in the key size check logic and forgot to bind it to SSP support. Can you please check the patch that I just send you.
-> >
-> > https://lore.kernel.org/linux-bluetooth/20190522070540.48895-1-marcel@holtmann.org/T/#u
->
-> This patch fixes the issue for me. Thanks!
->
-> >
-> > Regards
-> >
-> > Marcel
-> >
+> > For memory and io, we're generally going for remote charging, where a
+> > kthread explicitly says who the specific io or allocation is for,
+> > combined with selective back-charging, where the resource is charged
+> > and consumed unconditionally even if that would put the usage above
+> > the current limits temporarily.  From what I've been seeing recently,
+> > combination of the two give us really good control quality without
+> > being too invasive across the stack.
+> 
+> Yes, for memory I actually use remote charging.  In patch 3 the worker's
+> current->active_memcg field is changed to match that of the cgroup associated
+> with the work.
+
+I see.
+
+> > CPU doesn't have a backcharging mechanism yet and depending on the use
+> > case, we *might* need to put kthreads in different cgroups.  However,
+> > such use cases might not be that abundant and there may be gotaches
+> > which require them to be force-executed and back-charged (e.g. fs
+> > compression from global reclaim).
+> 
+> The CPU-intensiveness of these works is one of the reasons for actually putting
+> the workers through the migration path.  I don't know of a way to get the
+> workers to respect the cpu controller (and even cpuset for that matter) without
+> doing that.
+
+So, I still think it'd likely be better to go back-charging route than
+actually putting kworkers in non-root cgroups.  That's gonna be way
+cheaper, simpler and makes avoiding inadvertent priority inversions
+trivial.
+
+Thanks.
+
+-- 
+tejun
