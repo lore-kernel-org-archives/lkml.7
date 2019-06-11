@@ -2,146 +2,116 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69EBC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B11EC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B520120896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D0012146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O6TxbJgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfFKKdT (ORCPT
+        id S2387513AbfFKKlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:33:19 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33330 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfFKKdT (ORCPT
+        Tue, 11 Jun 2019 06:41:01 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37266 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727919AbfFKKlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:33:19 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 21FC68023C; Tue, 11 Jun 2019 12:33:06 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 12:33:16 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-Message-ID: <20190611103316.GA20775@amd>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
- <20190606200926.4029-4-yu-cheng.yu@intel.com>
- <20190607080832.GT3419@hirez.programming.kicks-ass.net>
- <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
- <20190607174336.GM3436@hirez.programming.kicks-ass.net>
- <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
- <20190608205218.GA2359@xo-6d-61-c0.localdomain>
- <e1543e7beb0eb55d6febcd847ccab9b219e60338.camel@intel.com>
+        Tue, 11 Jun 2019 06:41:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v14so12435849wrr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 03:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7Us0ePqajLzv9F8VyyEgnx7luzsoyG4vzsDlEA+qZoA=;
+        b=O6TxbJgNNzTRHvhsHcPcpFSEUN11tv3n1CNF50tCukacGTLqdUAK+DDEWaCElbVabt
+         QU5pBOco5tJX+h0zDpfzd3H/8MttD0lp+YNl+n1tW3scb6cYp1Y52CS4GL173QcZvDe9
+         vlXriA5EQNVgXnNONNVP5E/xr35kQmk9KzJU6KRcU8DfJcYIgitGm3jQI9fH0t2iMJSh
+         oIYQAJzZJyH8UnnP/kwMuy97Jdv5Qjy94LWHpg/5MzSLC1Dsy3NpfFGuLIddsyGNONrx
+         RhYU2n+dd0ezUTpaYFnf8DqqZxYnSlvR8apoS0Kj35ayKcKtbbFM6uXVsee9Yeu95JUc
+         kOgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7Us0ePqajLzv9F8VyyEgnx7luzsoyG4vzsDlEA+qZoA=;
+        b=BefBA5/m2nDpYKsn1ezK8mBo5NHKUJG0PBBjm+kILzjpt03GO9xNmVE3M79DKDOCIS
+         hyo2ak8lop9zOguHUWdWBrnegbefYM99PMcfCM0G/HAiO2Ya6LsDWrZacpOgortzdcXJ
+         xpkjI8JD8bvDRUyKePSlNYlVkYBTStMu05PR26g9fe3keB+TRjTSgROIPtkp1UfCcNu3
+         9/bkSS911suVuYg/xn1qTisKeWPyVDxBXa5GD7MFnIDlqm0NaRO0SeVSZsgsEPj21L3y
+         j89caTnQ2qby41PyKz2MtHG0r1E8+bVMZdORAJKBpTMUt5bS/mg0DffMp9rsX+umShSB
+         FSfw==
+X-Gm-Message-State: APjAAAXg1ARopi/sZLRWnO/FRu2xgQ7GGrQoWquKBUtrhMYMSLyi79ww
+        TIH93XVgA8Vqg4+siq+VKLPopw==
+X-Google-Smtp-Source: APXvYqwKnDzyF9xodu2F8D8uakDUS7/kq2b5T0SBVt6AAGazCrBBaf6zY+sVXP/lUzeZyCqpx23H9A==
+X-Received: by 2002:a5d:6207:: with SMTP id y7mr29651668wru.265.1560249658630;
+        Tue, 11 Jun 2019 03:40:58 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id c65sm2359614wma.44.2019.06.11.03.40.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 03:40:58 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org, vkoul@kernel.org
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        bgoswami@quicinc.com,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [RFC PATCH 0/5] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date:   Tue, 11 Jun 2019 11:40:38 +0100
+Message-Id: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
-Content-Disposition: inline
-In-Reply-To: <e1543e7beb0eb55d6febcd847ccab9b219e60338.camel@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
+This also adds support to some missing bits in SoundWire bus layer like
+Device Tree support and module_sdw_driver macro.
 
---AhhlLboLdkugWU4S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 speakers.
 
-On Mon 2019-06-10 08:47:45, Yu-cheng Yu wrote:
-> On Sat, 2019-06-08 at 22:52 +0200, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > > I've no idea what the kernel should do; since you failed to answer =
-the
-> > > > question what happens when you point this to garbage.
-> > > >=20
-> > > > Does it then fault or what?
-> > >=20
-> > > Yeah, I think you'll fault with a rather mysterious CR2 value since
-> > > you'll go look at the instruction that faulted and not see any
-> > > references to the CR2 value.
-> > >=20
-> > > I think this new MSR probably needs to get included in oops output wh=
-en
-> > > CET is enabled.
-> > >=20
-> > > Why don't we require that a VMA be in place for the entire bitmap?
-> > > Don't we need a "get" prctl function too in case something like a JIT=
- is
-> > > running and needs to find the location of this bitmap to set bits its=
-elf?
-> > >=20
-> > > Or, do we just go whole-hog and have the kernel manage the bitmap
-> > > itself. Our interface here could be:
-> > >=20
-> > > 	prctl(PR_MARK_CODE_AS_LEGACY, start, size);
-> > >=20
-> > > and then have the kernel allocate and set the bitmap for those code
-> > > locations.
-> >=20
-> > For the record, that sounds like a better interface than userspace know=
-ing
-> > about the bitmap formats...
-> > 									Pavel
->=20
-> Initially we implemented the bitmap that way.  To manage the bitmap, ever=
-y time
-> the application issues a syscall for a .so it loads, and the kernel does
-> copy_from_user() & copy_to_user() (or similar things).  If a system has a=
- few
-> legacy .so files and every application does the same, it can take a long =
-time to
-> boot up.
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
 
-Loading .so is already many syscalls, I'd not expect measurable
-performance there. Are you sure?
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+TODO:
+	Add thermal sensor support in WSA881x.
 
---AhhlLboLdkugWU4S
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks,
+srini
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Srinivas Kandagatla (5):
+  dt-bindings: soundwire: add slave bindings
+  soundwire: core: add device tree support for slave devices
+  soundwire: add module_sdw_driver helper macro
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
 
-iEYEARECAAYFAlz/g2wACgkQMOfwapXb+vIj7QCfRkp2CAAYHfFjIjZpoiuF3QSp
-XOcAn2kbcxPiUdvqncAD5H23uN2WhHP1
-=j3lF
------END PGP SIGNATURE-----
+ .../bindings/sound/qcom,wsa881x.txt           |   27 +
+ .../devicetree/bindings/soundwire/bus.txt     |   48 +
+ drivers/soundwire/bus.c                       |    2 +-
+ drivers/soundwire/bus.h                       |    1 +
+ drivers/soundwire/slave.c                     |   54 +-
+ include/linux/soundwire/sdw_type.h            |   11 +
+ sound/soc/codecs/Kconfig                      |    9 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1160 +++++++++++++++++
+ 9 files changed, 1312 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.txt
+ create mode 100644 Documentation/devicetree/bindings/soundwire/bus.txt
+ create mode 100644 sound/soc/codecs/wsa881x.c
 
---AhhlLboLdkugWU4S--
+-- 
+2.21.0
+
