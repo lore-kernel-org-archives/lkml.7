@@ -2,116 +2,179 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E051AC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C20C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA632086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPZoz7Up"
+	by mail.kernel.org (Postfix) with ESMTP id A1CA3212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389541AbfFKNCc (ORCPT
+        id S2389744AbfFKNCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:02:32 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35504 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388131AbfFKNCc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:02:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so7412800pfd.2;
-        Tue, 11 Jun 2019 06:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RYF8jmWoohaknAxpNSmkAVScav4AJcUimkVoJQxY0o4=;
-        b=oPZoz7UpspmDSRDP60yFZFTmgXjX4FyOYwKa4q4wZ/w/lcxofJ1bYofPYAVnjMjzNh
-         T1xSeHPQy/NF+HMNDHLcJPkcfMkJfU/RcaklDAK3s35nWtAcVv7JDueu9P85a7aCBC9k
-         F3CR+tVrxGah0e7BcVAvYWM3XpxAbCrN4VuuVy7F67t47vLln8oJGRYE4p+j3WEXt/2R
-         OOVG5FbU6/2xbMmHufaBHnyBRQjhPukeuPpsEfZQHAlkRQI1k5tcOHGAW39ClmkE1eHg
-         bEdWHKDHWxNhu/b1WlJg4lO9w4GuFwNLl6L5onMIq0QEamzcETftvpTFD4FXEgeUXlMO
-         0XzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RYF8jmWoohaknAxpNSmkAVScav4AJcUimkVoJQxY0o4=;
-        b=TR9YRnVOCX1CKABVA6j7LQHRzYvoyQC1GAS2XhTwlH32Pf/LI1E1pCwi5TRmIoiNDW
-         ocUsLiSeTZc0IS41VdSxBLzq2rHnXbAav9zyIYlvnmaVoRNfbPlkuc3R4/TUVcf8LXcM
-         K/wXuVDHoKKc87ALnblMy1Asc7RQ3YaX1jSlq809w3fm7A1u88SRj2ZgaD61j09B74ws
-         DxINvhjnO5qBGxfw81t7r4vAG0l36jagABdTwleK951L+0vVxmk/BpiBFjN/XBOl+JFu
-         pdzb06l79GUOktlSQDTvA2nHH0keZli4ozgeCVCLp5QJ8oUjFVFaNBDdp2t1qjG0MWti
-         4WDg==
-X-Gm-Message-State: APjAAAXrgpfxLVd0DMp0Ea48AJkfYNtuVF8QoONrpu1SdlyR7gIrxhFY
-        92BH8viccnZ2p8SVhjgSsGxGkkk8SVs=
-X-Google-Smtp-Source: APXvYqwOb0S95cl/7KsX0ESLaeUeaojcPDGOqXQQ0d6Vdvy+oGGi8WCHtt08DYRkCgQryg1VfwQ9MA==
-X-Received: by 2002:a63:c44f:: with SMTP id m15mr4501065pgg.34.1560258151007;
-        Tue, 11 Jun 2019 06:02:31 -0700 (PDT)
-Received: from [10.44.0.192] ([103.48.210.53])
-        by smtp.gmail.com with ESMTPSA id g15sm27612945pfm.119.2019.06.11.06.02.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 06:02:30 -0700 (PDT)
-From:   Greg Ungerer <gregungerer00@gmail.com>
-X-Google-Original-From: Greg Ungerer <gerg@linux-m68k.org>
-Subject: Re: binfmt_flat cleanups and RISC-V support
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-kernel@vger.kernel.org
-References: <20190610212015.9157-1-hch@lst.de>
- <6e5fb7db-1d6f-7d49-553c-edc18f14f641@linux-m68k.org>
- <20190611073802.GB21522@lst.de>
-Message-ID: <87039cee-925b-3f50-f29f-94e55ef6e985@linux-m68k.org>
-Date:   Tue, 11 Jun 2019 23:02:24 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 11 Jun 2019 09:02:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:60956 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388131AbfFKNCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:02:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E8EE344;
+        Tue, 11 Jun 2019 06:02:37 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D24B3F557;
+        Tue, 11 Jun 2019 06:02:35 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 14:02:33 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will.deacon@arm.com>,
+        akpm@linux-foundation.org, catalin.marinas@arm.com,
+        linux-kernel@vger.kernel.org, mhocko@kernel.org,
+        linux-mm@kvack.org, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
+        cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
+Message-ID: <20190611130233.GD29008@lakrids.cambridge.arm.com>
+References: <1559656836-24940-1-git-send-email-cai@lca.pw>
+ <20190604142338.GC24467@lakrids.cambridge.arm.com>
+ <20190610114326.GF15979@fuggles.cambridge.arm.com>
+ <1560187575.6132.70.camel@lca.pw>
+ <20190611100348.GB26409@lakrids.cambridge.arm.com>
+ <20190611124118.GA4761@rapoport-lnx>
 MIME-Version: 1.0
-In-Reply-To: <20190611073802.GB21522@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190611124118.GA4761@rapoport-lnx>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 11/6/19 5:38 pm, Christoph Hellwig wrote:
-> On Tue, Jun 11, 2019 at 04:51:02PM +1000, Greg Ungerer wrote:
->> Hi Christoph,
->>
->> On 11/6/19 7:20 am, Christoph Hellwig wrote:
->>> below is a larger stash of cleanups for the binfmt_misc code,
->>> preparing for the last patch that now trivially adds RISC-V
->>> support, which will be used for the RISC-V nommu series I am
->>> about to post.
->>
->> Whole series looks pretty good. Just the one comment I made.
->>
->> I normally take these through the m68knommu git tree,
->> if you have no problem with that I'll push it in there.
->> It will hit linux-next from there.
+On Tue, Jun 11, 2019 at 03:41:19PM +0300, Mike Rapoport wrote:
+> On Tue, Jun 11, 2019 at 11:03:49AM +0100, Mark Rutland wrote:
+> > On Mon, Jun 10, 2019 at 01:26:15PM -0400, Qian Cai wrote:
+> > > On Mon, 2019-06-10 at 12:43 +0100, Will Deacon wrote:
+> > > > On Tue, Jun 04, 2019 at 03:23:38PM +0100, Mark Rutland wrote:
+> > > > > On Tue, Jun 04, 2019 at 10:00:36AM -0400, Qian Cai wrote:
+> > > > > > The commit "arm64: switch to generic version of pte allocation"
+> > > > > > introduced endless failures during boot like,
+> > > > > > 
+> > > > > > kobject_add_internal failed for pgd_cache(285:chronyd.service) (error:
+> > > > > > -2 parent: cgroup)
+> > > > > > 
+> > > > > > It turns out __GFP_ACCOUNT is passed to kernel page table allocations
+> > > > > > and then later memcg finds out those don't belong to any cgroup.
+> > > > > 
+> > > > > Mike, I understood from [1] that this wasn't expected to be a problem,
+> > > > > as the accounting should bypass kernel threads.
+> > > > > 
+> > > > > Was that assumption wrong, or is something different happening here?
+> > > > > 
+> > > > > > 
+> > > > > > backtrace:
+> > > > > >   kobject_add_internal
+> > > > > >   kobject_init_and_add
+> > > > > >   sysfs_slab_add+0x1a8
+> > > > > >   __kmem_cache_create
+> > > > > >   create_cache
+> > > > > >   memcg_create_kmem_cache
+> > > > > >   memcg_kmem_cache_create_func
+> > > > > >   process_one_work
+> > > > > >   worker_thread
+> > > > > >   kthread
+> > > > > > 
+> > > > > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > > > > ---
+> > > > > >  arch/arm64/mm/pgd.c | 2 +-
+> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > 
+> > > > > > diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
+> > > > > > index 769516cb6677..53c48f5c8765 100644
+> > > > > > --- a/arch/arm64/mm/pgd.c
+> > > > > > +++ b/arch/arm64/mm/pgd.c
+> > > > > > @@ -38,7 +38,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+> > > > > >  	if (PGD_SIZE == PAGE_SIZE)
+> > > > > >  		return (pgd_t *)__get_free_page(gfp);
+> > > > > >  	else
+> > > > > > -		return kmem_cache_alloc(pgd_cache, gfp);
+> > > > > > +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_KERNEL);
+> > > > > 
+> > > > > This is used to allocate PGDs for both user and kernel pagetables (e.g.
+> > > > > for the efi runtime services), so while this may fix the regression, I'm
+> > > > > not sure it's the right fix.
+> > > > > 
+> > > > > Do we need a separate pgd_alloc_kernel()?
+> > > > 
+> > > > So can I take the above for -rc5, or is somebody else working on a different
+> > > > fix to implement pgd_alloc_kernel()?
+> > > 
+> > > The offensive commit "arm64: switch to generic version of pte allocation" is not
+> > > yet in the mainline, but only in the Andrew's tree and linux-next, and I doubt
+> > > Andrew will push this out any time sooner given it is broken.
+> > 
+> > I'd assumed that Mike would respin these patches to implement and use
+> > pgd_alloc_kernel() (or take gfp flags) and the updated patches would
+> > replace these in akpm's tree.
+> > 
+> > Mike, could you confirm what your plan is? I'm happy to review/test
+> > updated patches for arm64.
 > 
-> Yes, that's fine.  We'll need it to bring up riscv nommu support,
-> but there is no actual dependency on the patches for it to compile,
-> just for it to actually be useful.
+> Sorry for the delay, I'm mostly offline these days.
 > 
-> Btw, it seems like the uclinux-dev list is dead, is there a replacement
-> for it?
+> I wanted to understand first what is the reason for the failure. I've tried
+> to reproduce it with qemu, but I failed to find a bootable configuration
+> that will have PGD_SIZE != PAGE_SIZE :(
 
-No, unfortunately no replacement. Generally I think anything that comes
-up goes to the architecture list that issues come up on. Probably not
-ideal, especially for things like this that are across all arches.
+This is the case with 48-bit VA and 64K pages. In that case we have
+three levels of table, and the PGD is 1/16th of a page, as it only needs
+to resolve 9 bits of virtual address rather than 13.
 
-Regards
-Greg
+If you build defconfig + ARM64_64K_PAGES=y, that should be the case:
 
+[mark@lakrids:~/src/linux]% usekorg 8.1.0 aarch64-linux-objdump -d arch/arm64/mm/pgd.o     
+
+arch/arm64/mm/pgd.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <pgd_alloc>:
+   0:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
+   4:   90000000        adrp    x0, 0 <pgd_alloc>
+   8:   5281b801        mov     w1, #0xdc0                      // #3520
+   c:   910003fd        mov     x29, sp
+  10:   f9400000        ldr     x0, [x0]
+  14:   94000000        bl      0 <kmem_cache_alloc>
+  18:   a8c17bfd        ldp     x29, x30, [sp], #16
+  1c:   d65f03c0        ret
+
+0000000000000020 <pgd_free>:
+  20:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
+  24:   90000000        adrp    x0, 0 <pgd_alloc>
+  28:   910003fd        mov     x29, sp
+  2c:   f9400000        ldr     x0, [x0]
+  30:   94000000        bl      0 <kmem_cache_free>
+  34:   a8c17bfd        ldp     x29, x30, [sp], #16
+  38:   d65f03c0        ret
+
+Disassembly of section .init.text:
+
+0000000000000000 <pgd_cache_init>:
+   0:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
+   4:   52804002        mov     w2, #0x200                      // #512
+   8:   d2800004        mov     x4, #0x0                        // #0
+   c:   910003fd        mov     x29, sp
+  10:   2a0203e1        mov     w1, w2
+  14:   52a00083        mov     w3, #0x40000                    // #262144
+  18:   90000000        adrp    x0, 0 <pgd_cache_init>
+  1c:   91000000        add     x0, x0, #0x0
+  20:   94000000        bl      0 <kmem_cache_create>
+  24:   90000001        adrp    x1, 0 <pgd_cache_init>
+  28:   a8c17bfd        ldp     x29, x30, [sp], #16
+  2c:   f9000020        str     x0, [x1]
+  30:   d65f03c0        ret
+
+Thanks,
+Mark.
