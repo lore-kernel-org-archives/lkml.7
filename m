@@ -2,66 +2,87 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87E3C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA977C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DE92089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B9B21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405191AbfFKKIP (ORCPT
+        id S2405203AbfFKKIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:08:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:57390 "EHLO foss.arm.com"
+        Tue, 11 Jun 2019 06:08:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:57408 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405169AbfFKKIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:08:14 -0400
+        id S2405185AbfFKKIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:08:15 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66884337;
-        Tue, 11 Jun 2019 03:08:13 -0700 (PDT)
-Received: from [10.1.29.141] (e121487-lin.cambridge.arm.com [10.1.29.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5692A3F557;
-        Tue, 11 Jun 2019 03:09:54 -0700 (PDT)
-Subject: Re: binfmt_flat cleanups and RISC-V support
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
-        linux-c6x-dev@linux-c6x.org, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190610212015.9157-1-hch@lst.de>
- <4f000219-4baf-b03e-9003-26482640d3de@arm.com>
- <20190611081117.GA22110@lst.de>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <d41f1077-936f-ce5b-2121-5a5ade521a98@arm.com>
-Date:   Tue, 11 Jun 2019 11:08:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E075D346;
+        Tue, 11 Jun 2019 03:08:14 -0700 (PDT)
+Received: from redmoon (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FAB53F557;
+        Tue, 11 Jun 2019 03:09:56 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 11:08:11 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, linux-riscv@lists.infradead.org, palmer@sifive.com,
+        paul.walmsley@sifive.com
+Subject: Re: [PATCH v2] PCI: endpoint: Allocate enough space for fixed size
+ BAR
+Message-ID: <20190611100811.GB29976@redmoon>
+References: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
 MIME-Version: 1.0
-In-Reply-To: <20190611081117.GA22110@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 9:11 AM, Christoph Hellwig wrote:
-> On Tue, Jun 11, 2019 at 09:05:45AM +0100, Vladimir Murzin wrote:
->> I'm wondering if you have a branch with these changes so I can give
->> it a try on ARM NOMMU platforms?
+On Thu, May 23, 2019 at 02:47:59PM -0700, Alan Mikhak wrote:
+> PCI endpoint test function code should honor the .bar_fixed_size parameter
+> from underlying endpoint controller drivers or results may be unexpected.
 > 
+> In pci_epf_test_alloc_space(), check if BAR being used for test register
+> space is a fixed size BAR. If so, allocate the required fixed size.
 > 
->     git://git.infradead.org/users/hch/riscv.git riscv-flat
-> 
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 
-Thanks! I gave it a go and provided my tags for relevant patches.
+Applied to pci/endpoint for v5.3, thanks.
 
-Cheers
-Vladimir
+Lorenzo
+
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 27806987e93b..7d41e6684b87 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  	int bar;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	const struct pci_epc_features *epc_features;
+> +	size_t test_reg_size;
+>  
+>  	epc_features = epf_test->epc_features;
+>  
+> -	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
+> +	if (epc_features->bar_fixed_size[test_reg_bar])
+> +		test_reg_size = bar_size[test_reg_bar];
+> +	else
+> +		test_reg_size = sizeof(struct pci_epf_test_reg);
+> +
+> +	base = pci_epf_alloc_space(epf, test_reg_size,
+>  				   test_reg_bar, epc_features->align);
+>  	if (!base) {
+>  		dev_err(dev, "Failed to allocated register space\n");
+> -- 
+> 2.7.4
+> 
