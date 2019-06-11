@@ -2,117 +2,64 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61BEC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A3EC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9189212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52AB92145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ODhUns9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404603AbfFKPRL (ORCPT
+        id S1729286AbfFKPRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:17:11 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37298 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfFKPRL (ORCPT
+        Tue, 11 Jun 2019 11:17:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48132 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727601AbfFKPRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:17:11 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y57so14996576qtk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:17:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P8EQNdlfEKMSd2en3pkgledmujjaJiojIo3h1kmvnOQ=;
-        b=ckIs0ZQT0ZQTyavRyAxo1zsbS8aSMUP6pda4+gSHZC7pv6edOFGv8rB1mPTeSovZPx
-         +3X3sHrMhro7Pb/LTaaag0dK95CohY6m4y52C43+GGxrcpNH66FlmaZK+KeQcIpB9Nju
-         29G0mDHn0OzOqjCE67invoF6pHTgkAyVRLJCYhCEHzE9lOXhi+yuFYIkzORZ6Gh/sBfh
-         zn+FeWKUSAofC7ycMQJhlbwQ4U+wGic2TniEqzOPHtVvMW2y/JkOS6b7qYkZK0YJvSGK
-         AP+eMmg8U5d+qfUaCB0T125XTNveyVYzx9++5Mgmv/XyK+fG6PxMTmsnN78haXGoYNvP
-         3ldQ==
-X-Gm-Message-State: APjAAAVwnANJg/I+OomvTUiHrmBzi4mE0m0u3c9EnZjvyi/R2YRphvIy
-        WB7IRWMqlnrvtiA87D/VeTrOYXvQ6+az80ftTr76WQ==
-X-Google-Smtp-Source: APXvYqxTwhCXjUiYOLjzsXDsnhv8C1o60LWTFhRLJ28dtwbw6MnKs2gpVUwymuiiAZ8b1O+X+RMvu9It7qiwHlxTQk8=
-X-Received: by 2002:ac8:2998:: with SMTP id 24mr62676416qts.31.1560266230100;
- Tue, 11 Jun 2019 08:17:10 -0700 (PDT)
+        Tue, 11 Jun 2019 11:17:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eVgOWDgLR7upfxnSi0/pPEtmnURMeK6qO9i2y3dCEiY=; b=ODhUns9UlpGQitCQA9RkQL2Jy
+        i1FreyI7EgQ7P+ic2LLzUo6tC8GrCd9bZ5mbTHSiWZXdfZlHAsmZq/BB3YeqXh4/mKl0yrSujQrgS
+        Y9dNPvpMaYnpbC2PmDu9xUa7deeVKZVG9G9fHJM5fR9FIWgtvzEZkh7Q/peJbnufAM+7Q/hAgl5Ml
+        UE9vD6qJcKFpvo4aRTl8GVwB/1s6Hjttl8WCXc5xU4dZPpi+9It3siDXxW/Up4l3xNFQHOdTph4Qj
+        fVgUCJ834WlgPgqGybCEDhME2Af/6fDouq+C0EZCMY93i8Ih39fFHmaC5KfijOMuC4he2Xin1uIyh
+        eK/sGMgYA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1haiX3-00037l-SL; Tue, 11 Jun 2019 15:17:53 +0000
+Date:   Tue, 11 Jun 2019 08:17:53 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Oded Gabbay <oded.gabbay@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
+Message-ID: <20190611151753.GA11404@infradead.org>
+References: <20190611092144.11194-1-oded.gabbay@gmail.com>
+ <20190611095857.GB24058@kroah.com>
 MIME-Version: 1.0
-References: <20190611123101.25264-1-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20190611123101.25264-1-ckeepax@opensource.cirrus.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 11 Jun 2019 17:16:58 +0200
-Message-ID: <CAO-hwJ+qSXwZ-5sAiZ55-r_PXp9pvnE1XEaE_v3SBnxzQQNH4g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] I2C IRQ Probe Improvements
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, mika.westerberg@linux.intel.com,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        Jim Broadus <jbroadus@gmail.com>, patches@opensource.cirrus.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611095857.GB24058@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 2:31 PM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
->
-> This series attempts to align as much IRQ handling into the
-> probe path as possible. Note that I don't have a great setup
-> for testing these patches so they are mostly just build tested
-> and need careful review and testing before any of them are
-> merged.
->
-> The series brings the ACPI path inline with the way the device
-> tree path handles the IRQ entirely at probe time. However,
-> it still leaves any IRQ specified through the board_info as
-> being handled at device time. In that case we need to cache
-> something from the board_info until probe time, which leaves
-> any alternative solution with something basically the same as
-> the current handling although perhaps caching more stuff.
+On Tue, Jun 11, 2019 at 11:58:57AM +0200, Greg KH wrote:
+> That feels like a big hack.  ppc doesn't have any "what arch am I
+> running on?" runtime call?  Did you ask on the ppc64 mailing list?  I'm
+> ok to take this for now, but odds are you need a better fix for this
+> sometime...
 
-Hmm, I still haven't pinpointed the issue, but I wanted to give a test
-of the series and I have:
-[    5.511806] i2c_hid i2c-DLL075B:01: HID over i2c has not been
-provided an Int IRQ
-[    5.511825] i2c_hid: probe of i2c-DLL075B:01 failed with error -22
-
-So it seems that there is something wrong happening when fetching the
-IRQ and providing it to i2c-hid.
-
-That was on a Dell XPS 9360.
-
-Bisecting is starting.
-
-Cheers,
-Benjamin
-
->
-> Thanks,
-> Charles
->
-> See previous discussions:
->  - https://lkml.org/lkml/2019/2/15/989
->  - https://www.spinics.net/lists/linux-i2c/msg39541.html
->
-> Charles Keepax (7):
->   i2c: core: Allow whole core to use i2c_dev_irq_from_resources
->   i2c: acpi: Use available IRQ helper functions
->   i2c: acpi: Factor out getting the IRQ from ACPI
->   i2c: core: Make i2c_acpi_get_irq available to the rest of the I2C core
->   i2c: core: Move ACPI IRQ handling to probe time
->   i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
->   i2c: core: Tidy up handling of init_irq
->
->  drivers/i2c/i2c-core-acpi.c | 58 ++++++++++++++++++++++++++++++++-------------
->  drivers/i2c/i2c-core-base.c | 11 +++++----
->  drivers/i2c/i2c-core.h      |  9 +++++++
->  3 files changed, 56 insertions(+), 22 deletions(-)
->
-> --
-> 2.11.0
->
+That isn't the worst part of it.  The whole idea of checking what I'm
+running to set a dma mask just doesn't make any sense at all.
