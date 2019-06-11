@@ -2,117 +2,120 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6EEC0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1259C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688CF21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E36921743
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YxOzn70d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XL0AUogK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407544AbfFKTVW (ORCPT
+        id S2407565AbfFKTVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:21:22 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:37662 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407496AbfFKTVS (ORCPT
+        Tue, 11 Jun 2019 15:21:25 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33642 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407527AbfFKTVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:21:18 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 044BAC019A;
-        Tue, 11 Jun 2019 19:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560280878; bh=7ZtOQar5xQn+bgJQWzr7Ojryo8q6IAx78zywu3z+Hf8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YxOzn70d0CwAPBohu8pVOW/R6YbtUr1fML4sY14BmgeN2NuuixyTQA9pvF6FUkryY
-         mFG+XviwPwvHf1FTTtM0xK2prElCgRTURmteOpfyPspt38MdJPxCzAIBDgTDu+9K4l
-         MVz5ykxjn73Pft6awe982NtOpaBSFrIUeHONLew+w4Zpd8c9CGPWW8Rsh+NJVf0bIs
-         Dfgk820/aza6f8+w4kwWLq6YaRTB7JM16D6MWZD38RIgHOtmYKXESsC10+2Uo79L/W
-         0htt6zNdpA5UPOx35TfC0cyESNwQTIq4dR++mnswV/BWiB01NR05kZUpYFh4Pt/Pg2
-         sfDNAqoLxDipg==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id CD92FA0238;
-        Tue, 11 Jun 2019 19:21:16 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id B9EEB3F8A2;
-        Tue, 11 Jun 2019 21:21:16 +0200 (CEST)
-From:   Luis Oliveira <Luis.Oliveira@synopsys.com>
-To:     mchehab@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        robh@kernel.org, nicolas.ferre@microchip.com,
-        paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Joao.Pinto@synopsys.com, Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [v4 4/6] dt-bindings: phy: Document the Synopsys MIPI DPHY Rx bindings
-Date:   Tue, 11 Jun 2019 21:20:53 +0200
-Message-Id: <1560280855-18085-5-git-send-email-luis.oliveira@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+        Tue, 11 Jun 2019 15:21:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g21so5548523plq.0;
+        Tue, 11 Jun 2019 12:21:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=VyKAAyyKF/StTl6Cc7Bhi0hP4Fbpr1Wnyb227vQxupA=;
+        b=XL0AUogKv6Cxj1o55F+H/u/jeXLI0x8/C754Uw2qjM+DoJhR91Fi3mcEZ68gY4v+kq
+         NlInBqn0UHjxqmEKlFK3dYtwZQc+TKSPXvD0uOvoJ8iuNUQNCax008E5a0DXfzKHpxBN
+         pTDcvpwV5W0HCPMLiEwX33vLLaEIBiWx0rB16luo9rM2PPahYhMYGFFYiHP555AcOif/
+         0RH+eQDsztBx+jbLeCw5tJp+sdNXoRgX5KaUHqK60vPDIZ3JUAuED/Nqok7rmxI6DYht
+         dntc/LH7EsxfsFex9bPNJU3k1D7VAlhJHTlnN06/ZSnEIM5lB08KL4a0Xk6JixyQjdBi
+         6DFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=VyKAAyyKF/StTl6Cc7Bhi0hP4Fbpr1Wnyb227vQxupA=;
+        b=nuctAf7lyTp08CPfv9YwjxQdEBVyKOOCxpMINwk17kc7shZywA8ajT6DxBSJqlD9Fg
+         vJJt3C517PfaRdwqxnpGlRuHP8khXsy+L61YCE2tEsF5SUigMaS4f9YcryFTLBCS4yxn
+         /VAEU5SLsOIk0IG/kOHdw7krsIqjK40wxa/7v7dlMf78zxkg0hVweXt1JZznE6uNvF3N
+         Elhx1axGN227BGPYP/T+F4va8/tsbaRWV9QsBtSK1TtWliUst+NcYqMO+ya9fP1F6rJB
+         E+VyT4bC2uSq8GH3otlKp9dV01eLwvxUiy13iaNFgz0f++E69uKZsOfQ3YS43mrAmvgg
+         bjHA==
+X-Gm-Message-State: APjAAAUPJD7ScX0UtpmaftNjQXtK2EMc2DSBvhgwVzmHA6EDc71WLgcU
+        hc9RNfW7fFI3SVSnPUuQIvg=
+X-Google-Smtp-Source: APXvYqxM45D6ih9NPop4Jnwxqresrp36WK7FBsVW0XTK9ysiGJzlc2i43YN/D1Vc1OShKwnlvGlETg==
+X-Received: by 2002:a17:902:b58f:: with SMTP id a15mr76885535pls.201.1560280880449;
+        Tue, 11 Jun 2019 12:21:20 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id z32sm14669727pgk.25.2019.06.11.12.21.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 12:21:19 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, marc.w.gonzalez@free.fr,
+        jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v3 2/2] arm64: dts: qcom: msm8998: Add gpucc node
+Date:   Tue, 11 Jun 2019 12:21:16 -0700
+Message-Id: <20190611192116.15009-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190611191949.14906-1-jeffrey.l.hugo@gmail.com>
+References: <20190611191949.14906-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
-RX mode.
+Add MSM8998 GPU Clock Controller DT node.
 
-Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
-Changelog
-v3-v4
-- @Laurent I know I told you I could remove the snps,dphy-frequency on V3 but
-  it is really useful for me here. I removed all other the proprietary
-  properties except this one. Do you still think it must be removed?
-- Frequency units @Rob
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
- .../devicetree/bindings/phy/snps,dw-dphy-rx.txt    | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt b/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
-new file mode 100644
-index 0000000..50603e6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
-@@ -0,0 +1,29 @@
-+Synopsys DesignWare MIPI Rx D-PHY block details
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 574be78a936e..cf00bfeec6b3 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -3,6 +3,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8998.h>
++#include <dt-bindings/clock/qcom,gpucc-msm8998.h>
+ #include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/gpio/gpio.h>
+ 
+@@ -763,6 +764,20 @@
+ 			reg = <0x1f40000 0x20000>;
+ 		};
+ 
++		gpucc: clock-controller@5065000 {
++			compatible = "qcom,gpucc-msm8998";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++			reg = <0x05065000 0x9000>;
 +
-+Description
-+-----------
++			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
++				 <&gcc GPLL0_OUT_MAIN>;
++			clock-names = "xo",
++				      "gpll0";
++		};
 +
-+The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
-+Please refer to phy-bindings.txt for more information.
 +
-+Required properties:
-+- compatible		: Shall be "snps,dw-dphy-rx".
-+- #phy-cells		: Must be 1.
-+- bus-width		: Size of the test interface data bus (8 bits->8 or
-+			  12bits->12).
-+- snps,dphy-frequency	: Frequency at which D-PHY should start, configurable.
-+			  Check Synopsys databook. (-kHz)
-+- reg			: Test interface register. This correspondes to the
-+			  physical base address of the controller and size of
-+			  the device memory mapped registers; Check Synopsys
-+			  databook.
-+
-+Example:
-+
-+	mipi_dphy_rx1: dphy@d00003040 {
-+		compatible = "snps,dw-dphy-rx";
-+		#phy-cells = <1>;
-+		bus-width = <12>;
-+		snps,dphy-frequency = <300000>;
-+		reg = <0xd0003040 0x20>;
-+	};
+ 		apcs_glb: mailbox@9820000 {
+ 			compatible = "qcom,msm8998-apcs-hmss-global";
+ 			reg = <0x17911000 0x1000>;
 -- 
-2.7.4
+2.17.1
 
