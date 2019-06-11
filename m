@@ -2,90 +2,138 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC1FC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85168C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC0620673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C387208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="H1mABFdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390371AbfFKNMG (ORCPT
+        id S2390442AbfFKNMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:12:06 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36056 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390242AbfFKNMG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:12:06 -0400
-Received: by mail-qk1-f196.google.com with SMTP id g18so7589101qkl.3;
-        Tue, 11 Jun 2019 06:12:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KyYvnirAncfvqftH8b0du6PTVoUwek5hDeS0HicdvJ8=;
-        b=a0gDpktX2fWf6Gi+wK6lT/F9VVIzl1ms/u98eTt4Gz7fp+vl73j+u+ZPuqBggcBE69
-         fCjIAEwJIvrODWmDMQwlpZMvqHQKaEydPGlHJ0saMvsjo2YnVA/HcvmyEaIikVA5+McR
-         DMth3ZVgxSFtDZ6o1/4GQC01AVPdsz753Z7UiAkgHjCP+YT4V4FocO2ZlpHsd2eMHxft
-         2Ruy9qo4cuWMXQ3sbZ1P9IEFaCEm3zfjpLmZRgXiyiepypbMKX5qMiUAP3p873aqhi0g
-         U7d+kS8ARmSvQCMqHAuMVLbx1uPg9F7+V+xIwZmUha5MQsXsXwUD+Pes6H7DKQNFH8g/
-         3dvw==
-X-Gm-Message-State: APjAAAVggiqXGCaYc9kPIiL7aXP5FvhijUfzONkm9OKEJsgkIwN7eYgU
-        0DubTmDONT5Y2XChPD3FD2QBHYV3zo7dRvox0OA=
-X-Google-Smtp-Source: APXvYqylIdCcVDzvlOPTn/Jad8SMMmSjCbrCYwIscvJcBt34a5gTosawEIrvHbQw778UawvftHqdj+8EU+S0lkdHer0=
-X-Received: by 2002:a05:620a:16c1:: with SMTP id a1mr17486493qkn.269.1560258724850;
- Tue, 11 Jun 2019 06:12:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190610133245.306812-1-tmaimon77@gmail.com> <20190610133245.306812-3-tmaimon77@gmail.com>
-In-Reply-To: <20190610133245.306812-3-tmaimon77@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 11 Jun 2019 15:11:48 +0200
-Message-ID: <CAK8P3a0s1fdt2yHVjOXffeKPKkwUyJ7DKCZHHMKjx+3j300ZAQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] soc: nuvoton: add NPCM LPC BPC driver
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Olof Johansson <olof@lixom.net>,
-        gregkh <gregkh@linuxfoundation.org>,
+        Tue, 11 Jun 2019 09:12:10 -0400
+Received: from mail-eopbgr1410107.outbound.protection.outlook.com ([40.107.141.107]:44496
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389077AbfFKNMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:12:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8cMuS4gsqjAgnz37TEKlHRK1cbHkybuipfSHgOIQMAw=;
+ b=H1mABFdG/HUGXjV4ehMqzN/GuysEbq+Je1E1FF+30hgiv747BwP5C/Bvtrwh8rkmuILsVGkb37MqT8RNNDRvPKvPE3KTH7LxG94SiNXaQxguLF0YjVOICZXYDkV+l+ihTrGjmavgJfGqFeVdckmn9uc0Age9vPZCBQeqJtkTd68=
+Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com (52.133.168.140) by
+ TYXPR01MB1600.jpnprd01.prod.outlook.com (52.133.167.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Tue, 11 Jun 2019 13:12:05 +0000
+Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com
+ ([fe80::acfa:7109:d143:eefb]) by TYXPR01MB1775.jpnprd01.prod.outlook.com
+ ([fe80::acfa:7109:d143:eefb%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 13:12:04 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>, benjaminfair@google.com,
-        Joel Stanley <joel@jms.id.au>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
+Subject: RE: [PATCH 0/6] Add USB2.0/CMT/TMU support to HiHope RZ/G2M
+Thread-Topic: [PATCH 0/6] Add USB2.0/CMT/TMU support to HiHope RZ/G2M
+Thread-Index: AQHVIFaRfqtojhOoXkS8bzmIbfpQG6aWbVow
+Date:   Tue, 11 Jun 2019 13:12:04 +0000
+Message-ID: <TYXPR01MB1775725F45944C969BCDD49EC0ED0@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 93fd71fd-3618-4b4f-9448-08d6ee6e6651
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TYXPR01MB1600;
+x-ms-traffictypediagnostic: TYXPR01MB1600:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <TYXPR01MB16005516ABD4238EC2905240C0ED0@TYXPR01MB1600.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(6029001)(396003)(346002)(376002)(39860400002)(366004)(136003)(189003)(199004)(7736002)(66946007)(478600001)(256004)(74316002)(8936002)(86362001)(8676002)(6116002)(81156014)(5660300002)(52536014)(73956011)(71200400001)(71190400001)(7416002)(81166006)(66476007)(66446008)(7696005)(110136005)(64756008)(54906003)(76176011)(3846002)(6506007)(53546011)(66556008)(99286004)(102836004)(44832011)(11346002)(486006)(446003)(4326008)(68736007)(186003)(33656002)(229853002)(305945005)(25786009)(76116006)(26005)(476003)(6436002)(316002)(9686003)(966005)(53936002)(14454004)(6306002)(55016002)(66066001)(2906002)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1600;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FoObxzFueNIe2cg7G2pPdCQVOMjZhu0JgaQtb6oUBbvI/IYJhk0SegFv3BqZBTZWvcg+iWeSdRsgTh27VLLHM59Q2P7Hr/LXTvvb1EmvleGejUsYVdHnFmolIrD4W166fSjcDsgRGsbCVaPn8wsXJd0/coGf/bA8N1CZg+aft7V58dgTjdmAeRsDRhGgbJ6RQaFdBKx2KHLubXaKSIFFRrqa+Jy1RQl4zrEInD0LvnZucWzKghqbxNXB1TR85wSRM0ZCK2MWFkeRrDkMS/1ttRucr0YiSCjaMkhfq+k++ZF9xDL4BffqyMA0Sr+E3x0iE4Q/1RycfOrlGh2CPi4QiIvVAKB3OA654+X1WIRtzStP2toDNSIU2xGr+DuJ6ApdSUhatbmTuuwyqGIWqJBD7HX7K2ZiXARUnBJEnN6G014=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93fd71fd-3618-4b4f-9448-08d6ee6e6651
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 13:12:04.8100
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fabrizio.castro@bp.renesas.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1600
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 4:19 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
->
-> Add Nuvoton BMC NPCM BIOS post code (BPC) driver.
->
-> The NPCM BPC monitoring two I/O address written by
-> the host on the Low Pin Count (LPC) bus, the capure
-> data stored in 128-word FIFO.
->
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Sent: 11 June 2019 14:07
+> Subject: [PATCH 0/6] Add USB2.0/CMT/TMU support to HiHope RZ/G2M
+>=20
+> Dear All,
+>=20
+> this series adds USB2.0/CMT/TMU support to the HiHope RZ/G2M.
 
-We've run into this situation before, but don't have a good solution yet:
+Ah, I forgot to mention that this series depends on:
+https://patchwork.kernel.org/cover/10980861/
+https://patchwork.kernel.org/patch/10980997/
+https://patchwork.kernel.org/patch/10986211/
 
-The driver seems useful and well implemented, but I keep having a bad
-feeling about adding a chardev driver into drivers/soc for something that
-is clearly specific to a particular implementation on the hardware side
-but generic on the user interface. The same user interface might be
-used on an Aspeed BMC or any other one, so please coordinate at
-least between Novoton and Aspeed developers on creating a common
-user interface, and review each other's patches.
+Thanks,
+Fab
 
-Maybe we can introduce a drivers/bmc/ (or even drivers/openbmc)
-that collects all those user interfaces with a thin abstraction layer
-and one or two hardware specific back-ends?
+>=20
+> Thanks,
+> Fab
+>=20
+> Fabrizio Castro (6):
+>   arm64: dts: renesas: r8a774a1: Fix USB 2.0 clocks
+>   arm64: dts: renesas: hihope-common: Add USB 2.0 support
+>   arm64: dts: renesas: r8a774a1: Add CMT device nodes
+>   clk: renesas: r8a774a1: Add TMU clock
+>   dt-bindings: timer: renesas: tmu: Document r8a774a1 bindings
+>   arm64: dts: renesas: r8a774a1: Add TMU device nodes
+>=20
+>  .../devicetree/bindings/timer/renesas,tmu.txt      |   1 +
+>  arch/arm64/boot/dts/renesas/hihope-common.dtsi     |  76 +++++++++++
+>  arch/arm64/boot/dts/renesas/r8a774a1.dtsi          | 151 +++++++++++++++=
+++++--
+>  drivers/clk/renesas/r8a774a1-cpg-mssr.c            |   5 +
+>  4 files changed, 225 insertions(+), 8 deletions(-)
+>=20
+> --
+> 2.7.4
 
-        Arnd
