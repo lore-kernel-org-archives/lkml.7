@@ -2,172 +2,101 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E00C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5083DC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA23F2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rw6hfum1"
+	by mail.kernel.org (Postfix) with ESMTP id 2D45B2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404290AbfFKHXj (ORCPT
+        id S2404344AbfFKHY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:23:39 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37529 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404113AbfFKHXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:23:38 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 22so1633332wmg.2;
-        Tue, 11 Jun 2019 00:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=8SXJkBChm4tyl3x86k5LU1rDYIAY8lVNxWSGhpiEXRo=;
-        b=Rw6hfum1sKXPRFT9U92P0V9plNe7rUitbH17YswE0CIhwSIvvRU9n80XfNHUGQyZsl
-         yEjaHD/quOOiegC3UPn3CFdqKza0pes8sYu2QNcEq25Ez/N9KSpw6LUmv8Wu/jwbS6Sz
-         xV+BerwCt0efJFQJ28M1ABA2tpxvTruOz2WPG8vPjL+SrkVoHgEtDRJTiJMDhSrZ2o4p
-         /XrbRe0iITXdmH8WECZcQUxhwWek755PabHnr0e1SPoxSxB17+pEfVwM791MqViYiADb
-         rgZwjUDCwPgGufX8lVOHz27O5LD+eDxuDbPhtQ8UeOziTs599Ueiko4M7MuzlL6d3NaH
-         LLUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8SXJkBChm4tyl3x86k5LU1rDYIAY8lVNxWSGhpiEXRo=;
-        b=ab7hFT+5OtUxYXWuzH4Qv/dGf/SErzMq6oNnncYOP/Cjyzav+zsqbZqgZp+bCkNZQS
-         pESNDs2vC9BbuXXoDedJWTmkYh/g7AdrmCq4lUcSDXvHuzILxAn8R9XCUocgOy0IWvLM
-         j3Vd58TKTnEt0rBq4IcB+WOJ6l0v+IOeOlMCUKD11Rej0HDMY/FGgrN8X1DrJHLo1m2I
-         HUixsNcpL1XF2qkQNYYYx/yKPmnlK6lvqmBe849izBtxxA+iCARVTdW4h/uxASb5kF0w
-         GXvd4C7+9Rky7zoze2lTKMYHAGUeiymHynuzlrbPUQwBJlRnuyuy9HZkHZECIfWtOnCg
-         Iprg==
-X-Gm-Message-State: APjAAAUc6ij3Xhy2RTmU6CfdnrbSFLBJYu1j9YEk500Q8QmasXuGA0kM
-        WV2XBAMQajNKu8RZBijymwX1XVT5MJQ=
-X-Google-Smtp-Source: APXvYqwxTxMc2ofRGlxkTnvt/Yn8XNjoTYXK/DmZQyPZeSoihP/oKeiY82l/LrSu8Cob4TksASmcfg==
-X-Received: by 2002:a1c:2dd2:: with SMTP id t201mr15512930wmt.136.1560237815690;
-        Tue, 11 Jun 2019 00:23:35 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id j3sm13616971wrt.73.2019.06.11.00.23.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Jun 2019 00:23:34 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 09:23:33 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Hui Wang <hui.wang@canonical.com>
-Cc:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
-        Naoki Saito <naoki.saito@alpsalpine.com>,
-        Hideo Kawase <hideo.kawase@alpsalpine.com>
-Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
- =?utf-8?B?5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= input: alps-fix the issue alps
- cs19 trackstick do not work.
-Message-ID: <20190611072333.nd4va4q2m5epmukc@pali>
-References: <20190527100913.sgxrjrmphsjfmcdb@pali>
- <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190528071824.jimhixhtsynzwixe@pali>
- <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190610104310.qa5snt7jpcljodfv@pali>
- <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
- <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
+        Tue, 11 Jun 2019 03:24:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39522 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404260AbfFKHY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 03:24:26 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 425D6C18B2F3;
+        Tue, 11 Jun 2019 07:24:20 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-118.ams2.redhat.com [10.36.116.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F4B05D721;
+        Tue, 11 Jun 2019 07:24:04 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+        <20190606200926.4029-4-yu-cheng.yu@intel.com>
+        <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+        <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+        <20190607174336.GM3436@hirez.programming.kicks-ass.net>
+        <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+        <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
+        <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+        <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
+        <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
+        <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
+        <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
+        <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
+        <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
+        <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
+        <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
+        <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com>
+Date:   Tue, 11 Jun 2019 09:24:03 +0200
+In-Reply-To: <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com> (Dave Hansen's
+        message of "Mon, 10 Jun 2019 15:02:45 -0700")
+Message-ID: <8736kgd1po.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 11 Jun 2019 07:24:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 11 June 2019 12:32:33 Hui Wang wrote:
-> On 2019/6/11 上午11:23, Hui Wang wrote:
-> > On 2019/6/11 上午11:05, Xiaoxiao Liu wrote:
-> > > Hi Pali,
-> > > 
-> > > I discussed with our FW team about this problem.
-> > > We think the V8 method means a touchpad feature  and does not fit
-> > > the CS19 trackpoint device.
-> > > CS19 TrackPoint needn't  use any Absolute (Raw) mode and is usually
-> > > use standard mouse data.
-> > > CS19 TrackPoint device is a completely different device with
-> > > DualPoint device of Dell/HP.
-> > > CS19 TrackPoint device is independent  of Touchpad. (Touchpad is
-> > > connecting by I2C, TrackPoint is directly connecting with PS2 port.)
-> > > And it has completely another FW.
-> > > 
-> > > So we think it is better to use the mouse mode for CS19 trackpoint.
-> > 
-> > Maybe here is some mis-understanding,  the mouse mode here doesn't mean
-> > we use psmouse-base.c for cs19 (bare ps/2 mouse), we plan to use
-> > trackpoint.c to drive this HW, so this trackpoint has all features a
-> > trackpoint should have.
-> > 
-> And I sent a patch one month ago to let the the trackpoint.c to drive this
-> HW: https://www.spinics.net/lists/linux-input/msg61341.html, maybe that
-> patch is reference.
+* Dave Hansen:
 
-So instead of creating blacklist, you should check for TP_VARIANT_ALPS
-in alps.c and disallow its usage.
+> My assumption has always been that these large, potentially sparse
+> hardware tables *must* be mmap()'d with MAP_NORESERVE specified.  That
+> should keep them from being problematic with respect to overcommit.
 
-Or maybe better, move trackpoint.c detect code before alsp.c detect code
-in psmouse-base. And no changes in alps.c are needed.
+MAP_NORESERVE pages still count towards the commit limit.  The flag only
+disables checks at allocation time, for this particular allocation.  (At
+least this was the behavior the last time I looked into this, I
+believe.)
 
-> > Regards,
-> > 
-> > Hui.
-> > 
-> > > 
-> > > Best Regards
-> > > Shona
-> > > -----邮件原件-----
-> > > 发件人: Pali Rohár <pali.rohar@gmail.com>
-> > > 发送时间: Monday, June 10, 2019 6:43 PM
-> > > 收件人: 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
-> > > 抄送: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>;
-> > > dmitry.torokhov@gmail.com; peter.hutterer@who-t.net;
-> > > hui.wang@canonical.com; linux-input@vger.kernel.org;
-> > > linux-kernel@vger.kernel.org; 曹 曉建 Xiaojian Cao
-> > > <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 斉藤 直樹 Naoki
-> > > Saito <naoki.saito@alpsalpine.com>; 川瀬 英夫 Hideo Kawase
-> > > <hideo.kawase@alpsalpine.com>
-> > > 主题: Re: 答复: 答复: [PATCH] input: alps-fix the issue alps cs19
-> > > trackstick do not work.
-> > > 
-> > > On Monday 10 June 2019 10:03:51 Xiaoxiao Liu wrote:
-> > > > Hi Pali,
-> > > Hi!
-> > > 
-> > > > We register our CS19 device as ALPS_ONLY_TRACKSTICK device.
-> > > > And let the V8 protocol function support the process of
-> > > > ALPS_ONLY_TRACKSTICK device.
-> > > > 
-> > > > I want to confirm if this solution OK?
-> > > Yes, it is fine. Just make sure that touchapad input device is not
-> > > registered when this ALPS_ONLY_TRACKSTICK flag is set. So userspace
-> > > would not see any fake/unavailable touchpad input device.
-> > > 
-> > > > Xiaoxiao.Liu
-> > > -- 
-> > > Pali Rohár
-> > > pali.rohar@gmail.com
+Not sure if this makes a difference here.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Thanks,
+Florian
