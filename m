@@ -6,94 +6,152 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FA2C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43CFC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F303120673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75B1212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390593AbfFKNO7 (ORCPT
+        id S2403849AbfFKNPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:14:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:32966 "EHLO foss.arm.com"
+        Tue, 11 Jun 2019 09:15:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:32980 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388792AbfFKNO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:14:58 -0400
+        id S2388792AbfFKNPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:15:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C901B344;
-        Tue, 11 Jun 2019 06:14:57 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CB4F3F557;
-        Tue, 11 Jun 2019 06:14:56 -0700 (PDT)
-Subject: Re: [PATCH HACK RFC] cpu: Prevent late-arriving interrupts from
- disrupting offline
-To:     paulmck@linux.ibm.com
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        mingo@kernel.org, jpoimboe@redhat.com, mojha@codeaurora.org,
-        linux-kernel@vger.kernel.org
-References: <20190602011253.GA6167@linux.ibm.com>
- <20190603083848.GB3436@hirez.programming.kicks-ass.net>
- <20190603114455.GA16119@lakrids.cambridge.arm.com>
- <ea4887fb-cc77-59d4-3ba7-a59f5237ca40@arm.com>
- <20190604074549.GP28207@linux.ibm.com>
- <6eb5d59f-37d0-0aab-1fc0-fcf48cc4164f@arm.com>
- <20190608164158.GK28207@linux.ibm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <16a424d1-0ab7-7e81-5c4f-93da23519b1d@arm.com>
-Date:   Tue, 11 Jun 2019 15:14:54 +0200
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1289D346;
+        Tue, 11 Jun 2019 06:15:01 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31F8E3F557;
+        Tue, 11 Jun 2019 06:14:59 -0700 (PDT)
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Vincent Stehle <Vincent.Stehle@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+ <20190526161004.25232-27-eric.auger@redhat.com>
+ <20190603163139.70fe8839@x1.home>
+ <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+ <20190605154553.0d00ad8d@jacob-builder>
+ <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
+ <20190606132903.064f7ac4@jacob-builder>
+ <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
+ <20190607104301.6b1bbd74@jacob-builder>
+ <e02b024f-6ebc-e8fa-c30c-5bf3f4b164d6@arm.com>
+ <20190610143134.7bff96e9@jacob-builder>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <905f130b-02dc-6971-8d5b-ce87d9bc96a4@arm.com>
+Date:   Tue, 11 Jun 2019 14:14:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190608164158.GK28207@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20190610143134.7bff96e9@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/8/19 6:41 PM, Paul E. McKenney wrote:
-> On Tue, Jun 04, 2019 at 03:29:32PM +0200, Dietmar Eggemann wrote:
->> On 6/4/19 9:45 AM, Paul E. McKenney wrote:
->>> On Mon, Jun 03, 2019 at 03:39:18PM +0200, Dietmar Eggemann wrote:
->>>> On 6/3/19 1:44 PM, Mark Rutland wrote:
->>>>> On Mon, Jun 03, 2019 at 10:38:48AM +0200, Peter Zijlstra wrote:
->>>>>> On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
->>>>>>> Scheduling-clock interrupts can arrive late in the CPU-offline process,
-
-[...]
-
->>> And it looks like the reason I dropped it was that I didn't get any
->>> response from the maintainer.  I sent a message to this effect to
->>> linux-arm-kernel@lists.infradead.org and linux@arm.linux.org.uk on May
->>> 21, 2015.
->>>
->>> So here it is again.  ;-)
->>>
->>> I have queued this locally.  Left to myself, I add the two of you on its
->>> Cc: list and run it through my normal process.  But given the history,
->>> I would still want either an ack from the maintainer or, better, for
->>> the maintainer to take the patch.
->>>
->>> Or is there a better way for us to proceed on this?
->>
->> You could send this patch also to
->> linux-arm-kernel@lists.infradead.org and cc rmk to get his opinion
->> on the patch.
+On 10/06/2019 22:31, Jacob Pan wrote:
+> On Mon, 10 Jun 2019 13:45:02 +0100
+> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 > 
-> OK, please let me know how the testing goes.  My thought is to send the
-> patch as you suggest with your Tested-by.
+>> On 07/06/2019 18:43, Jacob Pan wrote:
+>>>>> So it seems we agree on the following:
+>>>>> - iommu_unregister_device_fault_handler() will never fail
+>>>>> - iommu driver cleans up all pending faults when handler is
+>>>>> unregistered
+>>>>> - assume device driver or guest not sending more page response
+>>>>> _after_ handler is unregistered.
+>>>>> - system will tolerate rare spurious response
+>>>>>
+>>>>> Sounds right?    
+>>>>
+>>>> Yes, I'll add that to the fault series  
+>>> Hold on a second please, I think we need more clarifications. Ashok
+>>> pointed out to me that the spurious response can be harmful to other
+>>> devices when it comes to mdev, where PRQ group id is not per PASID,
+>>> device may reuse the group number and receiving spurious page
+>>> response can confuse the entire PF.   
+>>
+>> I don't understand how mdev differs from the non-mdev situation (but I
+>> also still don't fully get how mdev+PASID will be implemented). Is the
+>> following the case you're worried about?
+>>
+>>   M#: mdev #
+>>
+>> # Dev         Host        mdev drv       VFIO/QEMU        Guest
+>> ====================================================================
+>> 1                     <- reg(handler)
+>> 2 PR1 G1 P1    ->         M1 PR1 G1        inject ->     M1 PR1 G1
+>> 3                     <- unreg(handler)
+>> 4       <- PS1 G1 P1 (F)      |
+>> 5                        unreg(handler)
+>> 6                     <- reg(handler)
+>> 7 PR2 G1 P1    ->         M2 PR2 G1        inject ->     M2 PR2 G1
+>> 8                                                     <- M1 PS1 G1
+>> 9         accept ??    <- PS1 G1 P1
+>> 10                                                    <- M2 PS2 G1
+>> 11        accept       <- PS2 G1 P1
+>>
+> Not really. I am not worried about PASID reuse or unbind. Just within
+> the same PASID bind lifetime of a single mdev, back to back
+> register/unregister fault handler.
+> After Step 4, device will think G1 is done. Device could reuse G1 for
+> the next PR, if we accept PS1 in step 9, device will terminate G1 before
+> the real G1 PS arrives in Step 11. The real G1 PS might have a
+> different response code. Then we just drop the PS in Step 11?
 
-Tested your patch on top of v5.2-rc4* on Arm TC2 (32bit) and CPU hotplug 
-stress test. W/o your patch, the test fails within seconds since CPUs 
-are not coming up again. W/ your patch, the test runs for hours just fine.
+Yes, I think we do. Two possibilities:
 
-You can add my:
+* G1 is reused at step 7 for the same PASID context, which means that it
+is for the same mdev. The problem is then identical to the non-mdev
+case, new page faults and old page response may cross:
 
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+# Dev         Host        mdev drv       VFIO/QEMU        Guest
+====================================================================
+7 PR2 G1 P1  --.
+8               \                         .------------- M1 PS1 G1
+9                '----->  PR2 G1 P1  ->  /   inject  --> M1 PR2 G1
+10           accept <---  PS1 G1 P1  <--'
+11           reject <---  PS2 G1 P1  <------------------ M1 PS2 G1
 
-* just for the record: one additional unrelated patch (to disable the 
-NOR flash) is necessary on Arm TC2: 
-https://patchwork.kernel.org/patch/10968391 .
+And the incorrect page response is returned to the guest. However it
+affects a single mdev/guest context, it doesn't affect other mdevs.
+
+* Or G1 is reused at step 7 for a different PASID. At step 10 the fault
+handler rejects the page response because the PASID is different, and
+step 11 is accepted.
+
+
+>>> Having spurious page response is also not
+>>> abiding the PCIe spec. exactly.  
+>>
+>> We are following the PCI spec though, in that we don't send page
+>> responses for PRGIs that aren't in flight.
+>>
+> You are right, the worst case of the spurious PS is to terminate the
+> group prematurely. Need to know the scope of the HW damage in case of mdev
+> where group IDs can be shared among mdevs belong to the same PF.
+
+But from the IOMMU fault API point of view, the full page request is
+identified by both PRGI and PASID. Given that each mdev has its own set
+of PASIDs, it should be easy to isolate page responses per mdev.
+
+Thanks,
+Jean
