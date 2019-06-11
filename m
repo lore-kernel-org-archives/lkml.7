@@ -2,126 +2,47 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAB3C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAB1C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0150820896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LOWBtZ0p"
+	by mail.kernel.org (Postfix) with ESMTP id A645420820
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391203AbfFKFYH (ORCPT
+        id S2391230AbfFKF1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 01:24:07 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38921 "EHLO ozlabs.org"
+        Tue, 11 Jun 2019 01:27:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:48116 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391044AbfFKFYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 01:24:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NJMS5CLLz9s6w;
-        Tue, 11 Jun 2019 15:24:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560230644;
-        bh=QJPDp6hkCDquK5eksgMhI6xqZ1XaNY2awH4ssjTacHA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LOWBtZ0pX4QsMm1RFXu46/TTlTcvvmiIcYfrQiGC6wfDMSjcQZQ3bWXfHajFp4i6W
-         nEJ6FAx5NZtlY2j45/SrHKftaDM/HUS3GlUF+8JILHmztQUlQ4VVKbIzUQtVE6tNRK
-         wxKTRij/W9WykefNDuaEdcArnuxwGdCE5F350s6A6xFSLpR/e0RDp/DhzEhsTOaVk5
-         xffzoTy/eYKMTOOppocDQqnFH50oFtEFI2Sb8sVfQ8qTR8wstI/uT5UgZtA2MC66J7
-         +3nBS+luIouKg9+UETB8/R1qugOmLrQvF0a0674w4yZW8P5tLetRrKRqUmOf28OPfA
-         SPJvQyALDBSbw==
-Date:   Tue, 11 Jun 2019 15:24:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Subject: linux-next: manual merge of the clockevents tree with Linus' tree
-Message-ID: <20190611152402.59f9cc0b@canb.auug.org.au>
+        id S2391044AbfFKF1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 01:27:00 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 0B2F968B02; Tue, 11 Jun 2019 07:26:31 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 07:26:30 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, akpm@linux-foundation.org,
+        alexey.skidanov@intel.com, olof@lixom.net, sjhuang@iluvatar.ai,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH] dma-remap: Avoid de-referencing NULL atomic_pool
+Message-ID: <20190611052630.GA19263@lst.de>
+References: <20190607234333.9776-1-f.fainelli@gmail.com> <20190610225437.10912-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/A/PEMEyF/YNGD3rvZWCai7K"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610225437.10912-1-f.fainelli@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/A/PEMEyF/YNGD3rvZWCai7K
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the clockevents tree got a conflict in:
-
-  drivers/clocksource/timer-tegra.c
-
-between commit:
-
-  9c92ab619141 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - =
-rule 282")
-
-from Linus' tree and commit:
-
-  75e9f7c6dca8 ("clocksource/drivers/tegra: Use SPDX identifier")
-
-from the clockevents tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/clocksource/timer-tegra.c
-index 1e7ece279730,9406855781ff..000000000000
---- a/drivers/clocksource/timer-tegra.c
-+++ b/drivers/clocksource/timer-tegra.c
-@@@ -1,11 -1,11 +1,11 @@@
- -// SPDX-License-Identifier: GPL-2.0
- +// SPDX-License-Identifier: GPL-2.0-only
-  /*
-   * Copyright (C) 2010 Google, Inc.
--  *
--  * Author:
--  *	Colin Cross <ccross@google.com>
-+  * Author: Colin Cross <ccross@google.com>
-   */
- =20
-+ #define pr_fmt(fmt)	"tegra-timer: " fmt
-+=20
-  #include <linux/clk.h>
-  #include <linux/clockchips.h>
-  #include <linux/cpu.h>
-
---Sig_/A/PEMEyF/YNGD3rvZWCai7K
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/OvIACgkQAVBC80lX
-0GwOhAf/TAU1T095cbsc5y2wFoB9A5ttQhV/LgY5Y/271/OoB/5yxBahB0CfF4TY
-1OEF7ngf5yjoHjKxwWrAGXuCvJZUfWlg6rzmGOA88aSvG2jWjgvF2dNtkL+SiP/y
-PzB+oGYzSYz9I8UaKJXRMw5HuqsbY1M9eNk8Eyiz3uCGJOPimyJBJRkK8O3hGcDd
-wXmVh6mMRQv5BitMmbNzIVc++dcQRCmUSUvISLRxSgGNCAdUD7hXocyYEpXBvpIg
-A3RfsnAvC9lSikKNznVjVI/DJD5erIlWrKBxgTi9MTycT1gW+CyCo2ezwy7ohtLC
-n3BCk+o98WIBXSQnPOV0FKNCbhv1Ww==
-=VtU5
------END PGP SIGNATURE-----
-
---Sig_/A/PEMEyF/YNGD3rvZWCai7K--
+Looks good to me.  When did this start to show up?  Do we need
+to push it to Linus this cycle and cc stable?
