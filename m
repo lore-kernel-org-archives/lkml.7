@@ -2,171 +2,98 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6740FC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF10C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3839D20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA98206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gjAPQJQh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="aywADk+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406886AbfFKSIL (ORCPT
+        id S2406901AbfFKSIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:08:11 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43488 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406829AbfFKSIJ (ORCPT
+        Tue, 11 Jun 2019 14:08:14 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60280 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406861AbfFKSIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:08:09 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z24so2442345qtj.10;
-        Tue, 11 Jun 2019 11:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sDDXeskfmkhVSOYqH42jOLWDA0Vpzj5152gUAPbopKc=;
-        b=gjAPQJQh5JYwgRA+PLgGch9BqhXKwD4pmlQFBzQr3EHgrz4jxWStM/Y7awrI1CUftG
-         Q4m1ApltFabUdZJ0KRghLP8AFhPzODkHPQveT/xxQZQM+QEzkrLZmaltafHRgYzyaN0Y
-         mTx67w113DmqbDylrQCFSSfjgbvytuU5ZMiihubCLlXR4+yw48u+DmsRbQGhIYPVMwhM
-         La+vPFdwH+21lP1PAJ954YB58DnFtt0UlbvZdxAZTsz4i2CT5xl0M14PkmRabLaVIuVn
-         pTgmipqwS+ibZ6aFKAIpTgfYI60dUE0cgrmgV4hrGfU4rlpA4zixbwMUbp3AXNH1hAnE
-         PWpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sDDXeskfmkhVSOYqH42jOLWDA0Vpzj5152gUAPbopKc=;
-        b=CoM1hbSUlMaXJNn2kLxhtPhrUmOaBxCQ7vGPslf9B8LvI8c4hzFo7atkJd0PpEU08E
-         TXtuv4VwaXBkBH83gB+jxxTl5Mq8DlXqP3t6prySydvIbCv9fTzHKWRVUdZkEwNXQUp5
-         FzfqYp+cHTp3iczBuSZu9SrJErC/7WNnf1TVZLhU1XeaP0AUA3F4SP4SWf3RfT2PMz8a
-         TLW/Y3Qnq3pRGFgx9q+4cHHegjadhVHdJIr/a/OLKNwCmDauFLcz9DLQL2Am5WI8VQBo
-         ayHWXKE+orQaBc9cNdd6YZPD7oWpMOx/km6Z4IOXWVEpVLKFZzBuw3PQeNBINkkrL7PH
-         MXVw==
-X-Gm-Message-State: APjAAAWI4fvO5MGtljK9DOe9nhnSXenpe1lWs3z2x0HoW2Xu9o280jez
-        NRCJB/qyLFVqWgaUgBUz9y7e4WBPcyqQjdWKyg8=
-X-Google-Smtp-Source: APXvYqwOYnk52r/0lGOolOj7HyR0unUh3LoklSIswrk+LqydWlPNKuTeAXG8iyCxlGTqg36QPbC3khPydoiviuERjI4=
-X-Received: by 2002:ac8:1087:: with SMTP id a7mr51876992qtj.141.1560276487946;
- Tue, 11 Jun 2019 11:08:07 -0700 (PDT)
+        Tue, 11 Jun 2019 14:08:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1560276488; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mxguP54LGk1LDDmHZ+LTxj1W+hmJy/VMSDmPzHC2W88=;
+        b=aywADk+hxDpBBFft8+10XyUbQRWOiHGjl23uw3oFuaKJxkXjeuWaXskKTIRbMaaR3JCY8L
+        Ke1xODBKLCtKbtv0UHh85kIcboviI2QZaUPPT5fLgNqcAv0FpGJrRH74wrhfVOaeXzI5+p
+        Pd/wB9sIZsRtldtihvI4RT5b6DPV4FE=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     od@zcrc.me, linux-mips@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 3/5] MIPS: jz4740: PM: Let CGU driver suspend clocks and set sleep mode
+Date:   Tue, 11 Jun 2019 20:07:55 +0200
+Message-Id: <20190611180757.32299-3-paul@crapouillou.net>
+In-Reply-To: <20190611180757.32299-1-paul@crapouillou.net>
+References: <20190611180757.32299-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20190611132811.GA27212@embeddedor> <CAEf4BzaG=cQWAVNNj0hy4Ui7mHzXZgxs8J3rKbxjjVdEGdNkvA@mail.gmail.com>
- <4acbc6b9-e2aa-02d3-0e99-f641b67a3da3@embeddedor.com> <07450b27-5c09-2156-e6ee-921fef174c78@embeddedor.com>
-In-Reply-To: <07450b27-5c09-2156-e6ee-921fef174c78@embeddedor.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 11 Jun 2019 11:07:56 -0700
-Message-ID: <CAEf4BzawBrzyA60fS2PU_Kdg1EgP2ufSc8_BBx3JUZXqrFx0fg@mail.gmail.com>
-Subject: Re: [PATCH] bpf: verifier: avoid fall-through warnings
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:41 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
->
->
-> On 6/11/19 12:27 PM, Gustavo A. R. Silva wrote:
-> >
-> >
-> > On 6/11/19 12:22 PM, Andrii Nakryiko wrote:
-> >> On Tue, Jun 11, 2019 at 7:05 AM Gustavo A. R. Silva
-> >> <gustavo@embeddedor.com> wrote:
-> >>>
-> >>> In preparation to enabling -Wimplicit-fallthrough, this patch silence=
-s
-> >>> the following warning:
-> >>
-> >> Your patch doesn't apply cleanly to neither bpf nor bpf-next tree.
-> >> Could you please rebase and re-submit? Please also include which tree
-> >> (probably bpf-next) you are designating this patch to in subject
-> >> prefix.
-> >>
-> >
-> > This patch applies cleanly to linux-next (tag next-20190611).
-> >
->
-> It seems that this commit hasn't been merged into bpf/bpf-next yet:
->
-> 983695fa676568fc0fe5ddd995c7267aabc24632
->
-> --
-> Gustavo
->
-> >>>
-> >>> kernel/bpf/verifier.c: In function =E2=80=98check_return_code=E2=80=
-=99:
-> >>> kernel/bpf/verifier.c:5509:6: warning: this statement may fall throug=
-h [-Wimplicit-fallthrough=3D]
-> >>>    if (env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP4_RECVMSG=
- ||
-> >>>       ^
-> >>> kernel/bpf/verifier.c:5512:2: note: here
-> >>>   case BPF_PROG_TYPE_CGROUP_SKB:
-> >>>   ^~~~
-> >>>
-> >>> Warning level 3 was used: -Wimplicit-fallthrough=3D3
-> >>>
-> >>> Notice that it's much clearer to explicitly add breaks in each case
-> >>> (that actually contains some code), rather than letting the code to
-> >>> fall through.
-> >>>
-> >>> This patch is part of the ongoing efforts to enable
-> >>> -Wimplicit-fallthrough.
-> >>>
-> >>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> >>> ---
-> >>>  kernel/bpf/verifier.c | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> >>> index 1e9d10b32984..e9fc28991548 100644
-> >>> --- a/kernel/bpf/verifier.c
-> >>> +++ b/kernel/bpf/verifier.c
-> >>> @@ -5509,11 +5509,13 @@ static int check_return_code(struct bpf_verif=
-ier_env *env)
-> >>>                 if (env->prog->expected_attach_type =3D=3D BPF_CGROUP=
-_UDP4_RECVMSG ||
-> >>>                     env->prog->expected_attach_type =3D=3D BPF_CGROUP=
-_UDP6_RECVMSG)
-> >>>                         range =3D tnum_range(1, 1);
-> >>> +               break;
+Instead of forcing the jz4740 clocks to suspend here, we let the CGU
+driver handle it.
+We also let the CGU driver set the "sleep mode" bit.
 
-So this part is in bpf tree only...
+This has the added benefit that now it is possible to build a kernel on
+SoCs newer than the JZ4740 with CONFIG_PM.
 
-> >>>         case BPF_PROG_TYPE_CGROUP_SKB:
-> >>>                 if (env->prog->expected_attach_type =3D=3D BPF_CGROUP=
-_INET_EGRESS) {
-> >>>                         range =3D tnum_range(0, 3);
-> >>>                         enforce_attach_type_range =3D tnum_range(2, 3=
-);
-> >>>                 }
-> >>> +               break;
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-... while this one is in bpf-next only.
+Notes:
+    v2: Rebase on v5.2-rc4
 
-Maybe just split this into two separate patches, one targeting bpf
-tree and another for bpf-next tree? Unless you are willing to wait
-till bpf is merged into bpf-next.
+ arch/mips/jz4740/pm.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-> >>>         case BPF_PROG_TYPE_CGROUP_SOCK:
-> >>>         case BPF_PROG_TYPE_SOCK_OPS:
-> >>>         case BPF_PROG_TYPE_CGROUP_DEVICE:
-> >>> --
-> >>> 2.21.0
-> >>>
+diff --git a/arch/mips/jz4740/pm.c b/arch/mips/jz4740/pm.c
+index bbdd2b801e6e..f9b551f01f42 100644
+--- a/arch/mips/jz4740/pm.c
++++ b/arch/mips/jz4740/pm.c
+@@ -9,21 +9,13 @@
+ #include <linux/delay.h>
+ #include <linux/suspend.h>
+ 
+-#include <asm/mach-jz4740/clock.h>
+-
+ static int jz4740_pm_enter(suspend_state_t state)
+ {
+-	jz4740_clock_suspend();
+-
+-	jz4740_clock_set_wait_mode(JZ4740_WAIT_MODE_SLEEP);
+-
+ 	__asm__(".set\tmips3\n\t"
+ 		"wait\n\t"
+ 		".set\tmips0");
+ 
+-	jz4740_clock_set_wait_mode(JZ4740_WAIT_MODE_IDLE);
+ 
+-	jz4740_clock_resume();
+ 
+ 	return 0;
+ }
+-- 
+2.21.0.593.g511ec345e18
+
