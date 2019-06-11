@@ -2,106 +2,140 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B3BC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0378C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9975120883
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agp8Ljxg"
+	by mail.kernel.org (Postfix) with ESMTP id A1ABB20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406706AbfFLB1N (ORCPT
+        id S2406807AbfFLB1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:27:13 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41418 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406215AbfFLB1M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:27:12 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so8052610pff.8;
-        Tue, 11 Jun 2019 18:27:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CtAUnKccNVM3Ar1NimuBm5cYjQQHpUUV35G3NGl7I18=;
-        b=agp8LjxgsiKUNBRzMQ6B1lsikXTP9MXAxScOYcZnsKclD0N+jlNVoUl/hzW4poyT5e
-         3L5Kpn7BSqpfe4Vqr0OMLbW+npbpmydrSh4Nk6mj5SGyx5Jj6jf653H8VmcdoFa5nFlP
-         PVXiNmiBrwZEiKboElbWiL4LdjFKAAbWcoG28ZIwtcy8dPhR9hlh49PJ6xikrmMZLHzP
-         20qVkn6ttaCMzY1I08lsTIN5eoleBIFYn7aRuLf/OzGJBwoDwiiv7JFIo5WL8ooodEKt
-         b/SI9mnoX3vTwRgRrKm2an9+aTc8TPah2tNonQDJrq5z+DrzQV1yJmuEkhrXeIPbcuOQ
-         mhuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CtAUnKccNVM3Ar1NimuBm5cYjQQHpUUV35G3NGl7I18=;
-        b=FzhAsGYxmBnN668L0avinUo4XrpGKzI143/f++HbbliQdoUWYL7rIB07JskNWd+DU7
-         9+jmbLvpyufPPU8eq2izcCQRPo6orwcxUzTS5OUq7UHKXLLbMSF/8DIg84j79oFaTWzH
-         E/Wf2FNiDzxa7xnKm9OoWDmikQTdDGdNnhVVBS6MJm6hrgiPmAba2fijUfhXxYpekJD5
-         un5jWa/UL28tWsTkCFge14d0BYjkEI442PL0hQcNImY80LK60XtCruQlHxXE12hXaNrD
-         TVcToHfg5GzGvJ2hFzaL1CPH0OrbIsZZwU7xYr0epJ4Xmv6eUpK9T9Zd/dtqzCSv62oS
-         Ovpw==
-X-Gm-Message-State: APjAAAW63NOZnX17illK661RcsXbWTv8zbb9LMRh6E+aeNPIC6DjZn8x
-        UlVnDtutcFL11xnw3IiiJkk=
-X-Google-Smtp-Source: APXvYqyJ4j/UPWrjvOrQasPCqbyNI8I79UTnDUErLKqAMrK1NLwjt0JJmzYLlyxhcupMkfrOP1908w==
-X-Received: by 2002:a17:90a:cb87:: with SMTP id a7mr10403544pju.130.1560302831475;
-        Tue, 11 Jun 2019 18:27:11 -0700 (PDT)
-Received: from [10.2.189.129] ([66.170.99.2])
-        by smtp.gmail.com with ESMTPSA id c10sm3547108pjq.14.2019.06.11.18.27.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 18:27:10 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 16/16] mm: pass get_user_pages_fast iterator arguments in
- a structure
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <1560300464.nijubslu3h.astroid@bobo.none>
-Date:   Tue, 11 Jun 2019 18:27:09 -0700
-Cc:     Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <0441EC80-B09F-4722-B186-E42EB6A83386@gmail.com>
-References: <20190611144102.8848-1-hch@lst.de>
- <20190611144102.8848-17-hch@lst.de> <1560300464.nijubslu3h.astroid@bobo.none>
-To:     Nicholas Piggin <npiggin@gmail.com>, Christoph Hellwig <hch@lst.de>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 11 Jun 2019 21:27:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18130 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406215AbfFLB1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 21:27:40 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7885718CA3B9CC4C27AE;
+        Wed, 12 Jun 2019 09:27:38 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
+ 09:27:28 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jeyu@kernel.org>, <gregkh@linuxfoundation.org>, <mbenes@suse.cz>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v4] kernel/module: Fix mem leak in module_add_modinfo_attrs
+Date:   Tue, 11 Jun 2019 23:00:07 +0800
+Message-ID: <20190611150007.21064-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190603144554.18168-1-yuehaibing@huawei.com>
+References: <20190603144554.18168-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 11, 2019, at 5:52 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
-> 
-> Christoph Hellwig's on June 12, 2019 12:41 am:
->> Instead of passing a set of always repeated arguments down the
->> get_user_pages_fast iterators, create a struct gup_args to hold them and
->> pass that by reference.  This leads to an over 100 byte .text size
->> reduction for x86-64.
-> 
-> What does this do for performance? I've found this pattern can be
-> bad for store aliasing detection.
+In module_add_modinfo_attrs if sysfs_create_file
+fails, we forget to free allocated modinfo_attrs
+and roll back the sysfs files.
 
-Note that sometimes such an optimization can also have adverse effect due to
-stack protector code that gcc emits when you use such structs.
+Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v4: call module_remove_modinfo_attrs only while i > 0
+v3: reuse module_remove_modinfo_attrs
+v2: free from '--i' instead of 'i--'
+---
+ kernel/module.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-Matthew Wilcox encountered such a case:
-https://patchwork.kernel.org/patch/10702741/
+diff --git a/kernel/module.c b/kernel/module.c
+index f954d72..3310a39 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1696,6 +1696,8 @@ static int add_usage_links(struct module *mod)
+ 	return ret;
+ }
+ 
++static void module_remove_modinfo_attrs(struct module *mod, int end);
++
+ static int module_add_modinfo_attrs(struct module *mod)
+ {
+ 	struct module_attribute *attr;
+@@ -1710,24 +1712,34 @@ static int module_add_modinfo_attrs(struct module *mod)
+ 		return -ENOMEM;
+ 
+ 	temp_attr = mod->modinfo_attrs;
+-	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
++	for (i = 0; (attr = modinfo_attrs[i]); i++) {
+ 		if (!attr->test || attr->test(mod)) {
+ 			memcpy(temp_attr, attr, sizeof(*temp_attr));
+ 			sysfs_attr_init(&temp_attr->attr);
+ 			error = sysfs_create_file(&mod->mkobj.kobj,
+ 					&temp_attr->attr);
++			if (error)
++				goto error_out;
+ 			++temp_attr;
+ 		}
+ 	}
++
++	return 0;
++
++error_out:
++	if (i > 0)
++		module_remove_modinfo_attrs(mod, --i);
+ 	return error;
+ }
+ 
+-static void module_remove_modinfo_attrs(struct module *mod)
++static void module_remove_modinfo_attrs(struct module *mod, int end)
+ {
+ 	struct module_attribute *attr;
+ 	int i;
+ 
+ 	for (i = 0; (attr = &mod->modinfo_attrs[i]); i++) {
++		if (end >= 0 && i > end)
++			break;
+ 		/* pick a field to test for end of list */
+ 		if (!attr->attr.name)
+ 			break;
+@@ -1815,7 +1827,7 @@ static int mod_sysfs_setup(struct module *mod,
+ 	return 0;
+ 
+ out_unreg_modinfo_attrs:
+-	module_remove_modinfo_attrs(mod);
++	module_remove_modinfo_attrs(mod, -1);
+ out_unreg_param:
+ 	module_param_sysfs_remove(mod);
+ out_unreg_holders:
+@@ -1851,7 +1863,7 @@ static void mod_sysfs_fini(struct module *mod)
+ {
+ }
+ 
+-static void module_remove_modinfo_attrs(struct module *mod)
++static void module_remove_modinfo_attrs(struct module *mod, int end)
+ {
+ }
+ 
+@@ -1867,7 +1879,7 @@ static void init_param_lock(struct module *mod)
+ static void mod_sysfs_teardown(struct module *mod)
+ {
+ 	del_usage_links(mod);
+-	module_remove_modinfo_attrs(mod);
++	module_remove_modinfo_attrs(mod, -1);
+ 	module_param_sysfs_remove(mod);
+ 	kobject_put(mod->mkobj.drivers_dir);
+ 	kobject_put(mod->holders_dir);
+-- 
+2.7.4
+
+
