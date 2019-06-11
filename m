@@ -2,121 +2,98 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03223C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85711C31E46
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26262086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534D62086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uikxw7Ut"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lJFKSnjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436553AbfFKV2N (ORCPT
+        id S2391787AbfFKV3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:28:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36867 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407653AbfFKV2L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:28:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r10so13386785otd.4;
-        Tue, 11 Jun 2019 14:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yfYsg0/cES0OHcG6fX5W9snm90ggOgAM9kXY3QBEhu4=;
-        b=uikxw7UtyOptEVyjeY2qK4xy247KZZSlixb4FYF44cy5IOYuGfhYNz0auK7eAN3lSf
-         RDykMi53c/UWnKOss3Gbf99f02SgcsLInyU9jZT7mZ9OHg9hKC6fNrTncVfEUwMvFzyT
-         LcQoyh1B+GWH1wcVdCBdLQqRjW9xbNzL/XHVXJwKNd+h41OfOLBnxXrK/w2EGMY7Sdql
-         Ev+iISe8afAaHYadIsKtGIEgMDX6CnpwHgbsBe+aUSzQIjTpiqosNwjLo3ub7MMP5bSh
-         sv6W0b+fg0PHcDLs3IdJMwn13c7joqsHqAOaS3kYpN0/uUkfhOoBhUB3X+c5vOw3dtMp
-         LbTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yfYsg0/cES0OHcG6fX5W9snm90ggOgAM9kXY3QBEhu4=;
-        b=VWmUwoR9ygSpzmu4vbM58zXol8+svInEvDKpx3nMhm+HUUPkpjQFP1iBHSaJGr19vS
-         95FjdqeDmEyVPNLlHxujyrkm+XB4c3pgqKNuXE+cLYd/6DCBbHTUOBSY1Laaci39LtAm
-         ku1YQurhfqt7Rsv8jIxnJmTy8eNUu16xvKh+JlNnQ+qNcCuvvECDFZqTp7Wf5ar24t1A
-         BRP7ry1XKTd2FrHGlum+xDxKYmUGvI7VeTQgDFmlyPKlnt8yATbnMkJ4keOnzeO78NJ+
-         GoEKrkqND1eAAqYaVDicBO/APMs+b88oGYLOtNTBHO11uwPHSqsANgEcL7+k6MWX8RTw
-         fF7w==
-X-Gm-Message-State: APjAAAVBb8lSaSZmNEGcGH0pWaR+0rEHRIElG+mC9Z4PHENl0VkTWb6j
-        Ga0+tOEQHcrmhOUsjZQTRQ0HuPqxUKfRt+DCN84=
-X-Google-Smtp-Source: APXvYqwZE6DuGW97Wtdkbau380s5wncliqmuWNA2I8e3nRFVHn0Gyt7oiNVh7GBK4ctz/0QIVrifVcW0qHRMDnaPYKk=
-X-Received: by 2002:a9d:7b43:: with SMTP id f3mr18847440oto.337.1560288490020;
- Tue, 11 Jun 2019 14:28:10 -0700 (PDT)
+        Tue, 11 Jun 2019 17:29:51 -0400
+Received: from ozlabs.org ([203.11.71.1]:46325 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387804AbfFKV3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 17:29:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Njnl73ddz9s6w;
+        Wed, 12 Jun 2019 07:29:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560288588;
+        bh=tj1WwZ7rdEKsUT9uwOStMxcrABMexqXGFXrGRdTjnxI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lJFKSnjUtgoYc42G7sa5G5kdsP8yWtJFs+v3E0E4ax66x+0FIFBJfvvJ2Qb8rNU59
+         mNz5GORFxVWzh7x3aSbxAQbLKSfVZoG52HMGTZcBZUNGFhJ/2rv8moGhxfWvAqJjNz
+         HIU4XRebwracr/VI48m40yy4EfDFUDfVYoQ6bQoS9F5x+GlPbVguLYz+9nKOz4bsy8
+         iXnawTsxqQ0GlSZvQxIpXDUmv6/YPpkLuhaNxRKeWkwvdxGnxo7/PF0KWEfc6X96uL
+         D6bcb+m20fHXwx9kPI+RvyEXeC5ivWEXUXaAkrLRCOCCwE1vxnkNR8zpRGpGP0KZTc
+         u/KbEB1zyKOMQ==
+Date:   Wed, 12 Jun 2019 07:29:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+Subject: linux-next: Fixes tag needs some work in the scmi tree
+Message-ID: <20190612072946.15403676@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
- <20190611134831.a60c11f4b691d14d04a87e29@linux-foundation.org>
- <6DCAE4F8-3BEC-45F2-A733-F4D15850B7F3@dilger.ca> <20190611140907.899bebb12a3d731da24a9ad1@linux-foundation.org>
-In-Reply-To: <20190611140907.899bebb12a3d731da24a9ad1@linux-foundation.org>
-From:   Shyam Saini <mayhs11saini@gmail.com>
-Date:   Wed, 12 Jun 2019 02:57:58 +0530
-Message-ID: <CAOfkYf5_HTN1HO0gQY9iGchK5Anf6oVx7knzMhL1hWpv4gV20Q@mail.gmail.com>
-Subject: Re: [PATCH V2] include: linux: Regularise the use of FIELD_SIZEOF macro
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andreas Dilger <adilger@dilger.ca>,
-        Shyam Saini <shyam.saini@amarulasolutions.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        devel@lists.orangefs.org, linux-mm <linux-mm@kvack.org>,
-        linux-sctp@vger.kernel.org, bpf <bpf@vger.kernel.org>,
-        kvm@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/lhGhTEZ0nnpLPVQgCDBtZid"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+--Sig_/lhGhTEZ0nnpLPVQgCDBtZid
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
->
-> On Tue, 11 Jun 2019 15:00:10 -0600 Andreas Dilger <adilger@dilger.ca> wrote:
->
-> > >> to FIELD_SIZEOF
-> > >
-> > > As Alexey has pointed out, C structs and unions don't have fields -
-> > > they have members.  So this is an opportunity to switch everything to
-> > > a new member_sizeof().
-> > >
-> > > What do people think of that and how does this impact the patch footprint?
-> >
-> > I did a check, and FIELD_SIZEOF() is used about 350x, while sizeof_field()
-> > is about 30x, and SIZEOF_FIELD() is only about 5x.
->
-> Erk.  Sorry, I should have grepped.
->
-> > That said, I'm much more in favour of "sizeof_field()" or "sizeof_member()"
-> > than FIELD_SIZEOF().  Not only does that better match "offsetof()", with
-> > which it is closely related, but is also closer to the original "sizeof()".
-> >
-> > Since this is a rather trivial change, it can be split into a number of
-> > patches to get approval/landing via subsystem maintainers, and there is no
-> > huge urgency to remove the original macros until the users are gone.  It
-> > would make sense to remove SIZEOF_FIELD() and sizeof_field() quickly so
-> > they don't gain more users, and the remaining FIELD_SIZEOF() users can be
-> > whittled away as the patches come through the maintainer trees.
->
-> In that case I'd say let's live with FIELD_SIZEOF() and remove
-> sizeof_field() and SIZEOF_FIELD().
->
-> I'm a bit surprised that the FIELD_SIZEOF() definition ends up in
-> stddef.h rather than in kernel.h where such things are normally
-> defined.  Why is that?
+Hi Sudeep,
 
-Thanks for pointing out this, I was not aware if this is a convention.
-Anyway, I'll keep FIELD_SIZEOF definition in kernel.h in next version.
+In commit
+
+  e322dcbd75e8 ("dt-bindings: arm: fix the document ID for SCMI protocol do=
+cumentation")
+
+Fixes tag
+
+  Fixes: fe7be8b297b2 ("dt-bindings: arm: add support for ARM System Control
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line (it is ok for
+that to be a long line).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/lhGhTEZ0nnpLPVQgCDBtZid
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0AHUoACgkQAVBC80lX
+0Gzb+Qf/SAWsIn3RJhxT2hzg5GR3bIcBGOEgprhz6TGt0vO5sSzcQ2LAI5xCjJBQ
+FZKq2418HGwHW/YkKbi53hEAcaGQXpq0DapaTWZl2LdegVFLy3aZTrZo7olzET4l
+MtbAHEIIAMqWAQ3oM9U648neshZytLzL04Qek6O6hYUq0zNlpbeHIkasharddsPA
+JNmCvCCmQ4NFCQzMKZmLB62EIBmFChn5AV5+DF/964bA8Y08HPBe512txh1z2cUm
+RwrI6Lt+5GadEAc1BkHrjxekRC0m5UlioET40t5hfVTV2qWg0+vKAOkOZDPFjA++
+04K/0xtPbKiNW6dJizUsmtX2uG/Qhg==
+=Wb3x
+-----END PGP SIGNATURE-----
+
+--Sig_/lhGhTEZ0nnpLPVQgCDBtZid--
