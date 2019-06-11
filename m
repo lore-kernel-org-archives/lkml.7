@@ -2,129 +2,147 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC311C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B68C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87022086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EE620896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405854AbfFKRHp (ORCPT
+        id S2405866AbfFKRHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:07:45 -0400
-Received: from mga17.intel.com ([192.55.52.151]:18244 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405345AbfFKRHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:07:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 10:07:44 -0700
-X-ExtLoop1: 1
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2019 10:07:44 -0700
-Date:   Tue, 11 Jun 2019 10:10:52 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, robh+dt@kernel.org,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
-Message-ID: <20190611101052.35af46df@jacob-builder>
-In-Reply-To: <95292b47-4cf4-5fd9-b096-1cb016e2264f@arm.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
-        <20190610184714.6786-2-jean-philippe.brucker@arm.com>
-        <20190611052626.20bed59a@jacob-builder>
-        <95292b47-4cf4-5fd9-b096-1cb016e2264f@arm.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 11 Jun 2019 13:07:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37496 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405345AbfFKRHs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:07:48 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BH2gqf131275
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 13:07:46 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t2enadnst-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 13:07:46 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.vnet.ibm.com>;
+        Tue, 11 Jun 2019 18:07:45 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 18:07:42 +0100
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BH7fKg12583310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 17:07:41 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E9902805A;
+        Tue, 11 Jun 2019 17:07:41 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6639C28059;
+        Tue, 11 Jun 2019 17:07:40 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.199.191])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jun 2019 17:07:40 +0000 (GMT)
+Subject: Re: [PATCH v3 3/3] powerpc: Add support to initialize ima policy
+ rules
+To:     Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>
+References: <1560198837-18857-1-git-send-email-nayna@linux.ibm.com>
+ <1560198837-18857-4-git-send-email-nayna@linux.ibm.com>
+ <20190611051943.GA7516@sathnaga86.in.ibm.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Date:   Tue, 11 Jun 2019 13:07:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190611051943.GA7516@sathnaga86.in.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19061117-0052-0000-0000-000003CE8E55
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011247; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01216515; UDB=6.00639636; IPR=6.00997614;
+ MB=3.00027265; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-11 17:07:44
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061117-0053-0000-0000-00006148D898
+Message-Id: <d596d03f-7aaf-d0af-ee45-92a990292ad0@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=872 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 15:37:42 +0100
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-> On 11/06/2019 13:26, Jacob Pan wrote:
-> >> +/**
-> >> + * ioasid_set_data - Set private data for an allocated ioasid
-> >> + * @ioasid: the ID to set data
-> >> + * @data:   the private data
-> >> + *
-> >> + * For IOASID that is already allocated, private data can be set
-> >> + * via this API. Future lookup can be done via ioasid_find.
-> >> + */
-> >> +int ioasid_set_data(ioasid_t ioasid, void *data)
-> >> +{
-> >> +	struct ioasid_data *ioasid_data;
-> >> +	int ret = 0;
-> >> +
-> >> +	xa_lock(&ioasid_xa);  
-> > Just wondering if this is necessary, since xa_load is under
-> > rcu_read_lock and we are not changing anything internal to xa. For
-> > custom allocator I still need to have the mutex against allocator
-> > removal.  
-> 
-> I think we do need this because of a possible race with ioasid_free():
-> 
->          CPU1                      CPU2
->   ioasid_free(ioasid)     ioasid_set_data(ioasid, foo)
->                             data = xa_load(...)
->     xa_erase(...)
->     kfree_rcu(data)           (no RCU lock held)
->     ...free(data)
->                             data->private = foo;
-> 
-make sense, thanks for explaining.
 
-> The issue is theoretical at the moment because no users do this, but
-> I'd be more comfortable taking the xa_lock, which prevents a
-> concurrent xa_erase()+free(). (I commented on your v3 but you might
-> have missed it)
-> 
-Did you reply to my v3? I did not see it. I only saw your comments about
-v3 in your commit message.
+On 06/11/2019 01:19 AM, Satheesh Rajendran wrote:
+> On Mon, Jun 10, 2019 at 04:33:57PM -0400, Nayna Jain wrote:
+>> PowerNV secure boot relies on the kernel IMA security subsystem to
+>> perform the OS kernel image signature verification. Since each secure
+>> boot mode has different IMA policy requirements, dynamic definition of
+>> the policy rules based on the runtime secure boot mode of the system is
+>> required. On systems that support secure boot, but have it disabled,
+>> only measurement policy rules of the kernel image and modules are
+>> defined.
+>>
+>> This patch defines the arch-specific implementation to retrieve the
+>> secure boot mode of the system and accordingly configures the IMA policy
+>> rules.
+>>
+>> This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
+>> config is enabled.
+>>
+>> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+>> ---
+>>   arch/powerpc/Kconfig           | 14 +++++++++
+>>   arch/powerpc/kernel/Makefile   |  1 +
+>>   arch/powerpc/kernel/ima_arch.c | 54 ++++++++++++++++++++++++++++++++++
+>>   include/linux/ima.h            |  3 +-
+>>   4 files changed, 71 insertions(+), 1 deletion(-)
+>>   create mode 100644 arch/powerpc/kernel/ima_arch.c
+> Hi,
+>
+> This series failed to build against linuxppc/merge tree with `ppc64le_defconfig`,
+>
+> arch/powerpc/platforms/powernv/secboot.c:14:6: error: redefinition of 'get_powerpc_sb_mode'
+>     14 | bool get_powerpc_sb_mode(void)
+>        |      ^~~~~~~~~~~~~~~~~~~
+> In file included from arch/powerpc/platforms/powernv/secboot.c:11:
+> ./arch/powerpc/include/asm/secboot.h:15:20: note: previous definition of 'get_powerpc_sb_mode' was here
+>     15 | static inline bool get_powerpc_sb_mode(void)
+>        |                    ^~~~~~~~~~~~~~~~~~~
+> make[3]: *** [scripts/Makefile.build:278: arch/powerpc/platforms/powernv/secboot.o] Error 1
+> make[3]: *** Waiting for unfinished jobs....
+> make[2]: *** [scripts/Makefile.build:489: arch/powerpc/platforms/powernv] Error 2
+> make[1]: *** [scripts/Makefile.build:489: arch/powerpc/platforms] Error 2
+> make: *** [Makefile:1071: arch/powerpc] Error 2
+> make: *** Waiting for unfinished jobs....
 
-> >> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
-> >> +	if (ioasid_data)
-> >> +		rcu_assign_pointer(ioasid_data->private, data);  
-> > it is good to publish and have barrier here. But I just wonder even
-> > for weakly ordered machine, this pointer update is quite far away
-> > from its data update.  
-> 
-> I don't know, it could be right before calling ioasid_set_data():
-> 
-> 	mydata = kzalloc(sizeof(*mydata));
-> 	mydata->ops = &my_ops;			(1)
-> 	ioasid_set_data(ioasid, mydata);
-> 		... /* no write barrier here */
-> 		data->private = mydata;		(2)
-> 
-> And then another thread calls ioasid_find():
-> 
-> 	mydata = ioasid_find(ioasid);
-> 	if (mydata)
-> 		mydata->ops->do_something();
-> 
-> On a weakly ordered machine, this thread could observe the pointer
-> assignment (2) before the ops assignment (1), and dereference NULL.
-> Using rcu_assign_pointer() should fix that
-> 
-I agree it is better to have the barrier. Just thought there is already
-a rcu_read_lock() in xa_load() in between. rcu_read_lock() may have
-barrier in some case but better not count on it. No issues here. I will
-integrate this in the next version.
 
-> Thanks,
-> Jean
+Thanks for reporting. I have fixed it and reposted as v4.
 
-[Jacob Pan]
+Please retry.
+
+Thanks & Regards,
+      - Nayna
+
+
