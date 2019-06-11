@@ -2,70 +2,70 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE4CC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C7BC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C542086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B291E2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="dH/+BLje"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="yJAoZbbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391488AbfFKJ5V (ORCPT
+        id S2404899AbfFKJ51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:57:21 -0400
-Received: from mail-eopbgr740083.outbound.protection.outlook.com ([40.107.74.83]:65152
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        Tue, 11 Jun 2019 05:57:27 -0400
+Received: from mail-eopbgr750057.outbound.protection.outlook.com ([40.107.75.57]:50769
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727641AbfFKJ5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:57:18 -0400
+        id S1728975AbfFKJ5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 05:57:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G3brkG15xLingG3mRXEA8jdLqGp0HAD2p+rpmjo1QiU=;
- b=dH/+BLjeAlwIke8S5tJUABjhJg6QqHfQ8LCd+MOIYomC0EJwtI5hZsfq29yU3tnJHCItYzmG9ThycqAhXy6+VNHbUNnts5DC4ffYEjASNNqgtbyQsyquh1qNvdFLrrIL6b5/Eso7nVA0Y0hp5o2DIn/wwBQMEiDxdrnEQPi97jA=
-Received: from MWHPR0201CA0039.namprd02.prod.outlook.com
- (2603:10b6:301:73::16) by DM5PR02MB2682.namprd02.prod.outlook.com
- (2603:10b6:3:108::15) with Microsoft SMTP Server (version=TLS1_2,
+ bh=HN7suMNXQ5BPxJt5bOqZDCQpoA4tMdZyDFGnBer3wZY=;
+ b=yJAoZbbkNweMClqdlbXYPXUp5mJlN+8A+4EmJ84yB/GLhJ2SXQdrzmADXbwZFSLk+JHfQIxcO6vM4HZoCbexAGe0f7lzO01d0VTKxht95erLuvj4Cg7gMbTMILwVw/v3FxDJwHxgLNrycW9AdHXPCnLp8Lwz5yjwJjyRBxOvxmc=
+Received: from MWHPR0201CA0072.namprd02.prod.outlook.com
+ (2603:10b6:301:73::49) by BL0PR02MB4931.namprd02.prod.outlook.com
+ (2603:10b6:208:53::28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.17; Tue, 11 Jun
  2019 09:57:16 +0000
 Received: from CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::209) by MWHPR0201CA0039.outlook.office365.com
- (2603:10b6:301:73::16) with Microsoft SMTP Server (version=TLS1_2,
+ (2a01:111:f400:7e45::206) by MWHPR0201CA0072.outlook.office365.com
+ (2603:10b6:301:73::49) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.15 via Frontend
  Transport; Tue, 11 Jun 2019 09:57:15 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
  header.from=xilinx.com;
 Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
  CY1NAM02FT039.mail.protection.outlook.com (10.152.75.140) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1965.12
  via Frontend Transport; Tue, 11 Jun 2019 09:57:14 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:46268 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <manish.narani@xilinx.com>)
-        id 1hadWk-0006ss-5m; Tue, 11 Jun 2019 02:57:14 -0700
+        id 1hadWk-0005Gr-AR; Tue, 11 Jun 2019 02:57:14 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <manish.narani@xilinx.com>)
-        id 1hadWf-0002WX-1y; Tue, 11 Jun 2019 02:57:09 -0700
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x5B9v0ao016627;
-        Tue, 11 Jun 2019 02:57:01 -0700
+        id 1hadWf-0002WX-6c; Tue, 11 Jun 2019 02:57:09 -0700
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x5B9v2Ko016724;
+        Tue, 11 Jun 2019 02:57:02 -0700
 Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <mnarani@xilinx.com>)
-        id 1hadWW-0002Qq-AT; Tue, 11 Jun 2019 02:57:00 -0700
+        id 1hadWY-0002TF-1c; Tue, 11 Jun 2019 02:57:02 -0700
 Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 8005E12174A; Tue, 11 Jun 2019 15:26:59 +0530 (IST)
+        id 3FE5212174A; Tue, 11 Jun 2019 15:27:01 +0530 (IST)
 From:   Manish Narani <manish.narani@xilinx.com>
 To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         michal.simek@xilinx.com, adrian.hunter@intel.com,
@@ -73,9 +73,9 @@ To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         nava.manne@xilinx.com, manish.narani@xilinx.com, olof@lixom.net
 Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/3] firmware: xilinx: Add SDIO Tap Delay API
-Date:   Tue, 11 Jun 2019 15:26:49 +0530
-Message-Id: <1560247011-26369-2-git-send-email-manish.narani@xilinx.com>
+Subject: [PATCH 3/3] mmc: sdhci-of-arasan: Add support for ZynqMP Platform Tap Delays Setup
+Date:   Tue, 11 Jun 2019 15:26:51 +0530
+Message-Id: <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
 X-Mailer: git-send-email 2.1.1
 In-Reply-To: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com>
 References: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com>
@@ -84,139 +84,290 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(39860400002)(376002)(346002)(2980300002)(199004)(189003)(48376002)(8676002)(126002)(8936002)(63266004)(50466002)(476003)(6266002)(44832011)(2616005)(5660300002)(305945005)(51416003)(336012)(426003)(446003)(81156014)(76176011)(52956003)(81166006)(11346002)(2906002)(356004)(26005)(106002)(6666004)(70586007)(72206003)(16586007)(42186006)(316002)(36756003)(70206006)(103686004)(36386004)(47776003)(50226002)(478600001)(486006)(14444005)(186003)(4326008)(921003)(1121003)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB2682;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(346002)(39860400002)(136003)(376002)(2980300002)(189003)(199004)(26005)(16586007)(476003)(36756003)(76176011)(51416003)(305945005)(5660300002)(316002)(186003)(103686004)(81166006)(8676002)(2616005)(81156014)(356004)(6666004)(11346002)(4326008)(36386004)(336012)(47776003)(42186006)(446003)(72206003)(426003)(14444005)(478600001)(70586007)(486006)(106002)(70206006)(8936002)(2906002)(48376002)(50226002)(63266004)(126002)(6266002)(44832011)(52956003)(50466002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB4931;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3ca211fe-68bc-4e72-4936-08d6ee532ead
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM5PR02MB2682;
-X-MS-TrafficTypeDiagnostic: DM5PR02MB2682:
+X-MS-Office365-Filtering-Correlation-Id: fcc0657c-4252-426a-5482-08d6ee532ec6
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BL0PR02MB4931;
+X-MS-TrafficTypeDiagnostic: BL0PR02MB4931:
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <DM5PR02MB2682E6EB5D6330848DAD3590C1ED0@DM5PR02MB2682.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Microsoft-Antispam-PRVS: <BL0PR02MB49310251D62A338D88EC3696C1ED0@BL0PR02MB4931.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
 X-Forefront-PRVS: 006546F32A
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: ykGTWxa4ZR5sg1KWPkM4nDVK3yKxZPN820+DTj5qAx5lYIJd3xnHrg7fXpFXphT9lYxclWwJdztB21woymt0pj57m2GzKBnbDq8ix46QGZYp0A8noSzS3obqDKUjr8E1jLvDDCZXQE/ASn4S8T0DzOhindfXQjrizQsnaNCMCGgElYLcVkufaGCa1UyIFLQqNluHn83wlSRIHPGqYocT7p5IvyaSy1mxit1fLFKkkXGWy3YBHG3x2V6iaEUa7V+1f9i0VQiUMUYDenp/EaV7T5IxPk8kDfCcbkgu3Vd4myRc0Cx17LKOgsBHS6dcP5kfd1zjnayt33gUMFGVf7ygBeoVvdFT9/pbHN/tTa5uPaFAWHHhvy46vGVnE8pENymhbazeIvMsJngZ4bGA6Yeyj3sLcnB3MYZzAuRUIA8GnXg=
+X-Microsoft-Antispam-Message-Info: TciCagJheeLfL8idlhtlJa9aoWcPSqJIhREVYRjGvdEq661GANxATGLIyzvPtt+Z5LsNpjgdHKr6cgZ58kLdxHQxOvNc6vhEW6OODK3WwX51P53YOxwpS/IX/UhTXhGeNfnd65suZFJ+3ppysNSZ6trOVEU9s0BG+0+rq/mjzUu9KMofXWhp+bPvigXry2Kyt1u8ufC5UnQz9YSDekPrGf86dFpaMGPBYG8JJX41JHnRgtK9PT0QbhLueHZdRp0CkxG9wTJb8U4qimLd2zBw+epc3dAAXO25mnp2rThRpuUwbrVst1WF937XQ+ICUW49f+1s/Zk/ocTD8oX+Pc6gJSFTCp5m45+ISHrOYXmbU0JlyA198VyLCLPtztJk+53kpQzz8gcWpMuhMdDhvCSvB6R8fee6EvwADUY+zhBbK9w=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2019 09:57:14.6543
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2019 09:57:14.7774
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ca211fe-68bc-4e72-4936-08d6ee532ead
+X-MS-Exchange-CrossTenant-Network-Message-Id: fcc0657c-4252-426a-5482-08d6ee532ec6
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2682
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4931
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add API for setting SDIO Tap Delays on ZynqMP platforms.
+Apart from taps set by auto tuning, ZynqMP platform has feature to set
+the tap values manually. Add support to read tap delay values from
+DT and set the same in HW via ZynqMP SoC framework. Reading Tap
+Delays from DT is optional, if the property is not available in DT the
+driver will use the pre-defined Tap Delay Values.
 
 Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 ---
- drivers/firmware/xilinx/zynqmp.c     | 32 ++++++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h | 17 ++++++++++++++++-
- 2 files changed, 48 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-of-arasan.c | 173 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 172 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index fd3d837..c6f9e72 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -664,6 +664,37 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
- 				   qos, ack, NULL);
- }
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index b12abf9..7af6cec 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -22,6 +22,7 @@
+ #include <linux/phy/phy.h>
+ #include <linux/regmap.h>
+ #include <linux/of.h>
++#include <linux/firmware/xlnx-zynqmp.h>
  
-+/**
-+ * zynqmp_pm_sdio_setphase() - PM call to set clock delays for SD clock
-+ * @device_id:		Device ID of the SD controller
-+ * @degrees:		Tap Delay value in degrees for Input/Output clocks
-+ *
-+ * This API function is to be used for setting the clock delays for SD
-+ * clock.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_sdio_setphase(u32 device_id, int degrees)
-+{
-+	u32 node_id = (!device_id) ? NODE_SD_0 : NODE_SD_1;
-+	enum tap_delay_type tap_type;
-+	int ret;
+ #include "cqhci.h"
+ #include "sdhci-pltfm.h"
+@@ -32,6 +33,10 @@
+ 
+ #define PHY_CLK_TOO_SLOW_HZ		400000
+ 
++/* Default settings for ZynqMP Tap Delays */
++#define ZYNQMP_ITAP_DELAYS {0, 0x15, 0x15, 0, 0x15, 0, 0, 0x3D, 0x12, 0, 0}
++#define ZYNQMP_OTAP_DELAYS {0, 0x5, 0x6, 0, 0x5, 0x3, 0x3, 0x4, 0x6, 0x3, 0}
 +
-+	if (degrees < INPUT_TAP_BOUNDARY) {
-+		tap_type = PM_TAPDELAY_INPUT;
-+	} else {
-+		tap_type = PM_TAPDELAY_OUTPUT;
-+		degrees -= INPUT_TAP_BOUNDARY;
+ /*
+  * On some SoCs the syscon area has a feature where the upper 16-bits of
+  * each 32-bit register act as a write mask for the lower 16-bits.  This allows
+@@ -81,6 +86,7 @@ struct sdhci_arasan_soc_ctl_map {
+  * @sdcardclk:		Pointer to normal 'struct clock' for sdcardclk_hw.
+  * @soc_ctl_base:	Pointer to regmap for syscon for soc_ctl registers.
+  * @soc_ctl_map:	Map to get offsets into soc_ctl registers.
++ * @of_data:		Platform specific runtime data storage pointer
+  */
+ struct sdhci_arasan_data {
+ 	struct sdhci_host *host;
+@@ -101,6 +107,15 @@ struct sdhci_arasan_data {
+ /* Controller immediately reports SDHCI_CLOCK_INT_STABLE after enabling the
+  * internal clock even when the clock isn't stable */
+ #define SDHCI_ARASAN_QUIRK_CLOCK_UNSTABLE BIT(1)
++
++	void *of_data;
++};
++
++struct sdhci_arasan_zynqmp_data {
++	void (*set_tap_delay)(struct sdhci_host *host);
++	const struct zynqmp_eemi_ops *eemi_ops;
++	u8 tapdly[MMC_TIMING_MMC_HS400 + 1][2]; /* [0] for input delay, */
++						/* [1] for output delay */
+ };
+ 
+ struct sdhci_arasan_of_data {
+@@ -209,6 +224,16 @@ static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
+ 		sdhci_arasan->is_phy_on = false;
+ 	}
+ 
++	/* Set the Input and Output Tap Delays */
++	if (host->version >= SDHCI_SPEC_300 &&
++	    host->timing != MMC_TIMING_LEGACY &&
++	    host->timing != MMC_TIMING_UHS_SDR12) {
++		struct sdhci_arasan_zynqmp_data *zynqmp_data =
++			sdhci_arasan->of_data;
++		if (zynqmp_data && zynqmp_data->set_tap_delay)
++			zynqmp_data->set_tap_delay(host);
 +	}
 +
-+	ret = zynqmp_pm_ioctl(node_id, IOCTL_SET_SD_TAPDELAY, tap_type,
-+			      degrees, NULL);
-+	if (ret)
-+		pr_err("Error setting Tap Delay\n");
+ 	sdhci_set_clock(host, clock);
+ 
+ 	if (sdhci_arasan->quirks & SDHCI_ARASAN_QUIRK_CLOCK_UNSTABLE)
+@@ -487,6 +512,10 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
+ 		.compatible = "arasan,sdhci-4.9a",
+ 		.data = &sdhci_arasan_data,
+ 	},
++	{
++		.compatible = "xlnx,zynqmp-8.9a",
++		.data = &sdhci_arasan_data,
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sdhci_arasan_of_match);
+@@ -517,6 +546,37 @@ static const struct clk_ops arasan_sdcardclk_ops = {
+ };
+ 
+ /**
++ * sdhci_zynqmp_sdcardclk_set_phase - Set the SD Clock Tap Delays
++ *
++ * Set the SD Clock Tap Delays for Input and Output paths
++ *
++ * @hw:			Pointer to the hardware clock structure.
++ * @degrees		The clock phase shift between 0 - 359.
++ * Return: 0 on success and error value on error
++ */
++static int sdhci_zynqmp_sdcardclk_set_phase(struct clk_hw *hw, int degrees)
 +
-+	return ret;
++{
++	struct sdhci_arasan_data *sdhci_arasan =
++		container_of(hw, struct sdhci_arasan_data, sdcardclk_hw);
++	struct sdhci_arasan_zynqmp_data *zynqmp_data = sdhci_arasan->of_data;
++	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_data->eemi_ops;
++	const char *clk_name = clk_hw_get_name(hw);
++	u32 device_id = !strcmp(clk_name, "clk_sd0") ? 0 : 1;
++
++	if (!eemi_ops->sdio_setphase)
++		return -ENODEV;
++
++	/* Set the Clock Phase */
++	return eemi_ops->sdio_setphase(device_id, degrees);
 +}
 +
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.get_chipid = zynqmp_pm_get_chipid,
-@@ -687,6 +718,7 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.set_requirement = zynqmp_pm_set_requirement,
- 	.fpga_load = zynqmp_pm_fpga_load,
- 	.fpga_get_status = zynqmp_pm_fpga_get_status,
-+	.sdio_setphase = zynqmp_pm_sdio_setphase,
- };
- 
- /**
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 1262ea6..0fc4bf7 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -56,6 +56,9 @@
- #define XILINX_ZYNQMP_PM_FPGA_FULL	0x0U
- #define XILINX_ZYNQMP_PM_FPGA_PARTIAL	BIT(0)
- 
-+/* Input Tap Delay Boundary Value */
-+#define INPUT_TAP_BOUNDARY		0x100
-+
- enum pm_api_id {
- 	PM_GET_API_VERSION = 1,
- 	PM_REQUEST_NODE = 13,
-@@ -92,7 +95,8 @@ enum pm_ret_status {
- };
- 
- enum pm_ioctl_id {
--	IOCTL_SET_PLL_FRAC_MODE = 8,
-+	IOCTL_SET_SD_TAPDELAY = 7,
-+	IOCTL_SET_PLL_FRAC_MODE,
- 	IOCTL_GET_PLL_FRAC_MODE,
- 	IOCTL_SET_PLL_FRAC_DATA,
- 	IOCTL_GET_PLL_FRAC_DATA,
-@@ -251,6 +255,16 @@ enum zynqmp_pm_request_ack {
- 	ZYNQMP_PM_REQUEST_ACK_NON_BLOCKING,
- };
- 
-+enum pm_node_id {
-+	NODE_SD_0 = 39,
-+	NODE_SD_1,
++static const struct clk_ops zynqmp_sdcardclk_ops = {
++	.recalc_rate = sdhci_arasan_sdcardclk_recalc_rate,
++	.set_phase = sdhci_zynqmp_sdcardclk_set_phase,
 +};
 +
-+enum tap_delay_type {
-+	PM_TAPDELAY_INPUT = 0,
-+	PM_TAPDELAY_OUTPUT,
-+};
-+
- /**
-  * struct zynqmp_pm_query_data - PM query data
-  * @qid:	query ID
-@@ -295,6 +309,7 @@ struct zynqmp_eemi_ops {
- 			       const u32 capabilities,
- 			       const u32 qos,
- 			       const enum zynqmp_pm_request_ack ack);
-+	int (*sdio_setphase)(u32 device_id, int degrees);
- };
++/**
+  * sdhci_arasan_update_clockmultiplier - Set corecfg_clockmultiplier
+  *
+  * The corecfg_clockmultiplier is supposed to contain clock multiplier
+@@ -638,7 +698,10 @@ static int sdhci_arasan_register_sdclk(struct sdhci_arasan_data *sdhci_arasan,
+ 	sdcardclk_init.parent_names = &parent_clk_name;
+ 	sdcardclk_init.num_parents = 1;
+ 	sdcardclk_init.flags = CLK_GET_RATE_NOCACHE;
+-	sdcardclk_init.ops = &arasan_sdcardclk_ops;
++	if (of_device_is_compatible(np, "xlnx,zynqmp-8.9a"))
++		sdcardclk_init.ops = &zynqmp_sdcardclk_ops;
++	else
++		sdcardclk_init.ops = &arasan_sdcardclk_ops;
  
- int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
+ 	sdhci_arasan->sdcardclk_hw.init = &sdcardclk_init;
+ 	sdhci_arasan->sdcardclk =
+@@ -714,6 +777,108 @@ static int sdhci_arasan_add_host(struct sdhci_arasan_data *sdhci_arasan)
+ 	return ret;
+ }
+ 
++static void sdhci_arasan_zynqmp_set_tap_delay(struct sdhci_host *host)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
++	struct sdhci_arasan_zynqmp_data *zynqmp_data = sdhci_arasan->of_data;
++
++	clk_set_phase(sdhci_arasan->sdcardclk,
++		      (int)zynqmp_data->tapdly[host->timing][0]);
++	clk_set_phase(sdhci_arasan->sdcardclk,
++		      (int)zynqmp_data->tapdly[host->timing][1] +
++		      INPUT_TAP_BOUNDARY);
++}
++
++static void arasan_dt_read_tap_delay(struct device *dev, u8 *tapdly,
++				     const char *prop, u8 itap_def, u8 otap_def)
++{
++	struct device_node *np = dev->of_node;
++
++	tapdly[0] = itap_def;
++	tapdly[1] = otap_def;
++
++	/*
++	 * Read Tap Delay values from DT, if the DT does not contain the
++	 * Tap Values then use the pre-defined values.
++	 */
++	if (of_property_read_variable_u8_array(np, prop, &tapdly[0], 2, 0)) {
++		dev_dbg(dev, "Using predefined tapdly for %s = %d %d\n",
++			prop, tapdly[0], tapdly[1]);
++	}
++}
++
++/**
++ * arasan_dt_parse_tap_delays - Read Tap Delay values from DT
++ *
++ * Called at initialization to parse the values of Tap Delays.
++ *
++ * @dev:		Pointer to our struct device.
++ */
++static int arasan_dt_parse_tap_delays(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct sdhci_host *host = platform_get_drvdata(pdev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
++	struct sdhci_arasan_zynqmp_data zynqmp_data;
++	const struct zynqmp_eemi_ops *eemi_ops;
++	u8 *itapdly, *otapdly;
++	u32 mio_bank = 0;
++
++	eemi_ops = zynqmp_pm_get_eemi_ops();
++	if (IS_ERR(eemi_ops))
++		return PTR_ERR(eemi_ops);
++
++	itapdly = (u8 [MMC_TIMING_MMC_HS400 + 1]) ZYNQMP_ITAP_DELAYS;
++	otapdly = (u8 [MMC_TIMING_MMC_HS400 + 1]) ZYNQMP_OTAP_DELAYS;
++
++	of_property_read_u32(pdev->dev.of_node, "xlnx,mio-bank", &mio_bank);
++	if (mio_bank == 2) {
++		otapdly[MMC_TIMING_UHS_SDR104] = 0x2;
++		otapdly[MMC_TIMING_MMC_HS200] = 0x2;
++	}
++
++	arasan_dt_read_tap_delay(dev, zynqmp_data.tapdly[MMC_TIMING_MMC_HS],
++				 "xlnx,tap-delay-mmc-hsd",
++				 itapdly[MMC_TIMING_MMC_HS],
++				 otapdly[MMC_TIMING_MMC_HS]);
++	arasan_dt_read_tap_delay(dev, zynqmp_data.tapdly[MMC_TIMING_SD_HS],
++				 "xlnx,tap-delay-sd-hsd",
++				 itapdly[MMC_TIMING_SD_HS],
++				 otapdly[MMC_TIMING_SD_HS]);
++	arasan_dt_read_tap_delay(dev, zynqmp_data.tapdly[MMC_TIMING_UHS_SDR25],
++				 "xlnx,tap-delay-sdr25",
++				 itapdly[MMC_TIMING_UHS_SDR25],
++				 otapdly[MMC_TIMING_UHS_SDR25]);
++	arasan_dt_read_tap_delay(dev, zynqmp_data.tapdly[MMC_TIMING_UHS_SDR50],
++				 "xlnx,tap-delay-sdr50",
++				 itapdly[MMC_TIMING_UHS_SDR50],
++				 otapdly[MMC_TIMING_UHS_SDR50]);
++	arasan_dt_read_tap_delay(dev, zynqmp_data.tapdly[MMC_TIMING_UHS_SDR104],
++				 "xlnx,tap-delay-sdr104",
++				 itapdly[MMC_TIMING_UHS_SDR104],
++				 otapdly[MMC_TIMING_UHS_SDR104]);
++	arasan_dt_read_tap_delay(dev, zynqmp_data.tapdly[MMC_TIMING_UHS_DDR50],
++				 "xlnx,tap-delay-sd-ddr50",
++				 itapdly[MMC_TIMING_UHS_DDR50],
++				 otapdly[MMC_TIMING_UHS_DDR50]);
++	arasan_dt_read_tap_delay(dev, zynqmp_data.tapdly[MMC_TIMING_MMC_DDR52],
++				 "xlnx,tap-delay-mmc-ddr52",
++				 itapdly[MMC_TIMING_MMC_DDR52],
++				 otapdly[MMC_TIMING_MMC_DDR52]);
++	arasan_dt_read_tap_delay(dev, zynqmp_data.tapdly[MMC_TIMING_MMC_HS200],
++				 "xlnx,tap-delay-mmc-hs200",
++				 itapdly[MMC_TIMING_MMC_HS200],
++				 otapdly[MMC_TIMING_MMC_HS200]);
++
++	zynqmp_data.set_tap_delay = sdhci_arasan_zynqmp_set_tap_delay;
++	zynqmp_data.eemi_ops = eemi_ops;
++	sdhci_arasan->of_data = &zynqmp_data;
++
++	return 0;
++}
++
+ static int sdhci_arasan_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -806,6 +971,12 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+ 		goto unreg_clk;
+ 	}
+ 
++	if (of_device_is_compatible(pdev->dev.of_node, "xlnx,zynqmp-8.9a")) {
++		ret = arasan_dt_parse_tap_delays(&pdev->dev);
++		if (ret)
++			goto unreg_clk;
++	}
++
+ 	sdhci_arasan->phy = ERR_PTR(-ENODEV);
+ 	if (of_device_is_compatible(pdev->dev.of_node,
+ 				    "arasan,sdhci-5.1")) {
 -- 
 2.1.1
 
