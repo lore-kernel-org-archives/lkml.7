@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3E8C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF784C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0276A21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A0E21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="laSYdg+9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENnb5DPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404841AbfFKPTk (ORCPT
+        id S2404861AbfFKPTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:19:40 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44693 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387563AbfFKPTj (ORCPT
+        Tue, 11 Jun 2019 11:19:43 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36364 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404842AbfFKPTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:19:39 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x47so14944858qtk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:19:39 -0700 (PDT)
+        Tue, 11 Jun 2019 11:19:42 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so7576195qtl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3YajPL9keBD1PgFsRAQ5XHEZUjp++ldFMZE5mzh7qVo=;
-        b=laSYdg+9mu5jmzB9fvg85XGBfsrnwK/KXgXp15a3LOmkxgOs/DghF5QngvMMmGMdx/
-         TGNnm9EC7gpOtHPHUZ7zts03XHFu6aTTDBQGRYdKANebjHM47x97+tQa3g1cbq86A2lU
-         tGOhzqNJFYnsV9wGJzGdz3WfZVbZGSkRoIOh2cn3UJXKmCbjxoYtJ+P8rIo7lx/nuFTP
-         UKR5ADwuNlSaT1rCnvRPVDvgeD+w2RFZzQxyoUldcKKGBmrUrNQoIPRYOGr7uvu0Gai4
-         DVRLB5kVBVwtJ8eB2sQ67+BtCuiVkgGzgIXZb6HBc0MYNjM8cIQ1I14BJe7oP0zwO1fi
-         Jl6w==
+        bh=Xk/nUeSwmjb6lEDGBh3mV3CTpCHSAUw0VWDygG78GcY=;
+        b=ENnb5DPQJReREn1b0ZGYhCbls9bU6aKjPnMMIT3IDI6TQL/5Z6ccXp8OUmJ9pntjhe
+         BXopYGyAbHSZdSYdyck6ZmfLWsHijBIB8zEsuUgr7j6ZREBdo2RFm6qj1JyJt7TQQWaS
+         c28gYKAPWXlG/Xh03mKf7GK7+C4oPDcFjTe+nDDgMBjbm780EQu33is/diUiQcIQ4HV9
+         BKtQmpq+LjUq0P9BJKzTscvaxSgHu7psnFXFqkDIn5q0fNdGTw7DB8axTTgzkYNCfIAq
+         ORZGVpvcwfIilUxX8eO6TkXJk4heEc4JV0dBZ4+w695PDlNBRe5hzWnlu1BHu+oJqNni
+         PbrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3YajPL9keBD1PgFsRAQ5XHEZUjp++ldFMZE5mzh7qVo=;
-        b=YvCu8GfF0Rr1OsKtClWPXChW5QuV75m7qYj4sEFWaTkRNEN+ItjDABv6cviJGwcxGp
-         Y8g+NqOncqvGMVRpsh4VM7mepKsbr1fNprJF+lgHVl6Z4s4H0HrtSauRu12x1C+Lo6aK
-         lepDFCIe8Ohm5UAQ0bgH2Jq3OXBKr/aYVVbEiCuKlqKEXwP/Yo3cw54FUQ+RlNAwacFF
-         00NhhqBcjvhUrE5Yf7SzXqpsRHi1v0OXg5MaH9zNWCRCXMoJ6jcHJaVdXbmtMc7ZV3J4
-         HeCUq0wyAQWZ5ohHt6kg67acbD0BDxfZxOQAdUlF2kMmmbuLBwJevIJGV/kKGULRpekI
-         I0PQ==
-X-Gm-Message-State: APjAAAU1pK0ji3GbH4PSAoGcUF1l85LKgOz/V1oEqiXoMBmgDTc92sqV
-        POW/xkRrOUYgbfJJ4uDcpg==
-X-Google-Smtp-Source: APXvYqwEyV6qnh3/vMG8T9LAybCDQp3YsE/QBpvtrlsyD4nZCWkj8cWN3gJnDks2/t0FKmrSooRGVA==
-X-Received: by 2002:a0c:9253:: with SMTP id 19mr13908484qvz.180.1560266378888;
-        Tue, 11 Jun 2019 08:19:38 -0700 (PDT)
+        bh=Xk/nUeSwmjb6lEDGBh3mV3CTpCHSAUw0VWDygG78GcY=;
+        b=H5EILjb9v+5DjrTlVz16B1NtubxzfkLpl+DBlRr0hRsJUgeAth4H9J48xzreqDQjHr
+         9tV4Qw0v/ryPi9A48r9NZKt2Ar69y4K+JVEhcCRxVUpHZ7g63pkdp2KWkfc2qL5zquPV
+         D9AEkzYbkmTYyl9Oux1yhoAz/rgKeR0yr51IKdGBhu4EYV3s08D59D/jA8NNCkcl6RbW
+         dxJ/pi9vH9Ud8eRoB0ZjBa0odoJC2groSQO5ywKqpTUQdnT4eUnyf0Qj3setz7De5sJ0
+         FT/8+1QkX5sZUditW0wVgMEq5EAWWUItrHXuGRqrF25LFJ5VSj9gOw/hy78KTxzbDbYi
+         FkmQ==
+X-Gm-Message-State: APjAAAU5cy011NvVYhGwdArma1UpkzpLr2Xd0C6zJZ9+0NxNcHecxhkK
+        QnTazxRvf79EH3gUf8vGyQ==
+X-Google-Smtp-Source: APXvYqw28toKoVkfyCeZHHVkhZ1hltwnLs7p4JkG/RqFIAuee62sNbitk9iGIz/UO3zf6zppFIJZ9Q==
+X-Received: by 2002:ac8:2e5d:: with SMTP id s29mr56136444qta.70.1560266381319;
+        Tue, 11 Jun 2019 08:19:41 -0700 (PDT)
 Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id z57sm6538533qta.62.2019.06.11.08.19.37
+        by smtp.gmail.com with ESMTPSA id z57sm6538533qta.62.2019.06.11.08.19.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 08:19:38 -0700 (PDT)
+        Tue, 11 Jun 2019 08:19:40 -0700 (PDT)
 From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -65,9 +65,9 @@ Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
         linux-kernel@vger.kernel.org,
         Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
         Zhang Lei <zhang.lei@jp.fujitsu.com>
-Subject: [PATCH 1/2] arm64/mm: check cpu cache line size with non-coherent device
-Date:   Tue, 11 Jun 2019 11:17:30 -0400
-Message-Id: <20190611151731.6135-2-msys.mizuma@gmail.com>
+Subject: [PATCH 2/2] arm64/mm: show TAINT_CPU_OUT_OF_SPEC warning if the cache size is over the spec.
+Date:   Tue, 11 Jun 2019 11:17:31 -0400
+Message-Id: <20190611151731.6135-3-msys.mizuma@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190611151731.6135-1-msys.mizuma@gmail.com>
 References: <20190611151731.6135-1-msys.mizuma@gmail.com>
@@ -78,49 +78,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-As discussed in the thread [1], the cpu cache line size will be problem
-only on non-coherent devices. And, the coherent flag is already introduced
-to struct device.
-
-Show the warning only if the device is non-coherent device and
-ARCH_DMA_MINALIGN is smaller than the cpu cache size.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20180514145703.celnlobzn3uh5tc2@localhost/
+Show the warning and taints as TAINT_CPU_OUT_OF_SPEC if the cache line
+size is greater than the maximum.
 
 Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 Reviewed-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 Tested-by: Zhang Lei <zhang.lei@jp.fujitsu.com>
 ---
- arch/arm64/mm/dma-mapping.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/cache.h | 2 ++
+ arch/arm64/mm/init.c           | 5 +++++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index 674860e3e478..c0c09890c845 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -91,10 +91,6 @@ static int __swiotlb_mmap_pfn(struct vm_area_struct *vma,
+diff --git a/arch/arm64/include/asm/cache.h b/arch/arm64/include/asm/cache.h
+index 926434f413fa..636e277fefc9 100644
+--- a/arch/arm64/include/asm/cache.h
++++ b/arch/arm64/include/asm/cache.h
+@@ -91,6 +91,8 @@ static inline u32 cache_type_cwg(void)
  
- static int __init arm64_dma_init(void)
+ #define __read_mostly __attribute__((__section__(".data..read_mostly")))
+ 
++#define ARM64_MAX_CACHE_LINE_SIZE	2048
++
+ static inline int cache_line_size(void)
  {
--	WARN_TAINT(ARCH_DMA_MINALIGN < cache_line_size(),
--		   TAINT_CPU_OUT_OF_SPEC,
--		   "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
--		   ARCH_DMA_MINALIGN, cache_line_size());
- 	return dma_atomic_pool_init(GFP_DMA32, __pgprot(PROT_NORMAL_NC));
+ 	u32 cwg = cache_type_cwg();
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index d2adffb81b5d..df621d90b19c 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -562,6 +562,11 @@ void __init mem_init(void)
+ 		 */
+ 		sysctl_overcommit_memory = OVERCOMMIT_ALWAYS;
+ 	}
++
++	WARN_TAINT(cache_line_size() > ARM64_MAX_CACHE_LINE_SIZE,
++		   TAINT_CPU_OUT_OF_SPEC,
++		   "CTR_EL0.CWG is greater than the spec (%d > %d)",
++		   cache_line_size(), ARM64_MAX_CACHE_LINE_SIZE);
  }
- arch_initcall(arm64_dma_init);
-@@ -473,6 +469,11 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
- 			const struct iommu_ops *iommu, bool coherent)
- {
- 	dev->dma_coherent = coherent;
-+
-+	if (!coherent && (cache_line_size() > ARCH_DMA_MINALIGN))
-+		dev_WARN(dev, "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
-+				ARCH_DMA_MINALIGN, cache_line_size());
-+
- 	__iommu_setup_dma_ops(dev, dma_base, size, iommu);
  
- #ifdef CONFIG_XEN
+ void free_initmem(void)
 -- 
 2.20.1
 
