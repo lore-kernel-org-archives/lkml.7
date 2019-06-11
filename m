@@ -2,112 +2,125 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB2DC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8B9C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D124A20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:15:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t2tAqctA"
+	by mail.kernel.org (Postfix) with ESMTP id 1AC3D20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404716AbfFKIPA (ORCPT
+        id S2404692AbfFKIQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:15:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41408 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403996AbfFKIO7 (ORCPT
+        Tue, 11 Jun 2019 04:16:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57509 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404073AbfFKIQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:14:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rAIZ7FJf0J2lqQzq5dJJHqYXe4kkarjlGPQQ0o7ePeQ=; b=t2tAqctAJIpeoLWXUomazXH2P
-        9oYCDj5ayBOxpU249Bagdzi7c5IGCC4782ld3dmUdxA6wjVQZ+Iaz7AJIueRckUKA3RI6d/Zxv1qW
-        VMJZB47jSS+Jpb2T/kWsFctcB+Yw1cfcImoy4pP169oWjm/NUWNjrDe9BbqIb76diVXv7D65Fkt+4
-        tjOYp/QIX5jwimyYuyadGUWMprQNfYmK+9FaALXLDKpHnuF03oIhlcibX78Lffr/W2zvdQU3V8X0F
-        U0Rp0EddPotow9payHRcDuO3ZfJ0+NYwf2HCtj+cxa2QOZP7odKYrb5HT/vYtYLtCLf413YelH+7F
-        6fud750IA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1habvP-0004Ce-E4; Tue, 11 Jun 2019 08:14:35 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E1F4C20227121; Tue, 11 Jun 2019 10:14:33 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 10:14:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 05/15] x86_32: Provide consistent pt_regs
-Message-ID: <20190611081433.GP3436@hirez.programming.kicks-ass.net>
-References: <20190605130753.327195108@infradead.org>
- <20190605131944.829537410@infradead.org>
- <20190607193215.qw5xo2cdajhihk2x@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607193215.qw5xo2cdajhihk2x@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 11 Jun 2019 04:16:03 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1habwb-0003K3-2W; Tue, 11 Jun 2019 10:15:49 +0200
+Message-ID: <1560240943.13886.1.camel@pengutronix.de>
+Subject: Re: [PATCH 5/8] drivers: media: coda: fix warning same module names
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Matt Redfearn <matt.redfearn@thinci.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "marex@denx.de" <marex@denx.de>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Date:   Tue, 11 Jun 2019 10:15:43 +0200
+In-Reply-To: <c2ff2c77-5c14-4bc4-f59c-7012d272ec76@thinci.com>
+References: <20190606094722.23816-1-anders.roxell@linaro.org>
+         <d6b79ee0-07c6-ad81-16b0-8cf929cc214d@xs4all.nl>
+         <CADYN=9KY5=FzrkC7MKj9QnG-eM1NVuL00w8Xv4yU2r05rhr7WQ@mail.gmail.com>
+         <c2ff2c77-5c14-4bc4-f59c-7012d272ec76@thinci.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 03:32:15PM -0400, Josh Poimboeuf wrote:
-> On Wed, Jun 05, 2019 at 03:07:58PM +0200, Peter Zijlstra wrote:
-> > Currently pt_regs on x86_32 has an oddity in that kernel regs
-> > (!user_mode(regs)) are short two entries (esp/ss). This means that any
-> > code trying to use them (typically: regs->sp) needs to jump through
-> > some unfortunate hoops.
-> > 
-> > Change the entry code to fix this up and create a full pt_regs frame.
-> > 
-> > This then simplifies various trampolines in ftrace and kprobes, the
-> > stack unwinder, ptrace, kdump and kgdb.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >
-> > ---
-> >  arch/x86/entry/entry_32.S         |  105 ++++++++++++++++++++++++++++++++++----
-> >  arch/x86/include/asm/kexec.h      |   17 ------
-> >  arch/x86/include/asm/ptrace.h     |   17 ------
-> >  arch/x86/include/asm/stacktrace.h |    2 
-> >  arch/x86/kernel/crash.c           |    8 --
-> >  arch/x86/kernel/ftrace_32.S       |   77 +++++++++++++++------------
-> >  arch/x86/kernel/kgdb.c            |    8 --
-> >  arch/x86/kernel/kprobes/common.h  |    4 -
-> >  arch/x86/kernel/kprobes/core.c    |   29 ++++------
-> >  arch/x86/kernel/kprobes/opt.c     |   20 ++++---
-> >  arch/x86/kernel/process_32.c      |   16 +----
-> >  arch/x86/kernel/ptrace.c          |   29 ----------
-> >  arch/x86/kernel/time.c            |    3 -
-> >  arch/x86/kernel/unwind_frame.c    |   32 +----------
-> >  arch/x86/kernel/unwind_orc.c      |    2 
-> >  15 files changed, 178 insertions(+), 191 deletions(-)
+Hi,
+
+On Mon, 2019-06-10 at 13:14 +0000, Matt Redfearn wrote:
 > 
-> I recall writing some of this code (some of the kernel_stack_pointer
-> removal stuff) so please give me a shout-out ;-)
+> On 10/06/2019 14:03, Anders Roxell wrote:
+> > On Thu, 6 Jun 2019 at 12:13, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> > > 
+> > > On 6/6/19 11:47 AM, Anders Roxell wrote:
+> > > > When building with CONFIG_VIDEO_CODA and CONFIG_CODA_FS enabled as
+> > > > loadable modules, we see the following warning:
+> > > > 
+> > > > warning: same module names found:
+> > > >    fs/coda/coda.ko
+> > > >    drivers/media/platform/coda/coda.ko
+> > > > 
+> > > > Rework so media coda matches the config fragment. Leaving CODA_FS as is
+> > > > since thats a well known module.
+> > > > 
+> > > > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> > > > ---
+> > > >   drivers/media/platform/coda/Makefile | 4 ++--
+> > > >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/media/platform/coda/Makefile b/drivers/media/platform/coda/Makefile
+> > > > index 54e9a73a92ab..588e6bf7c190 100644
+> > > > --- a/drivers/media/platform/coda/Makefile
+> > > > +++ b/drivers/media/platform/coda/Makefile
+> > > > @@ -1,6 +1,6 @@
+> > > >   # SPDX-License-Identifier: GPL-2.0-only
+> > > > 
+> > > > -coda-objs := coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-mpeg2.o coda-mpeg4.o coda-jpeg.o
+> > > > +video-coda-objs := coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-mpeg2.o coda-mpeg4.o coda-jpeg.o
+> > > > 
+> > > > -obj-$(CONFIG_VIDEO_CODA) += coda.o
+> > > > +obj-$(CONFIG_VIDEO_CODA) += video-coda.o
+> > > 
+> > > How about imx-coda? video-coda suggests it is part of the video subsystem,
+> > > which it isn't.
+> > 
+> > I'll resend a v2 shortly with imx-coda instead.
 
-Absolutely, sorry for not doing that. I've added:
+I'd be in favor of calling it "coda-vpu" instead.
 
- "Much thanks to Josh for help with the cleanups!"
+> What about other vendor SoCs implementing the Coda IP block which are 
+> not an imx? I'd prefer a more generic name - maybe media-coda.
+
+Right, this driver can be used on other SoCs [1].
+
+[1] https://www.mail-archive.com/linux-media@vger.kernel.org/msg146498.html
+
+regards
+Philipp
