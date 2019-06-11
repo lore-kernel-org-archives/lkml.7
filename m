@@ -2,178 +2,147 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1159AC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77E4C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29E7214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95EB2212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uqZUZ9SU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404987AbfFKJ7w (ORCPT
+        id S2405001AbfFKKAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:59:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:57148 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbfFKJ7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:59:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25EB4337;
-        Tue, 11 Jun 2019 02:59:51 -0700 (PDT)
-Received: from [10.1.29.141] (e121487-lin.cambridge.arm.com [10.1.29.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18C923F73C;
-        Tue, 11 Jun 2019 03:01:31 -0700 (PDT)
-Subject: Re: [PATCH 09/15] binfmt_flat: add a ARCH_HAS_BINFMT_FLAT option
-To:     Christoph Hellwig <hch@lst.de>, Greg Ungerer <gerg@linux-m68k.org>
-Cc:     uclinux-h8-devel@lists.sourceforge.jp,
-        linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
-        linux-c6x-dev@linux-c6x.org, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190610212015.9157-1-hch@lst.de>
- <20190610212015.9157-10-hch@lst.de>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <416fd8cc-6721-ff40-d90e-6755e490fd61@arm.com>
-Date:   Tue, 11 Jun 2019 10:59:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 06:00:16 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60038 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727726AbfFKKAQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:00:16 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190611100014euoutp02092084ef67383a67bd41f1eb9e90a74c~nHJNOXxX62493324933euoutp02U
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:00:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190611100014euoutp02092084ef67383a67bd41f1eb9e90a74c~nHJNOXxX62493324933euoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560247214;
+        bh=DMPZzqhNW3jYYvKP6v+4Dy8sFNdg4mhxn6oDisfjVQo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=uqZUZ9SU93FvDAQ0o7qA5I3rromxhI2tQ8Nka49GYTSVFXkxxUAFCcH5eS4PzpZBX
+         Q5Qa+sUrdWFJGDoWJvTtnjPrq6hAsdMjSTkvi8qj//mF5WT0uPR8nZ2dozik3sdV8J
+         PTkz/SAms/WODXYuIvDFyMnKg6m6387Kw4Tg5Tfc=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190611100014eucas1p18496883ad65b7a14cdd78354288264d7~nHJMrmuz93238632386eucas1p1f;
+        Tue, 11 Jun 2019 10:00:14 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id E6.BF.04377.DAB7FFC5; Tue, 11
+        Jun 2019 11:00:14 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190611100013eucas1p229fae8dc62aac7cc8619c0bcf1740c2b~nHJL4x-hP0704907049eucas1p2B;
+        Tue, 11 Jun 2019 10:00:13 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190611100013eusmtrp10efc8e1d221b5c24a34ec203fac56a4f~nHJLpMg1f1968119681eusmtrp15;
+        Tue, 11 Jun 2019 10:00:13 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-cf-5cff7bad6a7d
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 76.61.04140.DAB7FFC5; Tue, 11
+        Jun 2019 11:00:13 +0100 (BST)
+Received: from [106.120.50.25] (unknown [106.120.50.25]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190611100012eusmtip1d4dfa66a3c18f04d01ffd9351727b6e2~nHJKy4XE50583705837eusmtip1F;
+        Tue, 11 Jun 2019 10:00:12 +0000 (GMT)
+Subject: Re: [PATCH] MAINTAINERS: media: Add Tomasz Figa as a videobuf2
+ reviewer
+To:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?B?UGF3ZcWCIE/Fm2NpYWs=?= <posciak@chromium.org>,
+        Pawel Osciak <pawel@osciak.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <4acd9745-216b-8cd4-9f6f-bbfc870a6c0d@samsung.com>
+Date:   Tue, 11 Jun 2019 12:00:11 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190610212015.9157-10-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190607083518.90078-1-tfiga@chromium.org>
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zk7O4qz47zsRSNjVGCSZhc4YJmSwX4ERj+idJhTDyq5KZvT
+        1B8Ns7Ils1Qq18AMMhVvLNtMw1LRpeJIzTIvlDYUw4HkZWm2cjta/nve5708zwMviQlMXH8y
+        TZ7FKOTSdBHhjht71yyHG/P/SI4sFGJ0f9kshx4sWODRI216gi5ufsmlqw0bHLrctsajmyf7
+        CHrppoOIJMWP1UO42FB3hxB/W58nxNqWOiReMuwV968s8c4Tse4nk5n0tGxGERqR4J7aNDOB
+        ZdqJa/0ljRw1GuRqkBsJ1HGova3maJA7KaBqEHxsNnLZYhlB4Vg5xhZLCFZfvUDbKxOldpxt
+        PEeg7X2wNWVDMDpf6TrsTV2ASe0oz4l9qCjobZp2iWDUOoKpyQbC2SCoMNDYNC7MpyLAWF/t
+        WsCpA6Bvr3cd8qUksPJmFGNnvKCvwoo7sRtFw+znIo4TY1QgmGx6jMVCGLdWusSA6uBBaX8T
+        j/UdDT8/fMJY7A3fzS1b/B4YKCvG2YUbCKYtDTy2KEYwUvBoK3U4dJuHNi2RmxJB0NQWytJR
+        cL+nFXPSQHnCmM2LNeEJpcaHWzQfim4J2OmDoDM3/pPtfD+M3UMi3Y5ouh1xdDvi6P7rPkF4
+        HRIyKqUshVEelTM5IUqpTKmSp4QkZcgMaPOdBhzm5VbUtpHYhSgSiTz4l+IcEgFXmq3MlXUh
+        IDGRD19j36T4ydLcPEaRcUWhSmeUXSiAxEVCfv6ur3ECKkWaxVxlmExGsd3lkG7+auSXoy8+
+        kVZgTggPXE17dn24IjnSEVpNdyfZ875gBnvFZY92VdW4xW/mbM3CXNK67XTrXbeK4H3vfvl2
+        PAtQz60tDiVOTQfFWOOfWnbXXQzuGRE6ot/+eC2yW7hnYntjsjJNQ/FrJadmTSnaxf1SbWeI
+        pBaY3+dUxzix1ka/5SoRrkyVhh3CFErpXxNNGN5KAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsVy+t/xu7prq//HGOybx25xavIzJouzTW/Y
+        LS7vmsNm0bNhK6vFsk1/mCymvP3JbrHhzkk2i8+t/9gcODxmN1xk8di0qpPN4/Gvl2wefVtW
+        MXp83iTncerrZ/YAtig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TU
+        nMyy1CJ9uwS9jPWPbjMXfGerONW/jqmB8SxrFyMnh4SAicTtSd9Zuhi5OIQEljJKfNx0ESoh
+        I3FyWgOULSzx51oXG0TRa0aJBzf/MoEkhAWCJO70XWUHsUUEHCWOrX/IBFLELPCLUWLzwYtQ
+        Y7sZJSb+/ALWwSZgKNH1FmQUJwevgJ3EtjXLwLpZBFQl5uxeA7ZOVCBGoq9xBQtEjaDEyZlP
+        wGxOAQuJZzc7wOYwC5hJzNv8kBnClpfY/nYOlC0ucevJfKYJjEKzkLTPQtIyC0nLLCQtCxhZ
+        VjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG47ZjP7fsYOx6F3yIUYCDUYmHNyL6X4wQa2JZ
+        cWXuIUYJDmYlEd6u70Ah3pTEyqrUovz4otKc1OJDjKZAz01klhJNzgcmirySeENTQ3MLS0Nz
+        Y3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYyle48Kb52X1JEmtUlz2UmHmQ9S68qe
+        z5hXavdfd620RJCt6NQWm/VPLyy/cnnxl2cTpfKeffOOU5DZoNRQtOppmmM40/bbbKyvE3j+
+        a3T0NPgl1n2s8WTMTbu6M5v5WsNZphP3JaQzfjOfuM14spRDdof2g9dyPRuqjHNWGp5YW9Ey
+        +8KX71uUWIozEg21mIuKEwHxnlQe3AIAAA==
+X-CMS-MailID: 20190611100013eucas1p229fae8dc62aac7cc8619c0bcf1740c2b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190607083531epcas3p48cf46e033280d7e86ed1029707f2f373
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190607083531epcas3p48cf46e033280d7e86ed1029707f2f373
+References: <CGME20190607083531epcas3p48cf46e033280d7e86ed1029707f2f373@epcas3p4.samsung.com>
+        <20190607083518.90078-1-tfiga@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 10:20 PM, Christoph Hellwig wrote:
-> Allow architectures to opt into ARCH_HAS_BINFMT_FLAT support instead of
-> assuming that all nommu ports support the format.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+On 2019-06-07 10:35, Tomasz Figa wrote:
+> I tend to review most of the vb2 patches anyway and we need some active
+> reviewers, so let add me to the MAINTAINERS file as such.
+>
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
 > ---
->  arch/arm/Kconfig        | 1 +
->  arch/c6x/Kconfig        | 1 +
->  arch/h8300/Kconfig      | 1 +
->  arch/m68k/Kconfig       | 1 +
->  arch/microblaze/Kconfig | 1 +
->  arch/sh/Kconfig         | 1 +
->  arch/xtensa/Kconfig     | 1 +
->  fs/Kconfig.binfmt       | 5 ++++-
->  8 files changed, 11 insertions(+), 1 deletion(-)
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 98cd84977350..b5f65f61becb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16758,6 +16758,7 @@ VIDEOBUF2 FRAMEWORK
+>   M:	Pawel Osciak <pawel@osciak.com>
+>   M:	Marek Szyprowski <m.szyprowski@samsung.com>
+>   M:	Kyungmin Park <kyungmin.park@samsung.com>
+> +R:	Tomasz Figa <tfiga@chromium.org>
+>   L:	linux-media@vger.kernel.org
+>   S:	Maintained
+>   F:	drivers/media/common/videobuf2/*
 
-
-For ARM bits:
-
-Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
-
-
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index b1b48c0bde76..695a26c68064 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -4,6 +4,7 @@ config ARM
->  	default y
->  	select ARCH_32BIT_OFF_T
->  	select ARCH_CLOCKSOURCE_DATA
-> +	select ARCH_HAS_BINFMT_FLAT
->  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
->  	select ARCH_HAS_DEVMEM_IS_ALLOWED
->  	select ARCH_HAS_ELF_RANDOMIZE
-> diff --git a/arch/c6x/Kconfig b/arch/c6x/Kconfig
-> index eeb0471268a0..78dfe186d708 100644
-> --- a/arch/c6x/Kconfig
-> +++ b/arch/c6x/Kconfig
-> @@ -7,6 +7,7 @@
->  config C6X
->  	def_bool y
->  	select ARCH_32BIT_OFF_T
-> +	select ARCH_HAS_BINFMT_FLAT
->  	select ARCH_HAS_SYNC_DMA_FOR_CPU
->  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->  	select CLKDEV_LOOKUP
-> diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
-> index 7457f190caaa..ec800e9d5aad 100644
-> --- a/arch/h8300/Kconfig
-> +++ b/arch/h8300/Kconfig
-> @@ -2,6 +2,7 @@
->  config H8300
->          def_bool y
->  	select ARCH_32BIT_OFF_T
-> +	select ARCH_HAS_BINFMT_FLAT
->  	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
->  	select BINFMT_FLAT_OLD_ALWAYS_RAM
->  	select GENERIC_ATOMIC64
-> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-> index fd69ee5ad6ab..c0c43c624afa 100644
-> --- a/arch/m68k/Kconfig
-> +++ b/arch/m68k/Kconfig
-> @@ -3,6 +3,7 @@ config M68K
->  	bool
->  	default y
->  	select ARCH_32BIT_OFF_T
-> +	select ARCH_HAS_BINFMT_FLAT
->  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
->  	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
->  	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
-> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-> index f11433daab4a..d411de05b628 100644
-> --- a/arch/microblaze/Kconfig
-> +++ b/arch/microblaze/Kconfig
-> @@ -3,6 +3,7 @@ config MICROBLAZE
->  	def_bool y
->  	select ARCH_32BIT_OFF_T
->  	select ARCH_NO_SWAP
-> +	select ARCH_HAS_BINFMT_FLAT if !MMU
->  	select ARCH_HAS_DMA_COHERENT_TO_PFN if MMU
->  	select ARCH_HAS_GCOV_PROFILE_ALL
->  	select ARCH_HAS_SYNC_DMA_FOR_CPU
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index b77f512bb176..df3e6215b78c 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  config SUPERH
->  	def_bool y
-> +	select ARCH_HAS_BINFMT_FLAT if !MMU
->  	select ARCH_HAS_PTE_SPECIAL
->  	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->  	select ARCH_MIGHT_HAVE_PC_PARPORT
-> diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
-> index 6ec1b75eabc5..ebc135bda921 100644
-> --- a/arch/xtensa/Kconfig
-> +++ b/arch/xtensa/Kconfig
-> @@ -2,6 +2,7 @@
->  config XTENSA
->  	def_bool y
->  	select ARCH_32BIT_OFF_T
-> +	select ARCH_HAS_BINFMT_FLAT if !MMU
->  	select ARCH_HAS_SYNC_DMA_FOR_CPU
->  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->  	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
-> diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-> index 82f7d7f234f3..286b425b30b9 100644
-> --- a/fs/Kconfig.binfmt
-> +++ b/fs/Kconfig.binfmt
-> @@ -91,9 +91,12 @@ config BINFMT_SCRIPT
->  
->  	  Most systems will not boot if you say M or N here.  If unsure, say Y.
->  
-> +config ARCH_HAS_BINFMT_FLAT
-> +	bool
-> +
->  config BINFMT_FLAT
->  	bool "Kernel support for flat binaries"
-> -	depends on !MMU || ARM || M68K
-> +	depends on ARCH_HAS_BINFMT_FLAT
->  	help
->  	  Support uClinux FLAT format binaries.
->  
-> 
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
