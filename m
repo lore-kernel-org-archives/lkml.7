@@ -2,130 +2,216 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F6EC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE33DC46477
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB06C21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="EWcXliNy"
+	by mail.kernel.org (Postfix) with ESMTP id 9654020896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406806AbfFKSDe (ORCPT
+        id S2406822AbfFKSDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:03:34 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36220 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406723AbfFKSDd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:03:33 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 28BD32AF;
-        Tue, 11 Jun 2019 20:03:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560276211;
-        bh=exWMQpzVUcVHbArclfchPQA20MY/zWqw3zj3LWT3EWw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EWcXliNyKKtOO/SjPheM3h6upHk9ZqRoe9SojrbSZElysefFhoOiKK5BZxyrCCuMe
-         rQ9suCr4VtdEkkjJ3d5hcTBZ7Z7FZW/rwIo1IzOpdQEjQGbw5HaA60UMBus69bF5gB
-         BB9xoqtbaPqC+Naa6cZlwUpaEucDEGxLJRs43PNI=
-Date:   Tue, 11 Jun 2019 21:03:16 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Michael Drake <michael.drake@codethink.co.uk>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@lists.codethink.co.uk,
-        Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
-Subject: Re: [PATCH v1 01/11] dt-bindings: display/bridge: Add bindings for
- ti948
-Message-ID: <20190611180316.GS5016@pendragon.ideasonboard.com>
-References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
- <20190611140412.32151-2-michael.drake@codethink.co.uk>
+        Tue, 11 Jun 2019 14:03:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33046 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406724AbfFKSDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:03:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 72435AEF7;
+        Tue, 11 Jun 2019 18:03:44 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     stefan.wahren@i2se.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     mbrugger@suse.de, sboyd@kernel.org, eric@anholt.net,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        ptesarik@suse.com, linux-rpi-kernel@lists.infradead.org,
+        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/7] cpufreq: add driver for Raspbery Pi
+Date:   Tue, 11 Jun 2019 19:58:40 +0200
+Message-Id: <20190611175839.28351-5-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190611175839.28351-1-nsaenzjulienne@suse.de>
+References: <20190611175839.28351-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190611140412.32151-2-michael.drake@codethink.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+Raspberry Pi's firmware offers and interface though which update it's
+performance requirements. It allows us to request for specific runtime
+frequencies, which the firmware might or might not respect, depending on
+the firmware configuration and thermals.
 
-Thank you for the patch.
+As the maximum and minimum frequencies are configurable in the firmware
+there is no way to know in advance their values. So the Raspberry Pi
+cpufreq driver queries them, builds an opp frequency table to then
+launch cpufreq-dt.
 
-On Tue, Jun 11, 2019 at 03:04:02PM +0100, Michael Drake wrote:
-> Adds device tree bindings for:
-> 
->   TI DS90UB948-Q1 2K FPD-Link III to OpenLDI Deserializer
-> 
-> The device has the compatible string "ti,ds90ub948", and
-> and allows an arrray of strings to be provided as regulator
+Also, as the firmware interface might be configured as a module, making
+the cpu clock unavailable during init, this implements a full fledged
+driver, as opposed to most drivers registering cpufreq-dt, which only
+make use of an init routine.
 
-s/arrray/array/
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Acked-by: Eric Anholt <eric@anholt.net>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+---
+  
+Changes since v1:
+  - Remove compatible checks
+  - Add module support, now full fledged driver
+  - Use NULL in clk_get()
 
-> names to enable for operation of the device.
-> 
-> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
-> Cc: Patrick Glaser <pglaser@tesla.com>
-> Cc: Nate Case <ncase@tesla.com>
-> ---
->  .../bindings/display/bridge/ti,ds90ub948.txt  | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
-> new file mode 100644
-> index 000000000000..f9e86cb22900
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
-> @@ -0,0 +1,24 @@
-> +TI DS90UB948-Q1 2K FPD-Link III to OpenLDI Deserializer
-> +=======================================================
-> +
-> +This is the binding for Texas Instruments DS90UB948-Q1 bridge deserializer.
-> +
-> +This device supports I2C only.
+ drivers/cpufreq/Kconfig.arm           |  8 +++
+ drivers/cpufreq/Makefile              |  1 +
+ drivers/cpufreq/raspberrypi-cpufreq.c | 97 +++++++++++++++++++++++++++
+ 3 files changed, 106 insertions(+)
+ create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
 
-Then the DT node should be a child of its I2C controller, and have a reg
-property.
-
-> +
-> +Required properties:
-> +
-> +- compatible: "ti,ds90ub948"
-> +
-> +Optional properties:
-> +
-> +- regulators: List of regulator name strings to enable for operation of device.
-
-There's a standard binding for regulators, using *-supply properties.
-Please use them.
-
-You should also use the OF graph DT bindings to model the data
-connections.
-
-> +
-> +Example
-> +-------
-> +
-> +ti948: ds90ub948@0 {
-> +	compatible = "ti,ds90ub948";
-> +
-> +	regulators: "vcc",
-> +	            "vcc_disp";
-> +};
-
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index 6f65b7f05496..56c31a78c692 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -142,6 +142,14 @@ config ARM_QCOM_CPUFREQ_HW
+ 	  The driver implements the cpufreq interface for this HW engine.
+ 	  Say Y if you want to support CPUFreq HW.
+ 
++config ARM_RASPBERRYPI_CPUFREQ
++	tristate "Raspberry Pi cpufreq support"
++	depends on CLK_RASPBERRYPI || COMPILE_TEST
++	help
++	  This adds the CPUFreq driver for Raspberry Pi
++
++	  If in doubt, say N.
++
+ config ARM_S3C_CPUFREQ
+ 	bool
+ 	help
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index 7bcda2273d0c..5a6c70d26c98 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -65,6 +65,7 @@ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
+ obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
+ obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
+ obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-kryo.o
++obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+= raspberrypi-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
+diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/raspberrypi-cpufreq.c
+new file mode 100644
+index 000000000000..2bc7d9734272
+--- /dev/null
++++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Raspberry Pi cpufreq driver
++ *
++ * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++ */
++
++#include <linux/clk.h>
++#include <linux/cpu.h>
++#include <linux/cpufreq.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_opp.h>
++
++#define RASPBERRYPI_FREQ_INTERVAL	100000000
++
++static struct platform_device *cpufreq_dt;
++
++static int raspberrypi_cpufreq_probe(struct platform_device *pdev)
++{
++	struct device *cpu_dev;
++	unsigned long min, max;
++	unsigned long rate;
++	struct clk *clk;
++	int ret;
++
++	cpu_dev = get_cpu_device(0);
++	if (!cpu_dev) {
++		pr_err("Cannot get CPU for cpufreq driver\n");
++		return -ENODEV;
++	}
++
++	clk = clk_get(cpu_dev, NULL);
++	if (IS_ERR(clk)) {
++		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
++		return PTR_ERR(clk);
++	}
++
++	/*
++	 * The max and min frequencies are configurable in the Raspberry Pi
++	 * firmware, so we query them at runtime.
++	 */
++	min = roundup(clk_round_rate(clk, 0), RASPBERRYPI_FREQ_INTERVAL);
++	max = roundup(clk_round_rate(clk, ULONG_MAX), RASPBERRYPI_FREQ_INTERVAL);
++	clk_put(clk);
++
++	for (rate = min; rate <= max; rate += RASPBERRYPI_FREQ_INTERVAL) {
++		ret = dev_pm_opp_add(cpu_dev, rate, 0);
++		if (ret)
++			goto remove_opp;
++	}
++
++	cpufreq_dt = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
++	ret = PTR_ERR_OR_ZERO(cpufreq_dt);
++	if (ret) {
++		dev_err(cpu_dev, "Failed to create platform device, %d\n", ret);
++		goto remove_opp;
++	}
++
++	return 0;
++
++remove_opp:
++	dev_pm_opp_remove_all_dynamic(cpu_dev);
++
++	return ret;
++}
++
++static int raspberrypi_cpufreq_remove(struct platform_device *pdev)
++{
++	struct device *cpu_dev;
++
++	cpu_dev = get_cpu_device(0);
++	if (cpu_dev)
++		dev_pm_opp_remove_all_dynamic(cpu_dev);
++
++	platform_device_unregister(cpufreq_dt);
++
++	return 0;
++}
++
++/*
++ * Since the driver depends on clk-raspberrypi, which may return EPROBE_DEFER,
++ * all the activity is performed in the probe, which may be defered as well.
++ */
++static struct platform_driver raspberrypi_cpufreq_driver = {
++	.driver = {
++		.name = "raspberrypi-cpufreq",
++	},
++	.probe          = raspberrypi_cpufreq_probe,
++	.remove		= raspberrypi_cpufreq_remove,
++};
++module_platform_driver(raspberrypi_cpufreq_driver);
++
++MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de");
++MODULE_DESCRIPTION("Raspberry Pi cpufreq driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:raspberrypi-cpufreq");
 -- 
-Regards,
+2.21.0
 
-Laurent Pinchart
