@@ -2,92 +2,120 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E072DC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3727C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF91821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560292514;
-	bh=OSw+/K5bvoTr1HEC9Y/CwqLjEc5nFO9PjsF4Pibd8Go=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CCAa1LTQAgK7VHH3tIHh7AFgHtFdduKNg6oXptBvmSIfGZluMqQAYm4o9bFl0Vorf
-	 2/q71KDY3nmgg95C5geVELGmyR4dOBCu+uH/2uxFbzULD0zrKmwmEBV2NE/wUp6Nf5
-	 KvpM51tn3PB0trSU0hCrutWTuipXfpXqgS7jS+w4=
+	by mail.kernel.org (Postfix) with ESMTP id CF3732173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407131AbfFKWfN (ORCPT
+        id S2407197AbfFKWhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:35:13 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45824 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405174AbfFKWfM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:35:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id e3so11296069ioc.12;
-        Tue, 11 Jun 2019 15:35:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NCgQwxsu0f3r4btRqej5pZhVli0wu2GBc0gKWgavRis=;
-        b=Nn7j2RkQ7LwCq7tRGrwPzOkfh0I79XGw9slQaYNAoRVNjaJLdJs7IQakHEU8aZJDgl
-         ORN60sXcuYxeQIbcvccw899YbDkzhQWTBykmehNWCSL5IGislKAlVPR8aMDHdoSWfhGA
-         U747IGH1l95gR5x+yC+rMVKqoSoV3X04B9jKiZB9PwL8vTpuU8khEpnC7WBc7wn7O3UW
-         dSG/McsLdIqowtlbv8pXXyoAgapRGz/LrMYWJIVQU/2QMzc9QMay7lRANnQD5tIO5yNb
-         y21qyzxwqbWLs0es9LmGgQX6N78wTpHBGd30Jw887uoXBBYGQWvsY4a3m5XxLGic5tgk
-         AFgw==
-X-Gm-Message-State: APjAAAVTYrVM2i5Jfc7ljuocImzytGE5XP34gK5tLfXW/EE+8U0CQy7w
-        R2YH3n9jTEGQSkOxeP43Fw==
-X-Google-Smtp-Source: APXvYqyldbzjVVfHCAHQd21SudrsdTqB9IH5YfFTe83h4l7n3V0qepl2ZRh+aD/yH4IiOo6MWE21IQ==
-X-Received: by 2002:a05:6602:2256:: with SMTP id o22mr19307948ioo.95.1560292511617;
-        Tue, 11 Jun 2019 15:35:11 -0700 (PDT)
-Received: from localhost (ip-174-149-252-64.englco.spcsdns.net. [174.149.252.64])
-        by smtp.gmail.com with ESMTPSA id q142sm1884761itb.17.2019.06.11.15.35.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 15:35:10 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 16:35:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     yibin.gong@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
-        festevam@gmail.com, vkoul@kernel.org, dan.j.williams@intel.com,
-        u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com,
-        l.stach@pengutronix.de, will.deacon@arm.com,
-        linux-spi@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 10/15] dma: imx-sdma: add i.mx6ul/6sx compatible name
-Message-ID: <20190611223507.GA25722@bogus>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
- <20190610081753.11422-11-yibin.gong@nxp.com>
+        Tue, 11 Jun 2019 18:37:45 -0400
+Received: from mga06.intel.com ([134.134.136.31]:32551 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405478AbfFKWho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:37:44 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 15:37:43 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Jun 2019 15:37:43 -0700
+Date:   Tue, 11 Jun 2019 15:28:22 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>, g@romley-ivt3.sc.intel.com
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [RFC PATCH] x86/cpufeatures: Enumerate new AVX512 bfloat16
+ instructions
+Message-ID: <20190611222822.GD180343@romley-ivt3.sc.intel.com>
+References: <1560186158-174788-1-git-send-email-fenghua.yu@intel.com>
+ <20190610192026.GI5488@zn.tnic>
+ <20190611181920.GC180343@romley-ivt3.sc.intel.com>
+ <20190611194701.GJ31772@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610081753.11422-11-yibin.gong@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190611194701.GJ31772@zn.tnic>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 16:17:48 +0800, yibin.gong@nxp.com wrote:
-> From: Robin Gong <yibin.gong@nxp.com>
+On Tue, Jun 11, 2019 at 09:47:02PM +0200, Borislav Petkov wrote:
+> On Tue, Jun 11, 2019 at 11:19:20AM -0700, Fenghua Yu wrote:
+> > So can I re-organize word 11 and 12 as follows?
+> > 
+> > 1. Change word 11 to host scattered features.
+> > 2. Move the previos features in word 11 and word 12 to word 11:
+> > /*
+> >  * Extended auxiliary flags: Linux defined - For features scattered in various
+> >  * CPUID levels and sub-leaves like CPUID level 7 and sub-leaf 1, etc, word 19.
+> >  */
+> > #define X86_FEATURE_CQM_LLC             (11*32+ 0) /* LLC QoS if 1 */
+> > #define X86_FEATURE_CQM_OCCUP_LLC       (11*32+ 1) /* LLC occupancy monitoring */
+> > #define X86_FEATURE_CQM_MBM_TOTAL       (11*32+ 2) /* LLC Total MBM monitoring */
+> > #define X86_FEATURE_CQM_MBM_LOCAL       (11*32+ 3) /* LLC Local MBM monitoring */
 > 
-> Add i.mx6ul and i.mx6sx compatible name in binding doc.
+> Yap.
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> > 3. Change word 12 to host CPUID.(EAX=7,ECX=1):EAX:
+> > /* Intel-defined CPU features, CPUID level 0x7:1 (EAX), word 12 */
+> > #define X86_FEATURE_AVX512_BF16         (12*32+ 0) /* BFLOAT16 instructions */
 > 
+> This needs to be (12*32+ 5) if word 12 is going to map leaf
+> CPUID.(EAX=7,ECX=1):EAX.
+> 
+> At least judging from the arch extensions doc which lists EAX as:
+> 
+> Bits 04-00: Reserved.
+> Bit 05: AVX512_BF16. Vector Neural Network Instructions supporting BFLOAT16 inputs and conversion instructions from IEEE single precision.
+> Bits 31-06: Reserved.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Yes, you are absolutely right. I'll defint it as (12*32+ 5).
 
-If a tag was not added on purpose, please state why and what changed.
+> 
+> > 4. Do other necessary changes to match the new word 11 and word 12.
+> 
+> But split in two patches: first does steps 1+2, second patch adds the
+> new leaf to word 12.
+
+There are two varialbes defined in cpuinfo_x86: x86_cache_max_rmid and
+x86_cache_occ_scale. c->x86_cache_max_rmid is read from CPUID.0xf.1:ECX
+and c->x86_cache_occ_scale is read from CPUID.0xf.1:EBX.
+
+After getting X86_FEATURE_CQM_* from scattered, the two variables need
+to be read from CPUID again. So the code of reading the two variables
+need to be moved from before init_scattered_cpuid_features(c) to after
+the function. This make the get_cpu_cap() code awkward.
+
+And the two variables are ONLY used in resctrl monitoring configuration.
+There is no need to store them in cpuinfo_x86 on each CPU.
+
+I'm thinking to simplify and clean this part of code:
+
+1. In patch #1:
+- remove the definitions of x86_cache_max_rmid and x86_cache_occ_scale
+from cpuinfo_x86
+- remove assignment of c->x86_cache_max_rmid and c->x86_cache_occ_scale
+from get_cpu_cap(c)
+- get r->mon_scale and r->num_rmid in rdt_get_mon_l3_config(r) directly
+from CPUID.0xf.1:EBX and CPUID.0xf.1:ECX.
+2. In patch #2: do steps 1+2 to recycle word 11. After patch #1, I can
+totally remove the code to get c->x86_cache_max_rmd and
+c->x86_cache_occ_scale in get_cpu_cap(c). And patch #2 is cleaner.
+3. In patch #3: add new word 12 to host CPUID.7.1:EAX
+
+Do you think the patch #1 is necessary and this is a right patch set?
+
+Thanks.
+
+-Fenghua
