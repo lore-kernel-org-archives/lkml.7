@@ -2,111 +2,266 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40603C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402FDC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B75B212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014302145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNch+St/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404364AbfFKHhZ (ORCPT
+        id S2404448AbfFKHh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:37:25 -0400
-Received: from muru.com ([72.249.23.125]:52734 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404009AbfFKHhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:37:25 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 23EA580C0;
-        Tue, 11 Jun 2019 07:37:45 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 00:37:20 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Russell King <rmk@arm.linux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [PATCH-next 00/20]  gpio: gpio-omap: set of fixes and big
- clean-up
-Message-ID: <20190611073720.GB5447@atomide.com>
-References: <20190610171103.30903-1-grygorii.strashko@ti.com>
+        Tue, 11 Jun 2019 03:37:57 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36336 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404009AbfFKHh4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 03:37:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w7so8211120oic.3;
+        Tue, 11 Jun 2019 00:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uyWNTU55JT9GK2aN646mLXTRkgWwGnf383ImPAHfNpc=;
+        b=NNch+St/7hAl3ovYZbYCVbvfTDW9aaAdG3YFRwtyjwKjabESyVU20yJQkrnKixD3V/
+         MoQhUTsGszn5tB3sqV40NutooZumVOOm53GRxEuKgaiDULicGCieRRvk7R5bj/uoQa02
+         ZcPZNO38kFAJy/g9yETKVRDRXYZLLc6KGC1ouRVEKOAMX/wrHNeyluk2fPksMft1XpGV
+         XGPrYHRVJCCTdzOYbSokuPBI43FsdrG+exejkRj1mJqxgRrLLhO3DvzjPBDmriC5mzoi
+         Am+ztDUZIWoZrvOT3pXdFwClzI9uq6Ltf0K6ph2Bp0y52xWs23mGDCwtR0vMYsk/8S9I
+         sNQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uyWNTU55JT9GK2aN646mLXTRkgWwGnf383ImPAHfNpc=;
+        b=jcANhyl9a0lLMLyucPCpFaBiYgG4dFvLQ8HSk2o5Yo5jpgUTXHVh7xqk3QqUa1VWKt
+         o/MqIKytkcGnzRxHWEl9hf/so1rC3OMtK6GYbYANV/nWYtjn+ZfZ5kvVahzqBOcOxdRE
+         vDXqSJfE88AdQlQV5WUmpdxtGGxQiXmTDBPo/Uc1xklaXHYnqMhQQfFZ/eMGh4DX7PCB
+         VJSMQZ2SOUtlX1vStOys5CYKtPmK3mZHKgQQ7CT7DRxpT95MDGccCLlgjwyXoJ3Web/h
+         4X87bsauwfGoWbgYwcbdWnFexPVpfC1aJEiBQql1niFlboJ0TnPo8i3usFbg37UE+57h
+         jKHQ==
+X-Gm-Message-State: APjAAAX1V3szujy6jUA7FdUqZpcldCXzEI7zshSpl8TaYJ9nja3wGkJM
+        h1ZjU2FpZWOo+H75UkzpdCE1EjEa8XLTACuZ8rQ=
+X-Google-Smtp-Source: APXvYqw+OUl8lt7EinVIXV0dyYFcWVFGvEUraTxANWi0wvDXljmpbDt7OmvSt0YYFLlgqxH/x4HFS/kwFzsk6v9ZG5M=
+X-Received: by 2002:aca:3305:: with SMTP id z5mr12567515oiz.141.1560238675747;
+ Tue, 11 Jun 2019 00:37:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610171103.30903-1-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
+ <1558418814-6822-2-git-send-email-wanpengli@tencent.com> <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
+In-Reply-To: <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 11 Jun 2019 15:38:40 +0800
+Message-ID: <CANRm+CyqH5ojNTcX3zfVjB8rayGHAW0Ex+fiGPnrO7bkmvr_4w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] KVM: X86: Provide a capability to disable cstate
+ msr read intercepts
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 5 Jun 2019 at 00:53, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 21/05/19 08:06, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Allow guest reads CORE cstate when exposing host CPU power management c=
+apabilities
+> > to the guest. PKG cstate is restricted to avoid a guest to get the whol=
+e package
+> > information in multi-tenant scenario.
+> >
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Cc: Liran Alon <liran.alon@oracle.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> > v1 -> v2:
+> >  * use a separate bit for KVM_CAP_X86_DISABLE_EXITS
+> >
+> >  Documentation/virtual/kvm/api.txt | 1 +
+> >  arch/x86/include/asm/kvm_host.h   | 1 +
+> >  arch/x86/kvm/vmx/vmx.c            | 6 ++++++
+> >  arch/x86/kvm/x86.c                | 5 ++++-
+> >  arch/x86/kvm/x86.h                | 5 +++++
+> >  include/uapi/linux/kvm.h          | 4 +++-
+> >  tools/include/uapi/linux/kvm.h    | 4 +++-
+> >  7 files changed, 23 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/=
+kvm/api.txt
+> > index 33cd92d..91fd86f 100644
+> > --- a/Documentation/virtual/kvm/api.txt
+> > +++ b/Documentation/virtual/kvm/api.txt
+> > @@ -4894,6 +4894,7 @@ Valid bits in args[0] are
+> >  #define KVM_X86_DISABLE_EXITS_MWAIT            (1 << 0)
+> >  #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
+> >  #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
+> > +#define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
+> >
+> >  Enabling this capability on a VM provides userspace with a way to no
+> >  longer intercept some instructions for improved latency in some
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm=
+_host.h
+> > index d5457c7..1ce8289 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -882,6 +882,7 @@ struct kvm_arch {
+> >       bool mwait_in_guest;
+> >       bool hlt_in_guest;
+> >       bool pause_in_guest;
+> > +     bool cstate_in_guest;
+> >
+> >       unsigned long irq_sources_bitmap;
+> >       s64 kvmclock_offset;
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 0861c71..da24f18 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -6637,6 +6637,12 @@ static struct kvm_vcpu *vmx_create_vcpu(struct k=
+vm *kvm, unsigned int id)
+> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, M=
+SR_TYPE_RW);
+> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, =
+MSR_TYPE_RW);
+> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, =
+MSR_TYPE_RW);
+> > +     if (kvm_cstate_in_guest(kvm)) {
+> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES=
+, MSR_TYPE_R);
+> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RES=
+IDENCY, MSR_TYPE_R);
+> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RES=
+IDENCY, MSR_TYPE_R);
+> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RES=
+IDENCY, MSR_TYPE_R);
+>
+> I think I have changed my mind on the implementation of this, sorry.
+>
+> 1) We should emulate these MSRs always, otherwise the guest API changes
+> between different values of KVM_CAP_X86_DISABLE_EXITS which is not
+> intended.  Also, KVM_CAP_X86_DISABLE_EXITS does not prevent live
+> migration, so it should be possible to set the MSRs in the host to
+> change the delta between the host and guest values.
+>
+> 2) If both KVM_X86_DISABLE_EXITS_HLT and KVM_X86_DISABLE_EXITS_MWAIT are
+> disabled (i.e. exit happens), the MSRs will be purely emulated.
+> C3/C6/C7 residency will never increase (it will remain the value that is
+> set by the host).  When the VM executes an hlt vmexit, it should save
+> the current TSC.  When it comes back, the C1 residency MSR should be
+> increased by the time that has passed.
+>
+> 3) If KVM_X86_DISABLE_EXITS_HLT is enabled but
+> KVM_X86_DISABLE_EXITS_MWAIT is disabled (i.e. mait exits happen),
+> C3/C6/C7 residency will also never increase, but the C1 residency value
+> should be read using rdmsr from the host, with a delta added from the
+> host value.
+>
+> 4) If KVM_X86_DISABLE_EXITS_HLT and KVM_X86_DISABLE_EXITS_MWAIT are both
+> disabled (i.e. mwait exits do not happen), all four residency values
+> should be read using rdmsr from the host, with a delta added from the
+> host value.
+>
+> 5) If KVM_X86_DISABLE_EXITS_HLT is disabled and
+> KVM_X86_DISABLE_EXITS_MWAIT is enabled, the configuration makes no sense
+> so it's okay not to be very optimized.  In this case, the residency
+> value should be read as in (4), but hlt vmexits will be accounted as in
+> (2) so we need to be careful not to double-count the residency during
+> hlt.  This means doing four rdmsr before the beginning of the hlt vmexit
+> and four at the end of the hlt vmexit.
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [190610 10:11]:
-> Hi Linus, Russell, Tony, All,
-> 
-> This series contains set of patches from Russell King which were circulated
-> internally for quite some time already and I fill it's reasonable to move
-> future discussion upstream (and also avoid rebasing).
-> Fisrt two patches are fixes and the rest are big, great clean up
-> from Russell King.
-> 
-> Personally, I like this clean up and refactoring very much and don't want
-> it to be lost.
+MSR_CORE_C1_RES is unreadable except for ATOM platform, so I think we
+can avoid the complex logic to handle C1 now. :)
 
-Adding Aaro to Cc too hopefully for more testing. Yes this is very nice
-and behaves for my idle test cases. I've also boot tested omap1 osk and
-it still works just fine for NFSroot.
+Regards,
+Wanpeng Li
 
-FYI, after this series, the only issue I'm aware of still remaining
-is the lost edge wake-up interrupts for L4 PER idle that I posted a WIP
-fix as "[PATCH] gpio: gpio-omap: Fix lost edge wake-up interrupts".
-But that one still needs a bit more work and is a separate fix from this
-series.
-
-So for this whole series, please feel free to add:
-
-Tested-by: Tony Lindgren <tony@atomide.com>
-
-
-
-> Code can be found at:
->  git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
-> branch:
->  lkml-next-gpio-clean-up
-> 
-> Russell King (20):
->   gpio: gpio-omap: ensure irq is enabled before wakeup
->   gpio: gpio-omap: fix lack of irqstatus_raw0 for OMAP4
->   gpio: gpio-omap: remove remainder of list management
->   gpio: gpio-omap: clean up edge interrupt handling
->   gpio: gpio-omap: remove irq_ack method
->   gpio: gpio-omap: move omap_gpio_request() and omap_gpio_free()
->   gpio: gpio-omap: simplify omap_gpio_get_direction()
->   gpio: gpio-omap: simplify get() method
->   gpio: gpio-omap: simplify get_multiple()
->   gpio: gpio-omap: simplify set_multiple()
->   gpio: gpio-omap: simplify bank->level_mask
->   gpio: gpio-omap: simplify read-modify-write
->   gpio: gpio-omap: simplify omap_toggle_gpio_edge_triggering()
->   gpio: gpio-omap: simplify omap_set_gpio_irqenable()
->   gpio: gpio-omap: remove dataout variation in context handling
->   gpio: gpio-omap: clean up omap_gpio_restore_context()
->   gpio: gpio-omap: constify register tables
->   gpio: gpio-omap: clean up wakeup handling
->   gpio: gpio-omap: irq_startup() must not return error codes
->   gpio: gpio-omap: clean up register access in omap2_set_gpio_debounce()
-> 
->  drivers/gpio/gpio-omap.c                | 497 ++++++++----------------
->  include/linux/platform_data/gpio-omap.h |   2 +-
->  2 files changed, 161 insertions(+), 338 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+>
+> Therefore the data structure should be something like
+>
+> struct kvm_residency_msr {
+>         u64 value;
+>         bool delta_from_host;
+>         bool count_with_host;
+> }
+>
+> u64 kvm_residency_read_host(struct kvm_residency_msr *msr)
+> {
+>         u64 unscaled_value =3D rdmsrl(msr->index);
+>         // apply TSC scaling...
+>         return ...
+> }
+>
+> u64 kvm_residency_read(struct kvm_residency_msr *msr)
+> {
+>         return msr->value +
+>                 (msr->delta_from_host ? kvm_residency_read_host(msr) : 0)=
+;
+> }
+>
+> void kvm_residency_write(struct kvm_residency_msr *msr,
+>                          u64 value)
+> {
+>         msr->value =3D value -
+>                 (msr->delta_from_host ? kvm_residency_read_host(msr) : 0)=
+;
+> }
+>
+> // count_with_host is true for C1 iff any of KVM_CAP_DISABLE_EXITS_HLT
+> // or KVM_CAP_DISABLE_EXITS_MWAIT is set
+> // count_with_host is true for C3/C6/C7 iff KVM_CAP_DISABLE_EXITS_MWAIT
+> is set
+> void kvm_residency_setup(struct kvm_residency_msr *msr, u16 index,
+>                          bool count_with_host)
+> {
+>         /* Preserve value on calls after the first */
+>         u64 value =3D msr->index ? kvm_residency_read(msr) : 0;
+>         msr->delta_from_host =3D msr->count_with_host =3D count_with_host=
+;
+>         msr->index =3D index;
+>         kvm_residency_write(msr, value);
+> }
+>
+> // The following functions are called from hlt vmexits.
+>
+> void kvm_residency_start_hlt(struct kvm_residency_msr *msr)
+> {
+>         if (msr->count_with_host) {
+>                 WARN_ON(msr->delta_from_host);
+>                 msr->value +=3D kvm_residency_read_host(msr);
+>                 msr->delta_from_host =3D false;
+>         }
+> }
+>
+> // host_tsc_waited is 0 except for MSR_CORE_C1_RES
+> void kvm_residency_end_hlt(struct kvm_residency_msr *msr,
+>                            u64 host_tsc_waited)
+> {
+>         if (msr->count_with_host) {
+>                 WARN_ON(!msr->delta_from_host);
+>                 msr->value -=3D kvm_residency_read_host(msr);
+>                 msr->delta_from_host =3D true;
+>         }
+>         if (host_tsc_waited) {
+>                 // ... apply TSC scaling to host_tsc_waited ...
+>                 msr->value +=3D ...;
+>         }
+> }
+>
+> Thanks,
+>
+> Paolo
