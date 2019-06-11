@@ -2,115 +2,104 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED48C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4BBC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F332173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FCA2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="EF7nNAKs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vRgavvQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404479AbfFKHaM (ORCPT
+        id S2404099AbfFKHeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:30:12 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:26452 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404447AbfFKHaG (ORCPT
+        Tue, 11 Jun 2019 03:34:22 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38471 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403920AbfFKHeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:30:06 -0400
+        Tue, 11 Jun 2019 03:34:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v11so6455268pgl.5;
+        Tue, 11 Jun 2019 00:34:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1560238205; x=1591774205;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=esr2q1USdAHDmA56Tt83OjQfJ7WBN6FOvwjL3QK6qPg=;
-  b=EF7nNAKsczP12k9j6IxMoY7mMTD9pTc2YANdG8AHkXteLXGwRUsOMgmc
-   lQi3MIHESiAvQXHovzK+n9uPIXgZZxHbsWp5ZyVdUMnnLdYJIu7rZZ+hc
-   XIvbc83vsY/fb9sxmCRpFpFM2hlugKYzVEWqjRarrnlFrEnheobtT9Boh
-   s=;
-X-IronPort-AV: E=Sophos;i="5.60,578,1549929600"; 
-   d="scan'208";a="804701720"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 11 Jun 2019 07:30:03 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id B8109A20FE;
-        Tue, 11 Jun 2019 07:30:02 +0000 (UTC)
-Received: from EX13D13UWB001.ant.amazon.com (10.43.161.156) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 11 Jun 2019 07:30:02 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D13UWB001.ant.amazon.com (10.43.161.156) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 11 Jun 2019 07:30:01 +0000
-Received: from [10.107.3.19] (10.107.3.19) by mail-relay.amazon.com
- (10.43.162.232) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Tue, 11 Jun 2019 07:29:57 +0000
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>
-CC:     James Morse <james.morse@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
- <20190608090556.GA32464@zn.tnic>
- <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <07977a4a-0927-3427-e102-5a850b2f6dce@amazon.com>
-Date:   Tue, 11 Jun 2019 10:29:55 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8fNYdcY99hechvTD8ARpttj/QvqTzgjVeORsIZWh0xs=;
+        b=vRgavvQpYLzwzD6d+h7wpnmye62IpW4iDT3LEq2Ecqz3KDn2NUpn3Sl6ITX/3j0Qqj
+         URdhE1sxJPBN0TnaNnOInjcu2+8U97kE1BvXWnE0KgGMFYsDeCX8rc8lTLeSXY/Niet2
+         wf3DqZeY1V25X4S2q0DQSNGSvXM0K+PmhO2HUc40i7owNDyTgqidcXBjTbSrarBku2Am
+         ysMXzcIb2n9dkD7Tq5ppCoUtDdDh5AFeSRrdrmOBMYxWdsby5U7TgmJ0D0IIKZAXvVEo
+         1YLCt++2fP7xuj+rCT8g8wKe+9l9pXoVhRnjhohsa067ziMP5DQ6pNZxIOCvTlZPOqpP
+         4uOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8fNYdcY99hechvTD8ARpttj/QvqTzgjVeORsIZWh0xs=;
+        b=jfZd+PeSnZqk8FgvmJqMIo3y1MUTQA/HETjnrwXdiW5vt0gOFBSuBwliq10nu98Bq1
+         IV8e/dYtPgEEIZileW943q8MD6ze6pLpDCEC00638M5jPYej5nbDS43neDtallB0pdww
+         SZo71lcIJ4ZzRHRM4KkvRhv2OXJW6kTCv6NxtR699CD+NKbQt0YNPvAZenwht8Sin3tT
+         Qxkjq9cIOipdPyu6QXp4p615VI7k88yNl01qPcoOBeZnGIBuq7dt85EjPe4hoJ6B1g+R
+         6bgfpLi7cZeT6YzAqJFPJgAOQPfpiYG995/s9hMhn5EtUDJVSe1KymYU7pSgKhypRsFc
+         qYOg==
+X-Gm-Message-State: APjAAAUUcAmjvJ9i8m9UjkZWkKFZbXMJkytAQKvpPaWeO0ckbpL6Wm0o
+        hSCPc2+/iDR7XlxD3glnraSowdqD
+X-Google-Smtp-Source: APXvYqyMVooA2mZ+u1WFP1NhPY/ZacqkzaKzAvWBK3iJ5lyO0pdgyP0A/0qpmFjwEfZP1u8pZ3ud1w==
+X-Received: by 2002:a63:dc56:: with SMTP id f22mr3381114pgj.305.1560238461658;
+        Tue, 11 Jun 2019 00:34:21 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id 14sm6860800pfj.36.2019.06.11.00.34.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 11 Jun 2019 00:34:20 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v2 0/5] KVM: X86: Add virtual C-states residency msrs support
+Date:   Tue, 11 Jun 2019 15:34:06 +0800
+Message-Id: <1560238451-19495-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben, Boris
+After exposing some host CPU power management capabilities to dedicated 
+instances, there is a requirement to consult current idle power-state 
+residency statistics by turbostat.
 
-On 6/11/2019 8:50 AM, Benjamin Herrenschmidt wrote:
-> 
-> Anyway, let's get back to the specific case of our Amazon platform here
-> since it's a concrete example.
-> 
-> Hanna, can you give us a reasonably exhaustive list of how many such
-> "drivers" we'll want in the EDAC subsystem and whether you envision any
-> coordination requirement between them or not ?
-In the near future we plan to push EDAC drivers for L1/L2 and memory 
-controller.
-There's no common resources/shared data between them.
+This patchset adds virtual C-states residency msrs emulation. Allowing 
+guest reads CORE cstate when exposing host CPU power management capabilities 
+to the guest. PKG cstate is restricted currently to avoid a guest to get 
+the whole package information in multi-tenant scenario.
 
-Thanks,
-Hanna
-> 
-> Cheers,
-> Ben.
-> 
-> 
-> 
+v1 -> v2:
+ * add residency msrs emulation (base on Paolo's design)
+
+Wanpeng Li (5):
+  KVM: X86: Dynamic allocate core residency msr state
+  KVM: X86: Introduce residency msrs read/write operations
+  KVM: X86: setup residency msrs during vCPU creation
+  KVM: VMX: Add get/set residency msrs logic
+  KVM: X86: Save/restore residency values when sched_out/sched_in
+
+ arch/arm/include/asm/kvm_host.h     |   1 +
+ arch/arm64/include/asm/kvm_host.h   |   1 +
+ arch/mips/include/asm/kvm_host.h    |   1 +
+ arch/powerpc/include/asm/kvm_host.h |   1 +
+ arch/s390/include/asm/kvm_host.h    |   1 +
+ arch/x86/include/asm/kvm_host.h     |  11 ++++
+ arch/x86/kvm/vmx/vmx.c              |  15 ++++++
+ arch/x86/kvm/x86.c                  | 104 ++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.h                  |   5 ++
+ include/linux/kvm_host.h            |   1 +
+ virt/kvm/kvm_main.c                 |   1 +
+ 11 files changed, 142 insertions(+)
+
+-- 
+2.7.4
+
