@@ -2,101 +2,96 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3726FC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0A3C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1065220866
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252AF20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406198AbfFKRrK (ORCPT
+        id S2406287AbfFKRsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:47:10 -0400
-Received: from mga06.intel.com ([134.134.136.31]:15394 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405488AbfFKRrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:47:09 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 10:46:55 -0700
-X-ExtLoop1: 1
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2019 10:46:55 -0700
-Date:   Tue, 11 Jun 2019 10:37:34 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v4 0/5] x86/umwait: Enable user wait instructions
-Message-ID: <20190611173733.GB180343@romley-ivt3.sc.intel.com>
-References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
- <20190611090145.GU3436@hirez.programming.kicks-ass.net>
+        Tue, 11 Jun 2019 13:48:15 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:47535 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405625AbfFKRsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:48:15 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45Nct32KfCz1rXhY;
+        Tue, 11 Jun 2019 19:48:10 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45Nct20nSjz1rxRG;
+        Tue, 11 Jun 2019 19:48:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 2BFHBsK6aqSo; Tue, 11 Jun 2019 19:48:09 +0200 (CEST)
+X-Auth-Info: HG913dC6nI3QeXdDWZOlZYfrTig6dgohUmdEi80BbIbGuJfv0F142LduSvY+GpMv
+Received: from igel.home (ppp-46-244-178-52.dynamic.mnet-online.de [46.244.178.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 11 Jun 2019 19:48:09 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id C6AC72C0D1D; Tue, 11 Jun 2019 19:48:06 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+        <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
+        <20190607172902.GA8183@lst.de>
+        <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
+        <20190610081825.GA16534@lst.de>
+        <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
+X-Yow:  Hello...  IRON CURTAIN?  Send over a SAUSAGE PIZZA!
+ World War III?  No thanks!
+Date:   Tue, 11 Jun 2019 19:48:06 +0200
+In-Reply-To: <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net> (Larry
+        Finger's message of "Mon, 10 Jun 2019 11:09:47 -0500")
+Message-ID: <87ftogau95.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611090145.GU3436@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 11:01:45AM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 07, 2019 at 03:00:32PM -0700, Fenghua Yu wrote:
-> > Today, if an application needs to wait for a very short duration
-> > they have to have spinloops. Spinloops consume more power and continue
-> > to use execution resources that could hurt its thread siblings in a core
-> > with hyperthreads. New instructions umonitor, umwait and tpause allow
-> > a low power alternative waiting at the same time could improve the HT
-> > sibling perform while giving it any power headroom. These instructions
-> > can be used in both user space and kernel space.
-> > 
-> > A new MSR IA32_UMWAIT_CONTROL allows kernel to set a time limit in
-> > TSC-quanta that prevents user applications from waiting for a long time.
-> > This allows applications to yield the CPU and the user application
-> > should consider using other alternatives to wait.
-> 
-> I'm confused on the purpose of this control; what do we win by limiting
-> this time?
+On Jun 10 2019, Larry Finger <Larry.Finger@lwfinger.net> wrote:
 
-In previous patches, there is no time limit (max time is 0 which means no
-time limit).
+> I do not understand why the if statement returns true as neither of the
+> values is zero.
 
-Andy Lutomirski proposed to set the time limit:
+That's because the format string does not make any sense.  You are
+printing garbage.
 
-https://lkml.org/lkml/2019/2/26/735
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index f7afdad..ba2489d 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -317,9 +317,12 @@ int dma_supported(struct device *dev, u64 mask)
+>
+>  int dma_set_mask(struct device *dev, u64 mask)
+>  {
+> +       pr_info("mask 0x%llx, dma_mask 0x%llx, dma_supported 0x%llx\n",
+> mask, dev->dma_mask,
+> +               dma_supported(dev, mask));
 
-"So I propose setting the timeout to either 100 microseconds or 100k
-"cycles" by default.  In the event someone determines that they save
-materially more power or gets materially better performance with a
-longer timeout, we can revisit the value."
+None of the format directives match the type of the arguments.
 
-Does it make sense?
+Andreas.
 
-> 
-> >  .../ABI/testing/sysfs-devices-system-cpu      |  21 ++
-> >  arch/x86/include/asm/cpufeatures.h            |   1 +
-> >  arch/x86/include/asm/msr-index.h              |   4 +
-> >  arch/x86/power/Makefile                       |   1 +
-> >  arch/x86/power/umwait.c                       | 182 ++++++++++++++++++
-> 
-> You seem to miss the arch/x86/lib/delay.c change to use this fancy new
-> stuff for udelay(). I'm thinking that's exactly what TPAUSE is good for.
-
-There may be other places to use the instructions. But I think this
-patch set just first enables basic functionalities. We can focus on how to
-use the instructions in the future.
-
-Thanks.
-
--Fenghua
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
