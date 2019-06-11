@@ -2,96 +2,186 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0A3C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCE1C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 252AF20866
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262D120866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406287AbfFKRsP (ORCPT
+        id S2406524AbfFKRsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:48:15 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:47535 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405625AbfFKRsP (ORCPT
+        Tue, 11 Jun 2019 13:48:20 -0400
+Received: from gateway36.websitewelcome.com ([50.116.127.2]:14111 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406187AbfFKRsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:48:15 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45Nct32KfCz1rXhY;
-        Tue, 11 Jun 2019 19:48:10 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45Nct20nSjz1rxRG;
-        Tue, 11 Jun 2019 19:48:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 2BFHBsK6aqSo; Tue, 11 Jun 2019 19:48:09 +0200 (CEST)
-X-Auth-Info: HG913dC6nI3QeXdDWZOlZYfrTig6dgohUmdEi80BbIbGuJfv0F142LduSvY+GpMv
-Received: from igel.home (ppp-46-244-178-52.dynamic.mnet-online.de [46.244.178.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 11 Jun 2019 19:48:09 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-        id C6AC72C0D1D; Tue, 11 Jun 2019 19:48:06 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
-        <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
-        <20190607172902.GA8183@lst.de>
-        <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
-        <20190610081825.GA16534@lst.de>
-        <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
-X-Yow:  Hello...  IRON CURTAIN?  Send over a SAUSAGE PIZZA!
- World War III?  No thanks!
-Date:   Tue, 11 Jun 2019 19:48:06 +0200
-In-Reply-To: <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net> (Larry
-        Finger's message of "Mon, 10 Jun 2019 11:09:47 -0500")
-Message-ID: <87ftogau95.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Tue, 11 Jun 2019 13:48:19 -0400
+X-Greylist: delayed 1241 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 13:48:18 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id AD447400C8A3C
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:48:50 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id akYahquLgYTGMakYahnwbi; Tue, 11 Jun 2019 12:27:36 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.75.107] (port=55782 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hakYZ-001B5Y-MS; Tue, 11 Jun 2019 12:27:35 -0500
+Subject: Re: [PATCH] bpf: verifier: avoid fall-through warnings
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20190611132811.GA27212@embeddedor>
+ <CAEf4BzaG=cQWAVNNj0hy4Ui7mHzXZgxs8J3rKbxjjVdEGdNkvA@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <4acbc6b9-e2aa-02d3-0e99-f641b67a3da3@embeddedor.com>
+Date:   Tue, 11 Jun 2019 12:27:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAEf4BzaG=cQWAVNNj0hy4Ui7mHzXZgxs8J3rKbxjjVdEGdNkvA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.75.107
+X-Source-L: No
+X-Exim-ID: 1hakYZ-001B5Y-MS
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.75.107]:55782
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Jun 10 2019, Larry Finger <Larry.Finger@lwfinger.net> wrote:
 
-> I do not understand why the if statement returns true as neither of the
-> values is zero.
 
-That's because the format string does not make any sense.  You are
-printing garbage.
+On 6/11/19 12:22 PM, Andrii Nakryiko wrote:
+> On Tue, Jun 11, 2019 at 7:05 AM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>>
+>> In preparation to enabling -Wimplicit-fallthrough, this patch silences
+>> the following warning:
+> 
+> Your patch doesn't apply cleanly to neither bpf nor bpf-next tree.
+> Could you please rebase and re-submit? Please also include which tree
+> (probably bpf-next) you are designating this patch to in subject
+> prefix.
+> 
 
-> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-> index f7afdad..ba2489d 100644
-> --- a/kernel/dma/mapping.c
-> +++ b/kernel/dma/mapping.c
-> @@ -317,9 +317,12 @@ int dma_supported(struct device *dev, u64 mask)
->
->  int dma_set_mask(struct device *dev, u64 mask)
->  {
-> +       pr_info("mask 0x%llx, dma_mask 0x%llx, dma_supported 0x%llx\n",
-> mask, dev->dma_mask,
-> +               dma_supported(dev, mask));
+This patch applies cleanly to linux-next (tag next-20190611).
 
-None of the format directives match the type of the arguments.
+--
+Gustavo
 
-Andreas.
-
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+>>
+>> kernel/bpf/verifier.c: In function ‘check_return_code’:
+>> kernel/bpf/verifier.c:5509:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    if (env->prog->expected_attach_type == BPF_CGROUP_UDP4_RECVMSG ||
+>>       ^
+>> kernel/bpf/verifier.c:5512:2: note: here
+>>   case BPF_PROG_TYPE_CGROUP_SKB:
+>>   ^~~~
+>>
+>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>
+>> Notice that it's much clearer to explicitly add breaks in each case
+>> (that actually contains some code), rather than letting the code to
+>> fall through.
+>>
+>> This patch is part of the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  kernel/bpf/verifier.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+>> index 1e9d10b32984..e9fc28991548 100644
+>> --- a/kernel/bpf/verifier.c
+>> +++ b/kernel/bpf/verifier.c
+>> @@ -5509,11 +5509,13 @@ static int check_return_code(struct bpf_verifier_env *env)
+>>                 if (env->prog->expected_attach_type == BPF_CGROUP_UDP4_RECVMSG ||
+>>                     env->prog->expected_attach_type == BPF_CGROUP_UDP6_RECVMSG)
+>>                         range = tnum_range(1, 1);
+>> +               break;
+>>         case BPF_PROG_TYPE_CGROUP_SKB:
+>>                 if (env->prog->expected_attach_type == BPF_CGROUP_INET_EGRESS) {
+>>                         range = tnum_range(0, 3);
+>>                         enforce_attach_type_range = tnum_range(2, 3);
+>>                 }
+>> +               break;
+>>         case BPF_PROG_TYPE_CGROUP_SOCK:
+>>         case BPF_PROG_TYPE_SOCK_OPS:
+>>         case BPF_PROG_TYPE_CGROUP_DEVICE:
+>> --
+>> 2.21.0
+>>
