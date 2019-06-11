@@ -2,105 +2,104 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4412C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6823CC46477
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9948F20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:25:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="iUogNK2F"
+	by mail.kernel.org (Postfix) with ESMTP id 4A1A820866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391799AbfFKWZm (ORCPT
+        id S2392004AbfFKW0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:25:42 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41794 "EHLO vps.xff.cz"
+        Tue, 11 Jun 2019 18:26:18 -0400
+Received: from gate.crashing.org ([63.228.1.57]:56267 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389575AbfFKWZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:25:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1560291939; bh=u1xRqcipnjQfdrJT1iMxqmCOWzuFT5iSpjmBJ/NwAng=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iUogNK2F3RyjngMx4djQtjKewbxnn+Nvf/e84Jaqj+b4bz0KfhOo3Ucmsc62ArP91
-         AnN9RXuB+r50eNOnii91OJYHduVuqj5nTyOUHPDIYkXghBU6tFTYtNYz9GqOvxApED
-         F0Y3GKdyuZXdNlSiqbjhmi4AahsEzFRbhTeWdtDA=
-Date:   Wed, 12 Jun 2019 00:25:39 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-sunxi@googlegroups.com, Jose Abreu <joabreu@synopsys.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v6 4/6] dt-bindings: display: hdmi-connector: Support DDC
- bus enable
-Message-ID: <20190611222539.msviqrbptjd5vdji@core.my.home>
-Mail-Followup-To: Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-sunxi@googlegroups.com, Jose Abreu <joabreu@synopsys.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-References: <20190527162237.18495-1-megous@megous.com>
- <20190527162237.18495-5-megous@megous.com>
- <20190611215206.GA17759@bogus>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611215206.GA17759@bogus>
+        id S2389575AbfFKW0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:26:18 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5BMPqDC020637;
+        Tue, 11 Jun 2019 17:25:53 -0500
+Message-ID: <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Date:   Wed, 12 Jun 2019 08:25:52 +1000
+In-Reply-To: <20190611115651.GD31772@zn.tnic>
+References: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+         <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+         <20190531051400.GA2275@cz.tnic>
+         <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+         <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+         <20190608090556.GA32464@zn.tnic>
+         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+         <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+         <20190611115651.GD31772@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:52:06PM -0600, Rob Herring wrote:
-> On Mon, 27 May 2019 18:22:35 +0200, megous@megous.com wrote:
-> > From: Ondrej Jirman <megous@megous.com>
+On Tue, 2019-06-11 at 13:56 +0200, Borislav Petkov wrote:
+> On Tue, Jun 11, 2019 at 05:21:39PM +1000, Benjamin Herrenschmidt wrote:
+> > So looking again ... all the registration/removal of edac devices seem
+> > to already be protected by mutexes, so that's not a problem.
 > > 
-> > Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
-> > on-board voltage shifting logic for the DDC bus using a gpio to be able
-> > to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
-> > model this.
-> > 
-> > Add binding documentation for optional ddc-en-gpios property.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
+> > Tell me more about what specific races you think we might have here,
+> > I'm not sure I follow...
 > 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+> Well, as I said "it might work or it might set your cat on fire." For
+> example, one of the error logging paths is edac_mc_handle_error() and
+> that thing mostly operates using the *mci pointer which should be ok
+> but then it calls the "trace_mc_event" tracepoint and I'd suppose that
+> tracepoints can do lockless but I'm not sure.
+
+Yes, we would be in a world of pain already if tracepoints couldn't
+handle concurrency :-)
+
+> So what needs to happen is for paths which weren't called by multiple
+> EDAC agents in parallel but need to get called in parallel now due to
+> ARM drivers wanting to do that, to get audited that they're safe.
+
+That's the thing, I don't think we have such path. We are talking about
+having separate L1/L2 vs. MC drivers, they don't overlap.
+
+> Situation is easy if you have one platform driver where you can
+> synchronize things in the driver but since you guys need to do separate
+> drivers for whatever reason, then that would need to be done prior.
 > 
-> If a tag was not added on purpose, please state why and what changed.
+> Makes more sense?
 
-Sorry, it was some mistake. Thanks for the note.
+Sort-of... I still don't see a race in what we propose but I might be
+missing something subtle. We are talking about two drivers for two
+different IP blocks updating different counters etc...
 
-regards,
-	Ondrej
+Cheers,
+Ben.
 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
