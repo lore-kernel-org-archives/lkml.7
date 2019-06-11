@@ -2,136 +2,180 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45899C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B06C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199502089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F714207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IA3uBOyz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOk1M317"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbfFKMRV (ORCPT
+        id S2390248AbfFKMRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:17:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41895 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbfFKMRU (ORCPT
+        Tue, 11 Jun 2019 08:17:25 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45007 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387814AbfFKMRY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:17:20 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 83so6877407pgg.8;
-        Tue, 11 Jun 2019 05:17:19 -0700 (PDT)
+        Tue, 11 Jun 2019 08:17:24 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n2so6870404pgp.11;
+        Tue, 11 Jun 2019 05:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=VstETx0bfm7UURKplBatSb5BNYNyEd5qFU1Sx8kI+P8=;
-        b=IA3uBOyzTPBq9pCogzGKvaZOhjtmYw/hCBMQOC3HoqTGKt9x/zMu2vwp8APhrTCqdD
-         QjFs0B+8JrRHRKqMiB5P+OWsH+7GOZuj0n5fR1fM6qBcWWxjwelRiiJZOYYtLr5UEeDk
-         K/rA/WLlK4txuJ9Ice/Efj1GG/nuJnI6qrAF5fpnQ46gTEK1J0t4pzh3bLBZW0TPiQ3g
-         tqo3LjqFEuLz0d+3niWnCP/6OGEuqjE8q38qmoxSd3ZFpthsutrk+phrMWWShtzBZpe9
-         zBkOD/bRCYDLiwapO4p+JhBZpstmd9OA/VTxWSyYVsnxPxwfdYjbK0/S07c6fBBnEbZQ
-         4p4Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4jHs27FTKy0dRUgrWNghDEXPvRuXCxHm03+a+AGR4s4=;
+        b=VOk1M317Lbm7Sbfn7Nxj7qZAfCpr0V4lAH690E3N9YjdmwnCIvePrixx9WG0r2iN56
+         OS9VEg1d2pW50ceSW0Uz1CQ2L3H9xxCAX5Jsw7IcVBBrWoL8Nro2rI3lR/5+rV9nUSMN
+         MKxtGmvpwwlB1cKnOi+j4GsO2P2Ttal+SlOvHFSxnd7lNF4dcN3ejk2MDg4g6DxKTd1i
+         0m7YuDJEaRYnj1B5EqEhK6SKHpHMc125SkEQz/P2ob7OHTrL2cp0CAMjkFxZMq5v5ykh
+         fuCHrI2iEoqpksdtEUWQvRQcCMtie0sAToKn/Jckwkp5VZJT51diN1CnOr7T58+YZ8vR
+         rlXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VstETx0bfm7UURKplBatSb5BNYNyEd5qFU1Sx8kI+P8=;
-        b=Ovh7Gr2sF5ITMaQ7gJzRE1ySnXpsGLjahGKxeuq0HOmLTP86HBPg1sH1Fxy5O65FV+
-         aIOyGAC+4F36EJl71ewVx/BZViblElkzjyJlrzk2wzYnXeeIU5skrww+TPqiZx7Yxhh/
-         vLu818/u6r5/JipUBLWjUZCtI6KI9KVmqjESz/43sONDMfdJxEcXjmbkm27JLEcELdtE
-         +wz7n2xHfTJILnyBt9a3lGrtEp9b7cdQeGtS3D9S0QaLfJXVviuhm0X49FHncw9jO9y4
-         39Jh9wNwkVw+LMBD34ACravjb70wQlG74/H6GmyHRWERarLzjTXSIs/J+ZH6Q2SzuW44
-         qivA==
-X-Gm-Message-State: APjAAAU00w5s7oA6WRN/OVH+YXVrci+7zAn5To/+RYNy/9heStfTKI8h
-        54lVPzD9KH9KVSIRb3h3hh/dIpIE
-X-Google-Smtp-Source: APXvYqznf4FbDIT4rjVPKKrufi3F7ndvwcmyiiuN8AKVEPO92qX3naFifYMC1DO4mMs/6uA9pzG2Cw==
-X-Received: by 2002:aa7:9203:: with SMTP id 3mr81570451pfo.123.1560255439322;
-        Tue, 11 Jun 2019 05:17:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4jHs27FTKy0dRUgrWNghDEXPvRuXCxHm03+a+AGR4s4=;
+        b=qwJV0aXGDwPr3RCP1LdWlljNCwslzMwTZ4s1hZa08OsnHh7OgIJ9oVNeIY86R2ScX5
+         PQCs0GOyEUZI4XN6b+O1y4ZJkmIZD3o1zl63gWzBXL46MpgPhFo8Gd8zwqOmS7w8Q/Ks
+         HEDRgkyPBZSbSGNdqM3sR5sVqi1ReELXL3Y3IWpx8EGZ9i2AVzH7IZ9Wd9euE21rtDRu
+         3KU2RYWs1VZGw+hWAZb52p/G5FploK6lBxHy4geHBrB7rQzam9WNw0ZxsmyRMB/hMVuV
+         CiIV1eyUwiTV3G6jFNaE5wFMyGi4wykOm27arSuxVtazWMUqscZ1mi1CI6aYYvg3F9x1
+         lTPA==
+X-Gm-Message-State: APjAAAW6IPdEUPJQrvhiCneUkpn74Z8ei2kzfzxGR0RbhnCqEwn/2NYV
+        ZF99fY5iyo7JOfoKzik+s8wu4ABP
+X-Google-Smtp-Source: APXvYqzX1CcHC3CySDnfEisveM4xqkQFrHz1g4OtmNuGGahNNSDnfH7dPxOTVyO/w6LX5pnR2ujNVA==
+X-Received: by 2002:a63:2c14:: with SMTP id s20mr19676175pgs.182.1560255443619;
+        Tue, 11 Jun 2019 05:17:23 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id v4sm19649478pff.45.2019.06.11.05.17.17
+        by smtp.googlemail.com with ESMTPSA id v4sm19649478pff.45.2019.06.11.05.17.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 11 Jun 2019 05:17:18 -0700 (PDT)
+        Tue, 11 Jun 2019 05:17:23 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH v3 0/4] KVM: LAPIC: Implement Exitless Timer
-Date:   Tue, 11 Jun 2019 20:17:05 +0800
-Message-Id: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH v3 2/4] KVM: LAPIC: lapic timer interrupt is injected by posted interrupt
+Date:   Tue, 11 Jun 2019 20:17:07 +0800
+Message-Id: <1560255429-7105-3-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
+References: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wanpeng Li <wanpengli@tencent.com>
+
 Dedicated instances are currently disturbed by unnecessary jitter due 
 to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
 There is no hardware virtual timer on Intel for guest like ARM. Both 
 programming timer in guest and the emulated timer fires incur vmexits.
-This patchset tries to avoid vmexit which is incurred by the emulated 
+This patch tries to avoid vmexit which is incurred by the emulated 
 timer fires in dedicated instance scenario. 
 
-When nohz_full is enabled in dedicated instances scenario, the unpinned 
-timer will be moved to the nearest busy housekeepers after commit 444969223c8
-("sched/nohz: Fix affine unpinned timers mess"). However, KVM always makes 
-lapic timer pinned to the pCPU which vCPU residents, the reason is explained 
-by commit 61abdbe0 (kvm: x86: make lapic hrtimer pinned). Actually, these 
-emulated timers can be offload to the housekeeping cpus since APICv 
-is really common in recent years. The guest timer interrupt is injected by 
-posted-interrupt which is delivered by housekeeping cpu once the emulated 
+When nohz_full is enabled in dedicated instances scenario, the emulated 
+timers can be offload to the nearest busy housekeeping cpus since APICv 
+is really common in recent years. The guest timer interrupt is injected 
+by posted-interrupt which is delivered by housekeeping cpu once the emulated 
 timer fires. 
 
-The host admin should fine tuned, e.g. dedicated instances scenario w/ 
-nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
-for housekeeping, disable mwait/hlt/pause vmexits to occupy the pCPUs, 
-fortunately preemption timer is disabled after mwait is exposed to 
-guest which makes emulated timer offload can be possible. 
 ~3% redis performance benefit can be observed on Skylake server.
 
-w/o patchset:
+w/o patch:
 
             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
 
 EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
 
-w/ patchset:
+w/ patch:
 
             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
 
 EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
 
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
-v2 -> v3:
- * disarming the vmx preemption timer when posted_interrupt_inject_timer_enabled()
- * check kvm_hlt_in_guest instead
-
-v1 -> v2:
- * check vcpu_halt_in_guest
- * move module parameter from kvm-intel to kvm
- * add housekeeping_enabled
- * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
-
-
-Wanpeng Li (4):
-  KVM: LAPIC: Make lapic timer unpinned when timer is injected by pi
-  KVM: LAPIC: lapic timer interrupt is injected by posted interrupt
-  KVM: LAPIC: Ignore timer migration when lapic timer is injected by pi
-  KVM: LAPIC: add advance timer support to pi_inject_timer
-
- arch/x86/kvm/lapic.c            | 61 +++++++++++++++++++++++++++++++----------
- arch/x86/kvm/lapic.h            |  3 +-
- arch/x86/kvm/svm.c              |  2 +-
- arch/x86/kvm/vmx/vmx.c          |  5 ++--
- arch/x86/kvm/x86.c              |  5 ++++
- arch/x86/kvm/x86.h              |  2 ++
- include/linux/sched/isolation.h |  2 ++
- kernel/sched/isolation.c        |  6 ++++
- 8 files changed, 68 insertions(+), 18 deletions(-)
-
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index e57eeba..020599f 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -133,6 +133,12 @@ inline bool posted_interrupt_inject_timer_enabled(struct kvm_vcpu *vcpu)
+ }
+ EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer_enabled);
+ 
++static inline bool can_posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
++{
++	return posted_interrupt_inject_timer_enabled(vcpu) &&
++		kvm_hlt_in_guest(vcpu->kvm);
++}
++
+ static inline bool kvm_apic_map_get_logical_dest(struct kvm_apic_map *map,
+ 		u32 dest_id, struct kvm_lapic ***cluster, u16 *mask) {
+ 	switch (map->mode) {
+@@ -1441,6 +1447,19 @@ static void apic_update_lvtt(struct kvm_lapic *apic)
+ 	}
+ }
+ 
++static void kvm_apic_inject_pending_timer_irqs(struct kvm_lapic *apic)
++{
++	struct kvm_timer *ktimer = &apic->lapic_timer;
++
++	kvm_apic_local_deliver(apic, APIC_LVTT);
++	if (apic_lvtt_tscdeadline(apic))
++		ktimer->tscdeadline = 0;
++	if (apic_lvtt_oneshot(apic)) {
++		ktimer->tscdeadline = 0;
++		ktimer->target_expiration = 0;
++	}
++}
++
+ static void apic_timer_expired(struct kvm_lapic *apic)
+ {
+ 	struct kvm_vcpu *vcpu = apic->vcpu;
+@@ -1450,6 +1469,11 @@ static void apic_timer_expired(struct kvm_lapic *apic)
+ 	if (atomic_read(&apic->lapic_timer.pending))
+ 		return;
+ 
++	if (can_posted_interrupt_inject_timer(apic->vcpu)) {
++		kvm_apic_inject_pending_timer_irqs(apic);
++		return;
++	}
++
+ 	atomic_inc(&apic->lapic_timer.pending);
+ 	kvm_set_pending_timer(vcpu);
+ 
+@@ -2386,13 +2410,7 @@ void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu)
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 
+ 	if (atomic_read(&apic->lapic_timer.pending) > 0) {
+-		kvm_apic_local_deliver(apic, APIC_LVTT);
+-		if (apic_lvtt_tscdeadline(apic))
+-			apic->lapic_timer.tscdeadline = 0;
+-		if (apic_lvtt_oneshot(apic)) {
+-			apic->lapic_timer.tscdeadline = 0;
+-			apic->lapic_timer.target_expiration = 0;
+-		}
++		kvm_apic_inject_pending_timer_irqs(apic);
+ 		atomic_set(&apic->lapic_timer.pending, 0);
+ 	}
+ }
 -- 
 2.7.4
 
