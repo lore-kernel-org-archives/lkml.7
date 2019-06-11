@@ -2,107 +2,168 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAC3C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DBDC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034902173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A372086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:36:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMowBwbs"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Od5hsTWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391790AbfFKSfD (ORCPT
+        id S2391828AbfFKSgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:35:03 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40957 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388207AbfFKSfC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:35:02 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so6903030eds.7;
-        Tue, 11 Jun 2019 11:35:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NtWdQJ9LEITnrhrHl26XNWq7Hb7t+LrK5A39rgpFt0s=;
-        b=jMowBwbsSVJmS3jexAjSfrwNoteJgOUFfp/90l7wVQ1JRLGnCmM/d0mVbkKEa7UbRA
-         0mqvDNg5i/f4rdZLtjXOPGZvAzLRElZQprG5GiHWhf8L2K2vY+47xzs4OP4ks4QDB+oB
-         hrrbrExvx6PfJAvzQJL58VjuyQNcEDR+nVFRwn4z7AoLEWeI4GKTqYUQLDDd4mzXEvwv
-         PjrhIMC+9t2n9ppYwLX3uvWbCHUgsVadNHAYCnr3vcORnmhgPm30Y9iFRNqaHuBaXKKB
-         jOcwDurtYVBHMTlPgFh1PsZeucPWDdhEMlqA5zw3k6SMTFxNOi9UbSEKVd58usgRep78
-         VFVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NtWdQJ9LEITnrhrHl26XNWq7Hb7t+LrK5A39rgpFt0s=;
-        b=DKEUgUis1PRjJO9+tpATXo5dywxK8Hj9WWJOCIp7kNbatI1FJUrHaham4aixacK6XA
-         Em3VWiIR566QUcMTrKcCWY5IN5pj5Zdsh5wD4on39tgkI4TI5hm+jfJmNtyvK/+EhfKM
-         zdf/q4JrirWimVbSwZOffcJhtUoqbDuCiuKFdhPbyLfvYDdkKkOazbLT9e8ABC4oDmPN
-         xpy99LzWO5H7JkybDVeVm05f+hHKKiQSaNGzC/+3sl6iNdFgLB3YEMv2FsLk5mxG48MY
-         vku6z7kxSOpH5kyLKz0sG8w86g+JDUm7p/qDhWMk/cNCjRNRIGuFakmElXV+C+x9g1i8
-         WwyQ==
-X-Gm-Message-State: APjAAAW/8kfNwruMwNYvTWlRq76ltkItobz1WmiBnRrBU8BJIUs+UCCE
-        /EXNQ8Zj3DHuGfqB66kuq0IjS+vfS/6EOL5CCJrOyQ==
-X-Google-Smtp-Source: APXvYqx0B2gl+9W10GKRrcOR9BLDHAADqb6X2KNcMm/rCC1BIz+gJMNGCJzv1jgg9DS8LnzHVwN6HIn3k7ZdzzL1KDs=
-X-Received: by 2002:a17:906:c459:: with SMTP id ck25mr23323206ejb.32.1560278100761;
- Tue, 11 Jun 2019 11:35:00 -0700 (PDT)
+        Tue, 11 Jun 2019 14:36:15 -0400
+Received: from mail-eopbgr680111.outbound.protection.outlook.com ([40.107.68.111]:54947
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388207AbfFKSgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:36:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=J7nbEttadHTm4ma/j+KuoYq9umE0Z4DAtEYo3tgjGoJfQ4VG2cjPO4wXf1x6I3yzSvay7moLeb1PVbuXj/L7+LE4XN1jeGCV2GODNXOSrUc7xYMP6oFiy0PLD9iosc4JhEzOjOeds84mPPUuJNTn+U0ikDZkYIPKHW50RKPdf4c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7wlqhkqq0jZD3+JaoDH8D68E1QIBI3F/Zx9Z7+2re7c=;
+ b=AGcLKG/ilkXDulNIwHbMQk1G2OOH+Qxlp5+zrz9UY1cWEOmZEhz8cHrGE3HP4ZxvY6GrJJPXCG8rhB3ad6a92+MZnuehOJGAg1QyU8V+qjAsY/IHoD3O/DaiIPfXwFp9AXqilNNg5o3CvhtLz/VET4gNb7pGQI2YCUI2D+5Yxkc=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7wlqhkqq0jZD3+JaoDH8D68E1QIBI3F/Zx9Z7+2re7c=;
+ b=Od5hsTWRZeBDyRNtaBgNYKvAH8XuQssp3m9bipP8EXEXNBKtRUdNCHaDUhaABkw9HqypqUBpSasJI1GUbPSpr9ZSevbDGFpeT2NHcawGQmK2k+EELQi7pI/1j2j6Vrk+j0sy+F9TsuI2mQWFuGRHFAquLPADROnnPCOdvLCGlaI=
+Received: from BYAPR21MB1303.namprd21.prod.outlook.com (2603:10b6:a03:10b::21)
+ by BYAPR21MB1254.namprd21.prod.outlook.com (2603:10b6:a03:108::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.1; Tue, 11 Jun
+ 2019 18:35:31 +0000
+Received: from BYAPR21MB1303.namprd21.prod.outlook.com
+ ([fe80::d98:b97a:40fb:767b]) by BYAPR21MB1303.namprd21.prod.outlook.com
+ ([fe80::d98:b97a:40fb:767b%8]) with mapi id 15.20.2008.002; Tue, 11 Jun 2019
+ 18:35:31 +0000
+From:   Pavel Shilovskiy <pshilov@microsoft.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Christoph Probst <kernel@probst.it>,
+        Steven French <Steven.French@microsoft.com>
+Subject: RE: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and reduce
+ raciness in smb21_set_oplock_level()
+Thread-Topic: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and reduce
+ raciness in smb21_set_oplock_level()
+Thread-Index: AQHVHuRr/qIHTPIzFki/7touvMYvRaaVQkzQgADMHwCAALvpwA==
+Date:   Tue, 11 Jun 2019 18:35:31 +0000
+Message-ID: <BYAPR21MB1303F7B6A672A491068A9D38B6ED0@BYAPR21MB1303.namprd21.prod.outlook.com>
+References: <20190609164147.729157653@linuxfoundation.org>
+ <20190609164148.958546130@linuxfoundation.org>
+ <BYAPR21MB130347F749FFEC7025DA5710B6130@BYAPR21MB1303.namprd21.prod.outlook.com>
+ <20190611072010.GA10581@kroah.com>
+In-Reply-To: <20190611072010.GA10581@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=pshilov@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-11T18:35:29.6162688Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8eeab497-ca9c-4ea4-9827-a4c6868db0cc;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pshilov@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:1:f059:bdc7:91b3:3685]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b884640e-34ff-4a21-13d7-08d6ee9b959f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR21MB1254;
+x-ms-traffictypediagnostic: BYAPR21MB1254:
+x-microsoft-antispam-prvs: <BYAPR21MB1254351D0E35693A30BCB69BB6ED0@BYAPR21MB1254.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:390;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(136003)(346002)(39860400002)(376002)(366004)(396003)(199004)(189003)(13464003)(54906003)(52396003)(6506007)(102836004)(6916009)(99286004)(7696005)(74316002)(10090500001)(53546011)(76176011)(5660300002)(8936002)(81166006)(81156014)(8676002)(71200400001)(71190400001)(66946007)(76116006)(64756008)(66446008)(66556008)(73956011)(66476007)(6436002)(9686003)(305945005)(8990500004)(7736002)(55016002)(46003)(68736007)(186003)(33656002)(229853002)(316002)(478600001)(86362001)(446003)(14454004)(476003)(2906002)(6246003)(107886003)(11346002)(22452003)(52536014)(486006)(10290500003)(25786009)(256004)(6116002)(4326008)(53936002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1254;H:BYAPR21MB1303.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2VsSBJ6D9I5EKG4brGvDLxeCgYBlNHCCunWCRPAs76kWYSQRwhPAouGFW2cepe/70wzzWC7lqEzH/z6smDUmjr4EZ6sjqFIGbXHo2rOAkA1fnqDOjBHEl8yykhstmawfKNwLtwqigLiMKIkpUUNxa+3xggcSztS4UEBAiVVCLmRcIDjM2S2gPqciRvNL3s52UUgnJ6IBDH4icJ59bjYwMNbnxgsj2IN304ut89g4NXmJeZd8tk3D6rsOx+sWOANFxemfZq3cqfYm8+erUnYzA4yX1gFABGHzE0nYCSD77cpP9bPadGJc+HR6apNJ3i3ZT1yPo5g7uUaC4RiLVMXeC6VgeFQVKaWh0JnGybKHgYktI5QaFdDK48P/QnbJ08iWG+mbPKM7+HiGLSO0VklzYzCJr3v6E/iSJMIhoEwXSmo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190611192432.1d8f11b2@canb.auug.org.au> <12e489ae-d3d9-0390-dee7-0da6301fdcf8@infradead.org>
-In-Reply-To: <12e489ae-d3d9-0390-dee7-0da6301fdcf8@infradead.org>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 11 Jun 2019 21:34:49 +0300
-Message-ID: <CA+h21hqw83c9ZHtQ7NwscGRZUNFwTA9RuUAafnjjkcY4FEGwAw@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jun 11 (net/dsa/tag_sja1105.c)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b884640e-34ff-4a21-13d7-08d6ee9b959f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 18:35:31.5197
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pshilov@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1254
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 at 21:30, Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 6/11/19 2:24 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20190607:
-> >
->
-> on i386:
->
-> #
-> # Library routines
-> #
-> # CONFIG_PACKING is not set
->
-> ld: net/dsa/tag_sja1105.o: in function `sja1105_rcv':
-> tag_sja1105.c:(.text+0x40b): undefined reference to `packing'
-> ld: tag_sja1105.c:(.text+0x423): undefined reference to `packing'
-> ld: tag_sja1105.c:(.text+0x43e): undefined reference to `packing'
-> ld: tag_sja1105.c:(.text+0x456): undefined reference to `packing'
-> ld: tag_sja1105.c:(.text+0x471): undefined reference to `packing'
->
->
-> Should this driver select PACKING?
->
->
-> --
-> ~Randy
+-----Original Message-----
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>=20
+Sent: Tuesday, June 11, 2019 12:20 AM
+To: Pavel Shilovskiy <pshilov@microsoft.com>
+Cc: linux-kernel@vger.kernel.org; stable@vger.kernel.org; Christoph Probst =
+<kernel@probst.it>; Steven French <Steven.French@microsoft.com>
+Subject: Re: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and reduc=
+e raciness in smb21_set_oplock_level()
 
-Hi Randy,
+On Mon, Jun 10, 2019 at 07:13:24PM +0000, Pavel Shilovskiy wrote:
+>=20
+> -----Original Message-----
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Sent: Sunday, June 9, 2019 9:40 AM
+> To: linux-kernel@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>;=20
+> stable@vger.kernel.org; Christoph Probst <kernel@probst.it>; Pavel=20
+> Shilovskiy <pshilov@microsoft.com>; Steven French=20
+> <Steven.French@microsoft.com>
+> Subject: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and=20
+> reduce raciness in smb21_set_oplock_level()
+>=20
+> From: Christoph Probst <kernel@probst.it>
+>=20
+> commit 6a54b2e002c9d00b398d35724c79f9fe0d9b38fb upstream.
+>=20
+> Change strcat to strncpy in the "None" case to fix a buffer overflow when=
+ cinode->oplock is reset to 0 by another thread accessing the same cinode. =
+It is never valid to append "None" to any other message.
+>=20
+> Consolidate multiple writes to cinode->oplock to reduce raciness.
+>=20
+> Signed-off-by: Christoph Probst <kernel@probst.it>
+> Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+> Signed-off-by: Steve French <stfrench@microsoft.com>
+> CC: Stable <stable@vger.kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> --------------------------------
+>=20
+> Hi Greg,
+>=20
+> This patch has been queued for 4.4.y and has already been merged into=20
+> 5.1.y (5.1.5). Are you going to apply it to other stable kernels: 4.9,=20
+> 4.14, 4.19?
 
-Yes it should, thanks for pointing it out.
-Are you going to send a patch, or should I?
+It is already in the 4.9.179, 4.14.122, 4.19.46, 5.0.19, and 5.1.5 released=
+ kernels.  So I don't think I can merge it into them again :)
 
-Thanks!
--Vladimir
+thanks,
+
+greg k-h
+---------------------------------
+
+You are right, I missed it somehow. Thanks for clarifying!
+
+Best regards,
+Pavel Shilovsky
