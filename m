@@ -2,210 +2,108 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A28C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0D0C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B382086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:23:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="GoV+9Rwt"
+	by mail.kernel.org (Postfix) with ESMTP id A40E92086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390966AbfFKDXX (ORCPT
+        id S2390998AbfFKDXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 23:23:23 -0400
-Received: from mail-eopbgr10047.outbound.protection.outlook.com ([40.107.1.47]:14819
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390856AbfFKDXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 23:23:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u6zPxAO5xW9AMbXEn90LpqnSru44qNDErPVbRjW23fM=;
- b=GoV+9RwtNUNg8PayKAAm8iX+rqGH0ImchGc831f5tnP3qkng80AcDGqqoeiiW7SKhYNTRdy5rDGM2Xp71fNRlXdQysZGzd7molDbg6KD6ZdhZpeARniM1eELhW65ZYCUqBTN4AgMjOMVTpbwcpwYAKKd2UOCHJHCq0oFB5Q2UtA=
-Received: from AM4PR0501MB2260.eurprd05.prod.outlook.com (10.165.45.148) by
- AM4PR0501MB2753.eurprd05.prod.outlook.com (10.172.217.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.10; Tue, 11 Jun 2019 03:22:38 +0000
-Received: from AM4PR0501MB2260.eurprd05.prod.outlook.com
- ([fe80::bc36:32d1:e149:5838]) by AM4PR0501MB2260.eurprd05.prod.outlook.com
- ([fe80::bc36:32d1:e149:5838%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 03:22:38 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Mon, 10 Jun 2019 23:23:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33388 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390972AbfFKDXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 23:23:53 -0400
+Received: from [125.35.49.90] (helo=[10.0.0.22])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <hui.wang@canonical.com>)
+        id 1haXNy-0006e7-Mf; Tue, 11 Jun 2019 03:23:47 +0000
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW5wdXQ6?=
+ =?UTF-8?Q?_alps-fix_the_issue_alps_cs19_trackstick_do_not_work=2e?=
+To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc:     XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: RE: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Thread-Topic: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Thread-Index: AQHVGj4q7+/NzeZHEUWGN8sRZjbLIKaK/b4AgArXHIA=
-Date:   Tue, 11 Jun 2019 03:22:37 +0000
-Message-ID: <AM4PR0501MB2260589DAFDA6ECF1E8D6D87D1ED0@AM4PR0501MB2260.eurprd05.prod.outlook.com>
-References: <20190603185658.54517-1-parav@mellanox.com>
-        <20190603185658.54517-4-parav@mellanox.com>
- <20190604074820.71853cbb.cohuck@redhat.com>
-In-Reply-To: <20190604074820.71853cbb.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [49.207.52.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 48e4ef88-454b-43fe-63a2-08d6ee1c0df5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR0501MB2753;
-x-ms-traffictypediagnostic: AM4PR0501MB2753:
-x-microsoft-antispam-prvs: <AM4PR0501MB27539D1AAFD6F91FB7758632D1ED0@AM4PR0501MB2753.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(366004)(39860400002)(376002)(199004)(189003)(13464003)(68736007)(76116006)(9686003)(73956011)(478600001)(6436002)(25786009)(7736002)(86362001)(6246003)(53936002)(52536014)(66476007)(66556008)(66446008)(64756008)(305945005)(4326008)(66946007)(55016002)(229853002)(5660300002)(71190400001)(6916009)(71200400001)(33656002)(54906003)(8936002)(81166006)(3846002)(81156014)(8676002)(66066001)(6116002)(14454004)(446003)(11346002)(102836004)(486006)(476003)(316002)(186003)(26005)(2906002)(256004)(74316002)(6506007)(7696005)(99286004)(76176011)(14444005)(53546011)(55236004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0501MB2753;H:AM4PR0501MB2260.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mmFvnUheqj4434kXYYo+Sz3KN/QCRz2ocaMsMHOMSr7sftF4I225QyO7OuYUoV+0WQ/r4ziRnlPVycq3vgfe1w4PqbSVI4Z5tmLRXv3DQGls0FcdPFpPolvU6Q6pnFwc0zg96y1aEdv6rSbL6M6lWTfr4vxh5UR61+9i1/jgPjKoyMIEXvFwI2+gI9XhPhnHpYS/EU/ANPdozOz7TjO3ZKdNCVKJIrVHcvvhmQAm3YTX3MHBFfZdUPclrKYScXGvZGIzbxP/sv4ltsZKXsu1S4JpBMtabImEEo2IkFI2zLOkbYA9imxnIJ1J0kgyU8ozHhaO1RsLYnIlG+vT6srN6tpz1Tpy272Yv+G8XROj9wGfp5j3E6Qkn1dkYQjTzHsOV1Ym1FgkUmjYOIr18GqcOTAEgzRjT0ByIEZzFTJT0cI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
+        Naoki Saito <naoki.saito@alpsalpine.com>,
+        Hideo Kawase <hideo.kawase@alpsalpine.com>
+References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
+ <20190527100913.sgxrjrmphsjfmcdb@pali>
+ <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190528071824.jimhixhtsynzwixe@pali>
+ <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190610104310.qa5snt7jpcljodfv@pali>
+ <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+From:   Hui Wang <hui.wang@canonical.com>
+Message-ID: <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
+Date:   Tue, 11 Jun 2019 11:23:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48e4ef88-454b-43fe-63a2-08d6ee1c0df5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 03:22:37.9123
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: parav@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0501MB2753
+In-Reply-To: <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On 2019/6/11 上午11:05, Xiaoxiao Liu wrote:
+> Hi Pali,
+>
+> I discussed with our FW team about this problem.
+> We think the V8 method means a touchpad feature  and does not fit the CS19 trackpoint device.
+> CS19 TrackPoint needn't  use any Absolute (Raw) mode and is usually use standard mouse data.
+> CS19 TrackPoint device is a completely different device with DualPoint device of Dell/HP.
+> CS19 TrackPoint device is independent  of Touchpad. (Touchpad is connecting by I2C, TrackPoint is directly connecting with PS2 port.)
+> And it has completely another FW.
+>
+> So we think it is better to use the mouse mode for CS19 trackpoint.
 
-> -----Original Message-----
-> From: Cornelia Huck <cohuck@redhat.com>
-> Sent: Tuesday, June 4, 2019 11:18 AM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com
-> Subject: Re: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove
-> with parent removal
->=20
-> On Mon,  3 Jun 2019 13:56:58 -0500
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > In following sequences, child devices created while removing mdev
-> > parent device can be left out, or it may lead to race of removing half
-> > initialized child mdev devices.
-> >
-> > issue-1:
-> > --------
-> >        cpu-0                         cpu-1
-> >        -----                         -----
-> >                                   mdev_unregister_device()
-> >                                     device_for_each_child()
-> >                                       mdev_device_remove_cb()
-> >                                         mdev_device_remove()
-> > create_store()
-> >   mdev_device_create()                   [...]
-> >     device_add()
-> >                                   parent_remove_sysfs_files()
-> >
-> > /* BUG: device added by cpu-0
-> >  * whose parent is getting removed
-> >  * and it won't process this mdev.
-> >  */
-> >
-> > issue-2:
-> > --------
-> > Below crash is observed when user initiated remove is in progress and
-> > mdev_unregister_driver() completes parent unregistration.
-> >
-> >        cpu-0                         cpu-1
-> >        -----                         -----
-> > remove_store()
-> >    mdev_device_remove()
-> >    active =3D false;
-> >                                   mdev_unregister_device()
-> >                                   parent device removed.
-> >    [...]
-> >    parents->ops->remove()
-> >  /*
-> >   * BUG: Accessing invalid parent.
-> >   */
-> >
-> > This is similar race like create() racing with mdev_unregister_device()=
-.
-> >
-> > BUG: unable to handle kernel paging request at ffffffffc0585668 PGD
-> > e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
-> > Oops: 0000 [#1] SMP PTI
-> > CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted
-> > 5.1.0-rc6-vdevbus+ #6 Hardware name: Supermicro
-> > SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
-> > RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev] Call Trace:
-> >  remove_store+0x71/0x90 [mdev]
-> >  kernfs_fop_write+0x113/0x1a0
-> >  vfs_write+0xad/0x1b0
-> >  ksys_write+0x5a/0xe0
-> >  do_syscall_64+0x5a/0x210
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > Therefore, mdev core is improved as below to overcome above issues.
-> >
-> > Wait for any ongoing mdev create() and remove() to finish before
-> > unregistering parent device.
-> > This continues to allow multiple create and remove to progress in
-> > parallel for different mdev devices as most common case.
-> > At the same time guard parent removal while parent is being accessed
-> > by
-> > create() and remove() callbacks.
-> > create()/remove() and unregister_device() are synchronized by the rwsem=
-.
-> >
-> > Refactor device removal code to mdev_device_remove_common() to avoid
-> > acquiring unreg_sem of the parent.
-> >
-> > Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > ---
-> >  drivers/vfio/mdev/mdev_core.c    | 71 ++++++++++++++++++++++++--------
-> >  drivers/vfio/mdev/mdev_private.h |  2 +
-> >  2 files changed, 55 insertions(+), 18 deletions(-)
-> >
->=20
-> > @@ -265,6 +299,12 @@ int mdev_device_create(struct kobject *kobj,
-> >
-> >  	mdev->parent =3D parent;
-> >
->=20
-> Adding
->=20
-> /* Check if parent unregistration has started */
->=20
-> here as well might be nice, but no need to resend the patch for that.
->=20
-> > +	if (!down_read_trylock(&parent->unreg_sem)) {
-> > +		mdev_device_free(mdev);
-> > +		ret =3D -ENODEV;
-> > +		goto mdev_fail;
-> > +	}
-> > +
-> >  	device_initialize(&mdev->dev);
-> >  	mdev->dev.parent  =3D dev;
-> >  	mdev->dev.bus     =3D &mdev_bus_type;
->=20
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Maybe here is some mis-understanding,  the mouse mode here doesn't mean 
+we use psmouse-base.c for cs19 (bare ps/2 mouse), we plan to use 
+trackpoint.c to drive this HW, so this trackpoint has all features a 
+trackpoint should have.
 
-Now that we have all 3 patches reviewed and comments addressed, if there ar=
-e no more comments, can you please take it forward?
+Regards,
+
+Hui.
+
+>
+> Best Regards
+> Shona
+> -----邮件原件-----
+> 发件人: Pali Rohár <pali.rohar@gmail.com>
+> 发送时间: Monday, June 10, 2019 6:43 PM
+> 收件人: 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
+> 抄送: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>; dmitry.torokhov@gmail.com; peter.hutterer@who-t.net; hui.wang@canonical.com; linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 斉藤 直樹 Naoki Saito <naoki.saito@alpsalpine.com>; 川瀬 英夫 Hideo Kawase <hideo.kawase@alpsalpine.com>
+> 主题: Re: 答复: 答复: [PATCH] input: alps-fix the issue alps cs19 trackstick do not work.
+>
+> On Monday 10 June 2019 10:03:51 Xiaoxiao Liu wrote:
+>> Hi Pali,
+> Hi!
+>
+>> We register our CS19 device as ALPS_ONLY_TRACKSTICK device.
+>> And let the V8 protocol function support the process of ALPS_ONLY_TRACKSTICK device.
+>>
+>> I want to confirm if this solution OK?
+> Yes, it is fine. Just make sure that touchapad input device is not registered when this ALPS_ONLY_TRACKSTICK flag is set. So userspace would not see any fake/unavailable touchpad input device.
+>
+>> Xiaoxiao.Liu
+> --
+> Pali Rohár
+> pali.rohar@gmail.com
