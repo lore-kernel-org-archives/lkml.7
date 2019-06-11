@@ -2,105 +2,102 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B20C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C792FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1192086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Btz5wTJR"
+	by mail.kernel.org (Postfix) with ESMTP id A97E620896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403965AbfFKGcw (ORCPT
+        id S2403973AbfFKGqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 02:32:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:50097 "EHLO ozlabs.org"
+        Tue, 11 Jun 2019 02:46:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23142 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391045AbfFKGcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 02:32:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NKtm5z4Yz9s3l;
-        Tue, 11 Jun 2019 16:32:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560234769;
-        bh=XCaHli6O4cB8u4MOhcBBw2PeyV9cd8jTGqbDtKaB1ak=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Btz5wTJRuEQTYBCimYrOlfI7QI2D5j2Tf+4k5R1wcmJyinP4xlDkv6sp+HocbWyRN
-         SUjHwLTQLMGexDfLE7ds3Ku1e2CVyhHzw4GHFCFCre0yKEv0xZL9jea3RGjrzgt+bH
-         GwJcHUql6coru5wJTy4BGJOXsKodZaJM3ssxZFP3AWFEOmS3M/5iv4cdUrsa+QWT8V
-         3RJLfgpv9tLF9VKY2CqH9u9y9hVcje1BTbxaKiZGr1HiCIdLTQiRWquEDwZEZE2FmU
-         P3A9Jw66mX7I9CvjuTVjwX5cFYqrnG7QsdwC1AVDSLD7/02z/8WCJ1yO06WuJLtr8n
-         0hgSUlaZDU4sQ==
-Date:   Tue, 11 Jun 2019 16:32:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Simon Horman <horms+renesas@verge.net.au>
-Subject: linux-next: manual merge of the slave-dma tree with Linus' tree
-Message-ID: <20190611163246.6f90fba6@canb.auug.org.au>
+        id S2390485AbfFKGqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 02:46:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 23:46:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,578,1557212400"; 
+   d="scan'208";a="183696202"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Jun 2019 23:46:19 -0700
+Subject: Re: [PATCH] perf script/intel-pt: set synth_opts.callchain for
+ use_browser > 0
+To:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, davidca@fb.com,
+        Milian Wolff <milian.wolff@kdab.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+References: <20190610234216.2849236-1-songliubraving@fb.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <def87b9f-a4fa-37ff-722a-9f14b14b2c7b@intel.com>
+Date:   Tue, 11 Jun 2019 09:45:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/zT+_=bmZ96yjIPQLyX.Zbae"; protocol="application/pgp-signature"
+In-Reply-To: <20190610234216.2849236-1-songliubraving@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zT+_=bmZ96yjIPQLyX.Zbae
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 11/06/19 2:42 AM, Song Liu wrote:
+> Currently, intel_pt_process_auxtrace_info() sets synth_opts.callchain for
+> use_browser != -1, which is not accurate after we set use_browser to 0 in
+> cmd_script(). As a result, the following commands sees a lot more errors
+> like:
+> 
+>   perf record -e intel_pt//u -C 10 -- sleep 3
+>   perf script
+> 
+>   ...
+>   instruction trace error type 1 time ...
+>   ...
+> 
+> This patch fixes this by checking use_browser > 0 instead.
+> 
+> Fixes: c1c9b9695cc8 ("perf script: Allow extended console debug output")
+> Reported-by: David Carrillo Cisneros <davidca@fb.com>
+> Cc: Milian Wolff <milian.wolff@kdab.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> ---
+>  tools/perf/util/intel-pt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index 6d288237887b..15692c104ca8 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -2588,7 +2588,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+>  	} else {
+>  		itrace_synth_opts__set_default(&pt->synth_opts,
+>  				session->itrace_synth_opts->default_no_sample);
+> -		if (use_browser != -1) {
+> +		if (use_browser > 0) {
 
-Hi all,
+That code has changed recently.  Refer:
 
-Today's linux-next merge of the slave-dma tree got a conflict in:
+	https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=26f19c2eb7e54
 
-  include/linux/sudmac.h
 
-between commit:
+>  			pt->synth_opts.branches = false;
+>  			pt->synth_opts.callchain = true;
+>  		}
+> 
 
-  49833cbeafa4 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - =
-rule 311")
-
-from Linus' tree and commit:
-
-  9a0f780958bb ("dmaengine: sudmac: remove unused driver")
-
-from the slave-dma tree.
-
-I fixed it up (I removed the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/zT+_=bmZ96yjIPQLyX.Zbae
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/Sw4ACgkQAVBC80lX
-0GwCigf/dnsq+HSsjyWyGUotVxgg18xFqgiCu8SOZWG2k7dTlpfCqTcjaNcy/wq/
-opfkp0dd9nWIRYcCbfcQ/JYXecarH03ztDEyR1gcYG3dF7tMvwSDqnhVD1K0TtNs
-HWmqgGNH+VM4zkK6eoFQGt7Pm8vqF3JRLCOC3pAjfI2fRwED2xm5lztdUBFn7pn+
-O7XnhO4zdNmOiA8tn470Bzf9SNI4KrnmhBA5o2wGE23sXnX4DcOycXshXUHKIBrs
-6zUTTIFv/M1X2+cKFFQmB+2aUEaqVDiitp8p6hOlPs/nz6vTux9jz+UtIzZBufFr
-Mzct5XeYM8a8Uff71XW3iRuaQCTQaw==
-=i+gD
------END PGP SIGNATURE-----
-
---Sig_/zT+_=bmZ96yjIPQLyX.Zbae--
