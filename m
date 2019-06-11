@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187C5C31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A1CC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF6A21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E39922173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LSsD9PMp"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="D2jzOp2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408051AbfFKXSf (ORCPT
+        id S2408072AbfFKXSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 19:18:35 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:51176 "EHLO
+        Tue, 11 Jun 2019 19:18:39 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:46262 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407993AbfFKXS0 (ORCPT
+        by vger.kernel.org with ESMTP id S2408044AbfFKXSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 19:18:26 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BN98q8005907
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 16:18:26 -0700
+        Tue, 11 Jun 2019 19:18:36 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BN9aFB031322
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 16:18:35 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=wvy1LTE78mhoSYH9KKkPh58hA9wYMnN4JWdHvONVtxM=;
- b=LSsD9PMpW8fbsnC/E4xQtfhl4K7ThMyR8L2jfRX5XAtFIJOzguxeNNi20t8xHS9gi+AF
- BoQ1bcDQMVcFdpTOHkadn/SrIM943nw0YShfdEIhZGgfvOY9IyTTPxkQGU+OqKGycW/M
- WTHtfuR62ysJI/7iNO7NcLAL+qauqwy8VMk= 
+ content-type; s=facebook; bh=Tffvx74eRN7sOmy9DcF9GcEFiD3Crn+QmEOXHigsbRc=;
+ b=D2jzOp2PflUbmHqEVfc7rVBqWuylvhKlJDwk4z50trsh5OnSL8V0XdAJx156r+1jIQ87
+ pWGXmoZ5D/ZMEHXRJhwunP7szIiqp221o3oIPGl0Gtd0fVuOUf1r7cC6euRTFPP0d+VD
+ 0tRIEwxDkaym8d3Uox+TFQ1JXaEQOcnVSBE= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t2j2urupw-6
+        by mx0a-00082601.pphosted.com with ESMTP id 2t2ha1926c-12
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 16:18:26 -0700
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 16:18:34 -0700
 Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.1713.5; Tue, 11 Jun 2019 16:18:22 -0700
 Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 30FC6130CBF6B; Tue, 11 Jun 2019 16:18:20 -0700 (PDT)
+        id 4A8F8130CBF77; Tue, 11 Jun 2019 16:18:20 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
@@ -52,9 +52,9 @@ CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
         Shakeel Butt <shakeelb@google.com>,
         Waiman Long <longman@redhat.com>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v7 03/10] mm: generalize postponed non-root kmem_cache deactivation
-Date:   Tue, 11 Jun 2019 16:18:06 -0700
-Message-ID: <20190611231813.3148843-4-guro@fb.com>
+Subject: [PATCH v7 09/10] mm: stop setting page->mem_cgroup pointer for slab pages
+Date:   Tue, 11 Jun 2019 16:18:12 -0700
+Message-ID: <20190611231813.3148843-10-guro@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190611231813.3148843-1-guro@fb.com>
 References: <20190611231813.3148843-1-guro@fb.com>
@@ -66,7 +66,7 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=658 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1906110151
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,174 +74,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently SLUB uses a work scheduled after an RCU grace period
-to deactivate a non-root kmem_cache. This mechanism can be reused
-for kmem_caches release, but requires generalization for SLAB
-case.
+Every slab page charged to a non-root memory cgroup has a pointer
+to the memory cgroup and holds a reference to it, which protects
+a non-empty memory cgroup from being released. At the same time
+the page has a pointer to the corresponding kmem_cache, and also
+hold a reference to the kmem_cache. And kmem_cache by itself
+holds a reference to the cgroup.
 
-Introduce kmemcg_cache_deactivate() function, which calls
-allocator-specific __kmem_cache_deactivate() and schedules
-execution of __kmem_cache_deactivate_after_rcu() with all
-necessary locks in a worker context after an rcu grace period.
+So there is clearly some redundancy, which allows to stop setting
+the page->mem_cgroup pointer and rely on getting memcg pointer
+indirectly via kmem_cache. Further it will allow to change this
+pointer easier, without a need to go over all charged pages.
 
-Here is the new calling scheme:
-  kmemcg_cache_deactivate()
-    __kmemcg_cache_deactivate()                  SLAB/SLUB-specific
-    kmemcg_rcufn()                               rcu
-      kmemcg_workfn()                            work
-        __kmemcg_cache_deactivate_after_rcu()    SLAB/SLUB-specific
+So let's stop setting page->mem_cgroup pointer for slab pages,
+and stop using the css refcounter directly for protecting
+the memory cgroup from going away. Instead rely on kmem_cache
+as an intermediate object.
 
-instead of:
-  __kmemcg_cache_deactivate()                    SLAB/SLUB-specific
-    slab_deactivate_memcg_cache_rcu_sched()      SLUB-only
-      kmemcg_rcufn()                             rcu
-        kmemcg_workfn()                          work
-          kmemcg_cache_deact_after_rcu()         SLUB-only
-
-For consistency, all allocator-specific functions start with "__".
+Make sure that vmstats and shrinker lists are working as previously,
+as well as /proc/kpagecgroup interface.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 ---
- mm/slab.c        |  4 ++++
- mm/slab.h        |  3 +--
- mm/slab_common.c | 27 ++++++++-------------------
- mm/slub.c        |  8 +-------
- 4 files changed, 14 insertions(+), 28 deletions(-)
+ mm/list_lru.c   |  3 +-
+ mm/memcontrol.c | 12 ++++----
+ mm/slab.h       | 74 ++++++++++++++++++++++++++++++++++++++++---------
+ 3 files changed, 70 insertions(+), 19 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index a4091f8b3655..4b865393ebb4 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -2252,6 +2252,10 @@ void __kmemcg_cache_deactivate(struct kmem_cache *cachep)
- {
- 	__kmem_cache_shrink(cachep);
- }
-+
-+void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
-+{
-+}
- #endif
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 927d85be32f6..0f1f6b06b7f3 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -12,6 +12,7 @@
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
+ #include <linux/memcontrol.h>
++#include "slab.h"
  
- int __kmem_cache_shutdown(struct kmem_cache *cachep)
+ #ifdef CONFIG_MEMCG_KMEM
+ static LIST_HEAD(list_lrus);
+@@ -63,7 +64,7 @@ static __always_inline struct mem_cgroup *mem_cgroup_from_kmem(void *ptr)
+ 	if (!memcg_kmem_enabled())
+ 		return NULL;
+ 	page = virt_to_head_page(ptr);
+-	return page->mem_cgroup;
++	return memcg_from_slab_page(page);
+ }
+ 
+ static inline struct list_lru_one *
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 43a42bc3ed3f..25e72779fd33 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -486,7 +486,10 @@ ino_t page_cgroup_ino(struct page *page)
+ 	unsigned long ino = 0;
+ 
+ 	rcu_read_lock();
+-	memcg = READ_ONCE(page->mem_cgroup);
++	if (PageHead(page) && PageSlab(page))
++		memcg = memcg_from_slab_page(page);
++	else
++		memcg = READ_ONCE(page->mem_cgroup);
+ 	while (memcg && !(memcg->css.flags & CSS_ONLINE))
+ 		memcg = parent_mem_cgroup(memcg);
+ 	if (memcg)
+@@ -2807,9 +2810,6 @@ int __memcg_kmem_charge_memcg(struct page *page, gfp_t gfp, int order,
+ 		cancel_charge(memcg, nr_pages);
+ 		return -ENOMEM;
+ 	}
+-
+-	page->mem_cgroup = memcg;
+-
+ 	return 0;
+ }
+ 
+@@ -2832,8 +2832,10 @@ int __memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
+ 	memcg = get_mem_cgroup_from_current();
+ 	if (!mem_cgroup_is_root(memcg)) {
+ 		ret = __memcg_kmem_charge_memcg(page, gfp, order, memcg);
+-		if (!ret)
++		if (!ret) {
++			page->mem_cgroup = memcg;
+ 			__SetPageKmemcg(page);
++		}
+ 	}
+ 	css_put(&memcg->css);
+ 	return ret;
 diff --git a/mm/slab.h b/mm/slab.h
-index 7ef695b91919..dc83583ee9dd 100644
+index 5d2b8511e6fb..7ead47cb9338 100644
 --- a/mm/slab.h
 +++ b/mm/slab.h
-@@ -172,6 +172,7 @@ int __kmem_cache_shutdown(struct kmem_cache *);
- void __kmem_cache_release(struct kmem_cache *);
- int __kmem_cache_shrink(struct kmem_cache *);
- void __kmemcg_cache_deactivate(struct kmem_cache *s);
-+void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
- void slab_kmem_cache_release(struct kmem_cache *);
+@@ -255,30 +255,67 @@ static inline struct kmem_cache *memcg_root_cache(struct kmem_cache *s)
+ 	return s->memcg_params.root_cache;
+ }
  
- struct seq_file;
-@@ -290,8 +291,6 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
++/*
++ * Expects a pointer to a slab page. Please note, that PageSlab() check
++ * isn't sufficient, as it returns true also for tail compound slab pages,
++ * which do not have slab_cache pointer set.
++ * So this function assumes that the page can pass PageHead() and PageSlab()
++ * checks.
++ */
++static inline struct mem_cgroup *memcg_from_slab_page(struct page *page)
++{
++	struct kmem_cache *s;
++
++	s = READ_ONCE(page->slab_cache);
++	if (s && !is_root_cache(s))
++		return s->memcg_params.memcg;
++
++	return NULL;
++}
++
++/*
++ * Charge the slab page belonging to the non-root kmem_cache.
++ * Can be called for non-root kmem_caches only.
++ */
+ static __always_inline int memcg_charge_slab(struct page *page,
+ 					     gfp_t gfp, int order,
+ 					     struct kmem_cache *s)
+ {
++	struct mem_cgroup *memcg;
++	struct lruvec *lruvec;
+ 	int ret;
+ 
+-	if (is_root_cache(s))
+-		return 0;
+-
+-	ret = memcg_kmem_charge_memcg(page, gfp, order, s->memcg_params.memcg);
++	memcg = s->memcg_params.memcg;
++	ret = memcg_kmem_charge_memcg(page, gfp, order, memcg);
+ 	if (ret)
+ 		return ret;
+ 
++	lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
++	mod_lruvec_state(lruvec, cache_vmstat_idx(s), 1 << order);
++
++	/* transer try_charge() page references to kmem_cache */
+ 	percpu_ref_get_many(&s->memcg_params.refcnt, 1 << order);
++	css_put_many(&memcg->css, 1 << order);
+ 
+ 	return 0;
+ }
+ 
++/*
++ * Uncharge a slab page belonging to a non-root kmem_cache.
++ * Can be called for non-root kmem_caches only.
++ */
+ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
+ 						struct kmem_cache *s)
+ {
+-	if (!is_root_cache(s))
+-		percpu_ref_put_many(&s->memcg_params.refcnt, 1 << order);
+-	memcg_kmem_uncharge(page, order);
++	struct mem_cgroup *memcg;
++	struct lruvec *lruvec;
++
++	memcg = s->memcg_params.memcg;
++	lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
++	mod_lruvec_state(lruvec, cache_vmstat_idx(s), -(1 << order));
++	memcg_kmem_uncharge_memcg(page, order, memcg);
++
++	percpu_ref_put_many(&s->memcg_params.refcnt, 1 << order);
+ }
  
  extern void slab_init_memcg_params(struct kmem_cache *);
- extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg);
--extern void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
--				void (*work_fn)(struct kmem_cache *));
- 
- #else /* CONFIG_MEMCG_KMEM */
- 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 99489d82ba78..5e7638f495d1 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -708,7 +708,7 @@ static void kmemcg_workfn(struct work_struct *work)
- 	put_online_mems();
- 	put_online_cpus();
- 
--	/* done, put the ref from slab_deactivate_memcg_cache_rcu_sched() */
-+	/* done, put the ref from kmemcg_cache_deactivate() */
- 	css_put(&s->memcg_params.memcg->css);
+@@ -314,6 +351,11 @@ static inline struct kmem_cache *memcg_root_cache(struct kmem_cache *s)
+ 	return s;
  }
  
-@@ -726,31 +726,21 @@ static void kmemcg_rcufn(struct rcu_head *head)
- 	queue_work(memcg_kmem_cache_wq, &s->memcg_params.work);
- }
- 
--/**
-- * slab_deactivate_memcg_cache_rcu_sched - schedule deactivation after a
-- *					   sched RCU grace period
-- * @s: target kmem_cache
-- * @work_fn: deactivation function to call
-- *
-- * Schedule @work_fn to be invoked with online cpus, mems and slab_mutex
-- * held after a sched RCU grace period.  The slab is guaranteed to stay
-- * alive until @work_fn is finished.  This is to be used from
-- * __kmemcg_cache_deactivate().
-- */
--void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
--					   void (*work_fn)(struct kmem_cache *))
-+static void kmemcg_cache_deactivate(struct kmem_cache *s)
- {
- 	if (WARN_ON_ONCE(is_root_cache(s)) ||
- 	    WARN_ON_ONCE(s->memcg_params.work_fn))
- 		return;
- 
-+	__kmemcg_cache_deactivate(s);
++static inline struct mem_cgroup *memcg_from_slab_page(struct page *page)
++{
++	return NULL;
++}
 +
- 	if (s->memcg_params.root_cache->memcg_params.dying)
- 		return;
- 
- 	/* pin memcg so that @s doesn't get destroyed in the middle */
- 	css_get(&s->memcg_params.memcg->css);
- 
--	s->memcg_params.work_fn = work_fn;
-+	s->memcg_params.work_fn = __kmemcg_cache_deactivate_after_rcu;
- 	call_rcu(&s->memcg_params.rcu_head, kmemcg_rcufn);
- }
- 
-@@ -773,7 +763,7 @@ void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
- 		if (!c)
- 			continue;
- 
--		__kmemcg_cache_deactivate(c);
-+		kmemcg_cache_deactivate(c);
- 		arr->entries[idx] = NULL;
- 	}
- 	mutex_unlock(&slab_mutex);
-@@ -866,11 +856,10 @@ static void flush_memcg_workqueue(struct kmem_cache *s)
- 	mutex_unlock(&slab_mutex);
- 
- 	/*
--	 * SLUB deactivates the kmem_caches through call_rcu. Make
-+	 * SLAB and SLUB deactivate the kmem_caches through call_rcu. Make
- 	 * sure all registered rcu callbacks have been invoked.
- 	 */
--	if (IS_ENABLED(CONFIG_SLUB))
--		rcu_barrier();
-+	rcu_barrier();
- 
- 	/*
- 	 * SLAB and SLUB create memcg kmem_caches through workqueue and SLUB
-diff --git a/mm/slub.c b/mm/slub.c
-index 9cb2eef62a37..ae3b1e49ecec 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4022,7 +4022,7 @@ int __kmem_cache_shrink(struct kmem_cache *s)
- }
- 
- #ifdef CONFIG_MEMCG
--static void kmemcg_cache_deact_after_rcu(struct kmem_cache *s)
-+void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
+ static inline int memcg_charge_slab(struct page *page, gfp_t gfp, int order,
+ 				    struct kmem_cache *s)
  {
- 	/*
- 	 * Called with all the locks held after a sched RCU grace period.
-@@ -4048,12 +4048,6 @@ void __kmemcg_cache_deactivate(struct kmem_cache *s)
- 	 */
- 	slub_set_cpu_partial(s, 0);
- 	s->min_partial = 0;
+@@ -351,18 +393,24 @@ static __always_inline int charge_slab_page(struct page *page,
+ 					    gfp_t gfp, int order,
+ 					    struct kmem_cache *s)
+ {
+-	int ret = memcg_charge_slab(page, gfp, order, s);
 -
--	/*
--	 * s->cpu_partial is checked locklessly (see put_cpu_partial), so
--	 * we have to make sure the change is visible before shrinking.
--	 */
--	slab_deactivate_memcg_cache_rcu_sched(s, kmemcg_cache_deact_after_rcu);
+-	if (!ret)
+-		mod_lruvec_page_state(page, cache_vmstat_idx(s), 1 << order);
++	if (is_root_cache(s)) {
++		mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
++				    1 << order);
++		return 0;
++	}
+ 
+-	return ret;
++	return memcg_charge_slab(page, gfp, order, s);
  }
- #endif	/* CONFIG_MEMCG */
+ 
+ static __always_inline void uncharge_slab_page(struct page *page, int order,
+ 					       struct kmem_cache *s)
+ {
+-	mod_lruvec_page_state(page, cache_vmstat_idx(s), -(1 << order));
++	if (is_root_cache(s)) {
++		mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
++				    -(1 << order));
++		return;
++	}
++
+ 	memcg_uncharge_slab(page, order, s);
+ }
  
 -- 
 2.21.0
