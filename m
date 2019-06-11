@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3382C06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B50C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF41121883
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45BB21841
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560279772;
-	bh=0ajeEWj5kL5FMCTtxzGBql20ziWbMwbq/JZumNCct3c=;
+	s=default; t=1560279776;
+	bh=22JvqhMRFadlku1d18uzDdaZ+nanOpO9WyNtz0V2N0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHEQh+L7AZqzYky+xav3T9dvfK/gbF0GuO+kNek1/q8qrQTaVnB8saPVZ660GXSvf
-	 zbMhPX5gAMNta+aEy+vAnOQpSri1CHsCj4Ty8U6Va+ya84NTpe96YBHjkVA37NAezv
-	 YePixkaPgWJ5YOsuinB77iaP1/qd4qQW4A08zh2I=
+	b=aFbZWVK+Bo4mjMx6MflHI7wG6dkiCSiEJid1PjVm2RzLaBALahy+R9E5+RLVB3tcA
+	 nD1zYCqqeTINgqFKZN44e+WaQ8FYl2PjqQxEzPA1pXfQ1zB20a9T4kLOZlI+vd5G+2
+	 li98xfs04NKAYqjiwPRpihmXVHIXBhQrujuAeKwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392412AbfFKTCv (ORCPT
+        id S2392423AbfFKTCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38958 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 15:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392400AbfFKTCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:02:50 -0400
+        id S2392010AbfFKTCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:02:54 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC760217D6;
-        Tue, 11 Jun 2019 19:02:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EAE22183E;
+        Tue, 11 Jun 2019 19:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279769;
-        bh=0ajeEWj5kL5FMCTtxzGBql20ziWbMwbq/JZumNCct3c=;
+        s=default; t=1560279773;
+        bh=22JvqhMRFadlku1d18uzDdaZ+nanOpO9WyNtz0V2N0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ct+X2nkMHyJmr2I63v+3KoX/2VoBmQZ4lUbjMqTbHB0iXFXuV5DAFRb807M5OG0L5
-         RGFnkDzj0Usswof7BTgF2GybozydRXEGhkevJdRejIbgBb7u1vjsMn46BfDHKoM//2
-         t6GQAnP1Va2uMdEXbd/4AE5UpxGJRWABMAFIXljE=
+        b=v9Q8vqfS6dvj1JpborORWGI2Xcu0YKv0IK6kPZ+NJBkxtkPBpC5dJclYkEolnuCSr
+         AW5lmGtgpeHGrTEF9H7sjl1sjmimnMni6kfYop1djPAR7nyIWEg/KbEFj8dPBAQ/BK
+         joH5DS1CIpHTl1jK3vUj+kKvrAliq/diDf1B89UY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -53,9 +53,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Suzuki Poulouse <suzuki.poulose@arm.com>,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 46/85] perf cs-etm: Get rid of unused cpu in struct cs_etm_queue
-Date:   Tue, 11 Jun 2019 15:58:32 -0300
-Message-Id: <20190611185911.11645-47-acme@kernel.org>
+Subject: [PATCH 47/85] perf cs-etm: Move thread to traceid_queue
+Date:   Tue, 11 Jun 2019 15:58:33 -0300
+Message-Id: <20190611185911.11645-48-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
@@ -68,8 +68,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Nowadays the synthesize code is using the packet's cpu information,
-making cs_etm_queue::cpu useless.  As such simply remove it.
+The thread field of structure cs_etm_queue is CPU dependent and as such
+need to be part of the cs_etm_traceid_queue in order to support CPU-wide
+trace scenarios.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Tested-by: Leo Yan <leo.yan@linaro.org>
@@ -80,42 +81,73 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: coresight@lists.linaro.org
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-11-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/20190524173508.29044-12-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ tools/perf/util/cs-etm.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 9e8212c74055..531bbb355ba4 100644
+index 531bbb355ba4..0d51d6d9a594 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -79,7 +79,6 @@ struct cs_etm_queue {
+@@ -65,6 +65,7 @@ struct cs_etm_traceid_queue {
+ 	u64 period_instructions;
+ 	size_t last_branch_pos;
+ 	union perf_event *event_buf;
++	struct thread *thread;
+ 	struct branch_stack *last_branch;
+ 	struct branch_stack *last_branch_rb;
+ 	struct cs_etm_packet *prev_packet;
+@@ -74,7 +75,6 @@ struct cs_etm_traceid_queue {
+ 
+ struct cs_etm_queue {
+ 	struct cs_etm_auxtrace *etm;
+-	struct thread *thread;
+ 	struct cs_etm_decoder *decoder;
  	struct auxtrace_buffer *buffer;
  	unsigned int queue_nr;
- 	pid_t pid, tid;
--	int cpu;
- 	u64 offset;
- 	const unsigned char *buf;
- 	size_t buf_len, buf_used;
-@@ -599,7 +598,6 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	queue->priv = etmq;
- 	etmq->etm = etm;
- 	etmq->queue_nr = queue_nr;
--	etmq->cpu = queue->cpu;
- 	etmq->tid = queue->tid;
- 	etmq->pid = -1;
- 	etmq->offset = 0;
-@@ -831,11 +829,8 @@ static void cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
- 		etmq->thread = machine__find_thread(etm->machine, -1,
+@@ -415,7 +415,7 @@ static void cs_etm__free_queue(void *priv)
+ 	if (!etmq)
+ 		return;
+ 
+-	thread__zput(etmq->thread);
++	thread__zput(etmq->traceid_queues->thread);
+ 	cs_etm_decoder__free(etmq->decoder);
+ 	zfree(&etmq->traceid_queues->event_buf);
+ 	zfree(&etmq->traceid_queues->last_branch);
+@@ -503,7 +503,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
+ 	machine = etmq->etm->machine;
+ 	cpumode = cs_etm__cpu_mode(etmq, address);
+ 
+-	thread = etmq->thread;
++	thread = etmq->traceid_queues->thread;
+ 	if (!thread) {
+ 		if (cpumode != PERF_RECORD_MISC_KERNEL)
+ 			return 0;
+@@ -819,18 +819,21 @@ cs_etm__get_trace(struct cs_etm_queue *etmq)
+ static void cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
+ 				    struct auxtrace_queue *queue)
+ {
++	struct cs_etm_traceid_queue *tidq;
+ 	struct cs_etm_queue *etmq = queue->priv;
+ 
++	tidq = cs_etm__etmq_get_traceid_queue(etmq, CS_ETM_PER_THREAD_TRACEID);
++
+ 	/* CPU-wide tracing isn't supported yet */
+ 	if (queue->tid == -1)
+ 		return;
+ 
+-	if ((!etmq->thread) && (etmq->tid != -1))
+-		etmq->thread = machine__find_thread(etm->machine, -1,
++	if ((!tidq->thread) && (etmq->tid != -1))
++		tidq->thread = machine__find_thread(etm->machine, -1,
  						    etmq->tid);
  
--	if (etmq->thread) {
-+	if (etmq->thread)
- 		etmq->pid = etmq->thread->pid_;
--		if (queue->cpu == -1)
--			etmq->cpu = etmq->thread->cpu;
--	}
+-	if (etmq->thread)
+-		etmq->pid = etmq->thread->pid_;
++	if (tidq->thread)
++		etmq->pid = tidq->thread->pid_;
  }
  
  static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
