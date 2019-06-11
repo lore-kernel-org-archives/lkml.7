@@ -2,137 +2,138 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EC5C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38332C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF1620896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084682086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390869AbfFKBs2 (ORCPT
+        id S2390363AbfFKBye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:48:28 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21662 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbfFKBs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:48:28 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 18:48:27 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga004.jf.intel.com with ESMTP; 10 Jun 2019 18:48:25 -0700
-Cc:     baolu.lu@linux.intel.com, James Sewart <jamessewart@arista.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Subject: Re: "iommu/vt-d: Delegate DMA domain to generic iommu" series breaks
- megaraid_sas
-To:     Qian Cai <cai@lca.pw>
-References: <1559941717.6132.63.camel@lca.pw>
- <1e4f0642-e4e1-7602-3f50-37edc84ced50@linux.intel.com>
- <1560174264.6132.65.camel@lca.pw> <1560178459.6132.66.camel@lca.pw>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <2ff8404d-7103-a96d-2749-ac707ce74563@linux.intel.com>
-Date:   Tue, 11 Jun 2019 09:41:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1560178459.6132.66.camel@lca.pw>
-Content-Type: multipart/mixed;
- boundary="------------4796EFDAD3CE19C641E50EC9"
-Content-Language: en-US
+        Mon, 10 Jun 2019 21:54:34 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:47114 "EHLO
+        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfFKByd (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Mon, 10 Jun 2019 21:54:33 -0400
+Received: from ghe-pc.suse.asia (prva10-snat226-1.provo.novell.com [137.65.226.35])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Mon, 10 Jun 2019 19:54:27 -0600
+From:   Gang He <ghe@suse.com>
+To:     mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com
+Cc:     Gang He <ghe@suse.com>, linux-kernel@vger.kernel.org,
+        ocfs2-devel@oss.oracle.com, akpm@linux-foundation.org
+Subject: [PATCH V4 1/3] ocfs2: add last unlock times in locking_state
+Date:   Tue, 11 Jun 2019 09:54:12 +0800
+Message-Id: <20190611015414.27754-1-ghe@suse.com>
+X-Mailer: git-send-email 2.12.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------4796EFDAD3CE19C641E50EC9
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ocfs2 file system uses locking_state file under debugfs to dump
+each ocfs2 file system's dlm lock resources, but the dlm lock
+resources in memory are becoming more and more after the files
+were touched by the user. it will become a bit difficult to analyze
+these dlm lock resource records in locking_state file by the upper
+scripts, though some files are not active for now, which were
+accessed long time ago.
+Then, I'd like to add last pr/ex unlock times in locking_state file
+for each dlm lock resource record, the the upper scripts can use
+last unlock time to filter inactive dlm lock resource record.
 
-Ah, good catch!
+Compared with v1, the main change is to use wall time in
+microsecond for last pr/ex unlock time.
 
-The device failed to be attached by a DMA domain. Can you please try the
-attached fix patch?
-
-[  101.885468] pci 0000:06:00.0: DMAR: Device is ineligible for IOMMU
-domain attach due to platform RMRR requirement.  Contact your platform
-vendor.
-[  101.900801] pci 0000:06:00.0: Failed to add to iommu group 23: -1
-
-Best regards,
-Baolu
-
-On 6/10/19 10:54 PM, Qian Cai wrote:
-> On Mon, 2019-06-10 at 09:44 -0400, Qian Cai wrote:
->> On Sun, 2019-06-09 at 10:43 +0800, Lu Baolu wrote:
->>> Hi Qian,
->>>
->>> I just posted some fix patches. I cc'ed them in your email inbox as
->>> well. Can you please check whether they happen to fix your issue?
->>> If not, do you mind posting more debug messages?
->>
->> Unfortunately, it does not work. Here is the dmesg.
->>
->> https://raw.githubusercontent.com/cailca/tmp/master/dmesg?token=AMC35QKPIZBYUM
->> FUQKLW4ZC47ZPIK
-> 
-> This one should be good to view.
-> 
-> https://cailca.github.io/files/dmesg.txt
-> 
-
---------------4796EFDAD3CE19C641E50EC9
-Content-Type: text/x-patch;
- name="0001-iommu-vt-d-Allow-DMA-domain-attaching-to-rmrr-locked.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-iommu-vt-d-Allow-DMA-domain-attaching-to-rmrr-locked.pa";
- filename*1="tch"
-
-From ff0b1ae0d8fde0655392fde3a1090b03a7a35394 Mon Sep 17 00:00:00 2001
-From: Lu Baolu <baolu.lu@linux.intel.com>
-Date: Tue, 11 Jun 2019 09:29:16 +0800
-Subject: [PATCH 1/1] iommu/vt-d: Allow DMA domain attaching to rmrr locked
- device
-
-We don't allow a device to be assigned to user level when it is locked
-by any RMRR's. Hence, intel_iommu_attach_device() will return error if
-a domain of type IOMMU_DOMAIN_UNMANAGED is about to attach to a device
-locked by rmrr. But this doesn't apply to a domain of type other than
-IOMMU_DOMAIN_UNMANAGED. This adds a check to fix this.
-
-Fixes: fa954e6831789 ("iommu/vt-d: Delegate the dma domain to upper layer")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Gang He <ghe@suse.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
 ---
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ocfs2/dlmglue.c | 18 +++++++++++++++---
+ fs/ocfs2/ocfs2.h   |  1 +
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 1dcb6365ddc4..38232220f6ff 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5281,7 +5281,8 @@ static int intel_iommu_attach_device(struct iommu_domain *domain,
- {
- 	int ret;
+diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+index af405586c5b1..3b0e7d399df2 100644
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -474,6 +474,8 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
  
--	if (device_is_rmrr_locked(dev)) {
-+	if (domain->type == IOMMU_DOMAIN_UNMANAGED &&
-+	    device_is_rmrr_locked(dev)) {
- 		dev_warn(dev, "Device is ineligible for IOMMU domain attach due to platform RMRR requirement.  Contact your platform vendor.\n");
- 		return -EPERM;
- 	}
+ 	if (ret)
+ 		stats->ls_fail++;
++
++	stats->ls_last = ktime_to_us(ktime_get_real());
+ }
+ 
+ static inline void ocfs2_track_lock_refresh(struct ocfs2_lock_res *lockres)
+@@ -3093,8 +3095,10 @@ static void *ocfs2_dlm_seq_next(struct seq_file *m, void *v, loff_t *pos)
+  *	- Lock stats printed
+  * New in version 3
+  *	- Max time in lock stats is in usecs (instead of nsecs)
++ * New in version 4
++ *	- Add last pr/ex unlock times in usecs
+  */
+-#define OCFS2_DLM_DEBUG_STR_VERSION 3
++#define OCFS2_DLM_DEBUG_STR_VERSION 4
+ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ {
+ 	int i;
+@@ -3145,6 +3149,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ # define lock_max_prmode(_l)		((_l)->l_lock_prmode.ls_max)
+ # define lock_max_exmode(_l)		((_l)->l_lock_exmode.ls_max)
+ # define lock_refresh(_l)		((_l)->l_lock_refresh)
++# define lock_last_prmode(_l)		((_l)->l_lock_prmode.ls_last)
++# define lock_last_exmode(_l)		((_l)->l_lock_exmode.ls_last)
+ #else
+ # define lock_num_prmode(_l)		(0)
+ # define lock_num_exmode(_l)		(0)
+@@ -3155,6 +3161,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ # define lock_max_prmode(_l)		(0)
+ # define lock_max_exmode(_l)		(0)
+ # define lock_refresh(_l)		(0)
++# define lock_last_prmode(_l)		(0ULL)
++# define lock_last_exmode(_l)		(0ULL)
+ #endif
+ 	/* The following seq_print was added in version 2 of this output */
+ 	seq_printf(m, "%u\t"
+@@ -3165,7 +3173,9 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ 		   "%llu\t"
+ 		   "%u\t"
+ 		   "%u\t"
+-		   "%u\t",
++		   "%u\t"
++		   "%llu\t"
++		   "%llu\t",
+ 		   lock_num_prmode(lockres),
+ 		   lock_num_exmode(lockres),
+ 		   lock_num_prmode_failed(lockres),
+@@ -3174,7 +3184,9 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ 		   lock_total_exmode(lockres),
+ 		   lock_max_prmode(lockres),
+ 		   lock_max_exmode(lockres),
+-		   lock_refresh(lockres));
++		   lock_refresh(lockres),
++		   lock_last_prmode(lockres),
++		   lock_last_exmode(lockres));
+ 
+ 	/* End the line */
+ 	seq_printf(m, "\n");
+diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+index 1f029fbe8b8d..6f43651f01b3 100644
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -164,6 +164,7 @@ struct ocfs2_lock_stats {
+ 
+ 	/* Storing max wait in usecs saves 24 bytes per inode */
+ 	u32		ls_max;		/* Max wait in USEC */
++	u64		ls_last;	/* Last unlock time in USEC */
+ };
+ #endif
+ 
 -- 
-2.17.1
+2.21.0
 
-
---------------4796EFDAD3CE19C641E50EC9--
