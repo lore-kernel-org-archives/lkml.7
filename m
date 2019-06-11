@@ -2,116 +2,115 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD4AC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB95C46477
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E2421721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560296103;
-	bh=MWbLYTS41uOOsTsM2O/ynimdXvBMsIgRB1pkQQYFBds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aNq9VIIz66ZrBvO3+mX2grMC7kmbLoPvn2l0g3s3kNuYfqP0maKzoMayomQWxmjdR
-	 tlIq9J5ZlTzCF5lmm7RBgC1SWms0ceunWulD5MyiOHdLuSnFWIm3NxnXu81aWhH3Wz
-	 Xik6CDfqd/fP0UAj4vx5b6nNwB0xE/3rLGDY4An8=
+	by mail.kernel.org (Postfix) with ESMTP id 20F4221734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408180AbfFKXfB (ORCPT
+        id S2408195AbfFKXkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 19:35:01 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:37055 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405380AbfFKXfA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 19:35:00 -0400
-Received: by mail-it1-f193.google.com with SMTP id x22so7703874itl.2;
-        Tue, 11 Jun 2019 16:35:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m12BEF6aoD8sKKRDjXmfbkhom6wFfuNMaUfEfaPontI=;
-        b=XY0rO2QwWDGXv8VVnDhHhvdSjjvbZijD/ov9NKzOKMub0OeJJCX9/bSZuY9+/qN6/y
-         TqtZX8bPgOv25p0uXyW6mlEgXwgB8BpRHkwp5Gq3ec1PJwgj0sGgCfX7cKNtTUNMqDMb
-         th742GGwBdnUr9TbLgmXe7asWtUE+TnrEG5Ay9ukVxO+qtGhQakkOMFB9SRVccxxz1T4
-         3zytVj7MQ+pT34uh7iZhocD8fv8yLPyK4k87ADndWLalQvC/8Kh9wXTbtrbKIN91ZvU+
-         yMkfUu41g/Tj78vV/EriqJMDQ0OIJ2fge5WNFDwguOSeWH014BXACcNIrnObrKToMo1X
-         71cw==
-X-Gm-Message-State: APjAAAVtZURezix/FJ+P86mISyFSyjY6SfeM+pKGBNWS/lK3Qy82dtJm
-        RE/3DJz5DWIbqRqWwzY39A==
-X-Google-Smtp-Source: APXvYqye7O0X80ue+IvTi1olrle0IaMnhZvFUdN3Pu38l2XXIz46k5UuwXpGJfD3KkSIfO+KTcA/TQ==
-X-Received: by 2002:a24:4754:: with SMTP id t81mr21499151itb.106.1560296099482;
-        Tue, 11 Jun 2019 16:34:59 -0700 (PDT)
-Received: from localhost (ip-174-149-252-64.englco.spcsdns.net. [174.149.252.64])
-        by smtp.gmail.com with ESMTPSA id q79sm2082456itb.15.2019.06.11.16.34.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 16:34:58 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 17:34:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Tue, 11 Jun 2019 19:40:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:43209 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405380AbfFKXkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 19:40:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 16:40:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,363,1557212400"; 
+   d="scan'208";a="184035062"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Jun 2019 16:39:59 -0700
+Subject: [PATCH 0/6] libnvdimm: Fix async operations and locking
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Jane Chu <jane.chu@oracle.com>, stable@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v5 2/3] fdt: add support for rng-seed
-Message-ID: <20190611233453.GA14130@bogus>
-References: <20190527043336.112854-1-hsinyi@chromium.org>
- <20190527043336.112854-2-hsinyi@chromium.org>
- <5ced598d.1c69fb81.dabd8.339d@mx.google.com>
- <CAJMQK-i0z1EHCMK3eTya+SmK6GD_C4Ljvb7BHvsaMWLDxxmwMg@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Erwin Tsaur <erwin.tsaur@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 11 Jun 2019 16:25:43 -0700
+Message-ID: <156029554317.419799.1324389595953183385.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJMQK-i0z1EHCMK3eTya+SmK6GD_C4Ljvb7BHvsaMWLDxxmwMg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 06:59:11PM +0800, Hsin-Yi Wang wrote:
-> On Tue, May 28, 2019 at 11:53 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Hsin-Yi Wang (2019-05-26 21:33:35)
-> > > Introducing a chosen node, rng-seed, which is an entropy that can be
-> > > passed to kernel called very early to increase initial device
-> > > randomness. Bootloader should provide this entropy and the value is
-> > > read from /chosen/rng-seed in DT.
-> > >
-> > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > ---
-> >
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> >
-> 
-> Hi Rob,
-> 
-> Is this series accepted? Or is there any other related concern?
-> 
-> If it's fine, I also have sent a patch for updating
-> schemas/chosen.yaml document.
+The libnvdimm subsystem uses async operations to parallelize device
+probing operations and to allow sysfs to trigger device_unregister() on
+deleted namepsaces. A multithreaded stress test of the libnvdimm sysfs
+interface uncovered a case where device_unregister() is triggered
+multiple times, and the subsequent investigation uncovered a broken
+locking scenario.
 
-The kernel change is fine, but please put the documentation change into 
-the schema doc (in github.com/devicetree-org/dt-schema) and don't modify 
-chosen.txt.
+The lack of lockdep coverage for device_lock() stymied the debug. That
+is, until patch6 "driver-core, libnvdimm: Let device subsystems add
+local lockdep coverage" solved that with a shadow lock, with lockdep
+coverage, to mirror device_lock() operations. Given the time saved with
+shadow-lock debug-hack, patch6 attempts to generalize device_lock()
+debug facility that might be able to be carried upstream. Patch6 is
+staged at the end of this fix series in case it is contentious and needs
+to be dropped.
 
-Rob
+Patch1 "drivers/base: Introduce kill_device()" could be achieved with
+local libnvdimm infrastructure. However, the existing 'dead' flag in
+'struct device_private' aims to solve similar async register/unregister
+races so the fix in patch2 "libnvdimm/bus: Prevent duplicate
+device_unregister() calls" can be implemented with existing driver-core
+infrastructure.
+
+Patch3 is a rare lockdep warning that is intermittent based on
+namespaces racing ahead of the completion of probe of their parent
+region. It is not related to the other fixes, it just happened to
+trigger as a result of the async stress test.
+
+Patch4 and patch5 address an ABBA deadlock tripped by the stress test.
+
+These patches pass the failing stress test and the existing libnvdimm
+unit tests with CONFIG_PROVE_LOCKING=y and the new "dev->lockdep_mutex"
+shadow lock with no lockdep warnings.
+
+---
+
+Dan Williams (6):
+      drivers/base: Introduce kill_device()
+      libnvdimm/bus: Prevent duplicate device_unregister() calls
+      libnvdimm/region: Register badblocks before namespaces
+      libnvdimm/bus: Stop holding nvdimm_bus_list_mutex over __nd_ioctl()
+      libnvdimm/bus: Fix wait_nvdimm_bus_probe_idle() ABBA deadlock
+      driver-core, libnvdimm: Let device subsystems add local lockdep coverage
+
+
+ drivers/acpi/nfit/core.c        |   28 ++++---
+ drivers/acpi/nfit/nfit.h        |   24 ++++++
+ drivers/base/core.c             |   30 ++++++--
+ drivers/nvdimm/btt_devs.c       |   16 ++--
+ drivers/nvdimm/bus.c            |  154 +++++++++++++++++++++++++++------------
+ drivers/nvdimm/core.c           |   10 +--
+ drivers/nvdimm/dimm_devs.c      |    4 +
+ drivers/nvdimm/namespace_devs.c |   36 +++++----
+ drivers/nvdimm/nd-core.h        |   71 ++++++++++++++++++
+ drivers/nvdimm/pfn_devs.c       |   24 +++---
+ drivers/nvdimm/pmem.c           |    4 +
+ drivers/nvdimm/region.c         |   24 +++---
+ drivers/nvdimm/region_devs.c    |   12 ++-
+ include/linux/device.h          |    6 ++
+ 14 files changed, 308 insertions(+), 135 deletions(-)
