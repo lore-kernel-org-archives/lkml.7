@@ -2,487 +2,147 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C48C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97683C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 095672089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778862054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391515AbfFKOns (ORCPT
+        id S2404048AbfFKOpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:43:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:34748 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389454AbfFKOnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:43:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E615A337;
-        Tue, 11 Jun 2019 07:43:46 -0700 (PDT)
-Received: from [10.162.43.135] (p8cg001049571a15.blr.arm.com [10.162.43.135])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 011D43F557;
-        Tue, 11 Jun 2019 07:43:41 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V5 3/3] arm64/mm: Enable memory hot remove
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, james.morse@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com
-References: <1559121387-674-1-git-send-email-anshuman.khandual@arm.com>
- <1559121387-674-4-git-send-email-anshuman.khandual@arm.com>
- <20190530151227.GD56046@lakrids.cambridge.arm.com>
-Message-ID: <e339a58f-4426-1a37-3ab9-112f5d4cc643@arm.com>
-Date:   Tue, 11 Jun 2019 20:13:59 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 11 Jun 2019 10:45:06 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:48893 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389454AbfFKOpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:45:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id z19so10144727ioi.15
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 07:45:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=tUob3QbIRa6wmkeEyy9XTsPmW1BG3WSB6d8B47p1jt4=;
+        b=aMzRwxAPc8C6VtcP2nI/X3/4kE+XZWH/fNr+dImrVgvJmn0wbLt+VUWXiftqS4RTcM
+         0DoQsxzUt8eYmGflXiNz2MFAuiUAhD1d44EIEEuaAFxte+bFZvMM2KHRsaO3zqMOTgvi
+         QxP014v4Nyv8f0Y06yftGhSkbMpSItqfaAYmPfaFEJUhPPrb8C2VCZoLHpyEMfKi0mPW
+         rojpg2lAdgh4XQXi5oyDy9sHDxZaG4vqufhcDJ2RFIa7eYueO51bpeQzWoyCvWo0Yq4e
+         x14/6t+O8ORIYcy6bY0LZD8lhyHvvXF5ET3ch0h6qgt4SzEYjWOM5VkkaNzuLk13xmjj
+         VXAQ==
+X-Gm-Message-State: APjAAAWm165qLC9e1N1E9n93vW+njnlFCREjnJmEGeOzwiJEj10jR1Aw
+        BCDVX7I39Q48vXBdbUFAq+emjf8hbAskqpQwwfimLcz5ZyzQ
+X-Google-Smtp-Source: APXvYqxUcaF8F+lxr/TKjqHdPHFrKqils+BWR4nhGGnebCV9hedlRnvZhYOzFq7Ue1OI/ANoVAi7xOOXefcmoubboxrhAswxLEnK
 MIME-Version: 1.0
-In-Reply-To: <20190530151227.GD56046@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:b817:: with SMTP id o23mr34272047jam.134.1560264305324;
+ Tue, 11 Jun 2019 07:45:05 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 07:45:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000acb99a058b0d5741@google.com>
+Subject: WARNING in snd_usb_motu_microbookii_communicate/usb_submit_urb
+From:   syzbot <syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/30/2019 08:42 PM, Mark Rutland wrote:
-> Hi Anshuman,
+Hello,
 
-Hello Mark,
+syzbot found the following crash on:
 
-> 
->>From reviwing the below, I can see some major issues that need to be
-> addressed, which I've commented on below.
-> 
-> Andrew, please do not pick up this patch.
+HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=111aabfea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=193d8457178b3229
+dashboard link: https://syzkaller.appspot.com/bug?extid=d952e5e28f5fb7718d23
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e71f51a00000
 
-I was reworking this patch series and investigating the vmalloc/vmemmap
-conflict issues. Hence could not respond earlier.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
 
-> 
-> On Wed, May 29, 2019 at 02:46:27PM +0530, Anshuman Khandual wrote:
->> The arch code for hot-remove must tear down portions of the linear map and
->> vmemmap corresponding to memory being removed. In both cases the page
->> tables mapping these regions must be freed, and when sparse vmemmap is in
->> use the memory backing the vmemmap must also be freed.
->>
->> This patch adds a new remove_pagetable() helper which can be used to tear
->> down either region, and calls it from vmemmap_free() and
->> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
->> backing memory will be freed.
->>
->> While freeing intermediate level page table pages bail out if any of it's
-> 
-> Nit: s/it's/its/
-
-Done.
-
-> 
->> entries are still valid. This can happen for partially filled kernel page
->> table either from a previously attempted failed memory hot add or while
->> removing an address range which does not span the entire page table page
->> range.
->>
->> The vmemmap region may share levels of table with the vmalloc region. Take
->> the kernel ptl so that we can safely free potentially-shared tables.
-> 
-> AFAICT, this is not sufficient; please see below for details.
-
-Sure.
-
-> 
->> While here update arch_add_memory() to handle __add_pages() failures by
->> just unmapping recently added kernel linear mapping. Now enable memory hot
->> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
->>
->> This implementation is overall inspired from kernel page table tear down
->> procedure on X86 architecture.
->>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> Acked-by: David Hildenbrand <david@redhat.com>
-> 
-> Looking at this some more, I don't think this is quite right, and tI
-> think that structure of the free_*() and remove_*() functions makes this
-> unnecessarily hard to follow. We should aim for this to be obviously
-> correct.
-
-Okay.
-
-> 
-> The x86 code is the best template to follow here. As mentioned
-
-Did you mean *not the best* instead.
-
-> previously, I'm fairly certain it's not entirely correct (e.g. due to
-> missing TLB maintenance), and we've already diverged a fair amount in
-> fixing up obvious issues, so we shouldn't aim to mirror it.
-
-Okay.
-
-> 
-> I think that the structure of unmap_region() is closer to what we want
-> here -- do one pass to unmap leaf entries (and freeing the associated
-> memory if unmapping the vmemmap), then do a second pass cleaning up any
-> empty tables.
-
-Done.
-
-> 
-> In general I'm concerned that we don't strictly follow a
-> clear->tlbi->free sequence, and free pages before tearing down their
-> corresponding mapping. It doesn't feel great to leave a cacheable alias
-> around, even transiently. Further, as commented below, the
-> remove_p?d_table() functions leave stale leaf entries in the TLBs when
-> removing section entries.
-
-Fixed these.
-
-> 
->> ---
->>  arch/arm64/Kconfig  |   3 +
->>  arch/arm64/mm/mmu.c | 211 +++++++++++++++++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 212 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 697ea05..7f917fe 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -268,6 +268,9 @@ config HAVE_GENERIC_GUP
->>  config ARCH_ENABLE_MEMORY_HOTPLUG
->>  	def_bool y
->>  
->> +config ARCH_ENABLE_MEMORY_HOTREMOVE
->> +	def_bool y
->> +
->>  config SMP
->>  	def_bool y
->>  
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index a1bfc44..4803624 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -733,6 +733,187 @@ int kern_addr_valid(unsigned long addr)
->>  
->>  	return pfn_valid(pte_pfn(pte));
->>  }
->> +
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +static void free_hotplug_page_range(struct page *page, ssize_t size)
-> 
-> The size argument should never be negative, so size_t would be best.
-
-Done.
-
-> 
->> +{
->> +	WARN_ON(PageReserved(page));
->> +	free_pages((unsigned long)page_address(page), get_order(size));
->> +}
->> +
->> +static void free_hotplug_pgtable_page(struct page *page)
->> +{
->> +	free_hotplug_page_range(page, PAGE_SIZE);
->> +}
->> +
->> +static void free_pte_table(pte_t *ptep, pmd_t *pmdp, unsigned long addr)
->> +{
->> +	struct page *page;
->> +	int i;
->> +
->> +	for (i = 0; i < PTRS_PER_PTE; i++) {
->> +		if (!pte_none(ptep[i]))
->> +			return;
->> +	}
->> +
->> +	page = pmd_page(READ_ONCE(*pmdp));
->> +	pmd_clear(pmdp);
->> +	__flush_tlb_kernel_pgtable(addr);
->> +	free_hotplug_pgtable_page(page);
->> +}
->> +
->> +static void free_pmd_table(pmd_t *pmdp, pud_t *pudp, unsigned long addr)
->> +{
->> +	struct page *page;
->> +	int i;
->> +
->> +	if (CONFIG_PGTABLE_LEVELS <= 2)
->> +		return;
->> +
->> +	for (i = 0; i < PTRS_PER_PMD; i++) {
->> +		if (!pmd_none(pmdp[i]))
->> +			return;
->> +	}
->> +
->> +	page = pud_page(READ_ONCE(*pudp));
->> +	pud_clear(pudp);
->> +	__flush_tlb_kernel_pgtable(addr);
->> +	free_hotplug_pgtable_page(page);
->> +}
->> +
->> +static void free_pud_table(pud_t *pudp, pgd_t *pgdp, unsigned long addr)
->> +{
->> +	struct page *page;
->> +	int i;
->> +
->> +	if (CONFIG_PGTABLE_LEVELS <= 3)
->> +		return;
->> +
->> +	for (i = 0; i < PTRS_PER_PUD; i++) {
->> +		if (!pud_none(pudp[i]))
->> +			return;
->> +	}
->> +
->> +	page = pgd_page(READ_ONCE(*pgdp));
->> +	pgd_clear(pgdp);
->> +	__flush_tlb_kernel_pgtable(addr);
->> +	free_hotplug_pgtable_page(page);
->> +}
->> +
->> +static void
->> +remove_pte_table(pmd_t *pmdp, unsigned long addr,
-> 
-> Please put this on a single line.
-> 
-> All the existing functions in this file (and the ones you add above)
-> have the return type on the same line as the name, and since this
-> portion of the prototype doesn't encroach 80 columns there's no reason
-> to flow it.
-
-Fixed.
-
-> 
->> +			unsigned long end, bool sparse_vmap)
->> +{
->> +	struct page *page;
->> +	pte_t *ptep, pte;
->> +	unsigned long start = addr;
->> +
->> +	for (; addr < end; addr += PAGE_SIZE) {
->> +		ptep = pte_offset_kernel(pmdp, addr);
->> +		pte = READ_ONCE(*ptep);
->> +
->> +		if (pte_none(pte))
->> +			continue;
->> +
->> +		WARN_ON(!pte_present(pte));
->> +		if (sparse_vmap) {
->> +			page = pte_page(pte);
->> +			free_hotplug_page_range(page, PAGE_SIZE);
->> +		}
->> +		pte_clear(&init_mm, addr, ptep);
->> +	}
->> +	flush_tlb_kernel_range(start, end);
->> +}
-> 
-> For consistency we should use a do { ... } while (..., addr != end) loop
-> to iterate over the page tables. All the other code in our mmu.c does
-> that, and diverging from that doesn't save use anything here but does
-> make review and maintenance harder.
-
-Done.
-
-> 
->> +
->> +static void
->> +remove_pmd_table(pud_t *pudp, unsigned long addr,
-> 
-> Same line please.
-> 
->> +			unsigned long end, bool sparse_vmap)
->> +{
->> +	unsigned long next;
->> +	struct page *page;
->> +	pte_t *ptep_base;
->> +	pmd_t *pmdp, pmd;
->> +
->> +	for (; addr < end; addr = next) {
->> +		next = pmd_addr_end(addr, end);
->> +		pmdp = pmd_offset(pudp, addr);
->> +		pmd = READ_ONCE(*pmdp);
->> +
->> +		if (pmd_none(pmd))
->> +			continue;
->> +
->> +		WARN_ON(!pmd_present(pmd));
->> +		if (pmd_sect(pmd)) {
->> +			if (sparse_vmap) {
->> +				page = pmd_page(pmd);
->> +				free_hotplug_page_range(page, PMD_SIZE);
->> +			}
->> +			pmd_clear(pmdp);
-> 
-> As mentioned above, this has no corresponding TLB maintenance, and I'm
-> concerned that we free the page before clearing the entry. If the page
-> gets re-allocated elsewhere, whoever received the page may not be
-> expecting a cacheable alias to exist other than the linear map.
-
-Fixed.
-
-> 
->> +			continue;
->> +		}
->> +		ptep_base = pte_offset_kernel(pmdp, 0UL);
->> +		remove_pte_table(pmdp, addr, next, sparse_vmap);
->> +		free_pte_table(ptep_base, pmdp, addr);
->> +	}
->> +}
->> +
->> +static void
->> +remove_pud_table(pgd_t *pgdp, unsigned long addr,
-> 
-> Same line please
-
-Fixed.
-
-> 
->> +			unsigned long end, bool sparse_vmap)
->> +{
->> +	unsigned long next;
->> +	struct page *page;
->> +	pmd_t *pmdp_base;
->> +	pud_t *pudp, pud;
->> +
->> +	for (; addr < end; addr = next) {
->> +		next = pud_addr_end(addr, end);
->> +		pudp = pud_offset(pgdp, addr);
->> +		pud = READ_ONCE(*pudp);
->> +
->> +		if (pud_none(pud))
->> +			continue;
->> +
->> +		WARN_ON(!pud_present(pud));
->> +		if (pud_sect(pud)) {
->> +			if (sparse_vmap) {
->> +				page = pud_page(pud);
->> +				free_hotplug_page_range(page, PUD_SIZE);
->> +			}
->> +			pud_clear(pudp);
-> 
-> Same issue as in remove_pmd_table().
-
-Fixed.
+usb 2-1: Waiting for MOTU Microbook II to boot up...
+------------[ cut here ]------------
+usb 2-1: BOGUS urb xfer, pipe 1 != type 3
+WARNING: CPU: 0 PID: 2059 at drivers/usb/core/urb.c:477  
+usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 2059 Comm: kworker/0:2 Not tainted 5.2.0-rc1+ #10
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x292/0x6c9 kernel/panic.c:218
+  __warn.cold+0x20/0x4b kernel/panic.c:575
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Code: 4d 85 ed 74 2c e8 b8 06 e9 fd 4c 89 f7 e8 c0 44 13 ff 41 89 d8 44 89  
+e1 4c 89 ea 48 89 c6 48 c7 c7 20 1c 1a 86 e8 03 db be fd <0f> 0b e9 20 f4  
+ff ff e8 8c 06 e9 fd 4c 89 f2 48 b8 00 00 00 00 00
+RSP: 0018:ffff8881cdba6dc0 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8127e98d RDI: ffffed1039b74daa
+RBP: ffff8881d7b3bb80 R08: ffff8881ccffc800 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: ffff8881d9159510 R14: ffff8881d0f61a20 R15: ffff8881d0a28000
+  usb_start_wait_urb+0x108/0x2b0 drivers/usb/core/message.c:57
+  usb_bulk_msg+0x228/0x550 drivers/usb/core/message.c:253
+  snd_usb_motu_microbookii_communicate.constprop.0+0xe3/0x240  
+sound/usb/quirks.c:1011
+  snd_usb_motu_microbookii_boot_quirk sound/usb/quirks.c:1051 [inline]
+  snd_usb_apply_boot_quirk.cold+0x140/0x36b sound/usb/quirks.c:1280
+  usb_audio_probe+0x2ec/0x2010 sound/usb/card.c:590
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2268
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+  kthread+0x30b/0x410 kernel/kthread.c:254
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> 
->> +			continue;
->> +		}
->> +		pmdp_base = pmd_offset(pudp, 0UL);
->> +		remove_pmd_table(pudp, addr, next, sparse_vmap);
->> +		free_pmd_table(pmdp_base, pudp, addr);
->> +	}
->> +}
->> +
->> +static void
->> +remove_pagetable(unsigned long start, unsigned long end, bool sparse_vmap)
-> 
-> Same line please (with the sparse_vmap argument flowed on to the next
-> line as that will encroach 80 characters).
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Done.
-
-> 
->> +{
->> +	unsigned long addr, next;
->> +	pud_t *pudp_base;
->> +	pgd_t *pgdp, pgd;
->> +
->> +	spin_lock(&init_mm.page_table_lock);
-> 
-> Please add a comment above this to explain why we need to take the
-> init_mm ptl. Per the cover letter, this should be something like:
-> 
-> 	/*
-> 	 * We may share tables with the vmalloc region, so we must take
-> 	 * the init_mm ptl so that we can safely free any
-> 	 * potentially-shared tables that we have emptied.
-> 	 */
-
-This might not be required any more (see below comments)
-
-> 
-> The vmalloc code doesn't hold the init_mm ptl when walking a table; it
-
-Right.
-
-> only takes the init_mm ptl when populating a none entry in
-> __p??_alloc(), to avoid a race where two threads need to populate the
-> entry.
-
-Right.
-
-> 
-> So AFAICT, taking the init_mm ptl here is not sufficient to make this
-> safe.
-
-I understand that there can be potential conflicts here if vmalloc and
-vmemap mappings share kernel intermediate level page table pages.
-
-For example.
-
-- vmalloc takes an intermediate page table page pointer during walk
-  (without init_mm lock) and proceeds further to create leaf level
-  entries
-
-- memory hot-remove walks the page table, (clear-->--invalidate-->free)
-  leaf level entries and then removes (clear-->--invalidate-->free) an
-  intermediate level page table pages (already emptied) while holding
-  init_mm lock
-
-- vmalloc now holds an invalid page table entry pointer derived from a
-  freed page (potentially being used else where) and proceeds to create
-  an entry on it !
-
-The primary cause which creates this problematic situation is
-
-- vmalloc does not take init_mm.page_table_lock for it's entire duration.
-  Kernel page table walk, page table page insert, creation of leaf level
-  entries etc. This should have prevented memory hot-remove from deleting
-  intermediate page table pages while vmalloc was at it.
-
-So how to solve this problem ?
-
-Broadly there are three options (unless I have missed some more)
-
-Option 1:
-
-Take init_mm ptl for the entire duration of vmalloc() but it will then
-have significant impact on it's performance. vmalloc() works on mutually
-exclusive ranges which can proceed concurrently for their allocation
-except the page table pages which are currently protected. Multiple
-threads doing vmalloc() dont need init_mm ptl for it's entire duration.
-Hence doing so can affect performance.
-
-Option 2:
-
-Take mem_hotplug_lock in read mode through [get|put]_online_mems() for
-the entire duration of vmalloc(). It protects vmalloc() from concurrent
-memory hot remove operation but does not add significant overhead to
-other concurrent vmalloc() threads.
-
-Option 3:
-
-Dont not free page table pages for vmemmap mappings after unmapping the
-hotplug range. The only downside is that some page table pages might
-remain empty and unused till the next hot add operation for the same
-memory range, which should be fine.
-
-IMHO
-
-- Option 1 does not seem to be viable for it's performance impact
-- Option 2 seems to solve the problem in the right way unless we dont
-           want to further the usage of mem_hotplug_lock in core MM
-
-- Option 3 seems like an easy and quick solution on the platform side
-           which avoids the problem for now
-
-Please let me know your thoughts.
-
-- Anshuman
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
