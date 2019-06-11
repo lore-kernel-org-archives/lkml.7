@@ -2,140 +2,78 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30BFC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1091CC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD28214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E82208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560266819;
+	bh=1zBlTS3Nie+mVMEnxT8ngtbUEWBVODf4UqfieGxASKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t6FwUbQanIv14tO+dNTPjS2+gMm+usi8FCzcwfv1bSl/6rqUdtuwkWaysSmzha2/I
+	 j1/72So7CTD/pSdR65AxD5iJjosASOlXY4jPXDs0BKGMIpCGHNQ0igNh4X2KD41ubn
+	 BbkgJPJhqZAGav78IisA9q64uDxT2qPZXCZJwC98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404960AbfFKPZx (ORCPT
+        id S2390464AbfFKP07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:25:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:32063 "EHLO mga04.intel.com"
+        Tue, 11 Jun 2019 11:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404926AbfFKPZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:25:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 08:25:51 -0700
-X-ExtLoop1: 1
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.140.156]) ([10.249.140.156])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2019 08:25:49 -0700
-Subject: Re: [PATCH AUTOSEL 4.14 15/31] PCI: PM: Avoid possible
- suspend-to-idle issue
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Keith Busch <keith.busch@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-References: <20190608114646.9415-1-sashal@kernel.org>
- <20190608114646.9415-15-sashal@kernel.org>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <7003865c-8689-78f2-d441-f2a223fb3122@intel.com>
-Date:   Tue, 11 Jun 2019 17:25:48 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S2387864AbfFKP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:26:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E6252080A;
+        Tue, 11 Jun 2019 15:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560266818;
+        bh=1zBlTS3Nie+mVMEnxT8ngtbUEWBVODf4UqfieGxASKw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R6z3c2Wfvs1aSYFX2p/bQ8TdbkA8+VWR6+YduaGWCiMIADIM2sRkbsl9+iTmO40/8
+         0se38PEGyvAGb8TRdb4ph0aPgJ9chqojwEkY83ethTGWXuIeDWvW8gZ+wT3xrk47KY
+         NzuGx81caV4zNIhtctzfiYZVsHOilPnq/uVdW9rI=
+Date:   Tue, 11 Jun 2019 17:26:55 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
+Message-ID: <20190611152655.GA3972@kroah.com>
+References: <20190611092144.11194-1-oded.gabbay@gmail.com>
+ <20190611095857.GB24058@kroah.com>
+ <20190611151753.GA11404@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190608114646.9415-15-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611151753.GA11404@infradead.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/8/2019 1:46 PM, Sasha Levin wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->
-> [ Upstream commit d491f2b75237ef37d8867830ab7fad8d9659e853 ]
->
-> If a PCI driver leaves the device handled by it in D0 and calls
-> pci_save_state() on the device in its ->suspend() or ->suspend_late()
-> callback, it can expect the device to stay in D0 over the whole
-> s2idle cycle.  However, that may not be the case if there is a
-> spurious wakeup while the system is suspended, because in that case
-> pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
-> which calls pci_restore_state(), via pci_pm_default_resume_early(),
-> so state_saved is cleared and the second iteration of
-> pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
-> may change the power state of the device.
->
-> To avoid that, add a new internal flag, skip_bus_pm, that will be set
-> by pci_pm_suspend_noirq() when it runs for the first time during the
-> given system suspend-resume cycle if the state of the device has
-> been saved already and the device is still in D0.  Setting that flag
-> will cause the next iterations of pci_pm_suspend_noirq() to set
-> state_saved for pci_pm_resume_noirq(), so that it always restores the
-> device state from the originally saved data, and avoid calling
-> pci_prepare_to_sleep() for the device.
->
-> Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Keith Busch <keith.busch@intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   drivers/pci/pci-driver.c | 17 ++++++++++++++++-
->   include/linux/pci.h      |  1 +
->   2 files changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index ea69b4dbab66..f5d66335fe53 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -726,6 +726,8 @@ static int pci_pm_suspend(struct device *dev)
->   	struct pci_dev *pci_dev = to_pci_dev(dev);
->   	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
->   
-> +	pci_dev->skip_bus_pm = false;
-> +
->   	if (pci_has_legacy_pm_support(pci_dev))
->   		return pci_legacy_suspend(dev, PMSG_SUSPEND);
->   
-> @@ -799,7 +801,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
->   		}
->   	}
->   
-> -	if (!pci_dev->state_saved) {
-> +	if (pci_dev->skip_bus_pm) {
-> +		/*
-> +		 * The function is running for the second time in a row without
-> +		 * going through full resume, which is possible only during
-> +		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-> +		 * device was originally left in D0, so its power state should
-> +		 * not be changed here and the device register values saved
-> +		 * originally should be restored on resume again.
-> +		 */
-> +		pci_dev->state_saved = true;
-> +	} else if (pci_dev->state_saved) {
-> +		if (pci_dev->current_state == PCI_D0)
-> +			pci_dev->skip_bus_pm = true;
-> +	} else {
->   		pci_save_state(pci_dev);
->   		if (pci_power_manageable(pci_dev))
->   			pci_prepare_to_sleep(pci_dev);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 59f4d10568c6..430f3c335446 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -346,6 +346,7 @@ struct pci_dev {
->   						   D3cold, not set for devices
->   						   powered on/off by the
->   						   corresponding bridge */
-> +	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
->   	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
->   	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
->   						      controlled exclusively by
+On Tue, Jun 11, 2019 at 08:17:53AM -0700, Christoph Hellwig wrote:
+> On Tue, Jun 11, 2019 at 11:58:57AM +0200, Greg KH wrote:
+> > That feels like a big hack.  ppc doesn't have any "what arch am I
+> > running on?" runtime call?  Did you ask on the ppc64 mailing list?  I'm
+> > ok to take this for now, but odds are you need a better fix for this
+> > sometime...
+> 
+> That isn't the worst part of it.  The whole idea of checking what I'm
+> running to set a dma mask just doesn't make any sense at all.
 
-This has been reported to be problematic, I wouldn't recommend taking it 
-for -stable at this point.
+Oded, I thought I asked if there was a dma call you should be making to
+keep this type of check from being needed.  What happened to that?  As
+Christoph points out, none of this should be needed, which is what I
+thought I originally said :)
 
+thanks,
 
+greg k-h
