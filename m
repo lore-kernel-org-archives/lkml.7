@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F55DC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1CAC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D332184B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B6E21874
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560279638;
-	bh=aY8GUASc/oObyohkVWHCuz80ViEkpUoo3Ul0PwXBp7U=;
+	s=default; t=1560279642;
+	bh=xbBl2kCw5i1ABrpzJg4zX6C54ei+Lg8uUczzmJgjQ3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ByPOLFOp+xDd8b6cjijh8aMiNJ4lr9tPmMbHNKxDrGKfSeampRvgILFI4GRAN+fCe
-	 guiiJ5LZc3yrQDL9Sy/IovN/vwy+SXNDioKPo9HXrqesgrJB9jVcNC2zZfq16vLS60
-	 t7Wj2+xHiIjZf1k3dHTvw5oOPV7lgEwbAUj6vTYE=
+	b=HahlRLzxSkHwUjXQ9vV0dw4mNc/TTWB+C80Wa6aBX4j5TRZa9FklIQT/FL4UrydSp
+	 R3ECYidg4DTYW1UgCOhecw/t9swYnJQD/C+R3CUT1yFrNbxhDuKMzDE2t/cXdFmKUQ
+	 hfO7/cQkJ4WO+lR4qU4bgLxR1hdotmDqU2QZIYAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436484AbfFKTAh (ORCPT
+        id S2391834AbfFKTAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:00:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 15:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405274AbfFKTAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:00:36 -0400
+        id S2391579AbfFKTAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:00:40 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C3D721871;
-        Tue, 11 Jun 2019 19:00:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134302183E;
+        Tue, 11 Jun 2019 19:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279635;
-        bh=aY8GUASc/oObyohkVWHCuz80ViEkpUoo3Ul0PwXBp7U=;
+        s=default; t=1560279639;
+        bh=xbBl2kCw5i1ABrpzJg4zX6C54ei+Lg8uUczzmJgjQ3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRex885G6b4aVL2xx5z2CoRxWcDyCJIqfbZoL4exgP3kSZq6S6kYtGIr2a1Qh6huy
-         x50/RpbjGhRRAtHVcCP300uzsKBvO5zyioxXq9NZm5SKp/niIonZPvch9gcuF1r0FU
-         G8y344bkvXphEqmCbR6JgMvNq4u00OIcX+1qFplI=
+        b=WryQx9OuQ8pGfDJhfs8eiQWJbYRz/s/bEJbwuvhlaXHyjAYQNe04E1VYAN2Erfbcq
+         v9DZw3h8d23iwaL4T1xs3ZKQH1LFbluse/ggVennSNkeSLmlTDnxGBG5BTplrvbIhp
+         VftMoIDK5J9cNGp/EgDgxx6F6RaWOF35VkZaJL2M=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,16 +46,15 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 21/85] perf scripts python: exported-sql-viewer.py: Add IPC information to the Branch reports
-Date:   Tue, 11 Jun 2019 15:58:07 -0300
-Message-Id: <20190611185911.11645-22-acme@kernel.org>
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 22/85] perf scripts python: exported-sql-viewer.py: Add CallGraphModelParams
+Date:   Tue, 11 Jun 2019 15:58:08 -0300
+Message-Id: <20190611185911.11645-23-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,262 +63,252 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Enhance the "All branches" and "Selected branches" reports to display IPC
-information if it is available.
-
-Committer testing:
-
-So, testing this I noticed that it all starts with the left arrow in every
-line, that should mean there is some tree there, i.e. look at all those ▶
-symbols:
-
-Reports -> All Branches:
-
-Time              CPU Command         PID   TID   Branch Type  In Tx  Insn Cnt  Cyc Cnt  IPC  Branch
-▶ 187836112195670 7   simple-retpolin 23003 23003 trace begin  No     0         0        0               0 unknown (unknown) -> 7f6f33d4f110
-+_start (ld-2.28.so)
-▶ 187836112195987 7   simple-retpolin 23003 23003 trace end    No     0         883      0    7f6f33d4f110 _start (ld-2.28.so) -> 0 unknown
-+(unknown)
-▶ 187836112199189 7   simple-retpolin 23003 23003 trace begin  No     0         0        0               0 unknown (unknown) -> 7f6f33d4f110
-+_start (ld-2.28.so)
-▶ 187836112199189 7   simple-retpolin 23003 23003 call         No     0         0        0    7f6f33d4f113 _start+0x3 (ld-2.28.so) -> 7f6f33d4ff50
-+_dl_start (ld-2.28.so)
-▶ 187836112199544 7   simple-retpolin 23003 23003 trace end    No     17        996      0.02 7f6f33d4ff73 _dl_start+0x23 (ld-2.28.so) -> 0
-+unknown (unknown)
-▶ 187836112200939 7   simple-retpolin 23003 23003 trace begin  No     0         0        0               0 unknown (unknown) -> 7f6f33d4ff73
-+_dl_start+0x23 (ld-2.28.so)
-▶ 187836112201229 7   simple-retpolin 23003 23003 trace end    No     1         816      0.00 7f6f33d4ff7a _dl_start+0x2a (ld-2.28.so) -> 0
-+unknown (unknown)
-▶ 187836112203500 7   simple-retpolin 23003 23003 trace begin  No     0         0        0               0 unknown (unknown) -> 7f6f33d4ff7a
-+_dl_start+0x2a (ld-2.28.so)
-
-But if you click on it, that ▶ disappears and a new click doesn't make
-it reappear, looks buggy, minor oddity, reported to Adrian.
-
-Reports -> Selected Branches, then ask for branches in the ld-2.28.so
-DSO:
-
-Time               CPU  Command          PID    TID    Branch Type        In Tx  Insn Cnt  Cyc Cnt  IPC   Branch
-▶ 187836112195987  7    simple-retpolin  23003  23003  trace end          No     0         883      0     7f6f33d4f110 _start (ld-2.28.so) -> 0 unknown (unknown)
-▶ 187836112199189  7    simple-retpolin  23003  23003  trace begin        No     0         0        0                0 unknown (unknown) -> 7f6f33d4f110 _start (ld-2.28.so)
-▶ 187836112199189  7    simple-retpolin  23003  23003  call               No     0         0        0     7f6f33d4f113 _start+0x3 (ld-2.28.so) -> 7f6f33d4ff50 _dl_start (ld-2.28.so)
-▶ 187836112199544  7    simple-retpolin  23003  23003  trace end          No     17        996      0.02  7f6f33d4ff73 _dl_start+0x23 (ld-2.28.so) -> 0 unknown (unknown)
-▶ 187836112200939  7    simple-retpolin  23003  23003  trace begin        No     0         0        0                0 unknown (unknown) -> 7f6f33d4ff73 _dl_start+0x23 (ld-2.28.so)
-▶ 187836112201229  7    simple-retpolin  23003  23003  trace end          No     1         816      0.00  7f6f33d4ff7a _dl_start+0x2a (ld-2.28.so) -> 0 unknown (unknown)
-▶ 187836112203500  7    simple-retpolin  23003  23003  trace begin        No     0         0        0                0 unknown (unknown) -> 7f6f33d4ff7a _dl_start+0x2a (ld-2.28.so)
-▶ 187836112203528  7    simple-retpolin  23003  23003  unconditional jump No     0         0        0     7f6f33d4ffe7 _dl_start+0x97 (ld-2.28.so) -> 7f6f33d5000b _dl_start+0xbb (ld-2.28.so)
-▶ 187836112203528  7    simple-retpolin  23003  23003  conditional jump   No     0         0        0     7f6f33d5000f _dl_start+0xbf (ld-2.28.so) -> 7f6f33d4fffb _dl_start+0xab (ld-2.28.so)
-▶ 187836112203528  7    simple-retpolin  23003  23003  conditional jump   No     0         0        0     7f6f33d5000f _dl_start+0xbf (ld-2.28.so) -> 7f6f33d4fffb _dl_start+0xab (ld-2.28.so)
-▶ 187836112203539  7    simple-retpolin  23003  23003  conditional jump   No     0         0        0     7f6f33d50025 _dl_start+0xd5 (ld-2.28.so) -> 7f6f33d50210 _dl_start+0x2c0 (ld-2.28.so)
-▶ 187836112203539  7    simple-retpolin  23003  23003  conditional jump   No     0         0        0     7f6f33d5021a _dl_start+0x2ca (ld-2.28.so) -> 7f6f33d50360 _dl_start+0x410 (ld-2.28.so)
-▶ 187836112203539  7    simple-retpolin  23003  23003  unconditional jump No     0         0        0     7f6f33d50377 _dl_start+0x427 (ld-2.28.so) -> 7f6f33d4ffff _dl_start+0xaf (ld-2.28.so)
-▶ 187836112203539  7    simple-retpolin  23003  23003  conditional jump   No     0         0        0     7f6f33d5000f _dl_start+0xbf (ld-2.28.so) -> 7f6f33d4fffb _dl_start+0xab (ld-2.28.so)
-▶ 187836112203562  7    simple-retpolin  23003  23003  conditional jump   No     0         0        0     7f6f33d5000f _dl_start+0xbf (ld-2.28.so) -> 7f6f33d4fffb _dl_start+0xab (ld-2.28.so)
+Add a parameter to call graph and call tree, to determine whether IPC
+information is available.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190520113728.14389-19-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190520113728.14389-20-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 102 ++++++++++++++----
- 1 file changed, 83 insertions(+), 19 deletions(-)
+ .../scripts/python/exported-sql-viewer.py     | 73 +++++++++++--------
+ 1 file changed, 41 insertions(+), 32 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 6fe553258ce5..a607235c8cd9 100755
+index a607235c8cd9..b3508bd4eb00 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -1369,11 +1369,11 @@ class FetchMoreRecordsBar():
+@@ -200,9 +200,10 @@ class Thread(QThread):
  
- class BranchLevelTwoItem():
+ class TreeModel(QAbstractItemModel):
  
--	def __init__(self, row, text, parent_item):
-+	def __init__(self, row, col, text, parent_item):
+-	def __init__(self, glb, parent=None):
++	def __init__(self, glb, params, parent=None):
+ 		super(TreeModel, self).__init__(parent)
+ 		self.glb = glb
++		self.params = params
+ 		self.root = self.GetRoot()
+ 		self.last_row_read = 0
+ 
+@@ -463,8 +464,9 @@ class FindBar():
+ 
+ class CallGraphLevelItemBase(object):
+ 
+-	def __init__(self, glb, row, parent_item):
++	def __init__(self, glb, params, row, parent_item):
+ 		self.glb = glb
++		self.params = params
  		self.row = row
  		self.parent_item = parent_item
--		self.data = [""] * 8
--		self.data[7] = text
-+		self.data = [""] * (col + 1)
-+		self.data[col] = text
- 		self.level = 2
+ 		self.query_done = False;
+@@ -503,8 +505,8 @@ class CallGraphLevelItemBase(object):
  
- 	def getParentItem(self):
-@@ -1405,6 +1405,7 @@ class BranchLevelOneItem():
- 		self.dbid = data[0]
- 		self.level = 1
- 		self.query_done = False
-+		self.br_col = len(self.data) - 1
+ class CallGraphLevelTwoPlusItemBase(CallGraphLevelItemBase):
  
- 	def getChildItem(self, row):
- 		return self.child_items[row]
-@@ -1485,7 +1486,7 @@ class BranchLevelOneItem():
- 				while k < 15:
- 					byte_str += "   "
- 					k += 1
--				self.child_items.append(BranchLevelTwoItem(0, byte_str + " " + text, self))
-+				self.child_items.append(BranchLevelTwoItem(0, self.br_col, byte_str + " " + text, self))
- 				self.child_count += 1
- 			else:
- 				return
-@@ -1536,16 +1537,37 @@ class BranchRootItem():
- 	def getData(self, column):
- 		return ""
+-	def __init__(self, glb, row, comm_id, thread_id, call_path_id, time, branch_count, parent_item):
+-		super(CallGraphLevelTwoPlusItemBase, self).__init__(glb, row, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, call_path_id, time, branch_count, parent_item):
++		super(CallGraphLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
+ 		self.comm_id = comm_id
+ 		self.thread_id = thread_id
+ 		self.call_path_id = call_path_id
+@@ -525,7 +527,7 @@ class CallGraphLevelTwoPlusItemBase(CallGraphLevelItemBase):
+ 					" GROUP BY call_path_id, name, short_name"
+ 					" ORDER BY call_path_id")
+ 		while query.next():
+-			child_item = CallGraphLevelThreeItem(self.glb, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), int(query.value(5)), self)
++			child_item = CallGraphLevelThreeItem(self.glb, self.params, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), int(query.value(5)), self)
+ 			self.child_items.append(child_item)
+ 			self.child_count += 1
  
-+# Calculate instructions per cycle
-+
-+def CalcIPC(cyc_cnt, insn_cnt):
-+	if cyc_cnt and insn_cnt:
-+		ipc = Decimal(float(insn_cnt) / cyc_cnt)
-+		ipc = str(ipc.quantize(Decimal(".01"), rounding=ROUND_HALF_UP))
-+	else:
-+		ipc = "0"
-+	return ipc
-+
- # Branch data preparation
+@@ -533,8 +535,8 @@ class CallGraphLevelTwoPlusItemBase(CallGraphLevelItemBase):
  
--def BranchDataPrep(query):
--	data = []
--	for i in xrange(0, 8):
--		data.append(query.value(i))
-+def BranchDataPrepBr(query, data):
- 	data.append(tohex(query.value(8)).rjust(16) + " " + query.value(9) + offstr(query.value(10)) +
- 			" (" + dsoname(query.value(11)) + ")" + " -> " +
- 			tohex(query.value(12)) + " " + query.value(13) + offstr(query.value(14)) +
- 			" (" + dsoname(query.value(15)) + ")")
-+
-+def BranchDataPrepIPC(query, data):
-+	insn_cnt = query.value(16)
-+	cyc_cnt = query.value(17)
-+	ipc = CalcIPC(cyc_cnt, insn_cnt)
-+	data.append(insn_cnt)
-+	data.append(cyc_cnt)
-+	data.append(ipc)
-+
-+def BranchDataPrep(query):
-+	data = []
-+	for i in xrange(0, 8):
-+		data.append(query.value(i))
-+	BranchDataPrepBr(query, data)
- 	return data
+ class CallGraphLevelThreeItem(CallGraphLevelTwoPlusItemBase):
  
- def BranchDataPrepWA(query):
-@@ -1555,10 +1577,26 @@ def BranchDataPrepWA(query):
- 	data.append("{:>19}".format(query.value(1)))
- 	for i in xrange(2, 8):
- 		data.append(query.value(i))
--	data.append(tohex(query.value(8)).rjust(16) + " " + query.value(9) + offstr(query.value(10)) +
--			" (" + dsoname(query.value(11)) + ")" + " -> " +
--			tohex(query.value(12)) + " " + query.value(13) + offstr(query.value(14)) +
--			" (" + dsoname(query.value(15)) + ")")
-+	BranchDataPrepBr(query, data)
-+	return data
-+
-+def BranchDataWithIPCPrep(query):
-+	data = []
-+	for i in xrange(0, 8):
-+		data.append(query.value(i))
-+	BranchDataPrepIPC(query, data)
-+	BranchDataPrepBr(query, data)
-+	return data
-+
-+def BranchDataWithIPCPrepWA(query):
-+	data = []
-+	data.append(query.value(0))
-+	# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
-+	data.append("{:>19}".format(query.value(1)))
-+	for i in xrange(2, 8):
-+		data.append(query.value(i))
-+	BranchDataPrepIPC(query, data)
-+	BranchDataPrepBr(query, data)
- 	return data
+-	def __init__(self, glb, row, comm_id, thread_id, call_path_id, name, dso, count, time, branch_count, parent_item):
+-		super(CallGraphLevelThreeItem, self).__init__(glb, row, comm_id, thread_id, call_path_id, time, branch_count, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, call_path_id, name, dso, count, time, branch_count, parent_item):
++		super(CallGraphLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, call_path_id, time, branch_count, parent_item)
+ 		dso = dsoname(dso)
+ 		self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
+ 		self.dbid = call_path_id
+@@ -543,8 +545,8 @@ class CallGraphLevelThreeItem(CallGraphLevelTwoPlusItemBase):
  
- # Branch data model
-@@ -1572,10 +1610,20 @@ class BranchModel(TreeModel):
+ class CallGraphLevelTwoItem(CallGraphLevelTwoPlusItemBase):
+ 
+-	def __init__(self, glb, row, comm_id, thread_id, pid, tid, parent_item):
+-		super(CallGraphLevelTwoItem, self).__init__(glb, row, comm_id, thread_id, 1, 0, 0, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
++		super(CallGraphLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 1, 0, 0, parent_item)
+ 		self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", ""]
+ 		self.dbid = thread_id
+ 
+@@ -561,8 +563,8 @@ class CallGraphLevelTwoItem(CallGraphLevelTwoPlusItemBase):
+ 
+ class CallGraphLevelOneItem(CallGraphLevelItemBase):
+ 
+-	def __init__(self, glb, row, comm_id, comm, parent_item):
+-		super(CallGraphLevelOneItem, self).__init__(glb, row, parent_item)
++	def __init__(self, glb, params, row, comm_id, comm, parent_item):
++		super(CallGraphLevelOneItem, self).__init__(glb, params, row, parent_item)
+ 		self.data = [comm, "", "", "", "", "", ""]
+ 		self.dbid = comm_id
+ 
+@@ -574,7 +576,7 @@ class CallGraphLevelOneItem(CallGraphLevelItemBase):
+ 					" INNER JOIN threads ON thread_id = threads.id"
+ 					" WHERE comm_id = " + str(self.dbid))
+ 		while query.next():
+-			child_item = CallGraphLevelTwoItem(self.glb, self.child_count, self.dbid, query.value(0), query.value(1), query.value(2), self)
++			child_item = CallGraphLevelTwoItem(self.glb, self.params, self.child_count, self.dbid, query.value(0), query.value(1), query.value(2), self)
+ 			self.child_items.append(child_item)
+ 			self.child_count += 1
+ 
+@@ -582,8 +584,8 @@ class CallGraphLevelOneItem(CallGraphLevelItemBase):
+ 
+ class CallGraphRootItem(CallGraphLevelItemBase):
+ 
+-	def __init__(self, glb):
+-		super(CallGraphRootItem, self).__init__(glb, 0, None)
++	def __init__(self, glb, params):
++		super(CallGraphRootItem, self).__init__(glb, params, 0, None)
+ 		self.dbid = 0
+ 		self.query_done = True;
+ 		query = QSqlQuery(glb.db)
+@@ -591,16 +593,23 @@ class CallGraphRootItem(CallGraphLevelItemBase):
+ 		while query.next():
+ 			if not query.value(0):
+ 				continue
+-			child_item = CallGraphLevelOneItem(glb, self.child_count, query.value(0), query.value(1), self)
++			child_item = CallGraphLevelOneItem(glb, params, self.child_count, query.value(0), query.value(1), self)
+ 			self.child_items.append(child_item)
+ 			self.child_count += 1
+ 
++# Call graph model parameters
++
++class CallGraphModelParams():
++
++	def __init__(self, glb, parent=None):
++		self.have_ipc = IsSelectable(glb.db, "calls", columns = "insn_count, cyc_count")
++
+ # Context-sensitive call graph data model base
+ 
+ class CallGraphModelBase(TreeModel):
+ 
+ 	def __init__(self, glb, parent=None):
+-		super(CallGraphModelBase, self).__init__(glb, parent)
++		super(CallGraphModelBase, self).__init__(glb, CallGraphModelParams(glb), parent)
+ 
+ 	def FindSelect(self, value, pattern, query):
+ 		if pattern:
+@@ -682,7 +691,7 @@ class CallGraphModel(CallGraphModelBase):
+ 		super(CallGraphModel, self).__init__(glb, parent)
+ 
+ 	def GetRoot(self):
+-		return CallGraphRootItem(self.glb)
++		return CallGraphRootItem(self.glb, self.params)
+ 
+ 	def columnCount(self, parent=None):
+ 		return 7
+@@ -729,8 +738,8 @@ class CallGraphModel(CallGraphModelBase):
+ 
+ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+ 
+-	def __init__(self, glb, row, comm_id, thread_id, calls_id, time, branch_count, parent_item):
+-		super(CallTreeLevelTwoPlusItemBase, self).__init__(glb, row, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, time, branch_count, parent_item):
++		super(CallTreeLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
+ 		self.comm_id = comm_id
+ 		self.thread_id = thread_id
+ 		self.calls_id = calls_id
+@@ -752,7 +761,7 @@ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+ 					" WHERE calls.parent_id = " + str(self.calls_id) + comm_thread +
+ 					" ORDER BY call_time, calls.id")
+ 		while query.next():
+-			child_item = CallTreeLevelThreeItem(self.glb, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), int(query.value(5)), self)
++			child_item = CallTreeLevelThreeItem(self.glb, self.params, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), int(query.value(5)), self)
+ 			self.child_items.append(child_item)
+ 			self.child_count += 1
+ 
+@@ -760,8 +769,8 @@ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+ 
+ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+ 
+-	def __init__(self, glb, row, comm_id, thread_id, calls_id, name, dso, count, time, branch_count, parent_item):
+-		super(CallTreeLevelThreeItem, self).__init__(glb, row, comm_id, thread_id, calls_id, time, branch_count, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, count, time, branch_count, parent_item):
++		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, time, branch_count, parent_item)
+ 		dso = dsoname(dso)
+ 		self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
+ 		self.dbid = calls_id
+@@ -770,8 +779,8 @@ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+ 
+ class CallTreeLevelTwoItem(CallTreeLevelTwoPlusItemBase):
+ 
+-	def __init__(self, glb, row, comm_id, thread_id, pid, tid, parent_item):
+-		super(CallTreeLevelTwoItem, self).__init__(glb, row, comm_id, thread_id, 0, 0, 0, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
++		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, parent_item)
+ 		self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", ""]
+ 		self.dbid = thread_id
+ 
+@@ -788,8 +797,8 @@ class CallTreeLevelTwoItem(CallTreeLevelTwoPlusItemBase):
+ 
+ class CallTreeLevelOneItem(CallGraphLevelItemBase):
+ 
+-	def __init__(self, glb, row, comm_id, comm, parent_item):
+-		super(CallTreeLevelOneItem, self).__init__(glb, row, parent_item)
++	def __init__(self, glb, params, row, comm_id, comm, parent_item):
++		super(CallTreeLevelOneItem, self).__init__(glb, params, row, parent_item)
+ 		self.data = [comm, "", "", "", "", "", ""]
+ 		self.dbid = comm_id
+ 
+@@ -801,7 +810,7 @@ class CallTreeLevelOneItem(CallGraphLevelItemBase):
+ 					" INNER JOIN threads ON thread_id = threads.id"
+ 					" WHERE comm_id = " + str(self.dbid))
+ 		while query.next():
+-			child_item = CallTreeLevelTwoItem(self.glb, self.child_count, self.dbid, query.value(0), query.value(1), query.value(2), self)
++			child_item = CallTreeLevelTwoItem(self.glb, self.params, self.child_count, self.dbid, query.value(0), query.value(1), query.value(2), self)
+ 			self.child_items.append(child_item)
+ 			self.child_count += 1
+ 
+@@ -809,8 +818,8 @@ class CallTreeLevelOneItem(CallGraphLevelItemBase):
+ 
+ class CallTreeRootItem(CallGraphLevelItemBase):
+ 
+-	def __init__(self, glb):
+-		super(CallTreeRootItem, self).__init__(glb, 0, None)
++	def __init__(self, glb, params):
++		super(CallTreeRootItem, self).__init__(glb, params, 0, None)
+ 		self.dbid = 0
+ 		self.query_done = True;
+ 		query = QSqlQuery(glb.db)
+@@ -818,7 +827,7 @@ class CallTreeRootItem(CallGraphLevelItemBase):
+ 		while query.next():
+ 			if not query.value(0):
+ 				continue
+-			child_item = CallTreeLevelOneItem(glb, self.child_count, query.value(0), query.value(1), self)
++			child_item = CallTreeLevelOneItem(glb, params, self.child_count, query.value(0), query.value(1), self)
+ 			self.child_items.append(child_item)
+ 			self.child_count += 1
+ 
+@@ -830,7 +839,7 @@ class CallTreeModel(CallGraphModelBase):
+ 		super(CallTreeModel, self).__init__(glb, parent)
+ 
+ 	def GetRoot(self):
+-		return CallTreeRootItem(self.glb)
++		return CallTreeRootItem(self.glb, self.params)
+ 
+ 	def columnCount(self, parent=None):
+ 		return 7
+@@ -1606,7 +1615,7 @@ class BranchModel(TreeModel):
+ 	progress = Signal(object)
+ 
+ 	def __init__(self, glb, event_id, where_clause, parent=None):
+-		super(BranchModel, self).__init__(glb, parent)
++		super(BranchModel, self).__init__(glb, None, parent)
  		self.event_id = event_id
  		self.more = True
  		self.populated = 0
-+		self.have_ipc = IsSelectable(glb.db, "samples", columns = "insn_count, cyc_count")
-+		if self.have_ipc:
-+			select_ipc = ", insn_count, cyc_count"
-+			prep_fn = BranchDataWithIPCPrep
-+			prep_wa_fn = BranchDataWithIPCPrepWA
-+		else:
-+			select_ipc = ""
-+			prep_fn = BranchDataPrep
-+			prep_wa_fn = BranchDataPrepWA
- 		sql = ("SELECT samples.id, time, cpu, comm, pid, tid, branch_types.name,"
- 			" CASE WHEN in_tx = '0' THEN 'No' ELSE 'Yes' END,"
- 			" ip, symbols.name, sym_offset, dsos.short_name,"
- 			" to_ip, to_symbols.name, to_sym_offset, to_dsos.short_name"
-+			+ select_ipc +
- 			" FROM samples"
- 			" INNER JOIN comms ON comm_id = comms.id"
- 			" INNER JOIN threads ON thread_id = threads.id"
-@@ -1589,9 +1637,9 @@ class BranchModel(TreeModel):
- 			" ORDER BY samples.id"
- 			" LIMIT " + str(glb_chunk_sz))
- 		if pyside_version_1 and sys.version_info[0] == 3:
--			prep = BranchDataPrepWA
-+			prep = prep_fn
- 		else:
--			prep = BranchDataPrep
-+			prep = prep_wa_fn
- 		self.fetcher = SQLFetcher(glb, sql, prep, self.AddSample)
- 		self.fetcher.done.connect(self.Update)
- 		self.fetcher.Fetch(glb_chunk_sz)
-@@ -1600,13 +1648,23 @@ class BranchModel(TreeModel):
- 		return BranchRootItem()
- 
- 	def columnCount(self, parent=None):
--		return 8
-+		if self.have_ipc:
-+			return 11
-+		else:
-+			return 8
- 
- 	def columnHeader(self, column):
--		return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Branch")[column]
-+		if self.have_ipc:
-+			return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Insn Cnt", "Cyc Cnt", "IPC", "Branch")[column]
-+		else:
-+			return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Branch")[column]
- 
- 	def columnFont(self, column):
--		if column != 7:
-+		if self.have_ipc:
-+			br_col = 10
-+		else:
-+			br_col = 7
-+		if column != br_col:
- 			return None
- 		return QFont("Monospace")
- 
-@@ -2114,10 +2172,10 @@ def GetEventList(db):
- 
- # Is a table selectable
- 
--def IsSelectable(db, table, sql = ""):
-+def IsSelectable(db, table, sql = "", columns = "*"):
- 	query = QSqlQuery(db)
- 	try:
--		QueryExec(query, "SELECT * FROM " + table + " " + sql + " LIMIT 1")
-+		QueryExec(query, "SELECT " + columns + " FROM " + table + " " + sql + " LIMIT 1")
- 	except:
- 		return False
- 	return True
-@@ -2854,6 +2912,12 @@ cd xed
- sudo ./mfile.py --prefix=/usr/local install
- sudo ldconfig
- </pre>
-+<h3>Instructions per Cycle (IPC)</h3>
-+If available, IPC information is displayed in columns 'insn_cnt', 'cyc_cnt' and 'IPC'.
-+<p><b>Intel PT note:</b> The information applies to the blocks of code ending with, and including, that branch.
-+Due to the granularity of timing information, the number of cycles for some code blocks will not be known.
-+In that case, 'insn_cnt', 'cyc_cnt' and 'IPC' are zero, but when 'IPC' is displayed it covers the period
-+since the previous displayed 'IPC'.
- <h3>Find</h3>
- Ctrl-F displays a Find bar which finds substrings by either an exact match or a regular expression match.
- Refer to Python documentation for the regular expression syntax.
 -- 
 2.20.1
 
