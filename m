@@ -2,291 +2,119 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F329C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08022C0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA722080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A50208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:40:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fk+KKf4/"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hAiF2huG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405250AbfFKPjV (ORCPT
+        id S2405278AbfFKPkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:39:21 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33564 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388362AbfFKPjU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:39:20 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h9so20793739edr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:39:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YCKJrlHJ2rcgM7LbwO8NTE67CMy/Nc+h2uBoKNkjaRk=;
-        b=fk+KKf4/mJFPrmi+CjAX8He/QrYRyFausqaG8WXXLijeZtmoapPjbk8/3poke78a8d
-         Cs5Ty7LPFsllXjnzAopJxRjbcUoJy42GhKnZDrvw+rgAEsjz0KRoHjfLowGKf1vDuoOl
-         0rGSjXcQB/2YYSoTBUQdZ7WJRMW8xLzD8UGy4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=YCKJrlHJ2rcgM7LbwO8NTE67CMy/Nc+h2uBoKNkjaRk=;
-        b=dFCu0Lnv5UVVjLvjaDUNEhA9p2jkXVdm0EMmIdE9qMDVUVbQ32bNqzqfXfVl9BNkFG
-         klrwrhUS17tt4MUZ284X/fW41fjtxbQATeY7bgt1n1Q7YR/KCumpAyvxrIBd2bNFwQdP
-         K0tWzNMwDqBUqPtfPBwMJaaeRSNmEOsApIk2G36eIFSDXql47lXNXxrUNcPni3kNm3wy
-         EJjThg9qEuKmUDJKVqu4X/4mhkFLrB60AnCWCEkpHN4kU95b0yoZcuR2PoGxbj05i5lU
-         iOkaYKFQZ59dGrATqLM0bCCxDapiibHkCUYF6dKnlB5zec+GSijRPndicfc+Hrje6p94
-         KRLQ==
-X-Gm-Message-State: APjAAAWGpPfl4btatc49hirapXuIl10pf+sokELWq5C0fVpYkpEiWOeA
-        uDIbC9ZIN1kPEN/fAwgnCk15xg==
-X-Google-Smtp-Source: APXvYqz88cWBUDjUoBHGn72GG1IyGH9mqwTxUwQrWTQmkl1DXXjou7JenyuL9kCKyi44a1l24BxmOA==
-X-Received: by 2002:a17:906:8d8:: with SMTP id o24mr65720732eje.235.1560267558194;
-        Tue, 11 Jun 2019 08:39:18 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id b10sm2350986ejb.30.2019.06.11.08.39.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 08:39:17 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 17:39:14 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Yisheng Xie <ysxie@foxmail.com>
-Subject: Re: [PATCH 24/33] Revert "backlight/fbcon: Add FB_EVENT_CONBLANK"
-Message-ID: <20190611153914.GF2458@phenom.ffwll.local>
-Mail-Followup-To: Daniel Thompson <daniel.thompson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Yisheng Xie <ysxie@foxmail.com>
-References: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
- <20190528090304.9388-25-daniel.vetter@ffwll.ch>
- <20190611140929.ufkz3rz3pjw75qgy@holly.lan>
+        Tue, 11 Jun 2019 11:40:14 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:49395 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405025AbfFKPkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:40:13 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45NZ2K025Mz9v0CC;
+        Tue, 11 Jun 2019 17:40:09 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=hAiF2huG; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id neQk5hWg6UDv; Tue, 11 Jun 2019 17:40:08 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45NZ2J61y8z9v0CB;
+        Tue, 11 Jun 2019 17:40:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560267608; bh=nacfqdIc+gMnmYv/4j/Y6ajtQLWCe6LbE+j1wnUxsF8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hAiF2huGd8nVnjWRuL4lLXCHBMUh/wFQ8bRhZ2DA8B5E3uomVGcNYyUdcI3ukZaK6
+         JiiSDwBX99CTy0N8KHlaswTlJMAPN+zYveHMsAj2Kta3WT3Ggr/dRA30T5VmEgV6LB
+         EvA67HFc3ggCyZycwf+rRWwj0+nXdR8iWMTTIGwk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 53CB58B7F8;
+        Tue, 11 Jun 2019 17:40:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id sd1TWQufMMeN; Tue, 11 Jun 2019 17:40:10 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8EB858B75B;
+        Tue, 11 Jun 2019 17:40:09 +0200 (CEST)
+Subject: Re: [PATCH v2 0/4] Additional fixes on Talitos driver
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <cover.1560263641.git.christophe.leroy@c-s.fr>
+ <VI1PR0402MB34853CAF031426F4183FE29B98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <0cb7c534-6e48-5284-899c-c0ef85c3c126@c-s.fr>
+Date:   Tue, 11 Jun 2019 17:40:09 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611140929.ufkz3rz3pjw75qgy@holly.lan>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <VI1PR0402MB34853CAF031426F4183FE29B98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:09:29PM +0100, Daniel Thompson wrote:
-> On Tue, May 28, 2019 at 11:02:55AM +0200, Daniel Vetter wrote:
-> > This reverts commit 994efacdf9a087b52f71e620b58dfa526b0cf928.
-> > 
-> > The justification is that if hw blanking fails (i.e. fbops->fb_blank)
-> > fails, then we still want to shut down the backlight. Which is exactly
-> > _not_ what fb_blank() does and so rather inconsistent if we end up
-> > with different behaviour between fbcon and direct fbdev usage. Given
-> > that the entire notifier maze is getting in the way anyway I figured
-> > it's simplest to revert this not well justified commit.
-> > 
-> > v2: Add static inline to the dummy version.
-> > 
-> > Cc: Richard Purdie <rpurdie@rpsys.net>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> > Cc: Jingoo Han <jingoohan1@gmail.com>
-> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > Cc: Hans de Goede <hdegoede@redhat.com>
-> > Cc: Yisheng Xie <ysxie@foxmail.com>
-> > Cc: linux-fbdev@vger.kernel.org
+
+
+Le 11/06/2019 à 17:37, Horia Geanta a écrit :
+> On 6/11/2019 5:39 PM, Christophe Leroy wrote:
+>> This series is the last set of fixes for the Talitos driver.
+>>
+>> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
+>> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
+>>
+> I am getting below failures on a sec 3.3.2 (p1020rdb) for hmac(sha384) and
+> hmac(sha512):
+
+Is that new with this series or did you already have it before ?
+
+What do you mean by "fuzz testing" enabled ? Is that 
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS or something else ?
+
+Christophe
+
 > 
-> This was the main patch where I wanted the bigger picture ;-) and TBH
-> I'm still in two minds here. I don't personally view fbcon as
-> inconsistent, more that, as an in-kernel service it might have to do
-> more that something more complicated than freak out and let userspace
-> decide what to do next.
-
-I think the story is even worse, at least for drm-based drivers:
-
-- We have the fbcon code here, which did something slightly different than
-  fbdev modesets called through /dev/fb*.
-
-- For most x86 drivers the expectations is that userspace handles the
-  backlight over modesets (enabling/disabling as needed), and the rules
-  for which backlight to pick extremely arcane: There's no link in sysfs
-  or anywhere else from a drm connector to the corresponding backlight
-  device.
-
-- But some other drivers, mostly on the soc side, handle backlight
-  enabling/disabling themselves, as part of the usual drm modeset
-  sequence. And I suspect that at least some drm userspace more geared
-  towards userspace doesn't bother handling the backlight on its own.
-
-I don't have any plan yet how to get us out of this whole, but figured
-this patch here should at least simplifiy things a bit.
-
-Just fyi a bit more context here, I think there's more work to do :-/
--Daniel
-
-> However... since I'm struggling to make up my mind, I can't think of
-> many products that would ship reliant exclusively on fbcon *and* this
-> patch is more about fbcon than backlight then I figure that, from a
-> backlight perspective:
+> alg: ahash: hmac-sha384-talitos test failed (wrong result) on test vector "random: psize=2497 ksize=124", cfg="random: inplace use_finup nosimd src_divs=[<reimport>76.49%@+4002, <reimport>23.51%@alignmask+26] iv_offset=4"
+> alg: ahash: hmac-sha512-talitos test failed (wrong result) on test vector "random: psize=27 ksize=121", cfg="random: inplace may_sleep use_digest src_divs=[100.0%@+10] iv_offset=9"
 > 
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Reproducibility rate is 100% so far, here are a few more runs - they might help finding a pattern:
 > 
+> 1.
+> alg: ahash: hmac-sha384-talitos test failed (wrong result) on test vector "random: psize=184 ksize=121", cfg="random: use_finup src_divs=[<reimport,nosimd>100.0%@+3988] dst_divs=[100.0%@+547] iv_offset=44"
+> alg: ahash: hmac-sha512-talitos test failed (wrong result) on test vector "random: psize=7 ksize=122", cfg="random: may_sleep use_digest src_divs=[100.0%@+3968] dst_divs=[100.0%@+20]"
 > 
-> Daniel.
+> 2.
+> alg: ahash: hmac-sha384-talitos test failed (wrong result) on test vector "random: psize=6481 ksize=120", cfg="random: use_final src_divs=[<reimport>100.0%@+6] dst_divs=[43.84%@alignmask+6, 56.16%@+22]"
+> alg: ahash: hmac-sha512-talitos test failed (wrong result) on test vector "random: psize=635 ksize=128", cfg="random: may_sleep use_finup src_divs=[100.0%@+4062] dst_divs=[20.47%@+2509, 72.36%@alignmask+2, 7.17%@alignmask+3990]"
 > 
+> 3.
+> alg: ahash: hmac-sha384-talitos test failed (wrong result) on test vector "random: psize=2428 ksize=127", cfg="random: may_sleep use_finup src_divs=[<reimport>35.19%@+18, 64.81%@+1755] dst_divs=[100.0%@+111] iv_offset=5"
+> alg: ahash: hmac-sha512-talitos test failed (wrong result) on test vector "random: psize=4345 ksize=128", cfg="random: may_sleep use_digest src_divs=[100.0%@+2820] iv_offset=59"
 > 
-> > ---
-> >  drivers/video/backlight/backlight.c |  2 +-
-> >  drivers/video/fbdev/core/fbcon.c    | 14 +-------------
-> >  drivers/video/fbdev/core/fbmem.c    |  1 +
-> >  include/linux/fb.h                  |  4 +---
-> >  include/linux/fbcon.h               |  2 ++
-> >  5 files changed, 6 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-> > index 1ef8b6fd62ac..5dc07106a59e 100644
-> > --- a/drivers/video/backlight/backlight.c
-> > +++ b/drivers/video/backlight/backlight.c
-> > @@ -47,7 +47,7 @@ static int fb_notifier_callback(struct notifier_block *self,
-> >  	int fb_blank = 0;
-> >  
-> >  	/* If we aren't interested in this event, skip it immediately ... */
-> > -	if (event != FB_EVENT_BLANK && event != FB_EVENT_CONBLANK)
-> > +	if (event != FB_EVENT_BLANK)
-> >  		return 0;
-> >  
-> >  	bd = container_of(self, struct backlight_device, fb_notif);
-> > diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-> > index ef69bd4ad343..a4617067ff24 100644
-> > --- a/drivers/video/fbdev/core/fbcon.c
-> > +++ b/drivers/video/fbdev/core/fbcon.c
-> > @@ -2350,8 +2350,6 @@ static int fbcon_switch(struct vc_data *vc)
-> >  static void fbcon_generic_blank(struct vc_data *vc, struct fb_info *info,
-> >  				int blank)
-> >  {
-> > -	struct fb_event event;
-> > -
-> >  	if (blank) {
-> >  		unsigned short charmask = vc->vc_hi_font_mask ?
-> >  			0x1ff : 0xff;
-> > @@ -2362,13 +2360,6 @@ static void fbcon_generic_blank(struct vc_data *vc, struct fb_info *info,
-> >  		fbcon_clear(vc, 0, 0, vc->vc_rows, vc->vc_cols);
-> >  		vc->vc_video_erase_char = oldc;
-> >  	}
-> > -
-> > -
-> > -	lock_fb_info(info);
-> > -	event.info = info;
-> > -	event.data = &blank;
-> > -	fb_notifier_call_chain(FB_EVENT_CONBLANK, &event);
-> > -	unlock_fb_info(info);
-> >  }
-> >  
-> >  static int fbcon_blank(struct vc_data *vc, int blank, int mode_switch)
-> > @@ -3240,7 +3231,7 @@ int fbcon_fb_registered(struct fb_info *info)
-> >  	return ret;
-> >  }
-> >  
-> > -static void fbcon_fb_blanked(struct fb_info *info, int blank)
-> > +void fbcon_fb_blanked(struct fb_info *info, int blank)
-> >  {
-> >  	struct fbcon_ops *ops = info->fbcon_par;
-> >  	struct vc_data *vc;
-> > @@ -3344,9 +3335,6 @@ static int fbcon_event_notify(struct notifier_block *self,
-> >  		con2fb = event->data;
-> >  		con2fb->framebuffer = con2fb_map[con2fb->console - 1];
-> >  		break;
-> > -	case FB_EVENT_BLANK:
-> > -		fbcon_fb_blanked(info, *(int *)event->data);
-> > -		break;
-> >  	case FB_EVENT_REMAP_ALL_CONSOLE:
-> >  		idx = info->node;
-> >  		fbcon_remap_all(idx);
-> > diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-> > index ddc0c16b8bbf..9366fbe99a58 100644
-> > --- a/drivers/video/fbdev/core/fbmem.c
-> > +++ b/drivers/video/fbdev/core/fbmem.c
-> > @@ -1068,6 +1068,7 @@ fb_blank(struct fb_info *info, int blank)
-> >  	event.data = &blank;
-> >  
-> >  	early_ret = fb_notifier_call_chain(FB_EARLY_EVENT_BLANK, &event);
-> > +	fbcon_fb_blanked(info, blank);
-> >  
-> >  	if (info->fbops->fb_blank)
-> >   		ret = info->fbops->fb_blank(blank, info);
-> > diff --git a/include/linux/fb.h b/include/linux/fb.h
-> > index 0d86aa31bf8d..1e66fac3124f 100644
-> > --- a/include/linux/fb.h
-> > +++ b/include/linux/fb.h
-> > @@ -137,12 +137,10 @@ struct fb_cursor_user {
-> >  #define FB_EVENT_GET_CONSOLE_MAP        0x07
-> >  /*      CONSOLE-SPECIFIC: set console to framebuffer mapping */
-> >  #define FB_EVENT_SET_CONSOLE_MAP        0x08
-> > -/*      A hardware display blank change occurred */
-> > +/*      A display blank is requested       */
-> >  #define FB_EVENT_BLANK                  0x09
-> >  /*      Private modelist is to be replaced */
-> >  #define FB_EVENT_MODE_CHANGE_ALL	0x0B
-> > -/*	A software display blank change occurred */
-> > -#define FB_EVENT_CONBLANK               0x0C
-> >  /*      CONSOLE-SPECIFIC: remap all consoles to new fb - for vga_switcheroo */
-> >  #define FB_EVENT_REMAP_ALL_CONSOLE      0x0F
-> >  /*      A hardware display blank early change occurred */
-> > diff --git a/include/linux/fbcon.h b/include/linux/fbcon.h
-> > index 305e4f2eddac..d67d7ec51ef9 100644
-> > --- a/include/linux/fbcon.h
-> > +++ b/include/linux/fbcon.h
-> > @@ -14,6 +14,7 @@ int fbcon_mode_deleted(struct fb_info *info,
-> >  void fbcon_new_modelist(struct fb_info *info);
-> >  void fbcon_get_requirement(struct fb_info *info,
-> >  			   struct fb_blit_caps *caps);
-> > +void fbcon_fb_blanked(struct fb_info *info, int blank);
-> >  #else
-> >  static inline void fb_console_init(void) {}
-> >  static inline void fb_console_exit(void) {}
-> > @@ -27,6 +28,7 @@ static inline int fbcon_mode_deleted(struct fb_info *info,
-> >  static inline void fbcon_new_modelist(struct fb_info *info) {}
-> >  static inline void fbcon_get_requirement(struct fb_info *info,
-> >  					 struct fb_blit_caps *caps) {}
-> > +static inline void fbcon_fb_blanked(struct fb_info *info, int blank) {}
-> >  #endif
-> >  
-> >  #endif /* _LINUX_FBCON_H */
-> > -- 
-> > 2.20.1
-> > 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> If you run several times with fuzz testing enabled on your sec2.2,
+> are you able to see similar failures?
+> 
+> Thanks,
+> Horia
+> 
