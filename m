@@ -2,129 +2,180 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F577C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA7AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F394F2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560228938;
-	bh=VdGa6wSoL+22BZ+sm2TYAjWTOA+mGM3ZjWBOrVYWcmU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rmVyD0KE3A0E/WL9ZYRabYX7o+R0G55SFsx+5E7Q9agELg7MBw85MT7tDlOU48aSc
-	 BikFMPzC8i6WuNTuHCfhDzrA0foIzDG9SRNFCgcShCdktreQW/9NF5lTys8WaRGd4G
-	 uixC7PdH8aw/WcOKa4Cu04bCok4bRMcsDa1UM6rU=
+	by mail.kernel.org (Postfix) with ESMTP id 950872086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:02:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="He0veXrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391133AbfFKEzg (ORCPT
+        id S2391100AbfFKFCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 00:55:36 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:36357 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390081AbfFKEzg (ORCPT
+        Tue, 11 Jun 2019 01:02:42 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43939 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388934AbfFKFCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 00:55:36 -0400
-Received: by mail-lj1-f174.google.com with SMTP id i21so10167949ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 21:55:35 -0700 (PDT)
+        Tue, 11 Jun 2019 01:02:42 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i189so6611685pfg.10;
+        Mon, 10 Jun 2019 22:02:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+0NVFIKvZo+cTD+d9Ui7mDkyi5Oxsx4RGqTwt9X3ykk=;
-        b=J42kFBk4S2k8nsKBY9fwhx/vZSEYU/OLrOlYGuYtsIl7R1OW7G6cP1AqGwj2+yGLg2
-         EYdlAVSm3K888i1Z/0BN2vG2wscFrXTIpee8gDD08eNXZ7Iutd7Co9x7wrC2XzSTo6Wr
-         D0e1tE4Z4fwwQjCOh4OvXBe5BDfZKYbAU0USA=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=tP1svpltKO1fGLOzf67iO0MI+/MDJ8p+COkpulTN3F0=;
+        b=He0veXrBWEYNKO8HWqPtN2lva11acLgl5Xjij261Ink30AkSnldWN/ChwB9tl/VJS8
+         76Zygd3SY/Y7RTgU8mOOvf7nHiBE5agjkFg5WbPE6x3LXXsgT4XDGO/DSPWsJCDymKns
+         Gg6ze2g/Qrnsiigz9wEKjLbmemguYS2UyNJ6PiLF8cdD0H4SCp6ZLge/A34F6jFni0Da
+         uuv451tsM3OC8O1Ue4eeSBfOh+RWJOBN4rjg0/u7HUEC9XSyppkoNGdr5Ox1oE1jvX3t
+         PbZCj8csfa5alENy4X0Ha5vBY2pL2iyekosKC4id5Nu729lBUt3qch+1zGbMzHUtiqQ/
+         eJ6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+0NVFIKvZo+cTD+d9Ui7mDkyi5Oxsx4RGqTwt9X3ykk=;
-        b=NCQNep3gNqDa/EZUXUvgPh+B3aQ/ShnI0FzforyY8VAUcNAEIB8Vz71PdfeffPnLSh
-         /K8P+5c4Z7VlZ9HE7CYeQfCtfuXM/dUEk5Ni3WHBR02sExvgdgNAyT5OaYnAv0ZnfVmP
-         Egef4SXeydORuVS1JxR4FUwDoI6ouR/L+quXYgvd32/j3/0JzNYk3oWz64qXW7e3eeR5
-         Qj9VepEjmWnu0IUTlVkqwSelWjFB8kH6oiTDK8oTgjanGEFzeLulWvt3xONwED7zW9F/
-         Go7OK/IYuhuWBgCLR6vPcC1VphQ7unoN9fyCZIRXBUjOkjyEUoslEDha+ZwtTaD8nvIo
-         4v/A==
-X-Gm-Message-State: APjAAAUHe3+2nlAEUR1pP4hDUVDJoYDr8gmKKWBMpTNQFwTLUjRG5d/R
-        a6IPobouYbIXjqs2EWq8LrtpCkis2+U=
-X-Google-Smtp-Source: APXvYqw6DmkKRlHEEnUb6GqwZZ2McFPYhd4mbhzN4FL/NRtbmmIzImjVPONuG+tzrCxyZ3IgtGMR1Q==
-X-Received: by 2002:a2e:9dca:: with SMTP id x10mr7195153ljj.17.1560228933691;
-        Mon, 10 Jun 2019 21:55:33 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id s20sm2297017lfb.95.2019.06.10.21.55.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 21:55:32 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id s21so10171516lji.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 21:55:32 -0700 (PDT)
-X-Received: by 2002:a2e:9c03:: with SMTP id s3mr23108926lji.209.1560228931996;
- Mon, 10 Jun 2019 21:55:31 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=tP1svpltKO1fGLOzf67iO0MI+/MDJ8p+COkpulTN3F0=;
+        b=Za5/yW6FXOYWC7BYwR7Iqq+jmdgryVBgN0kRLDFowfz8i3bWzgCLML42/157RCEj5U
+         6k9AUa4YPjHwnZuNjhlRcLBHTF1T5w83v1rKv04cxDi4rp0mqS3QSIN+J4IPir/rmT/u
+         nqI2Z36ofZpVlg6dBOv39Zbv2B7C+6kIBBcrLaCYc69u6NVS9JxBsswj0TlLbiK70cRU
+         cSdLpiDjNL+ip8oQxirnIbm2ETaYwjXATTqtwZcjtzU2YNehQj0QJIBUcod7RXtlGN85
+         VQLt7CARwZCYwyMnNrM8Imr2qs1JX7eDSLHSJcbepBxyyfbWOsWIZ0AaVMi1BNyjeyM7
+         NYcQ==
+X-Gm-Message-State: APjAAAXIEqGj+0MTlYnguCsfRKTgeI1Bt1WJbYMoGkTWfLzG0TktLANA
+        QWW+lAjeU8mF186JoQ/UmNK7WXL1
+X-Google-Smtp-Source: APXvYqwwaXtX7T4BaAQhFUdzXjHyfTh4Nhk98pJzSFYQ3dJt5uMbgtxxJwj9ioXhCVkr9TPrBQ+viw==
+X-Received: by 2002:a62:78c2:: with SMTP id t185mr8417912pfc.142.1560229361712;
+        Mon, 10 Jun 2019 22:02:41 -0700 (PDT)
+Received: from [192.168.1.101] (122-58-182-39-adsl.sparkbb.co.nz. [122.58.182.39])
+        by smtp.gmail.com with ESMTPSA id p27sm8707081pfq.136.2019.06.10.22.02.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 22:02:41 -0700 (PDT)
+Subject: Re: [PATCH] NCR5380: Support chained sg lists
+To:     Finn Thain <fthain@telegraphics.com.au>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+References: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <a1fe2d99-fc2f-c12d-41fe-025ee1f66c0b@gmail.com>
+Date:   Tue, 11 Jun 2019 17:02:36 +1200
+User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
+ Icedove/45.4.0
 MIME-Version: 1.0
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com> <20190611011737.GA28701@kmo-pixel>
-In-Reply-To: <20190611011737.GA28701@kmo-pixel>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 10 Jun 2019 18:55:15 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wizTF+NbMrSRG-bc-LyuT7PUJ1QRAR8q_anOd6mY+9Z4A@mail.gmail.com>
-Message-ID: <CAHk-=wizTF+NbMrSRG-bc-LyuT7PUJ1QRAR8q_anOd6mY+9Z4A@mail.gmail.com>
-Subject: Re: bcachefs status update (it's done cooking; let's get this sucker merged)
-To:     Kent Overstreet <kent.overstreet@gmail.com>
-Cc:     Dave Chinner <dchinner@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-bcache@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 3:17 PM Kent Overstreet
-<kent.overstreet@gmail.com> wrote:
+Hi Finn,
+
+Thanks - can't test this on my hardware but looks good to me.
+
+Cheers,
+
+	Michael
+
+Am 11.06.2019 um 15:25 schrieb Finn Thain:
+> My understanding is that support for chained scatterlists is to
+> become mandatory for LLDs.
+>
+> Cc: Michael Schmitz <schmitzmic@gmail.com>
+> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+> ---
+>  drivers/scsi/NCR5380.c | 41 ++++++++++++++++++-----------------------
+>  1 file changed, 18 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+> index d9fa9cf2fd8b..536426f25e86 100644
+> --- a/drivers/scsi/NCR5380.c
+> +++ b/drivers/scsi/NCR5380.c
+> @@ -149,12 +149,10 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
+>
+>  	if (scsi_bufflen(cmd)) {
+>  		cmd->SCp.buffer = scsi_sglist(cmd);
+> -		cmd->SCp.buffers_residual = scsi_sg_count(cmd) - 1;
+>  		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+>  		cmd->SCp.this_residual = cmd->SCp.buffer->length;
+>  	} else {
+>  		cmd->SCp.buffer = NULL;
+> -		cmd->SCp.buffers_residual = 0;
+>  		cmd->SCp.ptr = NULL;
+>  		cmd->SCp.this_residual = 0;
+>  	}
+> @@ -163,6 +161,17 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
+>  	cmd->SCp.Message = 0;
+>  }
+>
+> +static inline void advance_sg_buffer(struct scsi_cmnd *cmd)
+> +{
+> +	struct scatterlist *s = cmd->SCp.buffer;
+> +
+> +	if (!cmd->SCp.this_residual && s && !sg_is_last(s)) {
+> +		cmd->SCp.buffer = sg_next(s);
+> +		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+> +		cmd->SCp.this_residual = cmd->SCp.buffer->length;
+> +	}
+> +}
+> +
+>  /**
+>   * NCR5380_poll_politely2 - wait for two chip register values
+>   * @hostdata: host private data
+> @@ -1670,12 +1679,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+>  			    sun3_dma_setup_done != cmd) {
+>  				int count;
+>
+> -				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
+> -					++cmd->SCp.buffer;
+> -					--cmd->SCp.buffers_residual;
+> -					cmd->SCp.this_residual = cmd->SCp.buffer->length;
+> -					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+> -				}
+> +				advance_sg_buffer(cmd);
+>
+>  				count = sun3scsi_dma_xfer_len(hostdata, cmd);
+>
+> @@ -1725,15 +1729,11 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+>  				 * scatter-gather list, move onto the next one.
+>  				 */
+>
+> -				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
+> -					++cmd->SCp.buffer;
+> -					--cmd->SCp.buffers_residual;
+> -					cmd->SCp.this_residual = cmd->SCp.buffer->length;
+> -					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+> -					dsprintk(NDEBUG_INFORMATION, instance, "%d bytes and %d buffers left\n",
+> -					         cmd->SCp.this_residual,
+> -					         cmd->SCp.buffers_residual);
+> -				}
+> +				advance_sg_buffer(cmd);
+> +				dsprintk(NDEBUG_INFORMATION, instance,
+> +					"this residual %d, sg ents %d\n",
+> +					cmd->SCp.this_residual,
+> +					sg_nents(cmd->SCp.buffer));
+>
+>  				/*
+>  				 * The preferred transfer method is going to be
+> @@ -2126,12 +2126,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+>  	if (sun3_dma_setup_done != tmp) {
+>  		int count;
+>
+> -		if (!tmp->SCp.this_residual && tmp->SCp.buffers_residual) {
+> -			++tmp->SCp.buffer;
+> -			--tmp->SCp.buffers_residual;
+> -			tmp->SCp.this_residual = tmp->SCp.buffer->length;
+> -			tmp->SCp.ptr = sg_virt(tmp->SCp.buffer);
+> -		}
+> +		advance_sg_buffer(tmp);
+>
+>  		count = sun3scsi_dma_xfer_len(hostdata, tmp);
 >
 >
-> > Why does the regular page lock (at a finer granularity) not suffice?
->
-> Because the lock needs to prevent pages from being _added_ to the page cache -
-> to do it with a page granularity lock it'd have to be part of the radix tree,
-
-No, I understand that part, but I still think we should be able to do
-the locking per-page rather than over the whole mapping.
-
-When doing dio, you need to iterate over old existing pages anyway in
-that range (otherwise the "no _new_ pages" part is kind of pointless
-when there are old pages there), so my gut feel is that you might as
-well at that point also "poison" the range you are doin dio on. With
-the xarray changes, we might be better at handling ranges. That was
-one of the arguments for the xarrays over the old radix tree model,
-after all.
-
-And I think the dio code would ideally want to have a range-based lock
-anyway, rather than one global one. No?
-
-Anyway, don't get me wrong. I'm not entirely against a "stop adding
-pages" model per-mapping if it's just fundamentally simpler and nobody
-wants anything fancier. So I'm certainly open to it, assuming it
-doesn't add any real overhead to the normal case.
-
-But I *am* against it when it has ad-hoc locking and random
-anti-recursion things.
-
-So I'm with Dave on the "I hope we can avoid the recursive hacks" by
-making better rules. Even if I disagree with him on the locking thing
-- I'd rather put _more_stress on the standard locking and make sure it
-really works, over having multiple similar locking models because they
-don't trust each other.
-
-               Linus
