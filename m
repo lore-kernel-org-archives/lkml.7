@@ -7,57 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715BDC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B98BC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE4C2184E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DA02184E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560279837;
-	bh=nQz/FiPhSp99AyagSW4bHpw6sEPfWuQnWGR4HXWX6TM=;
+	s=default; t=1560279840;
+	bh=McIxz4iOyiBOq9OURz1UZN3YQo9i5sFMbEtzFIt494U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LiKUM/QcwfCcWyrsgqpKH9ElqlSKBxFivyNyfuZR6nYoDSml3X2vv1VEYyXSewTqP
-	 yeknDGTOpbiBf4vg3NzQqV0VL2JOVxTikvkVS1GdWS9PcWNmSc0a9kv/D0qZqK/Y/U
-	 nWwAkiSICv40BrXNI3DUySzHFh69qdDHmtx9JMOg=
+	b=FNqh/mRhp7PT+yEMOc4VqZx5+xl/tFRp3JZFY/2gh4Tz77Tlg4nAHXUoSfgnBOdrC
+	 RE7DdbxjiyxwNQ4v8Wr5HDzmWEKzygw+RfE8e/wHkolKV0GWWDkxcTfuRO1vWhi+CG
+	 3JuuMO5/ot4u5tXEAzn1044pr4fm1G+Sa4BJzZI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405676AbfFKTD4 (ORCPT
+        id S2405753AbfFKTD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:03:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40092 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 15:03:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405486AbfFKTDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:03:53 -0400
+        id S2405486AbfFKTD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:03:56 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8695621850;
-        Tue, 11 Jun 2019 19:03:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86DD421881;
+        Tue, 11 Jun 2019 19:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279833;
-        bh=nQz/FiPhSp99AyagSW4bHpw6sEPfWuQnWGR4HXWX6TM=;
+        s=default; t=1560279836;
+        bh=McIxz4iOyiBOq9OURz1UZN3YQo9i5sFMbEtzFIt494U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ahYlfeqMCpPLXR3vZ3QTn7BIDCw//yWC1clhFvq5Amssu4ZCsZ5uC5gzJHDOnDl1r
-         d+++RvtdYs0aHgBtZqC3KmHICqwE/zIUWbGCg6dFEWQ+fHrG4qn1qL+jVZhzYZdidN
-         C9fUMHkyNHN9n0oAa5Eqm4u6iBE5zSUk1D0wMQgU=
+        b=XQCZpixbPfrk+dYCXUTTscqvox19rlqLadGfJeSutU6ZA3kFwZS5YZmaTGXiXUwyA
+         Q/HlrIMq2T6usZ8Pmhz/JiYt/4EtTsES1bBudhoDGsJzlitxt0e1VpE2Jsvm0Gu1Th
+         OB48uRPEUKQ250QOCUBIPdhDjV7VnGgZdPIBDVyo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@redhat.com>, Mark Drayton <mbd@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 62/85] perf config: Update default value for llvm.clang-bpf-cmd-template
-Date:   Tue, 11 Jun 2019 15:58:48 -0300
-Message-Id: <20190611185911.11645-63-acme@kernel.org>
+Subject: [PATCH 63/85] perf auxtrace: Add perf time interval to itrace_synth_ops
+Date:   Tue, 11 Jun 2019 15:58:49 -0300
+Message-Id: <20190611185911.11645-64-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
@@ -68,56 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-The clang bpf cmdline template has defined default value in the file
-tools/perf/util/llvm-utils.c, which has been changed for several times.
+Instruction trace decoders can optimize output based on what time
+intervals will be filtered, so pass that information in
+itrace_synth_ops.
 
-This patch updates the documentation to reflect the latest default value
-for the configuration llvm.clang-bpf-cmd-template.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Fixes: d35b168c3dcd ("perf bpf: Give precedence to bpf header dir")
-Fixes: cb76371441d0 ("perf llvm: Allow passing options to llc in addition to clang")
-Fixes: 1b16fffa389d ("perf llvm-utils: Add bpf include path to clang command line")
-Link: http://lkml.kernel.org/r/20190607143508.18141-1-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/20190604130017.31207-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/util/auxtrace.h | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 462b3cde0675..e4aa268d2e38 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -564,9 +564,12 @@ llvm.*::
- 	llvm.clang-bpf-cmd-template::
- 		Cmdline template. Below lines show its default value. Environment
- 		variable is used to pass options.
--		"$CLANG_EXEC -D__KERNEL__ $CLANG_OPTIONS $KERNEL_INC_OPTIONS \
--		-Wno-unused-value -Wno-pointer-sign -working-directory \
--		$WORKING_DIR  -c $CLANG_SOURCE -target bpf -O2 -o -"
-+		"$CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS "\
-+		"-DLINUX_VERSION_CODE=$LINUX_VERSION_CODE "	\
-+		"$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
-+		"-Wno-unused-value -Wno-pointer-sign "		\
-+		"-working-directory $WORKING_DIR "		\
-+		"-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index c69bcd9a3091..c80c58eb7f4d 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -83,6 +83,8 @@ enum itrace_period_type {
+  * @period_type: 'instructions' events period type
+  * @initial_skip: skip N events at the beginning.
+  * @cpu_bitmap: CPUs for which to synthesize events, or NULL for all
++ * @ptime_range: time intervals to trace or NULL
++ * @range_num: number of time intervals to trace
+  */
+ struct itrace_synth_opts {
+ 	bool			set;
+@@ -107,6 +109,8 @@ struct itrace_synth_opts {
+ 	enum itrace_period_type	period_type;
+ 	unsigned long		initial_skip;
+ 	unsigned long		*cpu_bitmap;
++	struct perf_time_interval *ptime_range;
++	int			range_num;
+ };
  
- 	llvm.clang-opt::
- 		Options passed to clang.
+ /**
+@@ -599,6 +603,21 @@ static inline void auxtrace__free(struct perf_session *session)
+ "				PERIOD[ns|us|ms|i|t]:   specify period to sample stream\n" \
+ "				concatenate multiple options. Default is ibxwpe or cewp\n"
+ 
++static inline
++void itrace_synth_opts__set_time_range(struct itrace_synth_opts *opts,
++				       struct perf_time_interval *ptime_range,
++				       int range_num)
++{
++	opts->ptime_range = ptime_range;
++	opts->range_num = range_num;
++}
++
++static inline
++void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts)
++{
++	opts->ptime_range = NULL;
++	opts->range_num = 0;
++}
+ 
+ #else
+ 
+@@ -742,6 +761,21 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+ 
+ #define ITRACE_HELP ""
+ 
++static inline
++void itrace_synth_opts__set_time_range(struct itrace_synth_opts *opts
++				       __maybe_unused,
++				       struct perf_time_interval *ptime_range
++				       __maybe_unused,
++				       int range_num __maybe_unused)
++{
++}
++
++static inline
++void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts
++					 __maybe_unused)
++{
++}
++
+ #endif
+ 
+ #endif
 -- 
 2.20.1
 
