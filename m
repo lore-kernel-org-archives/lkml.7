@@ -2,97 +2,90 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1843C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B672C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE392089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068B120820
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:26:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZazrBdVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405374AbfFKKZb (ORCPT
+        id S2405423AbfFKK0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:25:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52112 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405196AbfFKKZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:25:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0928CADDD;
-        Tue, 11 Jun 2019 10:25:30 +0000 (UTC)
-Subject: Re: [PATCH 11/12] closures: closure_wait_event()
-To:     Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-bcache@vger.kernel.org
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <20190610191420.27007-12-kent.overstreet@gmail.com>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <3130eb62-e3b7-12d7-e724-7d549c68b6cf@suse.de>
-Date:   Tue, 11 Jun 2019 18:25:22 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Tue, 11 Jun 2019 06:26:00 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40106 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405196AbfFKK0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:26:00 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w196so8525831oie.7;
+        Tue, 11 Jun 2019 03:25:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GQNk2X+mqFzYu/l14YqOj+MZd5VlmZKor3lgSCt8XE0=;
+        b=ZazrBdVDFN8xniS08ceQaj2CoYGYZdy/ZbsdBHxGR4WGi7Bp8XyaC8+AfJ1eSNyb2S
+         uJi+eqLRcTo4KVFmVW/3nP0TXpWRSWKY6NRle6hwXroCAAfKp46B6fOrjXjnSvJ4hNGJ
+         4nCnwcLQSlVPXwLyf56rgRYBS51zXNz9RiytZg+ZF0ArVPZSB8v7VlyVHQUDr/Vpo8lO
+         btygHZC2671DTDknU3K3q3oud3HO+mIm5RmBMiPD8AIoXasM36pt3nKJ00vNJibLjxAa
+         HqmDbo2BujiaEwcmjgzd+ufqyV510KsVC2n4/d/YVxteYgVGpHjB7SPNh3XCsEQAJD8V
+         +HLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GQNk2X+mqFzYu/l14YqOj+MZd5VlmZKor3lgSCt8XE0=;
+        b=pSV0BX+tkl0UO3Pg0j6sR2TLAZRy1mWEs1Hqms9S3caRP6GDIgCH1WVahSNMLHB/xT
+         chwfQxE9QBAOHlOupAyJ5ca3OJxuFmnjN6dxf5YVOjZO237vaOFfL5L5h/ZieBNFNoRL
+         h4ydcR7Aur5c4xC38wTTNjQYDgU+iDBqgvnXO6HN/T79CaWybrFw5FMcBaq5U3yoFi0P
+         dR9O9LLE3beD8fBgwJiy3gIXoJdVRpH9g8ooRzE3dUpf/iVCELvY6S0dqAlXPZj/MTgk
+         fkO3ENJ4qtmEY7FTJgElpoYYx4862krWHOHh/P511QNMh/f4VpFlxidvsbtu68vhVBQ+
+         ezsQ==
+X-Gm-Message-State: APjAAAXnoXr8g+od1Ag1hKdDePaelK0V2Nwm4ySDGU+Dj/sR39LFSgiR
+        QGvW7zo+rkDE2NTgdK3B5duMpFrzAUIP8P/SWY8=
+X-Google-Smtp-Source: APXvYqwCLPt2cDR6MpqGZkxAfKD7ViSk4snzzshaqe0gkPdTYUQk+Gfv6tdgkW1/hkqIlnJm3WFjB8AjqvTf/Cl03VQ=
+X-Received: by 2002:aca:b9d4:: with SMTP id j203mr3907896oif.5.1560248759174;
+ Tue, 11 Jun 2019 03:25:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190610191420.27007-12-kent.overstreet@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com> <20190610143420.GA6594@flask>
+In-Reply-To: <20190610143420.GA6594@flask>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 11 Jun 2019 18:26:43 +0800
+Message-ID: <CANRm+CwgE5d0hQif0Rj-=q-orxMpSZq+tKLvrkZuatmatYxjWg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
+To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/11 3:14 上午, Kent Overstreet wrote:
-> Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
+On Mon, 10 Jun 2019 at 22:34, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.c=
+om> wrote:
+>
+> 2019-05-30 09:05+0800, Wanpeng Li:
+> > The idea is from Xen, when sending a call-function IPI-many to vCPUs,
+> > yield if any of the IPI target vCPUs was preempted. 17% performance
+> > increasement of ebizzy benchmark can be observed in an over-subscribe
+> > environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function
+> > IPI-many since call-function is not easy to be trigged by userspace
+> > workload).
+>
+> Have you checked if we could gain performance by having the yield as an
+> extension to our PV IPI call?
 
-Acked-by: Coly Li <colyli@suse.de>
+It will extend irq disabled time in __send_ipi_mask(). In addition,
+sched yield can be used to optimize other synchronization primitives
+in guest I think.
 
-Thanks.
-
-Coly Li
-
-> ---
->  include/linux/closure.h | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/include/linux/closure.h b/include/linux/closure.h
-> index 308e38028c..abacb91c35 100644
-> --- a/include/linux/closure.h
-> +++ b/include/linux/closure.h
-> @@ -379,4 +379,26 @@ static inline void closure_call(struct closure *cl, closure_fn fn,
->  	continue_at_nobarrier(cl, fn, wq);
->  }
->  
-> +#define __closure_wait_event(waitlist, _cond)				\
-> +do {									\
-> +	struct closure cl;						\
-> +									\
-> +	closure_init_stack(&cl);					\
-> +									\
-> +	while (1) {							\
-> +		closure_wait(waitlist, &cl);				\
-> +		if (_cond)						\
-> +			break;						\
-> +		closure_sync(&cl);					\
-> +	}								\
-> +	closure_wake_up(waitlist);					\
-> +	closure_sync(&cl);						\
-> +} while (0)
-> +
-> +#define closure_wait_event(waitlist, _cond)				\
-> +do {									\
-> +	if (!(_cond))							\
-> +		__closure_wait_event(waitlist, _cond);			\
-> +} while (0)
-> +
->  #endif /* _LINUX_CLOSURE_H */
-> 
-
-
--- 
-
-Coly Li
+Regards,
+Wanpeng Li
