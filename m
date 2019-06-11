@@ -2,132 +2,148 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE74C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B33DC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEEA420652
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FEE20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:37:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pBIiVtcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390578AbfFKBh2 (ORCPT
+        id S2390716AbfFKBhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:37:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18123 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389168AbfFKBh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:37:28 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9C5ADD4619E6F16E261B;
-        Tue, 11 Jun 2019 09:37:25 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 09:37:18 +0800
-Subject: Re: [PATCH 1/2] staging: erofs: add requirements field in superblock
-To:     Gao Xiang <gaoxiang25@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, <stable@vger.kernel.org>
-References: <20190610093640.96705-1-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <f4fbd407-7f0d-bbe3-2283-f7291a29026a@huawei.com>
-Date:   Tue, 11 Jun 2019 09:37:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 10 Jun 2019 21:37:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34755 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389168AbfFKBhd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:37:33 -0400
+Received: by mail-oi1-f196.google.com with SMTP id u64so7736447oib.1;
+        Mon, 10 Jun 2019 18:37:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fGPZMeJ1EnlKMpnGfl89g5dre+BiZQl2zm9s8Z/1iC8=;
+        b=pBIiVtcuDIrxjR3mwZAwHasTxfrU3E8tSa6iKlMHgdcsVGAO1FLfZyMfphJjILWwZA
+         nCankq2MqTbsPuZaazyT++K+xbajOpWJj5AjQGZy7T8TC/6DoGPY5uXBMt3cgNgWorTR
+         +WEhUdMEBeoTlv4je+ABlPa4qoQgZ1+9LuFONO5458xEQKGAUgbmuzfciXXGfw6zNojg
+         HCIV+/E8+FQ/xe0H4/hFXSJ46H7pLCiJAL6wzEcV1NH3QSuSMESn3pewukUb4QsiNrJm
+         jftom9v9GcJ++F7hbdc7sh1rWaI23L0CCWIUlWlZtDAqEOaj1/abCRwxd5400PMMevXj
+         cL3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fGPZMeJ1EnlKMpnGfl89g5dre+BiZQl2zm9s8Z/1iC8=;
+        b=o09jLdXIxGadiFpDuUMsB7jigHDytCad37JxvlDTpsvu2Y4PF6bOnydWjBuda9/g/Y
+         hPWfcClwQdjFzqY81y4oqcWewApNLq0cqWqIzy5UL4k6W4L/aqCeXdabexu1fojFZoOO
+         Fw/NQKvuwuSCDv5EKxwVuw9OoQ5mYRLA9Gh+PTPCl2AKCoY90OX2OWDJOu+f42swLHF/
+         s+oPr1FJboO+SBTn7Puhinn+B1ERLGIwIn706XLEYlofP5iqojd8rcyMqhV1IG00mtN7
+         nLtqBNkpxzAWswxu095TklIcplRF5j/kJdas7JCd8yznbCxkxWfCyPi1RUKzOlVj+GTt
+         GfSQ==
+X-Gm-Message-State: APjAAAWOFvpFZHCWK3xYDGstOZMdIZmA+AFRMYhbYqPMKvFNMo8UH1vE
+        7e2LqE87zz0XGqZKps2t2IFlxJWwzE4XMCZReRE=
+X-Google-Smtp-Source: APXvYqwNj1lVGk5KSffnwL4YiLo49T5IAtiZ6lJoASphoz+XfG9ITpyB+ZYnGj1xThfg2Uwa7mqcmmBfkC6ySH9SsDw=
+X-Received: by 2002:aca:544b:: with SMTP id i72mr14141895oib.174.1560217052971;
+ Mon, 10 Jun 2019 18:37:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190610093640.96705-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <1559284814-20378-1-git-send-email-wanpengli@tencent.com> <20190611012118.GC24835@linux.intel.com>
+In-Reply-To: <20190611012118.GC24835@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 11 Jun 2019 09:38:18 +0800
+Message-ID: <CANRm+CxrYJXB1WaBz0w1NpBkz8p5tAsmyoAVwTO0MueqcDkQLQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] KVM: LAPIC: Optimize timer latency consider world
+ switch time
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/10 17:36, Gao Xiang wrote:
-> There are some backward incompatible optimizations pending
-> for months, mainly due to on-disk format expensions.
-> 
-> However, we should ensure that it cannot be mounted with
-> old kernels. Otherwise, it will causes unexpected behaviors.
-> 
-> Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
-> Cc: <stable@vger.kernel.org> # 4.19+
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
->  drivers/staging/erofs/erofs_fs.h | 11 +++++++++--
->  drivers/staging/erofs/super.c    |  8 ++++++++
->  2 files changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
-> index fa52898df006..531821757845 100644
-> --- a/drivers/staging/erofs/erofs_fs.h
-> +++ b/drivers/staging/erofs/erofs_fs.h
-> @@ -17,10 +17,16 @@
->  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
->  #define EROFS_SUPER_OFFSET      1024
->  
-> +/*
-> + * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
-> + * incompatible with this kernel version.
-> + */
-> +#define EROFS_ALL_REQUIREMENTS  0
-> +
->  struct erofs_super_block {
->  /*  0 */__le32 magic;           /* in the little endian */
->  /*  4 */__le32 checksum;        /* crc32c(super_block) */
-> -/*  8 */__le32 features;
-> +/*  8 */__le32 features;        /* extra features for the image */
->  /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
->  /* 13 */__u8 reserved;
->  
-> @@ -34,8 +40,9 @@ struct erofs_super_block {
->  /* 44 */__le32 xattr_blkaddr;
->  /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
->  /* 64 */__u8 volume_name[16];   /* volume name */
-> +/* 80 */__le32 requirements;    /* all mandatory minimum requirements */
->  
-> -/* 80 */__u8 reserved2[48];     /* 128 bytes */
-> +/* 84 */__u8 reserved2[44];     /* 128 bytes */
+On Tue, 11 Jun 2019 at 09:21, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Fri, May 31, 2019 at 02:40:13PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Advance lapic timer tries to hidden the hypervisor overhead between the
+> > host emulated timer fires and the guest awares the timer is fired. Howe=
+ver,
+> > even though after more sustaining optimizations, kvm-unit-tests/tscdead=
+line_latency
+> > still awares ~1000 cycles latency since we lost the time between the en=
+d of
+> > wait_lapic_expire and the guest awares the timer is fired. There are
+> > codes between the end of wait_lapic_expire and the world switch, furthe=
+rmore,
+> > the world switch itself also has overhead. Actually the guest_tsc is eq=
+ual
+> > to the target deadline time in wait_lapic_expire is too late, guest wil=
+l
+> > aware the latency between the end of wait_lapic_expire() and after vmen=
+try
+> > to the guest. This patch takes this time into consideration.
+> >
+> > The vmentry_lapic_timer_advance_ns module parameter should be well tune=
+d by
+> > host admin, setting bit 0 to 1 to finally cache parameter in KVM. This =
+patch
+> > can reduce average cyclictest latency from 3us to 2us on Skylake server=
+.
+> > (guest w/ nohz=3Doff, idle=3Dpoll, host w/ preemption_timer=3DN, the cy=
+clictest
+> > latency is not too sensitive when preemption_timer=3DY for this optimiz=
+ation in
+> > my testing), kvm-unit-tests/tscdeadline_latency can reach 0.
+> >
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> > NOTE: rebase on https://lkml.org/lkml/2019/5/20/449
+> > v1 -> v2:
+> >  * rename get_vmentry_advance_delta to get_vmentry_advance_cycles
+> >  * cache vmentry_advance_cycles by setting param bit 0
+> >  * add param max limit
+> >
+> >  arch/x86/kvm/lapic.c   | 38 +++++++++++++++++++++++++++++++++++---
+> >  arch/x86/kvm/lapic.h   |  3 +++
+> >  arch/x86/kvm/vmx/vmx.c |  2 +-
+> >  arch/x86/kvm/x86.c     |  9 +++++++++
+> >  arch/x86/kvm/x86.h     |  2 ++
+> >  5 files changed, 50 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index fcf42a3..60587b5 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -1531,6 +1531,38 @@ static inline void adjust_lapic_timer_advance(st=
+ruct kvm_vcpu *vcpu,
+> >       apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
+> >  }
+> >
+> > +#define MAX_VMENTRY_ADVANCE_NS 1000
+> > +
+> > +u64 compute_vmentry_advance_cycles(struct kvm_vcpu *vcpu)
+>
+> This can be static, unless get_vmentry_advance_cycles() is moved to
+> lapic.h, in which case compute_vmentry_advance_cycles() would need to be
+> exported.
 
-Xiang,
+Thanks for the review, Sean. I think Paolo has already drop this one.
+https://lkml.org/lkml/2019/5/31/210
 
-It needs to update the comment behind reserved2, it's locating at 132 bytes.
-
->  } __packed;
->  
->  /*
-> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
-> index f580d4ef77a1..815e5825db59 100644
-> --- a/drivers/staging/erofs/super.c
-> +++ b/drivers/staging/erofs/super.c
-> @@ -104,6 +104,14 @@ static int superblock_read(struct super_block *sb)
->  		goto out;
->  	}
->  
-> +	/* check if the kernel meets all mandatory requirements */
-> +	if (le32_to_cpu(layout->requirements) & (~EROFS_ALL_REQUIREMENTS)) {
-> +		errln("too old to meet minimum requirements: %x supported: %x",
-
-It will be better to give a suggestion to user to upgrade kernel version to
-match the image with new layout, otherwise it's just a little confused about
-above printed message.
-
-Thanks,
-
-> +		      le32_to_cpu(layout->requirements),
-> +		      EROFS_ALL_REQUIREMENTS);
-> +		goto out;
-> +	}
-> +
->  	sbi->blocks = le32_to_cpu(layout->blocks);
->  	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
->  #ifdef CONFIG_EROFS_FS_XATTR
-> 
+Regards,
+Wanpeng Li
