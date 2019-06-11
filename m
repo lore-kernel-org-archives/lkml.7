@@ -2,172 +2,101 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97372C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3726FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638CB20866
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E796AeM4"
+	by mail.kernel.org (Postfix) with ESMTP id 1065220866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406097AbfFKRpM (ORCPT
+        id S2406198AbfFKRrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:45:12 -0400
-Received: from mail-pl1-f174.google.com ([209.85.214.174]:38808 "EHLO
-        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405488AbfFKRpL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:45:11 -0400
-Received: by mail-pl1-f174.google.com with SMTP id f97so5426344plb.5;
-        Tue, 11 Jun 2019 10:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UOVsPRLAcnpUv1+7kG2cLWfi6R+JpEtYqM1GcRMnUuk=;
-        b=E796AeM4mrk/MSBxGtpMvy0jAewOt2VNTO2H4g8HmqyMDux7C9fCoNGP9YBUT1YBxw
-         ggozz9KENqRwxiGI8rjR2UOcUH7bYKuNZHmLp4AbKDUlWFBeLRQOda1EnQebiTT49Rg+
-         x9Rm2dPF82JgtGeV/h8Jlgb8NUX4CgCn5ZRj4hbeqxZagQSBQO+8J63qBDPO2z8NeA5b
-         NCnK2GMFz2y/FRYvn1ucJ1y61C/gZvtis18HuwrLk3eDsBBw0BEFi9e6T5RYyPKNfGUi
-         HOZA/ptPnAbua3/ANmOFwhr01WvcViJGEeqGRua4G8F5fFS6dxvLu3EX/qLRVRThzC0d
-         9nBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UOVsPRLAcnpUv1+7kG2cLWfi6R+JpEtYqM1GcRMnUuk=;
-        b=rmjL8WBPcWdlV+fi2HRwScSeZfAixI4QJmqx58Zpvkp3G/BPkERjR5Osrr+FVoOowS
-         Y6XTNEYfpcg5vX60IYO6kJynu8i4hq9orgpfbMSu9xryoVJioOH6ouGhJnH2JLNxOanR
-         IErcYPxjvxndBb0S56JhAeThJ8cPzWHfAFML8B0LOTFUHOf1SQNTmCm2bkQyZtRi0MFJ
-         vMBJuTr/xPUCqeCrOwWH61YE4tj62hSqwi6hoAfmH1WQ/1zKqtuw/2N2JLOizNYGfnzA
-         Bs6E2VQPWZ59ibLg4FwewxLtdqeetUmdVIQkoBEMro81GosmrEGwkaEz8EK7Rb75vprl
-         drmw==
-X-Gm-Message-State: APjAAAX418pcV+9gmNWq2PiC38kG4ssVVPABhfDtOmKYYx+SNAh+Wj8b
-        K8+0ZqbYIeRWblYbHGxpC53pb6RN7zk=
-X-Google-Smtp-Source: APXvYqx7oq6rzV/BZztfvDk9Bxl3R0qXF/jIuDbPR8j8NoxUy0yy7IMnVgh7qCHmllAxllyR672i1Q==
-X-Received: by 2002:a17:902:fa2:: with SMTP id 31mr52633040plz.38.1560275110168;
-        Tue, 11 Jun 2019 10:45:10 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id d123sm28212058pfc.144.2019.06.11.10.45.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 10:45:09 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 10:45:07 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     Hui Wang <hui.wang@canonical.com>,
-        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
-        Naoki Saito <naoki.saito@alpsalpine.com>,
-        Hideo Kawase <hideo.kawase@alpsalpine.com>
-Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
- =?utf-8?B?5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= input: alps-fix the issue alps
- cs19 trackstick do not work.
-Message-ID: <20190611174507.GF143729@dtor-ws>
-References: <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190610104310.qa5snt7jpcljodfv@pali>
- <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
- <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
- <20190611072333.nd4va4q2m5epmukc@pali>
- <20190611170707.GA143729@dtor-ws>
- <20190611171707.tydk7rsmtzmjohky@pali>
- <20190611173228.GD143729@dtor-ws>
- <20190611173856.jjwoagud6doxvpy3@pali>
+        Tue, 11 Jun 2019 13:47:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15394 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405488AbfFKRrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:47:09 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 10:46:55 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2019 10:46:55 -0700
+Date:   Tue, 11 Jun 2019 10:37:34 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v4 0/5] x86/umwait: Enable user wait instructions
+Message-ID: <20190611173733.GB180343@romley-ivt3.sc.intel.com>
+References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
+ <20190611090145.GU3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190611173856.jjwoagud6doxvpy3@pali>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190611090145.GU3436@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 07:38:56PM +0200, Pali Rohár wrote:
-> On Tuesday 11 June 2019 10:32:28 dmitry.torokhov@gmail.com wrote:
-> > On Tue, Jun 11, 2019 at 07:17:07PM +0200, Pali Rohár wrote:
-> > > On Tuesday 11 June 2019 10:07:07 dmitry.torokhov@gmail.com wrote:
-> > > > On Tue, Jun 11, 2019 at 09:23:33AM +0200, Pali Rohár wrote:
-> > > > > On Tuesday 11 June 2019 12:32:33 Hui Wang wrote:
-> > > > > > On 2019/6/11 上午11:23, Hui Wang wrote:
-> > > > > > > On 2019/6/11 上午11:05, Xiaoxiao Liu wrote:
-> > > > > > > > Hi Pali,
-> > > > > > > > 
-> > > > > > > > I discussed with our FW team about this problem.
-> > > > > > > > We think the V8 method means a touchpad feature  and does not fit
-> > > > > > > > the CS19 trackpoint device.
-> > > > > > > > CS19 TrackPoint needn't  use any Absolute (Raw) mode and is usually
-> > > > > > > > use standard mouse data.
-> > > > > > > > CS19 TrackPoint device is a completely different device with
-> > > > > > > > DualPoint device of Dell/HP.
-> > > > > > > > CS19 TrackPoint device is independent  of Touchpad. (Touchpad is
-> > > > > > > > connecting by I2C, TrackPoint is directly connecting with PS2 port.)
-> > > > > > > > And it has completely another FW.
-> > > > > > > > 
-> > > > > > > > So we think it is better to use the mouse mode for CS19 trackpoint.
-> > > > > > > 
-> > > > > > > Maybe here is some mis-understanding,  the mouse mode here doesn't mean
-> > > > > > > we use psmouse-base.c for cs19 (bare ps/2 mouse), we plan to use
-> > > > > > > trackpoint.c to drive this HW, so this trackpoint has all features a
-> > > > > > > trackpoint should have.
-> > > > > > > 
-> > > > > > And I sent a patch one month ago to let the the trackpoint.c to drive this
-> > > > > > HW: https://www.spinics.net/lists/linux-input/msg61341.html, maybe that
-> > > > > > patch is reference.
-> > > > > 
-> > > > > So instead of creating blacklist, you should check for TP_VARIANT_ALPS
-> > > > > in alps.c and disallow its usage.
-> > > > > 
-> > > > > Or maybe better, move trackpoint.c detect code before alsp.c detect code
-> > > > > in psmouse-base. And no changes in alps.c are needed.
-> > > > 
-> > > > I'd be very cautions of moving around the protocol detection. It is very
-> > > > fragile, so if we can detect trackpoint-only case in alps.c and skip on
-> > > > to trackpoint I would prefer it.
-> > > 
-> > > The main problem is that proposed trackpoint-only check in alps.c is
-> > > basically what trackpoint.c is doing for checking if device is
-> > > trackpoint (via function trackpoint_start_protocol()).
-> > > 
-> > > So I'm not sure now what is the best solution...
+On Tue, Jun 11, 2019 at 11:01:45AM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 07, 2019 at 03:00:32PM -0700, Fenghua Yu wrote:
+> > Today, if an application needs to wait for a very short duration
+> > they have to have spinloops. Spinloops consume more power and continue
+> > to use execution resources that could hurt its thread siblings in a core
+> > with hyperthreads. New instructions umonitor, umwait and tpause allow
+> > a low power alternative waiting at the same time could improve the HT
+> > sibling perform while giving it any power headroom. These instructions
+> > can be used in both user space and kernel space.
 > > 
-> > Unfortunately currently trackpoint is being probed only after we tried
-> > Elan, Genius, and Logitech PS2++ protocols, and I am not sure if moving
-> > trackpoint around will disturb them or not.
-> > 
-> > I do not think there is much code duplication by pulling limited version
-> > of trackpoint detection code into alps.c and then have it bail out when
-> > it sees trackpoint-only device so trackpoint.c can handle it properly.
+> > A new MSR IA32_UMWAIT_CONTROL allows kernel to set a time limit in
+> > TSC-quanta that prevents user applications from waiting for a long time.
+> > This allows applications to yield the CPU and the user application
+> > should consider using other alternatives to wait.
 > 
-> Ok. Seems that it is the best solution.
-> 
-> The last question is, should be use ALPS or Trackpoint protocol? Because
-> it looks like that device can be configured to one or other.
-> 
-> What are pros and cons of these two protocols?
+> I'm confused on the purpose of this control; what do we win by limiting
+> this time?
 
-As far as I know the device implements trackpoint protocol, although not
-complete version. Several manufacturers started making trackponts once
-IBM/Lenovo patents on the original one expired (I think).
+In previous patches, there is no time limit (max time is 0 which means no
+time limit).
 
-The data stream is regular relative PS/2, bit it allows controlling
-device behavior a bit, such as press-to-select option and device
-sensitivity. IBM/Lenovo version has many more parameters.
+Andy Lutomirski proposed to set the time limit:
+
+https://lkml.org/lkml/2019/2/26/735
+
+"So I propose setting the timeout to either 100 microseconds or 100k
+"cycles" by default.  In the event someone determines that they save
+materially more power or gets materially better performance with a
+longer timeout, we can revisit the value."
+
+Does it make sense?
+
+> 
+> >  .../ABI/testing/sysfs-devices-system-cpu      |  21 ++
+> >  arch/x86/include/asm/cpufeatures.h            |   1 +
+> >  arch/x86/include/asm/msr-index.h              |   4 +
+> >  arch/x86/power/Makefile                       |   1 +
+> >  arch/x86/power/umwait.c                       | 182 ++++++++++++++++++
+> 
+> You seem to miss the arch/x86/lib/delay.c change to use this fancy new
+> stuff for udelay(). I'm thinking that's exactly what TPAUSE is good for.
+
+There may be other places to use the instructions. But I think this
+patch set just first enables basic functionalities. We can focus on how to
+use the instructions in the future.
 
 Thanks.
 
--- 
-Dmitry
+-Fenghua
