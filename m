@@ -2,123 +2,131 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54379C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C81C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABAF21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5869420896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Vo19II7z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="MFYmu7nM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406853AbfFKSH2 (ORCPT
+        id S2406875AbfFKSIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:07:28 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36296 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406739AbfFKSH2 (ORCPT
+        Tue, 11 Jun 2019 14:08:09 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60230 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406739AbfFKSIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:07:28 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5AD0EFA6;
-        Tue, 11 Jun 2019 20:07:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560276445;
-        bh=U6cKsDlIYIUfJDEzJan9NNjl5MrieaoyWtyhjTAgz4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vo19II7zbYRl4pohD//ZsjLDurh4XnSv5I1Hy7ArCKvKqru7lg3u0uay0D89nhrMj
-         8YQJj5RCRoL+L2ITwNGolf5osznyh/2qk17MiL1clDQktwm+OcaLxdORHCHfeUrivV
-         e2rYFRwV3bT0NWBNdQ92AdePHJKImJuihtwF5Zdw=
-Date:   Tue, 11 Jun 2019 21:07:10 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Michael Drake <michael.drake@codethink.co.uk>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@lists.codethink.co.uk,
-        Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
-Subject: Re: [PATCH v1 03/11] dt-bindings: display/bridge: Add config
- property for ti948
-Message-ID: <20190611180710.GT5016@pendragon.ideasonboard.com>
-References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
- <20190611140412.32151-4-michael.drake@codethink.co.uk>
+        Tue, 11 Jun 2019 14:08:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1560276483; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=F92Hgvhl4FW1kSKmvn0gmYzIQd65L6N4f7rKJUGKlLY=;
+        b=MFYmu7nMhGPBRi2lqewJHzgo4uCKPVKDPAJ2IbRdcv3xvqrH6HVC5rEoiygSPWVspfSDWg
+        dIY3wMpsk1tB4ZTywq5TD9PHRlqDMjkTlkR5OP8S7Tf9ECcXy6pdxGj7rArW+wplLhUASP
+        pJfiOFRo5tQAHHVP6aTXHB/XTHtZgAs=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     od@zcrc.me, linux-mips@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/5] clk: ingenic: Add missing header in cgu.h
+Date:   Tue, 11 Jun 2019 20:07:53 +0200
+Message-Id: <20190611180757.32299-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190611140412.32151-4-michael.drake@codethink.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+The cgu.h has structures that contain 'clk_onecell_data' and 'clk_hw'
+structures (no pointers), so the <linux/clk-provider.h> header should be
+included.
 
-Thank you for the patch.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-On Tue, Jun 11, 2019 at 03:04:04PM +0100, Michael Drake wrote:
-> The config property can be used to provide an array of
-> register addresses and values to be written to configure
-> the device for the board.
+Notes:
+    v2: Rebase on v5.2-rc4
 
-Please don't. DT describes the hardware (or more accurately the system),
-it's not meant to store arbitrary configuration data. All the registers
-specified below should instead be set by the driver based on a
-combination of hardware description and information obtained at runtime.
+ drivers/clk/ingenic/cgu.h         | 1 +
+ drivers/clk/ingenic/jz4725b-cgu.c | 1 -
+ drivers/clk/ingenic/jz4740-cgu.c  | 1 -
+ drivers/clk/ingenic/jz4770-cgu.c  | 1 -
+ drivers/clk/ingenic/jz4780-cgu.c  | 1 -
+ 5 files changed, 1 insertion(+), 4 deletions(-)
 
-> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
-> Cc: Patrick Glaser <pglaser@tesla.com>
-> Cc: Nate Case <ncase@tesla.com>
-> ---
->  .../bindings/display/bridge/ti,ds90ub948.txt  | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
-> index f9e86cb22900..1e7033b0f3b7 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub948.txt
-> @@ -12,6 +12,8 @@ Required properties:
->  Optional properties:
->  
->  - regulators: List of regulator name strings to enable for operation of device.
-> +- config: List of <register address>,<value> pairs to be set to configure
-> +  device on powerup.  The register addresses and values are 8bit.
->  
->  Example
->  -------
-> @@ -21,4 +23,23 @@ ti948: ds90ub948@0 {
->  
->  	regulators: "vcc",
->  	            "vcc_disp";
-> +	config:
-> +	        /* set error count to max */
-> +	        <0x41>, <0x1f>,
-> +	        /* sets output mode, no change noticed */
-> +	        <0x49>, <0xe0>,
-> +	        /* speed up I2C, 0xE is around 480KHz */
-> +	        <0x26>, <0x0e>,
-> +	        /* speed up I2C, 0xE is around 480KHz */
-> +	        <0x27>, <0x0e>,
-> +	        /* sets GPIO0 as an input */
-> +	        <0x1D>, <0x13>,
-> +	        /* set GPIO2 high, backlight PWM (set to 0x50 for normal use) */
-> +	        <0x1E>, <0x50>,
-> +	        /* sets GPIO3 as an output with remote control for touch XRES */
-> +	        <0x1F>, <0x05>,
-> +	        /* set GPIO5 high, backlight enable on new display */
-> +	        <0x20>, <0x09>,
-> +	        /* set GPIO7 and GPIO8 high to enable touch power and prox sense */
-> +	        <0x21>, <0x91>;
->  };
-
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index bfbcf6db437d..ef2db1e26e58 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -10,6 +10,7 @@
+ #define __DRIVERS_CLK_INGENIC_CGU_H__
+ 
+ #include <linux/bitops.h>
++#include <linux/clk-provider.h>
+ #include <linux/of.h>
+ #include <linux/spinlock.h>
+ 
+diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
+index 8901ea0295b7..6e8bbf620c76 100644
+--- a/drivers/clk/ingenic/jz4725b-cgu.c
++++ b/drivers/clk/ingenic/jz4725b-cgu.c
+@@ -6,7 +6,6 @@
+  * Author: Paul Cercueil <paul@crapouillou.net>
+  */
+ 
+-#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/of.h>
+ #include <dt-bindings/clock/jz4725b-cgu.h>
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index c77f4e1506dc..2deac19a8d04 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -6,7 +6,6 @@
+  * Author: Paul Burton <paul.burton@mips.com>
+  */
+ 
+-#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
+index dfce740c25a8..42b2ee121642 100644
+--- a/drivers/clk/ingenic/jz4770-cgu.c
++++ b/drivers/clk/ingenic/jz4770-cgu.c
+@@ -5,7 +5,6 @@
+  */
+ 
+ #include <linux/bitops.h>
+-#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index 2464fc4032af..6d524e760180 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -6,7 +6,6 @@
+  * Author: Paul Burton <paul.burton@mips.com>
+  */
+ 
+-#include <linux/clk-provider.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
 -- 
-Regards,
+2.21.0.593.g511ec345e18
 
-Laurent Pinchart
