@@ -2,127 +2,110 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE17C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E15C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4276620820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A4820896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbfFKEcx (ORCPT
+        id S1729032AbfFKEdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 00:32:53 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34017 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfFKEcx (ORCPT
+        Tue, 11 Jun 2019 00:33:18 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51647 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbfFKEdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 00:32:53 -0400
-Received: from [125.35.49.90] (helo=[10.0.0.22])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <hui.wang@canonical.com>)
-        id 1haYSj-0002Mb-1L; Tue, 11 Jun 2019 04:32:45 +0000
-Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW5wdXQ6?=
- =?UTF-8?Q?_alps-fix_the_issue_alps_cs19_trackstick_do_not_work=2e?=
-From:   Hui Wang <hui.wang@canonical.com>
-To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc:     XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
-        Naoki Saito <naoki.saito@alpsalpine.com>,
-        Hideo Kawase <hideo.kawase@alpsalpine.com>
-References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
- <20190527100913.sgxrjrmphsjfmcdb@pali>
- <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190528071824.jimhixhtsynzwixe@pali>
- <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190610104310.qa5snt7jpcljodfv@pali>
- <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
-Message-ID: <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
-Date:   Tue, 11 Jun 2019 12:32:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 00:33:17 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1haYTE-0005Bb-BD; Tue, 11 Jun 2019 06:33:16 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1haYTD-0005xx-CH; Tue, 11 Jun 2019 06:33:15 +0200
+Date:   Tue, 11 Jun 2019 06:33:15 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     daniel.baluta@nxp.com
+Cc:     jassisinghbrar@gmail.com, aisheng.dong@nxp.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 1/2] mailbox: imx: Clear GIEn bit at shutdown
+Message-ID: <20190611043315.mr72owvjrxkegdww@pengutronix.de>
+References: <20190610141609.17559-1-daniel.baluta@nxp.com>
+ <20190610141609.17559-2-daniel.baluta@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610141609.17559-2-daniel.baluta@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 06:27:45 up 24 days, 10:45, 45 users,  load average: 0.10, 0.05,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/11 上午11:23, Hui Wang wrote:
-> On 2019/6/11 上午11:05, Xiaoxiao Liu wrote:
->> Hi Pali,
->>
->> I discussed with our FW team about this problem.
->> We think the V8 method means a touchpad feature  and does not fit the 
->> CS19 trackpoint device.
->> CS19 TrackPoint needn't  use any Absolute (Raw) mode and is usually 
->> use standard mouse data.
->> CS19 TrackPoint device is a completely different device with 
->> DualPoint device of Dell/HP.
->> CS19 TrackPoint device is independent  of Touchpad. (Touchpad is 
->> connecting by I2C, TrackPoint is directly connecting with PS2 port.)
->> And it has completely another FW.
->>
->> So we think it is better to use the mouse mode for CS19 trackpoint.
->
-> Maybe here is some mis-understanding,  the mouse mode here doesn't 
-> mean we use psmouse-base.c for cs19 (bare ps/2 mouse), we plan to use 
-> trackpoint.c to drive this HW, so this trackpoint has all features a 
-> trackpoint should have.
->
-And I sent a patch one month ago to let the the trackpoint.c to drive 
-this HW: https://www.spinics.net/lists/linux-input/msg61341.html, maybe 
-that patch is reference.
-> Regards,
->
-> Hui.
->
->>
->> Best Regards
->> Shona
->> -----邮件原件-----
->> 发件人: Pali Rohár <pali.rohar@gmail.com>
->> 发送时间: Monday, June 10, 2019 6:43 PM
->> 收件人: 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
->> 抄送: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>; 
->> dmitry.torokhov@gmail.com; peter.hutterer@who-t.net; 
->> hui.wang@canonical.com; linux-input@vger.kernel.org; 
->> linux-kernel@vger.kernel.org; 曹 曉建 Xiaojian Cao 
->> <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 斉藤 直樹 Naoki Saito 
->> <naoki.saito@alpsalpine.com>; 川瀬 英夫 Hideo Kawase 
->> <hideo.kawase@alpsalpine.com>
->> 主题: Re: 答复: 答复: [PATCH] input: alps-fix the issue alps cs19 
->> trackstick do not work.
->>
->> On Monday 10 June 2019 10:03:51 Xiaoxiao Liu wrote:
->>> Hi Pali,
->> Hi!
->>
->>> We register our CS19 device as ALPS_ONLY_TRACKSTICK device.
->>> And let the V8 protocol function support the process of 
->>> ALPS_ONLY_TRACKSTICK device.
->>>
->>> I want to confirm if this solution OK?
->> Yes, it is fine. Just make sure that touchapad input device is not 
->> registered when this ALPS_ONLY_TRACKSTICK flag is set. So userspace 
->> would not see any fake/unavailable touchpad input device.
->>
->>> Xiaoxiao.Liu
->> -- 
->> Pali Rohár
->> pali.rohar@gmail.com
+On Mon, Jun 10, 2019 at 10:16:08PM +0800, daniel.baluta@nxp.com wrote:
+> From: Daniel Baluta <daniel.baluta@nxp.com>
+> 
+> GIEn is enabled at startup for RX doorbell mailboxes so
+> we need to clear the bit at shutdown in order to avoid
+> leaving the interrupt line enabled.
+> 
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+
+Please send  bug fixes separately from RFC patches.
+
+You can add my
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+> ---
+>  drivers/mailbox/imx-mailbox.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+> index 25be8bb5e371..9f74dee1a58c 100644
+> --- a/drivers/mailbox/imx-mailbox.c
+> +++ b/drivers/mailbox/imx-mailbox.c
+> @@ -217,8 +217,8 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
+>  	if (cp->type == IMX_MU_TYPE_TXDB)
+>  		tasklet_kill(&cp->txdb_tasklet);
+>  
+> -	imx_mu_xcr_rmw(priv, 0,
+> -		   IMX_MU_xCR_TIEn(cp->idx) | IMX_MU_xCR_RIEn(cp->idx));
+> +	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx) |
+> +		       IMX_MU_xCR_RIEn(cp->idx) | IMX_MU_xCR_GIEn(cp->idx));
+>  
+>  	free_irq(priv->irq, chan);
+>  }
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
