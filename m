@@ -2,82 +2,118 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AD2C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF920C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2DDA2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48F22080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:13:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="mmbk6nB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388956AbfFKLKA (ORCPT
+        id S2388976AbfFKLNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:10:00 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37651 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388447AbfFKLJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:09:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v14so12535870wrr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 04:09:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ewq00r0CEEYLXioP30O1q2BeCLR2SfDQByxI3ASmz30=;
-        b=ar+FsVde5zUpYyHd+9ZM/eClx91VKz1DWgmNCdJLYqlf2HBGgM6bCM2vSPLruvU6aE
-         FpxjYWElgMwV45K0uI06QS/HPlVd/ol+Rig4piJv/wC1OJztSX9NA8qo8vTnPBN5RvZ4
-         CBKV9P6WWKW3dPuumYfzzQdx35L/9ULYNuTIQ+AvHEMgjOywtrHThgmV8N5nzN/7Lup7
-         MXoyd/3WvD9/hv0rGismCeextTwUDHwt/vKss60cCb1BgOe8r51hIiSCYA7k6PmJRVo+
-         EzdJilP6k+L5DSHlKLrtxmbw3wFqEUgSlRBVYqMVEgQ0T2voVxAcx/I1sRjDuL1FmE3g
-         Pj1Q==
-X-Gm-Message-State: APjAAAXPANpfY27FrGx83dekYlROdvW2WsILJ71s6bt43RHOEpUwHr1y
-        aKX9UFTAQGonfzZ+MveY2vWnsg==
-X-Google-Smtp-Source: APXvYqzN/haxCNxgeICKR52OC0EvsGr/RwWKjb1vCrA8a/DvAOMqDb3jb86+FmbFRNs7K9cItb7HhA==
-X-Received: by 2002:a5d:6b49:: with SMTP id x9mr33023295wrw.170.1560251398314;
-        Tue, 11 Jun 2019 04:09:58 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id c16sm11726088wrr.53.2019.06.11.04.09.54
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 04:09:57 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] KVM: X86: Provide a capability to disable cstate
- msr read intercepts
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
- <1558418814-6822-2-git-send-email-wanpengli@tencent.com>
- <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
- <CANRm+CyqH5ojNTcX3zfVjB8rayGHAW0Ex+fiGPnrO7bkmvr_4w@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b30067df-2929-9ce9-221f-0f1a84dd1228@redhat.com>
-Date:   Tue, 11 Jun 2019 13:09:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CANRm+CyqH5ojNTcX3zfVjB8rayGHAW0Ex+fiGPnrO7bkmvr_4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 11 Jun 2019 07:13:37 -0400
+Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:30694
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388447AbfFKLNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:13:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nE+rexGCau0MD0bOEZMoob66efRDzX4iFP7hoYrNH7A=;
+ b=mmbk6nB5O3xSu3CMzbkEJ9hK0Cbd8pIFxgoml1wCthQ97Mqwg7je13cArt98aYZ5jqQMClkXB9o6fRhWhbryra0fft1JRhkHc87w6o4v9CfHeLq0cYhXIIkMG9DwagKHKoO6NRN4tyAkXdaMooqFoBeouagrq3Om+2pp/+7WjK0=
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com (52.133.246.150) by
+ VI1PR08MB3550.eurprd08.prod.outlook.com (20.177.61.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Tue, 11 Jun 2019 11:13:33 +0000
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::e9f4:59c8:9be1:910b]) by VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::e9f4:59c8:9be1:910b%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 11:13:33 +0000
+From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: [PATCH v2 0/2] Adds slave pipeline support
+Thread-Topic: [PATCH v2 0/2] Adds slave pipeline support
+Thread-Index: AQHVIEa0RZsFrZpBmE6Oc2PEdiSdtA==
+Date:   Tue, 11 Jun 2019 11:13:33 +0000
+Message-ID: <1560251589-31827-1-git-send-email-lowry.li@arm.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: SL2PR04CA0005.apcprd04.prod.outlook.com
+ (2603:1096:100:2d::17) To VI1PR08MB5488.eurprd08.prod.outlook.com
+ (2603:10a6:803:137::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Lowry.Li@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dddfe338-f113-4404-0725-08d6ee5dd708
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3550;
+x-ms-traffictypediagnostic: VI1PR08MB3550:
+x-ms-exchange-purlcount: 1
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VI1PR08MB3550F9A6FA18BE0BB29F2FFD9FED0@VI1PR08MB3550.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39850400004)(396003)(366004)(346002)(136003)(189003)(199004)(305945005)(256004)(72206003)(6512007)(476003)(6306002)(14454004)(966005)(99286004)(2616005)(478600001)(52116002)(486006)(6636002)(7736002)(6506007)(26005)(68736007)(66066001)(186003)(2501003)(386003)(36756003)(4744005)(25786009)(66446008)(3846002)(81156014)(8676002)(316002)(6116002)(66946007)(66556008)(64756008)(66476007)(73956011)(50226002)(8936002)(6486002)(6436002)(71190400001)(86362001)(2906002)(55236004)(110136005)(54906003)(53936002)(71200400001)(4326008)(81166006)(5660300002)(2201001)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3550;H:VI1PR08MB5488.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KoVwuAUCOLCZTmNla20ImcCwvoVWGKYQOvkqfpx2s0M2cORnYm8nq52EDPEojXo7x077YQMhZIz7FL2Ia4XbOV6mLJKCu+SWLEuDJeELHl1KfZ6SfmeuxkJW9IWjAgIcuZQm4Q1hqZG7UGitqFAwbiEBfUM4IAec5Oqa7MG5kjP90LXqB2lvdp55WaKXWGiMEmh2k5rmyWmXgMB3Qw6a4Mb/S1Cyh4Z9buD9fEAKjcWcHM5IxLSX6ZciX+Rf2ZKFjRsr82SIvV4U7fXSwIfLDCIiLwgONVoci7W73ItZwbYdeXrIEj/zJiVNbliMuR8CF4m8cAIlBFV2h8x/CwXgankNAFLhhB7xZ14yuciNQON1FKfIzL0OmBpsAKkM/PdEqaLlhcL7BHUfAtzYnfNFFDV6pI+W6bxuJqamSUemtVw=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dddfe338-f113-4404-0725-08d6ee5dd708
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 11:13:33.2355
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lowry.Li@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3550
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06/19 09:38, Wanpeng Li wrote:
-> MSR_CORE_C1_RES is unreadable except for ATOM platform, so I think we
-> can avoid the complex logic to handle C1 now. :)
-
-I disagree.  Linux uses it on all platforms is available, and virtual
-machines that don't pass mwait through _only_ have C1, so it would be
-less useful to have deep C-state residency MSRs and not C1 residency.
-
-But turbostat can get the information from sysfs, so what are these MSRs
-used for?
-
-Paolo
+SGksDQoNClRoaXMgc2VyaWUgYWltcyBhdCBhZGRpbmcgdGhlIHN1cHBvcnQgZm9yIHNsYXZlIHBp
+cGVsaW5lIG9uIEtvbWVkYQ0KZHJpdmVyLiBBbHNvIGFkZHMgZHJvcF9tYXN0ZXIgdG8gc2h1dGRv
+d24gdGhlIGRldmljZSBhbmQgbWFrZSBzdXJlDQphbGwgdGhlIGtvbWVkYSByZXNvdXJjZXMgc2hh
+cmVkIGJldHdlZW4gY3J0Y3MgaGF2ZSBiZWVuIHJlbGVhc2VkLg0KDQpDaGFuZ2Ugc2luY2UgdjE6
+DQpSZWJhc2VzIHRoZSBjb2RlIGFuZCByZXNvbHZlcyB0aGUgY29uZmxpY3QuDQoNClRoaXMgcGF0
+Y2ggc2VyaWVzIGRlcGVuZHMgb246DQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9y
+Zy9zZXJpZXMvNjA4NTYvDQoNClJlZ2FyZHMsDQpMb3dyeQ0KDQpMb3dyeSBMaSAoQXJtIFRlY2hu
+b2xvZ3kgQ2hpbmEpICgyKToNCiAgZHJtL2tvbWVkYTogQWRkIHNsYXZlIHBpcGVsaW5lIHN1cHBv
+cnQNCiAgZHJtL2tvbWVkYTogQWRkcyBrb21lZGFfa21zX2Ryb3BfbWFzdGVyDQoNCiBkcml2ZXJz
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9jcnRjLmMgICB8IDQxICsrKysrKysr
+KysrKysrKysrKysrLS0NCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVk
+YV9rbXMuYyAgICB8IDIzICsrKysrKysrKysrKw0KIGRyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
+eS9rb21lZGEva29tZWRhX2ttcy5oICAgIHwgIDkgKysrKysNCiAuLi4vZ3B1L2RybS9hcm0vZGlz
+cGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmMgICB8IDIyICsrKysrKysrKysrKw0KIC4uLi9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmUuaCAgIHwgIDIgKysNCiAu
+Li4vZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYyB8IDE1ICsr
+KysrKysrDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGxhbmUu
+YyAgfCAzMiArKysrKysrKysrKysrKysrLQ0KIDcgZmlsZXMgY2hhbmdlZCwgMTQxIGluc2VydGlv
+bnMoKyksIDMgZGVsZXRpb25zKC0pDQoNCi0tIA0KMS45LjENCg0K
