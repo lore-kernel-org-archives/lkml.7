@@ -2,142 +2,170 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8E2C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1E2C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A69120896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB53B21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388591AbfFKMjT (ORCPT
+        id S2388330AbfFKMlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:39:19 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43615 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfFKMjT (ORCPT
+        Tue, 11 Jun 2019 08:41:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34104 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727733AbfFKMlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:39:19 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z24so1042208qtj.10;
-        Tue, 11 Jun 2019 05:39:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XN3fdwJg/1ymduxamw9Yc8WWX44+wT/44w1TY3cVD68=;
-        b=h65OoEXcMrUfvAbkzzkLh7tsRVvD3pePyq+VOC7UIwxEIP+hfN1MfmQvNAU1u/W2kC
-         XRZn51Hn5v45KuJyRFlOGBBowQrdmLQBBJeW5rP5YOL7ZEIdwub1zkwDlbv+eu4/CxHG
-         lVWj25tE3Ddo0zcO2WSPLIKuxSxQXPKzQmghcdkYptxyXo2M+kM6eCv03tlRg5Kjv7kJ
-         JGLS+sWkJSoAPt2awwxN7Sn/hhDxqeDkw0jTH7YI2y8umM4FjsAo4gjU1j26J/xNUoZp
-         y8zN8K7H92R9tpH5ht+UQekMNhojOvi4lmRXG/G1nVfHU/LlgILjR+DmDgW6W+W2BLxc
-         M+vA==
-X-Gm-Message-State: APjAAAWEnAWWC36ucRiL/vqL9BQkTLPM2NAE2jADL9sYdwUnbSx8tFaE
-        d3iU/Er8OULDzFK7YnC/4Wn2dY/eiw1sW1CsNMQ=
-X-Google-Smtp-Source: APXvYqwmSxz91ETm2g0mbXcHkb07TlAw56ssGqW2/FqZR35L2ttg80Er6XbiViGTQYeI9p3/OWxF9OBLbPdYmK1HXHE=
-X-Received: by 2002:aed:2bc1:: with SMTP id e59mr43872597qtd.7.1560256757764;
- Tue, 11 Jun 2019 05:39:17 -0700 (PDT)
+        Tue, 11 Jun 2019 08:41:31 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BCW0NR123936
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:41:30 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t2bkv2umn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:41:29 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 11 Jun 2019 13:41:27 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 13:41:23 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BCfM8E56688832
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 12:41:22 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC6FB11C052;
+        Tue, 11 Jun 2019 12:41:22 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A368411C050;
+        Tue, 11 Jun 2019 12:41:21 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.204.69])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 11 Jun 2019 12:41:21 +0000 (GMT)
+Date:   Tue, 11 Jun 2019 15:41:19 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will.deacon@arm.com>,
+        akpm@linux-foundation.org, catalin.marinas@arm.com,
+        linux-kernel@vger.kernel.org, mhocko@kernel.org,
+        linux-mm@kvack.org, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
+        cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
+References: <1559656836-24940-1-git-send-email-cai@lca.pw>
+ <20190604142338.GC24467@lakrids.cambridge.arm.com>
+ <20190610114326.GF15979@fuggles.cambridge.arm.com>
+ <1560187575.6132.70.camel@lca.pw>
+ <20190611100348.GB26409@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-References: <0000000000007ce6f5058b0715ea@google.com>
-In-Reply-To: <0000000000007ce6f5058b0715ea@google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 11 Jun 2019 14:39:01 +0200
-Message-ID: <CAK8P3a1akOXWgAWXM0g_FYSdWUynBDRR2dAwZt8Xg5RiXhMZag@mail.gmail.com>
-Subject: Re: KASAN: null-ptr-deref Read in x25_connect
-To:     syzbot <syzbot+777a2aab6ffd397407b5@syzkaller.appspotmail.com>
-Cc:     allison@lohutok.net, Andrew Hendry <andrew.hendry@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-x25@vger.kernel.org, ms@dev.tdt.de,
-        Networking <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190611100348.GB26409@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19061112-0028-0000-0000-000003794EFF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061112-0029-0000-0000-000024393D13
+Message-Id: <20190611124118.GA4761@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=60 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 9:18 AM syzbot
-<syzbot+777a2aab6ffd397407b5@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    f4cfcfbd net: dsa: sja1105: Fix link speed not working at ..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16815cd2a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4f721a391cd46ea
-> dashboard link: https://syzkaller.appspot.com/bug?extid=777a2aab6ffd397407b5
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+777a2aab6ffd397407b5@syzkaller.appspotmail.com
+On Tue, Jun 11, 2019 at 11:03:49AM +0100, Mark Rutland wrote:
+> On Mon, Jun 10, 2019 at 01:26:15PM -0400, Qian Cai wrote:
+> > On Mon, 2019-06-10 at 12:43 +0100, Will Deacon wrote:
+> > > On Tue, Jun 04, 2019 at 03:23:38PM +0100, Mark Rutland wrote:
+> > > > On Tue, Jun 04, 2019 at 10:00:36AM -0400, Qian Cai wrote:
+> > > > > The commit "arm64: switch to generic version of pte allocation"
+> > > > > introduced endless failures during boot like,
+> > > > > 
+> > > > > kobject_add_internal failed for pgd_cache(285:chronyd.service) (error:
+> > > > > -2 parent: cgroup)
+> > > > > 
+> > > > > It turns out __GFP_ACCOUNT is passed to kernel page table allocations
+> > > > > and then later memcg finds out those don't belong to any cgroup.
+> > > > 
+> > > > Mike, I understood from [1] that this wasn't expected to be a problem,
+> > > > as the accounting should bypass kernel threads.
+> > > > 
+> > > > Was that assumption wrong, or is something different happening here?
+> > > > 
+> > > > > 
+> > > > > backtrace:
+> > > > >   kobject_add_internal
+> > > > >   kobject_init_and_add
+> > > > >   sysfs_slab_add+0x1a8
+> > > > >   __kmem_cache_create
+> > > > >   create_cache
+> > > > >   memcg_create_kmem_cache
+> > > > >   memcg_kmem_cache_create_func
+> > > > >   process_one_work
+> > > > >   worker_thread
+> > > > >   kthread
+> > > > > 
+> > > > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > > > ---
+> > > > >  arch/arm64/mm/pgd.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
+> > > > > index 769516cb6677..53c48f5c8765 100644
+> > > > > --- a/arch/arm64/mm/pgd.c
+> > > > > +++ b/arch/arm64/mm/pgd.c
+> > > > > @@ -38,7 +38,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+> > > > >  	if (PGD_SIZE == PAGE_SIZE)
+> > > > >  		return (pgd_t *)__get_free_page(gfp);
+> > > > >  	else
+> > > > > -		return kmem_cache_alloc(pgd_cache, gfp);
+> > > > > +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_KERNEL);
+> > > > 
+> > > > This is used to allocate PGDs for both user and kernel pagetables (e.g.
+> > > > for the efi runtime services), so while this may fix the regression, I'm
+> > > > not sure it's the right fix.
+> > > > 
+> > > > Do we need a separate pgd_alloc_kernel()?
+> > > 
+> > > So can I take the above for -rc5, or is somebody else working on a different
+> > > fix to implement pgd_alloc_kernel()?
+> > 
+> > The offensive commit "arm64: switch to generic version of pte allocation" is not
+> > yet in the mainline, but only in the Andrew's tree and linux-next, and I doubt
+> > Andrew will push this out any time sooner given it is broken.
+> 
+> I'd assumed that Mike would respin these patches to implement and use
+> pgd_alloc_kernel() (or take gfp flags) and the updated patches would
+> replace these in akpm's tree.
+> 
+> Mike, could you confirm what your plan is? I'm happy to review/test
+> updated patches for arm64.
 
-Not sure why I was on Cc on this (I know nothing about x25), but I had
-a brief look and found that this is in the error path of x25_connect,
-after "goto out_put_neigh", with x25->neighbour==NULL.
+Sorry for the delay, I'm mostly offline these days.
 
-This would indicate that either 'x25' is being freed between the
-"if (!x25->neighbour)" check in that function and the
-x25_neigh_put(x25->neighbour), or that there are two concurrent
-calls to x25_connect, with both failing, so one sets
-x25->neighbour=NULL before the other one checks it.
+I wanted to understand first what is the reason for the failure. I've tried
+to reproduce it with qemu, but I failed to find a bootable configuration
+that will have PGD_SIZE != PAGE_SIZE :(
 
-    Arnd
+Qian Cai, can you share what is your environment and the kernel config?
+ 
+> Thanks,
+> Mark.
+> 
 
-> ==================================================================
-> BUG: KASAN: null-ptr-deref in atomic_read
-> include/asm-generic/atomic-instrumented.h:26 [inline]
-> BUG: KASAN: null-ptr-deref in refcount_sub_and_test_checked+0x87/0x200
-> lib/refcount.c:182
-> Read of size 4 at addr 00000000000000c8 by task syz-executor.2/16959
->
-> CPU: 0 PID: 16959 Comm: syz-executor.2 Not tainted 5.2.0-rc2+ #40
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->   __kasan_report.cold+0x5/0x40 mm/kasan/report.c:321
->   kasan_report+0x12/0x20 mm/kasan/common.c:614
->   check_memory_region_inline mm/kasan/generic.c:185 [inline]
->   check_memory_region+0x123/0x190 mm/kasan/generic.c:191
->   kasan_check_read+0x11/0x20 mm/kasan/common.c:94
->   atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
->   refcount_sub_and_test_checked+0x87/0x200 lib/refcount.c:182
->   refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
->   x25_neigh_put include/net/x25.h:252 [inline]
->   x25_connect+0x8d8/0xea0 net/x25/af_x25.c:820
->   __sys_connect+0x264/0x330 net/socket.c:1840
->   __do_sys_connect net/socket.c:1851 [inline]
->   __se_sys_connect net/socket.c:1848 [inline]
->   __x64_sys_connect+0x73/0xb0 net/socket.c:1848
->   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459279
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f09776b4c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459279
-> RDX: 0000000000000012 RSI: 0000000020000280 RDI: 0000000000000004
-> RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f09776b56d4
-> R13: 00000000004bf854 R14: 00000000004d0e08 R15: 00000000ffffffff
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Sincerely yours,
+Mike.
+
