@@ -2,193 +2,118 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885AFC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35144C0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFAE2177E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE1121734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wy6GLE/b"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nX9Y2AlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391730AbfFKQ2v (ORCPT
+        id S2391946AbfFKQak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 12:28:51 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35604 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727748AbfFKQ2v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:28:51 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a25so9809359lfg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 09:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RgyPf7xhx0YF0w9Kty/80UkxGW/cNJhmecxkZGC4Svg=;
-        b=Wy6GLE/bRjVgzVg3lTBzcxvgONy0/gxFk0wNAyFPNhLKb1zkqgi7IORqDn/A5oMhNs
-         P1N7dtfcmcAozuWE5Eb3UlefyJfoLU/vDMgiMI3gdS0x+DBehpksepzE3rG6XpxcTQTL
-         dgguk5hn73V7XtY9m418kM424zKdGmSeZiwHBMjROl0RJXauPuHC4yXQZJhkON6lbL4x
-         8yP5dVjBuymlWB96zkGHGcjBVzztPUFGpPcNcVrKQyhj8zt9gsA+MYw/a7H4tw2+tBeS
-         72NhJJT+iv7ymfMLyx7RYScRS52teqvNNZh+H661tbd0KCYPYAwPMSB88JYKm6t07qyn
-         5NRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RgyPf7xhx0YF0w9Kty/80UkxGW/cNJhmecxkZGC4Svg=;
-        b=li18fbD6oV3hw48bRgMN4pFYBRUtJTfctWm08yj5mBTtHvz9TG1aduvhbWDTfkab8F
-         +4vEwnNfL6gtbs0AhbCEByb0fSYqeqO8e9rrCE3EByyOEGy8TpFUkGmfOIUMMcheBlvj
-         2G0ela9R2gE6RhuSrk1W8d8dh7gcTHuVfiOge/pDdEfIfLOeZhW7jKe9dWMDHbfEP7lZ
-         +O+UlILBML4IK0jeBzfypMr3ZrUZOXIkjDmws9CshC+SNuPHWEltdM2PkvEKSsDbyR/l
-         BQmpKQD701QiBpil2VXJYwC51ssVRtkrw7Lg9Dz+TP4hM/mOEv/NPJQUml6x92Qhu6D8
-         CoKg==
-X-Gm-Message-State: APjAAAWBrrCPy+FUK3DdNyF+cFQHLieMr9vV3dRvirxvASlXWe/MwOJ4
-        qMOwXotMKRWfoAJQTiekZ4iUhDtQ7edUwnYzeWBSzQ==
-X-Google-Smtp-Source: APXvYqz+8HsvC2fZeq6JGexwZBxWKw0IGtco6wwqGIYyL/OdqZf9E69/kPyFOQ1Wtpf5LQTIPeOKLiFAWfBQYsb8+YM=
-X-Received: by 2002:a19:c383:: with SMTP id t125mr31681402lff.89.1560270528359;
- Tue, 11 Jun 2019 09:28:48 -0700 (PDT)
+        Tue, 11 Jun 2019 12:30:40 -0400
+Received: from mail-eopbgr70040.outbound.protection.outlook.com ([40.107.7.40]:42817
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391703AbfFKQaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:30:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZBmbstKvPK2WLXM1xmmmhCIUkvtodyhsFlA454TXjYU=;
+ b=nX9Y2AlRB4/s0a98mnqFkRQRahcfKrO1VHXrmC8/ufDATk80bij0QwY9OONafqOv30RApSqbl/a1sX3O+Z5/w7HgBoOl/fCi1nOq/uF/5K0CymlgivKM7VGZs40A94BkAfzI2S7ukNI/pS6G7DG1gWN9UGgCHXCuKjwNLKEfJ+A=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB2799.eurprd04.prod.outlook.com (10.175.20.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Tue, 11 Jun 2019 16:30:34 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 16:30:34 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 0/4] Additional fixes on Talitos driver
+Thread-Topic: [PATCH v2 0/4] Additional fixes on Talitos driver
+Thread-Index: AQHVIGOH8ah5xSLD4UOplfJkXECTiA==
+Date:   Tue, 11 Jun 2019 16:30:34 +0000
+Message-ID: <VI1PR0402MB3485AD965F36709F27EFB72698ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <cover.1560263641.git.christophe.leroy@c-s.fr>
+ <VI1PR0402MB34853CAF031426F4183FE29B98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <0cb7c534-6e48-5284-899c-c0ef85c3c126@c-s.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b3e86c67-0c46-4806-a870-08d6ee8a2127
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2799;
+x-ms-traffictypediagnostic: VI1PR0402MB2799:
+x-microsoft-antispam-prvs: <VI1PR0402MB2799F8B21E76E9687BD646DB98ED0@VI1PR0402MB2799.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(366004)(346002)(376002)(136003)(189003)(199004)(26005)(14454004)(99286004)(6246003)(4326008)(33656002)(66946007)(66556008)(7696005)(64756008)(66476007)(66446008)(25786009)(256004)(76116006)(73956011)(102836004)(53546011)(76176011)(6506007)(316002)(8936002)(81156014)(8676002)(81166006)(305945005)(6116002)(3846002)(7736002)(6436002)(2906002)(74316002)(229853002)(478600001)(55016002)(53936002)(68736007)(9686003)(486006)(476003)(446003)(54906003)(110136005)(186003)(44832011)(86362001)(71200400001)(52536014)(5660300002)(71190400001)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2799;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Upw35HGlCh+ue53bfE7wM/9LdXjhl84nvOPuDmZb4OghYu9pTNj0lZCO1BvCadGwJ63jUnSIhyoM6sJyn0PEqEHFoZny7OxKTdJk/pLTt1ER6V3gtK4kzPMBoMNSreqgUrYNnPsoh4TAZyROiM3cHStOU+J5fAOiZlBXLGZNId/T9BI7dT4Fiby33UWfk3oK+xGOpbHFgTdN1s8K84FsnGjSmuEybemOAFP5GiVBJ77ObTFrxQV7GmfCy+s3+XrQ5s9X2JMleIGQevCZKxn7ihCVy6X/F842HyftdWL4tlyElIPX8Xcj2DwtZ6iKhNCgVNeVwqoQbcTxzB8AxKYUDULDR7aluw4BauCxRsOiYVFovhnDN43WSPy+nh38IbQ0bd5OtX/O1rZrjQi6cSAAXUOm9BCqkFSTbKgcBVr+92A=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190606094722.23816-1-anders.roxell@linaro.org>
- <d6b79ee0-07c6-ad81-16b0-8cf929cc214d@xs4all.nl> <CADYN=9KY5=FzrkC7MKj9QnG-eM1NVuL00w8Xv4yU2r05rhr7WQ@mail.gmail.com>
- <c2ff2c77-5c14-4bc4-f59c-7012d272ec76@thinci.com> <1560240943.13886.1.camel@pengutronix.de>
- <221c8ef8-7adc-4383-93c9-9031dca590f0@xs4all.nl> <CADYN=9K7GwPGM_Eh5q-OZ9rcEPAjXw4BXy-m3a=QxmGuVruCUw@mail.gmail.com>
- <CAAEAJfC9vja5WwsNc5+MTVHLFg_P3zG=OZt_CuRR5eG-3iWD9Q@mail.gmail.com>
-In-Reply-To: <CAAEAJfC9vja5WwsNc5+MTVHLFg_P3zG=OZt_CuRR5eG-3iWD9Q@mail.gmail.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Tue, 11 Jun 2019 18:28:37 +0200
-Message-ID: <CADYN=9L36CadXu2csbQhvey=20NTte-a+a8i08w=pP-+VdTuLA@mail.gmail.com>
-Subject: Re: [PATCH 5/8] drivers: media: coda: fix warning same module names
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matt Redfearn <matt.redfearn@thinci.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "marex@denx.de" <marex@denx.de>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3e86c67-0c46-4806-a870-08d6ee8a2127
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 16:30:34.7609
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 at 18:18, Ezequiel Garcia
-<ezequiel@vanguardiasur.com.ar> wrote:
->
->
->
-> On Tue, Jun 11, 2019, 1:01 PM Anders Roxell <anders.roxell@linaro.org> wrote:
->>
->> On Tue, 11 Jun 2019 at 10:21, Hans Verkuil <hverkuil@xs4all.nl> wrote:
->> >
->> > On 6/11/19 10:15 AM, Philipp Zabel wrote:
->> > > Hi,
->> > >
->> > > On Mon, 2019-06-10 at 13:14 +0000, Matt Redfearn wrote:
->> > >>
->> > >> On 10/06/2019 14:03, Anders Roxell wrote:
->> > >>> On Thu, 6 Jun 2019 at 12:13, Hans Verkuil <hverkuil@xs4all.nl> wrote:
->> > >>>>
->> > >>>> On 6/6/19 11:47 AM, Anders Roxell wrote:
->> > >>>>> When building with CONFIG_VIDEO_CODA and CONFIG_CODA_FS enabled as
->> > >>>>> loadable modules, we see the following warning:
->> > >>>>>
->> > >>>>> warning: same module names found:
->> > >>>>>    fs/coda/coda.ko
->> > >>>>>    drivers/media/platform/coda/coda.ko
->> > >>>>>
->> > >>>>> Rework so media coda matches the config fragment. Leaving CODA_FS as is
->> > >>>>> since thats a well known module.
->> > >>>>>
->> > >>>>> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
->> > >>>>> ---
->> > >>>>>   drivers/media/platform/coda/Makefile | 4 ++--
->> > >>>>>   1 file changed, 2 insertions(+), 2 deletions(-)
->> > >>>>>
->> > >>>>> diff --git a/drivers/media/platform/coda/Makefile b/drivers/media/platform/coda/Makefile
->> > >>>>> index 54e9a73a92ab..588e6bf7c190 100644
->> > >>>>> --- a/drivers/media/platform/coda/Makefile
->> > >>>>> +++ b/drivers/media/platform/coda/Makefile
->> > >>>>> @@ -1,6 +1,6 @@
->> > >>>>>   # SPDX-License-Identifier: GPL-2.0-only
->> > >>>>>
->> > >>>>> -coda-objs := coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-mpeg2.o coda-mpeg4.o coda-jpeg.o
->> > >>>>> +video-coda-objs := coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-mpeg2.o coda-mpeg4.o coda-jpeg.o
->> > >>>>>
->> > >>>>> -obj-$(CONFIG_VIDEO_CODA) += coda.o
->> > >>>>> +obj-$(CONFIG_VIDEO_CODA) += video-coda.o
->> > >>>>
->> > >>>> How about imx-coda? video-coda suggests it is part of the video subsystem,
->> > >>>> which it isn't.
->> > >>>
->> > >>> I'll resend a v2 shortly with imx-coda instead.
->> > >
->> > > I'd be in favor of calling it "coda-vpu" instead.
->> >
->> > Fine by me!
->> >
->> > >
->> > >> What about other vendor SoCs implementing the Coda IP block which are
->> > >> not an imx? I'd prefer a more generic name - maybe media-coda.
->> > >
->> > > Right, this driver can be used on other SoCs [1].
->> >
->> > Good point.
->>
->> OK, so I'll change it to 'media-coda'.
->>
->>
->>
->
-> As suggested by Philipp, coda-vpu seems the most accurate name.
-
-urgh, that correct.
-
-Thanks,
-Anders
-
->
-> Thanks,
-> Ezequiel
->
->
->
->> Cheers,
->> Anders
->>
->> >
->> > Regards,
->> >
->> >         Hans
->> >
->> > >
->> > > [1] https://www.mail-archive.com/linux-media@vger.kernel.org/msg146498.html
->> > >
->> > > regards
->> > > Philipp
->> > >
->> >
+On 6/11/2019 6:40 PM, Christophe Leroy wrote:=0A=
+> =0A=
+> =0A=
+> Le 11/06/2019 =E0 17:37, Horia Geanta a =E9crit=A0:=0A=
+>> On 6/11/2019 5:39 PM, Christophe Leroy wrote:=0A=
+>>> This series is the last set of fixes for the Talitos driver.=0A=
+>>>=0A=
+>>> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and=0A=
+>>> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:=0A=
+>>>=0A=
+>> I am getting below failures on a sec 3.3.2 (p1020rdb) for hmac(sha384) a=
+nd=0A=
+>> hmac(sha512):=0A=
+> =0A=
+> Is that new with this series or did you already have it before ?=0A=
+> =0A=
+Looks like this happens with or without this series.=0A=
+=0A=
+I haven't checked the state of this driver for quite some time.=0A=
+Since I've noticed increased activity, I thought it would be worth=0A=
+actually testing the changes.=0A=
+=0A=
+Are changes in patch 2/4 ("crypto: talitos - fix hash on SEC1.")=0A=
+strictly for sec 1.x or they affect all revisions?=0A=
+=0A=
+> What do you mean by "fuzz testing" enabled ? Is that =0A=
+> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS or something else ?=0A=
+> =0A=
+Yes, it's this config symbol.=0A=
+=0A=
+Horia=0A=
