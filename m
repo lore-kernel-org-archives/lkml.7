@@ -2,112 +2,93 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98CBC0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702D3C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEB72080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA53214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391857AbfFKPzg (ORCPT
+        id S2405473AbfFKPzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:55:36 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:48875 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388958AbfFKPzg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:55:36 -0400
-X-Originating-IP: 90.88.159.246
-Received: from mc-bl-xps13.lan (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 6B74B60016;
-        Tue, 11 Jun 2019 15:55:29 +0000 (UTC)
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH net] net: ethtool: Allow matching on vlan CFI bit
-Date:   Tue, 11 Jun 2019 17:54:56 +0200
-Message-Id: <20190611155456.15360-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 11 Jun 2019 11:55:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:36618 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388492AbfFKPzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:55:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4541337;
+        Tue, 11 Jun 2019 08:55:48 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 963093F246;
+        Tue, 11 Jun 2019 08:55:45 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 16:55:43 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 3/7] cpu-topology: Move cpu topology code to common
+ code.
+Message-ID: <20190611155543.GJ4324@fuggles.cambridge.arm.com>
+References: <20190529211340.17087-1-atish.patra@wdc.com>
+ <20190529211340.17087-4-atish.patra@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529211340.17087-4-atish.patra@wdc.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using ethtool, users can specify a classification action matching on the
-full vlan tag, which includes the CFI bit.
+On Wed, May 29, 2019 at 02:13:36PM -0700, Atish Patra wrote:
+> Both RISC-V & ARM64 are using cpu-map device tree to describe
+> their cpu topology. It's better to move the relevant code to
+> a common place instead of duplicate code.
+> 
+> To: Will Deacon <will.deacon@arm.com>
+> To: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> [Tested on QDF2400]
+> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> [Tested on Juno and other embedded platforms.]
+> Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> 
+> ---
+> Hi Will/Catalin,
+> Can we get ack for this patch ? We are hoping to get the entire series
+> merged at one go.
 
-However, when converting the ethool_flow_spec to a flow_rule, we use
-dissector keys to represent the matching patterns.
+If Sudeep is happy with it then that's good enough for me.
 
-Since the vlan dissector key doesn't include the CFI bit, this
-information was silently discarded when translating the ethtool
-flow spec in to a flow_rule.
+Acked-by: Will Deacon <will.deacon@arm.com>
 
-This commit adds the CFI bit into the vlan dissector key, and allows
-propagating the information to the driver when parsing the ethtool flow
-spec.
-
-Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
-Reported-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
-Hi all,
-
-Although this prevents information to be silently discarded when parsing
-an ethtool_flow_spec, this information doesn't seem to be used by any
-driver that converts an ethtool_flow_spec to a flow_rule, hence I'm not
-sure this is suitable for -net.
-
-Thanks,
-
-Maxime
-
- include/net/flow_dissector.h | 1 +
- net/core/ethtool.c           | 5 +++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
-index 7c5a8d9a8d2a..9d2e395c6568 100644
---- a/include/net/flow_dissector.h
-+++ b/include/net/flow_dissector.h
-@@ -46,6 +46,7 @@ struct flow_dissector_key_tags {
- 
- struct flow_dissector_key_vlan {
- 	u16	vlan_id:12,
-+		vlan_cfi:1,
- 		vlan_priority:3;
- 	__be16	vlan_tpid;
- };
-diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-index d08b1e19ce9c..43df34c1ebe1 100644
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -3020,6 +3020,11 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
- 			match->mask.vlan.vlan_id =
- 				ntohs(ext_m_spec->vlan_tci) & 0x0fff;
- 
-+			match->key.vlan.vlan_cfi =
-+				!!(ntohs(ext_h_spec->vlan_tci) & 0x1000);
-+			match->mask.vlan.vlan_cfi =
-+				!!(ntohs(ext_m_spec->vlan_tci) & 0x1000);
-+
- 			match->key.vlan.vlan_priority =
- 				(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
- 			match->mask.vlan.vlan_priority =
--- 
-2.20.1
-
+Will
