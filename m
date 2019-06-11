@@ -2,116 +2,66 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBCCC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87E3C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A292089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z4UJWCmS"
+	by mail.kernel.org (Postfix) with ESMTP id 87DE92089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405177AbfFKKIJ (ORCPT
+        id S2405191AbfFKKIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:08:09 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:34262 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405169AbfFKKIJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:08:09 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BA4BEX051438;
-        Tue, 11 Jun 2019 10:07:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=LjjDKR+0h5jy8XWEJc5KDfAlumpMbZO6+MQdfmzWlVc=;
- b=Z4UJWCmSC5Fx0veR+504Jx5Wf5hA4lgVp8zYHsu4stBJBEd0Fvr6ewO7UVjpqh2pOMP3
- IdQ1V63N0qaOhh17Sby4XazWeuQhE6SsGH/FfpUd9qFN+aeylQYXzCBwJCeRYmfNxFt4
- pf8i9mQhmqqPK7HbMgP7uiblqZLJbqyQaPS7eCbDJElTx8/CMwDMMhihxvkl/P1Jz1Q0
- KTGqepsHNsdkWSAK49hxWZb3bCVItdBBgVF4wlXrgL79URvo0+QXx7MmVoftgmESXN5P
- NQ+v8RMsLynTBNxftHT0TjDjqTIAWPOz2pp3GGZPq8bhiPUMqHh2OjHYGMU4zqxdm4vA 9Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2t02hemabq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 10:07:36 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BA7GG8103976;
-        Tue, 11 Jun 2019 10:07:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2t024uars6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 10:07:35 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5BA7XDJ020039;
-        Tue, 11 Jun 2019 10:07:33 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Jun 2019 03:07:33 -0700
-Date:   Tue, 11 Jun 2019 13:07:24 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Yishai Hadas <yishaih@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] IB/mlx4: prevent undefined shift in set_user_sq_size()
-Message-ID: <20190611100724.GB1915@kadam>
-References: <20190608092231.GA28890@mwanda>
- <20190610132849.GD18468@ziepe.ca>
+        Tue, 11 Jun 2019 06:08:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:57390 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405169AbfFKKIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:08:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66884337;
+        Tue, 11 Jun 2019 03:08:13 -0700 (PDT)
+Received: from [10.1.29.141] (e121487-lin.cambridge.arm.com [10.1.29.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5692A3F557;
+        Tue, 11 Jun 2019 03:09:54 -0700 (PDT)
+Subject: Re: binfmt_flat cleanups and RISC-V support
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Greg Ungerer <gerg@linux-m68k.org>,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
+        linux-c6x-dev@linux-c6x.org, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190610212015.9157-1-hch@lst.de>
+ <4f000219-4baf-b03e-9003-26482640d3de@arm.com>
+ <20190611081117.GA22110@lst.de>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <d41f1077-936f-ce5b-2121-5a5ade521a98@arm.com>
+Date:   Tue, 11 Jun 2019 11:08:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610132849.GD18468@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110070
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110070
+In-Reply-To: <20190611081117.GA22110@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:28:49AM -0300, Jason Gunthorpe wrote:
-> On Sat, Jun 08, 2019 at 12:22:31PM +0300, Dan Carpenter wrote:
-> > The ucmd->log_sq_bb_count is a u8 that comes from the user.  If it's
-> > larger than the number of bits in an int then that's undefined behavior.
-> > It turns out this doesn't really cause an issue at runtime but it's
-> > still nice to clean it up.
-> > 
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> >  drivers/infiniband/hw/mlx4/qp.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/infiniband/hw/mlx4/qp.c b/drivers/infiniband/hw/mlx4/qp.c
-> > index 5221c0794d1d..9f6eb23e8044 100644
-> > --- a/drivers/infiniband/hw/mlx4/qp.c
-> > +++ b/drivers/infiniband/hw/mlx4/qp.c
-> > @@ -439,7 +439,8 @@ static int set_user_sq_size(struct mlx4_ib_dev *dev,
-> >  			    struct mlx4_ib_create_qp *ucmd)
-> >  {
-> >  	/* Sanity check SQ size before proceeding */
-> > -	if ((1 << ucmd->log_sq_bb_count) > dev->dev->caps.max_wqes	 ||
-> > +	if (ucmd->log_sq_bb_count > 31					 ||
-> > +	    (1 << ucmd->log_sq_bb_count) > dev->dev->caps.max_wqes	 ||
+On 6/11/19 9:11 AM, Christoph Hellwig wrote:
+> On Tue, Jun 11, 2019 at 09:05:45AM +0100, Vladimir Murzin wrote:
+>> I'm wondering if you have a branch with these changes so I can give
+>> it a try on ARM NOMMU platforms?
 > 
-> Surely this should use check_shl_overflow() ?
+> 
+>     git://git.infradead.org/users/hch/riscv.git riscv-flat
 > 
 
-Same for the other one I sent.  I'll resend in a couple days.  No rush.
+Thanks! I gave it a go and provided my tags for relevant patches.
 
-regards,
-dan carpenter
-
+Cheers
+Vladimir
