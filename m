@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6F7C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85243C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C520E21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FDB720866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:22:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikB+Tbsz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MH1ZRE7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407028AbfFKSWM (ORCPT
+        id S2407041AbfFKSWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:22:12 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44113 "EHLO
+        Tue, 11 Jun 2019 14:22:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46305 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405802AbfFKSWM (ORCPT
+        with ESMTP id S2405802AbfFKSWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:22:12 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so7408956pgp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:22:12 -0700 (PDT)
+        Tue, 11 Jun 2019 14:22:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v9so5706731pgr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=w+GPyWgwq3wF+11wmpSdhR0x5M0TH4NOB3dASP/5Dsg=;
-        b=ikB+TbszFd5cHriyURqfCSWha/XGtBim8PTf54Xf8gjs96SRXBJMuvScmE9MFo0TU3
-         CF1B8EXexxNak9xh7uZCFX0KTgZZzfLqhIG5OG8X54q5b3xS4m7u8cv3ot1u/JG3vroW
-         ytxSgcFcQOJ6p96vJvdTioonTYXFBoZ4kld0wI302Yj1kBL8xKosbID8ItSl0p1NRAcD
-         9l92MEmQ/E86J18Z8QE7IuwPlULVnonH+UvnCNRIamHzSX2bagxfuyvgEIid7LumCGG7
-         qKm9luewGU0cBfibDOoOuByxSO/GQvOqBX4U+R37QehV5DW93Y1mYv+zTWnfrPbmd/BL
-         cURA==
+        bh=BjqXD/m5PG7/DLaEwX43f1YffKfL3QpgfkJmrcRE+ls=;
+        b=MH1ZRE7Xg7MVcQ9tT2WxdjMWgsd+Krlz8NzJ7gNvkGpv6wU9nG+0iSuvQ3hZCIGGd5
+         8gexrMRj7EapmQccHzchJhNlIlwT1Vdh5k3g5mILOOpz1KmO5m1PYtbXu0QxqesKV5EM
+         u7CAXxCewqQjHo8xH8JeVZwTUKAle8kXqijoW2MgINDzmHHP3+u7547k/h6A/9nFf7aF
+         P3uqp6xcD1rA1ADh/KkvnjrcBksS2TsS/gPalXMrRlpoRlpPFnXeivm+bl1n+ht/w4cM
+         KCFdbCoBVvfyTWc4e0h0xsnrQczPuY0VFryI6/BsMCm3jR28fmNXTqy5OL2/RnJ+rzbh
+         nHZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=w+GPyWgwq3wF+11wmpSdhR0x5M0TH4NOB3dASP/5Dsg=;
-        b=ET5zfYGebb6MRrpZdj2o4nV56HT8UTc0MlRLgvFM4IFQBxEdPAUjZAQPXwvnbs0nId
-         BlV2GrJrvY/UdppYOQb6fPYbc9RP/l2CBHDWC4rEhDiPNchABZjpI64G3ayM4KvoB647
-         /PfirrI1zh7jSrLvZA+Jh5vBkeI1U9xnpYTVKB4yWR4kIXq/61Z+NratGucy9KTIac+o
-         z2DmZB7UyZlic1Ett8ifZAow9hNKL+wYWTqwB+P5un08clLpLDSYedlG1W7FtjdwyI1Y
-         EDDBfeHoAprRDmxlTeB7GbKRYxtrZIfChcbqlZeui6cDc9kOEfJRvc2ok4CBWpXhyats
-         82yQ==
-X-Gm-Message-State: APjAAAU5ulZqcsKHvbV8oxwNlVlW+dcDz1SO2bZTagI4JBiyTCnBKs7y
-        AO5kNSY+01bx5obwLqxup8A=
-X-Google-Smtp-Source: APXvYqzImy7uI7u3pw2kZ89UjO65/t3il5lfJt2Xgh+DiOPSquUiPqxr0vcouaXn33dXG6RKTgW4dA==
-X-Received: by 2002:a63:6948:: with SMTP id e69mr10629493pgc.441.1560277332016;
-        Tue, 11 Jun 2019 11:22:12 -0700 (PDT)
+        bh=BjqXD/m5PG7/DLaEwX43f1YffKfL3QpgfkJmrcRE+ls=;
+        b=EFR7M41KRJkWhanpqu7GT38oXvpJVBW45A43w2uHv820AEp7H2GU5HDGfRxOSRGC1/
+         PUp800cqOCJVpRho+0QBxiRiVDNjwDZYnVoqRL0v0+ihokftUdq7aTNUGqbdyyIYfBm4
+         fSudjmWV7jCOsI6rABHFtXXjDi+hHR4keKLN/vgnXYjZONUpHj0Tb3i8ouOlE4i7uUw1
+         IB7zNV4TQFmV8R1Wc1JcLuDdnyo4UqSRPgyNy34gOq67RWMWWyVDXjUu1cZYEnTXF4KM
+         o+l+vTnjx2gsNH1rG/9xZUKpZgj/j6wmMQNwQZa/XCxYoLZyvi75QrQDxjf7et1OO2kJ
+         y1YQ==
+X-Gm-Message-State: APjAAAV5WjS4uisExpJnBafQsTJLsIFAYGIw7Wm39yfQremzzZmuMLF8
+        9uaqnp6hrCjhOMNFseRqg10=
+X-Google-Smtp-Source: APXvYqyg9ioyIb6FvYiYW4hd1g5lD11XX2CCMfrWZMOJfnMwXDr72iw6gI+ydRtdO+osgzbd/rwS/w==
+X-Received: by 2002:aa7:8b12:: with SMTP id f18mr80797549pfd.178.1560277355944;
+        Tue, 11 Jun 2019 11:22:35 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id e16sm2984256pga.11.2019.06.11.11.22.09
+        by smtp.gmail.com with ESMTPSA id x17sm14885916pgk.72.2019.06.11.11.22.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 11:22:11 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 23:52:06 +0530
+        Tue, 11 Jun 2019 11:22:35 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 23:52:30 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hariprasad Kelam <hariprasad.kelam@gmail.com>,
@@ -67,9 +67,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Colin Ian King <colin.king@canonical.com>,
         Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] staging: rtl8723bs: hal: sdio_ops: fix spaces preferred
- around unary operator
-Message-ID: <20190611182206.GA7187@hari-Inspiron-1545>
+Subject: [PATCH 3/3] staging: rtl8723bs: hal: sdio_ops: fix  braces {} are
+ not necessary for single statement blocks
+Message-ID: <20190611182230.GA7208@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -79,67 +79,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CHECK: spaces preferred around that '+' (ctx:VxV)
-CHECK: spaces preferred around that '+' (ctx:VxV)
-CHECK: spaces preferred around that '+' (ctx:VxV)
-CHECK: spaces preferred around that '+' (ctx:VxV)
+This patch fixes below issue reported by checkpatch
+
+WARNING: braces {} are not necessary for single statement blocks
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/staging/rtl8723bs/hal/sdio_ops.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/staging/rtl8723bs/hal/sdio_ops.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-index baeffbb..ebd2ab8 100644
+index ebd2ab8..22bbcb7 100644
 --- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
 +++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-@@ -214,7 +214,7 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
- 
- 		ftaddr &= ~(u16)0x3;
- 		sd_read(intfhdl, ftaddr, 8, tmpbuf);
--		memcpy(&le_tmp, tmpbuf+shift, 4);
-+		memcpy(&le_tmp, tmpbuf + shift, 4);
- 		val = le32_to_cpu(le_tmp);
- 
- 		kfree(tmpbuf);
-@@ -261,7 +261,7 @@ static s32 sdio_readN(struct intf_hdl *intfhdl, u32 addr, u32 cnt, u8 *buf)
- 
- 		err = sd_read(intfhdl, ftaddr, n, tmpbuf);
- 		if (!err)
--			memcpy(buf, tmpbuf+shift, cnt);
-+			memcpy(buf, tmpbuf + shift, cnt);
- 		kfree(tmpbuf);
- 	}
- 	return err;
-@@ -366,7 +366,7 @@ static s32 sdio_writeN(struct intf_hdl *intfhdl, u32 addr, u32 cnt, u8 *buf)
- 			kfree(tmpbuf);
- 			return err;
+@@ -1045,13 +1045,11 @@ void sd_int_dpc(struct adapter *adapter)
  		}
--		memcpy(tmpbuf+shift, buf, cnt);
-+		memcpy(tmpbuf + shift, buf, cnt);
- 		err = sd_write(intfhdl, ftaddr, n, tmpbuf);
- 		kfree(tmpbuf);
- 	}
-@@ -727,8 +727,8 @@ static s32 ReadInterrupt8723BSdio(struct adapter *adapter, u32 *phisr)
- 	hisr = 0;
- 	while (hisr_len != 0) {
- 		hisr_len--;
--		val8 = SdioLocalCmd52Read1Byte(adapter, SDIO_REG_HISR+hisr_len);
--		hisr |= (val8 << (8*hisr_len));
-+		val8 = SdioLocalCmd52Read1Byte(adapter, SDIO_REG_HISR + hisr_len);
-+		hisr |= (val8 << (8 * hisr_len));
  	}
  
- 	*phisr = hisr;
-@@ -952,7 +952,7 @@ static struct recv_buf *sd_recv_rxfifo(struct adapter *adapter, u32 size)
- 			recvbuf->pskb->dev = adapter->pnetdev;
+-	if (hal->sdio_hisr & SDIO_HISR_TXBCNOK) {
++	if (hal->sdio_hisr & SDIO_HISR_TXBCNOK)
+ 		DBG_8192C("%s: SDIO_HISR_TXBCNOK\n", __func__);
+-	}
  
- 			tmpaddr = (SIZE_PTR)recvbuf->pskb->data;
--			alignment = tmpaddr & (RECVBUFF_ALIGN_SZ-1);
-+			alignment = tmpaddr & (RECVBUFF_ALIGN_SZ - 1);
- 			skb_reserve(recvbuf->pskb, (RECVBUFF_ALIGN_SZ - alignment));
- 		}
+-	if (hal->sdio_hisr & SDIO_HISR_TXBCNERR) {
++	if (hal->sdio_hisr & SDIO_HISR_TXBCNERR)
+ 		DBG_8192C("%s: SDIO_HISR_TXBCNERR\n", __func__);
+-	}
+ #ifndef CONFIG_C2H_PACKET_EN
+ 	if (hal->sdio_hisr & SDIO_HISR_C2HCMD) {
+ 		struct c2h_evt_hdr_88xx *c2h_evt;
+@@ -1077,13 +1075,12 @@ void sd_int_dpc(struct adapter *adapter)
+ 	}
+ #endif
  
+-	if (hal->sdio_hisr & SDIO_HISR_RXFOVW) {
++	if (hal->sdio_hisr & SDIO_HISR_RXFOVW)
+ 		DBG_8192C("%s: Rx Overflow\n", __func__);
+-	}
+ 
+-	if (hal->sdio_hisr & SDIO_HISR_RXERR) {
++	if (hal->sdio_hisr & SDIO_HISR_RXERR)
+ 		DBG_8192C("%s: Rx Error\n", __func__);
+-	}
++
+ 
+ 	if (hal->sdio_hisr & SDIO_HISR_RX_REQUEST) {
+ 		struct recv_buf *recvbuf;
+@@ -1143,9 +1140,8 @@ void sd_int_hdl(struct adapter *adapter)
+ 
+ 		/*  clear HISR */
+ 		v32 = hal->sdio_hisr & MASK_SDIO_HISR_CLEAR;
+-		if (v32) {
++		if (v32)
+ 			SdioLocalCmd52Write4Byte(adapter, SDIO_REG_HISR, v32);
+-		}
+ 
+ 		sd_int_dpc(adapter);
+ 	} else {
 -- 
 2.7.4
 
