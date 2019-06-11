@@ -2,175 +2,107 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A9EC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA53C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD3B21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6E2208C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhOuZSIw"
+	dkim=pass (1024-bit key) header.d=raithlin.onmicrosoft.com header.i=@raithlin.onmicrosoft.com header.b="VsLjOkbA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436469AbfFKXsH (ORCPT
+        id S2407381AbfFKX4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 19:48:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32826 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387864AbfFKXsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 19:48:06 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k187so7338312pga.0;
-        Tue, 11 Jun 2019 16:48:06 -0700 (PDT)
+        Tue, 11 Jun 2019 19:56:11 -0400
+Received: from mail-eopbgr670097.outbound.protection.outlook.com ([40.107.67.97]:63909
+        "EHLO CAN01-TO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404808AbfFKX4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 19:56:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=rQZeUVQ6RxiqAEW7WsFNWPKzRIxBC2e622V0NwiVfj8=;
-        b=JhOuZSIwFe0oFF53PYSrxKAUzLnKxYXF3enN5K3WkjEWNf5o+aXe08SIYrulbIEm6p
-         2LnH4OE/iXxG8SSqIT3JTjm8mUhsly1+F2TM+80en7Tu27EufyPEku/INQgwkNsGLAS8
-         L52ox5SXXIWN35Cnv41YbI/v0AKFWXmBzgJIu9D4bvdd4jOc7fw0OAhj4maK9UhmXi6G
-         xpbKcP4jF7f6eWuzyD4kbeoOPEOd/dMrgEryHTDwFtMrDGUhdPOCTIqzG239oezkIpPO
-         +RS5ERit+Kc+g5b26QU+lM8DKzSFvWKdiW72LNu1ii7xoBHTrKVkJHTIq71j93XyHAEZ
-         hV5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=rQZeUVQ6RxiqAEW7WsFNWPKzRIxBC2e622V0NwiVfj8=;
-        b=KPMH2cBNrXPhr/gSnNq3CZ09wWA/LrAjOoXV2hbYb6uehGWvFugJaMYMILRUXOC9aj
-         o+gkDEKE9d83ecXIwvA2ZO9/QHBhLpMPc30CpX4TZa94IOgQZnis/4noMpCK8TssT0oI
-         Fv/cGYFWjOC8sOHVou76/tWK+joxJgEbau96Q9AB8hyWqfsZK1KxRKxIq5IS6SAaTs3o
-         PEyr1UoCdlx71+B/cfxZCayDy8ckNuLCyZrDgirbBUNgtpnTfS5TjNyOCjohT+XqnujI
-         haCVtSsFsZGN4nVK21R/LquLdYYe2YCNeyTcCC72F8AOB5LYyXX86FCkvFXGtZHe6TOn
-         eyhw==
-X-Gm-Message-State: APjAAAWp7CYKtBucQBMLP6q9HM7nZfkzvIJJUDDdNC+Ffq0WHRLCM+ut
-        FueOdU0uLlSI/oU7vew3HnNrDbjq
-X-Google-Smtp-Source: APXvYqxUx2Sy7+lan8lwCnaRlwtZHr6H574ZyeXVeqnyPritVWqcquM6Z4UosS7MBUDXGzLtdeF/2Q==
-X-Received: by 2002:a63:e250:: with SMTP id y16mr21858926pgj.392.1560296886103;
-        Tue, 11 Jun 2019 16:48:06 -0700 (PDT)
-Received: from ?IPv6:2001:df0:0:200c:cd5b:7c57:228c:7f0a? ([2001:df0:0:200c:cd5b:7c57:228c:7f0a])
-        by smtp.gmail.com with ESMTPSA id i3sm15448121pfa.175.2019.06.11.16.47.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 16:48:05 -0700 (PDT)
-Subject: Re: [PATCH] NCR5380: Support chained sg lists
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
-From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <a79e01ba-e47c-6b29-3625-29bfb7122ad8@gmail.com>
-Date:   Wed, 12 Jun 2019 11:47:56 +1200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ d=raithlin.onmicrosoft.com; s=selector1-raithlin-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PLgT1++JPQi0Nu33GWU22HzN/RiC/hSZKCNg3J2n85c=;
+ b=VsLjOkbAV58pz5Ss65s2n9vGMg5+1/jAJN/UYsz2tGA3NreKD76Z398E2Q1I2AycWXmN01pIxrNIWkXvOhxox28Yox10Snu2IpZfUZ8iTHVEqCxNZ0hxqNv06Q5CSRs9vnR54wnzhZPXm+soQBVPwQuR304G4jWfdLbMpYHeom8=
+Received: from YTOPR0101MB0793.CANPRD01.PROD.OUTLOOK.COM (52.132.44.17) by
+ YTOPR0101MB2250.CANPRD01.PROD.OUTLOOK.COM (52.132.50.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Tue, 11 Jun 2019 23:56:06 +0000
+Received: from YTOPR0101MB0793.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::3535:ab58:99bd:516]) by YTOPR0101MB0793.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::3535:ab58:99bd:516%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 23:56:06 +0000
+From:   "Stephen  Bates" <sbates@raithlin.com>
+To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Jens Axboe <axboe@kernel.dk>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shhuiw@foxmail.com" <shhuiw@foxmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: [PATCH] io_uring: fix SQPOLL cpu check
+Thread-Topic: [PATCH] io_uring: fix SQPOLL cpu check
+Thread-Index: AQHVILE8MKvlFSwx2kqc/AjEamoMkQ==
+Date:   Tue, 11 Jun 2019 23:56:06 +0000
+Message-ID: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
+Accept-Language: en-CA, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/10.1a.0.190609
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sbates@raithlin.com; 
+x-originating-ip: [2001:bb6:a2c:ed58:2ca3:41e6:9240:e71d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2759eb70-7fcd-4e28-87ee-08d6eec85eb9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:YTOPR0101MB2250;
+x-ms-traffictypediagnostic: YTOPR0101MB2250:
+x-microsoft-antispam-prvs: <YTOPR0101MB22502C6E370F41EDC4E503BDAAED0@YTOPR0101MB2250.CANPRD01.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39830400003)(366004)(136003)(396003)(199004)(189003)(68736007)(76116006)(58126008)(486006)(54906003)(6506007)(476003)(6486002)(33656002)(256004)(99286004)(2616005)(2201001)(36756003)(110136005)(2501003)(316002)(102836004)(2906002)(71190400001)(305945005)(86362001)(6512007)(81166006)(81156014)(8676002)(71200400001)(8936002)(14454004)(508600001)(66476007)(66946007)(66556008)(64756008)(91956017)(4744005)(186003)(66446008)(73956011)(25786009)(5660300002)(4326008)(7736002)(53936002)(6116002)(6436002)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:YTOPR0101MB2250;H:YTOPR0101MB0793.CANPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: raithlin.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FUytEI66HLW7guPRGv0aVzJAUnXoyumZ84/l5JRlU5cPVraiBZGOoXnVzVnSePGt/oMTAfYOaFaE6rHFOvpn8pRzKXgrCgvj1a2NhmR4XgkeMME8npqI66Eq2gUIDZUBMM0hnPUBBBQydD/xwRpQEuoYM014Milf88wY+OWYWce5kuMpnEqt08sk+OSizTW/Yt5SZLzkAkvUppfUnRAJiAmYX6ZvvASmnGNiRoida/S5GdfQM94wJ9Fsy9m/NOFtL/Nzp78SsLshzb+dN0kUC2s7XZb++QJuJvLCT1Oh11CyFW6Aw0ifQ0yG/UHVnI06U0EYSfBrcFrj1cKnqh8hC/Atgf8Et50ytdGwEkvDiBIK1SUnFWRAJOvcyyZHg6e1QSyZpcoDOYpQjf47ZN/Q9pzK0E/PoH0BCkeBKf8eyqU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A3BF8340A20CD74B8B1EC0C365ADD759@CANPRD01.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: raithlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2759eb70-7fcd-4e28-87ee-08d6eec85eb9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 23:56:06.8641
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 18519031-7ff4-4cbb-bbcb-c3252d330f4b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sbates@raithlin.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YTOPR0101MB2250
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06/19 3:25 PM, Finn Thain wrote:
-
-> My understanding is that support for chained scatterlists is to
-> become mandatory for LLDs.
->
-> Cc: Michael Schmitz <schmitzmic@gmail.com>
-> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Reviewed-by: Michael Schmitz <schmitzmic@gmail.com>
-> ---
->   drivers/scsi/NCR5380.c | 41 ++++++++++++++++++-----------------------
->   1 file changed, 18 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-> index d9fa9cf2fd8b..536426f25e86 100644
-> --- a/drivers/scsi/NCR5380.c
-> +++ b/drivers/scsi/NCR5380.c
-> @@ -149,12 +149,10 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
->   
->   	if (scsi_bufflen(cmd)) {
->   		cmd->SCp.buffer = scsi_sglist(cmd);
-> -		cmd->SCp.buffers_residual = scsi_sg_count(cmd) - 1;
->   		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
->   		cmd->SCp.this_residual = cmd->SCp.buffer->length;
->   	} else {
->   		cmd->SCp.buffer = NULL;
-> -		cmd->SCp.buffers_residual = 0;
->   		cmd->SCp.ptr = NULL;
->   		cmd->SCp.this_residual = 0;
->   	}
-> @@ -163,6 +161,17 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
->   	cmd->SCp.Message = 0;
->   }
->   
-> +static inline void advance_sg_buffer(struct scsi_cmnd *cmd)
-> +{
-> +	struct scatterlist *s = cmd->SCp.buffer;
-> +
-> +	if (!cmd->SCp.this_residual && s && !sg_is_last(s)) {
-> +		cmd->SCp.buffer = sg_next(s);
-> +		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
-> +		cmd->SCp.this_residual = cmd->SCp.buffer->length;
-> +	}
-> +}
-> +
->   /**
->    * NCR5380_poll_politely2 - wait for two chip register values
->    * @hostdata: host private data
-> @@ -1670,12 +1679,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->   			    sun3_dma_setup_done != cmd) {
->   				int count;
->   
-> -				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
-> -					++cmd->SCp.buffer;
-> -					--cmd->SCp.buffers_residual;
-> -					cmd->SCp.this_residual = cmd->SCp.buffer->length;
-> -					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
-> -				}
-> +				advance_sg_buffer(cmd);
->   
->   				count = sun3scsi_dma_xfer_len(hostdata, cmd);
->   
-> @@ -1725,15 +1729,11 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->   				 * scatter-gather list, move onto the next one.
->   				 */
->   
-> -				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
-> -					++cmd->SCp.buffer;
-> -					--cmd->SCp.buffers_residual;
-> -					cmd->SCp.this_residual = cmd->SCp.buffer->length;
-> -					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
-> -					dsprintk(NDEBUG_INFORMATION, instance, "%d bytes and %d buffers left\n",
-> -					         cmd->SCp.this_residual,
-> -					         cmd->SCp.buffers_residual);
-> -				}
-> +				advance_sg_buffer(cmd);
-> +				dsprintk(NDEBUG_INFORMATION, instance,
-> +					"this residual %d, sg ents %d\n",
-> +					cmd->SCp.this_residual,
-> +					sg_nents(cmd->SCp.buffer));
->   
->   				/*
->   				 * The preferred transfer method is going to be
-> @@ -2126,12 +2126,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
->   	if (sun3_dma_setup_done != tmp) {
->   		int count;
->   
-> -		if (!tmp->SCp.this_residual && tmp->SCp.buffers_residual) {
-> -			++tmp->SCp.buffer;
-> -			--tmp->SCp.buffers_residual;
-> -			tmp->SCp.this_residual = tmp->SCp.buffer->length;
-> -			tmp->SCp.ptr = sg_virt(tmp->SCp.buffer);
-> -		}
-> +		advance_sg_buffer(tmp);
->   
->   		count = sun3scsi_dma_xfer_len(hostdata, tmp);
->   
+VGhlIGFycmF5X2luZGV4X25vc3BlYygpIGNoZWNrIGluIGlvX3NxX29mZmxvYWRfc3RhcnQoKSBp
+cyBwZXJmb3JtZWQNCmJlZm9yZSBhbnkgY2hlY2tzIG9uIHAtPnNxX3RocmVhZF9jcHUgYXJlIGRv
+bmUuIFRoaXMgbWVhbnMgY3B1IGlzDQpjbGFtcGVkIGFuZCB0aGVyZWZvcmUgbm8gZXJyb3Igb2Nj
+dXJzIHdoZW4gb3V0LW9mLXJhbmdlIHZhbHVlcyBhcmUNCnBhc3NlZCBpbiBmcm9tIHVzZXJzcGFj
+ZS4gVGhpcyBpcyBpbiB2aW9sYXRpb24gb2YgdGhlIHNwZWNpZmljYXRpb24NCmZvciBpb19yaW5n
+X3NldHVwKCkgYW5kIGNhdXNlcyB0aGUgaW9fcmluZ19zZXR1cCB1bml0IHRlc3QgaW4gbGlidXJp
+bmcNCnRvIHJlZ3Jlc3MuDQoNCkFkZCBhIG5ldyBib3VuZHMgY2hlY2sgb24gc3FfdGhyZWFkX2Nw
+dSBhdCB0aGUgc3RhcnQgb2YNCmlvX3NxX29mZmxvYWRfc3RhcnQoKSBzbyB3ZSBjYW4gZXhpdCB0
+aGUgZnVuY3Rpb24gZWFybHkgd2hlbiBiYWQNCnZhbHVlcyBhcmUgcGFzc2VkIGluLg0KDQpGaXhl
+czogOTc1NTU0YjAzZWRkICgiaW9fdXJpbmc6IGZpeCBTUVBPTEwgY3B1IHZhbGlkYXRpb24iKQ0K
+U2lnbmVkLW9mZi1ieTogU3RlcGhlbiBCYXRlcyA8c2JhdGVzQHJhaXRobGluLmNvbT4NCi0tLQ0K
+IGZzL2lvX3VyaW5nLmMgfCAzICsrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykN
+Cg0KZGlmZiAtLWdpdCBhL2ZzL2lvX3VyaW5nLmMgYi9mcy9pb191cmluZy5jDQppbmRleCAzMGE1
+Njg3Li5lNDU4NDcwIDEwMDY0NA0KLS0tIGEvZnMvaW9fdXJpbmcuYw0KKysrIGIvZnMvaW9fdXJp
+bmcuYw0KQEAgLTIzMTYsNiArMjMxNiw5IEBAIHN0YXRpYyBpbnQgaW9fc3Ffb2ZmbG9hZF9zdGFy
+dChzdHJ1Y3QgaW9fcmluZ19jdHggKmN0eCwNCiB7DQogCWludCByZXQ7DQogDQorCWlmIChwLT5z
+cV90aHJlYWRfY3B1ID49IG5yX2NwdV9pZHMpDQorCQlyZXR1cm4gLUVJTlZBTDsNCisNCiAJaW5p
+dF93YWl0cXVldWVfaGVhZCgmY3R4LT5zcW9fd2FpdCk7DQogCW1tZ3JhYihjdXJyZW50LT5tbSk7
+DQogCWN0eC0+c3FvX21tID0gY3VycmVudC0+bW07DQotLSANCjIuNy40DQoNCg==
