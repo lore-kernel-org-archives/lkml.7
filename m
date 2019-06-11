@@ -2,129 +2,107 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B91BC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B90C0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A36F2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444092173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560274812;
+	bh=7PcY0EB4mUu+r7OtLkjmpV2IMEEFbqL3M5c9HsmDC2o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fhmmNJhj7cC72juger3mqZO2oUYf7PFer8IegrS8kxplDurvBxe9nYQuhLI72ZnBZ
+	 4GglePUbmXpzUKvZYOrucDBLQnfHdZOSb5RvzLbUxTqPiLRU7jFCPyrr1D+Z4yAjKK
+	 hOfhYSpzIW3O59KL2FOYOxL61Tyswe8wv+s0b9PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406437AbfFKRjN (ORCPT
+        id S2406292AbfFKRkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:39:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:38942 "EHLO foss.arm.com"
+        Tue, 11 Jun 2019 13:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406416AbfFKRjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:39:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBF6D337;
-        Tue, 11 Jun 2019 10:39:11 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B7793F73C;
-        Tue, 11 Jun 2019 10:39:06 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 18:39:04 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v16 02/16] arm64: untag user pointers in access_ok and
- __uaccess_mask_ptr
-Message-ID: <20190611173903.4icrfmoyfvms35cy@mbp>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <4327b260fb17c4776a1e3c844f388e4948cfb747.1559580831.git.andreyknvl@google.com>
- <20190610175326.GC25803@arrakis.emea.arm.com>
- <20190611145720.GA63588@arrakis.emea.arm.com>
- <CAAeHK+z5nSOOaGfehETzznNcMq5E5U+Eb1rZE16UVsT8FWT0Vg@mail.gmail.com>
+        id S2406516AbfFKRkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:40:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ADC121734;
+        Tue, 11 Jun 2019 17:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560274809;
+        bh=7PcY0EB4mUu+r7OtLkjmpV2IMEEFbqL3M5c9HsmDC2o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hilj4TLKJUBRur0VtMtD1jRI59k82d/x3tlS47V0p3Ewyq6faSWP2wRMyjZeeiKNv
+         JHsuqb9RSeMTtIIJlQHRxgbSPXWliKarZrjZ5KnaKoy0mHJomejexmT8s/T/51J3hz
+         JFkxQODOJOqrOoV0cLrC6i8lLgQS1ECa5Hegm4Rg=
+Date:   Tue, 11 Jun 2019 19:40:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Sven Joachim <svenjoac@gmx.de>, stable <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Airlie <airlied@redhat.com>
+Subject: Re: Linux 5.1.9 build failure with
+ CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n
+Message-ID: <20190611174006.GB31662@kroah.com>
+References: <87k1dsjkdo.fsf@turtle.gmx.de>
+ <20190611153656.GA5084@kroah.com>
+ <CAKMK7uH_3P3pYkJ9Ua4hOFno5UiQ4p-rdWu9tPO75MxGCbyXSA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAeHK+z5nSOOaGfehETzznNcMq5E5U+Eb1rZE16UVsT8FWT0Vg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAKMK7uH_3P3pYkJ9Ua4hOFno5UiQ4p-rdWu9tPO75MxGCbyXSA@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 07:09:46PM +0200, Andrey Konovalov wrote:
-> On Tue, Jun 11, 2019 at 4:57 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> >
-> > On Mon, Jun 10, 2019 at 06:53:27PM +0100, Catalin Marinas wrote:
-> > > On Mon, Jun 03, 2019 at 06:55:04PM +0200, Andrey Konovalov wrote:
-> > > > diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
-> > > > index e5d5f31c6d36..9164ecb5feca 100644
-> > > > --- a/arch/arm64/include/asm/uaccess.h
-> > > > +++ b/arch/arm64/include/asm/uaccess.h
-> > > > @@ -94,7 +94,7 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
-> > > >     return ret;
-> > > >  }
-> > > >
-> > > > -#define access_ok(addr, size)      __range_ok(addr, size)
-> > > > +#define access_ok(addr, size)      __range_ok(untagged_addr(addr), size)
+On Tue, Jun 11, 2019 at 07:33:16PM +0200, Daniel Vetter wrote:
+> On Tue, Jun 11, 2019 at 5:37 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Tue, Jun 11, 2019 at 03:56:35PM +0200, Sven Joachim wrote:
+> > > Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
+> > > legacy contexts. (v3)") has caused a build failure for me when I
+> > > actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
 > > >
-> > > I'm going to propose an opt-in method here (RFC for now). We can't have
-> > > a check in untagged_addr() since this is already used throughout the
-> > > kernel for both user and kernel addresses (khwasan) but we can add one
-> > > in __range_ok(). The same prctl() option will be used for controlling
-> > > the precise/imprecise mode of MTE later on. We can use a TIF_ flag here
-> > > assuming that this will be called early on and any cloned thread will
-> > > inherit this.
-> >
-> > Updated patch, inlining it below. Once we agreed on the approach, I
-> > think Andrey can insert in in this series, probably after patch 2. The
-> > differences from the one I posted yesterday:
-> >
-> > - renamed PR_* macros together with get/set variants and the possibility
-> >   to disable the relaxed ABI
-> >
-> > - sysctl option - /proc/sys/abi/tagged_addr to disable the ABI globally
-> >   (just the prctl() opt-in, tasks already using it won't be affected)
-> >
-> > And, of course, it needs more testing.
+> > > ,----
+> > > | Kernel: arch/x86/boot/bzImage is ready  (#1)
+> > > |   Building modules, stage 2.
+> > > |   MODPOST 290 modules
+> > > | ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
+> > > | scripts/Makefile.modpost:91: recipe for target '__modpost' failed
+> > > `----
 > 
-> Sure, I'll add it to the series.
+> Calling drm_legacy_mmap is definitely not a great idea. I think either
+> we need a custom patch to remove that out on older kernels, or maybe
+> even #ifdef if you want to be super paranoid about breaking stuff ...
 > 
-> Should I drop access_ok() change from my patch, since yours just reverts it?
+> > > Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
+> > > Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
+> > > drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
+> > > apply in 5.1.9.
+> > >
+> > > Most likely 4.19.50 and 4.14.125 are also affected, I haven't tested
+> > > them yet.
+> >
+> > They probably are.
+> >
+> > Should I just revert this patch in the stable tree, or add some other
+> > patch (like the one pointed out here, which seems an odd patch for
+> > stable...)
+> 
+> ... or backport the above patch, that should be save to do too. Not
+> sure what stable folks prefer?
 
-Not necessary, your patch just relaxes the ABI for all apps, mine
-tightens it. You could instead move the untagging to __range_ok() and
-rebase my patch accordingly.
+The above patch does not apply to all of the stable branches, so how
+about I just revert this?  People can live with this option not able to
+turn off for now, and if they really want it, they can use a newer
+kernel, right?
 
--- 
-Catalin
+thanks,
+
+greg k-h
