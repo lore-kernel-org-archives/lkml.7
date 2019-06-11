@@ -2,110 +2,102 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF9BC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE30C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE5D2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91E02173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AkAgROt9"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="CtAwYJF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392111AbfFKWaX (ORCPT
+        id S2404168AbfFKWa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:30:23 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35816 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392091AbfFKWaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:30:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s27so7751281pgl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 15:30:22 -0700 (PDT)
+        Tue, 11 Jun 2019 18:30:29 -0400
+Received: from mail-eopbgr750139.outbound.protection.outlook.com ([40.107.75.139]:23190
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2392112AbfFKWa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:30:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3nJbbRKlTPYM1woarvu6grRc9TzO5KmCP13nZ/PCJ6c=;
-        b=AkAgROt9atHwV3xoI9VjaZrzZaaO5howAWh2priY04W1eiUwPse4i9GNmq6QF62bfM
-         MjEIEYGjhwP96quM3HMtr3Th7Fkvo1GgNOmUIQgHXmbm147RCQC4UZxj1RlLETex3AUi
-         Ks7ioq3D9bjZkjE4COgReB+rkRk03RcrgiW1E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3nJbbRKlTPYM1woarvu6grRc9TzO5KmCP13nZ/PCJ6c=;
-        b=mIJY7zXEyv0ZIkDXXqr6N3PtaQ4M8N5e9B79EIWHOyco127h2nLq+cKqwIHG0m+0qc
-         HYomm2aY28/Qi7mHXX9EFEXkpRJ8k6bkx/ELzrd0CeC1NlUxO5xGpbSt2EGjSy/fhKOT
-         OboentJ41pSZ9cPRQVlx6uvf0fZqgYstPjBfklqiupI1qQS+Z4POWlv1Cy6828QfwPgE
-         Drj4ulYXIKdszVcTCV9gLY8DSSVS1T0QeOjkzqOIqQPcbDTVC8v1Xcm7as10mBBJKnWA
-         cqE4SmMNzgnsTjz4Jr0xzM3Jkjd8mXWUuHQ5HHqbp5EjKAyxxmmiJSVcYMhbLLFEATXS
-         rZ7w==
-X-Gm-Message-State: APjAAAW4tza4na3OBgu+PuISZuJ9qoqr90huJ83XRr5oEgg8soIw85ty
-        0gHIbGzc5DceQ17CjaS6HUd30A==
-X-Google-Smtp-Source: APXvYqzPGqvHJEEW8KGadINzmMV1t9wKDJZxZqs3Q4ilQ1+NwSxiG1GZwT6wk/dEzb5udw5jUepoxQ==
-X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr28582703pje.123.1560292222289;
-        Tue, 11 Jun 2019 15:30:22 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id a13sm8937301pgh.6.2019.06.11.15.30.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 15:30:20 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 15:30:19 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Brian Norris <briannorris@google.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Doug Anderson <dianders@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Guenter Roeck <groeck@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com
-Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
- linearly to human eye.
-Message-ID: <20190611223019.GH137143@google.com>
-References: <20180208113032.27810-1-enric.balletbo@collabora.com>
- <20180208113032.27810-4-enric.balletbo@collabora.com>
- <20190607220947.GR40515@google.com>
- <20190608210226.GB2359@xo-6d-61-c0.localdomain>
- <20190610205233.GB137143@google.com>
- <20190611104913.egsbwcedshjdy3m5@holly.lan>
- <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PSKch9pAjX7S4XLgSqDkmTqW8yTRUUfmXjtxyR6xbKk=;
+ b=CtAwYJF1S9rhGzmI1R1rUvW8Q0lXLb6AgFhjzYIRNVNxBYMuVU8tUWVUNamgbEV9Q0R1Sn2tPsGA465AwP49SZsWppA5g77JatiWtu1sM9xPDlLW2K7mCn0Jz0OqxB/PIpGRAKnYzy+rCq2R46xmFv7380Y5ez7Emv/+/eQhMik=
+Received: from CY4PR2201MB1272.namprd22.prod.outlook.com (10.171.214.23) by
+ CY4PR2201MB1014.namprd22.prod.outlook.com (10.171.220.163) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Tue, 11 Jun 2019 22:30:25 +0000
+Received: from CY4PR2201MB1272.namprd22.prod.outlook.com
+ ([fe80::d571:f49f:6a5c:4962]) by CY4PR2201MB1272.namprd22.prod.outlook.com
+ ([fe80::d571:f49f:6a5c:4962%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 22:30:25 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: ftrace: Reword prepare_ftrace_return() comment
+ block
+Thread-Topic: [PATCH] MIPS: ftrace: Reword prepare_ftrace_return() comment
+ block
+Thread-Index: AQHVHSVJKYmUWPtEQE6QKD+e1RbfTqaXEDmA
+Date:   Tue, 11 Jun 2019 22:30:25 +0000
+Message-ID: <CY4PR2201MB127245FB035671563D1BD9ACC1ED0@CY4PR2201MB1272.namprd22.prod.outlook.com>
+References: <20190607113640.15191-1-geert+renesas@glider.be>
+In-Reply-To: <20190607113640.15191-1-geert+renesas@glider.be>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR03CA0017.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::27) To CY4PR2201MB1272.namprd22.prod.outlook.com
+ (2603:10b6:910:6e::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: de730ac6-6485-49ae-ef90-08d6eebc65d7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CY4PR2201MB1014;
+x-ms-traffictypediagnostic: CY4PR2201MB1014:
+x-microsoft-antispam-prvs: <CY4PR2201MB101476346479E74A434F5E81C1ED0@CY4PR2201MB1014.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(366004)(39840400004)(346002)(199004)(189003)(476003)(8676002)(446003)(486006)(4326008)(11346002)(7696005)(2906002)(6506007)(386003)(26005)(52116002)(102836004)(316002)(76176011)(66066001)(68736007)(6116002)(99286004)(33656002)(3846002)(55016002)(44832011)(9686003)(186003)(6246003)(305945005)(66476007)(54906003)(52536014)(71200400001)(71190400001)(66556008)(64756008)(66946007)(7736002)(66446008)(5660300002)(8936002)(25786009)(14454004)(73956011)(53936002)(74316002)(478600001)(42882007)(229853002)(81166006)(81156014)(558084003)(6436002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1014;H:CY4PR2201MB1272.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mteBN8MtZBBb0WVB8lS09dzrxDWAROcj5H6loKXUV+T8uR/R3Xvyo9KIjNBjwYwLWWOd03rAQ+gD/6/Tpw5Gr4LdlPnKDJSyMdldjycjDtPxumCvZAIaXVVrEMqehriiOfF1MphEy0cjploBOyB+13nnZdsAWsFUAFUI9LAXUYLbVAToPiLsv71JDLp3AvhWnX9V/NtWgfZW8+YK+AuqylK19Q7f5bOm5AvlWojM3Ao6SvAU71lZckG2LYJTxi04er4IqylXTi40L98ldmYRo3I0Gr2sB7QS2P5icaYfM7m4buf31g2ZkdMBBvXfRMR+pZbOMzlZnf/2/ahdZbatkiclRGNTAJPCRFzlTAMvKTSHSHC5FTAvvkXPxaowLZjuAdzxePdeDiPaT/BzYT6N3qcI1D65m5krO0jCGVLurX0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de730ac6-6485-49ae-ef90-08d6eebc65d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 22:30:25.3630
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 09:55:30AM -0700, Brian Norris wrote:
-> On Tue, Jun 11, 2019 at 3:49 AM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> > This is a long standing flaw in the backlight interfaces. AFAIK generic
-> > userspaces end up with a (flawed) heuristic.
-> 
-> Bingo! Would be nice if we could start to fix this long-standing flaw.
-
-Agreed!
-
-How could a fix look like, a sysfs attribute? Would a boolean value
-like 'logarithmic_scale' or 'linear_scale' be enough or could more
-granularity be needed?
-
-The new attribute could be optional (it only exists if explicitly
-specified by the driver) or be set to a default based on a heuristic
-if not specified and be 'fixed' on a case by case basis. The latter
-might violate "don't break userspace" though, so I'm not sure it's a
-good idea.
+SGVsbG8sDQoNCkdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4gSW1wcm92ZSB0aGUgY29tbWVu
+dCBibG9jayBmb3IgcHJlcGFyZV9mdHJhY2VfcmV0dXJuKCkuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
+OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KDQpBcHBsaWVk
+IHRvIG1pcHMtbmV4dC4NCg0KVGhhbmtzLA0KICAgIFBhdWwNCg0KWyBUaGlzIG1lc3NhZ2Ugd2Fz
+IGF1dG8tZ2VuZXJhdGVkOyBpZiB5b3UgYmVsaWV2ZSBhbnl0aGluZyBpcyBpbmNvcnJlY3QNCiAg
+dGhlbiBwbGVhc2UgZW1haWwgcGF1bC5idXJ0b25AbWlwcy5jb20gdG8gcmVwb3J0IGl0LiBdDQo=
