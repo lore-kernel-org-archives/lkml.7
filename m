@@ -2,99 +2,100 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658B6C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6489DC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E6B212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560237632;
-	bh=A6Gg0KGw/+9WbdgZDB3FBl1rwLrEFluqXrCtKVr6q5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rRJfD7EHmyNp5xeSleEtrkWzDihCdIXDoXp8IMTor+54RW9VgjH1jVt/RZ/Ai6Oe5
-	 c71AMv5BywO0/ajmwHRNPHE2JRO6DihFW3iyRVmYmiG3ZziMP9vIpRq95YJ3f2KOvT
-	 ZeaQPolOvfDbCv5TzubHqZnXxnMD4mqocPu9LA5E=
+	by mail.kernel.org (Postfix) with ESMTP id 38DAB2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404299AbfFKHUU (ORCPT
+        id S2404347AbfFKHUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:20:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52598 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 03:20:37 -0400
+Received: from shell.v3.sk ([90.176.6.54]:60852 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404279AbfFKHUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:20:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6854D2086D;
-        Tue, 11 Jun 2019 07:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560237617;
-        bh=A6Gg0KGw/+9WbdgZDB3FBl1rwLrEFluqXrCtKVr6q5Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rp4s/cwTvhpotEafDiSCBxwwG57+Tz0FM/y63j/l51/Pvcd1VU0nP2Sg7UaM9/9uT
-         +CGfIOgDoQ3hDtpBrh6w2lvzUNe/FQUONWZKQYQvf2BIVlTMS4e+L1fDf+y1k0+maB
-         HQ23nMK4FbV2Oz+a0uepd2AngQUCG0iVo3pVraGQ=
-Date:   Tue, 11 Jun 2019 09:20:10 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Shilovskiy <pshilov@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Christoph Probst <kernel@probst.it>,
-        Steven French <Steven.French@microsoft.com>
-Subject: Re: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and reduce
- raciness in smb21_set_oplock_level()
-Message-ID: <20190611072010.GA10581@kroah.com>
-References: <20190609164147.729157653@linuxfoundation.org>
- <20190609164148.958546130@linuxfoundation.org>
- <BYAPR21MB130347F749FFEC7025DA5710B6130@BYAPR21MB1303.namprd21.prod.outlook.com>
+        id S2404319AbfFKHUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 03:20:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id B6A85104F7E;
+        Tue, 11 Jun 2019 09:20:31 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id u2YoUcM1_rmB; Tue, 11 Jun 2019 09:20:12 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 56CC8104F75;
+        Tue, 11 Jun 2019 09:20:11 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id TwDhlqFSGqW1; Tue, 11 Jun 2019 09:20:09 +0200 (CEST)
+Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id D1A02104F6E;
+        Tue, 11 Jun 2019 09:20:08 +0200 (CEST)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     John Crispin <john@phrozen.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] pinctrl: lantiq: Switch to SPDX header
+Date:   Tue, 11 Jun 2019 09:20:04 +0200
+Message-Id: <20190611072004.2978373-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB130347F749FFEC7025DA5710B6130@BYAPR21MB1303.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 07:13:24PM +0000, Pavel Shilovskiy wrote:
-> 
-> -----Original Message-----
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org> 
-> Sent: Sunday, June 9, 2019 9:40 AM
-> To: linux-kernel@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; stable@vger.kernel.org; Christoph Probst <kernel@probst.it>; Pavel Shilovskiy <pshilov@microsoft.com>; Steven French <Steven.French@microsoft.com>
-> Subject: [PATCH 4.4 041/241] cifs: fix strcat buffer overflow and reduce raciness in smb21_set_oplock_level()
-> 
-> From: Christoph Probst <kernel@probst.it>
-> 
-> commit 6a54b2e002c9d00b398d35724c79f9fe0d9b38fb upstream.
-> 
-> Change strcat to strncpy in the "None" case to fix a buffer overflow when cinode->oplock is reset to 0 by another thread accessing the same cinode. It is never valid to append "None" to any other message.
-> 
-> Consolidate multiple writes to cinode->oplock to reduce raciness.
-> 
-> Signed-off-by: Christoph Probst <kernel@probst.it>
-> Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-> Signed-off-by: Steve French <stfrench@microsoft.com>
-> CC: Stable <stable@vger.kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> --------------------------------
-> 
-> Hi Greg,
-> 
-> This patch has been queued for 4.4.y and has already been merged into
-> 5.1.y (5.1.5). Are you going to apply it to other stable kernels: 4.9,
-> 4.14, 4.19?
+The original license text had a typo ("publishhed") which would be
+likely to confuse automated licensing auditing tools. Let's just switch
+to SPDX instead of fixing the wording.
 
-It is already in the 4.9.179, 4.14.122, 4.19.46, 5.0.19, and 5.1.5
-released kernels.  So I don't think I can merge it into them again :)
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/pinctrl/pinctrl-lantiq.c | 5 +----
+ drivers/pinctrl/pinctrl-lantiq.h | 5 +----
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
-thanks,
+diff --git a/drivers/pinctrl/pinctrl-lantiq.c b/drivers/pinctrl/pinctrl-l=
+antiq.c
+index 22e80613e269..029e0aecb8d8 100644
+--- a/drivers/pinctrl/pinctrl-lantiq.c
++++ b/drivers/pinctrl/pinctrl-lantiq.c
+@@ -1,11 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  *  linux/drivers/pinctrl/pinctrl-lantiq.c
+  *  based on linux/drivers/pinctrl/pinctrl-pxa3xx.c
+  *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License version 2 as
+- *  publishhed by the Free Software Foundation.
+- *
+  *  Copyright (C) 2012 John Crispin <john@phrozen.org>
+  */
+=20
+diff --git a/drivers/pinctrl/pinctrl-lantiq.h b/drivers/pinctrl/pinctrl-l=
+antiq.h
+index 0e4308b8f235..d6530838fca8 100644
+--- a/drivers/pinctrl/pinctrl-lantiq.h
++++ b/drivers/pinctrl/pinctrl-lantiq.h
+@@ -1,11 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  *  linux/drivers/pinctrl/pinctrl-lantiq.h
+  *  based on linux/drivers/pinctrl/pinctrl-pxa3xx.h
+  *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License version 2 as
+- *  publishhed by the Free Software Foundation.
+- *
+  *  Copyright (C) 2012 John Crispin <john@phrozen.org>
+  */
+=20
+--=20
+2.21.0
 
-greg k-h
