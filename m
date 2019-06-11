@@ -2,215 +2,112 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BDBC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B830C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C93420673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC0E20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aLUiKbmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390224AbfFKNLg (ORCPT
+        id S2390311AbfFKNLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:11:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41482 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfFKNLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:11:35 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 875513082E6A;
-        Tue, 11 Jun 2019 13:11:19 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 374A45D704;
-        Tue, 11 Jun 2019 13:11:08 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 4A3B74EBC9;
-        Tue, 11 Jun 2019 13:10:59 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 09:10:58 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     cohuck@redhat.com, jack@suse.cz, kvm@vger.kernel.org,
-        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
-        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-        dm-devel@redhat.com, adilger kernel <adilger.kernel@dilger.ca>,
-        zwisler@kernel.org, aarcange@redhat.com,
-        dave jiang <dave.jiang@intel.com>, jstaron@google.com,
-        linux-nvdimm@lists.01.org,
-        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
-        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
-        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
-        kilobyte@angband.pl, rdunlap@infradead.org, riel@surriel.com,
-        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
-        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
-        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
-        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
-Message-ID: <1206355816.34396746.1560258658768.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190610192803.GA29002@redhat.com>
-References: <20190610090730.8589-1-pagupta@redhat.com> <20190610090730.8589-5-pagupta@redhat.com> <20190610192803.GA29002@redhat.com>
-Subject: Re: [Qemu-devel] [PATCH v11 4/7] dm: enable synchronous dax
+        Tue, 11 Jun 2019 09:11:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52698 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390242AbfFKNLr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:11:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mXp7GfOu1REQRIFlq9C+d+O/GeRzxbASf2pcGXMeKhE=; b=aLUiKbmukQrL/U1LPPsjrJ+0O
+        ChvbrLtjGXC9SZMNEwtoYmpcNyyDqle2WwDidzWiQWLzhoa9T32xbRnaVLVfxFK74e+Anw3A5VEjt
+        jDaP5+mB0EJ06W8qaX2r7RPVnEuQQJsxzypyMOJBHFk7N4HTy70/y5+3yiPba78ttKqxOqh4dtjgH
+        oUEjUgsgyIt1qrKrQejBbhQaIyihLg/BgSbQHlQcMo9ZjWw9bLo6xzQuNA0j35JKGZfVaA1anIUQl
+        +1CucbkmJ7uiPq0KleCAQAlstwyoaO3/7siMLbq33B0/vqbIBEiKQKI71xc64Gqipdd5QTm2ulEn3
+        7/pygxh+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hagYn-0003q6-H1; Tue, 11 Jun 2019 13:11:34 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 661F920234FA3; Tue, 11 Jun 2019 15:11:31 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 15:11:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v8 16/19] locking/rwsem: Guard against making count
+ negative
+Message-ID: <20190611131131.GG3402@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-1-longman@redhat.com>
+ <20190520205918.22251-17-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.33, 10.4.195.27]
-Thread-Topic: enable synchronous dax
-Thread-Index: 9TyGIIOSkuHn9exFInDwoSOU8/oLjA==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 11 Jun 2019 13:11:34 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520205918.22251-17-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+On Mon, May 20, 2019 at 04:59:15PM -0400, Waiman Long wrote:
 
-Thanks for the review Please find my reply inline.
+> +static inline long rwsem_read_trylock(struct rw_semaphore *sem, long *cnt)
+> +{
+> +	long adjustment = -RWSEM_READER_BIAS;
+> +
+> +	*cnt = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS, &sem->count);
 
-> 
-> dm_table_supports_dax() is called multiple times (from
-> dm_table_set_restrictions and dm_table_determine_type).  It is strange
-> to have a getter have a side-effect of being a setter too.  Overloading
-> like this could get you in trouble in the future.
-> 
-> Are you certain this is what you want?
+I'm thinking we'd actually want add_return_acquire() here.
 
-I agree with you.
+> +	if (unlikely(*cnt < 0)) {
+> +		atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
+> +		adjustment = 0;
+> +	}
+> +	return adjustment;
+> +}
 
-> 
-> Or would it be better to refactor dm_table_supports_dax() to take an
-> iterate_devices_fn arg and have callers pass the appropriate function?
-> Then have dm_table_set_restrictions() caller do:
-> 
->      if (dm_table_supports_dax(t, device_synchronous, NULL))
->                set_dax_synchronous(t->md->dax_dev);
-> 
-> (NULL arg implies dm_table_supports_dax() refactoring would take a int
-> *data pointer rather than int type).
-> 
-> Mike
-> 
+> @@ -1271,9 +1332,10 @@ static struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem)
+>   */
+>  inline void __down_read(struct rw_semaphore *sem)
+>  {
+> +	long tmp, adjustment = rwsem_read_trylock(sem, &tmp);
+> +
+> +	if (unlikely(tmp & RWSEM_READ_FAILED_MASK)) {
+> +		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE, adjustment);
+>  		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+>  	} else {
+>  		rwsem_set_reader_owned(sem);
+> @@ -1282,9 +1344,11 @@ inline void __down_read(struct rw_semaphore *sem)
+>  
+>  static inline int __down_read_killable(struct rw_semaphore *sem)
+>  {
+> +	long tmp, adjustment = rwsem_read_trylock(sem, &tmp);
+> +
+> +	if (unlikely(tmp & RWSEM_READ_FAILED_MASK)) {
+> +		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE,
+> +						    adjustment)))
+>  			return -EINTR;
+>  		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+>  	} else {
 
-I am sending below patch as per your suggestion. Does it look
-near to what you have in mind?
+I'm confused by the need for @tmp; isn't that returning the exact same
+state !adjustment is?
 
-Thank you,
-Pankaj
-
-===============
-
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 350cf0451456..8d89acc8b8c2 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -881,7 +881,7 @@ void dm_table_set_type(struct dm_table *t, enum dm_queue_mode type)
- EXPORT_SYMBOL_GPL(dm_table_set_type);
-
- /* validate the dax capability of the target device span */
--static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
-+int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
-                                       sector_t start, sector_t len, void *data)
- {
-        int blocksize = *(int *) data;
-@@ -890,7 +890,15 @@ static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
-                        start, len);
- }
-
--bool dm_table_supports_dax(struct dm_table *t, int blocksize)
-+/* Check devices support synchronous DAX */
-+static int device_synchronous(struct dm_target *ti, struct dm_dev *dev,
-+                                      sector_t start, sector_t len, void *data)
-+{
-+       return dax_synchronous(dev->dax_dev);
-+}
-+
-+bool dm_table_supports_dax(struct dm_table *t,
-+                         iterate_devices_callout_fn iterate_fn, int *blocksize)
- {
-        struct dm_target *ti;
-        unsigned i;
-@@ -903,8 +911,7 @@ bool dm_table_supports_dax(struct dm_table *t, int blocksize)
-                        return false;
-
-                if (!ti->type->iterate_devices ||
--                   !ti->type->iterate_devices(ti, device_supports_dax,
--                           &blocksize))
-+                       !ti->type->iterate_devices(ti, iterate_fn, blocksize))
-                        return false;
-        }
-
-@@ -940,6 +947,7 @@ static int dm_table_determine_type(struct dm_table *t)
-        struct dm_target *tgt;
-        struct list_head *devices = dm_table_get_devices(t);
-        enum dm_queue_mode live_md_type = dm_get_md_type(t->md);
-+       int page_size = PAGE_SIZE;
-
-        if (t->type != DM_TYPE_NONE) {
-                /* target already set the table's type */
-@@ -984,7 +992,7 @@ static int dm_table_determine_type(struct dm_table *t)
- verify_bio_based:
-                /* We must use this table as bio-based */
-                t->type = DM_TYPE_BIO_BASED;
--               if (dm_table_supports_dax(t, PAGE_SIZE) ||
-+               if (dm_table_supports_dax(t, device_supports_dax, &page_size) ||
-                    (list_empty(devices) && live_md_type == DM_TYPE_DAX_BIO_BASED)) {
-                        t->type = DM_TYPE_DAX_BIO_BASED;
-                } else {
-@@ -1883,6 +1891,7 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
-                               struct queue_limits *limits)
- {
-        bool wc = false, fua = false;
-+       int page_size = PAGE_SIZE;
-
-        /*
-         * Copy table's limits to the DM device's request_queue
-@@ -1910,8 +1919,13 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
-        }
-        blk_queue_write_cache(q, wc, fua);
-
--       if (dm_table_supports_dax(t, PAGE_SIZE))
-+       if (dm_table_supports_dax(t, device_supports_dax, &page_size)) {
-+
-                blk_queue_flag_set(QUEUE_FLAG_DAX, q);
-+               if (dm_table_supports_dax(t, device_synchronous, NULL))
-+                       set_dax_synchronous(t->md->dax_dev);
-+       }
-        else
-                blk_queue_flag_clear(QUEUE_FLAG_DAX, q);
-
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index b1caa7188209..b92c42a72ad4 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1119,7 +1119,7 @@ static bool dm_dax_supported(struct dax_device *dax_dev, struct block_device *bd
-        if (!map)
-                return false;
-
--       ret = dm_table_supports_dax(map, blocksize);
-+       ret = dm_table_supports_dax(map, device_supports_dax, &blocksize);
-
-        dm_put_live_table(md, srcu_idx);
-
-diff --git a/drivers/md/dm.h b/drivers/md/dm.h
-index 17e3db54404c..0475673337f3 100644
---- a/drivers/md/dm.h
-+++ b/drivers/md/dm.h
-@@ -72,7 +72,10 @@ bool dm_table_bio_based(struct dm_table *t);
- bool dm_table_request_based(struct dm_table *t);
- void dm_table_free_md_mempools(struct dm_table *t);
- struct dm_md_mempools *dm_table_get_md_mempools(struct dm_table *t);
--bool dm_table_supports_dax(struct dm_table *t, int blocksize);
-+bool dm_table_supports_dax(struct dm_table *t, iterate_devices_callout_fn fn,
-+                          int *blocksize);
-+int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
-+                          sector_t start, sector_t len, void *data);
-
- void dm_lock_md_type(struct mapped_device *md);
- void dm_unlock_md_type(struct mapped_device *md);
---
-2.20.1
+Also; half the patch seems to do cnt<0, while the other half (above)
+does &READ_FAILED, what gives?
