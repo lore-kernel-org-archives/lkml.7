@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE08C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701A2C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757322089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5422089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389125AbfFKOz0 (ORCPT
+        id S2391687AbfFKOzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:55:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52556 "EHLO mx1.suse.de"
+        Tue, 11 Jun 2019 10:55:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52670 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391625AbfFKOzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:55:16 -0400
+        id S2388925AbfFKOz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:55:27 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BCAC6ABD2;
-        Tue, 11 Jun 2019 14:55:15 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 1FC56ABD2;
+        Tue, 11 Jun 2019 14:55:26 +0000 (UTC)
 From:   Roman Penyaev <rpenyaev@suse.de>
 Cc:     Roman Penyaev <rpenyaev@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 07/14] epoll: call ep_add_event_to_uring() from ep_poll_callback()
-Date:   Tue, 11 Jun 2019 16:54:51 +0200
-Message-Id: <20190611145458.9540-8-rpenyaev@suse.de>
+Subject: [PATCH v4 12/14] epoll: support mapping for epfd when polled from userspace
+Date:   Tue, 11 Jun 2019 16:54:56 +0200
+Message-Id: <20190611145458.9540-13-rpenyaev@suse.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190611145458.9540-1-rpenyaev@suse.de>
 References: <20190611145458.9540-1-rpenyaev@suse.de>
@@ -43,13 +43,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each ep_poll_callback() is called when fd calls wakeup() on epfd.
-So account new event in user ring.
-
-The tricky part here is EPOLLONESHOT.  Since we are lockless we
-have to be deal with ep_poll_callbacks() called in paralle, thus
-use cmpxchg to clear public event bits and filter out concurrent
-call from another cpu.
+User has to mmap user_header and user_index vmalloce'd pointers in order
+to consume events from userspace.  Also we do not let any copies of vma
+on fork().
 
 Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -58,72 +54,61 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- fs/eventpoll.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ fs/eventpoll.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 545d1769fa0f..bcd57ca47564 100644
+index e42ddf580556..c5db15c5f8b0 100644
 --- a/fs/eventpoll.c
 +++ b/fs/eventpoll.c
-@@ -1539,6 +1539,29 @@ struct file *get_epoll_tfile_raw_ptr(struct file *file, int tfd,
+@@ -1426,11 +1426,47 @@ static void ep_show_fdinfo(struct seq_file *m, struct file *f)
  }
- #endif /* CONFIG_CHECKPOINT_RESTORE */
+ #endif
  
-+/**
-+ * Atomically clear public event bits and return %true if the old value has
-+ * public event bits set.
-+ */
-+static inline bool ep_clear_public_event_bits(struct epitem *epi)
++static int ep_eventpoll_mmap(struct file *filep, struct vm_area_struct *vma)
 +{
-+	__poll_t old, flags;
++	struct eventpoll *ep = vma->vm_file->private_data;
++	size_t size;
++	int rc;
++
++	if (!ep_polled_by_user(ep))
++		return -ENOTSUPP;
++
++	size = vma->vm_end - vma->vm_start;
++	if (!vma->vm_pgoff && size > ep->header_length)
++		return -ENXIO;
++	if (vma->vm_pgoff && ep->header_length != (vma->vm_pgoff << PAGE_SHIFT))
++		/* Index ring starts exactly after the header */
++		return -ENXIO;
++	if (vma->vm_pgoff && size > ep->index_length)
++		return -ENXIO;
 +
 +	/*
-+	 * Here we race with ourselves and with ep_modify(), which can
-+	 * change the event bits.  In order not to override events updated
-+	 * by ep_modify() we have to do cmpxchg.
++	 * vm_pgoff is used *only* for indication, what is mapped: user header
++	 * or user index ring.  Sizes are checked above.
 +	 */
++	if (!vma->vm_pgoff)
++		rc = remap_vmalloc_range_partial(vma, vma->vm_start,
++						 ep->user_header, size);
++	else
++		rc = remap_vmalloc_range_partial(vma, vma->vm_start,
++						 ep->user_index, size);
++	if (likely(!rc))
++		/* No copies for forks(), please */
++		vma->vm_flags |= VM_DONTCOPY;
 +
-+	old = READ_ONCE(epi->event.events);
-+	do {
-+		flags = old;
-+	} while ((old = cmpxchg(&epi->event.events, flags,
-+				flags & EP_PRIVATE_BITS)) != flags);
-+
-+	return flags & ~EP_PRIVATE_BITS;
++	return rc;
 +}
 +
- /**
-  * Adds a new entry to the tail of the list in a lockless way, i.e.
-  * multiple CPUs are allowed to call this function concurrently.
-@@ -1658,6 +1681,20 @@ static int ep_poll_callback(struct epitem *epi, __poll_t pollflags)
- 	if (pollflags && !(pollflags & epi->event.events))
- 		goto out_unlock;
- 
-+	if (ep_polled_by_user(ep)) {
-+		/*
-+		 * For polled descriptor from user we have to disable events on
-+		 * callback path in case of one-shot.
-+		 */
-+		if ((epi->event.events & EPOLLONESHOT) &&
-+		    !ep_clear_public_event_bits(epi))
-+			/* Race is lost, another callback has cleared events */
-+			goto out_unlock;
-+
-+		ep_add_event_to_uring(epi, pollflags);
-+		goto wakeup;
-+	}
-+
- 	/*
- 	 * If we are transferring events to userspace, we can hold no locks
- 	 * (because we're accessing user memory, and because of linux f_op->poll()
-@@ -1677,6 +1714,7 @@ static int ep_poll_callback(struct epitem *epi, __poll_t pollflags)
- 		ep_pm_stay_awake_rcu(epi);
- 	}
- 
-+wakeup:
- 	/*
- 	 * Wake up ( if active ) both the eventpoll wait list and the ->poll()
- 	 * wait list.
+ /* File callbacks that implement the eventpoll file behaviour */
+ static const struct file_operations eventpoll_fops = {
+ #ifdef CONFIG_PROC_FS
+ 	.show_fdinfo	= ep_show_fdinfo,
+ #endif
++	.mmap		= ep_eventpoll_mmap,
+ 	.release	= ep_eventpoll_release,
+ 	.poll		= ep_eventpoll_poll,
+ 	.llseek		= noop_llseek,
 -- 
 2.21.0
 
