@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E7DC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80BFC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0F1215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC34220874
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:54:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPqJo+I+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8LUQDA0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391719AbfFKVyA (ORCPT
+        id S2391840AbfFKVyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:54:00 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35132 "EHLO
+        Tue, 11 Jun 2019 17:54:31 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35197 "EHLO
         mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387764AbfFKVyA (ORCPT
+        with ESMTP id S2391563AbfFKVyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:54:00 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p26so18292076edr.2;
-        Tue, 11 Jun 2019 14:53:59 -0700 (PDT)
+        Tue, 11 Jun 2019 17:54:31 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p26so18293777edr.2;
+        Tue, 11 Jun 2019 14:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=enVQQiD0qEvE81kIlPzU4UOe7eV8T+/6nHsnl/OSqaE=;
-        b=uPqJo+I+2gRZvEgFHAxSICGCcvMalPcwnaQOwTZ2l/Fgcp2WFfbnz9pzM1VPxUu18L
-         PPvvbUqqkPcmpZHvBlm2qbBsdg/dcMGiS3apoX+CdZx81jm9K5RXZj2EAQCVth8/0n4k
-         nf2qPmN0hw9mKbPPDnRyyTxQ/MW9ksJqGoQlML5gUq8yIEBprrAFbiNv3CK0GJj5x34f
-         BlSKG5NOi9RAIZf7jCmYiUhP6jwGD0Uu8I7yb8ZrluH885HhqpsoQ0CVgcEpUE6VHGwP
-         4FKmBTX9sNDPMaRmPhBRmiG5+KMDjJrwiO3uLSLn3lhgjs/Iv32+MbgYroUDrv16JjbW
-         2XUw==
+        bh=DHhMjd1fNN7IkriGi8xv0Blych3KQHIWLAG6ekYhHaU=;
+        b=e8LUQDA0ucs+NpZtWxD/LJWddlKnLuSOXGX6Y6zjx9R6JyJVLVfwfq86T9reM2rrNC
+         2ohulDkuA89z/5oTEbIIr9mwlhpN9nJVXWdYYlenHvLRdz5rht0bdymhI8/yu3D2ktL0
+         x1kg/JxPRzw6LW0cKKHEfePtwxbsBcPSNnpvEDZESa4f0VcxHYpV+GZzFnYHmEd+CC1h
+         2+ftkUN8WQ/VWse3L/CA+lPsPLR3RWNGM7Z9b4i3KHAs182b//CbCV5mkwllk1JR83ld
+         ZNyNEbE5/CjvgRgvFNHxBwDLdcCHj3rzO8h6nvfFkoEkXaH2JKjt2QZFajDfMOgYN8cZ
+         1x9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=enVQQiD0qEvE81kIlPzU4UOe7eV8T+/6nHsnl/OSqaE=;
-        b=Mf/K9OAvoE0uQ/P4spG2/05AoeidfIAyuxuNPItnFrbzEuZ1rqBLhDfh3UB2jcfWeG
-         Br8dPzAH0JWHHh+wii/uCbU/B5jzATQ//i6i0FiH2e/pCiuZ3FzW/uUwOg1V1ED3C0tg
-         IBy+lmAL3ZZrm6noyFswLiiO8ti8DoCrnMNBIFXH/HG7WsyWm88kZxuzI3d2OXltySwy
-         ySABf3dlRp2Y+FoArot4qRdxK/SKljmH15yJI9vdaDjRb8/jznobpVyiYRSxq7UcfYez
-         Jsx1DKtlYszWYVbnJRNr+/n/tCbFnSA+v2b+C9LCE/KGa/JqmDE64NeWeNDguzkmRCkf
-         Hf2Q==
-X-Gm-Message-State: APjAAAVE/dJfhZGVuoJPzdAKpdKYCcPmePhb0jzRRL5+tTN934qvuQ2n
-        cKt1z5USaXqYyPum8I8vKZ4=
-X-Google-Smtp-Source: APXvYqxz2kDWi7DBQi+Y4uLa+i8+0Gq0mwrASzfFnHiXgKzerihODElkUUuJm7ZITNSJi1M7b/T2KA==
-X-Received: by 2002:a50:eb8b:: with SMTP id y11mr17934715edr.154.1560290038648;
-        Tue, 11 Jun 2019 14:53:58 -0700 (PDT)
+        bh=DHhMjd1fNN7IkriGi8xv0Blych3KQHIWLAG6ekYhHaU=;
+        b=LTEwKDZGvA2CH79BZWk3BlZ/WKd3LgSQ19EIMUYnlAgZSt/ek0RiyhuVvM0upx3xC/
+         EiTGt7zOTyZ31aZWPtTYQIPUoEYI/mKdUo0/1/S5QZM0cLPlqAfXkNMpnGFZwSjwTPIK
+         +QtawMvcjOQggtMFp9CE0Eb2IL9CPlotoWmiQMrOtxF9NuTN8eTL/5xWWVyxwqtvzYMo
+         c1u9pYllRfmMSqDLnnCRJO6jU2rYYKUhGv+JYbZ4b6e+koMhMsPVatpmPj+P081K0Lx8
+         QA83zE8DVqQFKPYweUV+/s7hdsfGXS9BEqs5EaniUrsHbjEbOilGOENXWdRYO46ZDQ7+
+         0zvA==
+X-Gm-Message-State: APjAAAXAb1Y36UsEjmhRscQUMKwFvBwyrve7364gYw4eBoqzHe79/C5/
+        ksr8vdZ6pNWqi/TkKdlyYes=
+X-Google-Smtp-Source: APXvYqxa6B3yBQfXiX0KGyiJzxI3jbaWqHZPyTOBf9DKR2bvaQfBCmkV0iVTPijvFqtSl/LUQm5zqQ==
+X-Received: by 2002:a50:a784:: with SMTP id i4mr14433341edc.3.1560290069503;
+        Tue, 11 Jun 2019 14:54:29 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id o21sm790246edr.12.2019.06.11.14.53.55
+        by smtp.gmail.com with ESMTPSA id 23sm2498119eji.42.2019.06.11.14.54.26
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 14:53:57 -0700 (PDT)
+        Tue, 11 Jun 2019 14:54:28 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org
@@ -69,26 +69,20 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] ARM: dts: Fix BCM7445 DTC warnings
-Date:   Tue, 11 Jun 2019 14:53:48 -0700
-Message-Id: <20190611215348.9994-1-f.fainelli@gmail.com>
+Subject: Re: [PATCH 2/7] ARM: dts: Cygnus: Fix most DTC W=1 warnings
+Date:   Tue, 11 Jun 2019 14:54:19 -0700
+Message-Id: <20190611215419.10109-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190528230134.27007-2-f.fainelli@gmail.com>
-References: <20190528230134.27007-1-f.fainelli@gmail.com> <20190528230134.27007-2-f.fainelli@gmail.com>
+In-Reply-To: <20190528230134.27007-3-f.fainelli@gmail.com>
+References: <20190528230134.27007-1-f.fainelli@gmail.com> <20190528230134.27007-3-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 16:01:28 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> Fixes a number of unit_address_vs_reg warnings:
-> 
->   DTC     arch/arm/boot/dts/bcm7445-bcm97445svmb.dtb
-> arch/arm/boot/dts/bcm7445.dtsi:66.6-225.4: Warning (unit_address_vs_reg): /rdb: node has a reg or ranges property, but no unit name
-> arch/arm/boot/dts/bcm7445.dtsi:227.21-298.4: Warning (unit_address_vs_reg): /memory_controllers: node has a reg or ranges property, but no unit name
-> arch/arm/boot/dts/bcm7445-bcm97445svmb.dts:9.9-14.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
-> arch/arm/boot/dts/bcm7445.dtsi:255.10-275.5: Warning (simple_bus_reg): /memory_controllers/memc@1: simple-bus unit address format error, expected "80000"
-> arch/arm/boot/dts/bcm7445.dtsi:277.10-297.5: Warning (simple_bus_reg): /memory_controllers/memc@2: simple-bus unit address format error, expected "100000"
+On Tue, 28 May 2019 16:01:29 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Fix the bulk of the unit_address_vs_reg warnings and unnecessary
+> \#address-cells/#size-cells without "ranges" or child "reg" property
 > 
 > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
