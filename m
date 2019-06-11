@@ -2,130 +2,210 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D644C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A28C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 240D320820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B382086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GY0W/W8d"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="GoV+9Rwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391016AbfFKDFi (ORCPT
+        id S2390966AbfFKDXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 23:05:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40446 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390791AbfFKDFh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 23:05:37 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p184so3157991pfp.7;
-        Mon, 10 Jun 2019 20:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UyJgv7diIvsGV8yNapWATBHWh5ErPBRaSoIXVIecPDQ=;
-        b=GY0W/W8dLBHKkrHL2nfX4mjMoxYMJArz0NAt5yCD/WyI2puDS2djFJ2jCLOfYH/jD8
-         niMueqxfkKwcE7BpKxOkYGhkvVs3JytYpjtPwMuNZWAGNT11GzNEXoE+3ird/ChA4+Gb
-         pxu9tUmrxA1oETJAaluDL1qOFx0oVD0NTuw07YLPN40iCfDbPCFOhSlykJfvu4X5pO2g
-         z6WHaxiWh42LbjwYsrpr07d+xq7fZ4+OI5Kp9lbAtB3CkGirK5WJuvXW6uEx3HWsPJwg
-         l/wxqR9JNb4McHMv17tdEG9IdfEB7nFSTVW0UNCkHtvaxVeaCAi/h81kw36RAGB0JM6P
-         rNsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UyJgv7diIvsGV8yNapWATBHWh5ErPBRaSoIXVIecPDQ=;
-        b=ADOqRM8xrH2SYpTiB9jo2NlsBQS/EvTlOPxLziHq//S1xFQ2xbYW3rppOzr3cSx0dP
-         kxHMDTbl/ACw9aCo2bxaUeaZyyKAmSgS3d5r/9c4FufBrBFhC3K2bgJvo0pRSp5PphDS
-         OHW+VrDsU2yGNhOvWZS6LOs6IqDtoXud0csr5Q96lx6d5SHgk51dDAHr/AsoWnDLMw2K
-         SGMcH/2+19yS0WLMNTJsRhUKKNC2bwft4DOukd82w9KUl5WBMKngjE0iVpuOX+bIju6A
-         pjc4coyNi1AHZ8Ua5c3+jZRn+tEtOm8/4+hvrNFbDaSZQyujJLGqD9Roxn5xiHqEqcL9
-         pELw==
-X-Gm-Message-State: APjAAAW57bCIeK2OI7T3o4MjRpc/7LkAa+P3ffDEYxOnGzzn2EV/R2yr
-        p2ZGcKiIk4NKMcPYKpbQKfVyxPxeenl14w==
-X-Google-Smtp-Source: APXvYqxB1TznsG2txR630wRTasQQMNG3n9JBoWYroGId67CZHYM1NNMiNqlwx8hwZ71MmwNtaT5TKw==
-X-Received: by 2002:a17:90a:3a85:: with SMTP id b5mr8505271pjc.84.1560222337087;
-        Mon, 10 Jun 2019 20:05:37 -0700 (PDT)
-Received: from ubuntu ([104.192.108.10])
-        by smtp.gmail.com with ESMTPSA id r4sm781677pjd.25.2019.06.10.20.05.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 20:05:36 -0700 (PDT)
-Date:   Mon, 10 Jun 2019 20:05:31 -0700
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] selinux: lsm: fix a missing-check bug in
- selinux_sb_eat_lsm_o pts()
-Message-ID: <20190611030529.GB4013@ubuntu>
-References: <20190606085524.GA21119@zhanggen-UX430UQ>
- <CAFqZXNvM94T2reUsn6Mwuz6GNGNCR=wUNBE8w4tcjNuhJ6rCeQ@mail.gmail.com>
- <CAHC9VhT+e2Z+4=5P0g4B4F1g0w2SkQjwUnhQkmu5V+HvuZi8Cg@mail.gmail.com>
+        Mon, 10 Jun 2019 23:23:23 -0400
+Received: from mail-eopbgr10047.outbound.protection.outlook.com ([40.107.1.47]:14819
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390856AbfFKDXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 23:23:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u6zPxAO5xW9AMbXEn90LpqnSru44qNDErPVbRjW23fM=;
+ b=GoV+9RwtNUNg8PayKAAm8iX+rqGH0ImchGc831f5tnP3qkng80AcDGqqoeiiW7SKhYNTRdy5rDGM2Xp71fNRlXdQysZGzd7molDbg6KD6ZdhZpeARniM1eELhW65ZYCUqBTN4AgMjOMVTpbwcpwYAKKd2UOCHJHCq0oFB5Q2UtA=
+Received: from AM4PR0501MB2260.eurprd05.prod.outlook.com (10.165.45.148) by
+ AM4PR0501MB2753.eurprd05.prod.outlook.com (10.172.217.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Tue, 11 Jun 2019 03:22:38 +0000
+Received: from AM4PR0501MB2260.eurprd05.prod.outlook.com
+ ([fe80::bc36:32d1:e149:5838]) by AM4PR0501MB2260.eurprd05.prod.outlook.com
+ ([fe80::bc36:32d1:e149:5838%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 03:22:38 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: RE: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Thread-Topic: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Thread-Index: AQHVGj4q7+/NzeZHEUWGN8sRZjbLIKaK/b4AgArXHIA=
+Date:   Tue, 11 Jun 2019 03:22:37 +0000
+Message-ID: <AM4PR0501MB2260589DAFDA6ECF1E8D6D87D1ED0@AM4PR0501MB2260.eurprd05.prod.outlook.com>
+References: <20190603185658.54517-1-parav@mellanox.com>
+        <20190603185658.54517-4-parav@mellanox.com>
+ <20190604074820.71853cbb.cohuck@redhat.com>
+In-Reply-To: <20190604074820.71853cbb.cohuck@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [49.207.52.114]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 48e4ef88-454b-43fe-63a2-08d6ee1c0df5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR0501MB2753;
+x-ms-traffictypediagnostic: AM4PR0501MB2753:
+x-microsoft-antispam-prvs: <AM4PR0501MB27539D1AAFD6F91FB7758632D1ED0@AM4PR0501MB2753.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(366004)(39860400002)(376002)(199004)(189003)(13464003)(68736007)(76116006)(9686003)(73956011)(478600001)(6436002)(25786009)(7736002)(86362001)(6246003)(53936002)(52536014)(66476007)(66556008)(66446008)(64756008)(305945005)(4326008)(66946007)(55016002)(229853002)(5660300002)(71190400001)(6916009)(71200400001)(33656002)(54906003)(8936002)(81166006)(3846002)(81156014)(8676002)(66066001)(6116002)(14454004)(446003)(11346002)(102836004)(486006)(476003)(316002)(186003)(26005)(2906002)(256004)(74316002)(6506007)(7696005)(99286004)(76176011)(14444005)(53546011)(55236004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0501MB2753;H:AM4PR0501MB2260.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mmFvnUheqj4434kXYYo+Sz3KN/QCRz2ocaMsMHOMSr7sftF4I225QyO7OuYUoV+0WQ/r4ziRnlPVycq3vgfe1w4PqbSVI4Z5tmLRXv3DQGls0FcdPFpPolvU6Q6pnFwc0zg96y1aEdv6rSbL6M6lWTfr4vxh5UR61+9i1/jgPjKoyMIEXvFwI2+gI9XhPhnHpYS/EU/ANPdozOz7TjO3ZKdNCVKJIrVHcvvhmQAm3YTX3MHBFfZdUPclrKYScXGvZGIzbxP/sv4ltsZKXsu1S4JpBMtabImEEo2IkFI2zLOkbYA9imxnIJ1J0kgyU8ozHhaO1RsLYnIlG+vT6srN6tpz1Tpy272Yv+G8XROj9wGfp5j3E6Qkn1dkYQjTzHsOV1Ym1FgkUmjYOIr18GqcOTAEgzRjT0ByIEZzFTJT0cI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhT+e2Z+4=5P0g4B4F1g0w2SkQjwUnhQkmu5V+HvuZi8Cg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48e4ef88-454b-43fe-63a2-08d6ee1c0df5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 03:22:37.9123
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: parav@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0501MB2753
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 04:20:28PM -0400, Paul Moore wrote:
-> On Fri, Jun 7, 2019 at 4:41 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> >
-> > On Thu, Jun 6, 2019 at 10:55 AM Gen Zhang <blackgod016574@gmail.com> wrote:
-> > > In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
-> > > returns NULL when fails. So 'arg' should be checked. And 'mnt_opts'
-> > > should be freed when error.
-> > >
-> > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > > Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
-> >
-> > My comments about the subject and an empty line before label apply
-> > here as well, but Paul can fix both easily when applying ...
-> 
-> Since we've been discussing general best practices for submitting
-> patches in this thread (and the other related thread), I wanted to
-> (re)clarify my thoughts around maintainers fixing patches when merging
-> them upstream.
-> 
-> When in doubt, do not ever rely on the upstream maintainer fixing your
-> patch while merging it, and if problems do arise during review, it is
-> best to not ask the maintainer to fix them for you, but for you to fix
-> them instead (you are the patch author after all!).  Similarly, making
-> comments along the lines of "X can fix both easily when applying", is
-> also a bad thing to say when reviewing patches.  It's the patch
-> author's responsibility to fix the patch by address review comments,
-> not the maintainer.  I'll typically let you know if you don't need to
-> rework a patch(set).
-> 
-> That said, there are times when the maintainer will change the patch
-> during merging, most of which are due to resolving merge
-> conflicts/fuzz with changes already in the tree (that *is* the
-> maintainer's responsibility).  Speaking for myself, sometimes I will
-> also make some minor changes if the patch author is away, or
-> unreliable, or if there is a hard deadline near and I'm worried that
-> the updated patch might not be ready in time.  I'll also sometimes
-> make the changes directly if the patch is holding up a larger, more
-> important patch(set), but that is really rare.  I'm sure I've made
-> changes for other reasons in the past, and I'm sure I'll make changes
-> for other reasons in the future, but hopefully this will give you a
-> better idea of how the process works :)
-> 
-> -- 
-> paul moore
-> www.paul-moore.com
-Thanks for your comments. I will resend a patch after revising.
+Hi Alex,
 
-Thanks
-Gen
+> -----Original Message-----
+> From: Cornelia Huck <cohuck@redhat.com>
+> Sent: Tuesday, June 4, 2019 11:18 AM
+> To: Parav Pandit <parav@mellanox.com>
+> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com
+> Subject: Re: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove
+> with parent removal
+>=20
+> On Mon,  3 Jun 2019 13:56:58 -0500
+> Parav Pandit <parav@mellanox.com> wrote:
+>=20
+> > In following sequences, child devices created while removing mdev
+> > parent device can be left out, or it may lead to race of removing half
+> > initialized child mdev devices.
+> >
+> > issue-1:
+> > --------
+> >        cpu-0                         cpu-1
+> >        -----                         -----
+> >                                   mdev_unregister_device()
+> >                                     device_for_each_child()
+> >                                       mdev_device_remove_cb()
+> >                                         mdev_device_remove()
+> > create_store()
+> >   mdev_device_create()                   [...]
+> >     device_add()
+> >                                   parent_remove_sysfs_files()
+> >
+> > /* BUG: device added by cpu-0
+> >  * whose parent is getting removed
+> >  * and it won't process this mdev.
+> >  */
+> >
+> > issue-2:
+> > --------
+> > Below crash is observed when user initiated remove is in progress and
+> > mdev_unregister_driver() completes parent unregistration.
+> >
+> >        cpu-0                         cpu-1
+> >        -----                         -----
+> > remove_store()
+> >    mdev_device_remove()
+> >    active =3D false;
+> >                                   mdev_unregister_device()
+> >                                   parent device removed.
+> >    [...]
+> >    parents->ops->remove()
+> >  /*
+> >   * BUG: Accessing invalid parent.
+> >   */
+> >
+> > This is similar race like create() racing with mdev_unregister_device()=
+.
+> >
+> > BUG: unable to handle kernel paging request at ffffffffc0585668 PGD
+> > e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
+> > Oops: 0000 [#1] SMP PTI
+> > CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted
+> > 5.1.0-rc6-vdevbus+ #6 Hardware name: Supermicro
+> > SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> > RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev] Call Trace:
+> >  remove_store+0x71/0x90 [mdev]
+> >  kernfs_fop_write+0x113/0x1a0
+> >  vfs_write+0xad/0x1b0
+> >  ksys_write+0x5a/0xe0
+> >  do_syscall_64+0x5a/0x210
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > Therefore, mdev core is improved as below to overcome above issues.
+> >
+> > Wait for any ongoing mdev create() and remove() to finish before
+> > unregistering parent device.
+> > This continues to allow multiple create and remove to progress in
+> > parallel for different mdev devices as most common case.
+> > At the same time guard parent removal while parent is being accessed
+> > by
+> > create() and remove() callbacks.
+> > create()/remove() and unregister_device() are synchronized by the rwsem=
+.
+> >
+> > Refactor device removal code to mdev_device_remove_common() to avoid
+> > acquiring unreg_sem of the parent.
+> >
+> > Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > ---
+> >  drivers/vfio/mdev/mdev_core.c    | 71 ++++++++++++++++++++++++--------
+> >  drivers/vfio/mdev/mdev_private.h |  2 +
+> >  2 files changed, 55 insertions(+), 18 deletions(-)
+> >
+>=20
+> > @@ -265,6 +299,12 @@ int mdev_device_create(struct kobject *kobj,
+> >
+> >  	mdev->parent =3D parent;
+> >
+>=20
+> Adding
+>=20
+> /* Check if parent unregistration has started */
+>=20
+> here as well might be nice, but no need to resend the patch for that.
+>=20
+> > +	if (!down_read_trylock(&parent->unreg_sem)) {
+> > +		mdev_device_free(mdev);
+> > +		ret =3D -ENODEV;
+> > +		goto mdev_fail;
+> > +	}
+> > +
+> >  	device_initialize(&mdev->dev);
+> >  	mdev->dev.parent  =3D dev;
+> >  	mdev->dev.bus     =3D &mdev_bus_type;
+>=20
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
+Now that we have all 3 patches reviewed and comments addressed, if there ar=
+e no more comments, can you please take it forward?
