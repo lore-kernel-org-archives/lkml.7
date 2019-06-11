@@ -2,111 +2,164 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBC8C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E2EC06508
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1852089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3132173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560268031;
+	bh=ODzIca1G6HwE9DpSxb7ddhUfILHkfcmRba/4rBqVBxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XFDfC8Cgw7rXzCto9HxQJAwgPWJpGrEw4gncubXffYRtI3d2RStjgwinUOConKjr0
+	 vd2eHoKJ46fOzAsa+LyyXzScWDQhaXDXXDCZ/F5YgzQ6q9J/R7EHNzn4gHcOFwdHbh
+	 lH4Zgdf/evXJiIPTZxz5pILVBN+cICfqM8o7dB1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405383AbfFKPqR convert rfc822-to-8bit (ORCPT
+        id S2405396AbfFKPrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:46:17 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:36040 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405210AbfFKPqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:46:16 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-136-uZnrwUCgOQuJY1Gr7kFh-Q-1; Tue, 11 Jun 2019 16:46:13 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 11 Jun 2019 16:46:11 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 11 Jun 2019 16:46:11 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
-        'Oleg Nesterov' <oleg@redhat.com>
-CC:     'Andrew Morton' <akpm@linux-foundation.org>,
-        'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'arnd@arndb.de'" <arnd@arndb.de>,
-        "'dbueso@suse.de'" <dbueso@suse.de>,
-        "'axboe@kernel.dk'" <axboe@kernel.dk>,
-        "'dave@stgolabs.net'" <dave@stgolabs.net>,
-        "'e@80x24.org'" <e@80x24.org>,
-        "'jbaron@akamai.com'" <jbaron@akamai.com>,
-        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
-        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
-        "'tglx@linutronix.de'" <tglx@linutronix.de>,
-        'Al Viro' <viro@ZenIV.linux.org.uk>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Thread-Topic: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Thread-Index: AQHVH9JWknGdQ9+D0UeylJNmvFzQKKaWJ31QgABvBOA=
-Date:   Tue, 11 Jun 2019 15:46:11 +0000
-Message-ID: <05ffd0f434c64262aa767db81ad75ac1@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
-        <20190529161157.GA27659@redhat.com>     <20190604134117.GA29963@redhat.com>
-        <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
-        <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
- <87lfy96sta.fsf@xmission.com>
- <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
-In-Reply-To: <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 11 Jun 2019 11:47:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389302AbfFKPrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:47:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11BDC2080A;
+        Tue, 11 Jun 2019 15:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560268029;
+        bh=ODzIca1G6HwE9DpSxb7ddhUfILHkfcmRba/4rBqVBxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e3yDQiYkifbMrkWt69XVzkQEu4k3E4TzQ+jgCbNCKbq3tFTul7bQtdb/ivvMASCIo
+         D2mWwf5Ja3ceey3cJW0djsE08rHo0qdxViwzpPcbvxzwfEMBWvI9klRn7dfe5Cu8NB
+         PopmPDk+qxIOQXhJWAo78I+DLxkacSjMXgngNke4=
+Date:   Tue, 11 Jun 2019 17:47:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Richard Gong <richard.gong@linux.intel.com>
+Cc:     Romain Izard <romain.izard.pro@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, dinguyen@kernel.org, atull@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sen.li@intel.com, Richard Gong <richard.gong@intel.com>
+Subject: Re: A potential broken at platform driver?
+Message-ID: <20190611154706.GE5706@kroah.com>
+References: <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232224.GA29225@kroah.com>
+ <1e3b5447-b776-f929-bca6-306f90ac0856@linux.intel.com>
+ <b608d657-9d8c-9307-9290-2f6b052a71a9@linux.intel.com>
+ <20190603180255.GA18054@kroah.com>
+ <20190604103241.GA4097@5WDYG62>
+ <20190604142803.GA28355@kroah.com>
+ <e3adbd00-e500-70af-1c27-e4c064486561@linux.intel.com>
+ <20190604170310.GC14605@kroah.com>
+ <f484ce9f-a86e-ce33-686b-b42dc293beb8@linux.intel.com>
 MIME-Version: 1.0
-X-MC-Unique: uZnrwUCgOQuJY1Gr7kFh-Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f484ce9f-a86e-ce33-686b-b42dc293beb8@linux.intel.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Laight
-> Sent: 11 June 2019 10:52
-...
-> FWIW is ERESTARTNOHAND actually sane here?
-> If I've used setitimer() to get SIGALARM generated every second I'd
-> expect select() to return EINTR every second even if I don't
-> have a SIGALARM handler?
+On Tue, Jun 11, 2019 at 09:10:05AM -0500, Richard Gong wrote:
+> 
+> Hi Greg,
+> 
+> On 6/4/19 12:03 PM, Greg KH wrote:
+> > On Tue, Jun 04, 2019 at 11:13:02AM -0500, Richard Gong wrote:
+> > > 
+> > > Hi Greg,
+> > > 
+> > > On 6/4/19 9:28 AM, Greg KH wrote:
+> > > > On Tue, Jun 04, 2019 at 12:33:03PM +0200, Romain Izard wrote:
+> > > > > On Mon, Jun 03, 2019 at 08:02:55PM +0200, Greg KH wrote:
+> > > > > > > @@ -394,7 +432,7 @@ static struct platform_driver stratix10_rsu_driver = {
+> > > > > > >    	.remove = stratix10_rsu_remove,
+> > > > > > >    	.driver = {
+> > > > > > >    		.name = "stratix10-rsu",
+> > > > > > > -		.groups = rsu_groups,
+> > > > > > > +//		.groups = rsu_groups,
+> > > > > > 
+> > > > > > Are you sure this is the correct pointer?  I think that might be
+> > > > > > pointing to the driver's attributes, not the device's attributes.
+> > > > > > 
+> > > > > > If platform drivers do not have a way to register groups properly, then
+> > > > > > that really needs to be fixed, as trying to register it by yourself as
+> > > > > > you are doing, is ripe for racing with userspace.
+> > > > > This is a very common issue with platform drivers, and it seems to me that
+> > > > > it is not possible to add device attributes when binding a device to a
+> > > > > driver without entering the race condition.
+> > > > > 
+> > > > > My understanding is the following one:
+> > > > > 
+> > > > > The root cause is that the device has already been created and reported
+> > > > > to the userspace with a KOBJ_ADD uevent before the device and the driver
+> > > > > are bound together. On receiving this event, userspace will react, and
+> > > > > it will try to read the device's attributes. In parallel the kernel will
+> > > > > try to find a matching driver. If a driver is found, the kernel will
+> > > > > call the probe function from the driver with the device as a parameter,
+> > > > > and if successful a KOBJ_BIND uevent will be sent to userspace, but this
+> > > > > is a recent addition.
+> > > > > 
+> > > > > Unfortunately, not all created devices will be bound to a driver, and the
+> > > > > existing udev code relies on KOBJ_ADD uevents rather than KOBJ_BIND uevents.
+> > > > > If new per-device attributes have been added to the device during the
+> > > > > binding stage userspace may or may not see them, depending on when userspace
+> > > > > tries to read the device's attributes.
+> > > > > 
+> > > > > I have this possible workaround, but I do not know if it is a good solution:
+> > > > > 
+> > > > > When binding the device and the driver together, create a new device as a
+> > > > > child to the current device, and fill its "groups" member to point to the
+> > > > > per-device attributes' group. As the device will be created with all the
+> > > > > attributes, it will not be affected by the race issues. The functions
+> > > > > handling the attributes will need to be modified to use the parents of their
+> > > > > "device" parameter, instead of the device itself. Additionnaly, the sysfs
+> > > > > location of the attributes will be different, as the child device will show
+> > > > > up in the sysfs path. But for a newly introduced device this will not be
+> > > > > a problem.
+> > > > > 
+> > > > > Is this a good compromise ?
+> > > > 
+> > > > Not really.  You just want the attributes on the platform device itself.
+> > > > 
+> > > > Given the horrible hack that platform devices are today, what's one more
+> > > > hack!
+> > > > 
+> > > > Here's a patch below of what should probably be done here.  Richard, can
+> > > > you change your code to use the new dev_groups pointer in the struct
+> > > > platform_driver and this patch and let me know if that works or not?
+> > > > 
+> > > > Note, I've only compiled this code, not tested it...
+> > > > 
+> > > 
+> > > Your patch works.
+> > > 
+> > > Many thanks for your help!
+> > 
+> > Nice!
+> > 
+> > I guess I need to turn it into a real patch now.  Let me do that tonight
+> > and see if I can convert some existing drivers to use it as well...
+> > 
+> 
+> Sorry for asking.
+> 
+> I haven't seen your patch, did you release that?
+> 
 
-Actually no - after sigset(SIGALRM, SIG_IGN) I'd expect absolutely
-nothing to happen when kill(pid, SIGALRM) is called.
+I didn't post it yet, sorry.  I started on cleaning up the whole kernel
+tree, to show users of the new groups, and then got side-tracked.  The
+code is in a public branch, I'll clean it up this week and send it off,
+hopefully I'll have time over the next few days...
 
-However if I run:
+thanks,
 
-	struct itimerval itimerval = {{1, 0}, {1, 0}};
-	setitimer(ITIMER_REAL, &itimerval, NULL);
-	sigset(SIGALRM, SIG_IGN);
-
-	poll(0, 0, big_timeout);
-
-I see (with strace) poll() repeatedly returning ERESTART_RESTARTBLOCK
-and being restarted.
-Replacing poll() with pselect() returns ERESTARTNOHAND.
-(In both cases the timeout must be updated since the application
-does see the timeout.)
-
-I'm sure other unix kernels completely ignore signals set to SIG_IGN.
-So this restart dance just isn't needed.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+greg k-h
