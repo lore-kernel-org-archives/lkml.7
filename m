@@ -2,207 +2,112 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D66AC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01232C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058AD2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFD520657
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uoJ6xso6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404611AbfFKJgn (ORCPT
+        id S2404658AbfFKJhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:36:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18546 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404137AbfFKJgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:36:42 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7E1052B1E12D93060B1E;
-        Tue, 11 Jun 2019 17:36:40 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Jun 2019
- 17:36:35 +0800
-Date:   Tue, 11 Jun 2019 10:36:25 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-CC:     <will.deacon@arm.com>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <robh+dt@kernel.org>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
-Message-ID: <20190611103625.00001399@huawei.com>
-In-Reply-To: <20190610184714.6786-2-jean-philippe.brucker@arm.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
-        <20190610184714.6786-2-jean-philippe.brucker@arm.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 11 Jun 2019 05:37:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41136 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404137AbfFKJhv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 05:37:51 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 83so6639735pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 02:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9agf1wB19p+J83b1VsLOfSDCvk5Iwih8vT9zIEbIhto=;
+        b=uoJ6xso6aov+5DAxvyb5o40wrZU1FXY+1+wAIyp/jryKLjiHMMBNtAgYzTdICid9EW
+         go3OVPwipJhta6jl7ptE0/WhIkeZiCfooS6SSugO1LaOXqML8eCmYzkZdul2b2Xfpmz+
+         gclHl8JJUL6HWpk8WO5AKmqkx5Q1wz6C8BWINY5aO24OO68z5tpL9w7ehYBSCWOO7PTd
+         psldWcpkoLBpx8667PB9lQ7Hl4xkX/Et3VKXKqqbb6JSkBTLLyJxb8Owby/IighLuBP6
+         QryTlp/APxF2h1MpIYTj0IxAOJH3NZ9/aeDzKcKsBH1oE2YkS2KFjvJfoqVePF3HWsAP
+         5xrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9agf1wB19p+J83b1VsLOfSDCvk5Iwih8vT9zIEbIhto=;
+        b=SJ4z0UKKsC/CXA+kMGJXBAgOJVpqRwRrpjiCBKBXqxsJfD1ZSZO0csCLXS+YuFOeE3
+         1rv1+zOnxNw0REJRbCBpFPbU1/KS+3hoSzpGurlUq2ow8fdWGOZX7axVQbqn3/cMoMgw
+         ACdvf/hBfy+ozQT/tsbTbKBuIsoiw58l/rnpwrHVc0zPMABQUWZsBuuqoVbiwOOcDS09
+         /3x7D7VCbTGibzDcQBxBHJMqxXfQLZPxRckfkU1X53E+KoO+w/65fG08ZhI63blOXEHL
+         Jq3LqWlOW8pCGKBcHf6KzkPnIuFC9LJmuMfSYeqcQxyhIMeqTsO+DYkRgjotFUboBKCh
+         +goA==
+X-Gm-Message-State: APjAAAXUS4PCLC5yiR2g/YUrLgQrwPJSEBfVdESun7viLMnWViUZailp
+        4dkGQr5XSp2gGicxTGf2BD4=
+X-Google-Smtp-Source: APXvYqwW7A1WbJwAEbMJSnf3kHqZzSWeA7fnuPpsGxWy3rdDIeIaKarnUVnZCU2Z96HhMWgjooUtYg==
+X-Received: by 2002:a65:5688:: with SMTP id v8mr19726836pgs.138.1560245871063;
+        Tue, 11 Jun 2019 02:37:51 -0700 (PDT)
+Received: from ubuntu ([104.192.108.9])
+        by smtp.gmail.com with ESMTPSA id y22sm8563571pfm.70.2019.06.11.02.37.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 02:37:50 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 02:37:44 -0700
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     ssantosh@kernel.org, marc.zyngier@arm.com, olof@lixom.net
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] knav_qmss_queue: fix a missing-check bug in
+ knav_pool_create()
+Message-ID: <20190611093744.GA9783@ubuntu>
+References: <20190530033949.GA8895@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530033949.GA8895@zhanggen-UX430UQ>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 19:47:07 +0100
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
-
-> Some devices might support multiple DMA address spaces, in particular
-> those that have the PCI PASID feature. PASID (Process Address Space ID)
-> allows to share process address spaces with devices (SVA), partition a
-> device into VM-assignable entities (VFIO mdev) or simply provide
-> multiple DMA address space to kernel drivers. Add a global PASID
-> allocator usable by different drivers at the same time. Name it I/O ASID
-> to avoid confusion with ASIDs allocated by arch code, which are usually
-> a separate ID space.
+On Thu, May 30, 2019 at 11:39:49AM +0800, Gen Zhang wrote:
+> In knav_pool_create(), 'pool->name' is allocated by kstrndup(). It
+> returns NULL when fails. So 'pool->name' should be checked. And free
+> 'pool' when error.
 > 
-> The IOASID space is global. Each device can have its own PASID space,
-> but by convention the IOMMU ended up having a global PASID space, so
-> that with SVA, each mm_struct is associated to a single PASID.
-> 
-> The allocator is primarily used by IOMMU subsystem but in rare occasions
-> drivers would like to allocate PASIDs for devices that aren't managed by
-> an IOMMU, using the same ID space as IOMMU.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Hi,
-
-A few trivial comments inline.  May be more because I'm not that familiar
-with xa_array than anything else.
-
-Jonathan
-
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 > ---
-> The most recent discussion on this patch was at:
-> https://lkml.kernel.org/lkml/1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com/
-> I fixed it up a bit following comments in that series, and removed the
-> definitions for the custom allocator for now.
-> 
-> There also is a new version that includes the custom allocator into this
-> patch, but is currently missing the RCU fixes, at:
-> https://lore.kernel.org/lkml/1560087862-57608-13-git-send-email-jacob.jun.pan@linux.intel.com/
-> ---
-
-...
-
-> +
-> +/**
-> + * ioasid_alloc - Allocate an IOASID
-> + * @set: the IOASID set
-> + * @min: the minimum ID (inclusive)
-> + * @max: the maximum ID (inclusive)
-> + * @private: data private to the caller
-> + *
-> + * Allocate an ID between @min and @max. The @private pointer is stored
-> + * internally and can be retrieved with ioasid_find().
-> + *
-> + * Return: the allocated ID on success, or %INVALID_IOASID on failure.
-> + */
-> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
-> +		      void *private)
-> +{
-> +	u32 id = INVALID_IOASID;
-> +	struct ioasid_data *data;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return INVALID_IOASID;
-> +
-> +	data->set = set;
-> +	data->private = private;
-> +
-> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
-> +		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
-> +		goto exit_free;
+> diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+> index 8b41837..0f8cb28 100644
+> --- a/drivers/soc/ti/knav_qmss_queue.c
+> +++ b/drivers/soc/ti/knav_qmss_queue.c
+> @@ -814,6 +814,12 @@ void *knav_pool_create(const char *name,
+>  	}
+>  
+>  	pool->name = kstrndup(name, KNAV_NAME_SIZE - 1, GFP_KERNEL);
+> +	if (!pool->name) {
+> +		dev_err(kdev->dev, "failed to duplicate for pool(%s)\n",
+> +			name);
+> +		ret = -ENOMEM;
+> +		goto err_name;
 > +	}
-> +	data->id = id;
-> +
-> +exit_free:
+>  	pool->kdev = kdev;
+>  	pool->dev = kdev->dev;
+>  
+> @@ -864,6 +870,7 @@ void *knav_pool_create(const char *name,
+>  	mutex_unlock(&knav_dev_lock);
+>  err:
+>  	kfree(pool->name);
+> +err_name:
+>  	devm_kfree(kdev->dev, pool);
+>  	return ERR_PTR(ret);
+>  }
+Can anyone look into this patch?
 
-This error flow is perhaps a little more confusing than it needs to be?
-
-My assumption (perhaps wrong) is that we only have an id == INVALID_IOASID
-if the xa_alloc fails, and that we will always have such an id value if
-it does (I'm not totally sure this second element is true in __xa_alloc).
-
-If I'm missing something perhaps a comment on how else we'd get here.
-
-> +	if (id == INVALID_IOASID) {
-> +		kfree(data);
-> +		return INVALID_IOASID;
-> +	}
-> +	return id;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_alloc);
-> +
-> +/**
-> + * ioasid_free - Free an IOASID
-> + * @ioasid: the ID to remove
-> + */
-> +void ioasid_free(ioasid_t ioasid)
-> +{
-> +	struct ioasid_data *ioasid_data;
-> +
-> +	ioasid_data = xa_erase(&ioasid_xa, ioasid);
-> +
-> +	kfree_rcu(ioasid_data, rcu);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_free);
-> +
-> +/**
-> + * ioasid_find - Find IOASID data
-> + * @set: the IOASID set
-> + * @ioasid: the IOASID to find
-> + * @getter: function to call on the found object
-> + *
-> + * The optional getter function allows to take a reference to the found object
-> + * under the rcu lock. The function can also check if the object is still valid:
-> + * if @getter returns false, then the object is invalid and NULL is returned.
-> + *
-> + * If the IOASID has been allocated for this set, return the private pointer
-> + * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
-> + * if the IOASID is not found or does not belong to the set.
-
-Perhaps should make it clear that @set can be null.
-
-> + */
-> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> +		  bool (*getter)(void *))
-> +{
-> +	void *priv = NULL;
-
-Set in all paths, so does need to be set here.
-
-> +	struct ioasid_data *ioasid_data;
-> +
-> +	rcu_read_lock();
-> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
-> +	if (!ioasid_data) {
-> +		priv = ERR_PTR(-ENOENT);
-> +		goto unlock;
-> +	}
-> +	if (set && ioasid_data->set != set) {
-> +		/* data found but does not belong to the set */
-> +		priv = ERR_PTR(-EACCES);
-> +		goto unlock;
-> +	}
-> +	/* Now IOASID and its set is verified, we can return the private data */
-> +	priv = rcu_dereference(ioasid_data->private);
-> +	if (getter && !getter(priv))
-> +		priv = NULL;
-> +unlock:
-> +	rcu_read_unlock();
-> +
-> +	return priv;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_find);
-> +
-> +MODULE_LICENSE("GPL");
-...
-
+Thanks
+Gen
