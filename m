@@ -2,111 +2,130 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C51DC0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7225C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6569220896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560283256;
-	bh=s/Ht5+9CPxynHvmNGgca4LVS0zf0kgpTAEg3mLddkn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M18H1EFYsLd2C9LE+RF8KxQl9ZvCn4dwC0FSUI4dWqsThB0CRji8Ineq1UFN915RT
-	 8+ByanK94rJw9MK6l6A28spbSK9mwQc4CXUB/PEKBm8oPqKxYeYwzkqr0Vci09e5W/
-	 nAUjWHwjmKKLLy4UrH2JBlbJ+1u9SKZZ7xIh9aD4=
+	by mail.kernel.org (Postfix) with ESMTP id B038320883
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:02:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rjjq2BYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406411AbfFKUAz (ORCPT
+        id S2406442AbfFKUCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:00:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405168AbfFKUAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:00:55 -0400
-Received: from earth.universe (unknown [185.62.205.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 130F120883;
-        Tue, 11 Jun 2019 20:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560283254;
-        bh=s/Ht5+9CPxynHvmNGgca4LVS0zf0kgpTAEg3mLddkn0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1UAFM7E6z32INie2ywpw1WxlvWw6gwAH+2ireN9vwA81UQSpOFkLHMVPrEzMmFQw2
-         UHWF+yTW2DbFptWnYRH5PbiVRaTx9FQ1l9HYpmzrVt3+fq0mqOTVo1ylBdok4j3RJR
-         0TsIk179NCnIeR/FUlhchmcMm98+HagiQBI57/Ko=
-Received: by earth.universe (Postfix, from userid 1000)
-        id C5AC53C0C77; Tue, 11 Jun 2019 22:00:43 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 22:00:43 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Tue, 11 Jun 2019 16:02:31 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42734 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405168AbfFKUCa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 16:02:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x17so14358570wrl.9;
+        Tue, 11 Jun 2019 13:02:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jIebUp4XY7WW1bkNEqW8SSNqGZE7schYtfqUjB6l7k0=;
+        b=rjjq2BYL90EBCSL/toQeCzvvX7/mr3CT8wNVZ5RrUf9C4iHpBbLWDEbfYOZEJ8Pj4q
+         NNEdrItqug1NOkCSsrAgG3RaVp1IDaUsD0EY9yUcqX03AYR0uvQg3SEa/rIVUCmk79ik
+         AUaWNObvhnMKupRn+GrK6NbovbCK4c93D2eYGYLq2NMisxYK0gmviqStYYoaCInLvwoS
+         ik0rmfpNNqQwh1zguzJdUG/zHLIIJ0/L6Trutr9hHDGjdTk/wevjQxUE5vaWeo1qkqp4
+         l3sv1kswS2B88HLMkiLSc+8+51SEKiFcExDiVLbfATNMmV/gP5sCngr3zpwjKPHwn3nL
+         R5fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jIebUp4XY7WW1bkNEqW8SSNqGZE7schYtfqUjB6l7k0=;
+        b=TU8/9X8q45s9/pST0eKSUdFK3+9WU4fAih+5Q6S0D45/ZDXZ8cHp4vzCvuYTRc2abu
+         Oq6msR/rcm4SK2L2+Lcm9GCpKJODtT4TcFeiUra94oAlbClftJQPZ5Ae6VuZ4v5sT5Ii
+         xFdnhEov8SE0i/1jY+VwdiBsXbasERgUDiIWyB73wuCQj5C3UlxN4TEb8xmH/eCdjEfh
+         wtOW7tegqQX4rqgeFYFVRMHfWjleSladE5xu7RC/h4lfu5WOljyoLmUx7adXeNJwvsAa
+         rsEdX0nhyqXY0KG6c+9vy/0BQVkF+/vZW8T9p1H2IWSrZFKQPUZtfQKYWxzBgSgd4p7f
+         6f5g==
+X-Gm-Message-State: APjAAAVQZamUDF+ZZZjQXQTF4x7/rEzt8R1y6dMuBAtOwN5Of/B07Rk9
+        E7ijiwvC6wnSAW4GkBnnhUs=
+X-Google-Smtp-Source: APXvYqy69Nttw3VJy9kpldo/q2sr2jjcjp5IQcHqdojuXnECS/X413h3T3E/IrANMshlTYRLwEAwbA==
+X-Received: by 2002:adf:e60f:: with SMTP id p15mr5340510wrm.332.1560283348311;
+        Tue, 11 Jun 2019 13:02:28 -0700 (PDT)
+Received: from [192.168.1.17] (bgt97.neoplus.adsl.tpnet.pl. [83.28.83.97])
+        by smtp.gmail.com with ESMTPSA id t15sm6862774wrx.84.2019.06.11.13.02.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 13:02:27 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: pwm-backlight: Add 'max-brightness'
+ property
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v15 0/7] support ROHM BD70528 PMIC
-Message-ID: <20190611200043.eib3g3acc7ilawsx@earth.universe>
-References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>
+References: <20190610233739.29477-1-mka@chromium.org>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <00220cd7-ed4b-5250-d448-cf83ed4c2012@gmail.com>
+Date:   Tue, 11 Jun 2019 22:02:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qfajaxb2wnhwswu6"
-Content-Disposition: inline
-In-Reply-To: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190610233739.29477-1-mka@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Matthias,
 
---qfajaxb2wnhwswu6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 6/11/19 1:37 AM, Matthias Kaehlcke wrote:
+> Add an optional 'max-brightness' property, which is used to specify
+> the number of brightness levels (max-brightness + 1) when the node
+> has no 'brightness-levels' table.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>   .../devicetree/bindings/leds/backlight/pwm-backlight.txt       | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> index 64fa2fbd98c9..98f4ba626054 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> @@ -27,6 +27,9 @@ Optional properties:
+>                               resolution pwm duty cycle can be used without
+>                               having to list out every possible value in the
+>                               brightness-level array.
+> +  - max-brightness: Maximum brightness value. Used to specify the number of
+> +                    brightness levels (max-brightness + 1) when the node
+> +                    has no 'brightness-levels' table.
 
-Hi,
+In the LED subsystem we have led-max-microamp property which seems to
+better describe hardware capabilities. It says just: this is the current
+level the LED can withstand. max-brightness does not implicitly convey
+this kind of information.
 
-On Mon, Jun 03, 2019 at 10:23:37AM +0300, Matti Vaittinen wrote:
-> Patch series introducing support for ROHM BD70528 PMIC
-> [...]
+Why the need for the property at all? If for the reasons other than
+hardware capabilities than it should be more likely handled
+by userspace.
 
-I think all patches have been reviewed by the respective subsystem
-maintainers. Lee, can you provide an immutable branch with the MFD
-patches (1, 2, 4)? Looks like the other patches only depend on those
-and can go through their respective subsystems.
+>   [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+>   [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+> 
 
--- Sebastian
-
---qfajaxb2wnhwswu6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0ACGsACgkQ2O7X88g7
-+pqpvxAAiZzNy6zuuXZ4vjjMA7V17elDn9CTdWUe1RZBcvYxmFmOUWxTEPtRsmoC
-DSstvCVI3H0sOGanHoZ6WFe1R5cyV3jG4J9Xam7XQSQmVpWJPaQXSgQpSy4O6aMX
-3Hrs2E8Nv+zUuflVsm4yIOnX7avFBDxBdJlZzKNRzA2b3KOzmNvNr3Y/CbvS9IO4
-dTHBXDzcoo+XfrbOKD7Z/0LD6kPsVVkjI8qDiGMN0LCxVkkXV2IFFvMluaWzJHQl
-hDUheJRJkD1TXC6z1bCxHSzT4/DCDbWHXN191CnZSIeORMLeZxFFldSmKbYIvOV1
-DTJemYQUksIOl2usnvNvSl0GnxjrzZpw7PKbh3rXVlWaa52FEvRJJX++voIP3fNW
-zTHSYUTZrBqyLzC4Rp9AWeCy19ebFTrPjV3g3LZDIx0D37C3BeS71gNotRa9o91w
-aGBN/Um6Zm3PASbxAPk5TB9RIatlGSELFcVg4qa4of1Y7fY5+O/J5Civ/R1vQJkG
-iKE+ujAxYfKJkoUebhETYoHhonRh+naZuEgVC4yl9TsP2hGhz4rArD76kKTUnwNY
-g5rSpqb8LptHOkHdkP6ueQYIHavaNGfE6wJBfLqjG3uLU/8RU7YaOqZubQOH/WNT
-f2hxCJ76WfvTO5avZpYkykwOS0LwdP8MUoVz2tVnYLYm/q7DhB4=
-=2BRP
------END PGP SIGNATURE-----
-
---qfajaxb2wnhwswu6--
+-- 
+Best regards,
+Jacek Anaszewski
