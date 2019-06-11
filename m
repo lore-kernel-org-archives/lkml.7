@@ -2,102 +2,98 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5BEC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FA2C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B1A212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:14:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fjO0Aztz"
+	by mail.kernel.org (Postfix) with ESMTP id F303120673
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403793AbfFKNOG (ORCPT
+        id S2390593AbfFKNO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:14:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55296 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389077AbfFKNOG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:14:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jTRI0sUYzBjbqkRPqRB0al8MVf/JfGUcO0S+nPEvatk=; b=fjO0Aztzc+pyUxCYwqc+vs43g
-        9rPrhQ89XcSL3p7dXSABlmjWx7puSS4lkAmMVaplO0j2zgrha07weiRGAOnNiH4sluZMkFByC89cT
-        LVHVO5l5L+nBxAAoniGrGKXUg0RI4nqSYvhzyAoAxKhnqrRColkp+6H3Vxg0PofvzPGrVC63WfHwB
-        zEB/Tap8Zqbj83rqp0AsFFhxvS1ktdmWqnJVgjXJwW7f0NMi4wNIEdL78HQoVh7JMay8mWT9g1F4c
-        IxMwx6CjmDCi145Ibou4gy/hnkENzBj1sO++rdlsCPrzgi8yMOVET0efIptnELmP6tB1nqHDbFJ7U
-        /ekJrFNtQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hagbA-0004VQ-K7; Tue, 11 Jun 2019 13:14:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 23DE520234FA4; Tue, 11 Jun 2019 15:13:59 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 15:13:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v8 16/19] locking/rwsem: Guard against making count
- negative
-Message-ID: <20190611131359.GH3402@hirez.programming.kicks-ass.net>
-References: <20190520205918.22251-1-longman@redhat.com>
- <20190520205918.22251-17-longman@redhat.com>
+        Tue, 11 Jun 2019 09:14:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:32966 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388792AbfFKNO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:14:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C901B344;
+        Tue, 11 Jun 2019 06:14:57 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CB4F3F557;
+        Tue, 11 Jun 2019 06:14:56 -0700 (PDT)
+Subject: Re: [PATCH HACK RFC] cpu: Prevent late-arriving interrupts from
+ disrupting offline
+To:     paulmck@linux.ibm.com
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        mingo@kernel.org, jpoimboe@redhat.com, mojha@codeaurora.org,
+        linux-kernel@vger.kernel.org
+References: <20190602011253.GA6167@linux.ibm.com>
+ <20190603083848.GB3436@hirez.programming.kicks-ass.net>
+ <20190603114455.GA16119@lakrids.cambridge.arm.com>
+ <ea4887fb-cc77-59d4-3ba7-a59f5237ca40@arm.com>
+ <20190604074549.GP28207@linux.ibm.com>
+ <6eb5d59f-37d0-0aab-1fc0-fcf48cc4164f@arm.com>
+ <20190608164158.GK28207@linux.ibm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <16a424d1-0ab7-7e81-5c4f-93da23519b1d@arm.com>
+Date:   Tue, 11 Jun 2019 15:14:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520205918.22251-17-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190608164158.GK28207@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 04:59:15PM -0400, Waiman Long wrote:
->  static struct rw_semaphore __sched *
-> +rwsem_down_read_slowpath(struct rw_semaphore *sem, int state, long adjustment)
->  {
-> +	long count;
->  	bool wake = false;
->  	struct rwsem_waiter waiter;
->  	DEFINE_WAKE_Q(wake_q);
->  
-> +	if (unlikely(!adjustment)) {
-> +		/*
-> +		 * This shouldn't happen. If it does, there is probably
-> +		 * something wrong in the system.
-> +		 */
-> +		WARN_ON_ONCE(1);
+On 6/8/19 6:41 PM, Paul E. McKenney wrote:
+> On Tue, Jun 04, 2019 at 03:29:32PM +0200, Dietmar Eggemann wrote:
+>> On 6/4/19 9:45 AM, Paul E. McKenney wrote:
+>>> On Mon, Jun 03, 2019 at 03:39:18PM +0200, Dietmar Eggemann wrote:
+>>>> On 6/3/19 1:44 PM, Mark Rutland wrote:
+>>>>> On Mon, Jun 03, 2019 at 10:38:48AM +0200, Peter Zijlstra wrote:
+>>>>>> On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
+>>>>>>> Scheduling-clock interrupts can arrive late in the CPU-offline process,
 
-	if (WARN_ON_ONCE(!adjustment)) {
+[...]
 
-> +
-> +		/*
-> +		 * An adjustment of 0 means that there are too many readers
-> +		 * holding or trying to acquire the lock. So disable
-> +		 * optimistic spinning and go directly into the wait list.
-> +		 */
-> +		if (rwsem_test_oflags(sem, RWSEM_RD_NONSPINNABLE))
-> +			rwsem_set_nonspinnable(sem);
+>>> And it looks like the reason I dropped it was that I didn't get any
+>>> response from the maintainer.  I sent a message to this effect to
+>>> linux-arm-kernel@lists.infradead.org and linux@arm.linux.org.uk on May
+>>> 21, 2015.
+>>>
+>>> So here it is again.  ;-)
+>>>
+>>> I have queued this locally.  Left to myself, I add the two of you on its
+>>> Cc: list and run it through my normal process.  But given the history,
+>>> I would still want either an ack from the maintainer or, better, for
+>>> the maintainer to take the patch.
+>>>
+>>> Or is there a better way for us to proceed on this?
+>>
+>> You could send this patch also to
+>> linux-arm-kernel@lists.infradead.org and cc rmk to get his opinion
+>> on the patch.
+> 
+> OK, please let me know how the testing goes.  My thought is to send the
+> patch as you suggest with your Tested-by.
 
-ISTR rwsem_set_nonspinnable() already does that test, so no need to do
-it again, right?
+Tested your patch on top of v5.2-rc4* on Arm TC2 (32bit) and CPU hotplug 
+stress test. W/o your patch, the test fails within seconds since CPUs 
+are not coming up again. W/ your patch, the test runs for hours just fine.
 
-> +		goto queue;
-> +	}
-> +
->  	/*
->  	 * Save the current read-owner of rwsem, if available, and the
->  	 * reader nonspinnable bit.
+You can add my:
+
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+
+* just for the record: one additional unrelated patch (to disable the 
+NOR flash) is necessary on Arm TC2: 
+https://patchwork.kernel.org/patch/10968391 .
