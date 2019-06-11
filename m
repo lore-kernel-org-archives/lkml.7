@@ -2,258 +2,501 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE851C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E4DC06508
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8827921721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:40:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cern.onmicrosoft.com header.i=@cern.onmicrosoft.com header.b="Y27SOox5"
+	by mail.kernel.org (Postfix) with ESMTP id 0A39B2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404831AbfFKQkM (ORCPT
+        id S2404929AbfFKQkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 12:40:12 -0400
-Received: from mail-eopbgr140071.outbound.protection.outlook.com ([40.107.14.71]:39793
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388531AbfFKQkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:40:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.onmicrosoft.com;
- s=selector1-cern-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iqoINAHvWhuMJ7IcYNQ1pzujMCi9HKTuXGVzKIm0Epg=;
- b=Y27SOox56yUaUx+7aolfCR4zpGjWjcpA+sWw4EGHjX1NxgYIyanC0MPRFsRVT8ph+mZf0HyXOMTaSbLI8Qpu3kG58VJ3y5lycmg2hnA2VBEzpXt8jOgzbcAB8tHqW9tkeD/sFchnic/P9USGdkJAhn2m7ENEpVLd+8R8rA6Rsjo=
-Received: from VI1PR0601CA0039.eurprd06.prod.outlook.com
- (2603:10a6:800:1e::49) by AM6PR0602MB3749.eurprd06.prod.outlook.com
- (2603:10a6:209:1e::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.11; Tue, 11 Jun
- 2019 16:40:08 +0000
-Received: from VE1EUR02FT004.eop-EUR02.prod.protection.outlook.com
- (2a01:111:f400:7e06::200) by VI1PR0601CA0039.outlook.office365.com
- (2603:10a6:800:1e::49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14 via Frontend
- Transport; Tue, 11 Jun 2019 16:40:07 +0000
-Authentication-Results: spf=pass (sender IP is 188.184.36.50)
- smtp.mailfrom=cern.ch; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=bestguesspass action=none
- header.from=cern.ch;
-Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
- 188.184.36.50 as permitted sender) receiver=protection.outlook.com;
- client-ip=188.184.36.50; helo=cernmxgwlb4.cern.ch;
-Received: from cernmxgwlb4.cern.ch (188.184.36.50) by
- VE1EUR02FT004.mail.protection.outlook.com (10.152.12.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1965.12 via Frontend Transport; Tue, 11 Jun 2019 16:40:07 +0000
-Received: from cernfe03.cern.ch (188.184.36.39) by cernmxgwlb4.cern.ch
- (188.184.36.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 18:40:06 +0200
-Received: from harkonnen.localnet (62.203.14.162) by smtp.cern.ch
- (188.184.36.52) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 18:40:05 +0200
-From:   Federico Vaga <federico.vaga@cern.ch>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, Pat Riehecky <riehecky@fnal.gov>,
-        Alessandro Rubini <rubini@gnudd.com>
-Subject: Re: [PATCH] fmc: Delete the FMC subsystem
-Date:   Tue, 11 Jun 2019 18:40:05 +0200
-Message-ID: <4878106.TDPaGnYU28@harkonnen>
-Organization: CERN
-In-Reply-To: <20190610141809.17542-1-linus.walleij@linaro.org>
-References: <20190610141809.17542-1-linus.walleij@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [62.203.14.162]
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:188.184.36.50;IPV:NLI;CTRY:CH;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(39860400002)(2980300002)(189003)(199004)(956004)(70586007)(336012)(33716001)(186003)(486006)(426003)(476003)(53546011)(9576002)(16526019)(11346002)(446003)(9686003)(6306002)(229853002)(126002)(5660300002)(356004)(230700001)(26005)(36916002)(14444005)(6916009)(66066001)(23726003)(70206006)(76176011)(47776003)(6116002)(3846002)(44832011)(2906002)(106002)(6246003)(4326008)(54906003)(966005)(316002)(97756001)(305945005)(7636002)(7736002)(86362001)(246002)(478600001)(46406003)(8936002)(8676002)(74482002)(50466002)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0602MB3749;H:cernmxgwlb4.cern.ch;FPR:;SPF:Pass;LANG:en;PTR:cernmx11.cern.ch;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dc5b6f5e-4ed1-486e-8d45-08d6ee8b76a6
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:AM6PR0602MB3749;
-X-MS-TrafficTypeDiagnostic: AM6PR0602MB3749:
-X-MS-Exchange-PUrlCount: 1
-X-Microsoft-Antispam-PRVS: <AM6PR0602MB3749BAEB193A414628483783EFED0@AM6PR0602MB3749.eurprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 006546F32A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: ioq/WZJOT56m28XGrG5fBhbAABunzeIlVeYONSDln2d5jEYPuYCrfIncvwgRefNv672CNeYwS1FrA+O+Nuj9yyTx47pvdkDKDT+b/vmyZvAkkJr/mo0mZFJCP1rAy0DEUMV/18lJU7EHpDWmbadrUcyl07qruKJwmQmSlpU4wxpTcLWimH/5wmO/z+CyEi6zUhaZ14zeo4tUkKug8UTy874eclowljAPQ88WwdVcSL2YC+aVgagQ+oW1cRL3B2SyLUaCNqsBE18lJYZDQxj9AwWAoUvZnhAs/petE1TwGbpB2dmj+EDwSqznEEvK5LpYvc4fS4mh0VqKT8vRZmsSK5MVkE0gAl4W7Kf6nExC7Dwy8STOXzpNwmD8YDSmo3oi6rR7LYmKYUAFgERJZSW4GiHOp3tVH0gfTYolMGp/PsI=
-X-OriginatorOrg: cern.ch
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2019 16:40:07.5423
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc5b6f5e-4ed1-486e-8d45-08d6ee8b76a6
-X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[188.184.36.50];Helo=[cernmxgwlb4.cern.ch]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0602MB3749
+        Tue, 11 Jun 2019 12:40:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59052 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404624AbfFKQkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:40:39 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D2C4430833C4;
+        Tue, 11 Jun 2019 16:40:28 +0000 (UTC)
+Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-60.sin2.redhat.com [10.67.116.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 84C195B681;
+        Tue, 11 Jun 2019 16:39:43 +0000 (UTC)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
+        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
+        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
+Subject: [PATCH v12 2/7] virtio-pmem: Add virtio pmem driver
+Date:   Tue, 11 Jun 2019 22:07:57 +0530
+Message-Id: <20190611163802.25352-3-pagupta@redhat.com>
+In-Reply-To: <20190611163802.25352-1-pagupta@redhat.com>
+References: <20190611163802.25352-1-pagupta@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 11 Jun 2019 16:40:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Well I do not know if it make sense to make it stronger with:
+This patch adds virtio-pmem driver for KVM guest.
 
-Signed-off-by: Federico Vaga <federico.vaga@cern.ch>
+Guest reads the persistent memory range information from
+Qemu over VIRTIO and registers it on nvdimm_bus. It also
+creates a nd_region object with the persistent memory
+range information so that existing 'nvdimm/pmem' driver
+can reserve this into system memory map. This way
+'virtio-pmem' driver uses existing functionality of pmem
+driver to register persistent memory compatible for DAX
+capable filesystems.
 
-As you want
+This also provides function to perform guest flush over
+VIRTIO from 'pmem' driver when userspace performs flush
+on DAX memory range.
 
-On Monday, June 10, 2019 4:18:09 PM CEST Linus Walleij wrote:
-> The FMC subsystem was created in 2012 with the ambition to
-> drive development of drivers for this hardware upstream.
-> 
-> The current implementation has architectural flaws and would
-> need to be revamped using real hardware to something that can
-> reuse existing kernel abstractions in the subsystems for e.g.
-> I2C, FPGA and GPIO.
-> 
-> We have concluded that for the mainline kernel it will be
-> better to delete the subsystem and start over with a clean
-> slate when/if an active maintainer steps up.
-> 
-> For details see:
-> https://lkml.org/lkml/2018/10/29/534
-> 
-> Suggested-by: Federico Vaga <federico.vaga@cern.ch>
-> Cc: Federico Vaga <federico.vaga@cern.ch>
-> Cc: Pat Riehecky <riehecky@fnal.gov>
-> Cc: Alessandro Rubini <rubini@gnudd.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> If people are happy with this, I will queue the removal
-> in the GPIO kernel tree.
-> ---
->  Documentation/fmc/API.txt              |  47 ---
->  Documentation/fmc/FMC-and-SDB.txt      |  88 ------
->  Documentation/fmc/carrier.txt          | 311 --------------------
->  Documentation/fmc/fmc-chardev.txt      |  64 ----
->  Documentation/fmc/fmc-fakedev.txt      |  36 ---
->  Documentation/fmc/fmc-trivial.txt      |  17 --
->  Documentation/fmc/fmc-write-eeprom.txt |  98 -------
->  Documentation/fmc/identifiers.txt      | 168 -----------
->  Documentation/fmc/mezzanine.txt        | 123 --------
->  Documentation/fmc/parameters.txt       |  56 ----
->  drivers/fmc/Kconfig                    |  51 ----
->  drivers/fmc/Makefile                   |  15 -
->  drivers/fmc/fmc-chardev.c              | 200 -------------
->  drivers/fmc/fmc-core.c                 | 389 -------------------------
->  drivers/fmc/fmc-debug.c                | 173 -----------
->  drivers/fmc/fmc-dump.c                 |  59 ----
->  drivers/fmc/fmc-fakedev.c              | 355 ----------------------
->  drivers/fmc/fmc-match.c                | 114 --------
->  drivers/fmc/fmc-private.h              |   9 -
->  drivers/fmc/fmc-sdb.c                  | 220 --------------
->  drivers/fmc/fmc-trivial.c              | 102 -------
->  drivers/fmc/fmc-write-eeprom.c         | 176 -----------
->  drivers/fmc/fru-parse.c                |  81 -----
->  include/linux/fmc-sdb.h                |  39 ---
->  include/linux/fmc.h                    | 272 -----------------
->  25 files changed, 3263 deletions(-)
->  delete mode 100644 Documentation/fmc/API.txt
->  delete mode 100644 Documentation/fmc/FMC-and-SDB.txt
->  delete mode 100644 Documentation/fmc/carrier.txt
->  delete mode 100644 Documentation/fmc/fmc-chardev.txt
->  delete mode 100644 Documentation/fmc/fmc-fakedev.txt
->  delete mode 100644 Documentation/fmc/fmc-trivial.txt
->  delete mode 100644 Documentation/fmc/fmc-write-eeprom.txt
->  delete mode 100644 Documentation/fmc/identifiers.txt
->  delete mode 100644 Documentation/fmc/mezzanine.txt
->  delete mode 100644 Documentation/fmc/parameters.txt
->  delete mode 100644 drivers/fmc/Kconfig
->  delete mode 100644 drivers/fmc/Makefile
->  delete mode 100644 drivers/fmc/fmc-chardev.c
->  delete mode 100644 drivers/fmc/fmc-core.c
->  delete mode 100644 drivers/fmc/fmc-debug.c
->  delete mode 100644 drivers/fmc/fmc-dump.c
->  delete mode 100644 drivers/fmc/fmc-fakedev.c
->  delete mode 100644 drivers/fmc/fmc-match.c
->  delete mode 100644 drivers/fmc/fmc-private.h
->  delete mode 100644 drivers/fmc/fmc-sdb.c
->  delete mode 100644 drivers/fmc/fmc-trivial.c
->  delete mode 100644 drivers/fmc/fmc-write-eeprom.c
->  delete mode 100644 drivers/fmc/fru-parse.c
->  delete mode 100644 include/linux/fmc-sdb.h
->  delete mode 100644 include/linux/fmc.h
-> 
-> diff --git a/Documentation/fmc/API.txt b/Documentation/fmc/API.txt
-> deleted file mode 100644
-> index 06b06b92c794..000000000000
-> diff --git a/Documentation/fmc/FMC-and-SDB.txt
-> b/Documentation/fmc/FMC-and-SDB.txt deleted file mode 100644
-> index fa14e0b24521..000000000000
-> diff --git a/Documentation/fmc/carrier.txt b/Documentation/fmc/carrier.txt
-> deleted file mode 100644
-> index 5e4f1dd3e98b..000000000000
-> diff --git a/Documentation/fmc/fmc-chardev.txt
-> b/Documentation/fmc/fmc-chardev.txt deleted file mode 100644
-> index d9ccb278e597..000000000000
-> diff --git a/Documentation/fmc/fmc-fakedev.txt
-> b/Documentation/fmc/fmc-fakedev.txt deleted file mode 100644
-> index e85b74a4ae30..000000000000
-> diff --git a/Documentation/fmc/fmc-trivial.txt
-> b/Documentation/fmc/fmc-trivial.txt deleted file mode 100644
-> index d1910bc67159..000000000000
-> diff --git a/Documentation/fmc/fmc-write-eeprom.txt
-> b/Documentation/fmc/fmc-write-eeprom.txt deleted file mode 100644
-> index e0a9712156aa..000000000000
-> diff --git a/Documentation/fmc/identifiers.txt
-> b/Documentation/fmc/identifiers.txt deleted file mode 100644
-> index 3bb577ff0d52..000000000000
-> diff --git a/Documentation/fmc/mezzanine.txt
-> b/Documentation/fmc/mezzanine.txt deleted file mode 100644
-> index 87910dbfc91e..000000000000
-> diff --git a/Documentation/fmc/parameters.txt
-> b/Documentation/fmc/parameters.txt deleted file mode 100644
-> index 59edf088e3a4..000000000000
-> diff --git a/drivers/fmc/Kconfig b/drivers/fmc/Kconfig
-> deleted file mode 100644
-> index 3a75f4256d08..000000000000
-> diff --git a/drivers/fmc/Makefile b/drivers/fmc/Makefile
-> deleted file mode 100644
-> index e3da6192cf39..000000000000
-> diff --git a/drivers/fmc/fmc-chardev.c b/drivers/fmc/fmc-chardev.c
-> deleted file mode 100644
-> index 5ecf4090a610..000000000000
-> diff --git a/drivers/fmc/fmc-core.c b/drivers/fmc/fmc-core.c
-> deleted file mode 100644
-> index bbcb505d1522..000000000000
-> diff --git a/drivers/fmc/fmc-debug.c b/drivers/fmc/fmc-debug.c
-> deleted file mode 100644
-> index 32930722770c..000000000000
-> diff --git a/drivers/fmc/fmc-dump.c b/drivers/fmc/fmc-dump.c
-> deleted file mode 100644
-> index cd1df475b254..000000000000
-> diff --git a/drivers/fmc/fmc-fakedev.c b/drivers/fmc/fmc-fakedev.c
-> deleted file mode 100644
-> index 941d0930969a..000000000000
-> diff --git a/drivers/fmc/fmc-match.c b/drivers/fmc/fmc-match.c
-> deleted file mode 100644
-> index a0956d1f7550..000000000000
-> diff --git a/drivers/fmc/fmc-private.h b/drivers/fmc/fmc-private.h
-> deleted file mode 100644
-> index 1e5136643bdc..000000000000
-> diff --git a/drivers/fmc/fmc-sdb.c b/drivers/fmc/fmc-sdb.c
-> deleted file mode 100644
-> index d0e65b86dc22..000000000000
-> diff --git a/drivers/fmc/fmc-trivial.c b/drivers/fmc/fmc-trivial.c
-> deleted file mode 100644
-> index b99dbc7ee203..000000000000
-> diff --git a/drivers/fmc/fmc-write-eeprom.c b/drivers/fmc/fmc-write-eeprom.c
-> deleted file mode 100644
-> index 3eb81bb1f1fc..000000000000
-> diff --git a/drivers/fmc/fru-parse.c b/drivers/fmc/fru-parse.c
-> deleted file mode 100644
-> index eb21480d399f..000000000000
-> diff --git a/include/linux/fmc-sdb.h b/include/linux/fmc-sdb.h
-> deleted file mode 100644
-> index bec899f0867c..000000000000
-> diff --git a/include/linux/fmc.h b/include/linux/fmc.h
-> deleted file mode 100644
-> index f0d482d29df7..000000000000
+Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+Reviewed-by: Yuval Shaia <yuval.shaia@oracle.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jakub Staron <jstaron@google.com>
+Tested-by: Jakub Staron <jstaron@google.com>
+---
+ drivers/nvdimm/Makefile          |   1 +
+ drivers/nvdimm/nd_virtio.c       | 124 +++++++++++++++++++++++++++++++
+ drivers/nvdimm/virtio_pmem.c     | 122 ++++++++++++++++++++++++++++++
+ drivers/nvdimm/virtio_pmem.h     |  55 ++++++++++++++
+ drivers/virtio/Kconfig           |  11 +++
+ include/uapi/linux/virtio_ids.h  |   1 +
+ include/uapi/linux/virtio_pmem.h |  35 +++++++++
+ 7 files changed, 349 insertions(+)
+ create mode 100644 drivers/nvdimm/nd_virtio.c
+ create mode 100644 drivers/nvdimm/virtio_pmem.c
+ create mode 100644 drivers/nvdimm/virtio_pmem.h
+ create mode 100644 include/uapi/linux/virtio_pmem.h
 
-
+diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
+index 6f2a088afad6..cefe233e0b52 100644
+--- a/drivers/nvdimm/Makefile
++++ b/drivers/nvdimm/Makefile
+@@ -5,6 +5,7 @@ obj-$(CONFIG_ND_BTT) += nd_btt.o
+ obj-$(CONFIG_ND_BLK) += nd_blk.o
+ obj-$(CONFIG_X86_PMEM_LEGACY) += nd_e820.o
+ obj-$(CONFIG_OF_PMEM) += of_pmem.o
++obj-$(CONFIG_VIRTIO_PMEM) += virtio_pmem.o nd_virtio.o
+ 
+ nd_pmem-y := pmem.o
+ 
+diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
+new file mode 100644
+index 000000000000..efc535723517
+--- /dev/null
++++ b/drivers/nvdimm/nd_virtio.c
+@@ -0,0 +1,124 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * virtio_pmem.c: Virtio pmem Driver
++ *
++ * Discovers persistent memory range information
++ * from host and provides a virtio based flushing
++ * interface.
++ */
++#include "virtio_pmem.h"
++#include "nd.h"
++
++ /* The interrupt handler */
++void host_ack(struct virtqueue *vq)
++{
++	struct virtio_pmem *vpmem = vq->vdev->priv;
++	struct virtio_pmem_request *req_data, *req_buf;
++	unsigned long flags;
++	unsigned int len;
++
++	spin_lock_irqsave(&vpmem->pmem_lock, flags);
++	while ((req_data = virtqueue_get_buf(vq, &len)) != NULL) {
++		req_data->done = true;
++		wake_up(&req_data->host_acked);
++
++		if (!list_empty(&vpmem->req_list)) {
++			req_buf = list_first_entry(&vpmem->req_list,
++					struct virtio_pmem_request, list);
++			req_buf->wq_buf_avail = true;
++			wake_up(&req_buf->wq_buf);
++			list_del(&req_buf->list);
++		}
++	}
++	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
++}
++EXPORT_SYMBOL_GPL(host_ack);
++
++ /* The request submission function */
++int virtio_pmem_flush(struct nd_region *nd_region)
++{
++	struct virtio_device *vdev = nd_region->provider_data;
++	struct virtio_pmem *vpmem  = vdev->priv;
++	struct virtio_pmem_request *req_data;
++	struct scatterlist *sgs[2], sg, ret;
++	unsigned long flags;
++	int err, err1;
++
++	might_sleep();
++	req_data = kmalloc(sizeof(*req_data), GFP_KERNEL);
++	if (!req_data)
++		return -ENOMEM;
++
++	req_data->done = false;
++	init_waitqueue_head(&req_data->host_acked);
++	init_waitqueue_head(&req_data->wq_buf);
++	INIT_LIST_HEAD(&req_data->list);
++	req_data->req.type = cpu_to_virtio32(vdev, VIRTIO_PMEM_REQ_TYPE_FLUSH);
++	sg_init_one(&sg, &req_data->req, sizeof(req_data->req));
++	sgs[0] = &sg;
++	sg_init_one(&ret, &req_data->resp.ret, sizeof(req_data->resp));
++	sgs[1] = &ret;
++
++	spin_lock_irqsave(&vpmem->pmem_lock, flags);
++	 /*
++	  * If virtqueue_add_sgs returns -ENOSPC then req_vq virtual
++	  * queue does not have free descriptor. We add the request
++	  * to req_list and wait for host_ack to wake us up when free
++	  * slots are available.
++	  */
++	while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req_data,
++					GFP_ATOMIC)) == -ENOSPC) {
++
++		dev_err(&vdev->dev, "failed to send command to virtio pmem device, no free slots in the virtqueue\n");
++		req_data->wq_buf_avail = false;
++		list_add_tail(&req_data->list, &vpmem->req_list);
++		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
++
++		/* A host response results in "host_ack" getting called */
++		wait_event(req_data->wq_buf, req_data->wq_buf_avail);
++		spin_lock_irqsave(&vpmem->pmem_lock, flags);
++	}
++	err1 = virtqueue_kick(vpmem->req_vq);
++	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
++	/*
++	 * virtqueue_add_sgs failed with error different than -ENOSPC, we can't
++	 * do anything about that.
++	 */
++	if (err || !err1) {
++		dev_info(&vdev->dev, "failed to send command to virtio pmem device\n");
++		err = -EIO;
++	} else {
++		/* A host repsonse results in "host_ack" getting called */
++		wait_event(req_data->host_acked, req_data->done);
++		err = virtio32_to_cpu(vdev, req_data->resp.ret);
++	}
++
++	kfree(req_data);
++	return err;
++};
++
++/* The asynchronous flush callback function */
++int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
++{
++	/* Create child bio for asynchronous flush and chain with
++	 * parent bio. Otherwise directly call nd_region flush.
++	 */
++	if (bio && bio->bi_iter.bi_sector != -1) {
++		struct bio *child = bio_alloc(GFP_ATOMIC, 0);
++
++		if (!child)
++			return -ENOMEM;
++		bio_copy_dev(child, bio);
++		child->bi_opf = REQ_PREFLUSH;
++		child->bi_iter.bi_sector = -1;
++		bio_chain(child, bio);
++		submit_bio(child);
++		return 0;
++	}
++	if (virtio_pmem_flush(nd_region))
++		return -EIO;
++
++	return 0;
++};
++EXPORT_SYMBOL_GPL(async_pmem_flush);
++MODULE_LICENSE("GPL");
+diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
+new file mode 100644
+index 000000000000..b60ebd8cd2fd
+--- /dev/null
++++ b/drivers/nvdimm/virtio_pmem.c
+@@ -0,0 +1,122 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * virtio_pmem.c: Virtio pmem Driver
++ *
++ * Discovers persistent memory range information
++ * from host and registers the virtual pmem device
++ * with libnvdimm core.
++ */
++#include "virtio_pmem.h"
++#include "nd.h"
++
++static struct virtio_device_id id_table[] = {
++	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
++	{ 0 },
++};
++
++ /* Initialize virt queue */
++static int init_vq(struct virtio_pmem *vpmem)
++{
++	/* single vq */
++	vpmem->req_vq = virtio_find_single_vq(vpmem->vdev,
++						host_ack, "flush_queue");
++	if (IS_ERR(vpmem->req_vq))
++		return PTR_ERR(vpmem->req_vq);
++
++	spin_lock_init(&vpmem->pmem_lock);
++	INIT_LIST_HEAD(&vpmem->req_list);
++
++	return 0;
++};
++
++static int virtio_pmem_probe(struct virtio_device *vdev)
++{
++	struct nd_region_desc ndr_desc = {};
++	int nid = dev_to_node(&vdev->dev);
++	struct nd_region *nd_region;
++	struct virtio_pmem *vpmem;
++	struct resource res;
++	int err = 0;
++
++	if (!vdev->config->get) {
++		dev_err(&vdev->dev, "%s failure: config access disabled\n",
++			__func__);
++		return -EINVAL;
++	}
++
++	vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem), GFP_KERNEL);
++	if (!vpmem) {
++		err = -ENOMEM;
++		goto out_err;
++	}
++
++	vpmem->vdev = vdev;
++	vdev->priv = vpmem;
++	err = init_vq(vpmem);
++	if (err) {
++		dev_err(&vdev->dev, "failed to initialize virtio pmem vq's\n");
++		goto out_err;
++	}
++
++	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
++			start, &vpmem->start);
++	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
++			size, &vpmem->size);
++
++	res.start = vpmem->start;
++	res.end   = vpmem->start + vpmem->size - 1;
++	vpmem->nd_desc.provider_name = "virtio-pmem";
++	vpmem->nd_desc.module = THIS_MODULE;
++
++	vpmem->nvdimm_bus = nvdimm_bus_register(&vdev->dev,
++						&vpmem->nd_desc);
++	if (!vpmem->nvdimm_bus) {
++		dev_err(&vdev->dev, "failed to register device with nvdimm_bus\n");
++		err = -ENXIO;
++		goto out_vq;
++	}
++
++	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
++
++	ndr_desc.res = &res;
++	ndr_desc.numa_node = nid;
++	ndr_desc.flush = async_pmem_flush;
++	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
++	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
++	nd_region = nvdimm_pmem_region_create(vpmem->nvdimm_bus, &ndr_desc);
++	if (!nd_region) {
++		dev_err(&vdev->dev, "failed to create nvdimm region\n");
++		err = -ENXIO;
++		goto out_nd;
++	}
++	nd_region->provider_data = dev_to_virtio(nd_region->dev.parent->parent);
++	return 0;
++out_nd:
++	nvdimm_bus_unregister(vpmem->nvdimm_bus);
++out_vq:
++	vdev->config->del_vqs(vdev);
++out_err:
++	return err;
++}
++
++static void virtio_pmem_remove(struct virtio_device *vdev)
++{
++	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
++
++	nvdimm_bus_unregister(nvdimm_bus);
++	vdev->config->del_vqs(vdev);
++	vdev->config->reset(vdev);
++}
++
++static struct virtio_driver virtio_pmem_driver = {
++	.driver.name		= KBUILD_MODNAME,
++	.driver.owner		= THIS_MODULE,
++	.id_table		= id_table,
++	.probe			= virtio_pmem_probe,
++	.remove			= virtio_pmem_remove,
++};
++
++module_virtio_driver(virtio_pmem_driver);
++MODULE_DEVICE_TABLE(virtio, id_table);
++MODULE_DESCRIPTION("Virtio pmem driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
+new file mode 100644
+index 000000000000..6e47521be158
+--- /dev/null
++++ b/drivers/nvdimm/virtio_pmem.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * virtio_pmem.h: virtio pmem Driver
++ *
++ * Discovers persistent memory range information
++ * from host and provides a virtio based flushing
++ * interface.
++ **/
++
++#ifndef _LINUX_VIRTIO_PMEM_H
++#define _LINUX_VIRTIO_PMEM_H
++
++#include <linux/module.h>
++#include <uapi/linux/virtio_pmem.h>
++#include <linux/libnvdimm.h>
++#include <linux/spinlock.h>
++
++struct virtio_pmem_request {
++	struct virtio_pmem_req req;
++	struct virtio_pmem_resp resp;
++
++	/* Wait queue to process deferred work after ack from host */
++	wait_queue_head_t host_acked;
++	bool done;
++
++	/* Wait queue to process deferred work after virt queue buffer avail */
++	wait_queue_head_t wq_buf;
++	bool wq_buf_avail;
++	struct list_head list;
++};
++
++struct virtio_pmem {
++	struct virtio_device *vdev;
++
++	/* Virtio pmem request queue */
++	struct virtqueue *req_vq;
++
++	/* nvdimm bus registers virtio pmem device */
++	struct nvdimm_bus *nvdimm_bus;
++	struct nvdimm_bus_descriptor nd_desc;
++
++	/* List to store deferred work if virtqueue is full */
++	struct list_head req_list;
++
++	/* Synchronize virtqueue data */
++	spinlock_t pmem_lock;
++
++	/* Memory region information */
++	uint64_t start;
++	uint64_t size;
++};
++
++void host_ack(struct virtqueue *vq);
++int async_pmem_flush(struct nd_region *nd_region, struct bio *bio);
++#endif
+diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+index 35897649c24f..009278b23241 100644
+--- a/drivers/virtio/Kconfig
++++ b/drivers/virtio/Kconfig
+@@ -42,6 +42,17 @@ config VIRTIO_PCI_LEGACY
+ 
+ 	  If unsure, say Y.
+ 
++config VIRTIO_PMEM
++	tristate "Support for virtio pmem driver"
++	depends on VIRTIO
++	depends on LIBNVDIMM
++	help
++	  This driver provides access to virtio-pmem devices, storage devices
++	  that are mapped into the physical address space - similar to NVDIMMs
++	   - with a virtio-based flushing interface.
++
++	  If unsure, say Y.
++
+ config VIRTIO_BALLOON
+ 	tristate "Virtio balloon driver"
+ 	depends on VIRTIO
+diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
+index 6d5c3b2d4f4d..32b2f94d1f58 100644
+--- a/include/uapi/linux/virtio_ids.h
++++ b/include/uapi/linux/virtio_ids.h
+@@ -43,5 +43,6 @@
+ #define VIRTIO_ID_INPUT        18 /* virtio input */
+ #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
+ #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
++#define VIRTIO_ID_PMEM         27 /* virtio pmem */
+ 
+ #endif /* _LINUX_VIRTIO_IDS_H */
+diff --git a/include/uapi/linux/virtio_pmem.h b/include/uapi/linux/virtio_pmem.h
+new file mode 100644
+index 000000000000..7a3e2fe52415
+--- /dev/null
++++ b/include/uapi/linux/virtio_pmem.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
++/*
++ * Definitions for virtio-pmem devices.
++ *
++ * Copyright (C) 2019 Red Hat, Inc.
++ *
++ * Author(s): Pankaj Gupta <pagupta@redhat.com>
++ */
++
++#ifndef _UAPI_LINUX_VIRTIO_PMEM_H
++#define _UAPI_LINUX_VIRTIO_PMEM_H
++
++#include <linux/types.h>
++#include <linux/virtio_types.h>
++#include <linux/virtio_ids.h>
++#include <linux/virtio_config.h>
++
++struct virtio_pmem_config {
++	__le64 start;
++	__le64 size;
++};
++
++#define VIRTIO_PMEM_REQ_TYPE_FLUSH      0
++
++struct virtio_pmem_resp {
++	/* Host return status corresponding to flush request */
++	__virtio32 ret;
++};
++
++struct virtio_pmem_req {
++	/* command type */
++	__virtio32 type;
++};
++
++#endif
 -- 
-Federico Vaga [CERN BE-CO-HT]
-
+2.20.1
 
