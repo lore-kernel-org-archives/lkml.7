@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B6FC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351EDC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7863E205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092E82089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404192AbfFKOzV (ORCPT
+        id S2391650AbfFKOzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:55:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52598 "EHLO mx1.suse.de"
+        Tue, 11 Jun 2019 10:55:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52480 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404070AbfFKOzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:55:19 -0400
+        id S2391625AbfFKOzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:55:14 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 76E02AF0C;
-        Tue, 11 Jun 2019 14:55:17 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 0EDC5AFBD;
+        Tue, 11 Jun 2019 14:55:12 +0000 (UTC)
 From:   Roman Penyaev <rpenyaev@suse.de>
 Cc:     Roman Penyaev <rpenyaev@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 08/14] epoll: support polling from userspace for ep_insert()
-Date:   Tue, 11 Jun 2019 16:54:52 +0200
-Message-Id: <20190611145458.9540-9-rpenyaev@suse.de>
+Subject: [PATCH v4 05/14] epoll: offload polling to a work in case of epfd polled from userspace
+Date:   Tue, 11 Jun 2019 16:54:49 +0200
+Message-Id: <20190611145458.9540-6-rpenyaev@suse.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190611145458.9540-1-rpenyaev@suse.de>
 References: <20190611145458.9540-1-rpenyaev@suse.de>
@@ -43,8 +43,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When epfd is polled by userspace and new item is inserted new bit
-should be get from a bitmap and then user item is set accordingly.
+Not every device reports pollflags on wake_up(), expecting that it will be
+polled later.  vfs_poll() can't be called from ep_poll_callback(), because
+ep_poll_callback() is called under the spinlock.  Obviously userspace can't
+call vfs_poll(), thus epoll has to offload vfs_poll() to a work and then to
+call ep_poll_callback() with pollflags in a hand.
+
+In order not to bloat the size of `struct epitem` with `struct work_struct`
+new `struct uepitem` includes original epi and work.  Thus for ep pollable
+from user new `struct uepitem` will be allocated.  This will be done in
+the following patches.
 
 Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -53,190 +61,235 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- fs/eventpoll.c | 118 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 100 insertions(+), 18 deletions(-)
+ fs/eventpoll.c | 131 ++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 107 insertions(+), 24 deletions(-)
 
 diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index bcd57ca47564..4f541f85c7e5 100644
+index 529573266ff5..fc2bb0c8e9dd 100644
 --- a/fs/eventpoll.c
 +++ b/fs/eventpoll.c
-@@ -885,6 +885,23 @@ static void epi_rcu_free(struct rcu_head *head)
- 	kmem_cache_free(epi_cache, epi);
- }
+@@ -38,6 +38,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/compat.h>
+ #include <linux/rculist.h>
++#include <linux/workqueue.h>
+ #include <net/busy_poll.h>
  
-+static inline int ep_get_bit(struct eventpoll *ep)
-+{
-+	bool was_set;
-+	int bit;
-+
-+	lockdep_assert_held(&ep->mtx);
-+
-+	bit = find_first_zero_bit(ep->items_bm, ep->max_items_nr);
-+	if (bit >= ep->max_items_nr)
-+		return -ENOSPC;
-+
-+	was_set = test_and_set_bit(bit, ep->items_bm);
-+	WARN_ON(was_set);
-+
-+	return bit;
-+}
-+
- #define set_unless_zero_atomically(ptr, flags)			\
- ({								\
- 	typeof(ptr) _ptr = (ptr);				\
-@@ -1996,6 +2013,33 @@ static noinline void ep_destroy_wakeup_source(struct epitem *epi)
- 	wakeup_source_unregister(ws);
- }
+ /*
+@@ -184,6 +185,18 @@ struct epitem {
+ 	struct epoll_event event;
+ };
  
-+static inline struct epitem *epi_alloc(struct eventpoll *ep)
-+{
-+	struct epitem *epi;
++/*
++ * The only purpose of this structure is not to inflate the size of the
++ * 'struct epitem' if polling from user is not used.
++ */
++struct uepitem {
++	/* Includes ep item */
++	struct epitem epi;
 +
-+	if (ep_polled_by_user(ep)) {
-+		struct uepitem *uepi;
-+
-+		uepi = kmem_cache_alloc(uepi_cache, GFP_KERNEL);
-+		if (likely(uepi))
-+			epi = &uepi->epi;
-+		else
-+			epi = NULL;
-+	} else {
-+		epi = kmem_cache_alloc(epi_cache, GFP_KERNEL);
-+	}
-+
-+	return epi;
-+}
-+
-+static inline void epi_free(struct eventpoll *ep, struct epitem *epi)
-+{
-+	if (ep_polled_by_user(ep))
-+		kmem_cache_free(uepi_cache, uep_item_from_epi(epi));
-+	else
-+		kmem_cache_free(epi_cache, epi);
-+}
++	/* Work for offloading event callback */
++	struct work_struct work;
++};
 +
  /*
-  * Must be called with "mtx" held.
-  */
-@@ -2008,29 +2052,55 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
- 	struct epitem *epi;
- 	struct ep_pqueue epq;
+  * This structure is stored inside the "private_data" member of the file
+  * structure and represents the main data structure for the eventpoll
+@@ -313,6 +326,9 @@ static struct nested_calls poll_loop_ncalls;
+ /* Slab cache used to allocate "struct epitem" */
+ static struct kmem_cache *epi_cache __read_mostly;
  
-+	lockdep_assert_held(&ep->mtx);
- 	lockdep_assert_irqs_enabled();
- 
- 	user_watches = atomic_long_read(&ep->user->epoll_watches);
- 	if (unlikely(user_watches >= max_user_watches))
- 		return -ENOSPC;
--	if (!(epi = kmem_cache_alloc(epi_cache, GFP_KERNEL)))
-+	epi = epi_alloc(ep);
-+	if (unlikely(!epi))
- 		return -ENOMEM;
- 
- 	/* Item initialization follow here ... */
- 	INIT_LIST_HEAD(&epi->rdllink);
- 	INIT_LIST_HEAD(&epi->fllink);
- 	INIT_LIST_HEAD(&epi->pwqlist);
-+	RCU_INIT_POINTER(epi->ws, NULL);
- 	epi->ep = ep;
- 	ep_set_ffd(&epi->ffd, tfile, fd);
- 	epi->event = *event;
- 	epi->nwait = 0;
- 	epi->next = EP_UNACTIVE_PTR;
--	if (epi->event.events & EPOLLWAKEUP) {
++/* Slab cache used to allocate "struct uepitem" */
++static struct kmem_cache *uepi_cache __read_mostly;
 +
-+	if (ep_polled_by_user(ep)) {
-+		struct uepitem *uepi = uep_item_from_epi(epi);
-+		struct epoll_uitem *uitem;
-+		int bit;
-+
-+		INIT_WORK(&uepi->work, ep_poll_callback_work);
-+
-+		bit = ep_get_bit(ep);
-+		if (unlikely(bit < 0)) {
-+			error = bit;
-+			goto error_get_bit;
-+		}
-+		uepi->bit = bit;
-+
-+		/*
-+		 * Now fill-in user item.  Do not touch ready_events, since
-+		 * it can be EPOLLREMOVED (has been set by previous user
-+		 * item), thus user index entry can be not yet consumed
-+		 * by userspace.  See ep_remove_user_item() and
-+		 * ep_add_event_to_uring() for details.
-+		 */
-+		uitem = &ep->user_header->items[uepi->bit];
-+		uitem->events = event->events;
-+		uitem->data = event->data;
-+	} else if (epi->event.events & EPOLLWAKEUP) {
- 		error = ep_create_wakeup_source(epi);
- 		if (error)
- 			goto error_create_wakeup_source;
--	} else {
--		RCU_INIT_POINTER(epi->ws, NULL);
- 	}
+ /* Slab cache used to allocate "struct eppoll_entry" */
+ static struct kmem_cache *pwq_cache __read_mostly;
  
- 	/* Initialize the poll table using the queue callback */
-@@ -2077,16 +2147,23 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
- 	/* record NAPI ID of new item if present */
- 	ep_set_busy_poll_napi_id(epi);
- 
--	/* If the file is already "ready" we drop it inside the ready list */
--	if (revents && !ep_is_linked(epi)) {
--		list_add_tail(&epi->rdllink, &ep->rdllist);
--		ep_pm_stay_awake(epi);
-+	if (revents) {
-+		bool added = false;
- 
--		/* Notify waiting tasks that events are available */
--		if (waitqueue_active(&ep->wq))
--			wake_up(&ep->wq);
--		if (waitqueue_active(&ep->poll_wait))
--			pwake++;
-+		if (ep_polled_by_user(ep)) {
-+			added = ep_add_event_to_uring(epi, revents);
-+		} else if (!ep_is_linked(epi)) {
-+			list_add_tail(&epi->rdllink, &ep->rdllist);
-+			ep_pm_stay_awake(epi);
-+			added = true;
-+		}
-+		if (added) {
-+			/* Notify waiting tasks that events are available */
-+			if (waitqueue_active(&ep->wq))
-+				wake_up(&ep->wq);
-+			if (waitqueue_active(&ep->poll_wait))
-+				pwake++;
-+		}
- 	}
- 
- 	write_unlock_irq(&ep->lock);
-@@ -2115,15 +2192,20 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
- 	 * list, since that is used/cleaned only inside a section bound by "mtx".
- 	 * And ep_insert() is called with "mtx" held.
- 	 */
--	write_lock_irq(&ep->lock);
--	if (ep_is_linked(epi))
--		list_del_init(&epi->rdllink);
--	write_unlock_irq(&ep->lock);
-+	if (ep_polled_by_user(ep)) {
-+		ep_remove_user_item(epi);
-+	} else {
-+		write_lock_irq(&ep->lock);
-+		if (ep_is_linked(epi))
-+			list_del_init(&epi->rdllink);
-+		write_unlock_irq(&ep->lock);
-+	}
- 
- 	wakeup_source_unregister(ep_wakeup_source(epi));
- 
-+error_get_bit:
- error_create_wakeup_source:
--	kmem_cache_free(epi_cache, epi);
-+	epi_free(ep, epi);
- 
- 	return error;
+@@ -391,6 +407,12 @@ static inline struct epitem *ep_item_from_epqueue(poll_table *p)
+ 	return container_of(p, struct ep_pqueue, pt)->epi;
  }
+ 
++/* Get the "struct uepitem" from an generic epitem. */
++static inline struct uepitem *uep_item_from_epi(struct epitem *p)
++{
++	return container_of(p, struct uepitem, epi);
++}
++
+ /* Tells if the epoll_ctl(2) operation needs an event copy from userspace */
+ static inline int ep_op_has_event(int op)
+ {
+@@ -698,6 +720,14 @@ static void ep_unregister_pollwait(struct eventpoll *ep, struct epitem *epi)
+ 		ep_remove_wait_queue(pwq);
+ 		kmem_cache_free(pwq_cache, pwq);
+ 	}
++	if (ep_polled_by_user(ep)) {
++		/*
++		 * Events polled by user require offloading to a work,
++		 * thus we have to be sure everything which was queued
++		 * has run to a completion.
++		 */
++		flush_work(&uep_item_from_epi(epi)->work);
++	}
+ }
+ 
+ /* call only when ep->mtx is held */
+@@ -1343,9 +1373,8 @@ static inline bool chain_epi_lockless(struct epitem *epi)
+ }
+ 
+ /*
+- * This is the callback that is passed to the wait queue wakeup
+- * mechanism. It is called by the stored file descriptors when they
+- * have events to report.
++ * This is the callback that is called directly from wake queue wakeup or
++ * from a work.
+  *
+  * This callback takes a read lock in order not to content with concurrent
+  * events from another file descriptors, thus all modifications to ->rdllist
+@@ -1360,14 +1389,11 @@ static inline bool chain_epi_lockless(struct epitem *epi)
+  * queues are used should be detected accordingly.  This is detected using
+  * cmpxchg() operation.
+  */
+-static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, void *key)
++static int ep_poll_callback(struct epitem *epi, __poll_t pollflags)
+ {
+-	int pwake = 0;
+-	struct epitem *epi = ep_item_from_wait(wait);
+ 	struct eventpoll *ep = epi->ep;
+-	__poll_t pollflags = key_to_poll(key);
++	int pwake = 0, ewake = 0;
+ 	unsigned long flags;
+-	int ewake = 0;
+ 
+ 	read_lock_irqsave(&ep->lock, flags);
+ 
+@@ -1385,8 +1411,9 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
+ 	/*
+ 	 * Check the events coming with the callback. At this stage, not
+ 	 * every device reports the events in the "key" parameter of the
+-	 * callback. We need to be able to handle both cases here, hence the
+-	 * test for "key" != NULL before the event match test.
++	 * callback (for ep_poll_callback() case special worker is used).
++	 * We need to be able to handle both cases here, hence the test
++	 * for "key" != NULL before the event match test.
+ 	 */
+ 	if (pollflags && !(pollflags & epi->event.events))
+ 		goto out_unlock;
+@@ -1446,23 +1473,68 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
+ 	if (!(epi->event.events & EPOLLEXCLUSIVE))
+ 		ewake = 1;
+ 
+-	if (pollflags & POLLFREE) {
+-		/*
+-		 * If we race with ep_remove_wait_queue() it can miss
+-		 * ->whead = NULL and do another remove_wait_queue() after
+-		 * us, so we can't use __remove_wait_queue().
+-		 */
+-		list_del_init(&wait->entry);
++	return ewake;
++}
++
++static void ep_poll_callback_work(struct work_struct *work)
++{
++	struct uepitem *uepi = container_of(work, typeof(*uepi), work);
++	struct epitem *epi = &uepi->epi;
++	__poll_t pollflags;
++	poll_table pt;
++
++	WARN_ON(!ep_polled_by_user(epi->ep));
++
++	init_poll_funcptr(&pt, NULL);
++	pollflags = ep_item_poll(epi, &pt, 1);
++	if (pollflags)
++		(void)ep_poll_callback(epi, pollflags);
++}
++
++/*
++ * This is the callback that is passed to the wait queue wakeup
++ * mechanism. It is called by the stored file descriptors when they
++ * have events to report.
++ */
++static int ep_poll_wakeup(wait_queue_entry_t *wait, unsigned int mode,
++			  int sync, void *key)
++{
++
++	struct epitem *epi = ep_item_from_wait(wait);
++	struct eventpoll *ep = epi->ep;
++	__poll_t pollflags = key_to_poll(key);
++	int rc;
++
++	if (!ep_polled_by_user(ep) || pollflags) {
++		rc = ep_poll_callback(epi, pollflags);
++
++		if (pollflags & POLLFREE) {
++			/*
++			 * If we race with ep_remove_wait_queue() it can miss
++			 * ->whead = NULL and do another remove_wait_queue()
++			 * after us, so we can't use __remove_wait_queue().
++			 */
++			list_del_init(&wait->entry);
++			/*
++			 * ->whead != NULL protects us from the race with
++			 * ep_free() or ep_remove(), ep_remove_wait_queue()
++			 * takes whead->lock held by the caller. Once we nullify
++			 * it, nothing protects ep/epi or even wait.
++			 */
++			smp_store_release(&ep_pwq_from_wait(wait)->whead, NULL);
++		}
++	} else {
++		queue_work(system_highpri_wq, &uep_item_from_epi(epi)->work);
++
+ 		/*
+-		 * ->whead != NULL protects us from the race with ep_free()
+-		 * or ep_remove(), ep_remove_wait_queue() takes whead->lock
+-		 * held by the caller. Once we nullify it, nothing protects
+-		 * ep/epi or even wait.
++		 * Here on this path we are absolutely sure that for file
++		 * descriptors which are pollable from userspace we do not
++		 * support EPOLLEXCLUSIVE, so it is safe to return 1.
+ 		 */
+-		smp_store_release(&ep_pwq_from_wait(wait)->whead, NULL);
++		rc = 1;
+ 	}
+ 
+-	return ewake;
++	return rc;
+ }
+ 
+ /*
+@@ -1476,7 +1548,7 @@ static void ep_ptable_queue_proc(struct file *file, wait_queue_head_t *whead,
+ 	struct eppoll_entry *pwq;
+ 
+ 	if (epi->nwait >= 0 && (pwq = kmem_cache_alloc(pwq_cache, GFP_KERNEL))) {
+-		init_waitqueue_func_entry(&pwq->wait, ep_poll_callback);
++		init_waitqueue_func_entry(&pwq->wait, ep_poll_wakeup);
+ 		pwq->whead = whead;
+ 		pwq->base = epi;
+ 		if (epi->event.events & EPOLLEXCLUSIVE)
+@@ -2553,6 +2625,10 @@ static int __init eventpoll_init(void)
+ 	/*
+ 	 * We can have many thousands of epitems, so prevent this from
+ 	 * using an extra cache line on 64-bit (and smaller) CPUs
++	 *
++	 * 'struct uepitem' is used for polling from userspace, it is
++	 * slightly bigger than 128b because of the work struct, thus
++	 * it is excluded from the check below.
+ 	 */
+ 	BUILD_BUG_ON(sizeof(void *) <= 8 && sizeof(struct epitem) > 128);
+ 
+@@ -2560,6 +2636,13 @@ static int __init eventpoll_init(void)
+ 	epi_cache = kmem_cache_create("eventpoll_epi", sizeof(struct epitem),
+ 			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT, NULL);
+ 
++	/*
++	 * Allocates slab cache used to allocate "struct uepitem" items,
++	 * used only for polling from user.
++	 */
++	uepi_cache = kmem_cache_create("eventpoll_uepi", sizeof(struct uepitem),
++			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT, NULL);
++
+ 	/* Allocates slab cache used to allocate "struct eppoll_entry" */
+ 	pwq_cache = kmem_cache_create("eventpoll_pwq",
+ 		sizeof(struct eppoll_entry), 0, SLAB_PANIC|SLAB_ACCOUNT, NULL);
 -- 
 2.21.0
 
