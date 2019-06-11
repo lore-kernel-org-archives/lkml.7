@@ -2,118 +2,175 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1F8C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A9EC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42E421734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD3B21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhOuZSIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392147AbfFKXrW (ORCPT
+        id S2436469AbfFKXsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 19:47:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:22035 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387864AbfFKXrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 19:47:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 16:47:21 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 16:47:19 -0700
-Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        sai.praneeth.prakhya@intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] iommu/vt-d: Fixes and cleanups for linux-next
-To:     Qian Cai <cai@lca.pw>, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <20190609023803.23832-1-baolu.lu@linux.intel.com>
- <1560272102.5154.1.camel@lca.pw>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <28f728af-9bc8-d8ce-00b5-59bcfdceacf0@linux.intel.com>
-Date:   Wed, 12 Jun 2019 07:40:11 +0800
+        Tue, 11 Jun 2019 19:48:07 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32826 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387864AbfFKXsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 19:48:06 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k187so7338312pga.0;
+        Tue, 11 Jun 2019 16:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=rQZeUVQ6RxiqAEW7WsFNWPKzRIxBC2e622V0NwiVfj8=;
+        b=JhOuZSIwFe0oFF53PYSrxKAUzLnKxYXF3enN5K3WkjEWNf5o+aXe08SIYrulbIEm6p
+         2LnH4OE/iXxG8SSqIT3JTjm8mUhsly1+F2TM+80en7Tu27EufyPEku/INQgwkNsGLAS8
+         L52ox5SXXIWN35Cnv41YbI/v0AKFWXmBzgJIu9D4bvdd4jOc7fw0OAhj4maK9UhmXi6G
+         xpbKcP4jF7f6eWuzyD4kbeoOPEOd/dMrgEryHTDwFtMrDGUhdPOCTIqzG239oezkIpPO
+         +RS5ERit+Kc+g5b26QU+lM8DKzSFvWKdiW72LNu1ii7xoBHTrKVkJHTIq71j93XyHAEZ
+         hV5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=rQZeUVQ6RxiqAEW7WsFNWPKzRIxBC2e622V0NwiVfj8=;
+        b=KPMH2cBNrXPhr/gSnNq3CZ09wWA/LrAjOoXV2hbYb6uehGWvFugJaMYMILRUXOC9aj
+         o+gkDEKE9d83ecXIwvA2ZO9/QHBhLpMPc30CpX4TZa94IOgQZnis/4noMpCK8TssT0oI
+         Fv/cGYFWjOC8sOHVou76/tWK+joxJgEbau96Q9AB8hyWqfsZK1KxRKxIq5IS6SAaTs3o
+         PEyr1UoCdlx71+B/cfxZCayDy8ckNuLCyZrDgirbBUNgtpnTfS5TjNyOCjohT+XqnujI
+         haCVtSsFsZGN4nVK21R/LquLdYYe2YCNeyTcCC72F8AOB5LYyXX86FCkvFXGtZHe6TOn
+         eyhw==
+X-Gm-Message-State: APjAAAWp7CYKtBucQBMLP6q9HM7nZfkzvIJJUDDdNC+Ffq0WHRLCM+ut
+        FueOdU0uLlSI/oU7vew3HnNrDbjq
+X-Google-Smtp-Source: APXvYqxUx2Sy7+lan8lwCnaRlwtZHr6H574ZyeXVeqnyPritVWqcquM6Z4UosS7MBUDXGzLtdeF/2Q==
+X-Received: by 2002:a63:e250:: with SMTP id y16mr21858926pgj.392.1560296886103;
+        Tue, 11 Jun 2019 16:48:06 -0700 (PDT)
+Received: from ?IPv6:2001:df0:0:200c:cd5b:7c57:228c:7f0a? ([2001:df0:0:200c:cd5b:7c57:228c:7f0a])
+        by smtp.gmail.com with ESMTPSA id i3sm15448121pfa.175.2019.06.11.16.47.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 16:48:05 -0700 (PDT)
+Subject: Re: [PATCH] NCR5380: Support chained sg lists
+To:     Finn Thain <fthain@telegraphics.com.au>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <a79e01ba-e47c-6b29-3625-29bfb7122ad8@gmail.com>
+Date:   Wed, 12 Jun 2019 11:47:56 +1200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1560272102.5154.1.camel@lca.pw>
+In-Reply-To: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 11/06/19 3:25 PM, Finn Thain wrote:
 
-This is supposed to be fixed by this patch
-
-https://lkml.org/lkml/2019/6/3/115
-
-which is part of several RMRR related fixes and enhancements.
-
-Best regards,
-Baolu
-
-On 6/12/19 12:55 AM, Qian Cai wrote:
-> On Sun, 2019-06-09 at 10:37 +0800, Lu Baolu wrote:
->> Hi Joerg,
->>
->> This series includes several fixes and cleanups after delegating
->> DMA domain to generic iommu. Please review and consider them for
->> linux-next.
->>
->> Best regards,
->> Baolu
->>
->> Lu Baolu (5):
->>    iommu/vt-d: Don't return error when device gets right domain
->>    iommu/vt-d: Set domain type for a private domain
->>    iommu/vt-d: Don't enable iommu's which have been ignored
->>    iommu/vt-d: Fix suspicious RCU usage in probe_acpi_namespace_devices()
->>    iommu/vt-d: Consolidate domain_init() to avoid duplication
->>
->> Sai Praneeth Prakhya (1):
->>    iommu/vt-d: Cleanup after delegating DMA domain to generic iommu
->>
->>   drivers/iommu/intel-iommu.c | 210 +++++++++---------------------------
->>   1 file changed, 53 insertions(+), 157 deletions(-)
->>
-> 
-> BTW, the linux-next commit "iommu/vt-d: Expose ISA direct mapping region via
-> iommu_get_resv_regions" [1] also introduced a memory leak below, as it forgets
-> to ask intel_iommu_put_resv_regions() to call kfree() when
-> CONFIG_INTEL_IOMMU_FLOPPY_WA=y.
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1078963/
-> 
-> unreferenced object 0xffff88912ef789c8 (size 64):
->    comm "swapper/0", pid 1, jiffies 4294946232 (age 5399.530s)
->    hex dump (first 32 bytes):
->      48 83 f7 2e 91 88 ff ff 30 fa e3 00 82 88 ff ff  H.......0.......
->      00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00  ................
->    backtrace:
->      [<00000000d267f4be>] kmem_cache_alloc_trace+0x266/0x380
->      [<00000000d383d15b>] iommu_alloc_resv_region+0x40/0xb0
->      [<00000000db8be31b>] intel_iommu_get_resv_regions+0x25e/0x2d0
->      [<0000000021fbc6c3>] iommu_group_create_direct_mappings+0x159/0x3d0
->      [<0000000022259268>] iommu_group_add_device+0x17b/0x4f0
->      [<0000000028b91093>] iommu_group_get_for_dev+0x153/0x460
->      [<00000000577c33b4>] intel_iommu_add_device+0xc4/0x210
->      [<00000000587b7492>] iommu_probe_device+0x63/0x80
->      [<000000004aa997d1>] add_iommu_group+0xe/0x20
->      [<00000000c93a9cd6>] bus_for_each_dev+0xf0/0x150
->      [<00000000a2e5f0cb>] bus_set_iommu+0xc6/0x100
->      [<00000000dbad5db0>] intel_iommu_init+0x682/0xb0a
->      [<00000000226f7444>] pci_iommu_init+0x26/0x62
->      [<000000002d8694f5>] do_one_initcall+0xe5/0x3ea
->      [<000000004bc60101>] kernel_init_freeable+0x5ad/0x640
->      [<0000000091b0bad6>] kernel_init+0x11/0x138
-> 
-> 
+> My understanding is that support for chained scatterlists is to
+> become mandatory for LLDs.
+>
+> Cc: Michael Schmitz <schmitzmic@gmail.com>
+> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Reviewed-by: Michael Schmitz <schmitzmic@gmail.com>
+> ---
+>   drivers/scsi/NCR5380.c | 41 ++++++++++++++++++-----------------------
+>   1 file changed, 18 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+> index d9fa9cf2fd8b..536426f25e86 100644
+> --- a/drivers/scsi/NCR5380.c
+> +++ b/drivers/scsi/NCR5380.c
+> @@ -149,12 +149,10 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
+>   
+>   	if (scsi_bufflen(cmd)) {
+>   		cmd->SCp.buffer = scsi_sglist(cmd);
+> -		cmd->SCp.buffers_residual = scsi_sg_count(cmd) - 1;
+>   		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+>   		cmd->SCp.this_residual = cmd->SCp.buffer->length;
+>   	} else {
+>   		cmd->SCp.buffer = NULL;
+> -		cmd->SCp.buffers_residual = 0;
+>   		cmd->SCp.ptr = NULL;
+>   		cmd->SCp.this_residual = 0;
+>   	}
+> @@ -163,6 +161,17 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
+>   	cmd->SCp.Message = 0;
+>   }
+>   
+> +static inline void advance_sg_buffer(struct scsi_cmnd *cmd)
+> +{
+> +	struct scatterlist *s = cmd->SCp.buffer;
+> +
+> +	if (!cmd->SCp.this_residual && s && !sg_is_last(s)) {
+> +		cmd->SCp.buffer = sg_next(s);
+> +		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+> +		cmd->SCp.this_residual = cmd->SCp.buffer->length;
+> +	}
+> +}
+> +
+>   /**
+>    * NCR5380_poll_politely2 - wait for two chip register values
+>    * @hostdata: host private data
+> @@ -1670,12 +1679,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+>   			    sun3_dma_setup_done != cmd) {
+>   				int count;
+>   
+> -				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
+> -					++cmd->SCp.buffer;
+> -					--cmd->SCp.buffers_residual;
+> -					cmd->SCp.this_residual = cmd->SCp.buffer->length;
+> -					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+> -				}
+> +				advance_sg_buffer(cmd);
+>   
+>   				count = sun3scsi_dma_xfer_len(hostdata, cmd);
+>   
+> @@ -1725,15 +1729,11 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+>   				 * scatter-gather list, move onto the next one.
+>   				 */
+>   
+> -				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
+> -					++cmd->SCp.buffer;
+> -					--cmd->SCp.buffers_residual;
+> -					cmd->SCp.this_residual = cmd->SCp.buffer->length;
+> -					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+> -					dsprintk(NDEBUG_INFORMATION, instance, "%d bytes and %d buffers left\n",
+> -					         cmd->SCp.this_residual,
+> -					         cmd->SCp.buffers_residual);
+> -				}
+> +				advance_sg_buffer(cmd);
+> +				dsprintk(NDEBUG_INFORMATION, instance,
+> +					"this residual %d, sg ents %d\n",
+> +					cmd->SCp.this_residual,
+> +					sg_nents(cmd->SCp.buffer));
+>   
+>   				/*
+>   				 * The preferred transfer method is going to be
+> @@ -2126,12 +2126,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+>   	if (sun3_dma_setup_done != tmp) {
+>   		int count;
+>   
+> -		if (!tmp->SCp.this_residual && tmp->SCp.buffers_residual) {
+> -			++tmp->SCp.buffer;
+> -			--tmp->SCp.buffers_residual;
+> -			tmp->SCp.this_residual = tmp->SCp.buffer->length;
+> -			tmp->SCp.ptr = sg_virt(tmp->SCp.buffer);
+> -		}
+> +		advance_sg_buffer(tmp);
+>   
+>   		count = sun3scsi_dma_xfer_len(hostdata, tmp);
+>   
