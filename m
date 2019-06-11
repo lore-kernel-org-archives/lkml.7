@@ -2,109 +2,105 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D03C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F393AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A31B2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDF12089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJGdFVZs"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hzZ44tv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfFKAeJ (ORCPT
+        id S1728888AbfFKAhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 20:34:09 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33260 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728645AbfFKAeJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 20:34:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id q186so7663587oia.0;
-        Mon, 10 Jun 2019 17:34:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MvpxPDcZzjh7n/INm53wNH78am0tG0fs5CB4HRWG80I=;
-        b=CJGdFVZsnqw8uG8xiS/KagP650Y7VbvBNpLTQU7b3jR2sSiNEzuKbAX3w1m28GZ0Wl
-         EZObvX18VD15GsGJ2BPIU9tzVqmK0HS6oSnKPVLxPFzD43cXmkqd5vSn1/tsIbK99ee8
-         U5j8PWzMGKubRwd1VV7PvGMFcTYqtIOTXdhdmFUDqBX8PzKflaYjevR+kZPzwKdZ1V9J
-         UdcAy5GXlnEAeom2TovLkD0GlTG0jv1yXxd3gOpt5Yz7i5YXPUuzrMguL/aZISUyqV7p
-         sszJ21phJbDLayZ/cSoHicyiMffURBtAQLxylGxqyXVRY26uaKz0hJgRx4aYXoh1fAXE
-         ZvAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MvpxPDcZzjh7n/INm53wNH78am0tG0fs5CB4HRWG80I=;
-        b=lABsaJM6ihSoBv3Q9gOgvUycCMDNT1RCTnsSJHUvdDNeMr+06ATr6RFAH1ozCN7pji
-         BrWjd2Wrf0NESuCRpu15YGLaM3Abb197rK9fef1twtuZ/NuQgjE4SMQ26BFBenwZO85N
-         Yf7X2rM7/PHGDTUTLeXyP8GhVqjLuRknHSQIuHQyL1MQQ5gVNN0WDOgew4f3L7R3+QSI
-         hv3mKPvs3fZ9qowEDg+zI5/aDq6CoLOx0H5lHxwSjNuqfQ6ErFNqL2rwGjkD5d85+AOU
-         kWilaS0VRtAoUiTZtZuyfE+TfAmxnxFFRrjZnGWSCSrjXwyaV0RKqBmbiCNNraF5U98t
-         J2tQ==
-X-Gm-Message-State: APjAAAV/BFV0LpIEJAHpsvvTQokhpLwb+TG0FDi6R/JSJ5wPKEvBm0e8
-        KbhA2Y4NTWPUvexZroP5w5qVHQuTtbHSB3ZucX4=
-X-Google-Smtp-Source: APXvYqygQv0AkiaXaGjDiShSOiPL2Eb2sZ3ZOcJsNfhp/8djMj7zJtztfRTSl9AUjYgpefVvY3ky/7qm8w/heknsDsA=
-X-Received: by 2002:aca:f552:: with SMTP id t79mr13230037oih.145.1560213248234;
- Mon, 10 Jun 2019 17:34:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190525181329.18657-1-tiny.windzz@gmail.com> <20190525181329.18657-2-tiny.windzz@gmail.com>
- <CA+E=qVdh1E8Y7dZO0JSS4DJE2bo=98MuSKRt7nmeFg-td7Ua9Q@mail.gmail.com> <CAEExFWtjNridLsMXOnBe2mJOPhUOYJ6G3wGF3gx=0oQoQROOGg@mail.gmail.com>
-In-Reply-To: <CAEExFWtjNridLsMXOnBe2mJOPhUOYJ6G3wGF3gx=0oQoQROOGg@mail.gmail.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 10 Jun 2019 17:34:57 -0700
-Message-ID: <CA+E=qVeOSw=_z4OiQ4++z8g-KN29UYVXGicNd3PtHobg4xaG+w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mon, 10 Jun 2019 20:37:54 -0400
+Received: from ozlabs.org ([203.11.71.1]:47859 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728645AbfFKAhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 20:37:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NB1B5yz4z9s6w;
+        Tue, 11 Jun 2019 10:37:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560213471;
+        bh=LApRJ/z+bE9As444VerdrsONXsMGcN0MCgEVQHgZHgA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hzZ44tv8l7xbSx+urUhZgOTIXtzGMwdZW9ymKYNm73ug1afLKnj9E3IipGkNOOs9o
+         CpUpwhjD8C32rJSjc/da0SOn0M/RjkzF4R1J1dwYTtfhXga1gYoxc4coaeBxmmhIDi
+         qFKG6tQJLeBQRHYvnkb0/XjfVuw70yz8jy+Hp0eUwVs1PVVc2VJYfC1El5PJm1a14O
+         gc2GU4CXKwhBMRDUdek/T3ZGeXyJXaSIDPTl4ohx903QIE23yoUuYLbX1qC0EMC6cN
+         asfHfNw03p6snqT64GbHjFxrvjNu3RXq19OfbgkmS8wJnYBeQNkXKfUcU4URMBSMCb
+         i82jKz1SoUaFA==
+Date:   Tue, 11 Jun 2019 10:37:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fabio Estevam <festevam@gmail.com>
+Subject: linux-next: manual merge of the fbdev tree with Linus' tree
+Message-ID: <20190611103749.01b1f922@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Z4fE.w_vLjwIZ6T2Vb52IiE"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 5:31 PM Frank Lee <tiny.windzz@gmail.com> wrote:
->
-> On Tue, Jun 11, 2019 at 7:29 AM Vasily Khoruzhick <anarsoul@gmail.com> wr=
-ote:
-> >
-> > On Sat, May 25, 2019 at 11:17 AM Yangtao Li <tiny.windzz@gmail.com> wro=
-te:
-> > >
-> > > This patch adds the support for allwinner thermal sensor, within
-> > > allwinner SoC. It will register sensors for thermal framework
-> > > and use device tree to bind cooling device.
-> >
-> > Hi Yangtao,
-> >
-> > Any plans on v4 of this series?
-> >
->
-> I am waiting for comment from Maxime.
->
-> I=E2=80=99ll support both h3 and h6 in v4.
+--Sig_/Z4fE.w_vLjwIZ6T2Vb52IiE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-If you have a git tree I'll be happy to contribute A64 support. IIRC
-it was quite similar to H3.
+Hi all,
 
-> Yangtao
+Today's linux-next merge of the fbdev tree got a conflict in:
+
+  drivers/video/fbdev/mxsfb.c
+
+between commit:
+
+  c942fddf8793 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - =
+rule 157")
+
+from Linus' tree and commit:
+
+  f225f1393f03 ("video: fbdev: mxsfb: Remove driver")
+
+from the fbdev tree.
+
+I fixed it up (I removed the file) and can carry the fix as necessary.
+This is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Z4fE.w_vLjwIZ6T2Vb52IiE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz+990ACgkQAVBC80lX
+0Gyadgf9HgVSEMSbwgwG6QGeWoIEGU1Vjkav8JI4k4xrVlrgXoUce+w5rpXYPXGK
+m9AXJ3pgqJwcyYoUWTAHeUhb8yK8LVC6dK4UcHUFED0v/SAdEZMf2ydElqB+uUkA
+8G9id8tyNyYVkAbVeJ77NhaRMkcVpPp296x4XvMATQ6SFz0Uwc8QCL5McjWaFagJ
+y2G8kpCwi0dPiRj7sJ0RdcamcDaQh6hNNZVaI9kWB0Z6iZ+nHty0CfRJ58A7Tw4P
+umKx6heptIw6jOHqrDQoc7fs31FdfJRG2dbk2HcmreHF4BXZFKQ4ILJ5NWVKKrBg
+bOntckzVRJyac2haE2KVLwqVf3PCYg==
+=JfG9
+-----END PGP SIGNATURE-----
+
+--Sig_/Z4fE.w_vLjwIZ6T2Vb52IiE--
