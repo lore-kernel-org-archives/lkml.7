@@ -2,95 +2,122 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC932C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D789FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B2C20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C3521734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="q34tb1BD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406975AbfFKSNF (ORCPT
+        id S2406980AbfFKSOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:13:05 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:56987 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406831AbfFKSNE (ORCPT
+        Tue, 11 Jun 2019 14:14:24 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36430 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406685AbfFKSOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:13:04 -0400
-Received: from [192.168.1.110] ([95.118.191.213]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MwQCb-1giNZA3N25-00sOvD; Tue, 11 Jun 2019 20:11:17 +0200
-Subject: Re: [PATCH resend] serial: 8250: Add support for using
- platform_device resources
-To:     Esben Haabendal <esben@haabendal.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-kernel@vger.kernel.org
-References: <20190430140416.4707-1-esben@geanix.com>
- <20190521113426.16790-1-esben@geanix.com> <20190521131131.GA19685@kroah.com>
- <878suzn9wx.fsf@haabendal.dk>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <ef125e69-3128-255d-483e-14b50036905f@metux.net>
-Date:   Tue, 11 Jun 2019 20:11:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 11 Jun 2019 14:14:23 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 348E7112D;
+        Tue, 11 Jun 2019 20:14:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1560276860;
+        bh=Qaii2hzx2ceSMkoNdcuS2j/nQYnyPQB92jJfokvbcLc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q34tb1BDgS18AJaIrFPJ2tcd64cyCIwuV4A4W3PyXhpXz31a4Th5P20rSoYdzMC3g
+         V9E+fEOf4HX5zAMW8TV6E2A7BNf+tpRMQfe/QaorFlgsi0J/Q6L5jDhk/fqgJSukIg
+         dkrp4eI4mc5guCJlPg0Uf+naGxkJtYTOfp+gx7mw=
+Date:   Tue, 11 Jun 2019 21:13:51 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Michael Drake <michael.drake@codethink.co.uk>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@lists.codethink.co.uk,
+        Patrick Glaser <pglaser@tesla.com>, Nate Case <ncase@tesla.com>
+Subject: Re: [PATCH v1 08/11] dt-bindings: display/bridge: Add bindings for
+ ti949
+Message-ID: <20190611181351.GW5016@pendragon.ideasonboard.com>
+References: <20190611140412.32151-1-michael.drake@codethink.co.uk>
+ <20190611140412.32151-9-michael.drake@codethink.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <878suzn9wx.fsf@haabendal.dk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:x93nJV3Bbkp8Z/g8aMYok3VV7GLXLxitWGsdzTWg68qpXr7r4Fx
- CnQUJRVBah+Qe5WXAw0Uf3WyAiaLDgHZ5fgXiCikahMozhuantK5PAbqE9iGnDZdlVF9dNR
- d2lo4627itDIdvvpfuzQPYBVTPJJFKaGRZbeO711zzd46UxLit8ZZaUUqHVMasW0ColbCJ/
- qLVj844T5AL99/c/aphjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TkpVOKfh1aw=:DF8vRhPwBU7XHqD5rSAaza
- MRtAkq1iIi/YC6+Yy7yf8v17rcoi0Bx7RUZcgpUHcbJ0XxQtOFg2wwbD1v9Dzf0JKQUqjPR+S
- E+uwcwznlRuUUFX8d3RoIkNokLhdOWCGPWGtFAcGW8XlLWuMOo0dfOWpBdUImOPbrNgRJfqeq
- Io9JrP9pourQ8hmRJj5k56JCmxTP/RkXfM9473BsVW+B9hiuUznjr4I5usZUE6T9NLvvh68FA
- G31ojb/S8252vCh5fPDhEanwnvqYUFoCjWq/m/LiYcHIxtAOlimuKhNSurxEfysZQotLZI9xi
- 1yA5UPcQkOGNg7hI3G6MGBHW1XwsNlm5/r94lxZY7o3GbN5eGNvwZDg0dmIsbTLo641UMsxXR
- ++Vlj6HkICH1tFnil2GF382YNkfGEdy/Rn7qk/Ao+cA9TqUgfEZ26X4K3C8hZXVcd5k5ymhIA
- 9eBpLD7G38GwDPp1/RZkUtcweb2vl2FA4/lLaHFlO1zNXklWy3Qyl1YEvL+L7TlMKkS2NGRp/
- 63jmgKpTX8+wJ1H5GN3Iw0ohwCZve4+zmkxZEeBjPAs4tSU5nnKCNeBUrxt8EDr1U3U8JiZf+
- 38yl2snfj1JllqQZgwB85dQwhosj4HvLQNISweeY4llBrH4SqTgXfLmFG39ln9dzE58NsMZYE
- bZ+judknO2OYW2bHalP5STZAdLTi2Aagbqd4NN2ra/h9e/ayqD1tF4Lk5JGfr4N4twb8v/nRL
- l9TchayIw3q3YK3izxM7Vprz8SJLgdTqmV0SomaPewYuprExAKc9UHrUIgbB9v5wNC4kJBXpD
- YgJr1Bw
+Content-Disposition: inline
+In-Reply-To: <20190611140412.32151-9-michael.drake@codethink.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.05.19 16:45, Esben Haabendal wrote:
-> It sits here.  It is a rather big and clunky mfd driver, not ready for
-> upstreaming in its current form.  I hope to get around to clean it up.
-> But it is for a very specific hardware that is really available or
-> usable for anybody else.  Does it make sense to spend effort on
-> submitting such a driver?
+Hi Michael,
 
-Maybe you could post your queue w/ "RFC: " prefix and add a proper
-introduction, so everybody knows that isn't meant to be upstreamed,
-but instead a basis for discussions ?
+Thank you for the patch.
 
-Personally, I'd like to have a look at it and understand, what's the
-actual problem you'd like to solve.
+On Tue, Jun 11, 2019 at 03:04:09PM +0100, Michael Drake wrote:
+> Adds device tree bindings for:
+> 
+>   TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
+> 
+> It supports instantiation via device tree / ACPI table.
+> 
+> The device has the compatible string "ti,ds90ub949", and
+> and allows an arrray of strings to be provided as regulator
+> names to enable for operation of the device.
 
+All the comments I made regarding the ds90ub948 DT bindings apply here
+too. Same for the comments related to the driver, they apply to the
+subsequent patches in this series.
 
---mtx
+> Signed-off-by: Michael Drake <michael.drake@codethink.co.uk>
+> Cc: Patrick Glaser <pglaser@tesla.com>
+> Cc: Nate Case <ncase@tesla.com>
+> ---
+>  .../bindings/display/bridge/ti,ds90ub949.txt  | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
+> new file mode 100644
+> index 000000000000..3ba3897d5e81
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90ub949.txt
+> @@ -0,0 +1,24 @@
+> +TI DS90UB949-Q1 1080p HDMI to FPD-Link III bridge serializer
+> +============================================================
+> +
+> +This is the binding for Texas Instruments DS90UB949-Q1 bridge serializer.
+> +
+> +This device supports I2C only.
+> +
+> +Required properties:
+> +
+> +- compatible: "ti,ds90ub949"
+> +
+> +Optional properties:
+> +
+> +- regulators: List of regulator name strings to enable for operation of device.
+> +
+> +Example
+> +-------
+> +
+> +ti949: ds90ub949@0 {
+> +	compatible = "ti,ds90ub949";
+> +
+> +	regulators: "vcc",
+> +	            "vcc_hdmi";
+> +};
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Regards,
+
+Laurent Pinchart
