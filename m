@@ -2,124 +2,101 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9ABC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F06C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC3D2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709FA2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z2zysy0T"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="GRuCjFxU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405831AbfFKTgl (ORCPT
+        id S2406890AbfFKTgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:36:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34666 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404788AbfFKTgj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:36:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BJZPgx146908;
-        Tue, 11 Jun 2019 19:36:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=XR1k9/hTeFVGViPolkZIUh6rCPEU/P3ZeUnAtKG13/o=;
- b=z2zysy0TfCRFWv/zp3KooZKViDyYjCldDHO+HJRgr+UAo5HIbqpSKTBhD/M2QMVNFSLb
- PtSUW9Ul/yqC7srLx1ziPrf8qNvqdcHM7dHLCOAB0gu5M5XQ9CLeP41fpZdpVCacLdDd
- 95fQd3fPeoFlC3Yk93XaxE68TBMKZ6E9Zq/2M1fzpHLF8OuvAoRqYua1cgWVyQ0Mc7Da
- fDlt7/N57QY718wHpPzl7C+c4cy8ox13bsfKh1ne99YEJfbCf3RKy3v9dKqViIL6PlJX
- Eus+jkJzPhx0V0DpELovHgQ6h8ghK5PPWC8OKSWAeD/H2lJMfuzoQchkurcLsKW8DDCI YQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t04etqb59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 19:36:03 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BJYvmT077059;
-        Tue, 11 Jun 2019 19:36:02 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t04hyhkj0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 19:36:02 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5BJa0YV031560;
-        Tue, 11 Jun 2019 19:36:00 GMT
-Received: from [10.154.187.61] (/10.154.187.61)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Jun 2019 12:36:00 -0700
-Subject: Re: [PATCH 10/16] mm: rename CONFIG_HAVE_GENERIC_GUP to
- CONFIG_HAVE_FAST_GUP
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20190611144102.8848-1-hch@lst.de>
- <20190611144102.8848-11-hch@lst.de>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <98e75b14-89f4-91b4-e836-2fdff188535b@oracle.com>
-Date:   Tue, 11 Jun 2019 13:35:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190611144102.8848-11-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
+        Tue, 11 Jun 2019 15:36:47 -0400
+Received: from mail-eopbgr710087.outbound.protection.outlook.com ([40.107.71.87]:35042
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404788AbfFKTgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:36:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FozgdvJxXU4fmDCdYVRN9mpCFP4jCuNp9TjDpIohvts=;
+ b=GRuCjFxUHJA7LBbURl9T+dl3kJuT+c2LhpehqhRfsIHYOQnAv4WZrHtr0mJIzJ2/ZyTQz7Rm1US4rOgKZqkGyfXbm+vOOiO4PiO2ks2w4bw1Fl218fGu0P2BZkOHoTQiVaVijZVCnmrdf+vCN2wnZfePc+zXf/E7fE0E7DB2ayw=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4645.namprd05.prod.outlook.com (52.135.233.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.9; Tue, 11 Jun 2019 19:36:37 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::134:af66:bedb:ead9]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::134:af66:bedb:ead9%3]) with mapi id 15.20.1987.008; Tue, 11 Jun 2019
+ 19:36:37 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Julien Freche <jfreche@vmware.com>,
+        Pv-drivers <Pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vmw_ballon: no need to check return value of
+ debugfs_create functions
+Thread-Topic: [PATCH] vmw_ballon: no need to check return value of
+ debugfs_create functions
+Thread-Index: AQHVIIdFvmS55Wdtiki3OTqlCZRF+KaW2OaA
+Date:   Tue, 11 Jun 2019 19:36:36 +0000
+Message-ID: <5A5203EB-A789-4C48-9C25-EF0C0CBCE5CD@vmware.com>
+References: <20190611185528.GA4659@kroah.com>
+In-Reply-To: <20190611185528.GA4659@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110125
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28035a5b-8687-45b0-d53b-08d6eea41e4f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4645;
+x-ms-traffictypediagnostic: BYAPR05MB4645:
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR05MB46450677E31CDEE31CFBC030D0ED0@BYAPR05MB4645.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(366004)(376002)(396003)(39860400002)(199004)(189003)(66556008)(71200400001)(6436002)(102836004)(478600001)(25786009)(71190400001)(6512007)(66946007)(99286004)(256004)(53936002)(86362001)(83716004)(229853002)(2906002)(6506007)(53546011)(76176011)(6486002)(14454004)(186003)(6116002)(26005)(8936002)(3846002)(66476007)(4744005)(446003)(8676002)(81166006)(81156014)(66446008)(64756008)(5660300002)(4326008)(73956011)(66066001)(316002)(54906003)(76116006)(82746002)(2616005)(6246003)(7736002)(11346002)(68736007)(36756003)(476003)(6916009)(33656002)(486006)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4645;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: a1nSDsGZi5OFWS9JnVfgevHaaIT+gg7Om2Cjn58TcwY2rtR9rG38QNRoCJ+wrJonvTT1HLl2IE35SER4cBzUWHcaEUoWEtoe75BiLnemaA49iFt2w4BEnDEa0NcpSE2O/CFjAXOLF/wcFNIHUwrj4JG3KVAReKr7qkPk/BF4QP2UrEM3OFGSMdSpdfxsLpdJJQa6BX0oxkU0YdLtG0M1TZ+8bMbKTjhY9l0wf9E7kukoNe57NKG/vaUCIR10bEeENJeHJOUAyw/hoYD4SbO3TgVLq2FyhfaE3PRE+QsfH/I2pdb5aIntGI/rnhujideXAnNrupXCrk7NEw8o4ijl487jg3f03aCMZlqcHZAYlrwyX5Zd+V+HmWVwQR+bO/tjZ6bqjj/mmQbvnSZvTzFQ2HlMCbncceQ/9xUs5j1+YWo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <071E573035D3084A979D80ABBDB4A5A1@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28035a5b-8687-45b0-d53b-08d6eea41e4f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 19:36:36.7950
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4645
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 8:40 AM, Christoph Hellwig wrote:
-> We only support the generic GUP now, so rename the config option to
-> be more clear, and always use the mm/Kconfig definition of the
-> symbol and select it from the arch Kconfigs.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/arm/Kconfig     | 5 +----
->  arch/arm64/Kconfig   | 4 +---
->  arch/mips/Kconfig    | 2 +-
->  arch/powerpc/Kconfig | 2 +-
->  arch/s390/Kconfig    | 2 +-
->  arch/sh/Kconfig      | 2 +-
->  arch/sparc/Kconfig   | 2 +-
->  arch/x86/Kconfig     | 4 +---
->  mm/Kconfig           | 2 +-
->  mm/gup.c             | 4 ++--
->  10 files changed, 11 insertions(+), 18 deletions(-)
->=20
-
-Looks good.
-
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-
-
+UGxlYXNlIGNoYW5nZSB0aGUgdGl0bGUgb2YgdGhlIHBhdGNoIHRvIOKAnHZtd19iYWxsb29u4oCd
+IChpdCBpcyBjdXJyZW50bHkNCuKAnHZtd19iYWxsb27igJ0pLg0KDQo+IE9uIEp1biAxMSwgMjAx
+OSwgYXQgMTE6NTUgQU0sIEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlv
+bi5vcmc+IHdyb3RlOg0KPiANCj4gV2hlbiBjYWxsaW5nIGRlYnVnZnMgZnVuY3Rpb25zLCB0aGVy
+ZSBpcyBubyBuZWVkIHRvIGV2ZXIgY2hlY2sgdGhlDQo+IHJldHVybiB2YWx1ZS4gIFRoZSBmdW5j
+dGlvbiBjYW4gd29yayBvciBub3QsIGJ1dCB0aGUgY29kZSBsb2dpYyBzaG91bGQNCj4gbmV2ZXIg
+ZG8gc29tZXRoaW5nIGRpZmZlcmVudCBiYXNlZCBvbiB0aGlzLg0KDQpJIHJlbWVtYmVyIEkgc2F3
+IGEgZGlzY3Vzc2lvbiBhYm91dCBpdCwgYW5kIGRpZG7igJl0IGtub3cgdGhlIHJlc29sdXRpb24u
+DQoNCklmIHRoYXQncyB0aGUgZGVjaXNpb24gKGFzc3VtaW5nIGRlYnVnZnMgaW5pdGlhbGl6YXRp
+b24gYWx3YXlzIHN1Y2NlZWRzKSwNCmFuZCBhZnRlciBmaXhpbmcgdGhlIHRpdGxlIG9mIHRoZSBw
+YXRjaDoNCg0KICBBY2tlZC1ieTogTmFkYXYgQW1pdCA8bmFtaXRAdm13YXJlLmNvbT4NCg0KVGhh
+bmtzIQ0KTmFkYXY=
