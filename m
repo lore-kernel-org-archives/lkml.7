@@ -2,157 +2,190 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C93C31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E171AC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B04C2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCF620866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lZodZ6j9"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="jyXIkF1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407046AbfFKVME (ORCPT
+        id S2407609AbfFKVUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:12:04 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:49049 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406962AbfFKVMD (ORCPT
+        Tue, 11 Jun 2019 17:20:10 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41085 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407021AbfFKVUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:12:03 -0400
-Received: by mail-vs1-f74.google.com with SMTP id i6so4721899vsp.15
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 14:12:03 -0700 (PDT)
+        Tue, 11 Jun 2019 17:20:08 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p15so22166511eds.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 14:20:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=5g9SgyaKPTySWfJg3LNPHAqceK/gsh7xBGRzfCQmGiE=;
-        b=lZodZ6j9kTTHdQSxiQl6HxxKgL64WvJ7YvP2tsykPRK/+DVTGrsuRNR3mDWaiyWUbZ
-         wn0ex2JyYe3PkQC03U8WnDTH5CQOkG/99uFtB5I6R/ybEZE2RX7hTvk3yaAexFFvTq7Y
-         bTrzPcRKMbrpjyU8/cyqeqbyqnSXpgNmTZwyyOjFRswu50VOeFk8T1QRtSTk6gShyYvY
-         yyynk+3kGhIOMGVFA+Fdg2f+NvY/5QY5HTgEveuEGdNI1dPFmJEUhDECWrDVvEKHAnEx
-         MTZJ4ulo/Yvy9cTMLMgC9FvwQO8KcJR+mJOZ7owzHccNoDT0RM8vgOqwBFcpPz8aTwXH
-         losw==
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3OOJyWbB6/jxUd7+KAEy96qdC4Tdsl/f96tHzMaVcB4=;
+        b=jyXIkF1GdcmUnLu0AjQVG+Udjq0UcLRwKiUZCFdPn8a+eUUs0JzwnCONzTAOgGvuuL
+         8qywm8p9GaPge4mxScd7qXROT/CTuLJQpFl2FOylF96lRmgQ4fQvRcuYuCInAT5gHpWh
+         Anuw3mQQ0ML9bICJ8UdTd7HL3HN9oMf9ogRugDvI1U/pGKPwFPIZr5xwo9aKz6tSL9V4
+         PNu9kyl72rjbyjy1b8MTUB2fHoUgRpKJq1MVudCAG3SC8hfdFVVx/gVKqooXi1vcxQLG
+         BMq7V6uYNvrRn6rQT5vUSD2LQfSuqy7EbRgy3wUz9ateaSAcjBUsdixYhK0zQNNmM++7
+         H68Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=5g9SgyaKPTySWfJg3LNPHAqceK/gsh7xBGRzfCQmGiE=;
-        b=hDwB8H70FGY2yZtXC5A6Bus9KTRJSY2U/3yQa1ywbRZGg5rCkb5Ut9/Yn3On8QE2WC
-         9EXNLUZCbFPOHcXhTL4sQYawO/wpSADUS3AXiDpxVpNj9tUEc/uYBj59WMszViyRNa/l
-         8G7wdZBbxvdz+8CmnbthfnRwCVzpg09M5Tt+VIPW4TSrGokwhnBsLYWjXLJG8VptOawB
-         i9zCpsqQbzB4Kz3zryr4gmDM04ZvnXWbC68VYcetcaGQo9CgvPsglDB9EmHO/t+qbv+f
-         y3lGdhDpPs685118QOoKYKY7LDeQEXaqUZZR8quQeTKjiNwSH9gKR54BC21hYTBDjiNC
-         13Sw==
-X-Gm-Message-State: APjAAAXqt19YKHie4k2RiyVaMcvIZc0l0i1zxG/aAv6BRRExp+lXLm7n
-        cfppnHvhE3NxeYSbgWOixpJlsY99Lg==
-X-Google-Smtp-Source: APXvYqwnBVTE2y+yCuUnSh2UkR+2gJYYnucwu2hfaq7zr1chGY37x8d+vTStgxxXq1D/CHRAzz2qSl0P1g==
-X-Received: by 2002:a67:ad07:: with SMTP id t7mr7944256vsl.214.1560287522570;
- Tue, 11 Jun 2019 14:12:02 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 14:11:34 -0700
-Message-Id: <20190611211134.96159-1-nhuck@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH] clk: qcom: Fix -Wunused-const-variable
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     agross@kernel.org, david.brown@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3OOJyWbB6/jxUd7+KAEy96qdC4Tdsl/f96tHzMaVcB4=;
+        b=I7HBhpCZjZPZqkRbhAx6OxV/yxZZ73q9HEmKZG0V5sUK6BS8i2niUDnBW7u1Pa3Sbs
+         Mfjsp9PSEPNwb+CFSkTy0EpDgdDS2r7B6Bl9qa6Oof49OaXcYFsMiyF7/9Rl0wgNDYSR
+         rPQ/yH30FzOBp4G8zHWhBkZrOXIrARTQZPV5Yfg/GA9J/PdCclWPfzyPlvZV1W/FtD5q
+         DNAGYRCU3vwrqXT/UdikS7d7uCaaftplTygS6RknOKPkZ1bkKc4FNqKnU29WUeawQwjD
+         +mq0Ac/gpgg15gsvqnqT3SIZaQLcYzwGnVDl9//UPJYAvJ5bYm0XBpMgigADUJYq+gEF
+         YorA==
+X-Gm-Message-State: APjAAAWnKZ7kTQrk/XCSu0u4UAvvxjgb64JgACN3FSnUrouRCX2VZ5lf
+        K9S0SgyPAMBtrFM7+QnNh/MnsprsFfE=
+X-Google-Smtp-Source: APXvYqy8UkurlAlIz6eWbNQVfj0pLtyKFJ1RdwsS4Mhclx5Ug3s5dTGx4YcObvRBnw363mK1Ak9kYA==
+X-Received: by 2002:a50:f385:: with SMTP id g5mr2541498edm.14.1560288005996;
+        Tue, 11 Jun 2019 14:20:05 -0700 (PDT)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id a15sm1967030ejr.4.2019.06.11.14.20.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 14:20:05 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <dima@arista.com>,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: [PATCH] x86/hyperv: Disable preemption while setting reenlightenment vector
+Date:   Tue, 11 Jun 2019 22:20:03 +0100
+Message-Id: <20190611212003.26382-1-dima@arista.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang produces the following warning
+KVM support may be compiled as dynamic module, which triggers the
+following splat on modprobe:
 
-drivers/clk/qcom/gcc-msm8996.c:133:32: warning: unused variable
-'gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map' [-Wunused-const-variable]
-static const struct
-parent_map gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map[] =
-{ ^drivers/clk/qcom/gcc-msm8996.c:141:27: warning: unused variable
-'gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div' [-Wunused-const-variable] static
-const char * const gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div[] = { ^
-drivers/clk/qcom/gcc-msm8996.c:187:32: warning: unused variable
-'gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map'
-[-Wunused-const-variable] static const struct parent_map
-gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map[] = { ^
-drivers/clk/qcom/gcc-msm8996.c:197:27: warning: unused variable
-'gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div'
-[-Wunused-const-variable] static const char * const
-gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div[] = {
+ KVM: vmx: using Hyper-V Enlightened VMCS
+ BUG: using smp_processor_id() in preemptible [00000000] code: modprobe/466 caller is debug_smp_processor_id+0x17/0x19
+ CPU: 0 PID: 466 Comm: modprobe Kdump: loaded Not tainted 4.19.43 #1
+ Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
+ Call Trace:
+  dump_stack+0x61/0x7e
+  check_preemption_disabled+0xd4/0xe6
+  debug_smp_processor_id+0x17/0x19
+  set_hv_tscchange_cb+0x1b/0x89
+  kvm_arch_init+0x14a/0x163 [kvm]
+  kvm_init+0x30/0x259 [kvm]
+  vmx_init+0xed/0x3db [kvm_intel]
+  do_one_initcall+0x89/0x1bc
+  do_init_module+0x5f/0x207
+  load_module+0x1b34/0x209b
+  __ia32_sys_init_module+0x17/0x19
+  do_fast_syscall_32+0x121/0x1fa
+  entry_SYSENTER_compat+0x7f/0x91
 
-It looks like these were never used.
+The easiest solution seems to be disabling preemption while setting up
+reenlightment MSRs. While at it, fix hv_cpu_*() callbacks.
 
-Fixes: b1e010c0730a ("clk: qcom: Add MSM8996 Global Clock Control (GCC) driver")
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/518
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Fixes: 93286261de1b4 ("x86/hyperv: Reenlightenment notifications
+support")
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Cathy Avery <cavery@redhat.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>
+Cc: Mohammed Gamal <mmorsy@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Roman Kagan <rkagan@virtuozzo.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+Cc: devel@linuxdriverproject.org
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: x86@kernel.org
+Reported-by: Prasanna Panchamukhi <panchamukhi@arista.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- drivers/clk/qcom/gcc-msm8996.c | 36 ----------------------------------
- 1 file changed, 36 deletions(-)
+ arch/x86/hyperv/hv_init.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
-index d2f39a972cad..d004cdaa0e39 100644
---- a/drivers/clk/qcom/gcc-msm8996.c
-+++ b/drivers/clk/qcom/gcc-msm8996.c
-@@ -130,22 +130,6 @@ static const char * const gcc_xo_gpll0_gpll4_gpll0_early_div[] = {
- 	"gpll0_early_div"
- };
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 1608050e9df9..0bdd79ecbff8 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -91,7 +91,7 @@ EXPORT_SYMBOL_GPL(hv_max_vp_index);
+ static int hv_cpu_init(unsigned int cpu)
+ {
+ 	u64 msr_vp_index;
+-	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
++	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
+ 	void **input_arg;
+ 	struct page *pg;
  
--static const struct parent_map gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map[] = {
--	{ P_XO, 0 },
--	{ P_GPLL0, 1 },
--	{ P_GPLL2, 2 },
--	{ P_GPLL3, 3 },
--	{ P_GPLL0_EARLY_DIV, 6 }
--};
--
--static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div[] = {
--	"xo",
--	"gpll0",
--	"gpll2",
--	"gpll3",
--	"gpll0_early_div"
--};
--
- static const struct parent_map gcc_xo_gpll0_gpll1_early_div_gpll1_gpll4_gpll0_early_div_map[] = {
- 	{ P_XO, 0 },
- 	{ P_GPLL0, 1 },
-@@ -184,26 +168,6 @@ static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll2_early_gpll0_early
- 	"gpll0_early_div"
- };
+@@ -103,7 +103,7 @@ static int hv_cpu_init(unsigned int cpu)
  
--static const struct parent_map gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map[] = {
--	{ P_XO, 0 },
--	{ P_GPLL0, 1 },
--	{ P_GPLL2, 2 },
--	{ P_GPLL3, 3 },
--	{ P_GPLL1, 4 },
--	{ P_GPLL4, 5 },
--	{ P_GPLL0_EARLY_DIV, 6 }
--};
--
--static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div[] = {
--	"xo",
--	"gpll0",
--	"gpll2",
--	"gpll3",
--	"gpll1",
--	"gpll4",
--	"gpll0_early_div"
--};
--
- static struct clk_fixed_factor xo = {
- 	.mult = 1,
- 	.div = 1,
+ 	hv_get_vp_index(msr_vp_index);
+ 
+-	hv_vp_index[smp_processor_id()] = msr_vp_index;
++	hv_vp_index[cpu] = msr_vp_index;
+ 
+ 	if (msr_vp_index > hv_max_vp_index)
+ 		hv_max_vp_index = msr_vp_index;
+@@ -182,7 +182,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	struct hv_reenlightenment_control re_ctrl = {
+ 		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+ 		.enabled = 1,
+-		.target_vp = hv_vp_index[smp_processor_id()]
+ 	};
+ 	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+ 
+@@ -196,7 +195,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	/* Make sure callback is registered before we write to MSRs */
+ 	wmb();
+ 
++	preempt_disable();
++	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
+ 	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
++	preempt_enable();
++
+ 	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
+ }
+ EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
 -- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
+2.22.0
 
