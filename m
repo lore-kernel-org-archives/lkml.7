@@ -2,180 +2,335 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7AFC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 359EEC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBDD2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C17B0208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzGBZj5q"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FNYsJ2sD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391433AbfFKIl4 (ORCPT
+        id S2391453AbfFKImf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:41:56 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36426 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391272AbfFKIl4 (ORCPT
+        Tue, 11 Jun 2019 04:42:35 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57575 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391401AbfFKIme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:41:56 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w7so8331776oic.3;
-        Tue, 11 Jun 2019 01:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v59RXEncklQZD+fQgfPPSwKXWN+Shli8ceMKKuyEhf0=;
-        b=kzGBZj5q2XeUUnNn+hZIDQ46zIbc4pi+XhZMT9xquzmAl0mAoe/hTW/h4vI3GliFyD
-         mXnvOXJl3RpDm9VgZWAEm2w4h2wvu0g8FX8kQbFB14i2xbEtTzS3nJtZ+sTfGYQIY7+0
-         fIiRu2bpFatZkFK7tl+5xmNIkNo/0+aWiQUyy2ZQR3G9TgPGLCkyGRfd2GVcmdAQbwoT
-         dIDnLEETDOW7qbBihciICLYyBxd0Jaymx3fytdeRwx3hC4H742XJmZ0riceYpBoyKeEr
-         FYpmZBWZz3MUPy3Acp87PhKrT92mbXGGfNVFAVpX35lGvFuc9uJG/ZKYUADeNkYNr+wB
-         zEXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v59RXEncklQZD+fQgfPPSwKXWN+Shli8ceMKKuyEhf0=;
-        b=Zlgl6d/0oqVG1W7seWvgC+6sG8y1kKapWlrZeP4DBH7BNi3ivcssQHj3q05cdXe1kY
-         5Hs8zbj2Ye3jtw+MAvbB+DAN9iQY6pcQrySjX8Q/PqjHT0/o0hAtV8gBVPxhoImN+VBj
-         5CRulLM3VzREXkRwz4oIgS2P7yMqSDxGV8/O3MM1ZQXgXveRUSt95NyWL23z/Qtifh+K
-         CzyyHTLjzWYmY4Yad8A6PYUzSbwnxtyRSFvT/KcBys7NydVvEsWIluybnRzZN9TFj0UT
-         Lz95wrqTIIMpuJ07XzRpJnpRyXCJJaPFnv4yZyZX+dXxpM+lfyO8Tbds6IPwYMjQFx5f
-         SzNQ==
-X-Gm-Message-State: APjAAAXCQVI4eQgQKezAF26ZDYL8xYJhGZHPhwavp13fr/7zvZ1Sugt9
-        f6jekwtR/8sJ3dmB6PrPB49uwZBm/e2pXsr4POk=
-X-Google-Smtp-Source: APXvYqzxaOZ9KUV/kRDM8l0u6+E8suUMaqGg0qPMAJRT6KRoeygwlTXcCyHIDf4inVwolTl02OcElY+Wfcd/PVxQ3Ig=
-X-Received: by 2002:aca:3305:: with SMTP id z5mr12702145oiz.141.1560242515130;
- Tue, 11 Jun 2019 01:41:55 -0700 (PDT)
+        Tue, 11 Jun 2019 04:42:34 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190611084232euoutp024f72166a72af082b465f3e4fed4ac7b3~nGFWrJRkh1440114401euoutp02J
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:42:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190611084232euoutp024f72166a72af082b465f3e4fed4ac7b3~nGFWrJRkh1440114401euoutp02J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560242552;
+        bh=zrXpkmfwxTwSrQsAQj3bDtr4OFMDsuSR1EhAI4V5gOo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=FNYsJ2sDxJtsjDnopRbT5M9D0La/HNwsJ0w+nVcs3mk/sUymlK1Oi2Wnuan7VAVMV
+         +w5dLf1ehgJ9XsFPlrCQ7XjDp7CAk6qTnpOHJvcUH8QXDXusQEc3A8gzxkDDz7vduu
+         DMc9NGuJdd+TFXN2Z6rv1x+evgAAyg2sbHZ0C3z4=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190611084231eucas1p19f40a5345f3bba9117d0081b65d4eec4~nGFV2XG6A2792027920eucas1p1C;
+        Tue, 11 Jun 2019 08:42:31 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id F9.8A.04298.6796FFC5; Tue, 11
+        Jun 2019 09:42:30 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190611084230eucas1p2a2370397051346a87c8b1fc3a83cedea~nGFU-NtUH2722727227eucas1p2n;
+        Tue, 11 Jun 2019 08:42:30 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190611084230eusmtrp22ed78b9db7cd5aa7f35dbea536c9815c~nGFUvjCjw2927729277eusmtrp2U;
+        Tue, 11 Jun 2019 08:42:30 +0000 (GMT)
+X-AuditID: cbfec7f2-3615e9c0000010ca-83-5cff6976a939
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id F2.CA.04146.5796FFC5; Tue, 11
+        Jun 2019 09:42:29 +0100 (BST)
+Received: from [106.109.129.180] (unknown [106.109.129.180]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190611084229eusmtip13f54f1e3e1cb19745494f9dfd6d27055~nGFUDnkDK2720627206eusmtip1p;
+        Tue, 11 Jun 2019 08:42:29 +0000 (GMT)
+Subject: Re: [PATCH bpf v3] xdp: fix hang while unregistering device bound
+ to xdp socket
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+From:   Ilya Maximets <i.maximets@samsung.com>
+Message-ID: <e2313edb-6617-cd52-1a40-4712c9f20127@samsung.com>
+Date:   Tue, 11 Jun 2019 11:42:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20180130013919.GA19959@hori1.linux.bs1.fc.nec.co.jp>
- <1517284444-18149-1-git-send-email-n-horiguchi@ah.jp.nec.com>
- <87inbbjx2w.fsf@e105922-lin.cambridge.arm.com> <20180207011455.GA15214@hori1.linux.bs1.fc.nec.co.jp>
- <87fu6bfytm.fsf@e105922-lin.cambridge.arm.com> <20180208121749.0ac09af2b5a143106f339f55@linux-foundation.org>
- <87wozhvc49.fsf@concordia.ellerman.id.au> <e673f38a-9e5f-21f6-421b-b3cb4ff02e91@oracle.com>
- <CANRm+CxAgWVv5aVzQ0wdP_A7QQgqfy7nN_SxyaactG7Mnqfr2A@mail.gmail.com>
- <f79d828c-b0b4-8a20-c316-a13430cfb13c@oracle.com> <20190610235045.GB30991@hori.linux.bs1.fc.nec.co.jp>
-In-Reply-To: <20190610235045.GB30991@hori.linux.bs1.fc.nec.co.jp>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 11 Jun 2019 16:42:39 +0800
-Message-ID: <CANRm+Cy80ca6XC3c1CT0KzX=xi3g3nMEp5GxmhOH-CUZa-jM_g@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: hwpoison: disable memory error handling on 1GB hugepage
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Punit Agrawal <punit.agrawal@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        Xiao Guangrong <xiaoguangrong@tencent.com>,
-        "lidongchen@tencent.com" <lidongchen@tencent.com>,
-        "yongkaiwu@tencent.com" <yongkaiwu@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJ+HfNgdiutAwpnc3LDDEGXs2SFCu3UtMnao79sFNyZZpQ2ETw@mail.gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAKsWRmVeSWpSXmKPExsWy7djP87plmf9jDO6ctrI4P+0Um8Wftg2M
+        Fp+PHGezmHO+hcXiSvtPdotjL1rYLHatm8lscXnXHDaLFYdOAMUWiFls79/H6MDtsWXlTSaP
+        nbPusnss3vOSyWN690Nmj74tqxg9Pm+SC2CL4rJJSc3JLEst0rdL4Mr4tC2nYLdFxet3i5ga
+        GLs1uhg5OSQETCR2vtrB0sXIxSEksIJR4v/Mh6wQzhdGiXsLpzJBOJ8ZJabN/swO09K3bD8b
+        RGI5o0T7tOPsEM5HRokFs+4zglQJC0RJbD58nhnEFhHIlLjd8J0ZpIhZ4CyTxPuZHUwgCTYB
+        HYlTq4+ANfAK2Els/nECaDkHB4uAqsTdSUEgYVGBCIkvOzdBlQhKnJz5hAXE5hQIlFj//gjY
+        RcwC4hJNX1ayQtjyEs1bZzNDXHqJXeLlj0II20Xi08xVUB8IS7w6vgXKlpH4v3M+E4RdL3G/
+        5SUjyJ0SAh2MEtMP/YNK2EtseX2OHeQ2ZgFNifW79EFMCQFHiU1v1CBMPokbbwUhLuCTmLRt
+        OjNEmFeio00IYoaKxO+Dy6EOk5K4+e4z+wRGpVlI/pqF5JdZSH6ZhbB2ASPLKkbx1NLi3PTU
+        YsO81HK94sTc4tK8dL3k/NxNjMB0dfrf8U87GL9eSjrEKMDBqMTDGxH9L0aINbGsuDL3EKME
+        B7OSCG/Xd6AQb0piZVVqUX58UWlOavEhRmkOFiVx3mqGB9FCAumJJanZqakFqUUwWSYOTqkG
+        xgPuRwoWndi38tiyjy9YDn3vubym3u4aD5dO5Pqty90SHi6T+Wb3YMrTorUzZ29fVLeDT7Tj
+        X5rm7xhfz/zzXOob9198M8czwsn8XZ58b9+P3/88j8WfE3y0KOLk1YMd96YbbWdPvRnncqvS
+        Jd48fumceWdT/f6dyUtaX/pYc6NqnOPzKdKXxPmUWIozEg21mIuKEwFbq/mFUwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsVy+t/xu7qlmf9jDHpn2licn3aKzeJP2wZG
+        i89HjrNZzDnfwmJxpf0nu8WxFy1sFrvWzWS2uLxrDpvFikMngGILxCy29+9jdOD22LLyJpPH
+        zll32T0W73nJ5DG9+yGzR9+WVYwenzfJBbBF6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjq
+        GRqbx1oZmSrp29mkpOZklqUW6dsl6GV82pZTsNui4vW7RUwNjN0aXYycHBICJhJ9y/azdTFy
+        cQgJLGWU2Lu0kxkiISXx49cFVghbWOLPtS6ooveMErN6P7J0MXJwCAtESVxv5gGpERHIlNi4
+        8TdYL7PAWSaJoxONIeo7mSRm7J3OBJJgE9CROLX6CCOIzStgJ7H5xwlWkDksAqoSdycFgYRF
+        BSIkZu9qYIEoEZQ4OfMJmM0pECix/v0Rdoj56hJ/5l2C2iUu0fRlJSuELS/RvHU28wRGoVlI
+        2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAiN027Gfm3cwXtoYfIhR
+        gINRiYc3IvpfjBBrYllxZe4hRgkOZiUR3q7vQCHelMTKqtSi/Pii0pzU4kOMpkC/TWSWEk3O
+        ByaPvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjCKvlOVca6aK
+        bvjTWByYmBN3S/3T+7YJH0K23Fv12fSGxgO/q69/pjWErisoXKyhPOVfrNjGYoVcLp+9f37J
+        zvwe8TJ3c6XS4sN3V96353w1I/x3uHM1gzPTsa+NTpP9j0y+ISQkLM+3voz52cdqzesXmKM2
+        r39teC+tM8Df/tbvvBf/vblXhCuxFGckGmoxFxUnAgB8x+2T5gIAAA==
+X-CMS-MailID: 20190611084230eucas1p2a2370397051346a87c8b1fc3a83cedea
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df
+References: <CGME20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df@eucas1p1.samsung.com>
+        <20190610161546.30569-1-i.maximets@samsung.com>
+        <06C99519-64B9-4A91-96B9-0F99731E3857@gmail.com>
+        <CAJ+HfNgdiutAwpnc3LDDEGXs2SFCu3UtMnao79sFNyZZpQ2ETw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 at 07:51, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com> wrote:
->
-> On Wed, May 29, 2019 at 04:31:01PM -0700, Mike Kravetz wrote:
-> > On 5/28/19 2:49 AM, Wanpeng Li wrote:
-> > > Cc Paolo,
-> > > Hi all,
-> > > On Wed, 14 Feb 2018 at 06:34, Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> > >>
-> > >> On 02/12/2018 06:48 PM, Michael Ellerman wrote:
-> > >>> Andrew Morton <akpm@linux-foundation.org> writes:
-> > >>>
-> > >>>> On Thu, 08 Feb 2018 12:30:45 +0000 Punit Agrawal <punit.agrawal@arm.com> wrote:
-> > >>>>
-> > >>>>>>
-> > >>>>>> So I don't think that the above test result means that errors are properly
-> > >>>>>> handled, and the proposed patch should help for arm64.
-> > >>>>>
-> > >>>>> Although, the deviation of pud_huge() avoids a kernel crash the code
-> > >>>>> would be easier to maintain and reason about if arm64 helpers are
-> > >>>>> consistent with expectations by core code.
-> > >>>>>
-> > >>>>> I'll look to update the arm64 helpers once this patch gets merged. But
-> > >>>>> it would be helpful if there was a clear expression of semantics for
-> > >>>>> pud_huge() for various cases. Is there any version that can be used as
-> > >>>>> reference?
-> > >>>>
-> > >>>> Is that an ack or tested-by?
-> > >>>>
-> > >>>> Mike keeps plaintively asking the powerpc developers to take a look,
-> > >>>> but they remain steadfastly in hiding.
-> > >>>
-> > >>> Cc'ing linuxppc-dev is always a good idea :)
-> > >>>
-> > >>
-> > >> Thanks Michael,
-> > >>
-> > >> I was mostly concerned about use cases for soft/hard offline of huge pages
-> > >> larger than PMD_SIZE on powerpc.  I know that powerpc supports PGD_SIZE
-> > >> huge pages, and soft/hard offline support was specifically added for this.
-> > >> See, 94310cbcaa3c "mm/madvise: enable (soft|hard) offline of HugeTLB pages
-> > >> at PGD level"
-> > >>
-> > >> This patch will disable that functionality.  So, at a minimum this is a
-> > >> 'heads up'.  If there are actual use cases that depend on this, then more
-> > >> work/discussions will need to happen.  From the e-mail thread on PGD_SIZE
-> > >> support, I can not tell if there is a real use case or this is just a
-> > >> 'nice to have'.
-> > >
-> > > 1GB hugetlbfs pages are used by DPDK and VMs in cloud deployment, we
-> > > encounter gup_pud_range() panic several times in product environment.
-> > > Is there any plan to reenable and fix arch codes?
-> >
-> > I too am aware of slightly more interest in 1G huge pages.  Suspect that as
-> > Intel MMU capacity increases to handle more TLB entries there will be more
-> > and more interest.
-> >
-> > Personally, I am not looking at this issue.  Perhaps Naoya will comment as
-> > he know most about this code.
->
-> Thanks for forwarding this to me, I'm feeling that memory error handling
-> on 1GB hugepage is demanded as real use case.
->
-> >
-> > > In addition, https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kvm/mmu.c#n3213
-> > > The memory in guest can be 1GB/2MB/4K, though the host-backed memory
-> > > are 1GB hugetlbfs pages, after above PUD panic is fixed,
-> > > try_to_unmap() which is called in MCA recovery path will mark the PUD
-> > > hwpoison entry. The guest will vmexit and retry endlessly when
-> > > accessing any memory in the guest which is backed by this 1GB poisoned
-> > > hugetlbfs page. We have a plan to split this 1GB hugetblfs page by 2MB
-> > > hugetlbfs pages/4KB pages, maybe file remap to a virtual address range
-> > > which is 2MB/4KB page granularity, also split the KVM MMU 1GB SPTE
-> > > into 2MB/4KB and mark the offensive SPTE w/ a hwpoison flag, a sigbus
-> > > will be delivered to VM at page fault next time for the offensive
-> > > SPTE. Is this proposal acceptable?
-> >
-> > I am not sure of the error handling design, but this does sound reasonable.
->
-> I agree that that's better.
->
-> > That block of code which potentially dissolves a huge page on memory error
-> > is hard to understand and I'm not sure if that is even the 'normal'
-> > functionality.  Certainly, we would hate to waste/poison an entire 1G page
-> > for an error on a small subsection.
->
-> Yes, that's not practical, so we need at first establish the code base for
-> 2GB hugetlb splitting and then extending it to 1GB next.
+On 11.06.2019 11:09, Björn Töpel wrote:
+> On Mon, 10 Jun 2019 at 22:49, Jonathan Lemon <jonathan.lemon@gmail.com> wrote:
+>>
+>> On 10 Jun 2019, at 9:15, Ilya Maximets wrote:
+>>
+>>> Device that bound to XDP socket will not have zero refcount until the
+>>> userspace application will not close it. This leads to hang inside
+>>> 'netdev_wait_allrefs()' if device unregistering requested:
+>>>
+>>>   # ip link del p1
+>>>   < hang on recvmsg on netlink socket >
+>>>
+>>>   # ps -x | grep ip
+>>>   5126  pts/0    D+   0:00 ip link del p1
+>>>
+>>>   # journalctl -b
+>>>
+>>>   Jun 05 07:19:16 kernel:
+>>>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+>>>
+>>>   Jun 05 07:19:27 kernel:
+>>>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+>>>   ...
+>>>
+>>> Fix that by implementing NETDEV_UNREGISTER event notification handler
+>>> to properly clean up all the resources and unref device.
+>>>
+>>> This should also allow socket killing via ss(8) utility.
+>>>
+>>> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
+>>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+>>> ---
+>>>
+>>> Version 3:
+>>>
+>>>     * Declaration lines ordered from longest to shortest.
+>>>     * Checking of event type moved to the top to avoid unnecessary
+>>>       locking.
+>>>
+>>> Version 2:
+>>>
+>>>     * Completely re-implemented using netdev event handler.
+>>>
+>>>  net/xdp/xsk.c | 65
+>>> ++++++++++++++++++++++++++++++++++++++++++++++++++-
+>>>  1 file changed, 64 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+>>> index a14e8864e4fa..273a419a8c4d 100644
+>>> --- a/net/xdp/xsk.c
+>>> +++ b/net/xdp/xsk.c
+>>> @@ -693,6 +693,57 @@ static int xsk_mmap(struct file *file, struct
+>>> socket *sock,
+>>>                              size, vma->vm_page_prot);
+>>>  }
+>>>
+>>> +static int xsk_notifier(struct notifier_block *this,
+>>> +                     unsigned long msg, void *ptr)
+>>> +{
+>>> +     struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+>>> +     struct net *net = dev_net(dev);
+>>> +     int i, unregister_count = 0;
+>>> +     struct sock *sk;
+>>> +
+>>> +     switch (msg) {
+>>> +     case NETDEV_UNREGISTER:
+>>> +             mutex_lock(&net->xdp.lock);
+>>
+>> The call is under the rtnl lock, and we're not modifying
+>> the list, so this mutex shouldn't be needed.
+>>
+> 
+> The list can, however, be modified outside the rtnl lock (e.g. at
+> socket creation). AFAIK the hlist cannot be traversed lock-less,
+> right?
 
-I'm working on this, thanks for the inputs.
+We could use 'rcu_read_lock' instead and iterate with 'sk_for_each_rcu',
+but we'll not be able to synchronize inside.
 
-Regards,
-Wanpeng Li
+> 
+>>
+>>> +             sk_for_each(sk, &net->xdp.list) {
+>>> +                     struct xdp_sock *xs = xdp_sk(sk);
+>>> +
+>>> +                     mutex_lock(&xs->mutex);
+>>> +                     if (dev != xs->dev) {
+>>> +                             mutex_unlock(&xs->mutex);
+>>> +                             continue;
+>>> +                     }
+>>> +
+>>> +                     sk->sk_err = ENETDOWN;
+>>> +                     if (!sock_flag(sk, SOCK_DEAD))
+>>> +                             sk->sk_error_report(sk);
+>>> +
+>>> +                     /* Wait for driver to stop using the xdp socket. */
+>>> +                     xdp_del_sk_umem(xs->umem, xs);
+>>> +                     xs->dev = NULL;
+>>> +                     synchronize_net();
+>> Isn't this by handled by the unregister_count case below?
+>>
+> 
+> To clarify, setting dev to NULL and xdp_del_sk_umem() + sync makes
+> sure that a driver doesn't touch the Tx and Rx rings. Nothing can be
+> assumed about completion + fill ring (umem), until zero-copy has been
+> disabled via ndo_bpf.
+> 
+>>> +
+>>> +                     /* Clear device references in umem. */
+>>> +                     xdp_put_umem(xs->umem);
+>>> +                     xs->umem = NULL;
+>>
+>> This makes me uneasy.  We need to unregister the umem from
+>> the device (xdp_umem_clear_dev()) but this can remove the umem
+>> pages out from underneath the xsk.
+>>
+> 
+> Yes, this is scary. The socket is alive, and userland typically has
+> the fill/completion rings mmapped. Then the umem refcount is decreased
+> and can potentially free the umem (fill rings etc.), as Jonathan says,
+> underneath the xsk. Also, setting the xs umem/dev to zero, while the
+> socket is alive, would allow a user to re-setup the socket, which we
+> don't want to allow.
+> 
+>> Perhaps what's needed here is the equivalent of an unbind()
+>> call that just detaches the umem/sk from the device, but does
+>> not otherwise tear them down.
+>>
+> 
+> Yeah, I agree. A detached/zombie state is needed during the socket lifetime.
+
+
+I could try to rip the 'xdp_umem_release()' apart so the 'xdp_umem_clear_dev()'
+could be called separately. This will allow to not tear down the 'umem'.
+However, it seems that it'll not be easy to synchronize all parts.
+Any suggestions are welcome.
+
+Also, there is no way to not clear the 'dev' as we have to put the reference.
+Maybe we could add the additional check to 'xsk_bind()' for current device
+state (dev->reg_state == NETREG_REGISTERED). This will allow us to avoid
+re-setup of the socket.
+
+> 
+>>
+>>> +                     mutex_unlock(&xs->mutex);
+>>> +                     unregister_count++;
+>>> +             }
+>>> +             mutex_unlock(&net->xdp.lock);
+>>> +
+>>> +             if (unregister_count) {
+>>> +                     /* Wait for umem clearing completion. */
+>>> +                     synchronize_net();
+>>> +                     for (i = 0; i < unregister_count; i++)
+>>> +                             dev_put(dev);
+>>> +             }
+>>> +
+>>> +             break;
+>>> +     }
+>>> +
+>>> +     return NOTIFY_DONE;
+>>> +}
+>>> +
+>>>  static struct proto xsk_proto = {
+>>>       .name =         "XDP",
+>>>       .owner =        THIS_MODULE,
+>>> @@ -727,7 +778,8 @@ static void xsk_destruct(struct sock *sk)
+>>>       if (!sock_flag(sk, SOCK_DEAD))
+>>>               return;
+>>>
+>>> -     xdp_put_umem(xs->umem);
+>>> +     if (xs->umem)
+>>> +             xdp_put_umem(xs->umem);
+>> Not needed - xdp_put_umem() already does a null check.
+
+Indeed. Thanks.
+
+>> --
+>> Jonathan
+>>
+>>
+>>>
+>>>       sk_refcnt_debug_dec(sk);
+>>>  }
+>>> @@ -784,6 +836,10 @@ static const struct net_proto_family
+>>> xsk_family_ops = {
+>>>       .owner  = THIS_MODULE,
+>>>  };
+>>>
+>>> +static struct notifier_block xsk_netdev_notifier = {
+>>> +     .notifier_call  = xsk_notifier,
+>>> +};
+>>> +
+>>>  static int __net_init xsk_net_init(struct net *net)
+>>>  {
+>>>       mutex_init(&net->xdp.lock);
+>>> @@ -816,8 +872,15 @@ static int __init xsk_init(void)
+>>>       err = register_pernet_subsys(&xsk_net_ops);
+>>>       if (err)
+>>>               goto out_sk;
+>>> +
+>>> +     err = register_netdevice_notifier(&xsk_netdev_notifier);
+>>> +     if (err)
+>>> +             goto out_pernet;
+>>> +
+>>>       return 0;
+>>>
+>>> +out_pernet:
+>>> +     unregister_pernet_subsys(&xsk_net_ops);
+>>>  out_sk:
+>>>       sock_unregister(PF_XDP);
+>>>  out_proto:
+>>> --
+>>> 2.17.1
+> 
+> 
