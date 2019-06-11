@@ -2,68 +2,62 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E4EC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7F7C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1B42086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD8720896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390311AbfFKBLB (ORCPT
+        id S2390472AbfFKBMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:11:01 -0400
-Received: from mga06.intel.com ([134.134.136.31]:45314 "EHLO mga06.intel.com"
+        Mon, 10 Jun 2019 21:12:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388845AbfFKBLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:11:01 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 18:11:00 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga004.jf.intel.com with ESMTP; 10 Jun 2019 18:11:00 -0700
-Date:   Mon, 10 Jun 2019 18:11:00 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
-Message-ID: <20190611011100.GB24835@linux.intel.com>
-References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
- <20190610143420.GA6594@flask>
+        id S2389723AbfFKBMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:12:06 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 911EC2086A;
+        Tue, 11 Jun 2019 01:12:05 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 21:12:04 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH 0/4] trace: introduce trace event injection
+Message-ID: <20190610211204.76c8ca50@oasis.local.home>
+In-Reply-To: <CAM_iQpXg9PrA_T_Argxuc+SST2CqjY=qjQA_pEgBNtC6F_a2Pw@mail.gmail.com>
+References: <20190525165802.25944-1-xiyou.wangcong@gmail.com>
+        <20190525183715.0778f5e5@gandalf.local.home>
+        <CAM_iQpXg9PrA_T_Argxuc+SST2CqjY=qjQA_pEgBNtC6F_a2Pw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190610143420.GA6594@flask>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Krčmář wrote:
-> 2019-05-30 09:05+0800, Wanpeng Li:
-> > The idea is from Xen, when sending a call-function IPI-many to vCPUs, 
-> > yield if any of the IPI target vCPUs was preempted. 17% performance 
-> > increasement of ebizzy benchmark can be observed in an over-subscribe 
-> > environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function 
-> > IPI-many since call-function is not easy to be trigged by userspace 
-> > workload).
-> 
-> Have you checked if we could gain performance by having the yield as an
-> extension to our PV IPI call?
-> 
-> It would allow us to skip the VM entry/exit overhead on the caller.
-> (The benefit of that might be negligible and it also poses a
->  complication when splitting the target mask into several PV IPI
->  hypercalls.)
+On Mon, 10 Jun 2019 14:11:57 -0700
+Cong Wang <xiyou.wangcong@gmail.com> wrote:
 
-Tangetially related to splitting PV IPI hypercalls, are there any major
-hurdles to supporting shorthand?  Not having to generate the mask for
-->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy to way
-shave cycles for affected flows.
+> On Sat, May 25, 2019 at 3:37 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > Hi Cong,
+> >
+> > Thanks for sending these patches, but I just want to let you know that
+> > it's currently a US holiday, and then afterward I'll be doing quite a
+> > bit of traveling for the next two weeks. If you don't hear from me in
+> > after two weeks, please send me a reminder.  
+> 
+> This is a reminder after two weeks. :) Please review my patches
+> when you have a chance.
+>
+
+Thanks for the reminder. I'll try to get to it this week.
+
+-- Steve
