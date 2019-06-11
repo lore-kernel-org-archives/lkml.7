@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B433C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6680AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A7C212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368482089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560248251;
-	bh=qEBYkTzxu/4Dl1C/hKhql6onxGB35Izjqxrvnp600eY=;
+	s=default; t=1560248253;
+	bh=uJeKLBS6fKTQ/nvA0FnBFJQrRlvrfsBQnK9IvrqNg7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CYs0vzJqzUgLBiYo+rrB/M3X9vyFoZPvClj+BJsbZAwM7RhFrbnsTpvT8iueCn4WK
-	 LTk1yEAnhd2HmWtv2FovQNfdumovxr2zpMFpCJaenBGuQGnPVycpV7VSpN+p8gGMMk
-	 XkO3OcePIX3nXc4XyGTn5h/x8Wo2wW/hhQ+5dK2g=
+	b=uSvgaGyNt3m9/G1Ih7j6Jlu9/eQ+13+GRnD3XlTz+dEb87P4k8KiFNcoqzUd1tkYI
+	 0Y8OUkrQKlrjTSPVqPLrwRvZHCrIDO3ilBm00jSdbyGDE+xphsYL22DcTYUd0QtjKr
+	 f+SJIj2qjnvppHczsc5a9RTGqlxsBJRfS1KjDHNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405380AbfFKKRb (ORCPT
+        id S2405391AbfFKKRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45728 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 06:17:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405306AbfFKKRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:17:24 -0400
+        id S2405341AbfFKKR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:17:26 -0400
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3261C214AF;
-        Tue, 11 Jun 2019 10:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86E18217F9;
+        Tue, 11 Jun 2019 10:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560248243;
-        bh=qEBYkTzxu/4Dl1C/hKhql6onxGB35Izjqxrvnp600eY=;
+        s=default; t=1560248245;
+        bh=uJeKLBS6fKTQ/nvA0FnBFJQrRlvrfsBQnK9IvrqNg7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1RrAK4RxwCMNIxmV3bMIAMHOb1OpEaNrTYnT6godqRCYxR2FFD+TfyydiP6auGxsz
-         S5Yp0JuO7IA+qv2hzXBVowD5yAt99ipjuDIUwzA+yYebJRw3ietvoj+Q3vS2Dqroce
-         jB82hke8ymxLUBfhT7xfj/xiI4tsVnDciZ4nuhG8=
+        b=fDcdUdswDYDQDHG+d5ZJRayMDbmyQwGi8EoB+nzcxHcYGBmHEmpq1M8RGUb9s4asg
+         bref+Y+yRyQy22Z9PJR1cm7+kbtvIhR/x4mlimha8jfcWZnkWd4XFgl6K4b7GieDP1
+         kTBMx1puq7jN4tb3fWpOSVI7lAAxPnJ9ZtrRBB20=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 3A8A1603A9; Tue, 11 Jun 2019 18:17:18 +0800 (CST)
+        id 811C960C4E; Tue, 11 Jun 2019 18:17:18 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -48,9 +48,9 @@ To:     Maxime Ripard <maxime.ripard@bootlin.com>,
 Cc:     Chen-Yu Tsai <wens@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 07/25] clk: fixed-factor: Add CLK_FIXED_FACTOR_FW_NAME for DT clock-names parent
-Date:   Tue, 11 Jun 2019 18:16:40 +0800
-Message-Id: <20190611101658.23855-8-wens@kernel.org>
+Subject: [PATCH v2 18/25] clk: sunxi-ng: sun8i-r: Use local parent references for CLK_FIXED_FACTOR
+Date:   Tue, 11 Jun 2019 18:16:51 +0800
+Message-Id: <20190611101658.23855-19-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611101658.23855-1-wens@kernel.org>
 References: <20190611101658.23855-1-wens@kernel.org>
@@ -63,41 +63,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-With the new clk parenting code, clk_init_data was expanded to include
-.parent_data, for clk drivers to specify parents using a combination of
-device tree clock-names, pointers to struct clk_hw, device tree clocks,
-and/or fallback global clock names.
+With the new clk parenting code and CLK_FIXED_FACTOR_{HW,FW_NAME}
+macros, we can reference parents locally via pointers to struct clk_hw
+or DT clock-names.
 
-Add a new macro, CLK_FIXED_FACTOR_FW_NAME, that takes a string to match
-a clock-names entry in the device tree to specify the clock parent.
+Convert existing CLK_FIXED_FACTOR definitions to either the _HW or
+_FW_NAME variant based on whether the parent clock is internal or
+external to the CCU.
 
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- include/linux/clk-provider.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 146a6859969e..e5c44f6dd897 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -1011,6 +1011,17 @@ extern struct of_device_id __clk_of_table;
- 						  _flags),	\
- 	}
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
+index a43e8de873d7..4a111c28b8c3 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
+@@ -57,7 +57,7 @@ static struct ccu_div ar100_clk = {
+ 	},
+ };
  
-+#define CLK_FIXED_FACTOR_FW_NAME(_struct, _name, _parent,		\
-+				 _div, _mult, _flags)			\
-+	struct clk_fixed_factor _struct = {				\
-+		.div		= _div,					\
-+		.mult		= _mult,				\
-+		.hw.init	= CLK_HW_INIT_FW_NAME(_name,		\
-+						      _parent,		\
-+						      &clk_fixed_factor_ops, \
-+						      _flags),		\
-+	}
-+
- #ifdef CONFIG_OF
- int of_clk_add_provider(struct device_node *np,
- 			struct clk *(*clk_src_get)(struct of_phandle_args *args,
+-static CLK_FIXED_FACTOR(ahb0_clk, "ahb0", "ar100", 1, 1, 0);
++static CLK_FIXED_FACTOR_HW(ahb0_clk, "ahb0", &ar100_clk.common.hw, 1, 1, 0);
+ 
+ static struct ccu_div apb0_clk = {
+ 	.div		= _SUNXI_CCU_DIV_FLAGS(0, 2, CLK_DIVIDER_POWER_OF_TWO),
 -- 
 2.20.1
 
