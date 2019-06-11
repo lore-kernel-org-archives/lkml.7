@@ -2,254 +2,362 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3092C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4742C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD9720657
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BEA20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bWW0yqPB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KupoRQM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404637AbfFKJkQ (ORCPT
+        id S2404773AbfFKJkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:40:16 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46287 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403752AbfFKJkP (ORCPT
+        Tue, 11 Jun 2019 05:40:32 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33320 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403752AbfFKJkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:40:15 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h10so18993957edi.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 02:40:14 -0700 (PDT)
+        Tue, 11 Jun 2019 05:40:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so1510494wme.0;
+        Tue, 11 Jun 2019 02:40:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TV3qoPI3CybT3ZOiICpyVzHhXX/g/RYRK8tbjgl4RHM=;
-        b=bWW0yqPBDAcwXw6OB2vqqN5OwZnKDdnjN5PWudyV7Y//pEOBD/U7VnGsyzT/2J4smR
-         7duPRZnNFn8cWSFWoxGe73UcLjeEYajEh59HeRCOEYMgnPMwVphP0jmG1q6yxJs+tubc
-         GjmEqDMtEtmFNnlQKg5gDVIlwgt2q/W0hrljk=
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=tbwYwBZvQIUPwGxsvzFNSCGEV3PM5xX5K20ThyWf2Gw=;
+        b=KupoRQM49cm7dyzTnItVnBSZFeaYdBSe0ZuPUc5nm543IK3i8AQCFRRNVSc8aW8Rg5
+         rNW2OOWjL7kKZEqPbfwxi1iZqT0mpPva68AwBz0FK2iGrshD16m/sUQKZ/s45Eac4oYk
+         kdxbFn86aygmaNQDrqBL8fxCzD8PI+XGIa/oUCkKaKSPj0ieto+Nodwj4ebEvZH+w1AC
+         VB5Gy94TnYUnAUtPLf6fE01E1bm45KvOEc9fOtzG00+4SEB8Ip8HXkZLJuKWFf/sJzHk
+         E3+V/qYAHv2ahQFjT58iE9hfVelCt6t/io59t1va2f9j9WCwTdVKuZnurqob1kllHtzp
+         EUPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=TV3qoPI3CybT3ZOiICpyVzHhXX/g/RYRK8tbjgl4RHM=;
-        b=AbddBnBJGIP5Sut4cGylxd1P4DrgDcoC9uHm9FFwgZ+RZJXKWksRu39nyOc5lEFSJ4
-         anyJAeG5TSh32V0oBOQ8n/5URHiSvhD7BlpWuks1K84umXod3ob5/DxqtHgma5Eb6Ejq
-         zEzvC1UvsBCMbDMX/cT88d1+BgMjRRQWC9QFMAnEZebMuvO0p66nV/GPHU2/bwjB+Gz9
-         2T4XudKbmx7l/1L5yFWyjSxOIG2ILQm/s5KMxMpFVrQfMc5yY80Ne8k8icRDStFsgCjB
-         0qzXO95p8Kcv/W9OiKj0sxKkgYEzaQjbMwwSmKo+xC6FmfzfSRliSZBkonIk2p7wnE1F
-         XzDQ==
-X-Gm-Message-State: APjAAAX8hVknzjSDdFw8A20xeVha8G1H95OCR4fjJBazi6eBhJ6V8KpZ
-        Quajm/v0vvzdMGZxVH6wc5H0Tg==
-X-Google-Smtp-Source: APXvYqwHogsRH9fZfw5U5Fdv1dXg6iOF4lQ+mvx9xPLpYS/mg3rptWV1Xk3ElpWq9cPEH4dBd+KClg==
-X-Received: by 2002:a17:906:784c:: with SMTP id p12mr57702204ejm.159.1560246013358;
-        Tue, 11 Jun 2019 02:40:13 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id x98sm2712021ede.89.2019.06.11.02.40.12
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
+        bh=tbwYwBZvQIUPwGxsvzFNSCGEV3PM5xX5K20ThyWf2Gw=;
+        b=IQeVdrauyFtxwyay6LVf4siKKjFpAnhnu0Ek4e9YuEbVT43yTxTxzdNbem+fXcKVFr
+         Jw8g+vtyQsBM8YfoWwRpy56zSQzg+z8cinSHWPSq4MQe4MdEUkElBU5HE3JbpP1isHno
+         YYCATDGxPjnJMFTcSRiB2dH/UKXsyR311+i+I6xhyO4hacSoRWyuMNxklxq5ILe+QvzG
+         Zb1FEiVfYoScPIWpuh3UzNhvYYZTnUOsn6sMczX01EqEA73/a6cLa936Zk2dT8vl2mjd
+         sTWVtZWcQMW39R7YHXNllOaaIShXVLZDT9hLJc1kXr6GZeePvXTW7rn6XutISYxpDZZ8
+         c3RQ==
+X-Gm-Message-State: APjAAAV6wY74wnwhTXUIIwOIEb4zGMdfJqUesho8Lt62nq5MbbqNh0Ym
+        PKR7m5/KK1P+nn5hkRVEYPA=
+X-Google-Smtp-Source: APXvYqy3oQm67xDIkvXCxUJBmZmO0RGMLs0/pxnYCLAu5ZBcSkNJMNan5v0PS3xwquS8WkCKKw77pQ==
+X-Received: by 2002:a1c:e356:: with SMTP id a83mr17818025wmh.38.1560246028895;
+        Tue, 11 Jun 2019 02:40:28 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id r6sm6951244wrp.85.2019.06.11.02.40.26
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 02:40:12 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 11:40:10 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 33/33] docs: EDID/HOWTO.txt: convert it and rename to
- howto.rst
-Message-ID: <20190611094010.GZ21222@phenom.ffwll.local>
-Mail-Followup-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org
-References: <cover.1560045490.git.mchehab+samsung@kernel.org>
- <74bec0b5b7c32c8d84adbaf9ff208803475198e5.1560045490.git.mchehab+samsung@kernel.org>
- <20190611083731.GS21222@phenom.ffwll.local>
- <20190611060215.232af2bb@coco.lan>
+        Tue, 11 Jun 2019 02:40:27 -0700 (PDT)
+References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com> <20190606153825.8183-2-sebastien.szymanski@armadeus.com> <m34l4xpweh.fsf@gmail.com> <722336d1-c7f7-1796-95d5-7bba1fac7968@armadeus.com>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     =?utf-8?Q?S=C3=A9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/3] media: imx7-media-csi: add i.MX6UL support
+In-reply-to: <722336d1-c7f7-1796-95d5-7bba1fac7968@armadeus.com>
+Date:   Tue, 11 Jun 2019 10:40:22 +0100
+Message-ID: <m3zhmo1mux.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611060215.232af2bb@coco.lan>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 06:02:15AM -0300, Mauro Carvalho Chehab wrote:
-> Em Tue, 11 Jun 2019 10:37:31 +0200
-> Daniel Vetter <daniel@ffwll.ch> escreveu:
-> 
-> > On Sat, Jun 08, 2019 at 11:27:23PM -0300, Mauro Carvalho Chehab wrote:
-> > > Sphinx need to know when a paragraph ends. So, do some adjustments
-> > > at the file for it to be properly parsed.
-> > > 
-> > > At its new index.rst, let's add a :orphan: while this is not linked to
-> > > the main index.rst file, in order to avoid build warnings.
-> > > 
-> > > that's said, I believe that this file should be moved to the
-> > > GPU/DRM documentation.  
-> > 
-> > Yes, but there's a bit a twist: This is definitely end-user documentation,
-> > so maybe should be in admin-guide?
-> > 
-> > Atm all we have in Documentation/gpu/ is internals for drivers + some
-> > beginnings of uapi documentation for userspace developers.
-> 
-> On media, we have several different types of documents:
-> 
-> - uAPI - consumed by both userspace and kernelspace developers;
-> - kAPI - consumed by Kernel hackers;
-> - driver-specific information. Those are usually messy, as some contain
->   specific internal details, while others are pure end-user documentation.
-> 
-> there are several cross-references between uAPI and kAPI parts.
-> 
-> I've seem similar patterns on several other driver subsystems.
-> 
-> I agree with Jon's principle that the best is to focus the book per
-> audience. Yet, trying to rearrange the documentation means a lot of work,
-> specially on those cases where a single file contain different types of
-> documentation, like on media driver docs.
+Hi Sebastien,
+On Tue 11 Jun 2019 at 09:16, S=C3=A9bastien Szymanski wrote:
+> Hi Rui,
+>
+> thanks for the review!
+>
+> On 6/10/19 12:28 PM, Rui Miguel Silva wrote:
+>> Hi Sebastien,
+>> Thanks for the patch.
+>>
+>> On Thu 06 Jun 2019 at 16:38, S=C3=A9bastien Szymanski wrote:
+>>> i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L supp=
+ort
+>>> to imx7-media-csi driver.
+>>>
+>>> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.c=
+om>
+>>> ---
+>>>
+>>> Changes for v2:
+>>>  - rebase on top of linuxtv/master
+>>>  - mention i.MX6UL/L in header and Kconfig help text
+>>>  - rename csi_type to csi_soc_id
+>>>
+>>>  drivers/staging/media/imx/Kconfig          |  4 +-
+>>>  drivers/staging/media/imx/imx7-media-csi.c | 62 ++++++++++++++++------
+>>>  2 files changed, 49 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/media/=
+imx/Kconfig
+>>> index ad3d7df6bb3c..8b6dc42c39e0 100644
+>>> --- a/drivers/staging/media/imx/Kconfig
+>>> +++ b/drivers/staging/media/imx/Kconfig
+>>> @@ -22,11 +22,11 @@ config VIDEO_IMX_CSI
+>>>  	  A video4linux camera sensor interface driver for i.MX5/6.
+>>>
+>>>  config VIDEO_IMX7_CSI
+>>> -	tristate "i.MX7 Camera Sensor Interface driver"
+>>> +	tristate "i.MX6UL/L / i.MX7 Camera Sensor Interface driver"
+>>>  	depends on VIDEO_IMX_MEDIA && VIDEO_DEV && I2C
+>>>  	default y
+>>>  	help
+>>>  	  Enable support for video4linux camera sensor interface driver for
+>>> -	  i.MX7.
+>>> +	  i.MX6UL/L or i.MX7.
+>>>  endmenu
+>>>  endif
+>>> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/stagi=
+ng/media/imx/imx7-media-csi.c
+>>> index 9101566f3f67..902bdce594cf 100644
+>>> --- a/drivers/staging/media/imx/imx7-media-csi.c
+>>> +++ b/drivers/staging/media/imx/imx7-media-csi.c
+>>> @@ -1,6 +1,6 @@
+>>>  // SPDX-License-Identifier: GPL-2.0
+>>>  /*
+>>> - * V4L2 Capture CSI Subdev for Freescale i.MX7 SOC
+>>> + * V4L2 Capture CSI Subdev for Freescale i.MX6UL/L / i.MX7 SOC
+>>>   *
+>>>   * Copyright (c) 2019 Linaro Ltd
+>>>   *
+>>> @@ -152,6 +152,11 @@
+>>>  #define CSI_CSICR18		0x48
+>>>  #define CSI_CSICR19		0x4c
+>>>
+>>> +enum csi_soc_id {
+>>> +	IMX7,
+>>> +	IMX6UL
+>>> +};
+>>> +
+>>>  struct imx7_csi {
+>>>  	struct device *dev;
+>>>  	struct v4l2_subdev sd;
+>>> @@ -191,6 +196,7 @@ struct imx7_csi {
+>>>  	bool is_init;
+>>>  	bool is_streaming;
+>>>  	bool is_csi2;
+>>> +	enum csi_soc_id soc_id;
+>>>
+>>>  	struct completion last_eof_completion;
+>>>  };
+>>> @@ -548,6 +554,14 @@ static int imx7_csi_pad_link_validate(struct v4l2_=
+subdev *sd,
+>>>  	if (ret)
+>>>  		return ret;
+>>>
+>>> +	if (csi->soc_id =3D=3D IMX6UL) {
+>>> +		mutex_lock(&csi->lock);
+>>> +		csi->is_csi2 =3D false;
+>>> +		mutex_unlock(&csi->lock);
+>>> +
+>>> +		return 0;
+>>> +	}
+>>> +
+>>>  	ret =3D imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
+>>>  	if (ret) {
+>>>  		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
+>>> @@ -757,6 +771,7 @@ static int imx7_csi_configure(struct imx7_csi *csi)
+>>>  	struct v4l2_pix_format *out_pix =3D &vdev->fmt.fmt.pix;
+>>>  	__u32 in_code =3D csi->format_mbus[IMX7_CSI_PAD_SINK].code;
+>>>  	u32 cr1, cr18;
+>>> +	int width =3D out_pix->width;
+>>>
+>>>  	if (out_pix->field =3D=3D V4L2_FIELD_INTERLACED) {
+>>>  		imx7_csi_deinterlace_enable(csi, true);
+>>> @@ -766,15 +781,27 @@ static int imx7_csi_configure(struct imx7_csi *cs=
+i)
+>>>  		imx7_csi_buf_stride_set(csi, 0);
+>>>  	}
+>>>
+>>> -	imx7_csi_set_imagpara(csi, out_pix->width, out_pix->height);
+>>> +	cr18 =3D imx7_csi_reg_read(csi, CSI_CSICR18);
+>>> +
+>>> +	if (!csi->is_csi2) {
+>>> +		if (out_pix->pixelformat =3D=3D V4L2_PIX_FMT_UYVY ||
+>>> +		    out_pix->pixelformat =3D=3D V4L2_PIX_FMT_YUYV)
+>>> +			width *=3D 2;
+>>> +
+>>> +		imx7_csi_set_imagpara(csi, width, out_pix->height);
+>>> +
+>>> +		cr18 |=3D (BIT_BASEADDR_SWITCH_EN | BIT_BASEADDR_SWITCH_SEL |
+>>> +			BIT_BASEADDR_CHG_ERR_EN);
+>>> +		imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
+>>>
+>>> -	if (!csi->is_csi2)
+>>>  		return 0;
+>>> +	}
+>>> +
+>>> +	imx7_csi_set_imagpara(csi, width, out_pix->height);
+>>>
+>>>  	cr1 =3D imx7_csi_reg_read(csi, CSI_CSICR1);
+>>>  	cr1 &=3D ~BIT_GCLK_MODE;
+>>>
+>>> -	cr18 =3D imx7_csi_reg_read(csi, CSI_CSICR18);
+>>>  	cr18 &=3D BIT_MIPI_DATA_FORMAT_MASK;
+>>>  	cr18 |=3D BIT_DATA_FROM_MIPI;
+>>>
+>>> @@ -809,11 +836,9 @@ static void imx7_csi_enable(struct imx7_csi *csi)
+>>>  {
+>>>  	imx7_csi_sw_reset(csi);
+>>>
+>>> -	if (csi->is_csi2) {
+>>> -		imx7_csi_dmareq_rff_enable(csi);
+>>> -		imx7_csi_hw_enable_irq(csi);
+>>> -		imx7_csi_hw_enable(csi);
+>>> -	}
+>>> +	imx7_csi_dmareq_rff_enable(csi);
+>>> +	imx7_csi_hw_enable_irq(csi);
+>>> +	imx7_csi_hw_enable(csi);
+>>>  }
+>>>
+>>>  static void imx7_csi_disable(struct imx7_csi *csi)
+>>> @@ -1166,19 +1191,32 @@ static int imx7_csi_parse_endpoint(struct devic=
+e *dev,
+>>>  	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
+>>>  }
+>>>
+>>> +static const struct of_device_id imx7_csi_of_match[] =3D {
+>>> +	{ .compatible =3D "fsl,imx7-csi", .data =3D (void *)IMX7 },
+>>> +	{ .compatible =3D "fsl,imx6ul-csi", .data =3D (void *)IMX6UL },
+>>
+>> looking at this again I think we can do this is a different way.
+>> Instead data being the soc_id, just set here if it is_csi2 or not.
+>>
+>> This would avoid to add a soc_id  to the struct that it really it
+>> is used only to setup the is_csi2 var. I think this will make this
+>> patch a lot simpler.
+>
+> Well, I have added this soc_id because imx7_csi_get_upstream_endpoint in
+> imx7_csi_pad_link_validate fails:
+>
+> [  366.549768] csi: failed to find upstream endpoint
+> [  366.556274] csi: pipeline start failed with -19
+>
 
-Yeah atm we're doing a bad job of keeping the kapi and uapi parts
-separate. But the plan at least is to move all the gpu related uapi stuff
-into Documentation/gpu/drm-uapi.rst. Not sure there's value in moving that
-out of the gpu folder ...
+I think this fails because you do not define any endpoint for the
+csi in your board dts file. I see in patch 1/3 the setup of csi,
+disabled, but not the endpoint connecting csi with the ov5640 in
+your board file (see the connection between mipi imx7 and ov2680
+in the imx7-warp.dts, or the ov5640.txt file).
 
-> > Jon, what's your recommendation here for subsystem specific
-> > end-user/adming docs?
-> 
-> Jon, please correct me if I' wrong, bu I guess the plan is to place them 
-> somewhere under Documentation/admin-guide/.
-> 
-> If so, perhaps creating a Documentation/admin-guide/drm dir there and 
-> place docs like EDID/HOWTO.txt, svga.txt, etc would work.
-> 
-> Btw, that's one of the reasons[1] why I opted to keep the files where they
-> are: properly organizing the converted documents call for such kind
-> of discussions. On my experience, discussing names and directory locations
-> can generate warm discussions and take a lot of time to reach consensus.
-> 
-> [1] The other one is to avoid/simplify merge conflicts.
+---
+Cheers,
+        Rui
 
-Oh definitely not asking for moving them at the same time, just wondering
-how this should be solved properly.
--Daniel
 
-> 
-> > 
-> > Thanks, Daniel
-> > 
-> > > 
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > > ---
-> > >  Documentation/EDID/{HOWTO.txt => howto.rst}   | 31 ++++++++++++-------
-> > >  .../admin-guide/kernel-parameters.txt         |  2 +-
-> > >  drivers/gpu/drm/Kconfig                       |  2 +-
-> > >  3 files changed, 22 insertions(+), 13 deletions(-)
-> > >  rename Documentation/EDID/{HOWTO.txt => howto.rst} (83%)
-> > > 
-> > > diff --git a/Documentation/EDID/HOWTO.txt b/Documentation/EDID/howto.rst
-> > > similarity index 83%
-> > > rename from Documentation/EDID/HOWTO.txt
-> > > rename to Documentation/EDID/howto.rst
-> > > index 539871c3b785..725fd49a88ca 100644
-> > > --- a/Documentation/EDID/HOWTO.txt
-> > > +++ b/Documentation/EDID/howto.rst
-> > > @@ -1,3 +1,9 @@
-> > > +:orphan:
-> > > +
-> > > +====
-> > > +EDID
-> > > +====
-> > > +
-> > >  In the good old days when graphics parameters were configured explicitly
-> > >  in a file called xorg.conf, even broken hardware could be managed.
-> > >  
-> > > @@ -34,16 +40,19 @@ Makefile. Please note that the EDID data structure expects the timing
-> > >  values in a different way as compared to the standard X11 format.
-> > >  
-> > >  X11:
-> > > -HTimings:  hdisp hsyncstart hsyncend htotal
-> > > -VTimings:  vdisp vsyncstart vsyncend vtotal
-> > > +  HTimings:
-> > > +    hdisp hsyncstart hsyncend htotal
-> > > +  VTimings:
-> > > +    vdisp vsyncstart vsyncend vtotal
-> > >  
-> > > -EDID:
-> > > -#define XPIX hdisp
-> > > -#define XBLANK htotal-hdisp
-> > > -#define XOFFSET hsyncstart-hdisp
-> > > -#define XPULSE hsyncend-hsyncstart
-> > > +EDID::
-> > >  
-> > > -#define YPIX vdisp
-> > > -#define YBLANK vtotal-vdisp
-> > > -#define YOFFSET vsyncstart-vdisp
-> > > -#define YPULSE vsyncend-vsyncstart
-> > > +  #define XPIX hdisp
-> > > +  #define XBLANK htotal-hdisp
-> > > +  #define XOFFSET hsyncstart-hdisp
-> > > +  #define XPULSE hsyncend-hsyncstart
-> > > +
-> > > +  #define YPIX vdisp
-> > > +  #define YBLANK vtotal-vdisp
-> > > +  #define YOFFSET vsyncstart-vdisp
-> > > +  #define YPULSE vsyncend-vsyncstart
-> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > index 3d072ca532bb..3faf37b8b001 100644
-> > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > @@ -930,7 +930,7 @@
-> > >  			edid/1680x1050.bin, or edid/1920x1080.bin is given
-> > >  			and no file with the same name exists. Details and
-> > >  			instructions how to build your own EDID data are
-> > > -			available in Documentation/EDID/HOWTO.txt. An EDID
-> > > +			available in Documentation/EDID/howto.rst. An EDID
-> > >  			data set will only be used for a particular connector,
-> > >  			if its name and a colon are prepended to the EDID
-> > >  			name. Each connector may use a unique EDID data
-> > > diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> > > index 6b34949416b1..c3a6dd284c91 100644
-> > > --- a/drivers/gpu/drm/Kconfig
-> > > +++ b/drivers/gpu/drm/Kconfig
-> > > @@ -141,7 +141,7 @@ config DRM_LOAD_EDID_FIRMWARE
-> > >  	  monitor are unable to provide appropriate EDID data. Since this
-> > >  	  feature is provided as a workaround for broken hardware, the
-> > >  	  default case is N. Details and instructions how to build your own
-> > > -	  EDID data are given in Documentation/EDID/HOWTO.txt.
-> > > +	  EDID data are given in Documentation/EDID/howto.rst.
-> > >  
-> > >  config DRM_DP_CEC
-> > >  	bool "Enable DisplayPort CEC-Tunneling-over-AUX HDMI support"
-> > > -- 
-> > > 2.21.0
-> > >   
-> > 
-> 
-> 
-> 
-> Thanks,
-> Mauro
+>
+> My pipeline is:
+>
+> Device topology
+> - entity 1: csi (2 pads, 2 links)
+>             type V4L2 subdev subtype Unknown flags 0
+>             device node name /dev/v4l-subdev0
+>         pad0: Sink
+>                 [fmt:UYVY8_2X8/640x480 field:none colorspace:srgb
+> xfer:srgb ycbcr:601 quantization:full-range]
+>                 <- "ov5640 1-003c":0 [ENABLED]
+>         pad1: Source
+>                 [fmt:UYVY8_2X8/640x480 field:none colorspace:srgb
+> xfer:srgb ycbcr:601 quantization:full-range]
+>                 -> "csi capture":0 [ENABLED]
+>
+> - entity 4: csi capture (1 pad, 1 link)
+>             type Node subtype V4L flags 0
+>             device node name /dev/video1
+>         pad0: Sink
+>                 <- "csi":1 [ENABLED]
+>
+> - entity 10: ov5640 1-003c (1 pad, 1 link)
+>              type V4L2 subdev subtype Sensor flags 0
+>              device node name /dev/v4l-subdev1
+>         pad0: Source
+>                 [fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:srgb
+> xfer:srgb ycbcr:601 quantization:full-range]
+>                 -> "csi":0 [ENABLED]
+>
+>
+> Maybe we should fix this ?
+>
+> Regards,
+>
+>>
+>>> +	{ },
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
+>>> +
+>>>  static int imx7_csi_probe(struct platform_device *pdev)
+>>>  {
+>>>  	struct device *dev =3D &pdev->dev;
+>>>  	struct device_node *node =3D dev->of_node;
+>>>  	struct imx_media_dev *imxmd;
+>>>  	struct imx7_csi *csi;
+>>> +	const struct of_device_id *of_id;
+>>>  	int ret;
+>>>
+>>> +	of_id =3D of_match_node(imx7_csi_of_match, node);
+>>
+>> With the above said, here I think we can use the of_match_device?
+>>
+>> hope this makes sense also to you.
+>>
+>> Once again thanks for the patches.
+>>
+>> ---
+>> Cheers,
+>>         Rui
+>>
+>>> +	if (!of_id)
+>>> +		return -ENODEV;
+>>> +
+>>>  	csi =3D devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
+>>>  	if (!csi)
+>>>  		return -ENOMEM;
+>>>
+>>>  	csi->dev =3D dev;
+>>> +	csi->soc_id =3D (enum csi_soc_id)of_id->data;
+>>>
+>>>  	csi->mclk =3D devm_clk_get(&pdev->dev, "mclk");
+>>>  	if (IS_ERR(csi->mclk)) {
+>>> @@ -1294,12 +1332,6 @@ static int imx7_csi_remove(struct platform_devic=
+e *pdev)
+>>>  	return 0;
+>>>  }
+>>>
+>>> -static const struct of_device_id imx7_csi_of_match[] =3D {
+>>> -	{ .compatible =3D "fsl,imx7-csi" },
+>>> -	{ },
+>>> -};
+>>> -MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
+>>> -
+>>>  static struct platform_driver imx7_csi_driver =3D {
+>>>  	.probe =3D imx7_csi_probe,
+>>>  	.remove =3D imx7_csi_remove,
+>>
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
