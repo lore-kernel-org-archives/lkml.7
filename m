@@ -2,99 +2,106 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C6DC4646D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA481C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F222821744
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3A82173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560279064;
-	bh=eImiH0U2R9J23GU5acZAV8Hb7EeG17LzFiM7Nb4BDYQ=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=jYulzg5uJeDU1O+aifS1vTHxDCyP7h7Ng7baZPaG58PCFaM3vvp9a+tvOdzg8UP2U
-	 D92KnE3t2c52AX21wOUCdciFkIuix+W0P96odbLm8pTva5gUV/eN3Dy/QdrltV19Bm
-	 pUcoEPgVU/f+5vWUa16TpL8FYlbXoTwHcRJa/u4k=
+	s=default; t=1560279131;
+	bh=Af2Xf7oCOA4TNNRVlRh/3Omz2g+vvajcN7rh7OOMonQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CPStBqbbb5dxyCEYroRMx6R7GNGjXWjgUZ0M8TFhJwK8Ix7JbeHoTZi77lNi9UEQG
+	 n9rbUK9YdgCFVbSsCqyFduBpVJDQ2+SPh1Ir60LO3yo9h8kyIVY0FwpHYx7YErSPoR
+	 oQHs9qPyt0wGbntAy4ddFTe03O2WAn6xwS4Kza7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392114AbfFKSvD (ORCPT
+        id S2392131AbfFKSwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389470AbfFKSvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:51:03 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368ED21744;
-        Tue, 11 Jun 2019 18:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279062;
-        bh=eImiH0U2R9J23GU5acZAV8Hb7EeG17LzFiM7Nb4BDYQ=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=rfzC7eyFSl2rnamYq+e5oFdsnE0+XJDSNRNjSCHAChqv3ZrE2vSQBDpivAVbRv5jP
-         nk5wPdiLmDoMlmcVS0UFYNP3aNmDmtnbm5MYhqojR98C8PmjSZ8VMyuIOEssP+P6ue
-         63X9EX1KRTWzKQGg4mWfdfH6qE3bgDTOQmIwk69o=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 11 Jun 2019 14:52:10 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39071 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389470AbfFKSwK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:52:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so7997956pfe.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Yy0OWXyZ8KVFOzQyma6HgIMdzu+QpAU/FsXhUq9xLso=;
+        b=ej7JmHmwRccfgX6J9SleW4kdB4KDGp/zlkFhjqLihF0Qg20fcfmQPNhv8Yo4vVgzFb
+         r6fl2Yh7LPmoTyKpA+k8WVRXZdX/l/CCm7ERyV7UpACwM5LA9X0dF8loQVuqkTDm1xxe
+         2um711N+byV34Tmma9+No0AiRSItUAz1slLbsBcK5OZpIJp2/MSnCIFBcXz2bM4HdRXa
+         0PLKAwPi3/q4MlFjauQifoFZXFtBlv5aZjExLl49KxcuNh4TL9MpoBWQgjVcG74dLIZz
+         FaY5mQhKhROOkpNRjSG4XKe/tZ+8wTWe/68kw4aj8IDDWMkjwq7/2F9/43z3WEj3D3dS
+         rmQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yy0OWXyZ8KVFOzQyma6HgIMdzu+QpAU/FsXhUq9xLso=;
+        b=W5piQtQej3h8/X8Ci0ZRJJerK1WSStlyE8Kn2NYzRhP6PiQskWvbIAfENFMwfaIW4k
+         VrlqrMx3o8iw8Em90hKnwR1x59SWrH00MC5NhOylsXqeiCD536N0Hh+6q2DSDc6lcYXY
+         VAqQ9z+eil8tzuH7N7UztTUV9xC7fo4KzT4NgCYLsH8QDaaQ3Mn/ChTG0VACYbXNX3v9
+         ta8aX5jA1KhrNwsOZet6g26J5RX0XWkffMvJf7Q0k6ayFTKkFDfrNPrgY3cBYrNuugF2
+         3/Rt9a1CznHvmk07vErVus+aEJYzfKVmB2XkWyZ+a0qwg1/R007z2jKfot6+MYOA7hie
+         rFQg==
+X-Gm-Message-State: APjAAAXyozzb/HMnOWk+JItG10orRYHeB5rZ3ERXR5FVTm1jLTN4ZfR1
+        Ar/SoPUwpMYantXb0/9HjMk=
+X-Google-Smtp-Source: APXvYqxZttuM3YSEYQATNQB0u9z+UnACicWJQv56CJx/lsbzVj1DKqMvzdoAzz3koBp9Fe7tzkSuEQ==
+X-Received: by 2002:a17:90a:30cf:: with SMTP id h73mr28803429pjb.42.1560279129539;
+        Tue, 11 Jun 2019 11:52:09 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:1677])
+        by smtp.gmail.com with ESMTPSA id a12sm8962468pje.3.2019.06.11.11.52.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 11:52:08 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 11:52:06 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+4d497898effeb1936245@syzkaller.appspotmail.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, mwb@linux.vnet.ibm.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: linux-next boot error: WARNING: workqueue cpumask: online
+ intersect > possible intersect
+Message-ID: <20190611185206.GG3341036@devbig004.ftw2.facebook.com>
+References: <000000000000f19676058ab7adc4@google.com>
+ <CACT4Y+ZZy5nqduErU8hjKrwThHiybGpwd3QzOviAWftZFZ4d2A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <46b715974766d5c557685a1ab9131abe@codeaurora.org>
-References: <1559285512-27784-1-git-send-email-tengfeif@codeaurora.org> <CACRpkdbdkbSofrvJ0hSV66DX+DcwWXp0ONDjx0265Pz50yE8TA@mail.gmail.com> <20190610145132.DD1132085A@mail.kernel.org> <46b715974766d5c557685a1ab9131abe@codeaurora.org>
-To:     tengfeif@codeaurora.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
-User-Agent: alot/0.8.1
-Date:   Tue, 11 Jun 2019 11:51:01 -0700
-Message-Id: <20190611185102.368ED21744@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZZy5nqduErU8hjKrwThHiybGpwd3QzOviAWftZFZ4d2A@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting tengfeif@codeaurora.org (2019-06-11 03:41:26)
-> On 2019-06-10 22:51, Stephen Boyd wrote:
-> > Quoting Linus Walleij (2019-06-07 14:08:10)
-> >> On Fri, May 31, 2019 at 8:52 AM Tengfei Fan <tengfeif@codeaurora.org> =
+Hello,
 
-> >> wrote:
-> >>=20
-> >> > The gpio interrupt status bit is getting set after the
-> >> > irq is disabled and causing an immediate interrupt after
-> >> > enablling the irq, so clear status bit on irq_unmask.
-> >> >
-> >> > Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
-> >>=20
-> >> This looks pretty serious, can one of the Qcom maintainers ACK
-> >> this?
-> >>=20
-> >> Should it be sent to fixes and even stable?
-> >>=20
-> >> Fixes: tag?
-> >>=20
-> >=20
-> > How is the interrupt status bit getting set after the irq is disabled?
-> > It looks like this is a level type interrupt? I thought that after
-> > commit b55326dc969e ("pinctrl: msm: Really mask level interrupts to
-> > prevent latching") this wouldn't be a problem. Am I wrong, or is qcom
-> > just clearing out patches on drivers and this is the last one that=20
-> > needs
-> > to be upstreamed?
->=20
-> Your patch(commit b55326dc969e) can cover our issue, and my patch is no=20
-> longer needed.
-> Your patch isn't included in our code, so I submitted this patch.
+On Fri, Jun 07, 2019 at 10:45:45AM +0200, Dmitry Vyukov wrote:
+> +workqueue maintainers and Michael who added this WARNING
+> 
+> The WARNING was added in 2017, so I guess it's a change somewhere else
+> that triggered it.
+> The WARNING message does not seem to give enough info about the caller
+> (should it be changed to WARN_ONCE to print a stack?). How can be root
+> cause this and unbreak linux-next?
 
-Alright cool. Sounds like this patch can be dropped then and you can
-pick up the patch from upstream into your vendor kernel.
+So, during boot, workqueue builds masks of possible cpus of each node
+and stores them on wq_numa_possible_cpumask[] array.  The warning is
+saying that somehow online cpumask of a node became a superset of the
+possible mask, which should never happen.
 
+Dumping all masks in wq_numa_possible_cpumasks[] and cpumask_of_node()
+of each node should show what's going on.
+
+Thanks.
+
+-- 
+tejun
