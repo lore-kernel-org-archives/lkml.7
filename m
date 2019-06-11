@@ -2,96 +2,108 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B789C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D701EC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2822089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93F32089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:39:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dgrq9kJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391382AbfFKOjj (ORCPT
+        id S2391453AbfFKOju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:39:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:34638 "EHLO foss.arm.com"
+        Tue, 11 Jun 2019 10:39:50 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:28080 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389484AbfFKOji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:39:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C398E337;
-        Tue, 11 Jun 2019 07:39:37 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 603B13F557;
-        Tue, 11 Jun 2019 07:39:36 -0700 (PDT)
-Subject: Re: [PATCH HACK RFC] cpu: Prevent late-arriving interrupts from
- disrupting offline
-To:     paulmck@linux.ibm.com
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        mingo@kernel.org, jpoimboe@redhat.com, mojha@codeaurora.org,
-        linux-kernel@vger.kernel.org
-References: <20190602011253.GA6167@linux.ibm.com>
- <20190603083848.GB3436@hirez.programming.kicks-ass.net>
- <20190603114455.GA16119@lakrids.cambridge.arm.com>
- <ea4887fb-cc77-59d4-3ba7-a59f5237ca40@arm.com>
- <20190604074549.GP28207@linux.ibm.com>
- <6eb5d59f-37d0-0aab-1fc0-fcf48cc4164f@arm.com>
- <20190608164158.GK28207@linux.ibm.com>
- <16a424d1-0ab7-7e81-5c4f-93da23519b1d@arm.com>
- <20190611135429.GH28207@linux.ibm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <89ba6366-5be3-736e-ee78-3d9510aa2576@arm.com>
-Date:   Tue, 11 Jun 2019 16:39:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190611135429.GH28207@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        id S2388535AbfFKOju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:39:50 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45NXhf5Z9cz9v1Dt;
+        Tue, 11 Jun 2019 16:39:46 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=dgrq9kJe; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id tA0hWZRfDHhV; Tue, 11 Jun 2019 16:39:46 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45NXhf4978z9v1Ds;
+        Tue, 11 Jun 2019 16:39:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560263986; bh=RdIRCVd3rWEHV6Cf3Mdc0Zd+I1Z8QOf7DgnVm3Mjz0s=;
+        h=From:Subject:To:Cc:Date:From;
+        b=dgrq9kJe+z/9D9PAqATWSkwYtVrU4CrVMduV4DHyAu1Kw0MhqPZIEuq+dlj/GkQyP
+         vyIWUtchI/wJKZns5cvY48bc/7nFPlKFRsDaPftzKRGuNkiNZAkWLYFbJk2dUnBFYB
+         v5H3AjkHOGcEGv9FDfhwuuSZrd08OjItFQAPaJ5s=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1008E8B7F4;
+        Tue, 11 Jun 2019 16:39:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id iASOBC4muGKp; Tue, 11 Jun 2019 16:39:48 +0200 (CEST)
+Received: from po16838vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D94108B75B;
+        Tue, 11 Jun 2019 16:39:47 +0200 (CEST)
+Received: by po16838vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 66CC768CE5; Tue, 11 Jun 2019 14:39:47 +0000 (UTC)
+Message-Id: <cover.1560263641.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 0/4] Additional fixes on Talitos driver
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 11 Jun 2019 14:39:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 3:54 PM, Paul E. McKenney wrote:
-> On Tue, Jun 11, 2019 at 03:14:54PM +0200, Dietmar Eggemann wrote:
->> On 6/8/19 6:41 PM, Paul E. McKenney wrote:
->>> On Tue, Jun 04, 2019 at 03:29:32PM +0200, Dietmar Eggemann wrote:
->>>> On 6/4/19 9:45 AM, Paul E. McKenney wrote:
->>>>> On Mon, Jun 03, 2019 at 03:39:18PM +0200, Dietmar Eggemann wrote:
->>>>>> On 6/3/19 1:44 PM, Mark Rutland wrote:
->>>>>>> On Mon, Jun 03, 2019 at 10:38:48AM +0200, Peter Zijlstra wrote:
->>>>>>>> On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
->>>>>>>>> Scheduling-clock interrupts can arrive late in the CPU-offline process,
+This series is the last set of fixes for the Talitos driver.
 
-[...]
+We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
+SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
 
->> Tested your patch on top of v5.2-rc4* on Arm TC2 (32bit) and CPU
->> hotplug stress test. W/o your patch, the test fails within seconds
->> since CPUs are not coming up again. W/ your patch, the test runs for
->> hours just fine.
->>
->> You can add my:
->>
->> Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> 
-> Thank you!!!
-> 
->> * just for the record: one additional unrelated patch (to disable
->> the NOR flash) is necessary on Arm TC2:
->> https://patchwork.kernel.org/patch/10968391 .
-> 
-> Is this progressing, or does it also need help getting to mainline?
+[    3.385197] bus: 'platform': really_probe: probing driver talitos with device ff020000.crypto
+[    3.450982] random: fast init done
+[   12.252548] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
+[   12.262226] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
+[   43.310737] Bug in SEC1, padding ourself
+[   45.603318] random: crng init done
+[   54.612333] talitos ff020000.crypto: fsl,sec1.2 algorithms registered in /proc/crypto
+[   54.620232] driver: 'talitos': driver_bound: bound to device 'ff020000.crypto'
 
-This is an unrelated specific issue w/ the TC2 platform which will 
-progress independently. Other Arm32 platforms should profit from your 
-patch independently of that. I just wanted to mention it here in case 
-people try to recreate the test on this specific platform.
-> Left to myself, I will push my patch and assume that the NOR flash patch
-> will make it in its own good time -- or, alternatively, that there is
-> someone better positioned than me to push it.
+[    1.193721] bus: 'platform': really_probe: probing driver talitos with device b0030000.crypto
+[    1.229197] random: fast init done
+[    2.714920] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos)
+[    2.724312] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos-hsna)
+[    4.482045] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos)
+[    4.490940] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
+[    4.500280] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos)
+[    4.509727] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
+[    6.631781] random: crng init done
+[   11.521795] talitos b0030000.crypto: fsl,sec2.2 algorithms registered in /proc/crypto
+[   11.529803] driver: 'talitos': driver_bound: bound to device 'b0030000.crypto'
 
-IMHO, the best thing is you push your patch.
+v2: dropped patch 1 which was irrelevant due to a rebase weirdness. Added Cc to stable on the 2 first patches.
+
+Christophe Leroy (4):
+  crypto: talitos - move struct talitos_edesc into talitos.h
+  crypto: talitos - fix hash on SEC1.
+  crypto: talitos - eliminate unneeded 'done' functions at build time
+  crypto: talitos - drop icv_ool
+
+ drivers/crypto/talitos.c | 98 ++++++++++++++++++++----------------------------
+ drivers/crypto/talitos.h | 28 ++++++++++++++
+ 2 files changed, 69 insertions(+), 57 deletions(-)
+
+-- 
+2.13.3
+
