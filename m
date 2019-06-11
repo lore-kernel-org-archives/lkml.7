@@ -2,82 +2,151 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA8AC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E70C4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD58420820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDC420896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eikelenboom.it header.i=@eikelenboom.it header.b="bWAl55VN"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="hBl4AEV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388755AbfFKLDH (ORCPT
+        id S2388802AbfFKLEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:03:07 -0400
-Received: from server.eikelenboom.it ([91.121.65.215]:47512 "EHLO
-        server.eikelenboom.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387899AbfFKLDG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:03:06 -0400
-X-Greylist: delayed 1180 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 07:03:06 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=eikelenboom.it; s=20180706; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Cc:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QCeifO9zUtS8lYIt9Z5aMEE1UvJc3aqVFQ5sSYZy3wY=; b=bWAl55VNpppr1nSo99UKErndpK
-        HtURPpZZCzodH4vv5P6FsZPU8B+Y6Z/6IAmv4pPwx7gJzAHD/FQxJzaTZt6vCXFKun6A2PYR7LBeI
-        VkI7/h1SzUFiNGScDR/jsW/ZDn8uE0HvTAN4nwIeYvzWfApRqR6NRVualXRKKYQ4hAdw=;
-Received: from ip4da85049.direct-adsl.nl ([77.168.80.73]:38780 helo=[10.97.34.6])
-        by server.eikelenboom.it with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <linux@eikelenboom.it>)
-        id 1haeFO-0001Qx-Nx; Tue, 11 Jun 2019 12:43:22 +0200
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-To:     Kirill Smelkov <kirr@nexedi.com>,
-        Miklos Szeredi <mszeredi@redhat.com>, gluster-devel@gluster.org
-From:   Sander Eikelenboom <linux@eikelenboom.it>
-Subject: Linux 5.2-RC regression bisected, mounting glusterfs volumes fails
- after commit: fuse: require /dev/fuse reads to have enough buffer capacity
-Message-ID: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it>
-Date:   Tue, 11 Jun 2019 12:46:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Tue, 11 Jun 2019 07:04:44 -0400
+Received: from mail-eopbgr60127.outbound.protection.outlook.com ([40.107.6.127]:34261
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387899AbfFKLEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:04:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2qhrRaT56Rif+NJitpEl5W4KKdsQBXVyEfe/v4UMDGo=;
+ b=hBl4AEV6QAhG/jupo1a81DKqdLgG3K7FP/eDSGHdatp+B6nUHb5dMFTyFXUmNbgNPPxxQc2ZwILuOTTjkg+gw/xWP04BF3+C/Gk1tCT4kcs8FfKns2+AuI01mX8VOIskBB+sO07iEJokSmYt+YnrnSjgyQLLtQC/bheMeWh3n0s=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3339.eurprd02.prod.outlook.com (52.134.71.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Tue, 11 Jun 2019 11:03:59 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 11:03:59 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     =?utf-8?B?TXlsw6huZSBKb3NzZXJhbmQ=?= <mylene.josserand@bootlin.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v1 1/3] iio: afe: rescale: Move scale conversion to new
+ function
+Thread-Topic: [PATCH v1 1/3] iio: afe: rescale: Move scale conversion to new
+ function
+Thread-Index: AQHVIDwSq4viEEcKgka2YzIWUh6s7qaWSkCA
+Date:   Tue, 11 Jun 2019 11:03:59 +0000
+Message-ID: <11999b2d-b99f-a34c-d1d8-fcf58a5de3fc@axentia.se>
+References: <20190611095659.29845-1-mylene.josserand@bootlin.com>
+ <20190611095659.29845-2-mylene.josserand@bootlin.com>
+In-Reply-To: <20190611095659.29845-2-mylene.josserand@bootlin.com>
+Accept-Language: en-US, sv-SE
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1P190CA0004.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:bc::14)
+ To DB3PR0202MB3434.eurprd02.prod.outlook.com (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 29ce86c8-f548-4474-beec-08d6ee5c8170
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3339;
+x-ms-traffictypediagnostic: DB3PR0202MB3339:
+x-microsoft-antispam-prvs: <DB3PR0202MB3339986B7CB105C78F1A4011BCED0@DB3PR0202MB3339.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(39830400003)(346002)(376002)(189003)(199004)(3846002)(4326008)(52116002)(76176011)(99286004)(508600001)(6116002)(53936002)(6246003)(36756003)(86362001)(31696002)(256004)(2201001)(71200400001)(71190400001)(5660300002)(316002)(8936002)(8676002)(65956001)(53546011)(64126003)(2616005)(68736007)(65806001)(66066001)(186003)(14454004)(25786009)(65826007)(7736002)(81156014)(81166006)(11346002)(26005)(64756008)(66476007)(386003)(6506007)(476003)(102836004)(446003)(2501003)(6486002)(2906002)(58126008)(7416002)(6512007)(229853002)(110136005)(31686004)(54906003)(66946007)(73956011)(305945005)(66556008)(66446008)(486006)(74482002)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3339;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GGrht5sJt6ldfHAB41G0LAsqucXtNTyEt+d9PCU/PQJv2VvZV9FmRHEEcAatuGFMKHl7lU8DOvVJqRnT3Fw6h5cC7iN/jiex7EjWB0dRfvrH6qFOe1GKP+D/RJqjRHdlknYJiRdwhWvn8aXdX78IEOMmL+P1hPv9PXficZRggg3WCPvDQv8guxXs7F/Q0cWG0JQzq1wOWjguG2sylvaappo166MQ9g90G1hDUrHOP++NQItWBtCgcpD+nw70l5GDJf05Ki+0J2VqV28qQPiuI/Or4p1trAZJIwIm4Xiw4qOysJAqHq+lG/B3Tfdl6x9z/iy9ddCv9gDMh4zeIQoG4LwupDBgf1SZPdJ2s7OmuH4xWM532A+vnnHTWDAdhrCDIFnYkXhu+xSDkO5fGvQCrxIT9BJ3TrNEC7JLjWfymyk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73767A93B223B34D9A913EE236CCBD94@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29ce86c8-f548-4474-beec-08d6ee5c8170
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 11:03:59.8293
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3339
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-L.S.,
-
-While testing a linux 5.2 kernel I noticed it fails to mount my glusterfs volumes.
-
-It repeatedly fails with:
-   [2019-06-11 09:15:27.106946] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
-   [2019-06-11 09:15:27.106955] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
-   [2019-06-11 09:15:27.106963] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
-   [2019-06-11 09:15:27.106971] W [fuse-bridge.c:4993:fuse_thread_proc] 0-glusterfs-fuse: read from /dev/fuse returned -1 (Invalid argument)
-   etc. 
-   etc.
-
-Bisecting turned up as culprit:
-    commit d4b13963f217dd947da5c0cabd1569e914d21699: fuse: require /dev/fuse reads to have enough buffer capacity
-
-The glusterfs version i'm using is from Debian stable:
-    ii  glusterfs-client                3.8.8-1                      amd64        clustered file-system (client package)
-    ii  glusterfs-common                3.8.8-1                      amd64        GlusterFS common libraries and translator modules
-
-
-A 5.1.* kernel works fine, as does a 5.2-rc4 kernel with said commit reverted.
-
---
-Sander
+T24gMjAxOS0wNi0xMSAxMTo1NiwgTXlsw6huZSBKb3NzZXJhbmQgd3JvdGU6DQo+IFRvIHByZXBh
+cmUgdGhlIHN1cHBvcnQgb2YgcHJvY2Vzc2VkIHZhbHVlLCBjcmVhdGUgYSBmdW5jdGlvbg0KPiB0
+byBjb252ZXJ0IHRoZSBzY2FsZSBhY2NvcmRpbmcgdG8gdGhlIHZvbHRhZ2UtZGl2aWRlciBub2Rl
+DQo+IHVzZWQgaW4gdGhlIGRldmljZS10cmVlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTXlsw6hu
+ZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAYm9vdGxpbi5jb20+DQo+IC0tLQ0KPiAgZHJp
+dmVycy9paW8vYWZlL2lpby1yZXNjYWxlLmMgfCA1NCArKysrKysrKysrKysrKysrKysrKysrKysr
+LS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwg
+MjMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWZlL2lpby1y
+ZXNjYWxlLmMgYi9kcml2ZXJzL2lpby9hZmUvaWlvLXJlc2NhbGUuYw0KPiBpbmRleCBlOWNlZWU2
+NmQxZTcuLjNlNjg5ZDZlYjUwMSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9paW8vYWZlL2lpby1y
+ZXNjYWxlLmMNCj4gKysrIGIvZHJpdmVycy9paW8vYWZlL2lpby1yZXNjYWxlLmMNCj4gQEAgLTMz
+LDEyICszMyw0MSBAQCBzdHJ1Y3QgcmVzY2FsZSB7DQo+ICAJczMyIGRlbm9taW5hdG9yOw0KPiAg
+fTsNCj4gIA0KPiArc3RhdGljIGludCByZXNjYWxlX2NvbnZlcnRfc2NhbGUoc3RydWN0IHJlc2Nh
+bGUgKnJlc2NhbGUsIGludCAqdmFsLCBpbnQgKnZhbDIpDQo+ICt7DQo+ICsJdW5zaWduZWQgbG9u
+ZyBsb25nIHRtcDsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJcmV0ID0gaWlvX3JlYWRfY2hhbm5l
+bF9zY2FsZShyZXNjYWxlLT5zb3VyY2UsIHZhbCwgdmFsMik7DQo+ICsJc3dpdGNoIChyZXQpIHsN
+Cj4gKwljYXNlIElJT19WQUxfRlJBQ1RJT05BTDoNCj4gKwkJKnZhbCAqPSByZXNjYWxlLT5udW1l
+cmF0b3I7DQo+ICsJCSp2YWwyICo9IHJlc2NhbGUtPmRlbm9taW5hdG9yOw0KPiArCQlyZXR1cm4g
+cmV0Ow0KPiArCWNhc2UgSUlPX1ZBTF9JTlQ6DQo+ICsJCSp2YWwgKj0gcmVzY2FsZS0+bnVtZXJh
+dG9yOw0KPiArCQlpZiAocmVzY2FsZS0+ZGVub21pbmF0b3IgPT0gMSkNCj4gKwkJCXJldHVybiBy
+ZXQ7DQo+ICsJCSp2YWwyID0gcmVzY2FsZS0+ZGVub21pbmF0b3I7DQo+ICsJCXJldHVybiBJSU9f
+VkFMX0ZSQUNUSU9OQUw7DQo+ICsJY2FzZSBJSU9fVkFMX0ZSQUNUSU9OQUxfTE9HMjoNCj4gKwkJ
+dG1wID0gKnZhbCAqIDEwMDAwMDAwMDBMTDsNCj4gKwkJZG9fZGl2KHRtcCwgcmVzY2FsZS0+ZGVu
+b21pbmF0b3IpOw0KPiArCQl0bXAgKj0gcmVzY2FsZS0+bnVtZXJhdG9yOw0KPiArCQlkb19kaXYo
+dG1wLCAxMDAwMDAwMDAwTEwpOw0KPiArCQkqdmFsID0gdG1wOw0KPiArDQoNClRoaXMgYmxhbmsg
+bGluZSBpcyBpbiBjb25mbGljdCB3aXRoIHRoZSBzdHlsZSBvZiB0aGUgc3Vycm91bmRpbmcgY29k
+ZS4NCg0KQ2hlZXJzLA0KUGV0ZXINCg0KPiArCQlyZXR1cm4gcmV0Ow0KPiArCWRlZmF1bHQ6DQo+
+ICsJCXJldHVybiAtRU9QTk9UU1VQUDsNCj4gKwl9DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBpbnQg
+cmVzY2FsZV9yZWFkX3JhdyhzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2LA0KPiAgCQkJICAgIHN0
+cnVjdCBpaW9fY2hhbl9zcGVjIGNvbnN0ICpjaGFuLA0KPiAgCQkJICAgIGludCAqdmFsLCBpbnQg
+KnZhbDIsIGxvbmcgbWFzaykNCj4gIHsNCj4gIAlzdHJ1Y3QgcmVzY2FsZSAqcmVzY2FsZSA9IGlp
+b19wcml2KGluZGlvX2Rldik7DQo+IC0JdW5zaWduZWQgbG9uZyBsb25nIHRtcDsNCj4gIAlpbnQg
+cmV0Ow0KPiAgDQo+ICAJc3dpdGNoIChtYXNrKSB7DQo+IEBAIC00NiwyOCArNzUsNyBAQCBzdGF0
+aWMgaW50IHJlc2NhbGVfcmVhZF9yYXcoc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiwNCj4gIAkJ
+cmV0dXJuIGlpb19yZWFkX2NoYW5uZWxfcmF3KHJlc2NhbGUtPnNvdXJjZSwgdmFsKTsNCj4gIA0K
+PiAgCWNhc2UgSUlPX0NIQU5fSU5GT19TQ0FMRToNCj4gLQkJcmV0ID0gaWlvX3JlYWRfY2hhbm5l
+bF9zY2FsZShyZXNjYWxlLT5zb3VyY2UsIHZhbCwgdmFsMik7DQo+IC0JCXN3aXRjaCAocmV0KSB7
+DQo+IC0JCWNhc2UgSUlPX1ZBTF9GUkFDVElPTkFMOg0KPiAtCQkJKnZhbCAqPSByZXNjYWxlLT5u
+dW1lcmF0b3I7DQo+IC0JCQkqdmFsMiAqPSByZXNjYWxlLT5kZW5vbWluYXRvcjsNCj4gLQkJCXJl
+dHVybiByZXQ7DQo+IC0JCWNhc2UgSUlPX1ZBTF9JTlQ6DQo+IC0JCQkqdmFsICo9IHJlc2NhbGUt
+Pm51bWVyYXRvcjsNCj4gLQkJCWlmIChyZXNjYWxlLT5kZW5vbWluYXRvciA9PSAxKQ0KPiAtCQkJ
+CXJldHVybiByZXQ7DQo+IC0JCQkqdmFsMiA9IHJlc2NhbGUtPmRlbm9taW5hdG9yOw0KPiAtCQkJ
+cmV0dXJuIElJT19WQUxfRlJBQ1RJT05BTDsNCj4gLQkJY2FzZSBJSU9fVkFMX0ZSQUNUSU9OQUxf
+TE9HMjoNCj4gLQkJCXRtcCA9ICp2YWwgKiAxMDAwMDAwMDAwTEw7DQo+IC0JCQlkb19kaXYodG1w
+LCByZXNjYWxlLT5kZW5vbWluYXRvcik7DQo+IC0JCQl0bXAgKj0gcmVzY2FsZS0+bnVtZXJhdG9y
+Ow0KPiAtCQkJZG9fZGl2KHRtcCwgMTAwMDAwMDAwMExMKTsNCj4gLQkJCSp2YWwgPSB0bXA7DQo+
+IC0JCQlyZXR1cm4gcmV0Ow0KPiAtCQlkZWZhdWx0Og0KPiAtCQkJcmV0dXJuIC1FT1BOT1RTVVBQ
+Ow0KPiAtCQl9DQo+ICsJCXJldHVybiByZXNjYWxlX2NvbnZlcnRfc2NhbGUocmVzY2FsZSwgdmFs
+LCB2YWwyKTsNCj4gIAlkZWZhdWx0Og0KPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gIAl9DQo+IA0K
+DQo=
