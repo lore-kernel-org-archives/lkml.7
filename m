@@ -2,145 +2,144 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67622C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA7CC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3925A206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:34:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVwBmPNj"
+	by mail.kernel.org (Postfix) with ESMTP id 68D272145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390143AbfFKOeD (ORCPT
+        id S2390359AbfFKOfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:34:03 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34362 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388292AbfFKOeC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:34:02 -0400
-Received: by mail-qk1-f196.google.com with SMTP id t8so4091088qkt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 07:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x5MD+DeNQctHQznuuG5DArytM9Ulz9sKBFJ7MSffu8s=;
-        b=AVwBmPNjHGeSvBMkGNNUGW05JuQYvjBtqI6CJKr6eaFYIsDIQiQmCTG+2jKpDWoD68
-         mne7HsBkGQd8rXUYqisV5sa1R/fVrUu061fFTRPja2PuLYf098nwqFyhXs7iKSBQYti7
-         pf5ZjU7480aVp/mI+JVUrRuVpkkp5UoWXpYqiyn359/tXACB+Mat4vOfrwiiK9+nUVEo
-         MnJM6DPIg+8NwkpLQFPCOE5b0obL+u23eTNjvevZHXKdRf9o/jhzMiaxOlHCHYUu63TO
-         ipwGLhoR/Ov3IXFiPIJiZzlEWXOYUU0LRwpo1wot79+ELc+u850zP9z7gGBr/ntapKgK
-         MQwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x5MD+DeNQctHQznuuG5DArytM9Ulz9sKBFJ7MSffu8s=;
-        b=ki7yyrPsx6r1OuFK3p2aNzss6saaxoBTat26E1Z/XzNLw7gPHhGzuX2YI6k67Rsvik
-         RU11YQ2RmGLV3thOfTvdW8qZQujeD2zg7LPmY7oVG95eIAa3j3KcgLxRcADrMx3FiBZi
-         JJqAWoFmgbhz2rab6LX8a4nViTI8YwfaTKpjR+9ZWftzLvSgssRUZym+T3T4XCt3XuXg
-         K+D4jz4Uqf64FoL8zMzl4+krGw9hepqEZBitXZfuFApTyDpolrNIugx/xMo7StadXJ55
-         e9j62JAh2Zc6Kaie1D0S+K93LstkJlljLTsjZ5qvga0cHvIVQfCNjuBY2fLWweR4LatW
-         vgKg==
-X-Gm-Message-State: APjAAAXyvpv/a7kQ5fKwHBhwloaGjdBwlEeCGt46hiE4v/uK3r2Sfrql
-        t4Wmx2fUQiv1ntYdTLaPNWUgAmQlDzw=
-X-Google-Smtp-Source: APXvYqwn1C+0v1xejCoPdR32sI+SiyR9ewFUPmckfHadbPqcPp4wEwE2mg6Zv2lXbPrdkhMOW7XldQ==
-X-Received: by 2002:a05:620a:55c:: with SMTP id o28mr58031193qko.86.1560263641893;
-        Tue, 11 Jun 2019 07:34:01 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id t67sm6665395qkf.34.2019.06.11.07.34.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 07:34:01 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CF8A641149; Tue, 11 Jun 2019 11:23:56 -0300 (-03)
-Date:   Tue, 11 Jun 2019 11:23:56 -0300
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Raphael Gault <raphael.gault@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com
-Subject: Re: [PATCH 1/7] perf: arm64: Compile tests unconditionally
-Message-ID: <20190611142356.GA28689@kernel.org>
-References: <20190611125315.18736-1-raphael.gault@arm.com>
- <20190611125315.18736-2-raphael.gault@arm.com>
- <20190611140907.GF29008@lakrids.cambridge.arm.com>
+        Tue, 11 Jun 2019 10:35:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:34402 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388292AbfFKOfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:35:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6932D337;
+        Tue, 11 Jun 2019 07:35:49 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28CF33F557;
+        Tue, 11 Jun 2019 07:35:48 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, robh+dt@kernel.org,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+ <20190610184714.6786-2-jean-philippe.brucker@arm.com>
+ <20190611103625.00001399@huawei.com>
+Message-ID: <62d1f310-0cba-4d55-0f16-68bba3c64927@arm.com>
+Date:   Tue, 11 Jun 2019 15:35:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611140907.GF29008@lakrids.cambridge.arm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190611103625.00001399@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jun 11, 2019 at 03:09:07PM +0100, Mark Rutland escreveu:
-> On Tue, Jun 11, 2019 at 01:53:09PM +0100, Raphael Gault wrote:
-> > In order to subsequently add more tests for the arm64 architecture
-> > we compile the tests target for arm64 systematically.
+On 11/06/2019 10:36, Jonathan Cameron wrote:
+>> +/**
+>> + * ioasid_alloc - Allocate an IOASID
+>> + * @set: the IOASID set
+>> + * @min: the minimum ID (inclusive)
+>> + * @max: the maximum ID (inclusive)
+>> + * @private: data private to the caller
+>> + *
+>> + * Allocate an ID between @min and @max. The @private pointer is stored
+>> + * internally and can be retrieved with ioasid_find().
+>> + *
+>> + * Return: the allocated ID on success, or %INVALID_IOASID on failure.
+>> + */
+>> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>> +		      void *private)
+>> +{
+>> +	u32 id = INVALID_IOASID;
+>> +	struct ioasid_data *data;
+>> +
+>> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+>> +	if (!data)
+>> +		return INVALID_IOASID;
+>> +
+>> +	data->set = set;
+>> +	data->private = private;
+>> +
+>> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
+>> +		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
+>> +		goto exit_free;
+>> +	}
+>> +	data->id = id;
+>> +
+>> +exit_free:
 > 
-> Given prior questions regarding this commit, it's probably worth
-> spelling things out more explicitly, e.g.
+> This error flow is perhaps a little more confusing than it needs to be?
 > 
->   Currently we only build the arm64/tests directory if
->   CONFIG_DWARF_UNWIND is selected, which is fine as the only test we
->   have is arm64/tests/dwarf-unwind.o.
+> My assumption (perhaps wrong) is that we only have an id == INVALID_IOASID
+> if the xa_alloc fails, and that we will always have such an id value if
+> it does (I'm not totally sure this second element is true in __xa_alloc).
 > 
->   So that we can add more tests to the test directory, let's
->   unconditionally build the directory, but conditionally build
->   dwarf-unwind.o depending on CONFIG_DWARF_UNWIND.
-> 
->   There should be no functional change as a result of this patch.
-> 
-> > 
-> > Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-> 
-> Either way, the patch looks good to me:
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> If I'm missing something perhaps a comment on how else we'd get here.
 
-I'll update the comment, collect your Acked-by and apply the patch.
+Yes we can simplify this:
 
-- Arnaldo
- 
-> Mark.
+		return id;
+	exit_free:
+		kfree(data)
+		return INVALID_IOASID;
+	}
+
+The XA API doesn't say that @id passed to xa_alloc() won't be modified
+in case of error. It's true in the current implementation, but won't
+necessarily stay that way. On the other hand I think it's safe to expect
+@id to always be set when xa_alloc() succeeds.
+
+>> +/**
+>> + * ioasid_find - Find IOASID data
+>> + * @set: the IOASID set
+>> + * @ioasid: the IOASID to find
+>> + * @getter: function to call on the found object
+>> + *
+>> + * The optional getter function allows to take a reference to the found object
+>> + * under the rcu lock. The function can also check if the object is still valid:
+>> + * if @getter returns false, then the object is invalid and NULL is returned.
+>> + *
+>> + * If the IOASID has been allocated for this set, return the private pointer
+>> + * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
+>> + * if the IOASID is not found or does not belong to the set.
 > 
-> > ---
-> >  tools/perf/arch/arm64/Build       | 2 +-
-> >  tools/perf/arch/arm64/tests/Build | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/arch/arm64/Build b/tools/perf/arch/arm64/Build
-> > index 36222e64bbf7..a7dd46a5b678 100644
-> > --- a/tools/perf/arch/arm64/Build
-> > +++ b/tools/perf/arch/arm64/Build
-> > @@ -1,2 +1,2 @@
-> >  perf-y += util/
-> > -perf-$(CONFIG_DWARF_UNWIND) += tests/
-> > +perf-y += tests/
-> > diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
-> > index 41707fea74b3..a61c06bdb757 100644
-> > --- a/tools/perf/arch/arm64/tests/Build
-> > +++ b/tools/perf/arch/arm64/tests/Build
-> > @@ -1,4 +1,4 @@
-> >  perf-y += regs_load.o
-> > -perf-y += dwarf-unwind.o
-> > +perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
-> >  
-> >  perf-y += arch-tests.o
-> > -- 
-> > 2.17.1
-> > 
+> Perhaps should make it clear that @set can be null.
 
--- 
+Indeed. But I'm not sure allowing @set to be NULL is such a good idea,
+because the data type associated to an ioasid depends on its set. For
+example SVA will put an mm_struct in there, and auxiliary domains use
+some structure private to the IOMMU domain.
 
-- Arnaldo
+Jacob, could me make @set mandatory, or do you see a use for a global
+search? If @set is NULL, then callers can check if the return pointer is
+NULL, but will run into trouble if they try to dereference it.
+
+> 
+>> + */
+>> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>> +		  bool (*getter)(void *))
+>> +{
+>> +	void *priv = NULL;
+> 
+> Set in all paths, so does need to be set here.
+
+Right
+
+Thanks,
+Jean
