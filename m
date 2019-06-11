@@ -2,171 +2,219 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9335FC4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DC2C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62385208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:04:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZIa8H2Jy"
+	by mail.kernel.org (Postfix) with ESMTP id 9587521721
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404562AbfFKIEi (ORCPT
+        id S2404574AbfFKIFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:04:38 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36571 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404532AbfFKIEi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:04:38 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k21so15304891edq.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:04:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1VpP4BQl0scWmMIfvVrIwxl9EaLNPQUpAZnq/R1E08A=;
-        b=ZIa8H2Jy5lWKWQz1TT7B/cBLsAJV/t0RUOsjzlAUmvjxv48OR/2G2Z3xwj89VqyCSC
-         Y7NCdLF+j+Zb7j9MlTsh2N8qAd9mQSkTkGybODE0RYNXFT6BGqim8aTZFx8ccV9Ema2X
-         VHizYVWLs+TJqJRySt+NsoMrmPz7kLRDwVbHA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=1VpP4BQl0scWmMIfvVrIwxl9EaLNPQUpAZnq/R1E08A=;
-        b=BXQyVEMNJCmD7OOYHiTpcYaoQuXZf/Rit1FuhOip6/rKPIjFD39adwA7l+qIFCGNWT
-         Zv2XSkafy2O0M9Xdm5MYHdGGnUI8mTjfwaFQdyEcuSZ8kLJWxmCPIADO3EBcoYEr0WsO
-         EXaGBxhEkDnHAZUjD8SClUW3n/uY1Q15zMmR61fAkHzn1hqxhOtyY+M3XaP6lte/yaba
-         u6Ghw0Ygj0+VbyzvUbfQHuvu/2bzAm9bMnZ3sZIf/RU28l9whmJ8aysFDrzyI2rg36kX
-         LOCYUaK1XvmWnHdSJscWVj7A3kc/lTDaOGSfdW/wyNto/a8OWen5qMNu3ahnczo7uP4h
-         qA1A==
-X-Gm-Message-State: APjAAAXYvygsMJlMJHnwx8uoblUlRBQ3cSMzHCkwDmyWPXUVdeaXOSNw
-        qVwXnfXWQfQ3hlCTSY7+B7vGzQ==
-X-Google-Smtp-Source: APXvYqxTt4reyZxOwFM7gpLn44B2/syN7stLMXz/LTQgDQdiH76jkBmOlBKjhtvaB3E/mb8+p5bIJQ==
-X-Received: by 2002:a17:906:ad86:: with SMTP id la6mr44226340ejb.43.1560240275503;
-        Tue, 11 Jun 2019 01:04:35 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id y11sm3576596edj.96.2019.06.11.01.04.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 01:04:34 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 10:04:31 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>
-Cc:     airlied@linux.ie, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@ffwll.ch, daniel@iogearbox.net, davem@davemloft.net,
-        dri-devel@lists.freedesktop.org, hawk@kernel.org,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        kafai@fb.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, maxime.ripard@bootlin.com,
-        netdev@vger.kernel.org, paul.kocialkowski@bootlin.com,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        wens@csie.org, xdp-newbies@vger.kernel.org, yhs@fb.com
-Subject: Re: WARNING in bpf_jit_free
-Message-ID: <20190611080431.GP21222@phenom.ffwll.local>
-Mail-Followup-To: syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>,
-        airlied@linux.ie, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net,
-        dri-devel@lists.freedesktop.org, hawk@kernel.org,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        kafai@fb.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, maxime.ripard@bootlin.com,
-        netdev@vger.kernel.org, paul.kocialkowski@bootlin.com,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        wens@csie.org, xdp-newbies@vger.kernel.org, yhs@fb.com
-References: <000000000000e92d1805711f5552@google.com>
- <000000000000381684058ace28e5@google.com>
+        Tue, 11 Jun 2019 04:05:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:33802 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404389AbfFKIFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 04:05:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 01:05:08 -0700
+X-ExtLoop1: 1
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Jun 2019 01:05:02 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Derek Basehore <dbasehore@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Derek Basehore <dbasehore@chromium.org>,
+        Hans de Goede <j.w.r.degoede@gmail.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH 4/5] drm/connector: Split out orientation quirk detection
+In-Reply-To: <20190611040350.90064-5-dbasehore@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190611040350.90064-1-dbasehore@chromium.org> <20190611040350.90064-5-dbasehore@chromium.org>
+Date:   Tue, 11 Jun 2019 11:08:03 +0300
+Message-ID: <87zhmoy270.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000381684058ace28e5@google.com>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 04:22:06AM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following crash on:
-> 
-> HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1201b971a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2ff1e7cb738fd3c41113
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a3bf51a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120d19f2a00000
+On Mon, 10 Jun 2019, Derek Basehore <dbasehore@chromium.org> wrote:
+> This removes the orientation quirk detection from the code to add
+> an orientation property to a panel. This is used only for legacy x86
+> systems, yet we'd like to start using this on devicetree systems where
+> quirk detection like this is not needed.
 
-Looking at the reproducer I don't see any calls to ioctl which could end
-up anywhere in drm.
-> 
-> The bug was bisected to:
-> 
-> commit 0fff724a33917ac581b5825375d0b57affedee76
-> Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> Date:   Fri Jan 18 14:51:13 2019 +0000
-> 
->     drm/sun4i: backend: Use explicit fourcc helpers for packed YUV422 check
+Not needed, but no harm done either, right?
 
-And most definitely not in drm/sun4i. You can only hit this if you have
-sun4i and run on arm, which per your config isn't the case.
+I guess I'll defer judgement on this to Hans and Ville (Cc'd).
 
-tldr; smells like bisect gone wrong.
--Daniel
+Side note, I'm about to apply some (minor) conflicting changes in our
+-next as soon as I get CI results on it.
 
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467550f200000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667550f200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1267550f200000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
-> Fixes: 0fff724a3391 ("drm/sun4i: backend: Use explicit fourcc helpers for
-> packed YUV422 check")
-> 
-> WARNING: CPU: 0 PID: 8951 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 8951 Comm: kworker/0:0 Not tainted 5.2.0-rc3+ #23
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: events bpf_prog_free_deferred
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  panic+0x2cb/0x744 kernel/panic.c:219
->  __warn.cold+0x20/0x4d kernel/panic.c:576
->  report_bug+0x263/0x2b0 lib/bug.c:186
->  fixup_bug arch/x86/kernel/traps.c:179 [inline]
->  fixup_bug arch/x86/kernel/traps.c:174 [inline]
->  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
->  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
->  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> RIP: 0010:bpf_jit_free+0x157/0x1b0
-> Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00
-> 00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 f9 b5 f4 ff <0f> 0b e9 f9 fe ff
-> ff e8 bd 53 2d 00 e9 d9 fe ff ff 48 89 7d e0 e8
-> RSP: 0018:ffff88808886fcb0 EFLAGS: 00010293
-> RAX: ffff88808cb6c480 RBX: ffff88809051d280 RCX: ffffffff817ae68d
-> RDX: 0000000000000000 RSI: ffffffff817bf0f7 RDI: ffff88809051d2f0
-> RBP: ffff88808886fcd0 R08: 1ffffffff14ccaa8 R09: fffffbfff14ccaa9
-> R10: fffffbfff14ccaa8 R11: ffffffff8a665547 R12: ffffc90001925000
-> R13: ffff88809051d2e8 R14: ffff8880a0e43900 R15: ffff8880ae834840
->  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1984
->  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
->  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
->  kthread+0x354/0x420 kernel/kthread.c:255
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
+
+BR,
+Jani.
+
+
+>
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  drivers/gpu/drm/drm_connector.c | 16 ++++------------
+>  drivers/gpu/drm/i915/intel_dp.c | 14 +++++++++++---
+>  drivers/gpu/drm/i915/vlv_dsi.c  | 14 ++++++++++----
+>  include/drm/drm_connector.h     |  2 +-
+>  4 files changed, 26 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
+> index e17586aaa80f..58a09b65028b 100644
+> --- a/drivers/gpu/drm/drm_connector.c
+> +++ b/drivers/gpu/drm/drm_connector.c
+> @@ -1894,31 +1894,23 @@ EXPORT_SYMBOL(drm_connector_set_vrr_capable_property);
+>   * drm_connector_init_panel_orientation_property -
+>   *	initialize the connecters panel_orientation property
+>   * @connector: connector for which to init the panel-orientation property.
+> - * @width: width in pixels of the panel, used for panel quirk detection
+> - * @height: height in pixels of the panel, used for panel quirk detection
+>   *
+>   * This function should only be called for built-in panels, after setting
+>   * connector->display_info.panel_orientation first (if known).
+>   *
+> - * This function will check for platform specific (e.g. DMI based) quirks
+> - * overriding display_info.panel_orientation first, then if panel_orientation
+> - * is not DRM_MODE_PANEL_ORIENTATION_UNKNOWN it will attach the
+> - * "panel orientation" property to the connector.
+> + * This function will check if the panel_orientation is not
+> + * DRM_MODE_PANEL_ORIENTATION_UNKNOWN. If not, it will attach the "panel
+> + * orientation" property to the connector.
+>   *
+>   * Returns:
+>   * Zero on success, negative errno on failure.
+>   */
+>  int drm_connector_init_panel_orientation_property(
+> -	struct drm_connector *connector, int width, int height)
+> +	struct drm_connector *connector)
+>  {
+>  	struct drm_device *dev = connector->dev;
+>  	struct drm_display_info *info = &connector->display_info;
+>  	struct drm_property *prop;
+> -	int orientation_quirk;
+> -
+> -	orientation_quirk = drm_get_panel_orientation_quirk(width, height);
+> -	if (orientation_quirk != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
+> -		info->panel_orientation = orientation_quirk;
+>  
+>  	if (info->panel_orientation == DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
+>  		return 0;
+> diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
+> index b099a9dc28fd..72ab090ea97a 100644
+> --- a/drivers/gpu/drm/i915/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/intel_dp.c
+> @@ -40,6 +40,7 @@
+>  #include <drm/drm_edid.h>
+>  #include <drm/drm_hdcp.h>
+>  #include <drm/drm_probe_helper.h>
+> +#include <drm/drm_utils.h>
+>  #include <drm/i915_drm.h>
+>  
+>  #include "i915_debugfs.h"
+> @@ -7281,9 +7282,16 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
+>  	intel_connector->panel.backlight.power = intel_edp_backlight_power;
+>  	intel_panel_setup_backlight(connector, pipe);
+>  
+> -	if (fixed_mode)
+> -		drm_connector_init_panel_orientation_property(
+> -			connector, fixed_mode->hdisplay, fixed_mode->vdisplay);
+> +	if (fixed_mode) {
+> +		int orientation = drm_get_panel_orientation_quirk(
+> +				fixed_mode->hdisplay, fixed_mode->vdisplay);
+> +
+> +		if (orientation != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
+> +			connector->display_info.panel_orientation =
+> +				orientation;
+> +
+> +		drm_connector_init_panel_orientation_property(connector);
+> +	}
+>  
+>  	return true;
+>  
+> diff --git a/drivers/gpu/drm/i915/vlv_dsi.c b/drivers/gpu/drm/i915/vlv_dsi.c
+> index bfe2891eac37..27f86a787f60 100644
+> --- a/drivers/gpu/drm/i915/vlv_dsi.c
+> +++ b/drivers/gpu/drm/i915/vlv_dsi.c
+> @@ -30,6 +30,7 @@
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_edid.h>
+>  #include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_utils.h>
+>  
+>  #include "i915_drv.h"
+>  #include "intel_atomic.h"
+> @@ -1650,6 +1651,7 @@ static void intel_dsi_add_properties(struct intel_connector *connector)
+>  
+>  	if (connector->panel.fixed_mode) {
+>  		u32 allowed_scalers;
+> +		int orientation;
+>  
+>  		allowed_scalers = BIT(DRM_MODE_SCALE_ASPECT) | BIT(DRM_MODE_SCALE_FULLSCREEN);
+>  		if (!HAS_GMCH(dev_priv))
+> @@ -1660,12 +1662,16 @@ static void intel_dsi_add_properties(struct intel_connector *connector)
+>  
+>  		connector->base.state->scaling_mode = DRM_MODE_SCALE_ASPECT;
+>  
+> -		connector->base.display_info.panel_orientation =
+> -			vlv_dsi_get_panel_orientation(connector);
+> -		drm_connector_init_panel_orientation_property(
+> -				&connector->base,
+> +		orientation = drm_get_panel_orientation_quirk(
+>  				connector->panel.fixed_mode->hdisplay,
+>  				connector->panel.fixed_mode->vdisplay);
+> +		if (orientation != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
+> +			connector->base.display_info.panel_orientation = orientation;
+> +		else
+> +			connector->base.display_info.panel_orientation =
+> +				vlv_dsi_get_panel_orientation(connector);
+> +
+> +		drm_connector_init_panel_orientation_property(&connector->base);
+>  	}
+>  }
+>  
+> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> index 47e749b74e5f..c2992f7a0dd5 100644
+> --- a/include/drm/drm_connector.h
+> +++ b/include/drm/drm_connector.h
+> @@ -1370,7 +1370,7 @@ void drm_connector_set_link_status_property(struct drm_connector *connector,
+>  void drm_connector_set_vrr_capable_property(
+>  		struct drm_connector *connector, bool capable);
+>  int drm_connector_init_panel_orientation_property(
+> -	struct drm_connector *connector, int width, int height);
+> +	struct drm_connector *connector);
+>  int drm_connector_attach_max_bpc_property(struct drm_connector *connector,
+>  					  int min, int max);
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Jani Nikula, Intel Open Source Graphics Center
