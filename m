@@ -2,147 +2,131 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77E4C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6EEC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EB2212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C10212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uqZUZ9SU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fEkLdMkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405001AbfFKKAQ (ORCPT
+        id S2405030AbfFKKAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:00:16 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:60038 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfFKKAQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:00:16 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190611100014euoutp02092084ef67383a67bd41f1eb9e90a74c~nHJNOXxX62493324933euoutp02U
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:00:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190611100014euoutp02092084ef67383a67bd41f1eb9e90a74c~nHJNOXxX62493324933euoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560247214;
-        bh=DMPZzqhNW3jYYvKP6v+4Dy8sFNdg4mhxn6oDisfjVQo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=uqZUZ9SU93FvDAQ0o7qA5I3rromxhI2tQ8Nka49GYTSVFXkxxUAFCcH5eS4PzpZBX
-         Q5Qa+sUrdWFJGDoWJvTtnjPrq6hAsdMjSTkvi8qj//mF5WT0uPR8nZ2dozik3sdV8J
-         PTkz/SAms/WODXYuIvDFyMnKg6m6387Kw4Tg5Tfc=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190611100014eucas1p18496883ad65b7a14cdd78354288264d7~nHJMrmuz93238632386eucas1p1f;
-        Tue, 11 Jun 2019 10:00:14 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E6.BF.04377.DAB7FFC5; Tue, 11
-        Jun 2019 11:00:14 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190611100013eucas1p229fae8dc62aac7cc8619c0bcf1740c2b~nHJL4x-hP0704907049eucas1p2B;
-        Tue, 11 Jun 2019 10:00:13 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190611100013eusmtrp10efc8e1d221b5c24a34ec203fac56a4f~nHJLpMg1f1968119681eusmtrp15;
-        Tue, 11 Jun 2019 10:00:13 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-cf-5cff7bad6a7d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 76.61.04140.DAB7FFC5; Tue, 11
-        Jun 2019 11:00:13 +0100 (BST)
-Received: from [106.120.50.25] (unknown [106.120.50.25]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190611100012eusmtip1d4dfa66a3c18f04d01ffd9351727b6e2~nHJKy4XE50583705837eusmtip1F;
-        Tue, 11 Jun 2019 10:00:12 +0000 (GMT)
-Subject: Re: [PATCH] MAINTAINERS: media: Add Tomasz Figa as a videobuf2
- reviewer
-To:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        =?UTF-8?B?UGF3ZcWCIE/Fm2NpYWs=?= <posciak@chromium.org>,
-        Pawel Osciak <pawel@osciak.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <4acd9745-216b-8cd4-9f6f-bbfc870a6c0d@samsung.com>
-Date:   Tue, 11 Jun 2019 12:00:11 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190607083518.90078-1-tfiga@chromium.org>
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 06:00:41 -0400
+Received: from mail-eopbgr40073.outbound.protection.outlook.com ([40.107.4.73]:19353
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727726AbfFKKAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:00:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aKCs/l8ReRm7UvPlza56Cg9JjVoAdj9dZGcz0xpJ7D8=;
+ b=fEkLdMkAnqv85SCNscXyrEcC4T1WusPf5l1aD2KER8YI9g7AZ+JkbH4d8Qn3l1OK4ghxPl9uKR9BgQ+RzHGk8rulZ7n6lbixmwxwiqwBkgL9+/mWABPExeu+i/Cs3YcxoYP8pkM4GAKLDKGgugaO/qDp6fEA87IJWcVVOdCdwpI=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB4689.eurprd04.prod.outlook.com (20.176.214.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Tue, 11 Jun 2019 10:00:36 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::11e1:3bb9:156b:a3e4]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::11e1:3bb9:156b:a3e4%3]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 10:00:36 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Olof Johansson <olof@lixom.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MN
+Thread-Topic: [PATCH 1/3] dt-bindings: imx: Add pinctrl binding doc for
+ i.MX8MN
+Thread-Index: AQHVFpRumCyIBeRsW0uQNvKpc4bmq6aQvAOAgAWFwOA=
+Date:   Tue, 11 Jun 2019 10:00:36 +0000
+Message-ID: <AM0PR04MB421171336B9206D02FF6514080ED0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190530030546.9224-1-Anson.Huang@nxp.com>
+ <CACRpkdY-35o378Ka+4bgeSPjmq6P8DM872sgTxq2X3dDP9XZHQ@mail.gmail.com>
+In-Reply-To: <CACRpkdY-35o378Ka+4bgeSPjmq6P8DM872sgTxq2X3dDP9XZHQ@mail.gmail.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zk7O4qz47zsRSNjVGCSZhc4YJmSwX4ERj+idJhTDyq5KZvT
-        1B8Ns7Ils1Qq18AMMhVvLNtMw1LRpeJIzTIvlDYUw4HkZWm2cjta/nve5708zwMviQlMXH8y
-        TZ7FKOTSdBHhjht71yyHG/P/SI4sFGJ0f9kshx4sWODRI216gi5ufsmlqw0bHLrctsajmyf7
-        CHrppoOIJMWP1UO42FB3hxB/W58nxNqWOiReMuwV968s8c4Tse4nk5n0tGxGERqR4J7aNDOB
-        ZdqJa/0ljRw1GuRqkBsJ1HGova3maJA7KaBqEHxsNnLZYhlB4Vg5xhZLCFZfvUDbKxOldpxt
-        PEeg7X2wNWVDMDpf6TrsTV2ASe0oz4l9qCjobZp2iWDUOoKpyQbC2SCoMNDYNC7MpyLAWF/t
-        WsCpA6Bvr3cd8qUksPJmFGNnvKCvwoo7sRtFw+znIo4TY1QgmGx6jMVCGLdWusSA6uBBaX8T
-        j/UdDT8/fMJY7A3fzS1b/B4YKCvG2YUbCKYtDTy2KEYwUvBoK3U4dJuHNi2RmxJB0NQWytJR
-        cL+nFXPSQHnCmM2LNeEJpcaHWzQfim4J2OmDoDM3/pPtfD+M3UMi3Y5ouh1xdDvi6P7rPkF4
-        HRIyKqUshVEelTM5IUqpTKmSp4QkZcgMaPOdBhzm5VbUtpHYhSgSiTz4l+IcEgFXmq3MlXUh
-        IDGRD19j36T4ydLcPEaRcUWhSmeUXSiAxEVCfv6ur3ECKkWaxVxlmExGsd3lkG7+auSXoy8+
-        kVZgTggPXE17dn24IjnSEVpNdyfZ875gBnvFZY92VdW4xW/mbM3CXNK67XTrXbeK4H3vfvl2
-        PAtQz60tDiVOTQfFWOOfWnbXXQzuGRE6ot/+eC2yW7hnYntjsjJNQ/FrJadmTSnaxf1SbWeI
-        pBaY3+dUxzix1ka/5SoRrkyVhh3CFErpXxNNGN5KAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsVy+t/xu7prq//HGOybx25xavIzJouzTW/Y
-        LS7vmsNm0bNhK6vFsk1/mCymvP3JbrHhzkk2i8+t/9gcODxmN1xk8di0qpPN4/Gvl2wefVtW
-        MXp83iTncerrZ/YAtig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TU
-        nMyy1CJ9uwS9jPWPbjMXfGerONW/jqmB8SxrFyMnh4SAicTtSd9Zuhi5OIQEljJKfNx0ESoh
-        I3FyWgOULSzx51oXG0TRa0aJBzf/MoEkhAWCJO70XWUHsUUEHCWOrX/IBFLELPCLUWLzwYtQ
-        Y7sZJSb+/ALWwSZgKNH1FmQUJwevgJ3EtjXLwLpZBFQl5uxeA7ZOVCBGoq9xBQtEjaDEyZlP
-        wGxOAQuJZzc7wOYwC5hJzNv8kBnClpfY/nYOlC0ucevJfKYJjEKzkLTPQtIyC0nLLCQtCxhZ
-        VjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG47ZjP7fsYOx6F3yIUYCDUYmHNyL6X4wQa2JZ
-        cWXuIUYJDmYlEd6u70Ah3pTEyqrUovz4otKc1OJDjKZAz01klhJNzgcmirySeENTQ3MLS0Nz
-        Y3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYyle48Kb52X1JEmtUlz2UmHmQ9S68qe
-        z5hXavdfd620RJCt6NQWm/VPLyy/cnnxl2cTpfKeffOOU5DZoNRQtOppmmM40/bbbKyvE3j+
-        a3T0NPgl1n2s8WTMTbu6M5v5WsNZphP3JaQzfjOfuM14spRDdof2g9dyPRuqjHNWGp5YW9Ey
-        +8KX71uUWIozEg21mIuKEwHxnlQe3AIAAA==
-X-CMS-MailID: 20190611100013eucas1p229fae8dc62aac7cc8619c0bcf1740c2b
-X-Msg-Generator: CA
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7c088463-e407-42fa-55c7-08d6ee53a6b3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4689;
+x-ms-traffictypediagnostic: AM0PR04MB4689:
+x-microsoft-antispam-prvs: <AM0PR04MB4689D219E6146588739A2F3B80ED0@AM0PR04MB4689.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(366004)(39860400002)(189003)(199004)(486006)(52536014)(71200400001)(71190400001)(68736007)(25786009)(446003)(6436002)(11346002)(476003)(229853002)(53936002)(316002)(55016002)(54906003)(9686003)(44832011)(110136005)(256004)(3846002)(5660300002)(6116002)(7416002)(26005)(478600001)(14454004)(4326008)(186003)(53546011)(33656002)(6506007)(6246003)(2906002)(305945005)(73956011)(66946007)(81156014)(8676002)(66476007)(64756008)(66446008)(8936002)(86362001)(66556008)(76116006)(74316002)(7696005)(66066001)(81166006)(76176011)(99286004)(102836004)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4689;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nmod2sVtLKZTvzkJB/cXomYqiaiDfhS2NSeqH+ZvQbuuEiwmu3W8IHUFaH/zt0wZcZpIEKF2l0ALwVrvFUEGTOgtvOo71vnZZLgt6wVeOW2AbtAGX/E//cWgHlXfAUr2izabkR7YW6BhOudK0gItqEt4p7bmwaIrRUv+vj6ja+ju3BOejnFYXl91KmExKPzLtFvHd47gUdzrebDzCBYJLCop+PhWiq/E5/5ZDCLr6INxcO0T3OonBftrsEKCTlwQhXMpvEPH2vcLtmC5odANpH+5tQ5T4x3VKULGlKQnrKfbc8S412gta4+OEMW55YF5MoLYtO8JxoyRUSvHHvXnjZCoKC1c8qgPeiXo03r3egDMwC71hLZ+z3OqIbimerM5pt/D4Ffm8o/8p6ZYICaI//cnD1FEQ+G/bxkdWnnFVEY=
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190607083531epcas3p48cf46e033280d7e86ed1029707f2f373
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190607083531epcas3p48cf46e033280d7e86ed1029707f2f373
-References: <CGME20190607083531epcas3p48cf46e033280d7e86ed1029707f2f373@epcas3p4.samsung.com>
-        <20190607083518.90078-1-tfiga@chromium.org>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c088463-e407-42fa-55c7-08d6ee53a6b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 10:00:36.4311
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4689
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019-06-07 10:35, Tomasz Figa wrote:
-> I tend to review most of the vb2 patches anyway and we need some active
-> reviewers, so let add me to the MAINTAINERS file as such.
->
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-> ---
->   MAINTAINERS | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 98cd84977350..b5f65f61becb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16758,6 +16758,7 @@ VIDEOBUF2 FRAMEWORK
->   M:	Pawel Osciak <pawel@osciak.com>
->   M:	Marek Szyprowski <m.szyprowski@samsung.com>
->   M:	Kyungmin Park <kyungmin.park@samsung.com>
-> +R:	Tomasz Figa <tfiga@chromium.org>
->   L:	linux-media@vger.kernel.org
->   S:	Maintained
->   F:	drivers/media/common/videobuf2/*
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+PiBGcm9tOiBMaW51cyBXYWxsZWlqIFttYWlsdG86bGludXMud2FsbGVpakBsaW5hcm8ub3JnXQ0K
+PiBTZW50OiBTYXR1cmRheSwgSnVuZSA4LCAyMDE5IDU6MDQgQU0NCj4gDQo+IE9uIFRodSwgTWF5
+IDMwLCAyMDE5IGF0IDU6MDQgQU0gPEFuc29uLkh1YW5nQG54cC5jb20+IHdyb3RlOg0KPiANCj4g
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPg0KPiA+IEFkZCBi
+aW5kaW5nIGRvYyBmb3IgaS5NWDhNTiBwaW5jdHJsIGRyaXZlci4NCj4gPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiANCj4gTG9va3MgbW9z
+dGx5IE9LIHRvIG1lLCBidXQgSSdkIGxpa2UgdGhlIG1haW50YWluZXJzIHRvIHJldmlldywgc28g
+RG9uZyBldCBhbA0KPiBwbGVhc2UgbG9vayBhdCB0aGlzIQ0KPiANCj4gPiArUmVxdWlyZWQgcHJv
+cGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlOiAiZnNsLGlteDhtbi1pb211eGMiDQo+IA0KPiBT
+byBzaG91bGQgdGhpcyBub3QgYmUgIm54cCxpbXg4bW4taW9tdXhjIg0KPiBvciAibnhwLGZyZWVz
+Y2FsZS1pbXg4bW4taW9tdXhjIiBvciBzb21ldGhpbmcgdGhlc2UgZGF5cz8gVGhlIHZlbmRvciBu
+YW1lDQo+IGlzIG54cCBpcyBpdCBub3QuDQo+IA0KPiBJIHdhcyBjb21wbGFpbmluZyB0byB0aGUg
+RFQgbWFpbnRhaW5lcnMgYXQgb25lIHBvaW50IHRoYXQgdGhlc2UgY29tcGFuaWVzDQo+IHNlZW0g
+dG8gYnV5IGVhY2ggb3RoZXIgbGVmdCBhbmQgcmlnaHQgc28gdGhpcyB2ZW5kb3Igbm9tZW5jbGF0
+dXJlIGlzIGR1YmlvdXMsDQo+IGJ1dCBJIGd1ZXNzIGF0IGxlYXN0IGl0IHNob3VsZCByZWZsZWN0
+IHRoZSB2ZW5kb3IgdGhhdCBwcm9kdWNlZCB0aGUgY2hpcCBvcg0KPiBzb21ldGhpbmcuDQo+IA0K
+PiBJZiBldmVyeW9uZSBpcyBoYXBweSB3aXRoICJmc2wsKiIgSSB3aWxsIG5vdCBjb21wbGFpbiB0
+aG91Z2guDQo+IChpLmUuIGlmIHRoZSBtYWludGFpbmVycyBBQ0sgaXQuKQ0KDQpXZSBwcmVmZXJy
+ZWQgdG8ga2VlcCAiZnNsLCoiIGZvciBGcmVlc2NhbGUgaS5NWCBwcm9kdWN0IGxpbmUgYWNjb3Jk
+aW5nIHRvIGxhc3QgZGlzY3Vzc2lvbi4NCkFuZCB3ZSBhbHJlYWR5IGRpZCB0aGlzIHdheSBmb3Ig
+bW9zdCBpLk1YIGRldmljZXMuDQoNClNvOg0KQWNrZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVu
+Zy5kb25nQG54cC5jb20+DQoNCihSb2IsIHBsZWFzZSBsZXQgdXMga25vdyBpZiB5b3UgaGF2ZSBk
+aWZmZXJlbnQgaWRlYSkNCg0KUmVnYXJkcw0KRG9uZyBBaXNoZW5nDQoNCj4gDQo+IFlvdXJzLA0K
+PiBMaW51cyBXYWxsZWlqDQo=
