@@ -2,340 +2,153 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB2C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5562EC4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0990920652
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:47:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6RPO+gE"
+	by mail.kernel.org (Postfix) with ESMTP id 36E7A20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfFKBrn (ORCPT
+        id S2390639AbfFKBsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:47:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45578 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389168AbfFKBrm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:47:42 -0400
-Received: by mail-pl1-f195.google.com with SMTP id bi6so3972452plb.12;
-        Mon, 10 Jun 2019 18:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qOCIU3pHa11BqOJDtitDLMSpV7CivUt4w35JumdU44Y=;
-        b=R6RPO+gE+uX5TF5LhDxVY5ZDiVGdrcGD+Sxt9aP5PRDD0Cp7/NAMs+60HI7C6V7xSY
-         1HktGeGQ1rFOGPx6it9C5yY/PqTtS0F04igI7VFUm5s9dV43TIDeG6JnrUfeWV3Yym00
-         /G5T/3UJWvAGWQ5BWMx5rozumy1O5nSmXvHZHyZkUy5l8nfsD3QXl0dyTnJsBE+2OdLo
-         pWblyJJoGnugsBRKdgFtaZ9f5Rl0+BbQUE4jxeHla2+t4qjkwibAIZcy5w5urKJAC9qH
-         qQrLImIyQ2oJFaCicpBAqu+URr1ljwrKHV5zOOyi7bBFJrEpYuX6qVsqm1s2ohjrZ0Eb
-         ESZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qOCIU3pHa11BqOJDtitDLMSpV7CivUt4w35JumdU44Y=;
-        b=kbmZSBa6tZFtilzzdQYLt83e1WDgeJkq/CzWxVNePqwJWgbkMiptsYDVWh9NIhSwIt
-         bqgwXzWSfKEAnNj/n8M/1wVEEUXuHYc6Vca4TD/Uzb1NYdRByndTF16ia15sZghMMSJF
-         5SQyl9FlvYPLg1oGOv1yfP4eniWuoDrJjfkk/A+KHySHKNA5mAUTq1jXb5Vy2XHDmpV8
-         K3iaB6iM/S/o8firX+bukBeCIwCsPB1eK8MIAxoHxAzxOkpR03fIldY3bkB35440dw4J
-         IriZnrotsb5FaoRwIsDlySvjwfnBoSzfgwfi7vYd76oH6ajWILwkONEDSooztFgHwOXw
-         OkRg==
-X-Gm-Message-State: APjAAAX3pw9clxMfQUpl8viFXvER2d9x+WJTzq265uoFlYk/ztAzw2BJ
-        8dZDG7v7gahYXmlMJBpmRRsJbobV
-X-Google-Smtp-Source: APXvYqw5752JBG1RixqczI/Qo3INRzvN+TIpDT2dhGwRws0z49akmIOd/09FfK+0vcoTCAHZXLDnYA==
-X-Received: by 2002:a17:902:8a87:: with SMTP id p7mr56606620plo.124.1560217661651;
-        Mon, 10 Jun 2019 18:47:41 -0700 (PDT)
-Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id s12sm666288pjp.10.2019.06.10.18.47.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 18:47:40 -0700 (PDT)
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-To:     wg@grandegger.com, mkl@pengutronix.de
-Cc:     davem@davemloft.net, f.suligoi@asem.it,
-        linux-kernel@vger.kernel.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, peter_hong@fintek.com.tw,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: [RESEND PATCH V1] can: sja1000: f81601: add Fintek F81601 support
-Date:   Tue, 11 Jun 2019 09:47:32 +0800
-Message-Id: <1560217652-19834-1-git-send-email-hpeter+linux_kernel@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 10 Jun 2019 21:48:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18124 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726532AbfFKBsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:48:13 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0F746E898E3BC226B31F;
+        Tue, 11 Jun 2019 09:48:10 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 09:48:00 +0800
+Subject: Re: [PATCH 1/2] staging: erofs: add requirements field in superblock
+To:     Gao Xiang <gaoxiang25@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, <stable@vger.kernel.org>
+References: <20190610093640.96705-1-gaoxiang25@huawei.com>
+ <f4fbd407-7f0d-bbe3-2283-f7291a29026a@huawei.com>
+ <6993c266-0c95-780f-56b2-97996ee3be73@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <538f3643-ca29-f2a7-c077-8039ab137039@huawei.com>
+Date:   Tue, 11 Jun 2019 09:47:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <6993c266-0c95-780f-56b2-97996ee3be73@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for Fintek PCIE to 2 CAN controller support
+On 2019/6/11 9:43, Gao Xiang wrote:
+> Hi Chao,
+> 
+> On 2019/6/11 9:37, Chao Yu wrote:
+>> On 2019/6/10 17:36, Gao Xiang wrote:
+>>> There are some backward incompatible optimizations pending
+>>> for months, mainly due to on-disk format expensions.
+>>>
+>>> However, we should ensure that it cannot be mounted with
+>>> old kernels. Otherwise, it will causes unexpected behaviors.
+>>>
+>>> Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
+>>> Cc: <stable@vger.kernel.org> # 4.19+
+>>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>>> ---
+>>>  drivers/staging/erofs/erofs_fs.h | 11 +++++++++--
+>>>  drivers/staging/erofs/super.c    |  8 ++++++++
+>>>  2 files changed, 17 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
+>>> index fa52898df006..531821757845 100644
+>>> --- a/drivers/staging/erofs/erofs_fs.h
+>>> +++ b/drivers/staging/erofs/erofs_fs.h
+>>> @@ -17,10 +17,16 @@
+>>>  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
+>>>  #define EROFS_SUPER_OFFSET      1024
+>>>  
+>>> +/*
+>>> + * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
+>>> + * incompatible with this kernel version.
+>>> + */
+>>> +#define EROFS_ALL_REQUIREMENTS  0
+>>> +
+>>>  struct erofs_super_block {
+>>>  /*  0 */__le32 magic;           /* in the little endian */
+>>>  /*  4 */__le32 checksum;        /* crc32c(super_block) */
+>>> -/*  8 */__le32 features;
+>>> +/*  8 */__le32 features;        /* extra features for the image */
+>>>  /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+>>>  /* 13 */__u8 reserved;
+>>>  
+>>> @@ -34,8 +40,9 @@ struct erofs_super_block {
+>>>  /* 44 */__le32 xattr_blkaddr;
+>>>  /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
+>>>  /* 64 */__u8 volume_name[16];   /* volume name */
+>>> +/* 80 */__le32 requirements;    /* all mandatory minimum requirements */
+>>>  
+>>> -/* 80 */__u8 reserved2[48];     /* 128 bytes */
+>>> +/* 84 */__u8 reserved2[44];     /* 128 bytes */
+>>
+>> Xiang,
+>>
+>> It needs to update the comment behind reserved2, it's locating at 132 bytes.
+> 
+> I don't get the point... the whole struct is totally 128bytes I think?
 
-Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
----
- drivers/net/can/sja1000/Kconfig  |   8 ++
- drivers/net/can/sja1000/Makefile |   1 +
- drivers/net/can/sja1000/f81601.c | 223 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 232 insertions(+)
- create mode 100644 drivers/net/can/sja1000/f81601.c
+Xiang, I misunderstood meaning of comments, please ignore it, sorry. :)
 
-diff --git a/drivers/net/can/sja1000/Kconfig b/drivers/net/can/sja1000/Kconfig
-index f6dc89927ece..8588323c5138 100644
---- a/drivers/net/can/sja1000/Kconfig
-+++ b/drivers/net/can/sja1000/Kconfig
-@@ -101,4 +101,12 @@ config CAN_TSCAN1
- 	  IRQ numbers are read from jumpers JP4 and JP5,
- 	  SJA1000 IO base addresses are chosen heuristically (first that works).
- 
-+config CAN_F81601
-+	tristate "Fintek F81601 PCIE to 2 CAN Controller"
-+	depends on PCI
-+	help
-+	  This driver adds support for Fintek F81601 PCIE to 2 CAN Controller.
-+	  It had internal 24MHz clock source, but it can be changed by
-+	  manufacturer. We can use modinfo to get usage for parameters.
-+	  Visit http://www.fintek.com.tw to get more information.
- endif
-diff --git a/drivers/net/can/sja1000/Makefile b/drivers/net/can/sja1000/Makefile
-index 9253aaf9e739..6f6268543bd9 100644
---- a/drivers/net/can/sja1000/Makefile
-+++ b/drivers/net/can/sja1000/Makefile
-@@ -13,3 +13,4 @@ obj-$(CONFIG_CAN_PEAK_PCMCIA) += peak_pcmcia.o
- obj-$(CONFIG_CAN_PEAK_PCI) += peak_pci.o
- obj-$(CONFIG_CAN_PLX_PCI) += plx_pci.o
- obj-$(CONFIG_CAN_TSCAN1) += tscan1.o
-+obj-$(CONFIG_CAN_F81601) += f81601.o
-diff --git a/drivers/net/can/sja1000/f81601.c b/drivers/net/can/sja1000/f81601.c
-new file mode 100644
-index 000000000000..1578bb837aaf
---- /dev/null
-+++ b/drivers/net/can/sja1000/f81601.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Fintek F81601 PCIE to 2 CAN controller driver
-+ *
-+ * Copyright (C) 2019 Peter Hong <peter_hong@fintek.com.tw>
-+ * Copyright (C) 2019 Linux Foundation
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/netdevice.h>
-+#include <linux/delay.h>
-+#include <linux/slab.h>
-+#include <linux/pci.h>
-+#include <linux/can/dev.h>
-+#include <linux/io.h>
-+#include <linux/version.h>
-+
-+#include "sja1000.h"
-+
-+#define F81601_PCI_MAX_CHAN		2
-+
-+#define F81601_DECODE_REG		0x209
-+#define F81601_IO_MODE			BIT(7)
-+#define F81601_MEM_MODE			BIT(6)
-+#define F81601_CFG_MODE			BIT(5)
-+#define F81601_CAN2_INTERNAL_CLK	BIT(3)
-+#define F81601_CAN1_INTERNAL_CLK	BIT(2)
-+#define F81601_CAN2_EN			BIT(1)
-+#define F81601_CAN1_EN			BIT(0)
-+
-+#define F81601_TRAP_REG			0x20a
-+#define F81601_CAN2_HAS_EN		BIT(4)
-+
-+struct f81601_pci_card {
-+	int channels;			/* detected channels count */
-+	void __iomem *addr;
-+	spinlock_t lock;		/* for access mem io */
-+	struct pci_dev *dev;
-+	struct net_device *net_dev[F81601_PCI_MAX_CHAN];
-+};
-+
-+static const struct pci_device_id f81601_pci_tbl[] = {
-+	{ PCI_DEVICE(0x1c29, 0x1703) },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(pci, f81601_pci_tbl);
-+
-+static bool internal_clk = 1;
-+module_param(internal_clk, bool, 0444);
-+MODULE_PARM_DESC(internal_clk, "Use internal clock, default 1 (24MHz)");
-+
-+static unsigned int external_clk;
-+module_param(external_clk, uint, 0444);
-+MODULE_PARM_DESC(external_clk, "External Clock, must spec when internal_clk = 0");
-+
-+static u8 f81601_pci_read_reg(const struct sja1000_priv *priv, int port)
-+{
-+	return readb(priv->reg_base + port);
-+}
-+
-+static void f81601_pci_write_reg(const struct sja1000_priv *priv, int port,
-+				 u8 val)
-+{
-+	struct f81601_pci_card *card = priv->priv;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&card->lock, flags);
-+	writeb(val, priv->reg_base + port);
-+	readb(priv->reg_base);
-+	spin_unlock_irqrestore(&card->lock, flags);
-+}
-+
-+static void f81601_pci_del_card(struct pci_dev *pdev)
-+{
-+	struct f81601_pci_card *card = pci_get_drvdata(pdev);
-+	struct net_device *dev;
-+	int i = 0;
-+
-+	for (i = 0; i < F81601_PCI_MAX_CHAN; i++) {
-+		dev = card->net_dev[i];
-+		if (!dev)
-+			continue;
-+
-+		dev_info(&pdev->dev, "%s: Removing %s\n", __func__, dev->name);
-+
-+		unregister_sja1000dev(dev);
-+		free_sja1000dev(dev);
-+	}
-+
-+	pcim_iounmap(pdev, card->addr);
-+}
-+
-+/* Probe F81601 based device for the SJA1000 chips and register each
-+ * available CAN channel to SJA1000 Socket-CAN subsystem.
-+ */
-+static int f81601_pci_add_card(struct pci_dev *pdev,
-+			       const struct pci_device_id *ent)
-+{
-+	struct sja1000_priv *priv;
-+	struct net_device *dev;
-+	struct f81601_pci_card *card;
-+	int err, i;
-+	u8 tmp;
-+
-+	if (pcim_enable_device(pdev) < 0) {
-+		dev_err(&pdev->dev, "Failed to enable PCI device\n");
-+		return -ENODEV;
-+	}
-+
-+	dev_info(&pdev->dev, "Detected card at slot #%i\n",
-+		 PCI_SLOT(pdev->devfn));
-+
-+	card = devm_kzalloc(&pdev->dev, sizeof(*card), GFP_KERNEL);
-+	if (!card)
-+		return -ENOMEM;
-+
-+	card->channels = 0;
-+	card->dev = pdev;
-+	spin_lock_init(&card->lock);
-+
-+	pci_set_drvdata(pdev, card);
-+
-+	tmp = F81601_IO_MODE | F81601_MEM_MODE | F81601_CFG_MODE |
-+			F81601_CAN2_EN | F81601_CAN1_EN;
-+
-+	if (internal_clk) {
-+		tmp |= F81601_CAN2_INTERNAL_CLK | F81601_CAN1_INTERNAL_CLK;
-+
-+		dev_info(&pdev->dev,
-+			 "F81601 running with internal clock: 24Mhz\n");
-+	} else {
-+		dev_info(&pdev->dev,
-+			 "F81601 running with external clock: %dMhz\n",
-+			 external_clk / 1000000);
-+	}
-+
-+	pci_write_config_byte(pdev, F81601_DECODE_REG, tmp);
-+
-+	card->addr = pcim_iomap(pdev, 0, pci_resource_len(pdev, 0));
-+
-+	if (!card->addr) {
-+		err = -ENOMEM;
-+		dev_err(&pdev->dev, "%s: Failed to remap BAR\n", __func__);
-+		goto failure_cleanup;
-+	}
-+
-+	/* Detect available channels */
-+	for (i = 0; i < F81601_PCI_MAX_CHAN; i++) {
-+		/* read CAN2_HW_EN strap pin */
-+		pci_read_config_byte(pdev, F81601_TRAP_REG, &tmp);
-+		if (i == 1 && !(tmp & F81601_CAN2_HAS_EN))
-+			break;
-+
-+		dev = alloc_sja1000dev(0);
-+		if (!dev) {
-+			err = -ENOMEM;
-+			goto failure_cleanup;
-+		}
-+
-+		card->net_dev[i] = dev;
-+		dev->irq = pdev->irq;
-+
-+		priv = netdev_priv(dev);
-+		priv->priv = card;
-+		priv->irq_flags = IRQF_SHARED;
-+		priv->reg_base = card->addr + 0x80 * i;
-+		priv->read_reg = f81601_pci_read_reg;
-+		priv->write_reg = f81601_pci_write_reg;
-+
-+		if (internal_clk)
-+			priv->can.clock.freq = 24000000 / 2;
-+		else
-+			priv->can.clock.freq = external_clk / 2;
-+
-+		priv->ocr = OCR_TX0_PUSHPULL | OCR_TX1_PUSHPULL;
-+		priv->cdr = CDR_CBP;
-+
-+		SET_NETDEV_DEV(dev, &pdev->dev);
-+		dev->dev_id = i;
-+
-+		/* Register SJA1000 device */
-+		err = register_sja1000dev(dev);
-+		if (err) {
-+			dev_err(&pdev->dev,
-+				"%s: Registering device failed: %x\n", __func__,
-+				err);
-+			goto failure_cleanup;
-+		}
-+
-+		card->channels++;
-+
-+		dev_info(&pdev->dev, "Channel #%d, %s at 0x%p, irq %d\n", i,
-+			 dev->name, priv->reg_base, dev->irq);
-+	}
-+
-+	if (!card->channels) {
-+		err = -ENODEV;
-+		goto failure_cleanup;
-+	}
-+
-+	return 0;
-+
-+failure_cleanup:
-+	dev_err(&pdev->dev, "%s: failed: %d. Cleaning Up.\n", __func__, err);
-+	f81601_pci_del_card(pdev);
-+
-+	return err;
-+}
-+
-+static struct pci_driver f81601_pci_driver = {
-+	.name =		"f81601",
-+	.id_table =	f81601_pci_tbl,
-+	.probe =	f81601_pci_add_card,
-+	.remove =	f81601_pci_del_card,
-+};
-+
-+MODULE_DESCRIPTION("Fintek F81601 PCIE to 2 CANBUS adaptor driver");
-+MODULE_AUTHOR("Peter Hong <peter_hong@fintek.com.tw>");
-+MODULE_LICENSE("GPL v2");
-+
-+module_pci_driver(f81601_pci_driver);
--- 
-2.7.4
+Thanks,
 
+> 
+>>
+>>>  } __packed;
+>>>  
+>>>  /*
+>>> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+>>> index f580d4ef77a1..815e5825db59 100644
+>>> --- a/drivers/staging/erofs/super.c
+>>> +++ b/drivers/staging/erofs/super.c
+>>> @@ -104,6 +104,14 @@ static int superblock_read(struct super_block *sb)
+>>>  		goto out;
+>>>  	}
+>>>  
+>>> +	/* check if the kernel meets all mandatory requirements */
+>>> +	if (le32_to_cpu(layout->requirements) & (~EROFS_ALL_REQUIREMENTS)) {
+>>> +		errln("too old to meet minimum requirements: %x supported: %x",
+>>
+>> It will be better to give a suggestion to user to upgrade kernel version to
+>> match the image with new layout, otherwise it's just a little confused about
+>> above printed message.
+> 
+> OK, I will refine the printed message :)
+> 
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Thanks,
+>>
+>>> +		      le32_to_cpu(layout->requirements),
+>>> +		      EROFS_ALL_REQUIREMENTS);
+>>> +		goto out;
+>>> +	}
+>>> +
+>>>  	sbi->blocks = le32_to_cpu(layout->blocks);
+>>>  	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
+>>>  #ifdef CONFIG_EROFS_FS_XATTR
+>>>
+> .
+> 
