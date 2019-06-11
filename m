@@ -2,139 +2,168 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E15BC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73FAC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AEA2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:57:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRXbtH0f"
+	by mail.kernel.org (Postfix) with ESMTP id A18AC2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405590AbfFKQ5m (ORCPT
+        id S2405631AbfFKQ6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 12:57:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33819 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404099AbfFKQ5l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:57:41 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so5374925plt.1;
-        Tue, 11 Jun 2019 09:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=LRf7jr0/HLf72a+GCXiXIigk1cbBqM+c/XCEYVEbVfg=;
-        b=eRXbtH0f1kXlU/cWfbn2hNQ0rQG8fc8+TxdPwtiZfqj/7Okr/zjWiIo1pjc5NtrpGS
-         qroG2rFEMyH02ZhC+Mllt9e351NOylIugvL3xEybuCPelPlWQ+IagF9emLex4b2Tj+Zp
-         9NOFE66x219JcSYURURWOPD3Ec5nwdvLh3U5u3HxiSsXKd0KbP0ELQuu6Lf9r9Bc2VHe
-         UGqoZQm5kDnvTjiqglU8e3f/XlZ6Sz82MA14d6HIZgnTFZFXDwy2Pi+323YkZW3RBY4X
-         toZRcrKRW1evx4JP7mAuiZyiYsuo/erougOEJoxqfv1HYkEMMnqRIjl/goKTkIT8p5B6
-         sRmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=LRf7jr0/HLf72a+GCXiXIigk1cbBqM+c/XCEYVEbVfg=;
-        b=H9GXAObt9aUT/9hKsleHNKiA2uxh0zpM0h6t06uwo46sZiwdQG5H/qdH90qzvrnBe2
-         cKFSzV9RFD4aKpF+VcQ2fTJOVkXje1tC93AsrguFiI3S4NclCU0gRxu1rQhDZoS6pWxZ
-         ySPKDA0qlQ4Jsoy1Gv2sA2KK7RR+av7TLebBjGyBrZ5JpHl1iQ32+VpwRSOXeIBkEvYZ
-         3BS1kJQYGAdNu+EI4obJc7FL8WB+SDIAZl88sw1DIuXGKhAyw4DwSUcPExWyARuE33nb
-         33hz0rV2iS/0/reZBPBfVGw9nBZJOfBVHHnaNYyAF2FLTRBMryDUEUTtoHuyZMVRQ3Nr
-         htNg==
-X-Gm-Message-State: APjAAAWI4tE2jorl+ioUyd9USDozHDbGzJs2s86zEfoLabXLeO+9ZwaN
-        WcS/ase+hJyiG1RKasxqmJQ=
-X-Google-Smtp-Source: APXvYqzWMsD88MKj9it03NOFc2BtSLO1KcHll6YadGFk1Xj33L6yRvIe8cG87oclg6m35xQDh+5Dag==
-X-Received: by 2002:a17:902:8d92:: with SMTP id v18mr53873863plo.211.1560272260451;
-        Tue, 11 Jun 2019 09:57:40 -0700 (PDT)
-Received: from [10.2.189.129] ([66.170.99.2])
-        by smtp.gmail.com with ESMTPSA id c11sm5644951pgg.2.2019.06.11.09.57.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 09:57:39 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <CANRm+CyZcvuT80ixp9f0FNmjN+rTUtw8MshtBG0Uk4L1B1UjDw@mail.gmail.com>
-Date:   Tue, 11 Jun 2019 09:57:36 -0700
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <153047ED-75E2-4E70-BC33-C5FF27C08638@gmail.com>
-References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
- <20190610143420.GA6594@flask> <20190611011100.GB24835@linux.intel.com>
- <CANRm+Cwv5jqxBW=Ss5nkX7kZM3_Y-Ucs66yx5+wN09=W4pUdzA@mail.gmail.com>
- <F136E492-5350-49EE-A856-FBAEDB12FF99@gmail.com>
- <CANRm+CyZcvuT80ixp9f0FNmjN+rTUtw8MshtBG0Uk4L1B1UjDw@mail.gmail.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 11 Jun 2019 12:58:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:37692 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405593AbfFKQ6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:58:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74754337;
+        Tue, 11 Jun 2019 09:57:59 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3880B3F73C;
+        Tue, 11 Jun 2019 09:57:58 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 17:57:56 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Raphael Gault <raphael.gault@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH 3/7] perf: arm64: Use rseq to test userspace access to
+ pmu counters
+Message-ID: <20190611165755.GG29008@lakrids.cambridge.arm.com>
+References: <20190611125315.18736-1-raphael.gault@arm.com>
+ <20190611125315.18736-4-raphael.gault@arm.com>
+ <20190611143346.GB28689@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611143346.GB28689@kernel.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 11, 2019, at 3:02 AM, Wanpeng Li <kernellwp@gmail.com> wrote:
->=20
-> On Tue, 11 Jun 2019 at 09:48, Nadav Amit <nadav.amit@gmail.com> wrote:
->>> On Jun 10, 2019, at 6:45 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
->>>=20
->>> On Tue, 11 Jun 2019 at 09:11, Sean Christopherson
->>> <sean.j.christopherson@intel.com> wrote:
->>>> On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99=
- wrote:
->>>>> 2019-05-30 09:05+0800, Wanpeng Li:
->>>>>> The idea is from Xen, when sending a call-function IPI-many to =
-vCPUs,
->>>>>> yield if any of the IPI target vCPUs was preempted. 17% =
-performance
->>>>>> increasement of ebizzy benchmark can be observed in an =
-over-subscribe
->>>>>> environment. (w/ kvm-pv-tlb disabled, testing TLB flush =
-call-function
->>>>>> IPI-many since call-function is not easy to be trigged by =
-userspace
->>>>>> workload).
->>>>>=20
->>>>> Have you checked if we could gain performance by having the yield =
-as an
->>>>> extension to our PV IPI call?
->>>>>=20
->>>>> It would allow us to skip the VM entry/exit overhead on the =
-caller.
->>>>> (The benefit of that might be negligible and it also poses a
->>>>> complication when splitting the target mask into several PV IPI
->>>>> hypercalls.)
->>>>=20
->>>> Tangetially related to splitting PV IPI hypercalls, are there any =
-major
->>>> hurdles to supporting shorthand?  Not having to generate the mask =
-for
->>>> ->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy to =
-way
->>>> shave cycles for affected flows.
->>>=20
->>> Not sure why shorthand is not used for native x2apic mode.
->>=20
->> Why do you say so? native_send_call_func_ipi() checks if allbutself
->> shorthand should be used and does so (even though the check can be =
-more
->> efficient - I=E2=80=99m looking at that code right now=E2=80=A6)
->=20
-> Please continue to follow the apic/x2apic driver. Just apic_flat set
-> APIC_DEST_ALLBUT/APIC_DEST_ALLINC to ICR.
+Hi Arnaldo,
 
-Indeed - I was sure by the name that it does it correctly. That=E2=80=99s =
-stupid.
+On Tue, Jun 11, 2019 at 11:33:46AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jun 11, 2019 at 01:53:11PM +0100, Raphael Gault escreveu:
+> > Add an extra test to check userspace access to pmu hardware counters.
+> > This test doesn't rely on the seqlock as a synchronisation mechanism but
+> > instead uses the restartable sequences to make sure that the thread is
+> > not interrupted when reading the index of the counter and the associated
+> > pmu register.
+> > 
+> > In addition to reading the pmu counters, this test is run several time
+> > in order to measure the ratio of failures:
+> > I ran this test on the Juno development platform, which is big.LITTLE
+> > with 4 Cortex A53 and 2 Cortex A57. The results vary quite a lot
+> > (running it with 100 tests is not so long and I did it several times).
+> > I ran it once with 10000 iterations:
+> > `runs: 10000, abort: 62.53%, zero: 34.93%, success: 2.54%`
+> > 
+> > Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> > ---
+> >  tools/perf/arch/arm64/include/arch-tests.h    |   5 +-
+> >  tools/perf/arch/arm64/include/rseq-arm64.h    | 220 ++++++++++++++++++
+> 
+> So, I applied the first patch in this series, but could you please break
+> this patch into at least two, one introducing the facility
+> (include/rseq*) and the second adding the test?
+> 
+> We try to enforce this kind of granularity as down the line we may want
+> to revert one part while the other already has other uses and thus
+> wouldn't allow a straight revert.
+> 
+> Also, can this go to tools/arch/ instead? Is this really perf specific?
+> Isn't there any arch/arm64/include files for the kernel that we could
+> mirror and have it checked for drift in tools/perf/check-headers.sh?
 
-I=E2=80=99ll add it to the patch-set I am working on (TLB shootdown =
-improvements),
-if you don=E2=80=99t mind.
+The rseq bits aren't strictly perf specific, and I think the existing
+bits under tools/testing/selftests/rseq/ could be factored out to common
+locations under tools/include/ and tools/arch/*/include/.
 
+From a scan, those already duplicate barriers and other helpers which
+already have definitions under tools/, which seems unfortunate. :/
+
+Comments below are for Raphael and Matthieu.
+
+[...]
+
+> > +static u64 noinline mmap_read_self(void *addr, int cpu)
+> > +{
+> > +	struct perf_event_mmap_page *pc = addr;
+> > +	u32 idx = 0;
+> > +	u64 count = 0;
+> > +
+> > +	asm volatile goto(
+> > +                     RSEQ_ASM_DEFINE_TABLE(0, 1f, 2f, 3f)
+> > +		     "nop\n"
+> > +                     RSEQ_ASM_STORE_RSEQ_CS(1, 0b, rseq_cs)
+> > +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
+> > +                     RSEQ_ASM_OP_R_LOAD(pc_idx)
+> > +                     RSEQ_ASM_OP_R_AND(0xFF)
+> > +		     RSEQ_ASM_OP_R_STORE(idx)
+> > +                     RSEQ_ASM_OP_R_SUB(0x1)
+> > +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
+> > +                     "msr pmselr_el0, " RSEQ_ASM_TMP_REG "\n"
+> > +                     "isb\n"
+> > +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
+> > +                     "mrs " RSEQ_ASM_TMP_REG ", pmxevcntr_el0\n"
+> > +                     RSEQ_ASM_OP_R_FINAL_STORE(cnt, 2)
+> > +		     "nop\n"
+> > +                     RSEQ_ASM_DEFINE_ABORT(3, abort)
+> > +                     :/* No output operands */
+> > +		     :  [cpu_id] "r" (cpu),
+> > +			[current_cpu_id] "Qo" (__rseq_abi.cpu_id),
+> > +			[rseq_cs] "m" (__rseq_abi.rseq_cs),
+> > +			[cnt] "m" (count),
+> > +			[pc_idx] "r" (&pc->index),
+> > +			[idx] "m" (idx)
+> > +                     :"memory"
+> > +                     :abort
+> > +                    );
+
+While baroque, this doesn't look as scary as I thought it would!
+
+However, I'm very scared that this is modifying input operands without
+clobbering them. IIUC this is beacause we're trying to use asm goto,
+which doesn't permit output operands.
+
+I'm very dubious to abusing asm goto in this way. Can we instead use a
+regular asm volatile block, and place the abort handler _within_ the
+asm? If performance is a concern, we can use .pushsection and
+.popsection to move that far away...
+
+> > +
+> > +	if (idx)
+> > +		count += READ_ONCE(pc->offset);
+
+I'm rather scared that from GCC's PoV, idx was initialized to zero, and
+not modified above (per the asm constraints). I realise that we've used
+an "m" constraint and clobbered memory, but I could well imagine that
+GCC can interpret that as needing to place a read-only copy in memory,
+but still being permitted to use the original value in a register. That
+would permit the above to be optimized away, since GCC knows no
+registers were clobbered, and thus idx must still be zero.
+
+> > +
+> > +	return count;
+
+... and for similar reasons, always return zero here.
+
+> > +abort:
+> > +        pr_debug("Abort handler\n");
+> > +        exit(-2);
+> > +}
+
+Given the necessary complexity evident above, I'm also fearful that the
+sort of folk that want userspace counter access aren't going to bother
+with the above.
+
+Thanks,
+Mark.
