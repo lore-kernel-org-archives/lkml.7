@@ -2,115 +2,118 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E839AC4321D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7776C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F7720657
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560243845;
-	bh=sBq/O0q/eBLLmP2F2FzPaoGU9qk0OtfaGpP1vM2df2k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JmL2Ow81x63SQmuPhdD7xToSclUYJIfyG4PAVDrEjnjPuSi8ieKZFpHAoqNjKdQ/k
-	 IklP6zDbbhH0tWQuJtnGJVZfhO8N+h+fOj8TZPZPMRWZZBmFwAHiFDW5GZ3UYnnEUa
-	 mv9FQhYpSCB3OpzdrMUdwtSXXqJTiE7V7WKRIBPQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6B914212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:04:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1Mlh6SJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404911AbfFKJEE (ORCPT
+        id S2404925AbfFKJEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:04:04 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46787 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404888AbfFKJEC (ORCPT
+        Tue, 11 Jun 2019 05:04:15 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25288 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404702AbfFKJEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:04:02 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z23so11112990ote.13;
-        Tue, 11 Jun 2019 02:04:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xkpqu797JcU12g0w5NFxA6TZH8kiWDktgPOouyK6wz8=;
-        b=C+EbnsL/kQjqKyFGDmAo1aleTlSOQ7t70okNXqw8S7sJMEnD1gtnciQZSqDrF94q5+
-         3WPpVmxc06aCNzjwuRkrtailazG5H/BFiqwic4Eu2VnQ0z5hIf4kgrQRbjUSVtcyc21U
-         bpc+4ySo4tvmb2xQgpZ8/eGQwN99V93OzXgwd9ZbaePjunE9uHSnX5yaBLHPzIzMTVmg
-         Obk3mHKcUjoTKJtS8MKTxl3WRJjhNf9E8qGEKHI3cG48NcpjvjsrcC0c2sa84M09jERE
-         lGbAbNk+9Ja5rdS5Ft9lt40TZeS2J0XlpKXXm2rn52oATMBD8eL7z7rqmzElJ8XddVsa
-         +D8Q==
-X-Gm-Message-State: APjAAAU0x2G9aDGME9nhjqeWRleplcmWuOznPAROraosO6qzfYau1bZT
-        gIxD8oo9Pd1GNT2OmbkaB3hpEskHGnheVJzwWvI=
-X-Google-Smtp-Source: APXvYqzMpd9gFQQP34IDqVnyXu1aDZgXkGeVajlJkHf91wpXSYY3EvG0zd5ShGu4bud2vV4CcyiyzQkKfPKMO8yc7GE=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr196495otp.189.1560243841137;
- Tue, 11 Jun 2019 02:04:01 -0700 (PDT)
+        Tue, 11 Jun 2019 05:04:15 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5B8u8HA021898;
+        Tue, 11 Jun 2019 11:03:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=Yp0bFSnxg47LGWXkCBcDsGAcLvPwKkpEg+xTLQR3KdE=;
+ b=1Mlh6SJcPGRysv+LFfRyuf1T5VyHPL+wjsmK+mt02SK6UGOm5FkF7zC3O5Ywfz1WZzcb
+ 92P0lKQQYhJvnaBNpwOZsZCh/DlU5o2EQL+jT7UI3PrOPFkJDaPSsPd+Z8ljSv6YimJO
+ JCd0OE0IbB+hfngdKTAzFCxssDiaBV+48bSQ4nJzcdnVpR/eBD4YAFecYZQtb8J3SK1a
+ h3Jzm3hlDd0LWNuUF/c+Ix9eWXtQDs0xkWJOpPrJMk0fV1zseotMnFXXnraQ/CQo+MLq
+ d7fMJSgoWy+DcfGGgkZRuIybqL8uLfiNACVkoCHWvZymSb+HXpnxuUPv0VmbufWImRQG zQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2t26rp8vsx-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 11 Jun 2019 11:03:08 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D909D4A;
+        Tue, 11 Jun 2019 09:03:07 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C049B256F;
+        Tue, 11 Jun 2019 09:03:07 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 11:03:07 +0200
+Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun 2019 11:03:06
+ +0200
+From:   Hugues Fruchet <hugues.fruchet@st.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mickael Guene <mickael.guene@st.com>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Hugues Fruchet" <hugues.fruchet@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: [PATCH 1/3] media: st-mipid02: add support of RGB565
+Date:   Tue, 11 Jun 2019 11:02:47 +0200
+Message-ID: <1560243769-17510-2-git-send-email-hugues.fruchet@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1560243769-17510-1-git-send-email-hugues.fruchet@st.com>
+References: <1560243769-17510-1-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
-References: <2315917.ZGeXE6pBFC@kreacher> <10983642.dUqMSvAAlD@kreacher> <527F9B70-68AC-4CD4-A3C2-576EA09187DD@canonical.com>
-In-Reply-To: <527F9B70-68AC-4CD4-A3C2-576EA09187DD@canonical.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 11 Jun 2019 11:03:49 +0200
-Message-ID: <CAJZ5v0j-=ByjSMjr+MKDQGg_07s5-ZWKeCZR_-+trNoAA1nodw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: PM: Avoid possible suspend-to-idle issue
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.19]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:39 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> Hi Rafael,
->
-> at 19:02, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> > On Friday, May 17, 2019 11:08:50 AM CEST Rafael J. Wysocki wrote:
-> >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>
-> >> If a PCI driver leaves the device handled by it in D0 and calls
-> >> pci_save_state() on the device in its ->suspend() or ->suspend_late()
-> >> callback, it can expect the device to stay in D0 over the whole
-> >> s2idle cycle.  However, that may not be the case if there is a
-> >> spurious wakeup while the system is suspended, because in that case
-> >> pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
-> >> which calls pci_restore_state(), via pci_pm_default_resume_early(),
-> >> so state_saved is cleared and the second iteration of
-> >> pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
-> >> may change the power state of the device.
-> >>
-> >> To avoid that, add a new internal flag, skip_bus_pm, that will be set
-> >> by pci_pm_suspend_noirq() when it runs for the first time during the
-> >> given system suspend-resume cycle if the state of the device has
-> >> been saved already and the device is still in D0.  Setting that flag
-> >> will cause the next iterations of pci_pm_suspend_noirq() to set
-> >> state_saved for pci_pm_resume_noirq(), so that it always restores the
-> >> device state from the originally saved data, and avoid calling
-> >> pci_prepare_to_sleep() for the device.
-> >>
-> >> Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from
-> >> suspend-to-idle")
-> >> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> I just found out this patch has a chance to freeze or reboot the system
-> during suspend cycles.
-> What information do you need to debug?
+Add support of RGB565 pixel format.
 
-It would be good to narrow down the failure to a particular
-transition, for example.
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+---
+ drivers/media/i2c/st-mipid02.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-In particular, if that happens during the dpm_noirq_resume_devices()
-called from s2idle_loop(), it may be necessary to also skip
-pci_pm_default_resume_early() for the devices with skip_bus_pm set.
+diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
+index 9369f38..76a9f52 100644
+--- a/drivers/media/i2c/st-mipid02.c
++++ b/drivers/media/i2c/st-mipid02.c
+@@ -61,7 +61,8 @@ static const u32 mipid02_supported_fmt_codes[] = {
+ 	MEDIA_BUS_FMT_SGRBG10_1X10, MEDIA_BUS_FMT_SRGGB10_1X10,
+ 	MEDIA_BUS_FMT_SBGGR12_1X12, MEDIA_BUS_FMT_SGBRG12_1X12,
+ 	MEDIA_BUS_FMT_SGRBG12_1X12, MEDIA_BUS_FMT_SRGGB12_1X12,
+-	MEDIA_BUS_FMT_UYVY8_1X16, MEDIA_BUS_FMT_BGR888_1X24
++	MEDIA_BUS_FMT_UYVY8_1X16, MEDIA_BUS_FMT_BGR888_1X24,
++	MEDIA_BUS_FMT_RGB565_2X8_LE, MEDIA_BUS_FMT_RGB565_2X8_BE,
+ };
+ 
+ /* regulator supplies */
+@@ -128,6 +129,8 @@ static int bpp_from_code(__u32 code)
+ 	case MEDIA_BUS_FMT_SRGGB12_1X12:
+ 		return 12;
+ 	case MEDIA_BUS_FMT_UYVY8_1X16:
++	case MEDIA_BUS_FMT_RGB565_2X8_LE:
++	case MEDIA_BUS_FMT_RGB565_2X8_BE:
+ 		return 16;
+ 	case MEDIA_BUS_FMT_BGR888_1X24:
+ 		return 24;
+@@ -158,6 +161,9 @@ static u8 data_type_from_code(__u32 code)
+ 		return 0x1e;
+ 	case MEDIA_BUS_FMT_BGR888_1X24:
+ 		return 0x24;
++	case MEDIA_BUS_FMT_RGB565_2X8_LE:
++	case MEDIA_BUS_FMT_RGB565_2X8_BE:
++		return 0x22;
+ 	default:
+ 		return 0;
+ 	}
+-- 
+2.7.4
 
-How many devices on the affected system end up with skip_bus_pm set,
-for that matter?
