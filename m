@@ -2,97 +2,136 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C43C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E37C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D97E21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8741E2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:23:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvxvNFt2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zd9Ji1wJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406068AbfFKRW1 (ORCPT
+        id S2406091AbfFKRXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:22:27 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:41397 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405821AbfFKRWZ (ORCPT
+        Tue, 11 Jun 2019 13:23:08 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45903 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405821AbfFKRXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:22:25 -0400
-Received: by mail-vs1-f66.google.com with SMTP id g24so8438594vso.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:22:24 -0700 (PDT)
+        Tue, 11 Jun 2019 13:23:06 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j19so15454981qtr.12;
+        Tue, 11 Jun 2019 10:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ch5ySbq0FmSA2XajIVEvQlmmFhHNIePL/QuQTBUXjwE=;
-        b=BvxvNFt2CuRdvPDlu+YFPGTgJ0ILAjwFJunihoBUnffJQ6arR0U0poSOngu54e31oM
-         yX2FndF/g5urg4zuLG7xfVHMK42maMFVSTpmEbMgWWPBDBrmVUmTA7zoQc6XA6KtJD7b
-         n8AHQVrCvlKCojNGcjKziVI7e/dqruYe0fOczUG/4HftPDxxm9sg1Cc6hAHNDBep9imZ
-         XCmoUcmOESEHWXRd+aZ46Yxyf9fi+CP/DC+Vk++8ZJdGh3HyhS89+DeAk1SrYID7JOHQ
-         7KTqbEUqb16tINbU3onFOC6K4/NMO4O/bFKSJ7gt+vCiwepfkHdS+xDh7LuPaz3GJtgs
-         fFTg==
+         :cc:content-transfer-encoding;
+        bh=fJpMXr+NnksvkRmMWu25nN4h1uzoNawfgvQzE9rHA+8=;
+        b=Zd9Ji1wJ06DBu02p3GIu7ib7E14EX5jMOH62nvLOSunxZXxMLMiznLyP0kU76iJnQB
+         p+dRUsIY2c3C1/k7JWgXlLt/+aYI5MOGhJuz/s0TwHCHWjhOk684jz2y9CshV0ZpHgZy
+         98j9rnURnEjC3du4dRx/IrYg4Ag133+6mZPElkR2s5qzv3IUPG1WxTjLm2ET+yAXCqmS
+         bU34IT5yOSJMU9NN/Njn9orHwQwI4eMzdD0wqPZdmJAj4/urbcyazuPCdNJykRYzbCE6
+         WAfrs0AJq/rt+7wqzoK1FOr1iPGSH86cd/1EmrYM36EnHUCUKItllk9TfxRvOpEadKkk
+         7isw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ch5ySbq0FmSA2XajIVEvQlmmFhHNIePL/QuQTBUXjwE=;
-        b=p55T8K+a6xpKD+C9bSzlHlf1oLIbovplcE2k0y67xjYVC63xFa8iI6Ot43f+B4ch73
-         wbq43Llq3epl0qW8NuV558I0o7IoK2ehw39FU20kCpDcjB2JRv11z0WQ71c6d/4c9IlE
-         0G2tbNYDBSOIaTEJNUznSLfbV1Yj7lbN5lYsmXV7MaNGrjiUNlNH37XJfw2Jro4tsLO+
-         6LF0p/dcnnDR44QSg/v9Ica+YKaFzhtEXD7J9Jl8Gu6oWyfUL1/+JhHlMOeJWS0ficzp
-         OmesXzFh3baOa++uiLWKPqZNssd1W1eO3g34/B5ZYhhUrTIC/1fj0rUbbNEDid4tddOE
-         oKOA==
-X-Gm-Message-State: APjAAAXzss9MDx1yC+Q9dWgNS3OJlPeNAyp9nJHK3HJQ958XgN8CBZTy
-        fN1stfHWXZk78VHmvmcPN3MfKHDDmm9vFbf2mbk=
-X-Google-Smtp-Source: APXvYqxxtk2fyTdB5HLiUpLv+cHy2F//+aDjWV45YDWLO4QWQ+SzCCmrZzf6DWcxyJaIog0QW8ScWSukBqD64YkZ1RE=
-X-Received: by 2002:a67:d410:: with SMTP id c16mr32239283vsj.61.1560273743742;
- Tue, 11 Jun 2019 10:22:23 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fJpMXr+NnksvkRmMWu25nN4h1uzoNawfgvQzE9rHA+8=;
+        b=G9eOjUUF7q9+CDiL5tsQ59+hwgRIIMvdWsFSQhvRr+ZVwXggyn1PRC3s/YQI4EibTW
+         mW2xySRjdlORgilOlQlYzzsCbQ66WMS9PKc4Y3plGlu/R2Q8iu1V18EnVxCvQgUwP++0
+         qjb6qrX8mC5EO14YQPelAvARrEC0vG7Jwb5UhQc1TUI9Qm/liVZoqhhKQkQ5UuxmEPZo
+         M7nUh4cNMjB2UEInIcibkdcDDV8CDh+lgZ0nnN+xWjpsXZfsl0J0gU8ER8T3ezGVzP33
+         HV74GTKt+rMSikfpCxeBybTOrSCqIVOsKgvPFA+Hjtcf+5oh1YgJiXcJ/kZinGlu1ykj
+         PS2w==
+X-Gm-Message-State: APjAAAUZMKHktHXZbtFDuY8G+aavs4oDoIlmZZGEFDPspDnd4WPeVHM/
+        bMMwh8yc9BAsNCLHhiQdHcqIoXTgCXwfNMvKh0IovdJG
+X-Google-Smtp-Source: APXvYqwZSya4vlvbJFOQgLkCkgG2ELdO+otqiQUeSWQOTT8mHiCyU3QUdJJxB+UqEeJBYy+H1Nowool38e1PJcmzZeM=
+X-Received: by 2002:ac8:21b7:: with SMTP id 52mr47040577qty.59.1560273785202;
+ Tue, 11 Jun 2019 10:23:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAFCwf11EM9+NDML9hQmk9-rPzSmDmAyVLW+qOfs6h62dGK6H9A@mail.gmail.com>
- <20190611140725.GA28902@infradead.org>
-In-Reply-To: <20190611140725.GA28902@infradead.org>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Tue, 11 Jun 2019 20:21:58 +0300
-Message-ID: <CAFCwf13WgnbxHe2wpb3mnw2PLWCgor=136_VSSPQCVodu17uvA@mail.gmail.com>
-Subject: Re: Question - check in runtime which architecture am I running on
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linuxppc-dev@ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+References: <20190611132811.GA27212@embeddedor>
+In-Reply-To: <20190611132811.GA27212@embeddedor>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 11 Jun 2019 10:22:54 -0700
+Message-ID: <CAEf4BzaG=cQWAVNNj0hy4Ui7mHzXZgxs8J3rKbxjjVdEGdNkvA@mail.gmail.com>
+Subject: Re: [PATCH] bpf: verifier: avoid fall-through warnings
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 5:07 PM Christoph Hellwig <hch@infradead.org> wrote:
+On Tue, Jun 11, 2019 at 7:05 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 >
-> On Tue, Jun 11, 2019 at 03:30:08PM +0300, Oded Gabbay wrote:
-> > Hello POWER developers,
-> >
-> > I'm trying to find out if there is an internal kernel API so that a
-> > PCI driver can call it to check if its PCI device is running inside a
-> > POWER9 machine. Alternatively, if that's not available, if it is
-> > running on a machine with powerpc architecture.
->
-> Your driver has absolutely not business knowing this.
->
-> >
-> > I need this information as my device (Goya AI accelerator)
-> > unfortunately needs a slightly different configuration of its PCIe
-> > controller in case of POWER9 (need to set bit 59 to be 1 in all
-> > outbound transactions).
->
-> No, it doesn't.  You can query the output from dma_get_required_mask
-> to optimize for the DMA addresses you get, and otherwise you simply
-> set the maximum dma mask you support.  That is about the control you
-> get, and nothing else is a drivers business.
+> In preparation to enabling -Wimplicit-fallthrough, this patch silences
+> the following warning:
 
-I don't want to conduct two discussions as I saw you answered on my patch.
-I'll add the ppc mailing list to my patch.
-Oded
+Your patch doesn't apply cleanly to neither bpf nor bpf-next tree.
+Could you please rebase and re-submit? Please also include which tree
+(probably bpf-next) you are designating this patch to in subject
+prefix.
+
+>
+> kernel/bpf/verifier.c: In function =E2=80=98check_return_code=E2=80=99:
+> kernel/bpf/verifier.c:5509:6: warning: this statement may fall through [-=
+Wimplicit-fallthrough=3D]
+>    if (env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP4_RECVMSG ||
+>       ^
+> kernel/bpf/verifier.c:5512:2: note: here
+>   case BPF_PROG_TYPE_CGROUP_SKB:
+>   ^~~~
+>
+> Warning level 3 was used: -Wimplicit-fallthrough=3D3
+>
+> Notice that it's much clearer to explicitly add breaks in each case
+> (that actually contains some code), rather than letting the code to
+> fall through.
+>
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  kernel/bpf/verifier.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 1e9d10b32984..e9fc28991548 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -5509,11 +5509,13 @@ static int check_return_code(struct bpf_verifier_=
+env *env)
+>                 if (env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP=
+4_RECVMSG ||
+>                     env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP=
+6_RECVMSG)
+>                         range =3D tnum_range(1, 1);
+> +               break;
+>         case BPF_PROG_TYPE_CGROUP_SKB:
+>                 if (env->prog->expected_attach_type =3D=3D BPF_CGROUP_INE=
+T_EGRESS) {
+>                         range =3D tnum_range(0, 3);
+>                         enforce_attach_type_range =3D tnum_range(2, 3);
+>                 }
+> +               break;
+>         case BPF_PROG_TYPE_CGROUP_SOCK:
+>         case BPF_PROG_TYPE_SOCK_OPS:
+>         case BPF_PROG_TYPE_CGROUP_DEVICE:
+> --
+> 2.21.0
+>
