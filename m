@@ -2,159 +2,104 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C992AC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB42C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB92F2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAA32145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="E5Ye+SZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404089AbfFKHLm (ORCPT
+        id S2404126AbfFKHMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:11:42 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:59440 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403812AbfFKHLl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:11:41 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 253733DC13E;
-        Tue, 11 Jun 2019 17:11:36 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1haavW-0005Oj-9L; Tue, 11 Jun 2019 17:10:38 +1000
-Date:   Tue, 11 Jun 2019 17:10:38 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-bcache@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Zach Brown <zach.brown@ni.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: bcachefs status update (it's done cooking; let's get this sucker
- merged)
-Message-ID: <20190611071038.GC14363@dread.disaster.area>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611041045.GA14363@dread.disaster.area>
- <CAHk-=whDmeozRHUO0qM+2OeGw+=dkcjwGdsvms-x5Dz4y7Tzcw@mail.gmail.com>
+        Tue, 11 Jun 2019 03:12:09 -0400
+Received: from mail-eopbgr30125.outbound.protection.outlook.com ([40.107.3.125]:14830
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403812AbfFKHMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 03:12:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CLtl7q2l3/2/9qNqIpMF1Nd3boE+0rqK76h287Avmsk=;
+ b=E5Ye+SZnzAjES46335VZoKbWgxVKeN+JdPzN/Djif0JKPsub4yki+t+ZEnig20z1pjgk3cVc4qoD63mxjGQ8qelxkXkjweHg0MuBuM+kpgzV/hyuR8xzzD+id4BFpsu1u7XVsegjB9tRH+gHKimFAcE/D5teMe7bMS7s9wrojqA=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3449.eurprd02.prod.outlook.com (52.134.70.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Tue, 11 Jun 2019 07:12:04 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 07:12:04 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: mux: Use struct_size() in devm_kzalloc()
+Thread-Topic: [PATCH] i2c: mux: Use struct_size() in devm_kzalloc()
+Thread-Index: AQHVFjppJkxbZTNnA02k/V7Ddxx96aaWHXiA
+Date:   Tue, 11 Jun 2019 07:12:04 +0000
+Message-ID: <a7851536-52dc-367e-ffc2-88f49f96bd00@axentia.se>
+References: <20190529162014.GA27389@embeddedor>
+In-Reply-To: <20190529162014.GA27389@embeddedor>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1P195CA0018.EURP195.PROD.OUTLOOK.COM (2603:10a6:3:fd::28)
+ To DB3PR0202MB3434.eurprd02.prod.outlook.com (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ef84eb48-04a3-459b-7bc4-08d6ee3c1b11
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3449;
+x-ms-traffictypediagnostic: DB3PR0202MB3449:
+x-microsoft-antispam-prvs: <DB3PR0202MB34497C7673282A31A7AB6C1FBCED0@DB3PR0202MB3449.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(136003)(366004)(39830400003)(346002)(189003)(199004)(6116002)(2616005)(7736002)(229853002)(4744005)(65806001)(65956001)(5660300002)(71190400001)(53936002)(6246003)(3846002)(476003)(446003)(11346002)(68736007)(186003)(386003)(316002)(102836004)(6506007)(71200400001)(6486002)(6512007)(64126003)(6436002)(86362001)(486006)(66066001)(256004)(53546011)(31696002)(26005)(99286004)(66556008)(76176011)(74482002)(66446008)(64756008)(52116002)(73956011)(508600001)(36756003)(305945005)(31686004)(4326008)(66476007)(25786009)(54906003)(110136005)(65826007)(81156014)(81166006)(8936002)(8676002)(66946007)(14454004)(2906002)(58126008);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3449;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ip/IscYbMbIZa/IX08xVJUgxg6ynZUCnmDHoX0DS6Zhr6oCR7Sl71S5Yg5t72m+R/3cMTyHT1/jDHFFjl5JqnyEm1KJR8t2TV+T2DVsohNFq1Z1yui06W9XQ4WqVzgRnTDO+YeVV67WGrw97RCYJTz+2I3UJCjJWJg8Mt53mqztlGdjhrOTYaTrpl+Nl79DggYdDZ0ARCAjS+Z71M+QTFUSBrykaiNlu/lSyEiagZUnZnXhZ+DosxJTE7fW38RNEaxsZMbM2WP/FyrzoSxJZEpGpiSWpgfonevdXVvfTP/5rlUDxomPA2pdojkQ3jGiz3mYmm+93ChTEy/CIUWSuH46A3B+TcRvkCkoyxW+/qjNgvq6K4VYgv4lS6rCkK+eQq2GDEYA9HYz4eQgW1INs9AlwjBfyPnl+iTQjcRIXcGY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BB133A1904977940BF87507E3FC30B92@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whDmeozRHUO0qM+2OeGw+=dkcjwGdsvms-x5Dz4y7Tzcw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=m8L2FmhVJQLV1jLVrjkA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef84eb48-04a3-459b-7bc4-08d6ee3c1b11
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 07:12:04.3630
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3449
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 06:39:00PM -1000, Linus Torvalds wrote:
-> On Mon, Jun 10, 2019 at 6:11 PM Dave Chinner <david@fromorbit.com> wrote:
-> >
-> > Please, no, let's not make the rwsems even more fragile than they
-> > already are. I'm tired of the ongoing XFS customer escalations that
-> > end up being root caused to yet another rwsem memory barrier bug.
-> >
-> > > Have you talked to Waiman Long about that?
-> >
-> > Unfortunately, Waiman has been unable to find/debug multiple rwsem
-> > exclusion violations we've seen in XFS bug reports over the past 2-3
-> > years.
-> 
-> Inside xfs you can do whatever you want.
->
-> But in generic code, no, we're not saying "we don't trust the generic
-> locking, so we cook our own random locking".
-
-We use the generic rwsems in XFS, too, and it's the generic
-rwsems that have been the cause of the problems I'm talking about.
-
-The same rwsem issues were seen on the mmap_sem, the shrinker rwsem,
-in a couple of device drivers, and so on. i.e. This isn't an XFS
-issue I'm raising here - I'm raising a concern about the lack of
-validation of core infrastructure and it's suitability for
-functionality extensions.
-
-> If tghere really are exclusion issues, they should be fairly easy to
-> try to find with a generic test-suite.  Have a bunch of readers that
-> assert that some shared variable has a particular value, and a bund of
-> writers that then modify the value and set it back. Add some random
-> timing and "yield" to them all, and show that the serialization is
-> wrong.
-
-Writing such a test suite would be the responsibility of the rwsem
-maintainers, yes?
-
-> Some kind of "XFS load Y shows problems" is undebuggable, and not
-> necessarily due to locking.
-
-Sure, but this wasn't isolated to XFS, and it wasn't one workload.
-
-We had a growing pile of kernel crash dumps all with the same
-signatures across multiple subsystems. When this happens, it falls
-to the maintainer of that common element to more deeply analyse the
-issue. One of the rwsem maintainers was unable to reproduce or find
-the root cause of the pile of rwsem state corruptions, and so we've
-been left hanging telling people "we think it's rwsems because the
-state is valid right up to the rwsem state going bad, but we can't
-prove it's a rwsem problem because the debug we've added to the
-rwsem code makes the problem go away". Sometime later, a bug has
-been found in the upstream rwsem code....
-
-This has played out several times over the past couple of years. No
-locking bugs have been found in XFS, with the mmap_sem, the shrinker
-rwsem, etc, but 4 or 5 bugs have been found in the rwsem code and
-backports of those commits have been proven to solve _all_ the
-issues that were reported.
-
-That's the painful reality I'm telling you about here - that poor
-upstream core infrastructure quality has had quite severe downstream
-knock-on effects that cost a lot of time, resources, money and
-stress to diagnose and rectify.  I don't want those same mistakes to
-be made again for many reasons, not the least that the stress of
-these situations has a direct and adverse impact on my mental
-health....
-
-> Because if the locking issues are real (and we did fix one bug
-> recently in a9e9bcb45b15: "locking/rwsem: Prevent decrement of reader
-> count before increment") it needs to be fixed.
-
-That's just one of the bugs we've tripped over. There's been a
-couple of missed wakeups bugs that caused rwsem state hangs (e.g.
-readers waiting with no holder), there was a power arch specific
-memory barrier bug that caused read/write exclusion bugs, the
-optimistic spinning caused some severe performance degradations on
-the mmap_sem with some highly threaded workloads, the rwsem bias
-changed from read biased to write biased (might be the other way
-around, can't remember) some time around 4.10 causing a complete
-inversion in mixed read-write IO characteristics, there was a
-botched RHEL7 backport that had memory barrier bugs in it that
-upstream didn't have that occurred because of the complexity of the
-code, etc.
-
-But this is all off-topic for bcachefs review - all we need to do
-here is keep the SIX locking in a separate module and everything
-rwsem related will be just fine.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+T24gMjAxOS0wNS0yOSAxODoyMCwgR3VzdGF2byBBLiBSLiBTaWx2YSB3cm90ZToNCj4gT25lIG9m
+IHRoZSBtb3JlIGNvbW1vbiBjYXNlcyBvZiBhbGxvY2F0aW9uIHNpemUgY2FsY3VsYXRpb25zIGlz
+IGZpbmRpbmcNCj4gdGhlIHNpemUgb2YgYSBzdHJ1Y3R1cmUgdGhhdCBoYXMgYSB6ZXJvLXNpemVk
+IGFycmF5IGF0IHRoZSBlbmQsIGFsb25nDQo+IHdpdGggbWVtb3J5IGZvciBzb21lIG51bWJlciBv
+ZiBlbGVtZW50cyBmb3IgdGhhdCBhcnJheS4gRm9yIGV4YW1wbGU6DQo+IA0KPiBzdHJ1Y3QgZm9v
+IHsNCj4gICAgIGludCBzdHVmZjsNCj4gICAgIHN0cnVjdCBib28gZW50cnlbXTsNCj4gfTsNCj4g
+DQo+IGluc3RhbmNlID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKHN0cnVjdCBmb28pICsgY291
+bnQgKiBzaXplb2Yoc3RydWN0IGJvbyksIEdGUF9LRVJORUwpOw0KPiANCj4gSW5zdGVhZCBvZiBs
+ZWF2aW5nIHRoZXNlIG9wZW4tY29kZWQgYW5kIHByb25lIHRvIHR5cGUgbWlzdGFrZXMsIHdlIGNh
+bg0KPiBub3cgdXNlIHRoZSBuZXcgc3RydWN0X3NpemUoKSBoZWxwZXI6DQo+IA0KPiBpbnN0YW5j
+ZSA9IGRldm1fa3phbGxvYyhkZXYsIHN0cnVjdF9zaXplKGluc3RhbmNlLCBlbnRyeSwgY291bnQp
+LCBHRlBfS0VSTkVMKTsNCj4gDQo+IFRoaXMgY29kZSB3YXMgZGV0ZWN0ZWQgd2l0aCB0aGUgaGVs
+cCBvZiBDb2NjaW5lbGxlLg0KDQpUaGFua3MsIHBhdGNoIGFwcGxpZWQgdG8gaTJjLW11eC9mb3It
+bmV4dA0KDQpDaGVlcnMsDQpQZXRlcg0K
