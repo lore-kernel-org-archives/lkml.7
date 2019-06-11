@@ -2,62 +2,95 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4455DC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67409C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238DB21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301B721744
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560293398;
+	bh=VaFJuGzwOzYG4Fb2UF71NVm8aZPnptVanEfOgstypc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q3fG5oL578XOg4AmOs1PikRWt4o7iEeS3Ch7GRCWp+8pPUUv/3vSm2rn8Fve1EoiP
+	 YVRvgRGnq6zeLbL4ax2kLnb2wInwuMFaDIbDZiweXI1reLx3VM90P0c3t11B3DefMo
+	 Y4Hm7F2Cb489ZaJ01lH5PkbHa2YjN2yRolfjuRSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407316AbfFKWqw (ORCPT
+        id S2392131AbfFKWt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:46:52 -0400
-Received: from gate.crashing.org ([63.228.1.57]:34169 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404582AbfFKWqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:46:52 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5BMkUqQ021305;
-        Tue, 11 Jun 2019 17:46:31 -0500
-Message-ID: <0b257651bb7ac4a6f0a8dce5470120b7701720b9.camel@kernel.crashing.org>
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 12 Jun 2019 08:46:30 +1000
-In-Reply-To: <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
-         <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
-         <20190607172902.GA8183@lst.de>
-         <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
-         <20190610081825.GA16534@lst.de>
-         <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
-         <20190611060521.GA19512@lst.de>
-         <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 18:49:57 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39125 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391232AbfFKWt5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:49:57 -0400
+Received: by mail-it1-f193.google.com with SMTP id j204so7520877ite.4;
+        Tue, 11 Jun 2019 15:49:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/NnSGwbKcnY/7Q2s2Gevcsyo7XJDO9FOrJ4WUpJ1HFQ=;
+        b=mcwZkzaRMfcEx2kgdVXpQ0JOQ5S0bVaheiZLxCDxn9EIVkpp9l2w4SfjoLGqI3jLUv
+         D0YALaodQo3722PNenkTuC6ZLD0RiaLdlEEDGXTQbRnc5GeG5RgYBobpecL2AAf17RUC
+         I6BoMElENdwIsN+y+JhI7vJSZ+ZaDFUFjwAx5A/ZEG7+RVTjnCT48kYoZCxTghC33uip
+         rwi3fKwsTta/61hJNB2pD7iIske72X1Qy+gpVRzkYiXy0YRqREMduv8s+XkGXri1iG+r
+         y3dZeRc9aKD/FHTL0RNuREWP1YqKe+N9VbN2dauHbOTN5qBoMYpbtVath7qEbWl6s5DF
+         kPHg==
+X-Gm-Message-State: APjAAAXPJ2TP7uYkWmKet8neyIU/iqlJqkFXREKx0cncP9haXQ3m9Sy2
+        ZnIR4qUWC8EuPc0M72fDPjaLSmY=
+X-Google-Smtp-Source: APXvYqwdY0VqgKIy7eeWPn3ZJv3AdjkyxMqbBpgjo8QSwtv2zrOmnzCLT/FHfPAZdx/fsmc5KbbIEQ==
+X-Received: by 2002:a02:c6a9:: with SMTP id o9mr17897923jan.90.1560293396229;
+        Tue, 11 Jun 2019 15:49:56 -0700 (PDT)
+Received: from localhost (ip-174-149-252-64.englco.spcsdns.net. [174.149.252.64])
+        by smtp.gmail.com with ESMTPSA id o145sm572109itc.24.2019.06.11.15.49.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 15:49:55 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 16:49:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH REPOST v8 1/3] dt-bindings: i2c: extend existing opencore
+ bindings.
+Message-ID: <20190611224952.GA17031@bogus>
+References: <1559369475-15374-1-git-send-email-sagar.kadam@sifive.com>
+ <1559369475-15374-2-git-send-email-sagar.kadam@sifive.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559369475-15374-2-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 17:20 -0500, Larry Finger wrote:
-> b43-pci-bridge 0001:11:00.0: dma_direct_supported: failed (mask =
-> 0x3fffffff, 
-> min_mask = 0x5ffff000/0x5ffff000, dma bits = 0x1f
+On Sat,  1 Jun 2019 11:41:13 +0530, Sagar Shrikant Kadam wrote:
+> Reformatted compatibility strings to one valid combination on
+> each line.
+> Add FU540-C000 specific device tree bindings to already available
+> i2-ocores file. This device is available on
+> HiFive Unleashed Rev A00 board. Move interrupt under optional
+> property list as this can be optional.
+> 
+> The FU540-C000 SoC from sifive, has an Opencore's I2C block
+> reimplementation.
+> 
+> The DT compatibility string for this IP is present in HDL and available at.
+> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
 
-Ugh ? A mask with holes in it ? That's very wrong... That min_mask is
-bogus.
-
-Ben.
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
