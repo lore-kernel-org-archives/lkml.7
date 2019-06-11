@@ -2,139 +2,129 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05ACEC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC311C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE58F2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fskelMiu"
+	by mail.kernel.org (Postfix) with ESMTP id B87022086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405845AbfFKRHM (ORCPT
+        id S2405854AbfFKRHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:07:12 -0400
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:40926 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405356AbfFKRHL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:07:11 -0400
-Received: by mail-pf1-f181.google.com with SMTP id p184so4524503pfp.7;
-        Tue, 11 Jun 2019 10:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7aH25v3Hx1NMUvytzU1QVg/6VVIQIlEQHF1pCamcBQ4=;
-        b=fskelMiufq6DZGC/0bzKmWAptQbp84iH3H4HUD90gku5UFv2OXuClzXAubyulmk3OK
-         zpBUsRzGZJ4tVK2S6Zql/amqp/jPm/5fKlH7isLRQtPlzTFsn2EYexvgcK4qabMwRMAv
-         BpeEuZowx1MGgmfW5vN4VfQw5rcWyhdC5A7UTL/VkrML8sw5N0c3X41Y8qdCuhBjWtqL
-         zBjcI0nGSCgOtk7GoIisdh1fAqG206JRwtIsbL0vvAGg8+yJSJnRZfxCb6C1vCpBI4Cw
-         xz4C7gSRhyHWpmOQgwEpCO3YQmG3f8nEheKxIOZOlSJmxIdscCabcHRwyj1HbsmBYbtG
-         gQdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7aH25v3Hx1NMUvytzU1QVg/6VVIQIlEQHF1pCamcBQ4=;
-        b=r/tQGVvMLVsdeIbib5VYUhLEQ7TIPw2YV7CC+UcbFr0UyTwpx0dTq6RZrqi++diH95
-         jpoo3hw+aL5IyBK6uanNiPapkda9qVG6hTyTADhSZiiPCXv7W3lPUlwZPCM4Oh6jhUCs
-         ZZA9dq6GwSJQGQ82gwrwmzD8N6MLe2ce77pJQ+UGteWup88lfxVRJ8u/GAz3vd3uOzU/
-         79sit1iov6TkMO/NY0rO9VjqOJf5jSAzX0kf4DxPQomnQEiRYOs64E0SzxeCHH+MYOpi
-         EnoKc0iIPwhARubeRh6ghECOi9fS3gc6oNe65YVuWtn26dcPiXCrytDmHkYJo3XwRkww
-         xt5w==
-X-Gm-Message-State: APjAAAU4ztIx9nvLra6QQuwybqWk2sxaz+vdF71rFBwwNse2qT1VEv+k
-        MAmA2Vk4DDEwi2dh0rt1RnE=
-X-Google-Smtp-Source: APXvYqy3IZi/0Vi/+Hd0kW/KCxwTD6uwyywKfxJdkYbA4xRHvlC8p306bmDTO+3NDrKeTCh8nKFIpQ==
-X-Received: by 2002:a63:2a06:: with SMTP id q6mr21027443pgq.290.1560272830202;
-        Tue, 11 Jun 2019 10:07:10 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id t26sm2787341pgu.43.2019.06.11.10.07.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 10:07:09 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 10:07:07 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     Hui Wang <hui.wang@canonical.com>,
-        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
-        Naoki Saito <naoki.saito@alpsalpine.com>,
-        Hideo Kawase <hideo.kawase@alpsalpine.com>
-Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
- =?utf-8?B?5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= input: alps-fix the issue alps
- cs19 trackstick do not work.
-Message-ID: <20190611170707.GA143729@dtor-ws>
-References: <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190528071824.jimhixhtsynzwixe@pali>
- <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190610104310.qa5snt7jpcljodfv@pali>
- <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
- <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
- <20190611072333.nd4va4q2m5epmukc@pali>
+        Tue, 11 Jun 2019 13:07:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18244 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405345AbfFKRHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:07:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 10:07:44 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2019 10:07:44 -0700
+Date:   Tue, 11 Jun 2019 10:10:52 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, robh+dt@kernel.org,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
+Message-ID: <20190611101052.35af46df@jacob-builder>
+In-Reply-To: <95292b47-4cf4-5fd9-b096-1cb016e2264f@arm.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+        <20190610184714.6786-2-jean-philippe.brucker@arm.com>
+        <20190611052626.20bed59a@jacob-builder>
+        <95292b47-4cf4-5fd9-b096-1cb016e2264f@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190611072333.nd4va4q2m5epmukc@pali>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 09:23:33AM +0200, Pali Rohár wrote:
-> On Tuesday 11 June 2019 12:32:33 Hui Wang wrote:
-> > On 2019/6/11 上午11:23, Hui Wang wrote:
-> > > On 2019/6/11 上午11:05, Xiaoxiao Liu wrote:
-> > > > Hi Pali,
-> > > > 
-> > > > I discussed with our FW team about this problem.
-> > > > We think the V8 method means a touchpad feature  and does not fit
-> > > > the CS19 trackpoint device.
-> > > > CS19 TrackPoint needn't  use any Absolute (Raw) mode and is usually
-> > > > use standard mouse data.
-> > > > CS19 TrackPoint device is a completely different device with
-> > > > DualPoint device of Dell/HP.
-> > > > CS19 TrackPoint device is independent  of Touchpad. (Touchpad is
-> > > > connecting by I2C, TrackPoint is directly connecting with PS2 port.)
-> > > > And it has completely another FW.
-> > > > 
-> > > > So we think it is better to use the mouse mode for CS19 trackpoint.
-> > > 
-> > > Maybe here is some mis-understanding,  the mouse mode here doesn't mean
-> > > we use psmouse-base.c for cs19 (bare ps/2 mouse), we plan to use
-> > > trackpoint.c to drive this HW, so this trackpoint has all features a
-> > > trackpoint should have.
-> > > 
-> > And I sent a patch one month ago to let the the trackpoint.c to drive this
-> > HW: https://www.spinics.net/lists/linux-input/msg61341.html, maybe that
-> > patch is reference.
+On Tue, 11 Jun 2019 15:37:42 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+
+> On 11/06/2019 13:26, Jacob Pan wrote:
+> >> +/**
+> >> + * ioasid_set_data - Set private data for an allocated ioasid
+> >> + * @ioasid: the ID to set data
+> >> + * @data:   the private data
+> >> + *
+> >> + * For IOASID that is already allocated, private data can be set
+> >> + * via this API. Future lookup can be done via ioasid_find.
+> >> + */
+> >> +int ioasid_set_data(ioasid_t ioasid, void *data)
+> >> +{
+> >> +	struct ioasid_data *ioasid_data;
+> >> +	int ret = 0;
+> >> +
+> >> +	xa_lock(&ioasid_xa);  
+> > Just wondering if this is necessary, since xa_load is under
+> > rcu_read_lock and we are not changing anything internal to xa. For
+> > custom allocator I still need to have the mutex against allocator
+> > removal.  
 > 
-> So instead of creating blacklist, you should check for TP_VARIANT_ALPS
-> in alps.c and disallow its usage.
+> I think we do need this because of a possible race with ioasid_free():
 > 
-> Or maybe better, move trackpoint.c detect code before alsp.c detect code
-> in psmouse-base. And no changes in alps.c are needed.
+>          CPU1                      CPU2
+>   ioasid_free(ioasid)     ioasid_set_data(ioasid, foo)
+>                             data = xa_load(...)
+>     xa_erase(...)
+>     kfree_rcu(data)           (no RCU lock held)
+>     ...free(data)
+>                             data->private = foo;
+> 
+make sense, thanks for explaining.
 
-I'd be very cautions of moving around the protocol detection. It is very
-fragile, so if we can detect trackpoint-only case in alps.c and skip on
-to trackpoint I would prefer it.
+> The issue is theoretical at the moment because no users do this, but
+> I'd be more comfortable taking the xa_lock, which prevents a
+> concurrent xa_erase()+free(). (I commented on your v3 but you might
+> have missed it)
+> 
+Did you reply to my v3? I did not see it. I only saw your comments about
+v3 in your commit message.
 
-Thanks.
+> >> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
+> >> +	if (ioasid_data)
+> >> +		rcu_assign_pointer(ioasid_data->private, data);  
+> > it is good to publish and have barrier here. But I just wonder even
+> > for weakly ordered machine, this pointer update is quite far away
+> > from its data update.  
+> 
+> I don't know, it could be right before calling ioasid_set_data():
+> 
+> 	mydata = kzalloc(sizeof(*mydata));
+> 	mydata->ops = &my_ops;			(1)
+> 	ioasid_set_data(ioasid, mydata);
+> 		... /* no write barrier here */
+> 		data->private = mydata;		(2)
+> 
+> And then another thread calls ioasid_find():
+> 
+> 	mydata = ioasid_find(ioasid);
+> 	if (mydata)
+> 		mydata->ops->do_something();
+> 
+> On a weakly ordered machine, this thread could observe the pointer
+> assignment (2) before the ops assignment (1), and dereference NULL.
+> Using rcu_assign_pointer() should fix that
+> 
+I agree it is better to have the barrier. Just thought there is already
+a rcu_read_lock() in xa_load() in between. rcu_read_lock() may have
+barrier in some case but better not count on it. No issues here. I will
+integrate this in the next version.
 
--- 
-Dmitry
+> Thanks,
+> Jean
+
+[Jacob Pan]
