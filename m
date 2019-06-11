@@ -2,131 +2,139 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD41C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4CFC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1972063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350C62063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CX5pAIsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390898AbfFKN2W (ORCPT
+        id S2390938AbfFKN2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:28:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:33126 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfFKN2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:28:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE541344;
-        Tue, 11 Jun 2019 06:28:18 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 408E13F557;
-        Tue, 11 Jun 2019 06:28:17 -0700 (PDT)
-Subject: Re: [PATCH v4 0/8] arm64: IRQ priority masking and Pseudo-NMI fixes
-To:     Julien Thierry <julien.thierry@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        yuzenghui@huawei.com, wanghaibin.wang@huawei.com,
-        james.morse@arm.com, will.deacon@arm.com, catalin.marinas@arm.com,
-        mark.rutland@arm.com, liwei391@huawei.com
-References: <1560245893-46998-1-git-send-email-julien.thierry@arm.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <e90e7ab1-1c30-de1f-80de-5b86f99cb78b@arm.com>
-Date:   Tue, 11 Jun 2019 14:28:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <1560245893-46998-1-git-send-email-julien.thierry@arm.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 11 Jun 2019 09:28:35 -0400
+Received: from mail-eopbgr140089.outbound.protection.outlook.com ([40.107.14.89]:44330
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728901AbfFKN2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 09:28:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DlbQSzeBPeegRKEyagFHbbCcV/Do7KJkwCxOyExXH84=;
+ b=CX5pAIsli1Wr7zpS6svooUrrIyEaPNzDExaFpt2/A+u11QB26IzRULJXRQLQkSuTTc0Pd09jDbul3+b3MxifB33vNdafbRjupSFGV6dWIgaAntm2nys5sJYxhr7C2PCkJjTmg/U/AtDIy1z39xHdhd86V8IvmaP15gPeyCXhM8c=
+Received: from VI1PR05MB6239.eurprd05.prod.outlook.com (20.178.124.30) by
+ VI1PR05MB6752.eurprd05.prod.outlook.com (10.186.160.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.7; Tue, 11 Jun 2019 13:28:30 +0000
+Received: from VI1PR05MB6239.eurprd05.prod.outlook.com
+ ([fe80::9db8:5404:48e4:d7f2]) by VI1PR05MB6239.eurprd05.prod.outlook.com
+ ([fe80::9db8:5404:48e4:d7f2%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 13:28:29 +0000
+From:   Asmaa Mnebhi <Asmaa@mellanox.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        "minyard@acm.org" <minyard@acm.org>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Michael Shych <michaelsh@mellanox.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: RE: [PATCH v12 1/1] Add support for IPMB driver
+Thread-Topic: [PATCH v12 1/1] Add support for IPMB driver
+Thread-Index: AQHVH75wU/UOB8lBXUaBS/Idjd9IQKaVbvMAgAEEhJA=
+Date:   Tue, 11 Jun 2019 13:28:29 +0000
+Message-ID: <VI1PR05MB62398E3DADCD067A23BBC53BDAED0@VI1PR05MB6239.eurprd05.prod.outlook.com>
+References: <cover.1560192707.git.Asmaa@mellanox.com>
+ <319690553a0da2a1e80b400941341081b383e5f1.1560192707.git.Asmaa@mellanox.com>
+ <54f3c0e0-7aaa-9078-5328-50e8f709ebae@infradead.org>
+In-Reply-To: <54f3c0e0-7aaa-9078-5328-50e8f709ebae@infradead.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Asmaa@mellanox.com; 
+x-originating-ip: [216.156.69.42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 257a4e9c-ed5b-4aa5-37e2-08d6ee70b11c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6752;
+x-ms-traffictypediagnostic: VI1PR05MB6752:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR05MB6752A3C7C47F3DFFF1AA13CEDAED0@VI1PR05MB6752.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(136003)(39860400002)(396003)(13464003)(199004)(189003)(72206003)(478600001)(8676002)(81156014)(4326008)(25786009)(2906002)(81166006)(86362001)(14444005)(256004)(6116002)(3846002)(80792005)(68736007)(966005)(8936002)(2501003)(14454004)(74316002)(53546011)(6506007)(446003)(186003)(305945005)(7736002)(26005)(229853002)(99286004)(102836004)(7696005)(71190400001)(71200400001)(11346002)(6436002)(76176011)(476003)(53936002)(486006)(6306002)(6246003)(55016002)(9686003)(5660300002)(64756008)(66556008)(54906003)(66946007)(66476007)(66066001)(6636002)(66446008)(110136005)(76116006)(52536014)(73956011)(33656002)(2201001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6752;H:VI1PR05MB6239.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tYyrJwJxA4zPHbk/ob/Csw6GI6nuVPTgk5+xT23Wv2fpKBTDe8cKrV1jrERmi8rw7YUeY/XsK6v33LCeVDop45k+ZbbZtbXFy+p9bImOSAwu6K6DoCktAMZPPA9TSZMaEw6yFD4/a+Su9RYbcPqIEfZbv8JRiwXDxaW0JV580uZK8DjBNyIZKtqlp3Lm++WuQLqrmxM3YynaTD4sdaeGUV5RAK4zB5Tu+ho9IPRV4m+yybLp+AUyjjOqbzrV4ONpHNpoJVmo4KRB3nS1Fmiyz7rzxCuQM7bwxSmyjb7VDfaMvCaOIHxWSlstXNIXS9sv2RQoWihjpPCzaCmyVBe6alIvaDO5VS6l/N7/FsoJcTkRJko+ghWRx/z78WOCEjAtW+lZ7kJLOwGF89fY7bZVMmwUU3oRol2Kadty4tlFTqY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 257a4e9c-ed5b-4aa5-37e2-08d6ee70b11c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 13:28:29.3159
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Asmaa@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6752
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Julien,
-
-On 11/06/2019 10:38, Julien Thierry wrote:
-> Hi,
-> 
-> Version one[1] of this series attempted to fix the issue reported by
-> Zenghui[2] when using the function_graph tracer with IRQ priority
-> masking.
-> 
-> Since then, I realized that priority masking and the use of Pseudo-NMIs
-> was more broken than I thought.
-> 
-> * Patch 1-2 are just some cleanup
-> * Patch 3 fixes a potential issue with not clobbering condition flags
->   in irqflags operations
-> * Patch 4 fixes an issue where calling C code in Pseudo-NMI before
->   entering NMI enter could lead to potential races
-> * Patch 5 fixes the function_graph issue when using priority masking
-> * Patch 6 introduces some debug to hopefully avoid breaking things in
->   the future
-> * Patch 7 is a rebased version of the patch sent by Wei Li[3] fixing
->   an error that can happen during on some platform using the priority
->   masking feature
-> * Patch 8 re-enables the Pseudo-NMI selection
-> 
-> Changes since V3 [4]:
-> - Rebase on v5.2-rc4
-> - Fix comments/typos/missed updates
-> - Use single condition evalution for nmi_enter and nmi_exit
-
-Thanks for following up on this. For the whole series:
-
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+SGVsbG8gUmFuZHksDQoNClBsZWFzZSByZWZlciB0byB0aGUgc2xhdmUtaW50ZXJmYWNlIGxpbnV4
+IGRvY3VtZW50YXRpb246DQpodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9Eb2N1bWVudGF0aW9u
+L2kyYy9zbGF2ZS1pbnRlcmZhY2UNCg0KVGhhbmtzLg0KQXNtYWENCg0KLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCkZyb206IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPiAN
+ClNlbnQ6IE1vbmRheSwgSnVuZSAxMCwgMjAxOSA1OjU2IFBNDQpUbzogQXNtYWEgTW5lYmhpIDxB
+c21hYUBtZWxsYW5veC5jb20+OyBtaW55YXJkQGFjbS5vcmc7IHdzYUB0aGUtZHJlYW1zLmRlOyBW
+YWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxsYW5veC5jb20+OyBNaWNoYWVsIFNoeWNoIDxtaWNo
+YWVsc2hAbWVsbGFub3guY29tPg0KQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEyIDEvMV0gQWRk
+IHN1cHBvcnQgZm9yIElQTUIgZHJpdmVyDQoNCk9uIDYvMTAvMTkgMTE6NTcgQU0sIEFzbWFhIE1u
+ZWJoaSB3cm90ZToNCj4gU3VwcG9ydCByZWNlaXZpbmcgSVBNQiByZXF1ZXN0cyBvbiBhIFNhdGVs
+bGl0ZSBNQyBmcm9tIHRoZSBCTUMuDQo+IE9uY2UgYSByZXNwb25zZSBpcyByZWFkeSwgdGhpcyBk
+cml2ZXIgd2lsbCBzZW5kIGJhY2sgYSByZXNwb25zZSB0byB0aGUgDQo+IEJNQyB2aWEgdGhlIElQ
+TUIgY2hhbm5lbC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFzbWFhIE1uZWJoaSA8QXNtYWFAbWVs
+bGFub3guY29tPg0KPiBBY2tlZC1ieTogdmFkaW1wQG1lbGxhbm94LmNvbQ0KPiAtLS0NCj4gIERv
+Y3VtZW50YXRpb24vSVBNQi50eHQgICAgICAgICAgIHwgMTAzICsrKysrKysrKysrDQo+ICBkcml2
+ZXJzL2NoYXIvaXBtaS9LY29uZmlnICAgICAgICB8ICAgOCArDQo+ICBkcml2ZXJzL2NoYXIvaXBt
+aS9NYWtlZmlsZSAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL2NoYXIvaXBtaS9pcG1iX2Rldl9p
+bnQuYyB8IDM2NCANCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+
+ICA0IGZpbGVzIGNoYW5nZWQsIDQ3NiBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9JUE1CLnR4dCAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBkcml2ZXJz
+L2NoYXIvaXBtaS9pcG1iX2Rldl9pbnQuYw0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vSVBNQi50eHQgYi9Eb2N1bWVudGF0aW9uL0lQTUIudHh0IG5ldyBmaWxlIA0KPiBtb2RlIDEw
+MDY0NCBpbmRleCAwMDAwMDAwLi43MTYwZDUzDQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9JUE1CLnR4dA0KPiBAQCAtMCwwICsxLDEwMyBAQA0KDQpbLi4uXQ0KDQo+ICtJ
+bnN0YW50aWF0ZSB0aGUgZGV2aWNlDQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICsNCj4g
+K0FmdGVyIGxvYWRpbmcgdGhlIGRyaXZlciwgeW91IGNhbiBpbnN0YW50aWF0ZSB0aGUgZGV2aWNl
+IGFzIGRlc2NyaWJlZCANCj4gK2luICdEb2N1bWVudGF0aW9uL2kyYy9pbnN0YW50aWF0aW5nLWRl
+dmljZXMnLg0KPiArSWYgeW91IGhhdmUgbXVsdGlwbGUgQk1DcywgZWFjaCBjb25uZWN0ZWQgdG8g
+eW91ciBTYXRlbGxpdGUgTUMgdmlhIGEgDQo+ICtkaWZmZXJlbnQgSTJDIGJ1cywgeW91IGNhbiBp
+bnN0YW50aWF0ZSBhIGRldmljZSBmb3IgZWFjaCBvZiB0aG9zZSANCj4gK0JNQ3MuDQo+ICtUaGUg
+bmFtZSBvZiB0aGUgaW5zdGFudGlhdGVkIGRldmljZSBjb250YWlucyB0aGUgSTJDIGJ1cyBudW1i
+ZXIgDQo+ICthc3NvY2lhdGVkIHdpdGggaXQgYXMgZm9sbG93czoNCj4gKw0KPiArQk1DMSAtLS0t
+LS0gSVBNQi9JMkMgYnVzIDEgLS0tLS0tLS0tfCAgIC9kZXYvaXBtYi0xDQo+ICsJCQkJU2F0ZWxs
+aXRlIE1DDQo+ICtCTUMxIC0tLS0tLSBJUE1CL0kyQyBidXMgMiAtLS0tLS0tLS18ICAgL2Rldi9p
+cG1iLTINCj4gKw0KPiArRm9yIGluc3RhbmNlLCB5b3UgY2FuIGluc3RhbnRpYXRlIHRoZSBpcG1i
+LWRldi1pbnQgZGV2aWNlIGZyb20gdXNlciANCj4gK3NwYWNlIGF0IHRoZSA3IGJpdCBhZGRyZXNz
+IDB4MTAgb24gYnVzIDI6DQo+ICsNCj4gKyAgIyBlY2hvIGlwbWItZGV2IDB4MTAxMCA+IC9zeXMv
+YnVzL2kyYy9kZXZpY2VzL2kyYy0yL25ld19kZXZpY2UNCg0KVGhpcyBpcyBjb25mdXNpbmcuDQoN
+CkNhbiB5b3UgY2xhcmlmeSBob3cgdGhlIDctYml0IGFkZHJlc3MgaXMgZXh0cmFjdGVkIGZyb20g
+dGhhdCBoZXggbnVtYmVyPw0KSXMgdGhlIDctYml0IGFkZHJlc3MgcmVwZWF0ZWQgKGR1cGxpY2F0
+ZWQpPw0KSXMgdGhlIDctYml0IGFkZHJlc3MgdGhlIGxvdyBvcmRlciAobG93IGJpdHMpIDB4MTAg
+b3IgdGhlIDB4MTAgYXQgYml0cw0KMTUtOCAob3IgMTQtOCk/DQoNCj4gK1RoaXMgd2lsbCBjcmVh
+dGUgdGhlIGRldmljZSBmaWxlIC9kZXYvaXBtYi0yLCB3aGljaCBjYW4gYmUgYWNjZXNzZWQgDQo+
+ICtieSB0aGUgdXNlciBzcGFjZSBwcm9ncmFtLiBUaGUgZGV2aWNlIG5lZWRzIHRvIGJlIGluc3Rh
+bnRpYXRlZCBiZWZvcmUgDQo+ICtydW5uaW5nIHRoZSB1c2VyIHNwYWNlIHByb2dyYW0uDQoNCnRo
+YW5rcy4NCi0tDQp+UmFuZHkNCg==
