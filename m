@@ -2,222 +2,139 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC4DC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05ACEC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238EA2177E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE58F2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fskelMiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405839AbfFKRGf (ORCPT
+        id S2405845AbfFKRHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:06:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41478 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405825AbfFKRGd (ORCPT
+        Tue, 11 Jun 2019 13:07:12 -0400
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:40926 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405356AbfFKRHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:06:33 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BH2hn2059582
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 13:06:31 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t2emjdrm3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 13:06:30 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Tue, 11 Jun 2019 18:06:28 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Jun 2019 18:06:24 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BH6FWg26214754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 17:06:16 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD24D11C05E;
-        Tue, 11 Jun 2019 17:06:22 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 23A1011C04C;
-        Tue, 11 Jun 2019 17:06:20 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.199.191])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 Jun 2019 17:06:19 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Subject: [PATCH v4 3/3] powerpc: Add support to initialize ima policy rules
-Date:   Tue, 11 Jun 2019 13:06:05 -0400
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1560272765-5768-1-git-send-email-nayna@linux.ibm.com>
-References: <1560272765-5768-1-git-send-email-nayna@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19061117-0028-0000-0000-0000037967E0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061117-0029-0000-0000-0000243957E4
-Message-Id: <1560272765-5768-4-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906110109
+        Tue, 11 Jun 2019 13:07:11 -0400
+Received: by mail-pf1-f181.google.com with SMTP id p184so4524503pfp.7;
+        Tue, 11 Jun 2019 10:07:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7aH25v3Hx1NMUvytzU1QVg/6VVIQIlEQHF1pCamcBQ4=;
+        b=fskelMiufq6DZGC/0bzKmWAptQbp84iH3H4HUD90gku5UFv2OXuClzXAubyulmk3OK
+         zpBUsRzGZJ4tVK2S6Zql/amqp/jPm/5fKlH7isLRQtPlzTFsn2EYexvgcK4qabMwRMAv
+         BpeEuZowx1MGgmfW5vN4VfQw5rcWyhdC5A7UTL/VkrML8sw5N0c3X41Y8qdCuhBjWtqL
+         zBjcI0nGSCgOtk7GoIisdh1fAqG206JRwtIsbL0vvAGg8+yJSJnRZfxCb6C1vCpBI4Cw
+         xz4C7gSRhyHWpmOQgwEpCO3YQmG3f8nEheKxIOZOlSJmxIdscCabcHRwyj1HbsmBYbtG
+         gQdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7aH25v3Hx1NMUvytzU1QVg/6VVIQIlEQHF1pCamcBQ4=;
+        b=r/tQGVvMLVsdeIbib5VYUhLEQ7TIPw2YV7CC+UcbFr0UyTwpx0dTq6RZrqi++diH95
+         jpoo3hw+aL5IyBK6uanNiPapkda9qVG6hTyTADhSZiiPCXv7W3lPUlwZPCM4Oh6jhUCs
+         ZZA9dq6GwSJQGQ82gwrwmzD8N6MLe2ce77pJQ+UGteWup88lfxVRJ8u/GAz3vd3uOzU/
+         79sit1iov6TkMO/NY0rO9VjqOJf5jSAzX0kf4DxPQomnQEiRYOs64E0SzxeCHH+MYOpi
+         EnoKc0iIPwhARubeRh6ghECOi9fS3gc6oNe65YVuWtn26dcPiXCrytDmHkYJo3XwRkww
+         xt5w==
+X-Gm-Message-State: APjAAAU4ztIx9nvLra6QQuwybqWk2sxaz+vdF71rFBwwNse2qT1VEv+k
+        MAmA2Vk4DDEwi2dh0rt1RnE=
+X-Google-Smtp-Source: APXvYqy3IZi/0Vi/+Hd0kW/KCxwTD6uwyywKfxJdkYbA4xRHvlC8p306bmDTO+3NDrKeTCh8nKFIpQ==
+X-Received: by 2002:a63:2a06:: with SMTP id q6mr21027443pgq.290.1560272830202;
+        Tue, 11 Jun 2019 10:07:10 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id t26sm2787341pgu.43.2019.06.11.10.07.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 10:07:09 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 10:07:07 -0700
+From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Hui Wang <hui.wang@canonical.com>,
+        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
+        Naoki Saito <naoki.saito@alpsalpine.com>,
+        Hideo Kawase <hideo.kawase@alpsalpine.com>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
+ =?utf-8?B?5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= input: alps-fix the issue alps
+ cs19 trackstick do not work.
+Message-ID: <20190611170707.GA143729@dtor-ws>
+References: <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190528071824.jimhixhtsynzwixe@pali>
+ <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190610104310.qa5snt7jpcljodfv@pali>
+ <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
+ <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
+ <20190611072333.nd4va4q2m5epmukc@pali>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190611072333.nd4va4q2m5epmukc@pali>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PowerNV secure boot relies on the kernel IMA security subsystem to
-perform the OS kernel image signature verification. Since each secure
-boot mode has different IMA policy requirements, dynamic definition of
-the policy rules based on the runtime secure boot mode of the system is
-required. On systems that support secure boot, but have it disabled,
-only measurement policy rules of the kernel image and modules are
-defined.
+On Tue, Jun 11, 2019 at 09:23:33AM +0200, Pali Rohár wrote:
+> On Tuesday 11 June 2019 12:32:33 Hui Wang wrote:
+> > On 2019/6/11 上午11:23, Hui Wang wrote:
+> > > On 2019/6/11 上午11:05, Xiaoxiao Liu wrote:
+> > > > Hi Pali,
+> > > > 
+> > > > I discussed with our FW team about this problem.
+> > > > We think the V8 method means a touchpad feature  and does not fit
+> > > > the CS19 trackpoint device.
+> > > > CS19 TrackPoint needn't  use any Absolute (Raw) mode and is usually
+> > > > use standard mouse data.
+> > > > CS19 TrackPoint device is a completely different device with
+> > > > DualPoint device of Dell/HP.
+> > > > CS19 TrackPoint device is independent  of Touchpad. (Touchpad is
+> > > > connecting by I2C, TrackPoint is directly connecting with PS2 port.)
+> > > > And it has completely another FW.
+> > > > 
+> > > > So we think it is better to use the mouse mode for CS19 trackpoint.
+> > > 
+> > > Maybe here is some mis-understanding,  the mouse mode here doesn't mean
+> > > we use psmouse-base.c for cs19 (bare ps/2 mouse), we plan to use
+> > > trackpoint.c to drive this HW, so this trackpoint has all features a
+> > > trackpoint should have.
+> > > 
+> > And I sent a patch one month ago to let the the trackpoint.c to drive this
+> > HW: https://www.spinics.net/lists/linux-input/msg61341.html, maybe that
+> > patch is reference.
+> 
+> So instead of creating blacklist, you should check for TP_VARIANT_ALPS
+> in alps.c and disallow its usage.
+> 
+> Or maybe better, move trackpoint.c detect code before alsp.c detect code
+> in psmouse-base. And no changes in alps.c are needed.
 
-This patch defines the arch-specific implementation to retrieve the
-secure boot mode of the system and accordingly configures the IMA policy
-rules.
+I'd be very cautions of moving around the protocol detection. It is very
+fragile, so if we can detect trackpoint-only case in alps.c and skip on
+to trackpoint I would prefer it.
 
-This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
-config is enabled.
+Thanks.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/powerpc/Kconfig           | 14 +++++++++
- arch/powerpc/kernel/Makefile   |  1 +
- arch/powerpc/kernel/ima_arch.c | 54 ++++++++++++++++++++++++++++++++++
- include/linux/ima.h            |  3 +-
- 4 files changed, 71 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/kernel/ima_arch.c
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 8c1c636308c8..9de77bb14f54 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -902,6 +902,20 @@ config PPC_MEM_KEYS
- 
- 	  If unsure, say y.
- 
-+config PPC_SECURE_BOOT
-+	prompt "Enable PowerPC Secure Boot"
-+	bool
-+	default n
-+	depends on PPC64
-+	depends on OPAL_SECVAR
-+	depends on IMA
-+	depends on IMA_ARCH_POLICY
-+	help
-+	  Linux on POWER with firmware secure boot enabled needs to define
-+	  security policies to extend secure boot to the OS.This config
-+	  allows user to enable OS Secure Boot on PowerPC systems that
-+	  have firmware secure boot support.
-+
- endmenu
- 
- config ISA_DMA_API
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index 0ea6c4aa3a20..75c929b41341 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -131,6 +131,7 @@ ifdef CONFIG_IMA
- obj-y				+= ima_kexec.o
- endif
- endif
-+obj-$(CONFIG_PPC_SECURE_BOOT)	+= ima_arch.o
- 
- obj-$(CONFIG_AUDIT)		+= audit.o
- obj64-$(CONFIG_AUDIT)		+= compat_audit.o
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-new file mode 100644
-index 000000000000..1767bf6e6550
---- /dev/null
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 IBM Corporation
-+ * Author: Nayna Jain <nayna@linux.ibm.com>
-+ *
-+ * ima_arch.c
-+ *      - initialize ima policies for PowerPC Secure Boot
-+ */
-+
-+#include <linux/ima.h>
-+#include <asm/secboot.h>
-+
-+bool arch_ima_get_secureboot(void)
-+{
-+	bool sb_mode;
-+
-+	sb_mode = get_powerpc_sb_mode();
-+	if (sb_mode)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+/*
-+ * File signature verification is not needed, include only measurements
-+ */
-+static const char *const default_arch_rules[] = {
-+	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
-+	"measure func=MODULE_CHECK template=ima-modsig",
-+	NULL
-+};
-+
-+/* Both file signature verification and measurements are needed */
-+static const char *const sb_arch_rules[] = {
-+	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
-+	"measure func=MODULE_CHECK template=ima-modsig",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig template=ima-modsig",
-+#if !IS_ENABLED(CONFIG_MODULE_SIG)
-+	"appraise func=MODULE_CHECK appraise_type=imasig|modsig template=ima-modsig",
-+#endif
-+	NULL
-+};
-+
-+/*
-+ * On PowerPC, file measurements are to be added to the IMA measurement list
-+ * irrespective of the secure boot state of the system. Signature verification
-+ * is conditionally enabled based on the secure boot state.
-+ */
-+const char *const *arch_get_ima_policy(void)
-+{
-+	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot())
-+		return sb_arch_rules;
-+	return default_arch_rules;
-+}
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index fd9f7cf4cdf5..a01df076ecae 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -31,7 +31,8 @@ extern void ima_post_path_mknod(struct dentry *dentry);
- extern void ima_add_kexec_buffer(struct kimage *image);
- #endif
- 
--#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390)
-+#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
-+	|| defined(CONFIG_PPC_SECURE_BOOT)
- extern bool arch_ima_get_secureboot(void);
- extern const char * const *arch_get_ima_policy(void);
- #else
 -- 
-2.20.1
-
+Dmitry
