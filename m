@@ -4,65 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA786C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7655DC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D492089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3589020673
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:32:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=vmwopensource.org header.i=@vmwopensource.org header.b="FAcj3LkU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=vmwopensource.org header.i=@vmwopensource.org header.b="RyARfwIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389105AbfFKMcs (ORCPT
+        id S2389341AbfFKMcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:32:48 -0400
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:33264 "EHLO
+        Tue, 11 Jun 2019 08:32:53 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:9730 "EHLO
         ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388978AbfFKMcs (ORCPT
+        with ESMTP id S2388911AbfFKMcs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Jun 2019 08:32:48 -0400
+X-Greylist: delayed 439 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 08:32:46 EDT
 Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 044273F6AF;
-        Tue, 11 Jun 2019 14:25:26 +0200 (CEST)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 148373F633;
+        Tue, 11 Jun 2019 14:25:24 +0200 (CEST)
 Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=FAcj3LkU;
+        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=RyARfwIF;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
 Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
         dkim=pass (1024-bit key) header.d=vmwopensource.org
 Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
         by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id idaUZo_s1TSE; Tue, 11 Jun 2019 14:25:14 +0200 (CEST)
+        with ESMTP id CXn9JH6tdl4E; Tue, 11 Jun 2019 14:25:09 +0200 (CEST)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id B9E203F234;
-        Tue, 11 Jun 2019 14:25:09 +0200 (CEST)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 8F91C3F566;
+        Tue, 11 Jun 2019 14:25:08 +0200 (CEST)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 0ABDC361B7D;
-        Tue, 11 Jun 2019 14:25:09 +0200 (CEST)
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 47F1A3619F7;
+        Tue, 11 Jun 2019 14:25:08 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=vmwopensource.org;
-        s=mail; t=1560255909;
-        bh=ywu99SLn6S80+sqVBhdQUXNvrrN564QuiBbE0vgNWMU=;
+        s=mail; t=1560255908;
+        bh=MG0HfLcgqDRwxcPIDolCLkQDrfh6DF2qVfbCiXX/p4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FAcj3LkUS1YxWE3jLy9dYcK+X+wepDBNovbSe0Mmbgm29d8XMXJpnH1Jy7aOFlgXy
-         EWIj/FBVnoLODMKsWuQPQEfh2Rp83JVPG4m9lNsNtyz24Qz9784FcUoqPyi4eC0m0n
-         cPkksz+JkupHJpl5xRYteBerKjvZBm20r5KyXl50=
+        b=RyARfwIFJWOrkzXAOtSGCWJOroGc1STB77+TLw3mEE8m34xj5NYLlh7EeJffzNfQN
+         brhdf7u4OLw5jNY+7WcaqDYY+6rLRmBeY5HuSI/P2Z+HEDoUi9uBB2PAzmYVkR0goB
+         8cwe8pJKQvaUXg1idEnSACT2ivHkZnc1DFEGAUC4=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thellstrom@vmwopensource.org>
 To:     dri-devel@lists.freedesktop.org
 Cc:     linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
         linux-kernel@vger.kernel.org,
         Thomas Hellstrom <thellstrom@vmware.com>,
-        Deepak Rawat <drawat@vmware.com>
-Subject: [PATCH v4 7/9] drm/vmwgfx: Use an RBtree instead of linked list for MOB resources
-Date:   Tue, 11 Jun 2019 14:24:52 +0200
-Message-Id: <20190611122454.3075-8-thellstrom@vmwopensource.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH v4 2/9] mm: Add an apply_to_pfn_range interface
+Date:   Tue, 11 Jun 2019 14:24:47 +0200
+Message-Id: <20190611122454.3075-3-thellstrom@vmwopensource.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611122454.3075-1-thellstrom@vmwopensource.org>
 References: <20190611122454.3075-1-thellstrom@vmwopensource.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -71,176 +83,293 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-With emulated coherent memory we need to be able to quickly look up
-a resource from the MOB offset. Instead of traversing a linked list with
-O(n) worst case, use an RBtree with O(log n) worst case complexity.
+This is basically apply_to_page_range with added functionality:
+Allocating missing parts of the page table becomes optional, which
+means that the function can be guaranteed not to error if allocation
+is disabled. Also passing of the closure struct and callback function
+becomes different and more in line with how things are done elsewhere.
+
+Finally we keep apply_to_page_range as a wrapper around apply_to_pfn_range
+
+The reason for not using the page-walk code is that we want to perform
+the page-walk on vmas pointing to an address space without requiring the
+mmap_sem to be held rather than on vmas belonging to a process with the
+mmap_sem held.
+
+Notable changes since RFC:
+Don't export apply_to_pfn range.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com> #v1
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_bo.c       |  5 ++--
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h      | 10 +++----
- drivers/gpu/drm/vmwgfx/vmwgfx_resource.c | 33 +++++++++++++++++-------
- 3 files changed, 32 insertions(+), 16 deletions(-)
+ include/linux/mm.h |  10 ++++
+ mm/memory.c        | 135 ++++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 113 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-index 90ca866640fe..e8bc7a7ac031 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-@@ -464,6 +464,7 @@ void vmw_bo_bo_free(struct ttm_buffer_object *bo)
- 	struct vmw_buffer_object *vmw_bo = vmw_buffer_object(bo);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 0e8834ac32b7..3d06ce2a64af 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2675,6 +2675,16 @@ typedef int (*pte_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
+ extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
+ 			       unsigned long size, pte_fn_t fn, void *data);
  
- 	WARN_ON(vmw_bo->dirty);
-+	WARN_ON(!RB_EMPTY_ROOT(&vmw_bo->res_tree));
- 	vmw_bo_unmap(vmw_bo);
- 	kfree(vmw_bo);
++struct pfn_range_apply;
++typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
++			 struct pfn_range_apply *closure);
++struct pfn_range_apply {
++	struct mm_struct *mm;
++	pter_fn_t ptefn;
++	unsigned int alloc;
++};
++extern int apply_to_pfn_range(struct pfn_range_apply *closure,
++			      unsigned long address, unsigned long size);
+ 
+ #ifdef CONFIG_PAGE_POISONING
+ extern bool page_poisoning_enabled(void);
+diff --git a/mm/memory.c b/mm/memory.c
+index 168f546af1ad..462aa47f8878 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2032,18 +2032,17 @@ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long
  }
-@@ -480,6 +481,7 @@ static void vmw_user_bo_destroy(struct ttm_buffer_object *bo)
- 	struct vmw_buffer_object *vbo = &vmw_user_bo->vbo;
+ EXPORT_SYMBOL(vm_iomap_memory);
  
- 	WARN_ON(vbo->dirty);
-+	WARN_ON(!RB_EMPTY_ROOT(&vbo->res_tree));
- 	vmw_bo_unmap(vbo);
- 	ttm_prime_object_kfree(vmw_user_bo, prime);
- }
-@@ -515,8 +517,7 @@ int vmw_bo_init(struct vmw_private *dev_priv,
- 	memset(vmw_bo, 0, sizeof(*vmw_bo));
- 	BUILD_BUG_ON(TTM_MAX_BO_PRIORITY <= 3);
- 	vmw_bo->base.priority = 3;
--
--	INIT_LIST_HEAD(&vmw_bo->res_list);
-+	vmw_bo->res_tree = RB_ROOT;
- 
- 	ret = ttm_bo_init(bdev, &vmw_bo->base, size,
- 			  ttm_bo_type_device, placement,
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index 27c259395790..9b347923196f 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -89,7 +89,7 @@ struct vmw_fpriv {
- /**
-  * struct vmw_buffer_object - TTM buffer object with vmwgfx additions
-  * @base: The TTM buffer object
-- * @res_list: List of resources using this buffer object as a backing MOB
-+ * @res_tree: RB tree of resources using this buffer object as a backing MOB
-  * @pin_count: pin depth
-  * @dx_query_ctx: DX context if this buffer object is used as a DX query MOB
-  * @map: Kmap object for semi-persistent mappings
-@@ -98,7 +98,7 @@ struct vmw_fpriv {
-  */
- struct vmw_buffer_object {
- 	struct ttm_buffer_object base;
--	struct list_head res_list;
-+	struct rb_root res_tree;
- 	s32 pin_count;
- 	/* Not ref-counted.  Protected by binding_mutex */
- 	struct vmw_resource *dx_query_ctx;
-@@ -146,8 +146,8 @@ struct vmw_res_func;
-  * pin-count greater than zero. It is not on the resource LRU lists and its
-  * backup buffer is pinned. Hence it can't be evicted.
-  * @func: Method vtable for this resource. Immutable.
-+ * @mob_node; Node for the MOB backup rbtree. Protected by @backup reserved.
-  * @lru_head: List head for the LRU list. Protected by @dev_priv::resource_lock.
-- * @mob_head: List head for the MOB backup list. Protected by @backup reserved.
-  * @binding_head: List head for the context binding list. Protected by
-  * the @dev_priv::binding_mutex
-  * @res_free: The resource destructor.
-@@ -168,8 +168,8 @@ struct vmw_resource {
- 	unsigned long backup_offset;
- 	unsigned long pin_count;
- 	const struct vmw_res_func *func;
-+	struct rb_node mob_node;
- 	struct list_head lru_head;
--	struct list_head mob_head;
- 	struct list_head binding_head;
- 	struct vmw_resource_dirty *dirty;
- 	void (*res_free) (struct vmw_resource *res);
-@@ -742,7 +742,7 @@ void vmw_resource_dirty_update(struct vmw_resource *res, pgoff_t start,
-  */
- static inline bool vmw_resource_mob_attached(const struct vmw_resource *res)
+-static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+-				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data)
++static int apply_to_pte_range(struct pfn_range_apply *closure, pmd_t *pmd,
++			      unsigned long addr, unsigned long end)
  {
--	return !list_empty(&res->mob_head);
-+	return !RB_EMPTY_NODE(&res->mob_node);
+ 	pte_t *pte;
+ 	int err;
+ 	pgtable_t token;
+ 	spinlock_t *uninitialized_var(ptl);
+ 
+-	pte = (mm == &init_mm) ?
++	pte = (closure->mm == &init_mm) ?
+ 		pte_alloc_kernel(pmd, addr) :
+-		pte_alloc_map_lock(mm, pmd, addr, &ptl);
++		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
+ 	if (!pte)
+ 		return -ENOMEM;
+ 
+@@ -2054,86 +2053,109 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+ 	token = pmd_pgtable(*pmd);
+ 
+ 	do {
+-		err = fn(pte++, token, addr, data);
++		err = closure->ptefn(pte++, token, addr, closure);
+ 		if (err)
+ 			break;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+ 	arch_leave_lazy_mmu_mode();
+ 
+-	if (mm != &init_mm)
++	if (closure->mm != &init_mm)
+ 		pte_unmap_unlock(pte-1, ptl);
+ 	return err;
  }
  
- /**
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-index da9afa83fb4f..b84dd5953886 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-@@ -41,11 +41,24 @@
- void vmw_resource_mob_attach(struct vmw_resource *res)
+-static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+-				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data)
++static int apply_to_pmd_range(struct pfn_range_apply *closure, pud_t *pud,
++			      unsigned long addr, unsigned long end)
  {
- 	struct vmw_buffer_object *backup = res->backup;
-+	struct rb_node **new = &backup->res_tree.rb_node, *parent = NULL;
+ 	pmd_t *pmd;
+ 	unsigned long next;
+-	int err;
++	int err = 0;
  
- 	lockdep_assert_held(&backup->base.resv->lock.base);
- 	res->used_prio = (res->res_dirty) ? res->func->dirty_prio :
- 		res->func->prio;
--	list_add_tail(&res->mob_head, &backup->res_list);
+ 	BUG_ON(pud_huge(*pud));
+ 
+-	pmd = pmd_alloc(mm, pud, addr);
++	pmd = pmd_alloc(closure->mm, pud, addr);
+ 	if (!pmd)
+ 		return -ENOMEM;
 +
-+	while (*new) {
-+		struct vmw_resource *this =
-+			container_of(*new, struct vmw_resource, mob_node);
-+
-+		parent = *new;
-+		new = (res->backup_offset < this->backup_offset) ?
-+			&((*new)->rb_left) : &((*new)->rb_right);
-+	}
-+
-+	rb_link_node(&res->mob_node, parent, new);
-+	rb_insert_color(&res->mob_node, &backup->res_tree);
-+
- 	vmw_bo_prio_add(backup, res->used_prio);
+ 	do {
+ 		next = pmd_addr_end(addr, end);
+-		err = apply_to_pte_range(mm, pmd, addr, next, fn, data);
++		if (!closure->alloc && pmd_none_or_clear_bad(pmd))
++			continue;
++		err = apply_to_pte_range(closure, pmd, addr, next);
+ 		if (err)
+ 			break;
+ 	} while (pmd++, addr = next, addr != end);
+ 	return err;
  }
  
-@@ -59,7 +72,8 @@ void vmw_resource_mob_detach(struct vmw_resource *res)
+-static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+-				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data)
++static int apply_to_pud_range(struct pfn_range_apply *closure, p4d_t *p4d,
++			      unsigned long addr, unsigned long end)
+ {
+ 	pud_t *pud;
+ 	unsigned long next;
+-	int err;
++	int err = 0;
  
- 	lockdep_assert_held(&backup->base.resv->lock.base);
- 	if (vmw_resource_mob_attached(res)) {
--		list_del_init(&res->mob_head);
-+		rb_erase(&res->mob_node, &backup->res_tree);
-+		RB_CLEAR_NODE(&res->mob_node);
- 		vmw_bo_prio_del(backup, res->used_prio);
- 	}
+-	pud = pud_alloc(mm, p4d, addr);
++	pud = pud_alloc(closure->mm, p4d, addr);
+ 	if (!pud)
+ 		return -ENOMEM;
++
+ 	do {
+ 		next = pud_addr_end(addr, end);
+-		err = apply_to_pmd_range(mm, pud, addr, next, fn, data);
++		if (!closure->alloc && pud_none_or_clear_bad(pud))
++			continue;
++		err = apply_to_pmd_range(closure, pud, addr, next);
+ 		if (err)
+ 			break;
+ 	} while (pud++, addr = next, addr != end);
+ 	return err;
  }
-@@ -206,8 +220,8 @@ int vmw_resource_init(struct vmw_private *dev_priv, struct vmw_resource *res,
- 	res->res_free = res_free;
- 	res->dev_priv = dev_priv;
- 	res->func = func;
-+	RB_CLEAR_NODE(&res->mob_node);
- 	INIT_LIST_HEAD(&res->lru_head);
--	INIT_LIST_HEAD(&res->mob_head);
- 	INIT_LIST_HEAD(&res->binding_head);
- 	res->id = -1;
- 	res->backup = NULL;
-@@ -756,19 +770,20 @@ int vmw_resource_validate(struct vmw_resource *res, bool intr)
+ 
+-static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+-				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data)
++static int apply_to_p4d_range(struct pfn_range_apply *closure, pgd_t *pgd,
++			      unsigned long addr, unsigned long end)
+ {
+ 	p4d_t *p4d;
+ 	unsigned long next;
+-	int err;
++	int err = 0;
+ 
+-	p4d = p4d_alloc(mm, pgd, addr);
++	p4d = p4d_alloc(closure->mm, pgd, addr);
+ 	if (!p4d)
+ 		return -ENOMEM;
++
+ 	do {
+ 		next = p4d_addr_end(addr, end);
+-		err = apply_to_pud_range(mm, p4d, addr, next, fn, data);
++		if (!closure->alloc && p4d_none_or_clear_bad(p4d))
++			continue;
++		err = apply_to_pud_range(closure, p4d, addr, next);
+ 		if (err)
+ 			break;
+ 	} while (p4d++, addr = next, addr != end);
+ 	return err;
+ }
+ 
+-/*
+- * Scan a region of virtual memory, filling in page tables as necessary
+- * and calling a provided function on each leaf page table.
++/**
++ * apply_to_pfn_range - Scan a region of virtual memory, calling a provided
++ * function on each leaf page table entry
++ * @closure: Details about how to scan and what function to apply
++ * @addr: Start virtual address
++ * @size: Size of the region
++ *
++ * If @closure->alloc is set to 1, the function will fill in the page table
++ * as necessary. Otherwise it will skip non-present parts.
++ * Note: The caller must ensure that the range does not contain huge pages.
++ * The caller must also assure that the proper mmu_notifier functions are
++ * called before and after the call to apply_to_pfn_range.
++ *
++ * WARNING: Do not use this function unless you know exactly what you are
++ * doing. It is lacking support for huge pages and transparent huge pages.
++ *
++ * Return: Zero on success. If the provided function returns a non-zero status,
++ * the page table walk will terminate and that status will be returned.
++ * If @closure->alloc is set to 1, then this function may also return memory
++ * allocation errors arising from allocating page table memory.
   */
- void vmw_resource_unbind_list(struct vmw_buffer_object *vbo)
+-int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+-			unsigned long size, pte_fn_t fn, void *data)
++int apply_to_pfn_range(struct pfn_range_apply *closure,
++		       unsigned long addr, unsigned long size)
  {
--
--	struct vmw_resource *res, *next;
- 	struct ttm_validate_buffer val_buf = {
- 		.bo = &vbo->base,
- 		.num_shared = 0
- 	};
+ 	pgd_t *pgd;
+ 	unsigned long next;
+@@ -2143,16 +2165,65 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+ 	if (WARN_ON(addr >= end))
+ 		return -EINVAL;
  
- 	lockdep_assert_held(&vbo->base.resv->lock.base);
--	list_for_each_entry_safe(res, next, &vbo->res_list, mob_head) {
--		if (!res->func->unbind)
--			continue;
-+	while (!RB_EMPTY_ROOT(&vbo->res_tree)) {
-+		struct rb_node *node = vbo->res_tree.rb_node;
-+		struct vmw_resource *res =
-+			container_of(node, struct vmw_resource, mob_node);
+-	pgd = pgd_offset(mm, addr);
++	pgd = pgd_offset(closure->mm, addr);
+ 	do {
+ 		next = pgd_addr_end(addr, end);
+-		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data);
++		if (!closure->alloc && pgd_none_or_clear_bad(pgd))
++			continue;
++		err = apply_to_p4d_range(closure, pgd, addr, next);
+ 		if (err)
+ 			break;
+ 	} while (pgd++, addr = next, addr != end);
+ 
+ 	return err;
+ }
 +
-+		if (!WARN_ON_ONCE(!res->func->unbind))
-+			(void) res->func->unbind(res, res->res_dirty, &val_buf);
++/**
++ * struct page_range_apply - Closure structure for apply_to_page_range()
++ * @pter: The base closure structure we derive from
++ * @fn: The leaf pte function to call
++ * @data: The leaf pte function closure
++ */
++struct page_range_apply {
++	struct pfn_range_apply pter;
++	pte_fn_t fn;
++	void *data;
++};
++
++/*
++ * Callback wrapper to enable use of apply_to_pfn_range for
++ * the apply_to_page_range interface
++ */
++static int apply_to_page_range_wrapper(pte_t *pte, pgtable_t token,
++				       unsigned long addr,
++				       struct pfn_range_apply *pter)
++{
++	struct page_range_apply *pra =
++		container_of(pter, typeof(*pra), pter);
++
++	return pra->fn(pte, token, addr, pra->data);
++}
++
++/*
++ * Scan a region of virtual memory, filling in page tables as necessary
++ * and calling a provided function on each leaf page table.
++ *
++ * WARNING: Do not use this function unless you know exactly what you are
++ * doing. It is lacking support for huge pages and transparent huge pages.
++ */
++int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
++			unsigned long size, pte_fn_t fn, void *data)
++{
++	struct page_range_apply pra = {
++		.pter = {.mm = mm,
++			 .alloc = 1,
++			 .ptefn = apply_to_page_range_wrapper },
++		.fn = fn,
++		.data = data
++	};
++
++	return apply_to_pfn_range(&pra.pter, addr, size);
++}
+ EXPORT_SYMBOL_GPL(apply_to_page_range);
  
--		(void) res->func->unbind(res, res->res_dirty, &val_buf);
- 		res->backup_dirty = true;
- 		res->res_dirty = false;
- 		vmw_resource_mob_detach(res);
+ /*
 -- 
 2.20.1
 
