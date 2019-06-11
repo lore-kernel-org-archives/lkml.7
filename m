@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351EDC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3F4C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092E82089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C74F212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391650AbfFKOzQ (ORCPT
+        id S1729080AbfFKO4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:55:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52480 "EHLO mx1.suse.de"
+        Tue, 11 Jun 2019 10:56:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52422 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391625AbfFKOzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:55:14 -0400
+        id S2391593AbfFKOzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:55:10 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0EDC5AFBD;
-        Tue, 11 Jun 2019 14:55:12 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 7FD17AF0C;
+        Tue, 11 Jun 2019 14:55:08 +0000 (UTC)
 From:   Roman Penyaev <rpenyaev@suse.de>
 Cc:     Roman Penyaev <rpenyaev@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 05/14] epoll: offload polling to a work in case of epfd polled from userspace
-Date:   Tue, 11 Jun 2019 16:54:49 +0200
-Message-Id: <20190611145458.9540-6-rpenyaev@suse.de>
+Subject: [PATCH v4 03/14] epoll: allocate user header and user events ring for polling from userspace
+Date:   Tue, 11 Jun 2019 16:54:47 +0200
+Message-Id: <20190611145458.9540-4-rpenyaev@suse.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190611145458.9540-1-rpenyaev@suse.de>
 References: <20190611145458.9540-1-rpenyaev@suse.de>
@@ -43,16 +43,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not every device reports pollflags on wake_up(), expecting that it will be
-polled later.  vfs_poll() can't be called from ep_poll_callback(), because
-ep_poll_callback() is called under the spinlock.  Obviously userspace can't
-call vfs_poll(), thus epoll has to offload vfs_poll() to a work and then to
-call ep_poll_callback() with pollflags in a hand.
-
-In order not to bloat the size of `struct epitem` with `struct work_struct`
-new `struct uepitem` includes original epi and work.  Thus for ep pollable
-from user new `struct uepitem` will be allocated.  This will be done in
-the following patches.
+This one allocates user header and user events ring according to max items
+number, passed as a parameter.  User events (index) ring is in a pow2.
+Pages, which will be shared between kernel and userspace, are accounted
+through user->locked_vm counter.
 
 Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -61,235 +55,248 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- fs/eventpoll.c | 131 ++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 107 insertions(+), 24 deletions(-)
+ fs/eventpoll.c                 | 138 +++++++++++++++++++++++++++++++--
+ include/uapi/linux/eventpoll.h |   3 +-
+ 2 files changed, 133 insertions(+), 8 deletions(-)
 
 diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 529573266ff5..fc2bb0c8e9dd 100644
+index 90dc75ad4144..3a5c4d641ff0 100644
 --- a/fs/eventpoll.c
 +++ b/fs/eventpoll.c
-@@ -38,6 +38,7 @@
- #include <linux/seq_file.h>
- #include <linux/compat.h>
- #include <linux/rculist.h>
-+#include <linux/workqueue.h>
- #include <net/busy_poll.h>
+@@ -228,6 +228,33 @@ struct eventpoll {
  
- /*
-@@ -184,6 +185,18 @@ struct epitem {
- 	struct epoll_event event;
- };
+ 	struct file *file;
  
-+/*
-+ * The only purpose of this structure is not to inflate the size of the
-+ * 'struct epitem' if polling from user is not used.
-+ */
-+struct uepitem {
-+	/* Includes ep item */
-+	struct epitem epi;
++	/* User header with array of items */
++	struct epoll_uheader *user_header;
 +
-+	/* Work for offloading event callback */
-+	struct work_struct work;
-+};
++	/* User index, which acts as a ring of coming events */
++	unsigned int *user_index;
 +
- /*
-  * This structure is stored inside the "private_data" member of the file
-  * structure and represents the main data structure for the eventpoll
-@@ -313,6 +326,9 @@ static struct nested_calls poll_loop_ncalls;
- /* Slab cache used to allocate "struct epitem" */
- static struct kmem_cache *epi_cache __read_mostly;
- 
-+/* Slab cache used to allocate "struct uepitem" */
-+static struct kmem_cache *uepi_cache __read_mostly;
++	/* Actual length of user header, always aligned on page */
++	unsigned int header_length;
 +
- /* Slab cache used to allocate "struct eppoll_entry" */
- static struct kmem_cache *pwq_cache __read_mostly;
- 
-@@ -391,6 +407,12 @@ static inline struct epitem *ep_item_from_epqueue(poll_table *p)
- 	return container_of(p, struct ep_pqueue, pt)->epi;
- }
- 
-+/* Get the "struct uepitem" from an generic epitem. */
-+static inline struct uepitem *uep_item_from_epi(struct epitem *p)
-+{
-+	return container_of(p, struct uepitem, epi);
-+}
++	/* Actual length of user index, always pow2 */
++	unsigned int index_length;
 +
- /* Tells if the epoll_ctl(2) operation needs an event copy from userspace */
- static inline int ep_op_has_event(int op)
- {
-@@ -698,6 +720,14 @@ static void ep_unregister_pollwait(struct eventpoll *ep, struct epitem *epi)
- 		ep_remove_wait_queue(pwq);
- 		kmem_cache_free(pwq_cache, pwq);
- 	}
-+	if (ep_polled_by_user(ep)) {
-+		/*
-+		 * Events polled by user require offloading to a work,
-+		 * thus we have to be sure everything which was queued
-+		 * has run to a completion.
-+		 */
-+		flush_work(&uep_item_from_epi(epi)->work);
-+	}
- }
- 
- /* call only when ep->mtx is held */
-@@ -1343,9 +1373,8 @@ static inline bool chain_epi_lockless(struct epitem *epi)
- }
- 
- /*
-- * This is the callback that is passed to the wait queue wakeup
-- * mechanism. It is called by the stored file descriptors when they
-- * have events to report.
-+ * This is the callback that is called directly from wake queue wakeup or
-+ * from a work.
-  *
-  * This callback takes a read lock in order not to content with concurrent
-  * events from another file descriptors, thus all modifications to ->rdllist
-@@ -1360,14 +1389,11 @@ static inline bool chain_epi_lockless(struct epitem *epi)
-  * queues are used should be detected accordingly.  This is detected using
-  * cmpxchg() operation.
-  */
--static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, void *key)
-+static int ep_poll_callback(struct epitem *epi, __poll_t pollflags)
- {
--	int pwake = 0;
--	struct epitem *epi = ep_item_from_wait(wait);
- 	struct eventpoll *ep = epi->ep;
--	__poll_t pollflags = key_to_poll(key);
-+	int pwake = 0, ewake = 0;
- 	unsigned long flags;
--	int ewake = 0;
- 
- 	read_lock_irqsave(&ep->lock, flags);
- 
-@@ -1385,8 +1411,9 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
- 	/*
- 	 * Check the events coming with the callback. At this stage, not
- 	 * every device reports the events in the "key" parameter of the
--	 * callback. We need to be able to handle both cases here, hence the
--	 * test for "key" != NULL before the event match test.
-+	 * callback (for ep_poll_callback() case special worker is used).
-+	 * We need to be able to handle both cases here, hence the test
-+	 * for "key" != NULL before the event match test.
- 	 */
- 	if (pollflags && !(pollflags & epi->event.events))
- 		goto out_unlock;
-@@ -1446,23 +1473,68 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
- 	if (!(epi->event.events & EPOLLEXCLUSIVE))
- 		ewake = 1;
- 
--	if (pollflags & POLLFREE) {
--		/*
--		 * If we race with ep_remove_wait_queue() it can miss
--		 * ->whead = NULL and do another remove_wait_queue() after
--		 * us, so we can't use __remove_wait_queue().
--		 */
--		list_del_init(&wait->entry);
-+	return ewake;
-+}
++	/* Maximum possible event items */
++	unsigned int max_items_nr;
 +
-+static void ep_poll_callback_work(struct work_struct *work)
-+{
-+	struct uepitem *uepi = container_of(work, typeof(*uepi), work);
-+	struct epitem *epi = &uepi->epi;
-+	__poll_t pollflags;
-+	poll_table pt;
++	/* Items bitmap, is used to get a free bit for new registered epi */
++	unsigned long *items_bm;
 +
-+	WARN_ON(!ep_polled_by_user(epi->ep));
++	/* Length of both items bitmaps, always aligned on page */
++	unsigned int items_bm_length;
 +
-+	init_poll_funcptr(&pt, NULL);
-+	pollflags = ep_item_poll(epi, &pt, 1);
-+	if (pollflags)
-+		(void)ep_poll_callback(epi, pollflags);
-+}
-+
-+/*
-+ * This is the callback that is passed to the wait queue wakeup
-+ * mechanism. It is called by the stored file descriptors when they
-+ * have events to report.
-+ */
-+static int ep_poll_wakeup(wait_queue_entry_t *wait, unsigned int mode,
-+			  int sync, void *key)
-+{
-+
-+	struct epitem *epi = ep_item_from_wait(wait);
-+	struct eventpoll *ep = epi->ep;
-+	__poll_t pollflags = key_to_poll(key);
-+	int rc;
-+
-+	if (!ep_polled_by_user(ep) || pollflags) {
-+		rc = ep_poll_callback(epi, pollflags);
-+
-+		if (pollflags & POLLFREE) {
-+			/*
-+			 * If we race with ep_remove_wait_queue() it can miss
-+			 * ->whead = NULL and do another remove_wait_queue()
-+			 * after us, so we can't use __remove_wait_queue().
-+			 */
-+			list_del_init(&wait->entry);
-+			/*
-+			 * ->whead != NULL protects us from the race with
-+			 * ep_free() or ep_remove(), ep_remove_wait_queue()
-+			 * takes whead->lock held by the caller. Once we nullify
-+			 * it, nothing protects ep/epi or even wait.
-+			 */
-+			smp_store_release(&ep_pwq_from_wait(wait)->whead, NULL);
-+		}
-+	} else {
-+		queue_work(system_highpri_wq, &uep_item_from_epi(epi)->work);
-+
- 		/*
--		 * ->whead != NULL protects us from the race with ep_free()
--		 * or ep_remove(), ep_remove_wait_queue() takes whead->lock
--		 * held by the caller. Once we nullify it, nothing protects
--		 * ep/epi or even wait.
-+		 * Here on this path we are absolutely sure that for file
-+		 * descriptors which are pollable from userspace we do not
-+		 * support EPOLLEXCLUSIVE, so it is safe to return 1.
- 		 */
--		smp_store_release(&ep_pwq_from_wait(wait)->whead, NULL);
-+		rc = 1;
- 	}
- 
--	return ewake;
-+	return rc;
- }
- 
- /*
-@@ -1476,7 +1548,7 @@ static void ep_ptable_queue_proc(struct file *file, wait_queue_head_t *whead,
- 	struct eppoll_entry *pwq;
- 
- 	if (epi->nwait >= 0 && (pwq = kmem_cache_alloc(pwq_cache, GFP_KERNEL))) {
--		init_waitqueue_func_entry(&pwq->wait, ep_poll_callback);
-+		init_waitqueue_func_entry(&pwq->wait, ep_poll_wakeup);
- 		pwq->whead = whead;
- 		pwq->base = epi;
- 		if (epi->event.events & EPOLLEXCLUSIVE)
-@@ -2553,6 +2625,10 @@ static int __init eventpoll_init(void)
- 	/*
- 	 * We can have many thousands of epitems, so prevent this from
- 	 * using an extra cache line on 64-bit (and smaller) CPUs
-+	 *
-+	 * 'struct uepitem' is used for polling from userspace, it is
-+	 * slightly bigger than 128b because of the work struct, thus
-+	 * it is excluded from the check below.
- 	 */
- 	BUILD_BUG_ON(sizeof(void *) <= 8 && sizeof(struct epitem) > 128);
- 
-@@ -2560,6 +2636,13 @@ static int __init eventpoll_init(void)
- 	epi_cache = kmem_cache_create("eventpoll_epi", sizeof(struct epitem),
- 			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT, NULL);
- 
 +	/*
-+	 * Allocates slab cache used to allocate "struct uepitem" items,
-+	 * used only for polling from user.
++	 * Counter to support atomic and lockless ->tail updates.
++	 * See add_event_to_uring() for details of counter layout.
 +	 */
-+	uepi_cache = kmem_cache_create("eventpoll_uepi", sizeof(struct uepitem),
-+			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT, NULL);
++	atomic64_t shadow_cnt;
 +
- 	/* Allocates slab cache used to allocate "struct eppoll_entry" */
- 	pwq_cache = kmem_cache_create("eventpoll_pwq",
- 		sizeof(struct eppoll_entry), 0, SLAB_PANIC|SLAB_ACCOUNT, NULL);
+ 	/* used to optimize loop detection check */
+ 	int visited;
+ 	struct list_head visited_list_link;
+@@ -377,6 +404,27 @@ static void ep_nested_calls_init(struct nested_calls *ncalls)
+ 	spin_lock_init(&ncalls->lock);
+ }
+ 
++static inline unsigned int ep_to_items_length(unsigned int nr)
++{
++	struct epoll_uheader *user_header;
++
++	return PAGE_ALIGN(struct_size(user_header, items, nr));
++}
++
++static inline unsigned int ep_to_index_length(unsigned int nr)
++{
++	struct eventpoll *ep;
++	unsigned int size;
++
++	size = roundup_pow_of_two(nr << ilog2(sizeof(*ep->user_index)));
++	return max_t(typeof(size), size, PAGE_SIZE);
++}
++
++static inline unsigned int ep_to_items_bm_length(unsigned int nr)
++{
++	return PAGE_ALIGN(ALIGN(nr, 8) >> 3);
++}
++
+ /**
+  * ep_events_available - Checks if ready events might be available.
+  *
+@@ -832,6 +880,38 @@ static int ep_remove(struct eventpoll *ep, struct epitem *epi)
+ 	return 0;
+ }
+ 
++static int ep_account_mem(struct eventpoll *ep, struct user_struct *user)
++{
++	unsigned long nr_pages, page_limit, cur_pages, new_pages;
++
++	nr_pages  = ep->header_length >> PAGE_SHIFT;
++	nr_pages += ep->index_length >> PAGE_SHIFT;
++
++	/* Don't allow more pages than we can safely lock */
++	page_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
++
++	do {
++		cur_pages = atomic_long_read(&user->locked_vm);
++		new_pages = cur_pages + nr_pages;
++		if (new_pages > page_limit && !capable(CAP_IPC_LOCK))
++			return -ENOMEM;
++	} while (atomic_long_cmpxchg(&user->locked_vm, cur_pages,
++				     new_pages) != cur_pages);
++
++	return 0;
++}
++
++static void ep_unaccount_mem(struct eventpoll *ep, struct user_struct *user)
++{
++	unsigned long nr_pages;
++
++	nr_pages  = ep->header_length >> PAGE_SHIFT;
++	nr_pages += ep->index_length >> PAGE_SHIFT;
++	if (nr_pages)
++		/* When polled by user */
++		atomic_long_sub(nr_pages, &user->locked_vm);
++}
++
+ static void ep_free(struct eventpoll *ep)
+ {
+ 	struct rb_node *rbp;
+@@ -879,8 +959,12 @@ static void ep_free(struct eventpoll *ep)
+ 
+ 	mutex_unlock(&epmutex);
+ 	mutex_destroy(&ep->mtx);
+-	free_uid(ep->user);
+ 	wakeup_source_unregister(ep->ws);
++	vfree(ep->user_header);
++	vfree(ep->user_index);
++	vfree(ep->items_bm);
++	ep_unaccount_mem(ep, ep->user);
++	free_uid(ep->user);
+ 	kfree(ep);
+ }
+ 
+@@ -1033,7 +1117,7 @@ void eventpoll_release_file(struct file *file)
+ 	mutex_unlock(&epmutex);
+ }
+ 
+-static int ep_alloc(struct eventpoll **pep)
++static int ep_alloc(struct eventpoll **pep, int flags, size_t max_items)
+ {
+ 	int error;
+ 	struct user_struct *user;
+@@ -1045,6 +1129,39 @@ static int ep_alloc(struct eventpoll **pep)
+ 	if (unlikely(!ep))
+ 		goto free_uid;
+ 
++	if (flags & EPOLL_USERPOLL) {
++		BUILD_BUG_ON(sizeof(*ep->user_header) !=
++			     EPOLL_USERPOLL_HEADER_SIZE);
++		BUILD_BUG_ON(sizeof(ep->user_header->items[0]) != 16);
++
++		if (!max_items || max_items > EP_USERPOLL_MAX_ITEMS_NR) {
++			error = -EINVAL;
++			goto free_ep;
++		}
++		ep->max_items_nr = max_items;
++		ep->header_length = ep_to_items_length(max_items);
++		ep->index_length = ep_to_index_length(max_items);
++		ep->items_bm_length = ep_to_items_bm_length(max_items);
++
++		error = ep_account_mem(ep, user);
++		if (error)
++			goto free_ep;
++
++		ep->user_header = vmalloc_user(ep->header_length);
++		ep->user_index = vmalloc_user(ep->index_length);
++		ep->items_bm = vzalloc(ep->items_bm_length);
++		if (!ep->user_header || !ep->user_index || !ep->items_bm)
++			goto unaccount_mem;
++
++		*ep->user_header = (typeof(*ep->user_header)) {
++			.magic         = EPOLL_USERPOLL_HEADER_MAGIC,
++			.header_length = ep->header_length,
++			.index_length  = ep->index_length,
++			.max_items_nr  = ep->max_items_nr,
++		};
++	}
++
++	atomic64_set(&ep->shadow_cnt, 0);
+ 	mutex_init(&ep->mtx);
+ 	rwlock_init(&ep->lock);
+ 	init_waitqueue_head(&ep->wq);
+@@ -1058,6 +1175,13 @@ static int ep_alloc(struct eventpoll **pep)
+ 
+ 	return 0;
+ 
++unaccount_mem:
++	ep_unaccount_mem(ep, user);
++free_ep:
++	vfree(ep->user_header);
++	vfree(ep->user_index);
++	vfree(ep->items_bm);
++	kfree(ep);
+ free_uid:
+ 	free_uid(user);
+ 	return error;
+@@ -2062,7 +2186,7 @@ static void clear_tfile_check_list(void)
+ /*
+  * Open an eventpoll file descriptor.
+  */
+-static int do_epoll_create(int flags)
++static int do_epoll_create(int flags, size_t size)
+ {
+ 	int error, fd;
+ 	struct eventpoll *ep = NULL;
+@@ -2071,12 +2195,12 @@ static int do_epoll_create(int flags)
+ 	/* Check the EPOLL_* constant for consistency.  */
+ 	BUILD_BUG_ON(EPOLL_CLOEXEC != O_CLOEXEC);
+ 
+-	if (flags & ~EPOLL_CLOEXEC)
++	if (flags & ~(EPOLL_CLOEXEC | EPOLL_USERPOLL))
+ 		return -EINVAL;
+ 	/*
+ 	 * Create the internal data structure ("struct eventpoll").
+ 	 */
+-	error = ep_alloc(&ep);
++	error = ep_alloc(&ep, flags, size);
+ 	if (error < 0)
+ 		return error;
+ 	/*
+@@ -2107,7 +2231,7 @@ static int do_epoll_create(int flags)
+ 
+ SYSCALL_DEFINE1(epoll_create1, int, flags)
+ {
+-	return do_epoll_create(flags);
++	return do_epoll_create(flags, 0);
+ }
+ 
+ SYSCALL_DEFINE1(epoll_create, int, size)
+@@ -2115,7 +2239,7 @@ SYSCALL_DEFINE1(epoll_create, int, size)
+ 	if (size <= 0)
+ 		return -EINVAL;
+ 
+-	return do_epoll_create(0);
++	return do_epoll_create(0, 0);
+ }
+ 
+ /*
+diff --git a/include/uapi/linux/eventpoll.h b/include/uapi/linux/eventpoll.h
+index 3317901b19c4..efd58e9177c2 100644
+--- a/include/uapi/linux/eventpoll.h
++++ b/include/uapi/linux/eventpoll.h
+@@ -20,7 +20,8 @@
+ #include <linux/types.h>
+ 
+ /* Flags for epoll_create1.  */
+-#define EPOLL_CLOEXEC O_CLOEXEC
++#define EPOLL_CLOEXEC  O_CLOEXEC
++#define EPOLL_USERPOLL 1
+ 
+ /* Valid opcodes to issue to sys_epoll_ctl() */
+ #define EPOLL_CTL_ADD 1
 -- 
 2.21.0
 
