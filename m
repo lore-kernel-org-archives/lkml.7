@@ -2,155 +2,102 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3226C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CE0C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB98020673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:02:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiSHqTWD"
+	by mail.kernel.org (Postfix) with ESMTP id 0014720896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388666AbfFKLCG (ORCPT
+        id S2388707AbfFKLC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:02:06 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37991 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388629AbfFKLCF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:02:05 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v11so6770968pgl.5;
-        Tue, 11 Jun 2019 04:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FbfnQ+vyxLkky9Y2QN7piyoWYG4+Tbz+gCXalexofB0=;
-        b=ZiSHqTWDMwZI2ncl7CzllBTrpA5z72DaPReLrAyt7+0qSTaxxWRNMhzOBWGr1JI56Y
-         qi9RpektgZCibhRtOn+ktx8REAZo10rR/7Up+FAMlSZeEPA4XYnHblcrAp13yNegjr6+
-         mhPEcJrCIK3boLuR4OMqXbHALynvgH5NNj8SlgpiV0XTMX6sYx8PZxF3iudh0UoVNbFv
-         d8U1bEHaqVjqSCV7f7+GCjQT2r2MN5gGUr9wHhOB1csBBZkTvK32Z3w3iOBKWxpgZNnL
-         1mJuREZJYHWIY7SdEe+Lcq5ivHJo5SSlSHJga6OAJdxOH09pR4eeN/RfIBkNPEtAaMVX
-         q7Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FbfnQ+vyxLkky9Y2QN7piyoWYG4+Tbz+gCXalexofB0=;
-        b=h/EmZevCOJZQeKnyOeKrZRbqCVh7YMmwlNgMujsKN3dbc92jFY85vYKVTo0b+otLyU
-         iBcyMXgsF87DQWzfnfTvL84TlcrL81405dBLSLxZfPL5llUafZKcjgtZ4Au+s4+oIsVt
-         5+DiFT9BEwG4gLtvoiBw1DTEbcet9zMsEdeCJkTvxYsjEvoMefzuCYZ+k1iox5rp0xE+
-         eT7hbwnPgnlgghw1Zf5jts1r/uIzL++ZkLCquX/pEpGS0KRj95w4YXqu4LxFw2YFaiU4
-         4murETaBsq7cPFhnG7TZHmrPEWmgcXoJl5G/MlxYQIzgtczyOOCux4kKO5ffz89Oyb7U
-         iXMA==
-X-Gm-Message-State: APjAAAXtaTKD5/YWvoHx69sfQH1qXoMprM7L26eN4AqLlzVnwvaDyAUi
-        GcGerOtbNwjZ4y76yZq01U0gd5p3
-X-Google-Smtp-Source: APXvYqzLrsi7tvCerG4HlwMb+BvOOeMt0VY8IGu1xT+3WGJ2yVlQzaXQjG9a+bLlrRpZPyI/f+tMpQ==
-X-Received: by 2002:a63:cc4e:: with SMTP id q14mr19621119pgi.84.1560250924091;
-        Tue, 11 Jun 2019 04:02:04 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e4sm19432780pgi.80.2019.06.11.04.02.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 04:02:03 -0700 (PDT)
-Subject: Re: [PATCH v2 4/4] watchdog: jz4740: Make probe function
- __init_or_module
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>, od@zcrc.me,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190607162429.17915-1-paul@crapouillou.net>
- <20190607162429.17915-5-paul@crapouillou.net>
- <0dc0fd0a-54fc-5d70-af78-1874b5ece418@c-s.fr>
- <1559987821.1815.0@crapouillou.net>
- <78ef0273-5ec6-f522-428a-8429f40684ca@c-s.fr>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <f64db403-f8be-4e39-81e7-515b1c1c0c17@roeck-us.net>
-Date:   Tue, 11 Jun 2019 04:02:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 07:02:57 -0400
+Received: from twin.jikos.cz ([91.219.245.39]:58891 "EHLO twin.jikos.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388669AbfFKLC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:02:56 -0400
+X-Greylist: delayed 3594 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 07:02:55 EDT
+Received: from twin.jikos.cz (dave@[127.0.0.1])
+        by twin.jikos.cz (8.13.6/8.13.6) with ESMTP id x5BA1sTh019587
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Tue, 11 Jun 2019 12:01:55 +0200
+Received: (from dave@localhost)
+        by twin.jikos.cz (8.13.6/8.13.6/Submit) id x5BA1rtN019585;
+        Tue, 11 Jun 2019 12:01:53 +0200
+Date:   Tue, 11 Jun 2019 12:01:53 +0200
+From:   David Sterba <dave@jikos.cz>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        syzbot <syzbot+5b658d997a83984507a6@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: kernel BUG at fs/btrfs/volumes.c:LINE!
+Message-ID: <20190611100153.GD24160@twin.jikos.cz>
+Reply-To: dave@jikos.cz
+Mail-Followup-To: Eric Biggers <ebiggers@kernel.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        syzbot <syzbot+5b658d997a83984507a6@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <00000000000096009b056df92dc1@google.com>
+ <70a3c2d1-3f53-d4c0-13b3-29f836ec46d9@oracle.com>
+ <20180607153450.GF3215@twin.jikos.cz>
+ <CACT4Y+arBwkwhD-kob9fg1pVBXiMepW6KBK2LkhwjQ9HnDcoqw@mail.gmail.com>
+ <20180607165213.GI3215@twin.jikos.cz>
+ <20190610231403.GZ63833@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <78ef0273-5ec6-f522-428a-8429f40684ca@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610231403.GZ63833@gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 10:16 PM, Christophe Leroy wrote:
-> Hi Paul,
+On Mon, Jun 10, 2019 at 04:14:04PM -0700, Eric Biggers wrote:
+> On Thu, Jun 07, 2018 at 06:52:13PM +0200, David Sterba wrote:
+> > On Thu, Jun 07, 2018 at 06:28:02PM +0200, Dmitry Vyukov wrote:
+> > > > Normally the GFP_NOFS allocations do not fail so I think the fuzzer
+> > > > environment is tuned to allow that, which is fine for coverage but does
+> > > > not happen in practice. This will be fixed eventually.
+> > > 
+> > > Isn't GFP_NOFS more restricted than normal allocations?  Are these
+> > > allocations accounted against memcg? It's easy to fail any allocation
+> > > within a memory container.
+> > 
+> > https://lwn.net/Articles/723317/ The 'too small to fail' and some
+> > unwritten semantics of GFP_NOFS but I think you're right about the
+> > memory controler that can fail any allocation though.
+> > 
+> > Error handling is being improved over time, the memory allocation
+> > failures are in some cases hard and this one would need to update some
+> > logic so it's not a oneliner.
+> > 
 > 
-> Le 08/06/2019 à 11:57, Paul Cercueil a écrit :
->> Hi Christophe,
->>
->> Le sam. 8 juin 2019 à 9:51, Christophe Leroy <christophe.leroy@c-s.fr> a écrit :
->>> Hi Paul,
->>>
->>> Le 07/06/2019 à 18:24, Paul Cercueil a écrit :
->>>> This allows the probe function to be dropped after the kernel finished
->>>> its initialization, in the case where the driver was not compiled as a
->>>> module.
->>>
->>> I'm not sure that's what  __init_or_module flag does.
->>>
->>> As far as I understand, this flag makes the function being dropped only when the kernel is built without modules support, ie without CONFIG_MODULES. See https://elixir.bootlin.com/linux/latest/source/include/linux/module.h#L145
->>
->> So it doesn't depend on the driver being built-in or compiled as a module?
+> This bug is still there.  In btrfs_close_one_device():
 > 
-> No it doesn't. This flag is for built-in functions that are needed by init and modules init. If the kernel doesn't support modules, it can drop the function after init. If the kernel supports modules, it has to keep the function. That's what this flag is made for.
+> 	if (device->name) {
+> 		name = rcu_string_strdup(device->name->str, GFP_NOFS);
+> 		BUG_ON(!name); /* -ENOMEM */
+> 		rcu_assign_pointer(new_device->name, name);
+> 	}
 > 
-> If your need is to mark a function so that it gets discarded after init or module init, just mark it __init. If it is built in, it will be dropped after init. If it is in a module, it will be dropped after the module is initialised.
+> It assumes that the memory allocation succeeded.
 > 
->>
->>> In addition, I'm not sure you can simply define a probe function as __init. What if someone tries to unbind and rebind the device through sysfs for instance ?
->>
->> Ouch. I feel stupid now.
->>
->>> It seems there is a special function called __platform_driver_probe() for registering devices when the probe function is to be in __init, see https://elixir.bootlin.com/linux/latest/source/drivers/base/platform.c#L684
->>
->> Yes, but only usable by drivers that won't defer probe, and it removes the bind/unbind attributes from sysfs,
->> so it shouldn't be used for non-critical drivers, I think.
+> See syzbot report from v5.2-rc3 here: https://syzkaller.appspot.com/text?tag=CrashReport&x=16c839c1a00000
 > 
-> I guess it would make sense for watchdog drivers, we don't expect this kind of driver to be unbinded, do we ?
-> 
+> Is there any plan to fix this?
 
-Except for debugging, where it can be extremely useful to be able to do it.
-
-Guenter
-
-> Christophe
-> 
->>
->>> Christophe
->>>
->>>>
->>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>> ---
->>>>
->>>> Notes:
->>>>      v2: New patch
->>>>
->>>>   drivers/watchdog/jz4740_wdt.c | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
->>>> index 7519d80c5d05..2061788c1939 100644
->>>> --- a/drivers/watchdog/jz4740_wdt.c
->>>> +++ b/drivers/watchdog/jz4740_wdt.c
->>>> @@ -157,7 +157,7 @@ static const struct of_device_id jz4740_wdt_of_matches[] = {
->>>>   MODULE_DEVICE_TABLE(of, jz4740_wdt_of_matches);
->>>>   #endif
->>>>   -static int jz4740_wdt_probe(struct platform_device *pdev)
->>>> +static int __init_or_module jz4740_wdt_probe(struct platform_device *pdev)
->>>>   {
->>>>       struct device *dev = &pdev->dev;
->>>>       struct jz4740_wdt_drvdata *drvdata;
->>>>
->>
-> 
-
+Yes there is, to avoid allocations when closing the device and tracking
+the state in another way. As this has never been reported in practice
+the priority to fix it is rather low so I can't give you an ETA.
