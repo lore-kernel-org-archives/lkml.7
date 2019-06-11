@@ -2,135 +2,72 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48990C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9D1C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE25208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3225120896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:24:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I/UefZzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391456AbfFKOVU (ORCPT
+        id S2388808AbfFKOYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:21:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:22932 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387767AbfFKOVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:21:19 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1E922308218D;
-        Tue, 11 Jun 2019 14:21:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-126.rdu2.redhat.com [10.10.120.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D9956611AA;
-        Tue, 11 Jun 2019 14:21:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
-References: <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-usb@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: What do LSMs *actually* need for checks on notifications?
+        Tue, 11 Jun 2019 10:24:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41592 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387486AbfFKOYt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:24:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cAwSoiNOjCh49XGhHGTBldRGbI70g1E7SnqPU+lO6OU=; b=I/UefZzZ15oOLWR50UMcG5FNb
+        iiYmKkNDb/n9nOmfZnhv8mi7zJfX4MQ0akqHNzFkWe0rRdlb4nMljwDJ11NDXcFQhCz+PU18p8B5V
+        I2qFeRr+SuguvulKq4O/fIbqqwJIZfliCjGFvkU1EJVZiHQrxaDE5LDcfLgSI4M+O8PO/2BloC9Gn
+        7IcIb36/OFnJIhTDIhZqp/ezbkh0GtlsUg43c9UxphBlGJy6MesB8TSJLjLk0UmwHV58N59d+qOMv
+        d1HqA30hdpchxbWEW3f6CfnbArSviT8DPOon6BiG0ApRGaPzTjwxUO9UtckVjlz+SJLh6qibK3hWx
+        0Lq3PUOSA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hahhd-0003Gr-0m; Tue, 11 Jun 2019 14:24:45 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 168842023E4C7; Tue, 11 Jun 2019 16:24:43 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 16:24:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     bsegall@google.com, linux-kernel@vger.kernel.org,
+        Xunlei Pang <xlpang@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v2] sched/fair: don't push cfs_bandwith slack timers
+ forward
+Message-ID: <20190611142443.GZ3436@hirez.programming.kicks-ass.net>
+References: <xm26ef47yeyh.fsf@bsegall-linux.svl.corp.google.com>
+ <eafe846f-d83c-b2f3-4458-45e3ae6e5823@linux.alibaba.com>
+ <xm26a7euy6iq.fsf_-_@bsegall-linux.svl.corp.google.com>
+ <20190611135325.GY3436@hirez.programming.kicks-ass.net>
+ <20190611141219.GD15412@pauld.bos.csb>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <31008.1560262869.1@warthog.procyon.org.uk>
-Date:   Tue, 11 Jun 2019 15:21:09 +0100
-Message-ID: <31009.1560262869@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 11 Jun 2019 14:21:19 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611141219.GD15412@pauld.bos.csb>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To see if we can try and make progress on this, can we try and come at this
-from another angle: what do LSMs *actually* need to do this?  And I grant that
-each LSM might require different things.
+On Tue, Jun 11, 2019 at 10:12:19AM -0400, Phil Auld wrote:
 
--~-
+> That looks reasonable to me. 
+> 
+> Out of curiosity, why not bool? Is sizeof bool architecture dependent?
 
-[A] There are a bunch of things available, some of which may be coincident,
-depending on the context:
-
- (1) The creds of the process that created a watch_queue (ie. opened
-     /dev/watch_queue).
-
- (2) The creds of the process that set a watch (ie. called watch_sb,
-     KEYCTL_NOTIFY, ...);
-
- (3) The creds of the process that tripped the event (which might be the
-     system).
-
- (4) The security attributes of the object on which the watch was set (uid,
-     gid, mode, labels).
-
- (5) The security attributes of the object on which the event was tripped.
-
- (6) The security attributes of all the objects between the object in (5) and
-     the object in (4), assuming we work from (5) towards (4) if the two
-     aren't coincident (WATCH_INFO_RECURSIVE).
-
-At the moment, when post_one_notification() wants to write a notification into
-a queue, it calls security_post_notification() to ask if it should be allowed
-to do so.  This is passed (1) and (3) above plus the notification record.
-
-
-[B] There are a number of places I can usefully potentially add hooks:
-
- (a) The point at which a watch queue is created (ie. /dev/watch_queue is
-     opened).
-
- (b) The point at which a watch is set (ie. watch_sb).
-
- (c) The point at which a notification is generated (ie. an automount point is
-     tripped).
-
- (d) The point at which a notification is delivered (ie. we write the message
-     into the queue).
-
- (e) All the points at which we walk over an object in a chain from (c) to
-     find the watch on which we can effect (d) (eg. we walk rootwards from a
-     mountpoint to find watches on a branch in the mount topology).
-
-
-[C] Problems that need to be resolved:
-
- (x) Do I need to put a security pointer in struct watch for the active LSM to
-     fill in?  If so, I presume this would need passing to
-     security_post_notification().
-
- (y) What checks should be done on object destruction after final put and what
-     contexts need to be supplied?
-
-     This one is made all the harder because the creds that are in force when
-     close(), exit(), exec(), dup2(), etc. close a file descriptor might need
-     to be propagated to deferred-fput, which must in turn propagate them to
-     af_unix-cleanup, and thence back to deferred-fput and thence to implicit
-     unmount (dissolve_on_fput()[*]).
-
-     [*] Though it should be noted that if this happens, the subtree cannot be
-     	 attached to the root of a namespace.
-
-     Further, if several processes are sharing a file object, it's not
-     predictable as to which process the final notification will come from.
-
- (z) Do intermediate objects, say in a mount topology notification, actually
-     need to be checked against the watcher's creds?  For a mount topology
-     notification, would this require calling inode_permission() for each
-     intervening directory?
-
-     Doing that might be impractical as it would probably have to be done
-     outside of of the RCU read lock and the filesystem ->permission() hooks
-     might want to sleep (to touch disk or talk to a server).
-
-David
+Yeah, sizeof(_Bool) is unspecified and depends on ABI. It is mostly 1,
+but there are known cases where it is 4.
