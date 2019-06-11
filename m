@@ -2,127 +2,129 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AB5C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCE1C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C0921773
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:55:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c6xH5/Qv"
+	by mail.kernel.org (Postfix) with ESMTP id C1E5F21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560279333;
+	bh=0R2zOmorGZsNgEEEPiNEgjzKH2jE82jgb9T4TNAc6XE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=CkJ0TuxTZGgbEa7ST2YDt/L6WpPoVCns+AsmgcYlxCAzA1itALRSCS6v/yJlz5gaA
+	 djh1C/lt0Y60SbI2KoUjxRtTWQKOKIm2o4P9AjnpkENY3qDWoWZALMh2AHA6jLyfcM
+	 gbVPNFWo6cj7VVnPawjzcbrHE1iS+MMBfMDK+ShM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404061AbfFKSzO (ORCPT
+        id S2404230AbfFKSzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:55:14 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38728 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392161AbfFKSzO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:55:14 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v11so7459332pgl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=f3Fru+mwaeeiACG0X3g8c6CHiLSWKaplSTQC87ROeuQ=;
-        b=c6xH5/Qvawf6qJjZ/xM+E56es8JaiVT0/DwVftgp6f87+AJuA/RU/4CQiSYxjtTfmG
-         PSGytVbNJaOJtBjFzeOwwwcZDYYtXTZmoKwnT7IqB4KcdYfiPUlVDqNFeWYP6/AJw9uO
-         rrLzkJOifPfW/e9lmiCnGCeMRGrhln8IV1Ne8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=f3Fru+mwaeeiACG0X3g8c6CHiLSWKaplSTQC87ROeuQ=;
-        b=UB0rG4YryWd++pAFQ5OP6vtS9uZRSr1x6OvvhaTV3NqOyIG0J+vhIKCLtQwzwCBwLx
-         7ST4UhVzCirTe5EjcEn2B6yCdvwD/o4qA3wiZXNFCY1vFCzjV7khvSuY2zDderpOMSdc
-         JV+UgHnZFaz1FjKG1Y4tXfsC9PS7e6eRcnuIWnasZLNmIaRE3kGP/+p23w/V0a68sORj
-         sgvMnszEXS3E+GAEZNKJmGVIUwBrM9YENjwucZJFG2qqtfTH7JTkzgLIc3vOuX6dTjzB
-         9mU7r5Mu0BZWXYcGzlMZIdhlmDDC4DUzpTP+ElxwX6Nf8U5lN/PamIOhSa4ZZVr0I7zy
-         S+1A==
-X-Gm-Message-State: APjAAAVg+TpViQdf7cJvI1AjA65Dr7M8+Wkm3HwzDmpNxO7qvV71u5Np
-        rLhPEunOlGglhrJMwSmYAkMZFw==
-X-Google-Smtp-Source: APXvYqykLtoCMjK8ld6JD/RyOsTdfyoOM9u/UwTo1BXGOV4lbmZpi4MRGTiLpIKmeU10fMKb1YddfA==
-X-Received: by 2002:a62:4dc5:: with SMTP id a188mr82792699pfb.8.1560279313566;
-        Tue, 11 Jun 2019 11:55:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a186sm17123614pfa.188.2019.06.11.11.55.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Jun 2019 11:55:12 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 11:55:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Sathya Prakash <sathya.prakash@broadcom.com>,
-        Chaitra P B <chaitra.basappa@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: mpt3sas: Mark expected switch fall-through
-Message-ID: <201906111153.4413672DE8@keescook>
-References: <20190611150219.GA19152@embeddedor>
+        Tue, 11 Jun 2019 14:55:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391772AbfFKSzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:55:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61FA9206E0;
+        Tue, 11 Jun 2019 18:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560279331;
+        bh=0R2zOmorGZsNgEEEPiNEgjzKH2jE82jgb9T4TNAc6XE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WAc2/XLofYI4U2Ry9ppcLh0Qu/nw6o884k+QOvXXY64ECbeLjOyo/HoRR6F7OopAC
+         slilVZmVe89gbiPJK90aFkE7pHzZv/tbf+4pAD79EKzb+GtmlS00UGYec7oEJMr9yV
+         QEOzFTS9iXpo82Tvc2c0iPSjYYR1GovUOQNHYyVI=
+Date:   Tue, 11 Jun 2019 20:55:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Julien Freche <jfreche@vmware.com>, Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH] vmw_ballon: no need to check return value of debugfs_create
+ functions
+Message-ID: <20190611185528.GA4659@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190611150219.GA19152@embeddedor>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:02:19AM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-> where we are expecting to fall through.
-> 
-> This patch fixes the following warning:
-> 
-> drivers/scsi/mpt3sas/mpt3sas_base.c: In function ‘_base_update_ioc_page1_inlinewith_perf_mode’:
-> drivers/scsi/mpt3sas/mpt3sas_base.c:4510:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (ioc->high_iops_queues) {
->       ^
-> drivers/scsi/mpt3sas/mpt3sas_base.c:4530:2: note: here
->   case MPT_PERF_MODE_LATENCY:
->   ^~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
 
-Fixes: 30cb97023f38 ("scsi: mpt3sas: Introduce perf_mode module parameter")
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Julien Freche <jfreche@vmware.com>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: "VMware, Inc." <pv-drivers@vmware.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/misc/vmw_balloon.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
 
--Kees
-
-> ---
->  drivers/scsi/mpt3sas/mpt3sas_base.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-> index e6377ec07f6c..9fefcd1e9c97 100644
-> --- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-> +++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-> @@ -4527,6 +4527,7 @@ _base_update_ioc_page1_inlinewith_perf_mode(struct MPT3SAS_ADAPTER *ioc)
->  			ioc_info(ioc, "performance mode: balanced\n");
->  			return;
->  		}
-> +		/* Fall through */
->  	case MPT_PERF_MODE_LATENCY:
->  		/*
->  		 * Enable interrupt coalescing on all reply queues
-> -- 
-> 2.21.0
-> 
-
+diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
+index ad807d5a3141..fdf5ad757226 100644
+--- a/drivers/misc/vmw_balloon.c
++++ b/drivers/misc/vmw_balloon.c
+@@ -1516,19 +1516,10 @@ static int vmballoon_debug_show(struct seq_file *f, void *offset)
+ 
+ DEFINE_SHOW_ATTRIBUTE(vmballoon_debug);
+ 
+-static int __init vmballoon_debugfs_init(struct vmballoon *b)
++static void __init vmballoon_debugfs_init(struct vmballoon *b)
+ {
+-	int error;
+-
+ 	b->dbg_entry = debugfs_create_file("vmmemctl", S_IRUGO, NULL, b,
+ 					   &vmballoon_debug_fops);
+-	if (IS_ERR(b->dbg_entry)) {
+-		error = PTR_ERR(b->dbg_entry);
+-		pr_err("failed to create debugfs entry, error: %d\n", error);
+-		return error;
+-	}
+-
+-	return 0;
+ }
+ 
+ static void __exit vmballoon_debugfs_exit(struct vmballoon *b)
+@@ -1541,9 +1532,8 @@ static void __exit vmballoon_debugfs_exit(struct vmballoon *b)
+ 
+ #else
+ 
+-static inline int vmballoon_debugfs_init(struct vmballoon *b)
++static inline void vmballoon_debugfs_init(struct vmballoon *b)
+ {
+-	return 0;
+ }
+ 
+ static inline void vmballoon_debugfs_exit(struct vmballoon *b)
+@@ -1555,7 +1545,6 @@ static inline void vmballoon_debugfs_exit(struct vmballoon *b)
+ static int __init vmballoon_init(void)
+ {
+ 	enum vmballoon_page_size_type page_size;
+-	int error;
+ 
+ 	/*
+ 	 * Check if we are running on VMware's hypervisor and bail out
+@@ -1571,9 +1560,7 @@ static int __init vmballoon_init(void)
+ 
+ 	INIT_DELAYED_WORK(&balloon.dwork, vmballoon_work);
+ 
+-	error = vmballoon_debugfs_init(&balloon);
+-	if (error)
+-		return error;
++	vmballoon_debugfs_init(&balloon);
+ 
+ 	spin_lock_init(&balloon.comm_lock);
+ 	init_rwsem(&balloon.conf_sem);
 -- 
-Kees Cook
+2.22.0
+
