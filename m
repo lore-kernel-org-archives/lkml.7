@@ -2,115 +2,115 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330FDC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC1AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075DF20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560282912;
-	bh=2jeSb/OUEFUwExRaSwm27O/BgcQGHGrpHx+20YxbtuM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PfLo7JvGPhFMqDGynZMkXI7r1gYBBkI9DW/qaLjF6nV/0Iryg1lTJ2KgYlyqrUS9h
-	 is55sDthNe8bDbfZCKcqp1DspBNYYm7qx275O3dED3nxz5u+kECdv7kxSSiFBR9uPW
-	 iZsDAlEXZX6/xLVLlRCInOETq50R2DQjRvCTLumc=
+	by mail.kernel.org (Postfix) with ESMTP id 1F0F320896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtGsnv2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406357AbfFKTzL (ORCPT
+        id S2406378AbfFKTzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:55:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404282AbfFKTzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:55:10 -0400
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41EE82173C;
-        Tue, 11 Jun 2019 19:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560282909;
-        bh=2jeSb/OUEFUwExRaSwm27O/BgcQGHGrpHx+20YxbtuM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WTgRZYFURDZsQb5+TwkIswCl5Zg+MioxluX+zL+ZzZWomQHLpkKCnGCZBynVvT1qo
-         IhlX7pJGYmtDRJgSbcHGZDxgB6fAqtkxiqBUXeZBjaaLoX/Byz2TW4otC/3mkYhXpw
-         65X0hL2dZitOE6NFf3oTd8sboqXvP/dDOSreRQBg=
-Received: by mail-qk1-f180.google.com with SMTP id m14so8466957qka.10;
-        Tue, 11 Jun 2019 12:55:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAWtGlbF+oiyCNMLpRG50tYDM3e8ZC0c9vnLOXNr1iztlLJm/rg+
-        czWntOds4nHHjFQk/X07V0KvR2aB1AAHHvtbDQ==
-X-Google-Smtp-Source: APXvYqzDOaQFq9KRqVoTAyLrNcdmraacXiFjUvpNJC9DC1OsA19tDc1ngzzrggZx0+ae9yjZdwjNOgSx2r/OE2MEo4c=
-X-Received: by 2002:ae9:c208:: with SMTP id j8mr61663393qkg.264.1560282908475;
- Tue, 11 Jun 2019 12:55:08 -0700 (PDT)
+        Tue, 11 Jun 2019 15:55:15 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35776 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406242AbfFKTzN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:55:13 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j19so13141798otq.2;
+        Tue, 11 Jun 2019 12:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2i3vf0rvzIrUcS429y9/vh3HAalX4Oc5g7401Bit/+o=;
+        b=dtGsnv2yPE5aM4SpEjmjnV37V3jfaNlPDNkHOKNFiuRUzfgMcy9gJ9TOZQuwsPdmlO
+         ccQnpyuLiAn+grFpsdWaMy5oDsPqnvdW6ydLhvWpG9YBBzBU5Ou8LuKUVEeefVrdyM5H
+         7Nv/HN7DOURw0JuLBj4ifWjs91K6mrHe2K9Z4xP7oDwEbSSgDDmrSi8hhsY92HoBjhUS
+         JbOrOLrkustJ2PbA9kr/3vfdpnml6BjuTxGfsVwo/f8fFZHWNBGb+M9ZepxmbDMMWm77
+         O9UwSNY1M20+PU7eGRCyEXQOeMc48xIW8IX9XiHJx7sMii+RKPjZ+aMORy3UDFUwovQJ
+         3Iog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2i3vf0rvzIrUcS429y9/vh3HAalX4Oc5g7401Bit/+o=;
+        b=cK+2YUjBrZRLzSEFHz8YInA9FVIckSGy3I0ZLY/kOyM6vbcaJb4fzLkBnqz/N/grb9
+         hNcLIoGdULlqsFRukFxk6/4ThWVWt7D7J0aJyRXebfWp32q0jXsfKQ+xIOdqeP3LWS/4
+         VqKJ5O6psKmAgsQI6L8xQH6fiqh3+xRiN4ZdZDMrgxJUqnZf3NebO02uKf3YvRPtRsQQ
+         5Hji82KgGvmVUGTwz7yslSXCjJvzEux9Ye/eBrRGjJH2UzlxBrxMswzAiUlA7vVUQMCz
+         hZ+Abm6od4yLOvqOQHdHYwf8kh5YKqWcF1xt0IucbelefIlrO6vTW1VXDRvDwIEnptws
+         uMgw==
+X-Gm-Message-State: APjAAAWmixi+acmhOsMzzqDiDpFCRoKF65d/yP1+R7GgLaVNLB/sSGte
+        ULwXQGliRvcMyUamfR47GoV+3+S00u+XYHfHFfc=
+X-Google-Smtp-Source: APXvYqzsQM9kPsCqm9oHigjo0WuLHVlsFvcp2RFkRgadZQhoVDfqn8f7WCfVTe6ekcSET4BOaM8howSBFhMuozDOY8k=
+X-Received: by 2002:a9d:32a1:: with SMTP id u30mr35281383otb.371.1560282912579;
+ Tue, 11 Jun 2019 12:55:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190514005033.15593-1-robh@kernel.org> <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
- <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
-In-Reply-To: <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Jun 2019 13:54:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
-Message-ID: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20190522052002.10411-1-anarsoul@gmail.com> <6BD1D3F7-E2F2-4B2D-9479-06E27049133C@holtmann.org>
+ <7B7F362B-6C8B-4112-8772-FB6BC708ABF5@holtmann.org> <CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com>
+In-Reply-To: <CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Tue, 11 Jun 2019 12:56:02 -0700
+Message-ID: <CA+E=qVdLOS9smt-nBxg9Lon0iTZr87kONSp-XPKj9tqB4bvnqw@mail.gmail.com>
+Subject: Re: [PATCH] Revert "Bluetooth: Align minimum encryption key size for
+ LE and BR/EDR connections"
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 12:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+Greg,
+
+Can we get this revert merged into stable branches? Bluetooth HID has
+been broken for many devices for quite a while now and RFC patch that
+fixes the breakage hasn't seen any movement for almost a month.
+
+Regards,
+Vasily
+
+On Thu, May 23, 2019 at 7:52 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
 >
-> On 24-05-19, 13:38, Linus Walleij wrote:
-> > On Tue, May 14, 2019 at 2:50 AM Rob Herring <robh@kernel.org> wrote:
+> On Wed, May 22, 2019 at 12:08 AM Marcel Holtmann <marcel@holtmann.org> wrote:
 > >
-> > > Convert the Arm PL061 GPIO controller binding to json-schema format.
+> > Hi Vasily,
+> >
+> > >> This reverts commit d5bb334a8e171b262e48f378bd2096c0ea458265.
+> > >>
+> > >> This commit breaks some HID devices, see [1] for details
+> > >>
+> > >> https://bugzilla.kernel.org/show_bug.cgi?id=203643
+> > >>
+> > >> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > >> Cc: stable@vger.kernel.org
 > > >
-> > > As I'm the author for all but the gpio-ranges line, make the schema dual
-> > > GPL/BSD license.
+> > > let me have a look at this. Maybe there is a missing initialization for older HID devices that we need to handle. Do you happen to have the full btmon binary trace from controller initialization to connection attempt for me?
 > > >
-> > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > Cc: linux-gpio@vger.kernel.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > Are both devices Bluetooth 2.1 or later device that are supporting Secure Simple Pairing? Or is one of them a Bluetooth 2.0 or earlier device?
 > >
-> > Patch applied. As you know I am already a big fan of this scheme.
+> > I am almost certain that you have a Bluetooth 2.0 mouse. I made a really stupid mistake in the key size check logic and forgot to bind it to SSP support. Can you please check the patch that I just send you.
 > >
-> > > This warns on a few platforms missing clocks, interrupt-controller
-> > > and/or #interrupt-cells. We could not make those required, but really
-> > > they should be IMO. OTOH, it's platforms like Spear and Calxeda which
-> > > aren't too active, so I don't know that we want to fix them.
-> >
-> > What works for you works for me.
-> >
-> > We could add dummy fixed clocks in the DTS files if
-> > we wanted I suppose. The #interrupt-cells and interrupt-controller
-> > things we can just fix, but I wonder what the maintainers of these
-> > platforms are up to? Isn't Calxeda yours, and could Viresh fix
-> > up the SPEAr?
-
-I was hoping to delete Calxeda rather than fix. I'm pretty sure none
-of the distros are using the systems anymore and they were the main
-users for a while. Otherwise, I would have converted all the bindings
-it uses.
-
-> I checked SPEAr and it is missing interrupt-controller at few places and clocks
-> everywhere. Missing clocks should be fine as SPEAr doesn't get clocks from DT.
-
-Clocks not from DT was supposed to be a transitional thing...
-
+> > https://lore.kernel.org/linux-bluetooth/20190522070540.48895-1-marcel@holtmann.org/T/#u
 >
-> And interrupt-controller can be just added, I don't think there would be any
-> platform dependent side-affects ?
-
-There shouldn't be.
-
-Rob
+> This patch fixes the issue for me. Thanks!
+>
+> >
+> > Regards
+> >
+> > Marcel
+> >
