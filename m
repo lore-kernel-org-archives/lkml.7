@@ -2,138 +2,248 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E9CC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C121C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1A720896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F11520896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389224AbfFKLU0 (ORCPT
+        id S2389282AbfFKLVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:20:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:58848 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387444AbfFKLU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:20:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85669344;
-        Tue, 11 Jun 2019 04:20:25 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DBA03F557;
-        Tue, 11 Jun 2019 04:22:06 -0700 (PDT)
-Subject: Re: [PATCH v3 0/3] meson-gpio-irqc: Add support for the Meson-G12A
- SoC
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, khilman@baylibre.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190608190411.14018-1-martin.blumenstingl@googlemail.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <07bd74d6-0e6b-324e-20cf-00db54166b56@arm.com>
-Date:   Tue, 11 Jun 2019 12:20:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 07:21:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59188 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389228AbfFKLVe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 07:21:34 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BBH5sk123017
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 07:21:33 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t29q6n5y3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 07:21:32 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Tue, 11 Jun 2019 12:21:30 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 12:21:27 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BBLQQb47316994
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 11:21:26 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E9525205F;
+        Tue, 11 Jun 2019 11:21:26 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id E3DB452054;
+        Tue, 11 Jun 2019 11:21:25 +0000 (GMT)
+Date:   Tue, 11 Jun 2019 13:21:24 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH/RFC 2/3] s390: improve wait logic of stop_machine
+References: <20190608110853.35961-1-heiko.carstens@de.ibm.com>
+ <20190608110853.35961-3-heiko.carstens@de.ibm.com>
+ <20190611091546.GV3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190608190411.14018-1-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611091546.GV3436@hirez.programming.kicks-ass.net>
+X-TM-AS-GCONF: 00
+x-cbid: 19061111-0020-0000-0000-0000034915BD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061111-0021-0000-0000-0000219C3CD8
+Message-Id: <20190611112124.GA20654@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06/2019 20:04, Martin Blumenstingl wrote:
-> This series adds GPIO interrupt controller support for Meson-G12A SoCs.
-> Although the total number of pins is the same as the Meson-AXG SoC, the
-> GPIO banks and IRQ numbers are different. Add a new compatible string
-> to avoid confusion when using it.
+On Tue, Jun 11, 2019 at 11:15:46AM +0200, Peter Zijlstra wrote:
+> On Sat, Jun 08, 2019 at 01:08:52PM +0200, Heiko Carstens wrote:
+> > --- a/arch/s390/kernel/processor.c
+> > +++ b/arch/s390/kernel/processor.c
+> > @@ -31,6 +31,7 @@ struct cpu_info {
+> >  };
+> >  
+> >  static DEFINE_PER_CPU(struct cpu_info, cpu_info);
+> > +static DEFINE_PER_CPU(int, cpu_relax_retry);
+> >  
+> >  static bool machine_has_cpu_mhz;
+> >  
+> > @@ -58,13 +59,21 @@ void s390_update_cpu_mhz(void)
+> >  		on_each_cpu(update_cpu_mhz, NULL, 0);
+> >  }
+> >  
+> > +void notrace cpu_relax_yield(const struct cpumask *cpumask)
+> >  {
+> > +	int cpu;
+> > +
+> > +	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
+> > +		__this_cpu_write(cpu_relax_retry, 0);
 > 
-> I am re-sending this update because v2 looked good in my opinion (Xingyu
-> Chen did good work here) but it never made it into mainline.
-> 
-> 
-> Changes since v1 at [1]:
-> - share the device data with Meson-AXG
-> 
-> Changes since v2 at [2]:
-> - dropped "Change-Id" from patch #2
-> - added .dts patch #3 - this should go through Kevin's linux-amlogic
->   tree. if required I can re-send it in a separate series
-> 
-> 
-> [1] https://lore.kernel.org/lkml/20181203061324.36248-1-xingyu.chen@amlogic.com
-> [2] https://lore.kernel.org/patchwork/cover/1021232/
-> 
-> 
-> Martin Blumenstingl (1):
->   arm64: dts: meson: g12a: add the GPIO interrupt controller
-> 
-> Xingyu Chen (2):
->   dt-bindings: interrupt-controller: New binding for Meson-G12A SoC
->   irqchip/meson-gpio: Add support for Meson-G12A SoC
-> 
->  .../interrupt-controller/amlogic,meson-gpio-intc.txt     | 1 +
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi              | 9 +++++++++
->  drivers/irqchip/irq-meson-gpio.c                         | 1 +
->  3 files changed, 11 insertions(+)
-> 
+> I don't mind, but do we really need a per-cpu variable for this? Does it
+> really matter if you spin on a stack variable and occasionally spin a
+> bit longer due to the missed tail of the previous spin?
 
-I've taken patches 1 and 2 into the irqchip tree. Please route patch 3
-though armsoc.
+Well, that would have to be on the stack of the caller of this
+function, since this function itself does not spin. I think the idea
+was to hide the architecture details from the common code.
 
-Thanks,
+> > +		cpu = cpumask_next(smp_processor_id(), cpumask);
+> > +		if (cpu >= nr_cpu_ids) {
+> > +			cpu = cpumask_first(cpumask);
+> > +			if (cpu == smp_processor_id())
+> > +				return;
+> 
+> If this function is passed an empty cpumask, the above will result in
+> 'cpu == nr_cpu_ids' and the below might be unhappy with that.
+> 
+> (FWIW we do have cpumask_next_wrap(), but I admit it is somewhat awkward
+> to use)
 
-	M.
+I gave it a try; still compiles and boots, so must be correct ;)
+Updated patch:
+
+diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+index b0fcbc37b637..445ce9ee4404 100644
+--- a/arch/s390/include/asm/processor.h
++++ b/arch/s390/include/asm/processor.h
+@@ -36,6 +36,7 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
++#include <linux/cpumask.h>
+ #include <linux/linkage.h>
+ #include <linux/irqflags.h>
+ #include <asm/cpu.h>
+@@ -225,7 +226,7 @@ static __no_kasan_or_inline unsigned short stap(void)
+  * Give up the time slice of the virtual PU.
+  */
+ #define cpu_relax_yield cpu_relax_yield
+-void cpu_relax_yield(void);
++void cpu_relax_yield(const struct cpumask *cpumask);
+ 
+ #define cpu_relax() barrier()
+ 
+diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
+index 5de13307b703..4cdaefec1b7c 100644
+--- a/arch/s390/kernel/processor.c
++++ b/arch/s390/kernel/processor.c
+@@ -31,6 +31,7 @@ struct cpu_info {
+ };
+ 
+ static DEFINE_PER_CPU(struct cpu_info, cpu_info);
++static DEFINE_PER_CPU(int, cpu_relax_retry);
+ 
+ static bool machine_has_cpu_mhz;
+ 
+@@ -58,13 +59,19 @@ void s390_update_cpu_mhz(void)
+ 		on_each_cpu(update_cpu_mhz, NULL, 0);
+ }
+ 
+-void notrace cpu_relax_yield(void)
++void notrace cpu_relax_yield(const struct cpumask *cpumask)
+ {
+-	if (!smp_cpu_mtid && MACHINE_HAS_DIAG44) {
+-		diag_stat_inc(DIAG_STAT_X044);
+-		asm volatile("diag 0,0,0x44");
++	int cpu, this_cpu;
++
++	this_cpu = smp_processor_id();
++	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
++		__this_cpu_write(cpu_relax_retry, 0);
++		cpu = cpumask_next_wrap(this_cpu, cpumask, this_cpu, false);
++		if (cpu >= nr_cpu_ids)
++			return;
++		if (arch_vcpu_is_preempted(cpu))
++			smp_yield_cpu(cpu);
+ 	}
+-	barrier();
+ }
+ EXPORT_SYMBOL(cpu_relax_yield);
+ 
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index 35fafa2b91a8..a8eef7b7770a 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -418,7 +418,7 @@ void smp_yield_cpu(int cpu)
+ 		diag_stat_inc_norecursion(DIAG_STAT_X09C);
+ 		asm volatile("diag %0,0,0x9c"
+ 			     : : "d" (pcpu_devices[cpu].address));
+-	} else if (MACHINE_HAS_DIAG44) {
++	} else if (MACHINE_HAS_DIAG44 && !smp_cpu_mtid) {
+ 		diag_stat_inc_norecursion(DIAG_STAT_X044);
+ 		asm volatile("diag 0,0,0x44");
+ 	}
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 11837410690f..1f9f3160da7e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1519,7 +1519,7 @@ static inline int set_cpus_allowed_ptr(struct task_struct *p, const struct cpuma
+ #endif
+ 
+ #ifndef cpu_relax_yield
+-#define cpu_relax_yield() cpu_relax()
++#define cpu_relax_yield(cpumask) cpu_relax()
+ #endif
+ 
+ extern int yield_to(struct task_struct *p, bool preempt);
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index 2b5a6754646f..b8b0c5ff8da9 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -183,6 +183,7 @@ static int multi_cpu_stop(void *data)
+ 	struct multi_stop_data *msdata = data;
+ 	enum multi_stop_state curstate = MULTI_STOP_NONE;
+ 	int cpu = smp_processor_id(), err = 0;
++	const struct cpumask *cpumask;
+ 	unsigned long flags;
+ 	bool is_active;
+ 
+@@ -192,15 +193,18 @@ static int multi_cpu_stop(void *data)
+ 	 */
+ 	local_save_flags(flags);
+ 
+-	if (!msdata->active_cpus)
+-		is_active = cpu == cpumask_first(cpu_online_mask);
+-	else
+-		is_active = cpumask_test_cpu(cpu, msdata->active_cpus);
++	if (!msdata->active_cpus) {
++		cpumask = cpu_online_mask;
++		is_active = cpu == cpumask_first(cpumask);
++	} else {
++		cpumask = msdata->active_cpus;
++		is_active = cpumask_test_cpu(cpu, cpumask);
++	}
+ 
+ 	/* Simple state machine */
+ 	do {
+ 		/* Chill out and ensure we re-read multi_stop_state. */
+-		cpu_relax_yield();
++		cpu_relax_yield(cpumask);
+ 		if (msdata->state != curstate) {
+ 			curstate = msdata->state;
+ 			switch (curstate) {
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
