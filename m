@@ -6,84 +6,79 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5932CC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7477EC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237FB20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F632175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405911AbfFKRNZ (ORCPT
+        id S2405924AbfFKROq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:13:25 -0400
-Received: from mga06.intel.com ([134.134.136.31]:12980 "EHLO mga06.intel.com"
+        Tue, 11 Jun 2019 13:14:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40278 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405708AbfFKRNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:13:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 10:13:24 -0700
-X-ExtLoop1: 1
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jun 2019 10:13:24 -0700
-Date:   Tue, 11 Jun 2019 10:04:02 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v4 2/5] x86/umwait: Initialize umwait control values
-Message-ID: <20190611170402.GA180343@romley-ivt3.sc.intel.com>
-References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
- <1559944837-149589-3-git-send-email-fenghua.yu@intel.com>
- <20190611085036.GS3436@hirez.programming.kicks-ass.net>
+        id S2405627AbfFKROq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:14:46 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A50D081112;
+        Tue, 11 Jun 2019 17:14:34 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F196A60143;
+        Tue, 11 Jun 2019 17:14:17 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 13:14:17 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
+        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
+        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
+        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
+        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
+        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
+        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
+        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
+        david@redhat.com, david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
+        yuval.shaia@oracle.com, kilobyte@angband.pl, jstaron@google.com,
+        rdunlap@infradead.org
+Subject: Re: [PATCH v12 4/7] dm: enable synchronous dax
+Message-ID: <20190611171416.GA1248@redhat.com>
+References: <20190611163802.25352-1-pagupta@redhat.com>
+ <20190611163802.25352-5-pagupta@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190611085036.GS3436@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190611163802.25352-5-pagupta@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 11 Jun 2019 17:14:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:50:36AM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 07, 2019 at 03:00:34PM -0700, Fenghua Yu wrote:
-> > umwait or tpause allows processor to enter a light-weight
-> > power/performance optimized state (C0.1 state) or an improved
-> > power/performance optimized state (C0.2 state) for a period
-> > specified by the instruction or until the system time limit or until
-> > a store to the monitored address range in umwait.
-> > 
-> > IA32_UMWAIT_CONTROL MSR register allows kernel to enable/disable C0.2
-> > on the processor and set maximum time the processor can reside in
-> > C0.1 or C0.2.
-> > 
-> > By default C0.2 is enabled so the user wait instructions can enter the
-> > C0.2 state to save more power with slower wakeup time.
-> > 
-> > Default maximum umwait time is 100000 cycles. A later patch provides
-> > a sysfs interface to adjust this value.
-> > 
-> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> > Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-> > Reviewed-by: Andy Lutomirski <luto@kernel.org>
-> > ---
-> >  arch/x86/include/asm/msr-index.h |  4 +++
-> >  arch/x86/power/Makefile          |  1 +
-> >  arch/x86/power/umwait.c          | 56 ++++++++++++++++++++++++++++++++
+On Tue, Jun 11 2019 at 12:37pm -0400,
+Pankaj Gupta <pagupta@redhat.com> wrote:
+
+> This patch sets dax device 'DAXDEV_SYNC' flag if all the target
+> devices of device mapper support synchrononous DAX. If device
+> mapper consists of both synchronous and asynchronous dax devices,
+> we don't set 'DAXDEV_SYNC' flag.
 > 
-> Why is this in power/, this isn't in the least related to
-> suspend/hybernate. arch/x86/kernel/cpu/ might be a better place for
-> instruction support.
+> 'dm_table_supports_dax' is refactored to pass 'iterate_devices_fn'
+> as argument so that the callers can pass the appropriate functions.
+> 
+> Suggested-by: Mike Snitzer <snitzer@redhat.com>
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
 
-Ok. I can move umwait.c to arch/x86/kernel/cpu/umwait.c.
+Thanks, and for the benefit of others, passing function pointers like
+this is perfectly fine IMHO because this code is _not_ in the fast
+path.  These methods are only for device creation.
 
-Thanks.
-
--Fenghua
+Reviewed-by: Mike Snitzer <snitzer@redhat.com>
