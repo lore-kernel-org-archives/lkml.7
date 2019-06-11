@@ -2,171 +2,179 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37B5C31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94549C31E47
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD9320684
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7AC2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7z3Fh5f"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="BNyH/I0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407063AbfFKVWR (ORCPT
+        id S2407652AbfFKV2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:22:17 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37514 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406946AbfFKVWQ (ORCPT
+        Tue, 11 Jun 2019 17:28:05 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39407 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391636AbfFKV2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:22:16 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w13so22240755eds.4;
-        Tue, 11 Jun 2019 14:22:15 -0700 (PDT)
+        Tue, 11 Jun 2019 17:28:04 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 196so7671492pgc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 14:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZvDeGR/wNqT7nOMQkm0Ei6/MAhF95DsutBrwnh8cH3s=;
-        b=Q7z3Fh5fzWq9bcK4IP/8MEwMrSw8CW0m7n3nOqyj5bzdr0meeKA1JdnRjaTCDY8ozs
-         o32BW+ApvBxoHTCj3wsx9vCMp+ivoKBfeVU857s1PhLu5E3xTUulMKuhAI5o9LabLFiE
-         ia/0b2DfvFn0f1YNanuJMHPmAK/4X66ZPjtKm06tH6s5hG1V94fV63uidPpoXSt29xEy
-         mSpvR3OsffwH0PLg7/t5oAKU2Njg2hmKaTcCkFr0UvVIbzmilRgIwoVPNyLY031Wvdhi
-         QPK3GM5A5vAPA3TO5W3bElsXvjFUaVPnxkZpaor1xWUYXIaQj4kgK/xEdUfse4eassQU
-         bb8A==
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=kHOmEXm44ofEStTL89clw86zKCfMK7pxZweKkVj60zc=;
+        b=BNyH/I0aTFapdWvAUe1tA6vh4V7SGGnKW9i2iryYsCgfyNFoPcnfrRh6ENitI8pQJy
+         ceJmUE14+hVNBM9WC+xAjbbK0ncjBtDNhZsREXS8wFJSFtJTAC+2kp/Gx/2pDb6cUMf8
+         JpUjBxKEfOQvrL9m9kMePR3M4fWdfHCrRVaSTbbHZtX1SELIRUg9HXb/1sKatJNSwuF+
+         QO1DomLI907tfm1bq218gSHTCncrOyxsRkBkmStrHKSsQYkjWyIsW3ZSK9J+lpNXxDiR
+         oojDQ9O14TWNGl2rGOpuLibgYG5bNECymjz1Ygn5Bb6fBc1ArnndD5ref2xpl4j3WuJU
+         Jxfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZvDeGR/wNqT7nOMQkm0Ei6/MAhF95DsutBrwnh8cH3s=;
-        b=Jw7e0MbexpnODuuVgQ2M4pGp58NC2w9ch2NLXL67eJDdR1SONlqqiqNNbU3XTMAGGz
-         e0ZP9S3+7JTd2ncI3k86xwXtUvhaynnH2eircd1N9CKns/PmB2lBdFvOq2IJxbYhWDqx
-         gNAhrnnyt99b0Vzhie+q75b/V+xzdUNx3dWXtbuxCm34ZQKLwEjc6Ix03+Oguttl1ySE
-         qsbif5OiuUsIXEvVqNVW6jagxH6nu0wlFkQrs+Ve7g/9k8w76Fn2LXFMMeRBUH5RXApg
-         p06+1/ZjE96GY0yqcge7fKxM2LaG9tbTli8a4qXVXLJFg6c5szg3u2wvylD5z+apLYpb
-         CqcA==
-X-Gm-Message-State: APjAAAUwefGzqGwXRsIGqPwFw2BvtOo5mz6e3lqXkI1kWSrIURkp4b72
-        ZEcyXZfcnd/NI6mSNgQf4xilrHI/wDQ//Q==
-X-Google-Smtp-Source: APXvYqxeTYD5ov8U36NvA1MemZk0d8Py+wZARKkwyKdpkG6LnIiBUf8EIK3irjPOL1rbqjsNMT6HTg==
-X-Received: by 2002:a50:a96d:: with SMTP id m42mr7027965edc.74.1560288134405;
-        Tue, 11 Jun 2019 14:22:14 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id m21sm3961069edv.83.2019.06.11.14.22.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 14:22:13 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 14:22:11 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     agross@kernel.org, david.brown@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] clk: qcom: Fix -Wunused-const-variable
-Message-ID: <20190611212211.GA6815@archlinux-epyc>
-References: <20190611211134.96159-1-nhuck@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611211134.96159-1-nhuck@google.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=kHOmEXm44ofEStTL89clw86zKCfMK7pxZweKkVj60zc=;
+        b=P3cE9rm2PJ8yre1IixmO5+KAuzjNCoUGhr1x3JuDZ9m1Ac+HuFLjb3qPj+VROQYnRX
+         wdkgpWfrnItwxLs/VZ+NQFUqShfnkMPELYk2ZbrHq3ZMLo+jwAkKrewhtRw+8JPKKCLH
+         3G2sPzF7dhkyElX+D0WC9YSfi24+ftC6WdwKw0Jmvqgai2+9OqU7pyvpwc1+vvxis2v3
+         +j3xhZSfIJed4jvIEkdbUwPmDqwK5vmb1X0ahxHkcRaL675zSZiHid85avLh+FZHf5uh
+         nCnRr16bCdu8TChihxf1WaJOcTwGsiL2Ve2+m3Rcsyy+CZrow7SAop64ZjP9zlCMX1i1
+         ORMg==
+X-Gm-Message-State: APjAAAVifvoweVu4Zy8gHHE6a9jH31pfhUSxufULebtSH6pw1Rqav6Mt
+        tP5Lf4aLLsA0/eXWWRfKlcxWoQ==
+X-Google-Smtp-Source: APXvYqx8fSWzb0HB5KPULCR4fAdvphiu+yCLRaPJ3mwALDMWZWEo99vzBDgf+T6A9kZ8B2J2ELLLxQ==
+X-Received: by 2002:a17:90a:a505:: with SMTP id a5mr29364827pjq.27.1560288483342;
+        Tue, 11 Jun 2019 14:28:03 -0700 (PDT)
+Received: from cabot.adilger.ext (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id a192sm6068716pfa.84.2019.06.11.14.28.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 14:28:02 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <315FEA4D-41B1-4C5B-89AA-7ABA93D66E0A@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_5B427BF6-3A60-46C7-A8F9-EE572E3F0487";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH V2] include: linux: Regularise the use of FIELD_SIZEOF
+ macro
+Date:   Tue, 11 Jun 2019 15:28:00 -0600
+In-Reply-To: <20190611140907.899bebb12a3d731da24a9ad1@linux-foundation.org>
+Cc:     Shyam Saini <shyam.saini@amarulasolutions.com>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, linux-ext4 <linux-ext4@vger.kernel.org>,
+        devel@lists.orangefs.org, linux-mm@kvack.org,
+        linux-sctp@vger.kernel.org, bpf@vger.kernel.org,
+        kvm@vger.kernel.org, mayhs11saini@gmail.com,
+        Alexey Dobriyan <adobriyan@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+References: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
+ <20190611134831.a60c11f4b691d14d04a87e29@linux-foundation.org>
+ <6DCAE4F8-3BEC-45F2-A733-F4D15850B7F3@dilger.ca>
+ <20190611140907.899bebb12a3d731da24a9ad1@linux-foundation.org>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 02:11:34PM -0700, Nathan Huckleberry wrote:
-> Clang produces the following warning
-> 
-> drivers/clk/qcom/gcc-msm8996.c:133:32: warning: unused variable
-> 'gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map' [-Wunused-const-variable]
-> static const struct
-> parent_map gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map[] =
-> { ^drivers/clk/qcom/gcc-msm8996.c:141:27: warning: unused variable
-> 'gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div' [-Wunused-const-variable] static
-> const char * const gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div[] = { ^
-> drivers/clk/qcom/gcc-msm8996.c:187:32: warning: unused variable
-> 'gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map'
-> [-Wunused-const-variable] static const struct parent_map
-> gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map[] = { ^
-> drivers/clk/qcom/gcc-msm8996.c:197:27: warning: unused variable
-> 'gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div'
-> [-Wunused-const-variable] static const char * const
-> gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div[] = {
-> 
-> It looks like these were never used.
-> 
-> Fixes: b1e010c0730a ("clk: qcom: Add MSM8996 Global Clock Control (GCC) driver")
-> Cc: clang-built-linux@googlegroups.com
-> Link: https://github.com/ClangBuiltLinux/linux/issues/518
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 
-LGTM, this doesn't introduce any warnings/errors on arm32 or arm64 for
-me.
+--Apple-Mail=_5B427BF6-3A60-46C7-A8F9-EE572E3F0487
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+On Jun 11, 2019, at 3:09 PM, Andrew Morton <akpm@linux-foundation.org> =
+wrote:
+>=20
+> On Tue, 11 Jun 2019 15:00:10 -0600 Andreas Dilger <adilger@dilger.ca> =
+wrote:
+>=20
+>>>> to FIELD_SIZEOF
+>>>=20
+>>> As Alexey has pointed out, C structs and unions don't have fields -
+>>> they have members.  So this is an opportunity to switch everything =
+to
+>>> a new member_sizeof().
+>>>=20
+>>> What do people think of that and how does this impact the patch =
+footprint?
+>>=20
+>> I did a check, and FIELD_SIZEOF() is used about 350x, while =
+sizeof_field()
+>> is about 30x, and SIZEOF_FIELD() is only about 5x.
+>=20
+> Erk.  Sorry, I should have grepped.
+>=20
+>> That said, I'm much more in favour of "sizeof_field()" or =
+"sizeof_member()"
+>> than FIELD_SIZEOF().  Not only does that better match "offsetof()", =
+with
+>> which it is closely related, but is also closer to the original =
+"sizeof()".
+>>=20
+>> Since this is a rather trivial change, it can be split into a number =
+of
+>> patches to get approval/landing via subsystem maintainers, and there =
+is no
+>> huge urgency to remove the original macros until the users are gone.  =
+It
+>> would make sense to remove SIZEOF_FIELD() and sizeof_field() quickly =
+so
+>> they don't gain more users, and the remaining FIELD_SIZEOF() users =
+can be
+>> whittled away as the patches come through the maintainer trees.
+>=20
+> In that case I'd say let's live with FIELD_SIZEOF() and remove
+> sizeof_field() and SIZEOF_FIELD().
 
-> ---
->  drivers/clk/qcom/gcc-msm8996.c | 36 ----------------------------------
->  1 file changed, 36 deletions(-)
-> 
-> diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
-> index d2f39a972cad..d004cdaa0e39 100644
-> --- a/drivers/clk/qcom/gcc-msm8996.c
-> +++ b/drivers/clk/qcom/gcc-msm8996.c
-> @@ -130,22 +130,6 @@ static const char * const gcc_xo_gpll0_gpll4_gpll0_early_div[] = {
->  	"gpll0_early_div"
->  };
->  
-> -static const struct parent_map gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div_map[] = {
-> -	{ P_XO, 0 },
-> -	{ P_GPLL0, 1 },
-> -	{ P_GPLL2, 2 },
-> -	{ P_GPLL3, 3 },
-> -	{ P_GPLL0_EARLY_DIV, 6 }
-> -};
-> -
-> -static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll0_early_div[] = {
-> -	"xo",
-> -	"gpll0",
-> -	"gpll2",
-> -	"gpll3",
-> -	"gpll0_early_div"
-> -};
-> -
->  static const struct parent_map gcc_xo_gpll0_gpll1_early_div_gpll1_gpll4_gpll0_early_div_map[] = {
->  	{ P_XO, 0 },
->  	{ P_GPLL0, 1 },
-> @@ -184,26 +168,6 @@ static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll2_early_gpll0_early
->  	"gpll0_early_div"
->  };
->  
-> -static const struct parent_map gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div_map[] = {
-> -	{ P_XO, 0 },
-> -	{ P_GPLL0, 1 },
-> -	{ P_GPLL2, 2 },
-> -	{ P_GPLL3, 3 },
-> -	{ P_GPLL1, 4 },
-> -	{ P_GPLL4, 5 },
-> -	{ P_GPLL0_EARLY_DIV, 6 }
-> -};
-> -
-> -static const char * const gcc_xo_gpll0_gpll2_gpll3_gpll1_gpll4_gpll0_early_div[] = {
-> -	"xo",
-> -	"gpll0",
-> -	"gpll2",
-> -	"gpll3",
-> -	"gpll1",
-> -	"gpll4",
-> -	"gpll0_early_div"
-> -};
-> -
->  static struct clk_fixed_factor xo = {
->  	.mult = 1,
->  	.div = 1,
-> -- 
-> 2.22.0.rc2.383.gf4fbbf30c2-goog
-> 
+The real question is whether we want to live with a sub-standard macro =
+for
+the next 20 years rather than taking the opportunity to clean it up now?
+
+> I'm a bit surprised that the FIELD_SIZEOF() definition ends up in
+> stddef.h rather than in kernel.h where such things are normally
+> defined.  Why is that?
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_5B427BF6-3A60-46C7-A8F9-EE572E3F0487
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl0AHOAACgkQcqXauRfM
+H+BPvRAAvxlKWQUZz2tRSIBu/vtfIKMWVyY8fctru8Y1oH+Slx4hWvJ/xxYWjMIa
+LJJgybj3MjwTd30FmSWmmQmKDyjo5oWGelOeLzVfueI8blZIaDcUYT1rrM9h7F4G
+RD22ST6XCWjj5oAmVBW/XHxRIFD6uHtwOnby9a4LgkFOehdkDBhopfAMduEZrW7P
+qNa2T0M660SXtmt8dy89Ynb+sge7iinnRyPKkxNaweIXYGVtZzoScRFNK0vSZjbm
+TgVIKwFyLDbdX1bJFQHZDWnfchCRqQrrmHyIl+wAGTccpfen4bGhDqW0wU1+rQpv
+G2RL1z+N2WiWwKx/TmdPatglD2Hqr73jKfvi7X+DzkJ0nJdYMKnNRpe3S2rZwFjf
+MHpmP35Ql2/96bDulYuirHOVvSrrXF/RXZLUp6MuTu2rGankXETXgiP0lkKcmOZW
+gvA0pFTKFD8YaGf0NU9jS/OUOjYpqhMkBSK2C3d0UdRMCQzRWAudLzM9quRH7vCm
+SfRD6QWHQfOELlKMenRptxYEi8IM3+3R4G1g3VmR7YCegpayslXiSKpgnBAqw4W0
+Z4q6nJ/YOwNTjwzs9ndgCZfGpW6JxKYY0DuQe7ld+ngnXNdVrH1X5pZz9ASV9Wli
+CowwSgwFlqOSkmcy52L7pRGDGSI/yWwzl6QHtjT8o0e30S27eCs=
+=UFIV
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_5B427BF6-3A60-46C7-A8F9-EE572E3F0487--
