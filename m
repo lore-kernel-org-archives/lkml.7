@@ -2,168 +2,116 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262A1C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A8C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB36521721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1466021721
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K5nFuUQs"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="caXhb4Jr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406432AbfFKXXn (ORCPT
+        id S2407270AbfFKXYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 19:23:43 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46426 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405384AbfFKXXn (ORCPT
+        Tue, 11 Jun 2019 19:24:50 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45568 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405384AbfFKXYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 19:23:43 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so5755436pls.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 16:23:42 -0700 (PDT)
+        Tue, 11 Jun 2019 19:24:50 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s11so8372117pfm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 16:24:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4enqIBMnxmfNla3OgthjfzC+JEL8arxQKAIvidMiX7I=;
-        b=K5nFuUQsN7VQO+zSl9vqwaxq21RiKWxVyA7za3Wuty4C2/wORzeC9FQqNxJLLCRjdR
-         dijNEhp6cnt7nOBQCNdjHxsV6NqvlsPUn5newHxrwTreg8HoXbIiQzPoUhZU1jGWM/gv
-         yEHJonPqWhGrPPTJGnSxjza4infoEeKmcxRmyuaUdgUB67MN3r2MbvpNc7UJFNdi/7Sh
-         Ek4ub/eLAMOz470XvbKmzXlwZKhfT3Bsv7obWfp24RPFvVSlnFAp9hmN7yTcI0w1uxYi
-         ebfVf1UMl2qBbOVykcM7sTuQucjYkTDnpkpWcm1Vlk2fvvFIcD9/TwH29rJvfdKV/Lu4
-         AdjQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=pzZQijjYh2lq3MqwPAxsWI0diaePNWtLIjQJaO7lucU=;
+        b=caXhb4JrKoL25WULlmBoyErRhTzl+Qlefw5zmfGbW45Q82gCsvakwZwKbdppzTmYHq
+         wRtcEW9aBQjqtEnLBq7mdWutGGxaFThaxGaUrr6hxvw5WNwWKm/gOkg4F0fSjhpYU+jo
+         UhKHDTsgIbt5HjMWbJmawF8TeUU/Hy1WjGBhjBAXjssbkfrEeKUaiqm8lJEgEsRrAAIn
+         n4a6MQE9jdlTIiTsWxACww5EdRlH4vZyS8zy8itKUIjOB4AdOLbgdvxTVa0pYQqcCu6c
+         PPn5HgnY7WyNT70n8RmIMIC3HhTaR4x6iNx15v4683bc2S0IIr/nfO8ayq1TU8Ok6nse
+         kqXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4enqIBMnxmfNla3OgthjfzC+JEL8arxQKAIvidMiX7I=;
-        b=FEfqXxEHrUk9kU7P5xESp/M/akFlCDUCTs7LlO9WrG2S/Q/6EPujlzV2nsm+vnGO6v
-         0Y2FySrU8fJ9UCFJXA5S0BMHI45DuNy01eI+SSoC3RIMPtI1jrFapxdVJPTe2cG3vM+M
-         CberTq5GjkLzMs8dt52ws/HE4QAzj5yF3E6Nwbo97Z+7h066B2sCv0gSC6/IWD1sYCw6
-         0x9sW8nNOlLc1OUwDF7mH7f9+YaA3QMfbHZ9icFKbw/ZNWbVvzLdcoaSCOg2+nFfnszp
-         jINylPsx46RKpcVqDr0tlEadr+JKc30d/AHJWSvJkT/mRe+a9JquGFfuFWKrjwRQUWy1
-         eeig==
-X-Gm-Message-State: APjAAAV+MW5/3qIfHFKZQvhqmFOR/EFlHN7vBFKp8G/va+pOuQTDKax4
-        e9uodx0v2wuWT207jVVt02wv8Q==
-X-Google-Smtp-Source: APXvYqzITd2m4KxJ8pfadlI4Wwi/NqUG+384O2TzyHbUMFflAFd9VN23N+hXtlskx6SjaadeLaFXBg==
-X-Received: by 2002:a17:902:76c6:: with SMTP id j6mr53522648plt.263.1560295422245;
-        Tue, 11 Jun 2019 16:23:42 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a16sm26468426pfd.68.2019.06.11.16.23.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 16:23:41 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 16:23:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] soc: qcom: smd-rpm: Create RPM interconnect proxy
- child device
-Message-ID: <20190611232339.GU4814@minitux>
-References: <20190611164157.24656-1-georgi.djakov@linaro.org>
- <20190611164157.24656-4-georgi.djakov@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=pzZQijjYh2lq3MqwPAxsWI0diaePNWtLIjQJaO7lucU=;
+        b=J/RX8eBU6zWD7W22OZe313nVLMJcLMfx3z9X+Y7vUSUMA1udyLAAs0rgMM9RcL/2gL
+         ZlOle7Vjq/yu8/e9L28RJfgZta4p+x5n+DnEdQaCxVMw2geHN7g0kuZvF+fPnP1jge+T
+         QQ6iWGZ6Ai8QftXkdkHwb0YStfXiVyIJhWp3k+RyrS2O+ZULXniI7hoXdlnPJkv1EB4Y
+         HUUxPAuXP/NLEsa8iOAHYeW63v9yhaSXhQaWWS2koDuGeu8dmx6SrU7mm9BuNo5RDM3q
+         n98w206c1C9H3HoPad/RbgdG1064RPxIQRtIacIhyMZzch95FLIQ1GXLJ5ZO5qqm5uOj
+         +YpA==
+X-Gm-Message-State: APjAAAVW1PH1y8j15PftPBeylE2S7tlWNMDSLLskRPbptOYIJ2I2v6+t
+        79PRVVptyR7Yiq31tBo7qg9BNYb582g=
+X-Google-Smtp-Source: APXvYqynJgfnRKT9jxHr/rkFxt5cW774++TFNZRQTm5JTkX+8RQKfGhmIHYDuLE+xibLa/Xh3lHYeQ==
+X-Received: by 2002:a65:514a:: with SMTP id g10mr22250270pgq.328.1560295489184;
+        Tue, 11 Jun 2019 16:24:49 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id y7sm8141090pja.26.2019.06.11.16.24.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Jun 2019 16:24:48 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-kernel@vger.kernel.org,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Yannick =?utf-8?Q?Fertr=C3=A9?= <yannick.fertre@st.com>,
+        arm@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "moderated list\:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "open list\:ARM\/Amlogic Meson..." 
+        <linux-amlogic@lists.infradead.org>
+Subject: Re: [PATCH 1/2] ARM: multi_v7_defconfig: add Panfrost driver
+In-Reply-To: <71c929a0-d42e-7519-df43-100a474a63d4@baylibre.com>
+References: <20190604112003.31813-1-tomeu.vizoso@collabora.com> <71c929a0-d42e-7519-df43-100a474a63d4@baylibre.com>
+Date:   Tue, 11 Jun 2019 16:24:47 -0700
+Message-ID: <7h4l4v4se8.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611164157.24656-4-georgi.djakov@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 11 Jun 09:41 PDT 2019, Georgi Djakov wrote:
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-> Register a platform device to handle the communication of bus bandwidth
-> requests with the remote processor. The interconnect proxy device is part
-> of this remote processor (RPM) hardware. Let's create a icc-smd-rpm proxy
-> child device to represent the bus throughput functionality that is provided
-> by the RPM.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> 
-> v3:
-> - New patch.
-> 
->  drivers/soc/qcom/smd-rpm.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-> index 9956bb2c63f2..a028250737ec 100644
-> --- a/drivers/soc/qcom/smd-rpm.c
-> +++ b/drivers/soc/qcom/smd-rpm.c
-> @@ -27,12 +27,14 @@
->  /**
->   * struct qcom_smd_rpm - state of the rpm device driver
->   * @rpm_channel:	reference to the smd channel
-> + * @icc:		interconnect proxy device
->   * @ack:		completion for acks
->   * @lock:		mutual exclusion around the send/complete pair
->   * @ack_status:		result of the rpm request
->   */
->  struct qcom_smd_rpm {
->  	struct rpmsg_endpoint *rpm_channel;
-> +	struct platform_device *icc;
->  	struct device *dev;
->  
->  	struct completion ack;
-> @@ -201,6 +203,7 @@ static int qcom_smd_rpm_callback(struct rpmsg_device *rpdev,
->  static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
->  {
->  	struct qcom_smd_rpm *rpm;
-> +	int ret;
->  
->  	rpm = devm_kzalloc(&rpdev->dev, sizeof(*rpm), GFP_KERNEL);
->  	if (!rpm)
-> @@ -213,11 +216,23 @@ static int qcom_smd_rpm_probe(struct rpmsg_device *rpdev)
->  	rpm->rpm_channel = rpdev->ept;
->  	dev_set_drvdata(&rpdev->dev, rpm);
->  
-> -	return of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
-> +	rpm->icc = platform_device_register_data(&rpdev->dev, "icc_smd_rpm", -1,
-> +						 NULL, 0);
-> +	if (!IS_ERR(rpm->icc))
+> On 04/06/2019 13:20, Tomeu Vizoso wrote:
+>> With the goal of making it easier for CI services such as KernelCI to
+>> run tests for it.
+>> 
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> ---
+>>  arch/arm/configs/multi_v7_defconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+>> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+>> index 6b748f214eae..952dff9d39f2 100644
+>> --- a/arch/arm/configs/multi_v7_defconfig
+>> +++ b/arch/arm/configs/multi_v7_defconfig
+>> @@ -656,6 +656,7 @@ CONFIG_DRM_VC4=m
+>>  CONFIG_DRM_ETNAVIV=m
+>>  CONFIG_DRM_MXSFB=m
+>>  CONFIG_DRM_PL111=m
+>> +CONFIG_DRM_PANFROST=m
+>>  CONFIG_FB_EFI=y
+>>  CONFIG_FB_WM8505=y
+>>  CONFIG_FB_SH_MOBILE_LCDC=y
+>> 
+>
+> Hi Kevin,
+>
+> Could you apply this changeset on the linux-amlogic tree ?
 
-This will be IS_ERR() only if the struct platform_device couldn't be
-allocated or registered, it does not relate to that driver's probe. As
-such it makes sense to fail the probe if this failed.
+No, this needs to go via arm-soc (already cc'd)
 
-So flip this around and return PTR_ERR() here.
-
-> +		platform_set_drvdata(rpm->icc, rpm);
-
-It's possible that the device_register above finds the driver and calls
-it (pending initcall ordering etc), in which case the child's drvdata
-wouldn't yet be set.
-
-In the other drivers where we do this we have the child to request the
-drvdata of its parent, so I think you should do the same here.
-
-Apart from this, this patch looks good!
-
-Regards,
-Bjorn
-
-> +
-> +	ret = of_platform_populate(rpdev->dev.of_node, NULL, NULL, &rpdev->dev);
-> +	if (ret)
-> +		platform_device_unregister(rpm->icc);
-> +
-> +	return ret;
->  }
->  
->  static void qcom_smd_rpm_remove(struct rpmsg_device *rpdev)
->  {
-> +	struct qcom_smd_rpm *rpm = dev_get_drvdata(&rpdev->dev);
-> +
-> +	platform_device_unregister(rpm->icc);
->  	of_platform_depopulate(&rpdev->dev);
->  }
->  
+Kevin
