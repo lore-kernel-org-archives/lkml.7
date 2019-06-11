@@ -2,114 +2,126 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91961C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03387C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B97217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1044217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myaTjclO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WPzvz8KP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbfFKSof (ORCPT
+        id S2392014AbfFKSo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:44:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40808 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728412AbfFKSoe (ORCPT
+        Tue, 11 Jun 2019 14:44:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45384 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbfFKSoz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:44:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d30so7447148pgm.7;
-        Tue, 11 Jun 2019 11:44:34 -0700 (PDT)
+        Tue, 11 Jun 2019 14:44:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w34so7437452pga.12
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VjXOm39CWa6S4I71CKU5r+mT9fayfeuZ4n9Ko6h04/Q=;
-        b=myaTjclOScSIDrJvBHbz7GqxDxIFK7e7DAfxQEM9oALn9rsTlpKt80fwIgm0KtX6V1
-         rjsp2quD64X+j4e2krEEBu98c5MfZng1DbASdGyGwJG5NVw2h8ncvSeeiM2/is5mt8Tj
-         Hl7PulNEfKL1iTcOm+BmiLv6YbI73mFN+CKOysg5B0Qajeo+mJ+3lkv/hTsDiLqP1K2X
-         E0uc27fMFfCG5CTgpAOnmzWitO8GemDOyDhaTdzt2sylNoufOgyKKIZsO/0WcWMJBXRF
-         bOI29cs4Pv20llVSyHkYaKW+KY4DlzmN8lJPePgHDnkkKHK19ZK8RN8IcjgGd4Bksfk0
-         p/6A==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Etra+AHO4zcdS2DInBS7WLjC1KJ3vqfHkZBwr0AdbDs=;
+        b=WPzvz8KP4N4OsaYPxseiuZd3s/Ls+oFzEwz4kKA+nl43eiXtx3bXracBWLbvER2q7s
+         wOhI1I5bDSofH8IMocb7L8gTUxSmicRveLTNPFRNIRy/+I/7LQYCtYYO8buAQ5LDz5yO
+         926Ogfz5/NLPFenrEKNn/RBUgL4UBiLbl7KQg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VjXOm39CWa6S4I71CKU5r+mT9fayfeuZ4n9Ko6h04/Q=;
-        b=DGtfviaZwKHP/jH89Tru0Wsj4ev1KGVjO9XIsD4JvvwONe0/RFvN5kggNUnMZI3XNq
-         4Y1WDVMZT4yVRug5cYkrBiSxNaGloG2KF9YUjH/oWXIQjuYOFyAx3voCbz66FP2l2ztU
-         YK+pjqflDr55jhycvvnKkjK9wbC4j+MWVL9RfXSy0UoF7MU1EGZbt/D6YNtSx67pD86N
-         LvtuEaYlnb2SDFjiZ0V7l3gxl5y5Iv49E9BxRyyycA0hBeFOJVF6fL+XYS1zfjmnw45V
-         yK0uFYq4enVWefRdbPxpk0cO3tls1YhP4jvuJlxkxqwvTWqhEn3G7eKmuu/kmXZ0F7ch
-         /R9A==
-X-Gm-Message-State: APjAAAVGuf24ZkeAGJpgq4kGQcBC/vu7HLlnD/bwafbaofG2VEFI6nNO
-        JD1IvZb32aLCEw/IjleITS/bZLlpTvb/yzjvrg8=
-X-Google-Smtp-Source: APXvYqzkqeep3CqfOFDZoSRrKfSGRdBDWFEoMwtK6OFag6Wk/WDtXaVNa/EripQyuLMKoe63k5dbDPKFUOkVassx774=
-X-Received: by 2002:a63:d84a:: with SMTP id k10mr6952505pgj.74.1560278673900;
- Tue, 11 Jun 2019 11:44:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Etra+AHO4zcdS2DInBS7WLjC1KJ3vqfHkZBwr0AdbDs=;
+        b=idfl3lgfu8f+deWte8ryFF4MGINZ/2oJvDBREYxBSUUExxMaT05Q2JsMB4Cp7nkVNT
+         Ux2M5O/E9Vtkv4PKGueG9ceMC4wBS3J0fwTdsPGekFCmFLuGptEJjdRbmrfo+0wgHTOz
+         Tr1VrjMrOS1wt7VvlI8VlgN4J5mUlftx8KMc31CDNjw2t+1HZ1oPphS9QVorGlfay5m/
+         3w0VC9q3zoHb6r5AvbhPSaGOkP2KMNbrq20gQaNxryrA/VuMIHorR75OEPYXER4cINc8
+         UtuEKWqb4SYh3LlR/7ub6QMVMsQQjDGgJZZs5CqN+5l61bpFOolQLBOWjLZwTVX9hruB
+         AhqQ==
+X-Gm-Message-State: APjAAAVQa06DB4Ythn2oL+nfT42n/MDGAreG7+94gPtydPR/Zom+Iov3
+        32yz91yVuC/d3DNffWF6QJJAaA==
+X-Google-Smtp-Source: APXvYqwajD2TTecx4ms6AM1drd9sxvgjZCluWJNXUF7O3uWxQbNNjxm5g8X9VWrwLnlQO5nl61GnOw==
+X-Received: by 2002:aa7:82d6:: with SMTP id f22mr83534583pfn.151.1560278695132;
+        Tue, 11 Jun 2019 11:44:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v5sm14778297pfm.22.2019.06.11.11.44.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Jun 2019 11:44:54 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 11:44:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lkdtm: no need to check return value of debugfs_create
+ functions
+Message-ID: <201906111144.3E05EAA80@keescook>
+References: <20190611183213.GA31645@kroah.com>
 MIME-Version: 1.0
-References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
-In-Reply-To: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 11 Jun 2019 21:44:23 +0300
-Message-ID: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
-Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611183213.GA31645@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc: Heikki.
-Heikki, can you help here with swnodes?
+On Tue, Jun 11, 2019 at 08:32:13PM +0200, Greg Kroah-Hartman wrote:
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
 
-On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
-> Hi folks,
->
->
-> I'm looking for a way to inject fwnode data from a platform driver,
-> in order to initialize generic drivers w/ board specific configuration.
-> The idea is getting rid of passing driver specific pdata structs
-> (which, IIRC, seem to be deprecated).
->
-> An example usecase is the APUv2/3 board, which have things like gpios
-> wired to buttons and LEDs. The board can only be detected via DMI
-> string, no way to probe the platform devices - have to be initialized
-> explicitly (that's how I'm already doing it now).
->
-> The nicest way, IMHO, would be if I could just write some piece of DTS
-> and some fancy magic all the rest under the hood. Such thing doesn't
-> seem to exist yet. Does it make sense to implement that ? How could
-> we do it ?
->
-> Which other options do we have ?
->
-> Or should we just leave everything as it is and stick w/ pdata structs ?
->
->
-> thx
-> --mtx
->
-> --
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+What is the user-visible feedback when, say, debugfs_create_file()
+fails? And what happens when debugfs_create_file() passes in a NULL
+root?
 
+-Kees
 
+> 
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/misc/lkdtm/core.c | 13 ++-----------
+>  1 file changed, 2 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+> index 1972dad966f5..bae3b3763f3e 100644
+> --- a/drivers/misc/lkdtm/core.c
+> +++ b/drivers/misc/lkdtm/core.c
+> @@ -429,22 +429,13 @@ static int __init lkdtm_module_init(void)
+>  
+>  	/* Register debugfs interface */
+>  	lkdtm_debugfs_root = debugfs_create_dir("provoke-crash", NULL);
+> -	if (!lkdtm_debugfs_root) {
+> -		pr_err("creating root dir failed\n");
+> -		return -ENODEV;
+> -	}
+>  
+>  	/* Install debugfs trigger files. */
+>  	for (i = 0; i < ARRAY_SIZE(crashpoints); i++) {
+>  		struct crashpoint *cur = &crashpoints[i];
+> -		struct dentry *de;
+>  
+> -		de = debugfs_create_file(cur->name, 0644, lkdtm_debugfs_root,
+> -					 cur, &cur->fops);
+> -		if (de == NULL) {
+> -			pr_err("could not create crashpoint %s\n", cur->name);
+> -			goto out_err;
+> -		}
+> +		debugfs_create_file(cur->name, 0644, lkdtm_debugfs_root, cur,
+> +				    &cur->fops);
+>  	}
+>  
+>  	/* Install crashpoint if one was selected. */
+> -- 
+> 2.22.0
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Kees Cook
