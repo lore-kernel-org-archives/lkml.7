@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91B0C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73F0C31E45
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A768C20866
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93352054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436850AbfFKWWU (ORCPT
+        id S2436864AbfFKWWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:22:20 -0400
+        Tue, 11 Jun 2019 18:22:23 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29003 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436796AbfFKWWQ (ORCPT
+        by vger.kernel.org with ESMTP id S2436822AbfFKWWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:22:16 -0400
+        Tue, 11 Jun 2019 18:22:17 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 11 Jun 2019 15:22:11 -0700
+ 15.0.1156.6; Tue, 11 Jun 2019 15:22:12 -0700
 Received: from rlwimi.localdomain (unknown [10.129.220.121])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id C52D641BAB;
-        Tue, 11 Jun 2019 15:22:14 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 7BDD041BAB;
+        Tue, 11 Jun 2019 15:22:15 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 CC:     Ingo Molnar <mingo@kernel.org>,
@@ -33,9 +33,9 @@ CC:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [PATCH v2 05/13] recordmcount: Kernel style function signature formatting
-Date:   Tue, 11 Jun 2019 15:21:47 -0700
-Message-ID: <a7a6fcb3fb9d1d25f484fa0eb10bd000c68a0e56.1560285597.git.mhelsley@vmware.com>
+Subject: [PATCH v2 06/13] recordmcount: Kernel style formatting
+Date:   Tue, 11 Jun 2019 15:21:48 -0700
+Message-ID: <407b7c862a74da4a055c1fe0c8dade73a31cb44e.1560285597.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1560285597.git.mhelsley@vmware.com>
 References: <cover.1560285597.git.mhelsley@vmware.com>
@@ -49,121 +49,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The uwrite() and ulseek() functions are formatted inconsistently
-with the rest of the file and the kernel overall. While we're
-making other changes here let's fix this.
+Fix up the whitespace irregularity in the ELF switch
+blocks.
+
+Swapping the initial value of gpfx allows us to
+simplify all but one of the one-line switch cases even
+further.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- scripts/recordmcount.c | 21 +++++++--------------
- scripts/recordmcount.h | 13 ++++++-------
- 2 files changed, 13 insertions(+), 21 deletions(-)
+ scripts/recordmcount.c | 47 ++++++++++++++++++++++--------------------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
 
 diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 584dcbf3f320..1c3599f07f9b 100644
+index 1c3599f07f9b..9ae975ccf2dc 100644
 --- a/scripts/recordmcount.c
 +++ b/scripts/recordmcount.c
-@@ -52,8 +52,7 @@ static void *file_append; /* added to the end of the file */
- static size_t file_append_size; /* how much is added to end of file */
+@@ -487,15 +487,15 @@ static int do_file(char const *const fname)
+ 		push_bl_mcount_thumb = push_bl_mcount_thumb_be;
+ 		break;
+ 	}  /* end switch */
+-	if (memcmp(ELFMAG, ehdr->e_ident, SELFMAG) != 0
+-	||  w2(ehdr->e_type) != ET_REL
+-	||  ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
++	if (memcmp(ELFMAG, ehdr->e_ident, SELFMAG) != 0 ||
++	    w2(ehdr->e_type) != ET_REL ||
++	    ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
+ 		fprintf(stderr, "unrecognized ET_REL file %s\n", fname);
+ 		cleanup();
+ 		goto out;
+ 	}
  
- /* Per-file resource cleanup when multiple files. */
--static void
--cleanup(void)
-+static void cleanup(void)
- {
- 	if (!mmap_failed)
- 		munmap(file_map, sb.st_size);
-@@ -68,8 +67,7 @@ cleanup(void)
+-	gpfx = 0;
++	gpfx = '_';
+ 	switch (w2(ehdr->e_machine)) {
+ 	default:
+ 		fprintf(stderr, "unrecognized e_machine %u %s\n",
+@@ -508,32 +508,35 @@ static int do_file(char const *const fname)
+ 		make_nop = make_nop_x86;
+ 		ideal_nop = ideal_nop5_x86_32;
+ 		mcount_adjust_32 = -1;
++		gpfx = 0;
++		break;
++	case EM_ARM:
++		reltype = R_ARM_ABS32;
++		altmcount = "__gnu_mcount_nc";
++		make_nop = make_nop_arm;
++		rel_type_nop = R_ARM_NONE;
++		gpfx = 0;
+ 		break;
+-	case EM_ARM:	 reltype = R_ARM_ABS32;
+-			 altmcount = "__gnu_mcount_nc";
+-			 make_nop = make_nop_arm;
+-			 rel_type_nop = R_ARM_NONE;
+-			 break;
+ 	case EM_AARCH64:
+-			reltype = R_AARCH64_ABS64;
+-			make_nop = make_nop_arm64;
+-			rel_type_nop = R_AARCH64_NONE;
+-			ideal_nop = ideal_nop4_arm64;
+-			gpfx = '_';
+-			break;
+-	case EM_IA_64:	 reltype = R_IA64_IMM64;   gpfx = '_'; break;
+-	case EM_MIPS:	 /* reltype: e_class    */ gpfx = '_'; break;
+-	case EM_PPC:	 reltype = R_PPC_ADDR32;   gpfx = '_'; break;
+-	case EM_PPC64:	 reltype = R_PPC64_ADDR64; gpfx = '_'; break;
+-	case EM_S390:    /* reltype: e_class    */ gpfx = '_'; break;
+-	case EM_SH:	 reltype = R_SH_DIR32;                 break;
+-	case EM_SPARCV9: reltype = R_SPARC_64;     gpfx = '_'; break;
++		reltype = R_AARCH64_ABS64;
++		make_nop = make_nop_arm64;
++		rel_type_nop = R_AARCH64_NONE;
++		ideal_nop = ideal_nop4_arm64;
++		break;
++	case EM_IA_64:	reltype = R_IA64_IMM64; break;
++	case EM_MIPS:	/* reltype: e_class    */ break;
++	case EM_PPC:	reltype = R_PPC_ADDR32; break;
++	case EM_PPC64:	reltype = R_PPC64_ADDR64; break;
++	case EM_S390:	/* reltype: e_class    */ break;
++	case EM_SH:	reltype = R_SH_DIR32; gpfx = 0; break;
++	case EM_SPARCV9: reltype = R_SPARC_64; break;
+ 	case EM_X86_64:
+ 		make_nop = make_nop_x86;
+ 		ideal_nop = ideal_nop5_x86_64;
+ 		reltype = R_X86_64_64;
+ 		rel_type_nop = R_X86_64_NONE;
+ 		mcount_adjust_64 = -1;
++		gpfx = 0;
+ 		break;
+ 	}  /* end switch */
  
- /* ulseek, uwrite, ...:  Check return value for errors. */
- 
--static off_t
--ulseek(off_t const offset, int const whence)
-+static off_t ulseek(off_t const offset, int const whence)
- {
- 	switch (whence) {
- 	case SEEK_SET:
-@@ -89,8 +87,7 @@ ulseek(off_t const offset, int const whence)
- 	return file_ptr - file_map;
- }
- 
--static ssize_t
--uwrite(void const *const buf, size_t const count)
-+static ssize_t uwrite(void const *const buf, size_t const count)
- {
- 	size_t cnt = count;
- 	off_t idx = 0;
-@@ -127,8 +124,7 @@ uwrite(void const *const buf, size_t const count)
- 	return count;
- }
- 
--static void *
--umalloc(size_t size)
-+static void * umalloc(size_t size)
- {
- 	void *const addr = malloc(size);
- 	if (addr == 0) {
-@@ -394,8 +390,7 @@ static uint32_t (*w)(uint32_t);
- static uint32_t (*w2)(uint16_t);
- 
- /* Names of the sections that could contain calls to mcount. */
--static int
--is_mcounted_section_name(char const *const txtname)
-+static int is_mcounted_section_name(char const *const txtname)
- {
- 	return strncmp(".text",          txtname, 5) == 0 ||
- 		strcmp(".init.text",     txtname) == 0 ||
-@@ -446,8 +441,7 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
- 	}).r_info;
- }
- 
--static int
--do_file(char const *const fname)
-+static int do_file(char const *const fname)
- {
- 	Elf32_Ehdr *const ehdr = mmap_file(fname);
- 	unsigned int reltype = 0;
-@@ -595,8 +589,7 @@ do_file(char const *const fname)
- 	return rc;
- }
- 
--int
--main(int argc, char *argv[])
-+int main(int argc, char *argv[])
- {
- 	const char ftrace[] = "/ftrace.o";
- 	int ftrace_size = sizeof(ftrace) - 1;
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index f863d6fce066..3198459f7431 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -475,11 +475,10 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
- char const *already_has_rel_mcount = "success"; /* our work here is done! */
- 
- /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
--static char const *
--__has_rel_mcount(Elf_Shdr const *const relhdr,  /* is SHT_REL or SHT_RELA */
--		 Elf_Shdr const *const shdr0,
--		 char const *const shstrtab,
--		 char const *const fname)
-+static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
-+				     Elf_Shdr const *const shdr0,
-+				     char const *const shstrtab,
-+				     char const *const fname)
- {
- 	/* .sh_info depends on .sh_type == SHT_REL[,A] */
- 	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
-@@ -531,8 +530,8 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
- 
- 
- /* Overall supervision for Elf32 ET_REL file. */
--static int
--do_func(Elf_Ehdr *const ehdr, char const *const fname, unsigned const reltype)
-+static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
-+		   unsigned const reltype)
- {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
 -- 
 2.20.1
 
