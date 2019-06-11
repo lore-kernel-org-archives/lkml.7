@@ -3,154 +3,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C37C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A03C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B39212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457C8212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404182AbfFKIpa (ORCPT
+        id S2404129AbfFKIp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:45:30 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33567 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391273AbfFKIpY (ORCPT
+        Tue, 11 Jun 2019 04:45:28 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:16221 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391511AbfFKIpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Jun 2019 04:45:24 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y17so8661254lfe.0;
-        Tue, 11 Jun 2019 01:45:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y57jG1hTaYr//V6rbS7pGOghJQuFRY1IGCsOl42VTtw=;
-        b=sG+5h+hDch9dcy+V7HourwlMxNveon6WvUpYb9Kv/I2kr37d5scsZ6MhMy8eWoUrjp
-         4IxDSIAJddwRMIHfRUz0wadw/0hU/evqUnsc07C/zgUQRntRAzhw/kok91gIBJIFwFBT
-         sA6WPnLEHNZgMOHjBYQZ6NXnZXZVzlnE8JgjBBvToRJOKX+YSoFEkzydmuz8bokE84jT
-         1WpmnR/ov9p6X1LfR+mjS1VTesuZ2HlcFulbukFLRjGhjigNcZ5pCRszabvvskXT+oMH
-         NA0Q1ufHt7o9u7VL4iA3CdAAgwVZTJIp/aG7dZKRaIf/1Igxr4f4ikf0TG8c9cGYOztZ
-         XTfQ==
-X-Gm-Message-State: APjAAAWvp3500zZ/iGjzHVwGvB13dnABjf7QV3waxNv7vszoTxREEzzU
-        Tx8EeJhNYUbp3/7avocksiKPS0rijwjeG7ZPSFA=
-X-Google-Smtp-Source: APXvYqxdEI+m9gpVR9aDf6TiX8mC2NIvGhVvINnkOeatfGs/HFjyi0AXbZ47oirabwL+5YNhqaUJ8bMV5DqFEmGW2bE=
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr13628892lfn.23.1560242721494;
- Tue, 11 Jun 2019 01:45:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190607172958.20745-1-erosca@de.adit-jv.com> <87tvcxncuq.fsf@codeaurora.org>
- <20190610083012.GV5447@atomide.com>
-In-Reply-To: <20190610083012.GV5447@atomide.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 11 Jun 2019 10:45:08 +0200
-Message-ID: <CAMuHMdUOc17ocqmt=oNmyN1UT_K7_y=af1pwjwr5PTgQL2o2OQ@mail.gmail.com>
-Subject: Re: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
- inverted IRQ
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
+X-UUID: 492f727379794a0e86ee26cfaa5790b5-20190611
+X-UUID: 492f727379794a0e86ee26cfaa5790b5-20190611
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1666629951; Tue, 11 Jun 2019 16:45:18 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 11 Jun 2019 16:45:17 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 11 Jun 2019 16:45:15 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Joshua Frkuska <joshua_frkuska@mentor.com>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>, eyalr@ti.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <Marc.Zyngier@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Nagarjuna Kristam <nkristam@nvidia.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH v7 07/10] usb: roles: Add fwnode_usb_role_switch_get() function
+Date:   Tue, 11 Jun 2019 16:44:37 +0800
+Message-ID: <1560242680-23844-8-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1560242680-23844-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1560242680-23844-1-git-send-email-chunfeng.yun@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC irqchip
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Original thread at
-https://lore.kernel.org/lkml/20190607172958.20745-1-erosca@de.adit-jv.com/
+The fwnode_usb_role_switch_get() function is exactly the
+same as usb_role_switch_get(), except that it takes struct
+fwnode_handle as parameter instead of struct device.
 
-On Mon, Jun 10, 2019 at 10:30 AM Tony Lindgren <tony@atomide.com> wrote:
-> * Kalle Valo <kvalo@codeaurora.org> [190610 07:01]:
-> > Eugeniu Rosca <erosca@de.adit-jv.com> writes:
-> >
-> > > The wl1837mod datasheet [1] says about the WL_IRQ pin:
-> > >
-> > >  ---8<---
-> > > SDIO available, interrupt out. Active high. [..]
-> > > Set to rising edge (active high) on powerup.
-> > >  ---8<---
-> > >
-> > > That's the reason of seeing the interrupt configured as:
-> > >  - IRQ_TYPE_EDGE_RISING on HiKey 960/970
-> > >  - IRQ_TYPE_LEVEL_HIGH on a number of i.MX6 platforms
-> > >
-> > > We assert that all those platforms have the WL_IRQ pin connected
-> > > to the SoC _directly_ (confirmed on HiKey 970 [2]).
-> > >
-> > > That's not the case for R-Car Kingfisher extension target, which carries
-> > > a WL1837MODGIMOCT IC. There is an SN74LV1T04DBVR inverter present
-> > > between the WLAN_IRQ pin of the WL18* chip and the SoC, effectively
-> > > reversing the requirement quoted from [1]. IOW, in Kingfisher DTS
-> > > configuration we would need to use IRQ_TYPE_EDGE_FALLING or
-> > > IRQ_TYPE_LEVEL_LOW.
-> > >
-> > > Unfortunately, v4.2-rc1 commit bd763482c82ea2 ("wl18xx: wlan_irq:
-> > > support platform dependent interrupt types") made a special case out
-> > > of these interrupt types. After this commit, it is impossible to provide
-> > > an IRQ configuration via DTS which would describe an inverter present
-> > > between the WL18* chip and the SoC, generating the need for workarounds
-> > > like [3].
-> > >
-> > > Create a boolean OF property, called "invert-irq" to specify that
-> > > the WLAN_IRQ pin of WL18* is connected to the SoC via an inverter.
-> > >
-> > > This solution has been successfully tested on R-Car H3ULCB-KF-M06 using
-> > > the DTS configuration [4] combined with the "invert-irq" property.
-> > >
-> > > [1] http://www.ti.com/lit/ds/symlink/wl1837mod.pdf
-> > > [2] https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/
-> > > [3] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
-> > > [4] https://patchwork.kernel.org/patch/10895879/
-> > >     ("arm64: dts: ulcb-kf: Add support for TI WL1837")
-> > >
-> > > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> >
-> > Tony&Eyal, do you agree with this?
->
-> Yeah if there's some hardware between the WLAN device and the SoC
-> inverting the interrupt, I don't think we have clear a way to deal
-> with it short of setting up a separate irqchip that does the
-> translation.
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Tested-by: Biju Das <biju.das@bp.renesas.com>
+---
+v7: 
+ add signed-off-by Chunfeng and tested-by Biju
 
-Yeah, inverting the interrupt type in DT works only for simple devices,
-that don't need configuration.
-A simple irqchip driver that just inverts the type sounds like a good
-solution to me. Does something like that already exists?
+v6:
+  new patch
+---
+ drivers/usb/roles/class.c | 20 ++++++++++++++++++++
+ include/linux/usb/role.h  |  7 +++++++
+ 2 files changed, 27 insertions(+)
 
-> But in some cases we also do not want to invert the interrupt, so
-> I think this property should take IRQ_TYPE_EDGE_RISING and
-> IRQ_TYPE_EDGE_RISING values to override the setting for
-> the WLAN end of the hardware?
->
-> Let's wait a bit longer for comments from Eyal too.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 86defca6623e..5b637aaf311f 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -135,6 +135,26 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+ 
++/**
++ * fwnode_usb_role_switch_get - Find USB role switch linked with the caller
++ * @fwnode: The caller device node
++ *
++ * This is similar to the usb_role_switch_get() function above, but it searches
++ * the switch using fwnode instead of device entry.
++ */
++struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
++{
++	struct usb_role_switch *sw;
++
++	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
++					  usb_role_switch_match);
++	if (!IS_ERR_OR_NULL(sw))
++		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
++
++	return sw;
++}
++EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
++
+ /**
+  * usb_role_switch_put - Release handle to a switch
+  * @sw: USB Role Switch
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index da2b9641b877..2d77f97df72d 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -47,6 +47,7 @@ struct usb_role_switch_desc {
+ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
++struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *node);
+ void usb_role_switch_put(struct usb_role_switch *sw);
+ 
+ struct usb_role_switch *
+@@ -70,6 +71,12 @@ static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ 	return ERR_PTR(-ENODEV);
+ }
+ 
++static inline struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *node)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
+ 
+ static inline struct usb_role_switch *
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
