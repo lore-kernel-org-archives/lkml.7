@@ -2,140 +2,170 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C75C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EEBC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455A520874
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560291551;
-	bh=JRnontjDmVMLabiF6n7OXpnQaHOmJ0mPnBv9JJmBYHQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HNvsdj1sJZGYRJHGk5+eyrUeCoSQmfnBrpjGB68/haShfz/8qrQdxLXt04PxSxJy8
-	 MnS+o094msjB6qbxfi3l2WtVfJ05pTK0gc0CA3AwiCIWnO94iAi9qt7I1fn2uthLCR
-	 6/6eOsxHcX55Yls3NzLWh/VkCa95+RH3EtvdsHVc=
+	by mail.kernel.org (Postfix) with ESMTP id B14FB2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/BOc2qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436753AbfFKWTK (ORCPT
+        id S2436770AbfFKWUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:19:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390376AbfFKWTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:19:10 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE6802086D;
-        Tue, 11 Jun 2019 22:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560291549;
-        bh=JRnontjDmVMLabiF6n7OXpnQaHOmJ0mPnBv9JJmBYHQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MmAm/Rlq9xHW4QftY68w195BiVipJj7BtYU46+bxK1b6KmlDNAfwO9DhQg05xARCu
-         FEqfWAw+qoktRhbWY3KD/8J8BYYdnL1bEpW3I++EHV7Ci44iqPz0amWpf/bVcshNmA
-         +PpL5Jv9DPHAHQwerlof7S5AdLJlA4FWjEP1NbEs=
-Date:   Tue, 11 Jun 2019 15:19:08 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, ard.biesheuvel@arm.com, osalvador@suse.de,
-        david@redhat.com, mhocko@suse.com, mark.rutland@arm.com
-Subject: Re: [PATCH V5 - Rebased] mm/hotplug: Reorder
- memblock_[free|remove]() calls in try_remove_memory()
-Message-Id: <20190611151908.cdd6b73fd17fda09b1b3b65b@linux-foundation.org>
-In-Reply-To: <1560252373-3230-1-git-send-email-anshuman.khandual@arm.com>
-References: <36e0126f-e2d1-239c-71f3-91125a49e019@redhat.com>
-        <1560252373-3230-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 11 Jun 2019 18:20:15 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36759 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436755AbfFKWUP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:20:15 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so9212726oti.3;
+        Tue, 11 Jun 2019 15:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vfffTPwX82Idi1y/riGTFQzU5OrguyWB0uehUGHFMv4=;
+        b=b/BOc2qiPknWcS0qM4I1ROFqX2v2bn/BFdCQuZ0nURILM3EUTeeOCNms4U4wKZI917
+         yvKUXlUGmIs3dSGULT7FP45GMLEq3dngWO2Ik4gO3YK9HMArZJwUrncv8MoLfdYakNbn
+         bah0wvKoaJ5/3A5xUp03rnECtpX/Zb0f5h1VqnTIwBX1z57IZl4oSQv94bhW3mQ9Jej9
+         OSSVCyseEW4gYt/W7Sjvx5stNFHMvCZVWID8xlWbNJWYzkeiG0QPnno2By/wDFtKKELK
+         VeEFAEz0URsLSW+fkXIJpN/1TNGRbN/mJUHWQxMabMC6gs9g/QAUN1d7sE9pkBMlRhu9
+         uEGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vfffTPwX82Idi1y/riGTFQzU5OrguyWB0uehUGHFMv4=;
+        b=G5QVzcD1tHxsfaOds59uSlv3KgZYEDdfu1194ykTgz7IL/CGk8SIV6bB2GX74CVf7q
+         IWXDPz232J78TsqY+TSNeKtf+mLrTv0IEKJD10tuvnpMwTDOI9ZAqdhppUYRHebCXEPs
+         akhL11LmgW+d66Rbgeb26rBFxXYoB+5+RZh9OHOUuaRe7yzR42Vj7oZuYD7FQD9px1bn
+         8fYBX6Hfd8H37ubeUSv1MElkrzwik+9UB/J2W+uy9Xt8v23OtdYMD5FaNHCAopHoHIsz
+         V45dmrW4laHV7ioaemDn/0neR5HIz4YwHcHaIMpr5dOOnxez08FgFW7mpa5NJjPj0UV4
+         sQNw==
+X-Gm-Message-State: APjAAAV81fs3+Nhms3rGb2cM0HjRXeQxGOVcrb6uyPQ6JPHZ49EcTwXU
+        fAd2YnxHUwczc31zR56lUqrL+n8R
+X-Google-Smtp-Source: APXvYqwBXsNiPTo0yn/3zKEUnGFm4Ao1KrYIYiC3IG0c1gK/mb67+IOPk1NPjHn0OqAhRUhwh4+G2w==
+X-Received: by 2002:a9d:66c8:: with SMTP id t8mr19745696otm.94.1560291614292;
+        Tue, 11 Jun 2019 15:20:14 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id w140sm1977822oie.32.2019.06.11.15.20.12
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 15:20:13 -0700 (PDT)
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+ <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
+ <20190607172902.GA8183@lst.de>
+ <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
+ <20190610081825.GA16534@lst.de>
+ <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
+ <20190611060521.GA19512@lst.de>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
+Date:   Tue, 11 Jun 2019 17:20:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190611060521.GA19512@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 16:56:13 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-
-> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
-> entries between memory block and node. It first checks pfn validity with
-> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
-> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
+On 6/11/19 1:05 AM, Christoph Hellwig wrote:
+> On Mon, Jun 10, 2019 at 11:09:47AM -0500, Larry Finger wrote:
 > 
-> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
-> which scans all mapped memblock regions with memblock_is_map_memory(). This
-> creates a problem in memory hot remove path which has already removed given
-> memory range from memory block with memblock_[remove|free] before arriving
-> at unregister_mem_sect_under_nodes(). Hence get_nid_for_pfn() returns -1
-> skipping subsequent sysfs_remove_link() calls leaving node <-> memory block
-> sysfs entries as is. Subsequent memory add operation hits BUG_ON() because
-> of existing sysfs entries.
+> What might be confusing in your output is that dev->dma_mask is a pointer,
+> and we are setting it in dma_set_mask.  That is before we only check
+> if the pointer is set, and later we override it.  Of course this doesn't
+> actually explain the failure.  But what is even more strange to me
+> is that you get a return value from dma_supported() that isn't 0 or 1,
+> as that function is supposed to return a boolean, and I really can't see
+> how mask >= __phys_to_dma(dev, min_mask), would return anything but 0
+> or 1.  Does the output change if you use the correct printk specifiers?
 > 
-> [   62.007176] NUMA: Unknown node for memory at 0x680000000, assuming node 0
-> [   62.052517] ------------[ cut here ]------------
-> [   62.053211] kernel BUG at mm/memory_hotplug.c:1143!
-> [   62.053868] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> [   62.054589] Modules linked in:
-> [   62.054999] CPU: 19 PID: 3275 Comm: bash Not tainted 5.1.0-rc2-00004-g28cea40b2683 #41
-> [   62.056274] Hardware name: linux,dummy-virt (DT)
-> [   62.057166] pstate: 40400005 (nZcv daif +PAN -UAO)
-> [   62.058083] pc : add_memory_resource+0x1cc/0x1d8
-> [   62.058961] lr : add_memory_resource+0x10c/0x1d8
-> [   62.059842] sp : ffff0000168b3ce0
-> [   62.060477] x29: ffff0000168b3ce0 x28: ffff8005db546c00
-> [   62.061501] x27: 0000000000000000 x26: 0000000000000000
-> [   62.062509] x25: ffff0000111ef000 x24: ffff0000111ef5d0
-> [   62.063520] x23: 0000000000000000 x22: 00000006bfffffff
-> [   62.064540] x21: 00000000ffffffef x20: 00000000006c0000
-> [   62.065558] x19: 0000000000680000 x18: 0000000000000024
-> [   62.066566] x17: 0000000000000000 x16: 0000000000000000
-> [   62.067579] x15: ffffffffffffffff x14: ffff8005e412e890
-> [   62.068588] x13: ffff8005d6b105d8 x12: 0000000000000000
-> [   62.069610] x11: ffff8005d6b10490 x10: 0000000000000040
-> [   62.070615] x9 : ffff8005e412e898 x8 : ffff8005e412e890
-> [   62.071631] x7 : ffff8005d6b105d8 x6 : ffff8005db546c00
-> [   62.072640] x5 : 0000000000000001 x4 : 0000000000000002
-> [   62.073654] x3 : ffff8005d7049480 x2 : 0000000000000002
-> [   62.074666] x1 : 0000000000000003 x0 : 00000000ffffffef
-> [   62.075685] Process bash (pid: 3275, stack limit = 0x00000000d754280f)
-> [   62.076930] Call trace:
-> [   62.077411]  add_memory_resource+0x1cc/0x1d8
-> [   62.078227]  __add_memory+0x70/0xa8
-> [   62.078901]  probe_store+0xa4/0xc8
-> [   62.079561]  dev_attr_store+0x18/0x28
-> [   62.080270]  sysfs_kf_write+0x40/0x58
-> [   62.080992]  kernfs_fop_write+0xcc/0x1d8
-> [   62.081744]  __vfs_write+0x18/0x40
-> [   62.082400]  vfs_write+0xa4/0x1b0
-> [   62.083037]  ksys_write+0x5c/0xc0
-> [   62.083681]  __arm64_sys_write+0x18/0x20
-> [   62.084432]  el0_svc_handler+0x88/0x100
-> [   62.085177]  el0_svc+0x8/0xc
-
-This seems like a serious problem.  Once which should be fixed in 5.2
-and perhaps the various -stable kernels as well.
-
-> Re-ordering memblock_[free|remove]() with arch_remove_memory() solves the
-> problem on arm64 as pfn_valid() behaves correctly and returns positive
-> as memblock for the address range still exists. arch_remove_memory()
-> removes applicable memory sections from zone with __remove_pages() and
-> tears down kernel linear mapping. Removing memblock regions afterwards
-> is safe because there is no other memblock (bootmem) allocator user that
-> late. So nobody is going to allocate from the removed range just to blow
-> up later. Also nobody should be using the bootmem allocated range else
-> we wouldn't allow to remove it. So reordering is indeed safe.
+> i.e. with a debug patch like this:
 > 
-> ...
->
 > 
-> - Rebased on linux-next (next-20190611)
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 2c2772e9702a..9e5b30b12b10 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -378,6 +378,7 @@ EXPORT_SYMBOL(dma_direct_map_resource);
+>   int dma_direct_supported(struct device *dev, u64 mask)
+>   {
+>   	u64 min_mask;
+> +	bool ret;
+>   
+>   	if (IS_ENABLED(CONFIG_ZONE_DMA))
+>   		min_mask = DMA_BIT_MASK(ARCH_ZONE_DMA_BITS);
+> @@ -391,7 +392,12 @@ int dma_direct_supported(struct device *dev, u64 mask)
+>   	 * use __phys_to_dma() here so that the SME encryption mask isn't
+>   	 * part of the check.
+>   	 */
+> -	return mask >= __phys_to_dma(dev, min_mask);
+> +	ret = (mask >= __phys_to_dma(dev, min_mask));
+> +	if (!ret)
+> +		dev_info(dev,
+> +			"%s: failed (mask = 0x%llx, min_mask = 0x%llx/0x%llx, dma bits = %d\n",
+> +			__func__, mask, min_mask, __phys_to_dma(dev, min_mask), ARCH_ZONE_DMA_BITS);
+> +	return ret;
+>   }
+>   
+>   size_t dma_direct_max_mapping_size(struct device *dev)
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index f7afdadb6770..6c57ccdee2ae 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -317,8 +317,14 @@ void arch_dma_set_mask(struct device *dev, u64 mask);
+>   
+>   int dma_set_mask(struct device *dev, u64 mask)
+>   {
+> -	if (!dev->dma_mask || !dma_supported(dev, mask))
+> +	if (!dev->dma_mask) {
+> +		dev_info(dev, "no DMA mask set!\n");
+>   		return -EIO;
+> +	}
+> +	if (!dma_supported(dev, mask)) {
+> +		printk("DMA not supported\n");
+> +		return -EIO;
+> +	}
+>   
+>   	arch_dma_set_mask(dev, mask);
+>   	dma_check_mask(dev, mask);
+> 
 
-Yet the patch you've prepared is designed for 5.3.  Was that
-deliberate, or should we be targeting earlier kernels?
+After I got the correct formatting, the output with this patch only gives the 
+following in dmesg:
 
+b43-pci-bridge 0001:11:00.0: dma_direct_supported: failed (mask = 0x3fffffff, 
+min_mask = 0x5ffff000/0x5ffff000, dma bits = 0x1f
+DMA not supported
+b43legacy-phy0 ERROR: The machine/kernel does not support the required 30-bit 
+DMA mask
 
+Your first patch did not work as the configuration does not have 
+CONFIG_ZONE_DMA. As a result, the initial value of min_mask always starts at 32 
+bits and is taken down to 31 with the maximum pfn minimization. When I forced 
+the initial value of min_mask to 30 bits, the device worked.
+
+It is obvious that the case of a mask smaller than min_mask should be handled by 
+the IOMMU. In my system, CONFIG_IOMMU_SUPPORT is selected. All other CONFIG 
+variables containing IOMMU are not selected. When dma_direct_supported() fails, 
+should the system not try for an IOMMU solution? Is the driver asking for the 
+wrong type of memory? It is doing a dma_and_set_mask_coherent() call.
+
+Larry
