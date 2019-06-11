@@ -2,141 +2,111 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81BAC4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E650C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7524207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33162207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:56:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d6W435il"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404698AbfFKJyu (ORCPT
+        id S2391391AbfFKJ4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:54:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43390 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404086AbfFKJyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:54:49 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 01F092F8BEE;
-        Tue, 11 Jun 2019 09:54:44 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 06DD96064C;
-        Tue, 11 Jun 2019 09:54:36 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 17:54:32 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     syzbot <syzbot+b9d0d56867048c7bcfde@syzkaller.appspotmail.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in blk_mq_sched_free_requests
-Message-ID: <20190611095431.GB15921@ming.t460p>
-References: <000000000000fc4a7b058b04669e@google.com>
+        Tue, 11 Jun 2019 05:56:45 -0400
+Received: from mail-eopbgr80077.outbound.protection.outlook.com ([40.107.8.77]:1856
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727726AbfFKJ4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 05:56:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P2+iRFvcKX/B0Fgo8rl2Va9Wr5wecC2g8skImnvvOt4=;
+ b=d6W435ilLK7PLGLjYDS65kjb9XWAWxAHO/05QG3z/K6WUnla3HS1p8YmhKuYy8XqN5MpO0Gr+vM5Y2JanNOk2Dy4OQeCdFLvKHPM+rTxjnlrHLgJ9SXaScnh2UB3g1OlVhFSOwLnO4mFFhE7olIqKc9A88WZ+jHZRm5uSIHz4Ik=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3677.eurprd04.prod.outlook.com (52.134.15.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Tue, 11 Jun 2019 09:56:41 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
+ 09:56:41 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Spencer <christopher.spencer@sea.co.uk>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] crypto: caam - do not initialise clocks on the
+ i.MX8
+Thread-Topic: [PATCH v2 1/4] crypto: caam - do not initialise clocks on the
+ i.MX8
+Thread-Index: AQHVHWwGsMxFSBPcUUWzlXHZD6TwyA==
+Date:   Tue, 11 Jun 2019 09:56:40 +0000
+Message-ID: <VI1PR0402MB34855AC8C617A3D7A584A1B798ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190607200225.21419-1-andrew.smirnov@gmail.com>
+ <20190607200225.21419-2-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1e8d4328-fb86-46c4-d806-08d6ee531a5d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3677;
+x-ms-traffictypediagnostic: VI1PR0402MB3677:
+x-microsoft-antispam-prvs: <VI1PR0402MB3677CB501F7CA9E8DBD6238098ED0@VI1PR0402MB3677.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 006546F32A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(346002)(396003)(136003)(189003)(199004)(4744005)(66066001)(3846002)(4326008)(52536014)(2906002)(74316002)(81156014)(6116002)(71200400001)(81166006)(71190400001)(8936002)(305945005)(55016002)(229853002)(7736002)(8676002)(478600001)(14454004)(2501003)(6436002)(66476007)(110136005)(66446008)(66556008)(476003)(53936002)(5660300002)(64756008)(316002)(102836004)(25786009)(54906003)(9686003)(76116006)(86362001)(66946007)(256004)(446003)(73956011)(53546011)(68736007)(76176011)(6246003)(33656002)(26005)(186003)(7696005)(6506007)(486006)(99286004)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3677;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4uFTjBb6zhrXMfmPlFhHOYmNtCiQlApNIOx70ctP1hwMNDQ67bZ+/atSKi20MNYngJ5dBvxqUUaQT4erMpdgwQN3I4kPZIMBXRcnQQY/El7bahjEJiTHxzyYHyHkQsJPlKn/5B8O/XDjaAejlQ1aHbIPF0v0mGPiYnsTz3L+PlK1YRW3kvXkQ9fnWubkTPlQ6i+tiRKelx+BghBpz+XD4dnbjIed2iVODQQ8bX4sWkP5bUyIYGD0cFAxQqHD00lhn79Ol3u2iSc0XPci6VS/7LevdcoZxoCFawBdJBHdOcN3vuQfqHSqTx3OiAtbQnDAta2739fWAolNnA0EECRO5PbzjkhGmqC71nruW33bw2Eou21L7eZfV79CFtfk4jg42DVw3olSD5pDLCBvSw4VZRpgR343ejwtvoVaLzGwDoE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000fc4a7b058b04669e@google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 11 Jun 2019 09:54:49 +0000 (UTC)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e8d4328-fb86-46c4-d806-08d6ee531a5d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 09:56:40.9638
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3677
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-Thanks for your report!
-
-On Mon, Jun 10, 2019 at 09:05:07PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    d1fdb6d8 Linux 5.2-rc4
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=105ade6aa00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
-> dashboard link: https://syzkaller.appspot.com/bug?extid=b9d0d56867048c7bcfde
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c67dd2a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154be66aa00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+b9d0d56867048c7bcfde@syzkaller.appspotmail.com
-> 
-> Code: e8 bc b5 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> 0f 83 2b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f735bcf2d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 00000000004466e9
-> RDX: 0000000000000000 RSI: 0000000000004c80 RDI: 0000000000000003
-> RBP: 00000000006dbc30 R08: 0000000000000002 R09: 0000000000003034
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
-> R13: 00007f735bcf2d90 R14: 0000000000000004 R15: 20c49ba5e353f7cf
-> WARNING: CPU: 0 PID: 9739 at block/blk-mq-sched.c:558
-> blk_mq_sched_free_requests+0x207/0x290 block/blk-mq-sched.c:558
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 9739 Comm: syz-executor118 Not tainted 5.2.0-rc4 #25
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  panic+0x2cb/0x744 kernel/panic.c:219
->  __warn.cold+0x20/0x4d kernel/panic.c:576
->  report_bug+0x263/0x2b0 lib/bug.c:186
->  fixup_bug arch/x86/kernel/traps.c:179 [inline]
->  fixup_bug arch/x86/kernel/traps.c:174 [inline]
->  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
->  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
->  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> RIP: 0010:blk_mq_sched_free_requests+0x207/0x290 block/blk-mq-sched.c:558
-> Code: ff e8 6d bf 30 fe 31 ff 89 c3 89 c6 e8 32 ac 4a fe 85 db 0f 85 68 fe
-> ff ff e8 a5 aa 4a fe 0f 0b e9 5c fe ff ff e8 99 aa 4a fe <0f> 0b e9 7f fe ff
-> ff 48 c7 c7 b4 e5 80 89 e8 b6 48 83 fe e9 28 fe
-> RSP: 0018:ffff88808ab9fa60 EFLAGS: 00010293
-> RAX: ffff88808c9f6340 RBX: 0000000000000001 RCX: ffffffff8326000e
-> RDX: 0000000000000000 RSI: ffffffff83260027 RDI: ffff88809f27b020
-> RBP: ffff88808ab9fab0 R08: ffff88808c9f6340 R09: ffffed1015d06be0
-> R10: ffffed1015d06bdf R11: ffff8880ae835efb R12: 00000000fffffff4
-> R13: ffff88809f27b008 R14: ffff88809ec4e658 R15: ffff88809f27b008
->  blk_mq_init_sched+0x32c/0x770 block/blk-mq-sched.c:542
->  elevator_init_mq+0xcd/0x160 block/elevator.c:622
->  blk_mq_init_allocated_queue+0x10e2/0x15b0 block/blk-mq.c:2921
->  blk_mq_init_queue+0x62/0xb0 block/blk-mq.c:2705
->  loop_add+0x2dd/0x8d0 drivers/block/loop.c:2004
->  loop_control_ioctl drivers/block/loop.c:2157 [inline]
->  loop_control_ioctl+0x165/0x360 drivers/block/loop.c:2139
->  vfs_ioctl fs/ioctl.c:46 [inline]
->  file_ioctl fs/ioctl.c:509 [inline]
->  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
->  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
->  __do_sys_ioctl fs/ioctl.c:720 [inline]
->  __se_sys_ioctl fs/ioctl.c:718 [inline]
->  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
->  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x4466e9
-> Code: e8 bc b5 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> 0f 83 2b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f735bcf2d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 00000000004466e9
-> RDX: 0000000000000000 RSI: 0000000000004c80 RDI: 0000000000000003
-> RBP: 00000000006dbc30 R08: 0000000000000002 R09: 0000000000003034
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
-> R13: 00007f735bcf2d90 R14: 0000000000000004 R15: 20c49ba5e353f7cf
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-
-Patch has been posted out:
-
-https://lore.kernel.org/linux-block/20190611093153.7147-1-ming.lei@redhat.com/T/#u
-
-Thanks,
-Ming
+On 6/7/2019 11:03 PM, Andrey Smirnov wrote:=0A=
+> From: Chris Spencer <christopher.spencer@sea.co.uk>=0A=
+> =0A=
+> There are no clocks that the CAAM driver needs to initialise on the=0A=
+> i.MX8.=0A=
+> =0A=
+RM lists 5 clocks for CAAM module (instance.clock): caam.aclk, caam.ipg_clk=
+,=0A=
+caam.ipg_clk_s, caam_exsc.aclk_exsc, caam_mem.clk=0A=
+				=0A=
+Wouldn't it be better to have these clocks in DT, instead of relying that t=
+heir=0A=
+root clocks (ccm_ahb_clk_root, ccm_ipg_clk_root) are critical / always on?=
+=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
+=0A=
