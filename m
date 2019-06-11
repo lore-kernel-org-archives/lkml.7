@@ -2,146 +2,127 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AAEC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F227CC4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BE3206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA24920665
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:04:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="WnDvxfK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389605AbfFKODk (ORCPT
+        id S2389804AbfFKOE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:03:40 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34143 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387447AbfFKODj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:03:39 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m29so14644724qtu.1;
-        Tue, 11 Jun 2019 07:03:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EVkZ5Meb5CDL0oIFVhucUTp7l9QflUQMSduTMl4zDVk=;
-        b=PIq0Ev/PChofz6Afe9aOtPMXN7Bx9cGVLA8Ikx2ZGlPd9J8sQ6vee9LEcLQ/vIdB1f
-         XMa+3B6mOI7krWfkeEKicAeKgatqFqBsIzXt7xV1Hk/If+s9sH1VKWjK4R1RFsWJoFd0
-         8lLwNEmR/tFc8LAKVlYsmC3OVnqpbsp8eEGET0zw+CRIofYHxYc5CikkdDGZfRtCakki
-         zm+t+XftNFZT1073weiGc9hyduEGIR4l54dSCh0KSOycyYDsm1SokRdzQVJPU6NnqAcm
-         djp1v18U3jxTtZg3M1SUq0Dar9jMU3S1Q97M0RdTMaWGAKbRNXqyfkyk5BPE0vZ5/w10
-         9DCQ==
-X-Gm-Message-State: APjAAAVEpTa+L0DuTJQOqaYqR2DQ/jI6LZG6ioEzjKoAxgdE0l4/ubIe
-        px9Ka12VVcT23fmG6Yk3h4n/SMB2OQ1t5U0vY00=
-X-Google-Smtp-Source: APXvYqwjRh4MxYTD/r3wX3IAWhp6mUcPGbFHcJyg3Nm9R7I9MA09/x/Km+iN6StJdIVm6ZB0iSPXXM4rpG388gm2sig=
-X-Received: by 2002:a0c:8b49:: with SMTP id d9mr60281688qvc.63.1560261818703;
- Tue, 11 Jun 2019 07:03:38 -0700 (PDT)
+        Tue, 11 Jun 2019 10:04:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:12504 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbfFKOE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:04:26 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45NWvp6z72z9v0F4;
+        Tue, 11 Jun 2019 16:04:22 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=WnDvxfK7; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id eCIThnGPA5aS; Tue, 11 Jun 2019 16:04:22 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45NWvp5vKxz9v0F1;
+        Tue, 11 Jun 2019 16:04:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560261862; bh=cGzgpxbRFlxcK7aezB5YmRNBHzKIp4lffWmjax6sgQQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WnDvxfK7qGDC5nYHUZHAeW++MRre0DOZm+yuvmuDl/P2IoU6/KuJAQhcgGcYuoS7N
+         4MeefWV1hW8ekZlvU298lOyL/M5/hJ4e+O20Mqwcn/b2O9dJzp7ZXbUtJUydV06agi
+         FzRUO1pqSJrLK7eCfM8hHv5yPSO6KudmKabLhTJY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 485F98B7F4;
+        Tue, 11 Jun 2019 16:04:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id z-vV47D7T_jZ; Tue, 11 Jun 2019 16:04:24 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 934918B75B;
+        Tue, 11 Jun 2019 16:04:23 +0200 (CEST)
+Subject: Re: [PATCH v1 1/5] crypto: talitos - fix ECB and CBC algs ivsize
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <cover.1559819372.git.christophe.leroy@c-s.fr>
+ <c8b988faeea463b89e7d9485c9328dc65a909e8e.1559819372.git.christophe.leroy@c-s.fr>
+ <VI1PR0402MB3485627276325DEF9CC6F58798ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <bf4d6713-66a6-4d48-8b1a-32b88a3be540@c-s.fr>
+Date:   Tue, 11 Jun 2019 16:04:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <156025961444.27052.12727156666287330749.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156025961444.27052.12727156666287330749.stgit@warthog.procyon.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 11 Jun 2019 16:03:21 +0200
-Message-ID: <CAK8P3a34Ba+VAzY_-CsVN+tRjk2nCbCiHo=oQq0am6QKKw93Rw@mail.gmail.com>
-Subject: Re: [RFC PATCH] Add script to add/remove/rename/renumber syscalls and
- resolve conflicts
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Nitesh Kataria <nitesh.kataria@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <VI1PR0402MB3485627276325DEF9CC6F58798ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 3:27 PM David Howells <dhowells@redhat.com> wrote:
->
-> Add a script that simplifies the process of altering system call tables in
-> the kernel sources.  It has five functions available:
 
-Ah, fun. You had already threatened to add that script in the past.
-The implementation of course looks fine, I was just hoping we could
-instead eliminate the need for it first.
 
-> +    { file     => "arch/mips/kernel/syscalls/syscall_n32.tbl",
-> +      pattern  => "%NUM n32 %NAME sys_%NAME",
-> +      compat   => 0 },
-> +    { file     => "arch/mips/kernel/syscalls/syscall_n32.tbl",
-> +      pattern  => "%NUM n32 %NAME compat_sys_%NAME",
-> +      compat   => 1 },
-> +    { file     => "arch/mips/kernel/syscalls/syscall_n64.tbl",
-> +      pattern  => "%NUM n64 %NAME sys_%NAME" },
-> +    { file     => "arch/mips/kernel/syscalls/syscall_o32.tbl",
+Le 11/06/2019 à 13:52, Horia Geanta a écrit :
+> On 6/6/2019 2:31 PM, Christophe Leroy wrote:
+>> commit d84cc9c9524e ("crypto: talitos - fix ECB algs ivsize")
+>> wrongly modified CBC algs ivsize instead of ECB aggs ivsize.
+>>
+>> This restore the CBC algs original ivsize of removes ECB's ones.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Fixes: d84cc9c9524e ("crypto: talitos - fix ECB algs ivsize")
+> Initial patch is correct:
+> 
+> $ git show -U10 d84cc9c9524e
+> [...]
+> @@ -2802,21 +2802,20 @@ static struct talitos_alg_template driver_algs[] = {
+>          {       .type = CRYPTO_ALG_TYPE_ABLKCIPHER,
+>                  .alg.crypto = {
+>                          .cra_name = "ecb(aes)",
+>                          .cra_driver_name = "ecb-aes-talitos",
+>                          .cra_blocksize = AES_BLOCK_SIZE,
+>                          .cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
+>                                       CRYPTO_ALG_ASYNC,
+>                          .cra_ablkcipher = {
+>                                  .min_keysize = AES_MIN_KEY_SIZE,
+>                                  .max_keysize = AES_MAX_KEY_SIZE,
+> -                               .ivsize = AES_BLOCK_SIZE,
+>                                  .setkey = ablkcipher_aes_setkey,
+>                          }
+>                  },
+> [...]
+> 
+> and similar for ecb(des), ecb(des3_ede).
+> 
+> Current patch is incorrect: it adds ivsize for ecb and removes it from cbc.
 
-My preferred way forward for mips n32/n64 would be to merge the
-two files and put the n32 stuff into the compat side, with the
-middle 100 or so syscalls using '32' and '64' as the ABI since
-their numbers diverged at some point.
+Very strange. Looks like there has been some rebase weirdness which have 
+applied the patch on the wrong block at some point on my side, probably 
+due to the fact that both blocks have the two previous and following 
+lines identical.
 
-> +      pattern  => "%NUM o32 %NAME sys_%NAME",
-> +      compat   => 0 },
-> +    { file     => "arch/mips/kernel/syscalls/syscall_o32.tbl",
-> +      pattern  => "%NUM o32 %NAME sys_%NAME compat_sys_%NAME",
-> +      compat   => 1 },
+I've now rebased my serie on cryptodev/master and have the same 
+behaviour as you. I'll resend the series without this patch.
 
-For o32, I guess we can just use 'common' in the whole file'.
+Christophe
 
-> +    { file     => "arch/x86/entry/syscalls/syscall_32.tbl",
-> +      pattern  => "%NUM i386 %NAME sys_%NAME __ia32_sys_%NAME",
-> +      widths   => [ 8, 8, 24, 32, 32],
-> +      compat   => 0 },
-> +    { file     => "arch/x86/entry/syscalls/syscall_32.tbl",
-> +      pattern  => "%NUM i386 %NAME sys_%NAME __ia32_compat_sys_%NAME",
-> +      widths   => [ 8, 8, 24, 32, 32],
-> +      compat   => 1 },
-> +    { file     => "arch/x86/entry/syscalls/syscall_64.tbl",
-> +      pattern  => "%NUM common %NAME __x64_sys_%NAME",
-> +      widths   => [ 8, 8, 24, 32, 32] },
 
-In case of x86, there are three differences from the normal format,
-and both are unnecessary now:
-
-- the __ia32 and __x64 prefixes can easily be added from the
-  __SYSCALL_I386 and __SYSCALL_64 macros, for x32
-  something similar can be done with a little bit of rework,
-  or we skip that since it was decided that there won't be any
-  additional x32 syscalls
-
-- The "/ptregs" flag in some calls was added to enable an
-  optimization, but that optimization is already removed again,
-  so this no longer servers any purpose.
-
-- The whitespace difference can be trivially changed to the common
-  version.
-
-> +    # Find the __NR_syscalls value.
-> +    for ($i = 0; $i <= $#{$lines}; $i++) {
-> +       my $l = $lines->[$i];
-> +       if ($l =~ /^#define\s+__NR_syscalls\s+([0-9]+)/) {
-> +           die "$f:$i: Redefinition of __NR_syscalls\n" if ($i_nr != -1);
-> +           $nr = $1;
-> +           $i_nr = $i;
->       }
->   }
-
-Firoz and Nitesh have worked on a syscall.tbl file to replace
-the asm-generic/unistd.h file. Firoz had an earlier version before the
-time64 syscall changes that made it more complicated, so this
-still needs a rebase that I thought Nitesh wanted to post but
-hasn't done yet.
-
-The same series should also contain the corresponding conversion
-of arch/arm64/include/asm/unistd32.h.
-
-My plan was to eventually use the combination of two syscall.tbl
-files as input for the scripts: one architecture specific file for
-numbers below 403 (plus the x32 specific ones), and another
-generic file for all new numbers. I have not actually implemented
-any of that though.
-
-       Arnd
+> 
+> Horia
+> 
