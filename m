@@ -2,108 +2,132 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0D0C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD71DC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40E92086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AC72146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390998AbfFKDXx (ORCPT
+        id S2391000AbfFKD13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 23:23:53 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33388 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390972AbfFKDXx (ORCPT
+        Mon, 10 Jun 2019 23:27:29 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:60900 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390856AbfFKD12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 23:23:53 -0400
-Received: from [125.35.49.90] (helo=[10.0.0.22])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <hui.wang@canonical.com>)
-        id 1haXNy-0006e7-Mf; Tue, 11 Jun 2019 03:23:47 +0000
-Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRDSF0gaW5wdXQ6?=
- =?UTF-8?Q?_alps-fix_the_issue_alps_cs19_trackstick_do_not_work=2e?=
-To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc:     XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
-        Naoki Saito <naoki.saito@alpsalpine.com>,
-        Hideo Kawase <hideo.kawase@alpsalpine.com>
-References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
- <20190527100913.sgxrjrmphsjfmcdb@pali>
- <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190528071824.jimhixhtsynzwixe@pali>
- <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190610104310.qa5snt7jpcljodfv@pali>
- <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
-From:   Hui Wang <hui.wang@canonical.com>
-Message-ID: <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
-Date:   Tue, 11 Jun 2019 11:23:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Mon, 10 Jun 2019 23:27:28 -0400
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id 7094822994; Mon, 10 Jun 2019 23:27:27 -0400 (EDT)
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "Michael Schmitz" <schmitzmic@gmail.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH] NCR5380: Support chained sg lists
+Date:   Tue, 11 Jun 2019 13:25:09 +1000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/11 上午11:05, Xiaoxiao Liu wrote:
-> Hi Pali,
->
-> I discussed with our FW team about this problem.
-> We think the V8 method means a touchpad feature  and does not fit the CS19 trackpoint device.
-> CS19 TrackPoint needn't  use any Absolute (Raw) mode and is usually use standard mouse data.
-> CS19 TrackPoint device is a completely different device with DualPoint device of Dell/HP.
-> CS19 TrackPoint device is independent  of Touchpad. (Touchpad is connecting by I2C, TrackPoint is directly connecting with PS2 port.)
-> And it has completely another FW.
->
-> So we think it is better to use the mouse mode for CS19 trackpoint.
+My understanding is that support for chained scatterlists is to
+become mandatory for LLDs.
 
-Maybe here is some mis-understanding,  the mouse mode here doesn't mean 
-we use psmouse-base.c for cs19 (bare ps/2 mouse), we plan to use 
-trackpoint.c to drive this HW, so this trackpoint has all features a 
-trackpoint should have.
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+---
+ drivers/scsi/NCR5380.c | 41 ++++++++++++++++++-----------------------
+ 1 file changed, 18 insertions(+), 23 deletions(-)
 
-Regards,
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index d9fa9cf2fd8b..536426f25e86 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -149,12 +149,10 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
+ 
+ 	if (scsi_bufflen(cmd)) {
+ 		cmd->SCp.buffer = scsi_sglist(cmd);
+-		cmd->SCp.buffers_residual = scsi_sg_count(cmd) - 1;
+ 		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+ 		cmd->SCp.this_residual = cmd->SCp.buffer->length;
+ 	} else {
+ 		cmd->SCp.buffer = NULL;
+-		cmd->SCp.buffers_residual = 0;
+ 		cmd->SCp.ptr = NULL;
+ 		cmd->SCp.this_residual = 0;
+ 	}
+@@ -163,6 +161,17 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
+ 	cmd->SCp.Message = 0;
+ }
+ 
++static inline void advance_sg_buffer(struct scsi_cmnd *cmd)
++{
++	struct scatterlist *s = cmd->SCp.buffer;
++
++	if (!cmd->SCp.this_residual && s && !sg_is_last(s)) {
++		cmd->SCp.buffer = sg_next(s);
++		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
++		cmd->SCp.this_residual = cmd->SCp.buffer->length;
++	}
++}
++
+ /**
+  * NCR5380_poll_politely2 - wait for two chip register values
+  * @hostdata: host private data
+@@ -1670,12 +1679,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+ 			    sun3_dma_setup_done != cmd) {
+ 				int count;
+ 
+-				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
+-					++cmd->SCp.buffer;
+-					--cmd->SCp.buffers_residual;
+-					cmd->SCp.this_residual = cmd->SCp.buffer->length;
+-					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+-				}
++				advance_sg_buffer(cmd);
+ 
+ 				count = sun3scsi_dma_xfer_len(hostdata, cmd);
+ 
+@@ -1725,15 +1729,11 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+ 				 * scatter-gather list, move onto the next one.
+ 				 */
+ 
+-				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
+-					++cmd->SCp.buffer;
+-					--cmd->SCp.buffers_residual;
+-					cmd->SCp.this_residual = cmd->SCp.buffer->length;
+-					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+-					dsprintk(NDEBUG_INFORMATION, instance, "%d bytes and %d buffers left\n",
+-					         cmd->SCp.this_residual,
+-					         cmd->SCp.buffers_residual);
+-				}
++				advance_sg_buffer(cmd);
++				dsprintk(NDEBUG_INFORMATION, instance,
++					"this residual %d, sg ents %d\n",
++					cmd->SCp.this_residual,
++					sg_nents(cmd->SCp.buffer));
+ 
+ 				/*
+ 				 * The preferred transfer method is going to be
+@@ -2126,12 +2126,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
+ 	if (sun3_dma_setup_done != tmp) {
+ 		int count;
+ 
+-		if (!tmp->SCp.this_residual && tmp->SCp.buffers_residual) {
+-			++tmp->SCp.buffer;
+-			--tmp->SCp.buffers_residual;
+-			tmp->SCp.this_residual = tmp->SCp.buffer->length;
+-			tmp->SCp.ptr = sg_virt(tmp->SCp.buffer);
+-		}
++		advance_sg_buffer(tmp);
+ 
+ 		count = sun3scsi_dma_xfer_len(hostdata, tmp);
+ 
+-- 
+2.21.0
 
-Hui.
-
->
-> Best Regards
-> Shona
-> -----邮件原件-----
-> 发件人: Pali Rohár <pali.rohar@gmail.com>
-> 发送时间: Monday, June 10, 2019 6:43 PM
-> 收件人: 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
-> 抄送: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>; dmitry.torokhov@gmail.com; peter.hutterer@who-t.net; hui.wang@canonical.com; linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 斉藤 直樹 Naoki Saito <naoki.saito@alpsalpine.com>; 川瀬 英夫 Hideo Kawase <hideo.kawase@alpsalpine.com>
-> 主题: Re: 答复: 答复: [PATCH] input: alps-fix the issue alps cs19 trackstick do not work.
->
-> On Monday 10 June 2019 10:03:51 Xiaoxiao Liu wrote:
->> Hi Pali,
-> Hi!
->
->> We register our CS19 device as ALPS_ONLY_TRACKSTICK device.
->> And let the V8 protocol function support the process of ALPS_ONLY_TRACKSTICK device.
->>
->> I want to confirm if this solution OK?
-> Yes, it is fine. Just make sure that touchapad input device is not registered when this ALPS_ONLY_TRACKSTICK flag is set. So userspace would not see any fake/unavailable touchpad input device.
->
->> Xiaoxiao.Liu
-> --
-> Pali Rohár
-> pali.rohar@gmail.com
