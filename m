@@ -2,132 +2,65 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A3EC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AE8C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79624208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E85C2206BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:12:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i+skrpj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404458AbfFKPKX (ORCPT
+        id S2391747AbfFKPMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:10:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55928 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404326AbfFKPKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:10:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7F10FAFA5;
-        Tue, 11 Jun 2019 15:10:19 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 17:10:18 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
-Message-ID: <20190611151018.gvjazu4vedw2h2qh@pathway.suse.cz>
-References: <20190528002412.1625-1-dima@arista.com>
- <4a9c1b20-777d-079a-33f5-ddf0a39ff788@i-love.sakura.ne.jp>
- <20190528042208.GD26865@jagdpanzerIV>
- <90a22327-922d-6415-538a-6a3fcbe9f3e1@i-love.sakura.ne.jp>
- <20190528084825.GA9676@jagdpanzerIV>
- <966f1a8d-68ab-a808-9140-4ecf1453421d@i-love.sakura.ne.jp>
- <20190607170922.GA17017@xo-6d-61-c0.localdomain>
- <b28da439-1d2c-9a1c-17be-fa8b8476d313@i-love.sakura.ne.jp>
+        Tue, 11 Jun 2019 11:12:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44898 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388333AbfFKPMr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:12:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8Zz8IYaYi8X4JihDj2RJx4SBOxoW9ucRDrdaIchCcIk=; b=i+skrpj2uoU2UQ4AfrPKNef38
+        erUaxvLiw4im5aV10NNsDVxucYXy6hKEFdh4A+aNWBKSTlAsTAhzZAJ4nYEObYLr/32g/H2keVITL
+        +JEpxRG0WSSVKes0gfXTRvj2sK5ABuCdmfI2gvX+iAggXyOEVIixijcvcn4AUUkSfpSg7n7mVKtEB
+        RCLXzVGjNANHKb2yS1ke1KF3M2Vwp4lTBBzzN6ifMBCzaQBDwWADtCZZCEWk29gD52SgOb1j3dTt4
+        /YqOvrB6rBdTx5Dw6c3x4y+T7FhbAUhksAldvUM4SuEKkz4+pSENwTln1DkptagbXMTwozDS29HGT
+        aG77ZEs6A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1haiS7-00010R-Ap; Tue, 11 Jun 2019 15:12:47 +0000
+Date:   Tue, 11 Jun 2019 08:12:47 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH 8/8] habanalabs: enable 64-bit DMA mask in POWER9
+Message-ID: <20190611151247.GA3110@infradead.org>
+References: <20190611055045.15945-1-oded.gabbay@gmail.com>
+ <20190611055045.15945-9-oded.gabbay@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b28da439-1d2c-9a1c-17be-fa8b8476d313@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190611055045.15945-9-oded.gabbay@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2019-06-08 11:45:45, Tetsuo Handa wrote:
-> On 2019/06/08 2:09, Pavel Machek wrote:
-> > On Tue 2019-05-28 19:15:43, Tetsuo Handa wrote:
-> >> On 2019/05/28 17:51, Sergey Senozhatsky wrote:
-> >>>> You are trying to omit passing KERN_UNSUPPRESSED by utilizing implicit printk
-> >>>> context information. But doesn't such attempt resemble find_printk_buffer() ?
-> >>>
-> >>> Adding KERN_UNSUPPRESSED to all printks down the op_p->handler()
-> >>> line is hardly possible. At the same time I'd really prefer not
-> >>> to have buffering for sysrq.
-> >>
-> >> I don't think it is hardly possible. And I really prefer having
-> >> deferred printing for SysRq.
+On Tue, Jun 11, 2019 at 08:50:45AM +0300, Oded Gabbay wrote:
+> 2. The pci_set_dma_mask() is a generic Linux kernel call, so the driver
+>    can't tell why it got an error when it tried to set the DMA mask to 48
+>    bits. And upon such failure, the driver must fall-back to set the mask
+>    to 32 bits.
 
-> > 
-> > Well, magic SysRq was meant for situation where system is in weird/broken state.
-> > "Give me backtrace where it is hung", etc. Direct printing is more likely to work
-> > in that cases.
-> 
-> Magic SysRq from keyboard is for situation where system is in weird/broken state.
-> 
-> But I want to use Magic SysRq from /proc for situation where system is not fatally
-> weird/broken state. I have trouble getting SysRq-t from /proc when something bad
-> happened (e.g. some health check process did not return for 60 seconds). Since
-> /proc/pid/wchan shows only 1 line, it is useless for understanding why that process
-> got stuck. If direct printing is enforced, "echo t > /proc/sysrq-trigger" might take
-> many minutes. If direct printing is not enforced, "echo t > /proc/sysrq-trigger"
-> should complete within less than one second. If syslog is working (which is almost
-> equivalent to being able to write to /proc/sysrq-trigger), the latter is more helpful
-> for taking snapshots for multiple times (e.g. 5 times with 10 seconds interval) in
-> order to understand why that process got stuck. That's why I added
-
-This looks like a very specific use case. But the proposal changes
-the behavior for anyone. I am not persuaded that everyone would
-appreciate the change.
-
-OK, it takes 60 seconds when the messages appear on the console and
-1 second when they are just stored to the syslog.
-
-Why the system is configured to show all messages on the console
-when syslog is enough?
-
-If sysrq is the preferred interface, it might be used also the other
-way. I mean to increase console_loglevel to hide all messages on
-the console, trigger output of the system state and eventually
-decrease the loglevel again.
-
-> Also, regarding Magic SysRq from keyboard case, my intent is to allow SysRq
-> to just store the messages to printk() buffer, in order to avoid stalls and
-> take better snapshots for multiple times. And my intent of
-> 
->   And I really prefer having deferred printing for SysRq.
-
-Always deferring printk() for everyone is not acceptable. It is one
-extreme between printk() reliability and speed in favor of the speed.
-But many people prefer reliability (high chance to see messages
-when the system goes down.
-
-IMHO, the only acceptable solution need to be configurable:
-
-   + never deffer (debugging corner cases?)
-   + avoid softlockup (default on normal systems?)
-   + guarantee max time (throughput oriented systems)
-   + always deffer (real time, special usecases)
-
-It might be based on Sergey's patchsets adding the offload logic
-into console_unlock().
-
-IMHO, the most problematic thing is how to define the limit
-(lines?, characters?, time?). A limit bases on the data amount
-would also depend on console speed. Time based limit would be
-better but measuring time in console_unlock() is problematic
-(atomic context, possible deadlocks).
-
-Best Regards,
-Petr
+In the current kernel pci_set_dma_mask only fails if the DMA mask is
+to small to be supportable at all.  So you very obviously did not
+actually test this against mainline.
