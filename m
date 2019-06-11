@@ -2,106 +2,175 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC32C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC724C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B7C206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XCNS03ho"
+	by mail.kernel.org (Postfix) with ESMTP id C2FB92086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404634AbfFKJP4 (ORCPT
+        id S2404818AbfFKJTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:15:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33672 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727642AbfFKJP4 (ORCPT
+        Tue, 11 Jun 2019 05:19:34 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:35556 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404428AbfFKJTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:15:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VEECxa63lSDae44YYA0SmkX/nnYgGF1NhyGuBAx1jCI=; b=XCNS03hoWW8vU0KkhyVxGPJ6f
-        n+Nq9eTPb2heNUo12nB3A4BhWw98SyHCSRjyFfNtBC00CtsfVPJFVhxv0Ke/4QOAxZXg81dp9TF6N
-        BkZptKuD3RWSih9ooyCN5h506xvu0nilbBx8XTBlPHo6dvOyvVHaMrXTqonIGn7myRieJUvIHahRD
-        G4ZqdLy5csut//3VWHVkbk0AEOIR9KxWxiiLJkvRPlClaIaI6BqoFxT+9ZSx7JK3q/RiMCIGzG8II
-        etomQjJ1NReKz5VoBcGkXNg3dAmPeQDECmWb+cbOLova0UTApObf4FpXfkyB1hQZnYJzVZhy/6QkP
-        y+dpLbAdg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hacse-00069J-8B; Tue, 11 Jun 2019 09:15:48 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 54CF8202173E3; Tue, 11 Jun 2019 11:15:46 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 11:15:46 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH/RFC 2/3] s390: improve wait logic of stop_machine
-Message-ID: <20190611091546.GV3436@hirez.programming.kicks-ass.net>
-References: <20190608110853.35961-1-heiko.carstens@de.ibm.com>
- <20190608110853.35961-3-heiko.carstens@de.ibm.com>
+        Tue, 11 Jun 2019 05:19:34 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 263822952E;
+        Tue, 11 Jun 2019 05:19:30 -0400 (EDT)
+Date:   Tue, 11 Jun 2019 19:19:10 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Michael Schmitz <schmitzmic@gmail.com>
+cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] NCR5380: Support chained sg lists
+In-Reply-To: <a1fe2d99-fc2f-c12d-41fe-025ee1f66c0b@gmail.com>
+Message-ID: <alpine.LNX.2.21.1906111910220.25@nippy.intranet>
+References: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au> <a1fe2d99-fc2f-c12d-41fe-025ee1f66c0b@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190608110853.35961-3-heiko.carstens@de.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 01:08:52PM +0200, Heiko Carstens wrote:
-> --- a/arch/s390/kernel/processor.c
-> +++ b/arch/s390/kernel/processor.c
-> @@ -31,6 +31,7 @@ struct cpu_info {
->  };
->  
->  static DEFINE_PER_CPU(struct cpu_info, cpu_info);
-> +static DEFINE_PER_CPU(int, cpu_relax_retry);
->  
->  static bool machine_has_cpu_mhz;
->  
-> @@ -58,13 +59,21 @@ void s390_update_cpu_mhz(void)
->  		on_each_cpu(update_cpu_mhz, NULL, 0);
->  }
->  
-> +void notrace cpu_relax_yield(const struct cpumask *cpumask)
->  {
-> +	int cpu;
-> +
-> +	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
-> +		__this_cpu_write(cpu_relax_retry, 0);
 
-I don't mind, but do we really need a per-cpu variable for this? Does it
-really matter if you spin on a stack variable and occasionally spin a
-bit longer due to the missed tail of the previous spin?
+On Tue, 11 Jun 2019, Michael Schmitz wrote:
 
-> +		cpu = cpumask_next(smp_processor_id(), cpumask);
-> +		if (cpu >= nr_cpu_ids) {
-> +			cpu = cpumask_first(cpumask);
-> +			if (cpu == smp_processor_id())
-> +				return;
+> Hi Finn,
+> 
+> Thanks - can't test this on my hardware but looks good to me.
+> 
 
-If this function is passed an empty cpumask, the above will result in
-'cpu == nr_cpu_ids' and the below might be unhappy with that.
+Thanks for looking it over.
 
-(FWIW we do have cpumask_next_wrap(), but I admit it is somewhat awkward
-to use)
+Would you be willing to send a "reviewed-by" tag?
 
-> +		}
-> +		if (arch_vcpu_is_preempted(cpu))
-> +			smp_yield_cpu(cpu);
->  	}
->  }
->  EXPORT_SYMBOL(cpu_relax_yield);
+I tested this successfully on my PowerBook 180 using the parameters 
+mac_scsi.setup_sg_tablesize=128 mac_scsi.setup_use_pdma=0
+
+(Only because PDMA doesn't work with sg_tablesize > 1 with this particular 
+drive.)
+
+-- 
+
+> Cheers,
+> 
+> 	Michael
+> 
+> Am 11.06.2019 um 15:25 schrieb Finn Thain:
+> > My understanding is that support for chained scatterlists is to
+> > become mandatory for LLDs.
+> > 
+> > Cc: Michael Schmitz <schmitzmic@gmail.com>
+> > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+> > ---
+> >  drivers/scsi/NCR5380.c | 41 ++++++++++++++++++-----------------------
+> >  1 file changed, 18 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+> > index d9fa9cf2fd8b..536426f25e86 100644
+> > --- a/drivers/scsi/NCR5380.c
+> > +++ b/drivers/scsi/NCR5380.c
+> > @@ -149,12 +149,10 @@ static inline void initialize_SCp(struct scsi_cmnd
+> > *cmd)
+> > 
+> >  	if (scsi_bufflen(cmd)) {
+> >  		cmd->SCp.buffer = scsi_sglist(cmd);
+> > -		cmd->SCp.buffers_residual = scsi_sg_count(cmd) - 1;
+> >  		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+> >  		cmd->SCp.this_residual = cmd->SCp.buffer->length;
+> >  	} else {
+> >  		cmd->SCp.buffer = NULL;
+> > -		cmd->SCp.buffers_residual = 0;
+> >  		cmd->SCp.ptr = NULL;
+> >  		cmd->SCp.this_residual = 0;
+> >  	}
+> > @@ -163,6 +161,17 @@ static inline void initialize_SCp(struct scsi_cmnd
+> > *cmd)
+> >  	cmd->SCp.Message = 0;
+> >  }
+> > 
+> > +static inline void advance_sg_buffer(struct scsi_cmnd *cmd)
+> > +{
+> > +	struct scatterlist *s = cmd->SCp.buffer;
+> > +
+> > +	if (!cmd->SCp.this_residual && s && !sg_is_last(s)) {
+> > +		cmd->SCp.buffer = sg_next(s);
+> > +		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
+> > +		cmd->SCp.this_residual = cmd->SCp.buffer->length;
+> > +	}
+> > +}
+> > +
+> >  /**
+> >   * NCR5380_poll_politely2 - wait for two chip register values
+> >   * @hostdata: host private data
+> > @@ -1670,12 +1679,7 @@ static void NCR5380_information_transfer(struct
+> > Scsi_Host *instance)
+> >  			    sun3_dma_setup_done != cmd) {
+> >  				int count;
+> > 
+> > -				if (!cmd->SCp.this_residual &&
+> > cmd->SCp.buffers_residual) {
+> > -					++cmd->SCp.buffer;
+> > -					--cmd->SCp.buffers_residual;
+> > -					cmd->SCp.this_residual =
+> > cmd->SCp.buffer->length;
+> > -					cmd->SCp.ptr =
+> > sg_virt(cmd->SCp.buffer);
+> > -				}
+> > +				advance_sg_buffer(cmd);
+> > 
+> >  				count = sun3scsi_dma_xfer_len(hostdata, cmd);
+> > 
+> > @@ -1725,15 +1729,11 @@ static void NCR5380_information_transfer(struct
+> > Scsi_Host *instance)
+> >  				 * scatter-gather list, move onto the next
+> > one.
+> >  				 */
+> > 
+> > -				if (!cmd->SCp.this_residual &&
+> > cmd->SCp.buffers_residual) {
+> > -					++cmd->SCp.buffer;
+> > -					--cmd->SCp.buffers_residual;
+> > -					cmd->SCp.this_residual =
+> > cmd->SCp.buffer->length;
+> > -					cmd->SCp.ptr =
+> > sg_virt(cmd->SCp.buffer);
+> > -					dsprintk(NDEBUG_INFORMATION, instance,
+> > "%d bytes and %d buffers left\n",
+> > -					         cmd->SCp.this_residual,
+> > -					         cmd->SCp.buffers_residual);
+> > -				}
+> > +				advance_sg_buffer(cmd);
+> > +				dsprintk(NDEBUG_INFORMATION, instance,
+> > +					"this residual %d, sg ents %d\n",
+> > +					cmd->SCp.this_residual,
+> > +					sg_nents(cmd->SCp.buffer));
+> > 
+> >  				/*
+> >  				 * The preferred transfer method is going to
+> > be
+> > @@ -2126,12 +2126,7 @@ static void NCR5380_reselect(struct Scsi_Host
+> > *instance)
+> >  	if (sun3_dma_setup_done != tmp) {
+> >  		int count;
+> > 
+> > -		if (!tmp->SCp.this_residual && tmp->SCp.buffers_residual) {
+> > -			++tmp->SCp.buffer;
+> > -			--tmp->SCp.buffers_residual;
+> > -			tmp->SCp.this_residual = tmp->SCp.buffer->length;
+> > -			tmp->SCp.ptr = sg_virt(tmp->SCp.buffer);
+> > -		}
+> > +		advance_sg_buffer(tmp);
+> > 
+> >  		count = sun3scsi_dma_xfer_len(hostdata, tmp);
+> > 
+> > 
+> 
