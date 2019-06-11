@@ -2,107 +2,206 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C66C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC56CC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF132080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:53:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WEQRL6Cv"
+	by mail.kernel.org (Postfix) with ESMTP id A56412080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391851AbfFKPxn (ORCPT
+        id S2405448AbfFKPyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:53:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58390 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388958AbfFKPxn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:53:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=n6EuzMTdIJDT3nK6a2rUq5vUyQxtQQjq8okXh4kW0Vg=; b=WEQRL6CvNrWVt30j+cbpwAsr5
-        WqvdnRnKsI0LOqRP76sm6Carj8ZGQv6c7bQIlyDuOsy86iYINcqIAnDaeOC4+6ZfUjGVIxmbcMjIk
-        6QlNFic2mv63k95m5dhr/Nym0sg1aBvkCeH3Z16sOxFlL652D8Z7kIoCrf2g4VsLAZoctPpnP4WH9
-        dG+sPiGCY4c54r1MjC9RlMwmShf1MOce6fFnZ646ADT5dK6HuQtLISppxOhvze4GnZP6M6Shu1Kim
-        kQS7jwRrttIfQgyNDXtPjbnUoNRXMr3ScYS8ALcCl0xCHQmtcgC9g3A4M6Ak3J9BHW5Nl7x01uAJo
-        N71/PG5bQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1haj4r-0006YT-NM; Tue, 11 Jun 2019 15:52:49 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 10A8B20240777; Tue, 11 Jun 2019 17:52:48 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 17:52:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
- instructions
-Message-ID: <20190611155248.GA3436@hirez.programming.kicks-ass.net>
-References: <20190605130753.327195108@infradead.org>
- <20190605131945.005681046@infradead.org>
- <20190611111410.366f4ced@gandalf.local.home>
+        Tue, 11 Jun 2019 11:54:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46200 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405288AbfFKPyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:54:14 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8D9A48CB56;
+        Tue, 11 Jun 2019 15:54:08 +0000 (UTC)
+Received: from ovpn-112-53.rdu2.redhat.com (ovpn-112-53.rdu2.redhat.com [10.10.112.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EEFE619C70;
+        Tue, 11 Jun 2019 15:53:58 +0000 (UTC)
+Message-ID: <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+From:   Dan Williams <dcbw@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
+        Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        syadagir@codeaurora.org
+Date:   Tue, 11 Jun 2019 10:53:57 -0500
+In-Reply-To: <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611111410.366f4ced@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 11 Jun 2019 15:54:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 11:14:10AM -0400, Steven Rostedt wrote:
-> On Wed, 05 Jun 2019 15:08:01 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
+> On Tue, Jun 11, 2019 at 10:12 AM Johannes Berg
+> <johannes@sipsolutions.net> wrote:
 > 
-> > -void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
-> > +void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
-> >  {
-> >  	unsigned char int3 = 0xcc;
-> >  
-> > -	bp_int3_handler = handler;
-> > +	bp_int3_opcode = emulate ?: opcode;
-> >  	bp_int3_addr = (u8 *)addr + sizeof(int3);
-> >  	bp_patching_in_progress = true;
-> >  
-> >  	lockdep_assert_held(&text_mutex);
-> >  
-> >  	/*
-> > +	 * poke_int3_handler() relies on @opcode being a 5 byte instruction;
-> > +	 * notably a JMP, CALL or NOP5_ATOMIC.
-> > +	 */
-> > +	BUG_ON(len != 5);
+> > > As I've made clear before, my work on this has been focused on
+> > > the IPA transport,
+> > > and some of this higher-level LTE architecture is new to me.  But
+> > > it
+> > > seems pretty clear that an abstracted WWAN subsystem is a good
+> > > plan,
+> > > because these devices represent a superset of what a "normal"
+> > > netdev
+> > > implements.
+> > 
+> > I'm not sure I'd actually call it a superset. By themselves, these
+> > netdevs are actually completely useless to the network stack,
+> > AFAICT.
+> > Therefore, the overlap with netdevs you can really use with the
+> > network
+> > stack is pretty small?
 > 
-> If we have a bug on here, why bother with passing in len at all? Just
-> force it to be 5.
-
-Masami said the same.
-
-> We could make it a WARN_ON() and return without doing anything.
+> I think Alex meant the concept of having a type of netdev with a
+> generic
+> user space interface for wwan and similar to a wlan device, as I
+> understood
+> you had suggested as well, as opposed to a stacked device as in
+> rmnet or those drivers it seems to be modeled after (vlan, ip tunnel,
+> ...)/.
 > 
-> This also prevents us from ever changing two byte jmps.
+> > > HOWEVER I disagree with your suggestion that the IPA code should
+> > > not be committed until after that is all sorted out.  In part
+> > > it's
+> > > for selfish reasons, but I think there are legitimate reasons to
+> > > commit IPA now *knowing* that it will need to be adapted to fit
+> > > into the generic model that gets defined and developed.  Here
+> > > are some reasons why.
+> > 
+> > I can't really argue with those, though I would point out that the
+> > converse also holds - if we commit to this now, then we will have
+> > to
+> > actually keep the API offered by IPA/rmnet today, so we cannot
+> > actually
+> > remove the netdev again, even if we do migrate it to offer support
+> > for a
+> > WWAN framework in the future.
+> 
+> Right. The interface to support rmnet might be simple enough to keep
+> next to what becomes the generic interface, but it will always
+> continue
+> to be an annoyance.
+> 
+> > > Second, the IPA code has been out for review recently, and has
+> > > been
+> > > the subject of some detailed discussion in the past few
+> > > weeks.  Arnd
+> > > especially has invested considerable time in review and
+> > > discussion.
+> > > Delaying things until after a better generic model is settled on
+> > > (which I'm guessing might be on the order of months)
+> > 
+> > I dunno if it really has to be months. I think we can cobble
+> > something
+> > together relatively quickly that addresses the needs of IPA more
+> > specifically, and then extend later?
+> > 
+> > But OTOH it may make sense to take a more paced approach and think
+> > about the details more carefully than we have over in the other
+> > thread so far.
+> 
+> I would hope that as soon as we can agree on a general approach, it
+> would also be possible to merge a minimal implementation into the
+> kernel
+> along with IPA. Alex already mentioned that IPA in its current state
+> does
+> not actually support more than one data channel, so the necessary
+> setup for it becomes even simpler.
+> 
+> At the moment, the rmnet configuration in
+> include/uapi/linux/if_link.h
+> is almost trivial, with the three pieces of information needed being
+> an IFLA_LINK to point to the real device (not needed if there is only
+> one device per channel, instead of two), the IFLA_RMNET_MUX_ID
+> setting the ID of the muxing channel (not needed if there is only
+> one channel ?), a way to specify software bridging between channels
+> (not useful if there is only one channel) and a few flags that I
+> assume
+> must match the remote end:
+> 
+> #define RMNET_FLAGS_INGRESS_DEAGGREGATION         (1U << 0)
+> #define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
+> #define RMNET_FLAGS_INGRESS_MAP_CKSUMV4           (1U << 2)
+> #define RMNET_FLAGS_EGRESS_MAP_CKSUMV4            (1U << 3)
+> enum {
+>         IFLA_RMNET_UNSPEC,
+>         IFLA_RMNET_MUX_ID,
+>         IFLA_RMNET_FLAGS,
+>         __IFLA_RMNET_MAX,
+> };
+> #define IFLA_RMNET_MAX  (__IFLA_RMNET_MAX - 1)
+> struct ifla_rmnet_flags {
+>         __u32   flags;
+>         __u32   mask;
+> };
+> 
+> > > Third, having the code upstream actually means the actual
+> > > requirements
+> > > for rmnet-over-IPA are clear and explicit.  This might not be a
+> > > huge
+> > > deal, but I think it's better to devise a generic WWAN scheme
+> > > that
+> > > can refer to actual code than to do so with assumptions about
+> > > what
+> > > will work with rmnet (and others).  As far as I know, the
+> > > upstream
+> > > rmnet has no other upstream back end; IPA will make it "real."
+> > 
+> > Is that really true? I had previously been told that rmnet actually
+> > does
+> > have use with a few existing drivers.
+> > 
+> > 
+> > If true though, then I think this would be the killer argument *in
+> > favour* of *not* merging this - because that would mean we *don't*
+> > have
+> > to actually keep the rmnet API around for all foreseeable future.
+> 
+> I would agree with that. From the code I can see no other driver
+> including the rmnet protocol header (see the discussion about moving
+> the header to include/linux in order to merge ipa), and I don't see
+> any other driver referencing ETH_P_MAP either. My understanding
+> is that any driver used by rmnet would require both, but they are
+> all out-of-tree at the moment.
 
-It doesn't; that is, we'd need to add emulation for the 3 byte jump, but
-that'd be pretty trivial.
+The general plan (and I believe Daniele Palmas was working on it) was
+to eventually make qmi_wwan use rmnet rather than its internal sysfs-
+based implementation. qmi_wwan and ipa are at essentially the same
+level and both could utilize rmnet on top.
+
+*That's* what I'd like to see. I don't want to see two different ways
+to get QMAP packets to modem firmware from two different drivers that
+really could use the same code.
+
+Dan
+
