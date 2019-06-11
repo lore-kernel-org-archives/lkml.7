@@ -2,99 +2,106 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE67C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FDAC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0692089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0C52089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406677AbfFKRuG (ORCPT
+        id S2406695AbfFKRuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:50:06 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:36970 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406653AbfFKRuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:50:02 -0400
-Received: from [167.98.27.226] (helo=ct-lt-1124.office.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hakte-0001PN-2s; Tue, 11 Jun 2019 18:49:22 +0100
-From:   Thomas Preston <thomas.preston@codethink.co.uk>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 11 Jun 2019 13:50:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:39188 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406260AbfFKRup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:50:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D236337;
+        Tue, 11 Jun 2019 10:50:45 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18BF83F73C;
+        Tue, 11 Jun 2019 10:50:39 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 18:50:37 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kirill Marinushkin <kmarinushkin@birdec.tech>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        Thomas Preston <thomas.preston@codethink.co.uk>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/4] dt-bindings: ASoC: Add TDA7802 amplifier
-Date:   Tue, 11 Jun 2019 18:49:06 +0100
-Message-Id: <20190611174909.12162-2-thomas.preston@codethink.co.uk>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
-References: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v16 16/16] selftests, arm64: add a selftest for passing
+ tagged pointers to kernel
+Message-ID: <20190611175037.pflr6q6ob67zjj25@mbp>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <9e1b5998a28f82b16076fc85ab4f88af5381cf74.1559580831.git.andreyknvl@google.com>
+ <20190611150122.GB63588@arrakis.emea.arm.com>
+ <CAAeHK+wZrVXxAnDXBjoUy8JK9iG553G2Bp8uPWQ0u1u5gts0vQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+wZrVXxAnDXBjoUy8JK9iG553G2Bp8uPWQ0u1u5gts0vQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
-Cc: Patrick Glaser <pglaser@tesla.com>
-Cc: Rob Duncan <rduncan@tesla.com>
-Cc: Nate Case <ncase@tesla.com>
----
- .../devicetree/bindings/sound/tda7802.txt          | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/tda7802.txt
+On Tue, Jun 11, 2019 at 07:18:04PM +0200, Andrey Konovalov wrote:
+> On Tue, Jun 11, 2019 at 5:01 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > static void *tag_ptr(void *ptr)
+> > {
+> >         static int tagged_addr_err = 1;
+> >         unsigned long tag = 0;
+> >
+> >         if (tagged_addr_err == 1)
+> >                 tagged_addr_err = prctl(PR_SET_TAGGED_ADDR_CTRL,
+> >                                         PR_TAGGED_ADDR_ENABLE, 0, 0, 0);
+> 
+> I think this requires atomics. malloc() can be called from multiple threads.
 
-diff --git a/Documentation/devicetree/bindings/sound/tda7802.txt b/Documentation/devicetree/bindings/sound/tda7802.txt
-new file mode 100644
-index 000000000000..f80aaf4f1ba0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tda7802.txt
-@@ -0,0 +1,26 @@
-+ST TDA7802 audio processor
-+
-+This device supports I2C only.
-+
-+Required properties:
-+
-+- compatible : "st,tda7802"
-+- reg : the I2C address of the device
-+- enable-supply : a regulator spec for the PLLen pin
-+
-+Optional properties:
-+
-+- st,gain-ch13 : gain for channels 1 and 3 (range: 1-4)
-+- st,gain-ch24 : gain for channels 2 and 3 (range: 1-4)
-+- st,diagnostic-mode-ch13 : diagnotic mode for channels 1 and 3
-+                            values: "Speaker" (default), "Booster"
-+- st,diagnostic-mode-ch24 : diagnotic mode for channels 2 and 4
-+                            values: "Speaker" (default), "Booster"
-+
-+Example:
-+
-+amp: tda7802@6c {
-+	compatible = "st,tda7802";
-+	reg = <0x6c>;
-+	enable-supply = <&amp_enable_reg>;
-+};
+It's slightly racy but I assume in a real libc it can be initialised
+earlier than the hook calls while still in single-threaded mode (I had
+a quick attempt with __attribute__((constructor)) but didn't get far).
+
+Even with the race, under normal circumstances calling the prctl() twice
+is not a problem. I think the risk here is that someone disables the ABI
+via sysctl and the ABI is enabled for some of the threads only.
+
 -- 
-2.11.0
-
+Catalin
