@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5572C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C04C4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED712086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E862086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390850AbfFKCnR (ORCPT
+        id S2390887AbfFKCnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 22:43:17 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44130 "EHLO huawei.com"
+        Mon, 10 Jun 2019 22:43:18 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44136 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390244AbfFKCnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390461AbfFKCnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Jun 2019 22:43:17 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 813E8A03BFD95E363468;
+        by Forcepoint Email with ESMTP id 87F4069DBA60105D8B68;
         Tue, 11 Jun 2019 10:43:15 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 10:43:07 +0800
+ 2019 10:43:06 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Chao Yu <yuchao0@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -33,13 +33,11 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
         Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2 2/2] staging: erofs: rename data_mapping_mode to datamode
-Date:   Tue, 11 Jun 2019 10:42:20 +0800
-Message-ID: <20190611024220.86121-2-gaoxiang25@huawei.com>
+        Gao Xiang <gaoxiang25@huawei.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2 1/2] staging: erofs: add requirements field in superblock
+Date:   Tue, 11 Jun 2019 10:42:19 +0800
+Message-ID: <20190611024220.86121-1-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190611024220.86121-1-gaoxiang25@huawei.com>
-References: <20190611024220.86121-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -49,110 +47,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-data_mapping_mode is too long as a member name of erofs_vnode,
-datamode is straight-forward enough.
+There are some backward incompatible features pending
+for months, mainly due to on-disk format expensions.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+However, we should ensure that it cannot be mounted with
+old kernels. Otherwise, it will causes unexpected behaviors.
+
+Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
+Cc: <stable@vger.kernel.org> # 4.19+
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/inode.c    | 17 ++++++++---------
- drivers/staging/erofs/internal.h | 10 ++++------
- 2 files changed, 12 insertions(+), 15 deletions(-)
+change log v2:
+ - update printed message
 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 9520419f746c..e51348f7e838 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -22,11 +22,11 @@ static int read_inode(struct inode *inode, void *data)
- 	const unsigned int advise = le16_to_cpu(v1->i_advise);
- 	erofs_blk_t nblks = 0;
+ drivers/staging/erofs/erofs_fs.h | 13 ++++++++++---
+ drivers/staging/erofs/super.c    | 17 +++++++++++++++++
+ 2 files changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
+index fa52898df006..8ddb2b3e7d39 100644
+--- a/drivers/staging/erofs/erofs_fs.h
++++ b/drivers/staging/erofs/erofs_fs.h
+@@ -17,10 +17,16 @@
+ #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
+ #define EROFS_SUPER_OFFSET      1024
  
--	vi->data_mapping_mode = __inode_data_mapping(advise);
-+	vi->datamode = __inode_data_mapping(advise);
++/*
++ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
++ * incompatible with this kernel version.
++ */
++#define EROFS_ALL_REQUIREMENTS  0
++
+ struct erofs_super_block {
+ /*  0 */__le32 magic;           /* in the little endian */
+ /*  4 */__le32 checksum;        /* crc32c(super_block) */
+-/*  8 */__le32 features;
++/*  8 */__le32 features;        /* (aka. feature_compat) */
+ /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+ /* 13 */__u8 reserved;
  
--	if (unlikely(vi->data_mapping_mode >= EROFS_INODE_LAYOUT_MAX)) {
--		errln("unknown data mapping mode %u of nid %llu",
--		      vi->data_mapping_mode, vi->nid);
-+	if (unlikely(vi->datamode >= EROFS_INODE_LAYOUT_MAX)) {
-+		errln("unsupported data mapping %u of nid %llu",
-+		      vi->datamode, vi->nid);
- 		DBG_BUGON(1);
- 		return -EIO;
+@@ -34,9 +40,10 @@ struct erofs_super_block {
+ /* 44 */__le32 xattr_blkaddr;
+ /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
+ /* 64 */__u8 volume_name[16];   /* volume name */
++/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
+ 
+-/* 80 */__u8 reserved2[48];     /* 128 bytes */
+-} __packed;
++/* 84 */__u8 reserved2[44];
++} __packed;                     /* 128 bytes */
+ 
+ /*
+  * erofs inode data mapping:
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index f580d4ef77a1..fdcf65b3e52d 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -71,6 +71,20 @@ static void free_inode(struct inode *inode)
+ 	kmem_cache_free(erofs_inode_cachep, vi);
+ }
+ 
++static bool check_layout_compatibility(struct super_block *sb,
++				       struct erofs_super_block *layout)
++{
++	const unsigned int requirements = le32_to_cpu(layout->requirements);
++
++	/* check if current kernel meets all mandatory requirements */
++	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
++		errln("unidentified requirements %x, please upgrade kernel version",
++		      requirements & ~EROFS_ALL_REQUIREMENTS);
++		return false;
++	}
++	return true;
++}
++
+ static int superblock_read(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi;
+@@ -104,6 +118,9 @@ static int superblock_read(struct super_block *sb)
+ 		goto out;
  	}
-@@ -63,7 +63,7 @@ static int read_inode(struct inode *inode, void *data)
- 		inode->i_size = le64_to_cpu(v2->i_size);
  
- 		/* total blocks for compressed files */
--		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
-+		if (is_inode_layout_compression(inode))
- 			nblks = le32_to_cpu(v2->i_u.compressed_blocks);
- 	} else if (__inode_version(advise) == EROFS_INODE_LAYOUT_V1) {
- 		struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-@@ -95,7 +95,7 @@ static int read_inode(struct inode *inode, void *data)
- 			sbi->build_time_nsec;
- 
- 		inode->i_size = le32_to_cpu(v1->i_size);
--		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
-+		if (is_inode_layout_compression(inode))
- 			nblks = le32_to_cpu(v1->i_u.compressed_blocks);
- 	} else {
- 		errln("unsupported on-disk inode version %u of nid %llu",
-@@ -127,7 +127,7 @@ static int fill_inline_data(struct inode *inode, void *data,
- {
- 	struct erofs_vnode *vi = EROFS_V(inode);
- 	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
--	int mode = vi->data_mapping_mode;
-+	const int mode = vi->datamode;
- 
- 	DBG_BUGON(mode >= EROFS_INODE_LAYOUT_MAX);
- 
-@@ -299,9 +299,8 @@ int erofs_getattr(const struct path *path, struct kstat *stat,
- 		  u32 request_mask, unsigned int query_flags)
- {
- 	struct inode *const inode = d_inode(path->dentry);
--	struct erofs_vnode *const vi = EROFS_V(inode);
- 
--	if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
-+	if (is_inode_layout_compression(inode))
- 		stat->attributes |= STATX_ATTR_COMPRESSED;
- 
- 	stat->attributes |= STATX_ATTR_IMMUTABLE;
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index 911333cdeef4..6a7eb04d29b4 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -347,8 +347,7 @@ struct erofs_vnode {
- 	/* atomic flags (including bitlocks) */
- 	unsigned long flags;
- 
--	unsigned char data_mapping_mode;
--	/* inline size in bytes */
-+	unsigned char datamode;
- 	unsigned char inode_isize;
- 	unsigned short xattr_isize;
- 
-@@ -383,18 +382,17 @@ static inline unsigned long inode_datablocks(struct inode *inode)
- 
- static inline bool is_inode_layout_plain(struct inode *inode)
- {
--	return EROFS_V(inode)->data_mapping_mode == EROFS_INODE_LAYOUT_PLAIN;
-+	return EROFS_V(inode)->datamode == EROFS_INODE_LAYOUT_PLAIN;
- }
- 
- static inline bool is_inode_layout_compression(struct inode *inode)
- {
--	return EROFS_V(inode)->data_mapping_mode ==
--					EROFS_INODE_LAYOUT_COMPRESSION;
-+	return EROFS_V(inode)->datamode == EROFS_INODE_LAYOUT_COMPRESSION;
- }
- 
- static inline bool is_inode_layout_inline(struct inode *inode)
- {
--	return EROFS_V(inode)->data_mapping_mode == EROFS_INODE_LAYOUT_INLINE;
-+	return EROFS_V(inode)->datamode == EROFS_INODE_LAYOUT_INLINE;
- }
- 
- extern const struct super_operations erofs_sops;
++	if (!check_layout_compatibility(sb, layout))
++		goto out;
++
+ 	sbi->blocks = le32_to_cpu(layout->blocks);
+ 	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
+ #ifdef CONFIG_EROFS_FS_XATTR
 -- 
 2.17.1
 
