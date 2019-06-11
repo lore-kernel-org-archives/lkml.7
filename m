@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D46C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBE3C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B466A2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF8A2184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560279740;
-	bh=Qhd6bVtVoT9QbbazKZOFnIspsu4pUvCgE79I8j9p3yo=;
+	s=default; t=1560279744;
+	bh=0QqK2QyuTErClmvoocneuDu3zXEc1BnQfm/OZFXX5d4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Md+CfsqTLX8NO4oJUYT133VeGHMKpBUkqh7R556aUQIHqq9WYwj2N/kNjwF2A4ePl
-	 J+Y81xADYMDmuF0azHCAijSzQiix0QckejUcw+ySROjaTxzHtk+WdKjQtG8fZ1vQun
-	 2IhCGh6ixvktXjAMro+B3YYwAsReKAoEZirkKyZo=
+	b=Gla93n11BUYaoB/jd8Qjs1rSADE/f9ZkB6LY+z+s/MEuYKVUAq6bU3hs9ck+DkyrD
+	 7i8hxmJYW3oKcKWwmlmy2xZAEldoifqJO+nZSX04RQWMYGNXPwE10dPlfMJTqm4UYQ
+	 YO8QkTipJCf7yAIEc/77D/3ZQAB1VRIHG0jENYk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392373AbfFKTCU (ORCPT
+        id S2404429AbfFKTCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:02:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38464 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 15:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391736AbfFKTCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:02:18 -0400
+        id S2392376AbfFKTCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:02:23 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68F0C2184E;
-        Tue, 11 Jun 2019 19:02:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ED042183E;
+        Tue, 11 Jun 2019 19:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279738;
-        bh=Qhd6bVtVoT9QbbazKZOFnIspsu4pUvCgE79I8j9p3yo=;
+        s=default; t=1560279742;
+        bh=0QqK2QyuTErClmvoocneuDu3zXEc1BnQfm/OZFXX5d4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+9MkASYJuO+Q1mu5YtJloZrYVKLk3PIdu6DTxlxGtyMxpR6G8rEzop1fsRizLzhw
-         uwfbiBgHHxA+ED4GlZeBdsAT/uPfzMIwhqBlc3EqjAmVQzjM501rK+esRa+m5tfvCL
-         LAQ2NPmxUQodA6uEOzIUAX/nbtYLpTWXGkyKqSNc=
+        b=PRolsfTuLKg0f6cffJnti4xLZNJJrXHyMaYuSic9pR4Q1MQ20Um4GnsmS9kvaNbGa
+         xNIx2O81A8Oc3jUlqynpgX8qax7YHMie+WHW0+Mm4CTa88hyhI+vKRIBoh8k130T4D
+         wwLLQLDlW/xIgSL9ido2Ute3+M73XZZ9w+Xo096I=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -53,9 +53,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Suzuki Poulouse <suzuki.poulose@arm.com>,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 39/85] perf cs-etm: Configure SWITCH_EVENTS in CPU-wide mode
-Date:   Tue, 11 Jun 2019 15:58:25 -0300
-Message-Id: <20190611185911.11645-40-acme@kernel.org>
+Subject: [PATCH 40/85] perf cs-etm: Add handling of itrace start events
+Date:   Tue, 11 Jun 2019 15:58:26 -0300
+Message-Id: <20190611185911.11645-41-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
@@ -68,9 +68,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Ask the perf core to generate an event when processes are swapped in/out
-of context.  That way proper action can be taken by the decoding code
-when faced with such event.
+Add handling of ITRACE events in order to add the tid/pid of the
+executing process to the perf tools machine infrastructure.  This
+information is later retrieved when a contextID packet is found in the
+trace stream.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Tested-by: Leo Yan <leo.yan@linaro.org>
@@ -81,26 +82,56 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: coresight@lists.linaro.org
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-4-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/20190524173508.29044-5-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/cs-etm.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index be1e4f20affa..cc7f1cd23b14 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -257,6 +257,9 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 	ptr->evlist = evlist;
- 	ptr->snapshot_mode = opts->auxtrace_snapshot_mode;
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index de488b43f440..0742c50fce46 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1657,6 +1657,29 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+ 	return 0;
+ }
  
-+	if (perf_can_record_switch_events())
-+		opts->record_switch_events = true;
++static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
++					union perf_event *event)
++{
++	struct thread *th;
 +
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (evsel->attr.type == cs_etm_pmu->type) {
- 			if (cs_etm_evsel) {
++	if (etm->timeless_decoding)
++		return 0;
++
++	/*
++	 * Add the tid/pid to the log so that we can get a match when
++	 * we get a contextID from the decoder.
++	 */
++	th = machine__findnew_thread(etm->machine,
++				     event->itrace_start.pid,
++				     event->itrace_start.tid);
++	if (!th)
++		return -ENOMEM;
++
++	thread__put(th);
++
++	return 0;
++}
++
+ static int cs_etm__process_event(struct perf_session *session,
+ 				 union perf_event *event,
+ 				 struct perf_sample *sample,
+@@ -1694,6 +1717,9 @@ static int cs_etm__process_event(struct perf_session *session,
+ 		return cs_etm__process_timeless_queues(etm,
+ 						       event->fork.tid);
+ 
++	if (event->header.type == PERF_RECORD_ITRACE_START)
++		return cs_etm__process_itrace_start(etm, event);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
