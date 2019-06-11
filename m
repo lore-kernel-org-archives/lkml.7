@@ -2,136 +2,175 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47895C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C529C4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19AE02089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E753720896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 03:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="q5TYlxbV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPhGLVG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391024AbfFKDwI (ORCPT
+        id S2391073AbfFKD4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 23:52:08 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42089 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390941AbfFKDwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 23:52:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NGKJ07Knz9sND;
-        Tue, 11 Jun 2019 13:52:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560225124;
-        bh=6kjthrPOTPWNQKlDGL3hQSGhKE1EZEUyQV+BEUTX/uQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=q5TYlxbV/yk36cmEt8Cq5Uq29SkAYK5S+IeBicjJcTS9JPs3B6J7GrO53k0MGARjm
-         MkN2i7goAvrnWiWBT7mCe+FaPZ/9Tb9mNm3jn1zLAy54fkhhIWLiornH1P/kkbEc6A
-         NoH+AUGVuCiOWVlzjnyvQ65eE9n+Uw93TPImcFyDx3Sp0y6gOt6H6VQpNARgTjk/ew
-         flvgbQeanJK//42/c1W67lHVrsZh66L3we6PVvSV+nxzPNWoQd1GKSad2PHFS0Ux+k
-         3N9qLEay6vVVEmck1v9jQ3f2rlUzVaYBXNi96ipt2pJPVWuoyt+1ed0cmKA3NJ/2Ls
-         cLf3r3tJAGx0g==
-Date:   Tue, 11 Jun 2019 13:52:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: linux-next: manual merge of the drm-misc tree with the drm tree
-Message-ID: <20190611135202.145424e5@canb.auug.org.au>
+        Mon, 10 Jun 2019 23:56:02 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34011 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390985AbfFKD4C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 23:56:02 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p10so298242pgn.1;
+        Mon, 10 Jun 2019 20:56:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=mTzRo3n3K2VxjjsiqqmtCWCsBKqmuZ3UyS2JxCpDSv4=;
+        b=lPhGLVG6/t2L9QQBAK9Cv2PvZwTk/cMgQFiBtEC835tN1PRPoW6pDYFxSz17YVhDFD
+         HFiQ4a57yAFxr1Jsqxr/Oq8S4c8TKWN1vAn7fx9hqP9JGEj42dlkzNfstvVpAcA08DNe
+         92hTkaCEiKz1Kfz1qtAFkEp+lk7nj7VUo+Nn3ATK/GVIexF0xKjX+LLgPPzumEEXDPVU
+         vziTHwfs0P48fc3Iae0mXw5f1WJYTsVpSiwN4JgDnOg/uJHuy7nx3tgXWOTvbJxsQLuu
+         CUeVL2t5DIsgqbZQjk91EAapzzQx06lGSciY3F7NDoIWohoVg+m4Lx56XQHr6gYIf3kw
+         98LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=mTzRo3n3K2VxjjsiqqmtCWCsBKqmuZ3UyS2JxCpDSv4=;
+        b=jTdBqXcfFklFPmcOkdkCDte9uN7u2EPrgbQ3KzuRitVVlGAaLc1DGBijmVPo0PVS0h
+         8Hgnp6WrFnAWJRTR8PMt8hec+xrwZOrPhmV77/IfXvwGPl48yBeitLZJr1ESEP9U2wA7
+         n8DuopVGzQBcrzqCZKmWkAhEizUrMuAdWWqDkXFmbsaPjVdWorMsDNf4hXXrpsHpUqGt
+         gnURa66lCTuoFeHMhheBOhYxykK1/jIwFQcgwKxKQGbxjxCNxYpkj2N5cTVFiQXyynpj
+         OWdyubxkLCQTmQepmLeMyFLqoVjiACDwzgFHXbGXq7HptmLULmMiy3jzUUYKCA6TVUuI
+         /Vsw==
+X-Gm-Message-State: APjAAAU6u+8BS9EEDjC5pU2t9drdwhyTOPsSLzQyBNsAvSArAnc7kZc0
+        h3dqZm5nbiVYpUCWlactV6c=
+X-Google-Smtp-Source: APXvYqz+Xnt2HUGrc/sBTFjjjGMlEt3VpJVIlOjLqvkF+0LD1W8Kaa5018BLm5rwMMVp9SZFsXxHpA==
+X-Received: by 2002:a65:5684:: with SMTP id v4mr18784442pgs.160.1560225361285;
+        Mon, 10 Jun 2019 20:56:01 -0700 (PDT)
+Received: from t-1000 (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
+        by smtp.gmail.com with ESMTPSA id 5sm11939074pfh.109.2019.06.10.20.55.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 20:56:00 -0700 (PDT)
+Date:   Mon, 10 Jun 2019 20:55:57 -0700
+From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        harald@ccbib.org
+Cc:     shobhitkukreti@gmail.com
+Subject: [PATCH] iio: humidity: Replace older GPIO APIs with GPIO Consumer
+ APIs for the dht11 sensor
+Message-ID: <20190611035554.GA20589@t-1000>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/jfim9.VH5cOFoRzquBp6qyc"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jfim9.VH5cOFoRzquBp6qyc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The dht11 driver uses a single gpio to make measurements. It was
+using the older global gpio numberspace. The patch replaces the
+old gpio api with the new gpio descriptor based api.
 
-Hi all,
+Removed header files "linux/gpio.h" and "linux/of_gpio.h"
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
-
-  drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c
-
-between commit:
-
-  9b93eb475aa9 ("drm/amd/display: move clk_mgr files to right place")
-
-from the drm tree and commit:
-
-  4fc4dca8320e ("drm/amd: drop use of drmp.h in os_types.h")
-
-from the drm-misc tree.
-
-I fixed it up (I deleted the file and added the following patch) and
-can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
-I am not sure if this is actually needed but it seemed prudent with the
-addition of the kzalloc/kfree calls in this file.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 11 Jun 2019 13:48:08 +1000
-Subject: [PATCH] drm/amd/display: merge fix for "drm/amd: drop use of drmp.=
-h in os_types.h"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
 ---
- drivers/gpu/drm/amd/display/dc/clk_mgr/clk_mgr.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/humidity/dht11.c | 28 ++++++++++------------------
+ 1 file changed, 10 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/clk_mgr.c b/drivers/gpu=
-/drm/amd/display/dc/clk_mgr/clk_mgr.c
-index eb2204d42337..cb3f6a74d9e3 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/clk_mgr.c
-@@ -23,6 +23,8 @@
-  *
-  */
-=20
-+#include <linux/slab.h>
-+
- #include "dal_asic_id.h"
- #include "dc_types.h"
- #include "dccg.h"
---=20
-2.20.1
+diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
+index c815920..f5128d8 100644
+--- a/drivers/iio/humidity/dht11.c
++++ b/drivers/iio/humidity/dht11.c
+@@ -22,8 +22,7 @@
+ #include <linux/completion.h>
+ #include <linux/mutex.h>
+ #include <linux/delay.h>
+-#include <linux/gpio.h>
+-#include <linux/of_gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/timekeeping.h>
+ 
+ #include <linux/iio/iio.h>
+@@ -72,7 +71,7 @@
+ struct dht11 {
+ 	struct device			*dev;
+ 
+-	int				gpio;
++	struct gpio_desc		*gpiod;
+ 	int				irq;
+ 
+ 	struct completion		completion;
+@@ -179,7 +178,7 @@ static irqreturn_t dht11_handle_irq(int irq, void *data)
+ 	if (dht11->num_edges < DHT11_EDGES_PER_READ && dht11->num_edges >= 0) {
+ 		dht11->edges[dht11->num_edges].ts = ktime_get_boot_ns();
+ 		dht11->edges[dht11->num_edges++].value =
+-						gpio_get_value(dht11->gpio);
++						gpiod_get_value(dht11->gpiod);
+ 
+ 		if (dht11->num_edges >= DHT11_EDGES_PER_READ)
+ 			complete(&dht11->completion);
+@@ -217,12 +216,12 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+ 		reinit_completion(&dht11->completion);
+ 
+ 		dht11->num_edges = 0;
+-		ret = gpio_direction_output(dht11->gpio, 0);
++		ret = gpiod_direction_output(dht11->gpiod, 0);
+ 		if (ret)
+ 			goto err;
+ 		usleep_range(DHT11_START_TRANSMISSION_MIN,
+ 			     DHT11_START_TRANSMISSION_MAX);
+-		ret = gpio_direction_input(dht11->gpio);
++		ret = gpiod_direction_input(dht11->gpiod);
+ 		if (ret)
+ 			goto err;
+ 
+@@ -294,10 +293,8 @@ MODULE_DEVICE_TABLE(of, dht11_dt_ids);
+ static int dht11_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *node = dev->of_node;
+ 	struct dht11 *dht11;
+ 	struct iio_dev *iio;
+-	int ret;
+ 
+ 	iio = devm_iio_device_alloc(dev, sizeof(*dht11));
+ 	if (!iio) {
+@@ -307,18 +304,13 @@ static int dht11_probe(struct platform_device *pdev)
+ 
+ 	dht11 = iio_priv(iio);
+ 	dht11->dev = dev;
++	dht11->gpiod = devm_gpiod_get(dev, NULL, GPIOD_IN);
++	if (IS_ERR(dht11->gpiod))
++		return PTR_ERR(dht11->gpiod);
+ 
+-	ret = of_get_gpio(node, 0);
+-	if (ret < 0)
+-		return ret;
+-	dht11->gpio = ret;
+-	ret = devm_gpio_request_one(dev, dht11->gpio, GPIOF_IN, pdev->name);
+-	if (ret)
+-		return ret;
+-
+-	dht11->irq = gpio_to_irq(dht11->gpio);
++	dht11->irq = gpiod_to_irq(dht11->gpiod);
+ 	if (dht11->irq < 0) {
+-		dev_err(dev, "GPIO %d has no interrupt\n", dht11->gpio);
++		dev_err(dev, "GPIO %d has no interrupt\n", desc_to_gpio(dht11->gpiod));
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.7.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/jfim9.VH5cOFoRzquBp6qyc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/JWIACgkQAVBC80lX
-0GxNRwgApUmTX5kjEA+cNRAn68/Axad9xBwda1Zu4g/kvsT/rNgtT6X1OaArVK/i
-KX72++Kyo1bggwxeINKmH1Y6PsbnlIHKLD7FcdV0us4Ab43jeB00xU9ENp27OuXb
-5cuxkliKZFh7RaFwIyrmNLZaaq0aI6Ciwt+X+EsD1hl5tgyV5wniHERIKO+Qjh9C
-OsuiafBoxg7hdXKKcSGNq2tw0PHuYJ10iBduylvmXPOHm81S9JJ8Of13vrfFzJye
-W9U6OzTxuu5qsyKPiGulVOPBGMO8SrCs0XedHbiUtvnTK69CfE0bytnyTmLDVamL
-IxNmUS+bhE8U4qkJjeGMN5a8PyvMXA==
-=QHva
------END PGP SIGNATURE-----
-
---Sig_/jfim9.VH5cOFoRzquBp6qyc--
