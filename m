@@ -2,133 +2,161 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=BITCOIN_SPAM_02,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73935C0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FD5C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6472173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BLs92YLh"
+	by mail.kernel.org (Postfix) with ESMTP id C722A2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560282135;
+	bh=4tE7IsRTkWZmOShF4HZwN2HF/iAFXdX1Y8umkdI8VAw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=NIOOuyWMIWx96uItQrV4L6sKWCXZx6dFFl/Jbq1vRfIYKdd4o9mQ/rx7JOAnNfU+4
+	 zBpKpHJlA4Nw14mIPtSfCIj3gHLofm0dbuGKgRMjiy3tqopqxn+4khXM0VIvNadvcc
+	 SaJxfu4c97cqQUhrIm6MeROWXFBFUN5zfKy26kGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405721AbfFKTlw (ORCPT
+        id S2406084AbfFKTmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:41:52 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37621 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387563AbfFKTlw (ORCPT
+        Tue, 11 Jun 2019 15:42:15 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:55194 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387563AbfFKTmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:41:52 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r10so13094996otd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 12:41:52 -0700 (PDT)
+        Tue, 11 Jun 2019 15:42:14 -0400
+Received: by mail-it1-f193.google.com with SMTP id m138so6958507ita.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 12:42:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GulUsqBf8T027861ToGt8N8Fkx90aYJ3H5Xyw39pJCk=;
-        b=BLs92YLhBG37uFU+cv1zbVt054d9bpwDQzV1xZdsuQvcZDtafmxwl3DJq0QAi99ly3
-         fTguFr0mXqAua8mxzGmXTgGYpHcfHxqRKkJpiGKRnDImCIFJ1PVOtToClVzTp0NXuMhg
-         TzGHhfcrfHwSFtwxEU3vqrb6CJ3kaZAF1OmBE=
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EzEUes/1FRnA6401v5hqZqkDxseqr+IdiuMT9V28eeA=;
+        b=hTkzfwZzzYHmiAs6FC+gU8XBXndHXVMzlCkfNG/WsRGvoDN8aglSB7Vjv+wiIAZnaB
+         G9VB4lc2IB+RT2JHo52JDM2eOCqelXVGK3DIExhyQ40dEmOf4ihbA16dnBGwLLZMBRlc
+         OCMG4pgcAE6qLVwuxhua8GB1ScbcmIWJ8TPok=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GulUsqBf8T027861ToGt8N8Fkx90aYJ3H5Xyw39pJCk=;
-        b=V2N4GG0K76bTVSG+cNUMfIhuRHbBDPSiLlToankXQPEBeEVhVm6xH47dqdhUgUhyKh
-         kgeRwVou0Ql6dNKGa+H73AS4ojO56cRZToGb1YMgLSaS136QUOyVPhCqommA9B024hAP
-         CzxkZXPHolPsjGUjWsU6AcPGgnlUKYQpAiIRsGn4nySLgmPypYxUjb23SaB+APgC6UZl
-         dDx8Ixz4UsYTtXU1n/snRd7+66kQiZs9FHj1niAHLQx8Pl65Mfyt7YnmW7or0dTuknPd
-         KmmV2iNJiSaMVUShMkSbtNTndsr0SyDsHXUBqUb74hnEcz3XvykoGPX6lbi9pl1/EGCg
-         98hQ==
-X-Gm-Message-State: APjAAAUjgdtnbEkbs1iHCtqltaEuak42b1CxjH5Kihh8WpGmV7ECuvGl
-        vHnKaU/axtk72Zdt6xXg6jRfHmd1OGzbiA1I9DA4oA==
-X-Google-Smtp-Source: APXvYqylT3xp9u/Ufj7vpvMygQsyUsKKPYr6kWcupwMqFgM4VF/sbqAy0s68jrFuWrsPCzr+0e0GPUHeTTSPqdpHLwk=
-X-Received: by 2002:a9d:7451:: with SMTP id p17mr4483924otk.204.1560282111688;
- Tue, 11 Jun 2019 12:41:51 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EzEUes/1FRnA6401v5hqZqkDxseqr+IdiuMT9V28eeA=;
+        b=A7U5WX+O3oWewab8PYqZUd1G308PIQQFNLsl0qStJkEoG2Qsp9LLv2d25fLWMbSW82
+         /XPgHVQpmNDT9EC2pPmVREr6Mx0T7EH3SLpIw+KcqmLtQ3NeKJPFTBb1rc8G3OTj3KIz
+         RLk26Wc+VkJkyNw6FD83ri56M3V7XIeQneTzk96663wXmFAh8gip7iBr4Nd4b2UmebXI
+         fxjvQmssZDGKZLR9bEpPkJnxgAOwq/6Fz8PqhZzALaatI0RM1u0eLEhwvRjTCt7m2bOX
+         aHjNceSqUo1HbFFhYIZcGOmaGRh5uRUfxZeawDW9Awv5CGH6F79BTopGOdDUkrIVtQy/
+         QZbQ==
+X-Gm-Message-State: APjAAAWTgiVL27NmKMBbXN01LjKL6dXua8IMvy0wX2TzzNquhlTbof3C
+        40pnbfWGuQv0cRA5junPzALLJQ==
+X-Google-Smtp-Source: APXvYqx3yCfALUBWWct0MgNdskfPGRKil/M941CdiPk8QH7gxmkxz8YHPDGsGyzZZ9GoRm9H/N28NQ==
+X-Received: by 2002:a02:ce50:: with SMTP id y16mr51430645jar.75.1560282133886;
+        Tue, 11 Jun 2019 12:42:13 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id e188sm5297500ioa.3.2019.06.11.12.42.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 12:42:13 -0700 (PDT)
+Subject: Re: [PATCH 1/2] media: v4l2-core: Shifting signed 32-bit value by 31
+ bits error
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com,
+        niklas.soderlund+renesas@ragnatech.se, ezequiel@collabora.com,
+        paul.kocialkowski@bootlin.com
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <cover.1559764506.git.skhan@linuxfoundation.org>
+ <bac3ee3b10de409b6cdf7286e0e84737e63662ee.1559764506.git.skhan@linuxfoundation.org>
+ <8cc03625-f41d-6009-d50c-823e5f498dca@infradead.org>
+ <7819cae4-58e5-cbe1-ac9d-bca00d390066@xs4all.nl>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <d5aea86a-b556-aae4-0b97-9add8878f99f@linuxfoundation.org>
+Date:   Tue, 11 Jun 2019 13:42:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <87k1dsjkdo.fsf@turtle.gmx.de> <20190611153656.GA5084@kroah.com>
- <CAKMK7uH_3P3pYkJ9Ua4hOFno5UiQ4p-rdWu9tPO75MxGCbyXSA@mail.gmail.com> <87ef40j6mx.fsf@turtle.gmx.de>
-In-Reply-To: <87ef40j6mx.fsf@turtle.gmx.de>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 11 Jun 2019 21:41:40 +0200
-Message-ID: <CAKMK7uGTmb8SiTW+6mjovJwmrZYqhJY84ZyD5ozM_ynTBoOjGg@mail.gmail.com>
-Subject: Re: Linux 5.1.9 build failure with CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n
-To:     Sven Joachim <svenjoac@gmx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7819cae4-58e5-cbe1-ac9d-bca00d390066@xs4all.nl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 8:53 PM Sven Joachim <svenjoac@gmx.de> wrote:
->
-> On 2019-06-11 19:33 +0200, Daniel Vetter wrote:
->
-> > On Tue, Jun 11, 2019 at 5:37 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> >> On Tue, Jun 11, 2019 at 03:56:35PM +0200, Sven Joachim wrote:
-> >> > Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
-> >> > legacy contexts. (v3)") has caused a build failure for me when I
-> >> > actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
-> >> >
-> >> > ,----
-> >> > | Kernel: arch/x86/boot/bzImage is ready  (#1)
-> >> > |   Building modules, stage 2.
-> >> > |   MODPOST 290 modules
-> >> > | ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-> >> > | scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-> >> > `----
-> >
-> > Calling drm_legacy_mmap is definitely not a great idea.
->
-> Certainly not, but it was done by Dave in commit 2036eaa7403 ("nouveau:
-> bring back legacy mmap handler") for compatibility with old
-> xf86-video-nouveau versions (older than 1.0.4) that call DRIOpenDRMMaster.
->
-> If that is really necessary, it probably has been broken in Linus' tree
-> by commit bed2dd8421 where the test has been moved to ttm_bo_mmap() and
-> returns -EINVAL on failure.
+On 6/6/19 12:33 AM, Hans Verkuil wrote:
+> On 6/6/19 5:22 AM, Randy Dunlap wrote:
+>> On 6/5/19 2:53 PM, Shuah Khan wrote:
+>>> Fix the following cppcheck error:
+>>>
+>>> Checking drivers/media/v4l2-core/v4l2-ioctl.c ...
+>>> [drivers/media/v4l2-core/v4l2-ioctl.c:1370]: (error) Shifting signed 32-bit value by 31 bits is undefined behaviour
+>>>
+>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>>> ---
+>>>   drivers/media/v4l2-core/v4l2-ioctl.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> index 6859bdac86fe..333e387bafeb 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> @@ -1364,7 +1364,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>>>   					(char)((fmt->pixelformat >> 8) & 0x7f),
+>>>   					(char)((fmt->pixelformat >> 16) & 0x7f),
+>>>   					(char)((fmt->pixelformat >> 24) & 0x7f),
+>>> -					(fmt->pixelformat & (1 << 31)) ? "-BE" : "");
+>>> +					(fmt->pixelformat & BIT(31)) ? "-BE" : "");
+>>>   			break;
+>>>   		}
+>>>   	}
+>>>
+>>
+>> If this builds, I guess #define BIT(x) got pulled in indirectly
+>> since bits.h nor bitops.h is currently #included in that source file.
+>>
 
-Looking at the commit it's actually 1.0.1, which was release in 2012.
-I'd say lets keep current upstream as-is, and hope no one cares
-anymore ...
--Daniel
+It does build. You are right that I should have included bitops.h
 
-> > I think either
-> > we need a custom patch to remove that out on older kernels, or maybe
-> > even #ifdef if you want to be super paranoid about breaking stuff ...
-> >
-> >> > Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
-> >> > Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
-> >> > drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
-> >> > apply in 5.1.9.
-> >> >
-> >> > Most likely 4.19.50 and 4.14.125 are also affected, I haven't tested
-> >> > them yet.
-> >>
-> >> They probably are.
-> >>
-> >> Should I just revert this patch in the stable tree, or add some other
-> >> patch (like the one pointed out here, which seems an odd patch for
-> >> stable...)
-> >
-> > ... or backport the above patch, that should be save to do too. Not
-> > sure what stable folks prefer?
-> > -Daniel
+>> Documentation/process/submit-checklist.rst rule #1 says:
+>> 1) If you use a facility then #include the file that defines/declares
+>>     that facility.  Don't depend on other header files pulling in ones
+>>     that you use.
+>>
+>> Please add #include <linux/bits or bitops.h>
+>>
+> 
+> I'm not sure about this patch. '1 << 31' is used all over in the kernel,
+> including in public headers (e.g. media.h, videodev2.h).
+> 
+> It seems arbitrary to change it only here, but not anywhere else.
+> 
+
+Right. We have several places in the kernel that do that.
+
+> In this particular example for the fourcc handling I would prefer to just
+> use '1U << 31', both in v4l2-ioctl.c and videodev2.h.
 >
-> Cheers,
->        Sven
 
+If you would like to take the patch, I can send v2 fixing it using
+1U << 31 - This is simpler since it doesn't nee additional includes.
 
+> A separate patch doing the same for MEDIA_ENT_ID_FLAG_NEXT in media.h would
+> probably be a good idea either: that way the public API at least will do
+> the right thing.
+> 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+I should have explained it better. I wanted to start with one or two
+places first to see if it is worth our time to fix these:
+
+The full kernel cppcheck log for "Shifting signed 32-bit value by 31 
+bits is undefined behaviour" can be found at:
+
+https://drive.google.com/file/d/19Xu7UqBGJ7BpzxEp92ZQYb6F8UPrk3z3/view
+
+thanks,
+-- Shuah
+
