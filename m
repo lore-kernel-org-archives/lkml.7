@@ -2,190 +2,133 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1932AC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB96C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52242063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CB62063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 13:32:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aCngYCT5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isY0UqSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391042AbfFKN2s (ORCPT
+        id S2390852AbfFKNc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 09:28:48 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38689 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbfFKN2j (ORCPT
+        Tue, 11 Jun 2019 09:32:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45478 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387683AbfFKNc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 09:28:39 -0400
-Received: by mail-it1-f195.google.com with SMTP id e25so4699824itk.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 06:28:39 -0700 (PDT)
+        Tue, 11 Jun 2019 09:32:27 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w34so6973459pga.12;
+        Tue, 11 Jun 2019 06:32:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=StBa2k+etv+yvC2hGS7t8gT8g83jR2U1gV0NJrb3dU4=;
-        b=aCngYCT5L3a5Yjl7hu4dwEPNfuMl/AcJvX/pc8Y+U5k9EXPW0zcPincay+tcutm2Qr
-         mKst9z4KTyuAu9YcO9UWjOy6HAihkn84cM5sTgw1oDRS/XNO6c2+l06sO03muuvT0tN7
-         whNEY14ieDHWAf78arnKntl6QUoA/wvSufv9IJ54NYsL5dry6ccfdDyd5ngn8HCq6X2m
-         9qksq/+geoM69U6LUgSy7QFox8gKdb7uWEml6lH5m1gRuV3dK3w6FPhkFubTm1Fwr0Uq
-         MPomI1vNhY2yuyQhrUPGHT7AeD/IRkb/aK0Vz4aS/2ciIG3z0d6cy8oG2mOULQ8jVASO
-         XQ1Q==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o9Fzo35JippV1+onM33v00Qp5Y8cxbvuNyBylk/rwIE=;
+        b=isY0UqSM3MN0f0vbHrtxJK7GrAYz4XTlnUN1rn7Bqy1qZMwMD0/gJaLhxHEAdwnqRV
+         uC2e3GsKM6Sp0TnQXrZ+VuHVvJ/7nUmL/+jwB92wl8w/2orDthUlpEPyUfvhD7IMKhTk
+         wW6wVmoniu/4YM31UabwwMn/+AjtBKHuPcJbDh/1qB8MAcEmjMbLW/LaRODQskbq8ElN
+         UBLj4Qt2ROaYrESoLSAKCmwd1GAcSEYNOoXn3UXzfWcchnQmGm8wTdnJ041dSY1d7fFa
+         tN5ZT2p2rQfuDN1vAwwAXCvjtlALzuhAZJkmkpMyPN1No+ODNcSGfK2LL1cTS/4t1Aok
+         TRhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=StBa2k+etv+yvC2hGS7t8gT8g83jR2U1gV0NJrb3dU4=;
-        b=F4ssBkAkyX91ebmQ8H84itS3PJ36Fam4CS8xRAeGT9kGv1u6sGVGgeqKPs9M8KKLhn
-         fYtc3OoXDJv6TjFi8FbSoZciax7qVXf9QYJXk5ODGuvKIRlsfWJkkCwe2viMe5RA2DUw
-         BGWDAOXcL1gwdDUHgXuOlqWmqCmMKpO5m1fceCnWt6IarvfAb9JpFR88Z0NWOHan79Qd
-         kIvSJV64ayHDNYdGnI1D5E2gKdZaoyojRweZJuK2s/3x6HrEnR4t2XN/WRXzk+AfWcY3
-         gsGsvFZHCBVqEIQjTlYObamERtlV3NhBCrkqP0s0mRk2Lyb7OuR5aQtc+8yWKA+MZntr
-         9xbg==
-X-Gm-Message-State: APjAAAX3qW2a6dUpF+uQVvo2KsG1nx8rFnCIFFnNXAtqzNlK9cbrsydu
-        amTHZZ13x2KpQT1Ll0AWKNP9Wcjz2NqpowsuW3ts/Q==
-X-Google-Smtp-Source: APXvYqxkjEvDEtWdUFmVIoicaX4pEEWaZm+wR5T/qhnBObqDkFxv0BUFXesB42L6lVK/owm9xJGYvvmNpELiDC+azBU=
-X-Received: by 2002:a02:1384:: with SMTP id 126mr46141904jaz.72.1560259718591;
- Tue, 11 Jun 2019 06:28:38 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o9Fzo35JippV1+onM33v00Qp5Y8cxbvuNyBylk/rwIE=;
+        b=cN7+C3K/Omg/hpWM8glGaQ1JJecDFPuT+zkEjb528SUrG6GAqb5wn7gppuhs6lgfXa
+         t64TVzAN6vFULQ9SpUbojFW6oRyANxwiUG616g7Pzm3j4o1g4cTtggFYzLgP9J9MtXhY
+         fHMqgm58FBHymB5rjuyhdkHp/+J5DWo17n/oFuI9Ozpz8DXI9qoWfgoxjbcM2ynxSKke
+         xvRccw5tj/CkDiIRV1qvcucyNMiAZF8rPeYf4jiAVS/HvB65lL9QId8QVUtJSNW+8mPi
+         wnPWCzl0e7+LwTYrgBr5XIPkfIvJOfPQLPQq4j+Q8rfXRBgPBJ2cid0SULm3UIfdPMwI
+         bxQQ==
+X-Gm-Message-State: APjAAAUCBILzQlbjWtbcf6bz/PXwnIfrOW8WYjzdfeFHjKofKqL88u7d
+        DD6GZWITnUqF9dxKJr13Sus=
+X-Google-Smtp-Source: APXvYqzgM7j+1ULipofOzb+BHyeyPojALXL0hAC+L66dUnWLPRw9CPge0p8r/cA3bJc5I/UYVcpUKA==
+X-Received: by 2002:a63:c903:: with SMTP id o3mr8935810pgg.295.1560259946998;
+        Tue, 11 Jun 2019 06:32:26 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p6sm36249pgs.77.2019.06.11.06.32.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 06:32:25 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 06:32:23 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     laurentiu.tudor@nxp.com
+Cc:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, marex@denx.de, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
+        noring@nocrew.org, JuergenUrban@gmx.de
+Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
+ memory
+Message-ID: <20190611133223.GA30054@roeck-us.net>
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+ <20190529102843.13174-4-laurentiu.tudor@nxp.com>
+ <20190605214622.GA22254@roeck-us.net>
 MIME-Version: 1.0
-References: <0000000000007ce6f5058b0715ea@google.com> <CAK8P3a1akOXWgAWXM0g_FYSdWUynBDRR2dAwZt8Xg5RiXhMZag@mail.gmail.com>
-In-Reply-To: <CAK8P3a1akOXWgAWXM0g_FYSdWUynBDRR2dAwZt8Xg5RiXhMZag@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 11 Jun 2019 15:28:27 +0200
-Message-ID: <CACT4Y+Zhqor0pYfqTOPoom+438aC5ut4pXcOfePmNT63N=pjBw@mail.gmail.com>
-Subject: Re: KASAN: null-ptr-deref Read in x25_connect
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     syzbot <syzbot+777a2aab6ffd397407b5@syzkaller.appspotmail.com>,
-        allison@lohutok.net, Andrew Hendry <andrew.hendry@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-x25@vger.kernel.org, ms@dev.tdt.de,
-        Networking <netdev@vger.kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605214622.GA22254@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 2:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Jun 11, 2019 at 9:18 AM syzbot
-> <syzbot+777a2aab6ffd397407b5@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    f4cfcfbd net: dsa: sja1105: Fix link speed not working at ..
-> > git tree:       net
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16815cd2a00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=4f721a391cd46ea
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=777a2aab6ffd397407b5
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+777a2aab6ffd397407b5@syzkaller.appspotmail.com
->
-> Not sure why I was on Cc on this (I know nothing about x25),
+On Wed, Jun 05, 2019 at 02:46:22PM -0700, Guenter Roeck wrote:
+> On Wed, May 29, 2019 at 01:28:41PM +0300, laurentiu.tudor@nxp.com wrote:
+> > From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> > 
+> > In preparation for dropping the existing "coherent" dma mem declaration
+> > APIs, replace the current dma_declare_coherent_memory() based mechanism
+> > with the creation of a genalloc pool that will be used in the OHCI
+> > subsystem as replacement for the DMA APIs.
+> > 
+> > For context, see thread here: https://lkml.org/lkml/2019/4/22/357
+> > 
+> > Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> 
+> This patch results in usb access failures when trying to boot from the
+> sm501-usb controller on sh4 with qemu.
+> 
+> usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+> sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+> sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 08 7c 00 00 f0 00
+> print_req_error: I/O error, dev sda, sector 2172 flags 80700
+> usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+> sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+> sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 01 da 00 00 f0 00
+> print_req_error: I/O error, dev sda, sector 474 flags 84700
+> usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+> sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+> sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 02 da 00 00 f0 00
+> print_req_error: I/O error, dev sda, sector 730 flags 84700
+> usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+> sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+> sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 0b 50 00 00 f0 00
+> print_req_error: I/O error, dev sda, sector 2896 flags 84700
+> 
+> Qemu command line is:
+> 
+> The qemu command line is:
+> 
+> qemu-system-sh4 -M r2d \
+>         -kernel ./arch/sh/boot/zImage \
+> 	-snapshot \
+> 	-usb -device usb-storage,drive=d0 \
+> 	-drive file=rootfs.ext2,if=none,id=d0,format=raw \
+> 	-append 'panic=-1 slub_debug=FZPUA root=/dev/sda rootwait console=ttySC1,115200 earlycon=scif,mmio16,0xffe80000 noiotrap' \
+> 	-serial null -serial stdio \
+> 	-net nic,model=rtl8139 -net user -nographic -monitor null
+> 
+> Reverting this patch as well as "USB: drop HCD_LOCAL_MEM flag" fixes the
+> problem. Reverting "USB: drop HCD_LOCAL_MEM flag" alone does not help.
+> 
 
-syzbot uses get_maintainer.pl to find relevant people. This was
-attributed to net/x25/af_x25.c file, which looks correct. And then
-get_maintainer.pl points to you for this file:
+This problem is still seen in next-20190611.
+Has anyone actually tested this code ?
 
-$ scripts/get_maintainer.pl -f net/x25/af_x25.c
-Andrew Hendry <andrew.hendry@gmail.com> (odd fixer:X.25 NETWORK LAYER)
-"David S. Miller" <davem@davemloft.net> (maintainer:NETWORKING
-[GENERAL],commit_signer:7/9=78%)
-Eric Dumazet <edumazet@google.com>
-(commit_signer:4/9=44%,authored:4/9=44%,added_lines:16/30=53%,removed_lines:10/50=20%)
-Martin Schiller <ms@dev.tdt.de>
-(commit_signer:2/9=22%,authored:2/9=22%,added_lines:11/30=37%,removed_lines:7/50=14%)
-Marc Kleine-Budde <mkl@pengutronix.de> (commit_signer:1/9=11%)
-Willem de Bruijn <willemb@google.com> (commit_signer:1/9=11%)
-Arnd Bergmann <arnd@arndb.de> (authored:1/9=11%,removed_lines:26/50=52%)
-Thomas Gleixner <tglx@linutronix.de> (authored:1/9=11%,removed_lines:6/50=12%)
-linux-x25@vger.kernel.org (open list:X.25 NETWORK LAYER)
-netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-linux-kernel@vger.kernel.org (open list)
-
-
-
-
-> but I had
-> a brief look and found that this is in the error path of x25_connect,
-> after "goto out_put_neigh", with x25->neighbour==NULL.
->
-> This would indicate that either 'x25' is being freed between the
-> "if (!x25->neighbour)" check in that function and the
-> x25_neigh_put(x25->neighbour), or that there are two concurrent
-> calls to x25_connect, with both failing, so one sets
-> x25->neighbour=NULL before the other one checks it.
->
->     Arnd
->
-> > ==================================================================
-> > BUG: KASAN: null-ptr-deref in atomic_read
-> > include/asm-generic/atomic-instrumented.h:26 [inline]
-> > BUG: KASAN: null-ptr-deref in refcount_sub_and_test_checked+0x87/0x200
-> > lib/refcount.c:182
-> > Read of size 4 at addr 00000000000000c8 by task syz-executor.2/16959
-> >
-> > CPU: 0 PID: 16959 Comm: syz-executor.2 Not tainted 5.2.0-rc2+ #40
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> >   __kasan_report.cold+0x5/0x40 mm/kasan/report.c:321
-> >   kasan_report+0x12/0x20 mm/kasan/common.c:614
-> >   check_memory_region_inline mm/kasan/generic.c:185 [inline]
-> >   check_memory_region+0x123/0x190 mm/kasan/generic.c:191
-> >   kasan_check_read+0x11/0x20 mm/kasan/common.c:94
-> >   atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-> >   refcount_sub_and_test_checked+0x87/0x200 lib/refcount.c:182
-> >   refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
-> >   x25_neigh_put include/net/x25.h:252 [inline]
-> >   x25_connect+0x8d8/0xea0 net/x25/af_x25.c:820
-> >   __sys_connect+0x264/0x330 net/socket.c:1840
-> >   __do_sys_connect net/socket.c:1851 [inline]
-> >   __se_sys_connect net/socket.c:1848 [inline]
-> >   __x64_sys_connect+0x73/0xb0 net/socket.c:1848
-> >   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x459279
-> > Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> > ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007f09776b4c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-> > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459279
-> > RDX: 0000000000000012 RSI: 0000000020000280 RDI: 0000000000000004
-> > RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 00007f09776b56d4
-> > R13: 00000000004bf854 R14: 00000000004d0e08 R15: 00000000ffffffff
-> > ==================================================================
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/CAK8P3a1akOXWgAWXM0g_FYSdWUynBDRR2dAwZt8Xg5RiXhMZag%40mail.gmail.com.
-> For more options, visit https://groups.google.com/d/optout.
+Guenter
