@@ -2,120 +2,269 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D959C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7E4C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51DC02086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3152086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OW+NuIEq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTxjXUxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404598AbfFKIJE (ORCPT
+        id S2404616AbfFKIJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:09:04 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:32934 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404401AbfFKIJE (ORCPT
+        Tue, 11 Jun 2019 04:09:59 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44400 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404073AbfFKIJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:09:04 -0400
-Received: by mail-ua1-f66.google.com with SMTP id f20so4197936ual.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:09:03 -0700 (PDT)
+        Tue, 11 Jun 2019 04:09:59 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w187so7053865qkb.11;
+        Tue, 11 Jun 2019 01:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ymfUHuEw6a4KJ+dzAGtlZ28yY4L9Bb8N3OI1F30T1wg=;
-        b=OW+NuIEqcnugYX9K3R4rmbgs2X2r6DWluKygkZvcTQLs19tMCQFNPkHAvjSN5rMObn
-         pk4eJcpJ2NwFGTauF9Xsz+LqtXI5MtkC8Ipx04sXbSh+HVZre+W5Bt4P4cQv3LMwqPHH
-         76eOwLcG28yL9rMrK1Ds4H6UtEm/9jGTS1NOmIMZ2uqda+KgH5la/hvmcYaCQeSiB+2l
-         vVikavTSZnRMrQXmesDlb5gEx1/+8AjlT04IczhCNmoh7GsiG7QqVT2iG0in92z/JC3p
-         Bqy05Bgzuynl5FMwbCgj0dZ3fMm85MLvaEZUGyV5Mggx/Z0dtXdyzpQkw18utLRIH2PL
-         ny5g==
+        bh=cQ5mlxHCKg9OWIUg8k5qLquru5ZSr1owt2OS/5BIqsQ=;
+        b=DTxjXUxcNj0hqtB0aDUcGm05f2wZiEdKbAJwjjEOnP8kdB2nRXIIumXO3BTfQYPNIT
+         oSLM+QukntvA6HTPP4zO91ZtrqvBLUCtNz2fiQzzCv28ITo+m/nxVONriJildMjTW8CI
+         a81IJMxr7Z3prsjcs8lZxXPkjvdDQf1vntEQ0kw416/BbcjC5KjWrixfSgG9NMODUPyi
+         1q2Wc3OhdwauvwA67rntdIfTGDKHkzLH14rKE9Hsn8iaNWrNATsxwCA2p7NIqGPzpQx0
+         LzrXTR8TeMUHsG12NIkewitWegKssb1oKSwz1RfaFsAH0ZHmpzR+Os3frr7DSw6syCnW
+         OyrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ymfUHuEw6a4KJ+dzAGtlZ28yY4L9Bb8N3OI1F30T1wg=;
-        b=DASLgcsSSxOOIVEgKc0WJeAdP8ifduOMttpQCFse1X/eiX0PCDDeQe5XOc+VXYvzvB
-         XumEkNJ4tyzyDuXXyRgqzuMgoDoK6hnhDnfuxLJiAwTYrbAoedxxHyt5q47G54QhbKLC
-         ArUpzoZo4R8gV3qZh9Myew0DGLBL5u3qQM0Lhf4OuMuWlvinJSKv5gUM3i4JX7G6FEti
-         7bYRZKxGewossAjhY3fyF3QsNjHvXBivC3DTSslEWi50W5Ry+E9hC1ZdhHpOj8ZTG4/5
-         zOl32YePOtUoEgAU0RxZVQyqynngSp9rpbmeFkwdZKQRH5MpISA++2KGQQ8tpuctNSMW
-         rJIg==
-X-Gm-Message-State: APjAAAVFxe1hi2LR6FhUGQyi0DM8lj9QJDNznNu3JtKOEQD8EKcM0+TQ
-        GA6FUO1y6IW5v7/Jw16LgDbdD4C61/s5ao5wnaE/8G0M
-X-Google-Smtp-Source: APXvYqzwg6CQ8roNT6YJv9aPGhM26Z7ZVhgpVH046rpFBxD0Sq2H3fw9DlvExU6AmCGbhbEqwrQVs8y6pEaUpD5gSJI=
-X-Received: by 2002:ab0:4a55:: with SMTP id r21mr19143398uae.133.1560240543093;
- Tue, 11 Jun 2019 01:09:03 -0700 (PDT)
+        bh=cQ5mlxHCKg9OWIUg8k5qLquru5ZSr1owt2OS/5BIqsQ=;
+        b=qqDy1+O7v37+WVZ63o5ntZdcbLk4RYOJpLuu4WfMBM0BaFMawvOH9ldCTxyqHBKOrL
+         dcQ1EFZSyy+f5aLpJyIvQyXYKoun88fQnP+ULdbVRsTqrY3BheduI/5KEfzx/MJeiB/d
+         0Fnc6AMGqPehCJc+gZWMY29BETwIU88Z2s+IFXTKvo27QOL1f5jrodWE0dXa3zSE8E9V
+         yfqmhKirog9ZoeQFNy+RIaY68hN5p6JRAEkJzwlJkr1woXbLNflsN/GD3RZoCSylhkER
+         7m9e39xRPZ4rDrAvoX/N02oq0o1i7HrAH6gtYBGMNBwRx4UY0xkOdR15Ep0MI0cRLYP9
+         cEoQ==
+X-Gm-Message-State: APjAAAV85ZIdS970xE8DkI6iOAqNWJ5tNUCZWTeHQ6WUcHAdFQ3UUt2c
+        YdssoFr2JTHxRKI5+wcY9UruLeH8jGbgBE9ivUw=
+X-Google-Smtp-Source: APXvYqx8a+xivpqNL+2FXmKPvQZ/Rj69SbjVWCoN9zXkojc00njOQtIIluyRue3jP7vqQSI9PCgr7fNeUiq8QC69cuk=
+X-Received: by 2002:a05:620a:12c4:: with SMTP id e4mr8973515qkl.81.1560240597647;
+ Tue, 11 Jun 2019 01:09:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190611055045.15945-1-oded.gabbay@gmail.com> <20190611055045.15945-9-oded.gabbay@gmail.com>
- <20190611075933.GB13408@kroah.com>
-In-Reply-To: <20190611075933.GB13408@kroah.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Tue, 11 Jun 2019 11:08:37 +0300
-Message-ID: <CAFCwf12GRn6ePeH1cLuC_-C9pyQJJSZ9RaGdMUz6MkGrtR=Lvg@mail.gmail.com>
-Subject: Re: [PATCH 8/8] habanalabs: enable 64-bit DMA mask in POWER9
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+References: <CGME20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df@eucas1p1.samsung.com>
+ <20190610161546.30569-1-i.maximets@samsung.com> <06C99519-64B9-4A91-96B9-0F99731E3857@gmail.com>
+In-Reply-To: <06C99519-64B9-4A91-96B9-0F99731E3857@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Tue, 11 Jun 2019 10:09:45 +0200
+Message-ID: <CAJ+HfNgdiutAwpnc3LDDEGXs2SFCu3UtMnao79sFNyZZpQ2ETw@mail.gmail.com>
+Subject: Re: [PATCH bpf v3] xdp: fix hang while unregistering device bound to
+ xdp socket
+To:     Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Ilya Maximets <i.maximets@samsung.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:59 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Mon, 10 Jun 2019 at 22:49, Jonathan Lemon <jonathan.lemon@gmail.com> wrote:
 >
-> On Tue, Jun 11, 2019 at 08:50:45AM +0300, Oded Gabbay wrote:
-> > --- a/drivers/misc/habanalabs/habanalabs_drv.c
-> > +++ b/drivers/misc/habanalabs/habanalabs_drv.c
-> > @@ -28,6 +28,7 @@ static DEFINE_MUTEX(hl_devs_idr_lock);
+> On 10 Jun 2019, at 9:15, Ilya Maximets wrote:
+>
+> > Device that bound to XDP socket will not have zero refcount until the
+> > userspace application will not close it. This leads to hang inside
+> > 'netdev_wait_allrefs()' if device unregistering requested:
 > >
-> >  static int timeout_locked = 5;
-> >  static int reset_on_lockup = 1;
-> > +static int power9_64bit_dma_enable;
+> >   # ip link del p1
+> >   < hang on recvmsg on netlink socket >
 > >
-> >  module_param(timeout_locked, int, 0444);
-> >  MODULE_PARM_DESC(timeout_locked,
-> > @@ -37,6 +38,10 @@ module_param(reset_on_lockup, int, 0444);
-> >  MODULE_PARM_DESC(reset_on_lockup,
-> >       "Do device reset on lockup (0 = no, 1 = yes, default yes)");
+> >   # ps -x | grep ip
+> >   5126  pts/0    D+   0:00 ip link del p1
 > >
-> > +module_param(power9_64bit_dma_enable, int, 0444);
-> > +MODULE_PARM_DESC(power9_64bit_dma_enable,
-> > +     "Enable 64-bit DMA mask. Should be set only in POWER9 machine (0 = no, 1 = yes, default no)");
+> >   # journalctl -b
+> >
+> >   Jun 05 07:19:16 kernel:
+> >   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+> >
+> >   Jun 05 07:19:27 kernel:
+> >   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+> >   ...
+> >
+> > Fix that by implementing NETDEV_UNREGISTER event notification handler
+> > to properly clean up all the resources and unref device.
+> >
+> > This should also allow socket killing via ss(8) utility.
+> >
+> > Fixes: 965a99098443 ("xsk: add support for bind for Rx")
+> > Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+> > ---
+> >
+> > Version 3:
+> >
+> >     * Declaration lines ordered from longest to shortest.
+> >     * Checking of event type moved to the top to avoid unnecessary
+> >       locking.
+> >
+> > Version 2:
+> >
+> >     * Completely re-implemented using netdev event handler.
+> >
+> >  net/xdp/xsk.c | 65
+> > ++++++++++++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 64 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> > index a14e8864e4fa..273a419a8c4d 100644
+> > --- a/net/xdp/xsk.c
+> > +++ b/net/xdp/xsk.c
+> > @@ -693,6 +693,57 @@ static int xsk_mmap(struct file *file, struct
+> > socket *sock,
+> >                              size, vma->vm_page_prot);
+> >  }
+> >
+> > +static int xsk_notifier(struct notifier_block *this,
+> > +                     unsigned long msg, void *ptr)
+> > +{
+> > +     struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+> > +     struct net *net = dev_net(dev);
+> > +     int i, unregister_count = 0;
+> > +     struct sock *sk;
 > > +
-> >  #define PCI_VENDOR_ID_HABANALABS     0x1da3
+> > +     switch (msg) {
+> > +     case NETDEV_UNREGISTER:
+> > +             mutex_lock(&net->xdp.lock);
+>
+> The call is under the rtnl lock, and we're not modifying
+> the list, so this mutex shouldn't be needed.
+>
+
+The list can, however, be modified outside the rtnl lock (e.g. at
+socket creation). AFAIK the hlist cannot be traversed lock-less,
+right?
+
+>
+> > +             sk_for_each(sk, &net->xdp.list) {
+> > +                     struct xdp_sock *xs = xdp_sk(sk);
+> > +
+> > +                     mutex_lock(&xs->mutex);
+> > +                     if (dev != xs->dev) {
+> > +                             mutex_unlock(&xs->mutex);
+> > +                             continue;
+> > +                     }
+> > +
+> > +                     sk->sk_err = ENETDOWN;
+> > +                     if (!sock_flag(sk, SOCK_DEAD))
+> > +                             sk->sk_error_report(sk);
+> > +
+> > +                     /* Wait for driver to stop using the xdp socket. */
+> > +                     xdp_del_sk_umem(xs->umem, xs);
+> > +                     xs->dev = NULL;
+> > +                     synchronize_net();
+> Isn't this by handled by the unregister_count case below?
+>
+
+To clarify, setting dev to NULL and xdp_del_sk_umem() + sync makes
+sure that a driver doesn't touch the Tx and Rx rings. Nothing can be
+assumed about completion + fill ring (umem), until zero-copy has been
+disabled via ndo_bpf.
+
+> > +
+> > +                     /* Clear device references in umem. */
+> > +                     xdp_put_umem(xs->umem);
+> > +                     xs->umem = NULL;
+>
+> This makes me uneasy.  We need to unregister the umem from
+> the device (xdp_umem_clear_dev()) but this can remove the umem
+> pages out from underneath the xsk.
+>
+
+Yes, this is scary. The socket is alive, and userland typically has
+the fill/completion rings mmapped. Then the umem refcount is decreased
+and can potentially free the umem (fill rings etc.), as Jonathan says,
+underneath the xsk. Also, setting the xs umem/dev to zero, while the
+socket is alive, would allow a user to re-setup the socket, which we
+don't want to allow.
+
+> Perhaps what's needed here is the equivalent of an unbind()
+> call that just detaches the umem/sk from the device, but does
+> not otherwise tear them down.
+>
+
+Yeah, I agree. A detached/zombie state is needed during the socket lifetime.
+
+>
+> > +                     mutex_unlock(&xs->mutex);
+> > +                     unregister_count++;
+> > +             }
+> > +             mutex_unlock(&net->xdp.lock);
+> > +
+> > +             if (unregister_count) {
+> > +                     /* Wait for umem clearing completion. */
+> > +                     synchronize_net();
+> > +                     for (i = 0; i < unregister_count; i++)
+> > +                             dev_put(dev);
+> > +             }
+> > +
+> > +             break;
+> > +     }
+> > +
+> > +     return NOTIFY_DONE;
+> > +}
+> > +
+> >  static struct proto xsk_proto = {
+> >       .name =         "XDP",
+> >       .owner =        THIS_MODULE,
+> > @@ -727,7 +778,8 @@ static void xsk_destruct(struct sock *sk)
+> >       if (!sock_flag(sk, SOCK_DEAD))
+> >               return;
 > >
-> >  #define PCI_IDS_GOYA                 0x0001
+> > -     xdp_put_umem(xs->umem);
+> > +     if (xs->umem)
+> > +             xdp_put_umem(xs->umem);
+> Not needed - xdp_put_umem() already does a null check.
+> --
+> Jonathan
 >
 >
-> This is not the 1990's, please do not use module parameters.  Yeah, you
-> have a bunch of them already, but do not add additional ones that can be
-> easily determined at runtime, like this one.
->
-> thanks,
->
-> greg k-h
-
-Hi Greg,
-I would love to do this in runtime and that was my intent all along
-until I hit a wall on *how* to find out it in runtime if I'm running
-on POWER9 with PHB4 or not.
-I did a search in the kernel code, consulted with a couple of people
-but I didn't get any way of doing this in runtime.
-If you have some way, please share it with me because I hit a wall
-with this issue.
-
-The fact of the matter is, I have two different configurations of *my*
-device's PCIe controller. One is only suitable to POWER9 with PHB4 and
-the other one suits all the rest architectures/systems (that we have
-tested so far). So I have to know which system I'm running on and as I
-said, I didn't find a kernel API which can help me do that.
-
-Thanks,
-Oded
+> >
+> >       sk_refcnt_debug_dec(sk);
+> >  }
+> > @@ -784,6 +836,10 @@ static const struct net_proto_family
+> > xsk_family_ops = {
+> >       .owner  = THIS_MODULE,
+> >  };
+> >
+> > +static struct notifier_block xsk_netdev_notifier = {
+> > +     .notifier_call  = xsk_notifier,
+> > +};
+> > +
+> >  static int __net_init xsk_net_init(struct net *net)
+> >  {
+> >       mutex_init(&net->xdp.lock);
+> > @@ -816,8 +872,15 @@ static int __init xsk_init(void)
+> >       err = register_pernet_subsys(&xsk_net_ops);
+> >       if (err)
+> >               goto out_sk;
+> > +
+> > +     err = register_netdevice_notifier(&xsk_netdev_notifier);
+> > +     if (err)
+> > +             goto out_pernet;
+> > +
+> >       return 0;
+> >
+> > +out_pernet:
+> > +     unregister_pernet_subsys(&xsk_net_ops);
+> >  out_sk:
+> >       sock_unregister(PF_XDP);
+> >  out_proto:
+> > --
+> > 2.17.1
