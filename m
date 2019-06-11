@@ -2,152 +2,154 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FE9C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43674C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306B220872
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:10:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuetTGBK"
+	by mail.kernel.org (Postfix) with ESMTP id 0F92E21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560294873;
+	bh=3imD6aX3G+oJjgteBVtDCtp1lUXyjl1mNMy/sM6GSJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SuDHos/xhS7Bdt93vJY/U6muO21FVTTj9igY1sukxu+yhReJSGyONuKCnbnTwBMiN
+	 JJheQR8oMzr/GpnVXPtQwN1OLEhhKxPgXFwUBt4xuZaz/uLVxlrFOO9UQIFdei8MlJ
+	 70CuzYjGlevCEPKJYHNiZpNkYtFJER8fD9GfdlLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407963AbfFKXKt (ORCPT
+        id S2407964AbfFKXOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 19:10:49 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42106 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404483AbfFKXKs (ORCPT
+        Tue, 11 Jun 2019 19:14:32 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37016 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404483AbfFKXOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 19:10:48 -0400
-Received: by mail-pl1-f194.google.com with SMTP id go2so5737674plb.9;
-        Tue, 11 Jun 2019 16:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gOxpWt9450U9U7mtd5KrPlNhq9GnPsRQiRJlY6U4l00=;
-        b=fuetTGBKfhw9/3oHfiA01aA8ZjdhPmoy63MXWRVOpBEmfnoPOBp6VbMiW6oTgNLw3n
-         8NTVq76YGIWIEsCJWUmgxoBGXTLpv3SCg+T+t31Mll7Hhf4n8MnHNPNmrRPt5PrXh+OV
-         xEeRD7efc183++D/BVxkWtwRB+qEhn3seqVrbgk6MIaDjpZaEdI/IxyvDKqSBOz+TV1O
-         OZV8kO/s2jDoRfvBR+OYWzmh1Rt+Zs5+ZEqaepsQrrGYJ8n79aDNMRizc8HECcn5StWW
-         Po2GSqAkDoyiKwtVDTO12diZqwhqwrCI964OVhY7I3RgryEVM+dj0LnjHyhVJhEzO2Lh
-         nHHg==
+        Tue, 11 Jun 2019 19:14:32 -0400
+Received: by mail-io1-f68.google.com with SMTP id e5so11395066iok.4;
+        Tue, 11 Jun 2019 16:14:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=gOxpWt9450U9U7mtd5KrPlNhq9GnPsRQiRJlY6U4l00=;
-        b=FSJnucS9yMOrJZWRBMWUesDF0mBkgO7KxC2cFlVHpT2LtvxaiB7mNET0mo6a1NuG/g
-         SJ/86nKOldECSx93HOH9JP9+yAu+MPrdNN0NHzifwS8nE6OHQRzu4byFXyqgfF8Zqz7e
-         gCM+uMo13/7POyWkL1kwr8SAcRZeNBzp7dh3BaNghJUQpkZ1qpYERt6Ivm5Hi9qjW3+g
-         BjoFqK1VQQ+n8N/Xxh7GSgHyMuXhZX6EWap3taaag4KuGyyrCEBDMlpdQ/jE7ECnn2zp
-         rNkG2XB9l4JVrB8GjtRi1WbKbyrpS+NHU0qkj8MyKE5QvXKlgfr5PsAQsX6OVqCZnYTq
-         WBkg==
-X-Gm-Message-State: APjAAAVm4nlFkgHpEKlC/mn3VPd68rfz8ApxoB8ogih06Z1h/vqPjcXl
-        Y9qs5bmOOYI/PqpUeylW2+0=
-X-Google-Smtp-Source: APXvYqxUdk1S9SAThdril7xUBLfV5wwbAJN5cCNdmOKkFf03KYpf0V5DOctMIVmOqbdxa97ihDSxIw==
-X-Received: by 2002:a17:902:76c6:: with SMTP id j6mr53478342plt.263.1560294647815;
-        Tue, 11 Jun 2019 16:10:47 -0700 (PDT)
-Received: from [10.67.49.123] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id n2sm18998974pgp.27.2019.06.11.16.10.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 16:10:46 -0700 (PDT)
-Subject: Re: [PATCH net-next 4/4] net: dsa: use switchdev handle helpers
-To:     Vivien Didelot <vivien.didelot@gmail.com>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, andrew@lunn.ch
-References: <20190611214747.22285-1-vivien.didelot@gmail.com>
- <20190611214747.22285-5-vivien.didelot@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <51fe4433-89fc-2090-1a3c-3405ed7a8cc5@gmail.com>
-Date:   Tue, 11 Jun 2019 16:10:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/aBNuVSKZUriWZ/QesRFRpe/CatQ5nFG4Flo57Ca7og=;
+        b=kYPVk0CdtTyL+LO372bZtevGC1OfLJkq0xMP3JI2NLRCFlMzTRduAvS1cF+nf48Lls
+         Na1aA4Ae0h+IKNUgVDWrWRqPjsjmHeor3aZ9Ib7G6UERqhm1WGOJ24Eah2yWjeV2llBL
+         7ZCxochSVYt4GmpHsEN4lweiuw2vYFwgFSdOZrifOCNBYVDb3NHnBCg/gABwtjyy/G4G
+         A3lcV4OpvtVMT71+k6BZWAJPoQsSEVHUzgjqVkIBkhj7DhZKKB5gtBKgaTQeEMB61bYY
+         aGF6/5eUuiQrt0/EbJ2zmMye0VNgxVUVzr/GKITcuS8hQ9wRqIOg0CEODA8VSFW/UfXm
+         DYog==
+X-Gm-Message-State: APjAAAUXLgcQTELhBpa9csztSQLTSEKWDzRS6t00V3GVJSd0waunZoRb
+        XNjAwQkN+ys68cOntfBa6Q==
+X-Google-Smtp-Source: APXvYqz2xuF/nmQmlAS4lGQnIm1qVqg5LZxj2mk9azk9SPNMol/s2XBeLKVU261Gt24zGJac7bjYWQ==
+X-Received: by 2002:a05:6602:50:: with SMTP id z16mr2279838ioz.302.1560294870273;
+        Tue, 11 Jun 2019 16:14:30 -0700 (PDT)
+Received: from localhost (ip-174-149-252-64.englco.spcsdns.net. [174.149.252.64])
+        by smtp.gmail.com with ESMTPSA id q79sm2054468itb.15.2019.06.11.16.14.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 16:14:29 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 17:14:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Eduardo Valentin <eduval@amazon.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Haiyue Wang <haiyue.wang@linux.intel.com>,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@intel.com,
+        brendanhiggins@google.com, Mark Rutland <mark.rutland@arm.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 1/3] dt-bindings: i2c: document bindings for
+ i2c-slave-mqueue
+Message-ID: <20190611231425.GA29500@bogus>
+References: <20190605164651.15991-1-eduval@amazon.com>
+ <20190605164651.15991-2-eduval@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20190611214747.22285-5-vivien.didelot@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605164651.15991-2-eduval@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 2:47 PM, Vivien Didelot wrote:
-> Get rid of the dsa_slave_switchdev_port_{attr_set,obj}_event functions
-> in favor of the switchdev_handle_port_{attr_set,obj_add,obj_del}
-> helpers which recurse into the lower devices of the target interface.
+On Wed, Jun 05, 2019 at 09:46:49AM -0700, Eduardo Valentin wrote:
+> Document the i2c-slave-mqueue binding by adding
+> descriptor, required properties, and example.
 > 
-> This has the benefit of being aware of the operations made on the
-> bridge device itself, where orig_dev is the bridge, and dev is the
-> slave. This can be used later to configure bridge-wide attributes on
-> the hardware switches.
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+> ---
 > 
-> Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+> Changes from V6 to V7:
+> - none
+> 
+>  .../bindings/i2c/i2c-slave-mqueue.txt         | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt b/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+> new file mode 100644
+> index 000000000000..eb1881a4fc0e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+> @@ -0,0 +1,34 @@
+> +===============================================
+> +Device Tree for I2C slave message queue backend
+> +===============================================
+> +
+> +Some protocols over I2C/SMBus are designed for bi-directional transferring
+> +messages by using I2C Master Write protocol. This requires that both sides
+> +of the communication have slave addresses.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+So the address 0x10 in the example below is the address of the I2C 
+controller?
 
-Nice cleanup, thanks!
--- 
-Florian
+> +
+> +This I2C slave mqueue (message queue) is used to receive and queue
+> +messages from the remote i2c intelligent device; and it will add the target
+> +slave address (with R/W# bit is always 0) into the message at the first byte.
+> +
+> +Links
+> +----
+> +`Intelligent Platform Management Bus
+> +Communications Protocol Specification
+> +<https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/ipmp-spec-v1.0.pdf>`_
+> +
+> +`Management Component Transport Protocol (MCTP)
+> +SMBus/I2C Transport Binding Specification
+> +<https://www.dmtf.org/sites/default/files/standards/documents/DSP0237_1.1.0.pdf>`_
+> +
+> +Required Properties:
+> +- compatible		: should be "i2c-slave-mqueue"
+
+There is no mention of mqueue (or queue) in these specs. Where does that 
+come from? Perhaps something more closely matching the protocol would be 
+better name.
+
+> +- reg			: slave address
+> +
+> +Example:
+> +
+> +i2c {
+
+Would there be other slaves? 
+
+The common binding states 'multi-master' property should be present. 
+
+I need a more complete example.
+
+> +	slave_mqueue: i2c-slave-mqueue {
+> +		compatible = "i2c-slave-mqueue";
+> +		reg = <0x10>;
+> +	};
+> +};
+> -- 
+> 2.21.0
+> 
