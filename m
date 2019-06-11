@@ -2,122 +2,116 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA836C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AF9C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96348206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:11:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="OHXgU7no"
+	by mail.kernel.org (Postfix) with ESMTP id D93632145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390697AbfFKCLn (ORCPT
+        id S2390701AbfFKCQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 22:11:43 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54231 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728747AbfFKCLn (ORCPT
+        Mon, 10 Jun 2019 22:16:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35434 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726532AbfFKCQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 22:11:43 -0400
-Received: by mail-it1-f196.google.com with SMTP id m187so2337101ite.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 19:11:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8RcJD0etSUKCdAftUVogv11bxbo5C0KdF/jhN26WyyA=;
-        b=OHXgU7noh57Sp/hq02aCQk7Iwul4QOdcr6UViwgqqgDaoPRzDl52iiE0cD1hek0we8
-         3IKvO+lUENBcxzsHodJAZnTuabLcoZmMcyQ9lslSwB3speirTQXPv14ltLT3sMs93Mo7
-         sDeAhjdXkOwS9iJmOSINgqPbTWdBBDqiFERi0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8RcJD0etSUKCdAftUVogv11bxbo5C0KdF/jhN26WyyA=;
-        b=eCdfIzKhahtU4StVK2+Tn7WEhr8Pz9k0g4hWKtewYnNK+k5HWMigiOgWv63w8iO53w
-         eAowCIV+gbbvCtCXfaQw0leH9J+11PT0KB28L7FgNma7eeFX24oWVt+xhN2Uhl4ZfEeC
-         zoJNKKWWZCDE6RovNpWTsLq+xrvJTaXkttHbslJiM8BCWqZ/K/nrAapuT0qF8+l91YRe
-         vbJ38xXyuj3mSUYg5vz+gZg+UcwptlJ/TU5PyLkwng2a/RdP2fGSC6yy0gtpQjp0MPT4
-         zr2EOIgSdnlmfl6/oVGUen8XWqAacfgn9+EvBDOZaxvGSSp+HGi5S2UHS7S6wrckH9EV
-         PLQA==
-X-Gm-Message-State: APjAAAXHn0DoxaxIhu/4g2G+08u/MyTIW/Uk95clHb10at572egw/pVw
-        iMM7P8x3B7HWT6F2t82WIeMKpQ==
-X-Google-Smtp-Source: APXvYqzXNReWPcWQtoTC/Q7rrGPSPe4wVuVRroQKGCnjVJi4KH9bhqO038VqJ1HbXbKZCJDyQffZMQ==
-X-Received: by 2002:a24:c384:: with SMTP id s126mr15705942itg.1.1560219102350;
-        Mon, 10 Jun 2019 19:11:42 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id c23sm4403415iod.11.2019.06.10.19.11.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 19:11:41 -0700 (PDT)
-Subject: Re: [PATCH v2 02/17] dt-bindings: soc: qcom: add IPA bindings
-To:     Rob Herring <robh+dt@kernel.org>, Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org, subashab@codeaurora.org,
-        abhishek.esse@gmail.com, netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-References: <20190531035348.7194-1-elder@linaro.org>
- <20190531035348.7194-3-elder@linaro.org>
- <CAL_JsqLFk3=YN+V=RVxq9xWQTrPA9_0zW+eFrdXkGkCnM_sBkA@mail.gmail.com>
-From:   Alex Elder <elder@ieee.org>
-Message-ID: <bcb7f599-3c22-da27-c92b-4c1903a5ea06@ieee.org>
-Date:   Mon, 10 Jun 2019 21:11:38 -0500
+        Mon, 10 Jun 2019 22:16:35 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5B2CnTe032050
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 22:16:34 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t1yh5q98q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 22:16:17 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 11 Jun 2019 03:16:15 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 03:16:11 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5B2GA9H49479802
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 02:16:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 282D1A4068;
+        Tue, 11 Jun 2019 02:16:09 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 256E9A4054;
+        Tue, 11 Jun 2019 02:16:05 +0000 (GMT)
+Received: from [9.102.1.214] (unknown [9.102.1.214])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jun 2019 02:16:04 +0000 (GMT)
+Subject: Re: [PATCH RESEND 1/2] tools/perf: Add arch neutral function to
+ choose event for perf kvm record
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc:     mpe@ellerman.id.au, jolsa@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20190610064518.949-1-anju@linux.vnet.ibm.com>
+ <20190610151642.GT21245@kernel.org>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Tue, 11 Jun 2019 07:46:03 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLFk3=YN+V=RVxq9xWQTrPA9_0zW+eFrdXkGkCnM_sBkA@mail.gmail.com>
+In-Reply-To: <20190610151642.GT21245@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061102-0016-0000-0000-00000287E5CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061102-0017-0000-0000-000032E5109A
+Message-Id: <fb887226-52c9-3714-009f-c1c8a49197c9@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 5:08 PM, Rob Herring wrote:
-> On Thu, May 30, 2019 at 9:53 PM Alex Elder <elder@linaro.org> wrote:
->>
->> Add the binding definitions for the "qcom,ipa" device tree node.
->>
->> Signed-off-by: Alex Elder <elder@linaro.org>
->> ---
->>  .../devicetree/bindings/net/qcom,ipa.yaml     | 180 ++++++++++++++++++
->>  1 file changed, 180 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
->> new file mode 100644
->> index 000000000000..0037fc278a61
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
->> @@ -0,0 +1,180 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> 
-> New bindings are preferred to be dual GPL-2.0 and BSD-2-Clause. But
-> that's really a decision for the submitter.
 
-Thanks Rob.  I'll ask Qualcomm if there's any problem
-with doing that; I presume not.  If I re-submit this
-with dual copyright, I will include your Reviewed-by
-despite the change, OK?
 
-					-Alex
+On 6/10/19 8:46 PM, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Jun 10, 2019 at 12:15:17PM +0530, Anju T Sudhakar escreveu:
+>> 'perf kvm record' uses 'cycles'(if the user did not specify any event) as
+>> the default event to profile the guest.
+>> This will not provide any proper samples from the guest incase of
+>> powerpc architecture, since in powerpc the PMUs are controlled by
+>> the guest rather than the host.
+>>
+>> Patch adds a function to pick an arch specific event for 'perf kvm record',
+>> instead of selecting 'cycles' as a default event for all architectures.
+>>
+>> For powerpc this function checks for any user specified event, and if there
+>> isn't any it returns invalid instead of proceeding with 'cycles' event.
+> 
+> Michael, Ravi, Maddy, could you please provide an Acked-by, Reviewed-by
+> or Tested-by?
 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
+Code looks fine to me but cross-build fails for aarch64:
+
+  builtin-kvm.c:1513:12: error: no previous prototype for 'kvm_add_default_arch_event' [-Werror=missing-prototypes]
+   int __weak kvm_add_default_arch_event(int *argc __maybe_unused,
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  cc1: all warnings being treated as errors
+  mv: cannot stat './.builtin-kvm.o.tmp': No such file or directory
+
+With the build fix:
+Acked-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
