@@ -2,123 +2,171 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955B8C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9335FC4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67010208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62385208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:04:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dF4SG3R9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZIa8H2Jy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404489AbfFKIDu (ORCPT
+        id S2404562AbfFKIEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:03:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57284 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404132AbfFKIDu (ORCPT
+        Tue, 11 Jun 2019 04:04:38 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36571 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404532AbfFKIEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:03:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8xxQALJN7Syi60OL02MNSn/aq6yIJ8KjUuq65xvI+7Y=; b=dF4SG3R98ldLAVUuSrWAwLhOr
-        cJoQg2/9XlVlfVS3GJzSVmAzSu40cgW8v845BW//x9zPpNn3MA+f6Ii8bTnSb9IiEfab7FcUSzHec
-        DYvzXonBcwNAFADC/GOvv8PMET1EvSZi2PSpoGM73+0bFZpoOtMuKSOX79OHsVCc1HHh9gZNHnZZ5
-        GU4eF8n221ZOOobeCv3GivVpy1NHZpIkZ/xWDZADu9Yuo7SaUQsq1CtmsgqLg8S796dM3SCYecHz0
-        9KNRzjNAM7jVRFyIHXOgHBeGM5IG00N5C8A8qtNV3QPCkRC0hFGKAT6YBI9xAeYVo1Kwxcp4LGpt4
-        D2ltQDSIw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1habkM-0007Gc-0A; Tue, 11 Jun 2019 08:03:10 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8FE96202173E0; Tue, 11 Jun 2019 10:03:07 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 10:03:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
- instructions
-Message-ID: <20190611080307.GN3436@hirez.programming.kicks-ass.net>
-References: <20190605130753.327195108@infradead.org>
- <20190605131945.005681046@infradead.org>
- <20190608004708.7646b287151cf613838ce05f@kernel.org>
- <20190607173427.GK3436@hirez.programming.kicks-ass.net>
- <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net>
+        Tue, 11 Jun 2019 04:04:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k21so15304891edq.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 01:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1VpP4BQl0scWmMIfvVrIwxl9EaLNPQUpAZnq/R1E08A=;
+        b=ZIa8H2Jy5lWKWQz1TT7B/cBLsAJV/t0RUOsjzlAUmvjxv48OR/2G2Z3xwj89VqyCSC
+         Y7NCdLF+j+Zb7j9MlTsh2N8qAd9mQSkTkGybODE0RYNXFT6BGqim8aTZFx8ccV9Ema2X
+         VHizYVWLs+TJqJRySt+NsoMrmPz7kLRDwVbHA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=1VpP4BQl0scWmMIfvVrIwxl9EaLNPQUpAZnq/R1E08A=;
+        b=BXQyVEMNJCmD7OOYHiTpcYaoQuXZf/Rit1FuhOip6/rKPIjFD39adwA7l+qIFCGNWT
+         Zv2XSkafy2O0M9Xdm5MYHdGGnUI8mTjfwaFQdyEcuSZ8kLJWxmCPIADO3EBcoYEr0WsO
+         EXaGBxhEkDnHAZUjD8SClUW3n/uY1Q15zMmR61fAkHzn1hqxhOtyY+M3XaP6lte/yaba
+         u6Ghw0Ygj0+VbyzvUbfQHuvu/2bzAm9bMnZ3sZIf/RU28l9whmJ8aysFDrzyI2rg36kX
+         LOCYUaK1XvmWnHdSJscWVj7A3kc/lTDaOGSfdW/wyNto/a8OWen5qMNu3ahnczo7uP4h
+         qA1A==
+X-Gm-Message-State: APjAAAXYvygsMJlMJHnwx8uoblUlRBQ3cSMzHCkwDmyWPXUVdeaXOSNw
+        qVwXnfXWQfQ3hlCTSY7+B7vGzQ==
+X-Google-Smtp-Source: APXvYqxTt4reyZxOwFM7gpLn44B2/syN7stLMXz/LTQgDQdiH76jkBmOlBKjhtvaB3E/mb8+p5bIJQ==
+X-Received: by 2002:a17:906:ad86:: with SMTP id la6mr44226340ejb.43.1560240275503;
+        Tue, 11 Jun 2019 01:04:35 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id y11sm3576596edj.96.2019.06.11.01.04.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 01:04:34 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 10:04:31 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@ffwll.ch, daniel@iogearbox.net, davem@davemloft.net,
+        dri-devel@lists.freedesktop.org, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        kafai@fb.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, maxime.ripard@bootlin.com,
+        netdev@vger.kernel.org, paul.kocialkowski@bootlin.com,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        wens@csie.org, xdp-newbies@vger.kernel.org, yhs@fb.com
+Subject: Re: WARNING in bpf_jit_free
+Message-ID: <20190611080431.GP21222@phenom.ffwll.local>
+Mail-Followup-To: syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>,
+        airlied@linux.ie, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net,
+        dri-devel@lists.freedesktop.org, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        kafai@fb.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, maxime.ripard@bootlin.com,
+        netdev@vger.kernel.org, paul.kocialkowski@bootlin.com,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        wens@csie.org, xdp-newbies@vger.kernel.org, yhs@fb.com
+References: <000000000000e92d1805711f5552@google.com>
+ <000000000000381684058ace28e5@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net>
+In-Reply-To: <000000000000381684058ace28e5@google.com>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:10:19AM -0700, Andy Lutomirski wrote:
+On Sat, Jun 08, 2019 at 04:22:06AM -0700, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
 > 
+> HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1201b971a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2ff1e7cb738fd3c41113
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a3bf51a00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120d19f2a00000
+
+Looking at the reproducer I don't see any calls to ioctl which could end
+up anywhere in drm.
 > 
-> > On Jun 7, 2019, at 10:34 AM, Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > On Sat, Jun 08, 2019 at 12:47:08AM +0900, Masami Hiramatsu wrote:
-> > 
-> >>> This fits almost all text_poke_bp() users, except
-> >>> arch_unoptimize_kprobe() which restores random text, and for that site
-> >>> we have to build an explicit emulate instruction.
-> >> 
-> >> Hm, actually it doesn't restores randome text, since the first byte
-> >> must always be int3. As the function name means, it just unoptimizes
-> >> (jump based optprobe -> int3 based kprobe).
-> >> Anyway, that is not an issue. With this patch, optprobe must still work.
-> > 
-> > I thought it basically restored 5 bytes of original text (with no
-> > guarantee it is a single instruction, or even a complete instruction),
-> > with the first byte replaced with INT3.
-> > 
+> The bug was bisected to:
 > 
-> I am surely missing some kprobe context, but is it really safe to use
-> this mechanism to replace more than one instruction?
+> commit 0fff724a33917ac581b5825375d0b57affedee76
+> Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> Date:   Fri Jan 18 14:51:13 2019 +0000
+> 
+>     drm/sun4i: backend: Use explicit fourcc helpers for packed YUV422 check
 
-I'm not entirely up-to-scratch here, so Masami, please correct me if I'm
-wrong.
+And most definitely not in drm/sun4i. You can only hit this if you have
+sun4i and run on arm, which per your config isn't the case.
 
-So what happens is that arch_prepare_optimized_kprobe() <-
-copy_optimized_instructions() copies however much of the instruction
-stream is required such that we can overwrite the instruction at @addr
-with a 5 byte jump.
+tldr; smells like bisect gone wrong.
+-Daniel
 
-arch_optimize_kprobe() then does the text_poke_bp() that replaces the
-instruction @addr with int3, copies the rel jump address and overwrites
-the int3 with jmp.
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467550f200000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667550f200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1267550f200000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
+> Fixes: 0fff724a3391 ("drm/sun4i: backend: Use explicit fourcc helpers for
+> packed YUV422 check")
+> 
+> WARNING: CPU: 0 PID: 8951 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 8951 Comm: kworker/0:0 Not tainted 5.2.0-rc3+ #23
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: events bpf_prog_free_deferred
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  panic+0x2cb/0x744 kernel/panic.c:219
+>  __warn.cold+0x20/0x4d kernel/panic.c:576
+>  report_bug+0x263/0x2b0 lib/bug.c:186
+>  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+>  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+>  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> RIP: 0010:bpf_jit_free+0x157/0x1b0
+> Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00
+> 00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 f9 b5 f4 ff <0f> 0b e9 f9 fe ff
+> ff e8 bd 53 2d 00 e9 d9 fe ff ff 48 89 7d e0 e8
+> RSP: 0018:ffff88808886fcb0 EFLAGS: 00010293
+> RAX: ffff88808cb6c480 RBX: ffff88809051d280 RCX: ffffffff817ae68d
+> RDX: 0000000000000000 RSI: ffffffff817bf0f7 RDI: ffff88809051d2f0
+> RBP: ffff88808886fcd0 R08: 1ffffffff14ccaa8 R09: fffffbfff14ccaa9
+> R10: fffffbfff14ccaa8 R11: ffffffff8a665547 R12: ffffc90001925000
+> R13: ffff88809051d2e8 R14: ffff8880a0e43900 R15: ffff8880ae834840
+>  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1984
+>  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+>  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+>  kthread+0x354/0x420 kernel/kthread.c:255
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
 
-And I'm thinking the problem is with something like:
-
-@addr: nop nop nop nop nop
-
-We copy out the nops into the trampoline, overwrite the first nop with
-an INT3, overwrite the remaining nops with the rel addr, but oops,
-another CPU can still be executing one of those NOPs, right?
-
-I'm thinking we could fix this by first writing INT3 into all relevant
-instructions, which is going to be messy, given the current code base.
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
