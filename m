@@ -2,89 +2,79 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661A4C0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B566C06508
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E08721721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560267422;
-	bh=fEoHYLUoUcY9d8GXrqmAIqvlneWazjqtSYZ7U9oX254=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hhClhoQQ7h/i3VYlMeBdo5mFAXnY+dDON/1VzUL5nrKFPo1N3RaIxB6bVDH0JL0tm
-	 9BkihssBHCCt2TKN0Y4N5OoE68234rdR9hhO2nsYNvRBQFxPv5t/Me5TBz/9PypL+e
-	 WD0GdPioCyjUZdaggjZK6cYJEIqIXznFmUIh8GcY=
+	by mail.kernel.org (Postfix) with ESMTP id CFADE2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405100AbfFKPhB (ORCPT
+        id S2405122AbfFKPhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60540 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 11:37:05 -0400
+Received: from ms.lwn.net ([45.79.88.28]:51262 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388863AbfFKPhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:37:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2405101AbfFKPhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:37:03 -0400
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56409208E3;
-        Tue, 11 Jun 2019 15:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560267420;
-        bh=fEoHYLUoUcY9d8GXrqmAIqvlneWazjqtSYZ7U9oX254=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L+HewiuH18Tn8PTXdwxGf11Sd+J2LlpmhDkd6ygLY6Iu1mKKOQHQnlsHmCPMsubcm
-         uPzFSSJqL/U/01GKsriiICUZzR90OKciN7m2VNHDAhxuD4QY3foY7q/9jxkjP7xuBR
-         V+Y1I/XKnIxmNNXSXQPRUkI2awrv2XIb0lnrKZ0A=
-Date:   Tue, 11 Jun 2019 17:36:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sven Joachim <svenjoac@gmx.de>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>
-Subject: Re: Linux 5.1.9 build failure with
- CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n
-Message-ID: <20190611153656.GA5084@kroah.com>
-References: <87k1dsjkdo.fsf@turtle.gmx.de>
+        by ms.lwn.net (Postfix) with ESMTPSA id A356C382;
+        Tue, 11 Jun 2019 15:37:02 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 09:37:01 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 33/33] docs: EDID/HOWTO.txt: convert it and rename to
+ howto.rst
+Message-ID: <20190611093701.44344d00@lwn.net>
+In-Reply-To: <20190611060215.232af2bb@coco.lan>
+References: <cover.1560045490.git.mchehab+samsung@kernel.org>
+        <74bec0b5b7c32c8d84adbaf9ff208803475198e5.1560045490.git.mchehab+samsung@kernel.org>
+        <20190611083731.GS21222@phenom.ffwll.local>
+        <20190611060215.232af2bb@coco.lan>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k1dsjkdo.fsf@turtle.gmx.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:56:35PM +0200, Sven Joachim wrote:
-> Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
-> legacy contexts. (v3)") has caused a build failure for me when I
-> actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
-> 
-> ,----
-> | Kernel: arch/x86/boot/bzImage is ready  (#1)
-> |   Building modules, stage 2.
-> |   MODPOST 290 modules
-> | ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-> | scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-> `----
-> 
-> Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
-> Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
-> drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
-> apply in 5.1.9.
-> 
-> Most likely 4.19.50 and 4.14.125 are also affected, I haven't tested
-> them yet.
+On Tue, 11 Jun 2019 06:02:15 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-They probably are.
+> Jon, please correct me if I' wrong, bu I guess the plan is to place them 
+> somewhere under Documentation/admin-guide/.
 
-Should I just revert this patch in the stable tree, or add some other
-patch (like the one pointed out here, which seems an odd patch for
-stable...)
+That makes sense to me.
 
-thanks,
+> If so, perhaps creating a Documentation/admin-guide/drm dir there and 
+> place docs like EDID/HOWTO.txt, svga.txt, etc would work.
 
-greg k-h
+Maybe "graphics" or "display" rather than "drm", which may not entirely
+applicable to all of those docs or as familiar to all admins?
+
+> Btw, that's one of the reasons[1] why I opted to keep the files where they
+> are: properly organizing the converted documents call for such kind
+> of discussions. On my experience, discussing names and directory locations
+> can generate warm discussions and take a lot of time to reach consensus.
+
+Moving docs is a pain; my life would certainly be easier if I were happy
+to just let everything lie where it fell :)  But it's far from the hardest
+problem we solve in kernel development, I assume we can figure it out.
+
+Thanks,
+
+jon
