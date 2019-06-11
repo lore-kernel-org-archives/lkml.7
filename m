@@ -2,98 +2,107 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFDEC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F81CC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6807C20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAB720872
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 23:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPdjO/Fa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SBr/CRml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407472AbfFKXGl (ORCPT
+        id S2437040AbfFKXHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 19:06:41 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:52926 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390115AbfFKXGl (ORCPT
+        Tue, 11 Jun 2019 19:07:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54688 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390115AbfFKXHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 19:06:41 -0400
-Received: by mail-wm1-f47.google.com with SMTP id s3so4611230wms.2;
-        Tue, 11 Jun 2019 16:06:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=a2xmmeRndxEnZa1295uuokWUZL8ocpkn6ktjKi0+CP8=;
-        b=vPdjO/FahGvwMpUscMV6HlsA7bQwvz8z4pG+0TqmsLHHKd61n+IrP0c3FxN9YUt052
-         WZhjd34iVo7Z9XbK02Vary8h7GvqfCQ/n8kEMxTOX7vromQc9+PhmSVFMotrr3AM7Uml
-         W4p+fC9R8/aiGZBH53q6+Mne2/6lVqHi5yK/Gop9KWp8h7nNVc0jlgwVJ+tww8d8XjIp
-         TBDzZXXDRpN5bRC9lmsDIIf9M/dSDOm98Kh7wH1EjDKrZFhzu+RwAGOi0+inN4DBi7c9
-         bFuqAJB0S0PPV4NW4eDkUBaBqBmXTl5RCttqeJP2SPhFvtieYnW+ymab6ANL2VVhPQX6
-         /y4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a2xmmeRndxEnZa1295uuokWUZL8ocpkn6ktjKi0+CP8=;
-        b=b4lk/WWPiP9FKa47OJznAHgYGffWyezPtHHGHSllFRVwC4qC22tClZGpJZyIetlazB
-         u+mZGXSKweK7UBymUiBtFVWcqY8nDxgRHL4Tk1ZKHHx9Egu3Ip7XSPAPGJE1HOW8Y9Z6
-         cFEpcp4w1lsSK/x9q6jKeeL2+0Uno9L56fZqMZiUwI6pSmIHAAJYOrTUjVzhFL1opdtD
-         6Y+/r1v5U227tFQFlgR6nwp9UPCd43Co+/qalorfBo/ZYwFPG+M1+I+6xpwMEaHtUnXY
-         Z9OxaDpAm7U0C+hJUMTa4GKGDreHddTFxD34DqrFaiDn7MdX6z4j0zCk6EjimzZbdDbx
-         iM1Q==
-X-Gm-Message-State: APjAAAXAVBcqQkORYxsdLuzwZH9SRfEgiPDh4ZYHFOrSBfnz34XIh2cr
-        HUXo7aj1239TbZ8bnuYykkc=
-X-Google-Smtp-Source: APXvYqwxPrB+GW2h5nr7XOSCeIW7SYI73H+28mHUPkG/XxHFI6PW1bzGxQsFOU6sBfNd7ANr8Hmy1g==
-X-Received: by 2002:a1c:730d:: with SMTP id d13mr16612403wmb.88.1560294399018;
-        Tue, 11 Jun 2019 16:06:39 -0700 (PDT)
-Received: from [192.168.2.202] (pD9E5A42E.dip0.t-ipconnect.de. [217.229.164.46])
-        by smtp.gmail.com with ESMTPSA id f24sm2759973wmb.16.2019.06.11.16.06.37
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 16:06:38 -0700 (PDT)
-Subject: Re: [RFC 0/2] Support for buttons on newer MS Surface devices
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-References: <20190516142523.117978-1-luzmaximilian@gmail.com>
- <a0f93af3-c587-40d5-2a85-fdc0f9e6b79f@gmail.com>
-Message-ID: <e8bb212c-9894-d244-4ee1-617df3952a53@gmail.com>
-Date:   Wed, 12 Jun 2019 01:06:36 +0200
+        Tue, 11 Jun 2019 19:07:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aWwNDG9l+fRofOJ4dvlOUGxsf7dmx2az/Ef1K3Z/EoY=; b=SBr/CRmlczoybi8R+VWdBVH5K
+        MRuWlf8ggyJanc8B6NFuoRtDCxLL9hPPBgSUWSmJTUiXeBmJ78a+Yf+JFvXjsE0fEXHLsXL90AfeM
+        cPMEYgVdybx2YCGOtGDXR3T21UtRhpEm7Y9jxYxkQ+54bTyRctrL9jx1NfSHkMuyyNx/AT1ew2Vlg
+        6TRFdTKcs6czohEyEpX+5n/nfV4D6O88+o6IzUXsdj/E3M2D+U3WW3UNH7QgMNpal6kv5U73IRCN6
+        YrpTXe56o2+lm2tjxdXbXQvlbU9VLic4C6jZjk9TxhiTLCe7o4oc10QP1ch+Q6HR7NC1NDL76Io4j
+        TfKEWo1og==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hapr6-0000I0-UP; Tue, 11 Jun 2019 23:07:05 +0000
+Subject: Re: [PATCH net] mpls: fix af_mpls dependencies
+To:     David Miller <davem@davemloft.net>, mcroce@redhat.com
+Cc:     netdev@vger.kernel.org, linux-next@vger.kernel.org,
+        akpm@linux-foundation.org, dsahern@gmail.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20190608125019.417-1-mcroce@redhat.com>
+ <20190609.195742.739339469351067643.davem@davemloft.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d19abcd4-799c-ac2f-ffcb-fa749d17950c@infradead.org>
+Date:   Tue, 11 Jun 2019 16:06:53 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <a0f93af3-c587-40d5-2a85-fdc0f9e6b79f@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190609.195742.739339469351067643.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there are no comments on this, should I simply submit this as patch?
-
-Maximilian
-
-
-On 6/1/19 9:07 PM, Maximilian Luz wrote:
-> Hi,
+On 6/9/19 7:57 PM, David Miller wrote:
+> From: Matteo Croce <mcroce@redhat.com>
+> Date: Sat,  8 Jun 2019 14:50:19 +0200
 > 
-> any comments on this?
+>> MPLS routing code relies on sysctl to work, so let it select PROC_SYSCTL.
+>>
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> Suggested-by: David Ahern <dsahern@gmail.com>
+>> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 > 
-> I should also mention that this has been tested via
-> https://github.com/jakeday/linux-surface.
+> Applied, thanks.
 > 
-> Maximilian
+
+This patch causes build errors when
+# CONFIG_PROC_FS is not set
+because PROC_SYSCTL depends on PROC_FS.  The build errors are not
+in fs/proc/ but in other places in the kernel that never expect to see
+PROC_FS not set but PROC_SYSCTL=y.
+
+I see the following 2 build errors:
+
+../kernel/sysctl_binary.c: In function 'binary_sysctl':
+../kernel/sysctl_binary.c:1305:37: error: 'struct pid_namespace' has no member named 'proc_mnt'; did you mean 'proc_work'?
+  mnt = task_active_pid_ns(current)->proc_mnt;
+                                     ^~~~~~~~
+
+../fs/xfs/xfs_sysctl.c:80:19: error: 'xfs_panic_mask_proc_handler' undeclared here (not in a function); did you mean 'xfs_panic_mask'?
+   .proc_handler = xfs_panic_mask_proc_handler,
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+The patch's line:
++	select PROC_SYSCTL
+
+should not be done unless PROC_FS is enabled, e.g.:
+	select PROC_SYSCTL if PROC_FS
+but that still doesn't help the mpls driver operate as it should.
+
+The patch should have been
+	depends on PROC_SYSCTL
+
+As it stands now (in linux-next), this patch should be reverted IMO.
+
+
+-- 
+~Randy
