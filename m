@@ -2,114 +2,220 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DF9C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ED7C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7074206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y7qmYfLC"
+	by mail.kernel.org (Postfix) with ESMTP id C760A206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387560AbfFKK36 (ORCPT
+        id S2387648AbfFKKcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:29:58 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37022 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfFKK35 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:29:57 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v14so12396565wrr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 03:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M85tDvSO1y/yeeXKIT4QQ+Mi/qHlL9lRNm7SAqISA7I=;
-        b=y7qmYfLCKTDOn5agwlJpK0d/8R5GPbL3CHKyjAmTfPsU5SHzSZTRSeo9ltk0UBq7TS
-         tca01mVkEJ6KgwzyaTcSGkcZZZ21tbYvjK1onqMspHJr2xvkp0875BvxvYkq0q4eo9Ew
-         pvAmMlnVzbmx/yCj6O4J07Ubi9mRQwb5Fys/o4Y4RVNIuRyrDW4mRqwyVnGcJ8Em5j6x
-         CmrDUvMVbyDSevWGOyKFJ6fErZMisHGvKsrz09zacpIAjomTQTDmaY5Gts1SnmyUKVa2
-         7IMgEV77vtYBJnDMrH3AxZ7kvg2XNfvAvsVr6A8pZZqS/ms4y0odVPTeK3M2gq5SISbS
-         /Dsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M85tDvSO1y/yeeXKIT4QQ+Mi/qHlL9lRNm7SAqISA7I=;
-        b=Znlpfgqho6nY5yZ6y3S+BLmW7WPrOx35tqKULx1bgh6oCkP0QV/JTyfhQ9ekUPC/B7
-         w/snPzfvHZZ74iaLt4whuJsZa5x8E2uDLmVy5fXuwbIbPTZyeSWHmzeu6T/daY0HXJ6Y
-         7s9E7vtJ7gbb4w8Hcc53nv92j0RH5UOzybbKefQ/0GIt9YsiQyGLu2n4IdPStlJMpe/u
-         OyERgpioCaHOswbCoeCq9Qm9MeUE6c10s2z49HtKHOnUh+NpjVtjSgLWRbIBttLf/agQ
-         w9Kf0QRur8xRqbTKU+cqO409TuSxB8B6NpQPP8ybpi9sOPvLscRz2v5orASIm9BO1z2o
-         RzgA==
-X-Gm-Message-State: APjAAAUi4ZDEBP4QV9KWWyIOeNq68mWaJCG86/CDLpf4T8u9V8MbIDeo
-        7T4DwheNv+enDplVrEsszwmWVA==
-X-Google-Smtp-Source: APXvYqwxt7HB9+C3etBO06tZ96K8l6qG1G2Lj6oFtJDgC06knZVDdMfbFtxWP1l0oE2q0m0iUvSpNw==
-X-Received: by 2002:a05:6000:1241:: with SMTP id j1mr12045880wrx.63.1560248995982;
-        Tue, 11 Jun 2019 03:29:55 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id x11sm3017513wmg.23.2019.06.11.03.29.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 03:29:54 -0700 (PDT)
-Subject: Re: [alsa-devel] [RFC PATCH 6/6] soundwire: qcom: add support for
- SoundWire controller
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        broonie@kernel.org, vkoul@kernel.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org
-References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
- <20190607085643.932-7-srinivas.kandagatla@linaro.org>
- <249f9647-94d0-41d7-3b95-64c36d90f8e8@linux.intel.com>
- <40ea774c-8aa8-295d-e91e-71423b03c88d@linaro.org>
- <7269521a-ac89-3856-c18c-ffaaf64c0806@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <462620fc-ac91-6a36-46c7-7af0080f06cb@linaro.org>
-Date:   Tue, 11 Jun 2019 11:29:54 +0100
+        Tue, 11 Jun 2019 06:32:14 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31410 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387423AbfFKKcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:32:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 03:32:12 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga002.jf.intel.com with ESMTP; 11 Jun 2019 03:32:09 -0700
+Subject: Re: [RFC PATCH 1/2] mmc: sdhci: Manually check card status after
+ reset
+To:     Raul Rangel <rrangel@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        hongjiefang <hongjiefang@asrmicro.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Kyle Roeschley <kyle.roeschley@ni.com>,
+        Avri Altman <avri.altman@wdc.com>
+References: <20190501175457.195855-1-rrangel@chromium.org>
+ <CAPDyKFpL1nHt1E1zgS-iDZf_KDWk2CN32Lvr+5Nmo8CtB2VCWg@mail.gmail.com>
+ <20190607160553.GA185100@google.com>
+ <CAPDyKFout6AY2Q92pYQ-KPH0NENq1-SkYivkDxjjb=uB=tKXuQ@mail.gmail.com>
+ <20190610163252.GA227032@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <fcdf6cc4-2729-abe2-85c8-b0d04901c5ae@intel.com>
+Date:   Tue, 11 Jun 2019 13:30:55 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <7269521a-ac89-3856-c18c-ffaaf64c0806@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190610163252.GA227032@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/06/2019 15:12, Pierre-Louis Bossart wrote:
->>>> +
->>>> +    if (dev_addr == SDW_BROADCAST_DEV_NUM) {
->>>> +        ctrl->fifo_status = 0;
->>>> +        ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
->>>> +                          msecs_to_jiffies(TIMEOUT_MS));
->>>
->>> This is odd. The SoundWire spec does not handle writes to a single 
->>> device or broadcast writes differently. I don't see a clear reason 
->>> why you would only timeout for a broadcast write.
->>>
+On 10/06/19 7:32 PM, Raul Rangel wrote:
+> On Mon, Jun 10, 2019 at 06:17:31PM +0200, Ulf Hansson wrote:
+>> + Adrian
 >>
->> There is danger of blocking here without timeout.
-> 
-> Right, and it's fine to add a timeout. The question is why add a timeout 
-> *only* for a broadcast operation? It should be added for every 
-> transaction IMO, unless you have a reason not to do so.
-> 
-
-I did try this before, the issue is when we read/write registers from 
-interrupt handler, these can be deadlocked as we will be interrupt 
-handler waiting for another completion interrupt, which will never 
-happen unless we return from the first interrupt.
-
-thanks,
-srini
-
+>> On Fri, 7 Jun 2019 at 18:05, Raul Rangel <rrangel@chromium.org> wrote:
 >>>
+>>> On Tue, May 28, 2019 at 09:38:20AM +0200, Ulf Hansson wrote:
+>>>> On Wed, 1 May 2019 at 19:55, Raul E Rangel <rrangel@chromium.org> wrote:
+>>>
+>>> First off, thanks for the review.
+>>>
+>>>>>
+>>>>> There is a race condition between resetting the SDHCI controller and
+>>>>> disconnecting the card.
+>>>>>
+>>>>> For example:
+>>>>> 0) Card is connected and transferring data
+>>>>> 1) mmc_sd_reset is called to reset the controller due to a data error
+>>>>
+>>>> I assume you refer to mmc_sd_hw_reset()? In that case, I think you
+>>>> have interpreted the purpose of mmc_sd_hw_reset() slightly wrong. It's
+>>>> responsibility is to reset the SD-card and not the host/controller.
+>>> You are correct. I was looking at a 4.14 kernel where it's called
+>>> mmc_sd_reset. 4.19 and above call it mmc_sd_hw_reset.
+>>>
+>>> All I was trying to convey here was that a block error will eventually
+>>> call sdhci_set_ios with SOFT_RESET_ALL via:
+>>> mmc_blk_reset
+>>> mmc_hw_reset
+>>> mmc_sd_hw_reset
+>>> mmc_power_cycle
+>>> mmc_power_off
+>>> mmc_set_initial_state
+>>> sdhci_set_ios
+>>> sdhci_reinit
+>>> sdhci_init
+>>> sdhci_do_reset(host, SDHCI_RESET_ALL);
+>>>
+>>>>
+>>>> Whether there some additional "reset" of the controller needed, that
+>>>> is assumed by the core, to be managed via the ->set_ios() callback for
+>>>> the host.
+>>>>
+>>>>> 2) sdhci_set_ios calls sdhci_do_reset
+>>>>> 3) SOFT_RESET_ALL is toggled which clears the IRQs the controller has
+>>>>> configured.
+>>>>> 4) Wait for SOFT_RESET_ALL to clear
+>>>>> 5) CD logic notices card is gone and CARD_PRESENT goes low, but since the
+>>>>>    IRQs are not configured a CARD_REMOVED interrupt is never raised.
+>>>>> 6) IRQs are enabled again
+>>>>> 7) mmc layer never notices the device is disconnected. The SDHCI layer
+>>>>>    will keep returning -ENOMEDIUM. This results in a card that is always
+>>>>>    present and not functional.
+>>>>
+>>>> This sounds like host specific problems, which most likely should be
+>>>> fixed in host driver, solely. Unless I am missing something, of
+>>>> course.
+>>>
+>>> So in sdhci_do_reset we call the reset callback which is typically
+>>> sdhci_reset. sdhci_reset can wait for up to 100ms waiting for the
+>>> controller to reset. If SDHCI_RESET_ALL was passed as the flag, the
+>>> controller will clear the IRQ mask. If during that 100ms the card is
+>>> removed there is no notification to the MMC system that the card was
+>>> removed. So it seems like the card is always present.
+>>
+>> So you are saying that the problem occurs when the card is removed
+>> during this 100ms period?
+> Exactly. Thought I think most controllers reset fast enough to where
+> that window is very small. But for this AMD controller we need to do a
+> full reset which takes a while, so we can see the problem.
+> 
+>>
+>> I assume there a way for sdhci to re-validate whether the card has
+>> been removed during this period, right?
+> I'll let Adrian chime in here.
+> 
+>>>
+>>>>>  drivers/mmc/core/sd.c | 20 ++++++++++++++++++++
+>>>>>  1 file changed, 20 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+>>>>> index 265e1aeeb9d8..9206c4297d66 100644
+>>>>> --- a/drivers/mmc/core/sd.c
+>>>>> +++ b/drivers/mmc/core/sd.c
+>>>>> @@ -1242,7 +1242,27 @@ static int mmc_sd_runtime_resume(struct mmc_host *host)
+>>>>>
+>>>>>  static int mmc_sd_hw_reset(struct mmc_host *host)
+>>>>>  {
+>>>>> +       int present;
+>>>>>         mmc_power_cycle(host, host->card->ocr);
+>>>>> +
+>>>>> +       present = host->ops->get_cd(host);
+>>>>> +
+>>>>> +       /* The card status could have changed while resetting. */
+>>>>> +       if ((mmc_card_removed(host->card) && present) ||
+>>>>> +           (!mmc_card_removed(host->card) && !present)) {
+>>>>> +               pr_info("%s: card status changed during reset\n",
+>>>>> +                      mmc_hostname(host));
+>>>>> +               host->ops->card_event(host);
+>>>>> +               mmc_detect_change(host, 0);
+>>>>> +       }
+>>>>> +
+>>>>> +       /* Don't perform unnecessary transactions if the card is missing. */
+>>>>> +       if (!present) {
+>>>>> +               pr_info("%s: card was removed during reset\n",
+>>>>> +                       mmc_hostname(host));
+>>>>> +               return -ENOMEDIUM;
+>>>>> +       }
+>>>>> +
+>>>>
+>>>> When doing a  mmc_hw_reset() (which ends up calling mmc_sd_hw_reset()
+>>>> in case of SD cards), we are making a final attempt to make the card
+>>>> functional again, via a power cycle and a re-init of it.
+>>>>
+>>>> In this path, we don't care whether the card is removed, as that
+>>>> should have been detected already when the block layer calls
+>>>> mmc_detect_card_removed().
+>>>
+>>> mmc_detect_card_removed has the guard `host->detect_change` to
+>>> prevent it from checking the card status again. So maybe the fix to the
+>>> missing interrupt/race condition is to set `host->detect_change = 1`
+>>> from sdhci_do_reset after calling the reset handler. This way there will
+>>> always be a single poll after a full reset so the correct card status can
+>>> be detected?
+>>
+>> It sounds like you should call mmc_detect_change(), after the reset to
+>> let the core check for cards that may have been removed/inserted.
+>>
+>> Would that work?
+> Yeah, I could add `mmc_detect_change()` to the AMD SDHCI patch. I just
+> thought it would be better to fix the potential race condition at a
+> higher level. Though I'm happy to move it to the AMD patch. Let me know.
+
+Does the following work?
+
+
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 0cd5f2ce98df..f672171246b0 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -341,8 +341,19 @@ static void sdhci_init(struct sdhci_host *host, int soft)
+ 
+ static void sdhci_reinit(struct sdhci_host *host)
+ {
++	u32 cd = host->ier & (SDHCI_INT_CARD_REMOVE | SDHCI_INT_CARD_INSERT);
++
+ 	sdhci_init(host, 0);
+ 	sdhci_enable_card_detection(host);
++
++	/*
++	 * A change to the card detect bits indicates a change in present state,
++	 * refer sdhci_set_card_detection(). A card detect interrupt might have
++	 * been missed while the host controller was being reset, so trigger a
++	 * rescan to check.
++	 */
++	if (cd != (host->ier & (SDHCI_INT_CARD_REMOVE | SDHCI_INT_CARD_INSERT)))
++		mmc_detect_change(host->mmc, msecs_to_jiffies(200));
+ }
+ 
+ static void __sdhci_led_activate(struct sdhci_host *host)
