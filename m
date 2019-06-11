@@ -2,132 +2,113 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DFCC0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C61C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759B52086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:58:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMYNlL1J"
+	by mail.kernel.org (Postfix) with ESMTP id EDEFF20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406778AbfFKR6z (ORCPT
+        id S2406790AbfFKR66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:58:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35190 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406750AbfFKR6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:58:50 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p1so5448313plo.2;
-        Tue, 11 Jun 2019 10:58:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7O7Ru3+l0O74nsHSw3FBczx/b+MRdjv8EnNhf40gnd0=;
-        b=UMYNlL1JStLpTHwOS2NiKeg51hIerdo4Zd3UgAz+ypA5DvTYyj8rTf1XCvbQAi4k2c
-         /lMNDLF4CoFMIRkzKdfalIJm1fKrPhLsHu183fANxaqoHyb8pzP47DOJl++biJWHIEU5
-         h3VWtbexf1/ldnGwAbF5UnMFXm4gPPZ8L+9MDMi1l7jJx5einN1e70s0xGEB+D8JLsfT
-         jysbQ5FsIgolc/Ke8vsEYlNZwtFn3VzzWg5IVntUHZZ6ATjjXPt6v4w5vzjixEyzSg3j
-         jQt5BC32PWnOjw1O/xXO4932ZBf23eNWWUMHCuQBalBUsOJ9pr3+reTbPcbBlYJOCp7W
-         rXjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=7O7Ru3+l0O74nsHSw3FBczx/b+MRdjv8EnNhf40gnd0=;
-        b=ud+ukIhiZfCHrhEumGhEA10CPZBBFznPCPbImdqh6bBiGgpjxme/sETrDfKk+/2pa2
-         L/klVX84YNRFKqe828rl/V5KpSHIzhVTT0KEl1rDqbzqe3/oqwfejlkZqI4bzyGxQzYC
-         6SSQ6HhcjcXgClP42USG3SNkL3/Tjxdfe+shtZ5r3kjZgYPXUe8WtG9hbtZU2kdMtM/q
-         Z4+xv0on1lk8jGMU8C43Jw4HZEvULsM86FqM7S8SPt7W2/+2e5pJGfIycBsGF+gMsePf
-         oZf30XbLy9vh8ib66XKeJI0A8vRiwo96myeBPOzlt7tOcVwGnjyTx8aKA7ejJCjMaiEZ
-         mItw==
-X-Gm-Message-State: APjAAAW/aLT7pyKaZSwPMGIPsfxGbS+jyMRJr+Bp/SxyzU9oWkEyWrcY
-        8kW1qDFmkYtaj+Et+J1sKsASy/hy
-X-Google-Smtp-Source: APXvYqyiQwe71OfRqbIpE0WEbsjZnhVJzlFBUwrbKVsHtWtIyzZS9x7MotQhzQpxZuCnEGiRlw4yyA==
-X-Received: by 2002:a17:902:106:: with SMTP id 6mr13857570plb.64.1560275928967;
-        Tue, 11 Jun 2019 10:58:48 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s24sm15991182pfh.133.2019.06.11.10.58.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 10:58:46 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        iommu@lists.linux-foundation.org (open list:DMA MAPPING HELPERS),
-        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-Subject: [PATCH 2/2] swiotlb: Return consistent SWIOTLB segments/nr_tbl
-Date:   Tue, 11 Jun 2019 10:58:25 -0700
-Message-Id: <20190611175825.572-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190611175825.572-1-f.fainelli@gmail.com>
-References: <20190611175825.572-1-f.fainelli@gmail.com>
+        Tue, 11 Jun 2019 13:58:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59802 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406765AbfFKR6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:58:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9685EABE1;
+        Tue, 11 Jun 2019 17:58:50 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     stefan.wahren@i2se.com, linux-kernel@vger.kernel.org
+Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
+        sboyd@kernel.org, eric@anholt.net, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
+        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mturquette@baylibre.com, linux-pm@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v3 0/7] cpufreq support for Raspberry Pi
+Date:   Tue, 11 Jun 2019 19:58:32 +0200
+Message-Id: <20190611175839.28351-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With a specifically contrived memory layout where there is no physical
-memory available to the kernel below the 4GB boundary, we will fail to
-perform the initial swiotlb_init() call and set no_iotlb_memory to true.
+Hi all,
+this aims at adding cpufreq support to the Raspberry Pi family of
+boards.
 
-There are drivers out there that call into swiotlb_nr_tbl() to determine
-whether they can use the SWIOTLB. With the right DMA_BIT_MASK() value
-for these drivers (say 64-bit), they won't ever need to hit
-swiotlb_tbl_map_single() so this can go unoticed and we would be
-possibly lying about those drivers.
+The series first factors out 'pllb' from clk-bcm2385 and creates a new
+clk driver that operates it over RPi's firmware interface[1]. We are
+forced to do so as the firmware 'owns' the pll and we're not allowed to
+change through the register interface directly as we might race with the
+over-temperature and under-voltage protections provided by the firmware.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Next it creates a minimal cpufreq driver that populates the CPU's opp
+table, and registers cpufreq-dt. Which is needed as the firmware
+controls the max and min frequencies available.
+
+This was tested on a RPi3b+ and RPI2b, both using multi_v7_defconfig and
+arm64's defconfig.
+
+That's all,
+kind regards,
+Nicolas
+
+[1] https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
+
 ---
- kernel/dma/swiotlb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index b2b5c5df273c..e906ef2e6315 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -129,15 +129,17 @@ setup_io_tlb_npages(char *str)
- }
- early_param("swiotlb", setup_io_tlb_npages);
- 
-+static bool no_iotlb_memory;
-+
- unsigned long swiotlb_nr_tbl(void)
- {
--	return io_tlb_nslabs;
-+	return unlikely(no_iotlb_memory) ? 0 : io_tlb_nslabs;
- }
- EXPORT_SYMBOL_GPL(swiotlb_nr_tbl);
- 
- unsigned int swiotlb_max_segment(void)
- {
--	return max_segment;
-+	return unlikely(no_iotlb_memory) ? 0 : max_segment;
- }
- EXPORT_SYMBOL_GPL(swiotlb_max_segment);
- 
-@@ -160,8 +162,6 @@ unsigned long swiotlb_size_or_default(void)
- 	return size ? size : (IO_TLB_DEFAULT_SIZE);
- }
- 
--static bool no_iotlb_memory;
--
- void swiotlb_print_info(void)
- {
- 	unsigned long bytes = io_tlb_nslabs << IO_TLB_SHIFT;
+Changes since v2:
+  - Fixed configs to match Stefan's comments
+  - Round OPP frequencies
+  - Rebase onto linux-next
+  - Minor cleanups & checkpatch.pl
+
+Changes since v1:
+  - Enabled by default on the whole family of devices
+  - Added/Fixed module support
+  - clk device now registered by firmware driver
+  - raspberrypi-cpufreq device now registered by clk driver
+  - Reimplemented clk rounding unsing determine_rate()
+  - Enabled in configs for arm and arm64
+
+Changes since RFC:
+  - Move firmware clk device into own driver
+
+Nicolas Saenz Julienne (7):
+  clk: bcm2835: remove pllb
+  clk: bcm283x: add driver interfacing with Raspberry Pi's firmware
+  firmware: raspberrypi: register clk device
+  cpufreq: add driver for Raspbery Pi
+  clk: raspberrypi: register platform device for raspberrypi-cpufreq
+  ARM: defconfig: enable cpufreq driver for RPi
+  arm64: defconfig: enable cpufreq support for RPi3
+
+ arch/arm/configs/bcm2835_defconfig    |   9 +
+ arch/arm/configs/multi_v7_defconfig   |   2 +
+ arch/arm64/configs/defconfig          |   2 +
+ drivers/clk/bcm/Kconfig               |   7 +
+ drivers/clk/bcm/Makefile              |   1 +
+ drivers/clk/bcm/clk-bcm2835.c         |  28 +--
+ drivers/clk/bcm/clk-raspberrypi.c     | 315 ++++++++++++++++++++++++++
+ drivers/cpufreq/Kconfig.arm           |   8 +
+ drivers/cpufreq/Makefile              |   1 +
+ drivers/cpufreq/raspberrypi-cpufreq.c |  97 ++++++++
+ drivers/firmware/raspberrypi.c        |  10 +
+ 11 files changed, 456 insertions(+), 24 deletions(-)
+ create mode 100644 drivers/clk/bcm/clk-raspberrypi.c
+ create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
+
 -- 
-2.17.1
+2.21.0
 
