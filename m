@@ -2,146 +2,102 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE06C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A48AC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341E420820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226C420896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:16:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ieZyKDuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389177AbfFKLPC convert rfc822-to-8bit (ORCPT
+        id S2389211AbfFKLQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:15:02 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:59139 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389127AbfFKLPB (ORCPT
+        Tue, 11 Jun 2019 07:16:55 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40286 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387519AbfFKLQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:15:01 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-131-SkcspA-dOcuPT_tEja9Vbw-1; Tue, 11 Jun 2019 12:14:58 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 11 Jun 2019 12:14:57 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 11 Jun 2019 12:14:57 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
-        'Oleg Nesterov' <oleg@redhat.com>
-CC:     'Andrew Morton' <akpm@linux-foundation.org>,
-        'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'arnd@arndb.de'" <arnd@arndb.de>,
-        "'dbueso@suse.de'" <dbueso@suse.de>,
-        "'axboe@kernel.dk'" <axboe@kernel.dk>,
-        "'dave@stgolabs.net'" <dave@stgolabs.net>,
-        "'e@80x24.org'" <e@80x24.org>,
-        "'jbaron@akamai.com'" <jbaron@akamai.com>,
-        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
-        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
-        "'tglx@linutronix.de'" <tglx@linutronix.de>,
-        'Al Viro' <viro@ZenIV.linux.org.uk>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Thread-Topic: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Thread-Index: AQHVH9JWknGdQ9+D0UeylJNmvFzQKKaWJ31QgAAjZdA=
-Date:   Tue, 11 Jun 2019 11:14:57 +0000
-Message-ID: <95decc6904754004af8a5546aca0468a@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
-        <20190529161157.GA27659@redhat.com>     <20190604134117.GA29963@redhat.com>
-        <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
-        <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
- <87lfy96sta.fsf@xmission.com>
- <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
-In-Reply-To: <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 11 Jun 2019 07:16:55 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5BBGg0A111081;
+        Tue, 11 Jun 2019 06:16:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560251802;
+        bh=ymb68AYJr6qOFYNX8+pGpasWhJJh3G+q893ggNbXIfs=;
+        h=From:To:CC:Subject:Date;
+        b=ieZyKDuEirJDSUPqZk+s9RPf0XuZbf/3ldOM3ZPQ37TjF6kTSnuKI2/qg9y5CA3P8
+         bEeRcaY4IzLCI/wrF7VA1/24nnbRVQx1ts/2CO92ZlbOVaTWfH+Ug2zrzm++lYMZ/0
+         wwNhWAxvQ9Rl/6hnW4/stGmL5zt1GSGagn9zYQHU=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5BBGg7F110971
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Jun 2019 06:16:42 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 11
+ Jun 2019 06:16:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 11 Jun 2019 06:16:41 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5BBGesC057695;
+        Tue, 11 Jun 2019 06:16:41 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        <netdev@vger.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-next@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [RESEND PATCH net-next] net: ethernet: ti: cpts: fix build failure for powerpc
+Date:   Tue, 11 Jun 2019 14:16:32 +0300
+Message-ID: <20190611111632.9444-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MC-Unique: SkcspA-dOcuPT_tEja9Vbw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Laight
-> Sent: 11 June 2019 10:52
-...
-> If I have an application that has a loop with a pselect call that
-> enables SIGINT (without a handler) and, for whatever reason,
-> one of the fd is always 'ready' then I'd expect a SIGINT
-> (from ^C) to terminate the program.
-> 
-> A quick test program:
-> 
-> #include <sys/time.h>
-> #include <sys/types.h>
-> #include <unistd.h>
-> 
-> #include <sys/select.h>
-> #include <signal.h>
-> 
-> int main(int argc, char **argv)
-> {
->         fd_set readfds;
->         sigset_t sig_int;
->         struct timespec delay = {1, 0};
-> 
->         sigfillset(&sig_int);
->         sigdelset(&sig_int, SIGINT);
-> 
->         sighold(SIGINT);
-> 
->         for (;;) {
->                 FD_ZERO(&readfds);
->                 FD_SET(0, &readfds);
->                 pselect(1, &readfds, NULL, NULL, &delay, &sig_int);
-> 
->                 poll(0,0,1000);
->         }
-> }
-> 
-> Run under strace to see what is happening and send SIGINT from a different terminal.
-> The program sleeps for a second in each of the pselect() and poll() calls.
-> Send a SIGINT and in terminates after pselect() returns ERESTARTNOHAND.
-> 
-> Run again, this time press enter - making fd 0 readable.
-> pselect() returns 1, but the program still exits.
-> (Tested on a 5.1.0-rc5 kernel.)
-> 
-> If a signal handler were defined it should be called instead.
+Add dependency to TI CPTS from Common CLK framework COMMON_CLK to fix
+allyesconfig build for Powerpc:
 
-If I add a signal handler for SIGINT it is called when pselect()
-returns regardless of the return value.
+drivers/net/ethernet/ti/cpts.c: In function 'cpts_of_mux_clk_setup':
+drivers/net/ethernet/ti/cpts.c:567:2: error: implicit declaration of function 'of_clk_parent_fill'; did you mean 'of_clk_get_parent_name'? [-Werror=implicit-function-declaration]
+  of_clk_parent_fill(refclk_np, parent_names, num_parents);
+  ^~~~~~~~~~~~~~~~~~
+  of_clk_get_parent_name
 
-If I setup SIGUSR1/2 the same way as SIGINT and get the SIGINT
-handler to sighold() and then raise both of them, the USR1/2
-handlers are both called on the next pselect() call.
-(Without the extra sighold() the handlers are called when kill()
-returns.)
+Fixes: a3047a81ba13 ("net: ethernet: ti: cpts: add support for ext rftclk selection")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ Resending due to missed netdev@vger.kernel.org list in prev post.
 
-I'd expect the epoll functions to work the same way.
+ drivers/net/ethernet/ti/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-sigtimedwait is different though - it returns the number of the
-pending signal (and doesn't call the handler).
-So if two signals are pending neither handler should be called.
-The second signal would be returned on the following sigtimedwait call.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index bd05a977ee7e..a800d3417411 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -60,6 +60,7 @@ config TI_CPSW
+ config TI_CPTS
+ 	bool "TI Common Platform Time Sync (CPTS) Support"
+ 	depends on TI_CPSW || TI_KEYSTONE_NETCP || COMPILE_TEST
++	depends on COMMON_CLK
+ 	depends on POSIX_TIMERS
+ 	---help---
+ 	  This driver supports the Common Platform Time Sync unit of
+-- 
+2.17.1
 
