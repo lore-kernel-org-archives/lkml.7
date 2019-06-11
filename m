@@ -2,219 +2,155 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645EEC4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3226C4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3273620673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB98020673
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KkrrTS1C"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiSHqTWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388627AbfFKLBk (ORCPT
+        id S2388666AbfFKLCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:01:40 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38147 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfFKLBj (ORCPT
+        Tue, 11 Jun 2019 07:02:06 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37991 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388629AbfFKLCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:01:39 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so2411079wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 04:01:37 -0700 (PDT)
+        Tue, 11 Jun 2019 07:02:05 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v11so6770968pgl.5;
+        Tue, 11 Jun 2019 04:02:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=HGCftkSHpKLWELmSFAK/o0qPA0nwcHk8AkL38CX0UA8=;
-        b=KkrrTS1Clu1/ToalKbEGPTeGgoETAQ3joz8xJqvsmRl/kyhvR7hP8TWT+G7kdNygHG
-         cmqq3qdoUmYU1oRmb1P+LCMc0+Fal0R+NzaMrjCUAun6Wud2V36w2hRwbywGU/GRw7vB
-         EUpME2yr6RVyYgroFW9ziBVW+qNJfgQvIO9E0gTtSJukvJQcqw2W++2cpLo9hkL6f0xC
-         PWAFeT8YO0mUj6eWDEIEjVkh+NgzHSLctCDs14JxKyWfeKHRdfc0cq5Rh+1VbnqvBCkX
-         o1tJ21iM6xnmIzZ1oBgULEjaBI/adlliZQv458VEaaaVSWfcX1xenW7weqn+fqx5TY2X
-         Bz6A==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FbfnQ+vyxLkky9Y2QN7piyoWYG4+Tbz+gCXalexofB0=;
+        b=ZiSHqTWDMwZI2ncl7CzllBTrpA5z72DaPReLrAyt7+0qSTaxxWRNMhzOBWGr1JI56Y
+         qi9RpektgZCibhRtOn+ktx8REAZo10rR/7Up+FAMlSZeEPA4XYnHblcrAp13yNegjr6+
+         mhPEcJrCIK3boLuR4OMqXbHALynvgH5NNj8SlgpiV0XTMX6sYx8PZxF3iudh0UoVNbFv
+         d8U1bEHaqVjqSCV7f7+GCjQT2r2MN5gGUr9wHhOB1csBBZkTvK32Z3w3iOBKWxpgZNnL
+         1mJuREZJYHWIY7SdEe+Lcq5ivHJo5SSlSHJga6OAJdxOH09pR4eeN/RfIBkNPEtAaMVX
+         q7Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=HGCftkSHpKLWELmSFAK/o0qPA0nwcHk8AkL38CX0UA8=;
-        b=E51xxPE/q9b06xHwk9YsB4HKdw9liRw7kItFhKRUbqxyAW9VtaNeKzPiO+aQBWRUuE
-         Y1op4Ault2NKMwFtMsQugobQ9i5PjZzi3oMvWx0p6/ENIiQMTOYDYK77/XKuCpoJ2wWh
-         S9wZ1vULF+33lnDS8mUyk3QF2QPfj25mcV99BCPk3lJDmOEp0aYa07oWoFGIFOG2akGf
-         OokAl3mYJ8keGFu2Fy9YyVO3n7hZ5TEzisHlXapc/ifhcQdUM0P1wYdA6QQ+y4g3v8sJ
-         wbUsQs8Ka58rOzqEwDHnsjbEe0SbtUf4v7ygsAyUYgbFSq9E1t/PTw4I4pQx98JIJfrU
-         SlHA==
-X-Gm-Message-State: APjAAAVIAdy19k0bpI0N1mqLyzAnsfl+0/YnMOoTMvDzRgQk2QHIapqK
-        vRBCyaoX9tOZf+Ck1bGamoXw7w==
-X-Google-Smtp-Source: APXvYqyPiVk7Saf5lzMmnLLvD5VpZ3bXVkhTXya27VP/rsiz2+NET+l11ahDPVnTAcen3/TtwdPGWA==
-X-Received: by 2002:a1c:ddd6:: with SMTP id u205mr16651562wmg.54.1560250896605;
-        Tue, 11 Jun 2019 04:01:36 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id u1sm2360393wml.14.2019.06.11.04.01.35
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FbfnQ+vyxLkky9Y2QN7piyoWYG4+Tbz+gCXalexofB0=;
+        b=h/EmZevCOJZQeKnyOeKrZRbqCVh7YMmwlNgMujsKN3dbc92jFY85vYKVTo0b+otLyU
+         iBcyMXgsF87DQWzfnfTvL84TlcrL81405dBLSLxZfPL5llUafZKcjgtZ4Au+s4+oIsVt
+         5+DiFT9BEwG4gLtvoiBw1DTEbcet9zMsEdeCJkTvxYsjEvoMefzuCYZ+k1iox5rp0xE+
+         eT7hbwnPgnlgghw1Zf5jts1r/uIzL++ZkLCquX/pEpGS0KRj95w4YXqu4LxFw2YFaiU4
+         4murETaBsq7cPFhnG7TZHmrPEWmgcXoJl5G/MlxYQIzgtczyOOCux4kKO5ffz89Oyb7U
+         iXMA==
+X-Gm-Message-State: APjAAAXtaTKD5/YWvoHx69sfQH1qXoMprM7L26eN4AqLlzVnwvaDyAUi
+        GcGerOtbNwjZ4y76yZq01U0gd5p3
+X-Google-Smtp-Source: APXvYqzLrsi7tvCerG4HlwMb+BvOOeMt0VY8IGu1xT+3WGJ2yVlQzaXQjG9a+bLlrRpZPyI/f+tMpQ==
+X-Received: by 2002:a63:cc4e:: with SMTP id q14mr19621119pgi.84.1560250924091;
+        Tue, 11 Jun 2019 04:02:04 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e4sm19432780pgi.80.2019.06.11.04.02.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 04:01:35 -0700 (PDT)
-Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
- Temperature Sensor
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Guillaume La Roque <glaroque@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        khilman@baylibre.com, linux-kernel@vger.kernel.org,
-        jic23@kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190604144714.2009-1-glaroque@baylibre.com>
- <20190604144714.2009-2-glaroque@baylibre.com>
- <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <d68aae23-f877-1f65-94a4-79e909ae111a@baylibre.com>
-Date:   Tue, 11 Jun 2019 13:01:35 +0200
+        Tue, 11 Jun 2019 04:02:03 -0700 (PDT)
+Subject: Re: [PATCH v2 4/4] watchdog: jz4740: Make probe function
+ __init_or_module
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>, od@zcrc.me,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190607162429.17915-1-paul@crapouillou.net>
+ <20190607162429.17915-5-paul@crapouillou.net>
+ <0dc0fd0a-54fc-5d70-af78-1874b5ece418@c-s.fr>
+ <1559987821.1815.0@crapouillou.net>
+ <78ef0273-5ec6-f522-428a-8429f40684ca@c-s.fr>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <f64db403-f8be-4e39-81e7-515b1c1c0c17@roeck-us.net>
+Date:   Tue, 11 Jun 2019 04:02:02 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <78ef0273-5ec6-f522-428a-8429f40684ca@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/06/2019 21:16, Martin Blumenstingl wrote:
-> Hi Guillaume,
+On 6/10/19 10:16 PM, Christophe Leroy wrote:
+> Hi Paul,
 > 
-> thank you for working on this!
-> 
-> On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+> Le 08/06/2019 à 11:57, Paul Cercueil a écrit :
+>> Hi Christophe,
 >>
->> This adds the devicetree binding documentation for the Temperature
->> Sensor found in the Amlogic Meson G12 SoCs.
->> Currently only the G12A SoCs are supported.
-> so G12B is not supported (yet)?
-
-G12B is 95% similar as G12A, it will certainly use slighly different values.
-
-> 
->> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->> ---
->>  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+>> Le sam. 8 juin 2019 à 9:51, Christophe Leroy <christophe.leroy@c-s.fr> a écrit :
+>>> Hi Paul,
+>>>
+>>> Le 07/06/2019 à 18:24, Paul Cercueil a écrit :
+>>>> This allows the probe function to be dropped after the kernel finished
+>>>> its initialization, in the case where the driver was not compiled as a
+>>>> module.
+>>>
+>>> I'm not sure that's what  __init_or_module flag does.
+>>>
+>>> As far as I understand, this flag makes the function being dropped only when the kernel is built without modules support, ie without CONFIG_MODULES. See https://elixir.bootlin.com/linux/latest/source/include/linux/module.h#L145
 >>
->> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
->> new file mode 100644
->> index 000000000000..d064db0e9cac
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
->> @@ -0,0 +1,31 @@
->> +* Amlogic Meson Temperature Sensor
->> +
->> +Required properties:
->> +- compatible:  depending on the SoC and the position of the sensor,
->> +               this should be one of:
->> +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
->> +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
->> +               followed by the common :
->> +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
->> +- reg:         the physical base address and length of the registers
->> +- interrupts:  the interrupt indicating end of sampling
->> +- clocks:      phandle identifier for the reference clock of temperature sensor
->> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
-> have you considered using the thermal framework [0] instead of the iio
-> framework (see below)?
+>> So it doesn't depend on the driver being built-in or compiled as a module?
+> 
+> No it doesn't. This flag is for built-in functions that are needed by init and modules init. If the kernel doesn't support modules, it can drop the function after init. If the kernel supports modules, it has to keep the function. That's what this flag is made for.
+> 
+> If your need is to mark a function so that it gets discarded after init or module init, just mark it __init. If it is built in, it will be dropped after init. If it is in a module, it will be dropped after the module is initialised.
+> 
+>>
+>>> In addition, I'm not sure you can simply define a probe function as __init. What if someone tries to unbind and rebind the device through sysfs for instance ?
+>>
+>> Ouch. I feel stupid now.
+>>
+>>> It seems there is a special function called __platform_driver_probe() for registering devices when the probe function is to be in __init, see https://elixir.bootlin.com/linux/latest/source/drivers/base/platform.c#L684
+>>
+>> Yes, but only usable by drivers that won't defer probe, and it removes the bind/unbind attributes from sysfs,
+>> so it shouldn't be used for non-critical drivers, I think.
+> 
+> I guess it would make sense for watchdog drivers, we don't expect this kind of driver to be unbinded, do we ?
+> 
 
-Question: why thermal, and not hwmon ? what's the main difference ?
+Except for debugging, where it can be extremely useful to be able to do it.
 
-> 
->> +- amlogic,ao-secure: phandle to the ao-secure syscon
-> the driver has some "u_efuse_off" access. do we need to get some
-> calibration values from the AO syscon or can we also fetch it from the
-> eFuse? you can look at arch/arm/boot/dts/meson8.dtsi where I'm passing
-> the temperature sensor calibration data to the SAR ADC (there's no
-> dedicated temperature sensor IP block prior to G12A) while reading the
-> data from the eFuse
-> 
->> +Optional properties:
->> +- amlogic,critical-temperature: temperature value in milli degrees Celsius
->> +       to set automatic reboot on too high temperature
-> as far as I can tell the thermal framework supports multiple trip
-> points. I'm seeing this as a benefit because the hardware can raise
-> interrupts at four different temperatures (defined by the driver)
+Guenter
 
-Theoretically, but the implementation code differs a lot from the datasheet.
-
+> Christophe
 > 
->> +Example:
->> +       cpu_temp: temperature-sensor@ff634800 {
->> +               compatible = "amlogic,meson-g12a-cpu-tsensor",
->> +                            "amlogic,meson-g12a-tsensor";
->> +               reg = <0x0 0xff634800 0x0 0x50>;
->> +               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
->> +               clocks = <&clkc CLKID_TS>;
->> +               status = "okay";
-> as far as I know the dt-bindings should not have a status property in
-> the examples
-> 
-> 
-> Martin
-> 
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+>>
+>>> Christophe
+>>>
+>>>>
+>>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>>> ---
+>>>>
+>>>> Notes:
+>>>>      v2: New patch
+>>>>
+>>>>   drivers/watchdog/jz4740_wdt.c | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+>>>> index 7519d80c5d05..2061788c1939 100644
+>>>> --- a/drivers/watchdog/jz4740_wdt.c
+>>>> +++ b/drivers/watchdog/jz4740_wdt.c
+>>>> @@ -157,7 +157,7 @@ static const struct of_device_id jz4740_wdt_of_matches[] = {
+>>>>   MODULE_DEVICE_TABLE(of, jz4740_wdt_of_matches);
+>>>>   #endif
+>>>>   -static int jz4740_wdt_probe(struct platform_device *pdev)
+>>>> +static int __init_or_module jz4740_wdt_probe(struct platform_device *pdev)
+>>>>   {
+>>>>       struct device *dev = &pdev->dev;
+>>>>       struct jz4740_wdt_drvdata *drvdata;
+>>>>
+>>
 > 
 
