@@ -2,324 +2,100 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD67C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD77C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091F320652
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12AB2173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:17:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WpEuz0f2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404730AbfFKIQz (ORCPT
+        id S2404688AbfFKIRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:16:55 -0400
-Received: from 8.mo178.mail-out.ovh.net ([46.105.74.227]:50087 "EHLO
-        8.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404618AbfFKIQy (ORCPT
+        Tue, 11 Jun 2019 04:17:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47308 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404401AbfFKIRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:16:54 -0400
-Received: from player718.ha.ovh.net (unknown [10.108.35.158])
-        by mo178.mail-out.ovh.net (Postfix) with ESMTP id EA2B26C6BF
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:16:51 +0200 (CEST)
-Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
-        (Authenticated sender: sebastien.szymanski@armadeus.com)
-        by player718.ha.ovh.net (Postfix) with ESMTPSA id D1BE369E1F92;
-        Tue, 11 Jun 2019 08:16:33 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] media: imx7-media-csi: add i.MX6UL support
-To:     Rui Miguel Silva <rmfrfs@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
- <20190606153825.8183-2-sebastien.szymanski@armadeus.com>
- <m34l4xpweh.fsf@gmail.com>
-From:   =?UTF-8?Q?S=c3=a9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Openpgp: preference=signencrypt
-Message-ID: <722336d1-c7f7-1796-95d5-7bba1fac7968@armadeus.com>
-Date:   Tue, 11 Jun 2019 10:16:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 04:17:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ud411InFe8GoOew3/skHmwEYBmhHWja4h4GlbxBRd9I=; b=WpEuz0f2bMQMpMS+SEsJoXQ0a
+        clPKhCoLgxEn3zA+5EICQ7tkNJxjlskObNKJzKhSooTVjtW++jQr13J9cnEE8Kewof8/YRDYYFiaK
+        2VMxA6jXB6SQjukBtOBmnCSEk5BbkosCYTUe7GApgABK7mfNPTyoi8TDsWfBpIzpP5spitDAnXFqJ
+        OJjFrbh+1mOEuzOHiTemufpqLhbQMrUQ/9pBtxC2LM0knnGwb2FS60JeAS/8RsjzwFu9JvfS/VJTh
+        o9OCx+PnGVpfpP2BIxz2a+1f8NAAb+Q0bMNB14tRackxSOLhHN4SOwEOhg1Sx/xqj81sotWLmm16w
+        ITWNCyIHg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1haby5-00077F-3q; Tue, 11 Jun 2019 08:17:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8077D202173E1; Tue, 11 Jun 2019 10:17:19 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 10:17:19 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@aculab.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 07/15] x86: Add int3_emulate_call() selftest
+Message-ID: <20190611081719.GQ3436@hirez.programming.kicks-ass.net>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131944.946978563@infradead.org>
+ <20190610165258.t7rcvggdjihtdrfz@treble>
+ <CALCETrVRuMP4vF+dN-tK_cw=guv6J5EqgD1H-PxMow+d=1DT4g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <m34l4xpweh.fsf@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 7166071435811902533
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrudehgedgtdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVRuMP4vF+dN-tK_cw=guv6J5EqgD1H-PxMow+d=1DT4g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rui,
-
-thanks for the review!
-
-On 6/10/19 12:28 PM, Rui Miguel Silva wrote:
-> Hi Sebastien,
-> Thanks for the patch.
+On Mon, Jun 10, 2019 at 09:57:58AM -0700, Andy Lutomirski wrote:
+> On Mon, Jun 10, 2019 at 9:53 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Wed, Jun 05, 2019 at 03:08:00PM +0200, Peter Zijlstra wrote:
+> > > Given that the entry_*.S changes for this functionality are somewhat
+> > > tricky, make sure the paths are tested every boot, instead of on the
+> > > rare occasion when we trip an INT3 while rewriting text.
+> > >
+> > > Requested-by: Andy Lutomirski <luto@kernel.org>
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >
+> > Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> >
 > 
-> On Thu 06 Jun 2019 at 16:38, Sébastien Szymanski wrote:
->> i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L support
->> to imx7-media-csi driver.
->>
->> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
->> ---
->>
->> Changes for v2:
->>  - rebase on top of linuxtv/master
->>  - mention i.MX6UL/L in header and Kconfig help text
->>  - rename csi_type to csi_soc_id
->>
->>  drivers/staging/media/imx/Kconfig          |  4 +-
->>  drivers/staging/media/imx/imx7-media-csi.c | 62 ++++++++++++++++------
->>  2 files changed, 49 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/media/imx/Kconfig
->> index ad3d7df6bb3c..8b6dc42c39e0 100644
->> --- a/drivers/staging/media/imx/Kconfig
->> +++ b/drivers/staging/media/imx/Kconfig
->> @@ -22,11 +22,11 @@ config VIDEO_IMX_CSI
->>  	  A video4linux camera sensor interface driver for i.MX5/6.
->>
->>  config VIDEO_IMX7_CSI
->> -	tristate "i.MX7 Camera Sensor Interface driver"
->> +	tristate "i.MX6UL/L / i.MX7 Camera Sensor Interface driver"
->>  	depends on VIDEO_IMX_MEDIA && VIDEO_DEV && I2C
->>  	default y
->>  	help
->>  	  Enable support for video4linux camera sensor interface driver for
->> -	  i.MX7.
->> +	  i.MX6UL/L or i.MX7.
->>  endmenu
->>  endif
->> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
->> index 9101566f3f67..902bdce594cf 100644
->> --- a/drivers/staging/media/imx/imx7-media-csi.c
->> +++ b/drivers/staging/media/imx/imx7-media-csi.c
->> @@ -1,6 +1,6 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  /*
->> - * V4L2 Capture CSI Subdev for Freescale i.MX7 SOC
->> + * V4L2 Capture CSI Subdev for Freescale i.MX6UL/L / i.MX7 SOC
->>   *
->>   * Copyright (c) 2019 Linaro Ltd
->>   *
->> @@ -152,6 +152,11 @@
->>  #define CSI_CSICR18		0x48
->>  #define CSI_CSICR19		0x4c
->>
->> +enum csi_soc_id {
->> +	IMX7,
->> +	IMX6UL
->> +};
->> +
->>  struct imx7_csi {
->>  	struct device *dev;
->>  	struct v4l2_subdev sd;
->> @@ -191,6 +196,7 @@ struct imx7_csi {
->>  	bool is_init;
->>  	bool is_streaming;
->>  	bool is_csi2;
->> +	enum csi_soc_id soc_id;
->>
->>  	struct completion last_eof_completion;
->>  };
->> @@ -548,6 +554,14 @@ static int imx7_csi_pad_link_validate(struct v4l2_subdev *sd,
->>  	if (ret)
->>  		return ret;
->>
->> +	if (csi->soc_id == IMX6UL) {
->> +		mutex_lock(&csi->lock);
->> +		csi->is_csi2 = false;
->> +		mutex_unlock(&csi->lock);
->> +
->> +		return 0;
->> +	}
->> +
->>  	ret = imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
->>  	if (ret) {
->>  		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
->> @@ -757,6 +771,7 @@ static int imx7_csi_configure(struct imx7_csi *csi)
->>  	struct v4l2_pix_format *out_pix = &vdev->fmt.fmt.pix;
->>  	__u32 in_code = csi->format_mbus[IMX7_CSI_PAD_SINK].code;
->>  	u32 cr1, cr18;
->> +	int width = out_pix->width;
->>
->>  	if (out_pix->field == V4L2_FIELD_INTERLACED) {
->>  		imx7_csi_deinterlace_enable(csi, true);
->> @@ -766,15 +781,27 @@ static int imx7_csi_configure(struct imx7_csi *csi)
->>  		imx7_csi_buf_stride_set(csi, 0);
->>  	}
->>
->> -	imx7_csi_set_imagpara(csi, out_pix->width, out_pix->height);
->> +	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
->> +
->> +	if (!csi->is_csi2) {
->> +		if (out_pix->pixelformat == V4L2_PIX_FMT_UYVY ||
->> +		    out_pix->pixelformat == V4L2_PIX_FMT_YUYV)
->> +			width *= 2;
->> +
->> +		imx7_csi_set_imagpara(csi, width, out_pix->height);
->> +
->> +		cr18 |= (BIT_BASEADDR_SWITCH_EN | BIT_BASEADDR_SWITCH_SEL |
->> +			BIT_BASEADDR_CHG_ERR_EN);
->> +		imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
->>
->> -	if (!csi->is_csi2)
->>  		return 0;
->> +	}
->> +
->> +	imx7_csi_set_imagpara(csi, width, out_pix->height);
->>
->>  	cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
->>  	cr1 &= ~BIT_GCLK_MODE;
->>
->> -	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
->>  	cr18 &= BIT_MIPI_DATA_FORMAT_MASK;
->>  	cr18 |= BIT_DATA_FROM_MIPI;
->>
->> @@ -809,11 +836,9 @@ static void imx7_csi_enable(struct imx7_csi *csi)
->>  {
->>  	imx7_csi_sw_reset(csi);
->>
->> -	if (csi->is_csi2) {
->> -		imx7_csi_dmareq_rff_enable(csi);
->> -		imx7_csi_hw_enable_irq(csi);
->> -		imx7_csi_hw_enable(csi);
->> -	}
->> +	imx7_csi_dmareq_rff_enable(csi);
->> +	imx7_csi_hw_enable_irq(csi);
->> +	imx7_csi_hw_enable(csi);
->>  }
->>
->>  static void imx7_csi_disable(struct imx7_csi *csi)
->> @@ -1166,19 +1191,32 @@ static int imx7_csi_parse_endpoint(struct device *dev,
->>  	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
->>  }
->>
->> +static const struct of_device_id imx7_csi_of_match[] = {
->> +	{ .compatible = "fsl,imx7-csi", .data = (void *)IMX7 },
->> +	{ .compatible = "fsl,imx6ul-csi", .data = (void *)IMX6UL },
-> 
-> looking at this again I think we can do this is a different way.
-> Instead data being the soc_id, just set here if it is_csi2 or not.
-> 
-> This would avoid to add a soc_id  to the struct that it really it
-> is used only to setup the is_csi2 var. I think this will make this
-> patch a lot simpler.
+> Looks good to me, too,
 
-Well, I have added this soc_id because imx7_csi_get_upstream_endpoint in
-imx7_csi_pad_link_validate fails:
+I'll translate that into an Acked-by from you, if you don't mind :-)
 
-[  366.549768] csi: failed to find upstream endpoint
-[  366.556274] csi: pipeline start failed with -19
+> except that I seriously hate die notifiers that
+> return NOTIFY_STOP, and I eventually want to remove support for them.
+> This can wait, though.
 
-My pipeline is:
-
-Device topology
-- entity 1: csi (2 pads, 2 links)
-            type V4L2 subdev subtype Unknown flags 0
-            device node name /dev/v4l-subdev0
-        pad0: Sink
-                [fmt:UYVY8_2X8/640x480 field:none colorspace:srgb
-xfer:srgb ycbcr:601 quantization:full-range]
-                <- "ov5640 1-003c":0 [ENABLED]
-        pad1: Source
-                [fmt:UYVY8_2X8/640x480 field:none colorspace:srgb
-xfer:srgb ycbcr:601 quantization:full-range]
-                -> "csi capture":0 [ENABLED]
-
-- entity 4: csi capture (1 pad, 1 link)
-            type Node subtype V4L flags 0
-            device node name /dev/video1
-        pad0: Sink
-                <- "csi":1 [ENABLED]
-
-- entity 10: ov5640 1-003c (1 pad, 1 link)
-             type V4L2 subdev subtype Sensor flags 0
-             device node name /dev/v4l-subdev1
-        pad0: Source
-                [fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:srgb
-xfer:srgb ycbcr:601 quantization:full-range]
-                -> "csi":0 [ENABLED]
-
-
-Maybe we should fix this ?
-
-Regards,
-
-> 
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
->> +
->>  static int imx7_csi_probe(struct platform_device *pdev)
->>  {
->>  	struct device *dev = &pdev->dev;
->>  	struct device_node *node = dev->of_node;
->>  	struct imx_media_dev *imxmd;
->>  	struct imx7_csi *csi;
->> +	const struct of_device_id *of_id;
->>  	int ret;
->>
->> +	of_id = of_match_node(imx7_csi_of_match, node);
-> 
-> With the above said, here I think we can use the of_match_device?
-> 
-> hope this makes sense also to you.
-> 
-> Once again thanks for the patches.
-> 
-> ---
-> Cheers,
->         Rui
-> 
->> +	if (!of_id)
->> +		return -ENODEV;
->> +
->>  	csi = devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
->>  	if (!csi)
->>  		return -ENOMEM;
->>
->>  	csi->dev = dev;
->> +	csi->soc_id = (enum csi_soc_id)of_id->data;
->>
->>  	csi->mclk = devm_clk_get(&pdev->dev, "mclk");
->>  	if (IS_ERR(csi->mclk)) {
->> @@ -1294,12 +1332,6 @@ static int imx7_csi_remove(struct platform_device *pdev)
->>  	return 0;
->>  }
->>
->> -static const struct of_device_id imx7_csi_of_match[] = {
->> -	{ .compatible = "fsl,imx7-csi" },
->> -	{ },
->> -};
->> -MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
->> -
->>  static struct platform_driver imx7_csi_driver = {
->>  	.probe = imx7_csi_probe,
->>  	.remove = imx7_csi_remove,
-> 
-
-
--- 
-Sébastien Szymanski
-Software engineer, Armadeus Systems
-Tel: +33 (0)9 72 29 41 44
-Fax: +33 (0)9 72 28 79 26
+Yes, I share your hatred for notifiers in general. But since they are
+still here and I do think it is a waste to have an unconditional
+function call in do_int3() just for this, I figured I'd use them.
