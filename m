@@ -2,104 +2,61 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEBFC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4551FC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35802184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8862173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407463AbfFKTLm (ORCPT
+        id S2392098AbfFKTNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:11:42 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:37887 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404048AbfFKTLm (ORCPT
+        Tue, 11 Jun 2019 15:13:52 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:50544 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388777AbfFKTNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:11:42 -0400
-X-Originating-IP: 37.205.120.66
-Received: from localhost (unknown [37.205.120.66])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 94AF6C0005;
-        Tue, 11 Jun 2019 19:11:32 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 21:11:28 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
-Message-ID: <20190611191128.GK25472@piout.net>
-References: <20190611063333.48501-1-Anson.Huang@nxp.com>
- <20190611063333.48501-2-Anson.Huang@nxp.com>
- <AM0PR04MB4211DC4725A5FEBDC995560680ED0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4211DC4725A5FEBDC995560680ED0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 11 Jun 2019 15:13:52 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 681AF1525A43D;
+        Tue, 11 Jun 2019 12:13:51 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 12:13:50 -0700 (PDT)
+Message-Id: <20190611.121350.119608921995403526.davem@davemloft.net>
+To:     maowenan@huawei.com
+Cc:     willemdebruijn.kernel@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next v2] packet: remove unused variable 'status' in
+ __packet_lookup_frame_in_block
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190611013213.142745-1-maowenan@huawei.com>
+References: <CAF=yD-+g1bSGOubFUE8veZNvGiPy1oYsf+dFDd=hqXYD+k4g_Q@mail.gmail.com>
+        <20190611013213.142745-1-maowenan@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 11 Jun 2019 12:13:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06/2019 10:57:17+0000, Aisheng Dong wrote:
-> > From: Anson.Huang@nxp.com [mailto:Anson.Huang@nxp.com]
-> > Sent: Tuesday, June 11, 2019 2:34 PM
-> > 
-> > i.MX system controller RTC driver can support all i.MX SoCs with system
-> > controller inside, this patch makes the compatible string more generic to
-> > support other i.MX SoCs with system controller inside, such as i.MX8QM etc..
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> 
-> Regards
-> Dong Aisheng
-> 
-> > ---
-> >  drivers/rtc/rtc-imx-sc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c index
-> > c933045..38ef3ca 100644
-> > --- a/drivers/rtc/rtc-imx-sc.c
-> > +++ b/drivers/rtc/rtc-imx-sc.c
-> > @@ -178,7 +178,7 @@ static int imx_sc_rtc_probe(struct platform_device
-> > *pdev)  }
-> > 
-> >  static const struct of_device_id imx_sc_dt_ids[] = {
-> > -	{ .compatible = "fsl,imx8qxp-sc-rtc", },
+From: Mao Wenan <maowenan@huawei.com>
+Date: Tue, 11 Jun 2019 09:32:13 +0800
 
-Don't you want to keep that compatible for backward compatibility?
-
-> > +	{ .compatible = "fsl,imx-sc-rtc", },
-> >  	{}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, imx_sc_dt_ids);
-> > --
-> > 2.7.4
+> The variable 'status' in  __packet_lookup_frame_in_block() is never used since
+> introduction in commit f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer
+> implementation."), we can remove it.
 > 
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  v2: don't change parameter from 0 to TP_STATUS_KERNEL when calls 
+>  prb_retire_current_block(). 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Applied.
