@@ -2,122 +2,165 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31664C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97115C31E46
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0072D205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:59:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MR5Ygywl"
+	by mail.kernel.org (Postfix) with ESMTP id 6F656205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560290377;
+	bh=4uuV2jptdieShYqFqFl95pUVd/bkC1LgpkLs/BfcPVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oThk89A74GcuPwMuDoNokNC+vq42UcspoB5Ez8oSnskVXt8a2StyRTdPzfWAJs6OU
+	 WnGyj2j6lWmjIcVXnHNJv9yDAETwBR9WzgCfIcOnu6VtJwgkh87974GwRmQc90exSM
+	 NqhmUEb4esdOIvKTSHwACMFnBjIUC3LASW/NCV2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407799AbfFKV7C (ORCPT
+        id S2407813AbfFKV7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:59:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38642 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407784AbfFKV7C (ORCPT
+        Tue, 11 Jun 2019 17:59:36 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37190 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407784AbfFKV7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:59:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a186so8275285pfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 14:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=STdR09JTplMSpZu8BTmSobDKkVojc1fyDlFwggPK8Uk=;
-        b=MR5Ygywl093uFDulviOIYvyfuuIg7LVcRCENxaahnbQl3TWTuyLFxmaN/CsCFje4ZW
-         lMOJpV5vlQByThnbSdpFW5pDrScHKNyi5Uayf6G9Qo/JGt6L3QsMwiyIsPBFjywBcNsB
-         KOnwwUTJm+TTD2GsLYgy//6zZNVAYMjKqx244=
+        Tue, 11 Jun 2019 17:59:36 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y57so16511272qtk.4;
+        Tue, 11 Jun 2019 14:59:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=STdR09JTplMSpZu8BTmSobDKkVojc1fyDlFwggPK8Uk=;
-        b=o1du3beUFnePbc+6KqzyN3YZs8yReZwWjd7UGdbWPQG9SrjucfyZFLlgMY3s3s1A4T
-         om17kusq5hrZINAeayuyRc30h4PKhbbih9zvUy28ZZm9XaStqXBhuHr7hK8/NQVHXQuD
-         x5OuKS3VF5n+juFran7CfI6tryaz7DUrLDMpo+twP7rhSXVpFsr62zxvEpkot2ffkDCN
-         Zd7pLyOIhx5BqRs0iz+ID9IqL7CL7D6RhGqbdDS+REVUeWF/GqsbXeUa2rDNV5VvoIMP
-         WkrWcrdFug/XbhBEfvbdG0Q1hHLGboqW9PzU9ZYRTtPzrByUeJayE3nV0stC4qbuAphq
-         bQaw==
-X-Gm-Message-State: APjAAAVb/5hT6aodXaHGxY4IfvyvCZ1A97sDJCgvkYVh4ddBy3VfEcW2
-        nKXcATaWARfwvCJp9GyHXST2RQ==
-X-Google-Smtp-Source: APXvYqwNRiFSWTAdFHpr/jTf2FF34I6ZRq0BdECtRnB+Jk555Y9lQHvSTV1z1QBb+8m6aiHhXzbajQ==
-X-Received: by 2002:a17:90b:d8a:: with SMTP id bg10mr29155223pjb.92.1560290341471;
-        Tue, 11 Jun 2019 14:59:01 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id m2sm15311952pgq.48.2019.06.11.14.59.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 14:59:00 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 14:58:59 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 2/2] backlight: pwm_bl: Get number of brightness levels
- for CIE 1931 from the device tree
-Message-ID: <20190611215859.GF137143@google.com>
-References: <20190610233739.29477-1-mka@chromium.org>
- <20190610233739.29477-2-mka@chromium.org>
- <20190611101843.GD7526@amd>
+        bh=9t9Vw0XEPOw1ExmC4itvtXz4j0VSyI9TB0ZduDmVfKg=;
+        b=k9xTZNuDxHyekx1VmkknmfkoF8Rk8oefcA6t/PPUcYbPWrLp8Z1Goro9k15p6H4RCU
+         vRfvHCZowGcBZMWLWUjS0A08xk+Dn1EJL7fFnt5OPBn6XPWncHWqaWDxae0oYBuvBStj
+         uiQidIda2sdotCaChtj0pzFapxThXMjWsmbeOtbWZ6QxOH+M7nw1/bJBjeZojnevwFTz
+         oE+3/1aIH5EDF7/qkX8VJbtJiksJOXbWg3yL8siwFmtc33kEoW+XFRDXKfOMuo891PVW
+         MiGEc1j7YtSp0homyFxtOzhcIWWj1vjYhHjZX/H08mkVV0kNC5ecB95Vhz22GHs3mQsm
+         vN/Q==
+X-Gm-Message-State: APjAAAUVBbbGLeDlYYUz16CB8L6dw/qPh6E/x7/rRq9WCn8WmEaqT/zH
+        GC5w26jyuYqXGyj2lHCbDQ==
+X-Google-Smtp-Source: APXvYqyIqRZqiK1I29XxC6NLMQr2bU+3gkPzHwvqDBu0rSDHFe74k+Yow++SW13x5pKikO39nlsEXg==
+X-Received: by 2002:ac8:2906:: with SMTP id y6mr44917551qty.138.1560290375293;
+        Tue, 11 Jun 2019 14:59:35 -0700 (PDT)
+Received: from localhost ([64.188.179.199])
+        by smtp.gmail.com with ESMTPSA id k40sm9524080qta.50.2019.06.11.14.59.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 14:59:34 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 15:59:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Stefan Popa <stefan.popa@analog.com>
+Cc:     jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com,
+        gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] dt-bindings: iio: frequency: Add docs for ADF4371
+ PLL
+Message-ID: <20190611215932.GA24974@bogus>
+References: <1559653697-2760-1-git-send-email-stefan.popa@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190611101843.GD7526@amd>
+In-Reply-To: <1559653697-2760-1-git-send-email-stefan.popa@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-On Tue, Jun 11, 2019 at 12:18:43PM +0200, Pavel Machek wrote:
-> On Mon 2019-06-10 16:37:39, Matthias Kaehlcke wrote:
-> > Commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
-> > linearly to human eye") uses pwm_period / hweight32(pwm_period) as
-> > as heuristic to determine the number of brightness levels when the DT
-> > doesn't provide a brightness level table. This heuristic is broken
-> > and can result in excessively large brightness tables.
-> > 
-> > Instead of using the heuristic try to retrieve the number of
-> > brightness levels from the device tree (property 'max-brightness'
-> > + 1). If the value is not specified use a default of 256 levels.
-> > 
-> > Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
+On Tue, Jun 04, 2019 at 04:08:17PM +0300, Stefan Popa wrote:
+> Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
 > 
-> I don't think this one is suitable for stable. I'm pretty sure the
-> heuristics works well for many boards, and you just replaced it with
-> another heuristics ("256").
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> ---
+> Changes in v2:
+> 	- Nothing changed.
+> Changes in v3:
+> 	- Nothing changed.
+> Changes in v4:
+> 	- Nothing changed.
+> Changes in v5:
+> 	- Nothing changed.
 
-whether the patch is suitable for stable/upstream is certainly
-debatable, in any case I'd argue the current heuristic is bogus and
-works by accident or at a cost:
+Please add acks/reviewed-bys when posting new versions.
 
-nlevels = period / hweight(period)
+But something else I noticed:
 
-w/ period = 131071 ns  (0x1FFFF)
+> 
+>  .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> new file mode 100644
+> index 0000000..d7adf074
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADF4371 Wideband Synthesizer
+> +
+> +maintainers:
+> +  - Popa Stefan <stefan.popa@analog.com>
+> +
+> +description: |
+> +  Analog Devices ADF4371 SPI Wideband Synthesizer
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adf4371
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description:
+> +      Definition of the external clock (see clock/clock-bindings.txt)
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Must be "clkin"
 
-  nlevels = 131071 / 17 = 7710
+This can be a schema:
 
-w/ period = 131072 ns (0x20000)
+clock-names:
+  items:
+    - clkin
 
-  nlevels = 131072 / 1 = 131072
-
-and some PWMs use significantly higher periods like 1 ms or 10 ms.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        frequency@0 {
+> +                compatible = "adi,adf4371";
+> +                reg = <0>;
+> +                spi-max-frequency = <1000000>;
+> +                clocks = <&adf4371_clkin>;
+> +                clock-names = "clkin";
+> +        };
+> +    };
+> +...
+> -- 
+> 2.7.4
+> 
