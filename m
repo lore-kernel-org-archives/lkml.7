@@ -2,206 +2,150 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC56CC0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C4DC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56412080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECDDD212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:54:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="JGwtO/95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405448AbfFKPyP (ORCPT
+        id S2405466AbfFKPy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:54:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46200 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405288AbfFKPyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:54:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8D9A48CB56;
-        Tue, 11 Jun 2019 15:54:08 +0000 (UTC)
-Received: from ovpn-112-53.rdu2.redhat.com (ovpn-112-53.rdu2.redhat.com [10.10.112.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EEFE619C70;
-        Tue, 11 Jun 2019 15:53:58 +0000 (UTC)
-Message-ID: <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Dan Williams <dcbw@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
-        Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        syadagir@codeaurora.org
-Date:   Tue, 11 Jun 2019 10:53:57 -0500
-In-Reply-To: <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 11 Jun 2019 15:54:13 +0000 (UTC)
+        Tue, 11 Jun 2019 11:54:27 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41805 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405288AbfFKPy0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:54:26 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 83so7194793pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=7/rmAfXxEXpI5+u46SKl/lb2QdtqgSoIemXYjsm6rRY=;
+        b=JGwtO/95pxnGWI13wUGtJYUXwsq99nkWvZn4XWPr+MaqxfH1xHPo/VwZvWMN644TcH
+         +P5GD4btmaNaoXiIhW+LcGIMP2yMyFQY5N4lT3e1FgXZu8rIZjsY6mhGSWUNdbqw9ztd
+         uMcEjYp/irLDTWtKGany7LzkGLEaxAWAgiXJxXnaUB1YGkZb8d4mUl4q1MrmQndmXEna
+         9ADMcrNCBMa0lBl8T2Rpy8/atRRgd9ENS/IOVc6pMPzKbsk7y9sVZG3ZbwZFWuYv5OQf
+         iYvommQbA7hy8kyvAlmoGBAMss/afzpKtaYmkDFaprYBkDgCQtDPwRCK0dLjeML3rBpv
+         caRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=7/rmAfXxEXpI5+u46SKl/lb2QdtqgSoIemXYjsm6rRY=;
+        b=JgANwJZuoc6u5erILKpPt85sgyJu34tG/pIBlK/VkCdi4APDiBI/plBXDIrmwppQlt
+         09soOfnfnrDQAWwamYVQ06W3S05INO4hKCIPT0MrmW3smcwGD4MxU3A/da5UohvTocgS
+         F4XdsWe8tuCeFg2lMFY86Ti277vHfCXW5XUEQeDCu+LWLcfwzc8ZtYyt/l1pURUZ+BQ8
+         8Z6bEJQIAp8oq+MqVnVPFwaSWcSqsJWH+FbdaJqwOuALIPLvAWwi0K2p38AgQu452EQt
+         yHK5I5ffr27w4dRhcCge0D+/PMMO6pzn2IRQi5Si95ijk47kKu30N2CvxMqgHUdJAQbR
+         n9rw==
+X-Gm-Message-State: APjAAAU6rnBxgXHB35Lu9osnaZzylJv4obvLHq16fMqVjWkJ9LAKkso6
+        wiS2C9pG5Txa60RxzzQ5tDjhY+6LIGU=
+X-Google-Smtp-Source: APXvYqwmmEdW3dgKhypcu5q2FRXgvjN6eYK6yZrh4hwkGKY4tVK1A9+e9JQCiuTwWNW2qpqH9NzwmQ==
+X-Received: by 2002:a65:63d2:: with SMTP id n18mr9739049pgv.278.1560268466060;
+        Tue, 11 Jun 2019 08:54:26 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b062:7159:60af:2fa5:3435:5195? ([2600:1010:b062:7159:60af:2fa5:3435:5195])
+        by smtp.gmail.com with ESMTPSA id g17sm17964676pfb.56.2019.06.11.08.54.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 08:54:25 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate instructions
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <20190611080307.GN3436@hirez.programming.kicks-ass.net>
+Date:   Tue, 11 Jun 2019 08:54:23 -0700
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@aculab.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <435093E5-6FE3-4DAA-9ABE-EB9D372F8CF8@amacapital.net>
+References: <20190605130753.327195108@infradead.org> <20190605131945.005681046@infradead.org> <20190608004708.7646b287151cf613838ce05f@kernel.org> <20190607173427.GK3436@hirez.programming.kicks-ass.net> <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net> <20190611080307.GN3436@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
-> On Tue, Jun 11, 2019 at 10:12 AM Johannes Berg
-> <johannes@sipsolutions.net> wrote:
-> 
-> > > As I've made clear before, my work on this has been focused on
-> > > the IPA transport,
-> > > and some of this higher-level LTE architecture is new to me.  But
-> > > it
-> > > seems pretty clear that an abstracted WWAN subsystem is a good
-> > > plan,
-> > > because these devices represent a superset of what a "normal"
-> > > netdev
-> > > implements.
-> > 
-> > I'm not sure I'd actually call it a superset. By themselves, these
-> > netdevs are actually completely useless to the network stack,
-> > AFAICT.
-> > Therefore, the overlap with netdevs you can really use with the
-> > network
-> > stack is pretty small?
-> 
-> I think Alex meant the concept of having a type of netdev with a
-> generic
-> user space interface for wwan and similar to a wlan device, as I
-> understood
-> you had suggested as well, as opposed to a stacked device as in
-> rmnet or those drivers it seems to be modeled after (vlan, ip tunnel,
-> ...)/.
-> 
-> > > HOWEVER I disagree with your suggestion that the IPA code should
-> > > not be committed until after that is all sorted out.  In part
-> > > it's
-> > > for selfish reasons, but I think there are legitimate reasons to
-> > > commit IPA now *knowing* that it will need to be adapted to fit
-> > > into the generic model that gets defined and developed.  Here
-> > > are some reasons why.
-> > 
-> > I can't really argue with those, though I would point out that the
-> > converse also holds - if we commit to this now, then we will have
-> > to
-> > actually keep the API offered by IPA/rmnet today, so we cannot
-> > actually
-> > remove the netdev again, even if we do migrate it to offer support
-> > for a
-> > WWAN framework in the future.
-> 
-> Right. The interface to support rmnet might be simple enough to keep
-> next to what becomes the generic interface, but it will always
-> continue
-> to be an annoyance.
-> 
-> > > Second, the IPA code has been out for review recently, and has
-> > > been
-> > > the subject of some detailed discussion in the past few
-> > > weeks.  Arnd
-> > > especially has invested considerable time in review and
-> > > discussion.
-> > > Delaying things until after a better generic model is settled on
-> > > (which I'm guessing might be on the order of months)
-> > 
-> > I dunno if it really has to be months. I think we can cobble
-> > something
-> > together relatively quickly that addresses the needs of IPA more
-> > specifically, and then extend later?
-> > 
-> > But OTOH it may make sense to take a more paced approach and think
-> > about the details more carefully than we have over in the other
-> > thread so far.
-> 
-> I would hope that as soon as we can agree on a general approach, it
-> would also be possible to merge a minimal implementation into the
-> kernel
-> along with IPA. Alex already mentioned that IPA in its current state
-> does
-> not actually support more than one data channel, so the necessary
-> setup for it becomes even simpler.
-> 
-> At the moment, the rmnet configuration in
-> include/uapi/linux/if_link.h
-> is almost trivial, with the three pieces of information needed being
-> an IFLA_LINK to point to the real device (not needed if there is only
-> one device per channel, instead of two), the IFLA_RMNET_MUX_ID
-> setting the ID of the muxing channel (not needed if there is only
-> one channel ?), a way to specify software bridging between channels
-> (not useful if there is only one channel) and a few flags that I
-> assume
-> must match the remote end:
-> 
-> #define RMNET_FLAGS_INGRESS_DEAGGREGATION         (1U << 0)
-> #define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
-> #define RMNET_FLAGS_INGRESS_MAP_CKSUMV4           (1U << 2)
-> #define RMNET_FLAGS_EGRESS_MAP_CKSUMV4            (1U << 3)
-> enum {
->         IFLA_RMNET_UNSPEC,
->         IFLA_RMNET_MUX_ID,
->         IFLA_RMNET_FLAGS,
->         __IFLA_RMNET_MAX,
-> };
-> #define IFLA_RMNET_MAX  (__IFLA_RMNET_MAX - 1)
-> struct ifla_rmnet_flags {
->         __u32   flags;
->         __u32   mask;
-> };
-> 
-> > > Third, having the code upstream actually means the actual
-> > > requirements
-> > > for rmnet-over-IPA are clear and explicit.  This might not be a
-> > > huge
-> > > deal, but I think it's better to devise a generic WWAN scheme
-> > > that
-> > > can refer to actual code than to do so with assumptions about
-> > > what
-> > > will work with rmnet (and others).  As far as I know, the
-> > > upstream
-> > > rmnet has no other upstream back end; IPA will make it "real."
-> > 
-> > Is that really true? I had previously been told that rmnet actually
-> > does
-> > have use with a few existing drivers.
-> > 
-> > 
-> > If true though, then I think this would be the killer argument *in
-> > favour* of *not* merging this - because that would mean we *don't*
-> > have
-> > to actually keep the rmnet API around for all foreseeable future.
-> 
-> I would agree with that. From the code I can see no other driver
-> including the rmnet protocol header (see the discussion about moving
-> the header to include/linux in order to merge ipa), and I don't see
-> any other driver referencing ETH_P_MAP either. My understanding
-> is that any driver used by rmnet would require both, but they are
-> all out-of-tree at the moment.
 
-The general plan (and I believe Daniele Palmas was working on it) was
-to eventually make qmi_wwan use rmnet rather than its internal sysfs-
-based implementation. qmi_wwan and ipa are at essentially the same
-level and both could utilize rmnet on top.
 
-*That's* what I'd like to see. I don't want to see two different ways
-to get QMAP packets to modem firmware from two different drivers that
-really could use the same code.
+> On Jun 11, 2019, at 1:03 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+>> On Fri, Jun 07, 2019 at 11:10:19AM -0700, Andy Lutomirski wrote:
+>>=20
+>>=20
+>>> On Jun 7, 2019, at 10:34 AM, Peter Zijlstra <peterz@infradead.org> wrote=
+:
+>>>=20
+>>> On Sat, Jun 08, 2019 at 12:47:08AM +0900, Masami Hiramatsu wrote:
+>>>=20
+>>>>> This fits almost all text_poke_bp() users, except
+>>>>> arch_unoptimize_kprobe() which restores random text, and for that site=
 
-Dan
+>>>>> we have to build an explicit emulate instruction.
+>>>>=20
+>>>> Hm, actually it doesn't restores randome text, since the first byte
+>>>> must always be int3. As the function name means, it just unoptimizes
+>>>> (jump based optprobe -> int3 based kprobe).
+>>>> Anyway, that is not an issue. With this patch, optprobe must still work=
+.
+>>>=20
+>>> I thought it basically restored 5 bytes of original text (with no
+>>> guarantee it is a single instruction, or even a complete instruction),
+>>> with the first byte replaced with INT3.
+>>>=20
+>>=20
+>> I am surely missing some kprobe context, but is it really safe to use
+>> this mechanism to replace more than one instruction?
+>=20
+> I'm not entirely up-to-scratch here, so Masami, please correct me if I'm
+> wrong.
+>=20
+> So what happens is that arch_prepare_optimized_kprobe() <-
+> copy_optimized_instructions() copies however much of the instruction
+> stream is required such that we can overwrite the instruction at @addr
+> with a 5 byte jump.
+>=20
+> arch_optimize_kprobe() then does the text_poke_bp() that replaces the
+> instruction @addr with int3, copies the rel jump address and overwrites
+> the int3 with jmp.
+>=20
+> And I'm thinking the problem is with something like:
+>=20
+> @addr: nop nop nop nop nop
+>=20
+> We copy out the nops into the trampoline, overwrite the first nop with
+> an INT3, overwrite the remaining nops with the rel addr, but oops,
+> another CPU can still be executing one of those NOPs, right?
+>=20
+> I'm thinking we could fix this by first writing INT3 into all relevant
+> instructions, which is going to be messy, given the current code base.
 
+How does that help?  If RIP =3D=3D x+2 and you want to put a 5-byte jump at a=
+ddress x, no amount of 0xcc is going to change the fact that RIP is in the m=
+iddle of the jump.
+
+Live patching can handle this by detecting this condition on each CPU, but p=
+erformance won=E2=80=99t be great.  Maybe some synchronize_sched trickery co=
+uld help.=
