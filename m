@@ -2,148 +2,140 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FD7C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863B1C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6959A2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNfDt3Mu"
+	by mail.kernel.org (Postfix) with ESMTP id 69D542089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 10:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405215AbfFKKI0 (ORCPT
+        id S2405228AbfFKKIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 06:08:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42449 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405185AbfFKKI0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 06:08:26 -0400
-Received: by mail-pl1-f194.google.com with SMTP id go2so4887735plb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 03:08:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZlyaOqGyFC7c17YkXUN6lg7zWIfEjQ81AkuyNrOkHoI=;
-        b=iNfDt3Mub6qkW0z3LbJ8k3XhEhgrwj408NhTtyiJ6DQRpxzE5YyIhWdIoQ4KTgZ5a8
-         xANiP/c57r4XCNlvB6waiOOr+CJG8PWR4fTrTnx9YvERYNHNNAF9I2xZfzV3B/45Qu+0
-         sC8YMWLSu5O3wXnHjU2Hr3/oB79N4W5VWRk5ROSTSQvQq6COdk95b/6LCU2SexSHy8xW
-         l74aELF8On/prZrnquyTQh4WvCa2LH4S9SkNqOoYWSL4aoJX6mn2p0iuS1RQOkVW/oca
-         Zqc7fnHeAY1QmuCJOFAFPMdIacZLI6P31LD+4Er9fjpYT9miw5ZFHG1J9jvW5Zef3FOu
-         RESA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZlyaOqGyFC7c17YkXUN6lg7zWIfEjQ81AkuyNrOkHoI=;
-        b=GVe1E0Hk402P9XfsW68AFR8Rjo7YJ7uEjpC0ggSv8bW2h8RTyj4YXwx9SicvPACAZa
-         yRJNqNAdkVwbaSm3c86xZgMRmPYNfELUhxrJUAYuB/Zfeu37SA03Yu+VAm3GTxOcaF5P
-         5lN/pcDjogdUJvX0pw0oZnZ62h3xan+vcgVHDia+sb0VyeFeiA3KbzSEhEjasD1WZG0a
-         5PIoJC2Td4sGX2fjO+mKXUG/vJ4MLAXaGIT3koaHESE4+XgpDI9p0E6lrULkB2X+DfnM
-         9P6bbYUy5/4sGvSD2oquAFQIz3zk80zfGKVBwuq1RxV2srVmi6imtamWCInBIfSbBsM0
-         vINA==
-X-Gm-Message-State: APjAAAVk0DZvkkaLhOI1bN92glAyp8SqKtG6EmlX+XwwZrSs3kvdxmOT
-        Q3TC4sCCHguZunXIgNAkeNY=
-X-Google-Smtp-Source: APXvYqxwnC907CaLK2IU7NoNst6512I1yB+gfZW2TtIB/QhDmvCege3bObpdwaixhApkF6l6btT53A==
-X-Received: by 2002:a17:902:a411:: with SMTP id p17mr15886850plq.104.1560247705500;
-        Tue, 11 Jun 2019 03:08:25 -0700 (PDT)
-Received: from ubuntu ([104.192.108.9])
-        by smtp.gmail.com with ESMTPSA id o126sm13908712pfb.134.2019.06.11.03.08.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 03:08:24 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 03:08:19 -0700
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     ssantosh@kernel.org, olof@lixom.net, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] knav_qmss_queue: fix a missing-check bug in
- knav_pool_create()
-Message-ID: <20190611100819.GA10185@ubuntu>
-References: <20190530033949.GA8895@zhanggen-UX430UQ>
- <20190611093744.GA9783@ubuntu>
- <56a08bd2-6b94-457f-99f7-91ef3fca8804@arm.com>
+        Tue, 11 Jun 2019 06:08:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:57448 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405185AbfFKKIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 06:08:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 608CF337;
+        Tue, 11 Jun 2019 03:08:48 -0700 (PDT)
+Received: from redmoon (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3B353F557;
+        Tue, 11 Jun 2019 03:10:29 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 11:08:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, linux-riscv@lists.infradead.org, palmer@sifive.com,
+        paul.walmsley@sifive.com
+Subject: Re: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
+Message-ID: <20190611100845.GC29976@redmoon>
+References: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <56a08bd2-6b94-457f-99f7-91ef3fca8804@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:54:15AM +0100, Marc Zyngier wrote:
-> Hi Gen,
+On Thu, May 23, 2019 at 02:55:40PM -0700, Alan Mikhak wrote:
+> Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
+> and pci_epf_test_alloc_space().
 > 
-> No idea why I'm being cc'd on this but hey... ;-)
-I copied email address ftom thid commit:-)
-https://github.com/torvalds/linux/commit/832ad0e3da4510fd17f98804abe512ea9a747035#diff-f2a24befc247191f4b81af93e9336785
+> Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
+> index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
+> will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
+> but leaks on subsequent unbind by not calling pci_epf_free_space().
 > 
-> On 11/06/2019 10:37, Gen Zhang wrote:
-> > On Thu, May 30, 2019 at 11:39:49AM +0800, Gen Zhang wrote:
-> >> In knav_pool_create(), 'pool->name' is allocated by kstrndup(). It
-> >> returns NULL when fails. So 'pool->name' should be checked. And free
-> >> 'pool' when error.
-> >>
-> >> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> >> ---
-> >> diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-> >> index 8b41837..0f8cb28 100644
-> >> --- a/drivers/soc/ti/knav_qmss_queue.c
-> >> +++ b/drivers/soc/ti/knav_qmss_queue.c
-> >> @@ -814,6 +814,12 @@ void *knav_pool_create(const char *name,
-> >>  	}
-> >>  
-> >>  	pool->name = kstrndup(name, KNAV_NAME_SIZE - 1, GFP_KERNEL);
-> >> +	if (!pool->name) {
-> >> +		dev_err(kdev->dev, "failed to duplicate for pool(%s)\n",
-> >> +			name);
-> 
-> There is no need to output anything, the kernel will be loud enough if
-> you run out of memory.
-Thanks for your comments.
-> 
-> >> +		ret = -ENOMEM;
-> >> +		goto err_name;
-> >> +	}
-> >>  	pool->kdev = kdev;
-> >>  	pool->dev = kdev->dev;
-> >>  
-> >> @@ -864,6 +870,7 @@ void *knav_pool_create(const char *name,
-> >>  	mutex_unlock(&knav_dev_lock);
-> >>  err:
-> >>  	kfree(pool->name);
-> >> +err_name:
-> 
-> kfree(NULL) is perfectly valid, there is no need to create a second
-> label. Just branch to the existing error label.
-Sure, better not to add redundant codes.
-> 
-> >>  	devm_kfree(kdev->dev, pool);
-> >>  	return ERR_PTR(ret);
-> >>  }
-> > Can anyone look into this patch?
-> > 
-> > Thanks
-> > Gen
-> > 
-> 
-> The real question is whether this is actually an error at all.
-> pool->name doesn't seem to be used for anything but debug information,
-> and the printing code can perfectly accommodate a NULL pointer.
-That sounds reasonable. This patch just fixes a *theoretical* bug.
+> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
+>  1 file changed, 12 insertions(+), 13 deletions(-)
 
-Thanks
-Gen
-> 
-> Thanks,
-> 
-> 	M.
+Applied to pci/endpoint for v5.3, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 27806987e93b..96156a537922 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+>  
+>  static int pci_epf_test_set_bar(struct pci_epf *epf)
+>  {
+> -	int bar;
+> +	int bar, add;
+>  	int ret;
+>  	struct pci_epf_bar *epf_bar;
+>  	struct pci_epc *epc = epf->epc;
+> @@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>  
+>  	epc_features = epf_test->epc_features;
+>  
+> -	for (bar = BAR_0; bar <= BAR_5; bar++) {
+> +	for (bar = BAR_0; bar <= BAR_5; bar += add) {
+>  		epf_bar = &epf->bar[bar];
+> +		/*
+> +		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+> +		 * if the specific implementation required a 64-bit BAR,
+> +		 * even if we only requested a 32-bit BAR.
+> +		 */
+> +		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
+>  
+>  		if (!!(epc_features->reserved_bar & (1 << bar)))
+>  			continue;
+> @@ -413,13 +419,6 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+>  			if (bar == test_reg_bar)
+>  				return ret;
+>  		}
+> -		/*
+> -		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+> -		 * if the specific implementation required a 64-bit BAR,
+> -		 * even if we only requested a 32-bit BAR.
+> -		 */
+> -		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
+> -			bar++;
+>  	}
+>  
+>  	return 0;
+> @@ -431,7 +430,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  	struct device *dev = &epf->dev;
+>  	struct pci_epf_bar *epf_bar;
+>  	void *base;
+> -	int bar;
+> +	int bar, add;
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>  	const struct pci_epc_features *epc_features;
+>  
+> @@ -445,8 +444,10 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  	}
+>  	epf_test->reg[test_reg_bar] = base;
+>  
+> -	for (bar = BAR_0; bar <= BAR_5; bar++) {
+> +	for (bar = BAR_0; bar <= BAR_5; bar += add) {
+>  		epf_bar = &epf->bar[bar];
+> +		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
+> +
+>  		if (bar == test_reg_bar)
+>  			continue;
+>  
+> @@ -459,8 +460,6 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  			dev_err(dev, "Failed to allocate space for BAR%d\n",
+>  				bar);
+>  		epf_test->reg[bar] = base;
+> -		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
+> -			bar++;
+>  	}
+>  
+>  	return 0;
 > -- 
-> Jazz is not dead. It just smells funny...
+> 2.7.4
+> 
