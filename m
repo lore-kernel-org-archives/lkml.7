@@ -2,103 +2,92 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCDBC4646D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A8FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AA62086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CE82086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405985AbfFKRRj (ORCPT
+        id S2405990AbfFKRRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:17:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:38422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405778AbfFKRRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:17:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD400346;
-        Tue, 11 Jun 2019 10:17:37 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAB1C3F73C;
-        Tue, 11 Jun 2019 10:17:35 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 18:17:33 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>, bhelgaas@google.com
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 16/20] PCI: mobiveil: Add link up condition check
-Message-ID: <20190611171733.GB22836@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-17-Zhiqiang.Hou@nxp.com>
+        Tue, 11 Jun 2019 13:17:54 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:39217 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405263AbfFKRRy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:17:54 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TTwfifQ_1560273465;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TTwfifQ_1560273465)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 12 Jun 2019 01:17:49 +0800
+Subject: Re: [v7 PATCH 1/2] mm: vmscan: remove double slab pressure by inc'ing
+ sc->nr_scanned
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     Oscar Salvador <osalvador@suse.de>, ying.huang@intel.com,
+        hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
+        kirill.shutemov@linux.intel.com, josef@toxicpanda.com,
+        hughd@google.com, shakeelb@google.com, hdanton@sina.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1559025859-72759-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1560202615.3312.6.camel@suse.de>
+ <d99fbe8f-9c80-d407-e848-0be00e3b8886@linux.alibaba.com>
+Message-ID: <52ec93c6-a41b-e5aa-54f0-f508a5e30a09@linux.alibaba.com>
+Date:   Tue, 11 Jun 2019 10:17:39 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-17-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <d99fbe8f-9c80-d407-e848-0be00e3b8886@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NB: Please trim the CC list and keep it to concerned maintainers.
 
-On Fri, Apr 12, 2019 at 08:36:48AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> Avoid to issue CFG transactions to link partner when the PCIe
-> link is not up.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> V5:
->  - Corrected the subject.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 621852078caf..1ee3ea2570c0 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -283,6 +283,10 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
->  {
->  	struct mobiveil_pcie *pcie = bus->sysdata;
->  
-> +	/* If there is no link, then there is no device */
-> +	if (bus->number > pcie->root_bus_nr && !mobiveil_pcie_link_up(pcie))
 
-I think Bjorn mentioned this a million times already, eg:
+On 6/11/19 10:12 AM, Yang Shi wrote:
+>
+>
+> On 6/10/19 2:36 PM, Oscar Salvador wrote:
+>> On Tue, 2019-05-28 at 14:44 +0800, Yang Shi wrote:
+>>> The commit 9092c71bb724 ("mm: use sc->priority for slab shrink
+>>> targets")
+>>> has broken up the relationship between sc->nr_scanned and slab
+>>> pressure.
+>>> The sc->nr_scanned can't double slab pressure anymore.  So, it sounds
+>>> no
+>>> sense to still keep sc->nr_scanned inc'ed.  Actually, it would
+>>> prevent
+>>> from adding pressure on slab shrink since excessive sc->nr_scanned
+>>> would
+>>> prevent from scan->priority raise.
+>> Hi Yang,
+>>
+>> I might be misunderstanding this, but did you mean "prevent from scan-
+>> priority decreasing"?
+>> I guess we are talking about balance_pgdat(), and in case
+>> kswapd_shrink_node() returns true (it means we have scanned more than
+>> we had to reclaim), raise_priority becomes false, and this does not let
+>> sc->priority to be decreased, which has the impact that less pages will
+>>   be reclaimed the next round.
+>
+> Yes, exactly.
 
-https://lore.kernel.org/linux-pci/20190411201535.GS256045@google.com/
+BTW, for the scan priority, the smaller number the higher priority. So, 
+either "raise" or "decrease" sounds correct. "raise" means the real 
+priority, "decrease" means the number itself.
 
-this is racy and gives a false sense of robustness. We have code in the
-kernel that checks the link but adding more seems silly to me, so I am
-inclined to drop this patch.
+>
+>>
+>> Sorry for bugging here, I just wanted to see if I got this right.
+>>
+>>
+>
 
-Lorenzo
-
-> +		return false;
-> +
->  	/* Only one device down on each root port */
->  	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
->  		return false;
-> -- 
-> 2.17.1
-> 
