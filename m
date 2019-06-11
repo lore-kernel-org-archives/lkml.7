@@ -2,30 +2,30 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56092C31E45
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E5BC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A99F208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD56420866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391979AbfFKWWw (ORCPT
+        id S2436825AbfFKWWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:22:52 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29003 "EHLO
+        Tue, 11 Jun 2019 18:22:17 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:28995 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436827AbfFKWWS (ORCPT
+        by vger.kernel.org with ESMTP id S2436772AbfFKWWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:22:18 -0400
+        Tue, 11 Jun 2019 18:22:13 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 11 Jun 2019 15:22:13 -0700
+ 15.0.1156.6; Tue, 11 Jun 2019 15:22:08 -0700
 Received: from rlwimi.localdomain (unknown [10.129.220.121])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id D4A0941BAB;
-        Tue, 11 Jun 2019 15:22:16 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 60A7F41BAB;
+        Tue, 11 Jun 2019 15:22:11 -0700 (PDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 CC:     Ingo Molnar <mingo@kernel.org>,
@@ -33,12 +33,10 @@ CC:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [PATCH v2 08/13] recordmcount: Clarify what cleanup() does
-Date:   Tue, 11 Jun 2019 15:21:50 -0700
-Message-ID: <d31bd7ff3c9cf00b0b8f6252926a156b06ec8f5c.1560285597.git.mhelsley@vmware.com>
+Subject: [PATCH v2 00/13] Cleanup recordmcount and begin objtool conversion
+Date:   Tue, 11 Jun 2019 15:21:42 -0700
+Message-ID: <cover.1560285597.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1560285597.git.mhelsley@vmware.com>
-References: <cover.1560285597.git.mhelsley@vmware.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -49,249 +47,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cleanup() mostly frees/unmaps the malloc'd/privately-mapped
-copy of the ELF file recordmcount is working on, which is
-set up in mmap_file(). It also deals with positioning within
-the pseduo prive-mapping of the file and appending to the ELF
-file.
+This series cleans up recordmcount and then makes it into
+an objtool subcommand.
 
-Split into two steps:
-	mmap_cleanup() for the mapping itself
-	file_append_cleanup() for allocations storing the
-		appended ELF data.
+The series starts with 8 cleanup patches which make recordmcount
+easier to review and integrate with objtool. The final 5 patches
+show the beginning steps of converting recordmcount to use objtool's
+ELF code rather than its own open-coded methods of accessing ELF
+files.
 
-Also, move the global variable initializations out of the main,
-per-object-file loop and nearer to the alloc/init (mmap_file())
-and two cleanup functions so we can more clearly see how they're
-related.
-
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- scripts/recordmcount.c | 151 ++++++++++++++++++++++-------------------
- 1 file changed, 81 insertions(+), 70 deletions(-)
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 111419c282d3..9f4af109277e 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -48,21 +48,26 @@ static void *file_map;	/* pointer of the mapped file */
- static void *file_end;	/* pointer to the end of the mapped file */
- static int file_updated; /* flag to state file was changed */
- static void *file_ptr;	/* current file pointer location */
-+
- static void *file_append; /* added to the end of the file */
- static size_t file_append_size; /* how much is added to end of file */
- 
- /* Per-file resource cleanup when multiple files. */
--static void cleanup(void)
-+static void file_append_cleanup(void)
-+{
-+	free(file_append);
-+	file_append = NULL;
-+	file_append_size = 0;
-+	file_updated = 0;
-+}
-+
-+static void mmap_cleanup(void)
- {
- 	if (!mmap_failed)
- 		munmap(file_map, sb.st_size);
- 	else
- 		free(file_map);
- 	file_map = NULL;
--	free(file_append);
--	file_append = NULL;
--	file_append_size = 0;
--	file_updated = 0;
- }
- 
- /* ulseek, uwrite, ...:  Check return value for errors. */
-@@ -103,7 +108,8 @@ static ssize_t uwrite(void const *const buf, size_t const count)
- 		}
- 		if (!file_append) {
- 			perror("write");
--			cleanup();
-+			file_append_cleanup();
-+			mmap_cleanup();
- 			return -1;
- 		}
- 		if (file_ptr < file_end) {
-@@ -129,12 +135,76 @@ static void * umalloc(size_t size)
- 	void *const addr = malloc(size);
- 	if (addr == 0) {
- 		fprintf(stderr, "malloc failed: %zu bytes\n", size);
--		cleanup();
-+		file_append_cleanup();
-+		mmap_cleanup();
- 		return NULL;
- 	}
- 	return addr;
- }
- 
-+/*
-+ * Get the whole file as a programming convenience in order to avoid
-+ * malloc+lseek+read+free of many pieces.  If successful, then mmap
-+ * avoids copying unused pieces; else just read the whole file.
-+ * Open for both read and write; new info will be appended to the file.
-+ * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
-+ * do not propagate to the file until an explicit overwrite at the last.
-+ * This preserves most aspects of consistency (all except .st_size)
-+ * for simultaneous readers of the file while we are appending to it.
-+ * However, multiple writers still are bad.  We choose not to use
-+ * locking because it is expensive and the use case of kernel build
-+ * makes multiple writers unlikely.
-+ */
-+static void *mmap_file(char const *fname)
-+{
-+	/* Avoid problems if early cleanup() */
-+	fd_map = -1;
-+	mmap_failed = 1;
-+	file_map = NULL;
-+	file_ptr = NULL;
-+	file_updated = 0;
-+	sb.st_size = 0;
-+
-+	fd_map = open(fname, O_RDONLY);
-+	if (fd_map < 0) {
-+		perror(fname);
-+		return NULL;
-+	}
-+	if (fstat(fd_map, &sb) < 0) {
-+		perror(fname);
-+		goto out;
-+	}
-+	if (!S_ISREG(sb.st_mode)) {
-+		fprintf(stderr, "not a regular file: %s\n", fname);
-+		goto out;
-+	}
-+	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
-+			fd_map, 0);
-+	if (file_map == MAP_FAILED) {
-+		mmap_failed = 1;
-+		file_map = umalloc(sb.st_size);
-+		if (!file_map) {
-+			perror(fname);
-+			goto out;
-+		}
-+		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
-+			perror(fname);
-+			free(file_map);
-+			file_map = NULL;
-+			goto out;
-+		}
-+	} else
-+		mmap_failed = 0;
-+out:
-+	close(fd_map);
-+	fd_map = -1;
-+
-+	file_end = file_map + sb.st_size;
-+
-+	return file_map;
-+}
-+
-+
- static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
- static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
- static unsigned char *ideal_nop;
-@@ -238,61 +308,6 @@ static int make_nop_arm64(void *map, size_t const offset)
- 	return 0;
- }
- 
--/*
-- * Get the whole file as a programming convenience in order to avoid
-- * malloc+lseek+read+free of many pieces.  If successful, then mmap
-- * avoids copying unused pieces; else just read the whole file.
-- * Open for both read and write; new info will be appended to the file.
-- * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
-- * do not propagate to the file until an explicit overwrite at the last.
-- * This preserves most aspects of consistency (all except .st_size)
-- * for simultaneous readers of the file while we are appending to it.
-- * However, multiple writers still are bad.  We choose not to use
-- * locking because it is expensive and the use case of kernel build
-- * makes multiple writers unlikely.
-- */
--static void *mmap_file(char const *fname)
--{
--	file_map = NULL;
--	sb.st_size = 0;
--	fd_map = open(fname, O_RDONLY);
--	if (fd_map < 0) {
--		perror(fname);
--		return NULL;
--	}
--	if (fstat(fd_map, &sb) < 0) {
--		perror(fname);
--		goto out;
--	}
--	if (!S_ISREG(sb.st_mode)) {
--		fprintf(stderr, "not a regular file: %s\n", fname);
--		goto out;
--	}
--	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
--			fd_map, 0);
--	mmap_failed = 0;
--	if (file_map == MAP_FAILED) {
--		mmap_failed = 1;
--		file_map = umalloc(sb.st_size);
--		if (!file_map) {
--			perror(fname);
--			goto out;
--		}
--		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
--			perror(fname);
--			free(file_map);
--			file_map = NULL;
--			goto out;
--		}
--	}
--out:
--	close(fd_map);
--
--	file_end = file_map + sb.st_size;
--
--	return file_map;
--}
--
- static int write_file(const char *fname)
- {
- 	char tmp_file[strlen(fname) + 4];
-@@ -436,10 +451,11 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
- 
- static int do_file(char const *const fname)
- {
--	Elf32_Ehdr *const ehdr = mmap_file(fname);
-+	Elf32_Ehdr *ehdr;
- 	unsigned int reltype = 0;
- 	int rc = -1;
- 
-+	ehdr = mmap_file(fname);
- 	if (!ehdr)
- 		goto out;
- 
-@@ -575,7 +591,8 @@ static int do_file(char const *const fname)
- 
- 	rc = write_file(fname);
- out:
--	cleanup();
-+	file_append_cleanup();
-+	mmap_cleanup();
- 	return rc;
- }
- 
-@@ -618,12 +635,6 @@ int main(int argc, char *argv[])
- 		    strcmp(file + (len - ftrace_size), ftrace) == 0)
- 			continue;
- 
--		/* Avoid problems if early cleanup() */
--		fd_map = -1;
--		mmap_failed = 1;
--		file_map = NULL;
--		file_ptr = NULL;
--		file_updated = 0;
- 		if (do_file(file)) {
- 			fprintf(stderr, "%s: failed\n", file);
- 			++n_error;
+v2:
+	Fix whitespace before line continuation
+
+	Add ftrace/mcount/record.h to objtool_dep
+
+	Rename the Makefile variable BUILD_C_RECORDMCOUNT to
+	    better reflect its purpose
+
+	Similar: rename recordmcount_source => recordmcount_dep
+	    When using objtool we can just depend on the
+	    binary rather than the source the binary is
+	    built from. This should address Josh's feedback and
+	    make the Makefile code a bit clearer
+
+	Add a comment to make reading the Makefile a little
+	    easier
+
+	Rebased to latest mainline -rc
+
+	Collected some build time measurements
+
+Build times measurements -- median of multiple runs in a VM measured
+with "time":
+
+	mainline (5.2.0-rc4) build times (median of 3 runs):
+		real    2m58.379s
+		user    2m29.621s
+		sys     1m35.116s
+
+	Post recordmcount-cleanup build times (median of 5 runs):
+		real    2m51.973s
+		user    2m29.094s
+		sys     1m33.688s
+		
+	objtool mcount build times (median of 7 runs):
+		real	2m57.92s
+		user	2m33.73s
+		sys	1m37.06s
+
+Note: I saw some significant variation especially in the "real" time
+	measurements probably because it was in a VM on a machine with
+	various "idle" GUI tasks running. This is why I took the median
+	rather than the mean. Though I haven't run the statistics, my
+	sense is the numbers don't support concluding that things really
+	got any faster or slower.
+
+I'm working on a separate, follow-on RFC set which implements the
+pseudo-pipe idea.
+
+Matt Helsley (13):
+  recordmcount: Remove redundant strcmp
+  recordmcount: Remove uread()
+  recordmcount: Remove unused fd from uwrite() and ulseek()
+  recordmcount: Rewrite error/success handling
+  recordmcount: Kernel style function signature formatting
+  recordmcount: Kernel style formatting
+  recordmcount: Remove redundant cleanup() calls
+  recordmcount: Clarify what cleanup() does
+  objtool: Prepare to merge recordmcount
+  objtool: Make recordmcount into an objtool subcmd
+  objtool: recordmcount: Start using objtool's elf wrapper
+  objtool: recordmcount: Search for __mcount_loc before walking the
+    sections
+  objtool: recordmcount: Convert do_func() relhdrs
+
+ Makefile                                   |   6 +-
+ scripts/.gitignore                         |   1 -
+ scripts/Makefile                           |   1 -
+ scripts/Makefile.build                     |  27 +-
+ tools/objtool/.gitignore                   |   1 +
+ tools/objtool/Build                        |   1 +
+ tools/objtool/Makefile                     |   1 +
+ tools/objtool/builtin-mcount.c             |  72 +++++
+ tools/objtool/builtin-mcount.h             |  23 ++
+ tools/objtool/builtin.h                    |   1 +
+ tools/objtool/objtool.c                    |   1 +
+ {scripts => tools/objtool}/recordmcount.c  | 350 ++++++++++-----------
+ {scripts => tools/objtool}/recordmcount.h  | 197 +++++++-----
+ {scripts => tools/objtool}/recordmcount.pl |   0
+ 14 files changed, 407 insertions(+), 275 deletions(-)
+ create mode 100644 tools/objtool/builtin-mcount.c
+ create mode 100644 tools/objtool/builtin-mcount.h
+ rename {scripts => tools/objtool}/recordmcount.c (78%)
+ rename {scripts => tools/objtool}/recordmcount.h (78%)
+ rename {scripts => tools/objtool}/recordmcount.pl (100%)
+
 -- 
 2.20.1
 
