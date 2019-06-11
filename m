@@ -2,316 +2,131 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59E8C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F4FC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876AE212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2488C208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391409AbfFKIkT (ORCPT
+        id S2391424AbfFKIkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:40:19 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56929 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391272AbfFKIkT (ORCPT
+        Tue, 11 Jun 2019 04:40:25 -0400
+Received: from waikiki.ops.eusc.inter.net ([84.23.254.155]:39112 "EHLO
+        waikiki.ops.eusc.inter.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391272AbfFKIkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:40:19 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1hacKG-0006Te-Kq; Tue, 11 Jun 2019 10:40:16 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1hacKF-0006D8-3i; Tue, 11 Jun 2019 10:40:15 +0200
-Date:   Tue, 11 Jun 2019 10:40:15 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        jassisinghbrar@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC PATCH 2/2] imx: mailbox: Introduce TX doorbell with ACK
-Message-ID: <20190611084015.bjsusho5leqvfvhr@pengutronix.de>
-References: <20190610141609.17559-1-daniel.baluta@nxp.com>
- <20190610141609.17559-3-daniel.baluta@nxp.com>
- <20190611055530.sl3krujmcqnq6ntt@pengutronix.de>
- <CAEnQRZB9irx7_AeYPCdv5WU3Q-MGt96BiUH8Yk8raeBDA0RjTQ@mail.gmail.com>
+        Tue, 11 Jun 2019 04:40:24 -0400
+X-Greylist: delayed 1181 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 04:40:23 EDT
+X-Trace: 507c73696d6f6e2e65686c656e7c38372e37392e39332e3134307c316861633142
+        2d3030304f70752d4c737c31353630323431323333
+Received: from waikiki.ops.eusc.inter.net ([10.155.10.22] helo=localhost)
+        by waikiki.ops.eusc.inter.net with esmtpsa (Exim 4.92) 
+        id 1hac1B-000Opu-Ls; Tue, 11 Jun 2019 10:20:33 +0200
+Received: from [10.16.35.209] (unknown [10.16.35.209])
+        by lola.ninela.de (Postfix) with ESMTPSA id 53E6F24C28C;
+        Tue, 11 Jun 2019 10:20:21 +0200 (CEST)
+From:   Simon Ehlen <simon.ehlen@koeln.de>
+Subject: Re: [PATCH 0/5] isdn: deprecate non-mISDN drivers
+References: <20190423151143.464992-1-arnd@arndb.de>
+To:     linux-netdev@vger.kernel.org, linux-driver-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Openpgp: preference=signencrypt
+Autocrypt: addr=simon.ehlen@koeln.de; prefer-encrypt=mutual; keydata=
+ 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 0snB
+Message-ID: <9da847b0-9e32-ad4b-78d3-15398b0f8fe2@koeln.de>
+Date:   Tue, 11 Jun 2019 10:20:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEnQRZB9irx7_AeYPCdv5WU3Q-MGt96BiUH8Yk8raeBDA0RjTQ@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:15:45 up 24 days, 14:33, 47 users,  load average: 0.08, 0.10,
- 0.18
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190423151143.464992-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 87.79.93.140
+X-SA-Exim-Mail-From: simon.ehlen@koeln.de
+X-SA-Exim-Scanned: No (on waikiki.ops.eusc.inter.net); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:52:47AM +0300, Daniel Baluta wrote:
-> Hi Oleksij,
-> 
-> On Tue, Jun 11, 2019 at 8:56 AM Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> >
-> > Hi Daniel,
-> >
-> > On Mon, Jun 10, 2019 at 10:16:09PM +0800, daniel.baluta@nxp.com wrote:
-> > > From: Daniel Baluta <daniel.baluta@nxp.com>
-> > >
-> > > TX doorbell with ACK will allow us to push the doorbell ring button
-> > > (trigger GIR) and also will allow us to handle the response from DSP.
-> > >
-> > > DSP firmware found on i.MX8 boards implements a duplex
-> > > communication protocol over MU channels.
-> > >
-> > > On the host side (Linux) we need to plugin into Sound Open Firmware IPC
-> > > communication infrastructure which handles all the details (e.g message
-> > > queuing, tx/rx logic) [1] and the users are only required to provide the
-> > > following callbacks:
-> > >
-> > >   - send_msg (for Tx)
-> > >   - irq_handler (Ack of Tx, request from DSP)
-> > >
-> > > In order to implement send_msg and irq_handler we will use two MU
-> > > channels:
-> > >       * channel #0, TX doorbell with ACK
-> > >       * channel #1, RX doorbell
-> > >
-> > > Sending a request Host -> DSP (channel #0)
-> > >   - send_msg callback
-> > >       - write data into SHMEM
-> > >       - push doorbell ring button (trigger GIR)
-> > >  - irq handler
-> > >       - handle DSP request (channel #1)
-> > >         - read SHMEM and trigger SOF IPC state machine
-> > >         - send ACK (push doorbell ring button for channel #1)
-> > >       - handle DSP response (ACK) (channel #0)
-> > >         - read SHMEM and trigger IPC state machine
-> > >
-> > > The easisest way to implement this is to directly access the MU
-> > > registers but since the MU is abstracted using the mailbox interface
-> > > we need to use that instead.
-> > >
-> > > [1] https://elixir.bootlin.com/linux/v5.2-rc4/source/sound/soc/sof/ipc.c
-> > >
-> > > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > > ---
-> > >  drivers/mailbox/imx-mailbox.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> > > index 9f74dee1a58c..3a91611e17d2 100644
-> > > --- a/drivers/mailbox/imx-mailbox.c
-> > > +++ b/drivers/mailbox/imx-mailbox.c
-> > > @@ -42,6 +42,7 @@ enum imx_mu_chan_type {
-> > >       IMX_MU_TYPE_RX,         /* Rx */
-> > >       IMX_MU_TYPE_TXDB,       /* Tx doorbell */
-> > >       IMX_MU_TYPE_RXDB,       /* Rx doorbell */
-> > > +     IMX_MU_TYPE_TXDB_ACK    /* Tx doorbell with Ack */
-> > >  };
-> > >
-> > >  struct imx_mu_con_priv {
-> > > @@ -124,6 +125,7 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
-> > >                       (ctrl & IMX_MU_xCR_RIEn(cp->idx));
-> > >               break;
-> > >       case IMX_MU_TYPE_RXDB:
-> > > +     case IMX_MU_TYPE_TXDB_ACK:
-> > >               val &= IMX_MU_xSR_GIPn(cp->idx) &
-> > >                       (ctrl & IMX_MU_xCR_GIEn(cp->idx));
-> > >               break;
-> > > @@ -200,6 +202,7 @@ static int imx_mu_startup(struct mbox_chan *chan)
-> > >               imx_mu_xcr_rmw(priv, IMX_MU_xCR_RIEn(cp->idx), 0);
-> > >               break;
-> > >       case IMX_MU_TYPE_RXDB:
-> > > +     case IMX_MU_TYPE_TXDB_ACK:
-> > >               imx_mu_xcr_rmw(priv, IMX_MU_xCR_GIEn(cp->idx), 0);
-> > >               break;
-> > >       default:
-> > > --
-> > > 2.17.1
-> >
-> > If I see it correctly, with your implementation  the mbox client
-> > communication on channel 0 will look as follow:
-> > mbox_client -> send_msg()
-> >             /* sheduling of mbox_chan_txdone tasklet is avoided */
-> > mbox_client <- cl->rx_callback()
-> > mbox_client -> mbox_client_txdone()
-> > mbox_client -> send_msg()
-> >
-> 
-> Correct! But what I thought it is most important here is that
-> send_msg and rx_callback are called on the same "connection"
-> so that inside rx_callback I can figure out if I got an ACK or I got
-> a request from the other side.
-> 
-> > Without your patch you will need to register tx and rx doorbell
-> > channels and the communication will looks like this:
-> > mbox_client -> send_msg()
-> > mbox_client <- mbox_chan_txdone() /* dummy notification, can be ignored */
-> > mbox_client <- cl->rx_callback()
-> > mbox_client -> send_msg()
-> >
-> > I assume, you are trying to optimize it and avoid dummy
-> > mbox_chan_txdone() notification. Correct?
-> 
-> TBH I am little bit confused about the role of txdb_tasklet. Is it there
-> just to trigger the sending of the next message in the buffer?
+Hi,
 
-ACK. The TX type channel is acknowledged as soon as opposite side will
-read out the TX/RX FIFO. In this case we will get an interrupt and
-call mbox_chan_txdone(). With the TXDB type channels we have no this
-kind of interrupts, so we need to some how to tell the mailbox framework
-that this transmission is kind of done.
+Am 23.04.2019 um 17:11 schrieb Arnd Bergmann:
+> It turns out that the suggestion from Karsten Keil wa to remove I4L
+> in 2018 after the last public ISDN networks are shut down. This has
+> happened now (with a very small number of exceptions), so I guess it's
+> time to try again.
+There are still public ISDN networks available. My provider (NetCologne) is still serving native ISDN.
+> If anyone is still using isdn4linux and CAPI with modern kernels, please
+> speak up now.
+I'm using kernel isdn support in different ways.
+1. To connect (b1pci,capidrv) to the PSTN of my provider to use phone (capi, chan_capi), fax (capi4hylafax, hylafax) and answering machine (vbox) services.
+2. To build an internal ISDN network using hfc in NT mode.
 
-Beside, are there any reason why do you use TXDB instead of TX channel?
-In this case you will get your ACK for free.
+There are other users as well still making use of isdn support in the linux kernel. [1]
+As he pointed out, although public ISDN services are phasing out every AVM Fritz!Box is capable of providing VOIP services over it's internal S0 bus.
+In case my provider decides to shut down ISDN I would make use of the S0 bus to keep my services running.
 
-> Using IMX mailbox with SOF IPC mechanism has a lot of overhead because
-> I think they are both doing the same thing.
+So please refrain from removing ISDN/CAPI support of the linux kernel.
+>       Arnd
+Kind regards,
+Simon
 
-Sorry, I fail to follow this argumentation. If it important, please
-describe your issue.
+[1] https://lkml.org/lkml/2019/6/9/168
 
-> 
-> E.g: On TX queuing the messages and then when ACK arrives it will send the
-> next message.
-> 
-> >
-> > The problem is, that current mailbox-framework will set txdone_method
-> > inside of mbox_controller_register() for all channels even if
-> > imx-mailbox has different types of channels.
-> >
-> > The problem with your patch is, that it will silently merge two channels
-> > (TXDB and RXDB) and not setting actual ACK by controller - mbox_chan_txdone().
-> > Not sure, why we need to merge it in this case.
-> >
-> > So, with current imx_mailbox implementation your firmware should work as
-> > is. You will need to register two separate channels for TXDB and
-> > RXDB. It will run with some overhead by triggering txdone tasklet in
-> > imx-mailbox driver.
-> 
-> I see your point. I think with the current imx_mailbox implementation SOF IPC
-> should work as it is with some overhead (at least when Host (Linux) initiates
-> the communication).
-> 
-> The keypoint here (I figured it out now) is that the two channels
-> TXDB and RXDB share the same IDX right?
 
-ACK. Same idx with different types.
-
-> So, with
-> this idx we can figure out that we have an ACK from DSP or a request from DSP.
-
-Actually you will get it no by idx, you will get it by proper device
-tree configuration and assigned cl->rx_callback(). You assign rx_callback() per
-each rx-able channel.
-
-> 
-> So we are set for communication when Host (Linux) starts the communication. It
-> should just work.
-> 
-> How about the case when DSP initiates the communication and Host needs to
-> send an ACK.
-> 
-> In this case we have:
-> 
-> mbox_client <- cl->rx_callback()
-> mbox_client -> send_msg()
-
-The call chain of rx_callback() is:
-imx_mu_isr()
-  mbox_chan_received_data()
-    cl->rx_callback()
-
-Since rx_callback() is in interrupt context, send_msg() should be non
-blocking. You can use workqueue or some thing like this to mbox_send_message()
-out of interrupt context.
-
-> The problem here is that the Host needs to call send_msg() from inside
-> the rx_callback().
-> Do you see any problems with that:
-> 
-> Basically the pseudocode will be something like this:
-> 
-> Create connection #0 (RXDB0, TXDB0) Host -> DSP (Host initiates
-> communication, DSP sends ACK)
-> Create connection #1 (RXDB1, TXDB1) DSP -> Host (DSP initiates
-> communication, Host sends ACK).
-> 
-> rx_callback:
->  -> if (chan_id == 0) // this has to be an ACK from DSP
->       get_reply_from_shmem
->       trigger SOF IPC state machine (let them know we got a reply)
->     else if (chan_id == 1) // this has to be a request from DSP
->       get_request()
->        mbox_send_message(sc_chan->ch, NULL); //send back ACK
-> 
-
-If properly implemented, you will have separate rx_callback()s for each
-channel.
-
-I assume at some later point you will need to extend the ACK to some
-thing like:
-- ACK - message is ok and processed
-- BUSY - endpoint is still processing
-- ERR - message is corrupt or wrong formatting
-... and so on.
-
-To be able to transmit different types of ACK you will probably
-use TX/RX type channels + shmem instead of the doorbell.
-
-> 
-> >
-> > If this overhead is a problem, then this should be fixed.
-> 
-> I need to have a working version with the current implementation
-> and then tell if overhead is a problem.
-> 
-> > Merging two doorbell  channels in to one with ACK support is nice,
-> > but will introduce more issues if we need other doorbell channels
-> > without ACK support on same controller
-> >
-> > I personally would prefer to to extend mailbox framework to support
-> > controllers with mixed channel types and remove dummy txdone tasklet
-> > from imx-mailbox.
-> >
-> > Since we already initialize part of &mbox->chans[i] by imx-mailbox driver,
-> > we can set proper chan->txdone_method as well. So we need only to
-> > prevent mbox_controller_register() to overwrite it.
-> 
-> Thanks for your explanations! Thinks are much clearer now!
-> 
-> Will try to work on implementing what I need with the current IMX mailbox
-> support and send patches for review.
-> 
-> thanks,
-> Daniel.
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
