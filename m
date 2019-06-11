@@ -2,131 +2,106 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73114C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A87C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498452173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D4CA214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:31:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kuy7lMgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbfFKEW3 (ORCPT
+        id S1728971AbfFKEbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 00:22:29 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:6934 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726022AbfFKEW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 00:22:29 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 2B09EFC6017021BD9648;
-        Tue, 11 Jun 2019 12:22:26 +0800 (CST)
-Received: from dggeme754-chm.china.huawei.com (10.3.19.100) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 11 Jun 2019 12:22:25 +0800
-Received: from [127.0.0.1] (10.184.212.80) by dggeme754-chm.china.huawei.com
- (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 11
- Jun 2019 12:22:24 +0800
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, <linux@armlinux.org.uk>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <will.deacon@arm.com>,
-        <arnd@arndb.de>, <longman@redhat.com>,
-        <linux-arch@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <hpa@zytor.com>, <x86@kernel.org>
-CC:     <dave.dice@oracle.com>, <rahul.x.yadav@oracle.com>,
-        <steven.sistare@oracle.com>, <daniel.m.jordan@oracle.com>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
-From:   "liwei (GF)" <liwei391@huawei.com>
-Message-ID: <cc3eee8c-5212-7af5-c932-897ab8f3f8bf@huawei.com>
-Date:   Tue, 11 Jun 2019 12:22:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 11 Jun 2019 00:31:44 -0400
+Received: from ozlabs.org ([203.11.71.1]:54131 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726146AbfFKEbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 00:31:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NHC12PXnz9s4Y;
+        Tue, 11 Jun 2019 14:31:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560227501;
+        bh=AdCCbWYS8wIxzvqOOIihi4/d78PPt00vkrmvnznb5Dk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kuy7lMgUJFwVZgzPAk201y2cniRiWaY5m0Pzol8MyWEqSzsJMtT6e0/qgpWg15KYb
+         +a10BYgj+ACK0GHALE2zlcbZkwEM6HQ/W5TJb2gXKPFYjvbK7J9hNybQSgwaOoiS+y
+         oE8z/wGNQfBYvJqhePLE8INtMS44WCtDfE+8WUVeHnqBZDYmTzJI9iByoK3MCNTLkG
+         l4g+zo/CKKNiYPUFahXar2olp60/edtZJ0PZu2ZINKlYltiwuhYBsH32qAlKbEWGQ8
+         N97EWGJlw5juiRb5L6r33ghaU7vK/OE5dMqfUdfkBXbbRBUYQXeJAJ0UzizNgOrneS
+         EYq7pP7kPntoA==
+Date:   Tue, 11 Jun 2019 14:31:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: linux-next: manual merge of the mfd tree with Linus' tree
+Message-ID: <20190611143139.174e3eec@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190329152006.110370-4-alex.kogan@oracle.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.212.80]
-X-ClientProxiedBy: dggeme714-chm.china.huawei.com (10.1.199.110) To
- dggeme754-chm.china.huawei.com (10.3.19.100)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/5umunqededOQoV7r75zUz7/"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+--Sig_/5umunqededOQoV7r75zUz7/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/3/29 23:20, Alex Kogan wrote:
-> In CNA, spinning threads are organized in two queues, a main queue for
-> threads running on the same node as the current lock holder, and a
-> secondary queue for threads running on other nodes. At the unlock time,
-> the lock holder scans the main queue looking for a thread running on
-> the same node. If found (call it thread T), all threads in the main queue
-> between the current lock holder and T are moved to the end of the
-> secondary queue, and the lock is passed to T. If such T is not found, the
-> lock is passed to the first node in the secondary queue. Finally, if the
-> secondary queue is empty, the lock is passed to the next thread in the
-> main queue. For more details, see https://arxiv.org/abs/1810.05600.
-> 
-> Note that this variant of CNA may introduce starvation by continuously
-> passing the lock to threads running on the same node. This issue
-> will be addressed later in the series.
-> 
-> Enabling CNA is controlled via a new configuration option
-> (NUMA_AWARE_SPINLOCKS), which is enabled by default if NUMA is enabled.
-> 
-> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
-> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
-> ---
->  arch/x86/Kconfig                      |  14 +++
->  include/asm-generic/qspinlock_types.h |  13 +++
->  kernel/locking/mcs_spinlock.h         |  10 ++
->  kernel/locking/qspinlock.c            |  29 +++++-
->  kernel/locking/qspinlock_cna.h        | 173 ++++++++++++++++++++++++++++++++++
->  5 files changed, 236 insertions(+), 3 deletions(-)
->  create mode 100644 kernel/locking/qspinlock_cna.h
-> 
-(SNIP)
-> +
-> +static __always_inline int get_node_index(struct mcs_spinlock *node)
-> +{
-> +	return decode_count(node->node_and_count++);
-When nesting level is > 4, it won't return a index >= 4 here and the numa node number
-is changed by mistake. It will go into a wrong way instead of the following branch.
+Hi all,
 
+Today's linux-next merge of the mfd tree got a conflict in:
 
-	/*
-	 * 4 nodes are allocated based on the assumption that there will
-	 * not be nested NMIs taking spinlocks. That may not be true in
-	 * some architectures even though the chance of needing more than
-	 * 4 nodes will still be extremely unlikely. When that happens,
-	 * we fall back to spinning on the lock directly without using
-	 * any MCS node. This is not the most elegant solution, but is
-	 * simple enough.
-	 */
-	if (unlikely(idx >= MAX_NODES)) {
-		while (!queued_spin_trylock(lock))
-			cpu_relax();
-		goto release;
-	}
+  include/linux/mfd/cros_ec_commands.h
 
-> +}
-> +
-> +static __always_inline void release_mcs_node(struct mcs_spinlock *node)
-> +{
-> +	__this_cpu_dec(node->node_and_count);
-> +}
-> +
-> +static __always_inline void cna_init_node(struct mcs_spinlock *node, int cpuid,
-> +					  u32 tail)
-> +{
+between commit:
 
-Thanks,
-Wei
+  9c92ab619141 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - =
+rule 282")
 
+from Linus' tree and commit:
+
+  2769bd79a915 ("mfd: cros_ec: Update license term")
+
+from the mfd tree.
+
+I fixed it up (I use the SPDX tag from the former and the later change
+to the comment from the latter) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5umunqededOQoV7r75zUz7/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/LqsACgkQAVBC80lX
+0Gyipwf/TG3CER5ZZi0mDfQLl3i/+fCIAntcXgf8Uk72mMSNDPQMU++y92Idx3P6
+SwC3yO9lR2hFzIBIMlJZFCktwStVklV4grNf6K2vD2sVuWoSkNYJDR/Ve0eJXp3C
+0vxeefnrtnp4VGE6Lr/eLe0c9FoS+4LtNr3mwZH3Bk9Z83fzYfMhmqMysjAD1XRI
+lfthvUpjWPWoB9ziLBCWr3l+XckgmLXxs9OE0NfaNgAojYQwuBokBOo1zbEnb9hh
+6c51S9/9VxWUNGYCOLHdjt769ZBKmPnmJxexkBrAXHjS2qoMhab4XgkhsbeUkkwe
+JNE3a30qUsJ/Z8/njo1gCIWmkrxE4g==
+=SuZT
+-----END PGP SIGNATURE-----
+
+--Sig_/5umunqededOQoV7r75zUz7/--
