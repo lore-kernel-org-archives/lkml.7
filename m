@@ -2,98 +2,165 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85711C31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B392C31E46
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534D62086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lJFKSnjU"
+	by mail.kernel.org (Postfix) with ESMTP id 5DDB520874
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391787AbfFKV3v (ORCPT
+        id S2391989AbfFKVej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:29:51 -0400
-Received: from ozlabs.org ([203.11.71.1]:46325 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387804AbfFKV3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:29:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Njnl73ddz9s6w;
-        Wed, 12 Jun 2019 07:29:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560288588;
-        bh=tj1WwZ7rdEKsUT9uwOStMxcrABMexqXGFXrGRdTjnxI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lJFKSnjUtgoYc42G7sa5G5kdsP8yWtJFs+v3E0E4ax66x+0FIFBJfvvJ2Qb8rNU59
-         mNz5GORFxVWzh7x3aSbxAQbLKSfVZoG52HMGTZcBZUNGFhJ/2rv8moGhxfWvAqJjNz
-         HIU4XRebwracr/VI48m40yy4EfDFUDfVYoQ6bQoS9F5x+GlPbVguLYz+9nKOz4bsy8
-         iXnawTsxqQ0GlSZvQxIpXDUmv6/YPpkLuhaNxRKeWkwvdxGnxo7/PF0KWEfc6X96uL
-         D6bcb+m20fHXwx9kPI+RvyEXeC5ivWEXUXaAkrLRCOCCwE1vxnkNR8zpRGpGP0KZTc
-         u/KbEB1zyKOMQ==
-Date:   Wed, 12 Jun 2019 07:29:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-Subject: linux-next: Fixes tag needs some work in the scmi tree
-Message-ID: <20190612072946.15403676@canb.auug.org.au>
+        Tue, 11 Jun 2019 17:34:39 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56100 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387764AbfFKVej (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 17:34:39 -0400
+Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id de0f10f62d208a7f; Tue, 11 Jun 2019 23:34:36 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH] PCI: PM: Avoid possible suspend-to-idle issue
+Date:   Tue, 11 Jun 2019 23:34:36 +0200
+Message-ID: <1583084.Q78GrOSehU@kreacher>
+In-Reply-To: <527F9B70-68AC-4CD4-A3C2-576EA09187DD@canonical.com>
+References: <2315917.ZGeXE6pBFC@kreacher> <10983642.dUqMSvAAlD@kreacher> <527F9B70-68AC-4CD4-A3C2-576EA09187DD@canonical.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/lhGhTEZ0nnpLPVQgCDBtZid"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lhGhTEZ0nnpLPVQgCDBtZid
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tuesday, June 11, 2019 10:39:44 AM CEST Kai-Heng Feng wrote:
+> Hi Rafael,
+> 
+> at 19:02, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> 
+> > On Friday, May 17, 2019 11:08:50 AM CEST Rafael J. Wysocki wrote:
+> >> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >>
+> >> If a PCI driver leaves the device handled by it in D0 and calls
+> >> pci_save_state() on the device in its ->suspend() or ->suspend_late()
+> >> callback, it can expect the device to stay in D0 over the whole
+> >> s2idle cycle.  However, that may not be the case if there is a
+> >> spurious wakeup while the system is suspended, because in that case
+> >> pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
+> >> which calls pci_restore_state(), via pci_pm_default_resume_early(),
+> >> so state_saved is cleared and the second iteration of
+> >> pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
+> >> may change the power state of the device.
+> >>
+> >> To avoid that, add a new internal flag, skip_bus_pm, that will be set
+> >> by pci_pm_suspend_noirq() when it runs for the first time during the
+> >> given system suspend-resume cycle if the state of the device has
+> >> been saved already and the device is still in D0.  Setting that flag
+> >> will cause the next iterations of pci_pm_suspend_noirq() to set
+> >> state_saved for pci_pm_resume_noirq(), so that it always restores the
+> >> device state from the originally saved data, and avoid calling
+> >> pci_prepare_to_sleep() for the device.
+> >>
+> >> Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from  
+> >> suspend-to-idle")
+> >> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> I just found out this patch has a chance to freeze or reboot the system  
+> during suspend cycles.
+>
+> What information do you need to debug?
 
-Hi Sudeep,
+A few things are missing from your report, like which kernel you have tested
+and how exactly you have arrived at the conclusion that this particular commit
+is the source of the problem.
 
-In commit
+Care to provide some details on the above?
 
-  e322dcbd75e8 ("dt-bindings: arm: fix the document ID for SCMI protocol do=
-cumentation")
+Anyway, there are a couple of things that can be done to improve the code
+on top of 5.2-rc4.  The appended patch is one of them, so can you please test
+it and let me know if it makes any difference?
 
-Fixes tag
+The rationale here is that firmware in some devices may be confused by attempts
+to put the device into D0 if it already is in that power state, so it is better to avoid
+doing so.
 
-  Fixes: fe7be8b297b2 ("dt-bindings: arm: add support for ARM System Control
+---
+ drivers/pci/pci-driver.c |   20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-has these problem(s):
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
+ 	pci_power_up(pci_dev);
+ 	pci_restore_state(pci_dev);
+ 	pci_pme_restore(pci_dev);
+-	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+ }
+ 
+ /*
+@@ -844,14 +843,12 @@ static int pci_pm_suspend_noirq(struct d
+ 		/*
+ 		 * The function is running for the second time in a row without
+ 		 * going through full resume, which is possible only during
+-		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
+-		 * device was originally left in D0, so its power state should
+-		 * not be changed here and the device register values saved
+-		 * originally should be restored on resume again.
++		 * suspend-to-idle in a spurious wakeup case.  The device should
++		 * be in D0 at this point.
+ 		 */
+-		pci_dev->state_saved = true;
++		;
+ 	} else if (pci_dev->state_saved) {
+-		if (pci_dev->current_state == PCI_D0)
++		if (pci_dev->current_state == PCI_D0 && !pm_suspend_via_firmware())
+ 			pci_dev->skip_bus_pm = true;
+ 	} else {
+ 		pci_save_state(pci_dev);
+@@ -862,6 +859,9 @@ static int pci_pm_suspend_noirq(struct d
+ 	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
+ 		pci_power_name(pci_dev->current_state));
+ 
++	if (pci_dev->skip_bus_pm)
++		goto Fixup;
++
+ 	pci_pm_set_unknown_state(pci_dev);
+ 
+ 	/*
+@@ -909,7 +909,10 @@ static int pci_pm_resume_noirq(struct de
+ 	if (dev_pm_smart_suspend_and_suspended(dev))
+ 		pm_runtime_set_active(dev);
+ 
+-	pci_pm_default_resume_early(pci_dev);
++	if (!pci_dev->skip_bus_pm)
++		pci_pm_default_resume_early(pci_dev);
++
++	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+ 
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_resume_early(dev);
+@@ -1200,6 +1203,7 @@ static int pci_pm_restore_noirq(struct d
+ 	}
+ 
+ 	pci_pm_default_resume_early(pci_dev);
++	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+ 
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_resume_early(dev);
 
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
 
-Please do not split Fixes tags over more than one line (it is ok for
-that to be a long line).
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/lhGhTEZ0nnpLPVQgCDBtZid
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0AHUoACgkQAVBC80lX
-0Gzb+Qf/SAWsIn3RJhxT2hzg5GR3bIcBGOEgprhz6TGt0vO5sSzcQ2LAI5xCjJBQ
-FZKq2418HGwHW/YkKbi53hEAcaGQXpq0DapaTWZl2LdegVFLy3aZTrZo7olzET4l
-MtbAHEIIAMqWAQ3oM9U648neshZytLzL04Qek6O6hYUq0zNlpbeHIkasharddsPA
-JNmCvCCmQ4NFCQzMKZmLB62EIBmFChn5AV5+DF/964bA8Y08HPBe512txh1z2cUm
-RwrI6Lt+5GadEAc1BkHrjxekRC0m5UlioET40t5hfVTV2qWg0+vKAOkOZDPFjA++
-04K/0xtPbKiNW6dJizUsmtX2uG/Qhg==
-=Wb3x
------END PGP SIGNATURE-----
-
---Sig_/lhGhTEZ0nnpLPVQgCDBtZid--
