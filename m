@@ -7,68 +7,71 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA7AC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEE2C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950872086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AD42063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 05:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="He0veXrB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7KQ4YE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391100AbfFKFCm (ORCPT
+        id S2391158AbfFKFHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 01:02:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43939 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388934AbfFKFCm (ORCPT
+        Tue, 11 Jun 2019 01:07:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46333 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390387AbfFKFHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 01:02:42 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so6611685pfg.10;
-        Mon, 10 Jun 2019 22:02:42 -0700 (PDT)
+        Tue, 11 Jun 2019 01:07:23 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 81so6610238pfy.13;
+        Mon, 10 Jun 2019 22:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:references:cc:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-transfer-encoding;
-        bh=tP1svpltKO1fGLOzf67iO0MI+/MDJ8p+COkpulTN3F0=;
-        b=He0veXrBWEYNKO8HWqPtN2lva11acLgl5Xjij261Ink30AkSnldWN/ChwB9tl/VJS8
-         76Zygd3SY/Y7RTgU8mOOvf7nHiBE5agjkFg5WbPE6x3LXXsgT4XDGO/DSPWsJCDymKns
-         Gg6ze2g/Qrnsiigz9wEKjLbmemguYS2UyNJ6PiLF8cdD0H4SCp6ZLge/A34F6jFni0Da
-         uuv451tsM3OC8O1Ue4eeSBfOh+RWJOBN4rjg0/u7HUEC9XSyppkoNGdr5Ox1oE1jvX3t
-         PbZCj8csfa5alENy4X0Ha5vBY2pL2iyekosKC4id5Nu729lBUt3qch+1zGbMzHUtiqQ/
-         eJ6w==
+        bh=wkWM1sR/IFbO5oMe7Lbr307SWhapRDl2FwvCP8Cm0DQ=;
+        b=H7KQ4YE1BdcqVmVdPo9Iv1b26xjwbPzBiKEs1JStOXdfVbwqIPfct7MN0R6bN7QT6m
+         JA76QZ3UGggm0pmIB5/aBuD0PzfNpEEoagwkJURiuS1X6vnhKlpTmgdipsdq2aCPPrpu
+         UfWFQEAfNIKLQ4YKexBGnhWagD8E0j0rs4F0JARjkzajr2VV35WarHi54MYU7x4rs9kg
+         NWhlzlqjAP/zZmTTqr2yOFcaasCu9xTNRmUly9t8rTSvjPJQ00VtnGm29qqCtywALFsG
+         9tVUQC0Xm8KUikPMJA7Vw1WcfnQbzTez+s/l3nS8mBgkhGq2+t4t3ai1QTqNXppm3+n9
+         lhbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:cc:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=tP1svpltKO1fGLOzf67iO0MI+/MDJ8p+COkpulTN3F0=;
-        b=Za5/yW6FXOYWC7BYwR7Iqq+jmdgryVBgN0kRLDFowfz8i3bWzgCLML42/157RCEj5U
-         6k9AUa4YPjHwnZuNjhlRcLBHTF1T5w83v1rKv04cxDi4rp0mqS3QSIN+J4IPir/rmT/u
-         nqI2Z36ofZpVlg6dBOv39Zbv2B7C+6kIBBcrLaCYc69u6NVS9JxBsswj0TlLbiK70cRU
-         cSdLpiDjNL+ip8oQxirnIbm2ETaYwjXATTqtwZcjtzU2YNehQj0QJIBUcod7RXtlGN85
-         VQLt7CARwZCYwyMnNrM8Imr2qs1JX7eDSLHSJcbepBxyyfbWOsWIZ0AaVMi1BNyjeyM7
-         NYcQ==
-X-Gm-Message-State: APjAAAXIEqGj+0MTlYnguCsfRKTgeI1Bt1WJbYMoGkTWfLzG0TktLANA
-        QWW+lAjeU8mF186JoQ/UmNK7WXL1
-X-Google-Smtp-Source: APXvYqwwaXtX7T4BaAQhFUdzXjHyfTh4Nhk98pJzSFYQ3dJt5uMbgtxxJwj9ioXhCVkr9TPrBQ+viw==
-X-Received: by 2002:a62:78c2:: with SMTP id t185mr8417912pfc.142.1560229361712;
-        Mon, 10 Jun 2019 22:02:41 -0700 (PDT)
+        bh=wkWM1sR/IFbO5oMe7Lbr307SWhapRDl2FwvCP8Cm0DQ=;
+        b=IfKN8CUUwIq+38/aoDqKIUbw7lq5p4+b36OdG53SFgeiCwXPc2QCXjkx+T82WhkMb+
+         9ENYdr33HSXUTDDYCVenmwAEbRBXoHp9NQ/zpbCXHy+3rUooAycO2mmvVlaLxbjrC/dG
+         34WswqJk3Bv31sjbhr9+d2rGCpRR1LFIHcAcfLPitBnZ+4WIP8GD6zSWelqXuOausuJi
+         TbgIQCNUTuePPEB09DyBGcIjIgLlbVqyGmsPeTboF9KWB1vg8Q7DDm9iX6/u/QhDvCeg
+         UqXhawDfsVzvf4bz5q9VGho6o08kQS6auzqiE+XFRRgxKIO6LOhUwgtBLPIcnQblxoNU
+         mpgg==
+X-Gm-Message-State: APjAAAW9RAeRR/LyCBfLOTqg9PVIx6dikF/w90M7K+nR00Wdrl9kyH1y
+        HYtkPj7TkiZY55L1YJXI6FxAZeXI
+X-Google-Smtp-Source: APXvYqzulpP+6B6D5TiYLMd8uZ6luoILfila7CC3xVWXdCCzQiyQpPs5XiIxNsSlrmSzhLKcvrm28w==
+X-Received: by 2002:aa7:8502:: with SMTP id v2mr2666466pfn.98.1560229642113;
+        Mon, 10 Jun 2019 22:07:22 -0700 (PDT)
 Received: from [192.168.1.101] (122-58-182-39-adsl.sparkbb.co.nz. [122.58.182.39])
-        by smtp.gmail.com with ESMTPSA id p27sm8707081pfq.136.2019.06.10.22.02.38
+        by smtp.gmail.com with ESMTPSA id p27sm8751478pfq.136.2019.06.10.22.07.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 22:02:41 -0700 (PDT)
-Subject: Re: [PATCH] NCR5380: Support chained sg lists
+        Mon, 10 Jun 2019 22:07:21 -0700 (PDT)
+Subject: Re: [PATCH v2 2/7] scsi: NCR5380: Always re-enable reselection
+ interrupt
 To:     Finn Thain <fthain@telegraphics.com.au>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-References: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1560043151.git.fthain@telegraphics.com.au>
+ <61f0c0f6aaf8fa96bf3dade5475615b2cfbc8846.1560043151.git.fthain@telegraphics.com.au>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
 From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <a1fe2d99-fc2f-c12d-41fe-025ee1f66c0b@gmail.com>
-Date:   Tue, 11 Jun 2019 17:02:36 +1200
+Message-ID: <58081aba-4e77-3c8e-847e-0698cf80e426@gmail.com>
+Date:   Tue, 11 Jun 2019 17:07:16 +1200
 User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
  Icedove/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <739c214bafcb9af3f6d5037cc03f57f692966675.1560223509.git.fthain@telegraphics.com.au>
+In-Reply-To: <61f0c0f6aaf8fa96bf3dade5475615b2cfbc8846.1560043151.git.fthain@telegraphics.com.au>
 Content-Type: text/plain; charset=iso-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,104 +81,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Finn,
 
-Thanks - can't test this on my hardware but looks good to me.
+IIRC I'd tested that change as well - didn't change broken target 
+behaviour but no regressions in other respects. Add my tested-by if needed.
 
 Cheers,
 
 	Michael
 
-Am 11.06.2019 um 15:25 schrieb Finn Thain:
-> My understanding is that support for chained scatterlists is to
-> become mandatory for LLDs.
+
+Am 09.06.2019 um 13:19 schrieb Finn Thain:
+> The reselection interrupt gets disabled during selection and must be
+> re-enabled when hostdata->connected becomes NULL. If it isn't re-enabled
+> a disconnected command may time-out or the target may wedge the bus while
+> trying to reselect the host. This can happen after a command is aborted.
+>
+> Fix this by enabling the reselection interrupt in NCR5380_main() after
+> calls to NCR5380_select() and NCR5380_information_transfer() return.
 >
 > Cc: Michael Schmitz <schmitzmic@gmail.com>
+> Cc: stable@vger.kernel.org # v4.9+
+> Fixes: 8b00c3d5d40d ("ncr5380: Implement new eh_abort_handler")
+> Tested-by: Stan Johnson <userm57@yahoo.com>
 > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 > ---
->  drivers/scsi/NCR5380.c | 41 ++++++++++++++++++-----------------------
->  1 file changed, 18 insertions(+), 23 deletions(-)
+>  drivers/scsi/NCR5380.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
 >
 > diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-> index d9fa9cf2fd8b..536426f25e86 100644
+> index fe0535affc14..08e3ea8159b3 100644
 > --- a/drivers/scsi/NCR5380.c
 > +++ b/drivers/scsi/NCR5380.c
-> @@ -149,12 +149,10 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
->
->  	if (scsi_bufflen(cmd)) {
->  		cmd->SCp.buffer = scsi_sglist(cmd);
-> -		cmd->SCp.buffers_residual = scsi_sg_count(cmd) - 1;
->  		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
->  		cmd->SCp.this_residual = cmd->SCp.buffer->length;
->  	} else {
->  		cmd->SCp.buffer = NULL;
-> -		cmd->SCp.buffers_residual = 0;
->  		cmd->SCp.ptr = NULL;
->  		cmd->SCp.this_residual = 0;
+> @@ -709,6 +709,8 @@ static void NCR5380_main(struct work_struct *work)
+>  			NCR5380_information_transfer(instance);
+>  			done = 0;
+>  		}
+> +		if (!hostdata->connected)
+> +			NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+>  		spin_unlock_irq(&hostdata->lock);
+>  		if (!done)
+>  			cond_resched();
+> @@ -1110,8 +1112,6 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
+>  		spin_lock_irq(&hostdata->lock);
+>  		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+>  		NCR5380_reselect(instance);
+> -		if (!hostdata->connected)
+> -			NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+>  		shost_printk(KERN_ERR, instance, "reselection after won arbitration?\n");
+>  		goto out;
 >  	}
-> @@ -163,6 +161,17 @@ static inline void initialize_SCp(struct scsi_cmnd *cmd)
->  	cmd->SCp.Message = 0;
->  }
+> @@ -1119,7 +1119,6 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
+>  	if (err < 0) {
+>  		spin_lock_irq(&hostdata->lock);
+>  		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+> -		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
 >
-> +static inline void advance_sg_buffer(struct scsi_cmnd *cmd)
-> +{
-> +	struct scatterlist *s = cmd->SCp.buffer;
-> +
-> +	if (!cmd->SCp.this_residual && s && !sg_is_last(s)) {
-> +		cmd->SCp.buffer = sg_next(s);
-> +		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
-> +		cmd->SCp.this_residual = cmd->SCp.buffer->length;
-> +	}
-> +}
-> +
->  /**
->   * NCR5380_poll_politely2 - wait for two chip register values
->   * @hostdata: host private data
-> @@ -1670,12 +1679,7 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->  			    sun3_dma_setup_done != cmd) {
->  				int count;
+>  		/* Can't touch cmd if it has been reclaimed by the scsi ML */
+>  		if (!hostdata->selecting)
+> @@ -1157,7 +1156,6 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
+>  	if (err < 0) {
+>  		shost_printk(KERN_ERR, instance, "select: REQ timeout\n");
+>  		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+> -		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+>  		goto out;
+>  	}
+>  	if (!hostdata->selecting) {
+> @@ -1826,9 +1824,6 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+>  					 */
+>  					NCR5380_write(TARGET_COMMAND_REG, 0);
 >
-> -				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
-> -					++cmd->SCp.buffer;
-> -					--cmd->SCp.buffers_residual;
-> -					cmd->SCp.this_residual = cmd->SCp.buffer->length;
-> -					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
-> -				}
-> +				advance_sg_buffer(cmd);
+> -					/* Enable reselect interrupts */
+> -					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+> -
+>  					maybe_release_dma_irq(instance);
+>  					return;
+>  				case MESSAGE_REJECT:
+> @@ -1860,8 +1855,6 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+>  					 */
+>  					NCR5380_write(TARGET_COMMAND_REG, 0);
 >
->  				count = sun3scsi_dma_xfer_len(hostdata, cmd);
->
-> @@ -1725,15 +1729,11 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->  				 * scatter-gather list, move onto the next one.
->  				 */
->
-> -				if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
-> -					++cmd->SCp.buffer;
-> -					--cmd->SCp.buffers_residual;
-> -					cmd->SCp.this_residual = cmd->SCp.buffer->length;
-> -					cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
-> -					dsprintk(NDEBUG_INFORMATION, instance, "%d bytes and %d buffers left\n",
-> -					         cmd->SCp.this_residual,
-> -					         cmd->SCp.buffers_residual);
-> -				}
-> +				advance_sg_buffer(cmd);
-> +				dsprintk(NDEBUG_INFORMATION, instance,
-> +					"this residual %d, sg ents %d\n",
-> +					cmd->SCp.this_residual,
-> +					sg_nents(cmd->SCp.buffer));
->
->  				/*
->  				 * The preferred transfer method is going to be
-> @@ -2126,12 +2126,7 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
->  	if (sun3_dma_setup_done != tmp) {
->  		int count;
->
-> -		if (!tmp->SCp.this_residual && tmp->SCp.buffers_residual) {
-> -			++tmp->SCp.buffer;
-> -			--tmp->SCp.buffers_residual;
-> -			tmp->SCp.this_residual = tmp->SCp.buffer->length;
-> -			tmp->SCp.ptr = sg_virt(tmp->SCp.buffer);
-> -		}
-> +		advance_sg_buffer(tmp);
->
->  		count = sun3scsi_dma_xfer_len(hostdata, tmp);
->
+> -					/* Enable reselect interrupts */
+> -					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+>  #ifdef SUN3_SCSI_VME
+>  					dregs->csr |= CSR_DMA_ENABLE;
+>  #endif
+> @@ -1964,7 +1957,6 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
+>  					cmd->result = DID_ERROR << 16;
+>  					complete_cmd(instance, cmd);
+>  					maybe_release_dma_irq(instance);
+> -					NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
+>  					return;
+>  				}
+>  				msgout = NOP;
 >
