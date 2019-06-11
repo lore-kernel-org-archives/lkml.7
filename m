@@ -2,189 +2,130 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF4BC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A9FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8147A21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900432089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ys4wns7k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389992AbfFKM0I (ORCPT
+        id S2390376AbfFKM0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:26:08 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:64325 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389619AbfFKM0E (ORCPT
+        Tue, 11 Jun 2019 08:26:12 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:13030 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389806AbfFKM0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:26:04 -0400
-X-UUID: 8fc4afafc8034cc59a92651ab0d17e0e-20190611
-X-UUID: 8fc4afafc8034cc59a92651ab0d17e0e-20190611
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1205233393; Tue, 11 Jun 2019 20:25:56 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 11 Jun 2019 20:25:55 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 11 Jun 2019 20:25:55 +0800
-Message-ID: <1560255955.29153.20.camel@mtksdccf07>
-Subject: Re: [PATCH v2] kasan: add memory corruption identification for
- software tag-based mode
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen =?UTF-8?Q?=28=E9=99=B3=E6=B0=91=E6=A8=BA=29?= 
-        <Miles.Chen@mediatek.com>, kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Tue, 11 Jun 2019 20:25:55 +0800
-In-Reply-To: <CACT4Y+aXqjCMaJego3yeSG1eR1+vkJkx5GB+xsy5cpGvAtTnDA@mail.gmail.com>
-References: <1559651172-28989-1-git-send-email-walter-zh.wu@mediatek.com>
-         <CACT4Y+Y9_85YB8CCwmKerDWc45Z00hMd6Pc-STEbr0cmYSqnoA@mail.gmail.com>
-         <1560151690.20384.3.camel@mtksdccf07>
-         <CACT4Y+aetKEM9UkfSoVf8EaDNTD40mEF0xyaRiuw=DPEaGpTkQ@mail.gmail.com>
-         <1560236742.4832.34.camel@mtksdccf07>
-         <CACT4Y+YNG0OGT+mCEms+=SYWA=9R3MmBzr8e3QsNNdQvHNt9Fg@mail.gmail.com>
-         <1560249891.29153.4.camel@mtksdccf07>
-         <CACT4Y+aXqjCMaJego3yeSG1eR1+vkJkx5GB+xsy5cpGvAtTnDA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 08:26:07 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BCN2JA024846;
+        Tue, 11 Jun 2019 14:25:52 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=q+8EPvTaJkovohssWYYhUuM4RMRQjz08eTtbGZ/5swc=;
+ b=Ys4wns7kv2MLHTcSdOYO6J36CL38mo3MAhvTgLgFlX8KqIsOR4hhzIPdER+H2iw0M8jU
+ QUzxpvZfgPah0FO2XD8mDB8bdSOBB1NZAQ86Pdz9jfZ6Ve0zTMVyY9hPA3MICPwWi1kI
+ WJll6Lda1t55etzTSab87mtsx6MDdUh/FgLRMJjr4fQ3eIEDqggJc8+RYZ5uwZqH1yme
+ of6PD/CpVsnWI+orcq4uBQXDnkMep8GQHR9hSzz/HdA9THZPU3jpQxNX4nJ6QXJzD+cy
+ lKKt1sEMw5B0FwjLFTyFKyykhLzfQ3Je6hOy8CSCxeCrgln2Tgk9Fv4AFiTnzLBsRnZu bA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2t26rjsvaq-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 11 Jun 2019 14:25:51 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6162A31;
+        Tue, 11 Jun 2019 12:25:51 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 45F772A29;
+        Tue, 11 Jun 2019 12:25:51 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 14:25:51 +0200
+Received: from localhost (10.201.23.31) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun 2019 14:25:49
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>
+CC:     <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        "Fabrice Gasnier" <fabrice.gasnier@st.com>
+Subject: [PATCH v2 05/10] serial: stm32: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
+Date:   Tue, 11 Jun 2019 14:25:25 +0200
+Message-ID: <1560255930-22554-6-git-send-email-erwan.leray@st.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1560255930-22554-1-git-send-email-erwan.leray@st.com>
+References: <1560255930-22554-1-git-send-email-erwan.leray@st.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.31]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 13:32 +0200, Dmitry Vyukov wrote:
-> On Tue, Jun 11, 2019 at 12:44 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> >
-> > On Tue, 2019-06-11 at 10:47 +0200, Dmitry Vyukov wrote:
-> > > On Tue, Jun 11, 2019 at 9:05 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > >
-> > > > On Mon, 2019-06-10 at 13:46 +0200, Dmitry Vyukov wrote:
-> > > > > On Mon, Jun 10, 2019 at 9:28 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > > > > >
-> > > > > > On Fri, 2019-06-07 at 21:18 +0800, Dmitry Vyukov wrote:
-> > > > > > > > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> > > > > > > > index b40ea104dd36..be0667225b58 100644
-> > > > > > > > --- a/include/linux/kasan.h
-> > > > > > > > +++ b/include/linux/kasan.h
-> > > > > > > > @@ -164,7 +164,11 @@ void kasan_cache_shutdown(struct kmem_cache *cache);
-> > > > > > > >
-> > > > > > > >  #else /* CONFIG_KASAN_GENERIC */
-> > > > > > > >
-> > > > > > > > +#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> > > > > > > > +void kasan_cache_shrink(struct kmem_cache *cache);
-> > > > > > > > +#else
-> > > > > > >
-> > > > > > > Please restructure the code so that we don't duplicate this function
-> > > > > > > name 3 times in this header.
-> > > > > > >
-> > > > > > We have fixed it, Thank you for your reminder.
-> > > > > >
-> > > > > >
-> > > > > > > >  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
-> > > > > > > > +#endif
-> > > > > > > >  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
-> > > > > > > >
-> > > > > > > >  #endif /* CONFIG_KASAN_GENERIC */
-> > > > > > > > diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> > > > > > > > index 9950b660e62d..17a4952c5eee 100644
-> > > > > > > > --- a/lib/Kconfig.kasan
-> > > > > > > > +++ b/lib/Kconfig.kasan
-> > > > > > > > @@ -134,6 +134,15 @@ config KASAN_S390_4_LEVEL_PAGING
-> > > > > > > >           to 3TB of RAM with KASan enabled). This options allows to force
-> > > > > > > >           4-level paging instead.
-> > > > > > > >
-> > > > > > > > +config KASAN_SW_TAGS_IDENTIFY
-> > > > > > > > +       bool "Enable memory corruption idenitfication"
-> > > > > > >
-> > > > > > > s/idenitfication/identification/
-> > > > > > >
-> > > > > > I should replace my glasses.
-> > > > > >
-> > > > > >
-> > > > > > > > +       depends on KASAN_SW_TAGS
-> > > > > > > > +       help
-> > > > > > > > +         Now tag-based KASAN bug report always shows invalid-access error, This
-> > > > > > > > +         options can identify it whether it is use-after-free or out-of-bound.
-> > > > > > > > +         This will make it easier for programmers to see the memory corruption
-> > > > > > > > +         problem.
-> > > > > > >
-> > > > > > > This description looks like a change description, i.e. it describes
-> > > > > > > the current behavior and how it changes. I think code comments should
-> > > > > > > not have such, they should describe the current state of the things.
-> > > > > > > It should also mention the trade-off, otherwise it raises reasonable
-> > > > > > > questions like "why it's not enabled by default?" and "why do I ever
-> > > > > > > want to not enable it?".
-> > > > > > > I would do something like:
-> > > > > > >
-> > > > > > > This option enables best-effort identification of bug type
-> > > > > > > (use-after-free or out-of-bounds)
-> > > > > > > at the cost of increased memory consumption for object quarantine.
-> > > > > > >
-> > > > > > I totally agree with your comments. Would you think we should try to add the cost?
-> > > > > > It may be that it consumes about 1/128th of available memory at full quarantine usage rate.
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > I don't understand the question. We should not add costs if not
-> > > > > necessary. Or you mean why we should add _docs_ regarding the cost? Or
-> > > > > what?
-> > > > >
-> > > > I mean the description of option. Should it add the description for
-> > > > memory costs. I see KASAN_SW_TAGS and KASAN_GENERIC options to show the
-> > > > memory costs. So We originally think it is possible to add the
-> > > > description, if users want to enable it, maybe they want to know its
-> > > > memory costs.
-> > > >
-> > > > If you think it is not necessary, we will not add it.
-> > >
-> > > Full description of memory costs for normal KASAN mode and
-> > > KASAN_SW_TAGS should probably go into
-> > > Documentation/dev-tools/kasan.rst rather then into config description
-> > > because it may be too lengthy.
-> > >
-> > Thanks your reminder.
-> >
-> > > I mentioned memory costs for this config because otherwise it's
-> > > unclear why would one ever want to _not_ enable this option. If it
-> > > would only have positive effects, then it should be enabled all the
-> > > time and should not be a config option at all.
-> >
-> > Sorry, I don't get your full meaning.
-> > You think not to add the memory costs into the description of config ?
-> > or need to add it? or make it not be a config option(default enabled)?
-> 
-> Yes, I think we need to include mention of additional cost into _this_
-> new config.
+Use __maybe_unused for power management related functionsinstead of
 
-Thanks your response.
-We will fix v2 patch into next version.
+fixes: 270e5a74fe4c ("serial: stm32: add wakeup mechanism")
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-Thanks.
-Walter
-
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 60f3faf..0d43711 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -1275,8 +1275,8 @@ static int stm32_console_setup(struct console *co, char *options)
+ 	.cons		= STM32_SERIAL_CONSOLE,
+ };
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static void stm32_serial_enable_wakeup(struct uart_port *port, bool enable)
++static void __maybe_unused stm32_serial_enable_wakeup(struct uart_port *port,
++						      bool enable)
+ {
+ 	struct stm32_port *stm32_port = to_stm32_port(port);
+ 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
+@@ -1300,7 +1300,7 @@ static void stm32_serial_enable_wakeup(struct uart_port *port, bool enable)
+ 	}
+ }
+ 
+-static int stm32_serial_suspend(struct device *dev)
++static int __maybe_unused stm32_serial_suspend(struct device *dev)
+ {
+ 	struct uart_port *port = dev_get_drvdata(dev);
+ 
+@@ -1316,7 +1316,7 @@ static int stm32_serial_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int stm32_serial_resume(struct device *dev)
++static int __maybe_unused stm32_serial_resume(struct device *dev)
+ {
+ 	struct uart_port *port = dev_get_drvdata(dev);
+ 
+@@ -1327,7 +1327,6 @@ static int stm32_serial_resume(struct device *dev)
+ 
+ 	return uart_resume_port(&stm32_usart_driver, port);
+ }
+-#endif /* CONFIG_PM_SLEEP */
+ 
+ static int __maybe_unused stm32_serial_runtime_suspend(struct device *dev)
+ {
+-- 
+1.9.1
 
