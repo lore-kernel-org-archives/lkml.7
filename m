@@ -6,108 +6,266 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79452C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE00FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B350206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB6B20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390988AbfFKOg5 (ORCPT
+        id S2390512AbfFKOiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:36:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:34522 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387551AbfFKOg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:36:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 093FC346;
-        Tue, 11 Jun 2019 07:36:56 -0700 (PDT)
-Received: from [10.1.29.141] (e121487-lin.cambridge.arm.com [10.1.29.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 187C33F557;
-        Tue, 11 Jun 2019 07:36:54 -0700 (PDT)
-Subject: Re: [PATCH 02/17] mm: stub out all of swapops.h for !CONFIG_MMU
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, uclinux-dev@uclinux.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20190610221621.10938-1-hch@lst.de>
- <20190610221621.10938-3-hch@lst.de>
- <516c8def-22db-027c-873d-a943454e33af@arm.com>
- <20190611141841.GA29151@lst.de>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <80d01a1d-b6b0-18e8-811c-71af14cba3b9@arm.com>
-Date:   Tue, 11 Jun 2019 15:36:53 +0100
+        Tue, 11 Jun 2019 10:38:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45682 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387486AbfFKOiF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 10:38:05 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BEYOAj104093
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:38:04 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t2cpu5071-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:38:03 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Tue, 11 Jun 2019 15:38:03 +0100
+Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 15:38:00 +0100
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BEbuX631129990
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 14:37:56 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D0D57805F;
+        Tue, 11 Jun 2019 14:37:56 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 916177805E;
+        Tue, 11 Jun 2019 14:37:55 +0000 (GMT)
+Received: from [9.60.75.173] (unknown [9.60.75.173])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jun 2019 14:37:55 +0000 (GMT)
+Subject: Re: [PATCH v9 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+ <1558452877-27822-4-git-send-email-pmorel@linux.ibm.com>
+ <2ffee52b-5e7f-f52a-069f-0a43d6418341@linux.ibm.com>
+ <20190607162903.22fd959f.pasic@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Tue, 11 Jun 2019 10:37:55 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190611141841.GA29151@lst.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190607162903.22fd959f.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061114-8235-0000-0000-00000EA67704
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011247; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01216465; UDB=6.00639606; IPR=6.00997564;
+ MB=3.00027264; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-11 14:38:02
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061114-8236-0000-0000-000045F9F9CA
+Message-Id: <6bcb9a11-0a11-45c0-f0d6-f1fc43d7ee10@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 3:18 PM, Christoph Hellwig wrote:
-> On Tue, Jun 11, 2019 at 11:15:44AM +0100, Vladimir Murzin wrote:
->> On 6/10/19 11:16 PM, Christoph Hellwig wrote:
->>> The whole header file deals with swap entries and PTEs, none of which
->>> can exist for nommu builds.
+On 6/7/19 10:29 AM, Halil Pasic wrote:
+> On Tue, 4 Jun 2019 15:38:51 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> 
+>> On 5/21/19 11:34 AM, Pierre Morel wrote:
+>>> We register a AP PQAP instruction hook during the open
+>>> of the mediated device. And unregister it on release.
+> 
+> [..]
+> 
+>>> +/**
+>>> + * vfio_ap_wait_for_irqclear
+>>> + * @apqn: The AP Queue number
+>>> + *
+>>> + * Checks the IRQ bit for the status of this APQN using ap_tapq.
+>>> + * Returns if the ap_tapq function succedded and the bit is clear.
 >>
->> Although I agree with the patch, I'm wondering how you get into it?
+>> s/succedded/succeeded/
+>>
 > 
-> Without that the RISC-V nommu blows up like this:
+> I'm gonna fix this up when picking.
 > 
+>>> + * Returns if ap_tapq function failed with invalid, deconfigured or
+>>> + * checkstopped AP.
+>>> + * Otherwise retries up to 5 times after waiting 20ms.
+>>> + *
+>>> + */
+>>> +static void vfio_ap_wait_for_irqclear(int apqn)
+>>> +{
+>>> +	struct ap_queue_status status;
+>>> +	int retry = 5;
+>>> +
+>>> +	do {
+>>> +		status = ap_tapq(apqn, NULL);
+>>> +		switch (status.response_code) {
+>>> +		case AP_RESPONSE_NORMAL:
+>>> +		case AP_RESPONSE_RESET_IN_PROGRESS:
+>>> +			if (!status.irq_enabled)
+>>> +				return;
+>>> +			/* Fall through */
+>>> +		case AP_RESPONSE_BUSY:
+>>> +			msleep(20);
+>>> +			break;
+>>> +		case AP_RESPONSE_Q_NOT_AVAIL:
+>>> +		case AP_RESPONSE_DECONFIGURED:
+>>> +		case AP_RESPONSE_CHECKSTOPPED:
+>>> +		default:
+>>> +			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
+>>> +				  status.response_code, apqn);
+>>> +			return;
+>>
+>> Why not just break out of the loop and just use the WARN_ONCE
+>> outside of the loop?
+>>
 > 
-> In file included from mm/vmscan.c:58:
-> ./include/linux/swapops.h: In function ‘pte_to_swp_entry’:
-> ./include/linux/swapops.h:71:15: error: implicit declaration of function ‘__pte_to_swp_entry’; did you mean ‘pte_to_swp_entry’? [-Werror=implicit-function-declaration]
->   arch_entry = __pte_to_swp_entry(pte);
->                ^~~~~~~~~~~~~~~~~~
->                pte_to_swp_entry
-> ./include/linux/swapops.h:71:13: error: incompatible types when assigning to type ‘swp_entry_t’ {aka ‘struct <anonymous>’} from type ‘int’
->   arch_entry = __pte_to_swp_entry(pte);
->              ^
-> ./include/linux/swapops.h:72:19: error: implicit declaration of function ‘__swp_type’; did you mean ‘swp_type’? [-Werror=implicit-function-declaration]
->   return swp_entry(__swp_type(arch_entry), __swp_offset(arch_entry));
->                    ^~~~~~~~~~
->                    swp_type
-> ./include/linux/swapops.h:72:43: error: implicit declaration of function ‘__swp_offset’; did you mean ‘swp_offset’? [-Werror=implicit-function-declaration]
->   return swp_entry(__swp_type(arch_entry), __swp_offset(arch_entry));
->                                            ^~~~~~~~~~~~
->                                            swp_offset
-> ./include/linux/swapops.h: In function ‘swp_entry_to_pte’:
-> ./include/linux/swapops.h:83:15: error: implicit declaration of function ‘__swp_entry’; did you mean ‘swp_entry’? [-Werror=implicit-function-declaration]
->   arch_entry = __swp_entry(swp_type(entry), swp_offset(entry));
->                ^~~~~~~~~~~
->                swp_entry
-> ./include/linux/swapops.h:83:13: error: incompatible types when assigning to type ‘swp_entry_t’ {aka ‘struct <anonymous>’} from type ‘int’
->   arch_entry = __swp_entry(swp_type(entry), swp_offset(entry));
->              ^
-> ./include/linux/swapops.h:84:9: error: implicit declaration of function ‘__swp_entry_to_pte’; did you mean ‘swp_entry_to_pte’? [-Werror=implicit-function-declaration]
->   return __swp_entry_to_pte(arch_entry);
->          ^~~~~~~~~~~~~~~~~~
->          swp_entry_to_pte
-> ./include/linux/swapops.h:84:9: error: incompatible types when returning type ‘int’ but ‘pte_t’ {aka ‘struct <anonymous>’} was expected
->   return __swp_entry_to_pte(arch_entry);
->          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
-> make[1]: *** [scripts/Makefile.build:278: mm/vmscan.o] Error 1
-> make: *** [Makefile:1071: mm] Error 2
-> make: *** Waiting for unfinished jobs....
+> AFAIU the idea was to differentiate between got a strange response_code
+> and ran out of retires.
+
+In both cases, the response code is placed into the message, so one
+should be able to discern the reason in either case. This is not
+critical, just an observation.
+
+> 
+> Actually I suspect that we are fine in case of AP_RESPONSE_Q_NOT_AVAIL,
+>   AP_RESPONSE_DECONFIGURED and AP_RESPONSE_CHECKSTOPPED in a sense that
+> what should be the post-condition of this function is guaranteed to be
+> reached. What do you think?
+
+That would seem to be the case given those response codes indicate the
+queue is not accessible.
+
+> 
+> While I think that we can do better here, I see this as something that
+> should be done on top.
+
+Are you talking about a patch on top? What do you think needs to be
+addressed?
+
+> 
+>>> +		}
+>>> +	} while (--retry);
+>>> +
+>>> +	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
+>>> +		  __func__, status.response_code, apqn);
+>>> +}
+>>> +
+>>> +/**
+>>> + * vfio_ap_free_aqic_resources
+>>> + * @q: The vfio_ap_queue
+>>> + *
+>>> + * Unregisters the ISC in the GIB when the saved ISC not invalid.
+>>> + * Unpin the guest's page holding the NIB when it exist.
+>>> + * Reset the saved_pfn and saved_isc to invalid values.
+>>> + * Clear the pointer to the matrix mediated device.
+>>> + *
+>>> + */
+> 
+> [..]
+> 
+>>> +struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+>>> +{
+>>> +	struct ap_qirq_ctrl aqic_gisa = {};
+>>> +	struct ap_queue_status status;
+>>> +	int retries = 5;
+>>> +
+>>> +	do {
+>>> +		status = ap_aqic(q->apqn, aqic_gisa, NULL);
+>>> +		switch (status.response_code) {
+>>> +		case AP_RESPONSE_OTHERWISE_CHANGED:
+>>> +		case AP_RESPONSE_NORMAL:
+>>> +			vfio_ap_wait_for_irqclear(q->apqn);
+>>> +			goto end_free;
+>>> +		case AP_RESPONSE_RESET_IN_PROGRESS:
+>>> +		case AP_RESPONSE_BUSY:
+>>> +			msleep(20);
+>>> +			break;
+>>> +		case AP_RESPONSE_Q_NOT_AVAIL:
+>>> +		case AP_RESPONSE_DECONFIGURED:
+>>> +		case AP_RESPONSE_CHECKSTOPPED:
+>>> +		case AP_RESPONSE_INVALID_ADDRESS:
+>>> +		default:
+>>> +			/* All cases in default means AP not operational */
+>>> +			WARN_ONCE(1, "%s: ap_aqic status %d\n", __func__,
+>>> +				  status.response_code);
+>>> +			goto end_free;
+>>
+>> Why not just break out of the loop instead of repeating the WARN_ONCE
+>> message?
+>>
+> 
+> I suppose the reason is same as above. I'm not entirely happy with this
+> code myself. E.g. why do we do retries here -- shouldn't we just fail the
+> aqic by the guest?
+
+According to my reading of the code, it looks like the retries are for
+response code AP_RESPONSE_BUSY. Why wouldn't we want to wait until the
+queue was not busy anymore?
+
+> 
+> [..]
+> 
+>>> +static int handle_pqap(struct kvm_vcpu *vcpu)
+>>> +{
+>>> +	uint64_t status;
+>>> +	uint16_t apqn;
+>>> +	struct vfio_ap_queue *q;
+>>> +	struct ap_queue_status qstatus = {
+>>> +			       .response_code = AP_RESPONSE_Q_NOT_AVAIL, };
+>>> +	struct ap_matrix_mdev *matrix_mdev;
+>>> +
+>>> +	/* If we do not use the AIV facility just go to userland */
+>>> +	if (!(vcpu->arch.sie_block->eca & ECA_AIV))
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	apqn = vcpu->run->s.regs.gprs[0] & 0xffff;
+>>> +	mutex_lock(&matrix_dev->lock);
+>>> +
+>>> +	if (!vcpu->kvm->arch.crypto.pqap_hook)
+>>
+>> Wasn't this already checked in patch 2 prior to calling this
+>> function? In fact, doesn't the hook point to this function?
+>>
+> 
+> Let us benevolently call this defensive programming. We are actually
+> in that callback AFAICT, so it sure was set a moment ago, and I guess
+> the client code still holds the kvm.lock so it is guaranteed to stay
+> so unless somebody is playing foul.
+
+Defensive, but completely unnecessary; however, it doesn't negatively
+affect the logic in the least.
+
+> 
+> We can address this with a patch on top.
+> 
+> Regards,
+> Halil
 > 
 
-It looks like NOMMU ports tend to define those. For ARM they are:
-
-#define __swp_type(x)           (0)
-#define __swp_offset(x)         (0)
-#define __swp_entry(typ,off)    ((swp_entry_t) { ((typ) | ((off) << 7)) })
-#define __pte_to_swp_entry(pte) ((swp_entry_t) { pte_val(pte) })
-#define __swp_entry_to_pte(x)   ((pte_t) { (x).val })
-
-Anyway, I have no strong opinion on which is better :)
-
-Cheers
-Vladimir
