@@ -2,125 +2,103 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872C7C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923AEC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BBC206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:28:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Smur2bTH"
+	by mail.kernel.org (Postfix) with ESMTP id 5ED47206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390558AbfFKB2W (ORCPT
+        id S2390609AbfFKB3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:28:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43677 "EHLO ozlabs.org"
+        Mon, 10 Jun 2019 21:29:50 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34648 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388845AbfFKB2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:28:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NC7R2qylz9sBp;
-        Tue, 11 Jun 2019 11:28:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560216499;
-        bh=fa85krKLmtX9pSn2zzY2yce4JRXwulxnG6YN9Bj9k78=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Smur2bTHdyBtZD3YQsIZJz8YKfdu6d/mT7lvkdkL1OO0Iu+vJ0lGn3ZhEpalLFXtw
-         lL5MloqkXytp7uE3pCuNtup4tTdQSoJXPh5S+m83z4JY/qf8jY8X9RG4PpSIA2i93M
-         JUchFaijoAbPkUYVQX+HTJ8XAgembCEjnqDiVmg9WNuiq/70wgAkktz93E3TxYIYRm
-         Bb31KpOXARojwF7ITN7LTRuajGuAHw3MstDxlmL7zUfIeu3/MHRYlao07Dg+dafkfO
-         HVVyFhLfBIk6f1Oa1JIHjwpsG0H0qwiEfbKYbYB2O6H9H/cYvM1IQNfAQczIdQBciq
-         iyJHaZezCx/ng==
-Date:   Tue, 11 Jun 2019 11:28:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Edward Srouji <edwards@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Vu Pham <vuhuong@mellanox.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190611112816.01562368@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/4SGn3oMy8KB80YP_bK18Pi1"; protocol="application/pgp-signature"
+        id S2390349AbfFKB3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:29:50 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E2A61A098E;
+        Tue, 11 Jun 2019 03:29:48 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A3BA01A0990;
+        Tue, 11 Jun 2019 03:29:43 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CA9EB402DD;
+        Tue, 11 Jun 2019 09:29:37 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, leonard.crestez@nxp.com,
+        viresh.kumar@linaro.org, abel.vesa@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] soc: imx: Add i.MX8MN SoC driver support
+Date:   Tue, 11 Jun 2019 09:31:25 +0800
+Message-Id: <20190611013125.3434-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4SGn3oMy8KB80YP_bK18Pi1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Hi all,
+This patch adds i.MX8MN SoC driver support:
 
-Today's linux-next merge of the net-next tree got a conflict in:
+root@imx8mnevk:~# cat /sys/devices/soc0/family
+Freescale i.MX
 
-  drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+root@imx8mnevk:~# cat /sys/devices/soc0/machine
+NXP i.MX8MNano DDR4 EVK board
 
-between commit:
+root@imx8mnevk:~# cat /sys/devices/soc0/soc_id
+i.MX8MN
 
-  6a6fabbfa3e8 ("net/mlx5: Update pci error handler entries and command tra=
-nslation")
+root@imx8mnevk:~# cat /sys/devices/soc0/revision
+1.0
 
-from the net tree and commit:
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/soc/imx/soc-imx8.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-  cd56f929e6a5 ("net/mlx5: E-Switch, Replace host_params event with functio=
-ns_changed event")
+diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
+index 3842d09..02309a2 100644
+--- a/drivers/soc/imx/soc-imx8.c
++++ b/drivers/soc/imx/soc-imx8.c
+@@ -55,7 +55,12 @@ static u32 __init imx8mm_soc_revision(void)
+ 	void __iomem *anatop_base;
+ 	u32 rev;
+ 
+-	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-anatop");
++	if (of_machine_is_compatible("fsl,imx8mm"))
++		np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-anatop");
++	else if (of_machine_is_compatible("fsl,imx8mn"))
++		np = of_find_compatible_node(NULL, NULL, "fsl,imx8mn-anatop");
++	else
++		np = NULL;
+ 	if (!np)
+ 		return 0;
+ 
+@@ -79,9 +84,15 @@ static const struct imx8_soc_data imx8mm_soc_data = {
+ 	.soc_revision = imx8mm_soc_revision,
+ };
+ 
++static const struct imx8_soc_data imx8mn_soc_data = {
++	.name = "i.MX8MN",
++	.soc_revision = imx8mm_soc_revision,
++};
++
+ static const struct of_device_id imx8_soc_match[] = {
+ 	{ .compatible = "fsl,imx8mq", .data = &imx8mq_soc_data, },
+ 	{ .compatible = "fsl,imx8mm", .data = &imx8mm_soc_data, },
++	{ .compatible = "fsl,imx8mn", .data = &imx8mn_soc_data, },
+ 	{ }
+ };
+ 
+-- 
+2.7.4
 
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-index e94686c42000,30f7dffb5b1b..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@@ -632,11 -628,7 +632,11 @@@ const char *mlx5_command_str(int comman
-  	MLX5_COMMAND_STR_CASE(QUERY_MODIFY_HEADER_CONTEXT);
-  	MLX5_COMMAND_STR_CASE(ALLOC_MEMIC);
-  	MLX5_COMMAND_STR_CASE(DEALLOC_MEMIC);
-- 	MLX5_COMMAND_STR_CASE(QUERY_HOST_PARAMS);
-+ 	MLX5_COMMAND_STR_CASE(QUERY_ESW_FUNCTIONS);
- +	MLX5_COMMAND_STR_CASE(CREATE_UCTX);
- +	MLX5_COMMAND_STR_CASE(DESTROY_UCTX);
- +	MLX5_COMMAND_STR_CASE(CREATE_UMEM);
- +	MLX5_COMMAND_STR_CASE(DESTROY_UMEM);
-  	default: return "unknown command opcode";
-  	}
-  }
-
---Sig_/4SGn3oMy8KB80YP_bK18Pi1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/A7AACgkQAVBC80lX
-0GzMugf/W+RmBBvyZFmk1Hjq8KtSmsS7RQKc6BzuruTc8BCz45+JFgUGp2B7/ZYJ
-UYgoZjTtbGcIsFB34eP3DqWh+/XW9lyqbk0Msf1tc+sUIDKg1+aQuw80CESbwL2E
-dRM8oUr2At1L3nBwSXX8kaVEs5a6Ag3YQKrrk4j8XpZGlbqiFUYiw5e/PvkVaeIH
-HVXqodkZejoZkbXR6cREeuWbPiZkyMGEcrjjhRnmOXAZwlJRAYNKLiemOveD6Xpy
-4RaaK7yuP/ovQ1ZQ13yvRN3yQ6dfChityUAGXbRFJg3grqCnT3ndLKLy7c5EaUnT
-/ERXTD5ogHHGHsnXiKPFef4FtjTEVw==
-=Wuwh
------END PGP SIGNATURE-----
-
---Sig_/4SGn3oMy8KB80YP_bK18Pi1--
