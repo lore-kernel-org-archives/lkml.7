@@ -2,106 +2,121 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FDAC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31EAC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0C52089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18352086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:53:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ldEwDixk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406695AbfFKRuq (ORCPT
+        id S2406613AbfFKRxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:50:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:39188 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406260AbfFKRup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:50:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D236337;
-        Tue, 11 Jun 2019 10:50:45 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18BF83F73C;
-        Tue, 11 Jun 2019 10:50:39 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 18:50:37 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Tue, 11 Jun 2019 13:53:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41336 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406097AbfFKRxU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:53:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZwlPQb/tjk9f8fVri2mY645X65ytbNW01O1ld43ydTI=; b=ldEwDixkQ95IJz3vn/uo7qF29
+        NjB52ltMb13JZhpdNyWlPJ1VSXtEKdTID2oZVUmxeRFEdlEAdEEg1eTbEvzczcQ6Tlu577+4kdANC
+        5eLvHUv7DoFmYv+rZXzW2KdIuwXFX5BaIvZ8XFuLYthfRi4g4nmSNxJqh1czW3y+ajPfIbHv//eiA
+        Dk2WgUorzN/23+l2l8jWuSQ/2/pjalbE2Ieu/W2txvWkx6cFQQVMLPi8EdybrR7mswAQY+j1HwjC7
+        lrDJ1taCa0ZQxdK4W0T0gZayKRDz3wg+x6A6Xuij7nTvpW8h6iBaxytq6xAnqQlxjiTA0giwR9HSi
+        /QbY6mbDQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hakxS-0004og-S8; Tue, 11 Jun 2019 17:53:18 +0000
+Subject: Re: linux-next: Tree for Jun 11 (kernel/sysctl.c)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v16 16/16] selftests, arm64: add a selftest for passing
- tagged pointers to kernel
-Message-ID: <20190611175037.pflr6q6ob67zjj25@mbp>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <9e1b5998a28f82b16076fc85ab4f88af5381cf74.1559580831.git.andreyknvl@google.com>
- <20190611150122.GB63588@arrakis.emea.arm.com>
- <CAAeHK+wZrVXxAnDXBjoUy8JK9iG553G2Bp8uPWQ0u1u5gts0vQ@mail.gmail.com>
+        Waiman Long <longman@redhat.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20190611192432.1d8f11b2@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a35f64a7-4593-da2f-4d6d-81e870a8f3b5@infradead.org>
+Date:   Tue, 11 Jun 2019 10:53:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+wZrVXxAnDXBjoUy8JK9iG553G2Bp8uPWQ0u1u5gts0vQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190611192432.1d8f11b2@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 07:18:04PM +0200, Andrey Konovalov wrote:
-> On Tue, Jun 11, 2019 at 5:01 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > static void *tag_ptr(void *ptr)
-> > {
-> >         static int tagged_addr_err = 1;
-> >         unsigned long tag = 0;
-> >
-> >         if (tagged_addr_err == 1)
-> >                 tagged_addr_err = prctl(PR_SET_TAGGED_ADDR_CTRL,
-> >                                         PR_TAGGED_ADDR_ENABLE, 0, 0, 0);
+On 6/11/19 2:24 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I think this requires atomics. malloc() can be called from multiple threads.
+> Changes since 20190607:
+> 
 
-It's slightly racy but I assume in a real libc it can be initialised
-earlier than the hook calls while still in single-threaded mode (I had
-a quick attempt with __attribute__((constructor)) but didn't get far).
+on i386:
 
-Even with the race, under normal circumstances calling the prctl() twice
-is not a problem. I think the risk here is that someone disables the ABI
-via sysctl and the ABI is enabled for some of the threads only.
+when CONFIG_SYSCTL is not set/enabled:
+
+../kernel/sysctl.c: In function '_proc_do_string':
+../kernel/sysctl.c:2003:7: error: 'sysctl_writes_strict' undeclared (first use in this function); did you mean 'sysctl_schedstats'?
+   if (sysctl_writes_strict == SYSCTL_WRITES_STRICT) {
+       ^~~~~~~~~~~~~~~~~~~~
+       sysctl_schedstats
+../kernel/sysctl.c:2003:7: note: each undeclared identifier is reported only once for each function it appears in
+../kernel/sysctl.c:2003:31: error: 'SYSCTL_WRITES_STRICT' undeclared (first use in this function); did you mean 'SPECTRE_V2_USER_STRICT'?
+   if (sysctl_writes_strict == SYSCTL_WRITES_STRICT) {
+                               ^~~~~~~~~~~~~~~~~~~~
+                               SPECTRE_V2_USER_STRICT
+  CC      mm/mmu_gather.o
+../kernel/sysctl.c: In function 'proc_first_pos_non_zero_ignore':
+../kernel/sysctl.c:2079:10: error: 'sysctl_writes_strict' undeclared (first use in this function); did you mean 'sysctl_schedstats'?
+  switch (sysctl_writes_strict) {
+          ^~~~~~~~~~~~~~~~~~~~
+          sysctl_schedstats
+../kernel/sysctl.c:2080:7: error: 'SYSCTL_WRITES_STRICT' undeclared (first use in this function); did you mean 'SPECTRE_V2_USER_STRICT'?
+  case SYSCTL_WRITES_STRICT:
+       ^~~~~~~~~~~~~~~~~~~~
+       SPECTRE_V2_USER_STRICT
+../kernel/sysctl.c:2082:7: error: 'SYSCTL_WRITES_WARN' undeclared (first use in this function); did you mean 'SYSCTL_WRITES_STRICT'?
+  case SYSCTL_WRITES_WARN:
+       ^~~~~~~~~~~~~~~~~~
+       SYSCTL_WRITES_STRICT
+  AR      arch/x86/hyperv/built-in.a
+  CC      kernel/capability.o
+../kernel/sysctl.c:2088:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+At top level:
+../kernel/sysctl.c:3116:12: warning: 'proc_do_cad_pid' defined but not used [-Wunused-function]
+ static int proc_do_cad_pid(struct ctl_table *table, int write,
+            ^~~~~~~~~~~~~~~
+../kernel/sysctl.c:2816:12: warning: 'proc_dointvec_minmax_coredump' defined but not used [-Wunused-function]
+ static int proc_dointvec_minmax_coredump(struct ctl_table *table, int write,
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../kernel/sysctl.c:2795:12: warning: 'proc_dopipe_max_size' defined but not used [-Wunused-function]
+ static int proc_dopipe_max_size(struct ctl_table *table, int write,
+            ^~~~~~~~~~~~~~~~~~~~
+../kernel/sysctl.c:2629:12: warning: 'proc_dointvec_minmax_sysadmin' defined but not used [-Wunused-function]
+ static int proc_dointvec_minmax_sysadmin(struct ctl_table *table, int write,
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../kernel/sysctl.c:2597:12: warning: 'proc_taint' defined but not used [-Wunused-function]
+ static int proc_taint(struct ctl_table *table, int write,
+            ^~~~~~~~~~
+
 
 -- 
-Catalin
+~Randy
