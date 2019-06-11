@@ -2,115 +2,136 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4282EC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25464C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E52206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:11:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="uBLQaosT"
+	by mail.kernel.org (Postfix) with ESMTP id 0217A206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:13:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390177AbfFKMLu (ORCPT
+        id S2387819AbfFKMN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:11:50 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40654 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387538AbfFKMLu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:11:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=S/GNdtIZlqbQbbL38vT+kS6/kr3nqJhQg5a+95Ts0Zw=; b=uBLQaosTUT4twouiByQQfxnH/
-        X4qEfuUxiBPRXoeFU5qYMzHMNphYduVVAsuxWw/NhQ01M9JU6EtPKJLE/YFdiKyWkdUCYZppap59/
-        AJgzd5EQP4i9m9P+pNdP4KD+eVD2nau7Ay6bXTNWXZCa2jucR8F/zSAIIpDKXz2c9Q5h2XumUCFsO
-        6Mvh+sg/0QuRsKRhFtM5GE2PcncuJnHYSaqXrirLekSb6x5FXZVvSu0aUt/Vj8KK8BUqGJ/52e/4S
-        z3pdpsFGxQ7fACVx7JV038BjTzSpeLpVKWuL8I7CmfWhXTrdwQrVEJktShc4lsFqvTUZuYADV/3XP
-        burmnS+fQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52950)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hafct-0005EU-Lt; Tue, 11 Jun 2019 13:11:43 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hafcp-0007rK-A7; Tue, 11 Jun 2019 13:11:39 +0100
-Date:   Tue, 11 Jun 2019 13:11:39 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Hui Liu <jason.hui.liu@nxp.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 0/2] ARM errata 814220
-Message-ID: <20190611121139.tyoeaamhrslwhjzb@shell.armlinux.org.uk>
-References: <20190214083145.15148-1-benjamin.gaignard@linaro.org>
- <e25b2626-231b-28d7-93b0-004a21a3685e@st.com>
- <CAOMZO5A6A2sYzfPgjsqQxWcc4Z0YW9-sENW21KumO_XkN3WBYQ@mail.gmail.com>
- <CA+M3ks7LPEpEfOEqiOZ4q2-We-8BjK0FZfeKts4hBzL7GRRHSw@mail.gmail.com>
- <CA+M3ks5UE8VSa1iHVHWw8NfQWU-v_MRYffVPBMLhy53PD9SJxA@mail.gmail.com>
+        Tue, 11 Jun 2019 08:13:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44798 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387538AbfFKMN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 08:13:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5E5D7B00C;
+        Tue, 11 Jun 2019 12:13:25 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     dmitry.torokhov@gmail.com, wbauer@tmo.at,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] HID: input: fix a4tech horizontal wheel custom usage
+Date:   Tue, 11 Jun 2019 14:13:20 +0200
+Message-Id: <20190611121320.30267-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+M3ks5UE8VSa1iHVHWw8NfQWU-v_MRYffVPBMLhy53PD9SJxA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 01:42:34PM +0200, Benjamin Gaignard wrote:
-> Le mer. 24 avr. 2019 à 09:25, Benjamin Gaignard
-> <benjamin.gaignard@linaro.org> a écrit :
-> >
-> > Le mar. 23 avr. 2019 à 19:46, Fabio Estevam <festevam@gmail.com> a écrit :
-> > >
-> > > On Wed, Feb 27, 2019 at 1:21 PM Alexandre Torgue
-> > > <alexandre.torgue@st.com> wrote:
-> > > >
-> > > >
-> > > > On 2/14/19 9:31 AM, Benjamin Gaignard wrote:
-> > > > > Implement ARM errata 814220 for Cortex A7.
-> > > > >
-> > > > > This patch has been wroten by Jason Liu years ago but never send upstream.
-> > > > > I have tried to contact the author on multiple email addresses but I haven't
-> > > > > found any valid one...
-> > > > > I have keep Jason's sign-off and just rebase the patch on to v5-rc6.
-> > >
-> > > Adding Jason's NXP e-mail address.
-> > Thanks !
-> >
-> > Russell, can Alexandre push this series in stm32 tree or you prefer to
-> > merge it yourself ?
-> >
-> 
-> Hello Russell,
-> 
-> I have push this series in your patch system weeks ago, but nothing happens.
-> Do I miss something in your process ?
+Some a4tech mice use the 'GenericDesktop.00b8' usage to inform whether
+the previous wheel report was horizontal or vertical. Before
+c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key") this
+usage was being mapped to 'Relative.Misc'. After the patch it's simply
+ignored (usage->type == 0 & usage->code == 0). Which ultimately makes
+hid-a4tech ignore the WHEEL/HWHEEL selection event, as it has no
+usage->type.
 
-I'm now running stuff on a shoe-string here, so I only process patches
-once or twice a release cycle.  That's what happens when your funding
-gets severely cut - we are now _really_ struggling as a business, and
-so I don't see the current situation being able to be maintained much
-further into the future (our income is no longer sufficient to sustain
-us as a business.)
+We shouldn't rely on a mapping for that usage as it's nonstandard and
+doesn't really map to an input event. So we bypass the mapping and make
+sure the custom event handling properly handles both reports.
 
-However, I'll get to it in the next couple of weeks.
+Fixes: c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
+NOTE: I CC'd Wolfgang as he's the one who can test this.
+
+Changes since v1:
+  - new approach, moved fix into hid-a4tech
+
+ drivers/hid/hid-a4tech.c | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+index 98bf694626f7..3a8c4a5971f7 100644
+--- a/drivers/hid/hid-a4tech.c
++++ b/drivers/hid/hid-a4tech.c
+@@ -23,12 +23,36 @@
+ #define A4_2WHEEL_MOUSE_HACK_7	0x01
+ #define A4_2WHEEL_MOUSE_HACK_B8	0x02
+ 
++#define A4_WHEEL_ORIENTATION	(HID_UP_GENDESK | 0x000000b8)
++
+ struct a4tech_sc {
+ 	unsigned long quirks;
+ 	unsigned int hw_wheel;
+ 	__s32 delayed_value;
+ };
+ 
++static int a4_input_mapping(struct hid_device *hdev, struct hid_input *hi,
++			    struct hid_field *field, struct hid_usage *usage,
++			    unsigned long **bit, int *max)
++{
++	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
++
++	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8 &&
++	    usage->hid == A4_WHEEL_ORIENTATION) {
++		/*
++		 * We do not want to have this usage mapped to anything as it's
++		 * nonstandard and doesn't really behave like an HID report.
++		 * It's only selecting the orientation (vertical/horizontal) of
++		 * the previous mouse wheel report. The input_events will be
++		 * generated once both reports are recorded in a4_event().
++		 */
++		return -1;
++	}
++
++	return 0;
++
++}
++
+ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
+@@ -52,8 +76,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+ 	struct input_dev *input;
+ 
+-	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput ||
+-			!usage->type)
++	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput)
+ 		return 0;
+ 
+ 	input = field->hidinput->input;
+@@ -64,7 +87,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 			return 1;
+ 		}
+ 
+-		if (usage->hid == 0x000100b8) {
++		if (usage->hid == A4_WHEEL_ORIENTATION) {
+ 			input_event(input, EV_REL, value ? REL_HWHEEL :
+ 					REL_WHEEL, a4->delayed_value);
+ 			input_event(input, EV_REL, value ? REL_HWHEEL_HI_RES :
+@@ -131,6 +154,7 @@ MODULE_DEVICE_TABLE(hid, a4_devices);
+ static struct hid_driver a4_driver = {
+ 	.name = "a4tech",
+ 	.id_table = a4_devices,
++	.input_mapping = a4_input_mapping,
+ 	.input_mapped = a4_input_mapped,
+ 	.event = a4_event,
+ 	.probe = a4_probe,
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.21.0
+
