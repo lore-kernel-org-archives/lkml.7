@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36344C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADF5C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0102184E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174112184D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560279884;
-	bh=kKzgPGyp1rFRUoMeCAbqGywocjRtjiVE1tkm510zKkE=;
+	s=default; t=1560279887;
+	bh=l+dV5M2g9671cnvuk4p+EPhow8WZzJRVbUMZkvEqIw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EMfpSzAGffGvsTZPOFyIFuFUefDP+YowjUlGnZphwQ8gN7W9rxvun2CEmTSEBjiPX
-	 zJDwRsxhEDD6cCtArPNu84vVpUKAeUiQOPIlYLh+zzICq7X0cABx223tSwLYtuFHLC
-	 v1NTwYPBK4MTfHul+SZVpbJzgYGu8vhQHgJnC5EA=
+	b=uLgd2PreFY/YXOvzRkncLg+YruUM/QaOP1Dag3OcP4KKap2CWT7QPt8jKAXDUcylp
+	 g4FpByjlEg1uaI4GX8+OnW72A95VjZ63lIf+Xsn5zpHQRvLlS70BzuOKAomX3lhjuz
+	 FfL4e5OleBB3IEGllePQDAtIRQd0FNfKMGcrWAqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407329AbfFKTEn (ORCPT
+        id S2407338AbfFKTEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 15:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407312AbfFKTEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:04:39 -0400
+        id S2407324AbfFKTEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:04:43 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BE1521872;
-        Tue, 11 Jun 2019 19:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6DE2184C;
+        Tue, 11 Jun 2019 19:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560279879;
-        bh=kKzgPGyp1rFRUoMeCAbqGywocjRtjiVE1tkm510zKkE=;
+        s=default; t=1560279882;
+        bh=l+dV5M2g9671cnvuk4p+EPhow8WZzJRVbUMZkvEqIw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jc6EyRQ0aCx+K96v6C5S6lAnLRdisZNqrZwTnVzVh0qlljoLetRseYHt/joUk74rB
-         jT698RKvsg0wI7VaLQmtTULx/5C1M18copSjfdD/Wx6bMtfcf4B0ShAjXpI7/WkmJq
-         U/BeZ4aqTB8DhMQKnLq6m1q/kjPoSeHvOOUz25EY=
+        b=WNtydntTWiidBdKfp66XeWJDukMHyys3e5pytI13CWF8p3QRCNcvvhkTZBEb1xo1J
+         WOmq4Xm6/WAfUBwIEwATLWoTvjEZ6kfrLY9BNwNpqE3SUfjKZxJ+s9OVg9EPChXLht
+         0A5I99BEWHg3O+Z1rgZkPvxB4IV0jZ1MYlQf1J50=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Jin Yao <yao.jin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 76/85] perf time-utils: Prevent percentage time range overlap
-Date:   Tue, 11 Jun 2019 15:59:02 -0300
-Message-Id: <20190611185911.11645-77-acme@kernel.org>
+Subject: [PATCH 77/85] perf time-utils: Fix --time documentation
+Date:   Tue, 11 Jun 2019 15:59:03 -0300
+Message-Id: <20190611185911.11645-78-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
@@ -64,35 +64,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Prevent percentage time range overlap. This is only a 1 nanosecond
-change but makes the results more logical e.g. a sample cannot be in
-both the first 10% and the second 20%.
-
-Note, there is a later patch that adds a test for time-utils.
+Correct some punctuation and spelling and correct the format to show
+that the time resolution is nanoseconds not microseconds.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-15-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190604130017.31207-16-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/time-utils.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/Documentation/perf-diff.txt   | 6 +++---
+ tools/perf/Documentation/perf-report.txt | 6 +++---
+ tools/perf/Documentation/perf-script.txt | 6 +++---
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 69441faab3d0..3e87c21c293c 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -148,6 +148,9 @@ static int set_percent_time(struct perf_time_interval *ptime, double start_pcnt,
- 	ptime->start = start + round(start_pcnt * total);
- 	ptime->end = start + round(end_pcnt * total);
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+index da7809b15cc9..5732f69580ab 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -142,9 +142,9 @@ OPTIONS
+ 	  perf diff --time 0%-10%,30%-40%
  
-+	if (ptime->end > ptime->start && ptime->end != end)
-+		ptime->end -= 1;
-+
- 	return 0;
- }
+ 	It also supports analyzing samples within a given time window
+-	<start>,<stop>. Times have the format seconds.microseconds. If 'start'
+-	is not given (i.e., time string is ',x.y') then analysis starts at
+-	the beginning of the file. If stop time is not given (i.e, time
++	<start>,<stop>. Times have the format seconds.nanoseconds. If 'start'
++	is not given (i.e. time string is ',x.y') then analysis starts at
++	the beginning of the file. If stop time is not given (i.e. time
+ 	string is 'x.y,') then analysis goes to the end of the file. Time string is
+ 	'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for different
+ 	perf.data files.
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index f441baa794ce..3de029f6881d 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -412,12 +412,12 @@ OPTIONS
  
+ --time::
+ 	Only analyze samples within given time window: <start>,<stop>. Times
+-	have the format seconds.microseconds. If start is not given (i.e., time
++	have the format seconds.nanoseconds. If start is not given (i.e. time
+ 	string is ',x.y') then analysis starts at the beginning of the file. If
+-	stop time is not given (i.e, time string is 'x.y,') then analysis goes
++	stop time is not given (i.e. time string is 'x.y,') then analysis goes
+ 	to end of file.
+ 
+-	Also support time percent with multiple time range. Time string is
++	Also support time percent with multiple time ranges. Time string is
+ 	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
+ 
+ 	For example:
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index c59fd52e9e91..878349cce968 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -361,12 +361,12 @@ include::itrace.txt[]
+ 
+ --time::
+ 	Only analyze samples within given time window: <start>,<stop>. Times
+-	have the format seconds.microseconds. If start is not given (i.e., time
++	have the format seconds.nanoseconds. If start is not given (i.e. time
+ 	string is ',x.y') then analysis starts at the beginning of the file. If
+-	stop time is not given (i.e, time string is 'x.y,') then analysis goes
++	stop time is not given (i.e. time string is 'x.y,') then analysis goes
+ 	to end of file.
+ 
+-	Also support time percent with multipe time range. Time string is
++	Also support time percent with multiple time ranges. Time string is
+ 	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
+ 
+ 	For example:
 -- 
 2.20.1
 
