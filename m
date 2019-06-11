@@ -2,192 +2,150 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDB5C06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F23FC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8EAB21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:43:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ENeZ6tBC"
+	by mail.kernel.org (Postfix) with ESMTP id 3160B2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 19:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560282417;
+	bh=KmHH51L9OWNGt+JXZgeXpCttosUAXb7SFFEMqYwrEX8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Axd2wt9biv1XaH5iDsUVZ1CyRSoT6MKX+DIeHUNzl+TKgOe2hAkoQKqZ9p6VHP043
+	 3WD8ewf5o3TxfFcKPWto+I0bhNjJ66KufxT8hvGRjLHlqDgokKdpc5o2mK1uLjqvq7
+	 3KdWeQauwK4wl7UcSM+RRqs2CRtGv09dAgAE7vFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406276AbfFKTnl (ORCPT
+        id S2406281AbfFKTq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 15:43:41 -0400
-Received: from mout.gmx.net ([212.227.15.18]:34509 "EHLO mout.gmx.net"
+        Tue, 11 Jun 2019 15:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405684AbfFKTnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 15:43:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1560282198;
-        bh=rJPROSVdwR6ZnC7bA4RU4rdMj1HTOUmtQvboZHKa2I4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=ENeZ6tBCaLcXlIsOkz/CILO1gjX3KcUGLzzj/dDr5QOclumnZb4f/Sqn3YjXJVhIq
-         vEG1D1Q6kIz8urabR74PvzjpaLzYm6ISShr3bRNICd5XUCZXrhX+ouAA1pphiv0x1l
-         27HtTd23ADj8rwIUOXDAgiBVQuyed0KouC6uQnSw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.203.76.133]) by mail.gmx.com
- (mrgmx003 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 0M3AWN-1iTi8v19F9-00szby; Tue, 11 Jun 2019 21:43:18 +0200
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 6E402800A7; Tue, 11 Jun 2019 21:43:16 +0200 (CEST)
-From:   Sven Joachim <svenjoac@gmx.de>
-To:     Thomas Backlund <tmb@mageia.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        stable <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Airlie <airlied@redhat.com>
-Subject: Re: Linux 5.1.9 build failure with CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n
-References: <87k1dsjkdo.fsf@turtle.gmx.de> <20190611153656.GA5084@kroah.com>
-        <CAKMK7uH_3P3pYkJ9Ua4hOFno5UiQ4p-rdWu9tPO75MxGCbyXSA@mail.gmail.com>
-        <20190611174006.GB31662@kroah.com>
-        <11b2d815-d0c0-1f68-557d-144166c4a1a7@mageia.org>
-Date:   Tue, 11 Jun 2019 21:43:16 +0200
-In-Reply-To: <11b2d815-d0c0-1f68-557d-144166c4a1a7@mageia.org> (Thomas
-        Backlund's message of "Tue, 11 Jun 2019 22:08:10 +0300")
-Message-ID: <877e9rkiwb.fsf@turtle.gmx.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.50 (gnu/linux)
+        id S2405627AbfFKTq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 15:46:56 -0400
+Received: from earth.universe (unknown [185.62.205.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A97021734;
+        Tue, 11 Jun 2019 19:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560282414;
+        bh=KmHH51L9OWNGt+JXZgeXpCttosUAXb7SFFEMqYwrEX8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NmpKMBrZAm/zovGDFzVVJNDPkVxtHzZAPEd8JnPShvNCXa8bx/4rGKuOA3joFJkYz
+         WmxCy3WPzlCH1oHk9rtzoAzhXDxenGIzxK7Za89waYvOGhM6Eo4u5iZmBF7Aj47f+V
+         mJnELLOCK0P1qMJw0ihfgu4xAeCfkx+rDcqi8hZk=
+Received: by earth.universe (Postfix, from userid 1000)
+        id EF7E33C0C77; Tue, 11 Jun 2019 21:46:51 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 21:46:51 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] power: supply: ucs1002: Add HWMON interface
+Message-ID: <20190611194651.rmyo4jhdy7xgrgpu@earth.universe>
+References: <20190605072323.21990-1-andrew.smirnov@gmail.com>
+ <20190605072323.21990-3-andrew.smirnov@gmail.com>
+ <d9d8b0c4-e9f4-5a92-3832-3449153f807d@ti.com>
+ <CAHQ1cqFRVmZvcFyV93udAHEwZG8NhtM350BSm7JcchNFiqZDjA@mail.gmail.com>
+ <20190605183945.GA2442@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Provags-ID: V03:K1:pdn6o2WKrDFA93eOZRPB+/Sd3nN6DzJyZ1hHqghwbcfPpgE7rIk
- kxuaqGSdTXa3M9nd23mQUXGphr1OBK4HwcucODxh/LyFyS/eZuWHrMljm0FolKFTgIjPtkX
- rDIEAlPg3zLS8ZPUsUYGhUIqFbk/baTmtS3jQoHNlZhiNFXOK6O163TFe5SUG/1UvfP3cE9
- YocgnUioN7xs8MLvB8L/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nzItbOkWVGY=:ucCMfTaVwZYckGKIrQMnAT
- NR+Z4RRiVw5/abjwMa+mf1pgzvTJlskS3E+IgNFJmKGQmP3lgVM6pgSyqfRLYKI/eJ6vtKx6x
- g3nKzvFTmQXVhzLqxRr3LV161vMBhIPKpGynkzfQM/b0NOAp9p/MQIkGmE1CRm6AowABbpaLh
- fWo6CJ4wGpEKQSTPhLfgF8VxS3kz4Q9Ri7QCsVG0w4lRovvQ9yXcFGhgmCGQLc/Hk85uApWTx
- X16djK/wqc8xySx+/hNdgR/+zvUlzyBv3rqJfhGBIzWTOaHJvrMM1hV2QeZ+dCVPu9ACIiYRY
- LEYs01oNr6X7XMhFWs5SolIeIlUZljS+ChseGJZ+4kW1aWleeCOBpiV2I02MRfY2GZ89oMTKt
- bRFDRbTQp2zxxtikedRctkHCsXJDU5bMtpb7HAGEj/7xvkZzhpOCvf9Bk3dchD9laCMxksvw7
- vrIBdUHMOC/tlKPthGBJqNaOPqgq1EXyTq9hav6kxQ+CX3PDAx3E9UscupnP87hsXnpvRDeND
- HH/MN4hftzz90RywK8fhsQNyxf8NZjYb/Sc5zwhFIGj1pTZPVlK/iNtG5Wmwye1YXqGs9rQIi
- IEKqi7OU3tuL2gKwIo9eYjjh6g904XU5LNAMUDSu4qSksQjH+AuvooGk9qhFJUz6Qc+e9Rzfd
- GGQEQsZ2JaKceP0K2fa4Zv56PanLaecY1CE4SJ5YHWR5XkocXO3QfQB3q6he5RDuPGfhHmwTC
- VPCRrPisXZ11XNwLcKXaQRNpExsXgKxe+L/TVqJ8ZVluev/PYXGhJL/IsceY6u0+hUzN5pgF7
- D6dSZR9/QBleIrVcPXiWXjc308m52aVQL7DjhPpzC0XWLY5/WrMEM1uJqhekjLKeTP4UYkMVf
- AnejSbC5+BrqVlEKxBKoVIAFrY0yfLswPmN2SQT76GeFbguY3Shwh5WwKBOwPw/f10SWitzF1
- xkPJzwl658CKZYuBKoNcZcmT4w48JQOBZjxhIdbMdh7uCCaqZBfro
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="67udbxn3w4jw6xeb"
+Content-Disposition: inline
+In-Reply-To: <20190605183945.GA2442@roeck-us.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-11 22:08 +0300, Thomas Backlund wrote:
 
-> Den 11-06-2019 kl. 20:40, skrev Greg Kroah-Hartman:
->> On Tue, Jun 11, 2019 at 07:33:16PM +0200, Daniel Vetter wrote:
->>> On Tue, Jun 11, 2019 at 5:37 PM Greg Kroah-Hartman
->>> <gregkh@linuxfoundation.org> wrote:
->>>> On Tue, Jun 11, 2019 at 03:56:35PM +0200, Sven Joachim wrote:
->>>>> Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouv=
-eau
->>>>> legacy contexts. (v3)") has caused a build failure for me when I
->>>>> actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=3Dn):
->>>>>
->>>>> ,----
->>>>> | Kernel: arch/x86/boot/bzImage is ready  (#1)
->>>>> |   Building modules, stage 2.
->>>>> |   MODPOST 290 modules
->>>>> | ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] unde=
-fined!
->>>>> | scripts/Makefile.modpost:91: recipe for target '__modpost' failed
->>>>> `----
->>>
->>> Calling drm_legacy_mmap is definitely not a great idea. I think either
->>> we need a custom patch to remove that out on older kernels, or maybe
->>> even #ifdef if you want to be super paranoid about breaking stuff ...
->>>
->>>>> Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
->>>>> Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
->>>>> drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does =
-not
->>>>> apply in 5.1.9.
->>>>>
->>>>> Most likely 4.19.50 and 4.14.125 are also affected, I haven't tested
->>>>> them yet.
->>>>
->>>> They probably are.
->>>>
->>>> Should I just revert this patch in the stable tree, or add some other
->>>> patch (like the one pointed out here, which seems an odd patch for
->>>> stable...)
->>>
->>> ... or backport the above patch, that should be save to do too. Not
->>> sure what stable folks prefer?
->>
->> The above patch does not apply to all of the stable branches, so how
->> about I just revert this?  People can live with this option not able to
->> turn off for now, and if they really want it, they can use a newer
->> kernel, right?
->>
->
-> Or add the simple fix suggested by Daniel (if I understand correctly):
->
->
-> From: Thomas Backlund <tmb@mageia.org>
->
-> Setting CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=3Dn (added by commit:
-> b30a43ac7132) causes the build to fail with:
->
-> ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
->
-> Fix that by adding check for CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT around
-> the code using drm_legacy_mmap()
->
-> Fixes: b30a43ac7132 drm/nouveau: add kconfig option to turn off
-> nouveau legacy contexts. (v3)
-> Signed-off-by: Thomas Backlund <tmb@mageia.org>
->
-> ---
->  drivers/gpu/drm/nouveau/nouveau_ttm.c |    2 ++
->  1 file changed, 2 insertions(+)
->
-> --- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-> @@ -168,8 +168,10 @@ nouveau_ttm_mmap(struct file *filp, stru
->  	struct drm_file *file_priv =3D filp->private_data;
->  	struct nouveau_drm *drm =3D nouveau_drm(file_priv->minor->dev);
->
-> +#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
->  	if (unlikely(vma->vm_pgoff < DRM_FILE_PAGE_OFFSET))
->  		return drm_legacy_mmap(filp, vma);
-> +#endif
->
->  	return ttm_bo_mmap(filp, vma, &drm->ttm.bdev);
->  }
+--67udbxn3w4jw6xeb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's not quite correct, I am afraid.  If
-CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT is not defined, you still need to do
-the test, but return -EINVAL.  Something along these lines:
+Hi,
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouve=
-au/nouveau_ttm.c
-index 1543c2f8d3d3..05d513d54555 100644
-=2D-- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-@@ -169,7 +169,11 @@ nouveau_ttm_mmap(struct file *filp, struct vm_area_st=
-ruct *vma)
- 	struct nouveau_drm *drm =3D nouveau_drm(file_priv->minor->dev);
+On Wed, Jun 05, 2019 at 11:39:45AM -0700, Guenter Roeck wrote:
+> On Wed, Jun 05, 2019 at 10:47:25AM -0700, Andrey Smirnov wrote:
+> > On Wed, Jun 5, 2019 at 9:26 AM Andrew F. Davis <afd@ti.com> wrote:
+> > >
+> > > On 6/5/19 3:23 AM, Andrey Smirnov wrote:
+> > > > Expose current sensors found on UCS1002 via HWMON.
+> > > >
+> > > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > > > Cc: Chris Healy <cphealy@gmail.com>
+> > > > Cc: Cory Tusar <cory.tusar@zii.aero>
+> > > > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > > Cc: Guenter Roeck <linux@roeck-us.net>
+> > > > Cc: Sebastian Reichel <sre@kernel.org>
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > Cc: linux-pm@vger.kernel.org
+> > > > ---
+> > > >   drivers/power/supply/ucs1002_power.c | 6 ++++++
+> > > >   1 file changed, 6 insertions(+)
+> > > >
+> > > > diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/s=
+upply/ucs1002_power.c
+> > > > index 677f20a4d76f..a4b6b37549cf 100644
+> > > > --- a/drivers/power/supply/ucs1002_power.c
+> > > > +++ b/drivers/power/supply/ucs1002_power.c
+> > > > @@ -571,6 +571,12 @@ static int ucs1002_probe(struct i2c_client *cl=
+ient,
+> > > >               return ret;
+> > > >       }
+> > > >
+> > > > +     ret =3D devm_power_supply_add_hwmon_sysfs(info->charger);
+> > >
+> > > Could this be added to the core power supply framework on registering=
+ so
+> > > all devices get this, vs each driver having to add this line?
+> > >
+> >=20
+> > I'd say it is up to Sebastian to decide if this should be opt-out
+> > rather than opt-in. I have no objections to either approach.
+> >=20
+>=20
+> Same here, and agreed.
 
- 	if (unlikely(vma->vm_pgoff < DRM_FILE_PAGE_OFFSET))
-+#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
- 		return drm_legacy_mmap(filp, vma);
-+#else
-+		return -EINVAL;
-+#endif
+I think this should be registered in power_supply_register() and
+free'd in power_supply_unregister(). It's not device specific at
+all and the functionality can be configured via Kconfig.
 
- 	return ttm_bo_mmap(filp, vma, &drm->ttm.bdev);
- }
+-- Sebastian
 
+--67udbxn3w4jw6xeb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-At least that builds for me, need to reboot to check whether it works.
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
-       Sven
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0ABScACgkQ2O7X88g7
++pr18hAAok54gDCuCHySN6XdU81SMHYeFoyCmMFGc/1baJdQCmAQmCB3JDcGOMYW
+XS6GO/mQprQd6JT9pSj5S9fyVEuOjs0uSo7TU/wJ4UEsNmVhUB6g63uhmmuaaj0S
+Xz+l5X9Ih8v/D5agoLimN1KWx3HhGevRpOt2Vpv/frxcOOoICtA0q9KnD2yJdJks
+XrWdvDjZuPUps2eqc2mlWk4k17raLs89oMgLzLfw6w5mBJ6vezKT58CTBJX3SMhE
+oVR9xfzBCARCrMfPW2T2N7S6/zAUz7pYn5nSTkR3IYSF0InWVq8ithSnMuotA9En
+cS040flGqohlHUT74iZngj5zDCMFYVm2hzzYlcwvYDtLZFBug3JiSBGonrLEYOqG
+V62gD4dV0Mp5pmOgq6oPO/c9rws0JOtPbHCQj2xeoeiHRyi+zZ9qes6H6DZ2lcBu
+2vD5BwEa9ilmrAkxDAe6a9x5JFfZIZB/846/k4v76OVUvvG6R7JCc7LPZ/MMSS+4
+NokuvvMg1B/ZjVAd16bkXVjI3i1xN0DFtUnVUrBdUW1ZjDbaHXibNl3qHAXSMdqe
+JfvGqpdaeZMUVRt9DGr/I8NRNfdMcEyIMgKo6sNL0L/cEePNdjSW1ThK7J1jz96j
+7lWUXz8uP+Owd7y9jzaMMcvldeCXrdMaSoByO3s81DfkZlVWWXE=
+=3nYa
+-----END PGP SIGNATURE-----
+
+--67udbxn3w4jw6xeb--
