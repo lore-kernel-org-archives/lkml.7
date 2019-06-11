@@ -2,144 +2,87 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423CBC31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5516C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A502205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA861205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560290446;
-	bh=6wt58freXYakzLC3l+w1fNDxCWBRmdHXoj+rBGdpgUo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JxvNN098fnuG7IyU8DNdblJ7LdhgHO6oJaLtnw2qV9InJF31RtlUedu3OuHhENvyr
-	 MPbZlRflWBhfIIx44IxwjW7quce1FsONDluV7oACwrEZ7m0aknNDMC4UW0+EZa2xQO
-	 iotqQ4FEdlmVQFkdKy4w+1Tfap1dKyZEWzla61wU=
+	s=default; t=1560290482;
+	bh=Bt0HGRGv8d5bwQwnCiqo8yLA4cyS97HZ5bEY2lqzYXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ly8XaVn2f5EKIWVBL56hMXiDywWTKiQl/ymAokuLw9zMowchiZE6PKRLeAWlzmLi3
+	 YeftHIAEZrFKR3SWKicSA26uIF06qlg91NZJVLmsY9gcUXLHKQETyRdbR2hF0TPPEm
+	 BjyBckSStjNeKlwHGSCqdLLcHwVJ7Ucoxg0Etz3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407847AbfFKWAp (ORCPT
+        id S2436694AbfFKWBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:00:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407758AbfFKWAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:00:44 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE2820866;
-        Tue, 11 Jun 2019 22:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560290443;
-        bh=6wt58freXYakzLC3l+w1fNDxCWBRmdHXoj+rBGdpgUo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WwSPphCrIfjN8xr2FGpl9TwUkiKTORJSYOiN1Ar7DBUCd/sN5obikBSc9h7F+f+IN
-         8uFvcPjF9URXIAWJMWCwfWR5rEMwzmhg2y4HxlHOh36q4n6ofjtkgTgKgGR42+ZL2S
-         m6Q1P9S6eUi8b0/v43UamaEJZKg0cKD8RKupnZx8=
-Received: by mail-qk1-f177.google.com with SMTP id l128so8712184qke.2;
-        Tue, 11 Jun 2019 15:00:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAW3BW87NuwCBb4m5fBoRR1W1opKlgIoheHwUqhB4kJIL5y1Vdqc
-        Xcd1ghuy7EW/bgWV8TaW7Q6FOqfLMrR+hFxVaA==
-X-Google-Smtp-Source: APXvYqxAosGlT5kLbEYc7A8eFkXTwEsqIRmfJhcEbutAwwqMxG2UXqT+bffMX7rQ3up6XhxfhUajYaqFMZeSV3XzK9k=
-X-Received: by 2002:a05:620a:5b1:: with SMTP id q17mr60654324qkq.174.1560290442211;
- Tue, 11 Jun 2019 15:00:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <1559653697-2760-1-git-send-email-stefan.popa@analog.com> <20190611215932.GA24974@bogus>
-In-Reply-To: <20190611215932.GA24974@bogus>
+        Tue, 11 Jun 2019 18:01:21 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42818 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407758AbfFKWBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:01:21 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s15so16463633qtk.9;
+        Tue, 11 Jun 2019 15:01:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wVRjad9Fc8BILg/+DYBhqnoHZfByaIOMm77zfoBIfY0=;
+        b=uZheCOttbqblvyIMZwReeWp+JKZkUKNnu2dE7PFC6Ayj4XeuMQmtYZ7WfswaYJbQcF
+         vOGVbYTmuPxAMwyLC004S0bLmcYiboju7syJ7Mtk+B+50jjdMzQ+YrNHZh1SYSrxY+VL
+         /gb2QmzjjonwcTtZyBQI1OseExiibPQbdd7ATSHuyf4ESdngBp/2CsZ8+5V5mfvir+8s
+         LLf1GDzvcJYS9r6YT2OUn0qoIp/bJDutb8gsV10YK/nesxcS/Ri44EE3kKZV7VsPrXbr
+         HkH1F+DJ/NG22BGf6czObAZ5M96xGGQzxOWUTwLi6vCiQkbsQIV7HNk9KwMFlwAXLq4x
+         oAGQ==
+X-Gm-Message-State: APjAAAUW+2mrC6Zwr9mHJnEewB70KZwGWWg6N/sVLhUr6jD2t/fwnqYF
+        wKhc9t86sFPVMhWLqKvXig==
+X-Google-Smtp-Source: APXvYqxq+ctalxr4J055wzK7JBghbqhScsopOPimJQptlh5w/Pu3JDApOeKWxso3z1UIm9uUmO+OTw==
+X-Received: by 2002:ac8:c45:: with SMTP id l5mr50644561qti.63.1560290480260;
+        Tue, 11 Jun 2019 15:01:20 -0700 (PDT)
+Received: from localhost ([64.188.179.199])
+        by smtp.gmail.com with ESMTPSA id g5sm8812899qta.77.2019.06.11.15.01.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 15:01:19 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 16:01:17 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 11 Jun 2019 16:00:31 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLXXo7wMef-j8Gj+mim_yJ2w5R3tyqPMNtS8iX5ffrJjg@mail.gmail.com>
-Message-ID: <CAL_JsqLXXo7wMef-j8Gj+mim_yJ2w5R3tyqPMNtS8iX5ffrJjg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] dt-bindings: iio: frequency: Add docs for ADF4371 PLL
-To:     Stefan Popa <stefan.popa@analog.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com,
+        thierry.escande@linaro.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, c-hbandi@codeaurora.org
+Subject: Re: [PATCH v6 2/2] dt-bindings: net: bluetooth: Add device property
+ firmware-name for QCA6174
+Message-ID: <20190611220117.GA31601@bogus>
+References: <1557919203-11055-1-git-send-email-rjliao@codeaurora.org>
+ <1559814055-13872-1-git-send-email-rjliao@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559814055-13872-1-git-send-email-rjliao@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 3:59 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Jun 04, 2019 at 04:08:17PM +0300, Stefan Popa wrote:
-> > Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
-> >
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> > ---
-> > Changes in v2:
-> >       - Nothing changed.
-> > Changes in v3:
-> >       - Nothing changed.
-> > Changes in v4:
-> >       - Nothing changed.
-> > Changes in v5:
-> >       - Nothing changed.
->
-> Please add acks/reviewed-bys when posting new versions.
->
-> But something else I noticed:
->
-> >
-> >  .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > new file mode 100644
-> > index 0000000..d7adf074
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > @@ -0,0 +1,54 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices ADF4371 Wideband Synthesizer
-> > +
-> > +maintainers:
-> > +  - Popa Stefan <stefan.popa@analog.com>
-> > +
-> > +description: |
-> > +  Analog Devices ADF4371 SPI Wideband Synthesizer
-> > +  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,adf4371
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    description:
-> > +      Definition of the external clock (see clock/clock-bindings.txt)
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    description:
-> > +      Must be "clkin"
->
-> This can be a schema:
->
-> clock-names:
->   items:
->     - clkin
+On Thu, Jun 06, 2019 at 05:40:55PM +0800, Rocky Liao wrote:
+> This patch adds an optional device property "firmware-name" to allow the
+> driver to load customized nvm firmware file based on this property.
+> 
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
+> Changes in v6:
+>   * Added read firmware-name property for both QCA6174 and WCN399X
+> ---
+>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-And with that, you can keep my R-by.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
