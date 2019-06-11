@@ -2,202 +2,203 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73106C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B94C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1BF212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79EC9212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvUUJzsc"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LMnEfbOG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404630AbfFKPSp (ORCPT
+        id S2404688AbfFKPTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:18:45 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35596 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfFKPSp (ORCPT
+        Tue, 11 Jun 2019 11:19:03 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:45584 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389686AbfFKPTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:18:45 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so7645994pfd.2;
-        Tue, 11 Jun 2019 08:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nWL90qXjUuK8w+rtJZaynRsIXMY+sEETNIVgozGcpYY=;
-        b=hvUUJzscbqBqMtPEpSRuAuTno/JL6vDZa4C3VZHRLut01wds25WxWaiXi0hBAIpkoW
-         jNcMfBqsrcp1KT/6fFkHImK4/emdBsRF+jFmEr6+pSE0WauLpXCwJpzIS5kG+A5VrGq/
-         W0eVkzBzeXBocol9+uzyekHrXBcENDbMtU/K5kDYtuza2TY+BCp1rEJ8s6XH4txjDOu4
-         yiUov03zBYKi5wZF5PIkOJqHM5skau1sl1KO2/H1KUszXuzVpHVsdnoGmCrkvTVpGqSD
-         vyn7IeTeti0gOcYDKUr3kCgRrVoSwZLFOR3mVzBfCkGxgMQVStXP26RRWD7KQ8Jizg2l
-         wCsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nWL90qXjUuK8w+rtJZaynRsIXMY+sEETNIVgozGcpYY=;
-        b=BIY+Zi3KSfyGcWOvpfAlWP5tEeuSGMS59RORMBK4XIZKiAjm8yJApUGrIp9PxshBxL
-         avwveUi3Pod2/YURksznobG8IXJ4+HqE/6Pe1zDX20dJWtPcouflxWL5xOhI3t+xNhA0
-         KHxddx7ILU7VngS5suDe6A3mAsSrS0gGXp9gkjBiYivnDqmmTmxnhV1PbHUcYPYKTt92
-         2QeAEd6nJdeMArJOrdbyRj+QaqbvW6pQwGmqUqUpckfEDjAjJKTt4U89BFDnLBFz7b0L
-         1++565bxEZlRXPtcZ1ma4ytZ6uz2Ef/IQMP26MtrDYjBZVx0Yz9I1rYdLo7xsT1KATGt
-         vvLw==
-X-Gm-Message-State: APjAAAXT4/tfBxDgnNwv+GycPyQfw5CJlmPQbB1uM4pKIvtMC9supmjF
-        ZH+yuMZesMiaBv30arsMwyY=
-X-Google-Smtp-Source: APXvYqzqf8kgGYBTPaIZ1SBTEBOIIkVoUdOeKbbH7LVXNmxiy2I3a6qFL2H3o2/OGR3G+E5S/h5toA==
-X-Received: by 2002:a63:1657:: with SMTP id 23mr19568964pgw.98.1560266324025;
-        Tue, 11 Jun 2019 08:18:44 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id d6sm12660100pgv.4.2019.06.11.08.18.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 08:18:43 -0700 (PDT)
-Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up
- of_find_device_by_node()
-To:     Rob Herring <robh+dt@kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-References: <20190604003218.241354-1-saravanak@google.com>
- <20190604003218.241354-2-saravanak@google.com>
- <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
-Date:   Tue, 11 Jun 2019 08:18:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Jun 2019 11:19:02 -0400
+Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E574CC5944;
+        Tue, 11 Jun 2019 15:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1560266339; bh=mBpV3DPxMu1zOlFHKdZ74vSrOXCkS01TP7DfWxpo6LE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=LMnEfbOGZioUaSW06OOpCrAT9xgC1MBxKvrD8Le3ahACfqkZeUXsE5kY3N0juWaAD
+         EaIKtjBUy8DbDSJyICWZFa5Y94Zq2dievNKOO3zTz3svOsc0rccciROPao8ZsMc2vr
+         b8lwfUsc4cHAqrqUtQOGFbRwOZOp/WqitSn4aNtexgPK5cZ9vwz/mgrO5h5qeLiN8L
+         x5JDD9i85vEmDg/wBz9Z8Z1WGjLpeg/j6Yee0g7tiX8clek2G8TBo1+kAMv7STo2Rx
+         K1yDp15Y5PZTXWpfLYWBGJzS0XoAE1/yLe+KWXLYDMKnhsA65+16Z8f+vzf418fYTq
+         tm1bF57Y6g6Ug==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 33E35A022E;
+        Tue, 11 Jun 2019 15:18:58 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 1584D3FDBE;
+        Tue, 11 Jun 2019 17:18:58 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH net-next 2/3] net: stmmac: Start adding phylink support
+Date:   Tue, 11 Jun 2019 17:18:46 +0200
+Message-Id: <7daa1ac5cf56152b9d6c969c24603bc82e0b7d55.1560266175.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1560266175.git.joabreu@synopsys.com>
+References: <cover.1560266175.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1560266175.git.joabreu@synopsys.com>
+References: <cover.1560266175.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
+Start adding the phylink callbacks.
 
-On 6/10/19 10:36 AM, Rob Herring wrote:
-> Why are you resending this rather than replying to Frank's last
-> comments on the original?
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |  1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h  |  4 ++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 48 +++++++++++++++++++
+ 3 files changed, 53 insertions(+)
 
-Adding on a different aspect...  The independent replies from three different
-maintainers (Rob, Mark, myself) pointed out architectural issues with the
-patch series.  There were also some implementation issues brought out.
-(Although I refrained from bringing up most of my implementation issues
-as they are not relevant until architecture issues are resolved.)
-
-When three maintainers say the architecture has issues, you should step
-back and think hard.  (Not to say maintainers are always correct...)
-
-My suggestion at this point is that you need to go back to the drawing board
-and re-think how to address the use case.
-
--Frank
-
-> 
-> On Mon, Jun 3, 2019 at 6:32 PM Saravana Kannan <saravanak@google.com> wrote:
->>
->> Add a pointer from device tree node to the device created from it.
->> This allows us to find the device corresponding to a device tree node
->> without having to loop through all the platform devices.
->>
->> However, fallback to looping through the platform devices to handle
->> any devices that might set their own of_node.
->>
->> Signed-off-by: Saravana Kannan <saravanak@google.com>
->> ---
->>  drivers/of/platform.c | 20 +++++++++++++++++++-
->>  include/linux/of.h    |  3 +++
->>  2 files changed, 22 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index 04ad312fd85b..1115a8d80a33 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
->>         return dev->of_node == data;
->>  }
->>
->> +static DEFINE_SPINLOCK(of_dev_lock);
->> +
->>  /**
->>   * of_find_device_by_node - Find the platform_device associated with a node
->>   * @np: Pointer to device tree node
->> @@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
->>  {
->>         struct device *dev;
->>
->> -       dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
->> +       /*
->> +        * Spinlock needed to make sure np->dev doesn't get freed between NULL
->> +        * check inside and kref count increment inside get_device(). This is
->> +        * achieved by grabbing the spinlock before setting np->dev = NULL in
->> +        * of_platform_device_destroy().
->> +        */
->> +       spin_lock(&of_dev_lock);
->> +       dev = get_device(np->dev);
->> +       spin_unlock(&of_dev_lock);
->> +       if (!dev)
->> +               dev = bus_find_device(&platform_bus_type, NULL, np,
->> +                                     of_dev_node_match);
->>         return dev ? to_platform_device(dev) : NULL;
->>  }
->>  EXPORT_SYMBOL(of_find_device_by_node);
->> @@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
->>                 platform_device_put(dev);
->>                 goto err_clear_flag;
->>         }
->> +       np->dev = &dev->dev;
->>
->>         return dev;
->>
->> @@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
->>         if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
->>                 device_for_each_child(dev, NULL, of_platform_device_destroy);
->>
->> +       /* Spinlock is needed for of_find_device_by_node() to work */
->> +       spin_lock(&of_dev_lock);
->> +       dev->of_node->dev = NULL;
->> +       spin_unlock(&of_dev_lock);
->>         of_node_clear_flag(dev->of_node, OF_POPULATED);
->>         of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
->>
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index 0cf857012f11..f2b4912cbca1 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -48,6 +48,8 @@ struct property {
->>  struct of_irq_controller;
->>  #endif
->>
->> +struct device;
->> +
->>  struct device_node {
->>         const char *name;
->>         phandle phandle;
->> @@ -68,6 +70,7 @@ struct device_node {
->>         unsigned int unique_id;
->>         struct of_irq_controller *irq_trans;
->>  #endif
->> +       struct device *dev;             /* Device created from this node */
->>  };
->>
->>  #define MAX_PHANDLE_ARGS 16
->> --
->> 2.22.0.rc1.257.g3120a18244-goog
->>
-> .
-> 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+index 0b5c8d74c683..cf0c9f4f347a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
++++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+@@ -4,6 +4,7 @@ config STMMAC_ETH
+ 	depends on HAS_IOMEM && HAS_DMA
+ 	select MII
+ 	select PHYLIB
++	select PHYLINK
+ 	select CRC32
+ 	imply PTP_1588_CLOCK
+ 	select RESET_CONTROLLER
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index a16ada8b8507..b8386778f6c6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -25,6 +25,7 @@
+ #include <linux/clk.h>
+ #include <linux/stmmac.h>
+ #include <linux/phy.h>
++#include <linux/phylink.h>
+ #include <linux/pci.h>
+ #include "common.h"
+ #include <linux/ptp_clock_kernel.h>
+@@ -155,6 +156,9 @@ struct stmmac_priv {
+ 	struct mii_bus *mii;
+ 	int mii_irq[PHY_MAX_ADDR];
+ 
++	struct phylink_config phylink_config;
++	struct phylink *phylink;
++
+ 	struct stmmac_extra_stats xstats ____cacheline_aligned_in_smp;
+ 	struct stmmac_safety_stats sstats;
+ 	struct plat_stmmacenet_data *plat;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 6a2f072c0ce3..e2e69cb08fef 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -45,6 +45,7 @@
+ #include <linux/seq_file.h>
+ #endif /* CONFIG_DEBUG_FS */
+ #include <linux/net_tstamp.h>
++#include <linux/phylink.h>
+ #include <net/pkt_cls.h>
+ #include "stmmac_ptp.h"
+ #include "stmmac.h"
+@@ -848,6 +849,39 @@ static void stmmac_mac_flow_ctrl(struct stmmac_priv *priv, u32 duplex)
+ 			priv->pause, tx_cnt);
+ }
+ 
++static void stmmac_validate(struct phylink_config *config,
++			    unsigned long *supported,
++			    struct phylink_link_state *state)
++{
++	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
++	int tx_cnt = priv->plat->tx_queues_to_use;
++	int max_speed = priv->plat->max_speed;
++
++	/* Cut down 1G if asked to */
++	if ((max_speed > 0) && (max_speed < 1000)) {
++		phylink_set(mask, 1000baseT_Full);
++		phylink_set(mask, 1000baseX_Full);
++	}
++
++	/* Half-Duplex can only work with single queue */
++	if (tx_cnt > 1) {
++		phylink_set(mask, 10baseT_Half);
++		phylink_set(mask, 100baseT_Half);
++		phylink_set(mask, 1000baseT_Half);
++	}
++
++	bitmap_andnot(supported, supported, mask, __ETHTOOL_LINK_MODE_MASK_NBITS);
++	bitmap_andnot(state->advertising, state->advertising, mask,
++		      __ETHTOOL_LINK_MODE_MASK_NBITS);
++}
++
++static int stmmac_mac_link_state(struct phylink_config *config,
++				 struct phylink_link_state *state)
++{
++	return -EOPNOTSUPP;
++}
++
+ static void stmmac_mac_config(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+@@ -900,6 +934,11 @@ static void stmmac_mac_config(struct net_device *dev)
+ 	writel(ctrl, priv->ioaddr + MAC_CTRL_REG);
+ }
+ 
++static void stmmac_mac_an_restart(struct phylink_config *config)
++{
++	/* Not Supported */
++}
++
+ static void stmmac_mac_link_down(struct net_device *dev, bool autoneg)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+@@ -914,6 +953,15 @@ static void stmmac_mac_link_up(struct net_device *dev, bool autoneg)
+ 	stmmac_mac_set(priv, priv->ioaddr, true);
+ }
+ 
++static const struct phylink_mac_ops __maybe_unused stmmac_phylink_mac_ops = {
++	.validate = stmmac_validate,
++	.mac_link_state = stmmac_mac_link_state,
++	.mac_config = NULL, /* TO BE FILLED */
++	.mac_an_restart = stmmac_mac_an_restart,
++	.mac_link_down = NULL, /* TO BE FILLED */
++	.mac_link_up = NULL, /* TO BE FILLED */
++};
++
+ /**
+  * stmmac_adjust_link - adjusts the link parameters
+  * @dev: net device structure
+-- 
+2.21.0
 
