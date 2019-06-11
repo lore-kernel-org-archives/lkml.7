@@ -2,112 +2,105 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E123BC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4412C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EFB20866
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9948F20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="iUogNK2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436933AbfFKWXG (ORCPT
+        id S2391799AbfFKWZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:23:06 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:28995 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436797AbfFKWWO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:22:14 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 11 Jun 2019 15:22:09 -0700
-Received: from rlwimi.localdomain (unknown [10.129.220.121])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id C5B4441BAC;
-        Tue, 11 Jun 2019 15:22:12 -0700 (PDT)
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [PATCH v2 02/13] recordmcount: Remove uread()
-Date:   Tue, 11 Jun 2019 15:21:44 -0700
-Message-ID: <a9af0192fd910026082eace685a037009a2f3049.1560285597.git.mhelsley@vmware.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1560285597.git.mhelsley@vmware.com>
-References: <cover.1560285597.git.mhelsley@vmware.com>
+        Tue, 11 Jun 2019 18:25:42 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41794 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389575AbfFKWZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:25:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1560291939; bh=u1xRqcipnjQfdrJT1iMxqmCOWzuFT5iSpjmBJ/NwAng=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iUogNK2F3RyjngMx4djQtjKewbxnn+Nvf/e84Jaqj+b4bz0KfhOo3Ucmsc62ArP91
+         AnN9RXuB+r50eNOnii91OJYHduVuqj5nTyOUHPDIYkXghBU6tFTYtNYz9GqOvxApED
+         F0Y3GKdyuZXdNlSiqbjhmi4AahsEzFRbhTeWdtDA=
+Date:   Wed, 12 Jun 2019 00:25:39 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-sunxi@googlegroups.com, Jose Abreu <joabreu@synopsys.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v6 4/6] dt-bindings: display: hdmi-connector: Support DDC
+ bus enable
+Message-ID: <20190611222539.msviqrbptjd5vdji@core.my.home>
+Mail-Followup-To: Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        devicetree@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-sunxi@googlegroups.com, Jose Abreu <joabreu@synopsys.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+References: <20190527162237.18495-1-megous@megous.com>
+ <20190527162237.18495-5-megous@megous.com>
+ <20190611215206.GA17759@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611215206.GA17759@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uread() is only used to initialize the ELF file's pseudo
-private-memory mapping while uwrite() and ulseek() work within
-the pseudo-mapping and extend it as necessary.  Thus it is not
-a complementary function to uwrite() and ulseek(). It also makes
-no sense to do cleanups inside uread() when its only caller,
-mmap_file(), is doing the relevant allocations and associated
-initializations.
+On Tue, Jun 11, 2019 at 03:52:06PM -0600, Rob Herring wrote:
+> On Mon, 27 May 2019 18:22:35 +0200, megous@megous.com wrote:
+> > From: Ondrej Jirman <megous@megous.com>
+> > 
+> > Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+> > on-board voltage shifting logic for the DDC bus using a gpio to be able
+> > to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
+> > model this.
+> > 
+> > Add binding documentation for optional ddc-en-gpios property.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-Therefore it's clearer to use a plain read() call to initialize the
-data in mmap_file() and remove uread().
+Sorry, it was some mistake. Thanks for the note.
 
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
----
- scripts/recordmcount.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+regards,
+	Ondrej
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index ebe98c39f3cd..c0dd46344063 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -89,7 +89,7 @@ succeed_file(void)
- 	longjmp(jmpenv, SJ_SUCCEED);
- }
- 
--/* ulseek, uread, ...:  Check return value for errors. */
-+/* ulseek, uwrite, ...:  Check return value for errors. */
- 
- static off_t
- ulseek(int const fd, off_t const offset, int const whence)
-@@ -112,17 +112,6 @@ ulseek(int const fd, off_t const offset, int const whence)
- 	return file_ptr - file_map;
- }
- 
--static size_t
--uread(int const fd, void *const buf, size_t const count)
--{
--	size_t const n = read(fd, buf, count);
--	if (n != count) {
--		perror("read");
--		fail_file();
--	}
--	return n;
--}
--
- static size_t
- uwrite(int const fd, void const *const buf, size_t const count)
- {
-@@ -298,7 +287,10 @@ static void *mmap_file(char const *fname)
- 	if (file_map == MAP_FAILED) {
- 		mmap_failed = 1;
- 		file_map = umalloc(sb.st_size);
--		uread(fd_map, file_map, sb.st_size);
-+		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
-+			perror(fname);
-+			fail_file();
-+		}
- 	}
- 	close(fd_map);
- 
--- 
-2.20.1
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
