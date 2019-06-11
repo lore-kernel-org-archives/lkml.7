@@ -2,122 +2,127 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24427C06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A214DC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F181020896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFB02089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560272646;
-	bh=axRT5JjYKSXByd3Jz+2a0rbOsJIBRVP+DrKJgM5vAQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ovf5xKWkE2Qyw2JF/AYiVMpIc03xvWruo5ypUbKExYDk40QKEHYsLIKWeBgYpH9VK
-	 Z8xJ4CWO7W0Gsh0MKKvC/P2ufLuD4S5WkH44yQPxKGrOfuHIRk9gozDKXOCw/SX4Sh
-	 XT8KLxz13d16KyWQjBv8TUjHFZXjND/CMCpRTuWo=
+	s=default; t=1560272718;
+	bh=DauQCRhgV/O4VrW9hcrc1Sr/J/sLurl5KVbTla9rX2I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=D4jM+ZXYsFGpXO2ipKVfrexfa/ovlqVmbZKjtbegwSxu2JNtmrfG7iaQSmKo2CeZ/
+	 GdEfM5vIbRjKZ7v0osb/l+s2caAE133jjE75Pq1BqZIImvSWhDQNHGGz3RorNlSQru
+	 VDFggqJ5llKsQQ18MyeXKAYt3NUrUmDVlYHkf4gE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405804AbfFKREF (ORCPT
+        id S2405753AbfFKRFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:04:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405787AbfFKREE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:04:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CD6820896;
-        Tue, 11 Jun 2019 17:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560272643;
-        bh=axRT5JjYKSXByd3Jz+2a0rbOsJIBRVP+DrKJgM5vAQY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VntXkSI14TcPpPRJ8+KMneY8ceW0MOfhaGoB4PIwtAh1wcPgjUhQDfLBwBLgfw1Lg
-         MNfdQXia1Mzs7wBgwyrMe1QpGv1SGA9vOJPDDgIWKY8TwaGLMqvNoZRm1Y2oHILAtC
-         XFkM7XWPgw6BbJJY+L2RsV2oj+x48LTlDHTFimT0=
-Date:   Tue, 11 Jun 2019 19:04:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] PHY: for 5.2-rc
-Message-ID: <20190611170401.GA23216@kroah.com>
-References: <20190611140122.9429-1-kishon@ti.com>
+        Tue, 11 Jun 2019 13:05:17 -0400
+Received: from casper.infradead.org ([85.118.1.10]:41716 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404647AbfFKRFR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 13:05:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7Yq617plFowJ6SPqfSlFnXKBCkZMDSV9shNeKC4mMEY=; b=K0CsPURbcVID3VZgvAW0iTm3wR
+        a4w5JgdjFouiUq0BWdslkyoBdxaVdGLJePyibi1Mog+r1AuYwR/+jqWtSVGIrgf6yzUg0z1U28CyG
+        ZhJdIclAT572+X/UXggsJ8f8SVJMT/MisC//pgJXvXzFsvm9J+X3u1iSiUKWNx87KYuHGB3heK7cb
+        r1U6atgMP9cSs7F68WdhTtVFB7a/r7PPkSHtsAXTs+U5GV1KWlGhJYzDFXrGHhlV1xt/wYfmrvWud
+        Gs8cNb0zXmzCs1nXi+2dGANfmt3c8nyUKVKzyntwvyexURPTWIVP8gQmd/HhZ+q8RGBPy2CreqY6B
+        yzJmGK5g==;
+Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hakCs-0002PQ-Bo; Tue, 11 Jun 2019 17:05:10 +0000
+Date:   Tue, 11 Jun 2019 14:05:01 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        dri-devel@lists.freedesktop.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v3 06/20] docs: mark orphan documents as such
+Message-ID: <20190611140501.11ba091b@coco.lan>
+In-Reply-To: <CAHp75VfTNJOGZx-PoUXLRvzghqf6bVUdJ+yFjE9hNtDLCQ1=UA@mail.gmail.com>
+References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+        <0bea1c7c4fc06c7edabbf3185c0cbbc6e85eafd0.1559933665.git.mchehab+samsung@kernel.org>
+        <CAHp75VfTNJOGZx-PoUXLRvzghqf6bVUdJ+yFjE9hNtDLCQ1=UA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611140122.9429-1-kishon@ti.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 07:31:22PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Greg,
-> 
-> Please find the pull request for 5.2 -rc cycle.
-> 
-> The major fix being moving supplies powering PLLs used by USB, SATA,
-> PCIe to tegra-xusb driver fixing initialization failure.
-> 
-> Others are minor fixes. Please see the tag message below for more
-> details.
-> 
-> Consider merging it in this -rc cycle and let me know if you want me
-> to make any changes.
-> 
-> Thanks
-> Kishon
-> 
-> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-> 
->   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.2-rc
-> 
-> for you to fetch changes up to ada28f7b3a97fa720864c86504a7c426ee6f91c1:
-> 
->   phy: tegra: xusb: Add Tegra210 PLL power supplies (2019-06-07 15:58:34 +0530)
-> 
-> ----------------------------------------------------------------
-> phy: for 5.2-rc
-> 
->   *) Move Tegra124 PLL power supplies to be enabled by xusb-tegra124
->   *) Move Tegra210 PLL power supplies to be enabled by xusb-tegra210
->   *) Minor fixes: fix memory leaks at error path, fix sparse warnings
->      and addresses coverity.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> ----------------------------------------------------------------
-> Colin Ian King (1):
->       phy: qcom-qusb2: fix missing assignment of ret when calling clk_prepare_enable
-> 
-> Florian Fainelli (1):
->       phy: usb: phy-brcm-usb: Remove sysfs attributes upon driver removal
-> 
-> Thierry Reding (3):
->       dt-bindings: phy: tegra-xusb: List PLL power supplies
->       phy: tegra: xusb: Add Tegra124 PLL power supplies
->       phy: tegra: xusb: Add Tegra210 PLL power supplies
-> 
-> Yoshihiro Shimoda (1):
->       phy: renesas: rcar-gen2: Fix memory leak at error paths
-> 
-> YueHaibing (1):
->       phy: ti: am654-serdes: Make serdes_am654_xlate() static
+Em Tue, 11 Jun 2019 19:52:04 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> escreveu:
 
-sparse fixes are not for the -rc cycle, unless they fix an actual bug.
+> On Fri, Jun 7, 2019 at 10:04 PM Mauro Carvalho Chehab
+> <mchehab+samsung@kernel.org> wrote:
+> > Sphinx doesn't like orphan documents:  
+> 
+> >     Documentation/laptops/lg-laptop.rst: WARNING: document isn't included in any toctree  
+> 
+> >  Documentation/laptops/lg-laptop.rst             | 2 ++  
+> 
+> > diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/laptops/lg-laptop.rst
+> > index aa503ee9b3bc..f2c2ffe31101 100644
+> > --- a/Documentation/laptops/lg-laptop.rst
+> > +++ b/Documentation/laptops/lg-laptop.rst
+> > @@ -1,5 +1,7 @@
+> >  .. SPDX-License-Identifier: GPL-2.0+
+> >
+> > +:orphan:
+> > +
+> >  LG Gram laptop extra features
+> >  =============================
+> >  
+> 
+> Can we rather create a toc tree there?
+> It was a first document in reST format in that folder.
 
-Care to send these as a patch series and I can queue up the real
-bugfixes for -final and take the others for 5.3-rc1?
+Sure, but:
 
-thanks,
+1) I have a patch converting the other files on this dir to rst:
 
-greg k-h
+	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=convert_rst_renames_v4.1&id=abc13233035fdfdbc5ef2f2fbd3d127a1ab15530
+
+2) It probably makes sense to move the entire dir to
+Documentation/admin-guide.
+
+So, I would prefer to have the :orphan: here while (1) is not merged.
+
+Thanks,
+Mauro
