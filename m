@@ -2,266 +2,281 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402FDC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D33C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014302145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613362146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:38:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNch+St/"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V6rSEtAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404448AbfFKHh5 (ORCPT
+        id S2404483AbfFKHiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:37:57 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36336 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404009AbfFKHh4 (ORCPT
+        Tue, 11 Jun 2019 03:38:13 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8895 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404480AbfFKHiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:37:56 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w7so8211120oic.3;
-        Tue, 11 Jun 2019 00:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uyWNTU55JT9GK2aN646mLXTRkgWwGnf383ImPAHfNpc=;
-        b=NNch+St/7hAl3ovYZbYCVbvfTDW9aaAdG3YFRwtyjwKjabESyVU20yJQkrnKixD3V/
-         MoQhUTsGszn5tB3sqV40NutooZumVOOm53GRxEuKgaiDULicGCieRRvk7R5bj/uoQa02
-         ZcPZNO38kFAJy/g9yETKVRDRXYZLLc6KGC1ouRVEKOAMX/wrHNeyluk2fPksMft1XpGV
-         XGPrYHRVJCCTdzOYbSokuPBI43FsdrG+exejkRj1mJqxgRrLLhO3DvzjPBDmriC5mzoi
-         Am+ztDUZIWoZrvOT3pXdFwClzI9uq6Ltf0K6ph2Bp0y52xWs23mGDCwtR0vMYsk/8S9I
-         sNQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uyWNTU55JT9GK2aN646mLXTRkgWwGnf383ImPAHfNpc=;
-        b=jcANhyl9a0lLMLyucPCpFaBiYgG4dFvLQ8HSk2o5Yo5jpgUTXHVh7xqk3QqUa1VWKt
-         o/MqIKytkcGnzRxHWEl9hf/so1rC3OMtK6GYbYANV/nWYtjn+ZfZ5kvVahzqBOcOxdRE
-         vDXqSJfE88AdQlQV5WUmpdxtGGxQiXmTDBPo/Uc1xklaXHYnqMhQQfFZ/eMGh4DX7PCB
-         VJSMQZ2SOUtlX1vStOys5CYKtPmK3mZHKgQQ7CT7DRxpT95MDGccCLlgjwyXoJ3Web/h
-         4X87bsauwfGoWbgYwcbdWnFexPVpfC1aJEiBQql1niFlboJ0TnPo8i3usFbg37UE+57h
-         jKHQ==
-X-Gm-Message-State: APjAAAX1V3szujy6jUA7FdUqZpcldCXzEI7zshSpl8TaYJ9nja3wGkJM
-        h1ZjU2FpZWOo+H75UkzpdCE1EjEa8XLTACuZ8rQ=
-X-Google-Smtp-Source: APXvYqw+OUl8lt7EinVIXV0dyYFcWVFGvEUraTxANWi0wvDXljmpbDt7OmvSt0YYFLlgqxH/x4HFS/kwFzsk6v9ZG5M=
-X-Received: by 2002:aca:3305:: with SMTP id z5mr12567515oiz.141.1560238675747;
- Tue, 11 Jun 2019 00:37:55 -0700 (PDT)
+        Tue, 11 Jun 2019 03:38:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cff5a600000>; Tue, 11 Jun 2019 00:38:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 11 Jun 2019 00:38:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 11 Jun 2019 00:38:10 -0700
+Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 11 Jun
+ 2019 07:38:06 +0000
+Subject: Re: [PATCH V4 6/6] i2c: tegra: remove BUG, BUG_ON
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560186515-30797-1-git-send-email-bbiswas@nvidia.com>
+ <1560186515-30797-6-git-send-email-bbiswas@nvidia.com>
+ <06ab30b6-bf79-c628-0a04-d0307511a06f@gmail.com>
+ <851d7837-5b98-228e-d8c9-3c41be1fb2e0@nvidia.com>
+ <e733bcb0-ea8c-61d1-e6b5-cee8b7696c70@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <fe0a0cb2-73e3-8f5c-8115-f99c150bd5df@nvidia.com>
+Date:   Tue, 11 Jun 2019 00:38:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
- <1558418814-6822-2-git-send-email-wanpengli@tencent.com> <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
-In-Reply-To: <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 11 Jun 2019 15:38:40 +0800
-Message-ID: <CANRm+CyqH5ojNTcX3zfVjB8rayGHAW0Ex+fiGPnrO7bkmvr_4w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] KVM: X86: Provide a capability to disable cstate
- msr read intercepts
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e733bcb0-ea8c-61d1-e6b5-cee8b7696c70@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560238688; bh=ZyPPJDNvO7cDnmdl/kTHgbcR7ae41C4gpQR83a0/vbo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=V6rSEtASgNvCDYQjA/C42XVGp4xyB2wrxjw0xtgho6fRT/uAaDZVrweDBmT7C7kjc
+         7/V2AW7CJa1PLj7McltTf17W2u5n5RNlKs+Cjh8AhLGRHq5Q4cDxkbqXbybrv1Tck0
+         T67ghYqDLV6bpM2q785jsxkguhgZH4RTAIy9u8Ql1wfpBy3vNhq2gJTGiUqHW5ikKS
+         c85XzF7EjIIfad8OT/D/DExWhdBBMjOej+cnj9AFc7CgKDKq5lAWZcs+NJTQsKcT0O
+         soEjoyH1S/HQf6Y59kg6tW0b6EdBka1JfmdXPnc3GWKGzsSr2J8lqgdSfZCjbrh+w3
+         uyL3Lxo8fTJqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 at 00:53, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 21/05/19 08:06, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Allow guest reads CORE cstate when exposing host CPU power management c=
-apabilities
-> > to the guest. PKG cstate is restricted to avoid a guest to get the whol=
-e package
-> > information in multi-tenant scenario.
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Liran Alon <liran.alon@oracle.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v1 -> v2:
-> >  * use a separate bit for KVM_CAP_X86_DISABLE_EXITS
-> >
-> >  Documentation/virtual/kvm/api.txt | 1 +
-> >  arch/x86/include/asm/kvm_host.h   | 1 +
-> >  arch/x86/kvm/vmx/vmx.c            | 6 ++++++
-> >  arch/x86/kvm/x86.c                | 5 ++++-
-> >  arch/x86/kvm/x86.h                | 5 +++++
-> >  include/uapi/linux/kvm.h          | 4 +++-
-> >  tools/include/uapi/linux/kvm.h    | 4 +++-
-> >  7 files changed, 23 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/=
-kvm/api.txt
-> > index 33cd92d..91fd86f 100644
-> > --- a/Documentation/virtual/kvm/api.txt
-> > +++ b/Documentation/virtual/kvm/api.txt
-> > @@ -4894,6 +4894,7 @@ Valid bits in args[0] are
-> >  #define KVM_X86_DISABLE_EXITS_MWAIT            (1 << 0)
-> >  #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
-> >  #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
-> > +#define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
-> >
-> >  Enabling this capability on a VM provides userspace with a way to no
-> >  longer intercept some instructions for improved latency in some
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm=
-_host.h
-> > index d5457c7..1ce8289 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -882,6 +882,7 @@ struct kvm_arch {
-> >       bool mwait_in_guest;
-> >       bool hlt_in_guest;
-> >       bool pause_in_guest;
-> > +     bool cstate_in_guest;
-> >
-> >       unsigned long irq_sources_bitmap;
-> >       s64 kvmclock_offset;
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 0861c71..da24f18 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -6637,6 +6637,12 @@ static struct kvm_vcpu *vmx_create_vcpu(struct k=
-vm *kvm, unsigned int id)
-> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, M=
-SR_TYPE_RW);
-> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, =
-MSR_TYPE_RW);
-> >       vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, =
-MSR_TYPE_RW);
-> > +     if (kvm_cstate_in_guest(kvm)) {
-> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES=
-, MSR_TYPE_R);
-> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RES=
-IDENCY, MSR_TYPE_R);
-> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RES=
-IDENCY, MSR_TYPE_R);
-> > +             vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RES=
-IDENCY, MSR_TYPE_R);
->
-> I think I have changed my mind on the implementation of this, sorry.
->
-> 1) We should emulate these MSRs always, otherwise the guest API changes
-> between different values of KVM_CAP_X86_DISABLE_EXITS which is not
-> intended.  Also, KVM_CAP_X86_DISABLE_EXITS does not prevent live
-> migration, so it should be possible to set the MSRs in the host to
-> change the delta between the host and guest values.
->
-> 2) If both KVM_X86_DISABLE_EXITS_HLT and KVM_X86_DISABLE_EXITS_MWAIT are
-> disabled (i.e. exit happens), the MSRs will be purely emulated.
-> C3/C6/C7 residency will never increase (it will remain the value that is
-> set by the host).  When the VM executes an hlt vmexit, it should save
-> the current TSC.  When it comes back, the C1 residency MSR should be
-> increased by the time that has passed.
->
-> 3) If KVM_X86_DISABLE_EXITS_HLT is enabled but
-> KVM_X86_DISABLE_EXITS_MWAIT is disabled (i.e. mait exits happen),
-> C3/C6/C7 residency will also never increase, but the C1 residency value
-> should be read using rdmsr from the host, with a delta added from the
-> host value.
->
-> 4) If KVM_X86_DISABLE_EXITS_HLT and KVM_X86_DISABLE_EXITS_MWAIT are both
-> disabled (i.e. mwait exits do not happen), all four residency values
-> should be read using rdmsr from the host, with a delta added from the
-> host value.
->
-> 5) If KVM_X86_DISABLE_EXITS_HLT is disabled and
-> KVM_X86_DISABLE_EXITS_MWAIT is enabled, the configuration makes no sense
-> so it's okay not to be very optimized.  In this case, the residency
-> value should be read as in (4), but hlt vmexits will be accounted as in
-> (2) so we need to be careful not to double-count the residency during
-> hlt.  This means doing four rdmsr before the beginning of the hlt vmexit
-> and four at the end of the hlt vmexit.
 
-MSR_CORE_C1_RES is unreadable except for ATOM platform, so I think we
-can avoid the complex logic to handle C1 now. :)
 
-Regards,
-Wanpeng Li
+On 6/10/19 2:00 PM, Dmitry Osipenko wrote:
+> 10.06.2019 22:41, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>>
+>> On 6/10/19 11:12 AM, Dmitry Osipenko wrote:
+>>> 10.06.2019 20:08, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+>>>> as needed. Remove BUG() and make Rx and Tx case handling
+>>>> similar.
+>>>>
+>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
+>>>>  =C2=A0 1 file changed, 6 insertions(+), 5 deletions(-)
+>>>
+>>> Looks that this is still not correct. What if it transfer-complete flag
+>>> is set and buffer is full on RX? In this case the transfer will succeed
+>>> while it was a failure.
+>>>
+>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
+>>>> b/drivers/i2c/busses/i2c-tegra.c
+>>>> index 4dfb4c1..30619d6 100644
+>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>> @@ -515,7 +515,6 @@ static int tegra_i2c_empty_rx_fifo(struct
+>>>> tegra_i2c_dev *i2c_dev)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * prevent overwriting past the e=
+nd of buf
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rx_fifo_avail > 0 && buf_remaining=
+ > 0) {
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(buf_remaining > 3);
+>>>
+>>> Actually error should be returned here since out-of-bounds memory
+>>> accesses must be avoided, hence:
+>>>
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0if (WARN_ON_ONCE(buf_remaining > 3))
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>> buf_remaining will be less than equal to 3 because of the expression
+>> earlier
+>> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-=
+tegra.c#L520
+>>
+>=20
+> Ah yes, indeed!
+>=20
+I see that I am wrong and buf_remaining > 3 needs to be prevented at
 
->
-> Therefore the data structure should be something like
->
-> struct kvm_residency_msr {
->         u64 value;
->         bool delta_from_host;
->         bool count_with_host;
-> }
->
-> u64 kvm_residency_read_host(struct kvm_residency_msr *msr)
-> {
->         u64 unscaled_value =3D rdmsrl(msr->index);
->         // apply TSC scaling...
->         return ...
-> }
->
-> u64 kvm_residency_read(struct kvm_residency_msr *msr)
-> {
->         return msr->value +
->                 (msr->delta_from_host ? kvm_residency_read_host(msr) : 0)=
-;
-> }
->
-> void kvm_residency_write(struct kvm_residency_msr *msr,
->                          u64 value)
-> {
->         msr->value =3D value -
->                 (msr->delta_from_host ? kvm_residency_read_host(msr) : 0)=
-;
-> }
->
-> // count_with_host is true for C1 iff any of KVM_CAP_DISABLE_EXITS_HLT
-> // or KVM_CAP_DISABLE_EXITS_MWAIT is set
-> // count_with_host is true for C3/C6/C7 iff KVM_CAP_DISABLE_EXITS_MWAIT
-> is set
-> void kvm_residency_setup(struct kvm_residency_msr *msr, u16 index,
->                          bool count_with_host)
-> {
->         /* Preserve value on calls after the first */
->         u64 value =3D msr->index ? kvm_residency_read(msr) : 0;
->         msr->delta_from_host =3D msr->count_with_host =3D count_with_host=
-;
->         msr->index =3D index;
->         kvm_residency_write(msr, value);
-> }
->
-> // The following functions are called from hlt vmexits.
->
-> void kvm_residency_start_hlt(struct kvm_residency_msr *msr)
-> {
->         if (msr->count_with_host) {
->                 WARN_ON(msr->delta_from_host);
->                 msr->value +=3D kvm_residency_read_host(msr);
->                 msr->delta_from_host =3D false;
->         }
-> }
->
-> // host_tsc_waited is 0 except for MSR_CORE_C1_RES
-> void kvm_residency_end_hlt(struct kvm_residency_msr *msr,
->                            u64 host_tsc_waited)
-> {
->         if (msr->count_with_host) {
->                 WARN_ON(!msr->delta_from_host);
->                 msr->value -=3D kvm_residency_read_host(msr);
->                 msr->delta_from_host =3D true;
->         }
->         if (host_tsc_waited) {
->                 // ... apply TSC scaling to host_tsc_waited ...
->                 msr->value +=3D ...;
->         }
-> }
->
-> Thanks,
->
-> Paolo
+https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-teg=
+ra.c#L528
+
+because of word_to_transfer is limited to rx_fifo_avail:
+
+https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-teg=
+ra.c#L515
+
+I shall add the check for less than 3 in both RX and TX cases in a=20
+separate patch in this series.
+
+>>
+>>>
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D i2c_re=
+adl(i2c_dev, I2C_RX_FIFO);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D cpu_to=
+_le32(val);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memcpy(buf, &v=
+al, buf_remaining);
+>>>> @@ -523,7 +522,6 @@ static int tegra_i2c_empty_rx_fifo(struct
+>>>> tegra_i2c_dev *i2c_dev)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rx_fifo_avail-=
+-;
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 BUG_ON(rx_fifo_avail > 0 && buf_remaining =
+> 0);
+>>>
+>>> Better not to ignore this as well:
+>>>
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0if (WARN_ON_ONCE(rx_fifo_avail > 0 &&
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 buf_remaining > 0))
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>>
+>> Please check below line.
+>> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-=
+tegra.c#L532
+>>
+>>
+>> It ensures that buf_remaining will be 0 and we never hit the BUG_ON as
+>> follows:
+>=20
+> [1] Okay, but it doesn't ensure about rx_fifo_avail. So it could be:
+>=20
+> 	if (WARN_ON_ONCE(rx_fifo_avail))
+> 		return -EINVAL;
+I shall add the WARN_ON_ONCE.
+
+
+>=20
+>>>> -=C2=A0=C2=A0=C2=A0 BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+>>
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i2c_dev->msg_buf_remaining =3D buf_rem=
+aining;
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i2c_dev->msg_buf =3D buf;
+>>>>  =C2=A0 @@ -581,7 +579,6 @@ static int tegra_i2c_fill_tx_fifo(struct
+>>>> tegra_i2c_dev *i2c_dev)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * boundary and fault.
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (tx_fifo_avail > 0 && buf_remaining=
+ > 0) {
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(buf_remaining > 3);
+>>>
+>>> And here, cause this will corrupt stack:
+>>>
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(buf_remain=
+ing > 3))
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
+urn -EINVAL;
+>>>
+>> Please check the line
+>> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-=
+tegra.c#L576
+>>
+>>
+>> It ensures buf_remaining will be less or equal to 3.
+>=20
+> Okay, agree here.
+>=20
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memcpy(&val, b=
+uf, buf_remaining);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D le32_t=
+o_cpu(val);
+>>>>  =C2=A0 @@ -850,7 +847,8 @@ static irqreturn_t tegra_i2c_isr(int irq, =
+void
+>>>> *dev_id)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 if (i2c_dev->msg_buf_remaining)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_i2c_empty_rx_fifo(i2c_dev);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 else
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 BUG();
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 tegra_i2c_mask_irq(i2c_dev,
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 I2C_INT_RX_FIFO_DATA_REQ);
+>>>
+>>> Then here:
+>>>
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0if (WARN_ON_ONCE(!i2c_dev->msg_buf_remaining) =
+||
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_i2c_empty_rx_fifo(i2c=
+_dev)) {
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i2c_dev->msg_err |=3D I2C_E=
+RR_UNKNOWN_INTERRUPT;
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err;
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0}
+>>>
+>> Can you please elaborate why the condition needs to be as follows
+>> instead of " if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) " ?
+>>
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0 if (WARN_ON_ONCE(!i2c_dev->msg_buf_remaining)=
+ ||
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_i2c_empty_rx_fi=
+fo(i2c_dev)) {
+>=20
+> Because this is a "receive" transfer and hence it is a error condition
+> if the data-message was already fully received and then there is another
+> request from hardware to receive more data. So
+> "!i2c_dev->msg_buf_remaining" is the error condition here because there
+> is no more space in the buffer.
+>=20
+> Looking at this again, seems checking for "if
+> (WARN_ON_ONCE(rx_fifo_avail))" in the above hunk [1] will be already
+> enough since a not fully drained RX FIFO means that there is no enough
+> space in the buffer. Then it could be:
+>=20
+>          if (tegra_i2c_empty_rx_fifo(i2c_dev)) {
+>                  i2c_dev->msg_err |=3D I2C_ERR_UNKNOWN_INTERRUPT;
+>                  goto err;
+> 	}
+>=20
+In the case "if (status & I2C_INT_PACKET_XFER_COMPLETE) {" , we do not=20
+have any tegra_i2c_empty_rx_fifo call today. In this current driver I do=20
+not see any code that checks for the buffer space and prevents RX FIFO=20
+from being drained. The transfer complete when seen must have already=20
+consumed all bytes of msg_buf_remaining in the call at the line
+
+https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-teg=
+ra.c#L860
+
+So we can put the "WARN_ON_ONCE(i2c_dev->msg_buf_remaining) with msg_err=20
+assignment and goto err" to confirm if some corner case is not handled.
+
+Planning to share updated patch.
+
+-Thanks,
+  Bitan
