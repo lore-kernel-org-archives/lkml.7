@@ -2,150 +2,112 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C4DC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98CBC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDDD212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="JGwtO/95"
+	by mail.kernel.org (Postfix) with ESMTP id 7FEB72080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405466AbfFKPy1 (ORCPT
+        id S2391857AbfFKPzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:54:27 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41805 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405288AbfFKPy0 (ORCPT
+        Tue, 11 Jun 2019 11:55:36 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:48875 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388958AbfFKPzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:54:26 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 83so7194793pgg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 08:54:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=7/rmAfXxEXpI5+u46SKl/lb2QdtqgSoIemXYjsm6rRY=;
-        b=JGwtO/95pxnGWI13wUGtJYUXwsq99nkWvZn4XWPr+MaqxfH1xHPo/VwZvWMN644TcH
-         +P5GD4btmaNaoXiIhW+LcGIMP2yMyFQY5N4lT3e1FgXZu8rIZjsY6mhGSWUNdbqw9ztd
-         uMcEjYp/irLDTWtKGany7LzkGLEaxAWAgiXJxXnaUB1YGkZb8d4mUl4q1MrmQndmXEna
-         9ADMcrNCBMa0lBl8T2Rpy8/atRRgd9ENS/IOVc6pMPzKbsk7y9sVZG3ZbwZFWuYv5OQf
-         iYvommQbA7hy8kyvAlmoGBAMss/afzpKtaYmkDFaprYBkDgCQtDPwRCK0dLjeML3rBpv
-         caRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=7/rmAfXxEXpI5+u46SKl/lb2QdtqgSoIemXYjsm6rRY=;
-        b=JgANwJZuoc6u5erILKpPt85sgyJu34tG/pIBlK/VkCdi4APDiBI/plBXDIrmwppQlt
-         09soOfnfnrDQAWwamYVQ06W3S05INO4hKCIPT0MrmW3smcwGD4MxU3A/da5UohvTocgS
-         F4XdsWe8tuCeFg2lMFY86Ti277vHfCXW5XUEQeDCu+LWLcfwzc8ZtYyt/l1pURUZ+BQ8
-         8Z6bEJQIAp8oq+MqVnVPFwaSWcSqsJWH+FbdaJqwOuALIPLvAWwi0K2p38AgQu452EQt
-         yHK5I5ffr27w4dRhcCge0D+/PMMO6pzn2IRQi5Si95ijk47kKu30N2CvxMqgHUdJAQbR
-         n9rw==
-X-Gm-Message-State: APjAAAU6rnBxgXHB35Lu9osnaZzylJv4obvLHq16fMqVjWkJ9LAKkso6
-        wiS2C9pG5Txa60RxzzQ5tDjhY+6LIGU=
-X-Google-Smtp-Source: APXvYqwmmEdW3dgKhypcu5q2FRXgvjN6eYK6yZrh4hwkGKY4tVK1A9+e9JQCiuTwWNW2qpqH9NzwmQ==
-X-Received: by 2002:a65:63d2:: with SMTP id n18mr9739049pgv.278.1560268466060;
-        Tue, 11 Jun 2019 08:54:26 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b062:7159:60af:2fa5:3435:5195? ([2600:1010:b062:7159:60af:2fa5:3435:5195])
-        by smtp.gmail.com with ESMTPSA id g17sm17964676pfb.56.2019.06.11.08.54.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 08:54:25 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate instructions
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <20190611080307.GN3436@hirez.programming.kicks-ass.net>
-Date:   Tue, 11 Jun 2019 08:54:23 -0700
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <435093E5-6FE3-4DAA-9ABE-EB9D372F8CF8@amacapital.net>
-References: <20190605130753.327195108@infradead.org> <20190605131945.005681046@infradead.org> <20190608004708.7646b287151cf613838ce05f@kernel.org> <20190607173427.GK3436@hirez.programming.kicks-ass.net> <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net> <20190611080307.GN3436@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
+        Tue, 11 Jun 2019 11:55:36 -0400
+X-Originating-IP: 90.88.159.246
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 6B74B60016;
+        Tue, 11 Jun 2019 15:55:29 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH net] net: ethtool: Allow matching on vlan CFI bit
+Date:   Tue, 11 Jun 2019 17:54:56 +0200
+Message-Id: <20190611155456.15360-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Using ethtool, users can specify a classification action matching on the
+full vlan tag, which includes the CFI bit.
 
+However, when converting the ethool_flow_spec to a flow_rule, we use
+dissector keys to represent the matching patterns.
 
-> On Jun 11, 2019, at 1:03 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
->> On Fri, Jun 07, 2019 at 11:10:19AM -0700, Andy Lutomirski wrote:
->>=20
->>=20
->>> On Jun 7, 2019, at 10:34 AM, Peter Zijlstra <peterz@infradead.org> wrote=
-:
->>>=20
->>> On Sat, Jun 08, 2019 at 12:47:08AM +0900, Masami Hiramatsu wrote:
->>>=20
->>>>> This fits almost all text_poke_bp() users, except
->>>>> arch_unoptimize_kprobe() which restores random text, and for that site=
+Since the vlan dissector key doesn't include the CFI bit, this
+information was silently discarded when translating the ethtool
+flow spec in to a flow_rule.
 
->>>>> we have to build an explicit emulate instruction.
->>>>=20
->>>> Hm, actually it doesn't restores randome text, since the first byte
->>>> must always be int3. As the function name means, it just unoptimizes
->>>> (jump based optprobe -> int3 based kprobe).
->>>> Anyway, that is not an issue. With this patch, optprobe must still work=
-.
->>>=20
->>> I thought it basically restored 5 bytes of original text (with no
->>> guarantee it is a single instruction, or even a complete instruction),
->>> with the first byte replaced with INT3.
->>>=20
->>=20
->> I am surely missing some kprobe context, but is it really safe to use
->> this mechanism to replace more than one instruction?
->=20
-> I'm not entirely up-to-scratch here, so Masami, please correct me if I'm
-> wrong.
->=20
-> So what happens is that arch_prepare_optimized_kprobe() <-
-> copy_optimized_instructions() copies however much of the instruction
-> stream is required such that we can overwrite the instruction at @addr
-> with a 5 byte jump.
->=20
-> arch_optimize_kprobe() then does the text_poke_bp() that replaces the
-> instruction @addr with int3, copies the rel jump address and overwrites
-> the int3 with jmp.
->=20
-> And I'm thinking the problem is with something like:
->=20
-> @addr: nop nop nop nop nop
->=20
-> We copy out the nops into the trampoline, overwrite the first nop with
-> an INT3, overwrite the remaining nops with the rel addr, but oops,
-> another CPU can still be executing one of those NOPs, right?
->=20
-> I'm thinking we could fix this by first writing INT3 into all relevant
-> instructions, which is going to be messy, given the current code base.
+This commit adds the CFI bit into the vlan dissector key, and allows
+propagating the information to the driver when parsing the ethtool flow
+spec.
 
-How does that help?  If RIP =3D=3D x+2 and you want to put a 5-byte jump at a=
-ddress x, no amount of 0xcc is going to change the fact that RIP is in the m=
-iddle of the jump.
+Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
+Reported-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+Hi all,
 
-Live patching can handle this by detecting this condition on each CPU, but p=
-erformance won=E2=80=99t be great.  Maybe some synchronize_sched trickery co=
-uld help.=
+Although this prevents information to be silently discarded when parsing
+an ethtool_flow_spec, this information doesn't seem to be used by any
+driver that converts an ethtool_flow_spec to a flow_rule, hence I'm not
+sure this is suitable for -net.
+
+Thanks,
+
+Maxime
+
+ include/net/flow_dissector.h | 1 +
+ net/core/ethtool.c           | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
+index 7c5a8d9a8d2a..9d2e395c6568 100644
+--- a/include/net/flow_dissector.h
++++ b/include/net/flow_dissector.h
+@@ -46,6 +46,7 @@ struct flow_dissector_key_tags {
+ 
+ struct flow_dissector_key_vlan {
+ 	u16	vlan_id:12,
++		vlan_cfi:1,
+ 		vlan_priority:3;
+ 	__be16	vlan_tpid;
+ };
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index d08b1e19ce9c..43df34c1ebe1 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -3020,6 +3020,11 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
+ 			match->mask.vlan.vlan_id =
+ 				ntohs(ext_m_spec->vlan_tci) & 0x0fff;
+ 
++			match->key.vlan.vlan_cfi =
++				!!(ntohs(ext_h_spec->vlan_tci) & 0x1000);
++			match->mask.vlan.vlan_cfi =
++				!!(ntohs(ext_m_spec->vlan_tci) & 0x1000);
++
+ 			match->key.vlan.vlan_priority =
+ 				(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
+ 			match->mask.vlan.vlan_priority =
+-- 
+2.20.1
+
