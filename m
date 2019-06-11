@@ -2,86 +2,162 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88D8C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B44C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805DC20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213E12089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:30:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmzY8iGW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TDdftQpZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbfFKMaf (ORCPT
+        id S1729339AbfFKMap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:30:35 -0400
-Received: from mail-vs1-f45.google.com ([209.85.217.45]:44376 "EHLO
-        mail-vs1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfFKMaf (ORCPT
+        Tue, 11 Jun 2019 08:30:45 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35801 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfFKMao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:30:35 -0400
-Received: by mail-vs1-f45.google.com with SMTP id v129so7751657vsb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 05:30:34 -0700 (PDT)
+        Tue, 11 Jun 2019 08:30:44 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p26so15801938edr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 05:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=gz3HqulYPvDCNfbcUEJOb/UAkc1+ZcJON/gujaAEXD0=;
-        b=HmzY8iGWE4Yk2oQRLRu48hKTyF8RzCNOzW/P5czsYYSgeANwSG+7RB8x39I6COkeBo
-         JcYesfnyAib72/r4g5eWMnHv+ERjOr4XUa5xuSjLNx78fao7r2xHdDmnsZxIuFEU5Arb
-         hlpJV9tcKcmPHjXYIMHc4iaydhZtEr1B20FkFWf01CU4gLjCcj9VUtflJ4c4Gxq/DqK5
-         oNgFcgLIEiMItMiuy9SEFaUq8VgiJuEKYouU5HrZ7Jl48rY8yjRy/6j5MwUvDveR//R1
-         OT11uoUr7a1M6gPNxJpfetuKgW8J6TbkhZco124MfYsGGWu40AJjTfY+Apv5S7J4VB/d
-         5Q0Q==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=98w8kwDvoFHXd9IwMdM47Fy1DAIHUsUmNhEulT8HBK4=;
+        b=TDdftQpZMVzC4IfNr/u5BN6jeQVrrMKS019h77cvrJUOFVDKizki1g/tr26F8MSQ1q
+         AO6qkfOfPQ6Yl+Ziymqed6eoJg3Un/jdD0/+RcRSsG0gKsD3mahTEkGa1ajRe0wgjIlz
+         eijyc4arZLtf6hLGJtDiOguGvpspBBv2uf6bs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=gz3HqulYPvDCNfbcUEJOb/UAkc1+ZcJON/gujaAEXD0=;
-        b=RVKHSBicnIpKbKYxaTpd74rCCr5v95UWE2FC/Ar6dYtQfMHcvWyTeVZwAH1W+3Fh2p
-         ReVA4f3ReyR50yI4FKL+LSIRvBa7ngtceLz60PkrqF/kOXawNlTv4YbR8LdTOFwSgTTW
-         oOHwl/55d5Pcvfr8nfyR0N8JOxMRO0Q6CyLe1nBNwQac3FeJuS3A/S7iVzIc2Mv0x0nh
-         ySNl9WUb/I8eheE+m+2C/0Lr/9xSonnT6kjlVKAyU44cBw3yUKMiVQYwZ56nVEjAL7Yg
-         QOMw0ma2QHwl+CL3uZBBwigDYx3DPeykPlMtZp+pkzRvr9nSd/5Ku+asi3SmdK1/jb6X
-         t6Rw==
-X-Gm-Message-State: APjAAAXzzsEMO/J2TexrOPRDUfcob6b5VTi1OkQdcJhOv0ebYb55orkM
-        4diLgOk1nVEmNzxv6+dApSVv5C8K7iL4z3ZXpWCVN50e1XA=
-X-Google-Smtp-Source: APXvYqxI2htrUVQ9hXzBCZmaHeqhE6ujSVrkHU5bi67mzovbs8gfkWsrmJRj2Q+VZ4j3ipY/gTnP/L8YtSnmQPjiPuA=
-X-Received: by 2002:a67:eada:: with SMTP id s26mr24905937vso.163.1560256234020;
- Tue, 11 Jun 2019 05:30:34 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=98w8kwDvoFHXd9IwMdM47Fy1DAIHUsUmNhEulT8HBK4=;
+        b=HilsR0v58bbaVBG5NJz8X+/Koobhzv9M7BO2Q3ayT7gdHwzf04nk29cyHi+uiQnhc5
+         rHaLAgqaMkY+d/HQ+HJkYkbOsMLeblQN+6DhOSJPYK+0WbY3nprjbH865X0JUl3Q/AaC
+         f/hIxzwhc/J5m7LrD5+FEiCXIyapV5xtlg4XsDn4jhmjpfjykcotzH/z6A0YRML5pqBZ
+         kfR63C4WMIiSErw+s2kVetdF21LVGDex/nfDIF7sHfD27fdj/v21OncQpwb1TykGApZz
+         xo8HyelmGTTntJVrATg3w1oREwNKuwyP0skvtILjxARSJ0NBfve62V5dyI9sieDltiUe
+         CLRQ==
+X-Gm-Message-State: APjAAAVxQG1n8xwi/jP5tyGHU67i7XiKfNuAQ9sttPbtgfiodVbEC1Mo
+        ipdt7g1O4ZL1pAqEZ4bHKCN5Tw==
+X-Google-Smtp-Source: APXvYqzHQupV7Rmfh5ij3V00vLmNZH3ALvTxarM+XMmPX3T/9+vt9lBZBgQcrNIWb/U3FURLETC1mw==
+X-Received: by 2002:a50:8465:: with SMTP id 92mr3529325edp.151.1560256242889;
+        Tue, 11 Jun 2019 05:30:42 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id a9sm3781447edc.44.2019.06.11.05.30.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 05:30:40 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 14:30:38 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH v2 2/2] drm/komeda: Adds komeda_kms_drop_master
+Message-ID: <20190611123038.GC2458@phenom.ffwll.local>
+Mail-Followup-To: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+References: <1560251589-31827-1-git-send-email-lowry.li@arm.com>
+ <1560251589-31827-3-git-send-email-lowry.li@arm.com>
 MIME-Version: 1.0
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Tue, 11 Jun 2019 15:30:08 +0300
-Message-ID: <CAFCwf11EM9+NDML9hQmk9-rPzSmDmAyVLW+qOfs6h62dGK6H9A@mail.gmail.com>
-Subject: Question - check in runtime which architecture am I running on
-To:     linuxppc-dev@ozlabs.org
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560251589-31827-3-git-send-email-lowry.li@arm.com>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello POWER developers,
+On Tue, Jun 11, 2019 at 11:13:45AM +0000, Lowry Li (Arm Technology China) wrote:
+> From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+> 
+> The komeda internal resources (pipelines) are shared between crtcs,
+> and resources release by disable_crtc. This commit is working for once
+> user forgot disabling crtc like app quit abnomally, and then the
+> resources can not be used by another crtc. Adds drop_master to
+> shutdown the device and make sure all the komeda resources have been
+> released and can be used for the next usage.
+> 
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> index 8543860..647bce5 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> @@ -54,11 +54,24 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
+>  	return status;
+>  }
+>  
+> +/* Komeda internal resources (pipelines) are shared between crtcs, and resources
+> + * are released by disable_crtc. But if user forget disabling crtc like app quit
+> + * abnormally, the resources can not be used by another crtc.
+> + * Use drop_master to shutdown the device and make sure all the komeda resources
+> + * have been released, and can be used for the next usage.
+> + */
 
-I'm trying to find out if there is an internal kernel API so that a
-PCI driver can call it to check if its PCI device is running inside a
-POWER9 machine. Alternatively, if that's not available, if it is
-running on a machine with powerpc architecture.
+No. If we want this, we need to implement this across drivers, not with
+per-vendor hacks.
 
-I need this information as my device (Goya AI accelerator)
-unfortunately needs a slightly different configuration of its PCIe
-controller in case of POWER9 (need to set bit 59 to be 1 in all
-outbound transactions).
+The kerneldoc should have been a solid hint: "Only used by vmwgfx."
+-Daniel
 
-Currently I'm reading the PCI vendor and device ID of the parent PCI
-bus device and checking if it is PHB4 but that is an ugly hack. (see
-this commit - https://github.com/HabanaAI/linux/commit/1efd75ad5c9779b99a9a38c899e4e25e227626bf)
+> +static void komeda_kms_drop_master(struct drm_device *dev,
+> +				   struct drm_file *file_priv)
+> +{
+> +	drm_atomic_helper_shutdown(dev);
+> +}
+> +
+>  static struct drm_driver komeda_kms_driver = {
+>  	.driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC |
+>  			   DRIVER_PRIME | DRIVER_HAVE_IRQ,
+>  	.lastclose			= drm_fb_helper_lastclose,
+>  	.irq_handler			= komeda_kms_irq_handler,
+> +	.master_drop			= komeda_kms_drop_master,
+>  	.gem_free_object_unlocked	= drm_gem_cma_free_object,
+>  	.gem_vm_ops			= &drm_gem_cma_vm_ops,
+>  	.dumb_create			= komeda_gem_cma_dumb_create,
+> -- 
+> 1.9.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-I dug through the code but didn't find anything that can help me so I
-thought of asking more experienced people.
-
-Thanks,
-Oded
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
