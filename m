@@ -2,178 +2,184 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F87C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C870C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6957B20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7952089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b9zA6Ql8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6M2O8JB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406013AbfFKRSR (ORCPT
+        id S2405985AbfFKRVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:18:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46123 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405263AbfFKRSQ (ORCPT
+        Tue, 11 Jun 2019 13:21:16 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42911 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405263AbfFKRVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:18:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 81so7816423pfy.13
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:18:16 -0700 (PDT)
+        Tue, 11 Jun 2019 13:21:16 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z25so21229285edq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:21:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cRK7dSJ9ozXpkMag7XMLUlUKlJp+YVQsFuMywlLYIIY=;
-        b=b9zA6Ql86DPqQkTp5i0i6v7MtDOq0tAACNbJiToG/gsWM88lOHPNTLEE2A75D2FKoO
-         SaTGSkkdbkFjBHB6V7dNy3yNl8DW1iE0pnw0WmGXH9zKr6DLv5bE7mRA4LdyIllbpD/D
-         KcrOvJfjpWiyccNOyNMsy4lUx+9EWF4+Rz1owvnwBXs022X3zquKp/rp+skYCj68ppuI
-         s9oCX7Or8ik9oAg9pTuxoIFV/Q0kJ7gPx7GPxqYH4vPwX3SSd1Ma3tHuV9GC8yXrZkiY
-         8Msdnuz2aqf5gojfEQ2ZtoCfHhj+2CsKFVVs7asqO5iLhZbFI9QDBNBmCP2d56v0+z1i
-         p9EA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oLZoCH+w0vEsUh5B0jjb151kNbWDekY9Hx2peXKMbk4=;
+        b=p6M2O8JBT2y4hXNXJ+k4giMVUWIS/Vosq/FvvB5BUcx5CPLUCVhxMVpiKnBWJjmM+j
+         bpuaGCRGv3v0FS4vVfk6v3U5vqxLynpHPLlsCXUykwcn1Ztl5JH+vHVIe7GMg0z+CPBr
+         LzbhW4T+KhsMjCaPYzE5s6M5K9kOVr3z2uwec/+WMTXMQ3ppTHziHNvlDaySYajKXhpd
+         FQvVjnanOlnC/2R6c/9V1sx0kbvm5T7fxtOXsSmsRjSSLd2u4doQFURIdkmck2CsNZu5
+         BLGgTvnkcl0ZS2Pst76joa7hhkGeR5KfgWZin00PDYtmQZsnEHwmJNw7N1jq6PrmoVG4
+         vh9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cRK7dSJ9ozXpkMag7XMLUlUKlJp+YVQsFuMywlLYIIY=;
-        b=ss8Djxo/EI26S6vmL9Zb5m1SCLq6f2Rui8ikg6gk+iUuVEfWW9AgnjBiO/sa3rD4n5
-         nY/z2vWthT8D9FDRkjKSC0m229of/YScuYRfoj+fxzlHoM1MPqNRS0R1VceX5Cnw3Zb5
-         BYvK30n21PN6fkUA2BAWmkxaJP2wx+tlM+V8jkB8Y1tPhQaoEZZZKTPu+ikIyTaqLTBb
-         pXYdpMBI/BdSRVfBxaN9LQ/wp54zeh+1qix4RnRQmGheD158TS7Z9wP44blQDHtX2XEs
-         L1wHyaDv/MJqAYwIqaq92EMA4qYD4W8hUG0OjpRjywq8jL6BxZZMysuzhgbUEV2C+roD
-         ZGnA==
-X-Gm-Message-State: APjAAAUalinDFAUFTN7SWZt8sMLxwAcbDMap8n8UrEpPNnSb55Qdgjum
-        /EWpHesuo2ElTWxEAXvMsZQw0V4MdPUjA+a8F028GQ==
-X-Google-Smtp-Source: APXvYqwTIY2/OtCAe2ytKIYqGY3omJlioSYHG1JrmGnaMaDG0e9TwsYGQisqOCiIuCpfggd2Tzz2lgNj29c+F+rHVNg=
-X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr27381746pje.123.1560273495783;
- Tue, 11 Jun 2019 10:18:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oLZoCH+w0vEsUh5B0jjb151kNbWDekY9Hx2peXKMbk4=;
+        b=B46W7NGJplufibTibnHtGHT8YkKVUTzNHLtQFCScdPHJqOudbNyalTT7S/AZC43Kcd
+         8zIT82XbT1fJNdYYfAg6XxDXLT8KG8bdCaH4cDMdDszAm8ZBJMMTD7sWAgLUAzkkQfQQ
+         PqvPvbkkEzZ7vcRRl3GqczXotmshrOVGNWozkOadW8pGs46APMyq9ZWR+80hA10ik+P4
+         Ow1TXV1SjMpaCdK7XKS7V5onmTr59u6msCJdRX5IdnqwROVJPQIU7unGnrDjGAhsMZS8
+         COTFIcVTGezIJ6ZkJOQXsZ1Ut87yocu2bvoOjfasLMe77eEwVEBYdzNGLTA/n0R7o0sX
+         3nJQ==
+X-Gm-Message-State: APjAAAXmhkx7CJYH1ZS7D8fnvy/jroSKgjNhl0ngceBYEpnD1lJVFf3w
+        mOqJ4LX0qlWVxYPMj+n8RV8=
+X-Google-Smtp-Source: APXvYqyFh8CR41gRS/XNKx0eEHFjObJh4Rmr0MyxvtAXn6PhWqRAH/Y2ng7P1x+vtBW7ACiKuHvkyw==
+X-Received: by 2002:a17:906:d6a:: with SMTP id s10mr29877187ejh.180.1560273674134;
+        Tue, 11 Jun 2019 10:21:14 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id k9sm2403111eja.72.2019.06.11.10.21.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 10:21:13 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Qian Cai <cai@lca.pw>, Dave Martin <Dave.Martin@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v2] arm64: Don't unconditionally add -Wno-psabi to KBUILD_CFLAGS
+Date:   Tue, 11 Jun 2019 10:19:32 -0700
+Message-Id: <20190611171931.99705-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190607161201.73430-1-natechancellor@gmail.com>
+References: <20190607161201.73430-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com> <9e1b5998a28f82b16076fc85ab4f88af5381cf74.1559580831.git.andreyknvl@google.com>
- <20190611150122.GB63588@arrakis.emea.arm.com>
-In-Reply-To: <20190611150122.GB63588@arrakis.emea.arm.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 11 Jun 2019 19:18:04 +0200
-Message-ID: <CAAeHK+wZrVXxAnDXBjoUy8JK9iG553G2Bp8uPWQ0u1u5gts0vQ@mail.gmail.com>
-Subject: Re: [PATCH v16 16/16] selftests, arm64: add a selftest for passing
- tagged pointers to kernel
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 5:01 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Mon, Jun 03, 2019 at 06:55:18PM +0200, Andrey Konovalov wrote:
-> > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > pass tagged user pointers (with the top byte set to something else other
-> > than 0x00) as syscall arguments.
-> >
-> > This patch adds a simple test, that calls the uname syscall with a
-> > tagged user pointer as an argument. Without the kernel accepting tagged
-> > user pointers the test fails with EFAULT.
-> >
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
->
-> BTW, you could add
->
-> Co-developed-by: Catalin Marinas <catalin.marinas@arm.com>
->
-> since I wrote the malloc() etc. hooks.
+This is a GCC only option, which warns about ABI changes within GCC, so
+unconditionally adding it breaks Clang with tons of:
 
-Sure!
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
 
->
->
-> > +static void *tag_ptr(void *ptr)
-> > +{
-> > +     unsigned long tag = rand() & 0xff;
-> > +     if (!ptr)
-> > +             return ptr;
-> > +     return (void *)((unsigned long)ptr | (tag << TAG_SHIFT));
-> > +}
->
-> With the prctl() option, this function becomes (if you have a better
-> idea, fine by me):
->
-> ----------8<---------------
-> #include <stdlib.h>
-> #include <sys/prctl.h>
->
-> #define TAG_SHIFT       (56)
-> #define TAG_MASK        (0xffUL << TAG_SHIFT)
->
-> #define PR_SET_TAGGED_ADDR_CTRL         55
-> #define PR_GET_TAGGED_ADDR_CTRL         56
-> # define PR_TAGGED_ADDR_ENABLE          (1UL << 0)
->
-> void *__libc_malloc(size_t size);
-> void __libc_free(void *ptr);
-> void *__libc_realloc(void *ptr, size_t size);
-> void *__libc_calloc(size_t nmemb, size_t size);
->
-> static void *tag_ptr(void *ptr)
-> {
->         static int tagged_addr_err = 1;
->         unsigned long tag = 0;
->
->         if (tagged_addr_err == 1)
->                 tagged_addr_err = prctl(PR_SET_TAGGED_ADDR_CTRL,
->                                         PR_TAGGED_ADDR_ENABLE, 0, 0, 0);
+and link time failures:
 
-I think this requires atomics. malloc() can be called from multiple threads.
+ld.lld: error: undefined symbol: __efistub___stack_chk_guard
+>>> referenced by arm-stub.c:73
+(/home/nathan/cbl/linux/drivers/firmware/efi/libstub/arm-stub.c:73)
+>>>               arm-stub.stub.o:(__efistub_install_memreserve_table)
+in archive ./drivers/firmware/efi/libstub/lib.a
 
->
->         if (!ptr)
->                 return ptr;
->         if (!tagged_addr_err)
->                 tag = rand() & 0xff;
->
->         return (void *)((unsigned long)ptr | (tag << TAG_SHIFT));
-> }
->
-> --
-> Catalin
+These failures come from the lack of -fno-stack-protector, which is
+added via cc-option in drivers/firmware/efi/libstub/Makefile. When an
+unknown flag is added to KBUILD_CFLAGS, clang will noisily warn that it
+is ignoring the option like above, unlike gcc, who will just error.
+
+$ echo "int main() { return 0; }" > tmp.c
+
+$ clang -Wno-psabi tmp.c; echo $?
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+0
+
+$ gcc -Wsometimes-uninitialized tmp.c; echo $?
+gcc: error: unrecognized command line option
+‘-Wsometimes-uninitialized’; did you mean ‘-Wmaybe-uninitialized’?
+1
+
+For cc-option to work properly with clang and behave like gcc, -Werror
+is needed, which was done in commit c3f0d0bc5b01 ("kbuild, LLVMLinux:
+Add -Werror to cc-option to support clang").
+
+$ clang -Werror -Wno-psabi tmp.c; echo $?
+error: unknown warning option '-Wno-psabi'
+[-Werror,-Wunknown-warning-option]
+1
+
+As a consequence of this, when an unknown flag is unconditionally added
+to KBUILD_CFLAGS, it will cause cc-option to always fail and those flags
+will never get added:
+
+$ clang -Werror -Wno-psabi -fno-stack-protector tmp.c; echo $?
+error: unknown warning option '-Wno-psabi'
+[-Werror,-Wunknown-warning-option]
+1
+
+This can be seen when compiling the whole kernel as some warnings that
+are normally disabled (see below) show up. The full list of flags
+missing from drivers/firmware/efi/libstub are the following (gathered
+from diffing .arm64-stub.o.cmd):
+
+-fno-delete-null-pointer-checks
+-Wno-address-of-packed-member
+-Wframe-larger-than=2048
+-Wno-unused-const-variable
+-fno-strict-overflow
+-fno-merge-all-constants
+-fno-stack-check
+-Werror=date-time
+-Werror=incompatible-pointer-types
+-ffreestanding
+-fno-stack-protector
+
+Use cc-disable-warning so that it gets disabled for GCC and does nothing
+for Clang.
+
+Fixes: ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI drift")
+Link: https://github.com/ClangBuiltLinux/linux/issues/511
+Reported-by: Qian Cai <cai@lca.pw>
+Acked-by: Dave Martin <Dave.Martin@arm.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+v1 -> v2:
+
+* Improve commit message explanation, I wasn't entirely happy with the
+  first one; let me know if there are any issues/questions.
+
+* Carry forward Dave's ack and Nick's review (let me know if you
+  disagree with the commit messasge rewording).
+
+ arch/arm64/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 8fbd583b18e1..e9d2e578cbe6 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -51,7 +51,7 @@ endif
+ 
+ KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
+ KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+-KBUILD_CFLAGS	+= -Wno-psabi
++KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
+ KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
+ 
+ KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
+-- 
+2.22.0
+
