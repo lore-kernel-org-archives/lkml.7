@@ -2,117 +2,169 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964F3C4646D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B02C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F61320896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459FE2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 17:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="fCnawsru"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gw/VSc3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405960AbfFKRQu (ORCPT
+        id S2405975AbfFKRRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 13:16:50 -0400
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:38716 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405263AbfFKRQu (ORCPT
+        Tue, 11 Jun 2019 13:17:15 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44376 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405961AbfFKRRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 13:16:50 -0400
-Received: by mail-pf1-f175.google.com with SMTP id a186so7830673pfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 10:16:49 -0700 (PDT)
+        Tue, 11 Jun 2019 13:17:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b17so13907051wrq.11;
+        Tue, 11 Jun 2019 10:17:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=NP0gA1ABckvdSxnswrfwtyDrSN1dU2orYg+qwnAaWU0=;
-        b=fCnawsruKXMsyZtdZkLLbAjxXjcWO7UUBt6Go6jNPSUFC0x6uMTddfjQjosUqRo3cO
-         Jc0jXjHQrSrU42XNdeRKNRnGLYlRL4ojHXgGpbQbQ2qKmZdFzo/4AHYalAdrhYHi7C3U
-         DIE8zAxwbLxyv3krKFvNGd5ECXkYPMKwYaTKLgpvNZ29I7kb9E+A7gnrB2sDf9UTInwx
-         bGNgHFFd2sThfwGOP0ESd+1aNMgcut0JC8e11UOnxvAr+PmZX4AE8NB21aH/ZEZeYhZX
-         oJWJJ0nyehTcFjqj1YeRUYHo64MDB75LhR3TZucrAmzzKZMykDbkrd4HHajGzSZKqdPB
-         BAog==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WaysXXkkuoEHakv+09ZE71GtoG0EGkx2i9RGt2yoHmc=;
+        b=Gw/VSc3AnA7Gr+HwzDQepHUcTpPyOFmn3qNRuXg6MASXyOWVjp8iV9BCA21lQ33t8X
+         GdaHNBSSlbpOKjr5Ubl4dTm3jExQaVeYlGlQSf0uJ6ksxI83vAcX2glkuZ8bQaH2HUH9
+         BE1ON2NQjrOAPDvA4ZyqFVJshZKVU0SQzdKNksTkE1Iu4JMmtSlTf3Mrx9mLTWRkoNkz
+         5b0Lz+lK5XmK7NZ+HKNsVvAd4fNccgYKb02gZs0Zq20TA7bR3wJxl/AywrD19AZlyDLT
+         BTAmLMN/7jNP5TZLUzcLenMeQCWgroZNS+aGdoBFF5ITT56jHBG2wu1kDHonngZ/pOgb
+         vGhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=NP0gA1ABckvdSxnswrfwtyDrSN1dU2orYg+qwnAaWU0=;
-        b=OtrvArJoK4+CzjMQfN7jijy1ep5r8xFZhpJb4Oek/duLGqozKfh7HQN6avEYoVkn4E
-         h4YJZJMOCrkcvQKlbzEivQuTV0Cqa9EGy92m1v0pNUE4HrRSFDpSXUulbGKT1REpRuwV
-         7dz18Y0fnlsHtjUuWPzBk6ZOOphJCGmTqHyqwbMdiv47x6fsteMPvIKHDkLyBSUV6MDZ
-         PdIJ/29TAc7MKMGra7/YDtUiynMfgrgmwdIvHkV1hkO3dArh9MB0wYzuP2IZcv3qjppX
-         xzZ28242xg6VIrlcfVyDSfUDvyQhHk91vBceAwxKYWnf2yZ7hNiBWo/CqRaJ3saeZ0j0
-         NKUg==
-X-Gm-Message-State: APjAAAX1XaFcSWeiiwbkeDg52B45JDw+Q8232FOks3PI6nGenJr4hLL9
-        XTuKf8Lzzr6hLewIwmWCOc5Mrw==
-X-Google-Smtp-Source: APXvYqxtEattJ3/+CA3rv8tUikfccZabdw+tyfqO2UmRi4gT3U9+ViUAnX/16vxoTmntuqCAWtc2sg==
-X-Received: by 2002:a63:4813:: with SMTP id v19mr14934308pga.124.1560273409434;
-        Tue, 11 Jun 2019 10:16:49 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id j37sm13040375pgj.58.2019.06.11.10.16.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 10:16:49 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 10:16:44 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+06537213db7ba2745c4a@syzkaller.appspotmail.com>,
-        aviadye@mellanox.com, borisp@mellanox.com,
-        Daniel Borkmann <daniel@iogearbox.net>, davejwatson@fb.com,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        bpf <bpf@vger.kernel.org>, Eric Biggers <ebiggers@kernel.org>
-Subject: Re: memory leak in create_ctx
-Message-ID: <20190611101644.267d8e9c@cakuba.netronome.com>
-In-Reply-To: <CACT4Y+YX4biKo1nEKh32pJoS9ANNV06hQp5=+w+3GpWQB1worg@mail.gmail.com>
-References: <20190609025641.11448-1-hdanton@sina.com>
-        <CACT4Y+YX4biKo1nEKh32pJoS9ANNV06hQp5=+w+3GpWQB1worg@mail.gmail.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WaysXXkkuoEHakv+09ZE71GtoG0EGkx2i9RGt2yoHmc=;
+        b=DEFiVbWtjzMk3VU0ltwz9cuNTmMI+TQx60k7YU2ZSs9YESqw1md+fBsGI2H4tx3ks9
+         9eXyElKDnXBMMjbNeQaBN4tZnZM4Rfp+iIBq0nw0zC3OOLEoe7lw+6nTarstRZcuuExP
+         WdnN8Y1ArNNH7v1h8HhjgcRHO8yfy+4p4ImLJiqU0k5K9+lyTUUkxrjQh4gRFzCgnZAu
+         ErxwVme1ElVQKnJstoBoIu91d6GY7NP1z0LoJX8VNrQXSp5c79cWy7uhHt1oBuIfOhWt
+         6M+gJh8Wnb8DPz92EUKrqb9FzT3K0OVhAeWM3GZXtFIEgymG7fFCVjtVPHAxCFX0zLV7
+         0LVw==
+X-Gm-Message-State: APjAAAWhlnNRkXy22RnxGaJVgoJcsccTgOlxkmBf4FDDVPfSrfSCqA3D
+        51Rc6o7NgxjZAHu+WXfChSNortwI7+U=
+X-Google-Smtp-Source: APXvYqzgK+PWwgzwutUSp+2qsuLb5idLiN82ARL0NpGt1eyHQ4rSs6bViF6O7gzpj+V1EempEVeoaA==
+X-Received: by 2002:adf:aa09:: with SMTP id p9mr30515859wrd.59.1560273433335;
+        Tue, 11 Jun 2019 10:17:13 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id h1sm14299801wrt.20.2019.06.11.10.17.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Jun 2019 10:17:12 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 19:17:07 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+Cc:     Hui Wang <hui.wang@canonical.com>,
+        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
+        Naoki Saito <naoki.saito@alpsalpine.com>,
+        Hideo Kawase <hideo.kawase@alpsalpine.com>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
+ =?utf-8?B?5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= input: alps-fix the issue alps
+ cs19 trackstick do not work.
+Message-ID: <20190611171707.tydk7rsmtzmjohky@pali>
+References: <20190528071824.jimhixhtsynzwixe@pali>
+ <OSBPR01MB48556FD88D7F7D5F91CB5579DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <OSBPR01MB4855707AC8ABB7CFBE5BBBD5DA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <OSBPR01MB4855A2A30A4F5E6BDCFE715FDA130@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190610104310.qa5snt7jpcljodfv@pali>
+ <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
+ <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
+ <20190611072333.nd4va4q2m5epmukc@pali>
+ <20190611170707.GA143729@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="yk3mp3oui5gzabch"
+Content-Disposition: inline
+In-Reply-To: <20190611170707.GA143729@dtor-ws>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 13:45:11 +0200, Dmitry Vyukov wrote:
-> Do you see the bug? Jakub said he can't repro.
-> The repro has these suspicious bpf syscalls and there is currently
-> some nasty bpf bug that plagues us and leads to random assorted
-> splats.
 
-Ah, must be the BPF interaction indeed :S The reproducer text uses
-incorrect names:
+--yk3mp3oui5gzabch
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-bpf$MAP_CREATE(0x0, &(0x7f0000000280)={0xf, 0x4, 0x4, 0x400, 0x0, 0x1}, 0x3c)
+On Tuesday 11 June 2019 10:07:07 dmitry.torokhov@gmail.com wrote:
+> On Tue, Jun 11, 2019 at 09:23:33AM +0200, Pali Roh=C3=A1r wrote:
+> > On Tuesday 11 June 2019 12:32:33 Hui Wang wrote:
+> > > On 2019/6/11 =E4=B8=8A=E5=8D=8811:23, Hui Wang wrote:
+> > > > On 2019/6/11 =E4=B8=8A=E5=8D=8811:05, Xiaoxiao Liu wrote:
+> > > > > Hi Pali,
+> > > > >=20
+> > > > > I discussed with our FW team about this problem.
+> > > > > We think the V8 method means a touchpad feature=C2=A0 and does no=
+t fit
+> > > > > the CS19 trackpoint device.
+> > > > > CS19 TrackPoint needn't=C2=A0 use any Absolute (Raw) mode and is =
+usually
+> > > > > use standard mouse data.
+> > > > > CS19 TrackPoint device is a completely different device with
+> > > > > DualPoint device of Dell/HP.
+> > > > > CS19 TrackPoint device is independent=C2=A0 of Touchpad. (Touchpa=
+d is
+> > > > > connecting by I2C, TrackPoint is directly connecting with PS2 por=
+t.)
+> > > > > And it has completely another FW.
+> > > > >=20
+> > > > > So we think it is better to use the mouse mode for CS19 trackpoin=
+t.
+> > > >=20
+> > > > Maybe here is some mis-understanding,=C2=A0 the mouse mode here doe=
+sn't mean
+> > > > we use psmouse-base.c for cs19 (bare ps/2 mouse), we plan to use
+> > > > trackpoint.c to drive this HW, so this trackpoint has all features a
+> > > > trackpoint should have.
+> > > >=20
+> > > And I sent a patch one month ago to let the the trackpoint.c to drive=
+ this
+> > > HW: https://www.spinics.net/lists/linux-input/msg61341.html, maybe th=
+at
+> > > patch is reference.
+> >=20
+> > So instead of creating blacklist, you should check for TP_VARIANT_ALPS
+> > in alps.c and disallow its usage.
+> >=20
+> > Or maybe better, move trackpoint.c detect code before alsp.c detect code
+> > in psmouse-base. And no changes in alps.c are needed.
+>=20
+> I'd be very cautions of moving around the protocol detection. It is very
+> fragile, so if we can detect trackpoint-only case in alps.c and skip on
+> to trackpoint I would prefer it.
 
-# ^ this is a map create SOCKMAP
+The main problem is that proposed trackpoint-only check in alps.c is
+basically what trackpoint.c is doing for checking if device is
+trackpoint (via function trackpoint_start_protocol()).
 
-socket$rxrpc(0x21, 0x2, 0x800000000a)
-r0 = socket$inet6_tcp(0xa, 0x1, 0x0)
-setsockopt$inet6_tcp_int(r0, 0x6, 0x13, &(0x7f00000000c0)=0x100000001, 0x1d4)
-connect$inet6(r0, &(0x7f0000000140), 0x1c)
-bpf$MAP_CREATE(0x0, &(0x7f0000000000)={0x5, 0x0, 0x0, 0x0, 0x80}, 0x3c)
+So I'm not sure now what is the best solution...
 
-# ^ another map create (perf event array?)
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-bpf$MAP_CREATE(0x2, &(0x7f0000003000)={0x3, 0x0, 0x77fffb, 0x0, 0x10020000000, 0x0}, 0x2c)
+--yk3mp3oui5gzabch
+Content-Type: application/pgp-signature; name="signature.asc"
 
-# ^ but this is MAP_UPDATE, not MAP_CREATE, it probably inserts the r0
-#   into the map
+-----BEGIN PGP SIGNATURE-----
 
-setsockopt$inet6_tcp_TCP_ULP(r0, 0x6, 0x1f, &(0x7f0000000040)='tls\x00', 0x4)
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXP/iEAAKCRCL8Mk9A+RD
+Up7mAJ9bQIgZ06pMlZa1t6WOZ1oJCtYTxgCcC8h8NbVMVQgvRKYcG5H5EAHhWto=
+=nHiP
+-----END PGP SIGNATURE-----
 
-
-That threw me off.
-
-> I've run the repro as "./syz-execprog -repeat=0 -procs=6 repro"  and
-> in 10 mins I got the following splat, which indeed suggests a bpf bug.
-> But we of course can have both bpf stack overflow and a memory leak in tls.
+--yk3mp3oui5gzabch--
