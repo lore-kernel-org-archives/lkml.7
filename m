@@ -2,100 +2,141 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD77C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8FEC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12AB2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4005920657
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WpEuz0f2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFEd/Yza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404688AbfFKIRq (ORCPT
+        id S2404738AbfFKISD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:17:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47308 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404401AbfFKIRq (ORCPT
+        Tue, 11 Jun 2019 04:18:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41493 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404401AbfFKISC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:17:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ud411InFe8GoOew3/skHmwEYBmhHWja4h4GlbxBRd9I=; b=WpEuz0f2bMQMpMS+SEsJoXQ0a
-        clPKhCoLgxEn3zA+5EICQ7tkNJxjlskObNKJzKhSooTVjtW++jQr13J9cnEE8Kewof8/YRDYYFiaK
-        2VMxA6jXB6SQjukBtOBmnCSEk5BbkosCYTUe7GApgABK7mfNPTyoi8TDsWfBpIzpP5spitDAnXFqJ
-        OJjFrbh+1mOEuzOHiTemufpqLhbQMrUQ/9pBtxC2LM0knnGwb2FS60JeAS/8RsjzwFu9JvfS/VJTh
-        o9OCx+PnGVpfpP2BIxz2a+1f8NAAb+Q0bMNB14tRackxSOLhHN4SOwEOhg1Sx/xqj81sotWLmm16w
-        ITWNCyIHg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1haby5-00077F-3q; Tue, 11 Jun 2019 08:17:21 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8077D202173E1; Tue, 11 Jun 2019 10:17:19 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 10:17:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 07/15] x86: Add int3_emulate_call() selftest
-Message-ID: <20190611081719.GQ3436@hirez.programming.kicks-ass.net>
-References: <20190605130753.327195108@infradead.org>
- <20190605131944.946978563@infradead.org>
- <20190610165258.t7rcvggdjihtdrfz@treble>
- <CALCETrVRuMP4vF+dN-tK_cw=guv6J5EqgD1H-PxMow+d=1DT4g@mail.gmail.com>
+        Tue, 11 Jun 2019 04:18:02 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 107so11023326otj.8;
+        Tue, 11 Jun 2019 01:18:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k8iFXP2YapZ/y03rTP+uhVVYNu1jHF/FDPhY8TlmIFs=;
+        b=MFEd/YzanQ7feW7RujaUFgXIbQo5AwemZLZzPFqkc6uq3m4qQJrkLQ0VvWQCKTlCFV
+         1x5qoFGqBOxMO5+7W8KNz56ceoqTHIK53S2CqTahqDeLTXR0awz/bad+5eDYudoABLGw
+         +J0Q0DbHqjJwIWvi2u8GtAQvFA37iFaVPiYwStLMQRJUy+iZbl43DdkFDL8KolXfUw8Q
+         ey65t02HQ9igQ0fJddkK/hlKM3dOpbU9Oujpevv/3kaWaopHGPm+CwuUTvpy88QGrPlB
+         YTZRSgtEz6vBNBKAr57FnQUg/k86Mh9/fCnAnsRz0V6agOsAiRdeEEznZZ2GBIU6sl1H
+         vltA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k8iFXP2YapZ/y03rTP+uhVVYNu1jHF/FDPhY8TlmIFs=;
+        b=LT31gt/fgBvV+GJmhBuVd27/9Fls3g4kZfXW++VIa/6Ifm3sA2MM/eLhfU4ldZBN8m
+         QGqE0EqYh/wjN4SvB+oLobQZ6PX5MDjCzleJS7+jcjVgUawpEAt84L/UH1iA+D3KADrD
+         jFZJbLDr31imdPpf6R/FvrNK9FPt+Ki62JYJei/9yygK7LPGUJEzb4UWM3Y6Cen9BD7r
+         exjQ42I0o4wuybdAlaUkIZYFs/zz/w12S5ZGqCqbv3NOFbP7M1zaeuJU4+EAuN4+h8KT
+         HJros/uh6qGQlcZbWK3ItUkdONddwSvzGh3Xw6onkECD1xRbHevd2TF8xLX+K+fkGczF
+         ZlZA==
+X-Gm-Message-State: APjAAAUeRl7TYp2sjQv+6ddyLTVNUNTjIn1PabRurvM2yuvuOBgfrGYZ
+        6INQSEhhGhdNfrwKrfYNwDm/rDRoM0p+/y5NitbHvTWe
+X-Google-Smtp-Source: APXvYqzkjV6xW+S1V9TXzZvhH4WA2LcdgCsrocnV6Pj9lJZx7O9H9SOdD8aNwDehi+S21H1lAdyHTNZ/n0LVDgzZGO8=
+X-Received: by 2002:a9d:7601:: with SMTP id k1mr5339977otl.254.1560241082148;
+ Tue, 11 Jun 2019 01:18:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVRuMP4vF+dN-tK_cw=guv6J5EqgD1H-PxMow+d=1DT4g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1559799086-13912-1-git-send-email-wanpengli@tencent.com>
+ <1559799086-13912-3-git-send-email-wanpengli@tencent.com> <20190610165127.GA8389@flask>
+In-Reply-To: <20190610165127.GA8389@flask>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 11 Jun 2019 16:18:47 +0800
+Message-ID: <CANRm+Cy4wBMZLVEHY3v+eAe859a8yR+cJ3ZFDor0nWZdufC0Zg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] KVM: LAPIC: lapic timer interrupt is injected by
+ posted interrupt
+To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 09:57:58AM -0700, Andy Lutomirski wrote:
-> On Mon, Jun 10, 2019 at 9:53 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Tue, 11 Jun 2019 at 00:51, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.c=
+om> wrote:
+>
+> 2019-06-06 13:31+0800, Wanpeng Li:
+> > From: Wanpeng Li <wanpengli@tencent.com>
 > >
-> > On Wed, Jun 05, 2019 at 03:08:00PM +0200, Peter Zijlstra wrote:
-> > > Given that the entry_*.S changes for this functionality are somewhat
-> > > tricky, make sure the paths are tested every boot, instead of on the
-> > > rare occasion when we trip an INT3 while rewriting text.
-> > >
-> > > Requested-by: Andy Lutomirski <luto@kernel.org>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Dedicated instances are currently disturbed by unnecessary jitter due
+> > to the emulated lapic timers fire on the same pCPUs which vCPUs residen=
+t.
+> > There is no hardware virtual timer on Intel for guest like ARM. Both
+> > programming timer in guest and the emulated timer fires incur vmexits.
+> > This patch tries to avoid vmexit which is incurred by the emulated
+> > timer fires in dedicated instance scenario.
 > >
-> > Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > When nohz_full is enabled in dedicated instances scenario, the emulated
+> > timers can be offload to the nearest busy housekeeping cpus since APICv
+> > is really common in recent years. The guest timer interrupt is injected
+> > by posted-interrupt which is delivered by housekeeping cpu once the emu=
+lated
+> > timer fires.
 > >
-> 
-> Looks good to me, too,
+> > 3%~5% redis performance benefit can be observed on Skylake server.
+> >
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/lapic.c | 32 +++++++++++++++++++++++++-------
+> >  arch/x86/kvm/x86.h   |  5 +++++
+> >  2 files changed, 30 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index 09b7387..c08e5a8 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -133,6 +133,12 @@ static inline bool posted_interrupt_inject_timer_e=
+nabled(struct kvm_vcpu *vcpu)
+> >               kvm_mwait_in_guest(vcpu->kvm);
+> >  }
+> >
+> > +static inline bool can_posted_interrupt_inject_timer(struct kvm_vcpu *=
+vcpu)
+> > +{
+> > +     return posted_interrupt_inject_timer_enabled(vcpu) &&
+> > +             !vcpu_halt_in_guest(vcpu);
+>
+> It would make more sense to have a condition for general blocking in
+> KVM, but keep in mind that we're not running on the same cpu anymore, so
+> any code like that has to be properly protected against VM entries under
+> our hands.  (The VCPU could appear halted here, but before we get make
+> the timer pending, the VCPU would enter and potentially never check the
+> interrupt.)
+>
+> I think we should be able to simply do
+>
+>   if (posted_interrupt_inject_timer_enabled(vcpu))
+>         kvm_inject_apic_timer_irqs();
+>
+> directly in the apic_timer_expired() as the injection will wake up the
+> target if necessary.  It's going to be a bit slow for timer callback in
+> those (too slow to warrant special handling?), but there hopefully
+> aren't any context restrictions in place.
 
-I'll translate that into an Acked-by from you, if you don't mind :-)
+The vCPU halt status is used to handle non-PV apf notification aware
+guest which is pointed out by Paolo.
+https://lkml.org/lkml/2019/6/5/436 The vCPU will not re-vmentry w/
+timer interrupt even if there is a kick since vcpu->arch.apf.halted is
+true and it can't escape from kvm_vcpu_check_block().
 
-> except that I seriously hate die notifiers that
-> return NOTIFY_STOP, and I eventually want to remove support for them.
-> This can wait, though.
-
-Yes, I share your hatred for notifiers in general. But since they are
-still here and I do think it is a waste to have an unconditional
-function call in do_int3() just for this, I figured I'd use them.
+Regards,
+Wanpeng Li
