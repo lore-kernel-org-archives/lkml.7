@@ -2,253 +2,104 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028AFC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F625C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC8E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6372145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 00:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="zYcM1bjw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CM1dORqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390790AbfFKA11 (ORCPT
+        id S1728835AbfFKAbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 20:27:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33068 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389725AbfFKA10 (ORCPT
+        Mon, 10 Jun 2019 20:31:38 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:51983 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728645AbfFKAbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 20:27:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so6269216pfq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 17:27:25 -0700 (PDT)
+        Mon, 10 Jun 2019 20:31:38 -0400
+Received: by mail-it1-f193.google.com with SMTP id m3so2079635itl.1;
+        Mon, 10 Jun 2019 17:31:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=VM2dk3phoXMJWUmg4OkGbUsCUxKTv/qfJ7B/YkcH/jc=;
-        b=zYcM1bjwlBj/VZ68drx0nOd348CC8iakrVB6vDS+gJ7EnC22G0Gh88OpERBZMgOxFb
-         Ivn3P5x0NGHsY6n9ZwVcZ9+DkalHqli6FeDqy0tXEYqIPBV0K/GCO8vLZugKuT2lTtwD
-         hogTBTI88gW2RP7sY2VkC6QBGYVmfPW/Xblyq0TKoqpjTmAdJc19Kg+wXSgsVIgJiK68
-         TF1BEHQDiqVnYzgMC4rWD0NN1JH5T+orsD/EZPhiTRWl185RGHxhqVaMXN3a2sw23/ck
-         Loz04gUYjWWAQPhsjWh7cOJnDF71aXELbLgIeg20wyqufu5gFwncvNVs3a1n1mcZbyDn
-         xHhQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Q+q3Jj3P/wEz9k/LF4yrVB0MK2jEr9dEeFUcbQlT9GU=;
+        b=CM1dORqYQM2ipZY5oNybwUIL0KwgNjOfk3Kl9w/DhBKo+wCV0ASGN04Aldq+1SFYEZ
+         f7Z4ShsaN/iJWjjkk5Cl3KNdcEyHieX6OWgehxxLgNbB5pOywJze2bolQ2YNJE3LdaLb
+         PxlJqhya+6Gpxp31XcWLiPhkcZpqOPX6SFVoeGIwzINHyJJtFKXSnJCC7WyLMOjaIj5s
+         RpHe9ZUI8OK9VnFGNRhbf4KXQW8X5NUhdecDum9jGxDBZd8Hl6P5/hQeJHrO8KKTqVqf
+         7jGD4MOHYffF0q+VQy/peMbOSabL586+xGRU6Mm3I3xA2SbhnkN9uceHdeI2VKSxhfbS
+         cDFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=VM2dk3phoXMJWUmg4OkGbUsCUxKTv/qfJ7B/YkcH/jc=;
-        b=ssvM5aNc3QYf+BPFb57PKW5awXV4yqy9QJmGpwqIkwbAHXy1At7KuYmqg/oM8Zpdi8
-         o4X2j0wFRXwvyjNSsy1s+TJqVMSUQhYs307LpI44Q3sR6DxiH9VaK5jz8821gzCNoM5I
-         K6tzMx7LZSeErlcuUv8YMZ8IlPj+bsujDO+HIcjti4hWwZs41nTgT4zBqenjZ1x0uliy
-         co/FxkUypLfcaeCbRTxXuNS76oNWfzZBOEq/+MSBxRR/d2Da0mGi6+v6a08O/Co7uSFW
-         O/IhRP8ClOO6qokDKSUMnAr2s2LMabn+Jxa2f9CQf3kHcyztnKG+TWTOmnmk9pjzzgiE
-         4DAw==
-X-Gm-Message-State: APjAAAWJ7+PgfpGv4aWpgnunn2ys1uiL+IlOr17DUylX8IGEM4jCtTMc
-        gTH3VG8poxtCnStkJbBgRemakQ==
-X-Google-Smtp-Source: APXvYqzwt2kqHvu9OTRvm5vLnspi9CzNyFEQTcK84714NO8Z1PTwNct/Ne+Bo6TCz7ewEYKeUwxoHQ==
-X-Received: by 2002:a62:1ec3:: with SMTP id e186mr78012544pfe.197.1560212845477;
-        Mon, 10 Jun 2019 17:27:25 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b02c:114f:fc47:b6b2:14a5:bb80? ([2600:1010:b02c:114f:fc47:b6b2:14a5:bb80])
-        by smtp.gmail.com with ESMTPSA id u5sm11410506pgp.19.2019.06.10.17.27.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 17:27:23 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC][PATCH 00/13] Mount, FS, Block and Keyrings notifications [ver #4]
-Date:   Mon, 10 Jun 2019 17:13:51 -0700
-Message-Id: <97BA9EB5-4E62-4E3A-BD97-CEC34F16FCFF@amacapital.net>
-References: <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk> <be966d9c-e38d-7a30-8d80-fad5f25ab230@tycho.nsa.gov> <0cf7a49d-85f6-fba9-62ec-a378e0b76adf@schaufler-ca.com> <CALCETrX5O18q2=dUeC=hEtK2=t5KQpGBy9XveHxFw36OqkbNOg@mail.gmail.com> <dac74580-5b48-86e4-8222-cac29a9f541d@schaufler-ca.com> <E0925E1F-E5F2-4457-8704-47B6E64FE3F3@amacapital.net> <4b7d02b2-2434-8a7c-66cc-7dbebc37efbc@schaufler-ca.com> <CALCETrU+PKVbrKQJoXj9x_5y+vTZENMczHqyM_Xb85ca5YDZuA@mail.gmail.com> <25d88489-9850-f092-205e-0a4fc292f41b@schaufler-ca.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        USB list <linux-usb@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Q+q3Jj3P/wEz9k/LF4yrVB0MK2jEr9dEeFUcbQlT9GU=;
+        b=IPxAK5Q0KQesn/zOzoUkTsFEC7wUfIpWgK+2JeiTR8wqtFCAtf/aUI+mBEqri5xa2g
+         sIoh344MxUmmVdU6kv+z5OuuAGSIXlgHqUdCqmzhafhMQLZKTXpJtSFnURv9XeliY7Xn
+         0Gvo7SqAq34uzZeZE0MxZG2GeZFkfVxf6Z2+8uMedzpfRWy5Dd1cmSM7A/i5D1EHGtOx
+         E6YlBGXd9Bb87iFH9IpQ6eX1Zryf3OmuZDJHTc8xk469AhWrKksHXd/HhO5B26pnZ4wr
+         voByfDdBshOfv7pCFecQkWdqjqg/8OQzTvYnkQ38WPfpPuabzj19NEb5lC0jfjpzTsAn
+         f5gA==
+X-Gm-Message-State: APjAAAVrZ8WWy0V+KCXobUpQ/9mEiTy7NnBQVs3R2P2qdXGd4gAsuSqV
+        mtm7eag/MQhKrGiR6qHNDLdl8FgcDvV7BjrSW48=
+X-Google-Smtp-Source: APXvYqxNggVVfpV5Krk5yzsxhZtB5DI+b0F9entbVHlyJw8x1NfRB+IUQrtXUmQsrDzcxija2zLnc+hUajb+QOgYt60=
+X-Received: by 2002:a02:8816:: with SMTP id r22mr30641561jai.60.1560213097226;
+ Mon, 10 Jun 2019 17:31:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190525181329.18657-1-tiny.windzz@gmail.com> <20190525181329.18657-2-tiny.windzz@gmail.com>
+ <CA+E=qVdh1E8Y7dZO0JSS4DJE2bo=98MuSKRt7nmeFg-td7Ua9Q@mail.gmail.com>
+In-Reply-To: <CA+E=qVdh1E8Y7dZO0JSS4DJE2bo=98MuSKRt7nmeFg-td7Ua9Q@mail.gmail.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Tue, 11 Jun 2019 08:31:25 +0800
+Message-ID: <CAEExFWtjNridLsMXOnBe2mJOPhUOYJ6G3wGF3gx=0oQoQROOGg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        raven@themaw.net, Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>
-In-Reply-To: <25d88489-9850-f092-205e-0a4fc292f41b@schaufler-ca.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-X-Mailer: iPhone Mail (16F203)
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        paulmck@linux.ibm.com, devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Jun 10, 2019, at 2:25 PM, Casey Schaufler <casey@schaufler-ca.com> wrot=
+On Tue, Jun 11, 2019 at 7:29 AM Vasily Khoruzhick <anarsoul@gmail.com> wrot=
 e:
->=20
->> On 6/10/2019 12:53 PM, Andy Lutomirski wrote:
->> On Mon, Jun 10, 2019 at 12:34 PM Casey Schaufler <casey@schaufler-ca.com>=
- wrote:
->>>>>> I think you really need to give an example of a coherent policy that
->>>>>> needs this.
->>>>> I keep telling you, and you keep ignoring what I say.
->>>>>=20
->>>>>> As it stands, your analogy seems confusing.
->>>>> It's pretty simple. I have given both the abstract
->>>>> and examples.
->>>> You gave the /dev/null example, which is inapplicable to this patchset.=
+>
+> On Sat, May 25, 2019 at 11:17 AM Yangtao Li <tiny.windzz@gmail.com> wrote=
+:
+> >
+> > This patch adds the support for allwinner thermal sensor, within
+> > allwinner SoC. It will register sensors for thermal framework
+> > and use device tree to bind cooling device.
+>
+> Hi Yangtao,
+>
+> Any plans on v4 of this series?
+>
 
->>> That addressed an explicit objection, and pointed out
->>> an exception to a generality you had asserted, which was
->>> not true. It's also a red herring regarding the current
->>> discussion.
->> This argument is pointless.
->>=20
->> Please humor me and just give me an example.  If you think you have
->> already done so, feel free to repeat yourself.  If you have no
->> example, then please just say so.
->=20
-> To repeat the /dev/null example:
->=20
-> Process A and process B both open /dev/null.
-> A and B can write and read to their hearts content
-> to/from /dev/null without ever once communicating.
-> The mutual accessibility of /dev/null in no way implies that
-> A and B can communicate. If A can set a watch on /dev/null,
-> and B triggers an event, there still has to be an access
-> check on the delivery of the event because delivering an event
-> to A is not an action on /dev/null, but on A.
->=20
+I am waiting for comment from Maxime.
 
-At discussed, this is an irrelevant straw man. This patch series does not pr=
-oduce events when this happens. I=E2=80=99m looking for a relevant example, p=
-lease.
->=20
->=20
->>  An unprivileged
->> user can create a new userns and a new mount ns, but then they're
->> modifying a whole different mount tree.
->=20
-> Within those namespaces you can still have multiple users,
-> constrained be system access control policy.
+I=E2=80=99ll support both h3 and h6 in v4.
 
-And the one doing the mounting will be constrained by MAC and DAC policy, as=
- always.  The namespace creator is, from the perspective of those processes,=
- admin.
-
->=20
->>=20
->>>>>> Similarly, if someone
->>>>>> tries to receive a packet on a socket, we check whether they have the=
-
->>>>>> right to receive on that socket (from the endpoint in question) and,
->>>>>> if the sender is local, whether the sender can send to that socket.
->>>>>> We do not check whether the sender can send to the receiver.
->>>>> Bzzzt! Smack sure does.
->>>> This seems dubious. I=E2=80=99m still trying to get you to explain to a=
- non-Smack person why this makes sense.
->>> Process A sends a packet to process B.
->>> If A has access to TopSecret data and B is not
->>> allowed to see TopSecret data, the delivery should
->>> be prevented. Is that nonsensical?
->> It makes sense.  As I see it, the way that a sensible policy should do
->> this is by making sure that there are no sockets, pipes, etc that
->> Process A can write and that Process B can read.
->=20
-> You can't explain UDP controls without doing the access check
-> on packet delivery. The sendmsg() succeeds when the packet leaves
-> the sender. There doesn't even have to be a socket bound to the
-> port. The only opportunity you have for control is on packet
-> delivery, which is the only point at which you can have the
-> information required.
-
-Huh?  You sendmsg() from an address to an address.  My point is that, for mo=
-st purposes, that=E2=80=99s all the information that=E2=80=99s needed.
-
->=20
->> If you really want to prevent a malicious process with TopSecret data
->> from sending it to a different process, then you can't use Linux on
->> x86 or ARM.  Maybe that will be fixed some day, but you're going to
->> need to use an extremely tight sandbox to make this work.
->=20
-> I won't be commenting on that.
-
-Then why is preventing this is an absolute requirement? It=E2=80=99s unattai=
-nable.
-
->=20
->>=20
->>>>>> The signal example is inapplicable.
->>>>> =46rom a modeling viewpoint the actions are identical.
->>>> This seems incorrect to me
->>> What would be correct then? Some convoluted combination
->>> of system entities that aren't owned or controlled by
->>> any mechanism?
->>>=20
->> POSIX signal restrictions aren't there to prevent two processes from
->> communicating.  They're there to prevent the sender from manipulating
->> or crashing the receiver without appropriate privilege.
->=20
-> POSIX signal restrictions have a long history. In the P10031e/2c
-> debates both communication and manipulation where seriously
-> considered. I would say both are true.
->=20
->>>> and, I think, to most everyone else reading this.
->>> That's quite the assertion. You may even be correct.
->>>=20
->>>> Can you explain?
->>>>=20
->>>> In SELinux-ese, when you write to a file, the subject is the writer and=
- the object is the file.  When you send a signal to a process, the object is=
- the target process.
->>> YES!!!!!!!!!!!!
->>>=20
->>> And when a process triggers a notification it is the subject
->>> and the watching process is the object!
->>>=20
->>> Subject =3D=3D active entity
->>> Object  =3D=3D passive entity
->>>=20
->>> Triggering an event is, like calling kill(), an action!
->>>=20
->> And here is where I disagree with your interpretation.  Triggering an
->> event is a side effect of writing to the file.  There are *two*
->> security relevant actions, not one, and they are:
->>=20
->> First, the write:
->>=20
->> Subject =3D=3D the writer
->> Action =3D=3D write
->> Object =3D=3D the file
->>=20
->> Then the event, which could be modeled in a couple of ways:
->>=20
->> Subject =3D=3D the file
->=20
-> Files   are   not   subjects. They are passive entities.
->=20
->> Action =3D=3D notify
->> Object =3D=3D the recipient
-
-Great. Then use the variant below.
-
->>=20
->> or
->>=20
->> Subject =3D=3D the recipient
->> Action =3D=3D watch
->> Object =3D=3D the file
->>=20
->> By conflating these two actions into one, you've made the modeling
->> very hard, and you start running into all these nasty questions like
->> "who actually closed this open file"
->=20
-> No, I've made the code more difficult.
-> You can not call
-> the file a subject. That is just wrong. It's not a valid
-> model.
-
-You=E2=80=99ve ignored the =E2=80=9CAction =3D=3D watch=E2=80=9D variant. Do=
- you care to comment?
+Yangtao
