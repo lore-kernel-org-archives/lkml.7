@@ -2,143 +2,102 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EE3C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2237C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3D720652
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C16620652
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcS7ZWjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390732AbfFKBny (ORCPT
+        id S2390845AbfFKBos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:43:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18544 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389168AbfFKBnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:43:53 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 78CCC6CE4E63A440A303;
-        Tue, 11 Jun 2019 09:43:49 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
- 2019 09:43:41 +0800
-Subject: Re: [PATCH 1/2] staging: erofs: add requirements field in superblock
-To:     Chao Yu <yuchao0@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, <stable@vger.kernel.org>
-References: <20190610093640.96705-1-gaoxiang25@huawei.com>
- <f4fbd407-7f0d-bbe3-2283-f7291a29026a@huawei.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <6993c266-0c95-780f-56b2-97996ee3be73@huawei.com>
-Date:   Tue, 11 Jun 2019 09:43:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 10 Jun 2019 21:44:48 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38138 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389168AbfFKBos (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:44:48 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v186so7730366oie.5;
+        Mon, 10 Jun 2019 18:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EBarjJh8uVzKHhlG9hBvipdn1U2btzfvAG+mGnyJE/s=;
+        b=IcS7ZWjy7l1IhNBfOmuDgIBqPeFMKztzk14fOpvzbgBf5LhncMCWPT2npZhKCYCVLL
+         3h13e/9i+DqPpCi03FquEfMzkMGpP/zNuNImWpQMEsqwazGc9pv7g79XPGc3wcXK5dSO
+         LQoxUixsgbsUj/VkiGeORK6dNHGpQ/w/1z0QAtTv7ytVGa5GpXHZX6hzsG/KASt17NWw
+         TlMbfLKSBCN3X3bjLK6FitH6cmxkzN7I+RBBz4cbjiALZoPIbl3ycDfp3Wm7+3+SxTay
+         dgZWHQ7jqx+2Uv7Q1uOrs8sx3iybsFaaKSUx54bosbVpWfZ7r03kcTOTEiE4ZTXalCVM
+         XlNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EBarjJh8uVzKHhlG9hBvipdn1U2btzfvAG+mGnyJE/s=;
+        b=DYsTFITnRtnnJaxxA0Oe696fLNP8bV3U0EO/dyCCqIQfZLYvCzNYsVEolir7hcgjse
+         Q0n9Fl1+8awg0fjSU3DL34TqsynhOyeNhJ2cR1zUr+Nsx98MvYWXrzNrJ2Vvn7vfm8lD
+         HVIddlx3+SS0oRc0ayd8yK+0ycvy8ephuv8sywVX0CcD0gSbVPKhbH4L6qLbCNFwxiPx
+         NLfOWdi9MOYZJ5ElYv9w4d4uy6dVWVPbufCvBWOFU+e1EB9KDw9zrW4XOXNFX8G6l9WY
+         WB8tpC0YlKptzDAENDtq/HsxRzGJhffHqG8XKja+yBhB1vzwfMUjkdSc2INcGFbtPq+C
+         Bsnw==
+X-Gm-Message-State: APjAAAVQZayVnxQW4McRhK2w+Dz3is0kbsWEFQ4VcQJIMb2+Vz9lYimf
+        RyjEF9zPEKElOQs4iHMTDE8vTfAddD9MdzdgBni3Dg==
+X-Google-Smtp-Source: APXvYqzcJQ2Z3nZGwdn7NENHQRJ8Bko2OUwuqEYzWSjSSj+06tibhTjEhGokdsLZpxVLPbk8vDf4jxpQfwBiVBC+QUY=
+X-Received: by 2002:aca:3305:: with SMTP id z5mr11896170oiz.141.1560217487769;
+ Mon, 10 Jun 2019 18:44:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f4fbd407-7f0d-bbe3-2283-f7291a29026a@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+ <20190610143420.GA6594@flask> <20190611011100.GB24835@linux.intel.com>
+In-Reply-To: <20190611011100.GB24835@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 11 Jun 2019 09:45:33 +0800
+Message-ID: <CANRm+Cwv5jqxBW=Ss5nkX7kZM3_Y-Ucs66yx5+wN09=W4pUdzA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+On Tue, 11 Jun 2019 at 09:11, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
+te:
+> > 2019-05-30 09:05+0800, Wanpeng Li:
+> > > The idea is from Xen, when sending a call-function IPI-many to vCPUs,
+> > > yield if any of the IPI target vCPUs was preempted. 17% performance
+> > > increasement of ebizzy benchmark can be observed in an over-subscribe
+> > > environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function
+> > > IPI-many since call-function is not easy to be trigged by userspace
+> > > workload).
+> >
+> > Have you checked if we could gain performance by having the yield as an
+> > extension to our PV IPI call?
+> >
+> > It would allow us to skip the VM entry/exit overhead on the caller.
+> > (The benefit of that might be negligible and it also poses a
+> >  complication when splitting the target mask into several PV IPI
+> >  hypercalls.)
+>
+> Tangetially related to splitting PV IPI hypercalls, are there any major
+> hurdles to supporting shorthand?  Not having to generate the mask for
+> ->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy to way
+> shave cycles for affected flows.
 
-On 2019/6/11 9:37, Chao Yu wrote:
-> On 2019/6/10 17:36, Gao Xiang wrote:
->> There are some backward incompatible optimizations pending
->> for months, mainly due to on-disk format expensions.
->>
->> However, we should ensure that it cannot be mounted with
->> old kernels. Otherwise, it will causes unexpected behaviors.
->>
->> Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
->> Cc: <stable@vger.kernel.org> # 4.19+
->> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
->> ---
->>  drivers/staging/erofs/erofs_fs.h | 11 +++++++++--
->>  drivers/staging/erofs/super.c    |  8 ++++++++
->>  2 files changed, 17 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
->> index fa52898df006..531821757845 100644
->> --- a/drivers/staging/erofs/erofs_fs.h
->> +++ b/drivers/staging/erofs/erofs_fs.h
->> @@ -17,10 +17,16 @@
->>  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
->>  #define EROFS_SUPER_OFFSET      1024
->>  
->> +/*
->> + * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
->> + * incompatible with this kernel version.
->> + */
->> +#define EROFS_ALL_REQUIREMENTS  0
->> +
->>  struct erofs_super_block {
->>  /*  0 */__le32 magic;           /* in the little endian */
->>  /*  4 */__le32 checksum;        /* crc32c(super_block) */
->> -/*  8 */__le32 features;
->> +/*  8 */__le32 features;        /* extra features for the image */
->>  /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
->>  /* 13 */__u8 reserved;
->>  
->> @@ -34,8 +40,9 @@ struct erofs_super_block {
->>  /* 44 */__le32 xattr_blkaddr;
->>  /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
->>  /* 64 */__u8 volume_name[16];   /* volume name */
->> +/* 80 */__le32 requirements;    /* all mandatory minimum requirements */
->>  
->> -/* 80 */__u8 reserved2[48];     /* 128 bytes */
->> +/* 84 */__u8 reserved2[44];     /* 128 bytes */
-> 
-> Xiang,
-> 
-> It needs to update the comment behind reserved2, it's locating at 132 bytes.
+Not sure why shorthand is not used for native x2apic mode.
 
-I don't get the point... the whole struct is totally 128bytes I think?
-
-> 
->>  } __packed;
->>  
->>  /*
->> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
->> index f580d4ef77a1..815e5825db59 100644
->> --- a/drivers/staging/erofs/super.c
->> +++ b/drivers/staging/erofs/super.c
->> @@ -104,6 +104,14 @@ static int superblock_read(struct super_block *sb)
->>  		goto out;
->>  	}
->>  
->> +	/* check if the kernel meets all mandatory requirements */
->> +	if (le32_to_cpu(layout->requirements) & (~EROFS_ALL_REQUIREMENTS)) {
->> +		errln("too old to meet minimum requirements: %x supported: %x",
-> 
-> It will be better to give a suggestion to user to upgrade kernel version to
-> match the image with new layout, otherwise it's just a little confused about
-> above printed message.
-
-OK, I will refine the printed message :)
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> 
->> +		      le32_to_cpu(layout->requirements),
->> +		      EROFS_ALL_REQUIREMENTS);
->> +		goto out;
->> +	}
->> +
->>  	sbi->blocks = le32_to_cpu(layout->blocks);
->>  	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
->>  #ifdef CONFIG_EROFS_FS_XATTR
->>
+Regards,
+Wanpeng Li
