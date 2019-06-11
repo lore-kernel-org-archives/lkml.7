@@ -2,82 +2,124 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4DBC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9EDC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECEE2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5646620673
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4KwM3GL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389172AbfFKMYH (ORCPT
+        id S2389187AbfFKMYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:24:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52584 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388567AbfFKMYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:24:07 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D03CB200A0F;
-        Tue, 11 Jun 2019 14:24:05 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D471A200A07;
-        Tue, 11 Jun 2019 14:23:55 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 79E2B40319;
-        Tue, 11 Jun 2019 20:23:43 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        maxime.ripard@bootlin.com, olof@lixom.net,
-        horms+renesas@verge.net.au, jagan@amarulasolutions.com,
-        bjorn.andersson@linaro.org, leonard.crestez@nxp.com,
-        dinguyen@kernel.org, enric.balletbo@collabora.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MN by default
-Date:   Tue, 11 Jun 2019 20:25:35 +0800
-Message-Id: <20190611122535.23583-3-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190611122535.23583-1-Anson.Huang@nxp.com>
-References: <20190611122535.23583-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 11 Jun 2019 08:24:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46803 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389014AbfFKMYC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 08:24:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 81so7326786pfy.13;
+        Tue, 11 Jun 2019 05:24:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jpK78n7EuwzwuUYa9uLDGGpmavtbv1Fbssm0HIpkmiA=;
+        b=V4KwM3GLF7HCRFJQBiPn0U0u3Yoq3BpbibnG1fmmwO4ZjhuKm5myUMGG1TFMWlClpo
+         P8JMYHtkcGHvWtDoTgrA8Kyze2rcwUkcgE3vzogbTcBG9+oHJqZFcaQmEJ7mW4FgQLqU
+         UpQkPWnK75g4Wx7sM9bBlItGeVBxl9U8IdYU53ZGmkl9eONwB88AwrvJ+/DegmNS+vnB
+         z/zRVEO89+JJ4m1g4zo6hk779nyb1gWqbQ5OFGFoOR7NWRSSOAte30ANIc3H8yKJRKUu
+         LrlqSgV6ngJ1MA/VMMQob1JnseU5xbbz0gpHBksces9aOZ95CWmmk/tcJ/faHr5Jx1Be
+         ifeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jpK78n7EuwzwuUYa9uLDGGpmavtbv1Fbssm0HIpkmiA=;
+        b=Z2qePusxNFkeu+gTgoq9Eb61TpE94riAzM2OuKYgnAFSIU0MvtOtShFBUv+nk6hQQ3
+         x9kyZ9N3ORf2AFj3Lb5gLZHaA5WPl8VCAH/knYRcFBBy9Q3hOqm4U1Li9mjrezBwcwxa
+         XVZvz9SRYOQ8vysDPIqIgkqq3ImPpJdpEs+0NL0jmQBAnUM88Th6HNLw0IEbHg7DcWbb
+         eIOIlhujvwoNqwfCcrKJuD+sVh13jzaY5JU1m8RJeOqdIH1zhnrATuQ16sekmTYNf/F1
+         6gx1ClfsQmpQymtSbZtpZqtKsnjPSjipdh9p6lHkH/1AOtDOKCTGvP40rD49Dd22LtDe
+         gfuQ==
+X-Gm-Message-State: APjAAAWi/jNICoS/2S0i9jRfoYHoM06F4SD1SKT6m0t1GNuGRzcII/8x
+        iHEfPi6b2wOsw1be10KD2+X018/Q
+X-Google-Smtp-Source: APXvYqwUCQThZamEpHtqoJvNjZFPGs7bzsmpbp1MOs9ez3BVKjK/e0lKZvGo0G0RX7J3ChoivEUPkA==
+X-Received: by 2002:a65:4b88:: with SMTP id t8mr20722333pgq.374.1560255841015;
+        Tue, 11 Jun 2019 05:24:01 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id 127sm14832271pfc.159.2019.06.11.05.23.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 11 Jun 2019 05:24:00 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: [PATCH v4 3/3] KVM: X86: Expose PV_SCHED_YIELD CPUID feature bit to guest
+Date:   Tue, 11 Jun 2019 20:23:50 +0800
+Message-Id: <1560255830-8656-4-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1560255830-8656-1-git-send-email-wanpengli@tencent.com>
+References: <1560255830-8656-1-git-send-email-wanpengli@tencent.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Enable CONFIG_PINCTRL_IMX8MN by default to support i.MX8MN
-pinctrl driver.
+Expose PV_SCHED_YIELD feature bit to guest, the guest can check this
+feature bit before using paravirtualized sched yield.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
-Changes since V1:
-	- sort the change in alphabet order.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/virtual/kvm/cpuid.txt | 4 ++++
+ arch/x86/kvm/cpuid.c                | 3 ++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 9e6e07e..a47b0d6 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -374,6 +374,7 @@ CONFIG_SPMI=y
- CONFIG_PINCTRL_SINGLE=y
- CONFIG_PINCTRL_MAX77620=y
- CONFIG_PINCTRL_IMX8MM=y
-+CONFIG_PINCTRL_IMX8MN=y
- CONFIG_PINCTRL_IMX8MQ=y
- CONFIG_PINCTRL_IMX8QXP=y
- CONFIG_PINCTRL_IPQ8074=y
+diff --git a/Documentation/virtual/kvm/cpuid.txt b/Documentation/virtual/kvm/cpuid.txt
+index 97ca194..1c39683 100644
+--- a/Documentation/virtual/kvm/cpuid.txt
++++ b/Documentation/virtual/kvm/cpuid.txt
+@@ -66,6 +66,10 @@ KVM_FEATURE_PV_SEND_IPI            ||    11 || guest checks this feature bit
+                                    ||       || before using paravirtualized
+                                    ||       || send IPIs.
+ ------------------------------------------------------------------------------
++KVM_FEATURE_PV_SHED_YIELD          ||    12 || guest checks this feature bit
++                                   ||       || before using paravirtualized
++                                   ||       || sched yield.
++------------------------------------------------------------------------------
+ KVM_FEATURE_CLOCKSOURCE_STABLE_BIT ||    24 || host will warn if no guest-side
+                                    ||       || per-cpu warps are expected in
+                                    ||       || kvmclock.
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 60f87ba..38fc653 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -653,7 +653,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 			     (1 << KVM_FEATURE_PV_UNHALT) |
+ 			     (1 << KVM_FEATURE_PV_TLB_FLUSH) |
+ 			     (1 << KVM_FEATURE_ASYNC_PF_VMEXIT) |
+-			     (1 << KVM_FEATURE_PV_SEND_IPI);
++			     (1 << KVM_FEATURE_PV_SEND_IPI) |
++			     (1 << KVM_FEATURE_PV_SCHED_YIELD);
+ 
+ 		if (sched_info_on())
+ 			entry->eax |= (1 << KVM_FEATURE_STEAL_TIME);
 -- 
 2.7.4
 
