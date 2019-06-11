@@ -2,240 +2,92 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D987C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEEAC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF182146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F5D207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 12:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388548AbfFKMUK (ORCPT
+        id S2388272AbfFKMVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 08:20:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46170 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728859AbfFKMUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 08:20:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 537CBB024;
-        Tue, 11 Jun 2019 12:20:03 +0000 (UTC)
-From:   Takashi Iwai <tiwai@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 2/2] selftests: firmware: Add compressed firmware tests
-Date:   Tue, 11 Jun 2019 14:19:56 +0200
-Message-Id: <20190611121956.27460-3-tiwai@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190611121956.27460-1-tiwai@suse.de>
-References: <20190611121956.27460-1-tiwai@suse.de>
+        Tue, 11 Jun 2019 08:21:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:47451 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727413AbfFKMVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 08:21:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 05:21:21 -0700
+X-ExtLoop1: 1
+Received: from rrgarris-mobl1.amr.corp.intel.com (HELO [10.252.136.137]) ([10.252.136.137])
+  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2019 05:21:20 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 6/6] soundwire: qcom: add support for
+ SoundWire controller
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org, vkoul@kernel.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190607085643.932-1-srinivas.kandagatla@linaro.org>
+ <20190607085643.932-7-srinivas.kandagatla@linaro.org>
+ <249f9647-94d0-41d7-3b95-64c36d90f8e8@linux.intel.com>
+ <40ea774c-8aa8-295d-e91e-71423b03c88d@linaro.org>
+ <7269521a-ac89-3856-c18c-ffaaf64c0806@linux.intel.com>
+ <462620fc-ac91-6a36-46c7-7af0080f06cb@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <0e836692-2297-4cb7-d681-76692db78a56@linux.intel.com>
+Date:   Tue, 11 Jun 2019 07:21:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <462620fc-ac91-6a36-46c7-7af0080f06cb@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the test cases for checking compressed firmware load.
-Two more cases are added to fw_filesystem.sh:
-- Both a plain file and an xz file are present, and load the former
-- Only an xz file is present, and load without '.xz' suffix
 
-The tests are enabled only when CONFIG_FW_LOADER_COMPRESS is enabled
-and xz program is installed.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- tools/testing/selftests/firmware/fw_filesystem.sh | 73 +++++++++++++++++++----
- tools/testing/selftests/firmware/fw_lib.sh        |  7 +++
- tools/testing/selftests/firmware/fw_run_tests.sh  |  1 +
- 3 files changed, 71 insertions(+), 10 deletions(-)
+On 6/11/19 5:29 AM, Srinivas Kandagatla wrote:
+> 
+> 
+> On 10/06/2019 15:12, Pierre-Louis Bossart wrote:
+>>>>> +
+>>>>> +    if (dev_addr == SDW_BROADCAST_DEV_NUM) {
+>>>>> +        ctrl->fifo_status = 0;
+>>>>> +        ret = wait_for_completion_timeout(&ctrl->sp_cmd_comp,
+>>>>> +                          msecs_to_jiffies(TIMEOUT_MS));
+>>>>
+>>>> This is odd. The SoundWire spec does not handle writes to a single 
+>>>> device or broadcast writes differently. I don't see a clear reason 
+>>>> why you would only timeout for a broadcast write.
+>>>>
+>>>
+>>> There is danger of blocking here without timeout.
+>>
+>> Right, and it's fine to add a timeout. The question is why add a 
+>> timeout *only* for a broadcast operation? It should be added for every 
+>> transaction IMO, unless you have a reason not to do so.
+>>
+> 
+> I did try this before, the issue is when we read/write registers from 
+> interrupt handler, these can be deadlocked as we will be interrupt 
+> handler waiting for another completion interrupt, which will never 
+> happen unless we return from the first interrupt.
 
-diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
-index a4320c4b44dc..f901076aa2ea 100755
---- a/tools/testing/selftests/firmware/fw_filesystem.sh
-+++ b/tools/testing/selftests/firmware/fw_filesystem.sh
-@@ -153,13 +153,18 @@ config_set_read_fw_idx()
- 
- read_firmwares()
- {
-+	if [ "$1" = "xzonly" ]; then
-+		fwfile="${FW}-orig"
-+	else
-+		fwfile="$FW"
-+	fi
- 	for i in $(seq 0 3); do
- 		config_set_read_fw_idx $i
- 		# Verify the contents are what we expect.
- 		# -Z required for now -- check for yourself, md5sum
- 		# on $FW and DIR/read_firmware will yield the same. Even
- 		# cmp agrees, so something is off.
--		if ! diff -q -Z "$FW" $DIR/read_firmware 2>/dev/null ; then
-+		if ! diff -q -Z "$fwfile" $DIR/read_firmware 2>/dev/null ; then
- 			echo "request #$i: firmware was not loaded" >&2
- 			exit 1
- 		fi
-@@ -246,17 +251,17 @@ test_request_firmware_nowait_custom_nofile()
- 
- test_batched_request_firmware()
- {
--	echo -n "Batched request_firmware() try #$1: "
-+	echo -n "Batched request_firmware() $2 try #$1: "
- 	config_reset
- 	config_trigger_sync
--	read_firmwares
-+	read_firmwares $2
- 	release_all_firmware
- 	echo "OK"
- }
- 
- test_batched_request_firmware_direct()
- {
--	echo -n "Batched request_firmware_direct() try #$1: "
-+	echo -n "Batched request_firmware_direct() $2 try #$1: "
- 	config_reset
- 	config_set_sync_direct
- 	config_trigger_sync
-@@ -266,7 +271,7 @@ test_batched_request_firmware_direct()
- 
- test_request_firmware_nowait_uevent()
- {
--	echo -n "Batched request_firmware_nowait(uevent=true) try #$1: "
-+	echo -n "Batched request_firmware_nowait(uevent=true) $2 try #$1: "
- 	config_reset
- 	config_trigger_async
- 	release_all_firmware
-@@ -275,11 +280,16 @@ test_request_firmware_nowait_uevent()
- 
- test_request_firmware_nowait_custom()
- {
--	echo -n "Batched request_firmware_nowait(uevent=false) try #$1: "
-+	echo -n "Batched request_firmware_nowait(uevent=false) $2 try #$1: "
- 	config_reset
- 	config_unset_uevent
- 	RANDOM_FILE_PATH=$(setup_random_file)
- 	RANDOM_FILE="$(basename $RANDOM_FILE_PATH)"
-+	if [ "$2" = "both" ]; then
-+		xz -9 -C crc32 -k $RANDOM_FILE_PATH
-+	elif [ "$2" = "xzonly" ]; then
-+		xz -9 -C crc32 $RANDOM_FILE_PATH
-+	fi
- 	config_set_name $RANDOM_FILE
- 	config_trigger_async
- 	release_all_firmware
-@@ -294,19 +304,19 @@ test_config_present
- echo
- echo "Testing with the file present..."
- for i in $(seq 1 5); do
--	test_batched_request_firmware $i
-+	test_batched_request_firmware $i normal
- done
- 
- for i in $(seq 1 5); do
--	test_batched_request_firmware_direct $i
-+	test_batched_request_firmware_direct $i normal
- done
- 
- for i in $(seq 1 5); do
--	test_request_firmware_nowait_uevent $i
-+	test_request_firmware_nowait_uevent $i normal
- done
- 
- for i in $(seq 1 5); do
--	test_request_firmware_nowait_custom $i
-+	test_request_firmware_nowait_custom $i normal
- done
- 
- # Test for file not found, errors are expected, the failure would be
-@@ -329,4 +339,47 @@ for i in $(seq 1 5); do
- 	test_request_firmware_nowait_custom_nofile $i
- done
- 
-+test "$HAS_FW_LOADER_COMPRESS" != "yes" && exit 0
-+
-+# test with both files present
-+xz -9 -C crc32 -k $FW
-+config_set_name $NAME
-+echo
-+echo "Testing with both plain and xz files present..."
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware $i both
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_direct $i both
-+done
-+
-+for i in $(seq 1 5); do
-+	test_request_firmware_nowait_uevent $i both
-+done
-+
-+for i in $(seq 1 5); do
-+	test_request_firmware_nowait_custom $i both
-+done
-+
-+# test with only xz file present
-+mv "$FW" "${FW}-orig"
-+echo
-+echo "Testing with only xz file present..."
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware $i xzonly
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_direct $i xzonly
-+done
-+
-+for i in $(seq 1 5); do
-+	test_request_firmware_nowait_uevent $i xzonly
-+done
-+
-+for i in $(seq 1 5); do
-+	test_request_firmware_nowait_custom $i xzonly
-+done
-+
- exit 0
-diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
-index 1cbb12e284a6..f236cc295450 100755
---- a/tools/testing/selftests/firmware/fw_lib.sh
-+++ b/tools/testing/selftests/firmware/fw_lib.sh
-@@ -50,6 +50,7 @@ check_setup()
- {
- 	HAS_FW_LOADER_USER_HELPER="$(kconfig_has CONFIG_FW_LOADER_USER_HELPER=y)"
- 	HAS_FW_LOADER_USER_HELPER_FALLBACK="$(kconfig_has CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y)"
-+	HAS_FW_LOADER_COMPRESS="$(kconfig_has CONFIG_FW_LOADER_COMPRESS=y)"
- 	PROC_FW_IGNORE_SYSFS_FALLBACK="0"
- 	PROC_FW_FORCE_SYSFS_FALLBACK="0"
- 
-@@ -84,6 +85,12 @@ check_setup()
- 	fi
- 
- 	OLD_FWPATH="$(cat /sys/module/firmware_class/parameters/path)"
-+
-+	if [ "$HAS_FW_LOADER_COMPRESS" = "yes" ]; then
-+		if ! which xz 2> /dev/null > /dev/null; then
-+			HAS_FW_LOADER_COMPRESS=""
-+		fi
-+	fi
- }
- 
- verify_reqs()
-diff --git a/tools/testing/selftests/firmware/fw_run_tests.sh b/tools/testing/selftests/firmware/fw_run_tests.sh
-index cffdd4eb0a57..8e14d555c197 100755
---- a/tools/testing/selftests/firmware/fw_run_tests.sh
-+++ b/tools/testing/selftests/firmware/fw_run_tests.sh
-@@ -11,6 +11,7 @@ source $TEST_DIR/fw_lib.sh
- 
- export HAS_FW_LOADER_USER_HELPER=""
- export HAS_FW_LOADER_USER_HELPER_FALLBACK=""
-+export HAS_FW_LOADER_COMPRESS=""
- 
- run_tests()
- {
--- 
-2.16.4
-
+I don't quite get the issue. With the Intel hardware we only deal with 
+Master registers (some of which mirror the bus state) in the handler and 
+will only modify Slave registers in the thread. All changes to Slave 
+registers will be subject to a timeout as well as a check for no 
+response or NAK. Not sure what is specific about your solution that 
+requires a different handling of commands depending on which device 
+number is used. It could very well be that you've uncovered a flaw in 
+the bus design but I still don't see how it would be Qualcomm-specific?
