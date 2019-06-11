@@ -2,126 +2,80 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E18C46485
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B8EC06512
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C3D2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CF32080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404967AbfFKP3E (ORCPT
+        id S2404969AbfFKPaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:29:04 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:36414 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387864AbfFKP3E (ORCPT
+        Tue, 11 Jun 2019 11:30:02 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54797 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389677AbfFKPaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:29:04 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BFNeLu029871;
-        Tue, 11 Jun 2019 10:28:34 -0500
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail4.cirrus.com ([87.246.98.35])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2t0ae2vet2-1;
-        Tue, 11 Jun 2019 10:28:34 -0500
-Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
-        by mail4.cirrus.com (Postfix) with ESMTP id 2AABD611C8A7;
-        Tue, 11 Jun 2019 10:28:51 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 11 Jun
- 2019 16:28:33 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 11 Jun 2019 16:28:33 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2704B44;
-        Tue, 11 Jun 2019 16:28:33 +0100 (BST)
-Date:   Tue, 11 Jun 2019 16:28:33 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-CC:     Wolfram Sang <wsa@the-dreams.de>,
-        <mika.westerberg@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Jim Broadus <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v4 0/7] I2C IRQ Probe Improvements
-Message-ID: <20190611152833.GR28362@ediswmail.ad.cirrus.com>
-References: <20190611123101.25264-1-ckeepax@opensource.cirrus.com>
- <CAO-hwJ+qSXwZ-5sAiZ55-r_PXp9pvnE1XEaE_v3SBnxzQQNH4g@mail.gmail.com>
+        Tue, 11 Jun 2019 11:30:01 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1haiii-0001yg-GW; Tue, 11 Jun 2019 17:29:56 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1haiif-0004aA-9m; Tue, 11 Jun 2019 17:29:53 +0200
+Date:   Tue, 11 Jun 2019 17:29:53 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 01/14] pwm: meson: unify the parameter list of
+ meson_pwm_{enable,disable}
+Message-ID: <20190611152953.5pitafag62dhk6vu@pengutronix.de>
+References: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
+ <20190608180626.30589-2-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAO-hwJ+qSXwZ-5sAiZ55-r_PXp9pvnE1XEaE_v3SBnxzQQNH4g@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110101
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190608180626.30589-2-martin.blumenstingl@googlemail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 05:16:58PM +0200, Benjamin Tissoires wrote:
-> On Tue, Jun 11, 2019 at 2:31 PM Charles Keepax
-> <ckeepax@opensource.cirrus.com> wrote:
-> >
-> > This series attempts to align as much IRQ handling into the
-> > probe path as possible. Note that I don't have a great setup
-> > for testing these patches so they are mostly just build tested
-> > and need careful review and testing before any of them are
-> > merged.
-> >
-> > The series brings the ACPI path inline with the way the device
-> > tree path handles the IRQ entirely at probe time. However,
-> > it still leaves any IRQ specified through the board_info as
-> > being handled at device time. In that case we need to cache
-> > something from the board_info until probe time, which leaves
-> > any alternative solution with something basically the same as
-> > the current handling although perhaps caching more stuff.
+Hello Martin,
+
+On Sat, Jun 08, 2019 at 08:06:13PM +0200, Martin Blumenstingl wrote:
+> This is a preparation for a future cleanup. Pass struct pwm_device
+> instead of passing the individual values required by each function as
+> these can be obtained for each struct pwm_device instance.
 > 
-> Hmm, I still haven't pinpointed the issue, but I wanted to give a test
-> of the series and I have:
-> [    5.511806] i2c_hid i2c-DLL075B:01: HID over i2c has not been
-> provided an Int IRQ
-> [    5.511825] i2c_hid: probe of i2c-DLL075B:01 failed with error -22
+> As a nice side-effect the driver now uses "switch (pwm->hwpwm)"
+> everywhere. Before some functions used "switch (id)" while others used
+> "switch (pwm->hwpwm)".
 > 
-> So it seems that there is something wrong happening when fetching the
-> IRQ and providing it to i2c-hid.
+> No functional changes.
 > 
-> That was on a Dell XPS 9360.
-> 
-> Bisecting is starting.
-> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-I have a sneaking suspision, does this diff fix it:
+Best regards
+Uwe
 
-diff --git a/drivers/i2c/i2c-core-acpi.c
-b/drivers/i2c/i2c-core-acpi.c
-index 57be6342ba508..a90b05a269c36 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -169,7 +169,7 @@ int i2c_acpi_get_irq(struct i2c_client *client)
-        acpi_dev_free_resource_list(&resource_list);
-
-        if (irq == -ENOENT)
--           irq = acpi_dev_gpio_irq_get(adev, 0);
-+         irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(&client->dev), 0);
-
-        return irq;
- }
-
-There was some earlier discussion about which device was suitable
-for this call.
-
-Thanks,
-Charles
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
