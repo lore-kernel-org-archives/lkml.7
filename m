@@ -4,126 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E45C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE74C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFA220896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEEA420652
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390707AbfFKBah (ORCPT
+        id S2390578AbfFKBh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:30:37 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18122 "EHLO huawei.com"
+        Mon, 10 Jun 2019 21:37:28 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18123 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389168AbfFKBah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:30:37 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A6DD839207DF086F103B;
-        Tue, 11 Jun 2019 09:30:34 +0800 (CST)
-Received: from [10.177.30.175] (10.177.30.175) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 11 Jun 2019 09:30:27 +0800
-Subject: Re: [PATCH net-next] hinic: fix a bug in set rx mode
-To:     dann frazier <dann.frazier@canonical.com>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoshaokai@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>
-References: <20190527221005.10073-1-xuechaojing@huawei.com>
- <20190611004514.GA23302@xps13.dannf>
-From:   xuechaojing <xuechaojing@huawei.com>
-Message-ID: <b27a231a-bad0-0d76-c0c1-600b5c826f62@huawei.com>
-Date:   Tue, 11 Jun 2019 09:30:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S2389168AbfFKBh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:37:28 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9C5ADD4619E6F16E261B;
+        Tue, 11 Jun 2019 09:37:25 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 09:37:18 +0800
+Subject: Re: [PATCH 1/2] staging: erofs: add requirements field in superblock
+To:     Gao Xiang <gaoxiang25@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, <stable@vger.kernel.org>
+References: <20190610093640.96705-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <f4fbd407-7f0d-bbe3-2283-f7291a29026a@huawei.com>
+Date:   Tue, 11 Jun 2019 09:37:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190611004514.GA23302@xps13.dannf>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.30.175]
+In-Reply-To: <20190610093640.96705-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes, This patch fixes the Oops.
+On 2019/6/10 17:36, Gao Xiang wrote:
+> There are some backward incompatible optimizations pending
+> for months, mainly due to on-disk format expensions.
+> 
+> However, we should ensure that it cannot be mounted with
+> old kernels. Otherwise, it will causes unexpected behaviors.
+> 
+> Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> ---
+>  drivers/staging/erofs/erofs_fs.h | 11 +++++++++--
+>  drivers/staging/erofs/super.c    |  8 ++++++++
+>  2 files changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
+> index fa52898df006..531821757845 100644
+> --- a/drivers/staging/erofs/erofs_fs.h
+> +++ b/drivers/staging/erofs/erofs_fs.h
+> @@ -17,10 +17,16 @@
+>  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
+>  #define EROFS_SUPER_OFFSET      1024
+>  
+> +/*
+> + * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
+> + * incompatible with this kernel version.
+> + */
+> +#define EROFS_ALL_REQUIREMENTS  0
+> +
+>  struct erofs_super_block {
+>  /*  0 */__le32 magic;           /* in the little endian */
+>  /*  4 */__le32 checksum;        /* crc32c(super_block) */
+> -/*  8 */__le32 features;
+> +/*  8 */__le32 features;        /* extra features for the image */
+>  /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+>  /* 13 */__u8 reserved;
+>  
+> @@ -34,8 +40,9 @@ struct erofs_super_block {
+>  /* 44 */__le32 xattr_blkaddr;
+>  /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
+>  /* 64 */__u8 volume_name[16];   /* volume name */
+> +/* 80 */__le32 requirements;    /* all mandatory minimum requirements */
+>  
+> -/* 80 */__u8 reserved2[48];     /* 128 bytes */
+> +/* 84 */__u8 reserved2[44];     /* 128 bytes */
 
-xue
+Xiang,
 
-дк 2019/6/11 8:45, dann frazier wrote:
-> On Mon, May 27, 2019 at 10:10:05PM +0000, Xue Chaojing wrote:
->> in set_rx_mode, __dev_mc_sync and netdev_for_each_mc_addr will
->> repeatedly set the multicast mac address. so we delete this loop.
-> fyi, I'm told this fixes the following Oops (in case it makes sense to
-> queue it for stable):
->
-> [ 642.914581] Internal error: Oops: 96000005 [#1] SMP
-> [ 642.919444] Modules linked in: hinic(-) 8021q garp mrp stp llc ses enclosure sg nls_utf8 isofs vfat fat loop ipmi_ssif crc32_ce crct10dif_ce ghash_c e sha2_ce sha256_arm64 sha1_ce sbsa_gwdt hns_roce_hw_v2 hns_roce ib_core ipmi_si ipmi_devintf ipmi_msghandler xfs libcrc32c marvell hibmc_drm drm_kms_h elper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm qla2xxx ixgbe drm mpt3sas nvme_fc hns3 hisi_sas_v3_hw igb nvme_fabrics hisi_sas_main hclge mdio scsi_transport_fc nvme libsas hnae3 raid_class nvme_core scsi_transport_sas i2c_algo_bit gpio_dwapb gpio_generic dm_mirror dm_region_hash dm_log dm_mo d [last unloaded: hinic]
-> [ 642.974177] CPU: 4 PID: 5339 Comm: kworker/u256:1 Kdump: loaded Not tainted 4.18.0-74.el8.aarch64 #1
-> [ 642.983293] Hardware name: Huawei TaiShan 2280 V2/BC82AMDA, BIOS TA BIOS 2280-A CS V2.16.01 03/16/2019
-> [ 642.992591] Workqueue: hinic_dev set_rx_mode [hinic]
-> [ 642.997542] pstate: 00c00009 (nzcv daif +PAN +UAO)
-> [ 643.002320] pc : add_mac_addr+0xa4/0x100 [hinic]
-> [ 643.006924] lr : set_rx_mode+0x88/0xc0 [hinic]
-> [ 643.011353] sp : ffff00003228fd40
-> [ 643.014653] x29: ffff00003228fd40 x28: 0000000000000000
-> [ 643.019952] x27: ffffb955c362ff38 x26: ffff27ccd2cc3110
-> [ 643.025250] x25: 0000000000000000 x24: ffffb955025c6b08
-> [ 643.030547] x23: ffffb955025c6000 x22: 0000000000000010
-> [ 643.035845] x21: ffff27cc56040488 x20: ffffb955025c6ac0
-> [ 643.041142] x19: 0000000000000000 x18: 0000000000000010
-> [ 643.046440] x17: 0000ffffb7135830 x16: ffff27ccd2259bb8
-> [ 643.051737] x15: ffffffffffffffff x14: 2030302031302039
-> [ 643.057035] x13: 33203d2072646461 x12: 2063616d20746573
-> [ 643.062332] x11: 203a296465726574 x10: 0000000000000d10
-> [ 643.067630] x9 : ffff00003228f9f0 x8 : ffffb95501756170
-> [ 643.072927] x7 : 198c000940300814 x6 : ffff00003228fd08
-> [ 643.078225] x5 : 0000000000000000 x4 : 0000000000000000
-> [ 643.083523] x3 : 0000000000000000 x2 : 0000000000000001
-> [ 643.088820] x1 : 0000000000000010 x0 : 00000000000000e3
-> [ 643.094118] Process kworker/u256:1 (pid: 5339, stack limit = 0x0000000023b4f182)
-> [ 643.101498] Call trace:
-> [ 643.103932] add_mac_addr+0xa4/0x100 [hinic]
-> [ 643.108189] set_rx_mode+0x88/0xc0 [hinic]
-> [ 643.112272] process_one_work+0x1ac/0x3e0
-> [ 643.116268] worker_thread+0x44/0x448
-> [ 643.119916] kthread+0x130/0x138
-> [ 643.123130] ret_from_fork+0x10/0x18
-> [ 643.126692] Code: a9425bf5 a94363f7 a8c47bfd d65f03c0 (394016c7)
-> [ 643.132828] SMP: stopping secondary CPUs
-> [ 643.139859] Starting crashdump kernel...
-> [ 643.143771] Bye!
->
->    -dann
->
->> Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
->> ---
->>   drivers/net/ethernet/huawei/hinic/hinic_main.c | 4 ----
->>   1 file changed, 4 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
->> index e64bc664f687..cfd3f4232cac 100644
->> --- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
->> +++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
->> @@ -724,7 +724,6 @@ static void set_rx_mode(struct work_struct *work)
->>   {
->>   	struct hinic_rx_mode_work *rx_mode_work = work_to_rx_mode_work(work);
->>   	struct hinic_dev *nic_dev = rx_mode_work_to_nic_dev(rx_mode_work);
->> -	struct netdev_hw_addr *ha;
->>   
->>   	netif_info(nic_dev, drv, nic_dev->netdev, "set rx mode work\n");
->>   
->> @@ -732,9 +731,6 @@ static void set_rx_mode(struct work_struct *work)
->>   
->>   	__dev_uc_sync(nic_dev->netdev, add_mac_addr, remove_mac_addr);
->>   	__dev_mc_sync(nic_dev->netdev, add_mac_addr, remove_mac_addr);
->> -
->> -	netdev_for_each_mc_addr(ha, nic_dev->netdev)
->> -		add_mac_addr(nic_dev->netdev, ha->addr);
->>   }
->>   
->>   static void hinic_set_rx_mode(struct net_device *netdev)
-> .
->
+It needs to update the comment behind reserved2, it's locating at 132 bytes.
+
+>  } __packed;
+>  
+>  /*
+> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+> index f580d4ef77a1..815e5825db59 100644
+> --- a/drivers/staging/erofs/super.c
+> +++ b/drivers/staging/erofs/super.c
+> @@ -104,6 +104,14 @@ static int superblock_read(struct super_block *sb)
+>  		goto out;
+>  	}
+>  
+> +	/* check if the kernel meets all mandatory requirements */
+> +	if (le32_to_cpu(layout->requirements) & (~EROFS_ALL_REQUIREMENTS)) {
+> +		errln("too old to meet minimum requirements: %x supported: %x",
+
+It will be better to give a suggestion to user to upgrade kernel version to
+match the image with new layout, otherwise it's just a little confused about
+above printed message.
+
+Thanks,
+
+> +		      le32_to_cpu(layout->requirements),
+> +		      EROFS_ALL_REQUIREMENTS);
+> +		goto out;
+> +	}
+> +
+>  	sbi->blocks = le32_to_cpu(layout->blocks);
+>  	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
+>  #ifdef CONFIG_EROFS_FS_XATTR
+> 
