@@ -2,65 +2,97 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AE8C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6CFC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85C2206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:12:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i+skrpj2"
+	by mail.kernel.org (Postfix) with ESMTP id 5F75B212F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391747AbfFKPMs (ORCPT
+        id S2404554AbfFKPOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:12:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44898 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388333AbfFKPMr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:12:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8Zz8IYaYi8X4JihDj2RJx4SBOxoW9ucRDrdaIchCcIk=; b=i+skrpj2uoU2UQ4AfrPKNef38
-        erUaxvLiw4im5aV10NNsDVxucYXy6hKEFdh4A+aNWBKSTlAsTAhzZAJ4nYEObYLr/32g/H2keVITL
-        +JEpxRG0WSSVKes0gfXTRvj2sK5ABuCdmfI2gvX+iAggXyOEVIixijcvcn4AUUkSfpSg7n7mVKtEB
-        RCLXzVGjNANHKb2yS1ke1KF3M2Vwp4lTBBzzN6ifMBCzaQBDwWADtCZZCEWk29gD52SgOb1j3dTt4
-        /YqOvrB6rBdTx5Dw6c3x4y+T7FhbAUhksAldvUM4SuEKkz4+pSENwTln1DkptagbXMTwozDS29HGT
-        aG77ZEs6A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1haiS7-00010R-Ap; Tue, 11 Jun 2019 15:12:47 +0000
-Date:   Tue, 11 Jun 2019 08:12:47 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH 8/8] habanalabs: enable 64-bit DMA mask in POWER9
-Message-ID: <20190611151247.GA3110@infradead.org>
-References: <20190611055045.15945-1-oded.gabbay@gmail.com>
- <20190611055045.15945-9-oded.gabbay@gmail.com>
+        Tue, 11 Jun 2019 11:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391755AbfFKPOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:14:14 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A79062080A;
+        Tue, 11 Jun 2019 15:14:11 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 11:14:10 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20190611111410.366f4ced@gandalf.local.home>
+In-Reply-To: <20190605131945.005681046@infradead.org>
+References: <20190605130753.327195108@infradead.org>
+        <20190605131945.005681046@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611055045.15945-9-oded.gabbay@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 08:50:45AM +0300, Oded Gabbay wrote:
-> 2. The pci_set_dma_mask() is a generic Linux kernel call, so the driver
->    can't tell why it got an error when it tried to set the DMA mask to 48
->    bits. And upon such failure, the driver must fall-back to set the mask
->    to 32 bits.
+On Wed, 05 Jun 2019 15:08:01 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-In the current kernel pci_set_dma_mask only fails if the DMA mask is
-to small to be supportable at all.  So you very obviously did not
-actually test this against mainline.
+> -void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
+> +void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+>  {
+>  	unsigned char int3 = 0xcc;
+>  
+> -	bp_int3_handler = handler;
+> +	bp_int3_opcode = emulate ?: opcode;
+>  	bp_int3_addr = (u8 *)addr + sizeof(int3);
+>  	bp_patching_in_progress = true;
+>  
+>  	lockdep_assert_held(&text_mutex);
+>  
+>  	/*
+> +	 * poke_int3_handler() relies on @opcode being a 5 byte instruction;
+> +	 * notably a JMP, CALL or NOP5_ATOMIC.
+> +	 */
+> +	BUG_ON(len != 5);
+
+If we have a bug on here, why bother with passing in len at all? Just
+force it to be 5.
+
+We could make it a WARN_ON() and return without doing anything.
+
+This also prevents us from ever changing two byte jmps.
+
+-- Steve
+
+> +
+> +	/*
+>  	 * Corresponding read barrier in int3 notifier for making sure the
+> -	 * in_progress and handler are correctly ordered wrt. patching.
+> +	 * in_progress and opcode are correctly ordered wrt. patching.
+>  	 */
+>  	smp_wmb();
+>  
+> -
