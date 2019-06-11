@@ -2,267 +2,158 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A57C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C13C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE93206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683B5206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 08:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391271AbfFKIgH (ORCPT
+        id S2391332AbfFKIgO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 04:36:07 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:45783 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725766AbfFKIgG (ORCPT
+        Tue, 11 Jun 2019 04:36:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41295 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391272AbfFKIgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:36:06 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id acG8hfnuc41bFacGBhD0AX; Tue, 11 Jun 2019 10:36:04 +0200
-Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
-        linux-media@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Pawel Osciak <posciak@chromium.org>
-References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
- <e40174b9a3d813389dc9529598541e4849067387.camel@ndufresne.ca>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <41bac425-65bf-2cd7-ef70-e705f7b1717d@xs4all.nl>
-Date:   Tue, 11 Jun 2019 10:35:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 11 Jun 2019 04:36:14 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 136so8628386lfa.8;
+        Tue, 11 Jun 2019 01:36:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GUp8qliVx03zllgkYDK8ocvKtbFURF4tyvvuVMWSXJU=;
+        b=DGjVijvJhxsU9XOJsZTqixJOUCUjQ+JG5IjSEQrgnGNBYwBdAmAei3xqdoXsNZcJQ1
+         NCSZEFGO4T32PyXbefXgNBNvI3q44nT5vcMnZ8j2pktOH1Se4HXoj0gy/a4H51aC811T
+         lY54O97LjYqyTtIApbt+uGockin1RuxXmS1N49Q6mq5qdFVlmrTIyxsGuK+Kxu7AQrYt
+         tvIyK2ledWM8+WTYC+TINbgcx+birrKT9CZf/I0VrjfsPGK8+zZ74zJDySntKSKmv9BI
+         luL4yPcZ+LPjTrDfAJ76gdZFdNTOCTc2qItjmmfTY4yynm+U6b2xiKGDDwmX5SmtcOGE
+         MXiQ==
+X-Gm-Message-State: APjAAAVpcH8UtE5hEA0HG07mxEUQC4cgKcPVMPJZq1mOx/9gaODUbfxR
+        jIcjr5Ph0bQ8v8XEhGjMofr7bJITouJPChwoif0=
+X-Google-Smtp-Source: APXvYqwd/QOgBJwyleqHVMRIDIpSd3upHGdxLIZdMQ2+GlhKJ5bW8QObXfMjmP33hbygmeS7kdgIlsZS8CVKSZyz6fA=
+X-Received: by 2002:ac2:546a:: with SMTP id e10mr37353204lfn.75.1560242171986;
+ Tue, 11 Jun 2019 01:36:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e40174b9a3d813389dc9529598541e4849067387.camel@ndufresne.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfDVwglvUH47WVrMpqQ+b+yiDiI/cbaNtk4qBUpXzwmdNUBk8UEDuJ+0OM68f7yfODvlKUXsbfHMMVZMj+lfjG9Ks1kzBtEBYJFSSeNdZ83OmMApu/uEw
- pQw8ffLm7LR/YrYjDT2Je3zjbQ+du23SffsyaBVhH7qkqrrNnBOONrqF7VmJjCAbh2xKWDCnumfiQaFZ8vrJ5QmFmNvJg4wqeKuRjxB6Cr4Bkn9b4MgkvPwc
- wS8jd+I0xmVOOtlKti6t61K8A76AfF+AiNP6TyJ1EWmPjqvyHVq1rPgQu8FJGfNMMHXRvsO4VpNJAn8gOySQ02z8WdhcI2FDg9kGoEK1j9XV3lEvHlgqS4VY
- 9+1SKovRIUkgHkyhCbBrWRfeACllkyDqTEro+MgmkhxBgHc7/1ueVTyLGv0lwHb5AsGrM44YrkeA+kORuYhqfuaPwy6jJlIcZnYJtfTxZrI8E610vzWZWOWu
- snuIRXPPOp3hcqO0fOlXCHc9u88D3k8utMjTkA==
+References: <c57fe97b-ad4a-874e-663f-7f3a737824c9@microchip.com> <20190610062351.24405-1-tudor.ambarus@microchip.com>
+In-Reply-To: <20190610062351.24405-1-tudor.ambarus@microchip.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 11 Jun 2019 10:35:59 +0200
+Message-ID: <CAMuHMdW3=fzFvt+ZmC2B6qf0zEwfvV--HVEoxa06Tk=a=Q1cWA@mail.gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: use 16-bit WRR command when QE is set on
+ spansion flashes
+To:     Tudor Ambarus <Tudor.Ambarus@microchip.com>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "R, Vignesh" <vigneshr@ti.com>, Jonas Bonn <jonas@norrbonn.se>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 5:57 PM, Nicolas Dufresne wrote:
-> Le lundi 03 juin 2019 à 13:28 +0200, Hans Verkuil a écrit :
->> Since Thomasz was very busy with other things, I've taken over this
->> patch series. This v4 includes his draft changes and additional changes
->> from me.
->>
->> This series attempts to add the documentation of what was discussed
->> during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
->> later Embedded Linux Conference Europe 2014 in Düsseldorf and then
->> eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
->> video team (but mostly in a cosmetic way or making the document more
->> precise), during the several years of Chrome OS using the APIs in
->> production.
->>
->> Note that most, if not all, of the API is already implemented in
->> existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
->> this series is just to formalize what we already have.
->>
->> Thanks everyone for the huge amount of useful comments to previous
->> versions of this series. Much of the credits should go to Pawel Osciak
->> too, for writing most of the original text of the initial RFC.
->>
->> This v4 incorporates all known comments (let me know if I missed
->> something!) and should be complete for the decoder.
->>
->> For the encoder there are two remaining TODOs for the API:
->>
->> 1) Setting the frame rate so bitrate control can make sense, since
->>    they need to know this information.
->>
->>    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
->>    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
->>    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
->>    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
->>    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
-> 
-> Is ENUM_FRAMEINTERVALS really required ? This will be a hint to the
-> encoder, so that the encoder round to it's internal precision does not
-> seem very important.
+Hi Tudor,
 
-I don't like this proposal. Especially the use of S_PARM (I *hate* that ioctl).
-I think the frame period should be a control with a min/max range, like
-any other control.
+On Mon, Jun 10, 2019 at 8:24 AM <Tudor.Ambarus@microchip.com> wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+>
+> SPI memory devices from different manufacturers have widely
+> different configurations for Status, Control and Configuration
+> registers. JEDEC 216C defines a new map for these common register
+> bits and their functions, and describes how the individual bits may
+> be accessed for a specific device. For the JEDEC 216B compliant
+> flashes, we can partially deduce Status and Configuration registers
+> functions by inspecting the 16th DWORD of BFPT. Older flashes that
+> don't declare the SFDP tables (SPANSION FL512SAIFG1 311QQ063 A ©11
+> SPANSION) let the software decide how to interact with these registers.
+>
+> The commit dcb4b22eeaf4 ("spi-nor: s25fl512s supports region locking")
+> uncovered a probe error for s25fl512s, when the QUAD bit CR[1] was set
+> in the bootloader. When this bit is set, only the Write Register
+> WRR command format with 16 data bits may be used, WRR with 8 bits
+> is not recognized and hence the error when trying to clear the block
+> protection bits.
+>
+> Fix the above by using 16-bits WRR command when Quad bit is set.
+>
+> Backward compatibility should be fine. The newly introduced
+> spi_nor_spansion_clear_sr_bp() is tightly coupled with the
+> spansion_quad_enable() function. Both assume that the Write Register
+> with 16 bits, together with the Read Configuration Register (35h)
+> instructions are supported.
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+> Geert, Jonas,
+>
+> This patch is compile-tested only. I don't have the flash, I need your
+> help for testing this.
 
-FRAMEINTERVALS really refers to the rate at which frames arrive when
-capturing, and that's not quite what is happening in an encoder.
+Thanks, this revives access to the s25fl512s on Koelsch.
 
-For now I want to concentrate on the decoder spec, and I'll come back to
-this later.
+Fixes: dcb4b22eeaf44f91 ("spi-nor: s25fl512s supports region locking")
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>Hi Tudor,
 
-> 
->>
->> 2) Interactions between OUTPUT and CAPTURE formats.
->>
->>    The main problem is what to do if the capture sizeimage is too small
->>    for the OUTPUT resolution when streaming starts.
->>
->>    Proposal: width and height of S_FMT(OUTPUT) are used to
->>    calculate a minimum sizeimage (app may request more). This is
->>    driver-specific.
->>
->>    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
->>    for the encoder (i.e. we don't support mid-stream resolution
->>    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
->>    supported. See https://patchwork.linuxtv.org/patch/56478/ for
->>    the patch adding this flag.
->>
->>    Of course, if we start to support mid-stream resolution
->>    changes (or other changes that require a source change event),
->>    then this flag should be dropped by the encoder driver and
->>    documentation on how to handle the source change event should
->>    be documented in the encoder spec. I prefer to postpone this
->>    until we have an encoder than can actually do mid-stream
->>    resolution changes.
-> 
-> For H264, mid-stream changes would make sense for the case we'd like
-> the statefull encoder to emit multiple PPS at start, so then the switch
-> would simply change the PPS index. The problem seems to be how do we
-> expose "multiple" resolution in our interface ? As there is currently
-> no solution to this, I would not see much use for having this supported
-> at the moment.
+Two questions below...
 
-I agree. That's why I want to postpone that part.
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
 
-> 
->>
->>    If sizeimage of the OUTPUT is too small for the CAPTURE
->>    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
->>    then the second STREAMON (either CAPTURE or OUTPUT) will
->>    return -ENOMEM since there is not enough memory to do the
->>    encode.
->>
->>    If V4L2_FMT_FLAG_FIXED_RESOLUTION is set (i.e. that should
->>    be the case for all current encoders), then any bitrate controls
->>    will be limited in range to what the current state (CAPTURE and
->>    OUTPUT formats and frame rate) supports.
+> +static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
+> +{
 
-Note that this flag will be inverted: V4L2_FMT_FLAG_DYN_RESOLUTION.
-So this text is out of date in that regard.
+[...]
 
-Regards,
+> +        * When the configuration register QUAD bit CR[1] is 1, only
+> +        * the WRR command format with 16 data bits may be used.
 
-	Hans
+s/WRR/WRSR/?
 
->>
->> Comments regarding these two encoder proposals are welcome!
->>
->> Regards,
->>
->> 	Hans
->>
->> Changes since v3:
->>
->> - Lots of stylistic fixes and fixing typos/grammar/etc.
->>
->> Decoder:
->>
->> - width/height for S_FMT(OUTPUT):
->>
->>   Expects that the output width and height is always a valid
->>   resolution (i.e. never 0x0), and G/S/TRY_FMT and REQBUFS will use that
->>   instead of returning an error. Note that this resolution is a placeholder
->>   until the actual resolution is parsed from the stream.
->>
->> - Dropped step 3 (Query the minimum number of buffers required for the CAPTURE
->>   queue via VIDIOC_G_CTRL().) in the Capture Setup section. It seems to be
->>   a left-over from earlier versions. The same information is also in Step 10,
->>   so no need to have this in two places.
->>
->> - Added step 5 in the Capture Setup section: set COMPOSE rectangle if needed.
->>
->> - VIDIO_DECODER_CMD: document EBUSY return while draining the queue.
->>
->> Encoder:
->>
->> - width/height for S_FMT(CAPTURE): The width/height for the CAPTURE format
->>   are marked as read-only and are based on the encoders current state such
->>   as the OUTPUT format.
->>
->> - Drop TGT_COMPOSE support in the encoder: there are currently
->>   no encoders that can do composing/scaling.
->>
->> - Document corner cases in the Drain sequence
->>
->> - Document error handling.
->>
->> - VIDIO_ENCODER_CMD: document EBUSY return while draining the queue.
->>
->> Changes since v2:
->> (https://lore.kernel.org/patchwork/cover/1002474/)
->> Decoder:
->>  - Specified that the initial source change event is signaled
->>    regardless of whether the client-set format matches the
->>    stream format.
->>  - Dropped V4L2_CID_MIN_BUFFERS_FOR_OUTPUT since it's meaningless
->>    for the bitstream input buffers of decoders.
->>  - Explicitly stated that VIDIOC_REQBUFS is not allowed on CAPTURE
->>    if the stream information is not available.
->>  - Described decode error handling.
->>  - Mentioned that timestamps can be observed after a seek to
->>    determine whether the CAPTURE buffers originated from before
->>    or after the seek.
->>  - Explicitly stated that after a pair of V4L2_DEC_CMD_STOP and
->>    V4L2_DEC_CMD_START, the decoder is not reset and preserves
->>    all the state.
->>
->> Encoder:
->>  - Specified that width and height of CAPTURE format are ignored
->>    and always zero.
->>  - Explicitly noted the common use case for the CROP target with
->>    macroblock-unaligned video resolutions.
->>  - Added a reference to Request API.
->>  - Dropped V4L2_CID_MIN_BUFFERS_FOR_CAPTURE since it's meaningless
->>    for the bitstream output buffers of encoders.
->>  - Explicitly stated that after a pair of V4L2_ENC_CMD_STOP and
->>    V4L2_ENC_CMD_START, the encoder is not reset and preserves
->>    all the state.
->>
->> General:
->>  - Dropped format enumeration from "Initialization", since it's already
->>    a part of "Querying capabilities".
->>  - Many spelling, grammar, stylistic, etc. changes.
->>  - Changed the style of note blocks.
->>  - Rebased onto Hans' documentation cleanup series.
->>    (https://patchwork.kernel.org/cover/10775407/
->>     https://patchwork.kernel.org/patch/10776737/)
->>  - Moved the interfaces under the "Video Memory-To-Memory Interface"
->>    section.
->>
->> For changes since v1 see the v2:
->> https://lore.kernel.org/patchwork/cover/1002474/
->>
->> For changes since RFC see the v1:
->> https://patchwork.kernel.org/cover/10542207/
->>
->> Tomasz Figa (2):
->>   media: docs-rst: Document memory-to-memory video decoder interface
->>   media: docs-rst: Document memory-to-memory video encoder interface
->>
->>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
->>  Documentation/media/uapi/v4l/dev-encoder.rst  |  608 +++++++++
->>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    9 +-
->>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |   10 +
->>  Documentation/media/uapi/v4l/v4l2.rst         |   12 +-
->>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
->>  .../media/uapi/v4l/vidioc-encoder-cmd.rst     |   51 +-
->>  7 files changed, 1779 insertions(+), 36 deletions(-)
->>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
->>  create mode 100644 Documentation/media/uapi/v4l/dev-encoder.rst
->>
+> +        */
+> +       if (ret & CR_QUAD_EN_SPAN) {
+> +               sr_cr[1] = ret;
+> +
+> +               ret = read_sr(nor);
+> +               if (ret < 0) {
+> +                       dev_err(nor->dev,
+> +                               "error while reading status register\n");
+> +                       return ret;
+> +               }
+> +               sr_cr[0] = ret & ~mask;
+> +
+> +               ret = write_sr_cr(nor, sr_cr);
+> +               if (ret)
+> +                       dev_err(nor->dev, "16-bit write register failed\n");
+> +               return ret;
+> +       }
+> +
+> +       /* If quad bit is not set, use 8-bit WRR command. */
 
+Likewise.
+
+> +       return spi_nor_clear_sr_bp(nor);
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
