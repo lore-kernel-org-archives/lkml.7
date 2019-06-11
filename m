@@ -2,196 +2,311 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B34C06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1870FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF2F2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C307F2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i+ihcJfD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t6COAwWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406452AbfFKUHT (ORCPT
+        id S2406461AbfFKUIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:07:19 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52182 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405476AbfFKUHS (ORCPT
+        Tue, 11 Jun 2019 16:08:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37582 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406095AbfFKUIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:07:18 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BK5X7D176393;
-        Tue, 11 Jun 2019 20:06:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=chD9BHu2Q8n/vFf6CCiBN6lp1HXxmyrKtdEjtx98SfY=;
- b=i+ihcJfD+r++tCN09DcxE+9SdhIRXslpbsen1Ly2b/r82XpfipS+cg5oxIFDHr5z/GAU
- VrRdu7NdT1KOdFyjMhexY6IfvMPY77FUH+FKxtIUXO8d1C0e0tDTPRmvp1FdzV8V7pYX
- U4IzADiDszYzTuo1y6F4qZFiT2b9u6Cz8QDPrN+6Sqlg39FglRjDj2+y+RKoGD/iKR6m
- uDqlrJDwwIbHmVtlRXKy/zbwpgKr8Ch3G7MbdDDHDEU1fdVCH38z0MVPNm3oNSiK0LeC
- adAcFZjzJlLyTbihfu+4rXpoW5PNw7BgFZdrw7mehFHTf2SW6/39ZzEaisuCtPm7xaov 9A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t04etqfpk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 20:06:20 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5BK52LA147470;
-        Tue, 11 Jun 2019 20:06:20 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t04hyj0wv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 20:06:19 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5BK6Df4017807;
-        Tue, 11 Jun 2019 20:06:13 GMT
-Received: from [10.154.187.61] (/10.154.187.61)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 11 Jun 2019 13:06:13 -0700
-Subject: Re: [PATCH v16 03/16] lib, arm64: untag user pointers in strn*_user
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <14f17ef1902aa4f07a39f96879394e718a1f5dc1.1559580831.git.andreyknvl@google.com>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <dd2de772-bd55-86e3-0812-2e01ae97f8fa@oracle.com>
-Date:   Tue, 11 Jun 2019 14:06:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 16:08:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r10so13173523otd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 13:08:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wu5V06JjvlYtLTYwOjXCUcwHA/ZXRKacudSVXc/qyLM=;
+        b=t6COAwWiGhiE/0DvQedmgVW+ApWldYJ1b0mFdPv1RNHG9589h2kf28P4YxhTpyX6tN
+         C55kpbk5rtDosu6tmN6tUUkuDn+dWAobmudYFI/CZbvT1Wybtn3R54j4oSleCx6fozlb
+         ZC4PozSCM4+3sO02nef3OkrqCeqO6DE7dzoY8m5ufccwJDU5G6Gg2Hzj5b++YjTlkqHc
+         MuO0O4fho0IL4bmgoA+/suPDF7F7/0zrpS5PQ4oyyWzijQpDxCfSPHVF41iaLYdC3F6W
+         HhMCi4VVLujvvZ3pl15SgVvcf7C9fEu4pkaJ96T2ZMV7nFQ8XOOp4lyzwvyBD8K+HvDd
+         HPGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wu5V06JjvlYtLTYwOjXCUcwHA/ZXRKacudSVXc/qyLM=;
+        b=ajaznEF8yrgpH+GtFugluYhE/rB2p1ujPX40Xvdur7kJmeAy5bDi/1eoZlOexIkgNj
+         N3M7FXmApIGYWOV3G2yXC9YO8tl3EHjqpfuXPxYMLHZ2rnZnc7Gp4dk4vpgvxh/2UPZk
+         uYgr+VVt20q9rJkwwA/ZjsNzeWoFZv2oqHlNAGixzSkMH62bzBIwQ3TPHDta1Qdk5916
+         TyvhuAZRjMKFJA6wsvbLpM9NhtXcBIpGVwAiMUnGP7/T1wvas8aU4U/YMWLyan997o7a
+         1ldj4d8EkgnFquKh2PzA9fOlwvfv9flzV4opq+oJS5scYrF/0gcoXT2WP6XjtbsXR9Uk
+         Ob6g==
+X-Gm-Message-State: APjAAAUiIgLVi0JHHzkRmO9djmej5fihCjubzSNfOoJwmSEgvtbqSnXH
+        AVJUnh5JNLgxglXfnAtu0W4UUGWGjcEmAhFYZyHdMA==
+X-Google-Smtp-Source: APXvYqzbL4YJmh4Q4/UloaiwtpLeN2icmCmXUWR5ClxF0zqslixM+AcMA26mq5D9qUJsInSzM1xRnVR8dZbsRi8BSeI=
+X-Received: by 2002:a9d:6d06:: with SMTP id o6mr35503170otp.225.1560283714379;
+ Tue, 11 Jun 2019 13:08:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <14f17ef1902aa4f07a39f96879394e718a1f5dc1.1559580831.git.andreyknvl@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906110129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110129
+References: <20190524010117.225219-1-saravanak@google.com> <20190524010117.225219-2-saravanak@google.com>
+ <6f4ca588-106f-93d1-8579-9e8d32c8031d@gmail.com> <CAGETcx9zgMs5ne3jPa+6xR+EHR=+QuF7XfRb1gpenh-3ZQwV+w@mail.gmail.com>
+ <b3a88f46-5c3b-0e33-e08f-e0d9b5df2864@gmail.com> <b272ae7b-dcc6-acda-78b2-92eace0b6978@gmail.com>
+In-Reply-To: <b272ae7b-dcc6-acda-78b2-92eace0b6978@gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 11 Jun 2019 13:07:58 -0700
+Message-ID: <CAGETcx9nP8OUV1qX43UwfeJV=95cKrHgCm7wjQ96KHouDKm-Mg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/19 10:55 AM, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow=
- to
-> pass tagged user pointers (with the top byte set to something else othe=
-r
-> than 0x00) as syscall arguments.
->=20
-> strncpy_from_user and strnlen_user accept user addresses as arguments, =
-and
-> do not go through the same path as copy_from_user and others, so here w=
-e
-> need to handle the case of tagged user addresses separately.
->=20
-> Untag user pointers passed to these functions.
->=20
-> Note, that this patch only temporarily untags the pointers to perform
-> validity checks, but then uses them as is to perform user memory access=
-es.
->=20
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  lib/strncpy_from_user.c | 3 ++-
->  lib/strnlen_user.c      | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
+On Tue, Jun 11, 2019 at 7:51 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> Hi Saravana,
+>
+> (I notice that I never seem to spell your name correctly.  Apologies for that,
+> both past and future).
 
-Looks good.
+Thanks for noticing :) One trick that might help with remembering my
+name is that every other letter is an "a" :)
 
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
+>
+> This email was never answered.
 
->=20
-> diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-> index 023ba9f3b99f..dccb95af6003 100644
-> --- a/lib/strncpy_from_user.c
-> +++ b/lib/strncpy_from_user.c
-> @@ -6,6 +6,7 @@
->  #include <linux/uaccess.h>
->  #include <linux/kernel.h>
->  #include <linux/errno.h>
-> +#include <linux/mm.h>
-> =20
->  #include <asm/byteorder.h>
->  #include <asm/word-at-a-time.h>
-> @@ -108,7 +109,7 @@ long strncpy_from_user(char *dst, const char __user=
- *src, long count)
->  		return 0;
-> =20
->  	max_addr =3D user_addr_max();
-> -	src_addr =3D (unsigned long)src;
-> +	src_addr =3D (unsigned long)untagged_addr(src);
->  	if (likely(src_addr < max_addr)) {
->  		unsigned long max =3D max_addr - src_addr;
->  		long retval;
-> diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-> index 7f2db3fe311f..28ff554a1be8 100644
-> --- a/lib/strnlen_user.c
-> +++ b/lib/strnlen_user.c
-> @@ -2,6 +2,7 @@
->  #include <linux/kernel.h>
->  #include <linux/export.h>
->  #include <linux/uaccess.h>
-> +#include <linux/mm.h>
-> =20
->  #include <asm/word-at-a-time.h>
-> =20
-> @@ -109,7 +110,7 @@ long strnlen_user(const char __user *str, long coun=
-t)
->  		return 0;
-> =20
->  	max_addr =3D user_addr_max();
-> -	src_addr =3D (unsigned long)str;
-> +	src_addr =3D (unsigned long)untagged_addr(str);
->  	if (likely(src_addr < max_addr)) {
->  		unsigned long max =3D max_addr - src_addr;
->  		long retval;
->=20
+Yeah, because this patch wasn't central to the functionality. At worse
+case, I drop the patch and modules would still work. While waiting for
+responses for the other emails -- I was working on measuring the speed
+up.
 
+If I just took the clock bindings (in a final solution we'll have to
+look up clocks, resets, regulators, interrupts, etc) in a SDM845 and
+made them into device links, that resulted in ~500+ searches for
+devices by their nodes.
 
+Looking at all 500+ of the lookups:
+
+Total time:
+With patch, : 2 milliseconds
+Without patch: 12 milliseconds
+
+Worst case single look up:
+With patch: 39 microseconds
+Without patch: 250 microseconds
+
+Median of lookup times:
+With patch: 208 nanoseconds
+Without patch: 23 microseconds
+
+Even if I assume there are 1000 device nodes, the increase in memory
+from one additional pointer this patch adds is ~8KB.
+2GB is the low ball on the amount of memory available in a typical
+SDM845 device.
+Boot time to userspace on the device Iooked at is: 1149 ms
+So total boot time reduction is 0.8%
+Total memory increase is 0.00038%
+
+Once more device links are added I expect the boot time impact to be
+larger. I think a 1% reduction in boot time for 0.00038% increase in
+memory usage is a good trade off.
+
+That 1% faster boot time can also be approximated to 1% reduction in
+boot up power usage. That scaled to a million or billion devices
+that'll run an Android or some form of ARM Linux kernel is still a
+good chunk of energy savings for a small memory increase.
+
+I still stand by the usefulness of this patch, but this is not the
+hill I'm going to die on (so if dropping this patch is what it takes
+to get modules working, I'll drop it for now).
+
+-Saravana
+
+>
+> -Frank
+>
+>
+> On 5/24/19 5:12 PM, Frank Rowand wrote:
+> > On 5/24/19 11:21 AM, Saravana Kannan wrote:
+> >> On Fri, May 24, 2019 at 10:56 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>>
+> >>> Hi Sarvana,
+> >>>
+> >>> I'm not reviewing patches 1-5 in any detail, given my reply to patch 0.
+> >>>
+> >>> But I had already skimmed through this patch before I received the
+> >>> email for patch 0, so I want to make one generic comment below,
+> >>> to give some feedback as you continue thinking through possible
+> >>> implementations to solve the underlying problems.
+> >>
+> >> Appreciate the feedback Frank!
+> >>
+> >>>
+> >>>
+> >>> On 5/23/19 6:01 PM, Saravana Kannan wrote:
+> >>>> Add a pointer from device tree node to the device created from it.
+> >>>> This allows us to find the device corresponding to a device tree node
+> >>>> without having to loop through all the platform devices.
+> >>>>
+> >>>> However, fallback to looping through the platform devices to handle
+> >>>> any devices that might set their own of_node.
+> >>>>
+> >>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >>>> ---
+> >>>>  drivers/of/platform.c | 20 +++++++++++++++++++-
+> >>>>  include/linux/of.h    |  3 +++
+> >>>>  2 files changed, 22 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> >>>> index 04ad312fd85b..1115a8d80a33 100644
+> >>>> --- a/drivers/of/platform.c
+> >>>> +++ b/drivers/of/platform.c
+> >>>> @@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
+> >>>>       return dev->of_node == data;
+> >>>>  }
+> >>>>
+> >>>> +static DEFINE_SPINLOCK(of_dev_lock);
+> >>>> +
+> >>>>  /**
+> >>>>   * of_find_device_by_node - Find the platform_device associated with a node
+> >>>>   * @np: Pointer to device tree node
+> >>>> @@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+> >>>>  {
+> >>>>       struct device *dev;
+> >>>>
+> >>>> -     dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
+> >>>> +     /*
+> >>>> +      * Spinlock needed to make sure np->dev doesn't get freed between NULL
+> >>>> +      * check inside and kref count increment inside get_device(). This is
+> >>>> +      * achieved by grabbing the spinlock before setting np->dev = NULL in
+> >>>> +      * of_platform_device_destroy().
+> >>>> +      */
+> >>>> +     spin_lock(&of_dev_lock);
+> >>>> +     dev = get_device(np->dev);
+> >>>> +     spin_unlock(&of_dev_lock);
+> >>>> +     if (!dev)
+> >>>> +             dev = bus_find_device(&platform_bus_type, NULL, np,
+> >>>> +                                   of_dev_node_match);
+> >>>>       return dev ? to_platform_device(dev) : NULL;
+> >>>>  }
+> >>>>  EXPORT_SYMBOL(of_find_device_by_node);
+> >>>> @@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
+> >>>>               platform_device_put(dev);
+> >>>>               goto err_clear_flag;
+> >>>>       }
+> >>>> +     np->dev = &dev->dev;
+> >>>>
+> >>>>       return dev;
+> >>>>
+> >>>> @@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
+> >>>>       if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
+> >>>>               device_for_each_child(dev, NULL, of_platform_device_destroy);
+> >>>>
+> >>>> +     /* Spinlock is needed for of_find_device_by_node() to work */
+> >>>> +     spin_lock(&of_dev_lock);
+> >>>> +     dev->of_node->dev = NULL;
+> >>>> +     spin_unlock(&of_dev_lock);
+> >>>>       of_node_clear_flag(dev->of_node, OF_POPULATED);
+> >>>>       of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+> >>>>
+> >>>> diff --git a/include/linux/of.h b/include/linux/of.h
+> >>>> index 0cf857012f11..f2b4912cbca1 100644
+> >>>> --- a/include/linux/of.h
+> >>>> +++ b/include/linux/of.h
+> >>>> @@ -48,6 +48,8 @@ struct property {
+> >>>>  struct of_irq_controller;
+> >>>>  #endif
+> >>>>
+> >>>> +struct device;
+> >>>> +
+> >>>>  struct device_node {
+> >>>>       const char *name;
+> >>>>       phandle phandle;
+> >>>> @@ -68,6 +70,7 @@ struct device_node {
+> >>>>       unsigned int unique_id;
+> >>>>       struct of_irq_controller *irq_trans;
+> >>>>  #endif
+> >>>> +     struct device *dev;             /* Device created from this node */
+> >>>
+> >>> We have actively been working on shrinking the size of struct device_node,
+> >>> as part of reducing the devicetree memory usage.  As such, we need strong
+> >>> justification for adding anything to this struct.  For example, proof that
+> >>> there is a performance problem that can only be solved by increasing the
+> >>> memory usage.
+> >>
+> >> I didn't mean for people to focus on the deferred probe optimization.
+> >
+> > I was speaking specifically of the of_find_device_by_node() optimization.
+> > I did not chase any further back in the call chain to see how that would
+> > impact anything else.  My comments stand, whether this patch is meant
+> > to optimize deferred probe optimization or to optimize something else.
+> >
+> >
+> >> In reality that was just a added side benefit of this series. The main
+> >> problem to solve is that of suppliers having to know when all their
+> >> consumers are up and managing the resources actively, especially in a
+> >> system with loadable modules where we can't depend on the driver to
+> >> notify the supplier because the consumer driver module might not be
+> >> available or loaded until much later.
+> >>
+> >> Having said that, I'm not saying we should go around and waste space
+> >> willy-nilly. But, isn't the memory usage going to increase based on
+> >> the number of DT nodes present in DT? I'd think as the number of DT
+> >> nodes increase it's more likely for those devices have more memory? So
+> >> at least in this specific case I think adding the field is justified.
+> >
+> > Struct device_node is the nodes of the in kernel devicetree data.  This
+> > patch adds a field to every single node of the devicetree.
+> >
+> > The patch series is also adding a new property, of varying size, to
+> > some nodes.  This also results in additional memory usage by
+> > devicetree.
+> >
+> > Arguing that a more complex system is likely to have more memory is
+> > likely true, but beside the point.  Minimizing devicetree memory
+> > used on less complex systems is also one of our goals.
+> >
+> >
+> >> Also, right now the look up is O(n) complexity and if we are trying to
+> >> add device links to most of the devices, that whole process becomes
+> >> O(n^2). Having this field makes the look up a O(1) and the entire
+> >> linking process a O(n) process. I think the memory usage increase is
+> >> worth the efficiency improvement.
+> >
+> > Hand waving about O(n) and O(1) and O(n2) is not sufficient.  We require
+> > actual measurements that show O(n2) (when the existing algorithm is such)
+> > is a performance problem and that the proposed change to the algorithm
+> > results in a specific change in the performance.
+> >
+> > The devicetree maintainers have decided that memory use is important and
+> > to be minimized, and the burden of proof that performance is an issue
+> > lies on the submitter of a patch that improves performance at the cost
+> > of memory.
+> >
+> > Most devicetree boot time cpu overhead only affects the boot event.
+> > Added memory use persists for the entire booted lifetime of the system.
+> >
+> > That is not to say that we never increase memory use to improve boot
+> > performance.  We have done so when the measured performance issue and
+> > measured performance improvement justified the change.
+> >
+> >>
+> >> And if people are still strongly against it, we could make this a config option.
+> >>
+> >> -Saravana
+> >>
+> >
+> >
+>
