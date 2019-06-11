@@ -2,157 +2,131 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE30BC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AF2C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A8D20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C82E2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V04Asub/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hPfeNzhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407876AbfFKWIe (ORCPT
+        id S2436741AbfFKWLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:08:34 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43546 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405700AbfFKWId (ORCPT
+        Tue, 11 Jun 2019 18:11:52 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40559 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407857AbfFKWLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:08:33 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f25so7712064pgv.10;
-        Tue, 11 Jun 2019 15:08:33 -0700 (PDT)
+        Tue, 11 Jun 2019 18:11:52 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a93so5703848pla.7
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 15:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QYmVu7Nh4W0MeolwVO7YM0xZrXFwuxo+MvNj54r5DFI=;
-        b=V04Asub/oIIrYF6+VT1L4GjZO3YN5RWi9rFd6op5qhtYOIxhky/VEe7qC+jA9AzvxB
-         +Gej/5KEJDZZzULmeSg/PrjPuiFVaZUz1V016WIUG3rbdgVCCo3tNI+DJK8nYSKEfEuo
-         T5NxA9bJ133DtUVdisHqndqY9EiwefYIuOixqHDdNou3VTaEOoeIB5pUnRFEYF4YJHSZ
-         cBGQYGE4JNMhJe5Al2BDOsw7YXDZWgAPF2TFPEny6ezfswyr0dLv3+M0EQcRu2kY31FP
-         fZkipWKbwiwql2gdcZg7buZD87uMDImR42biyjiTuWSdn7R2cFLkf6fEd9fnayCZUsFC
-         dEUg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8vFvJ8V6ajJREADlkWcQGOvk5dqkkgFT9ytOdn/LZ6s=;
+        b=hPfeNzhq51hsmDu/JK7bh3qIFlI5DoZS5suqWw3uFdum9RZoZ2kLpg+CG3WfwtzWqG
+         wUsWqTNqS4DVwjG3bZ5K061mHFseBicQAv9ZBnZKQCzCbAd+m0Wm71AVkht6a9BHwRBP
+         mH/ugMZuWCy/YaFsK+qaD6od1aOotlirFt6fw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QYmVu7Nh4W0MeolwVO7YM0xZrXFwuxo+MvNj54r5DFI=;
-        b=H6G/clTwrgE5etYQsVGEDgdyVVDyqTQQ/4FPwLXk+8nAbKDbUHzqkcAWlXXK2HFu5V
-         HX64pm9lzQPHMZVI3jICD+ZSG4F16N80qtyKJrrtkkT48HM5RzY6hc0UWddazQAQZE4T
-         6K81Jp7oczS2iydithzEZTjk8Add/+GrXVVTA0wbJzrHPBGzBA5csm2/I1jVGjOEyvQl
-         e6oEwV02hnnfYmktjmTBw2HWEH13fX5RfJK2zhUdXS/CoT6kP50tIcFVRgWgsAOOGnRA
-         8RXanTGrFtOvKhRFk54SGAfWr9rX5aSspU1Al1tiDzFtyAHgf+zfo3J19m8cVAp4ROWF
-         Pg1A==
-X-Gm-Message-State: APjAAAUtaA3gWN8cqF8Ga6P/x8jvPmLL8skS1aGBf/Dv+mX75skMD5zE
-        xd/wmtjYARWXm5dxxkFQM46Xv5Ha
-X-Google-Smtp-Source: APXvYqzwkIT55bFViDlmpLpucpRSQsot83hu5okTBB5Ska5wI1ee/oDJ3I8uqTblmwQD08sTMnLXvA==
-X-Received: by 2002:a63:26c7:: with SMTP id m190mr22545113pgm.141.1560290912402;
-        Tue, 11 Jun 2019 15:08:32 -0700 (PDT)
-Received: from [10.67.49.123] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id o26sm13715272pgv.47.2019.06.11.15.08.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8vFvJ8V6ajJREADlkWcQGOvk5dqkkgFT9ytOdn/LZ6s=;
+        b=SvOpESheyd5WhpoNAdu7gK12nlp+aRLYXaEqrOL4JHXuKTZ31yd7yIZj2/yKkMBBeM
+         ScRyKVSIYcC0Ga9Pk8+2R/z3JILGs5Z+Xu6nHXWbcyZ63vNxZUhp8gabyTsKt7gPDf6a
+         4WPxySChjqpnnH9/6lYb20yTE9A6RDFHhvr/Xwpvjqr20mkpH2sTUHfph7Jo4eLd6qHR
+         tXyW5V87yZwmBps7oaw5yKwbLpEj4aAx+DlQXQWrjQv4l/U4X3oEZvU6uFdu9hLTiIMw
+         wcBOQN6yTK/Usmo5TNxuUCEoiYcIYlB8OxQfV1ghrDfKFDrTUuy/Y7Sdvq3yISTeLpGD
+         EjmQ==
+X-Gm-Message-State: APjAAAWMGWKYYzJN+havy4Dg11x7zfVKMkpoz6LcBPxtT9YEwxTr0fv6
+        t5SB1zjDCyDTIrNRMlpwPBZW+w==
+X-Google-Smtp-Source: APXvYqwEviZoSj03YwFf0xshEB8pQdCuQy4uEVw4wDJoV5zm7LJ8rVpZzWCRBK0Mj4y2Dqy1neX5Aw==
+X-Received: by 2002:a17:902:e58b:: with SMTP id cl11mr57462355plb.24.1560291110514;
+        Tue, 11 Jun 2019 15:11:50 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id u4sm17102828pfu.26.2019.06.11.15.11.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 15:08:31 -0700 (PDT)
-Subject: Re: [PATCH 6/7] ARM: dts: BCM5301X: Fix most DTC W=1 warnings
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Tue, 11 Jun 2019 15:11:49 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 15:11:47 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190528230134.27007-1-f.fainelli@gmail.com>
- <20190528230134.27007-7-f.fainelli@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <75cc626c-743c-4bf9-7290-c9e8b5368159@gmail.com>
-Date:   Tue, 11 Jun 2019 15:08:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thierry Reding <thierry.reding@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm-backlight: Add 'max-brightness'
+ property
+Message-ID: <20190611221147.GG137143@google.com>
+References: <20190610233739.29477-1-mka@chromium.org>
+ <00220cd7-ed4b-5250-d448-cf83ed4c2012@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528230134.27007-7-f.fainelli@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <00220cd7-ed4b-5250-d448-cf83ed4c2012@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 4:01 PM, Florian Fainelli wrote:
-> Fix the bulk of the unit_address_vs_reg warnings and unnecessary
-> \#address-cells/#size-cells without "ranges" or child "reg" property
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+Hi Jacek,
 
-Applied to devicetree/next, thanks!
--- 
-Florian
+On Tue, Jun 11, 2019 at 10:02:23PM +0200, Jacek Anaszewski wrote:
+> Hi Matthias,
+> 
+> On 6/11/19 1:37 AM, Matthias Kaehlcke wrote:
+> > Add an optional 'max-brightness' property, which is used to specify
+> > the number of brightness levels (max-brightness + 1) when the node
+> > has no 'brightness-levels' table.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> >   .../devicetree/bindings/leds/backlight/pwm-backlight.txt       | 3 +++
+> >   1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > index 64fa2fbd98c9..98f4ba626054 100644
+> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > @@ -27,6 +27,9 @@ Optional properties:
+> >                               resolution pwm duty cycle can be used without
+> >                               having to list out every possible value in the
+> >                               brightness-level array.
+> > +  - max-brightness: Maximum brightness value. Used to specify the number of
+> > +                    brightness levels (max-brightness + 1) when the node
+> > +                    has no 'brightness-levels' table.
+> 
+> In the LED subsystem we have led-max-microamp property which seems to
+> better describe hardware capabilities. It says just: this is the current
+> level the LED can withstand. max-brightness does not implicitly convey
+> this kind of information.
+> 
+> Why the need for the property at all? If for the reasons other than
+> hardware capabilities than it should be more likely handled
+> by userspace.
+
+The driver needs to know how many brightness levels to expose to
+userspace. It currently uses a heuristic for that which is broken:
+
+https://elixir.bootlin.com/linux/v5.1.9/source/drivers/video/backlight/pwm_bl.c#L234
+https://lore.kernel.org/patchwork/patch/1086777/#1282610
+
+In any case it seems the discussion is going into the direction of
+fixing the heuristic (apparently using the period as an indicator of
+the PWM resolution has more merit than I was initially aware of), if
+that moves forward the property wouldn't be needed.
