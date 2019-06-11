@@ -2,131 +2,114 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5108AC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91961C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B773217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B97217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aqb8jxee"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myaTjclO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392012AbfFKSnv (ORCPT
+        id S1729403AbfFKSof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:43:51 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40286 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391882AbfFKSnv (ORCPT
+        Tue, 11 Jun 2019 14:44:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40808 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbfFKSoe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:43:51 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so6940357eds.7;
-        Tue, 11 Jun 2019 11:43:50 -0700 (PDT)
+        Tue, 11 Jun 2019 14:44:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so7447148pgm.7;
+        Tue, 11 Jun 2019 11:44:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RkW+TrHoMG2ACLTVQx14ALq5DNyJPU7JtUOARQub7ow=;
-        b=Aqb8jxeeTalOYxcoObFAxshJng3bG/u1TjlA3V1ub6wE1ngHcFuZhAoR/7eAqaietQ
-         XYT2fr0+fi2rScY8JFxESIUhczR3eVQk0AcjthrN9vJ8lKX8VAwcBuFRf4V37Au4OQaN
-         WSKUxq+Ofq42TYVdnfq2GyUJBx12hiVuhj05+FvMUUJqIEw1iuU4Z9XU3+RQuBeN0Nia
-         DWBdo8DVCIgXmAhTkCIxNaW1j5RupHjyZ+De245rqTSR4iYNoPTcdJPLNgn+XcU3gaDJ
-         RiYKfbiiZgyHhKUMfU7bVtaPH02FRiuioNE2L+6CRTxdLZrxOYQ5uxUICnd0N2MIYZbn
-         DXfA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VjXOm39CWa6S4I71CKU5r+mT9fayfeuZ4n9Ko6h04/Q=;
+        b=myaTjclOScSIDrJvBHbz7GqxDxIFK7e7DAfxQEM9oALn9rsTlpKt80fwIgm0KtX6V1
+         rjsp2quD64X+j4e2krEEBu98c5MfZng1DbASdGyGwJG5NVw2h8ncvSeeiM2/is5mt8Tj
+         Hl7PulNEfKL1iTcOm+BmiLv6YbI73mFN+CKOysg5B0Qajeo+mJ+3lkv/hTsDiLqP1K2X
+         E0uc27fMFfCG5CTgpAOnmzWitO8GemDOyDhaTdzt2sylNoufOgyKKIZsO/0WcWMJBXRF
+         bOI29cs4Pv20llVSyHkYaKW+KY4DlzmN8lJPePgHDnkkKHK19ZK8RN8IcjgGd4Bksfk0
+         p/6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RkW+TrHoMG2ACLTVQx14ALq5DNyJPU7JtUOARQub7ow=;
-        b=sx+CDexiV5qVwXsiQorq16YCinfQgovlX62fKasuGaWhFeCccsxgtA7vINub6qbhvC
-         gwP3lwvX/ceH4Qij1WoyylC4P5buIakQ0crZjmmZJi77bvK7XOU8W7VjwaN8oPFYtftm
-         s3Vrw0m8SIKj5JX/R5EPDiw0okjDQ1gPodiT9fT5lV0wyTnQzRmoxqQzX6dz9aZCs8dv
-         FVo7cl+0Y+Hv0x7lGdurA6m23lJ04Qnvsl0a2gTPGzdirhRqd+/zIvGkYaAhH1tfhq50
-         GONpQQ0rx0K/FdZYqYYUEhN3t3O2Ml6+z6IZ62gpegLn2a65CHAmEWgIjiZouxNxprZ2
-         BAOQ==
-X-Gm-Message-State: APjAAAUlFchm1Rig4T6hbGeULv+OEvK6uw7A1pNxHE2Dcj/P4jEFmlAF
-        J6uNgBv14283PHfzSP17+Ps=
-X-Google-Smtp-Source: APXvYqwIvESw8dZXyDXr7dm9ktgGZSWxq/z1C3l26jRr2Otx3abfHNZmpjkMXIKmVxMAy1BGYBWPlg==
-X-Received: by 2002:a05:6402:550:: with SMTP id i16mr83163599edx.212.1560278628551;
-        Tue, 11 Jun 2019 11:43:48 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id l2sm1753785edn.59.2019.06.11.11.43.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 11:43:48 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Peter Smith <peter.smith@linaro.org>
-Subject: [PATCH] kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS
-Date:   Tue, 11 Jun 2019 11:43:31 -0700
-Message-Id: <20190611184331.44242-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VjXOm39CWa6S4I71CKU5r+mT9fayfeuZ4n9Ko6h04/Q=;
+        b=DGtfviaZwKHP/jH89Tru0Wsj4ev1KGVjO9XIsD4JvvwONe0/RFvN5kggNUnMZI3XNq
+         4Y1WDVMZT4yVRug5cYkrBiSxNaGloG2KF9YUjH/oWXIQjuYOFyAx3voCbz66FP2l2ztU
+         YK+pjqflDr55jhycvvnKkjK9wbC4j+MWVL9RfXSy0UoF7MU1EGZbt/D6YNtSx67pD86N
+         LvtuEaYlnb2SDFjiZ0V7l3gxl5y5Iv49E9BxRyyycA0hBeFOJVF6fL+XYS1zfjmnw45V
+         yK0uFYq4enVWefRdbPxpk0cO3tls1YhP4jvuJlxkxqwvTWqhEn3G7eKmuu/kmXZ0F7ch
+         /R9A==
+X-Gm-Message-State: APjAAAVGuf24ZkeAGJpgq4kGQcBC/vu7HLlnD/bwafbaofG2VEFI6nNO
+        JD1IvZb32aLCEw/IjleITS/bZLlpTvb/yzjvrg8=
+X-Google-Smtp-Source: APXvYqzkqeep3CqfOFDZoSRrKfSGRdBDWFEoMwtK6OFag6Wk/WDtXaVNa/EripQyuLMKoe63k5dbDPKFUOkVassx774=
+X-Received: by 2002:a63:d84a:: with SMTP id k10mr6952505pgj.74.1560278673900;
+ Tue, 11 Jun 2019 11:44:33 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+In-Reply-To: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 11 Jun 2019 21:44:23 +0300
+Message-ID: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
+Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI
-drift"), the arm64 Makefile added -Wno-psabi to KBUILD_CFLAGS, which is
-a GCC only option so clang rightfully complains:
++Cc: Heikki.
+Heikki, can you help here with swnodes?
 
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+>
+> Hi folks,
+>
+>
+> I'm looking for a way to inject fwnode data from a platform driver,
+> in order to initialize generic drivers w/ board specific configuration.
+> The idea is getting rid of passing driver specific pdata structs
+> (which, IIRC, seem to be deprecated).
+>
+> An example usecase is the APUv2/3 board, which have things like gpios
+> wired to buttons and LEDs. The board can only be detected via DMI
+> string, no way to probe the platform devices - have to be initialized
+> explicitly (that's how I'm already doing it now).
+>
+> The nicest way, IMHO, would be if I could just write some piece of DTS
+> and some fancy magic all the rest under the hood. Such thing doesn't
+> seem to exist yet. Does it make sense to implement that ? How could
+> we do it ?
+>
+> Which other options do we have ?
+>
+> Or should we just leave everything as it is and stick w/ pdata structs ?
+>
+>
+> thx
+> --mtx
+>
+> --
+> Enrico Weigelt, metux IT consult
+> Free software and Linux embedded engineering
+> info@metux.net -- +49-151-27565287
 
-https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
 
-However, by default, this is merely a warning so the build happily goes
-on with a slew of these warnings in the process.
 
-Commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
-support clang") worked around this behavior in cc-option by adding
--Werror so that unknown flags cause an error. However, this all happens
-silently and when an unknown flag is added to the build unconditionally
-like -Wno-psabi, cc-option will always fail because there is always an
-unknown flag in the list of flags. This manifested as link time failures
-in the arm64 libstub because -fno-stack-protector didn't get added to
-KBUILD_CFLAGS.
-
-To avoid these weird cryptic failures in the future, make clang behave
-like gcc and immediately error when it encounters an unknown flag by
-adding -Werror=unknown-warning-option to CLANG_FLAGS. This can be added
-unconditionally for clang because it is supported by at least 3.0.0,
-according to godbolt [1] and 4.0.0, according to its documentation [2],
-which is far earlier than we typically support.
-
-[1]: https://godbolt.org/z/7F7rm3
-[2]: https://releases.llvm.org/4.0.0/tools/clang/docs/DiagnosticsReference.html#wunknown-warning-option
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/511
-Link: https://github.com/ClangBuiltLinux/linux/issues/517
-Suggested-by: Peter Smith <peter.smith@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Makefile b/Makefile
-index b81e17261250..5f9d09bd2252 100644
---- a/Makefile
-+++ b/Makefile
-@@ -528,6 +528,7 @@ ifneq ($(GCC_TOOLCHAIN),)
- CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
- endif
- CLANG_FLAGS	+= -no-integrated-as
-+CLANG_FLAGS	+= -Werror=unknown-warning-option
- KBUILD_CFLAGS	+= $(CLANG_FLAGS)
- KBUILD_AFLAGS	+= $(CLANG_FLAGS)
- export CLANG_FLAGS
 -- 
-2.22.0
-
+With Best Regards,
+Andy Shevchenko
