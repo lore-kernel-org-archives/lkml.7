@@ -2,252 +2,101 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A162C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E3AC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C012080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:24:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uKvpmSrw"
+	by mail.kernel.org (Postfix) with ESMTP id 50BFE2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560270305;
+	bh=fyLwDDCECDsj4oxsh4i/Kj8+2jFpP6NlUei1WVffI5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V9dxFI4qPZwXKqAmXEwM0u32qjCb8L338++/PeqBF9q3E8YY8PLrDYf+qJo4HY5/E
+	 F073OKz75QaImtnEWDwdEA1/g7UARdIHoBinjgcYyL1ljzvz0P5UKIjeRY8K41kT2h
+	 pwXI89PteWSOxydUnmF1keJ5hPfTUe1dgTnoJTsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391710AbfFKQY4 (ORCPT
+        id S2391946AbfFKQZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 12:24:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57237 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbfFKQYz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:24:55 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5BGORFo281192
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 11 Jun 2019 09:24:27 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5BGORFo281192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560270268;
-        bh=2R/qm8dOfX1IEArBEkYJmzTC5f9So52GY4H8rVT3QHQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=uKvpmSrw7Z/UiiIYZEjQcek34vyV4EiA+ZAnKAoaBqUPtUONVVFqLW3aXPtIevbox
-         TJDAZJbZba3vjnC3/g3JcuRY9NT8y8McUNdRUR7i2VQQxuIDVdwC2MdVJx1AogeqvB
-         UVTgy6obIlqCAwzUMkcJOkBtr3fWURlRGsVrA/qdOE1aOd/u7zfLzjj65LMMMuqXfn
-         OmTH64uyrthtdwOnDrRHN/Exdm4gU6/iTiwZlml+1M967G4h75d+VFOgRk7dhv4Q9v
-         WmJLrCg/qYDKiqxvRfLkvZy7Ul6LaASc27cgrVa6agbevGGo54Rwfy8vL9k1pBQn2j
-         lxoNlh2dycw4A==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5BGORls281185;
-        Tue, 11 Jun 2019 09:24:27 -0700
-Date:   Tue, 11 Jun 2019 09:24:27 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Yazen Ghannam <tipbot@zytor.com>
-Message-ID: <tip-95d057f54664f3c6e8f650faf5690b82b30a9e52@git.kernel.org>
-Cc:     mingo@kernel.org, bp@suse.de, yazen.ghannam@amd.com,
-        tglx@linutronix.de, x86@kernel.org, tony.luck@intel.com,
-        linux-edac@vger.kernel.org, mingo@redhat.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com,
-          linux-edac@vger.kernel.org, tony.luck@intel.com,
-          yazen.ghannam@amd.com, tglx@linutronix.de, x86@kernel.org,
-          mingo@kernel.org, bp@suse.de
-In-Reply-To: <20190607201752.221446-4-Yazen.Ghannam@amd.com>
-References: <20190607201752.221446-4-Yazen.Ghannam@amd.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:ras/core] x86/MCE/AMD: Don't cache block addresses on SMCA
- systems
-Git-Commit-ID: 95d057f54664f3c6e8f650faf5690b82b30a9e52
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 11 Jun 2019 12:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391933AbfFKQZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:25:04 -0400
+Received: from localhost (unknown [216.243.17.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1B52080A;
+        Tue, 11 Jun 2019 16:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560270303;
+        bh=fyLwDDCECDsj4oxsh4i/Kj8+2jFpP6NlUei1WVffI5s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QZFnWxs/TeannM42GwRwiqvKa2VAwBY+2BBZUR/jokIO75+mVozc2L5miQ5hh/5d5
+         MvMz2+gSmVQGO2Abs+h4MsGYSmNfAgoaE9rmGIfotIZWTmTRl+xvG/RTigdL7+ZhSP
+         LMQbZ3Ev1aP1VqxCWTOo3G0thO+AC58vlh0mceGQ=
+Date:   Tue, 11 Jun 2019 12:25:03 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sahara <keun-o.park@darkmatter.ae>
+Subject: Re: [PATCH AUTOSEL 4.4 50/56] tty: pty: Fix race condition between
+ release_one_tty and pty_write
+Message-ID: <20190611162503.GB1513@sasha-vm>
+References: <20190601132600.27427-1-sashal@kernel.org>
+ <20190601132600.27427-50-sashal@kernel.org>
+ <20190601161707.GC4200@kroah.com>
+ <20190601161836.GD4200@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
+In-Reply-To: <20190601161836.GD4200@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  95d057f54664f3c6e8f650faf5690b82b30a9e52
-Gitweb:     https://git.kernel.org/tip/95d057f54664f3c6e8f650faf5690b82b30a9e52
-Author:     Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate: Fri, 7 Jun 2019 20:18:04 +0000
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Tue, 11 Jun 2019 15:22:41 +0200
+On Sat, Jun 01, 2019 at 09:18:36AM -0700, Greg Kroah-Hartman wrote:
+>On Sat, Jun 01, 2019 at 09:17:07AM -0700, Greg Kroah-Hartman wrote:
+>> On Sat, Jun 01, 2019 at 09:25:54AM -0400, Sasha Levin wrote:
+>> > From: Sahara <keun-o.park@darkmatter.ae>
+>> >
+>> > [ Upstream commit b9ca5f8560af244489b4a1bc1ae88b341f24bc95 ]
+>> >
+>> > Especially when a linked tty is used such as pty, the linked tty
+>> > port's buf works have not been cancelled while master tty port's
+>> > buf work has been cancelled. Since release_one_tty and flush_to_ldisc
+>> > run in workqueue threads separately, when pty_cleanup happens and
+>> > link tty port is freed, flush_to_ldisc tries to access freed port
+>> > and port->itty, eventually it causes a panic.
+>> > This patch utilizes the magic value with holding the tty_mutex to
+>> > check if the tty->link is valid.
+>> >
+>> > Fixes: 2b022ab7542d ("pty: cancel pty slave port buf's work in tty_release")
+>> > Signed-off-by: Sahara <keun-o.park@darkmatter.ae>
+>> > Cc: stable <stable@vger.kernel.org>
+>> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> > ---
+>> >  drivers/tty/pty.c    | 7 +++++++
+>> >  drivers/tty/tty_io.c | 3 +++
+>> >  2 files changed, 10 insertions(+)
+>>
+>> For some reason I did not apply this to the stable kernels, and this
+>> shouldn't only be for 4.4.y, so please drop this.
+>
+>Ah, I never applied it because it was later reverted, also upstream,
+>0eae4686a128 ("Revert "tty: pty: Fix race condition between
+>release_one_tty and pty_write""), so I didn't apply both of them to the
+>stable trees as that wouldn't have made sense.
 
-x86/MCE/AMD: Don't cache block addresses on SMCA systems
+I've dropped it.
 
-On legacy systems, the addresses of the MCA_MISC* registers need to be
-recursively discovered based on a Block Pointer field in the registers.
-
-On Scalable MCA systems, the register space is fixed, and particular
-addresses can be derived by regular offsets for bank and register type.
-This fixed address space includes the MCA_MISC* registers.
-
-MCA_MISC0 is always available for each MCA bank. MCA_MISC1 through
-MCA_MISC4 are considered available if MCA_MISC0[BlkPtr]=1.
-
-Cache the value of MCA_MISC0[BlkPtr] for each bank and per CPU. This
-needs to be done only during init. The values should be saved per CPU
-to accommodate heterogeneous SMCA systems.
-
-Redo smca_get_block_address() to directly return the block addresses.
-
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "x86@kernel.org" <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190607201752.221446-4-Yazen.Ghannam@amd.com
----
- arch/x86/kernel/cpu/mce/amd.c | 73 ++++++++++++++++++++++---------------------
- 1 file changed, 37 insertions(+), 36 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index d904aafe6409..d4d6e4b7f9dc 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -101,11 +101,6 @@ static struct smca_bank_name smca_names[] = {
- 	[SMCA_PCIE]	= { "pcie",		"PCI Express Unit" },
- };
- 
--static u32 smca_bank_addrs[MAX_NR_BANKS][NR_BLOCKS] __ro_after_init =
--{
--	[0 ... MAX_NR_BANKS - 1] = { [0 ... NR_BLOCKS - 1] = -1 }
--};
--
- static const char *smca_get_name(enum smca_bank_types t)
- {
- 	if (t >= N_SMCA_BANK_TYPES)
-@@ -199,6 +194,9 @@ static char buf_mcatype[MAX_MCATYPE_NAME_LEN];
- static DEFINE_PER_CPU(struct threshold_bank **, threshold_banks);
- static DEFINE_PER_CPU(unsigned int, bank_map);	/* see which banks are on */
- 
-+/* Map of banks that have more than MCA_MISC0 available. */
-+static DEFINE_PER_CPU(u32, smca_misc_banks_map);
-+
- static void amd_threshold_interrupt(void);
- static void amd_deferred_error_interrupt(void);
- 
-@@ -208,6 +206,28 @@ static void default_deferred_error_interrupt(void)
- }
- void (*deferred_error_int_vector)(void) = default_deferred_error_interrupt;
- 
-+static void smca_set_misc_banks_map(unsigned int bank, unsigned int cpu)
-+{
-+	u32 low, high;
-+
-+	/*
-+	 * For SMCA enabled processors, BLKPTR field of the first MISC register
-+	 * (MCx_MISC0) indicates presence of additional MISC regs set (MISC1-4).
-+	 */
-+	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_CONFIG(bank), &low, &high))
-+		return;
-+
-+	if (!(low & MCI_CONFIG_MCAX))
-+		return;
-+
-+	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_MISC(bank), &low, &high))
-+		return;
-+
-+	if (low & MASK_BLKPTR_LO)
-+		per_cpu(smca_misc_banks_map, cpu) |= BIT(bank);
-+
-+}
-+
- static void smca_configure(unsigned int bank, unsigned int cpu)
- {
- 	unsigned int i, hwid_mcatype;
-@@ -245,6 +265,8 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
- 		wrmsr(smca_config, low, high);
- 	}
- 
-+	smca_set_misc_banks_map(bank, cpu);
-+
- 	/* Return early if this bank was already initialized. */
- 	if (smca_banks[bank].hwid)
- 		return;
-@@ -455,42 +477,21 @@ static void deferred_error_interrupt_enable(struct cpuinfo_x86 *c)
- 	wrmsr(MSR_CU_DEF_ERR, low, high);
- }
- 
--static u32 smca_get_block_address(unsigned int bank, unsigned int block)
-+static u32 smca_get_block_address(unsigned int bank, unsigned int block,
-+				  unsigned int cpu)
- {
--	u32 low, high;
--	u32 addr = 0;
--
--	if (smca_get_bank_type(bank) == SMCA_RESERVED)
--		return addr;
--
- 	if (!block)
- 		return MSR_AMD64_SMCA_MCx_MISC(bank);
- 
--	/* Check our cache first: */
--	if (smca_bank_addrs[bank][block] != -1)
--		return smca_bank_addrs[bank][block];
--
--	/*
--	 * For SMCA enabled processors, BLKPTR field of the first MISC register
--	 * (MCx_MISC0) indicates presence of additional MISC regs set (MISC1-4).
--	 */
--	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_CONFIG(bank), &low, &high))
--		goto out;
--
--	if (!(low & MCI_CONFIG_MCAX))
--		goto out;
--
--	if (!rdmsr_safe(MSR_AMD64_SMCA_MCx_MISC(bank), &low, &high) &&
--	    (low & MASK_BLKPTR_LO))
--		addr = MSR_AMD64_SMCA_MCx_MISCy(bank, block - 1);
-+	if (!(per_cpu(smca_misc_banks_map, cpu) & BIT(bank)))
-+		return 0;
- 
--out:
--	smca_bank_addrs[bank][block] = addr;
--	return addr;
-+	return MSR_AMD64_SMCA_MCx_MISCy(bank, block - 1);
- }
- 
- static u32 get_block_address(u32 current_addr, u32 low, u32 high,
--			     unsigned int bank, unsigned int block)
-+			     unsigned int bank, unsigned int block,
-+			     unsigned int cpu)
- {
- 	u32 addr = 0, offset = 0;
- 
-@@ -498,7 +499,7 @@ static u32 get_block_address(u32 current_addr, u32 low, u32 high,
- 		return addr;
- 
- 	if (mce_flags.smca)
--		return smca_get_block_address(bank, block);
-+		return smca_get_block_address(bank, block, cpu);
- 
- 	/* Fall back to method we used for older processors: */
- 	switch (block) {
-@@ -637,7 +638,7 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- 		disable_err_thresholding(c, bank);
- 
- 		for (block = 0; block < NR_BLOCKS; ++block) {
--			address = get_block_address(address, low, high, bank, block);
-+			address = get_block_address(address, low, high, bank, block, cpu);
- 			if (!address)
- 				break;
- 
-@@ -1254,7 +1255,7 @@ static int allocate_threshold_blocks(unsigned int cpu, unsigned int bank,
- 	if (err)
- 		goto out_free;
- recurse:
--	address = get_block_address(address, low, high, bank, ++block);
-+	address = get_block_address(address, low, high, bank, ++block, cpu);
- 	if (!address)
- 		return 0;
- 
+--
+Thanks,
+Sasha
