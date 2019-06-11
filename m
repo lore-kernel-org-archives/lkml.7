@@ -2,143 +2,279 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4BAC31E46
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26CAC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D3720684
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6764A2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 20:57:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="EsPllGjf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ovMW03G+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406911AbfFKUvq (ORCPT
+        id S2406802AbfFKU5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 16:51:46 -0400
-Received: from us-smtp-delivery-168.mimecast.com ([63.128.21.168]:37486 "EHLO
-        us-smtp-delivery-168.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406215AbfFKUvp (ORCPT
+        Tue, 11 Jun 2019 16:57:02 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41301 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406712AbfFKU5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 16:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
-        s=mimecast20190405; t=1560286303;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tZJI8JGdaiRefhCxahVuZzeWNJpxVME+msCpQoaQ87U=;
-        b=EsPllGjfVGLilLLuZrN6tRKbPB/vhHc8ANG/KJcw8zwVMxABIFnjNzL2cKvW9p6vyePq6c
-        LylHxv4Y69YpahLvXkKnZJj1QumKKn/ap5PJQtwopAUIntZUbqCWbDradygFNw2duiYxd/
-        GynTsRVFbWTZJx2qeTnH6rNgv+4IZe8=
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com
- (mail-bl2nam02lp2056.outbound.protection.outlook.com [104.47.38.56]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-bdqTYNRGMlySrZspClMRyw-1; Tue, 11 Jun 2019 16:45:35 -0400
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3673.namprd06.prod.outlook.com (10.167.236.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Tue, 11 Jun 2019 20:45:31 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::88d1:40e0:d1be:1daf]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::88d1:40e0:d1be:1daf%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 20:45:31 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "festevam@gmail.com" <festevam@gmail.com>,
-        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>
-CC:     "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Linux-imx@nxp.com" <Linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "peng.fan@nxp.com" <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
-Thread-Topic: [PATCH 2/3] rtc: imx-sc: Make compatible string more generic
-Thread-Index: AQHVIB9pLfrzWsaWqUqp88lz3VFaBaaW6UGAgAADtgA=
-Date:   Tue, 11 Jun 2019 20:45:31 +0000
-Message-ID: <1560285930.2354.8.camel@impinj.com>
-References: <20190611063333.48501-1-Anson.Huang@nxp.com>
-         <20190611063333.48501-2-Anson.Huang@nxp.com>
-         <CAOMZO5BCuBKHs1jXkm3qFD84_xcB=0NSwE3SLJHx9kq4Stbd_A@mail.gmail.com>
-In-Reply-To: <CAOMZO5BCuBKHs1jXkm3qFD84_xcB=0NSwE3SLJHx9kq4Stbd_A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 53857865-7ec4-436d-3cd9-08d6eeadbecd
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR0601MB3673;
-x-ms-traffictypediagnostic: MWHPR0601MB3673:
-x-microsoft-antispam-prvs: <MWHPR0601MB367358AF176EFC206A27CFC8D3ED0@MWHPR0601MB3673.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(396003)(366004)(39850400004)(376002)(136003)(346002)(189003)(199004)(86362001)(6506007)(53546011)(8676002)(81166006)(81156014)(102836004)(25786009)(478600001)(6486002)(26005)(68736007)(186003)(316002)(256004)(229853002)(99286004)(76176011)(14444005)(66066001)(6512007)(5660300002)(14454004)(8936002)(53936002)(54906003)(110136005)(6246003)(2906002)(6436002)(66946007)(76116006)(66556008)(64756008)(91956017)(66476007)(73956011)(66446008)(3846002)(6116002)(7416002)(446003)(4326008)(103116003)(476003)(486006)(2616005)(11346002)(71190400001)(2501003)(71200400001)(7736002)(36756003)(305945005)(41533002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3673;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nFppgJnFMfNsTzT7QOgDM8RaEWMgvIXCTUG7RUzqPPzP2/6BlOV9gkZOnGVrO7z35ws9LrMY/tOJyPt653iw83mK4uVLEw2VEDb/4Gr8m1jeiV49zS+gJjm10ScxrCoBioK1ejd8x2oaJjBEBRzyH/tsmKCpTOKc8k/h6ZAZaf7V5xsnGsqVD1DFbCqqCMFseK+pzzi44zb2EpeMZ2oZWWS37rhFJgyPzVCuzFFiAnu0+Reup6Irc7M6pvDGVo0Q+uvZGvk7F1LaGNeQLzLavPyKgmxTaUoU1p/vb6m7vemuoQ4eeREnmNEA1bx9pLGfjuQ3MaR9TbuHVjvtc4Q7ldlnLwIMQNvKJSrFDPaLC/9vsqBo6ko8//n9ClFiV+8hTSx0O4za5G4W1uWLWIjPxqvUaT26ZLqyvIpZJHO5XY8=
-Content-ID: <DC1328CED465FC4189CCE1BF075530CC@namprd06.prod.outlook.com>
+        Tue, 11 Jun 2019 16:57:02 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 107so13305992otj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 13:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7vbIY4qHqvyN4/tBREUMhzOh6FCY5/55fwz+55klQII=;
+        b=ovMW03G+zCLOfnAhEGHYErVhlQwlzn5+9bgsLNpszqf6guNCs3YZTgiNNvL6PPlrBh
+         eNQJg/t2FFy4OgnvHuFToKee/dz3VyUBmdKtv7EVcznV/VdjinHjyk9IcOHtsAUsvMo8
+         hweYK3oTYURuQ7JJ0xxElMbvV4Gz2vN8SOBBLsUfJ5pDBHgA7+zkuepKGOtM56D6KIpF
+         0ARsOPcLmFJyap1ckCi+W37dw/yhgkXRkbkiRmXakqpcfM5xQJGGA+jWwbVSABFbUzBP
+         fURb0ChbTREG+iR5V/YSWxevoKOIdbJpDQn9hfVSyjvnMKDhPdDJD8djP2KU+4AV7Uic
+         wc0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7vbIY4qHqvyN4/tBREUMhzOh6FCY5/55fwz+55klQII=;
+        b=oQwQxNe4+A8uZceN0qaPEVl/qvdP8yF1I/tKAemR0GOahnfccuc5jtemUYUMRbcRMb
+         P+N25kiS7zXzJ6ObVUy1S29gesHZR2YANljcW20bCrn3Z86b6AigBDTrqlJdgher8YOL
+         847mwa3K+reIx4/WCQZCgnv6w8S/iyLC+B8HCv4pQP/DxyHi/9lIo+NdkqbHz1qzvF7t
+         wIjSlU5bBza5y7Yqx1985WEk2K3tZ53yiTdIz6xlnrqgTSGotuyq/Dl8QFGA0CmzV5lR
+         muHNDLcNJu9jNg18xmG8EQKya24M7Yo3nVPgBGkpy5dQbmWWWZqmRot49jorCfpMEmw0
+         30Cg==
+X-Gm-Message-State: APjAAAULJwy3taaGNEtEgw1HmwnKuCZqkcX4zJ9iM/jfxSe8nfxFp8if
+        uT/b8ETxG+MxqwKYCgrESqG+b8tSSo36ho2jyoim5g==
+X-Google-Smtp-Source: APXvYqxQYYn4atvG8al8XPSt0fLO+jvnyBEQlkbxEs6L+UgJnFwSvs13PAMxOcM4dB6whETBZex0WzwZ4+1Yn2i+GOc=
+X-Received: by 2002:a9d:6d06:: with SMTP id o6mr35658633otp.225.1560286621268;
+ Tue, 11 Jun 2019 13:57:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53857865-7ec4-436d-3cd9-08d6eeadbecd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 20:45:31.4759
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tpiepho@impinj.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3673
-X-MC-Unique: bdqTYNRGMlySrZspClMRyw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20190604003218.241354-1-saravanak@google.com> <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com> <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
+In-Reply-To: <570474f4-8749-50fd-5f72-36648ed44653@gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 11 Jun 2019 13:56:25 -0700
+Message-ID: <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA2LTExIGF0IDE3OjMyIC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
-PiBIaSBBbnNvbiwNCj4gDQo+IE9uIFR1ZSwgSnVuIDExLCAyMDE5IGF0IDM6MzEgQU0gPEFuc29u
-Lkh1YW5nQG54cC5jb20+IHdyb3RlOg0KPiA+IA0KPiA+IEZyb206IEFuc29uIEh1YW5nIDxBbnNv
-bi5IdWFuZ0BueHAuY29tPg0KPiA+IA0KPiA+IGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgUlRDIGRy
-aXZlciBjYW4gc3VwcG9ydCBhbGwgaS5NWCBTb0NzDQo+ID4gd2l0aCBzeXN0ZW0gY29udHJvbGxl
-ciBpbnNpZGUsIHRoaXMgcGF0Y2ggbWFrZXMgdGhlIGNvbXBhdGlibGUNCj4gPiBzdHJpbmcgbW9y
-ZSBnZW5lcmljIHRvIHN1cHBvcnQgb3RoZXIgaS5NWCBTb0NzIHdpdGggc3lzdGVtDQo+ID4gY29u
-dHJvbGxlciBpbnNpZGUsIHN1Y2ggYXMgaS5NWDhRTSBldGMuLg0KPiA+IA0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBk
-cml2ZXJzL3J0Yy9ydGMtaW14LXNjLmMgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
-c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L3J0Yy9ydGMtaW14LXNjLmMgYi9kcml2ZXJzL3J0Yy9ydGMtaW14LXNjLmMNCj4gPiBpbmRleCBj
-OTMzMDQ1Li4zOGVmM2NhIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2Mu
-Yw0KPiA+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1pbXgtc2MuYw0KPiA+IEBAIC0xNzgsNyArMTc4
-LDcgQEAgc3RhdGljIGludCBpbXhfc2NfcnRjX3Byb2JlKHN0cnVjdA0KPiA+IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikNCj4gPiAgfQ0KPiA+IA0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rl
-dmljZV9pZCBpbXhfc2NfZHRfaWRzW10gPSB7DQo+ID4gLSAgICAgICB7IC5jb21wYXRpYmxlID0g
-ImZzbCxpbXg4cXhwLXNjLXJ0YyIsIH0sDQo+ID4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gImZz
-bCxpbXgtc2MtcnRjIiwgfSwNCj4gDQo+IFdoYXQgaXMgd3Jvbmcgd2l0aCB0aGUgY3VycmVudCBj
-b21wYXRpYmxlIHN0cmluZz8NCj4gDQo+IElmIHlvdSB3YW50IHRvIHN1cHBvcnQgaS5NWDhRTSBq
-dXN0IGFkZCBpbiBpdHMgZHRzaToNCj4gDQo+IGNvbXBhdGlibGUgPSAiZnNsLGlteDhxbS1zYy1y
-dGMiLCAiZnNsLGlteDhxeHAtc2MtcnRjIg0KPiANCj4gYW5kIGFkZCBhIGR0LWJpbmRpbmdzIGVu
-dHJ5IGZvciAiZnNsLGlteDhxbS1zYy1ydGMiDQoNClllcywgSSB0aG91Z2h0IHRoaXMgaXMgKHdh
-cz8pIHRoZSByZWNvbW1lbmRlZCBwcmFjdGljZSBmb3IgSVAgYmxvY2tzIGluDQpTb0NzIHRoYXQg
-ZG9uJ3QgaGF2ZSB0aGVpciBvd24gdmVyc2lvbiAodnMgc29tZXRoaW5nIGxpa2UgYSBTeW5vcHNp
-cw0KYmxvY2sgdXNlZCBtYW55IHBsYWNlcyk6DQoNCiogVXNlIHRoZSBmaXJzdCBTb0MgdG8gaGF2
-ZSB0aGUgYmxvY2sgYXMgdGhlIGJhc2UgY29tcGF0aWJsZSBmb3IgdGhlDQpibG9jay4NCiogQWx3
-YXlzIGFkZCB0aGUgY3VycmVudCBTb0MsIGluIGFkZGl0aW9uYWwgdG8gdGhlIGJhc2UsIGluIHRo
-ZSBTb0Mncw0KZHRzJ3MgbGlzdCBvZiBjb21wYXRpYmxlcy4gIEV2ZW4gaWYgdW5uZWVkZWQgYXQg
-dGhlIHByZXNlbnQuDQoqIFRoZSBkcml2ZXIgd2lsbCBsaXN0IHRoZSBiYXNlIGNvbXBhdGlibGUg
-aW4gdGhlIG1hdGNoIHRhYmxlLCBhbmQgd2lsbA0KYWRkIG5ldyBvbmVzIGZvciBzcGVjaWZpYyBz
-b2NzIGlmL3doZW4gdGhlcmUgaXMgYSBuZWVkIGZvciBpdC4NCg==
+On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> Hi Saravana,
+>
+> On 6/10/19 10:36 AM, Rob Herring wrote:
+> > Why are you resending this rather than replying to Frank's last
+> > comments on the original?
+>
+> Adding on a different aspect...  The independent replies from three different
+> maintainers (Rob, Mark, myself) pointed out architectural issues with the
+> patch series.  There were also some implementation issues brought out.
+> (Although I refrained from bringing up most of my implementation issues
+> as they are not relevant until architecture issues are resolved.)
 
+Right, I'm not too worried about the implementation issues before we
+settle on the architectural issues. Those are easy to fix.
+
+Honestly, the main points that the maintainers raised are:
+1) This is a configuration property and not describing the device.
+Just use the implicit dependencies coming from existing bindings.
+
+I gave a bunch of reasons for why I think it isn't an OS configuration
+property. But even if that's not something the maintainers can agree
+to, I gave a concrete example (cyclic dependencies between clock
+provider hardware) where the implicit dependencies would prevent one
+of the devices from probing till the end of time. So even if the
+maintainers don't agree we should always look at "depends-on" to
+decide the dependencies, we still need some means to override the
+implicit dependencies where they don't match the real dependency. Can
+we use depends-on as an override when the implicit dependencies aren't
+correct?
+
+2) This doesn't need to be solved because this is just optimizing
+probing or saving power ("we should get rid of this auto disabling"):
+
+I explained why this patch series is not just about optimizing probe
+ordering or saving power. And why we can't ignore auto disabling
+(because it's more than just auto disabling). The kernel is currently
+broken when trying to use modules in ARM SoCs (probably in other
+systems/archs too, but I can't speak for those).
+
+3) Concerns about backwards compatibility
+
+I pointed out why the current scheme (depends-on being the only source
+of dependency) doesn't break compatibility. And if we go with
+"depends-on" as an override what we could do to keep backwards
+compatibility. Happy to hear more thoughts or discuss options.
+
+4) How the "sync_state" would work for a device that supplies multiple
+functionalities but a limited driver.
+
+I explained how it would work.
+
+> When three maintainers say the architecture has issues, you should step
+> back and think hard.  (Not to say maintainers are always correct...)
+
+Yes, the 3 maintainers brought up their concerns and I replied to
+explain my viewpoint on their concerns. So I'm waiting for a response
+from them before I proceed further. Even if the response is going to
+be "we still don't agree with this architecture", I'd prefer at least
+some direction on what the maintainers think is the right
+architecture. There are a million different ways to solve this. It's
+not reasonable to expect people submitting patches to shoot in the
+dark and hope it hits what the maintainers have in their mind as
+"acceptable solutions". I even proposed some alternatives. So, it'd be
+nice to hear the maintainers' thoughts on my responses, alternative
+designs or some alternate proposals.
+
+There's a real problem that needs to be solved. Just saying "I don't
+like this solution" without suggesting alternatives isn't a
+constructive way to improve the kernel.
+
+> My suggestion at this point is that you need to go back to the drawing board
+> and re-think how to address the use case.
+
+I'd be happy to and I've been thinking about other ways, but I'd like
+some direction from the maintainers before writing a lot of code
+that's just going to be completely rejected.
+
+To summarize the options:
+1) Use depends-on as the only source of dependency (this patch series)
+- Easy to keep backward compatible
+- Handles all cases
+- Arguable that this is OS configuration
+
+2) Use existing bindings for dependencies, but use "depends-on" for
+overriding cases that are incorrect.
+- New kernel not backward compatible with old DT. So devices will stop
+booting or won't have full functionality.
+- Needs some scheme to disabling all dependency tracking to be
+backward compatible.
+  a) Can have the dependency linking code under CONFIG_XXXXX
+  b) Can have a kernel commandline
+  c) NEW alternative to CONFIG_XXXX or commandline. Can have an
+additional "implicit-dependencies-are-explicit-too" DT property that
+can be added to the "choosen" DT node to tell the OS that the implicit
+dependencies are valid real dependencies too. Then if they need
+overrides, depends-on can be used. So old DT blobs would effectively
+have this feature disabled.
+- Handles all cases
+- Only (c) above could be argued as OS configuration. But I'd argue
+that it's clarifying the DT dependencies to be more explicit.
+
+Thanks,
+Saravana
+
+> -Frank
+>
+> >
+> > On Mon, Jun 3, 2019 at 6:32 PM Saravana Kannan <saravanak@google.com> wrote:
+> >>
+> >> Add a pointer from device tree node to the device created from it.
+> >> This allows us to find the device corresponding to a device tree node
+> >> without having to loop through all the platform devices.
+> >>
+> >> However, fallback to looping through the platform devices to handle
+> >> any devices that might set their own of_node.
+> >>
+> >> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >> ---
+> >>  drivers/of/platform.c | 20 +++++++++++++++++++-
+> >>  include/linux/of.h    |  3 +++
+> >>  2 files changed, 22 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> >> index 04ad312fd85b..1115a8d80a33 100644
+> >> --- a/drivers/of/platform.c
+> >> +++ b/drivers/of/platform.c
+> >> @@ -42,6 +42,8 @@ static int of_dev_node_match(struct device *dev, void *data)
+> >>         return dev->of_node == data;
+> >>  }
+> >>
+> >> +static DEFINE_SPINLOCK(of_dev_lock);
+> >> +
+> >>  /**
+> >>   * of_find_device_by_node - Find the platform_device associated with a node
+> >>   * @np: Pointer to device tree node
+> >> @@ -55,7 +57,18 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
+> >>  {
+> >>         struct device *dev;
+> >>
+> >> -       dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
+> >> +       /*
+> >> +        * Spinlock needed to make sure np->dev doesn't get freed between NULL
+> >> +        * check inside and kref count increment inside get_device(). This is
+> >> +        * achieved by grabbing the spinlock before setting np->dev = NULL in
+> >> +        * of_platform_device_destroy().
+> >> +        */
+> >> +       spin_lock(&of_dev_lock);
+> >> +       dev = get_device(np->dev);
+> >> +       spin_unlock(&of_dev_lock);
+> >> +       if (!dev)
+> >> +               dev = bus_find_device(&platform_bus_type, NULL, np,
+> >> +                                     of_dev_node_match);
+> >>         return dev ? to_platform_device(dev) : NULL;
+> >>  }
+> >>  EXPORT_SYMBOL(of_find_device_by_node);
+> >> @@ -196,6 +209,7 @@ static struct platform_device *of_platform_device_create_pdata(
+> >>                 platform_device_put(dev);
+> >>                 goto err_clear_flag;
+> >>         }
+> >> +       np->dev = &dev->dev;
+> >>
+> >>         return dev;
+> >>
+> >> @@ -556,6 +570,10 @@ int of_platform_device_destroy(struct device *dev, void *data)
+> >>         if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
+> >>                 device_for_each_child(dev, NULL, of_platform_device_destroy);
+> >>
+> >> +       /* Spinlock is needed for of_find_device_by_node() to work */
+> >> +       spin_lock(&of_dev_lock);
+> >> +       dev->of_node->dev = NULL;
+> >> +       spin_unlock(&of_dev_lock);
+> >>         of_node_clear_flag(dev->of_node, OF_POPULATED);
+> >>         of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+> >>
+> >> diff --git a/include/linux/of.h b/include/linux/of.h
+> >> index 0cf857012f11..f2b4912cbca1 100644
+> >> --- a/include/linux/of.h
+> >> +++ b/include/linux/of.h
+> >> @@ -48,6 +48,8 @@ struct property {
+> >>  struct of_irq_controller;
+> >>  #endif
+> >>
+> >> +struct device;
+> >> +
+> >>  struct device_node {
+> >>         const char *name;
+> >>         phandle phandle;
+> >> @@ -68,6 +70,7 @@ struct device_node {
+> >>         unsigned int unique_id;
+> >>         struct of_irq_controller *irq_trans;
+> >>  #endif
+> >> +       struct device *dev;             /* Device created from this node */
+> >>  };
+> >>
+> >>  #define MAX_PHANDLE_ARGS 16
+> >> --
+> >> 2.22.0.rc1.257.g3120a18244-goog
+> >>
+> > .
+> >
+>
