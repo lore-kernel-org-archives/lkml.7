@@ -2,185 +2,97 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7724CC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7BCC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4811B20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jynV4LeL"
+	by mail.kernel.org (Postfix) with ESMTP id E58D620874
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560290547;
+	bh=MhD+8y0ERq3GqD6GItAk03QOAWY9bjuZ5c18nOOYU54=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YiHXEMuAJx58QUaDFH/UVnVh794WjyaiW8qQJ2TdvqRyPLRuk4uZ7kkEv4t7bN8Vi
+	 kAAJV4JTbu4nqXh6E6nsX+i/KR1bT5W7/5SFeO0WtHLocx5CjzyiJ+qnRA4JY8mJLQ
+	 v7I86+YZ4FiiKKNFJ172/oe9CsuCwiiQuWH79wpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436708AbfFKWCB (ORCPT
+        id S2391989AbfFKWC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:02:01 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:43847 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436695AbfFKWCB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:02:01 -0400
-Received: by mail-vs1-f68.google.com with SMTP id d128so8971922vsc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 15:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R9aK4K+mYhxsBGuDL1wSkT9a9QdB+QJqvCcQqCRoZqk=;
-        b=jynV4LeLSkp8mY/yMLs3t4Pg5sizpYJiXBSRzIWuITTAmY09IkU049XMUREkVXni+g
-         JYmm1KjaWGlZolbGVaL1OfPnf3JRGs5E9Tzrgf9suFhpZzr0hUOGtfsAg/LWhL40oakz
-         62yF0xRTAYPtIkJav7muvoNoGgY8jAOJHKSgg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R9aK4K+mYhxsBGuDL1wSkT9a9QdB+QJqvCcQqCRoZqk=;
-        b=HTRVqJrQas6YpNC6CR0cxJ0LVUXtWQJe7ctfgaG3gytZdTcB2OFCM6Alz6p5/El6CK
-         wNq4yX6VT4cuyT918fwURU44WoPdOa9aEVBHdXY1isuEMz6NPquRXFthvVqReFIfGvU0
-         NBzqle4vl51o7ijz//rkikPYZgHuAwNDtz60V0UFVyqVpZwqEZ8aA1Xgx+vCd1Cra4ll
-         NaRpaUgKDa26uDro+6rQm+xXfuaLDzCHhrQdod81wWvz6T5yVoyNpSvg1gTMsLOh/NRc
-         DKq4R1Iu7rvpMKxBUcQUqrpZdkqdYtFlTViDKzjpEInwQ+H9hlVrcnT4P7cXT3s0p1Se
-         A6Dw==
-X-Gm-Message-State: APjAAAXGW32Tw70PbKmjk3vze8QILENLTH8i06Sy/MCOtLBA4u5QyaDi
-        K5ha9sGIJmEjbBVqWwNI5h6NlbWyZdouCOLyW+zaqg==
-X-Google-Smtp-Source: APXvYqw0envY6zW+Lz/LpkpAKuJuPPY1ZENACuLJfRT4NvK+IVqHR36Y7gi5Vlqk+iKUf5BiCUj6/+NTISBNAEyEhIk=
-X-Received: by 2002:a67:d384:: with SMTP id b4mr9315081vsj.152.1560290519746;
- Tue, 11 Jun 2019 15:01:59 -0700 (PDT)
+        Tue, 11 Jun 2019 18:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390411AbfFKWC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:02:26 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A335205ED;
+        Tue, 11 Jun 2019 22:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560290545;
+        bh=MhD+8y0ERq3GqD6GItAk03QOAWY9bjuZ5c18nOOYU54=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=0cdiuYYP9Bq46e+NLG0whSnYoRshba1+vkbEMUEIQ+eMBdugDZUCoK7a7vYlu1umy
+         8S6XN1nymffu1xhvuhZA1FnHr+WKTbG0WinLGp/LwN8+R8QZDC/o6BOrNe2/3+ObR/
+         VmTTSzpnbdUz5pIUFH9VbXq88gcCGm4YHU5y/PBU=
+Date:   Wed, 12 Jun 2019 00:02:21 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc:     Hans de Goede <hdegoede@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org
+Subject: Re: Strange regression in hid_llogitech_dj (was: Re: Linux
+ 5.2-rc4)
+In-Reply-To: <2268131.Lc39eCoc3j@kreacher>
+Message-ID: <nycvar.YFH.7.76.1906112358580.27227@cbobk.fhfr.pm>
+References: <CAHk-=wjm7FQxdF=RKa8Xe23CLNNpbGDOACewgo8e-hwDJ8TyQg@mail.gmail.com> <2268131.Lc39eCoc3j@kreacher>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190611040350.90064-1-dbasehore@chromium.org>
- <20190611040350.90064-3-dbasehore@chromium.org> <CAL_JsqLM1CikZ8+NPjLk2CEW-z9vPynZpVG20x0jsa7hVq0LvA@mail.gmail.com>
-In-Reply-To: <CAL_JsqLM1CikZ8+NPjLk2CEW-z9vPynZpVG20x0jsa7hVq0LvA@mail.gmail.com>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Tue, 11 Jun 2019 15:01:48 -0700
-Message-ID: <CAGAzgsoWGqf0JQPNyRFnv2xZTMxje6idce7Dy5FZzuxj30mQyw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] dt-bindings: display/panel: Expand rotation documentation
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 8:25 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Jun 10, 2019 at 10:03 PM Derek Basehore <dbasehore@chromium.org> wrote:
-> >
-> > This adds to the rotation documentation to explain how drivers should
-> > use the property and gives an example of the property in a devicetree
-> > node.
-> >
-> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > ---
-> >  .../bindings/display/panel/panel.txt          | 32 +++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/panel.txt b/Documentation/devicetree/bindings/display/panel/panel.txt
-> > index e2e6867852b8..f35d62d933fc 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/panel.txt
-> > +++ b/Documentation/devicetree/bindings/display/panel/panel.txt
-> > @@ -2,3 +2,35 @@ Common display properties
-> >  -------------------------
-> >
-> >  - rotation:    Display rotation in degrees counter clockwise (0,90,180,270)
-> > +
-> > +Property read from the device tree using of of_drm_get_panel_orientation
->
-> Don't put kernel specifics into bindings.
+On Tue, 11 Jun 2019, Rafael J. Wysocki wrote:
 
-Will remove that. I'll clean up the documentation to indicate that
-this binding creates a panel orientation property unless the rotation
-is handled in the Timing Controller on the panel if that sounds fine.
+> I noticed that the cordless mouse used by me with one of the machines here
+> stopped to work in 5.2-rc (up to and including the -rc4).
+> 
+> Bisection turned up commit 74808f9115ce ("HID: logitech-dj: add support for non
+> unifying receivers").
+> 
+> Of course, that commit does not revert cleanly from 5.2-rc4, but I have reverted
+> the changes made by it in hid/hid-ids.h and I took the version of hid/hid-logitech-dj.c
+> from commit b6aeeddef68d ("HID: logitech-dj: add logi_dj_recv_queue_unknown_work
+> helper"), which is the parent of commit 74808f9115ce, and that made the mouse
+> work again for me.
+> 
+> Here's the output of "dmesg | grep -i logitech" from 5.2-rc4 with the above changes:
+> 
+> [    4.288905] usb 1-2: Manufacturer: Logitech
+> [    5.444621] input: Logitech USB Receiver as /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.0/0003:046D:C52F.0002/input/input23
+> [    5.446960] hid-generic 0003:046D:C52F.0002: input,hidraw1: USB HID v1.11 Mouse [Logitech USB Receiver] on usb-0000:00:14.0-2/input0
+> [    5.451265] input: Logitech USB Receiver Consumer Control as /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.1/0003:046D:C52F.0003/input/input24
+> [    5.507545] hid-generic 0003:046D:C52F.0003: input,hiddev96,hidraw2: USB HID v1.11 Device [Logitech USB Receiver] on usb-0000:00:14.0-2/input1
 
->
-> > +
-> > +The panel driver may apply the rotation at the TCON level, which will
->
-> What's TCON? Something Mediatek specific IIRC.
+Hi Rafael,
 
-The TCON is the Timing controller, which is on the panel. Every panel
-has one. I'll add to the doc that the TCON is in the panel, etc.
+0x046d/0xc52f is known to have issues in 5.2-rcX. There is a patch queued 
+[1] that is believed to fix all this; my plan is to send it to Linus in 
+the coming 1-2 days. If you could report whether it fixes the issues 
+you've been seeing yourself as well, it'd be helpful.
 
->
-> > +make the panel look like it isn't rotated to the kernel and any other
-> > +software.
-> > +
-> > +If not, a panel orientation property should be added through the SoC
-> > +vendor DRM code using the drm_connector_init_panel_orientation_property
-> > +function.
->
-> The 'rotation' property should be defined purely based on how the
-> panel is mounted relative to a device's orientation. If the display
-> pipeline has some ability to handle rotation, that's a feature of the
-> display pipeline and not the panel.
+Thanks.
 
-This is how the panel orientation property is already handled in the
-kernel. See drivers/gpu/drm/i915/vlv_dsi.c for more details.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=for-5.2/fixes&id=3ed224e273ac5880eeab4c3043a6b06b0478dd56
 
->
-> > +
-> > +Example:
->
-> This file is a collection of common properties. It shouldn't have an
-> example especially as this example is mostly non-common properties.
+-- 
+Jiri Kosina
+SUSE Labs
 
-Just copied one of our DTS entries that uses the property. I'll remove
-everything under compatible except for rotation and status.
-
->
-> > +       panel: panel@0 {
-> > +               compatible = "boe,himax8279d8p";
-> > +               reg = <0>;
-> > +               enable-gpios = <&pio 45 0>;
->
-> > +               pp33-gpios = <&pio 35 0>;
-> > +               pp18-gpios = <&pio 36 0>;
->
-> BTW, are these upstream because they look like GPIO controlled
-> supplies which we model with gpio-regulator binding typically.
-
-The boe,himax8279 driver was sent upstream, but it doesn't appear to
-be merged. I'll look into it on that thread.
-
->
-> > +               pinctrl-names = "default", "state_3300mv", "state_1800mv";
-> > +               pinctrl-0 = <&panel_pins_default>;
-> > +               pinctrl-1 = <&panel_pins_3300mv>;
-> > +               pinctrl-2 = <&panel_pins_1800mv>;
-> > +               backlight = <&backlight_lcd0>;
-> > +               rotation = <180>;
-> > +               status = "okay";
-> > +
-> > +               port {
-> > +                       panel_in: endpoint {
-> > +                               remote-endpoint = <&dsi_out>;
-> > +                       };
-> > +               };
-> > +       };
-> > --
-> > 2.22.0.rc2.383.gf4fbbf30c2-goog
-> >
