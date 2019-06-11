@@ -2,137 +2,227 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D1CC0650E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1D5C0650E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3342089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:37:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TxRm03B7"
+	by mail.kernel.org (Postfix) with ESMTP id 1E6DF2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 15:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405140AbfFKPhN (ORCPT
+        id S2405158AbfFKPhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 11:37:13 -0400
-Received: from mail-eopbgr00081.outbound.protection.outlook.com ([40.107.0.81]:35722
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405103AbfFKPhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 11:37:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JbDta3UAqPFlYbWQqHzVlbX9nQ7MchAydhNYxGUKCfo=;
- b=TxRm03B7nK+ia7dDWDJqd6oFf1HJJLVptHNhlPg611kvRZvkDC34GCYg+CBhEbT7z7gWT/SziTNvg3EpsZpEzwrjN0enXfJ/fqbdSr+Mniuf+gV7Q3xD/biCyLmqxKzNnItzqtufIefNWFxxhdQKTD0xLnLgay38Jvk5nNlJd68=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2895.eurprd04.prod.outlook.com (10.175.24.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Tue, 11 Jun 2019 15:37:08 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 15:37:08 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 0/4] Additional fixes on Talitos driver
-Thread-Topic: [PATCH v2 0/4] Additional fixes on Talitos driver
-Thread-Index: AQHVIGOH8ah5xSLD4UOplfJkXECTiA==
-Date:   Tue, 11 Jun 2019 15:37:08 +0000
-Message-ID: <VI1PR0402MB34853CAF031426F4183FE29B98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <cover.1560263641.git.christophe.leroy@c-s.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 93651de6-7601-4d33-1601-08d6ee82aa43
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2895;
-x-ms-traffictypediagnostic: VI1PR0402MB2895:
-x-microsoft-antispam-prvs: <VI1PR0402MB289572B4325B730E39E2618798ED0@VI1PR0402MB2895.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(366004)(396003)(39860400002)(189003)(199004)(33656002)(316002)(6246003)(14454004)(110136005)(54906003)(25786009)(4326008)(6436002)(8936002)(81166006)(81156014)(8676002)(7736002)(305945005)(74316002)(53936002)(478600001)(86362001)(53546011)(9686003)(229853002)(55016002)(5660300002)(76116006)(68736007)(71190400001)(66946007)(71200400001)(486006)(73956011)(102836004)(99286004)(52536014)(446003)(186003)(7696005)(476003)(6506007)(76176011)(256004)(66446008)(66476007)(66556008)(64756008)(44832011)(6116002)(3846002)(2906002)(26005)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2895;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: R/Dd2TGs3gM3XE09uAGx3zcWyFfECw9h6EPovl1GNLuMe5ZD8NesBT4dnTLKQv2pzeL5nAan5xwKMLL9fpaxTzuykEVCNz9IMxKjFeKRixAP3TLFiIF4mVY7otJC6zr0UhviIDKNdVE1pbtczexZIOwOl7jx7C6akfIwW+M38jUGJR3gab9KA47FNfw6pRBJbFNvA5QHWr86xcBn37rnfGkT4vbWzfLXGKmrZw8mleLFTOGTRWvX4/iR4TCLkTiNfsMRbC064TeFPKOylbGiZ82x6wEchvcpwP+LmG2hnXCrJ4MsRJMqHiq8pAW8HWpLv6ddMd8sfNawpBH8MXzh7cjFzG+OOlKQqUOIf8Kb7S7A/ThshVOHx0x1Lr7dW+DF0K9gk1a+kd6AhZrtqzHwREFkp1e2HQmGo2f3Kh3nvKI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93651de6-7601-4d33-1601-08d6ee82aa43
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 15:37:08.8236
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2895
+        Tue, 11 Jun 2019 11:37:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51392 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388819AbfFKPhZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:37:25 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BFWQit115453
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:37:23 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t2ena9m9d-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 11:37:23 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 11 Jun 2019 16:37:21 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 16:37:19 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BFbId730212220
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 15:37:18 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A18B6A4051;
+        Tue, 11 Jun 2019 15:37:18 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CCB81A405E;
+        Tue, 11 Jun 2019 15:37:17 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.81.78])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jun 2019 15:37:17 +0000 (GMT)
+Subject: Re: [PATCH v7 0/3] add new ima hook ima_kexec_cmdline to measure
+ kexec boot cmdline args
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     roberto.sassu@huawei.com, vgoyal@redhat.com
+Date:   Tue, 11 Jun 2019 11:37:06 -0400
+In-Reply-To: <20190607002330.2999-1-prsriva02@gmail.com>
+References: <20190607002330.2999-1-prsriva02@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061115-0016-0000-0000-000002882983
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061115-0017-0000-0000-000032E558E5
+Message-Id: <1560267426.4464.173.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/2019 5:39 PM, Christophe Leroy wrote:=0A=
-> This series is the last set of fixes for the Talitos driver.=0A=
-> =0A=
-> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and=0A=
-> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:=0A=
-> =0A=
-I am getting below failures on a sec 3.3.2 (p1020rdb) for hmac(sha384) and=
-=0A=
-hmac(sha512):=0A=
-=0A=
-alg: ahash: hmac-sha384-talitos test failed (wrong result) on test vector "=
-random: psize=3D2497 ksize=3D124", cfg=3D"random: inplace use_finup nosimd =
-src_divs=3D[<reimport>76.49%@+4002, <reimport>23.51%@alignmask+26] iv_offse=
-t=3D4"=0A=
-alg: ahash: hmac-sha512-talitos test failed (wrong result) on test vector "=
-random: psize=3D27 ksize=3D121", cfg=3D"random: inplace may_sleep use_diges=
-t src_divs=3D[100.0%@+10] iv_offset=3D9"=0A=
-=0A=
-Reproducibility rate is 100% so far, here are a few more runs - they might =
-help finding a pattern:=0A=
-=0A=
-1.=0A=
-alg: ahash: hmac-sha384-talitos test failed (wrong result) on test vector "=
-random: psize=3D184 ksize=3D121", cfg=3D"random: use_finup src_divs=3D[<rei=
-mport,nosimd>100.0%@+3988] dst_divs=3D[100.0%@+547] iv_offset=3D44"=0A=
-alg: ahash: hmac-sha512-talitos test failed (wrong result) on test vector "=
-random: psize=3D7 ksize=3D122", cfg=3D"random: may_sleep use_digest src_div=
-s=3D[100.0%@+3968] dst_divs=3D[100.0%@+20]"=0A=
-=0A=
-2.=0A=
-alg: ahash: hmac-sha384-talitos test failed (wrong result) on test vector "=
-random: psize=3D6481 ksize=3D120", cfg=3D"random: use_final src_divs=3D[<re=
-import>100.0%@+6] dst_divs=3D[43.84%@alignmask+6, 56.16%@+22]"=0A=
-alg: ahash: hmac-sha512-talitos test failed (wrong result) on test vector "=
-random: psize=3D635 ksize=3D128", cfg=3D"random: may_sleep use_finup src_di=
-vs=3D[100.0%@+4062] dst_divs=3D[20.47%@+2509, 72.36%@alignmask+2, 7.17%@ali=
-gnmask+3990]"=0A=
-=0A=
-3.=0A=
-alg: ahash: hmac-sha384-talitos test failed (wrong result) on test vector "=
-random: psize=3D2428 ksize=3D127", cfg=3D"random: may_sleep use_finup src_d=
-ivs=3D[<reimport>35.19%@+18, 64.81%@+1755] dst_divs=3D[100.0%@+111] iv_offs=
-et=3D5"=0A=
-alg: ahash: hmac-sha512-talitos test failed (wrong result) on test vector "=
-random: psize=3D4345 ksize=3D128", cfg=3D"random: may_sleep use_digest src_=
-divs=3D[100.0%@+2820] iv_offset=3D59"=0A=
-=0A=
-If you run several times with fuzz testing enabled on your sec2.2,=0A=
-are you able to see similar failures?=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+Hi Prakhar,
+
+The patch/patch set title in the Subject line should not explain "how"
+you add a new feature.  In this case an appropriate patch set title
+would be, "Add support for measuring the boot command line".
+ Similarly, the first patch in this patch set could be named "Define a
+new IMA hook to measure the boot command line arguments".
+
+On Thu, 2019-06-06 at 17:23 -0700, Prakhar Srivastava wrote:
+> The motive behind the patch series is to measure the boot cmdline args
+> used for soft reboot/kexec case.
+
+When mentoring, I suggest starting out with a simple status statement
+(eg. "The kexec boot command line arguments are not currently being
+measured."), followed by the problem statement in the first paragraph.
+
+> 
+> For secure boot attestation, it is necessary to measure the kernel
+
+Secure boot enforces local file data integrity.  The term here should
+be "trusted boot attestation".
+
+> command line and the kernel version. 
+
+The original version of this patch set included the kernel version.  
+This version is just measuring the boot command line arguments.
+
+> For cold boot, the boot loader
+> can be enhanced to measure these parameters.
+> (https://mjg59.dreamwidth.org/48897.html)
+> However, for attestation across soft reboot boundary, these values 
+> also need to be measured during kexec_file_load.
+> 
+> Currently for Kexec(kexec_file_load)/soft reboot scenario the boot cmdline
+> args for the next kernel are not measured. For 
+> normal case of boot/hardreboot the cmdline args are measured into the TPM.
+> The hash of boot command line is calculated and added to the current 
+> running kernel's measurement list.
+> On a soft reboot like kexec, no cmdline arguments measurement takes place.
+> 
+> To achive the above the patch series does the following
+>   -adds a new ima hook: ima_kexec_cmdline which measures the cmdline args
+>    into the ima log, behind a new ima policy entry KEXEC_CMDLINE.
+>   -since the cmldine args cannot be appraised, a new template field(buf) is
+>    added. The template field contains the buffer passed(cmldine args), which
+>    can be used to appraise/attest at a later stage.
+>   -call the ima_kexec_cmdline(...) hook from kexec_file_load call.
+> 
+> The ima logs need to be carried over to the next kernel, which will be followed
+> up by other patchsets for x86_64 and arm64.
+> 
+> The kexec cmdline hash
+
+^stored in the "d-ng" field of the template data
+
+> can be verified using
+
+> sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements | 
+>   grep  kexec-cmdline | cut -d' ' -f 6 | xxd -r -p | sha256sum
+
+Until per policy template field rule support is added, a template name
+needs to be defined.  Please define "ima-buf" as:
+{.name = "ima-buf", .fmt = "d-ng|n-ng|buf"}
+
+I'm still seeing some scripts/checkpatch "WARNING: line over 80
+characters".  scripts/Lindent should provide the correct way of
+formatting these lines.
+
+Some people feel that references to Lindent should be removed, but I
+tend to agree with the Documentation/hwmon/submitting-patches.rst
+comment pertaining to scripts/Lindent.
+
+"* Running your patch or driver file(s) through checkpatch does not
+mean its formatting is clean. If unsure about formatting in your new
+driver, run it through Lindent. Lindent is not perfect, and you may
+have to do some minor cleanup, but it is a good start."
+
+Examples of where the line formatting is off is the call to
+ima_get_action() in process_buffer_measurement() and the call to
+process_buffer_measurement() in ima_kexec_cmdline().
+
+thanks,
+
+Mimi
+
+> 
+> Changelog:
+> V7:
+>   - rebased to next-queued-testing
+>   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/log/?h=next-queued-testing
+> 
+> V6:
+>   -add a new ima hook and policy to measure the cmdline
+>     args(ima_kexec_cmdline)
+>   -add a new template field buf to contain the buffer measured.
+>   [suggested by Mimi Zohar]
+>    add new fields to ima_event_data to store/read buffer data.
+>   [suggested by Roberto]
+>   -call ima_kexec_cmdline from kexec_file_load path
+> 
+> v5:
+>   -add a new ima hook and policy to measure the cmdline
+>     args(ima_kexec_cmdline)
+>   -add a new template field buf to contain the buffer measured.
+>     [suggested by Mimi Zohar]
+>   -call ima_kexec_cmdline from kexec_file_load path
+> 
+> v4:
+>   - per feedback from LSM community, removed the LSM hook and renamed the
+>     IMA policy to KEXEC_CMDLINE
+> 
+> v3: (rebase changes to next-general)
+>   - Add policy checks for buffer[suggested by Mimi Zohar]
+>   - use the IMA_XATTR to add buffer
+>   - Add kexec_cmdline used for kexec file load
+>   - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+> 
+> v2:
+>   - Add policy checks for buffer[suggested by Mimi Zohar]
+>   - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+>   - use the IMA_XATTR to add buffer instead of sig template
+> 
+> v1:
+>   -Add kconfigs to control the ima_buffer_check
+>   -measure the cmdline args suffixed with the kernel file name
+>   -add the buffer to the template sig field.
+> 
+> Prakhar Srivastava (3):
+>   Add a new ima hook ima_kexec_cmdline to measure cmdline args
+>   add a new ima template field buf
+>   call ima_kexec_cmdline to measure the cmdline args
+> 
+>  Documentation/ABI/testing/ima_policy      |  1 +
+>  Documentation/security/IMA-templates.rst  |  2 +-
+>  include/linux/ima.h                       |  2 +
+>  kernel/kexec_file.c                       |  8 ++-
+>  security/integrity/ima/ima.h              |  3 +
+>  security/integrity/ima/ima_api.c          |  5 +-
+>  security/integrity/ima/ima_init.c         |  2 +-
+>  security/integrity/ima/ima_main.c         | 80 +++++++++++++++++++++++
+>  security/integrity/ima/ima_policy.c       |  9 +++
+>  security/integrity/ima/ima_template.c     |  2 +
+>  security/integrity/ima/ima_template_lib.c | 20 ++++++
+>  security/integrity/ima/ima_template_lib.h |  4 ++
+>  12 files changed, 131 insertions(+), 7 deletions(-)
+> 
+
