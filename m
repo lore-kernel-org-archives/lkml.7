@@ -2,102 +2,126 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C792FC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0048EC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A97E620896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5AD2089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 06:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qj4QNTMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403973AbfFKGqW (ORCPT
+        id S2404051AbfFKGqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 02:46:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23142 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390485AbfFKGqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 02:46:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jun 2019 23:46:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,578,1557212400"; 
-   d="scan'208";a="183696202"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Jun 2019 23:46:19 -0700
-Subject: Re: [PATCH] perf script/intel-pt: set synth_opts.callchain for
- use_browser > 0
-To:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, davidca@fb.com,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20190610234216.2849236-1-songliubraving@fb.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <def87b9f-a4fa-37ff-722a-9f14b14b2c7b@intel.com>
-Date:   Tue, 11 Jun 2019 09:45:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 02:46:32 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45524 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390485AbfFKGqb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 02:46:31 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so11568090wre.12;
+        Mon, 10 Jun 2019 23:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xaxK2cOJGhx/VdHimxeYocKNki8UteruN2DyLSA9lqE=;
+        b=qj4QNTMgASzEMOBpzYHzyHzzClLpXmTOL7qOUKCaZRQuJppoA/7/Z58q9TPjAfoqCK
+         RszQR+97Ii/JzYpegUzxhQqmyHCAeRIfz9uYce1pr0HQGfQhxm7HWei7ElNNmLKByt0M
+         8EemVEXbjp6yrZuPCu86eR0rIsWjqMW1f0gve+ZK7FEujP/IF2jJjUEI+iZq5XLwuxmJ
+         dsM+raIPUrM+6X2QFx+AT1bOTGxyJ6qkV+/dDxaG0mk1xs+ysui+4OLx57+ncD5GbXrd
+         8bK54wFvn3I4gA2Nul1a+LKuYE3lZ1Ps3C5n7ihasx8y+W3EaowQzlVg7AzwEc4fleGd
+         gxPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xaxK2cOJGhx/VdHimxeYocKNki8UteruN2DyLSA9lqE=;
+        b=IU+QI6ljqvMSV9Pwd8wsP7JlpltKJxm0ZSdxEnaDC7cQwc4oBnyWFGLNqNJkXFVX5+
+         eEt6dzIkcpcg7ubvCs4KKK24IwXn8tO904QO6mgzdL685D9tatMGT3GPmZ49ndR1s3wH
+         2WOvLFHsvUkFnheAO9FfSfggd3u0G9BX25hUn9BOhXyQv5jQzCrJ6pDmUAd/tQHfKL3B
+         H1YkfAQCpnaq5FImISlxMGwNGfE3lbtSJW1qRPLspJKWXiG9sZpfBVSxyo6TlVO1w3u7
+         QMYVN+DLiVQbGWQQ08eQhdWfhjyxBm6weD8rfHSUkcgq03OM3bwqhYjITFae4X9Co1eq
+         0KmQ==
+X-Gm-Message-State: APjAAAW165VUubk3EM5ykbKIICDq9kNQd8q2T7ta/T4MquhXdGbxFcRc
+        YlgVbmBzFl7X6Q7LefGS5Jo7Q5HmjZQS3XP2jJg=
+X-Google-Smtp-Source: APXvYqyiCGtrkBdd7wPq/5oueuA5FZMEmjCwiT3TZbB58uld1OzRrPn8KlwupjVbH5Q9WeW5FtiskSCWIhZQPzI7yyI=
+X-Received: by 2002:adf:fc85:: with SMTP id g5mr48329708wrr.324.1560235589961;
+ Mon, 10 Jun 2019 23:46:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190610234216.2849236-1-songliubraving@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190524072745.27398-1-amergnat@baylibre.com>
+In-Reply-To: <20190524072745.27398-1-amergnat@baylibre.com>
+From:   wens Tsai <wens213@gmail.com>
+Date:   Tue, 11 Jun 2019 14:46:17 +0800
+Message-ID: <CAGb2v661GYVmq9Xvw9j3RN1jV5Xe2c-naHkvEcVFSbHkeW3HBQ@mail.gmail.com>
+Subject: Re: [PATCH] clk: fix clock global name usage.
+To:     Alexandre Mergnat <amergnat@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        baylibre-upstreaming@groups.io,
+        Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06/19 2:42 AM, Song Liu wrote:
-> Currently, intel_pt_process_auxtrace_info() sets synth_opts.callchain for
-> use_browser != -1, which is not accurate after we set use_browser to 0 in
-> cmd_script(). As a result, the following commands sees a lot more errors
-> like:
-> 
->   perf record -e intel_pt//u -C 10 -- sleep 3
->   perf script
-> 
->   ...
->   instruction trace error type 1 time ...
->   ...
-> 
-> This patch fixes this by checking use_browser > 0 instead.
-> 
-> Fixes: c1c9b9695cc8 ("perf script: Allow extended console debug output")
-> Reported-by: David Carrillo Cisneros <davidca@fb.com>
-> Cc: Milian Wolff <milian.wolff@kdab.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
+On Fri, May 24, 2019 at 3:29 PM Alexandre Mergnat <amergnat@baylibre.com> wrote:
+>
+> A recent patch allows the clock framework to specify the parent
+> relationship with either the clk_hw pointer, the global name or through
+> Device Tree name.
+>
+> But the global name isn't handled by the clk framework because the DT name
+> is considered valid even if it's NULL, so of_clk_get_hw() returns an
+> unexpected clock (the first clock specified in DT).
+>
+> This can be fixed by calling of_clk_get_hw() only when DT name is not NULL.
+>
+> Fixes: fc0c209c147f ("clk: Allow parents to be specified without string names")
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 > ---
->  tools/perf/util/intel-pt.c | 2 +-
+>  drivers/clk/clk.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index 6d288237887b..15692c104ca8 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -2588,7 +2588,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
->  	} else {
->  		itrace_synth_opts__set_default(&pt->synth_opts,
->  				session->itrace_synth_opts->default_no_sample);
-> -		if (use_browser != -1) {
-> +		if (use_browser > 0) {
+>
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index bdb077ba59b9..9624a75e5a8d 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -368,7 +368,7 @@ static struct clk_core *clk_core_get(struct clk_core *core, u8 p_index)
+>         const char *dev_id = dev ? dev_name(dev) : NULL;
+>         struct device_node *np = core->of_node;
+>
+> -       if (np && index >= 0)
+> +       if (name && np && index >= 0)
 
-That code has changed recently.  Refer:
+I think the opposite should be the case. If either the name or index is valid,
+and there's a device node backing it, the code path should be entered.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=26f19c2eb7e54
+This is implied by the description of struct clk_parent_data:
+
+    @index: parent index local to provider registering clk (if @fw_name absent)
+
+So the code path should be valid regardless of the value of .index.
+
+That would make it
+
+        if (np && (name || index >= 0)) ...
+
+Regards
+ChenYu
 
 
->  			pt->synth_opts.branches = false;
->  			pt->synth_opts.callchain = true;
->  		}
-> 
-
+>                 hw = of_clk_get_hw(np, index, name);
+>
+>         /*
+> --
+> 2.17.1
+>
