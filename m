@@ -2,148 +2,114 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7139DC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2972AC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D942080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E0A2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:04:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ypLhQnZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405526AbfFKQDT (ORCPT
+        id S2391821AbfFKQEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 12:03:19 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35747 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405513AbfFKQDT (ORCPT
+        Tue, 11 Jun 2019 12:04:34 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36049 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390351AbfFKQEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:03:19 -0400
-Received: by mail-io1-f65.google.com with SMTP id m24so10363366ioo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 09:03:18 -0700 (PDT)
+        Tue, 11 Jun 2019 12:04:33 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f21so1200597pgi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 09:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=fHgaF/ifDgAfQgzituzGnrDambMODchHBe1+gC1goFc=;
+        b=ypLhQnZ5ihNJgwdVJWVC91xIsfiFrz9ClfznVqmlTf6ghMEcUIC04zg9Rmg2GaSMUC
+         Nk/KuRk3kdeTrDCVRf22vfVsMPm0iAID5T/Fbpv2fECuSrqp81Fv/J4NjGKQPxSgIX1a
+         CAxqCZgIOSxqK7yfvQ8Rjv0S+IGKDsnlAXPCK1sBhdj9d4VBis7CIQYQFwyDZAbIxeYj
+         fl6BqcP3XQxDviKSOj+JizlLAFmYrz6ulfoCP0r7AgpPEUNUMBO4uOZyMAJ+XGyXjAee
+         sViBcr28A2wDwGnLCO4fPnTqaI2duqe7rshzpjdidVtGX2J9Jt7FB7QSkxKZ+Zo/P8ZB
+         EhKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=0mWSyTQJvoed04iwSAjNkm9jUTEiqeLoFtV8kHFixFA=;
-        b=AFuRxQ5L9P12qD51JagNi5p6VAZiCaOtslilQk7hnAByvKCSOiPwr7MYJXIRPFFHNI
-         YZuVPgofBIbzjGpChJqEgmPsi2LhL1X51ZK3SCMB6VxPEa+SlxHEsvdCzFrf9LjY4qOg
-         W5OrNdTfBMRjApHGGKGLuJRExJS9gxWebEg7SDzWFXjemVfVvVRF0lkzKkkwjiDeebcu
-         jm4gQ2LpGTRZUrIErKSR8v+Raztv/fi48jFOmpiwwUsT/usN5h5qwi3kCFUTfL5kkzcD
-         BUVA6JutzSuMdcWvgv7TE5qvZfIrRuT5gQVbsHNhx/RwKY767B/qBLzwQdWBY9bhG7e4
-         mHdw==
-X-Gm-Message-State: APjAAAXNlPOpx5S5jEyrRi9k6volMIq6HOf1y3nA/Hkk/3isAiUicEjX
-        E0Pxr/45yv/I1PLueMEBaCoSNY+9pmY=
-X-Google-Smtp-Source: APXvYqw7vh3o407Y7teYmLsSLtYLUHcQTYDz1NEf5mJ53lbtx1grZJAj348tE76u5CSzFDgrrUb7Ig==
-X-Received: by 2002:a6b:c90c:: with SMTP id z12mr42308195iof.11.1560268996957;
-        Tue, 11 Jun 2019 09:03:16 -0700 (PDT)
-Received: from masetto.ahs3 (c-67-165-232-89.hsd1.co.comcast.net. [67.165.232.89])
-        by smtp.gmail.com with ESMTPSA id b8sm4968332ioj.16.2019.06.11.09.03.16
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 09:03:16 -0700 (PDT)
-Reply-To: ahs3@redhat.com
-Subject: Re: [RFC PATCH] ACPI / processors: allow a processor device _UID to
- be a string
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190610200734.1182-1-ahs3@redhat.com>
- <20190611125258.GA16445@e107155-lin>
-From:   Al Stone <ahs3@redhat.com>
-Organization: Red Hat, Inc.
-Message-ID: <5ea4f403-853f-5067-4e9b-a8aabec5b1cd@redhat.com>
-Date:   Tue, 11 Jun 2019 10:03:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190611125258.GA16445@e107155-lin>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=fHgaF/ifDgAfQgzituzGnrDambMODchHBe1+gC1goFc=;
+        b=IaKQpxKwjDL8FfjS7inpasceApvYKh9CvhVPwAYmVjcTkgN4JmflUq2qLDC6+R5vAP
+         kctYJbDNoB5Y9vm9nIlz/HCpHu2vMI/1zAZvbR//uDhS4TJWmMTu8gkfjIMavYtXFmvu
+         qRvFLWq/KQ6qvixpFK2o4MVbU+juO5zlO9lMece/U77jk+PHWZuVCWxlpj0BTKhM+bpC
+         RzC31/jZD8oiKcTuwGNnGPXNADAwN3tskEbHwzMRaiQRZ/NGfhLKCoa6HPoUBiBRO0XW
+         Wo3bMuh7GwCDAApR6krBmx/go3/d7DIHiejmijOaCN+njJI9PcWd49HAe3kH9zRBd98c
+         nEUQ==
+X-Gm-Message-State: APjAAAXmU9LRZHj+ABwztT9a+65jhMaSc6LgICDhM1Djt3Xfhheu1HR3
+        rdeJTpOAZhWOWr6n6ajfPe/q3Q==
+X-Google-Smtp-Source: APXvYqzRdyu88HyKel/R/LqGyypz8I9fy5w87YxTteCaPn3bF6Cny2QQ1MSAtq3Cu/IjvG3qlKp68A==
+X-Received: by 2002:a17:90a:bc02:: with SMTP id w2mr18114744pjr.101.1560269073381;
+        Tue, 11 Jun 2019 09:04:33 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b062:7159:60af:2fa5:3435:5195? ([2600:1010:b062:7159:60af:2fa5:3435:5195])
+        by smtp.gmail.com with ESMTPSA id s42sm3106035pjc.5.2019.06.11.09.04.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 09:04:32 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v4 3/5] x86/umwait: Add sysfs interface to control umwait C0.2 state
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <20190611085410.GT3436@hirez.programming.kicks-ass.net>
+Date:   Tue, 11 Jun 2019 09:04:30 -0700
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0D67CEAC-9710-4ECB-9248-75B48542FF82@amacapital.net>
+References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com> <1559944837-149589-4-git-send-email-fenghua.yu@intel.com> <20190611085410.GT3436@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 6:53 AM, Sudeep Holla wrote:
-> On Mon, Jun 10, 2019 at 02:07:34PM -0600, Al Stone wrote:
->> In the ACPI specification, section 6.1.12, a _UID may be either an
->> integer or a string object.  Up until now, when defining processor
->> Device()s in ACPI (_HID ACPI0007), only integers were allowed even
->> though this ignored the specification.  As a practical matter, it
->> was not an issue.
->>
->> Recently, some DSDTs have shown up that look like this:
->>
->>   Device (XX00)
->>   {
->> 	Name (_HID, "ACPI0007" /* Processor Device */)
->>         Name (_UID, "XYZZY-XX00")
->>         .....
->>   }
->>
->> which is perfectly legal.  However, the kernel will report instead:
->>
-> 
-> I am not sure how this can be perfectly legal from specification
-> perspective. It's legal with respect to AML namespace but then the
-> other condition of this matching with entries in static tables like
-> MADT is not possible where there are declared to be simple 4 byte
-> integer/word. Same is true for even ACPI0010, the processor container
-> objects which need to match entries in PPTT,
-> 
-> ACPI Processor UID(in MADT): The OS associates this GICC(applies even
-> for APIC and family) Structure with a processor device object in
-> the namespace when the _UID child object of the processor device
-> evaluates to a numeric value that matches the numeric value in this
-> field.
-> 
-> So for me that indicates it can't be string unless you have some ways to
-> match those _UID entries to ACPI Processor ID in MADT and PPTT.
-> 
-> Let me know if I am missing to consider something here.
-> 
-> --
-> Regards,
-> Sudeep
-> 
 
-Harumph.  I think what we have here is a big mess in the spec, but
-that is exactly why this is an RFC.
 
-The MADT can have any of ~16 different subtables, as you note.  Of
-those, only these require a numeric _UID:
+> On Jun 11, 2019, at 1:54 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+>> On Fri, Jun 07, 2019 at 03:00:35PM -0700, Fenghua Yu wrote:
+>> C0.2 state in umwait and tpause instructions can be enabled or disabled
+>> on a processor through IA32_UMWAIT_CONTROL MSR register.
+>>=20
+>> By default, C0.2 is enabled and the user wait instructions result in
+>> lower power consumption with slower wakeup time.
+>>=20
+>> But in real time systems which require faster wakeup time although power
+>> savings could be smaller, the administrator needs to disable C0.2 and all=
 
-   -- Type 0x0: Processor Local APIC
-   -- Type 0x4: Local APIC NMI [0]
-   -- Type 0x7: Processor Local SAPIC [1]
-   -- Type 0x9: Processor Local x2APIC
-   -- Type 0xa: Local x2APIC NMI [0]
-   -- Type 0xb: GICC
+>> C0.2 requests from user applications revert to C0.1.
+>>=20
+>> A sysfs interface "/sys/devices/system/cpu/umwait_control/enable_c02" is
+>> created to allow the administrator to control C0.2 state during run time.=
 
-Note [0]: a value of !0x0 is also allowed, indicating all processors
-     [1]: this has two fields that could be interpreted as an ID when
-          used together
+>=20
+> We already have an interface for applications to convey their latency
+> requirements (pm-qos). We do not need another magic sys variable.
 
-It does not appear that you could build a usable system without any
-of these subtables -- but perhaps someone knows of incantations that
-could -- which is why I thought a string _UID might be viable.
+I=E2=80=99m not sure I agree.  This isn=E2=80=99t an overall latency request=
+, and setting an absurdly low pm_qos will badly hurt idle power and turbo pe=
+rformance.  Also, pm_qos isn=E2=80=99t exactly beautiful.
 
-If we consider the PPTT too, then yeah, _UID must be an integer for
-some devices.
+(I speak from some experience. I may be literally the only person to write a=
+ driver that listens to dev_pm_qos latency requests. And, in my production b=
+ox, I directly disable c states instead of messing with pm_qos.)
 
-Thanks for the feedback; it forced me to double-check my thinking about
-the MADT.  The root cause of the issue is not the kernel in this case,
-but a lack of clarity in the spec -- or at least implied requirements
-that probably need to be explicit.  I'll send in a spec change.
-
--- 
-ciao,
-al
------------------------------------
-Al Stone
-Software Engineer
-Red Hat, Inc.
-ahs3@redhat.com
------------------------------------
+I do wonder whether anyone will ever use this particular control, though.=
