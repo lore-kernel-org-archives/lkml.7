@@ -2,176 +2,96 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2868C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E7DC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4AB2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1E121743
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560238211;
+	bh=dSkXBR/OCEtFzFA8xUYw0p2FJxmWLSoWVqkK+1ttkkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HOrc3YekDUqzRSzm+jnDvcYXR1yO0SVr3XX5ImReUksaGi5TCTW8i5pjUlWLt7//w
+	 52CHaUz38lXNv0rIUiVarmEQKpcKRi0G2iVk/7+o3/FrVNw6ghU7u7CdeDaLT5jlrK
+	 SY1GoDTxv8OSvcVfO5pb6uWfeljLFE4xKHiwdKHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404456AbfFKHaH (ORCPT
+        id S2404470AbfFKHaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:30:07 -0400
-Received: from shell.v3.sk ([90.176.6.54]:60999 "EHLO shell.v3.sk"
+        Tue, 11 Jun 2019 03:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404353AbfFKH3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:29:45 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id C34D9104F73;
-        Tue, 11 Jun 2019 09:29:42 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id UQ0Bb_68C3u1; Tue, 11 Jun 2019 09:29:27 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 32A5F104F88;
-        Tue, 11 Jun 2019 09:29:26 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id C7D_2HtN1agj; Tue, 11 Jun 2019 09:29:24 +0200 (CEST)
-Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id E8414104F74;
-        Tue, 11 Jun 2019 09:29:23 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Wei Xu <xuwei5@hisilicon.com>, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 1/6] ARM: dts: STi: Switch to SPDX header
-Date:   Tue, 11 Jun 2019 09:29:16 +0200
-Message-Id: <20190611072921.2979446-2-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190611072921.2979446-1-lkundrak@v3.sk>
-References: <20190611072921.2979446-1-lkundrak@v3.sk>
+        id S2404353AbfFKHaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 03:30:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41BF821721;
+        Tue, 11 Jun 2019 07:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560238207;
+        bh=dSkXBR/OCEtFzFA8xUYw0p2FJxmWLSoWVqkK+1ttkkw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n0hiDa8n/fQqJYAnuExr8vtVgb4frORxcZEH5epOHkTE779ih7PtuEEhaEDEyH2m9
+         8fSFpiDJ4q3y5NiztDL7WTKzIP2SAGeamb8m+62LSpGvG1s3a0kr9QJdS0od3EmWmY
+         K8eRbXyF0EuDdBKj/sGCyFFYdM/8SD6i0WTa3ji0=
+Date:   Tue, 11 Jun 2019 09:30:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Eric Piel <eric.piel@tremplin-utc.net>,
+        Daniel Mack <daniel@caiaq.de>, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] misc: lis3lv02d: Switch to SPDX header
+Message-ID: <20190611073005.GA11407@kroah.com>
+References: <20190611072018.2978605-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611072018.2978605-1-lkundrak@v3.sk>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original license text had a typo ("publishhed") which would be
-likely to confuse automated licensing auditing tools. Let's just switch
-to SPDX instead of fixing the wording.
+On Tue, Jun 11, 2019 at 09:20:18AM +0200, Lubomir Rintel wrote:
+> The original license text had a typo ("publishhed") which would be
+> likely to confuse automated licensing auditing tools. Let's just switch
+> to SPDX instead of fixing the wording.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  drivers/misc/lis3lv02d/lis3lv02d_spi.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/misc/lis3lv02d/lis3lv02d_spi.c b/drivers/misc/lis3lv02d/lis3lv02d_spi.c
+> index e575475123c8..d7f17c59f3e7 100644
+> --- a/drivers/misc/lis3lv02d/lis3lv02d_spi.c
+> +++ b/drivers/misc/lis3lv02d/lis3lv02d_spi.c
+> @@ -1,11 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * lis3lv02d_spi - SPI glue layer for lis3lv02d
+>   *
+>   * Copyright (c) 2009 Daniel Mack <daniel@caiaq.de>
+> - *
+> - *  This program is free software; you can redistribute it and/or modify
+> - *  it under the terms of the GNU General Public License version 2 as
+> - *  publishhed by the Free Software Foundation.
+>   */
+>  
+>  #include <linux/module.h>
+> -- 
+> 2.21.0
+> 
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- arch/arm/boot/dts/stih407-family.dtsi  | 5 +----
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 5 +----
- arch/arm/boot/dts/stih407.dtsi         | 5 +----
- arch/arm/boot/dts/stih410-pinctrl.dtsi | 5 +----
- arch/arm/boot/dts/stih410.dtsi         | 5 +----
- arch/arm/boot/dts/stih418.dtsi         | 5 +----
- 6 files changed, 6 insertions(+), 24 deletions(-)
+Please always work with the latest kernel tree, this was fixed in
+5.2-rc4.
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/st=
-ih407-family.dtsi
-index 9e29a4499938..2ff2542bf335 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2014 STMicroelectronics Limited.
-  * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-  */
- #include "stih407-pinctrl.dtsi"
- #include <dt-bindings/mfd/st-lpc.h>
-diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/s=
-tih407-pinctrl.dtsi
-index e393519fb84c..db174019626f 100644
---- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2014 STMicroelectronics Limited.
-  * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-  */
- #include "st-pincfg.h"
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.d=
-tsi
-index 5b7951ffc350..242ac72e4d4a 100644
---- a/arch/arm/boot/dts/stih407.dtsi
-+++ b/arch/arm/boot/dts/stih407.dtsi
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2015 STMicroelectronics Limited.
-  * Author: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-  */
- #include "stih407-clock.dtsi"
- #include "stih407-family.dtsi"
-diff --git a/arch/arm/boot/dts/stih410-pinctrl.dtsi b/arch/arm/boot/dts/s=
-tih410-pinctrl.dtsi
-index 5ae1fd66c0b8..8532ae3f61e8 100644
---- a/arch/arm/boot/dts/stih410-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih410-pinctrl.dtsi
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2014 STMicroelectronics Limited.
-  * Author: Peter Griffin <peter.griffin@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-  */
- #include "st-pincfg.h"
- / {
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.d=
-tsi
-index 888548ea9b5c..23b494a13c47 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2014 STMicroelectronics Limited.
-  * Author: Peter Griffin <peter.griffin@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-  */
- #include "stih410-clock.dtsi"
- #include "stih407-family.dtsi"
-diff --git a/arch/arm/boot/dts/stih418.dtsi b/arch/arm/boot/dts/stih418.d=
-tsi
-index 0efb3cd6a86e..f3f0a0e0f23c 100644
---- a/arch/arm/boot/dts/stih418.dtsi
-+++ b/arch/arm/boot/dts/stih418.dtsi
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2014 STMicroelectronics Limited.
-  * Author: Peter Griffin <peter.griffin@linaro.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * publishhed by the Free Software Foundation.
-  */
- #include "stih418-clock.dtsi"
- #include "stih407-family.dtsi"
---=20
-2.21.0
+thanks,
 
+greg k-h
