@@ -2,216 +2,165 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46961C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31AEC43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214352145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40412145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405106AbfFKJvy (ORCPT
+        id S2405119AbfFKJwb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:51:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:56856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405067AbfFKJvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:51:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E51C337;
-        Tue, 11 Jun 2019 02:51:52 -0700 (PDT)
-Received: from [10.1.29.141] (e121487-lin.cambridge.arm.com [10.1.29.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 893B13F73C;
-        Tue, 11 Jun 2019 02:53:33 -0700 (PDT)
-Subject: Re: [PATCH 06/15] binfmt_flat: remove the uapi <linux/flat.h> header
-To:     Christoph Hellwig <hch@lst.de>, Greg Ungerer <gerg@linux-m68k.org>
-Cc:     uclinux-h8-devel@lists.sourceforge.jp,
-        linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
-        linux-c6x-dev@linux-c6x.org, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190610212015.9157-1-hch@lst.de>
- <20190610212015.9157-7-hch@lst.de>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <0971e6ed-524c-c9ee-b7d7-89126d742b8d@arm.com>
-Date:   Tue, 11 Jun 2019 10:51:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190610212015.9157-7-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
+        Tue, 11 Jun 2019 05:52:31 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:43436 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405107AbfFKJwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 05:52:30 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-196-OKKF5U8lNxCJ1snZU1YqkA-1; Tue, 11 Jun 2019 10:52:27 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
+ 11 Jun 2019 10:52:25 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 11 Jun 2019 10:52:25 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "e@80x24.org" <e@80x24.org>,
+        "jbaron@akamai.com" <jbaron@akamai.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Thread-Topic: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Thread-Index: AQHVH9JWknGdQ9+D0UeylJNmvFzQKKaWJ31Q
+Date:   Tue, 11 Jun 2019 09:52:25 +0000
+Message-ID: <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+        <20190529161157.GA27659@redhat.com>     <20190604134117.GA29963@redhat.com>
+        <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
+        <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
+ <87lfy96sta.fsf@xmission.com>
+In-Reply-To: <87lfy96sta.fsf@xmission.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: OKKF5U8lNxCJ1snZU1YqkA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/19 10:20 PM, Christoph Hellwig wrote:
-> The split between the two flat.h files is completely arbitrary, and the
-> uapi version even contains CONFIG_ ifdefs that can't work in userspace.
-> The only userspace program known to use the header is elf2flt, and it
-> ships with its own version of the combined header.
+From: Eric W. Biederman
+> Sent: 10 June 2019 22:21
+...
+> >
+> > As for "remove saved_sigmask" I have some concerns... At least this
+> > means a user-visible change iiuc. Say, pselect unblocks a fatal signal.
+> > Say, SIGINT without a handler. Suppose SIGINT comes after set_sigmask().
+> >
+> > Before this change the process will be killed.
+> >
+> > After this change it will be killed or not. It won't be killed if
+> > do_select() finds an already ready fd without blocking, or it finds a
+> > ready fd right after SIGINT interrupts poll_schedule_timeout().
 > 
-> Use the chance to move the <asm/flat.h> inclusion out of this file, as it
-> is in no way needed for the format defintion, but just for the binfmt
-> implementation.
+> Yes.  Because having the signal set in real_blocked disables the
+> immediate kill optimization, and the signal has to be delivered before
+> we decide to kill the process.  Which matters because as you say if
+> nothing checks signal_pending() when the signals are unblocked we might
+> not attempt to deliver the signal.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/binfmt_flat.c          |  1 +
->  include/linux/flat.h      | 45 ++++++++++++++++++++++++++---
->  include/uapi/linux/flat.h | 59 ---------------------------------------
->  3 files changed, 42 insertions(+), 63 deletions(-)
->  delete mode 100644 include/uapi/linux/flat.h
+> So it is a matter of timing.
+> 
+> If we have both a signal and a file descriptor become ready
+> at the same time I would call that a race.  Either could
+> wake up the process and depending on the exact time we could
+> return either one.
+> 
+> So it is possible that today if the signal came just after the file
+> descriptor ,the code might have made it to restore_saved_sigmask_unless,
+> before __send_signal runs.
+> 
+> I see the concern.  I think in a matter like this we try it.  Make
+> the patches clean so people can bisect the problem.  Then if someone
+> runs into this problem we revert the offending patches.
 
-FWIW:
+If I have an application that has a loop with a pselect call that
+enables SIGINT (without a handler) and, for whatever reason,
+one of the fd is always 'ready' then I'd expect a SIGINT
+(from ^C) to terminate the program.
 
-Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
+A quick test program:
 
-> 
-> diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-> index c09651087eda..6ae0f9af3fc9 100644
-> --- a/fs/binfmt_flat.c
-> +++ b/fs/binfmt_flat.c
-> @@ -42,6 +42,7 @@
->  #include <asm/unaligned.h>
->  #include <asm/cacheflush.h>
->  #include <asm/page.h>
-> +#include <asm/flat.h>
->  
->  #ifndef flat_get_relocate_addr
->  #define flat_get_relocate_addr(rel)	(rel)
-> diff --git a/include/linux/flat.h b/include/linux/flat.h
-> index 569b67d64d5c..21d901ba191b 100644
-> --- a/include/linux/flat.h
-> +++ b/include/linux/flat.h
-> @@ -10,8 +10,47 @@
->  #ifndef _LINUX_FLAT_H
->  #define _LINUX_FLAT_H
->  
-> -#include <uapi/linux/flat.h>
-> -#include <asm/flat.h>
-> +#define	FLAT_VERSION			0x00000004L
-> +
-> +#ifdef CONFIG_BINFMT_SHARED_FLAT
-> +#define	MAX_SHARED_LIBS			(4)
-> +#else
-> +#define	MAX_SHARED_LIBS			(1)
-> +#endif
-> +
-> +/*
-> + * To make everything easier to port and manage cross platform
-> + * development,  all fields are in network byte order.
-> + */
-> +
-> +struct flat_hdr {
-> +	char magic[4];
-> +	unsigned long rev;          /* version (as above) */
-> +	unsigned long entry;        /* Offset of first executable instruction
-> +	                               with text segment from beginning of file */
-> +	unsigned long data_start;   /* Offset of data segment from beginning of
-> +	                               file */
-> +	unsigned long data_end;     /* Offset of end of data segment
-> +	                               from beginning of file */
-> +	unsigned long bss_end;      /* Offset of end of bss segment from beginning
-> +	                               of file */
-> +
-> +	/* (It is assumed that data_end through bss_end forms the bss segment.) */
-> +
-> +	unsigned long stack_size;   /* Size of stack, in bytes */
-> +	unsigned long reloc_start;  /* Offset of relocation records from
-> +	                               beginning of file */
-> +	unsigned long reloc_count;  /* Number of relocation records */
-> +	unsigned long flags;
-> +	unsigned long build_date;   /* When the program/library was built */
-> +	unsigned long filler[5];    /* Reservered, set to zero */
-> +};
-> +
-> +#define FLAT_FLAG_RAM    0x0001 /* load program entirely into RAM */
-> +#define FLAT_FLAG_GOTPIC 0x0002 /* program is PIC with GOT */
-> +#define FLAT_FLAG_GZIP   0x0004 /* all but the header is compressed */
-> +#define FLAT_FLAG_GZDATA 0x0008 /* only data/relocs are compressed (for XIP) */
-> +#define FLAT_FLAG_KTRACE 0x0010 /* output useful kernel trace for debugging */
->  
->  /*
->   * While it would be nice to keep this header clean,  users of older
-> @@ -22,8 +61,6 @@
->   *        with the format above,  except to fix bugs with old format support.
->   */
->  
-> -#include <asm/byteorder.h>
-> -
->  #define	OLD_FLAT_VERSION			0x00000002L
->  #define OLD_FLAT_RELOC_TYPE_TEXT	0
->  #define OLD_FLAT_RELOC_TYPE_DATA	1
-> diff --git a/include/uapi/linux/flat.h b/include/uapi/linux/flat.h
-> deleted file mode 100644
-> index 27e595e44fb7..000000000000
-> --- a/include/uapi/linux/flat.h
-> +++ /dev/null
-> @@ -1,59 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> -/*
-> - * Copyright (C) 2002-2003  David McCullough <davidm@snapgear.com>
-> - * Copyright (C) 1998       Kenneth Albanowski <kjahds@kjahds.com>
-> - *                          The Silver Hammer Group, Ltd.
-> - *
-> - * This file provides the definitions and structures needed to
-> - * support uClinux flat-format executables.
-> - */
-> -
-> -#ifndef _UAPI_LINUX_FLAT_H
-> -#define _UAPI_LINUX_FLAT_H
-> -
-> -
-> -#define	FLAT_VERSION			0x00000004L
-> -
-> -#ifdef CONFIG_BINFMT_SHARED_FLAT
-> -#define	MAX_SHARED_LIBS			(4)
-> -#else
-> -#define	MAX_SHARED_LIBS			(1)
-> -#endif
-> -
-> -/*
-> - * To make everything easier to port and manage cross platform
-> - * development,  all fields are in network byte order.
-> - */
-> -
-> -struct flat_hdr {
-> -	char magic[4];
-> -	unsigned long rev;          /* version (as above) */
-> -	unsigned long entry;        /* Offset of first executable instruction
-> -	                               with text segment from beginning of file */
-> -	unsigned long data_start;   /* Offset of data segment from beginning of
-> -	                               file */
-> -	unsigned long data_end;     /* Offset of end of data segment
-> -	                               from beginning of file */
-> -	unsigned long bss_end;      /* Offset of end of bss segment from beginning
-> -	                               of file */
-> -
-> -	/* (It is assumed that data_end through bss_end forms the bss segment.) */
-> -
-> -	unsigned long stack_size;   /* Size of stack, in bytes */
-> -	unsigned long reloc_start;  /* Offset of relocation records from
-> -	                               beginning of file */
-> -	unsigned long reloc_count;  /* Number of relocation records */
-> -	unsigned long flags;       
-> -	unsigned long build_date;   /* When the program/library was built */
-> -	unsigned long filler[5];    /* Reservered, set to zero */
-> -};
-> -
-> -#define FLAT_FLAG_RAM    0x0001 /* load program entirely into RAM */
-> -#define FLAT_FLAG_GOTPIC 0x0002 /* program is PIC with GOT */
-> -#define FLAT_FLAG_GZIP   0x0004 /* all but the header is compressed */
-> -#define FLAT_FLAG_GZDATA 0x0008 /* only data/relocs are compressed (for XIP) */
-> -#define FLAT_FLAG_KTRACE 0x0010 /* output useful kernel trace for debugging */
-> -
-> -
-> -
-> -#endif /* _UAPI_LINUX_FLAT_H */
-> 
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include <sys/select.h>
+#include <signal.h>
+
+int main(int argc, char **argv)
+{
+        fd_set readfds;
+        sigset_t sig_int;
+        struct timespec delay = {1, 0};
+
+        sigfillset(&sig_int);
+        sigdelset(&sig_int, SIGINT);
+
+        sighold(SIGINT);
+
+        for (;;) {
+                FD_ZERO(&readfds);
+                FD_SET(0, &readfds);
+                pselect(1, &readfds, NULL, NULL, &delay, &sig_int);
+
+                poll(0,0,1000);
+        }
+}
+
+Run under strace to see what is happening and send SIGINT from a different terminal.
+The program sleeps for a second in each of the pselect() and poll() calls.
+Send a SIGINT and in terminates after pselect() returns ERESTARTNOHAND.
+
+Run again, this time press enter - making fd 0 readable.
+pselect() returns 1, but the program still exits.
+(Tested on a 5.1.0-rc5 kernel.)
+
+If a signal handler were defined it should be called instead.
+
+FWIW is ERESTARTNOHAND actually sane here?
+If I've used setitimer() to get SIGALARM generated every second I'd
+expect select() to return EINTR every second even if I don't
+have a SIGALARM handler?
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
