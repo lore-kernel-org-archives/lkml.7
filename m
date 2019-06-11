@@ -4,101 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946B3C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F577C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509D8214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VlJzJMTC"
+	by mail.kernel.org (Postfix) with ESMTP id F394F2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560228938;
+	bh=VdGa6wSoL+22BZ+sm2TYAjWTOA+mGM3ZjWBOrVYWcmU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rmVyD0KE3A0E/WL9ZYRabYX7o+R0G55SFsx+5E7Q9agELg7MBw85MT7tDlOU48aSc
+	 BikFMPzC8i6WuNTuHCfhDzrA0foIzDG9SRNFCgcShCdktreQW/9NF5lTys8WaRGd4G
+	 uixC7PdH8aw/WcOKa4Cu04bCok4bRMcsDa1UM6rU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391110AbfFKEw7 (ORCPT
+        id S2391133AbfFKEzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 00:52:59 -0400
-Received: from ozlabs.org ([203.11.71.1]:52693 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390229AbfFKEw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 00:52:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NHgX4x3Zz9s4Y;
-        Tue, 11 Jun 2019 14:52:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560228777;
-        bh=NxT9Po6P2dh2KWTTjv4NqvZafUGmR2kz7Eh+QY6FbBw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VlJzJMTCb7+aqgBP+MEO4f4M6uvIjxlThlBQ5S7a8JMIeTHmDE4PqkX8qmKw1deTM
-         JDka1R02UVIk9aqaF3DTVXeG7q05su3WqphFlBKyQ9q7tOfeEVy3tGckwGH34duKMX
-         KI5Lhlap+qvYiOlOI4iKmB42XmvDvToneZ5reGOVfJR0uH5V7sS8qJ4KVJD1hMFTUP
-         PFurD+kRKWc+QKE1Q4vLv40mByC7cH4h3tVqBBCxU7XBqmpU+pr2f/kN6rkwF8GSIz
-         mgYJmjmDiBsW30wKWpSP1eMg4Dk9gxNpIHIFQ1uVRk6ftvTfZ4RlUoDfSNB0zUdk/M
-         0s+qzPj4OZiLQ==
-Date:   Tue, 11 Jun 2019 14:52:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>
-Subject: linux-next: build warning after merge of the tpmdd tree
-Message-ID: <20190611145255.68682629@canb.auug.org.au>
+        Tue, 11 Jun 2019 00:55:36 -0400
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:36357 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390081AbfFKEzg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 00:55:36 -0400
+Received: by mail-lj1-f174.google.com with SMTP id i21so10167949ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 21:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+0NVFIKvZo+cTD+d9Ui7mDkyi5Oxsx4RGqTwt9X3ykk=;
+        b=J42kFBk4S2k8nsKBY9fwhx/vZSEYU/OLrOlYGuYtsIl7R1OW7G6cP1AqGwj2+yGLg2
+         EYdlAVSm3K888i1Z/0BN2vG2wscFrXTIpee8gDD08eNXZ7Iutd7Co9x7wrC2XzSTo6Wr
+         D0e1tE4Z4fwwQjCOh4OvXBe5BDfZKYbAU0USA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+0NVFIKvZo+cTD+d9Ui7mDkyi5Oxsx4RGqTwt9X3ykk=;
+        b=NCQNep3gNqDa/EZUXUvgPh+B3aQ/ShnI0FzforyY8VAUcNAEIB8Vz71PdfeffPnLSh
+         /K8P+5c4Z7VlZ9HE7CYeQfCtfuXM/dUEk5Ni3WHBR02sExvgdgNAyT5OaYnAv0ZnfVmP
+         Egef4SXeydORuVS1JxR4FUwDoI6ouR/L+quXYgvd32/j3/0JzNYk3oWz64qXW7e3eeR5
+         Qj9VepEjmWnu0IUTlVkqwSelWjFB8kH6oiTDK8oTgjanGEFzeLulWvt3xONwED7zW9F/
+         Go7OK/IYuhuWBgCLR6vPcC1VphQ7unoN9fyCZIRXBUjOkjyEUoslEDha+ZwtTaD8nvIo
+         4v/A==
+X-Gm-Message-State: APjAAAUHe3+2nlAEUR1pP4hDUVDJoYDr8gmKKWBMpTNQFwTLUjRG5d/R
+        a6IPobouYbIXjqs2EWq8LrtpCkis2+U=
+X-Google-Smtp-Source: APXvYqw6DmkKRlHEEnUb6GqwZZ2McFPYhd4mbhzN4FL/NRtbmmIzImjVPONuG+tzrCxyZ3IgtGMR1Q==
+X-Received: by 2002:a2e:9dca:: with SMTP id x10mr7195153ljj.17.1560228933691;
+        Mon, 10 Jun 2019 21:55:33 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id s20sm2297017lfb.95.2019.06.10.21.55.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 21:55:32 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id s21so10171516lji.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 21:55:32 -0700 (PDT)
+X-Received: by 2002:a2e:9c03:: with SMTP id s3mr23108926lji.209.1560228931996;
+ Mon, 10 Jun 2019 21:55:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Fo4sukQFr7Es.fHMTnZiiX="; protocol="application/pgp-signature"
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com> <20190611011737.GA28701@kmo-pixel>
+In-Reply-To: <20190611011737.GA28701@kmo-pixel>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 10 Jun 2019 18:55:15 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wizTF+NbMrSRG-bc-LyuT7PUJ1QRAR8q_anOd6mY+9Z4A@mail.gmail.com>
+Message-ID: <CAHk-=wizTF+NbMrSRG-bc-LyuT7PUJ1QRAR8q_anOd6mY+9Z4A@mail.gmail.com>
+Subject: Re: bcachefs status update (it's done cooking; let's get this sucker merged)
+To:     Kent Overstreet <kent.overstreet@gmail.com>
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-bcache@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Fo4sukQFr7Es.fHMTnZiiX=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jun 10, 2019 at 3:17 PM Kent Overstreet
+<kent.overstreet@gmail.com> wrote:
+>
+>
+> > Why does the regular page lock (at a finer granularity) not suffice?
+>
+> Because the lock needs to prevent pages from being _added_ to the page cache -
+> to do it with a page granularity lock it'd have to be part of the radix tree,
 
-Hi all,
+No, I understand that part, but I still think we should be able to do
+the locking per-page rather than over the whole mapping.
 
-After merging the tpmdd tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+When doing dio, you need to iterate over old existing pages anyway in
+that range (otherwise the "no _new_ pages" part is kind of pointless
+when there are old pages there), so my gut feel is that you might as
+well at that point also "poison" the range you are doin dio on. With
+the xarray changes, we might be better at handling ranges. That was
+one of the arguments for the xarrays over the old radix tree model,
+after all.
 
-drivers/firmware/efi/tpm.c: In function 'efi_tpm_eventlog_init':
-drivers/firmware/efi/tpm.c:80:10: warning: passing argument 1 of 'tpm2_calc=
-_event_log_size' makes pointer from integer without a cast [-Wint-conversio=
-n]
-  tbl_size =3D tpm2_calc_event_log_size(efi.tpm_final_log
-                                      ~~~~~~~~~~~~~~~~~
-          + sizeof(final_tbl->version)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          + sizeof(final_tbl->nr_events),
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/firmware/efi/tpm.c:19:43: note: expected 'void *' but argument is o=
-f type 'long unsigned int'
- static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
-                                     ~~~~~~^~~~
+And I think the dio code would ideally want to have a range-based lock
+anyway, rather than one global one. No?
 
-Introduced by commit
+Anyway, don't get me wrong. I'm not entirely against a "stop adding
+pages" model per-mapping if it's just fundamentally simpler and nobody
+wants anything fancier. So I'm certainly open to it, assuming it
+doesn't add any real overhead to the normal case.
 
-  a537b15c54a3 ("tpm: Reserve the TPM final events table")
+But I *am* against it when it has ad-hoc locking and random
+anti-recursion things.
 
---=20
-Cheers,
-Stephen Rothwell
+So I'm with Dave on the "I hope we can avoid the recursive hacks" by
+making better rules. Even if I disagree with him on the locking thing
+- I'd rather put _more_stress on the standard locking and make sure it
+really works, over having multiple similar locking models because they
+don't trust each other.
 
---Sig_/Fo4sukQFr7Es.fHMTnZiiX=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/M6cACgkQAVBC80lX
-0Gy7oAgAgHOWIaqHWtNFZSc9uxqpAoo1ih+uRWdRRGYVfCPRdh+JaBHJU2Rkf7Pu
-s/JD7G0l9Ca4hQEnowfkcF1fkcTEMV17NbSDvpvBzlSxH/Q14vrBlY0LiwRRP66p
-1sqW1Z7wEcSPoqyMaY1fSgVS2yqAVF4zAaNSg7ytxxErOvpU6n7FzSDcS4dV5LIc
-oXwbshV0nVGIq1peFAiuWYxvaBdn5ogaWq4iJXMWXO4s4lhAdSEqAkj70wETaIxI
-hd6W7Psp0EuXqoX3QwKr/y2UkKST13uYe4oj/eMTgsEklLxUu2pAGxxsklfA+9y+
-qLpNMgqrWKMZKWlBP49Aw3UFXdnvHg==
-=ofY6
------END PGP SIGNATURE-----
-
---Sig_/Fo4sukQFr7Es.fHMTnZiiX=--
+               Linus
