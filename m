@@ -2,99 +2,216 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAC3C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF4FC4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260B821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9192208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 11:34:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e87CA4x8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzo+X11G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389744AbfFKLe2 (ORCPT
+        id S2389797AbfFKLec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 07:34:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46584 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389558AbfFKLe1 (ORCPT
+        Tue, 11 Jun 2019 07:34:32 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35188 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389464AbfFKLe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 07:34:27 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 203so8651213oid.13;
-        Tue, 11 Jun 2019 04:34:27 -0700 (PDT)
+        Tue, 11 Jun 2019 07:34:28 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c6so2548935wml.0;
+        Tue, 11 Jun 2019 04:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x5rmiwyCLeKaoHJp17aHdkTJjyA6YPZC/WRbR5vMjpI=;
-        b=e87CA4x8A1PKtNjG2k6Scdr0xbId162DU6jQSXDhYLhWRm4Iqar9QhKyUwHijKDAPa
-         hAGpLYC2nBmYPzQAcLOtJJOitEd0IL/QiUD0/yZXIXdbg4X4hAAiMZdjjn8/dVPWZ2c8
-         3WvbMz8mdVQM0cj28sYVqPjUP0EdCA+AKQMV7PkL06zgSWyR5llbr0jmRou8JUuBrSto
-         gKGKS5UMF0Jaq/WT95feuerGdwNv+z5cDR1SHY7IO+2XKj0AoJ9VnhQZP/IQIankG28p
-         b9RmzdHEZAh3SjcEEmaO/murUhY7oYhyuMmT1eOUSBaqal/akF3K7HV9fBfhxuhrFw+X
-         l5bw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xR4/a7WNVnNdjKkXcp0HNzgqcmAgdkLcmZguQx5VvlQ=;
+        b=qzo+X11GrhC5BDiJLSpozKbqeKqNvhq2jKTCVZm083pNo2Ihhx93TCoxtntHPfevkg
+         4hM2iviNBsCIq+6zmcmcli980dNUme6a3mTf9NNKirMJEihwX6w+oopE4oFtk9V8VkOO
+         RQ5D2qgydIadpFJoq+1887jK2JDzIcTgAR9qdkrkpNlI2IlpR5R5N2M25ouXYL9Gykuz
+         bw2Do20eoNl0rlQo4aupvj+ASGXqJUzl+fUVFc1gSdun7W7jnaA2ZQow7ULhro/3Cji9
+         r27+F7/O47b0B4Sgbie+8wIrdt8cnZH923A7Z/hQXhbQtVfcBOjFyWsFzw/nnwrldiin
+         A/Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x5rmiwyCLeKaoHJp17aHdkTJjyA6YPZC/WRbR5vMjpI=;
-        b=KbL9f8vrvCAS5HSVnnMWicIDwL0TSJKTopDbVQr/9Y7LIrqUFjKbphDxvK/BaD+STQ
-         6KOs2+864D4A6Ki6dHFwY3uZw5cBv+QnPx+9DzCNdZntXiUc6lr/9NenLeqmx9UyUIGu
-         +cWgzeCaY/VkX0qMitWXHNspTwVCH7myob17EuQZynrCOUFUSHFxAYCvk1ZJL8AT/2IZ
-         ReOCZdI5rh4cO/mijCuWwPudVwx0KzTz3avE5Oz3FW3Y8NlaR1s3EnWcE4Gav1DDf7dZ
-         ZCOcPApK1zMGigyJbGFwSLyDqjZs3rNLHQtGMN+jIjZAyPEJbOMR9ZYihpQzizC6c0Yt
-         5ceg==
-X-Gm-Message-State: APjAAAXC6tye56qXqujLzfwU+QuOGL5N3aRjsat0ugK1R6RifTvEqqq1
-        1sw+A5WAcmWaFJzLj1zfVUD1TL3YZCBtd4oUZ9s=
-X-Google-Smtp-Source: APXvYqxti6kF49QbOqX5rYkaYjy9reVlZ+JZCnE9g2R9uYNvjXjUgNkqe5qb1ON4m0HKHX8Vy++ZkYYPCd0+zxB09I4=
-X-Received: by 2002:aca:544b:: with SMTP id i72mr15419354oib.174.1560252867275;
- Tue, 11 Jun 2019 04:34:27 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xR4/a7WNVnNdjKkXcp0HNzgqcmAgdkLcmZguQx5VvlQ=;
+        b=SE2EqR3LJfiLAa/UjnLre3PYOB+Iw09XPZwtcum2EQxYSOZngFsWLX9cXSLQ4L6xzk
+         M48efmZh7Wi0FDOGnU8G4XlWZpYKXMeyZXOWKd/NuHf+qFdW8rj8yieyVtL9B5DLrKl+
+         k+K9ij1SS9o6fTkl3dVDZVgZUF3PJcsaC4sc4Tsh6p1hoBStjjsBSUY/6bBX8YBo4DiX
+         IJbANx3iIMtBD7PkVm/G9wNmLwY894sjdVAauczybEFCQx+8LXQ50MvipqJzPCQrcSeD
+         fwzGnZMIxS9PhznUuUcT2yo+TvJafgvKelpweIC2zm5t9XIDXEJetlltoazXL4jO7Oxl
+         taPg==
+X-Gm-Message-State: APjAAAX9JmIK7MY0on7VxzVgb+hoJ6un0tRgvK/BC4iKj5lJZGJW+yGg
+        6hS6DvgA6ooeguvjsLPIZj0=
+X-Google-Smtp-Source: APXvYqzdFvEtmnkJFJOhgbFmhecGdB6F6cGpfC6vK5Qgf9dE5cH3VgDNQpTq9HloLsQfZPJX4J/4hA==
+X-Received: by 2002:a1c:a783:: with SMTP id q125mr18264200wme.94.1560252866238;
+        Tue, 11 Jun 2019 04:34:26 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id l1sm2795180wmg.13.2019.06.11.04.34.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 04:34:25 -0700 (PDT)
+Subject: Re: [PATCH V4 6/6] i2c: tegra: remove BUG, BUG_ON
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560186515-30797-1-git-send-email-bbiswas@nvidia.com>
+ <1560186515-30797-6-git-send-email-bbiswas@nvidia.com>
+ <06ab30b6-bf79-c628-0a04-d0307511a06f@gmail.com>
+ <851d7837-5b98-228e-d8c9-3c41be1fb2e0@nvidia.com>
+ <e733bcb0-ea8c-61d1-e6b5-cee8b7696c70@gmail.com>
+ <fe0a0cb2-73e3-8f5c-8115-f99c150bd5df@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d29804b9-d3be-9eb2-ba06-f4de2aad3764@gmail.com>
+Date:   Tue, 11 Jun 2019 14:34:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
- <1558418814-6822-2-git-send-email-wanpengli@tencent.com> <627e4189-3709-1fb2-a9bc-f1a577712fe0@redhat.com>
- <CANRm+CyqH5ojNTcX3zfVjB8rayGHAW0Ex+fiGPnrO7bkmvr_4w@mail.gmail.com> <b30067df-2929-9ce9-221f-0f1a84dd1228@redhat.com>
-In-Reply-To: <b30067df-2929-9ce9-221f-0f1a84dd1228@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 11 Jun 2019 19:35:11 +0800
-Message-ID: <CANRm+Cy+BVHeXjfSPhPz=n7_Qg8oQEC8DdcpCzEV5v4qYXgJGw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] KVM: X86: Provide a capability to disable cstate
- msr read intercepts
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fe0a0cb2-73e3-8f5c-8115-f99c150bd5df@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 at 19:09, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 11/06/19 09:38, Wanpeng Li wrote:
-> > MSR_CORE_C1_RES is unreadable except for ATOM platform, so I think we
-> > can avoid the complex logic to handle C1 now. :)
->
-> I disagree.  Linux uses it on all platforms is available, and virtual
-> machines that don't pass mwait through _only_ have C1, so it would be
-> less useful to have deep C-state residency MSRs and not C1 residency.
->
-> But turbostat can get the information from sysfs, so what are these MSRs
-> used for?
+11.06.2019 10:38, Bitan Biswas пишет:
+> 
+> 
+> On 6/10/19 2:00 PM, Dmitry Osipenko wrote:
+>> 10.06.2019 22:41, Bitan Biswas пишет:
+>>>
+>>>
+>>> On 6/10/19 11:12 AM, Dmitry Osipenko wrote:
+>>>> 10.06.2019 20:08, Bitan Biswas пишет:
+>>>>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+>>>>> as needed. Remove BUG() and make Rx and Tx case handling
+>>>>> similar.
+>>>>>
+>>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>>> ---
+>>>>>    drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
+>>>>>    1 file changed, 6 insertions(+), 5 deletions(-)
+>>>>
+>>>> Looks that this is still not correct. What if it transfer-complete flag
+>>>> is set and buffer is full on RX? In this case the transfer will succeed
+>>>> while it was a failure.
+>>>>
+>>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
+>>>>> b/drivers/i2c/busses/i2c-tegra.c
+>>>>> index 4dfb4c1..30619d6 100644
+>>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>>> @@ -515,7 +515,6 @@ static int tegra_i2c_empty_rx_fifo(struct
+>>>>> tegra_i2c_dev *i2c_dev)
+>>>>>         * prevent overwriting past the end of buf
+>>>>>         */
+>>>>>        if (rx_fifo_avail > 0 && buf_remaining > 0) {
+>>>>> -        BUG_ON(buf_remaining > 3);
+>>>>
+>>>> Actually error should be returned here since out-of-bounds memory
+>>>> accesses must be avoided, hence:
+>>>>
+>>>>      if (WARN_ON_ONCE(buf_remaining > 3))
+>>>>          return -EINVAL;
+>>> buf_remaining will be less than equal to 3 because of the expression
+>>> earlier
+>>> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-tegra.c#L520
+>>>
+>>>
+>>
+>> Ah yes, indeed!
+>>
+> I see that I am wrong and buf_remaining > 3 needs to be prevented at
+> 
+> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-tegra.c#L528
+> 
+> 
+> because of word_to_transfer is limited to rx_fifo_avail:
+> 
+> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-tegra.c#L515
+> 
+> 
+> I shall add the check for less than 3 in both RX and TX cases in a
+> separate patch in this series.
 
-The sysfs is not accurate, the time which is accumulated in the
-function cpuidle_enter_state() is the expected cstate we hope to enter
-instead of the real cstate we finally enter. For example, we found
-several SKX/CLX models can't enter deeper cstates in non-root mode,
-Intel hardware team has been working on this according to our report
-recently. The bare-metal cstate residency msrs don't increase in
-non-root mode, however, the time under
-/sys/devices/system/cpu/cpux/cpuidle/statex/ increase gradually in the
-guest.
+When word_to_transfer is more than rx_fifo_avail, then the rx_fifo_avail
+becomes zero and hence the nibbles won't be copied. Please take a closer
+look, the current code is correct, but the buf_remaining > 3 is unneeded
+because it can't ever happen.
 
-Regards,
-Wanpeng Li
+The code is structured the way that it's difficult to follow, apparently
+the person who added the BUG_ON check in the first place couldn't follow
+it either. Maybe it's worth to invest some more effort into refactoring
+at least that part of the code. At minimum a clarifying comments would
+be helpful.
+
+[snip]
+
+>>>> Then here:
+>>>>
+>>>>      if (WARN_ON_ONCE(!i2c_dev->msg_buf_remaining) ||
+>>>>          tegra_i2c_empty_rx_fifo(i2c_dev)) {
+>>>>          i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
+>>>>          goto err;
+>>>>      }
+>>>>
+>>> Can you please elaborate why the condition needs to be as follows
+>>> instead of " if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) " ?
+>>>
+>>>>       if (WARN_ON_ONCE(!i2c_dev->msg_buf_remaining) ||
+>>>>           tegra_i2c_empty_rx_fifo(i2c_dev)) {
+>>
+>> Because this is a "receive" transfer and hence it is a error condition
+>> if the data-message was already fully received and then there is another
+>> request from hardware to receive more data. So
+>> "!i2c_dev->msg_buf_remaining" is the error condition here because there
+>> is no more space in the buffer.
+>>
+>> Looking at this again, seems checking for "if
+>> (WARN_ON_ONCE(rx_fifo_avail))" in the above hunk [1] will be already
+>> enough since a not fully drained RX FIFO means that there is no enough
+>> space in the buffer. Then it could be:
+>>
+>>          if (tegra_i2c_empty_rx_fifo(i2c_dev)) {
+>>                  i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
+>>                  goto err;
+>>     }
+>>
+> In the case "if (status & I2C_INT_PACKET_XFER_COMPLETE) {" , we do not
+> have any tegra_i2c_empty_rx_fifo call today. In this current driver I do
+> not see any code that checks for the buffer space and prevents RX FIFO
+> from being drained. The transfer complete when seen must have already
+> consumed all bytes of msg_buf_remaining in the call at the line
+> 
+> https://elixir.bootlin.com/linux/v5.2-rc4/source/drivers/i2c/busses/i2c-tegra.c#L860
+> 
+> 
+> So we can put the "WARN_ON_ONCE(i2c_dev->msg_buf_remaining) with msg_err
+> assignment and goto err" to confirm if some corner case is not handled.
+> 
+> Planning to share updated patch.
+
+There are two possible error conditions:
+
+1) Underflow: the XFER_COMPLETE happens before message is fully sent.
+
+2) Overflow: message is fully sent, but there is no XFER_COMPLETE and
+then hardware asks to transfer more.
+
+We are addressing the second case here, while you seems are confusing it
+with the first case.
