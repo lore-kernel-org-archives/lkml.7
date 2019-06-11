@@ -2,167 +2,103 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E521C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946B3C4321B
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9E920820
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509D8214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xr/OkVp9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VlJzJMTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403800AbfFKEuO (ORCPT
+        id S2391110AbfFKEw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 00:50:14 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46456 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389620AbfFKEuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 00:50:14 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B4hbtt159138;
-        Tue, 11 Jun 2019 04:49:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=w6B62XWgEySnIWZsve79cF+lTRasJpmyyQueK4g93UE=;
- b=xr/OkVp95W9CZa1qjVKbtngLN9J+a0uZavn2r3ArsGbLa3Idt+XiHAevESEnFd2Muawd
- IDeKByu9gQWLom5QvFu9SB6aGdiFJoCp0tz7vKlzNewkahhwnjXvO0YFc7SwTBUu/TXr
- 1JAzKRa/DZxlP4ZZpnIqV/L0X1JujwSoecEOGG343C3b9FaK4zuy1R0cRIGXh59pnwVC
- rgO1+qT0i60g5fCtoX0xlqOK/qTFrDgQsRkvoiZce/aNAuX3Lrp5ll2wDFoSsEQSMY+0
- xO05b6rP2HVkV4MLCu2gbQsaloZCyjVElf52i0un57IO4AUWcCHG2FJLiCzCFi61Ne0u iQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t04etjm38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 04:49:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5B4jGrX167613;
-        Tue, 11 Jun 2019 04:47:06 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 2t024u6kpg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Jun 2019 04:47:06 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5B4l5Gj171026;
-        Tue, 11 Jun 2019 04:47:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2t024u6kpc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 04:47:05 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5B4l4Q5023284;
-        Tue, 11 Jun 2019 04:47:04 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Jun 2019 21:47:04 -0700
-Subject: [PATCH 6/6] xfs: clean up xfs_merge_ioc_xflags
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        darrick.wong@oracle.com, ard.biesheuvel@linaro.org,
-        josef@toxicpanda.com, clm@fb.com, adilger.kernel@dilger.ca,
-        viro@zeniv.linux.org.uk, jack@suse.com, dsterba@suse.com,
-        jaegeuk@kernel.org, jk@ozlabs.org
-Cc:     reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Date:   Mon, 10 Jun 2019 21:47:01 -0700
-Message-ID: <156022842153.3227213.3285668171167534801.stgit@magnolia>
-In-Reply-To: <156022836912.3227213.13598042497272336695.stgit@magnolia>
-References: <156022836912.3227213.13598042497272336695.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 11 Jun 2019 00:52:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:52693 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390229AbfFKEw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 00:52:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NHgX4x3Zz9s4Y;
+        Tue, 11 Jun 2019 14:52:56 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560228777;
+        bh=NxT9Po6P2dh2KWTTjv4NqvZafUGmR2kz7Eh+QY6FbBw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VlJzJMTCb7+aqgBP+MEO4f4M6uvIjxlThlBQ5S7a8JMIeTHmDE4PqkX8qmKw1deTM
+         JDka1R02UVIk9aqaF3DTVXeG7q05su3WqphFlBKyQ9q7tOfeEVy3tGckwGH34duKMX
+         KI5Lhlap+qvYiOlOI4iKmB42XmvDvToneZ5reGOVfJR0uH5V7sS8qJ4KVJD1hMFTUP
+         PFurD+kRKWc+QKE1Q4vLv40mByC7cH4h3tVqBBCxU7XBqmpU+pr2f/kN6rkwF8GSIz
+         mgYJmjmDiBsW30wKWpSP1eMg4Dk9gxNpIHIFQ1uVRk6ftvTfZ4RlUoDfSNB0zUdk/M
+         0s+qzPj4OZiLQ==
+Date:   Tue, 11 Jun 2019 14:52:55 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>
+Subject: linux-next: build warning after merge of the tpmdd tree
+Message-ID: <20190611145255.68682629@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9284 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=605 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906110033
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Fo4sukQFr7Es.fHMTnZiiX="; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+--Sig_/Fo4sukQFr7Es.fHMTnZiiX=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Clean up the calling convention since we're editing the fsxattr struct
-anyway.
+Hi all,
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/xfs_ioctl.c |   32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+After merging the tpmdd tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
+drivers/firmware/efi/tpm.c: In function 'efi_tpm_eventlog_init':
+drivers/firmware/efi/tpm.c:80:10: warning: passing argument 1 of 'tpm2_calc=
+_event_log_size' makes pointer from integer without a cast [-Wint-conversio=
+n]
+  tbl_size =3D tpm2_calc_event_log_size(efi.tpm_final_log
+                                      ~~~~~~~~~~~~~~~~~
+          + sizeof(final_tbl->version)
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          + sizeof(final_tbl->nr_events),
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/firmware/efi/tpm.c:19:43: note: expected 'void *' but argument is o=
+f type 'long unsigned int'
+ static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
+                                     ~~~~~~^~~~
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 7b19ba2956ad..a67bc9afdd0b 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -829,35 +829,31 @@ xfs_ioc_ag_geometry(
-  * Linux extended inode flags interface.
-  */
- 
--STATIC unsigned int
-+static inline void
- xfs_merge_ioc_xflags(
--	unsigned int	flags,
--	unsigned int	start)
-+	struct fsxattr	*fa,
-+	unsigned int	flags)
- {
--	unsigned int	xflags = start;
--
- 	if (flags & FS_IMMUTABLE_FL)
--		xflags |= FS_XFLAG_IMMUTABLE;
-+		fa->fsx_xflags |= FS_XFLAG_IMMUTABLE;
- 	else
--		xflags &= ~FS_XFLAG_IMMUTABLE;
-+		fa->fsx_xflags &= ~FS_XFLAG_IMMUTABLE;
- 	if (flags & FS_APPEND_FL)
--		xflags |= FS_XFLAG_APPEND;
-+		fa->fsx_xflags |= FS_XFLAG_APPEND;
- 	else
--		xflags &= ~FS_XFLAG_APPEND;
-+		fa->fsx_xflags &= ~FS_XFLAG_APPEND;
- 	if (flags & FS_SYNC_FL)
--		xflags |= FS_XFLAG_SYNC;
-+		fa->fsx_xflags |= FS_XFLAG_SYNC;
- 	else
--		xflags &= ~FS_XFLAG_SYNC;
-+		fa->fsx_xflags &= ~FS_XFLAG_SYNC;
- 	if (flags & FS_NOATIME_FL)
--		xflags |= FS_XFLAG_NOATIME;
-+		fa->fsx_xflags |= FS_XFLAG_NOATIME;
- 	else
--		xflags &= ~FS_XFLAG_NOATIME;
-+		fa->fsx_xflags &= ~FS_XFLAG_NOATIME;
- 	if (flags & FS_NODUMP_FL)
--		xflags |= FS_XFLAG_NODUMP;
-+		fa->fsx_xflags |= FS_XFLAG_NODUMP;
- 	else
--		xflags &= ~FS_XFLAG_NODUMP;
--
--	return xflags;
-+		fa->fsx_xflags &= ~FS_XFLAG_NODUMP;
- }
- 
- STATIC unsigned int
-@@ -1504,7 +1500,7 @@ xfs_ioc_setxflags(
- 		return -EOPNOTSUPP;
- 
- 	__xfs_ioc_fsgetxattr(ip, false, &fa);
--	fa.fsx_xflags = xfs_merge_ioc_xflags(flags, fa.fsx_xflags);
-+	xfs_merge_ioc_xflags(&fa, flags);
- 
- 	error = mnt_want_write_file(filp);
- 	if (error)
+Introduced by commit
 
+  a537b15c54a3 ("tpm: Reserve the TPM final events table")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Fo4sukQFr7Es.fHMTnZiiX=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/M6cACgkQAVBC80lX
+0Gy7oAgAgHOWIaqHWtNFZSc9uxqpAoo1ih+uRWdRRGYVfCPRdh+JaBHJU2Rkf7Pu
+s/JD7G0l9Ca4hQEnowfkcF1fkcTEMV17NbSDvpvBzlSxH/Q14vrBlY0LiwRRP66p
+1sqW1Z7wEcSPoqyMaY1fSgVS2yqAVF4zAaNSg7ytxxErOvpU6n7FzSDcS4dV5LIc
+oXwbshV0nVGIq1peFAiuWYxvaBdn5ogaWq4iJXMWXO4s4lhAdSEqAkj70wETaIxI
+hd6W7Psp0EuXqoX3QwKr/y2UkKST13uYe4oj/eMTgsEklLxUu2pAGxxsklfA+9y+
+qLpNMgqrWKMZKWlBP49Aw3UFXdnvHg==
+=ofY6
+-----END PGP SIGNATURE-----
+
+--Sig_/Fo4sukQFr7Es.fHMTnZiiX=--
