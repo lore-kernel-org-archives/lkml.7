@@ -2,83 +2,125 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F76C43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872C7C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C691E206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BBC206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 01:28:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Smur2bTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390504AbfFKBYs (ORCPT
+        id S2390558AbfFKB2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 21:24:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48562 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388845AbfFKBYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 21:24:48 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 53BC6ABED0F103BEE140;
-        Tue, 11 Jun 2019 09:24:45 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 11 Jun 2019 09:24:34 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <willemdebruijn.kernel@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH -next v2] packet: remove unused variable 'status' in __packet_lookup_frame_in_block
-Date:   Tue, 11 Jun 2019 09:32:13 +0800
-Message-ID: <20190611013213.142745-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <CAF=yD-+g1bSGOubFUE8veZNvGiPy1oYsf+dFDd=hqXYD+k4g_Q@mail.gmail.com>
-References: <CAF=yD-+g1bSGOubFUE8veZNvGiPy1oYsf+dFDd=hqXYD+k4g_Q@mail.gmail.com>
+        Mon, 10 Jun 2019 21:28:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43677 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388845AbfFKB2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 21:28:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45NC7R2qylz9sBp;
+        Tue, 11 Jun 2019 11:28:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560216499;
+        bh=fa85krKLmtX9pSn2zzY2yce4JRXwulxnG6YN9Bj9k78=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Smur2bTHdyBtZD3YQsIZJz8YKfdu6d/mT7lvkdkL1OO0Iu+vJ0lGn3ZhEpalLFXtw
+         lL5MloqkXytp7uE3pCuNtup4tTdQSoJXPh5S+m83z4JY/qf8jY8X9RG4PpSIA2i93M
+         JUchFaijoAbPkUYVQX+HTJ8XAgembCEjnqDiVmg9WNuiq/70wgAkktz93E3TxYIYRm
+         Bb31KpOXARojwF7ITN7LTRuajGuAHw3MstDxlmL7zUfIeu3/MHRYlao07Dg+dafkfO
+         HVVyFhLfBIk6f1Oa1JIHjwpsG0H0qwiEfbKYbYB2O6H9H/cYvM1IQNfAQczIdQBciq
+         iyJHaZezCx/ng==
+Date:   Tue, 11 Jun 2019 11:28:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Edward Srouji <edwards@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Vu Pham <vuhuong@mellanox.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20190611112816.01562368@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/4SGn3oMy8KB80YP_bK18Pi1"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable 'status' in  __packet_lookup_frame_in_block() is never used since
-introduction in commit f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer
-implementation."), we can remove it.
+--Sig_/4SGn3oMy8KB80YP_bK18Pi1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- v2: don't change parameter from 0 to TP_STATUS_KERNEL when calls 
- prb_retire_current_block(). 
----
- net/packet/af_packet.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hi all,
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index a29d66da7394..7fa847dcea30 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1003,7 +1003,6 @@ static void prb_fill_curr_block(char *curr,
- /* Assumes caller has the sk->rx_queue.lock */
- static void *__packet_lookup_frame_in_block(struct packet_sock *po,
- 					    struct sk_buff *skb,
--						int status,
- 					    unsigned int len
- 					    )
- {
-@@ -1075,7 +1074,7 @@ static void *packet_current_rx_frame(struct packet_sock *po,
- 					po->rx_ring.head, status);
- 		return curr;
- 	case TPACKET_V3:
--		return __packet_lookup_frame_in_block(po, skb, status, len);
-+		return __packet_lookup_frame_in_block(po, skb, len);
- 	default:
- 		WARN(1, "TPACKET version not supported\n");
- 		BUG();
--- 
-2.20.1
+Today's linux-next merge of the net-next tree got a conflict in:
 
+  drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+
+between commit:
+
+  6a6fabbfa3e8 ("net/mlx5: Update pci error handler entries and command tra=
+nslation")
+
+from the net tree and commit:
+
+  cd56f929e6a5 ("net/mlx5: E-Switch, Replace host_params event with functio=
+ns_changed event")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+index e94686c42000,30f7dffb5b1b..000000000000
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@@ -632,11 -628,7 +632,11 @@@ const char *mlx5_command_str(int comman
+  	MLX5_COMMAND_STR_CASE(QUERY_MODIFY_HEADER_CONTEXT);
+  	MLX5_COMMAND_STR_CASE(ALLOC_MEMIC);
+  	MLX5_COMMAND_STR_CASE(DEALLOC_MEMIC);
+- 	MLX5_COMMAND_STR_CASE(QUERY_HOST_PARAMS);
++ 	MLX5_COMMAND_STR_CASE(QUERY_ESW_FUNCTIONS);
+ +	MLX5_COMMAND_STR_CASE(CREATE_UCTX);
+ +	MLX5_COMMAND_STR_CASE(DESTROY_UCTX);
+ +	MLX5_COMMAND_STR_CASE(CREATE_UMEM);
+ +	MLX5_COMMAND_STR_CASE(DESTROY_UMEM);
+  	default: return "unknown command opcode";
+  	}
+  }
+
+--Sig_/4SGn3oMy8KB80YP_bK18Pi1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/A7AACgkQAVBC80lX
+0GzMugf/W+RmBBvyZFmk1Hjq8KtSmsS7RQKc6BzuruTc8BCz45+JFgUGp2B7/ZYJ
+UYgoZjTtbGcIsFB34eP3DqWh+/XW9lyqbk0Msf1tc+sUIDKg1+aQuw80CESbwL2E
+dRM8oUr2At1L3nBwSXX8kaVEs5a6Ag3YQKrrk4j8XpZGlbqiFUYiw5e/PvkVaeIH
+HVXqodkZejoZkbXR6cREeuWbPiZkyMGEcrjjhRnmOXAZwlJRAYNKLiemOveD6Xpy
+4RaaK7yuP/ovQ1ZQ13yvRN3yQ6dfChityUAGXbRFJg3grqCnT3ndLKLy7c5EaUnT
+/ERXTD5ogHHGHsnXiKPFef4FtjTEVw==
+=Wuwh
+-----END PGP SIGNATURE-----
+
+--Sig_/4SGn3oMy8KB80YP_bK18Pi1--
