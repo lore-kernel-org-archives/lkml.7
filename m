@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B62C4321D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296C1C4360E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AF020896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01BAD2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 14:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TNWLYOuK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QjUN4GXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391694AbfFKOl6 (ORCPT
+        id S2391665AbfFKOlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 10:41:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37734 "EHLO
+        Tue, 11 Jun 2019 10:41:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37662 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391662AbfFKOlx (ORCPT
+        with ESMTP id S2391528AbfFKOls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 10:41:53 -0400
+        Tue, 11 Jun 2019 10:41:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Di5x9I+PmFbp3wQMXLFAFlDyJOmNB4FZD0AGEZH9ycM=; b=TNWLYOuKb4VsBbWmGlVRczEKVd
-        Oc8fAb9Laqz/d2m6dxerNyqhqKK6NDR64Vp7M3aMej2vN/b1FX9x89y0D9h9xCZHG0FU5RlFKW5FX
-        o3sy6OMgatLwY8+ZFFoZWJCOQRNVTwcefC7wxvZpmZ8AAAD1p+yl+dvVlwK5t3LmSL93sboYQjHop
-        yZEAtlogrNrNYIQMRMEoPJza/+5vuExm681yLDlnq9mVjJuzZ0oII1MMnX458Rr76GSWalTonkUOd
-        3vbwVHdH6xvEuyni2brMTM/Ge49rp2TozJmoAsinSWEfz1zu/tAoJLbg1gpZZeGan87BQ88Zd/lq5
-        BfVIU2uA==;
+        bh=CCBHIDdzGw8dGT9zTCEQtOYrgJc8ZgxZZtlN4zHEVIg=; b=QjUN4GXs9WS8NwKVyrN/1jfeyT
+        3JfuLGB1+nUhhITWtvXF8SBH4lyEcYO6uDwD65K79Me0wivesJlXkrfs5T57LWLMU9iQm4xFHLbVd
+        N1rJtvtrWFaqA+CTkEy00BvVIAGlu+kLv0CNclptcLbddV9z0NDcgkg5NODv0TTOG+2ZSGfbseBqD
+        XeLA7vHyIKnjNaCfUK495QHfnc9SPjvCMgdXYkHxwHnY3IlPaN33oaWheojAID9VApvkf5DXalh/8
+        J73XphRdNfXhsay33ktGM9xVYkdyXj+dMzrQXtknZ+uo5PNXfc1+eULr8rnEjLy2wv4OiIhJaysG8
+        l64kLMew==;
 Received: from mpp-cp1-natpool-1-037.ethz.ch ([82.130.71.37] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hahxz-0005ST-Hi; Tue, 11 Jun 2019 14:41:40 +0000
+        id 1hahxu-0005Rg-3u; Tue, 11 Jun 2019 14:41:34 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -54,9 +54,9 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>,
         linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
         sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/16] mm: consolidate the get_user_pages* implementations
-Date:   Tue, 11 Jun 2019 16:40:57 +0200
-Message-Id: <20190611144102.8848-12-hch@lst.de>
+Subject: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
+Date:   Tue, 11 Jun 2019 16:40:55 +0200
+Message-Id: <20190611144102.8848-10-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190611144102.8848-1-hch@lst.de>
 References: <20190611144102.8848-1-hch@lst.de>
@@ -68,791 +68,418 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Always build mm/gup.c, and move the nommu versions and replace the
-separate stubs for various functions by the default ones, with the _fast
-version always falling back to the slow path because gup_fast_permitted
-always returns false now if HAVE_FAST_GUP is not set, and we use the
-nommu version of __get_user_pages while keeping all the wrappers common.
-
-This also ensures the new put_user_pages* helpers are available for
-nommu, as those are currently missing, which would create a problem as
-soon as we actually grew users for it.
+The sparc64 code is mostly equivalent to the generic one, minus various
+bugfixes and two arch overrides that this patch adds to pgtable.h.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- mm/Kconfig  |   1 +
- mm/Makefile |   4 +-
- mm/gup.c    | 476 +++++++++++++++++++++++++++++-----------------------
- mm/nommu.c  |  88 ----------
- mm/util.c   |  47 ------
- 5 files changed, 269 insertions(+), 347 deletions(-)
+ arch/sparc/Kconfig                  |   1 +
+ arch/sparc/include/asm/pgtable_64.h |  18 ++
+ arch/sparc/mm/Makefile              |   2 +-
+ arch/sparc/mm/gup.c                 | 340 ----------------------------
+ 4 files changed, 20 insertions(+), 341 deletions(-)
+ delete mode 100644 arch/sparc/mm/gup.c
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 98dffb0f2447..5c41409557da 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -133,6 +133,7 @@ config HAVE_MEMBLOCK_PHYS_MAP
- 	bool
- 
- config HAVE_FAST_GUP
-+	depends on MMU
- 	bool
- 
- config ARCH_KEEP_MEMBLOCK
-diff --git a/mm/Makefile b/mm/Makefile
-index ac5e5ba78874..dc0746ca1109 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -22,7 +22,7 @@ KCOV_INSTRUMENT_mmzone.o := n
- KCOV_INSTRUMENT_vmstat.o := n
- 
- mmu-y			:= nommu.o
--mmu-$(CONFIG_MMU)	:= gup.o highmem.o memory.o mincore.o \
-+mmu-$(CONFIG_MMU)	:= highmem.o memory.o mincore.o \
- 			   mlock.o mmap.o mmu_gather.o mprotect.o mremap.o \
- 			   msync.o page_vma_mapped.o pagewalk.o \
- 			   pgtable-generic.o rmap.o vmalloc.o
-@@ -39,7 +39,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
- 			   mm_init.o mmu_context.o percpu.o slab_common.o \
- 			   compaction.o vmacache.o \
- 			   interval_tree.o list_lru.o workingset.o \
--			   debug.o $(mmu-y)
-+			   debug.o gup.o $(mmu-y)
- 
- # Give 'page_alloc' its own module-parameter namespace
- page-alloc-y := page_alloc.o
-diff --git a/mm/gup.c b/mm/gup.c
-index 7328890ad8d3..fe4f205651fd 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -134,6 +134,7 @@ void put_user_pages(struct page **pages, unsigned long npages)
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 26ab6f5bbaaf..22435471f942 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -28,6 +28,7 @@ config SPARC
+ 	select RTC_DRV_M48T59
+ 	select RTC_SYSTOHC
+ 	select HAVE_ARCH_JUMP_LABEL if SPARC64
++	select HAVE_GENERIC_GUP if SPARC64
+ 	select GENERIC_IRQ_SHOW
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select GENERIC_PCI_IOMAP
+diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
+index 1904782dcd39..547ff96fb228 100644
+--- a/arch/sparc/include/asm/pgtable_64.h
++++ b/arch/sparc/include/asm/pgtable_64.h
+@@ -1098,6 +1098,24 @@ static inline unsigned long untagged_addr(unsigned long start)
  }
- EXPORT_SYMBOL(put_user_pages);
+ #define untagged_addr untagged_addr
  
-+#ifdef CONFIG_MMU
- static struct page *no_page_table(struct vm_area_struct *vma,
- 		unsigned int flags)
- {
-@@ -1100,86 +1101,6 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
- 	return pages_done;
- }
- 
--/*
-- * We can leverage the VM_FAULT_RETRY functionality in the page fault
-- * paths better by using either get_user_pages_locked() or
-- * get_user_pages_unlocked().
-- *
-- * get_user_pages_locked() is suitable to replace the form:
-- *
-- *      down_read(&mm->mmap_sem);
-- *      do_something()
-- *      get_user_pages(tsk, mm, ..., pages, NULL);
-- *      up_read(&mm->mmap_sem);
-- *
-- *  to:
-- *
-- *      int locked = 1;
-- *      down_read(&mm->mmap_sem);
-- *      do_something()
-- *      get_user_pages_locked(tsk, mm, ..., pages, &locked);
-- *      if (locked)
-- *          up_read(&mm->mmap_sem);
-- */
--long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
--			   unsigned int gup_flags, struct page **pages,
--			   int *locked)
--{
--	/*
--	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
--	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
--	 * vmas.  As there are no users of this flag in this call we simply
--	 * disallow this option for now.
--	 */
--	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
--		return -EINVAL;
--
--	return __get_user_pages_locked(current, current->mm, start, nr_pages,
--				       pages, NULL, locked,
--				       gup_flags | FOLL_TOUCH);
--}
--EXPORT_SYMBOL(get_user_pages_locked);
--
--/*
-- * get_user_pages_unlocked() is suitable to replace the form:
-- *
-- *      down_read(&mm->mmap_sem);
-- *      get_user_pages(tsk, mm, ..., pages, NULL);
-- *      up_read(&mm->mmap_sem);
-- *
-- *  with:
-- *
-- *      get_user_pages_unlocked(tsk, mm, ..., pages);
-- *
-- * It is functionally equivalent to get_user_pages_fast so
-- * get_user_pages_fast should be used instead if specific gup_flags
-- * (e.g. FOLL_FORCE) are not required.
-- */
--long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
--			     struct page **pages, unsigned int gup_flags)
--{
--	struct mm_struct *mm = current->mm;
--	int locked = 1;
--	long ret;
--
--	/*
--	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
--	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
--	 * vmas.  As there are no users of this flag in this call we simply
--	 * disallow this option for now.
--	 */
--	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
--		return -EINVAL;
--
--	down_read(&mm->mmap_sem);
--	ret = __get_user_pages_locked(current, mm, start, nr_pages, pages, NULL,
--				      &locked, gup_flags | FOLL_TOUCH);
--	if (locked)
--		up_read(&mm->mmap_sem);
--	return ret;
--}
--EXPORT_SYMBOL(get_user_pages_unlocked);
--
- /*
-  * get_user_pages_remote() - pin user pages in memory
-  * @tsk:	the task_struct to use for page fault accounting, or
-@@ -1256,6 +1177,199 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
- }
- EXPORT_SYMBOL(get_user_pages_remote);
- 
-+/**
-+ * populate_vma_page_range() -  populate a range of pages in the vma.
-+ * @vma:   target vma
-+ * @start: start address
-+ * @end:   end address
-+ * @nonblocking:
-+ *
-+ * This takes care of mlocking the pages too if VM_LOCKED is set.
-+ *
-+ * return 0 on success, negative error code on error.
-+ *
-+ * vma->vm_mm->mmap_sem must be held.
-+ *
-+ * If @nonblocking is NULL, it may be held for read or write and will
-+ * be unperturbed.
-+ *
-+ * If @nonblocking is non-NULL, it must held for read only and may be
-+ * released.  If it's released, *@nonblocking will be set to 0.
-+ */
-+long populate_vma_page_range(struct vm_area_struct *vma,
-+		unsigned long start, unsigned long end, int *nonblocking)
++static inline bool pte_access_permitted(pte_t pte, bool write)
 +{
-+	struct mm_struct *mm = vma->vm_mm;
-+	unsigned long nr_pages = (end - start) / PAGE_SIZE;
-+	int gup_flags;
++	u64 prot;
 +
-+	VM_BUG_ON(start & ~PAGE_MASK);
-+	VM_BUG_ON(end   & ~PAGE_MASK);
-+	VM_BUG_ON_VMA(start < vma->vm_start, vma);
-+	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
-+	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-+
-+	gup_flags = FOLL_TOUCH | FOLL_POPULATE | FOLL_MLOCK;
-+	if (vma->vm_flags & VM_LOCKONFAULT)
-+		gup_flags &= ~FOLL_POPULATE;
-+	/*
-+	 * We want to touch writable mappings with a write fault in order
-+	 * to break COW, except for shared mappings because these don't COW
-+	 * and we would not want to dirty them for nothing.
-+	 */
-+	if ((vma->vm_flags & (VM_WRITE | VM_SHARED)) == VM_WRITE)
-+		gup_flags |= FOLL_WRITE;
-+
-+	/*
-+	 * We want mlock to succeed for regions that have any permissions
-+	 * other than PROT_NONE.
-+	 */
-+	if (vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC))
-+		gup_flags |= FOLL_FORCE;
-+
-+	/*
-+	 * We made sure addr is within a VMA, so the following will
-+	 * not result in a stack expansion that recurses back here.
-+	 */
-+	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
-+				NULL, NULL, nonblocking);
-+}
-+
-+/*
-+ * __mm_populate - populate and/or mlock pages within a range of address space.
-+ *
-+ * This is used to implement mlock() and the MAP_POPULATE / MAP_LOCKED mmap
-+ * flags. VMAs must be already marked with the desired vm_flags, and
-+ * mmap_sem must not be held.
-+ */
-+int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
-+{
-+	struct mm_struct *mm = current->mm;
-+	unsigned long end, nstart, nend;
-+	struct vm_area_struct *vma = NULL;
-+	int locked = 0;
-+	long ret = 0;
-+
-+	end = start + len;
-+
-+	for (nstart = start; nstart < end; nstart = nend) {
-+		/*
-+		 * We want to fault in pages for [nstart; end) address range.
-+		 * Find first corresponding VMA.
-+		 */
-+		if (!locked) {
-+			locked = 1;
-+			down_read(&mm->mmap_sem);
-+			vma = find_vma(mm, nstart);
-+		} else if (nstart >= vma->vm_end)
-+			vma = vma->vm_next;
-+		if (!vma || vma->vm_start >= end)
-+			break;
-+		/*
-+		 * Set [nstart; nend) to intersection of desired address
-+		 * range with the first VMA. Also, skip undesirable VMA types.
-+		 */
-+		nend = min(end, vma->vm_end);
-+		if (vma->vm_flags & (VM_IO | VM_PFNMAP))
-+			continue;
-+		if (nstart < vma->vm_start)
-+			nstart = vma->vm_start;
-+		/*
-+		 * Now fault in a range of pages. populate_vma_page_range()
-+		 * double checks the vma flags, so that it won't mlock pages
-+		 * if the vma was already munlocked.
-+		 */
-+		ret = populate_vma_page_range(vma, nstart, nend, &locked);
-+		if (ret < 0) {
-+			if (ignore_errors) {
-+				ret = 0;
-+				continue;	/* continue at next VMA */
-+			}
-+			break;
-+		}
-+		nend = nstart + ret * PAGE_SIZE;
-+		ret = 0;
-+	}
-+	if (locked)
-+		up_read(&mm->mmap_sem);
-+	return ret;	/* 0 or negative error code */
-+}
-+
-+/**
-+ * get_dump_page() - pin user page in memory while writing it to core dump
-+ * @addr: user address
-+ *
-+ * Returns struct page pointer of user page pinned for dump,
-+ * to be freed afterwards by put_page().
-+ *
-+ * Returns NULL on any kind of failure - a hole must then be inserted into
-+ * the corefile, to preserve alignment with its headers; and also returns
-+ * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
-+ * allowing a hole to be left in the corefile to save diskspace.
-+ *
-+ * Called without mmap_sem, but after all other threads have been killed.
-+ */
-+#ifdef CONFIG_ELF_CORE
-+struct page *get_dump_page(unsigned long addr)
-+{
-+	struct vm_area_struct *vma;
-+	struct page *page;
-+
-+	if (__get_user_pages(current, current->mm, addr, 1,
-+			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
-+			     NULL) < 1)
-+		return NULL;
-+	flush_cache_page(vma, addr, page_to_pfn(page));
-+	return page;
-+}
-+#endif /* CONFIG_ELF_CORE */
-+
-+#else /* CONFIG_MMU */
-+static long __get_user_pages_locked(struct task_struct *tsk,
-+		struct mm_struct *mm, unsigned long start,
-+		unsigned long nr_pages, struct page **pages,
-+		struct vm_area_struct **vmas, int *locked,
-+		unsigned int foll_flags)
-+{
-+	struct vm_area_struct *vma;
-+	unsigned long vm_flags;
-+	int i;
-+
-+	/* calculate required read or write permissions.
-+	 * If FOLL_FORCE is set, we only require the "MAY" flags.
-+	 */
-+	vm_flags  = (foll_flags & FOLL_WRITE) ?
-+			(VM_WRITE | VM_MAYWRITE) : (VM_READ | VM_MAYREAD);
-+	vm_flags &= (foll_flags & FOLL_FORCE) ?
-+			(VM_MAYREAD | VM_MAYWRITE) : (VM_READ | VM_WRITE);
-+
-+	for (i = 0; i < nr_pages; i++) {
-+		vma = find_vma(mm, start);
-+		if (!vma)
-+			goto finish_or_fault;
-+
-+		/* protect what we can, including chardevs */
-+		if ((vma->vm_flags & (VM_IO | VM_PFNMAP)) ||
-+		    !(vm_flags & vma->vm_flags))
-+			goto finish_or_fault;
-+
-+		if (pages) {
-+			pages[i] = virt_to_page(start);
-+			if (pages[i])
-+				get_page(pages[i]);
-+		}
-+		if (vmas)
-+			vmas[i] = vma;
-+		start = (start + PAGE_SIZE) & PAGE_MASK;
++	if (tlb_type == hypervisor) {
++		prot = _PAGE_PRESENT_4V | _PAGE_P_4V;
++		if (write)
++			prot |= _PAGE_WRITE_4V;
++	} else {
++		prot = _PAGE_PRESENT_4U | _PAGE_P_4U;
++		if (write)
++			prot |= _PAGE_WRITE_4U;
 +	}
 +
-+	return i;
-+
-+finish_or_fault:
-+	return i ? : -EFAULT;
++	return (pte_val(pte) & (prot | _PAGE_SPECIAL)) == prot;
 +}
-+#endif /* !CONFIG_MMU */
++#define pte_access_permitted pte_access_permitted
 +
- #if defined(CONFIG_FS_DAX) || defined (CONFIG_CMA)
- static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
- {
-@@ -1417,7 +1531,7 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
- {
- 	return nr_pages;
- }
--#endif
-+#endif /* CONFIG_CMA */
+ #include <asm/tlbflush.h>
+ #include <asm-generic/pgtable.h>
  
- /*
-  * __gup_longterm_locked() is a wrapper for __get_user_pages_locked which
-@@ -1503,152 +1617,85 @@ long get_user_pages(unsigned long start, unsigned long nr_pages,
- }
- EXPORT_SYMBOL(get_user_pages);
+diff --git a/arch/sparc/mm/Makefile b/arch/sparc/mm/Makefile
+index d39075b1e3b7..b078205b70e0 100644
+--- a/arch/sparc/mm/Makefile
++++ b/arch/sparc/mm/Makefile
+@@ -5,7 +5,7 @@
+ asflags-y := -ansi
+ ccflags-y := -Werror
  
--/**
-- * populate_vma_page_range() -  populate a range of pages in the vma.
-- * @vma:   target vma
-- * @start: start address
-- * @end:   end address
-- * @nonblocking:
+-obj-$(CONFIG_SPARC64)   += ultra.o tlb.o tsb.o gup.o
++obj-$(CONFIG_SPARC64)   += ultra.o tlb.o tsb.o
+ obj-y                   += fault_$(BITS).o
+ obj-y                   += init_$(BITS).o
+ obj-$(CONFIG_SPARC32)   += extable.o srmmu.o iommu.o io-unit.o
+diff --git a/arch/sparc/mm/gup.c b/arch/sparc/mm/gup.c
+deleted file mode 100644
+index 1e770a517d4a..000000000000
+--- a/arch/sparc/mm/gup.c
++++ /dev/null
+@@ -1,340 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Lockless get_user_pages_fast for sparc, cribbed from powerpc
 - *
-- * This takes care of mlocking the pages too if VM_LOCKED is set.
-+/*
-+ * We can leverage the VM_FAULT_RETRY functionality in the page fault
-+ * paths better by using either get_user_pages_locked() or
-+ * get_user_pages_unlocked().
-  *
-- * return 0 on success, negative error code on error.
-+ * get_user_pages_locked() is suitable to replace the form:
-  *
-- * vma->vm_mm->mmap_sem must be held.
-+ *      down_read(&mm->mmap_sem);
-+ *      do_something()
-+ *      get_user_pages(tsk, mm, ..., pages, NULL);
-+ *      up_read(&mm->mmap_sem);
-  *
-- * If @nonblocking is NULL, it may be held for read or write and will
-- * be unperturbed.
-+ *  to:
-  *
-- * If @nonblocking is non-NULL, it must held for read only and may be
-- * released.  If it's released, *@nonblocking will be set to 0.
-+ *      int locked = 1;
-+ *      down_read(&mm->mmap_sem);
-+ *      do_something()
-+ *      get_user_pages_locked(tsk, mm, ..., pages, &locked);
-+ *      if (locked)
-+ *          up_read(&mm->mmap_sem);
-  */
--long populate_vma_page_range(struct vm_area_struct *vma,
--		unsigned long start, unsigned long end, int *nonblocking)
-+long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
-+			   unsigned int gup_flags, struct page **pages,
-+			   int *locked)
- {
--	struct mm_struct *mm = vma->vm_mm;
--	unsigned long nr_pages = (end - start) / PAGE_SIZE;
--	int gup_flags;
+- * Copyright (C) 2008 Nick Piggin
+- * Copyright (C) 2008 Novell Inc.
+- */
 -
--	VM_BUG_ON(start & ~PAGE_MASK);
--	VM_BUG_ON(end   & ~PAGE_MASK);
--	VM_BUG_ON_VMA(start < vma->vm_start, vma);
--	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
--	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
+-#include <linux/sched.h>
+-#include <linux/mm.h>
+-#include <linux/vmstat.h>
+-#include <linux/pagemap.h>
+-#include <linux/rwsem.h>
+-#include <asm/pgtable.h>
+-#include <asm/adi.h>
 -
--	gup_flags = FOLL_TOUCH | FOLL_POPULATE | FOLL_MLOCK;
--	if (vma->vm_flags & VM_LOCKONFAULT)
--		gup_flags &= ~FOLL_POPULATE;
--	/*
--	 * We want to touch writable mappings with a write fault in order
--	 * to break COW, except for shared mappings because these don't COW
--	 * and we would not want to dirty them for nothing.
--	 */
--	if ((vma->vm_flags & (VM_WRITE | VM_SHARED)) == VM_WRITE)
--		gup_flags |= FOLL_WRITE;
+-/*
+- * The performance critical leaf functions are made noinline otherwise gcc
+- * inlines everything into a single function which results in too much
+- * register pressure.
+- */
+-static noinline int gup_pte_range(pmd_t pmd, unsigned long addr,
+-		unsigned long end, int write, struct page **pages, int *nr)
+-{
+-	unsigned long mask, result;
+-	pte_t *ptep;
 -
- 	/*
--	 * We want mlock to succeed for regions that have any permissions
--	 * other than PROT_NONE.
-+	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
-+	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
-+	 * vmas.  As there are no users of this flag in this call we simply
-+	 * disallow this option for now.
- 	 */
--	if (vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC))
--		gup_flags |= FOLL_FORCE;
-+	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-+		return -EINVAL;
- 
--	/*
--	 * We made sure addr is within a VMA, so the following will
--	 * not result in a stack expansion that recurses back here.
--	 */
--	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
--				NULL, NULL, nonblocking);
-+	return __get_user_pages_locked(current, current->mm, start, nr_pages,
-+				       pages, NULL, locked,
-+				       gup_flags | FOLL_TOUCH);
- }
-+EXPORT_SYMBOL(get_user_pages_locked);
- 
- /*
-- * __mm_populate - populate and/or mlock pages within a range of address space.
-+ * get_user_pages_unlocked() is suitable to replace the form:
-  *
-- * This is used to implement mlock() and the MAP_POPULATE / MAP_LOCKED mmap
-- * flags. VMAs must be already marked with the desired vm_flags, and
-- * mmap_sem must not be held.
-+ *      down_read(&mm->mmap_sem);
-+ *      get_user_pages(tsk, mm, ..., pages, NULL);
-+ *      up_read(&mm->mmap_sem);
-+ *
-+ *  with:
-+ *
-+ *      get_user_pages_unlocked(tsk, mm, ..., pages);
-+ *
-+ * It is functionally equivalent to get_user_pages_fast so
-+ * get_user_pages_fast should be used instead if specific gup_flags
-+ * (e.g. FOLL_FORCE) are not required.
-  */
--int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
-+long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-+			     struct page **pages, unsigned int gup_flags)
- {
- 	struct mm_struct *mm = current->mm;
--	unsigned long end, nstart, nend;
--	struct vm_area_struct *vma = NULL;
--	int locked = 0;
--	long ret = 0;
-+	int locked = 1;
-+	long ret;
- 
--	end = start + len;
-+	/*
-+	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
-+	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
-+	 * vmas.  As there are no users of this flag in this call we simply
-+	 * disallow this option for now.
-+	 */
-+	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-+		return -EINVAL;
- 
--	for (nstart = start; nstart < end; nstart = nend) {
--		/*
--		 * We want to fault in pages for [nstart; end) address range.
--		 * Find first corresponding VMA.
--		 */
--		if (!locked) {
--			locked = 1;
--			down_read(&mm->mmap_sem);
--			vma = find_vma(mm, nstart);
--		} else if (nstart >= vma->vm_end)
--			vma = vma->vm_next;
--		if (!vma || vma->vm_start >= end)
--			break;
--		/*
--		 * Set [nstart; nend) to intersection of desired address
--		 * range with the first VMA. Also, skip undesirable VMA types.
--		 */
--		nend = min(end, vma->vm_end);
--		if (vma->vm_flags & (VM_IO | VM_PFNMAP))
--			continue;
--		if (nstart < vma->vm_start)
--			nstart = vma->vm_start;
--		/*
--		 * Now fault in a range of pages. populate_vma_page_range()
--		 * double checks the vma flags, so that it won't mlock pages
--		 * if the vma was already munlocked.
--		 */
--		ret = populate_vma_page_range(vma, nstart, nend, &locked);
--		if (ret < 0) {
--			if (ignore_errors) {
--				ret = 0;
--				continue;	/* continue at next VMA */
--			}
--			break;
--		}
--		nend = nstart + ret * PAGE_SIZE;
--		ret = 0;
+-	if (tlb_type == hypervisor) {
+-		result = _PAGE_PRESENT_4V|_PAGE_P_4V;
+-		if (write)
+-			result |= _PAGE_WRITE_4V;
+-	} else {
+-		result = _PAGE_PRESENT_4U|_PAGE_P_4U;
+-		if (write)
+-			result |= _PAGE_WRITE_4U;
 -	}
-+	down_read(&mm->mmap_sem);
-+	ret = __get_user_pages_locked(current, mm, start, nr_pages, pages, NULL,
-+				      &locked, gup_flags | FOLL_TOUCH);
- 	if (locked)
- 		up_read(&mm->mmap_sem);
--	return ret;	/* 0 or negative error code */
+-	mask = result | _PAGE_SPECIAL;
+-
+-	ptep = pte_offset_kernel(&pmd, addr);
+-	do {
+-		struct page *page, *head;
+-		pte_t pte = *ptep;
+-
+-		if ((pte_val(pte) & mask) != result)
+-			return 0;
+-		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+-
+-		/* The hugepage case is simplified on sparc64 because
+-		 * we encode the sub-page pfn offsets into the
+-		 * hugepage PTEs.  We could optimize this in the future
+-		 * use page_cache_add_speculative() for the hugepage case.
+-		 */
+-		page = pte_page(pte);
+-		head = compound_head(page);
+-		if (!page_cache_get_speculative(head))
+-			return 0;
+-		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+-			put_page(head);
+-			return 0;
+-		}
+-
+-		pages[*nr] = page;
+-		(*nr)++;
+-	} while (ptep++, addr += PAGE_SIZE, addr != end);
+-
+-	return 1;
 -}
 -
--/**
-- * get_dump_page() - pin user page in memory while writing it to core dump
-- * @addr: user address
-- *
-- * Returns struct page pointer of user page pinned for dump,
-- * to be freed afterwards by put_page().
-- *
-- * Returns NULL on any kind of failure - a hole must then be inserted into
-- * the corefile, to preserve alignment with its headers; and also returns
-- * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
-- * allowing a hole to be left in the corefile to save diskspace.
-- *
-- * Called without mmap_sem, but after all other threads have been killed.
-- */
--#ifdef CONFIG_ELF_CORE
--struct page *get_dump_page(unsigned long addr)
+-static int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
+-			unsigned long end, int write, struct page **pages,
+-			int *nr)
 -{
--	struct vm_area_struct *vma;
--	struct page *page;
+-	struct page *head, *page;
+-	int refs;
 -
--	if (__get_user_pages(current, current->mm, addr, 1,
--			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
--			     NULL) < 1)
--		return NULL;
--	flush_cache_page(vma, addr, page_to_pfn(page));
--	return page;
-+	return ret;
- }
--#endif /* CONFIG_ELF_CORE */
-+EXPORT_SYMBOL(get_user_pages_unlocked);
- 
- /*
-  * Fast GUP
-@@ -1683,7 +1730,7 @@ struct page *get_dump_page(unsigned long addr)
-  *
-  * This code is based heavily on the PowerPC implementation by Nick Piggin.
-  */
--#ifdef CONFIG_HAVE_FAST_GUP
-+#if defined(CONFIG_MMU) && defined(CONFIG_HAVE_FAST_GUP)
- #ifdef CONFIG_GUP_GET_PTE_LOW_HIGH
- /*
-  * WARNING: only to be used in the get_user_pages_fast() implementation.
-@@ -2160,6 +2207,12 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
- 			return;
- 	} while (pgdp++, addr = next, addr != end);
- }
-+#else
-+static inline void gup_pgd_range(unsigned long addr, unsigned long end,
-+		unsigned int flags, struct page **pages, int *nr)
-+{
-+}
-+#endif /* CONFIG_HAVE_FAST_GUP */
- 
- #ifndef gup_fast_permitted
- /*
-@@ -2168,7 +2221,7 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
-  */
- static bool gup_fast_permitted(unsigned long start, unsigned long end)
- {
--	return true;
-+	return IS_ENABLED(CONFIG_HAVE_FAST_GUP) ? true : false;
- }
- #endif
- 
-@@ -2177,6 +2230,9 @@ static bool gup_fast_permitted(unsigned long start, unsigned long end)
-  * the regular GUP.
-  * Note a difference with get_user_pages_fast: this always returns the
-  * number of pages pinned, 0 if no pages were pinned.
-+ *
-+ * If the architecture does not support this function, simply return with no
-+ * pages pinned.
-  */
- int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
- 			  struct page **pages)
-@@ -2214,6 +2270,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
- 
- 	return nr;
- }
-+EXPORT_SYMBOL_GPL(__get_user_pages_fast);
- 
- static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
- 				   unsigned int gup_flags, struct page **pages)
-@@ -2296,5 +2353,4 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
- 
- 	return ret;
- }
+-	if (!(pmd_val(pmd) & _PAGE_VALID))
+-		return 0;
 -
--#endif /* CONFIG_HAVE_GENERIC_GUP */
-+EXPORT_SYMBOL_GPL(get_user_pages_fast);
-diff --git a/mm/nommu.c b/mm/nommu.c
-index d8c02fbe03b5..07165ad2e548 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -111,94 +111,6 @@ unsigned int kobjsize(const void *objp)
- 	return PAGE_SIZE << compound_order(page);
- }
- 
--static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
--		      unsigned long start, unsigned long nr_pages,
--		      unsigned int foll_flags, struct page **pages,
--		      struct vm_area_struct **vmas, int *nonblocking)
--{
--	struct vm_area_struct *vma;
--	unsigned long vm_flags;
--	int i;
+-	if (write && !pmd_write(pmd))
+-		return 0;
 -
--	/* calculate required read or write permissions.
--	 * If FOLL_FORCE is set, we only require the "MAY" flags.
--	 */
--	vm_flags  = (foll_flags & FOLL_WRITE) ?
--			(VM_WRITE | VM_MAYWRITE) : (VM_READ | VM_MAYREAD);
--	vm_flags &= (foll_flags & FOLL_FORCE) ?
--			(VM_MAYREAD | VM_MAYWRITE) : (VM_READ | VM_WRITE);
+-	refs = 0;
+-	page = pmd_page(pmd) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+-	head = compound_head(page);
+-	do {
+-		VM_BUG_ON(compound_head(page) != head);
+-		pages[*nr] = page;
+-		(*nr)++;
+-		page++;
+-		refs++;
+-	} while (addr += PAGE_SIZE, addr != end);
 -
--	for (i = 0; i < nr_pages; i++) {
--		vma = find_vma(mm, start);
--		if (!vma)
--			goto finish_or_fault;
--
--		/* protect what we can, including chardevs */
--		if ((vma->vm_flags & (VM_IO | VM_PFNMAP)) ||
--		    !(vm_flags & vma->vm_flags))
--			goto finish_or_fault;
--
--		if (pages) {
--			pages[i] = virt_to_page(start);
--			if (pages[i])
--				get_page(pages[i]);
--		}
--		if (vmas)
--			vmas[i] = vma;
--		start = (start + PAGE_SIZE) & PAGE_MASK;
+-	if (!page_cache_add_speculative(head, refs)) {
+-		*nr -= refs;
+-		return 0;
 -	}
 -
--	return i;
+-	if (unlikely(pmd_val(pmd) != pmd_val(*pmdp))) {
+-		*nr -= refs;
+-		while (refs--)
+-			put_page(head);
+-		return 0;
+-	}
 -
--finish_or_fault:
--	return i ? : -EFAULT;
+-	return 1;
+-}
+-
+-static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
+-			unsigned long end, int write, struct page **pages,
+-			int *nr)
+-{
+-	struct page *head, *page;
+-	int refs;
+-
+-	if (!(pud_val(pud) & _PAGE_VALID))
+-		return 0;
+-
+-	if (write && !pud_write(pud))
+-		return 0;
+-
+-	refs = 0;
+-	page = pud_page(pud) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+-	head = compound_head(page);
+-	do {
+-		VM_BUG_ON(compound_head(page) != head);
+-		pages[*nr] = page;
+-		(*nr)++;
+-		page++;
+-		refs++;
+-	} while (addr += PAGE_SIZE, addr != end);
+-
+-	if (!page_cache_add_speculative(head, refs)) {
+-		*nr -= refs;
+-		return 0;
+-	}
+-
+-	if (unlikely(pud_val(pud) != pud_val(*pudp))) {
+-		*nr -= refs;
+-		while (refs--)
+-			put_page(head);
+-		return 0;
+-	}
+-
+-	return 1;
+-}
+-
+-static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+-		int write, struct page **pages, int *nr)
+-{
+-	unsigned long next;
+-	pmd_t *pmdp;
+-
+-	pmdp = pmd_offset(&pud, addr);
+-	do {
+-		pmd_t pmd = *pmdp;
+-
+-		next = pmd_addr_end(addr, end);
+-		if (pmd_none(pmd))
+-			return 0;
+-		if (unlikely(pmd_large(pmd))) {
+-			if (!gup_huge_pmd(pmdp, pmd, addr, next,
+-					  write, pages, nr))
+-				return 0;
+-		} else if (!gup_pte_range(pmd, addr, next, write,
+-					  pages, nr))
+-			return 0;
+-	} while (pmdp++, addr = next, addr != end);
+-
+-	return 1;
+-}
+-
+-static int gup_pud_range(pgd_t pgd, unsigned long addr, unsigned long end,
+-		int write, struct page **pages, int *nr)
+-{
+-	unsigned long next;
+-	pud_t *pudp;
+-
+-	pudp = pud_offset(&pgd, addr);
+-	do {
+-		pud_t pud = *pudp;
+-
+-		next = pud_addr_end(addr, end);
+-		if (pud_none(pud))
+-			return 0;
+-		if (unlikely(pud_large(pud))) {
+-			if (!gup_huge_pud(pudp, pud, addr, next,
+-					  write, pages, nr))
+-				return 0;
+-		} else if (!gup_pmd_range(pud, addr, next, write, pages, nr))
+-			return 0;
+-	} while (pudp++, addr = next, addr != end);
+-
+-	return 1;
 -}
 -
 -/*
-- * get a list of pages in an address range belonging to the specified process
-- * and indicate the VMA that covers each page
-- * - this is potentially dodgy as we may end incrementing the page count of a
-- *   slab page or a secondary page from a compound page
-- * - don't permit access to VMAs that don't support it, such as I/O mappings
-- */
--long get_user_pages(unsigned long start, unsigned long nr_pages,
--		    unsigned int gup_flags, struct page **pages,
--		    struct vm_area_struct **vmas)
--{
--	return __get_user_pages(current, current->mm, start, nr_pages,
--				gup_flags, pages, vmas, NULL);
--}
--EXPORT_SYMBOL(get_user_pages);
--
--long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
--			    unsigned int gup_flags, struct page **pages,
--			    int *locked)
--{
--	return get_user_pages(start, nr_pages, gup_flags, pages, NULL);
--}
--EXPORT_SYMBOL(get_user_pages_locked);
--
--static long __get_user_pages_unlocked(struct task_struct *tsk,
--			struct mm_struct *mm, unsigned long start,
--			unsigned long nr_pages, struct page **pages,
--			unsigned int gup_flags)
--{
--	long ret;
--	down_read(&mm->mmap_sem);
--	ret = __get_user_pages(tsk, mm, start, nr_pages, gup_flags, pages,
--				NULL, NULL);
--	up_read(&mm->mmap_sem);
--	return ret;
--}
--
--long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
--			     struct page **pages, unsigned int gup_flags)
--{
--	return __get_user_pages_unlocked(current, current->mm, start, nr_pages,
--					 pages, gup_flags);
--}
--EXPORT_SYMBOL(get_user_pages_unlocked);
--
- /**
-  * follow_pfn - look up PFN at a user virtual address
-  * @vma: memory mapping
-diff --git a/mm/util.c b/mm/util.c
-index 9834c4ab7d8e..68575a315dc5 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -300,53 +300,6 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
- }
- #endif
- 
--/*
-- * Like get_user_pages_fast() except its IRQ-safe in that it won't fall
-- * back to the regular GUP.
 - * Note a difference with get_user_pages_fast: this always returns the
 - * number of pages pinned, 0 if no pages were pinned.
-- * If the architecture does not support this function, simply return with no
-- * pages pinned.
 - */
--int __weak __get_user_pages_fast(unsigned long start,
--				 int nr_pages, int write, struct page **pages)
+-int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+-			  struct page **pages)
 -{
--	return 0;
--}
--EXPORT_SYMBOL_GPL(__get_user_pages_fast);
+-	struct mm_struct *mm = current->mm;
+-	unsigned long addr, len, end;
+-	unsigned long next, flags;
+-	pgd_t *pgdp;
+-	int nr = 0;
 -
--/**
-- * get_user_pages_fast() - pin user pages in memory
-- * @start:	starting user address
-- * @nr_pages:	number of pages from start to pin
-- * @gup_flags:	flags modifying pin behaviour
-- * @pages:	array that receives pointers to the pages pinned.
-- *		Should be at least nr_pages long.
-- *
-- * get_user_pages_fast provides equivalent functionality to get_user_pages,
-- * operating on current and current->mm, with force=0 and vma=NULL. However
-- * unlike get_user_pages, it must be called without mmap_sem held.
-- *
-- * get_user_pages_fast may take mmap_sem and page table locks, so no
-- * assumptions can be made about lack of locking. get_user_pages_fast is to be
-- * implemented in a way that is advantageous (vs get_user_pages()) when the
-- * user memory area is already faulted in and present in ptes. However if the
-- * pages have to be faulted in, it may turn out to be slightly slower so
-- * callers need to carefully consider what to use. On many architectures,
-- * get_user_pages_fast simply falls back to get_user_pages.
-- *
-- * Return: number of pages pinned. This may be fewer than the number
-- * requested. If nr_pages is 0 or negative, returns 0. If no pages
-- * were pinned, returns -errno.
-- */
--int __weak get_user_pages_fast(unsigned long start,
--				int nr_pages, unsigned int gup_flags,
--				struct page **pages)
+-#ifdef CONFIG_SPARC64
+-	if (adi_capable()) {
+-		long addr = start;
+-
+-		/* If userspace has passed a versioned address, kernel
+-		 * will not find it in the VMAs since it does not store
+-		 * the version tags in the list of VMAs. Storing version
+-		 * tags in list of VMAs is impractical since they can be
+-		 * changed any time from userspace without dropping into
+-		 * kernel. Any address search in VMAs will be done with
+-		 * non-versioned addresses. Ensure the ADI version bits
+-		 * are dropped here by sign extending the last bit before
+-		 * ADI bits. IOMMU does not implement version tags.
+-		 */
+-		addr = (addr << (long)adi_nbits()) >> (long)adi_nbits();
+-		start = addr;
+-	}
+-#endif
+-	start &= PAGE_MASK;
+-	addr = start;
+-	len = (unsigned long) nr_pages << PAGE_SHIFT;
+-	end = start + len;
+-
+-	local_irq_save(flags);
+-	pgdp = pgd_offset(mm, addr);
+-	do {
+-		pgd_t pgd = *pgdp;
+-
+-		next = pgd_addr_end(addr, end);
+-		if (pgd_none(pgd))
+-			break;
+-		if (!gup_pud_range(pgd, addr, next, write, pages, &nr))
+-			break;
+-	} while (pgdp++, addr = next, addr != end);
+-	local_irq_restore(flags);
+-
+-	return nr;
+-}
+-
+-int get_user_pages_fast(unsigned long start, int nr_pages,
+-			unsigned int gup_flags, struct page **pages)
 -{
--	return get_user_pages_unlocked(start, nr_pages, pages, gup_flags);
--}
--EXPORT_SYMBOL_GPL(get_user_pages_fast);
+-	struct mm_struct *mm = current->mm;
+-	unsigned long addr, len, end;
+-	unsigned long next;
+-	pgd_t *pgdp;
+-	int nr = 0;
 -
- unsigned long vm_mmap_pgoff(struct file *file, unsigned long addr,
- 	unsigned long len, unsigned long prot,
- 	unsigned long flag, unsigned long pgoff)
+-#ifdef CONFIG_SPARC64
+-	if (adi_capable()) {
+-		long addr = start;
+-
+-		/* If userspace has passed a versioned address, kernel
+-		 * will not find it in the VMAs since it does not store
+-		 * the version tags in the list of VMAs. Storing version
+-		 * tags in list of VMAs is impractical since they can be
+-		 * changed any time from userspace without dropping into
+-		 * kernel. Any address search in VMAs will be done with
+-		 * non-versioned addresses. Ensure the ADI version bits
+-		 * are dropped here by sign extending the last bit before
+-		 * ADI bits. IOMMU does not implements version tags,
+-		 */
+-		addr = (addr << (long)adi_nbits()) >> (long)adi_nbits();
+-		start = addr;
+-	}
+-#endif
+-	start &= PAGE_MASK;
+-	addr = start;
+-	len = (unsigned long) nr_pages << PAGE_SHIFT;
+-	end = start + len;
+-
+-	/*
+-	 * XXX: batch / limit 'nr', to avoid large irq off latency
+-	 * needs some instrumenting to determine the common sizes used by
+-	 * important workloads (eg. DB2), and whether limiting the batch size
+-	 * will decrease performance.
+-	 *
+-	 * It seems like we're in the clear for the moment. Direct-IO is
+-	 * the main guy that batches up lots of get_user_pages, and even
+-	 * they are limited to 64-at-a-time which is not so many.
+-	 */
+-	/*
+-	 * This doesn't prevent pagetable teardown, but does prevent
+-	 * the pagetables from being freed on sparc.
+-	 *
+-	 * So long as we atomically load page table pointers versus teardown,
+-	 * we can follow the address down to the the page and take a ref on it.
+-	 */
+-	local_irq_disable();
+-
+-	pgdp = pgd_offset(mm, addr);
+-	do {
+-		pgd_t pgd = *pgdp;
+-
+-		next = pgd_addr_end(addr, end);
+-		if (pgd_none(pgd))
+-			goto slow;
+-		if (!gup_pud_range(pgd, addr, next, gup_flags & FOLL_WRITE,
+-				   pages, &nr))
+-			goto slow;
+-	} while (pgdp++, addr = next, addr != end);
+-
+-	local_irq_enable();
+-
+-	VM_BUG_ON(nr != (end - start) >> PAGE_SHIFT);
+-	return nr;
+-
+-	{
+-		int ret;
+-
+-slow:
+-		local_irq_enable();
+-
+-		/* Try to get the remaining pages with get_user_pages */
+-		start += nr << PAGE_SHIFT;
+-		pages += nr;
+-
+-		ret = get_user_pages_unlocked(start,
+-			(end - start) >> PAGE_SHIFT, pages,
+-			gup_flags);
+-
+-		/* Have to be a bit careful with return values */
+-		if (nr > 0) {
+-			if (ret < 0)
+-				ret = nr;
+-			else
+-				ret += nr;
+-		}
+-
+-		return ret;
+-	}
+-}
 -- 
 2.20.1
 
