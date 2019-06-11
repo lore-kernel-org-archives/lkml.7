@@ -2,305 +2,258 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98710C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE851C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6039921721
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8827921721
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 16:40:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cern.onmicrosoft.com header.i=@cern.onmicrosoft.com header.b="Y27SOox5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404834AbfFKQjt (ORCPT
+        id S2404831AbfFKQkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 12:39:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37265 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388531AbfFKQjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:39:49 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2309630C0DD7;
-        Tue, 11 Jun 2019 16:39:43 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-60.sin2.redhat.com [10.67.116.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC7795B687;
-        Tue, 11 Jun 2019 16:38:53 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
-        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
-Subject: [PATCH v12 1/7] libnvdimm: nd_region flush callback support
-Date:   Tue, 11 Jun 2019 22:07:56 +0530
-Message-Id: <20190611163802.25352-2-pagupta@redhat.com>
-In-Reply-To: <20190611163802.25352-1-pagupta@redhat.com>
-References: <20190611163802.25352-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 11 Jun 2019 16:39:48 +0000 (UTC)
+        Tue, 11 Jun 2019 12:40:12 -0400
+Received: from mail-eopbgr140071.outbound.protection.outlook.com ([40.107.14.71]:39793
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388531AbfFKQkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:40:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.onmicrosoft.com;
+ s=selector1-cern-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iqoINAHvWhuMJ7IcYNQ1pzujMCi9HKTuXGVzKIm0Epg=;
+ b=Y27SOox56yUaUx+7aolfCR4zpGjWjcpA+sWw4EGHjX1NxgYIyanC0MPRFsRVT8ph+mZf0HyXOMTaSbLI8Qpu3kG58VJ3y5lycmg2hnA2VBEzpXt8jOgzbcAB8tHqW9tkeD/sFchnic/P9USGdkJAhn2m7ENEpVLd+8R8rA6Rsjo=
+Received: from VI1PR0601CA0039.eurprd06.prod.outlook.com
+ (2603:10a6:800:1e::49) by AM6PR0602MB3749.eurprd06.prod.outlook.com
+ (2603:10a6:209:1e::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.11; Tue, 11 Jun
+ 2019 16:40:08 +0000
+Received: from VE1EUR02FT004.eop-EUR02.prod.protection.outlook.com
+ (2a01:111:f400:7e06::200) by VI1PR0601CA0039.outlook.office365.com
+ (2603:10a6:800:1e::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14 via Frontend
+ Transport; Tue, 11 Jun 2019 16:40:07 +0000
+Authentication-Results: spf=pass (sender IP is 188.184.36.50)
+ smtp.mailfrom=cern.ch; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=cern.ch;
+Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
+ 188.184.36.50 as permitted sender) receiver=protection.outlook.com;
+ client-ip=188.184.36.50; helo=cernmxgwlb4.cern.ch;
+Received: from cernmxgwlb4.cern.ch (188.184.36.50) by
+ VE1EUR02FT004.mail.protection.outlook.com (10.152.12.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1965.12 via Frontend Transport; Tue, 11 Jun 2019 16:40:07 +0000
+Received: from cernfe03.cern.ch (188.184.36.39) by cernmxgwlb4.cern.ch
+ (188.184.36.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 18:40:06 +0200
+Received: from harkonnen.localnet (62.203.14.162) by smtp.cern.ch
+ (188.184.36.52) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 11 Jun
+ 2019 18:40:05 +0200
+From:   Federico Vaga <federico.vaga@cern.ch>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, Pat Riehecky <riehecky@fnal.gov>,
+        Alessandro Rubini <rubini@gnudd.com>
+Subject: Re: [PATCH] fmc: Delete the FMC subsystem
+Date:   Tue, 11 Jun 2019 18:40:05 +0200
+Message-ID: <4878106.TDPaGnYU28@harkonnen>
+Organization: CERN
+In-Reply-To: <20190610141809.17542-1-linus.walleij@linaro.org>
+References: <20190610141809.17542-1-linus.walleij@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [62.203.14.162]
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:188.184.36.50;IPV:NLI;CTRY:CH;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(39860400002)(2980300002)(189003)(199004)(956004)(70586007)(336012)(33716001)(186003)(486006)(426003)(476003)(53546011)(9576002)(16526019)(11346002)(446003)(9686003)(6306002)(229853002)(126002)(5660300002)(356004)(230700001)(26005)(36916002)(14444005)(6916009)(66066001)(23726003)(70206006)(76176011)(47776003)(6116002)(3846002)(44832011)(2906002)(106002)(6246003)(4326008)(54906003)(966005)(316002)(97756001)(305945005)(7636002)(7736002)(86362001)(246002)(478600001)(46406003)(8936002)(8676002)(74482002)(50466002)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0602MB3749;H:cernmxgwlb4.cern.ch;FPR:;SPF:Pass;LANG:en;PTR:cernmx11.cern.ch;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dc5b6f5e-4ed1-486e-8d45-08d6ee8b76a6
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:AM6PR0602MB3749;
+X-MS-TrafficTypeDiagnostic: AM6PR0602MB3749:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <AM6PR0602MB3749BAEB193A414628483783EFED0@AM6PR0602MB3749.eurprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 006546F32A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: ioq/WZJOT56m28XGrG5fBhbAABunzeIlVeYONSDln2d5jEYPuYCrfIncvwgRefNv672CNeYwS1FrA+O+Nuj9yyTx47pvdkDKDT+b/vmyZvAkkJr/mo0mZFJCP1rAy0DEUMV/18lJU7EHpDWmbadrUcyl07qruKJwmQmSlpU4wxpTcLWimH/5wmO/z+CyEi6zUhaZ14zeo4tUkKug8UTy874eclowljAPQ88WwdVcSL2YC+aVgagQ+oW1cRL3B2SyLUaCNqsBE18lJYZDQxj9AwWAoUvZnhAs/petE1TwGbpB2dmj+EDwSqznEEvK5LpYvc4fS4mh0VqKT8vRZmsSK5MVkE0gAl4W7Kf6nExC7Dwy8STOXzpNwmD8YDSmo3oi6rR7LYmKYUAFgERJZSW4GiHOp3tVH0gfTYolMGp/PsI=
+X-OriginatorOrg: cern.ch
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2019 16:40:07.5423
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc5b6f5e-4ed1-486e-8d45-08d6ee8b76a6
+X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[188.184.36.50];Helo=[cernmxgwlb4.cern.ch]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0602MB3749
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds functionality to perform flush from guest
-to host over VIRTIO. We are registering a callback based
-on 'nd_region' type. virtio_pmem driver requires this special
-flush function. For rest of the region types we are registering
-existing flush function. Report error returned by host fsync
-failure to userspace.
+Well I do not know if it make sense to make it stronger with:
 
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
----
- drivers/acpi/nfit/core.c     |  4 ++--
- drivers/nvdimm/claim.c       |  6 ++++--
- drivers/nvdimm/nd.h          |  1 +
- drivers/nvdimm/pmem.c        | 13 ++++++++-----
- drivers/nvdimm/region_devs.c | 26 ++++++++++++++++++++++++--
- include/linux/libnvdimm.h    |  9 ++++++++-
- 6 files changed, 47 insertions(+), 12 deletions(-)
+Signed-off-by: Federico Vaga <federico.vaga@cern.ch>
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index f1ed0befe303..9ddd8667153e 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -2434,7 +2434,7 @@ static void write_blk_ctl(struct nfit_blk *nfit_blk, unsigned int bw,
- 		offset = to_interleave_offset(offset, mmio);
- 
- 	writeq(cmd, mmio->addr.base + offset);
--	nvdimm_flush(nfit_blk->nd_region);
-+	nvdimm_flush(nfit_blk->nd_region, NULL);
- 
- 	if (nfit_blk->dimm_flags & NFIT_BLK_DCR_LATCH)
- 		readq(mmio->addr.base + offset);
-@@ -2483,7 +2483,7 @@ static int acpi_nfit_blk_single_io(struct nfit_blk *nfit_blk,
- 	}
- 
- 	if (rw)
--		nvdimm_flush(nfit_blk->nd_region);
-+		nvdimm_flush(nfit_blk->nd_region, NULL);
- 
- 	rc = read_blk_stat(nfit_blk, lane) ? -EIO : 0;
- 	return rc;
-diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
-index fb667bf469c7..13510bae1e6f 100644
---- a/drivers/nvdimm/claim.c
-+++ b/drivers/nvdimm/claim.c
-@@ -263,7 +263,7 @@ static int nsio_rw_bytes(struct nd_namespace_common *ndns,
- 	struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
- 	unsigned int sz_align = ALIGN(size + (offset & (512 - 1)), 512);
- 	sector_t sector = offset >> 9;
--	int rc = 0;
-+	int rc = 0, ret = 0;
- 
- 	if (unlikely(!size))
- 		return 0;
-@@ -301,7 +301,9 @@ static int nsio_rw_bytes(struct nd_namespace_common *ndns,
- 	}
- 
- 	memcpy_flushcache(nsio->addr + offset, buf, size);
--	nvdimm_flush(to_nd_region(ndns->dev.parent));
-+	ret = nvdimm_flush(to_nd_region(ndns->dev.parent), NULL);
-+	if (ret)
-+		rc = ret;
- 
- 	return rc;
- }
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index a5ac3b240293..0c74d2428bd7 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -159,6 +159,7 @@ struct nd_region {
- 	struct badblocks bb;
- 	struct nd_interleave_set *nd_set;
- 	struct nd_percpu_lane __percpu *lane;
-+	int (*flush)(struct nd_region *nd_region, struct bio *bio);
- 	struct nd_mapping mapping[0];
- };
- 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 0279eb1da3ef..c757a47183b8 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -192,6 +192,7 @@ static blk_status_t pmem_do_bvec(struct pmem_device *pmem, struct page *page,
- 
- static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- {
-+	int ret = 0;
- 	blk_status_t rc = 0;
- 	bool do_acct;
- 	unsigned long start;
-@@ -201,7 +202,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- 	struct nd_region *nd_region = to_region(pmem);
- 
- 	if (bio->bi_opf & REQ_PREFLUSH)
--		nvdimm_flush(nd_region);
-+		ret = nvdimm_flush(nd_region, bio);
- 
- 	do_acct = nd_iostat_start(bio, &start);
- 	bio_for_each_segment(bvec, bio, iter) {
-@@ -216,7 +217,10 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- 		nd_iostat_end(bio, start);
- 
- 	if (bio->bi_opf & REQ_FUA)
--		nvdimm_flush(nd_region);
-+		ret = nvdimm_flush(nd_region, bio);
-+
-+	if (ret)
-+		bio->bi_status = errno_to_blk_status(ret);
- 
- 	bio_endio(bio);
- 	return BLK_QC_T_NONE;
-@@ -469,7 +473,6 @@ static int pmem_attach_disk(struct device *dev,
- 	}
- 	dax_write_cache(dax_dev, nvdimm_has_cache(nd_region));
- 	pmem->dax_dev = dax_dev;
--
- 	gendev = disk_to_dev(disk);
- 	gendev->groups = pmem_attribute_groups;
- 
-@@ -527,14 +530,14 @@ static int nd_pmem_remove(struct device *dev)
- 		sysfs_put(pmem->bb_state);
- 		pmem->bb_state = NULL;
- 	}
--	nvdimm_flush(to_nd_region(dev->parent));
-+	nvdimm_flush(to_nd_region(dev->parent), NULL);
- 
- 	return 0;
- }
- 
- static void nd_pmem_shutdown(struct device *dev)
- {
--	nvdimm_flush(to_nd_region(dev->parent));
-+	nvdimm_flush(to_nd_region(dev->parent), NULL);
- }
- 
- static void nd_pmem_notify(struct device *dev, enum nvdimm_event event)
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index b4ef7d9ff22e..e5b59708865e 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -295,7 +295,9 @@ static ssize_t deep_flush_store(struct device *dev, struct device_attribute *att
- 		return rc;
- 	if (!flush)
- 		return -EINVAL;
--	nvdimm_flush(nd_region);
-+	rc = nvdimm_flush(nd_region, NULL);
-+	if (rc)
-+		return rc;
- 
- 	return len;
- }
-@@ -1085,6 +1087,11 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 	dev->of_node = ndr_desc->of_node;
- 	nd_region->ndr_size = resource_size(ndr_desc->res);
- 	nd_region->ndr_start = ndr_desc->res->start;
-+	if (ndr_desc->flush)
-+		nd_region->flush = ndr_desc->flush;
-+	else
-+		nd_region->flush = NULL;
-+
- 	nd_device_register(dev);
- 
- 	return nd_region;
-@@ -1125,11 +1132,24 @@ struct nd_region *nvdimm_volatile_region_create(struct nvdimm_bus *nvdimm_bus,
- }
- EXPORT_SYMBOL_GPL(nvdimm_volatile_region_create);
- 
-+int nvdimm_flush(struct nd_region *nd_region, struct bio *bio)
-+{
-+	int rc = 0;
-+
-+	if (!nd_region->flush)
-+		rc = generic_nvdimm_flush(nd_region);
-+	else {
-+		if (nd_region->flush(nd_region, bio))
-+			rc = -EIO;
-+	}
-+
-+	return rc;
-+}
- /**
-  * nvdimm_flush - flush any posted write queues between the cpu and pmem media
-  * @nd_region: blk or interleaved pmem region
-  */
--void nvdimm_flush(struct nd_region *nd_region)
-+int generic_nvdimm_flush(struct nd_region *nd_region)
- {
- 	struct nd_region_data *ndrd = dev_get_drvdata(&nd_region->dev);
- 	int i, idx;
-@@ -1153,6 +1173,8 @@ void nvdimm_flush(struct nd_region *nd_region)
- 		if (ndrd_get_flush_wpq(ndrd, i, 0))
- 			writeq(1, ndrd_get_flush_wpq(ndrd, i, idx));
- 	wmb();
-+
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(nvdimm_flush);
- 
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index feb342d026f2..5a4f7b13574d 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -19,6 +19,7 @@
- #include <linux/types.h>
- #include <linux/uuid.h>
- #include <linux/spinlock.h>
-+#include <linux/bio.h>
- 
- struct badrange_entry {
- 	u64 start;
-@@ -65,6 +66,9 @@ enum {
- 	 */
- 	ND_REGION_PERSIST_MEMCTRL = 2,
- 
-+	/* Platform provides asynchronous flush mechanism */
-+	ND_REGION_ASYNC = 3,
-+
- 	/* mark newly adjusted resources as requiring a label update */
- 	DPA_RESOURCE_ADJUSTED = 1 << 0,
- };
-@@ -121,6 +125,7 @@ struct nd_mapping_desc {
- 	int position;
- };
- 
-+struct nd_region;
- struct nd_region_desc {
- 	struct resource *res;
- 	struct nd_mapping_desc *mapping;
-@@ -133,6 +138,7 @@ struct nd_region_desc {
- 	int target_node;
- 	unsigned long flags;
- 	struct device_node *of_node;
-+	int (*flush)(struct nd_region *nd_region, struct bio *bio);
- };
- 
- struct device;
-@@ -260,7 +266,8 @@ unsigned long nd_blk_memremap_flags(struct nd_blk_region *ndbr);
- unsigned int nd_region_acquire_lane(struct nd_region *nd_region);
- void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane);
- u64 nd_fletcher64(void *addr, size_t len, bool le);
--void nvdimm_flush(struct nd_region *nd_region);
-+int nvdimm_flush(struct nd_region *nd_region, struct bio *bio);
-+int generic_nvdimm_flush(struct nd_region *nd_region);
- int nvdimm_has_flush(struct nd_region *nd_region);
- int nvdimm_has_cache(struct nd_region *nd_region);
- int nvdimm_in_overwrite(struct nvdimm *nvdimm);
+As you want
+
+On Monday, June 10, 2019 4:18:09 PM CEST Linus Walleij wrote:
+> The FMC subsystem was created in 2012 with the ambition to
+> drive development of drivers for this hardware upstream.
+> 
+> The current implementation has architectural flaws and would
+> need to be revamped using real hardware to something that can
+> reuse existing kernel abstractions in the subsystems for e.g.
+> I2C, FPGA and GPIO.
+> 
+> We have concluded that for the mainline kernel it will be
+> better to delete the subsystem and start over with a clean
+> slate when/if an active maintainer steps up.
+> 
+> For details see:
+> https://lkml.org/lkml/2018/10/29/534
+> 
+> Suggested-by: Federico Vaga <federico.vaga@cern.ch>
+> Cc: Federico Vaga <federico.vaga@cern.ch>
+> Cc: Pat Riehecky <riehecky@fnal.gov>
+> Cc: Alessandro Rubini <rubini@gnudd.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> If people are happy with this, I will queue the removal
+> in the GPIO kernel tree.
+> ---
+>  Documentation/fmc/API.txt              |  47 ---
+>  Documentation/fmc/FMC-and-SDB.txt      |  88 ------
+>  Documentation/fmc/carrier.txt          | 311 --------------------
+>  Documentation/fmc/fmc-chardev.txt      |  64 ----
+>  Documentation/fmc/fmc-fakedev.txt      |  36 ---
+>  Documentation/fmc/fmc-trivial.txt      |  17 --
+>  Documentation/fmc/fmc-write-eeprom.txt |  98 -------
+>  Documentation/fmc/identifiers.txt      | 168 -----------
+>  Documentation/fmc/mezzanine.txt        | 123 --------
+>  Documentation/fmc/parameters.txt       |  56 ----
+>  drivers/fmc/Kconfig                    |  51 ----
+>  drivers/fmc/Makefile                   |  15 -
+>  drivers/fmc/fmc-chardev.c              | 200 -------------
+>  drivers/fmc/fmc-core.c                 | 389 -------------------------
+>  drivers/fmc/fmc-debug.c                | 173 -----------
+>  drivers/fmc/fmc-dump.c                 |  59 ----
+>  drivers/fmc/fmc-fakedev.c              | 355 ----------------------
+>  drivers/fmc/fmc-match.c                | 114 --------
+>  drivers/fmc/fmc-private.h              |   9 -
+>  drivers/fmc/fmc-sdb.c                  | 220 --------------
+>  drivers/fmc/fmc-trivial.c              | 102 -------
+>  drivers/fmc/fmc-write-eeprom.c         | 176 -----------
+>  drivers/fmc/fru-parse.c                |  81 -----
+>  include/linux/fmc-sdb.h                |  39 ---
+>  include/linux/fmc.h                    | 272 -----------------
+>  25 files changed, 3263 deletions(-)
+>  delete mode 100644 Documentation/fmc/API.txt
+>  delete mode 100644 Documentation/fmc/FMC-and-SDB.txt
+>  delete mode 100644 Documentation/fmc/carrier.txt
+>  delete mode 100644 Documentation/fmc/fmc-chardev.txt
+>  delete mode 100644 Documentation/fmc/fmc-fakedev.txt
+>  delete mode 100644 Documentation/fmc/fmc-trivial.txt
+>  delete mode 100644 Documentation/fmc/fmc-write-eeprom.txt
+>  delete mode 100644 Documentation/fmc/identifiers.txt
+>  delete mode 100644 Documentation/fmc/mezzanine.txt
+>  delete mode 100644 Documentation/fmc/parameters.txt
+>  delete mode 100644 drivers/fmc/Kconfig
+>  delete mode 100644 drivers/fmc/Makefile
+>  delete mode 100644 drivers/fmc/fmc-chardev.c
+>  delete mode 100644 drivers/fmc/fmc-core.c
+>  delete mode 100644 drivers/fmc/fmc-debug.c
+>  delete mode 100644 drivers/fmc/fmc-dump.c
+>  delete mode 100644 drivers/fmc/fmc-fakedev.c
+>  delete mode 100644 drivers/fmc/fmc-match.c
+>  delete mode 100644 drivers/fmc/fmc-private.h
+>  delete mode 100644 drivers/fmc/fmc-sdb.c
+>  delete mode 100644 drivers/fmc/fmc-trivial.c
+>  delete mode 100644 drivers/fmc/fmc-write-eeprom.c
+>  delete mode 100644 drivers/fmc/fru-parse.c
+>  delete mode 100644 include/linux/fmc-sdb.h
+>  delete mode 100644 include/linux/fmc.h
+> 
+> diff --git a/Documentation/fmc/API.txt b/Documentation/fmc/API.txt
+> deleted file mode 100644
+> index 06b06b92c794..000000000000
+> diff --git a/Documentation/fmc/FMC-and-SDB.txt
+> b/Documentation/fmc/FMC-and-SDB.txt deleted file mode 100644
+> index fa14e0b24521..000000000000
+> diff --git a/Documentation/fmc/carrier.txt b/Documentation/fmc/carrier.txt
+> deleted file mode 100644
+> index 5e4f1dd3e98b..000000000000
+> diff --git a/Documentation/fmc/fmc-chardev.txt
+> b/Documentation/fmc/fmc-chardev.txt deleted file mode 100644
+> index d9ccb278e597..000000000000
+> diff --git a/Documentation/fmc/fmc-fakedev.txt
+> b/Documentation/fmc/fmc-fakedev.txt deleted file mode 100644
+> index e85b74a4ae30..000000000000
+> diff --git a/Documentation/fmc/fmc-trivial.txt
+> b/Documentation/fmc/fmc-trivial.txt deleted file mode 100644
+> index d1910bc67159..000000000000
+> diff --git a/Documentation/fmc/fmc-write-eeprom.txt
+> b/Documentation/fmc/fmc-write-eeprom.txt deleted file mode 100644
+> index e0a9712156aa..000000000000
+> diff --git a/Documentation/fmc/identifiers.txt
+> b/Documentation/fmc/identifiers.txt deleted file mode 100644
+> index 3bb577ff0d52..000000000000
+> diff --git a/Documentation/fmc/mezzanine.txt
+> b/Documentation/fmc/mezzanine.txt deleted file mode 100644
+> index 87910dbfc91e..000000000000
+> diff --git a/Documentation/fmc/parameters.txt
+> b/Documentation/fmc/parameters.txt deleted file mode 100644
+> index 59edf088e3a4..000000000000
+> diff --git a/drivers/fmc/Kconfig b/drivers/fmc/Kconfig
+> deleted file mode 100644
+> index 3a75f4256d08..000000000000
+> diff --git a/drivers/fmc/Makefile b/drivers/fmc/Makefile
+> deleted file mode 100644
+> index e3da6192cf39..000000000000
+> diff --git a/drivers/fmc/fmc-chardev.c b/drivers/fmc/fmc-chardev.c
+> deleted file mode 100644
+> index 5ecf4090a610..000000000000
+> diff --git a/drivers/fmc/fmc-core.c b/drivers/fmc/fmc-core.c
+> deleted file mode 100644
+> index bbcb505d1522..000000000000
+> diff --git a/drivers/fmc/fmc-debug.c b/drivers/fmc/fmc-debug.c
+> deleted file mode 100644
+> index 32930722770c..000000000000
+> diff --git a/drivers/fmc/fmc-dump.c b/drivers/fmc/fmc-dump.c
+> deleted file mode 100644
+> index cd1df475b254..000000000000
+> diff --git a/drivers/fmc/fmc-fakedev.c b/drivers/fmc/fmc-fakedev.c
+> deleted file mode 100644
+> index 941d0930969a..000000000000
+> diff --git a/drivers/fmc/fmc-match.c b/drivers/fmc/fmc-match.c
+> deleted file mode 100644
+> index a0956d1f7550..000000000000
+> diff --git a/drivers/fmc/fmc-private.h b/drivers/fmc/fmc-private.h
+> deleted file mode 100644
+> index 1e5136643bdc..000000000000
+> diff --git a/drivers/fmc/fmc-sdb.c b/drivers/fmc/fmc-sdb.c
+> deleted file mode 100644
+> index d0e65b86dc22..000000000000
+> diff --git a/drivers/fmc/fmc-trivial.c b/drivers/fmc/fmc-trivial.c
+> deleted file mode 100644
+> index b99dbc7ee203..000000000000
+> diff --git a/drivers/fmc/fmc-write-eeprom.c b/drivers/fmc/fmc-write-eeprom.c
+> deleted file mode 100644
+> index 3eb81bb1f1fc..000000000000
+> diff --git a/drivers/fmc/fru-parse.c b/drivers/fmc/fru-parse.c
+> deleted file mode 100644
+> index eb21480d399f..000000000000
+> diff --git a/include/linux/fmc-sdb.h b/include/linux/fmc-sdb.h
+> deleted file mode 100644
+> index bec899f0867c..000000000000
+> diff --git a/include/linux/fmc.h b/include/linux/fmc.h
+> deleted file mode 100644
+> index f0d482d29df7..000000000000
+
+
 -- 
-2.20.1
+Federico Vaga [CERN BE-CO-HT]
+
 
