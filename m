@@ -2,96 +2,168 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FFAC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91B0C31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CADB2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="p8Z/zWc6"
+	by mail.kernel.org (Postfix) with ESMTP id A768C20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436795AbfFKWWK (ORCPT
+        id S2436850AbfFKWWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:22:10 -0400
-Received: from mail-eopbgr790124.outbound.protection.outlook.com ([40.107.79.124]:46880
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436772AbfFKWWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:22:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9mXryIRRx6t9lD9VOFQ5C5hAGQB7QcTB+79DOL9u7sU=;
- b=p8Z/zWc6McdTQuirDIAAexiENgzLmNwoA19ZdiTn2FaiEqCFMCEg3vnTDlT7Q6rAI3MiJ6jIAFLgwRJQkviTvulBXRvUz6uJ7qCxk83j1ckjb+IX+S2ucbb9LTSegy5r79UVErtdr5A2XHatu5UBUS7nT6f51XsEpBPEvAAtgvQ=
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com (10.171.214.23) by
- CY4PR2201MB1367.namprd22.prod.outlook.com (10.171.217.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Tue, 11 Jun 2019 22:22:06 +0000
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::d571:f49f:6a5c:4962]) by CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::d571:f49f:6a5c:4962%7]) with mapi id 15.20.1965.017; Tue, 11 Jun 2019
- 22:22:06 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH trivial] memory: jz4780-nemc: Grammar s/the its/its/
-Thread-Topic: [PATCH trivial] memory: jz4780-nemc: Grammar s/the its/its/
-Thread-Index: AQHVHSTkqF1069CarE6SbLFS+Ro7tqaXDecA
-Date:   Tue, 11 Jun 2019 22:22:05 +0000
-Message-ID: <CY4PR2201MB1272A71C15A3B424B60EB591C1ED0@CY4PR2201MB1272.namprd22.prod.outlook.com>
-References: <20190607113343.14828-1-geert+renesas@glider.be>
-In-Reply-To: <20190607113343.14828-1-geert+renesas@glider.be>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR11CA0078.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::19) To CY4PR2201MB1272.namprd22.prod.outlook.com
- (2603:10b6:910:6e::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b3bc6682-c649-4566-ab84-08d6eebb3c37
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR2201MB1367;
-x-ms-traffictypediagnostic: CY4PR2201MB1367:
-x-microsoft-antispam-prvs: <CY4PR2201MB136795444DF5792ACC1516DDC1ED0@CY4PR2201MB1367.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 006546F32A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39850400004)(376002)(346002)(396003)(366004)(199004)(189003)(81156014)(446003)(2906002)(8676002)(81166006)(486006)(305945005)(7736002)(478600001)(476003)(11346002)(14454004)(44832011)(66446008)(5660300002)(66556008)(64756008)(66476007)(66946007)(68736007)(52536014)(8936002)(73956011)(6116002)(3846002)(74316002)(256004)(42882007)(71200400001)(71190400001)(26005)(9686003)(6246003)(558084003)(4326008)(102836004)(99286004)(55016002)(25786009)(54906003)(52116002)(6436002)(53936002)(7696005)(316002)(186003)(76176011)(6506007)(386003)(229853002)(66066001)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1367;H:CY4PR2201MB1272.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ETqTYEy52h3lRIZoZYBzIVXRlTMm6uzg5sB28Dp1WbQ+1x3ANNwQAfCobCKYaJG4GmOCSCUS7Nv/EUQZyaieXJts+ocWH4JI8eRNcpo8GqEr0nFv0l1B7tiB8ZV3xE48a6vpjM7H/bQ6oOcYsh4gSNO38FCgfp2wZVz/GmNK3XZx8Ie2QrKglhfwsYcYwU0593XzQ4aaxTQbx8QY2CsmnL0rmSIaRKrQneEDMLe9l+fVheyQAU6DModEbeth4DEm3yrOZ9fWlJsIPR0PNku2MIi3ldjuMwpyz8s95d0hDo8tOfQHw0G6XCmHbGqYrXpUKWH6aqdUUfN91FFKVoL+a48/OMDSatlVr0MgmipYn61ZbAtZt2dVWVOwhDnE5L/udiNh00Ayqg1VbdyPMbDtE85Kyvat5wz5LAbtWkUs+tg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 11 Jun 2019 18:22:20 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:29003 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436796AbfFKWWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:22:16 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 11 Jun 2019 15:22:11 -0700
+Received: from rlwimi.localdomain (unknown [10.129.220.121])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id C52D641BAB;
+        Tue, 11 Jun 2019 15:22:14 -0700 (PDT)
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [PATCH v2 05/13] recordmcount: Kernel style function signature formatting
+Date:   Tue, 11 Jun 2019 15:21:47 -0700
+Message-ID: <a7a6fcb3fb9d1d25f484fa0eb10bd000c68a0e56.1560285597.git.mhelsley@vmware.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1560285597.git.mhelsley@vmware.com>
+References: <cover.1560285597.git.mhelsley@vmware.com>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3bc6682-c649-4566-ab84-08d6eebb3c37
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2019 22:22:05.9092
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1367
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCkdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4gU2lnbmVkLW9mZi1ieTogR2Vl
-cnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCg0KQXBwbGllZCB0byBt
-aXBzLW5leHQuDQoNClRoYW5rcywNCiAgICBQYXVsDQoNClsgVGhpcyBtZXNzYWdlIHdhcyBhdXRv
-LWdlbmVyYXRlZDsgaWYgeW91IGJlbGlldmUgYW55dGhpbmcgaXMgaW5jb3JyZWN0DQogIHRoZW4g
-cGxlYXNlIGVtYWlsIHBhdWwuYnVydG9uQG1pcHMuY29tIHRvIHJlcG9ydCBpdC4gXQ0K
+The uwrite() and ulseek() functions are formatted inconsistently
+with the rest of the file and the kernel overall. While we're
+making other changes here let's fix this.
+
+Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+---
+ scripts/recordmcount.c | 21 +++++++--------------
+ scripts/recordmcount.h | 13 ++++++-------
+ 2 files changed, 13 insertions(+), 21 deletions(-)
+
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index 584dcbf3f320..1c3599f07f9b 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -52,8 +52,7 @@ static void *file_append; /* added to the end of the file */
+ static size_t file_append_size; /* how much is added to end of file */
+ 
+ /* Per-file resource cleanup when multiple files. */
+-static void
+-cleanup(void)
++static void cleanup(void)
+ {
+ 	if (!mmap_failed)
+ 		munmap(file_map, sb.st_size);
+@@ -68,8 +67,7 @@ cleanup(void)
+ 
+ /* ulseek, uwrite, ...:  Check return value for errors. */
+ 
+-static off_t
+-ulseek(off_t const offset, int const whence)
++static off_t ulseek(off_t const offset, int const whence)
+ {
+ 	switch (whence) {
+ 	case SEEK_SET:
+@@ -89,8 +87,7 @@ ulseek(off_t const offset, int const whence)
+ 	return file_ptr - file_map;
+ }
+ 
+-static ssize_t
+-uwrite(void const *const buf, size_t const count)
++static ssize_t uwrite(void const *const buf, size_t const count)
+ {
+ 	size_t cnt = count;
+ 	off_t idx = 0;
+@@ -127,8 +124,7 @@ uwrite(void const *const buf, size_t const count)
+ 	return count;
+ }
+ 
+-static void *
+-umalloc(size_t size)
++static void * umalloc(size_t size)
+ {
+ 	void *const addr = malloc(size);
+ 	if (addr == 0) {
+@@ -394,8 +390,7 @@ static uint32_t (*w)(uint32_t);
+ static uint32_t (*w2)(uint16_t);
+ 
+ /* Names of the sections that could contain calls to mcount. */
+-static int
+-is_mcounted_section_name(char const *const txtname)
++static int is_mcounted_section_name(char const *const txtname)
+ {
+ 	return strncmp(".text",          txtname, 5) == 0 ||
+ 		strcmp(".init.text",     txtname) == 0 ||
+@@ -446,8 +441,7 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
+ 	}).r_info;
+ }
+ 
+-static int
+-do_file(char const *const fname)
++static int do_file(char const *const fname)
+ {
+ 	Elf32_Ehdr *const ehdr = mmap_file(fname);
+ 	unsigned int reltype = 0;
+@@ -595,8 +589,7 @@ do_file(char const *const fname)
+ 	return rc;
+ }
+ 
+-int
+-main(int argc, char *argv[])
++int main(int argc, char *argv[])
+ {
+ 	const char ftrace[] = "/ftrace.o";
+ 	int ftrace_size = sizeof(ftrace) - 1;
+diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
+index f863d6fce066..3198459f7431 100644
+--- a/scripts/recordmcount.h
++++ b/scripts/recordmcount.h
+@@ -475,11 +475,10 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
+ char const *already_has_rel_mcount = "success"; /* our work here is done! */
+ 
+ /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
+-static char const *
+-__has_rel_mcount(Elf_Shdr const *const relhdr,  /* is SHT_REL or SHT_RELA */
+-		 Elf_Shdr const *const shdr0,
+-		 char const *const shstrtab,
+-		 char const *const fname)
++static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
++				     Elf_Shdr const *const shdr0,
++				     char const *const shstrtab,
++				     char const *const fname)
+ {
+ 	/* .sh_info depends on .sh_type == SHT_REL[,A] */
+ 	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
+@@ -531,8 +530,8 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
+ 
+ 
+ /* Overall supervision for Elf32 ET_REL file. */
+-static int
+-do_func(Elf_Ehdr *const ehdr, char const *const fname, unsigned const reltype)
++static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
++		   unsigned const reltype)
+ {
+ 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
+ 		+ (void *)ehdr);
+-- 
+2.20.1
+
