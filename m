@@ -2,111 +2,122 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA019C4321B
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA836C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8292D20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96348206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 02:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PGu+9+pJ"
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="OHXgU7no"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390570AbfFKCHd (ORCPT
+        id S2390697AbfFKCLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Jun 2019 22:07:33 -0400
-Received: from ozlabs.org ([203.11.71.1]:47545 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbfFKCHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Jun 2019 22:07:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45ND0f3knRz9sNC;
-        Tue, 11 Jun 2019 12:07:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560218851;
-        bh=m2FWhHME3XZj5STQwESX5Nb6gzcHzgfOilHsf4Im6nA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PGu+9+pJaco/mZuRkz3ReylE50zAvS/z7OxeX2QAYhsUsiMmHLqAvDOEmctFFopmT
-         tpxSQsVo6x5KKq1kTccPLlONwkDQdNgAbOqXERMP/DgUANxXv30ZIKxqk1jdppjFOC
-         xL6ZTg46yzyQ5Bo8J9mBnLKTvGG85MH51hYTVw2Plc0mF5YKQSVzuNH6rcNNEPDKjF
-         JwiY7P7bv2SdFcnwGD08oVqpCYwMy0fUglF+ib2a7nvBcDmaC75QQbWk3suueUM31L
-         m0wwX2p3bu3PVUnSpAKd/9OZ8W5g0pBjAYMtJY0V1aTnMAarpr3Ao4QoyKM4Lh3Hhk
-         45aV7bddn9jDQ==
-Date:   Tue, 11 Jun 2019 12:07:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Biggers <ebiggers@google.com>
-Subject: linux-next: manual merge of the crypto tree with Linus' tree
-Message-ID: <20190611120728.287af1f6@canb.auug.org.au>
+        Mon, 10 Jun 2019 22:11:43 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54231 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728747AbfFKCLn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Jun 2019 22:11:43 -0400
+Received: by mail-it1-f196.google.com with SMTP id m187so2337101ite.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 19:11:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ieee.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8RcJD0etSUKCdAftUVogv11bxbo5C0KdF/jhN26WyyA=;
+        b=OHXgU7noh57Sp/hq02aCQk7Iwul4QOdcr6UViwgqqgDaoPRzDl52iiE0cD1hek0we8
+         3IKvO+lUENBcxzsHodJAZnTuabLcoZmMcyQ9lslSwB3speirTQXPv14ltLT3sMs93Mo7
+         sDeAhjdXkOwS9iJmOSINgqPbTWdBBDqiFERi0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8RcJD0etSUKCdAftUVogv11bxbo5C0KdF/jhN26WyyA=;
+        b=eCdfIzKhahtU4StVK2+Tn7WEhr8Pz9k0g4hWKtewYnNK+k5HWMigiOgWv63w8iO53w
+         eAowCIV+gbbvCtCXfaQw0leH9J+11PT0KB28L7FgNma7eeFX24oWVt+xhN2Uhl4ZfEeC
+         zoJNKKWWZCDE6RovNpWTsLq+xrvJTaXkttHbslJiM8BCWqZ/K/nrAapuT0qF8+l91YRe
+         vbJ38xXyuj3mSUYg5vz+gZg+UcwptlJ/TU5PyLkwng2a/RdP2fGSC6yy0gtpQjp0MPT4
+         zr2EOIgSdnlmfl6/oVGUen8XWqAacfgn9+EvBDOZaxvGSSp+HGi5S2UHS7S6wrckH9EV
+         PLQA==
+X-Gm-Message-State: APjAAAXHn0DoxaxIhu/4g2G+08u/MyTIW/Uk95clHb10at572egw/pVw
+        iMM7P8x3B7HWT6F2t82WIeMKpQ==
+X-Google-Smtp-Source: APXvYqzXNReWPcWQtoTC/Q7rrGPSPe4wVuVRroQKGCnjVJi4KH9bhqO038VqJ1HbXbKZCJDyQffZMQ==
+X-Received: by 2002:a24:c384:: with SMTP id s126mr15705942itg.1.1560219102350;
+        Mon, 10 Jun 2019 19:11:42 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id c23sm4403415iod.11.2019.06.10.19.11.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Jun 2019 19:11:41 -0700 (PDT)
+Subject: Re: [PATCH v2 02/17] dt-bindings: soc: qcom: add IPA bindings
+To:     Rob Herring <robh+dt@kernel.org>, Alex Elder <elder@linaro.org>
+Cc:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org, subashab@codeaurora.org,
+        abhishek.esse@gmail.com, netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+References: <20190531035348.7194-1-elder@linaro.org>
+ <20190531035348.7194-3-elder@linaro.org>
+ <CAL_JsqLFk3=YN+V=RVxq9xWQTrPA9_0zW+eFrdXkGkCnM_sBkA@mail.gmail.com>
+From:   Alex Elder <elder@ieee.org>
+Message-ID: <bcb7f599-3c22-da27-c92b-4c1903a5ea06@ieee.org>
+Date:   Mon, 10 Jun 2019 21:11:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/8czFThpdyTCucr7DXBCF+JB"; protocol="application/pgp-signature"
+In-Reply-To: <CAL_JsqLFk3=YN+V=RVxq9xWQTrPA9_0zW+eFrdXkGkCnM_sBkA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8czFThpdyTCucr7DXBCF+JB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 6/10/19 5:08 PM, Rob Herring wrote:
+> On Thu, May 30, 2019 at 9:53 PM Alex Elder <elder@linaro.org> wrote:
+>>
+>> Add the binding definitions for the "qcom,ipa" device tree node.
+>>
+>> Signed-off-by: Alex Elder <elder@linaro.org>
+>> ---
+>>  .../devicetree/bindings/net/qcom,ipa.yaml     | 180 ++++++++++++++++++
+>>  1 file changed, 180 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>> new file mode 100644
+>> index 000000000000..0037fc278a61
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+>> @@ -0,0 +1,180 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> 
+> New bindings are preferred to be dual GPL-2.0 and BSD-2-Clause. But
+> that's really a decision for the submitter.
 
-Hi all,
+Thanks Rob.  I'll ask Qualcomm if there's any problem
+with doing that; I presume not.  If I re-submit this
+with dual copyright, I will include your Reviewed-by
+despite the change, OK?
 
-Today's linux-next merge of the crypto tree got conflicts in:
+					-Alex
 
-  drivers/crypto/vmx/aes.c
-  drivers/crypto/vmx/aes_cbc.c
-  drivers/crypto/vmx/aes_ctr.c
-  drivers/crypto/vmx/aes_xts.c
-  drivers/crypto/vmx/vmx.c
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 
-between commits:
-
-  64d85cc99980 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - =
-rule 299")
-  27ba4deb4e26 ("treewide: Replace GPLv2 boilerplate/reference with SPDX - =
-rule 442")
-
-from Linus' tree and commit:
-
-  1fa0a7dcf759 ("crypto: vmx - convert to SPDX license identifiers")
-
-from the crypto tree.
-
-I fixed it up (I just used the SPDX tags from Linus' tree) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the
-conflicting tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/8czFThpdyTCucr7DXBCF+JB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz/DOAACgkQAVBC80lX
-0GzJCgf+PSJjayUlkgOfTY9r8nDNsfZUlCnZs/EklT3rshOc9d37ov5W0vwyxA/n
-01T+yjNtUAr3Y9HPNjlPcsGFPOkOPkOxDYINfxOvclwzDW4FXZdt72XTjXahHBdU
-woksA/uuWxYQ65XBGKRDWrUDpHutgvOXuO3LMsYsXC9Sat1b8scM0RyOugQDojLb
-kxu9W0iH7GJ2YVM+TDxULuIGKqpJQ4Tlt6QkvbZB67V5jMYAq+OFYjrNcvppWPYm
-HHXKjSAEwxMCe6pL20U8jPyNxpjtGoMAtoyGxMNui8XRTyNugouSQwy/FVyKEdMu
-KzGDV46hzEL5VZHP0ycm4L6+K6AW6Q==
-=UrW1
------END PGP SIGNATURE-----
-
---Sig_/8czFThpdyTCucr7DXBCF+JB--
