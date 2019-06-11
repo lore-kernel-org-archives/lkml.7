@@ -4,123 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835ECC43218
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A935C43218
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEA120679
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560227962;
-	bh=mvtj2aHGzX0ilJr5zceP50LOhamFuNUHmgRWOiUlROA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fhbT2/BJvUg7p5aN1VPS7Bzas432HB1drRzolFGyHkDUTHPQqXNNuYxBL7KUboXAj
-	 MuXRRNPEBWUMnPJKDMj+Felci22+18Lfs4gTa/CekP71R/QNfdUu7dZN9lw1myc7Ck
-	 rnK0RTP8mXnqPKaqXZp44QaMNA/Jqb0LZjvHuAdU=
+	by mail.kernel.org (Postfix) with ESMTP id 2A4372146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 04:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PtUYWVLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391030AbfFKEjV (ORCPT
+        id S2391066AbfFKEkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 00:39:21 -0400
-Received: from mail-lj1-f169.google.com ([209.85.208.169]:41279 "EHLO
-        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387434AbfFKEjU (ORCPT
+        Tue, 11 Jun 2019 00:40:11 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34050 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388141AbfFKEkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 00:39:20 -0400
-Received: by mail-lj1-f169.google.com with SMTP id s21so10144204lji.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 21:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9SMEwJWMeHtEyw0+L1caTDzGbNv810UPp3Lqsx3PUF8=;
-        b=QoOOR0HYKqsx3JsW6Ew+a3guMYkQ2W/iAmuqxvOFKc2gBdgPpiDUc6GDNZv08ve+UL
-         EI1jVlrxftmcd8GkeJ0oFp4Q1bcxwTC2j3DRi7CGlH9xQA0pIgDG9f/n8XTk+FnhBPSf
-         5EUYmUYvqmN9yKTc9mv8oUSfj0cMJfJ9bKh/Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9SMEwJWMeHtEyw0+L1caTDzGbNv810UPp3Lqsx3PUF8=;
-        b=PHgeXV0vYtP0LInRJdxJLyPJKop+0n8JYMc4XFCtkXlpVL+3lUk4vWAktb60E+vqhF
-         uzlGx4ZaQPcB2k+PgIMC966zCWPq5bH4AvBLOw83LiTlsyDaikgUwHMJzWbnIh7XZrFs
-         bCEeXzirh+e2FR2AP+LuT6u4j4Z1NbO65vpo1x6I1ev8ScxkvbyAGz0hO04bWCL5f5PT
-         WjTvupNadqpybAQOnFGah4pFGwYqalr0VDgbsmrNxQ+t98cBNrXPTL7XcSEZVgtFV1Fy
-         b+tl46HT4v/FyZAsGfjeAsa2p7V88XYlBfjjAAzEx5wI2kI8cBufXydALuBktVssKEM4
-         98kA==
-X-Gm-Message-State: APjAAAUj0oJVeesqrRboBkxUCu0GX1e42VIBa97pTKo700RsFc9ZXafe
-        BF2GykwJP+RHmQEEO7cXj1kXo7kfm2M=
-X-Google-Smtp-Source: APXvYqwc9xd/mVAckObVN0+5wRvuLYJjCQsOdGdvgLA7PsLStiRU/OKXufKQCJVEPUvkk+9PrSCa8w==
-X-Received: by 2002:a2e:9692:: with SMTP id q18mr40044182lji.89.1560227958303;
-        Mon, 10 Jun 2019 21:39:18 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id t15sm2317469lff.94.2019.06.10.21.39.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Jun 2019 21:39:17 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id m23so10093716lje.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2019 21:39:16 -0700 (PDT)
-X-Received: by 2002:a2e:2c07:: with SMTP id s7mr4973161ljs.44.1560227956599;
- Mon, 10 Jun 2019 21:39:16 -0700 (PDT)
+        Tue, 11 Jun 2019 00:40:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5B4druO021816;
+        Mon, 10 Jun 2019 23:39:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560227993;
+        bh=4CSDiP1xLUzAxuQfz4ZRA31r4GwtzqiVasSISApjHu4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PtUYWVLx1XD5jnus/WobdTrHYWH38XwEd6RhBdD4d9ID+gD//I2BIe2INKAip1XwE
+         21KPjF8ghgsEjgj7ZTvAKKjT0Sg9P2PDJp6defIHu6/JyQo1Vjh+P6Md6TX/KZhfTY
+         B2bml38ZGyAf1Zmtb/u8LU5lTIk9xdQLHEFvGNFg=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5B4dr8j018697
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Jun 2019 23:39:53 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
+ Jun 2019 23:39:53 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 10 Jun 2019 23:39:53 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5B4dmJ6034860;
+        Mon, 10 Jun 2019 23:39:49 -0500
+Subject: Re: [RFC PATCH 23/30] of/platform: Export
+ of_platform_device_create_pdata()
+To:     Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190604131516.13596-1-kishon@ti.com>
+ <20190604131516.13596-24-kishon@ti.com>
+ <CAL_JsqJ5gsctd7L3VOhTO1JdUqmMmSJRpos1XQyfxzmGO7wauw@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <a80c7c33-7091-70d9-cd86-a19fe43d3bc6@ti.com>
+Date:   Tue, 11 Jun 2019 10:08:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com> <20190611041045.GA14363@dread.disaster.area>
-In-Reply-To: <20190611041045.GA14363@dread.disaster.area>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 10 Jun 2019 18:39:00 -1000
-X-Gmail-Original-Message-ID: <CAHk-=whDmeozRHUO0qM+2OeGw+=dkcjwGdsvms-x5Dz4y7Tzcw@mail.gmail.com>
-Message-ID: <CAHk-=whDmeozRHUO0qM+2OeGw+=dkcjwGdsvms-x5Dz4y7Tzcw@mail.gmail.com>
-Subject: Re: bcachefs status update (it's done cooking; let's get this sucker merged)
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-bcache@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Zach Brown <zach.brown@ni.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_JsqJ5gsctd7L3VOhTO1JdUqmMmSJRpos1XQyfxzmGO7wauw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 6:11 PM Dave Chinner <david@fromorbit.com> wrote:
->
-> Please, no, let's not make the rwsems even more fragile than they
-> already are. I'm tired of the ongoing XFS customer escalations that
-> end up being root caused to yet another rwsem memory barrier bug.
->
-> > Have you talked to Waiman Long about that?
->
-> Unfortunately, Waiman has been unable to find/debug multiple rwsem
-> exclusion violations we've seen in XFS bug reports over the past 2-3
-> years.
+Hi Rob,
 
-Inside xfs you can do whatever you want.
+On 10/06/19 11:13 PM, Rob Herring wrote:
+> On Tue, Jun 4, 2019 at 7:19 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Export of_platform_device_create_pdata() to be used by drivers to
+>> create child devices with the given platform data. This can be used
+>> by platform specific driver to send platform data core driver. For e.g.,
+>> this will be used by TI's J721E SoC specific PCIe driver to send
+>> ->start_link() ops and ->is_link_up() ops to Cadence core PCIe driver.
+> 
+> NAK
+> 
+> of_platform_device_create_pdata() is purely for legacy handling of
+> auxdata which is something I hope to get rid of someday. Or to put it
+> another way, auxdata use is a sign of platforms not fully converted to
+> DT.
 
-But in generic code, no, we're not saying "we don't trust the generic
-locking, so we cook our own random locking".
+All right. Thanks for letting me know your thoughts.
 
-If tghere really are exclusion issues, they should be fairly easy to
-try to find with a generic test-suite. Have a bunch of readers that
-assert that some shared variable has a particular value, and a bund of
-writers that then modify the value and set it back. Add some random
-timing and "yield" to them all, and show that the serialization is
-wrong.
+Lorenzo,
 
-Some kind of "XFS load Y shows problems" is undebuggable, and not
-necessarily due to locking.
+We've modeled Cadence PCIe core as a separate driver and for some of the
+functionalities (for example starting LTSSM or checking link status) it has to
+invoke the wrapper driver functions (The registers for these are present in
+wrapper and not in Cadence Core). In the case of Designware, we modeled DWC
+core as a library which provided APIs to be used by wrapper driver. Now that
+Rob is not inclined for passing platform data from one driver to another (in
+this case TI specific J721E driver to Cadence PCIe driver), should we model
+Cadence core also as a library? If you agree, I can prepare patches for making
+Cadence PCIe core as a library. Please let me know your thoughts.
 
-Because if the locking issues are real (and we did fix one bug
-recently in a9e9bcb45b15: "locking/rwsem: Prevent decrement of reader
-count before increment") it needs to be fixed. Some kind of "let's do
-something else entirely" is simply not acceptable.
+Thanks
+Kishon
 
-                  Linus
