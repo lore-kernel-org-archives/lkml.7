@@ -2,97 +2,107 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7BCC31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B552C31E45
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58D620874
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560290547;
-	bh=MhD+8y0ERq3GqD6GItAk03QOAWY9bjuZ5c18nOOYU54=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YiHXEMuAJx58QUaDFH/UVnVh794WjyaiW8qQJ2TdvqRyPLRuk4uZ7kkEv4t7bN8Vi
-	 kAAJV4JTbu4nqXh6E6nsX+i/KR1bT5W7/5SFeO0WtHLocx5CjzyiJ+qnRA4JY8mJLQ
-	 v7I86+YZ4FiiKKNFJ172/oe9CsuCwiiQuWH79wpI=
+	by mail.kernel.org (Postfix) with ESMTP id 0D90C205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391989AbfFKWC0 (ORCPT
+        id S2392050AbfFKWCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        Tue, 11 Jun 2019 18:02:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21062 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390411AbfFKWC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:02:26 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A335205ED;
-        Tue, 11 Jun 2019 22:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560290545;
-        bh=MhD+8y0ERq3GqD6GItAk03QOAWY9bjuZ5c18nOOYU54=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=0cdiuYYP9Bq46e+NLG0whSnYoRshba1+vkbEMUEIQ+eMBdugDZUCoK7a7vYlu1umy
-         8S6XN1nymffu1xhvuhZA1FnHr+WKTbG0WinLGp/LwN8+R8QZDC/o6BOrNe2/3+ObR/
-         VmTTSzpnbdUz5pIUFH9VbXq88gcCGm4YHU5y/PBU=
-Date:   Wed, 12 Jun 2019 00:02:21 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org
-Subject: Re: Strange regression in hid_llogitech_dj (was: Re: Linux
- 5.2-rc4)
-In-Reply-To: <2268131.Lc39eCoc3j@kreacher>
-Message-ID: <nycvar.YFH.7.76.1906112358580.27227@cbobk.fhfr.pm>
-References: <CAHk-=wjm7FQxdF=RKa8Xe23CLNNpbGDOACewgo8e-hwDJ8TyQg@mail.gmail.com> <2268131.Lc39eCoc3j@kreacher>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S2392014AbfFKWCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:02:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 15:02:45 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga006.fm.intel.com with ESMTP; 11 Jun 2019 15:02:44 -0700
+Date:   Tue, 11 Jun 2019 15:02:43 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Cedric Xing <cedric.xing@intel.com>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
+        jarkko.sakkinen@linux.intel.com, luto@kernel.org,
+        jmorris@namei.org, serge@hallyn.com, paul@paul-moore.com,
+        eparis@parisplace.org, jethro@fortanix.com, dave.hansen@intel.com,
+        tglx@linutronix.de, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, nhorman@redhat.com,
+        pmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
+        bp@alien8.de, josh@joshtriplett.org, kai.huang@intel.com,
+        rientjes@google.com, william.c.roberts@intel.com,
+        philip.b.tricca@intel.com
+Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
+ SELinux
+Message-ID: <20190611220243.GB3416@linux.intel.com>
+References: <cover.1560131039.git.cedric.xing@intel.com>
+ <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
+ <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019, Rafael J. Wysocki wrote:
+On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
+> I haven't looked at this code closely, but it feels like a lot of
+> SGX-specific logic embedded into SELinux that will have to be repeated or
+> reused for every security module.  Does SGX not track this state itself?
 
-> I noticed that the cordless mouse used by me with one of the machines here
-> stopped to work in 5.2-rc (up to and including the -rc4).
-> 
-> Bisection turned up commit 74808f9115ce ("HID: logitech-dj: add support for non
-> unifying receivers").
-> 
-> Of course, that commit does not revert cleanly from 5.2-rc4, but I have reverted
-> the changes made by it in hid/hid-ids.h and I took the version of hid/hid-logitech-dj.c
-> from commit b6aeeddef68d ("HID: logitech-dj: add logi_dj_recv_queue_unknown_work
-> helper"), which is the parent of commit 74808f9115ce, and that made the mouse
-> work again for me.
-> 
-> Here's the output of "dmesg | grep -i logitech" from 5.2-rc4 with the above changes:
-> 
-> [    4.288905] usb 1-2: Manufacturer: Logitech
-> [    5.444621] input: Logitech USB Receiver as /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.0/0003:046D:C52F.0002/input/input23
-> [    5.446960] hid-generic 0003:046D:C52F.0002: input,hidraw1: USB HID v1.11 Mouse [Logitech USB Receiver] on usb-0000:00:14.0-2/input0
-> [    5.451265] input: Logitech USB Receiver Consumer Control as /devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.1/0003:046D:C52F.0003/input/input24
-> [    5.507545] hid-generic 0003:046D:C52F.0003: input,hiddev96,hidraw2: USB HID v1.11 Device [Logitech USB Receiver] on usb-0000:00:14.0-2/input1
+SGX does track equivalent state.
 
-Hi Rafael,
+There are three proposals on the table (I think):
 
-0x046d/0xc52f is known to have issues in 5.2-rcX. There is a patch queued 
-[1] that is believed to fix all this; my plan is to send it to Linus in 
-the coming 1-2 days. If you could report whether it fixes the issues 
-you've been seeing yourself as well, it'd be helpful.
+  1. Require userspace to explicitly specificy (maximal) enclave page
+     permissions at build time.  The enclave page permissions are provided
+     to, and checked by, LSMs at enclave build time.
 
-Thanks.
+     Pros: Low-complexity kernel implementation, straightforward auditing
+     Cons: Sullies the SGX UAPI to some extent, may increase complexity of
+           SGX2 enclave loaders.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=for-5.2/fixes&id=3ed224e273ac5880eeab4c3043a6b06b0478dd56
+  2. Pre-check LSM permissions and dynamically track mappings to enclave
+     pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
+     based on the pre-checked permissions.
 
--- 
-Jiri Kosina
-SUSE Labs
+     Pros: Does not impact SGX UAPI, medium kernel complexity
+     Cons: Auditing is complex/weird, requires taking enclave-specific
+           lock during mprotect() to query/update tracking.
 
+  3. Implement LSM hooks in SGX to allow LSMs to track enclave regions
+     from cradle to grave, but otherwise defer everything to LSMs.
+
+     Pros: Does not impact SGX UAPI, maximum flexibility, precise auditing
+     Cons: Most complex and "heaviest" kernel implementation of the three,
+           pushes more SGX details into LSMs.
+
+My RFC series[1] implements #1.  My understanding is that Andy (Lutomirski)
+prefers #2.  Cedric's RFC series implements #3.
+
+Perhaps the easiest way to make forward progress is to rule out the
+options we absolutely *don't* want by focusing on the potentially blocking
+issue with each option:
+
+  #1 - SGX UAPI funkiness
+
+  #2 - Auditing complexity, potential enclave lock contention
+
+  #3 - Pushing SGX details into LSMs and complexity of kernel implementation
+
+
+[1] https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherson@intel.com
