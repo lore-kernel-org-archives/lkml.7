@@ -2,145 +2,157 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76713C06508
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E75C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D5321744
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:49:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSB2gUM+"
+	by mail.kernel.org (Postfix) with ESMTP id 470542183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 18:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560279020;
+	bh=KSPugbVcFVjo2LRDUR30DOGlfU301RbHfc51FMakphQ=;
+	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
+	b=LsSmnTYVy2gJZKIUot/b2ILsMJ/OAdWKwumajPzHyi+/ZDbovjWJP6qE3JRL98CjZ
+	 UDKrYMdJPkm6JL1mdcRErgyYopWC+VVx5olwa3KwCMSo/wNUqI+wXcnA+7Kji4lNau
+	 35/llN2ZVcLHun8b0Xa3QL/AoEYo9Ln9RyLCDAoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392082AbfFKStK (ORCPT
+        id S2392100AbfFKSuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 14:49:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37647 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389470AbfFKStK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 14:49:10 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r10so12937223otd.4;
-        Tue, 11 Jun 2019 11:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dz7olQKnFjj7omxNegzsPSUMtfyoczAclzprO/pRrIY=;
-        b=iSB2gUM+ptPC8s0fS0yg8bC2jBrbkuG0brKiZ4ngrjTHi+relJzZSSVPJM7dV94t4l
-         gU3KxxHGPU01Yx9AGtudkpc9rU439Z9qNm3rbjoR5B/7iJeXRxqHwfcr5IZ5SzddM02Z
-         KFRpUqromvZR6N5vo4caAUKNaf/cIIjAM5oIYD3ofGrEBW3cvf0nloSJTi5gamBihAiv
-         FzelkkfRr6VNAb86okmqCnZj+o+BTjCDQj5h9tZYGKgI0cXtUrf8gfFpchkWy7HNq+iw
-         Cyuqx6i0a88zbJDV9n7NKk+saN6/gz2eWAgEsIJEic7/Fsq1u7zC5GPzYX4zGn3XlKfY
-         OUyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dz7olQKnFjj7omxNegzsPSUMtfyoczAclzprO/pRrIY=;
-        b=OL5iXDPyZkqwlIa9GsGDeQFXHEYsC7gyK3YBuH8brfM+r4a0QeiFTzWyH7W5fGgYf3
-         +9h3GtbTieRqNZGSmSBwahxWNi0xckovOunBMdeosDkPNIspmegnqKRc4W7PQW5XmRIT
-         clxKc9orK/6dJS5KF6v0WFC5KeVSHZhtDGc/OJgMvMyM2KBb8Ym0pw4Xq30jJFvC38Bt
-         scJfTgN0LZDFJKBazyYCSIqNxXGryNu15JY7yIMh7Q2bUfK243WdAbOcQHbXtxFCjIxH
-         fYlSlkiq5DX/FffVX8ZQMtsvVC7rPGvc2zzAjtEVqW+WSz9OGRhc2xDAxqOJBu55htCe
-         VYdQ==
-X-Gm-Message-State: APjAAAWouTOPTmlq3Yo5scWq1UpHpT+A6+fbenATqG3lO+gJK/OqdM9b
-        5QyMRxXdxnwz9NL+MdMP6MFXnGewIBDH28LButcEAQ==
-X-Google-Smtp-Source: APXvYqzkhILMzkowVhwzSSm9im2xIoXr2H9SzdfAW6Yt/vy3tjIAvRSX0L7L/0gRotVLYOYkXaULmE+GUytAFw0YSBc=
-X-Received: by 2002:a9d:7245:: with SMTP id a5mr36283933otk.232.1560278949767;
- Tue, 11 Jun 2019 11:49:09 -0700 (PDT)
+        Tue, 11 Jun 2019 14:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389470AbfFKSuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 14:50:19 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E1C021744;
+        Tue, 11 Jun 2019 18:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560279018;
+        bh=KSPugbVcFVjo2LRDUR30DOGlfU301RbHfc51FMakphQ=;
+        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
+        b=eUcQmeuoyqCS292prTem1gEJTNrE/i4/3mRNGwiqnO3Tx9yQumA1yteW7iEE4JN1g
+         eh2ADC167gKmUCTbEgDbjScSG5xLnIHWi5uWk5SVDUlKT9arAGeIY6q58Nsi/mtoWM
+         Sissolu8Hy/cpsaYhChLTjhjFekH7GFD9BeulHFI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190607002330.2999-1-prsriva02@gmail.com> <1560267426.4464.173.camel@linux.ibm.com>
-In-Reply-To: <1560267426.4464.173.camel@linux.ibm.com>
-From:   prakhar srivastava <prsriva02@gmail.com>
-Date:   Tue, 11 Jun 2019 11:48:58 -0700
-Message-ID: <CAEFn8q+RgSnJaWAJT+xN-CZWCsaOVqrPunT3icd_ua2bpkp_SQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/3] add new ima hook ima_kexec_cmdline to measure
- kexec boot cmdline args
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>, vgoyal@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190611175830.GA236872@google.com>
+References: <20190514221711.248228-1-brendanhiggins@google.com> <20190514221711.248228-18-brendanhiggins@google.com> <20190517182254.548EA20815@mail.kernel.org> <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com> <20190607190047.C3E7A20868@mail.kernel.org> <20190611175830.GA236872@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Iurii Zaikin <yzaikin@google.com>, frowand.list@gmail.com,
+        gregkh@linuxfoundation.org, jpoimboe@redhat.com,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com
+Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+User-Agent: alot/0.8.1
+Date:   Tue, 11 Jun 2019 11:50:17 -0700
+Message-Id: <20190611185018.2E1C021744@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 8:37 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
->
-> Hi Prakhar,
->
-> The patch/patch set title in the Subject line should not explain "how"
-> you add a new feature.  In this case an appropriate patch set title
-> would be, "Add support for measuring the boot command line".
->  Similarly, the first patch in this patch set could be named "Define a
-> new IMA hook to measure the boot command line arguments".
->
-> On Thu, 2019-06-06 at 17:23 -0700, Prakhar Srivastava wrote:
-> > The motive behind the patch series is to measure the boot cmdline args
-> > used for soft reboot/kexec case.
->
-> When mentoring, I suggest starting out with a simple status statement
-> (eg. "The kexec boot command line arguments are not currently being
-> measured."), followed by the problem statement in the first paragraph.
->
-> >
-> > For secure boot attestation, it is necessary to measure the kernel
->
-> Secure boot enforces local file data integrity.  The term here should
-> be "trusted boot attestation".
->
-> > command line and the kernel version.
->
-> The original version of this patch set included the kernel version.
-> This version is just measuring the boot command line arguments.
->
-Sorry missed it while updating the cover letter.
-<snip>
+Quoting Brendan Higgins (2019-06-11 10:58:30)
+> On Fri, Jun 07, 2019 at 12:00:47PM -0700, Stephen Boyd wrote:
+> > Quoting Iurii Zaikin (2019-06-05 18:29:42)
+> > > On Fri, May 17, 2019 at 11:22 AM Stephen Boyd <sboyd@kernel.org> wrot=
+e:
+> > > >
+> > > > Quoting Brendan Higgins (2019-05-14 15:17:10)
+> > > > > diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+> > > > > new file mode 100644
+> > > > > index 0000000000000..fe0f2bae66085
+> > > > > --- /dev/null
+> > > > > +++ b/kernel/sysctl-test.c
+> > > > > +
+> > > > > +
+> > > > > +static void sysctl_test_dointvec_happy_single_negative(struct ku=
+nit *test)
+> > > > > +{
+> > > > > +       struct ctl_table table =3D {
+> > > > > +               .procname =3D "foo",
+> > > > > +               .data           =3D &test_data.int_0001,
+> > > > > +               .maxlen         =3D sizeof(int),
+> > > > > +               .mode           =3D 0644,
+> > > > > +               .proc_handler   =3D proc_dointvec,
+> > > > > +               .extra1         =3D &i_zero,
+> > > > > +               .extra2         =3D &i_one_hundred,
+> > > > > +       };
+> > > > > +       char input[] =3D "-9";
+> > > > > +       size_t len =3D sizeof(input) - 1;
+> > > > > +       loff_t pos =3D 0;
+> > > > > +
+> > > > > +       table.data =3D kunit_kzalloc(test, sizeof(int), GFP_USER);
+> > > > > +       KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, =
+&len, &pos));
+> > > > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
+> > > > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
+> > > > > +       KUNIT_EXPECT_EQ(test, -9, *(int *)table.data);
+> > > >
+> > > > Is the casting necessary? Or can the macro do a type coercion of the
+> > > > second parameter based on the first type?
+> > >  Data field is defined as void* so I believe casting is necessary to
+> > > dereference it as a pointer to an array of ints. I don't think the
+> > > macro should do any type coercion that =3D=3D operator wouldn't do.
+> > >  I did change the cast to make it more clear that it's a pointer to an
+> > > array of ints being dereferenced.
+> >=20
+> > Ok, I still wonder if we should make KUNIT_EXPECT_EQ check the types on
+> > both sides and cause a build warning/error if the types aren't the same.
+> > This would be similar to our min/max macros that complain about
+> > mismatched types in the comparisons. Then if a test developer needs to
+> > convert one type or the other they could do so with a
+> > KUNIT_EXPECT_EQ_T() macro that lists the types to coerce both sides to
+> > explicitly.
+>=20
+> Do you think it would be better to do a phony compare similar to how
+> min/max used to work prior to 4.17, or to use the new __typecheck(...)
+> macro? This might seem like a dumb question (and maybe it is), but Iurii
+> and I thought the former created an error message that was a bit easier
+> to understand, whereas __typecheck is obviously superior in terms of
+> code reuse.
+>=20
+> This is what we are thinking right now; if you don't have any complaints
+> I will squash it into the relevant commits on the next revision:
 
-> > The ima logs need to be carried over to the next kernel, which will be followed
-> > up by other patchsets for x86_64 and arm64.
-> >
-> > The kexec cmdline hash
->
-> ^stored in the "d-ng" field of the template data
->
-I will add another template-name for ima-buf
-> > can be verified using
->
-> > sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements |
-> >   grep  kexec-cmdline | cut -d' ' -f 6 | xxd -r -p | sha256sum
->
-> Until per policy template field rule support is added, a template name
-> needs to be defined.  Please define "ima-buf" as:
-> {.name = "ima-buf", .fmt = "d-ng|n-ng|buf"}
->
-> I'm still seeing some scripts/checkpatch "WARNING: line over 80
-> characters".  scripts/Lindent should provide the correct way of
-> formatting these lines.
->
-> Some people feel that references to Lindent should be removed, but I
-> tend to agree with the Documentation/hwmon/submitting-patches.rst
-> comment pertaining to scripts/Lindent.
->
-> "* Running your patch or driver file(s) through checkpatch does not
-> mean its formatting is clean. If unsure about formatting in your new
-> driver, run it through Lindent. Lindent is not perfect, and you may
-> have to do some minor cleanup, but it is a good start."
->
-I will double check fix the issues.
-> Examples of where the line formatting is off is the call to
-> ima_get_action() in process_buffer_measurement() and the call to
-> process_buffer_measurement() in ima_kexec_cmdline().
->
-Thanks,
-Prakhar Srivastava
-> thanks,
->
-> Mimi
-<snip>
+Can you provide the difference in error messages and describe that in
+the commit text? The commit message is where you "sell" the patch, so
+being able to compare the tradeoff of having another macro to do type
+comparisons vs. reusing the one that's there in kernel.h would be useful
+to allay concerns that we're duplicating logic for better error
+messages.
+
+Honestly, I'd prefer we just use the macros that we've developed in
+kernel.h to do comparisons here so that we can get code reuse, but more
+importantly so that we don't trip over problems that caused those macros
+to be created in the first place. If the error message is bad, perhaps
+that can be fixed with some sort of compiler directive to make the error
+message a little more useful, i.e. compiletime_warning() thrown into
+__typecheck() or something.
+
+> ---
+> From: Iurii Zaikin <yzaikin@google.com>
+>=20
+> Adds a warning message when comparing values of different types similar
+> to what min() / max() macros do.
+>=20
+> Signed-off-by: Iurii Zaikin <yzaikin@google.com>
