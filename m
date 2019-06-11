@@ -2,104 +2,188 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=BITCOIN_SPAM_02,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6823CC46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE1EC31E44
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1A820866
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BD520896
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 22:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560292082;
+	bh=Kghr8kiNgW/R8+h8kRzLyhWrZkjRGavIeD/1mCsR2Ok=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=NZj1gXpjqk4HR7ybZkJsgvLhv7I0EmZKyMgnNS0SIpLEOz3go6QyyvvDWjz+5d9PK
+	 GeRFnU92QRUBzRQhKAymsTlWJOyAjnWPMt63AzcMktEGhMkaFN84tKtYDFfpyc1nuX
+	 bCBMLLBjwCppNbotd12hx5Ihg8Kk5dk9et/cEHXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392004AbfFKW0S (ORCPT
+        id S2392090AbfFKW2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 18:26:18 -0400
-Received: from gate.crashing.org ([63.228.1.57]:56267 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389575AbfFKW0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 18:26:18 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5BMPqDC020637;
-        Tue, 11 Jun 2019 17:25:53 -0500
-Message-ID: <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Date:   Wed, 12 Jun 2019 08:25:52 +1000
-In-Reply-To: <20190611115651.GD31772@zn.tnic>
-References: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
-         <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
-         <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
-         <20190531051400.GA2275@cz.tnic>
-         <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
-         <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
-         <20190608090556.GA32464@zn.tnic>
-         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
-         <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
-         <20190611115651.GD31772@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Tue, 11 Jun 2019 18:28:01 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:54502 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389575AbfFKW2B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 18:28:01 -0400
+Received: by mail-it1-f194.google.com with SMTP id m138so7654984ita.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 15:28:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+X9der8NXdhTZrpKs7ARdC9UNxvkpwzf4UU4Vx5Hsq4=;
+        b=e4Npqn3VAgKiaPp80W37qxc1orZz3dpQR7luq/0MoHQ9azCxskb/8ERBGSD4AmvRpK
+         6a3YkPRDfCcxHlcoecJV8zMLhO4Ak8zIp+jFb+snV7+LH4GbZWI6J4MAX7JGcmLpMj9v
+         mGyCh53uPjlxb2gyL203LHr7bZyRI2Zf7dX7c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+X9der8NXdhTZrpKs7ARdC9UNxvkpwzf4UU4Vx5Hsq4=;
+        b=pqEvEF+TGAaytSNSXV1ryPzYpqfOw3ChkYw+77d+uLzIgwDnXWHKPVr+gAMqs9irDk
+         +GkCSPvuPGhonTBY3RZo9hDSVshBz/Yb9Ksn3esK1yyMVJRuEh2jaYc/STg1ZHKlLHPb
+         UfwQSGOMh/PFZwler7xbIdmnflksp1K13h2lcNG7WN/POhyYtyxuQU/UXV6ZsHeKrYOK
+         6bzoFAdK39ppM0lm+rOdDWsnPAZY+/CBKOMFXgaXTcx1cd7BTUAGkpLqccjlVb8+K2RS
+         yeq19RRSju2lUGS+hI0TZoWzXvG0P20AYxJE1VwZorxa/Nmxk+y8m/GkFArodKmVHqlh
+         zSOw==
+X-Gm-Message-State: APjAAAV2B1ANUpKceB9ANxFtNGE/Rui0M22R65248epzEXUh0ppgaZJC
+        qInQh9IPj/BZGSaIu+9kP/MpwQ==
+X-Google-Smtp-Source: APXvYqzY62xsZhPwvlwvKnXn2UnexiJcXOMLbaA2+xsHl+lom4K3vDxJ8RyO06LXn/4Y8oTp0K7J3w==
+X-Received: by 2002:a02:1a86:: with SMTP id 128mr52536525jai.95.1560292080103;
+        Tue, 11 Jun 2019 15:28:00 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id e26sm4683086iod.10.2019.06.11.15.27.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 15:27:59 -0700 (PDT)
+Subject: Re: [PATCH 1/2] media: v4l2-core: Shifting signed 32-bit value by 31
+ bits error
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com,
+        niklas.soderlund+renesas@ragnatech.se, ezequiel@collabora.com,
+        paul.kocialkowski@bootlin.com
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <cover.1559764506.git.skhan@linuxfoundation.org>
+ <bac3ee3b10de409b6cdf7286e0e84737e63662ee.1559764506.git.skhan@linuxfoundation.org>
+ <8cc03625-f41d-6009-d50c-823e5f498dca@infradead.org>
+ <7819cae4-58e5-cbe1-ac9d-bca00d390066@xs4all.nl>
+ <d5aea86a-b556-aae4-0b97-9add8878f99f@linuxfoundation.org>
+ <6b4654b1-7cd5-8fea-8c08-472ade8f3ebb@xs4all.nl>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <9f925e72-4d55-0cfc-ace6-dfe69bbc6903@linuxfoundation.org>
+Date:   Tue, 11 Jun 2019 16:27:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <6b4654b1-7cd5-8fea-8c08-472ade8f3ebb@xs4all.nl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 13:56 +0200, Borislav Petkov wrote:
-> On Tue, Jun 11, 2019 at 05:21:39PM +1000, Benjamin Herrenschmidt wrote:
-> > So looking again ... all the registration/removal of edac devices seem
-> > to already be protected by mutexes, so that's not a problem.
-> > 
-> > Tell me more about what specific races you think we might have here,
-> > I'm not sure I follow...
+On 6/11/19 2:50 PM, Hans Verkuil wrote:
+> On 6/11/19 9:42 PM, Shuah Khan wrote:
+>> On 6/6/19 12:33 AM, Hans Verkuil wrote:
+>>> On 6/6/19 5:22 AM, Randy Dunlap wrote:
+>>>> On 6/5/19 2:53 PM, Shuah Khan wrote:
+>>>>> Fix the following cppcheck error:
+>>>>>
+>>>>> Checking drivers/media/v4l2-core/v4l2-ioctl.c ...
+>>>>> [drivers/media/v4l2-core/v4l2-ioctl.c:1370]: (error) Shifting signed 32-bit value by 31 bits is undefined behaviour
+>>>>>
+>>>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>>>>> ---
+>>>>>    drivers/media/v4l2-core/v4l2-ioctl.c | 2 +-
+>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>>> index 6859bdac86fe..333e387bafeb 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>>>> @@ -1364,7 +1364,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>>>>>    					(char)((fmt->pixelformat >> 8) & 0x7f),
+>>>>>    					(char)((fmt->pixelformat >> 16) & 0x7f),
+>>>>>    					(char)((fmt->pixelformat >> 24) & 0x7f),
+>>>>> -					(fmt->pixelformat & (1 << 31)) ? "-BE" : "");
+>>>>> +					(fmt->pixelformat & BIT(31)) ? "-BE" : "");
+>>>>>    			break;
+>>>>>    		}
+>>>>>    	}
+>>>>>
+>>>>
+>>>> If this builds, I guess #define BIT(x) got pulled in indirectly
+>>>> since bits.h nor bitops.h is currently #included in that source file.
+>>>>
+>>
+>> It does build. You are right that I should have included bitops.h
+>>
+>>>> Documentation/process/submit-checklist.rst rule #1 says:
+>>>> 1) If you use a facility then #include the file that defines/declares
+>>>>      that facility.  Don't depend on other header files pulling in ones
+>>>>      that you use.
+>>>>
+>>>> Please add #include <linux/bits or bitops.h>
+>>>>
+>>>
+>>> I'm not sure about this patch. '1 << 31' is used all over in the kernel,
+>>> including in public headers (e.g. media.h, videodev2.h).
+>>>
+>>> It seems arbitrary to change it only here, but not anywhere else.
+>>>
+>>
+>> Right. We have several places in the kernel that do that.
+>>
+>>> In this particular example for the fourcc handling I would prefer to just
+>>> use '1U << 31', both in v4l2-ioctl.c and videodev2.h.
+>>>
+>>
+>> If you would like to take the patch, I can send v2 fixing it using
+>> 1U << 31 - This is simpler since it doesn't nee additional includes.
 > 
-> Well, as I said "it might work or it might set your cat on fire." For
-> example, one of the error logging paths is edac_mc_handle_error() and
-> that thing mostly operates using the *mci pointer which should be ok
-> but then it calls the "trace_mc_event" tracepoint and I'd suppose that
-> tracepoints can do lockless but I'm not sure.
-
-Yes, we would be in a world of pain already if tracepoints couldn't
-handle concurrency :-)
-
-> So what needs to happen is for paths which weren't called by multiple
-> EDAC agents in parallel but need to get called in parallel now due to
-> ARM drivers wanting to do that, to get audited that they're safe.
-
-That's the thing, I don't think we have such path. We are talking about
-having separate L1/L2 vs. MC drivers, they don't overlap.
-
-> Situation is easy if you have one platform driver where you can
-> synchronize things in the driver but since you guys need to do separate
-> drivers for whatever reason, then that would need to be done prior.
+> I would like to have this cleaned up in the public media APIs. Those can be
+> used by other compilers as well and it makes sense to me not to have
+> undefined behavior in those headers.
 > 
-> Makes more sense?
 
-Sort-of... I still don't see a race in what we propose but I might be
-missing something subtle. We are talking about two drivers for two
-different IP blocks updating different counters etc...
+Great. That is a good point. I will start looking at the public media
+APIs.
 
-Cheers,
-Ben.
+>>
+>>> A separate patch doing the same for MEDIA_ENT_ID_FLAG_NEXT in media.h would
+>>> probably be a good idea either: that way the public API at least will do
+>>> the right thing.
+>>>
 
+Sounds good.
 
+>>
+>> I should have explained it better. I wanted to start with one or two
+>> places first to see if it is worth our time to fix these:
+>>
+>> The full kernel cppcheck log for "Shifting signed 32-bit value by 31
+>> bits is undefined behaviour" can be found at:
+>>
+>> https://drive.google.com/file/d/19Xu7UqBGJ7BpzxEp92ZQYb6F8UPrk3z3/view
+> 
+> I don't think it makes sense to fix this for drivers. If gcc would do this
+> wrong, we'd have noticed it ages ago.
+
+Agreed. I am not concerned about it being incorrect. More for silencing
+cppcheck. I do agree that it isn't of a great value to us.
+
+> 
+> But I think it makes sense to fix this in public headers.
+> 
+
+Yes. This would definitely help.
+
+thanks,
+-- Shuah
