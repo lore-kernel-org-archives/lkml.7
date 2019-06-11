@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9EFC4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD67C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4032208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B670B2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 07:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HolacF8+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhXh9Jzb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404399AbfFKHea (ORCPT
+        id S2404277AbfFKHee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 03:34:30 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46477 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404276AbfFKHe2 (ORCPT
+        Tue, 11 Jun 2019 03:34:34 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36071 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404276AbfFKHec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 03:34:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 81so6846676pfy.13;
-        Tue, 11 Jun 2019 00:34:28 -0700 (PDT)
+        Tue, 11 Jun 2019 03:34:32 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d21so4723094plr.3;
+        Tue, 11 Jun 2019 00:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nkR2CGLhyvHwMw1SHqXyTIaVd8ya3H+LSY4Ah0z2vFw=;
-        b=HolacF8+aWi/c2mW5fFH3k2zm0ZhV9gAVHvPJCwLnkh0OQY1tOHbTZC1WkHcaBJbc6
-         fzUJX6lnIZT9bmJCQHQ+rg6OqeANyWZUmRCnpSLMwrZIqDw6O7nm6zf0ZBQ19oel8WAW
-         dpPaoLDsgBHjU0pHerFyNLgkj08SHbVn8XdgOhzmK3QF9EvQK1t6kdY2plmgAsd703KA
-         nk5FrQ3VkEEJAG/X5vQ/QZ2H60aDITLOfAiQL4QjC9BG4LmKZzete5lnqWEQiE3Y64Nk
-         ApD+ePC75PYKnLbk3OF2PuNY/R578NLEDfNQawS3ULhHd3Kiz7wWakrqLq2R9Ls1mlK2
-         SUaw==
+        bh=mrGW1T2iSqhdTKZCxglyJmU60TY2UWKhtt2t3Ktg1eY=;
+        b=lhXh9JzbrCKeEvpkhxKGibIZ9hpRyPXZiS1VvBwpSRo9EZutOEvdOIyKGyzSVDlrhx
+         yj3c9E2wA5zPUmMML0UFmKxlyUo2QDyTpX42qNSufnOc2SkmO3xeKRUiSLOBCKrbz7zD
+         zCZS7kSsvGlRonmmWITwbvsgAiJF8QyYHxHBMGkCsoRcYOwHsHeDiytpu1tAa5WMkdku
+         dr/3rPk4Hw4cDytfmxrjoj6ATrQ7v+y2lUU4XruShnwhhvH16HdNF8Kf8AcsVVLqDHgR
+         HkxSf5eVQPqAZCWnYAITogsNUNnzjX9cN4LVb7QmZCmriZ2ke76l+chFO9wWUkFXNzyu
+         xYmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nkR2CGLhyvHwMw1SHqXyTIaVd8ya3H+LSY4Ah0z2vFw=;
-        b=cAg0DxqH4ji23qu+5biK4rP4JzxkgKAV6oDQrd/uP4r1qjXkd3NdXZZMFJha+b+mpk
-         ZNU9Q78FYij5+slBOGH5hwmMrT8m2WAWGSUl3+Ci3Rf+VB0RgnCEplmao4ZGuSsy62Dd
-         KsbjNL/Jk4e6ZSRnNlW+kZFV/FOkrb7ShIKAdZYfuwBRc0UUZ27xdEioOZ//7N+ksxWP
-         pXsBncdSBf6DlMKCwugO9A1fTnqbq2nISOvme1vay2rOENiIV5akGjOC4Gvvc25QnG8M
-         mXZavWJAnKkL+CopZm+O++8PKYP3RI2BCMENNCpBVIz6jaYdo+7zgSQ5EL/BLTqBE8c8
-         Lozg==
-X-Gm-Message-State: APjAAAUeyFiWHeHqoXlzCd7YU04bBi4tQnxDtjMHO/JRysiIohu2CN3D
-        zyNZfvIe93PmdRXcYHJi0X4+10S8
-X-Google-Smtp-Source: APXvYqwvFiG1DTuESxZ7KpM5wcg/He8219TzmlFZ/vrU0uwYMsYekV+CPwzGXhazqWtR8BrCOdWVGQ==
-X-Received: by 2002:a17:90a:a593:: with SMTP id b19mr5736300pjq.31.1560238467579;
-        Tue, 11 Jun 2019 00:34:27 -0700 (PDT)
+        bh=mrGW1T2iSqhdTKZCxglyJmU60TY2UWKhtt2t3Ktg1eY=;
+        b=jxEdckvuo3ilzgJS+upmlLJ0ZLkBZU/hwx8JeE8I2tn3/jR9tdt+vGP7utka4gBSrC
+         2qpw+Mh7See+bpSIKuCCm8hnR1mdlFFcqifY7DWC5KGgZsvGYe2JL48uHKIZxAejCeuZ
+         x/Ri56KfmMitUP7sDqUXAyr2eSTFsfIBESkXjOgGzDHmd6sGJVQfK2tQO1N72e/KMuSI
+         4qrz/TWIbxHk/IlDzo75TM6gxWV0PlBGovs5LS9J7uNNSMpRrcL7fHaNuT1jMPIeKAwm
+         Gr/v/cJ2o+3jxD+cS8LF4VLf1CBOa/XiCIFp4Tr2JBmlAlYhdETYOY7aCJt4ZJV2rz3J
+         xgoA==
+X-Gm-Message-State: APjAAAUTnZbDaAwAZQmtQ40OrreG4FmkZ+qatgAXDaBhYTI9brnTIxso
+        z2iWrmr3qed47VUsUZejBqxEvMYA
+X-Google-Smtp-Source: APXvYqzIEA65a11MmHTFreR2/leIesD1hYM/5Xatw3lGgrf0ge5x+VAbkuh+h1t5nNOZ0TI1wtyGiA==
+X-Received: by 2002:a17:902:24c:: with SMTP id 70mr74121452plc.2.1560238471181;
+        Tue, 11 Jun 2019 00:34:31 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id 14sm6860800pfj.36.2019.06.11.00.34.25
+        by smtp.googlemail.com with ESMTPSA id 14sm6860800pfj.36.2019.06.11.00.34.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 11 Jun 2019 00:34:27 -0700 (PDT)
+        Tue, 11 Jun 2019 00:34:30 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH v2 3/5] KVM: X86: setup residency msrs during vCPU creation
-Date:   Tue, 11 Jun 2019 15:34:09 +0800
-Message-Id: <1560238451-19495-4-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH v2 5/5] KVM: X86: Save/restore residency values when vCPU migrations
+Date:   Tue, 11 Jun 2019 15:34:11 +0800
+Message-Id: <1560238451-19495-6-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560238451-19495-1-git-send-email-wanpengli@tencent.com>
 References: <1560238451-19495-1-git-send-email-wanpengli@tencent.com>
@@ -78,88 +78,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-To setup core residency msrs during vCPU creation. Allowing guest reads 
-CORE cstate when exposing host CPU power management capabilities to the 
-guest. PKG cstate is restricted currently to avoid a guest to get the 
-whole package information in multi-tenant scenario.
+To save/restore residency values when vCPU migrates between mulitple 
+pCPUs.
 
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/kvm/vmx/vmx.c |  2 ++
- arch/x86/kvm/x86.c     | 21 +++++++++++++++++++++
- arch/x86/kvm/x86.h     |  5 +++++
- 3 files changed, 28 insertions(+)
+ arch/arm/include/asm/kvm_host.h     |  1 +
+ arch/arm64/include/asm/kvm_host.h   |  1 +
+ arch/mips/include/asm/kvm_host.h    |  1 +
+ arch/powerpc/include/asm/kvm_host.h |  1 +
+ arch/s390/include/asm/kvm_host.h    |  1 +
+ arch/x86/kvm/x86.c                  | 38 +++++++++++++++++++++++++++++++++++++
+ include/linux/kvm_host.h            |  1 +
+ virt/kvm/kvm_main.c                 |  1 +
+ 8 files changed, 45 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 4dc2459..2ebaa90 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6663,6 +6663,8 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
- 	if (!vmx->vcpu.arch.core_cstate_msrs)
- 		goto free_vmcs;
+diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
+index 075e192..5e6a487 100644
+--- a/arch/arm/include/asm/kvm_host.h
++++ b/arch/arm/include/asm/kvm_host.h
+@@ -346,6 +346,7 @@ static inline void kvm_arch_hardware_unsetup(void) {}
+ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+ static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
++static inline void kvm_arch_sched_out(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
  
-+	kvm_core_residency_setup(&vmx->vcpu);
-+
- 	if (nested)
- 		nested_vmx_setup_ctls_msrs(&vmx->nested.msrs,
- 					   vmx_capability.ept,
+ static inline void kvm_arm_init_debug(void) {}
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 4bcd9c1..12fec7d 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -557,6 +557,7 @@ void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu);
+ static inline void kvm_arch_hardware_unsetup(void) {}
+ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+ static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
++static inline void kvm_arch_sched_out(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
+ 
+ void kvm_arm_init_debug(void);
+diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
+index 41204a4..217bbfd 100644
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -1136,6 +1136,7 @@ static inline void kvm_arch_free_memslot(struct kvm *kvm,
+ 		struct kvm_memory_slot *free, struct kvm_memory_slot *dont) {}
+ static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+ static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
++static inline void kvm_arch_sched_out(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+index d10df67..4f5306d 100644
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -854,6 +854,7 @@ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+ static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+ static inline void kvm_arch_flush_shadow_all(struct kvm *kvm) {}
+ static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
++static inline void kvm_arch_sched_out(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_exit(void) {}
+ static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index da5825a..8710298 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -908,6 +908,7 @@ static inline void kvm_arch_hardware_disable(void) {}
+ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+ static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
++static inline void kvm_arch_sched_out(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_arch_free_memslot(struct kvm *kvm,
+ 		struct kvm_memory_slot *free, struct kvm_memory_slot *dont) {}
+ static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 841a794..36905cd 100644
+index 36905cd..de91cc5 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -1376,6 +1376,16 @@ void kvm_residency_write(struct kvm_vcpu *vcpu,
+@@ -3332,6 +3332,36 @@ void kvm_core_residency_setup(struct kvm_vcpu *vcpu)
  }
- EXPORT_SYMBOL_GPL(kvm_residency_write);
+ EXPORT_SYMBOL_GPL(kvm_core_residency_setup);
  
-+static void kvm_residency_setup(struct kvm_vcpu *vcpu, struct kvm_residency_msr *msr,
-+		u16 index, bool count_with_host)
++static void kvm_residency_sched_out(struct kvm_vcpu *vcpu)
 +{
-+	/* Preserve value on calls after the first */
-+	u64 value = msr->index ? kvm_residency_read(vcpu, msr->index) : 0;
-+	msr->delta_from_host = msr->count_with_host = count_with_host;
-+	msr->index = index;
-+	kvm_residency_write(vcpu, msr->index, value);
++	int i;
++	struct kvm_residency_msr *msr;
++
++	for (i = 0; i < NR_CORE_RESIDENCY_MSRS; i++) {
++		msr = &vcpu->arch.core_cstate_msrs[i];
++		if (msr->count_with_host) {
++			WARN_ON(!msr->delta_from_host);
++			msr->value += kvm_residency_read_host(vcpu, msr);
++			msr->delta_from_host = false;
++		}
++	}
 +}
 +
- /*
-  * Writes msr value into into the appropriate "register".
-  * Returns 0 on success, non-0 otherwise.
-@@ -3311,6 +3321,17 @@ static bool need_emulate_wbinvd(struct kvm_vcpu *vcpu)
- 	return kvm_arch_has_noncoherent_dma(vcpu->kvm);
- }
- 
-+void kvm_core_residency_setup(struct kvm_vcpu *vcpu)
++static void kvm_residency_sched_in(struct kvm_vcpu *vcpu)
 +{
-+	kvm_residency_setup(vcpu, &vcpu->arch.core_cstate_msrs[0],
-+		MSR_CORE_C3_RESIDENCY, kvm_mwait_in_guest(vcpu->kvm));
-+	kvm_residency_setup(vcpu, &vcpu->arch.core_cstate_msrs[1],
-+		MSR_CORE_C6_RESIDENCY, kvm_mwait_in_guest(vcpu->kvm));
-+	kvm_residency_setup(vcpu, &vcpu->arch.core_cstate_msrs[2],
-+		MSR_CORE_C7_RESIDENCY, kvm_mwait_in_guest(vcpu->kvm));
++	int i;
++	struct kvm_residency_msr *msr;
++
++	for (i = 0; i < NR_CORE_RESIDENCY_MSRS; i++) {
++		msr = &vcpu->arch.core_cstate_msrs[i];
++		if (msr->count_with_host) {
++			WARN_ON(msr->delta_from_host);
++			msr->value -= kvm_residency_read_host(vcpu, msr);
++			msr->delta_from_host = true;
++		}
++	}
 +}
-+EXPORT_SYMBOL_GPL(kvm_core_residency_setup);
 +
  void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
  {
  	/* Address WBINVD may be executed by guest */
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index dc61dbd..123fc8d 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -284,6 +284,11 @@ bool kvm_vector_hashing_enabled(void);
- int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
- 			    int emulation_type, void *insn, int insn_len);
- 
-+u64 kvm_residency_read(struct kvm_vcpu *vcpu, u32 msr_index);
-+void kvm_residency_write(struct kvm_vcpu *vcpu,
-+				u32 msr_index, u64 value);
-+void kvm_core_residency_setup(struct kvm_vcpu *vcpu);
+@@ -9276,6 +9306,14 @@ void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu)
+ {
+ 	vcpu->arch.l1tf_flush_l1d = true;
+ 	kvm_x86_ops->sched_in(vcpu, cpu);
++	if (kvm_mwait_in_guest(vcpu->kvm))
++		kvm_residency_sched_in(vcpu);
++}
 +
- #define KVM_SUPPORTED_XCR0     (XFEATURE_MASK_FP | XFEATURE_MASK_SSE \
- 				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
- 				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
++void kvm_arch_sched_out(struct kvm_vcpu *vcpu)
++{
++	if (kvm_mwait_in_guest(vcpu->kvm))
++		kvm_residency_sched_out(vcpu);
+ }
+ 
+ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index abafddb..288bd34 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -854,6 +854,7 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu);
+ 
+ void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu);
++void kvm_arch_sched_out(struct kvm_vcpu *vcpu);
+ 
+ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 9613987..7d504c0 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4221,6 +4221,7 @@ static void kvm_sched_out(struct preempt_notifier *pn,
+ 
+ 	if (current->state == TASK_RUNNING)
+ 		vcpu->preempted = true;
++	kvm_arch_sched_out(vcpu);
+ 	kvm_arch_vcpu_put(vcpu);
+ }
+ 
 -- 
 2.7.4
 
