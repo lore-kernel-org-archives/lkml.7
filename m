@@ -2,29 +2,29 @@ Return-Path: <SRS0=TvG7=UK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3D2C4321A
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55160C4321A
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8893720657
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D4520657
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 09:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404952AbfFKJiW (ORCPT
+        id S2404965AbfFKJiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 05:38:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:56302 "EHLO foss.arm.com"
+        Tue, 11 Jun 2019 05:38:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:56312 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404137AbfFKJiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:38:22 -0400
+        id S2404137AbfFKJiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 05:38:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CBD7337;
-        Tue, 11 Jun 2019 02:38:21 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 200D0346;
+        Tue, 11 Jun 2019 02:38:23 -0700 (PDT)
 Received: from e112298-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B4FF13F73C;
-        Tue, 11 Jun 2019 02:38:19 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 80E7F3F73C;
+        Tue, 11 Jun 2019 02:38:21 -0700 (PDT)
 From:   Julien Thierry <julien.thierry@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
@@ -32,96 +32,61 @@ Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
         wanghaibin.wang@huawei.com, james.morse@arm.com,
         will.deacon@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com,
         liwei391@huawei.com, Julien Thierry <julien.thierry@arm.com>
-Subject: [PATCH v4 0/8] arm64: IRQ priority masking and Pseudo-NMI fixes
-Date:   Tue, 11 Jun 2019 10:38:05 +0100
-Message-Id: <1560245893-46998-1-git-send-email-julien.thierry@arm.com>
+Subject: [PATCH v4 1/8] arm64: Do not enable IRQs for ct_user_exit
+Date:   Tue, 11 Jun 2019 10:38:06 +0100
+Message-Id: <1560245893-46998-2-git-send-email-julien.thierry@arm.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1560245893-46998-1-git-send-email-julien.thierry@arm.com>
+References: <1560245893-46998-1-git-send-email-julien.thierry@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+For el0_dbg and el0_error, DAIF bits get explicitly cleared before
+calling ct_user_exit.
 
-Version one[1] of this series attempted to fix the issue reported by
-Zenghui[2] when using the function_graph tracer with IRQ priority
-masking.
+When context tracking is disabled, DAIF gets set (almost) immediately
+after. When context tracking is enabled, among the first things done
+is disabling IRQs.
 
-Since then, I realized that priority masking and the use of Pseudo-NMIs
-was more broken than I thought.
+What is actually needed is:
+- PSR.D = 0 so the system can be debugged (should be already the case)
+- PSR.A = 0 so async error can be handled during context tracking
 
-* Patch 1-2 are just some cleanup
-* Patch 3 fixes a potential issue with not clobbering condition flags
-  in irqflags operations
-* Patch 4 fixes an issue where calling C code in Pseudo-NMI before
-  entering NMI enter could lead to potential races
-* Patch 5 fixes the function_graph issue when using priority masking
-* Patch 6 introduces some debug to hopefully avoid breaking things in
-  the future
-* Patch 7 is a rebased version of the patch sent by Wei Li[3] fixing
-  an error that can happen during on some platform using the priority
-  masking feature
-* Patch 8 re-enables the Pseudo-NMI selection
+Do not clear PSR.I in those two locations.
 
-Changes since V3 [4]:
-- Rebase on v5.2-rc4
-- Fix comments/typos/missed updates
-- Use single condition evalution for nmi_enter and nmi_exit
+Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+Cc:Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+---
+ arch/arm64/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes since V2 [5]:
-- Rebase on v5.2-rc3
-- clobber conditions flags for asm that needs it as pointed out by Marc Z.
-  and Robin M.
-- Fix the naming of the new PMR bit value
-- Introduce some helper for the debug conditions
-- use WARN_ONCE for debug that might be very noisy
-- Reenable pseudo NMI.
-
-Changes since V1 [1]:
-- Fix possible race condition between NMI and trace irqflags
-- Simplify the representation of PSR.I in the PMR value
-- Include Wei Li's fix
-- Rebase on v5.1-rc7
-
-[1] https://marc.info/?l=linux-arm-kernel&m=155542458004480&w=2
-[2] https://www.spinics.net/lists/arm-kernel/msg716956.html
-[3] https://www.spinics.net/lists/arm-kernel/msg722171.html
-[4] https://lkml.org/lkml/2019/6/6/280
-[5] https://lkml.org/lkml/2019/4/29/643
-
-Cheers,
-
-Julien
-
--->
-
-Julien Thierry (7):
-  arm64: Do not enable IRQs for ct_user_exit
-  arm64: irqflags: Pass flags as readonly operand to restore instruction
-  arm64: irqflags: Add condition flags to inline asm clobber list
-  arm64: Fix interrupt tracing in the presence of NMIs
-  arm64: Fix incorrect irqflag restore for priority masking
-  arm64: irqflags: Introduce explicit debugging for IRQ priorities
-  arm64: Allow selecting Pseudo-NMI again
-
-Wei Li (1):
-  arm64: fix kernel stack overflow in kdump capture kernel
-
- arch/arm64/Kconfig                  | 12 +++++-
- arch/arm64/include/asm/arch_gicv3.h |  4 +-
- arch/arm64/include/asm/cpufeature.h |  6 +++
- arch/arm64/include/asm/daifflags.h  | 75 +++++++++++++++++++++------------
- arch/arm64/include/asm/irqflags.h   | 79 +++++++++++++++++-----------------
- arch/arm64/include/asm/kvm_host.h   |  7 ++--
- arch/arm64/include/asm/ptrace.h     | 10 ++++-
- arch/arm64/kernel/entry.S           | 84 +++++++++++++++++++++++++++++--------
- arch/arm64/kernel/irq.c             | 26 ++++++++++++
- arch/arm64/kernel/process.c         |  2 +-
- arch/arm64/kernel/smp.c             |  6 +--
- arch/arm64/kvm/hyp/switch.c         |  2 +-
- drivers/irqchip/irq-gic-v3.c        |  7 ++++
- kernel/irq/irqdesc.c                |  8 +++-
- 14 files changed, 228 insertions(+), 100 deletions(-)
-
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index cd0c7af..89ab6bd 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -870,7 +870,7 @@ el0_dbg:
+ 	mov	x1, x25
+ 	mov	x2, sp
+ 	bl	do_debug_exception
+-	enable_daif
++	enable_da_f
+ 	ct_user_exit
+ 	b	ret_to_user
+ el0_inv:
+@@ -922,7 +922,7 @@ el0_error_naked:
+ 	enable_dbg
+ 	mov	x0, sp
+ 	bl	do_serror
+-	enable_daif
++	enable_da_f
+ 	ct_user_exit
+ 	b	ret_to_user
+ ENDPROC(el0_error)
 --
 1.9.1
