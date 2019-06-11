@@ -7,85 +7,100 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9F1C31E44
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5312C31E45
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156F520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC30921721
+	for <linux-kernel@archiver.kernel.org>; Tue, 11 Jun 2019 21:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560289887;
-	bh=Ix8HMLnSDUMj+DYq2QkyskiJwe4yGG1VLNHrBJQZsbQ=;
+	s=default; t=1560289931;
+	bh=vJ94vobNhd0qbFwYklPBFes+At2zrfr0lalrezKjyJk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wmFbH82AhgeHOfMRiDUhmTMLHUM4B7rwrv9zx3M0dIai/G6PXWMtPupO8pbxVwyy8
-	 zHKfjF8p4nxF3A7z+xqFgUV7hBWJ2oxNR5J7b5KRPh9zFH4W+PWwiJlq1YHk8n4gQA
-	 MO2n6PS0SD+9hg9f4vEbNYbR/l+p3fX4nKulBdZw=
+	b=uEwM4iTj2ylUc7ubr+KSUFHsfMQnQiankWHA4Rs5Owx6AMsgWPZFf3wt7MX+mX9RT
+	 I0T97Ge5wVLd9tml9nwNa03HMl0TIiRdkmzmP8l+ofEijYQu9tyj5EAhW7EboSdImx
+	 7mB3e+PJUHaOg3+hRHr8SFyfMAorrpr897n0bY5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407161AbfFKVv0 (ORCPT
+        id S2407734AbfFKVwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 17:51:26 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43338 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387764AbfFKVvZ (ORCPT
+        Tue, 11 Jun 2019 17:52:11 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36382 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407165AbfFKVwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 17:51:25 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z24so3241821qtj.10;
-        Tue, 11 Jun 2019 14:51:25 -0700 (PDT)
+        Tue, 11 Jun 2019 17:52:10 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so9051643qtl.3;
+        Tue, 11 Jun 2019 14:52:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7TWYrDDzfkQtKv9+OVgy+qU0N7iuCHIvNR6+Puv9gzk=;
-        b=t+CCjQ/Pno8etKWdXdq1tHmV9jJCkiK3vjVL3NDXl+m6Ao0EojqQ5DX62gOGUvo7Si
-         4KcCrSA1IFdsgnyMdbnoKccTIZZEPw0BEjViBiYsbuqDWRyoZH18IDfAmEd4XW8Yd8Tn
-         lznWPMz0TeM6xb9eBzO8/j/brznEyaxJZAkzIlCE6bmcdPAM8Fde1XmAfqZiknFJ4Eea
-         6A5L7zeKP3yRQb4lNPyC53A4AE51rTlf0k8PyWIRWOyBpOGBPX1XIINprQ1xYLxHnTTu
-         97ljUN11XLZRJ4G7Ht3dg3TaQFK0bqIdcqBPICESTFdhm1fT4pKHLVqXYgTt+QWULmXX
-         8q5Q==
-X-Gm-Message-State: APjAAAVQVPmGd+giTO9948yVDdwRtq6+8BTkEzTSWD248V2KBMxXMp7Y
-        N0yxc5WdMIsX88I/S6vQuQ==
-X-Google-Smtp-Source: APXvYqw41EKa1vDT4YG9KxPTlR+OKZ8vNQM/geD9FeXtMv78BxIbs6gCj41LNOzCA2dBvc4h3ZRhEg==
-X-Received: by 2002:ac8:2bbd:: with SMTP id m58mr67089312qtm.225.1560289884437;
-        Tue, 11 Jun 2019 14:51:24 -0700 (PDT)
+        bh=3r12qJQBXAuvMT4EwoDNzavCtWYu4iRZchiufeeQkDA=;
+        b=N7kMZvLZcnBioe2//xcL1M1JtXeItOjpk+32oiPYYvkR1qcTd8UG3720klZffMZBVW
+         eyCbW5s0iv5N+NraXN/IN3BJxaIMxc5tD2DFHd2X8SHfKmssIE8hY2/48dLuk9AONPwl
+         +vQPd24NdiaUnvbfOJ1z0Mdu6wJRieu0Ae6ixAM/+cYB3EHfmA2DRG9U1P9K2kwiCObH
+         ZbUmt7uPESam5rwEesdww1EqU8q3NLU9UBJbijf6GSsd5H1gVveVzTj/Vxqj0H1UQA6p
+         +DneHyADuSaCtUPer4V7U3sk/Bj8h1IK8r+0Sn3r/PB1k0+cK+1DN9TjGyfHQRXOj5DX
+         xzOQ==
+X-Gm-Message-State: APjAAAUT3z3mCAFpflqGv0xig2ygoqF3bYTqnhEBuiVo1h0Q7rzpDE2A
+        MX7p6W7I272U4AFCh9nyone67ic=
+X-Google-Smtp-Source: APXvYqwYg7O90+eWMBJqzuTqXctWOHI40/oJ0GPlNFDUVF6CgMDfl7e03c/8RDgTcCt1Q9vjJvfAkA==
+X-Received: by 2002:a0c:b997:: with SMTP id v23mr62799346qvf.128.1560289929520;
+        Tue, 11 Jun 2019 14:52:09 -0700 (PDT)
 Received: from localhost ([64.188.179.199])
-        by smtp.gmail.com with ESMTPSA id r5sm1914028qkc.42.2019.06.11.14.51.23
+        by smtp.gmail.com with ESMTPSA id j26sm8645067qtj.70.2019.06.11.14.52.08
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 14:51:23 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 15:51:21 -0600
+        Tue, 11 Jun 2019 14:52:09 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 15:52:06 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
- of RGB drivers
-Message-ID: <20190611215121.GA14337@bogus>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-8-dmurphy@ti.com>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Ondrej Jirman <megous@megous.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v6 4/6] dt-bindings: display: hdmi-connector: Support DDC
+ bus enable
+Message-ID: <20190611215206.GA17759@bogus>
+References: <20190527162237.18495-1-megous@megous.com>
+ <20190527162237.18495-5-megous@megous.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523190820.29375-8-dmurphy@ti.com>
+In-Reply-To: <20190527162237.18495-5-megous@megous.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 02:08:18PM -0500, Dan Murphy wrote:
-> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and
-> LP5018 RGB LED device driver.  The LP5036/30/24/18 can control RGB LEDs
-> individually or as part of a control bank group.  These devices have the ability
-> to adjust the mixing control for the RGB LEDs to obtain different colors
-> independent of the overall brightness of the LED grouping.
+On Mon, 27 May 2019 18:22:35 +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
 > 
-> Datasheet:
-> http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+> Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+> on-board voltage shifting logic for the DDC bus using a gpio to be able
+> to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
+> model this.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Add binding documentation for optional ddc-en-gpios property.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
->  .../devicetree/bindings/leds/leds-lp50xx.txt  | 142 ++++++++++++++++++
->  1 file changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+>  .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
