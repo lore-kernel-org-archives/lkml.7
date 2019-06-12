@@ -2,126 +2,129 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE87C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A622C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA3B20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:16:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="adUJV5Q8"
+	by mail.kernel.org (Postfix) with ESMTP id 4BC2F20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439616AbfFLOQE (ORCPT
+        id S2439626AbfFLOSd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:16:04 -0400
-Received: from mail.efficios.com ([167.114.142.138]:48694 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408239AbfFLOQE (ORCPT
+        Wed, 12 Jun 2019 10:18:33 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:40588 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729329AbfFLOSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:16:04 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id E2F88249E5D;
-        Wed, 12 Jun 2019 10:16:02 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id iYe_KaCN3SYQ; Wed, 12 Jun 2019 10:16:02 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 38826249E48;
-        Wed, 12 Jun 2019 10:16:02 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 38826249E48
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1560348962;
-        bh=L5XC9WXtaVzp5iRMgYdqP/JUTm6Gc6c0+kHWK68s7bM=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=adUJV5Q8/Y+sjcB3KAzrkHEiS8cHT/EuD86HTYIDLFqNk30/bb1156wJukeMpHbec
-         OW9GKhZtQLyoxcWOT3Gh5KRPrrZ/lgglW89+DHKypLMo9ayMJwk0jw3L5QBdW7MKDq
-         wlQ8byB2+EznoZ/dzxOBI4F1Rg32KQ29gjXcRr2TfPULS+A2Ih6ymFTdhr33fUEUkX
-         y0VfuQJu1QoKoRft0I9q/QNVgefBm9J97qTtBh/roVIErfj28IRyAZ3j23ij4kZl7W
-         9o63ZJkh1W3Q7J5d1IRdQaZ7bfTCGgTGIoZk1o78fASBC781xOkintgA5br2bAqN3i
-         bwSL6s6+SW26g==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id k4WAOas13dsW; Wed, 12 Jun 2019 10:16:02 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 1C9B1249E3E;
-        Wed, 12 Jun 2019 10:16:02 -0400 (EDT)
-Date:   Wed, 12 Jun 2019 10:16:02 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1329439108.43041.1560348962006.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87wohzorj0.fsf@oldenburg2.str.redhat.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <875zprm4jo.fsf@oldenburg2.str.redhat.com> <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com> <87muj2k4ov.fsf@oldenburg2.str.redhat.com> <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com> <87o93d4lqb.fsf@oldenburg2.str.redhat.com> <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com> <87wohzorj0.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v10)
+        Wed, 12 Jun 2019 10:18:33 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-67-6FlXZ1SPP5GXeJczNtEwpw-1; Wed, 12 Jun 2019 15:18:29 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 12 Jun 2019 15:18:28 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 12 Jun 2019 15:18:28 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Oleg Nesterov' <oleg@redhat.com>
+CC:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "e@80x24.org" <e@80x24.org>,
+        "jbaron@akamai.com" <jbaron@akamai.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Thread-Topic: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Thread-Index: AQHVH9JWknGdQ9+D0UeylJNmvFzQKKaWJ31QgAHScICAABPkMA==
+Date:   Wed, 12 Jun 2019 14:18:28 +0000
+Message-ID: <6f748b26bef748208e2a74174c0c0bfc@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com>
+ <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
+ <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
+ <87lfy96sta.fsf@xmission.com>
+ <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
+ <20190612134558.GB3276@redhat.com>
+In-Reply-To: <20190612134558.GB3276@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-Thread-Index: cbg+MojW6KvB2DHzgPPhBZtXJWBfGg==
+X-MC-Unique: 6FlXZ1SPP5GXeJczNtEwpw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 6, 2019, at 1:57 PM, Florian Weimer fweimer@redhat.com wrote:
-
-> * Mathieu Desnoyers:
+From: Oleg Nesterov
+> Sent: 12 June 2019 14:46
+> On 06/11, David Laight wrote:
+> >
+> > If I have an application that has a loop with a pselect call that
+> > enables SIGINT (without a handler) and, for whatever reason,
+> > one of the fd is always 'ready' then I'd expect a SIGINT
+> > (from ^C) to terminate the program.
 > 
-[...]
+> This was never true.
 > 
->>> The final remaining case is static dlopen.  There is a copy of ld.so on
->>> the dynamic side, but it is completely inactive and has never run.  I do
->>> not think we need to support that because multi-threading does not work
->>> reliably in this scenario, either.  However, we should skip rseq
->>> registration in a nested libc (see the rtld_active function).
->>
->> So for SHARED, if (!rtld_active ()), we should indeed leave the state of
->> __rseq_handled as it is, because we are within a nested inactive ld.so.
+> Before Eric's patches SIGINT can kill a process or not, depending on timing.
+> In particular, if SIGINT was already pending before pselect() and it finds
+> an already ready fd, the program won't terminate.
+
+Which matches what I see on a very old Linux system.
+
+> After the Eric's patches SIGINT will only kill the program if pselect() does
+> not find a ready fd.
 > 
-> I think we should add __rseq_handled initialization to ld.so, so it will
-> only run once, ever.
+> And this is much more consistent. Now we can simply say that the signal will
+> be delivered only if pselect() fails and returns -EINTR. If it doesn't have
+> a handler the process will be killed, otherwise the handler will be called.
 
-OK
+But is it what the standards mandate?
+Can anyone check how Solaris and any of the BSDs behave?
+I don't have access to any solaris systems (I doubt I'll get the disk to
+spin on the one in my garage).
+I can check NetBSD when I get home.
 
-> 
-> It's the registration from libc.so which needs some care.  In
-> particular, we must not override an existing registration.
+The ToG page for pselect() http://pubs.opengroup.org/onlinepubs/9699919799/functions/pselect.html says:
+    "If sigmask is not a null pointer, then the pselect() function shall replace
+    the signal mask of the caller by the set of signals pointed to by sigmask
+    before examining the descriptors, and shall restore the signal mask of the
+    calling thread before returning."
+Note that it says 'before examining the descriptors' not 'before blocking'.
+Under the general description about signals it also says that the signal handler
+will be called (or other action happen) when a pending signal is unblocked.
+So unblocking SIGINT (set to SIG_DFL) prior to examining the descriptors
+should be enough to cause the process to exit.
+The fact that signal handlers are not called until 'return to user'
+is really an implementation choice - but (IMHO) it should appear as if they
+were called at the time they became unmasked.
 
-OK, so it could check if __rseq_abi.cpu_id is -1, and only
-perform registration if it is the case. Or do you have another
-approach in mind ?
+If nothing else the man pages need a note about the standards and portability.
 
-For the main thread, "nested" unregistration does not appear to be a
-problem, because we rely on program exit() to implicitly unregister.
+	David
 
-Thanks,
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-Mathieu
-
-> 
-> Thanks,
-> Florian
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
