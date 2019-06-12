@@ -2,75 +2,124 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7AAC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1B6C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A910720874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FE320B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:48:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QukZpvZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407185AbfFLDoQ (ORCPT
+        id S2407637AbfFLDsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:44:16 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55226 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726568AbfFLDoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:44:16 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6A40A1D14A6A6AD88AE1;
-        Wed, 12 Jun 2019 11:44:14 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
- 11:44:05 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <mchehab@kernel.org>, <tglx@linutronix.de>, <corbet@lwn.net>,
-        <gregkh@linuxfoundation.org>, <sean@mess.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] media: ttpci: Fix build error without RC_CORE
-Date:   Wed, 12 Jun 2019 11:43:10 +0800
-Message-ID: <20190612034310.4640-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 11 Jun 2019 23:48:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52586 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407061AbfFLDsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 23:48:22 -0400
+Received: from zn.tnic (p200300EC2F0A680098854F45E2A0A47F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:9885:4f45:e2a0:a47f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4D1C1EC01AD;
+        Wed, 12 Jun 2019 05:48:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560311300;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=J1N1vI6eyDVtjlL+ZshOlH/0wAtVw2YVqy7wYoH0usQ=;
+        b=QukZpvZs6Q/q1XtjMMV2DJy8T8vdHnSMai/7i7ER9R2aJv1H0B+Durxvgx90070ANE8Ckk
+        RLdLhGXAFm1/6cbSsR3YiQ/slQq9Gp34Q0Fm/sva9NXybvOZaWTqEah1RuxY8ctl6Ny5wK
+        R+B8a35EGnwK+rKVfQiT5FBVW1u1aPY=
+Date:   Wed, 12 Jun 2019 05:48:14 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        James Morse <james.morse@arm.com>
+Cc:     "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190612034813.GA32652@zn.tnic>
+References: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+ <20190531051400.GA2275@cz.tnic>
+ <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+ <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+ <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+ <20190608090556.GA32464@zn.tnic>
+ <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+ <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+ <20190611115651.GD31772@zn.tnic>
+ <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If RC_CORE is not set, building fails:
+On Wed, Jun 12, 2019 at 08:25:52AM +1000, Benjamin Herrenschmidt wrote:
+> Yes, we would be in a world of pain already if tracepoints couldn't
+> handle concurrency :-)
 
-drivers/media/pci/ttpci/av7110_ir.o: In function `av7110_ir_init':
-av7110_ir.c:(.text+0x1b0): undefined reference to `rc_allocate_device'
-av7110_ir.c:(.text+0x2c1): undefined reference to `rc_register_device'
-av7110_ir.c:(.text+0x2dc): undefined reference to `rc_free_device'
+Right, lockless buffer and the whole shebang :)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 71f49a8bf5c5 ("media: ttpci: use rc-core for the IR receiver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/media/pci/ttpci/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Sort-of... I still don't see a race in what we propose but I might be
+> missing something subtle. We are talking about two drivers for two
+> different IP blocks updating different counters etc...
 
-diff --git a/drivers/media/pci/ttpci/Kconfig b/drivers/media/pci/ttpci/Kconfig
-index d96d4fa..b705631 100644
---- a/drivers/media/pci/ttpci/Kconfig
-+++ b/drivers/media/pci/ttpci/Kconfig
-@@ -7,7 +7,7 @@ config DVB_AV7110
- 	depends on DVB_CORE && PCI && I2C
- 	select TTPCI_EEPROM
- 	select VIDEO_SAA7146_VV
--	select DVB_AV7110_IR if INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110
-+	select DVB_AV7110_IR if RC_CORE=DVB_AV7110 && (INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110)
- 	depends on VIDEO_DEV	# dependencies of VIDEO_SAA7146_VV
- 	select DVB_VES1820 if MEDIA_SUBDRV_AUTOSELECT
- 	select DVB_VES1X93 if MEDIA_SUBDRV_AUTOSELECT
+If you do only *that* you should be fine. That should technically be ok.
+
+I still think, though, that the sensible thing to do is have one
+platform driver which concentrates all RAS functionality. It is the
+more sensible design and takes care of potential EDAC shortcomings and
+the need to communicate between the different logging functionality,
+as in, for example, "I had so many errors, lemme go and increase DRAM
+scrubber frequency." For example. And all the other advantages of having
+everything in a single driver.
+
+And x86 already does that - we even have a single driver for all AMD
+platforms - amd64_edac. Intel has a couple but there's still a lot of
+sharing.
+
+But apparently ARM folks want to have one driver per IP block. And we
+have this discussion each time a new vendor decides to upstream its
+driver. And there's no shortage of vendors in ARM-land trying to do
+that.
+
+James and I have tried to come up with a nice scheme to make that work
+on ARM and he has an example prototype here:
+
+http://www.linux-arm.org/git?p=linux-jm.git;a=shortlog;h=refs/heads/edac_dummy/v1
+
+to show how it could look like.
+
+But I'm slowly growing a serious aversion against having this very same
+discussion each time an ARM vendor sends a driver. And that happens
+pretty often nowadays.
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
