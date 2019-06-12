@@ -2,383 +2,120 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB56DC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68ED6C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA5D2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419402086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/bgoMNU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FGGM+m7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408452AbfFLCaY (ORCPT
+        id S2436497AbfFLCcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 22:30:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38171 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405046AbfFLCaY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:30:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a186so8657525pfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 19:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=07Ezs23Foo3zNgzlpDf3FL7wZe6EwMZ3yF2BgR3VBVo=;
-        b=K/bgoMNUyw2wby7kVIaRRaUw/WlgixTvfojPmP0y0NIp7DyJueauySwpnV52heI47x
-         VTKzz9Wu7rIoXZG2tqaFdvySdqn+zSGNCJeDtk+DKEz590+6loyP3dIjx1g6SvSCVBK7
-         MKKD4ZsoZmHaEffD+5t680Z4P1wWQcGRq0VFlJJ1xO7o6iyErvg9tNqHwNzY57FKud8V
-         sIeWRZturJFxeHY9jDJBObsPN7i0Q4xOSK3WnsYIRHVCECfLWDeeJHpblQr77WCYzmb8
-         3KhXogZcPhaIKOp6pTZCFhr31/qXADNF0/lWgBjTLT/e91NxaE0BqH1NB2GYUpOfSZ5g
-         aHLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=07Ezs23Foo3zNgzlpDf3FL7wZe6EwMZ3yF2BgR3VBVo=;
-        b=Xcrxkw08hpVimaBxnR+H1gWxio4nmVyVtD8fBlU8vE71LQm+lhPiK3D65y8XRfGMcj
-         xyao/UWDpUufNvvIuOJXp7J7XkH1lDXgx84F02Ss9HNRJiG2nozVLsHTw13lgD8yDLsF
-         LfcFmmeHxvvTJlWPC/JCBimt17b3Y/nQcbtAXas1EZ8zeCxB9tc02FAhSMJ4LXAXjSqG
-         zDs/yJnX72WWFjQUvK4kpxtCKyipWPEMAlCKni0GIyH+X0m1Kn0WEF6hmD07RwHBOeUt
-         FDWHoQxBNa3h+Ntp7n0hPQz4/PAceOUnsm+5gYgq5BNfQ5pZI/U/EuVql4qaNutTUvpm
-         /TEA==
-X-Gm-Message-State: APjAAAUaJ5VtZcaKvhWzR8IFzto+b8Nr+NfU4lv+/vVkQ7zckrAxP65T
-        b+rBRWvtwOGHHjlga7wbIEff9Dwh
-X-Google-Smtp-Source: APXvYqwAUXmVXXezTykjSFQMndXDmdxTAvCH8DtlxhBbJFwpmlfE0wr2Z2vpJRrsyMqaa3iNUpI1iQ==
-X-Received: by 2002:a17:90a:9905:: with SMTP id b5mr24535070pjp.70.1560306623325;
-        Tue, 11 Jun 2019 19:30:23 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id e127sm16662594pfe.98.2019.06.11.19.30.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 19:30:22 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 08:00:19 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] staging: rtl8723bs: hal: sdio_halinit: fix spaces
- preferred around that unary operator
-Message-ID: <20190612023019.GA23721@hari-Inspiron-1545>
+        Tue, 11 Jun 2019 22:32:52 -0400
+Received: from mail-eopbgr10080.outbound.protection.outlook.com ([40.107.1.80]:21118
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404957AbfFLCcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 22:32:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=czVDxJ0zf8mPj6zoTY55KvKQNA0Z7prW1b4S5CPyVgg=;
+ b=FGGM+m7Mve3Gix62H81vFM30aQN8PciGEnUPQtUBfiAc7gOMvzYXSRq6WIcVOrPR0zN9BLCMlSzuLQb4WK2FXCMmp5a9pW3AKAfOQ8T7+9gIn405gEWYG03vWKRioXba8E7XkQff0kkC09SdnApqZgPZWUPNF9JK6AFBSGCMB7Y=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
+ VE1PR04MB6717.eurprd04.prod.outlook.com (20.179.235.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.17; Wed, 12 Jun 2019 02:32:46 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a13e:6f61:e9e6:16d7]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a13e:6f61:e9e6:16d7%7]) with mapi id 15.20.1943.026; Wed, 12 Jun 2019
+ 02:32:46 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v5 10/15] dma: imx-sdma: add i.mx6ul/6sx compatible name
+Thread-Topic: [PATCH v5 10/15] dma: imx-sdma: add i.mx6ul/6sx compatible name
+Thread-Index: AQHVH2TUbTkL7+9S6kqyltkWYzddn6aXDQ2AgADJhYA=
+Date:   Wed, 12 Jun 2019 02:32:46 +0000
+Message-ID: <1560335783.21664.6.camel@nxp.com>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+         <20190610081753.11422-11-yibin.gong@nxp.com> <20190611223507.GA25722@bogus>
+In-Reply-To: <20190611223507.GA25722@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ae661d44-0e4e-4c0c-9394-08d6eede4184
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6717;
+x-ms-traffictypediagnostic: VE1PR04MB6717:
+x-microsoft-antispam-prvs: <VE1PR04MB671780A9155EB4CA11E4A01789EC0@VE1PR04MB6717.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(346002)(396003)(376002)(199004)(189003)(54906003)(25786009)(102836004)(2906002)(50226002)(66066001)(478600001)(6486002)(14454004)(6916009)(2501003)(53546011)(6506007)(4326008)(6116002)(3846002)(4744005)(7736002)(6512007)(99286004)(76176011)(53936002)(91956017)(66476007)(64756008)(66446008)(305945005)(66556008)(76116006)(73956011)(86362001)(66946007)(446003)(71200400001)(8936002)(71190400001)(8676002)(229853002)(11346002)(476003)(2616005)(6436002)(256004)(2351001)(5660300002)(81156014)(36756003)(316002)(103116003)(26005)(1730700003)(186003)(81166006)(6246003)(68736007)(7416002)(5640700003)(486006)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6717;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: elcSp7V6Y5RQ3Z0SliXk9WYBx1omOdFOo/8aNfCztwSHf1D/3ZZYrNfcv6nyhnjdFuHc99F859lwHxvSwphu9uhOFX7B9/Z+M6bvZimk2eaEFmB2//S40Vej8w3+xf5SZjLiP/ypMJT+ScAnbmJLJcjXV3cXuZ3f+7dOnr8yTWjaOt14/6Q4Aj2GXPhfy7UVMwQYt9DsK1nkarDYbPAqQHgD0nUjN5/EU9MmOZf7yQoOT38YhsY71m1BevS2dgphq6Lcj2bHAIW5ZKEXDAqWQQv7AKS0dh6uADo79w6tM8aNiOQXTFT3XcAgH7TsMjRoXf0mub/SqW6cHfr0ab+I+tK0fsD0m8/2Mbw1vBI7EH7fE+BvVf2rNI8U7Eg1w3oZxO6BWK6hfzP25Cef44GU/z9eDiDeCfiyB0eZk9Bm3so=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <804F0C69EA776E4583B6B19240044F3A@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae661d44-0e4e-4c0c-9394-08d6eede4184
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 02:32:46.7182
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6717
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CHECK: spaces preferred around that '+' (ctx:VxV)
-CHECK: spaces preferred around that '<<' (ctx:VxV)
-CHECK: spaces preferred around that '|' (ctx:VxV)
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/hal/sdio_halinit.c | 92 ++++++++++++++--------------
- 1 file changed, 46 insertions(+), 46 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-index 70f9e1d..8f1c8f0 100644
---- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-+++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-@@ -112,17 +112,17 @@ u8 _InitPowerOn_8723BS(struct adapter *padapter)
-	/*  all of these MUST be configured before power on */
- #ifdef CONFIG_EXT_CLK
-	/*  Use external crystal(XTAL) */
--	value8 = rtw_read8(padapter, REG_PAD_CTRL1_8723B+2);
-+	value8 = rtw_read8(padapter, REG_PAD_CTRL1_8723B + 2);
-	value8 |=  BIT(7);
--	rtw_write8(padapter, REG_PAD_CTRL1_8723B+2, value8);
-+	rtw_write8(padapter, REG_PAD_CTRL1_8723B + 2, value8);
-
-	/*  CLK_REQ High active or Low Active */
-	/*  Request GPIO polarity: */
-	/*  0: low active */
-	/*  1: high active */
--	value8 = rtw_read8(padapter, REG_MULTI_FUNC_CTRL+1);
-+	value8 = rtw_read8(padapter, REG_MULTI_FUNC_CTRL + 1);
-	value8 |= BIT(5);
--	rtw_write8(padapter, REG_MULTI_FUNC_CTRL+1, value8);
-+	rtw_write8(padapter, REG_MULTI_FUNC_CTRL + 1, value8);
- #endif /*  CONFIG_EXT_CLK */
-
-	/*  only cmd52 can be used before power on(card enable) */
-@@ -137,12 +137,12 @@ u8 _InitPowerOn_8723BS(struct adapter *padapter)
-	}
-
-	/*  Radio-Off Pin Trigger */
--	value8 = rtw_read8(padapter, REG_GPIO_INTM+1);
-+	value8 = rtw_read8(padapter, REG_GPIO_INTM + 1);
-	value8 |= BIT(1); /*  Enable falling edge triggering interrupt */
--	rtw_write8(padapter, REG_GPIO_INTM+1, value8);
--	value8 = rtw_read8(padapter, REG_GPIO_IO_SEL_2+1);
-+	rtw_write8(padapter, REG_GPIO_INTM + 1, value8);
-+	value8 = rtw_read8(padapter, REG_GPIO_IO_SEL_2 + 1);
-	value8 |= BIT(1);
--	rtw_write8(padapter, REG_GPIO_IO_SEL_2+1, value8);
-+	rtw_write8(padapter, REG_GPIO_IO_SEL_2 + 1, value8);
-
-	/*  Enable power down and GPIO interrupt */
-	value16 = rtw_read16(padapter, REG_APS_FSMCO);
-@@ -203,13 +203,13 @@ static void _init_available_page_threshold(struct adapter *padapter, u8 numHQ, u
-	u16 HQ_threshold, NQ_threshold, LQ_threshold;
-
-	HQ_threshold = (numPubQ + numHQ + 1) >> 1;
--	HQ_threshold |= (HQ_threshold<<8);
-+	HQ_threshold |= (HQ_threshold << 8);
-
-	NQ_threshold = (numPubQ + numNQ + 1) >> 1;
--	NQ_threshold |= (NQ_threshold<<8);
-+	NQ_threshold |= (NQ_threshold << 8);
-
-	LQ_threshold = (numPubQ + numLQ + 1) >> 1;
--	LQ_threshold |= (LQ_threshold<<8);
-+	LQ_threshold |= (LQ_threshold << 8);
-
-	rtw_write16(padapter, 0x218, HQ_threshold);
-	rtw_write16(padapter, 0x21A, NQ_threshold);
-@@ -271,7 +271,7 @@ static void _InitTxBufferBoundary(struct adapter *padapter)
-	rtw_write8(padapter, REG_TXPKTBUF_MGQ_BDNY_8723B, txpktbuf_bndy);
-	rtw_write8(padapter, REG_TXPKTBUF_WMAC_LBK_BF_HD_8723B, txpktbuf_bndy);
-	rtw_write8(padapter, REG_TRXFF_BNDY, txpktbuf_bndy);
--	rtw_write8(padapter, REG_TDECTRL+1, txpktbuf_bndy);
-+	rtw_write8(padapter, REG_TDECTRL + 1, txpktbuf_bndy);
- }
-
- static void _InitNormalChipRegPriority(
-@@ -569,7 +569,7 @@ static void HalRxAggr8723BSdio(struct adapter *padapter)
-		valueDMAPageCount = 0x06;
-	}
-
--	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH+1, valueDMATimeout);
-+	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH + 1, valueDMATimeout);
-	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH, valueDMAPageCount);
- }
-
-@@ -588,8 +588,8 @@ static void sdio_AggSettingRxUpdate(struct adapter *padapter)
-	rtw_write8(padapter, REG_TRXDMA_CTRL, valueDMA);
-
-	valueRxAggCtrl |= RXDMA_AGG_MODE_EN;
--	valueRxAggCtrl |= ((aggBurstNum<<2) & 0x0C);
--	valueRxAggCtrl |= ((aggBurstSize<<4) & 0x30);
-+	valueRxAggCtrl |= ((aggBurstNum << 2) & 0x0C);
-+	valueRxAggCtrl |= ((aggBurstSize << 4) & 0x30);
-	rtw_write8(padapter, REG_RXDMA_MODE_CTRL_8723B, valueRxAggCtrl);/* RxAggLowThresh = 4*1K */
- }
-
-@@ -754,11 +754,11 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
-		rtw_hal_get_hwreg(padapter, HW_VAR_CPWM, &cpwm_orig);
-
-		/* ser rpwm */
--		val8 = rtw_read8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1);
-+		val8 = rtw_read8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1);
-		val8 &= 0x80;
-		val8 += 0x80;
-		val8 |= BIT(6);
--		rtw_write8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1, val8);
-+		rtw_write8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1, val8);
-		DBG_871X("%s: write rpwm =%02x\n", __func__, val8);
-		adapter_to_pwrctl(padapter)->tog = (val8 + 0x80) & 0x80;
-
-@@ -788,7 +788,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
-	}
-
- #ifdef CONFIG_WOWLAN
--	if (rtw_read8(padapter, REG_MCUFWDL)&BIT7) {
-+	if (rtw_read8(padapter, REG_MCUFWDL) & BIT7) {
-		u8 reg_val = 0;
-		DBG_871X("+Reset Entry+\n");
-		rtw_write8(padapter, REG_MCUFWDL, 0x00);
-@@ -802,12 +802,12 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
-		/* reset TRX path */
-		rtw_write16(padapter, REG_CR, 0);
-		/* reset MAC, Digital Core */
--		reg_val = rtw_read8(padapter, REG_SYS_FUNC_EN+1);
-+		reg_val = rtw_read8(padapter, REG_SYS_FUNC_EN + 1);
-		reg_val &= ~(BIT(4) | BIT(7));
--		rtw_write8(padapter, REG_SYS_FUNC_EN+1, reg_val);
--		reg_val = rtw_read8(padapter, REG_SYS_FUNC_EN+1);
-+		rtw_write8(padapter, REG_SYS_FUNC_EN + 1, reg_val);
-+		reg_val = rtw_read8(padapter, REG_SYS_FUNC_EN + 1);
-		reg_val |= BIT(4) | BIT(7);
--		rtw_write8(padapter, REG_SYS_FUNC_EN+1, reg_val);
-+		rtw_write8(padapter, REG_SYS_FUNC_EN + 1, reg_val);
-		DBG_871X("-Reset Entry-\n");
-	}
- #endif /* CONFIG_WOWLAN */
-@@ -955,7 +955,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
-	/*  Configure SDIO TxRx Control to enable Rx DMA timer masking. */
-	/*  2010.02.24. */
-	/*  */
--	rtw_write32(padapter, SDIO_LOCAL_BASE|SDIO_REG_TX_CTRL, 0);
-+	rtw_write32(padapter, SDIO_LOCAL_BASE | SDIO_REG_TX_CTRL, 0);
-
-	_RfPowerSave(padapter);
-
-@@ -979,7 +979,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
-	rtw_hal_set_hwreg(padapter, HW_VAR_NAV_UPPER, (u8 *)&NavUpper);
-
-	/* ack for xmit mgmt frames. */
--	rtw_write32(padapter, REG_FWHW_TXQ_CTRL, rtw_read32(padapter, REG_FWHW_TXQ_CTRL)|BIT(12));
-+	rtw_write32(padapter, REG_FWHW_TXQ_CTRL, rtw_read32(padapter, REG_FWHW_TXQ_CTRL) | BIT(12));
-
- /*	pHalData->PreRpwmVal = SdioLocalCmd52Read1Byte(padapter, SDIO_REG_HRPWM1) & 0x80; */
-
-@@ -1059,21 +1059,21 @@ static void CardDisableRTL8723BSdio(struct adapter *padapter)
-		rtl8723b_FirmwareSelfReset(padapter);
-
-	/*  Reset MCU 0x2[10]= 0. Suggested by Filen. 2011.01.26. by tynli. */
--	u1bTmp = rtw_read8(padapter, REG_SYS_FUNC_EN+1);
-+	u1bTmp = rtw_read8(padapter, REG_SYS_FUNC_EN + 1);
-	u1bTmp &= ~BIT(2);	/*  0x2[10], FEN_CPUEN */
--	rtw_write8(padapter, REG_SYS_FUNC_EN+1, u1bTmp);
-+	rtw_write8(padapter, REG_SYS_FUNC_EN + 1, u1bTmp);
-
-	/*  MCUFWDL 0x80[1:0]= 0 */
-	/*  reset MCU ready status */
-	rtw_write8(padapter, REG_MCUFWDL, 0);
-
-	/*  Reset MCU IO Wrapper, added by Roger, 2011.08.30 */
--	u1bTmp = rtw_read8(padapter, REG_RSV_CTRL+1);
-+	u1bTmp = rtw_read8(padapter, REG_RSV_CTRL + 1);
-	u1bTmp &= ~BIT(0);
--	rtw_write8(padapter, REG_RSV_CTRL+1, u1bTmp);
--	u1bTmp = rtw_read8(padapter, REG_RSV_CTRL+1);
-+	rtw_write8(padapter, REG_RSV_CTRL + 1, u1bTmp);
-+	u1bTmp = rtw_read8(padapter, REG_RSV_CTRL + 1);
-	u1bTmp |= BIT(0);
--	rtw_write8(padapter, REG_RSV_CTRL+1, u1bTmp);
-+	rtw_write8(padapter, REG_RSV_CTRL + 1, u1bTmp);
-
-	/*	==== Reset digital sequence end ====== */
-
-@@ -1110,10 +1110,10 @@ static u32 rtl8723bs_hal_deinit(struct adapter *padapter)
-				/* H2C done, enter 32k */
-				if (val8 == 0) {
-					/* ser rpwm to enter 32k */
--					val8 = rtw_read8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1);
-+					val8 = rtw_read8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1);
-					val8 += 0x80;
-					val8 |= BIT(0);
--					rtw_write8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1, val8);
-+					rtw_write8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1, val8);
-					DBG_871X("%s: write rpwm =%02x\n", __func__, val8);
-					adapter_to_pwrctl(padapter)->tog = (val8 + 0x80) & 0x80;
-					cnt = val8 = 0;
-@@ -1205,7 +1205,7 @@ static void rtl8723bs_interface_configure(struct adapter *padapter)
-
-	switch (pHalData->OutEpNumber) {
-	case 3:
--		pHalData->OutEpQueueSel = TX_SELE_HQ | TX_SELE_LQ|TX_SELE_NQ;
-+		pHalData->OutEpQueueSel = TX_SELE_HQ | TX_SELE_LQ | TX_SELE_NQ;
-		break;
-	case 2:
-		pHalData->OutEpQueueSel = TX_SELE_HQ | TX_SELE_NQ;
-@@ -1292,7 +1292,7 @@ static void Hal_EfuseParseBoardType_8723BS(
-	if (!AutoLoadFail) {
-		pHalData->BoardType = (hwinfo[EEPROM_RF_BOARD_OPTION_8723B] & 0xE0) >> 5;
-		if (pHalData->BoardType == 0xFF)
--			pHalData->BoardType = (EEPROM_DEFAULT_BOARD_OPTION&0xE0)>>5;
-+			pHalData->BoardType = (EEPROM_DEFAULT_BOARD_OPTION & 0xE0) >> 5;
-	} else
-		pHalData->BoardType = 0;
-	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("Board Type: 0x%2x\n", pHalData->BoardType));
-@@ -1460,7 +1460,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-		{
-			val8 = *val;
-			val8 &= 0xC1;
--			rtw_write8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1, val8);
-+			rtw_write8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1, val8);
-		}
-		break;
-	case HW_VAR_SET_REQ_FW_PS:
-@@ -1496,9 +1496,9 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-
-			/*  2. RX DMA stop */
-			DBG_871X_LEVEL(_drv_always_, "Pause DMA\n");
--			rtw_write32(padapter, REG_RXPKT_NUM, (rtw_read32(padapter, REG_RXPKT_NUM)|RW_RELEASE_EN));
-+			rtw_write32(padapter, REG_RXPKT_NUM, (rtw_read32(padapter, REG_RXPKT_NUM) | RW_RELEASE_EN));
-			do {
--				if ((rtw_read32(padapter, REG_RXPKT_NUM)&RXDMA_IDLE)) {
-+				if ((rtw_read32(padapter, REG_RXPKT_NUM) & RXDMA_IDLE)) {
-					DBG_871X_LEVEL(_drv_always_, "RX_DMA_IDLE is true\n");
-					break;
-				} else {
-@@ -1530,7 +1530,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-			sdio_local_read(padapter, SDIO_REG_HIMR, 4, (u8 *)&tmp);
-			DBG_871X("DisableInterruptButCpwm28723BSdio(): Read SDIO_REG_HIMR: 0x%08x\n", tmp);
-
--			himr = cpu_to_le32(SDIO_HIMR_DISABLED)|SDIO_HIMR_CPWM2_MSK;
-+			himr = cpu_to_le32(SDIO_HIMR_DISABLED) | SDIO_HIMR_CPWM2_MSK;
-			sdio_local_write(padapter, SDIO_REG_HIMR, 4, (u8 *)&himr);
-
-			sdio_local_read(padapter, SDIO_REG_HIMR, 4, (u8 *)&tmp);
-@@ -1545,7 +1545,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-				DBG_871X_LEVEL(_drv_always_, "Check EnableWoWlan CMD is ready\n");
-				mstatus = rtw_read8(padapter, REG_WOW_CTRL);
-				trycnt = 10;
--				while (!(mstatus&BIT1) && trycnt > 1) {
-+				while (!(mstatus & BIT1) && trycnt > 1) {
-					mstatus = rtw_read8(padapter, REG_WOW_CTRL);
-					DBG_871X("Loop index: %d :0x%02x\n", trycnt, mstatus);
-					trycnt--;
-@@ -1603,7 +1603,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-				DBG_871X_LEVEL(_drv_always_, "Check DisableWoWlan CMD is ready\n");
-				mstatus = rtw_read8(padapter, REG_WOW_CTRL);
-				trycnt = 50;
--				while (mstatus&BIT1 && trycnt > 1) {
-+				while (mstatus & BIT1 && trycnt > 1) {
-					mstatus = rtw_read8(padapter, REG_WOW_CTRL);
-					DBG_871X_LEVEL(_drv_always_, "Loop index: %d :0x%02x\n", trycnt, mstatus);
-					trycnt--;
-@@ -1613,9 +1613,9 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-				if (mstatus & BIT1) {
-					DBG_871X_LEVEL(_drv_always_, "Disable WOW mode fail!!\n");
-					DBG_871X("Set 0x690 = 0x00\n");
--					rtw_write8(padapter, REG_WOW_CTRL, (rtw_read8(padapter, REG_WOW_CTRL)&0xf0));
-+					rtw_write8(padapter, REG_WOW_CTRL, (rtw_read8(padapter, REG_WOW_CTRL) & 0xf0));
-					DBG_871X_LEVEL(_drv_always_, "Release RXDMA\n");
--					rtw_write32(padapter, REG_RXPKT_NUM, (rtw_read32(padapter, REG_RXPKT_NUM)&(~RW_RELEASE_EN)));
-+					rtw_write32(padapter, REG_RXPKT_NUM, (rtw_read32(padapter, REG_RXPKT_NUM) & (~RW_RELEASE_EN)));
-				}
-
-				/*  3.1 read fw iv */
-@@ -1706,9 +1706,9 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-			/*  2. RX DMA stop */
-			DBG_871X_LEVEL(_drv_always_, "Pause DMA\n");
-			rtw_write32(padapter, REG_RXPKT_NUM,
--				(rtw_read32(padapter, REG_RXPKT_NUM)|RW_RELEASE_EN));
-+				(rtw_read32(padapter, REG_RXPKT_NUM) | RW_RELEASE_EN));
-			do {
--				if ((rtw_read32(padapter, REG_RXPKT_NUM)&RXDMA_IDLE)) {
-+				if ((rtw_read32(padapter, REG_RXPKT_NUM) & RXDMA_IDLE)) {
-					DBG_871X_LEVEL(_drv_always_, "RX_DMA_IDLE is true\n");
-					break;
-				} else {
-@@ -1742,7 +1742,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-			sdio_local_read(padapter, SDIO_REG_HIMR, 4, (u8 *)&tmp);
-			DBG_871X("DisableInterruptButCpwm28723BSdio(): Read SDIO_REG_HIMR: 0x%08x\n", tmp);
-
--			himr = cpu_to_le32(SDIO_HIMR_DISABLED)|SDIO_HIMR_CPWM2_MSK;
-+			himr = cpu_to_le32(SDIO_HIMR_DISABLED) | SDIO_HIMR_CPWM2_MSK;
-			sdio_local_write(padapter, SDIO_REG_HIMR, 4, (u8 *)&himr);
-
-			sdio_local_read(padapter, SDIO_REG_HIMR, 4, (u8 *)&tmp);
-@@ -1808,7 +1808,7 @@ static void GetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
- {
-	switch (variable) {
-	case HW_VAR_CPWM:
--		*val = rtw_read8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HCPWM1_8723B);
-+		*val = rtw_read8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HCPWM1_8723B);
-		break;
-
-	case HW_VAR_FW_PS_STATE:
---
-2.7.4
-
+T24gMjAxOS0wNi0xMSBhdCAyMjozNSArMDAwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIE1v
+biwgMTAgSnVuIDIwMTkgMTY6MTc6NDggKzA4MDAsIHlpYmluLmdvbmdAbnhwLmNvbSB3cm90ZToN
+Cj4gPiANCj4gPiBGcm9tOiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+ID4gDQo+
+ID4gQWRkIGkubXg2dWwgYW5kIGkubXg2c3ggY29tcGF0aWJsZSBuYW1lIGluIGJpbmRpbmcgZG9j
+Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNv
+bT4NCj4gPiAtLS0NCj4gPiDCoERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEv
+ZnNsLWlteC1zZG1hLnR4dCB8IDIgKysNCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
+bnMoKykNCj4gPiANCj4gUGxlYXNlIGFkZCBBY2tlZC1ieS9SZXZpZXdlZC1ieSB0YWdzIHdoZW4g
+cG9zdGluZyBuZXcgdmVyc2lvbnMuDQo+IEhvd2V2ZXIsDQo+IHRoZXJlJ3Mgbm8gbmVlZCB0byBy
+ZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0YWdzLiBUaGUNCj4gdXBzdHJlYW0NCj4g
+bWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9yIGFja3MgcmVjZWl2ZWQgb24gdGhlIHZlcnNpb24g
+dGhleSBhcHBseS4NCj4gDQoNCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBw
+bGVhc2Ugc3RhdGUgd2h5IGFuZCB3aGF0IGNoYW5nZWQuDQpTb3JyeSBSb2IuLi5JIG1pc3MgeW91
+ciBtYWlsIHdpdGggJ1Jldmlld2VkLWJ5JyBpbiB2MiBiZWNhdXNlIGl0IHNsaXANCmludG8gJ3Vu
+ayBFbWFpbCcgZm9sZGVyLiBXaWxsIGFkZCB5b3VyIHRhZyBpbiB2NiBpZiBjb21tZW50cyByZWNl
+aXZlZA0KZnJvbSB2NQ==
