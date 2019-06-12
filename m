@@ -2,156 +2,135 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991C1C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D77C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B9D208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4AF2080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oMHCRrVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438224AbfFLLCM (ORCPT
+        id S2438228AbfFLLCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:02:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:50388 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406154AbfFLLCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:02:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E16528;
-        Wed, 12 Jun 2019 04:02:11 -0700 (PDT)
-Received: from C02TF0J2HF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04CA33F246;
-        Wed, 12 Jun 2019 04:03:23 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 12:01:34 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v16 12/16] IB, arm64: untag user pointers in
- ib_uverbs_(re)reg_mr()
-Message-ID: <20190612110129.GC28951@C02TF0J2HF1T.local>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <c829f93b19ad6af1b13be8935ce29baa8e58518f.1559580831.git.andreyknvl@google.com>
- <20190603174619.GC11474@ziepe.ca>
- <CAAeHK+xy-dx4dLDLLj9dRzRNSVG9H5nDPPnjpYF38qKZNNCh_g@mail.gmail.com>
- <20190604122714.GA15385@ziepe.ca>
- <CAAeHK+xyqwuJyviGhvU7L1wPZQF7Mf9g2vgKSsYmML3fV6NrXg@mail.gmail.com>
- <20190604130207.GD15385@ziepe.ca>
- <CAAeHK+xBxDB-OBuzPDcNaTHCNJqu6djHwqoVGSYpxG33w-YR9g@mail.gmail.com>
+        Wed, 12 Jun 2019 07:02:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58282 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405826AbfFLLCe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:02:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GyQvzVCRfx2rfSnJth+Ru0ibUKt+HtIeQExiXWplh8A=; b=oMHCRrVClCH7w4MftWKSBm1Xp
+        nWqAVapuqvKgC16niIy9kv/HuL8HtzPt8ULFienbDrBOojMdk8+VWGRAeQMavwOqXiA6On+aZFNzm
+        4DcZPAG2lD8GVopdAjdkiMMnXj0x5kD7iVJ/iTWV7KYP2H9hHavsXOuuQZ/x9iG+1iJLE2YmZpkc5
+        Q+PLGZ4IP82HLaRLeovvSXZrcqSy+grCUuetcHfvnTACjtUyPnQJzlQj22PUUI54QyeIEWnu3SMUU
+        usinM2Z9nF8Ve7/PrY8WQef0gC87c/dRpo+5QrHCiYNmC9tanSXE03sBUnoJn/U/oCWcq2TanXTeO
+        uxM+AA+XA==;
+Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hb11S-0000xB-Mu; Wed, 12 Jun 2019 11:02:30 +0000
+Date:   Wed, 12 Jun 2019 08:02:26 -0300
+From:   Mauro Carvalho Chehab <mchehab@infradead.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ruslan Babayev <ruslan@babayev.com>,
+        Andrew de Quincey <adq_dvb@lidskialf.net>
+Subject: Re: linux-next: build warning after merge of the i2c tree
+Message-ID: <20190612080226.45d2115a@coco.lan>
+In-Reply-To: <20190612081929.GA1687@kunai>
+References: <20190611102528.44ad5783@canb.auug.org.au>
+        <20190612081929.GA1687@kunai>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+xBxDB-OBuzPDcNaTHCNJqu6djHwqoVGSYpxG33w-YR9g@mail.gmail.com>
-User-Agent: Mutt/1.11.2 (2019-01-07)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <mchehab@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 03:09:26PM +0200, Andrey Konovalov wrote:
-> On Tue, Jun 4, 2019 at 3:02 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > On Tue, Jun 04, 2019 at 02:45:32PM +0200, Andrey Konovalov wrote:
-> > > On Tue, Jun 4, 2019 at 2:27 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > > On Tue, Jun 04, 2019 at 02:18:19PM +0200, Andrey Konovalov wrote:
-> > > > > On Mon, Jun 3, 2019 at 7:46 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > > > > On Mon, Jun 03, 2019 at 06:55:14PM +0200, Andrey Konovalov wrote:
-> > > > > > > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > > > > > > pass tagged user pointers (with the top byte set to something else other
-> > > > > > > than 0x00) as syscall arguments.
-> > > > > > >
-> > > > > > > ib_uverbs_(re)reg_mr() use provided user pointers for vma lookups (through
-> > > > > > > e.g. mlx4_get_umem_mr()), which can only by done with untagged pointers.
-> > > > > > >
-> > > > > > > Untag user pointers in these functions.
-> > > > > > >
-> > > > > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > > > > > >  drivers/infiniband/core/uverbs_cmd.c | 4 ++++
-> > > > > > >  1 file changed, 4 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-> > > > > > > index 5a3a1780ceea..f88ee733e617 100644
-> > > > > > > +++ b/drivers/infiniband/core/uverbs_cmd.c
-> > > > > > > @@ -709,6 +709,8 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
-> > > > > > >       if (ret)
-> > > > > > >               return ret;
-> > > > > > >
-> > > > > > > +     cmd.start = untagged_addr(cmd.start);
-> > > > > > > +
-> > > > > > >       if ((cmd.start & ~PAGE_MASK) != (cmd.hca_va & ~PAGE_MASK))
-> > > > > > >               return -EINVAL;
-> > > > > >
-> > > > > > I feel like we shouldn't thave to do this here, surely the cmd.start
-> > > > > > should flow unmodified to get_user_pages, and gup should untag it?
-> > > > > >
-> > > > > > ie, this sort of direction for the IB code (this would be a giant
-> > > > > > patch, so I didn't have time to write it all, but I think it is much
-> > > > > > saner):
-> > > > >
-> > > > > ib_uverbs_reg_mr() passes cmd.start to mlx4_get_umem_mr(), which calls
-> > > > > find_vma(), which only accepts untagged addresses. Could you explain
-> > > > > how your patch helps?
-> > > >
-> > > > That mlx4 is just a 'weird duck', it is not the normal flow, and I
-> > > > don't think the core code should be making special consideration for
-> > > > it.
-> > >
-> > > How do you think we should do untagging (or something else) to deal
-> > > with this 'weird duck' case?
-> >
-> > mlx4 should handle it around the call to find_vma like other patches
-> > do, ideally as part of the cast from a void __user * to the unsigned
-> > long that find_vma needs
-> 
-> So essentially what we had a few versions ago
-> (https://lkml.org/lkml/2019/4/30/785) plus changing unsigned longs to
-> __user * across all IB code? I think the second part is something
-> that's not related to this series and needs to be done separately. I
-> can move untagging back to mlx4_get_umem_mr() though.
-> 
-> Catalin, you've initially asked to to move untagging out of
-> mlx4_get_umem_mr(), do you have any comments on this?
+Em Wed, 12 Jun 2019 10:19:29 +0200
+Wolfram Sang <wsa@the-dreams.de> escreveu:
 
-It's fine by me either way. My original reasoning was to untag this at
-the higher level as tags may not be relevant to the mlx4 code. If that's
-what Jason prefers, go for it.
+> On Tue, Jun 11, 2019 at 10:25:28AM +1000, Stephen Rothwell wrote:
+> > Hi Wolfram,
+> > 
+> > After merging the i2c tree, today's linux-next build (x86_64 allmodconfig)
+> > produced this warning:
+> > 
+> > drivers/media/dvb-frontends/tua6100.c: In function 'tua6100_set_params':
+> > drivers/media/dvb-frontends/tua6100.c:71: warning: "_P" redefined
+> >  #define _P 32
+> >  
+> > In file included from include/acpi/platform/aclinux.h:54,
+> >                  from include/acpi/platform/acenv.h:152,
+> >                  from include/acpi/acpi.h:22,
+> >                  from include/linux/acpi.h:21,
+> >                  from include/linux/i2c.h:17,
+> >                  from drivers/media/dvb-frontends/tua6100.h:22,
+> >                  from drivers/media/dvb-frontends/tua6100.c:24:
+> > include/linux/ctype.h:14: note: this is the location of the previous definition
+> >  #define _P 0x10 /* punct */
+> > 
+> > Exposed by commit
+> > 
+> >   5213d7efc8ec ("i2c: acpi: export i2c_acpi_find_adapter_by_handle")
+> > 
+> > Since that included <linux/acpi.h> from <linux/i2c.h>
+> > 
+> > Originally introduced by commit
+> > 
+> >   00be2e7c6415 ("V4L/DVB (4606): Add driver for TUA6100")
+> > 
+> > The _P in <linux/ctype.h> has existed since before git.  
+> 
+> I suggest to fix the driver by adding a TUA6100_ prefix to the defines.
+> I can cook up a patch for that.
+> 
 
--- 
-Catalin
+That entire use of _P, _R and _ri looks weird into my eyes. The code there
+do things like:
+
+#define _P 32
+
+...
+
+        if (_P == 64)
+                reg1[1] |= 0x40;
+
+
+It sounds to me that _P and _R are actually some sort of setup
+with depends on how the device is wired. 
+
+A quick read on its datasheet at page 19 - downloaded from:
+
+	http://www.datasheetcatalog.com/datasheets_pdf/T/U/A/6/TUA6100.shtml
+
+Shows that:
+	P:  divide ratio of the prescaler.
+	R:  divide ratio of the R-counter.
+	ri: reference frequency input (XTAL osc).
+
+IMO, the right fix would be to change struct tua6100_priv, in order to
+add those  parameters, and initialize them with the current values
+at tua6100_attach.
+
+That would allow changing those values during device initialization,
+in the case we ever need to support a hardware with the same chipset,
+with, for example, a different XTAL.
+
+I'll work on a patch to address it.
+
+Thanks,
+Mauro
