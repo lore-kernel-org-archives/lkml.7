@@ -2,110 +2,130 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8FEC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F31C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D74B20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E3120896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:58:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="g0wJ6bpZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436930AbfFLN5r (ORCPT
+        id S2409260AbfFLN6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:57:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44216 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436459AbfFLN5r (ORCPT
+        Wed, 12 Jun 2019 09:58:09 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38020 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409246AbfFLN6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:57:47 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CDihm3127050
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:57:45 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t319d4jhg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:57:44 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
-        Wed, 12 Jun 2019 14:57:42 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Jun 2019 14:57:40 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CDvbGs39059542
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 13:57:37 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCC7242047;
-        Wed, 12 Jun 2019 13:57:37 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09C7A4204C;
-        Wed, 12 Jun 2019 13:57:37 +0000 (GMT)
-Received: from [10.0.2.15] (unknown [9.145.62.239])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Jun 2019 13:57:36 +0000 (GMT)
-Subject: Re: [PATCH v9 4/4] s390: ap: kvm: Enable PQAP/AQIC facility for the
- guest
-To:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, mimu@linux.ibm.com
-References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
- <1558452877-27822-5-git-send-email-pmorel@linux.ibm.com>
-From:   Harald Freudenberger <freude@linux.ibm.com>
-Date:   Wed, 12 Jun 2019 15:57:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 12 Jun 2019 09:58:09 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g13so25904660edu.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
+         :subject:mime-version:content-transfer-encoding;
+        bh=Y+4CclOchg68MnXlcf58UCwueBz0Zes4t/blHlilXOM=;
+        b=g0wJ6bpZk6ogq2pFPm12oLk0Yrtzf26EwY4s3uS4fyOd6DhxzmisPT5DBzV21l6Erd
+         8xZ853XwfPK15Zq64UL6RB8AuP6abPIlPzfZH+D8IuaOfO5wLiRJMFLfbYg0x6wxkchX
+         HX/TXdun2GZFn1lb1gKb3lWu60z7OGNBd2wN8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:subject:mime-version
+         :content-transfer-encoding;
+        bh=Y+4CclOchg68MnXlcf58UCwueBz0Zes4t/blHlilXOM=;
+        b=KDE0kEHe4aw7z2kxPnsUExHUS8e1KTLyuIii3ZtRmzbkzS41CqPJ3QdRsfdK3sMo5J
+         lZ0A3hyRQzdPnHbvIPkD+lW0tmUfgsp6xkjQCTcWgARKqRTtQ3yulSkIYug/3oL7rq0i
+         Hpaeec/VVACSt35lLy1oQNU8riXUafBPjsYQKsm2BsTxKyIbdHxgje9YdJp8cJ1Cjbmd
+         GfJX4K7kRxs5b0dzUJGU04qso4xM3+Ttz/ddWyLyXdliiRTLnbGis3W2KLQSw2TAljoc
+         3d37WecWL9x4gHshqwdFYiinq08OkG9N3Pp3TPFsjutRsSuQ/HS6QvG8hZsD37gDJb1C
+         ZHKA==
+X-Gm-Message-State: APjAAAU1O96y1pL81yyJRPdxqARSh1Rp4tOrbRCTUCflwzU0ecjvfxRV
+        8NOMDvMx8y48WNJwPhZRCu5suw==
+X-Google-Smtp-Source: APXvYqx5QFCQSwGLkC7MLW22rxzxN0yYWE/WednBPqVlB7ZnJV0pXPuAI6oipqRdLLV5RQdCZqU/cQ==
+X-Received: by 2002:a50:974b:: with SMTP id d11mr51553467edb.24.1560347887655;
+        Wed, 12 Jun 2019 06:58:07 -0700 (PDT)
+Received: from [192.168.178.17] (f140230.upc-f.chello.nl. [80.56.140.230])
+        by smtp.gmail.com with ESMTPSA id h5sm4614214ede.74.2019.06.12.06.58.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 12 Jun 2019 06:58:06 -0700 (PDT)
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Doug Anderson <dianders@chromium.org>,
+        "Hunter, Adrian" <adrian.hunter@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>, <briannorris@chromium.org>,
+        <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        <mka@chromium.org>, Wright Feng <wright.feng@cypress.com>,
+        "Chi-Hsien Lin" <chi-hsien.lin@cypress.com>,
+        <netdev@vger.kernel.org>, <brcm80211-dev-list@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        <linux-kernel@vger.kernel.org>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Wed, 12 Jun 2019 15:58:05 +0200
+Message-ID: <16b4bfb39e0.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+In-Reply-To: <CAPDyKFpM0+FfvoMo8Z_hxM9rzSjeQZHCsA2SPa8WP+SRDhhsPA@mail.gmail.com>
+References: <20190607223716.119277-1-dianders@chromium.org>
+ <20190607223716.119277-4-dianders@chromium.org>
+ <363DA0ED52042842948283D2FC38E4649C52F8A0@IRSMSX106.ger.corp.intel.com>
+ <CAD=FV=U8eo78Ee9xjhGXJMv=8YF9o89KLX024GH3iBRnRjCRvQ@mail.gmail.com>
+ <CAPDyKFo=QMRTkNYUVSE2AqiZgytkTVRXF0Mvznn6trVT4-cR=Q@mail.gmail.com>
+ <c7c6d3f4-ebb1-8964-0616-973fae1ab47d@broadcom.com>
+ <CAPDyKFpM0+FfvoMo8Z_hxM9rzSjeQZHCsA2SPa8WP+SRDhhsPA@mail.gmail.com>
+User-Agent: AquaMail/1.20.0-1458 (build: 102100001)
+Subject: Re: [PATCH v3 3/5] brcmfmac: sdio: Disable auto-tuning around commands expected to fail
 MIME-Version: 1.0
-In-Reply-To: <1558452877-27822-5-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19061213-0012-0000-0000-00000328817C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061213-0013-0000-0000-000021618992
-Message-Id: <d9b32e45-43de-aff4-61ef-2b40bf84dcf1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120093
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.05.19 17:34, Pierre Morel wrote:
-> AP Queue Interruption Control (AQIC) facility gives
-> the guest the possibility to control interruption for
-> the Cryptographic Adjunct Processor queues.
->
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  arch/s390/tools/gen_facilities.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
-> index 61ce5b5..aed14fc 100644
-> --- a/arch/s390/tools/gen_facilities.c
-> +++ b/arch/s390/tools/gen_facilities.c
-> @@ -114,6 +114,7 @@ static struct facility_def facility_defs[] = {
->  		.bits = (int[]){
->  			12, /* AP Query Configuration Information */
->  			15, /* AP Facilities Test */
-> +			65, /* AP Queue Interruption Control */
->  			156, /* etoken facility */
->  			-1  /* END */
->  		}
-acked-by: Harald Freudenberger <freude@linux.ibm.com>
+
+On 6/12/2019 1:48 PM, Ulf Hansson wrote:
+> On Wed, 12 Jun 2019 at 13:11, Arend Van Spriel
+> <arend.vanspriel@broadcom.com> wrote:
+>>
+>> On 6/12/2019 12:10 PM, Ulf Hansson wrote:
+>>>> drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c:
+>>>>     mmc_set_data_timeout(md, func->card);
+>>>>     mmc_wait_for_req(func->card->host, mr);
+>>> These are not okay, none of these things calls should really be done
+>>> from an SDIO func driver.
+>>>
+>>> It tells me that the func driver is a doing workaround for something
+>>> that should be managed in a common way.
+>>
+>> We are using some low-level functions passing chain of skbuff to the
+>> device using CMD53 with scatterlist. If I recall correctly Marvell made
+>> an attempt to have a similar function for it in the mmc stack. Not sure
+>> if that ever made it in. If so I can rework our driver using that API.
+>> If not, I can make a new attempt.
+> 
+> I recall there were some patches, but not sure why we didn't merge them.
+> 
+> Anyway, if you want to move this forward, that would be awesome!
+
+Let's scope it before moving forward. Our use-case is to transfer a
+chain of skbuff's. I am pretty sure that is not something we want to
+deal with in mmc stack api. So I suppose passing a scatterlist is more
+sensible, right? Maybe on sdio layer of the stack we could consider
+dealing with skbuff's for network func drivers?
+
+Let me see if I can find those Marvell patches. Might be a good start.
+
+Regards,
+Arend
+
 
