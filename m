@@ -2,121 +2,87 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE27C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D18DC31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA562080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:21:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yvFOoymH"
+	by mail.kernel.org (Postfix) with ESMTP id 31B6F2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbfFLKV0 (ORCPT
+        id S1732053AbfFLKVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:21:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55740 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbfFLKV0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:21:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a15so5948361wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=TqpQfNrIY2SpB5jRuIghaLMN98QjpgnwAtCKC7E1c4Y=;
-        b=yvFOoymHNRSw3LFLpbLHeLylxjqjH/FhSo8kjTGZzsNd2rtG9abw0Z/tWTPasqiBcA
-         CFac/28if66zb8Dx9+2wcZPPgiqen78KiIZUyqcyS3TSpTc4ffIvj3wDKhGscMRhtgEw
-         zsshAfe23zdRQDOSwiYiiOkaM9MGLon59ehCWPfRe+MNnJn2SlkEJwwJUPWIgVyCe7Au
-         HJSPJVYg6NU3Fm4tHfy7y5P3E3D6oK1IZFrRYr5HHJzQpP164VZkZ8dLZMNbbIEye1aX
-         mHSt+B7te8yWViuDseSk+zARKCBocsPH0wlpsWOk4tdngvDfP12g+NcXx2gRElgu+eNp
-         eDGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=TqpQfNrIY2SpB5jRuIghaLMN98QjpgnwAtCKC7E1c4Y=;
-        b=DPg+DRHNN7hgdvoptQzwNOtkJA3r4XFgxgGHE1igefalep+uLjrmmdV8jIAnIWPdZc
-         Xa27L9OD8RaL7qt76akYhagyLucDUlPnkjzd57p3WM2y7ARONL+je5QsTsNLyIe0/iNf
-         ud0Y2YZBvePrDhPp3ZELyvSaaSeR49CmA/oyDY/FbK+1Ez9IjY5IUV2qhFAx3F0UaUuP
-         v+cCMISFIWK8K//IiIeQR71LgCn1DYa90ZTULNCAwyTfcujxO4EIr+vZBelWUJUCftpp
-         pU35LSzzUkpIwvtDfX8h5hDEypOsBdvpwJvPKazIZaAkwrepq5r8zivv3UUlwdtCvVXD
-         4vOA==
-X-Gm-Message-State: APjAAAVEEpwdvf6hnN45ZJ2uQ4zsQHaiXXTtsaEqQxRUQGjRtBBLfkRW
-        iqybe1A3Vwfi0otL79HtG+HLHD2TDu4=
-X-Google-Smtp-Source: APXvYqxyDQWxQ96bD1/Ai73GBF3kQdI0dhkARnEuycMbStRCquki8XeU3gijJKvKoFd6lEO73WuKiQ==
-X-Received: by 2002:a7b:c775:: with SMTP id x21mr21264282wmk.9.1560334883924;
-        Wed, 12 Jun 2019 03:21:23 -0700 (PDT)
-Received: from dell ([185.80.132.160])
-        by smtp.gmail.com with ESMTPSA id v7sm831500wrv.71.2019.06.12.03.21.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 03:21:22 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 11:21:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drivers: mfd: 88pm800: fix warning same module names
-Message-ID: <20190612102121.GI4797@dell>
-References: <20190612081203.1477-1-anders.roxell@linaro.org>
+        Wed, 12 Jun 2019 06:21:40 -0400
+Received: from sauhun.de ([88.99.104.3]:58160 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727404AbfFLKVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:21:40 -0400
+Received: from localhost (p5486CACA.dip0.t-ipconnect.de [84.134.202.202])
+        by pokefinder.org (Postfix) with ESMTPSA id 5A19F2C54BC;
+        Wed, 12 Jun 2019 12:21:38 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 12:21:37 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bitan Biswas <bbiswas@nvidia.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+Subject: Re: [PATCH V5 1/7] i2c: tegra: clean up macros
+Message-ID: <20190612102137.mc2fwrifmbl2x6dr@ninjato>
+References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="glfpl6iv3trozchb"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190612081203.1477-1-anders.roxell@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019, Anders Roxell wrote:
 
-> When building with CONFIG_MFD_88PM800 and CONFIG_REGULATOR_88PM800
-> enabled as loadable modules, we see the following warning:
-> 
-> warning: same module names found:
->   drivers/regulator/88pm800.ko
->   drivers/mfd/88pm800.ko
-> 
-> Rework so the names matches the config fragment.
+--glfpl6iv3trozchb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please detail what this actually changes.
+On Tue, Jun 11, 2019 at 03:51:08AM -0700, Bitan Biswas wrote:
+> Clean up macros by:
+> 1) removing unused macros
+> 2) replace constants by macro BIT()
+>=20
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 
-I.e. what the new modules names will be.
+Applied to for-next, thanks!
 
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> ---
->  drivers/mfd/Makefile | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 52b1a90ff515..5e870eef6a20 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -5,8 +5,11 @@
->  
->  88pm860x-objs			:= 88pm860x-core.o 88pm860x-i2c.o
->  obj-$(CONFIG_MFD_88PM860X)	+= 88pm860x.o
-> -obj-$(CONFIG_MFD_88PM800)	+= 88pm800.o 88pm80x.o
-> -obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
-> +obj-$(CONFIG_MFD_88PM800)	+= mfd-88pm800.o mfd-88pm80x.o
-> +mfd-88pm800-objs		:= 88pm800.o
-> +obj-$(CONFIG_MFD_88PM805)	+= mfd-88pm805.o mfd-88pm80x.o
-> +mfd-88pm805-objs		:= 88pm805.o
-> +mfd-88pm80x-objs		:= 88pm80x.o
->  obj-$(CONFIG_MFD_ACT8945A)	+= act8945a.o
->  obj-$(CONFIG_MFD_SM501)		+= sm501.o
->  obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--glfpl6iv3trozchb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A0jEACgkQFA3kzBSg
+KbZ4YBAAr3ydA4TVT7tPO956qQjxScFkJ8fFKU/zTKTL9covc5QfQinf4fyTkGbv
+WR53r2u4NfAEtq/4wTbOA4bfK6t4FCZG9cH31YeY6ce6MkHTAFo7vKls09c0m8sg
+wPgoyPuRnw5GftVK7gwLfhIg3Gh7xDdyDD0XNzFC6/pKFe0OJmDWFR8S43FWsiwP
+t5x//BT5N2EjQq3HKYoJwjU8+iUeBisEdAuataWuqLfLiVz2JfxBRGx6/WUr0QqU
+RTpZ6Y+kgZ6/9fFIF4C8jgpjg0YOYoScX2NL6D0k/C//maaTVcgzaV5MrkjQZoLL
+wHDj0LTCGPcz+UFkCYrtJnogyUOBGWQawLGXOoNWJXD+U5l+DkZP9YSWeq3Um4+o
+0Puvn+GHBPjYC0yjP+basLveGfuWjRhTBz/7vlAAP5xT+NKRFw6UZ6ygk8mi4sQx
+OcoTLdBgbpUbufiRdP2HLyMZXbf4A5C5HqkvJS3ELq82ZbfjJVn6Wzo418NcJRmX
+s1xxElkDi7SsuI8F1d5P8c7cSmpDY7Wv8MX6GIaXiCm/bcsNa1yIOYNi6eVx6liz
+nQpcm4P7ngtaRuAh/EbU4fYs1O5sMU0Iuixz/6Es1YQWX1vh+Ehn5IGB5os3V8fr
+4upKSK/pFR78pqZE18Kgvv+ejjaIAGANjY6ooD7mGxAvpJXCDTo=
+=/aKc
+-----END PGP SIGNATURE-----
+
+--glfpl6iv3trozchb--
