@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC401C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF568C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938942082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868072082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OrQ5ncDI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="spIr1HI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439777AbfFLO1m (ORCPT
+        id S2439664AbfFLO1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:27:42 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33133 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439671AbfFLO1F (ORCPT
+        Wed, 12 Jun 2019 10:27:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38321 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409267AbfFLO1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:27:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so17198293wru.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:27:04 -0700 (PDT)
+        Wed, 12 Jun 2019 10:27:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so6774934wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:27:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fy6aQtpj04fOwVei4zMchW/ihmwVQAgPeocDj7znWWs=;
-        b=OrQ5ncDIKVyQSJV2lGbcoHTeQSe6MmmBwUcZC5zqV4QZ3vTVA1BtrgPUQ8jbMgb67v
-         /kOxwnETofKRgBNj1b0HtE9u0AFFdOWCcPcAbfIoJnuGIvOw57czbPWLpltqHuWbXWRj
-         fKXJ4DRXKuAYnQjGzz+tj23i+n5DN2bx3mYS5xPRMMAzHx9ZOqGZWEvU0hVNym6SnQL4
-         Jg4GILy6YS//Erz1lNqcpODAIzqawBCFwBpA+4APbSeGmT0vek59soiMsm8V76nAUrCv
-         Ljz98I133N7M+6ePZoFk6KumhrqC+Uk+SpqdoVV40pdsRct4z0Cgsbt4Rq99N2yIAGwK
-         eWDg==
+        bh=/Aaq1IVmTDwb5aMIJ54pXjvtw4nnZoMXSsSE3y/KzPo=;
+        b=spIr1HI0F3AbtAb8DiEu9/whqpOq+KBs10UFyXRd2fSUB1k5RBU6LCcCvVt+QuW/vS
+         oYdIGMzDfdkTfT6jYYjOpkFonvS+vzQwx9/Fxl6TXi+O2dNyxmmXE9Df9WzDen3//b5y
+         ljMssjx4qZ3ak18yl9aXl4FmlH/NWEAUxLlxVICaMzyU0EUL30iFeE0e9VXlrGA7UcOX
+         AXrZQIlUpuFk5xKlo2l/vShTgeyK3RUyY5UNypj3AV4gPjqd0e5jHOoEU+O6mIKCWA9i
+         0nAvG33btRAYHe81prn37js+mnL5VvdULXuL0SeXnGYxD2GuopufTTmtY1oh7HJIUUgY
+         DNGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fy6aQtpj04fOwVei4zMchW/ihmwVQAgPeocDj7znWWs=;
-        b=YRqhBA41RwFekmElc9ksxK7VDYX07z0flO4UhF2HNVMvVvrmDiBeV7/NQA8A2G1LIB
-         OL6bJaMgtHb7lfxscLAHFu8ce+DXtL8U3rbsO9zVUSWQVot8/NOlXD2utqfQoQZKj7zx
-         YRjKExT2rZKb3KFq39djO3rMkXQ6vUzRx6Qa6/e9aK3no5mlFrao0VWL09+7RQ5ew4X9
-         vAT8F82Hv9Zj46/1UdzwurTfN2TfLh5z83OCzLj67kckKErpFXTzdsho+DMmVJDGuilB
-         E3Ajv21wX1sB5BLRCxYHSmmhMt+5NnyKmxIx+YNM0m2irwrYJufWnuehe0H6ZXGXvGuP
-         AT2A==
-X-Gm-Message-State: APjAAAVqmdpaCFjk52JCLuFz9nzqu73IjAaE/6QoZyOqOifwP6ulrv54
-        A/Y7QgXsf3OKxZzzozkVFcy3pg==
-X-Google-Smtp-Source: APXvYqwFw+UqoHDB/67jT5cutBxDI1YWxBlU2IDiPnPIIo4Ib0zOzE+46btHcLsNuy0V0H4zJJx2KA==
-X-Received: by 2002:a5d:53ca:: with SMTP id a10mr42518942wrw.131.1560349623979;
-        Wed, 12 Jun 2019 07:27:03 -0700 (PDT)
+        bh=/Aaq1IVmTDwb5aMIJ54pXjvtw4nnZoMXSsSE3y/KzPo=;
+        b=Go7cNWqILGRu2CRo/L/dc3DwZ11SxgQgCQHdBCTk4kMh8ES7kVpxJMaDxO6+5M8cU9
+         R0kiic47DUGXQ3sC1UEw8qWZBxeVooa430GpvYyOQTPtvA+qtuQYjhqs6MsWgvHw0DFB
+         ElBrAZn8Rg8s/8zWxVOTAATRxcwlv6u3oAH11S/Jj2WsjeIVcyKP50XCH2CgOeWiikfu
+         Ow9Y3PyuHdY1HwRZIt5MiGoIeVYfqzGyggXJ6xBNS4XoXWf6UXIHbjN2/7QukGlkGQ/q
+         qfXhkJdT/HRcyc0DfKsVFrWF59as+tK8K79QvwFbFQJmJydnou5jaR4ygmyhw/eImopa
+         IlHA==
+X-Gm-Message-State: APjAAAUwmoEkJgeinD6jvs5Hmy3qj2TZJvd1KOLOcqVsP0Owl9T9Yrbk
+        M2Zhf/JrzwqbEedAiR/9Z7McGA==
+X-Google-Smtp-Source: APXvYqzhMtr87FUQtkIgk6gBz7+K8Bh4W4ijluuKFWE7BZ8jROvsdnXNClEI8US18UFuYTFEkTusGw==
+X-Received: by 2002:a1c:6c14:: with SMTP id h20mr6555123wmc.168.1560349619579;
+        Wed, 12 Jun 2019 07:26:59 -0700 (PDT)
 Received: from dell.watershed.co.uk ([185.80.132.160])
-        by smtp.gmail.com with ESMTPSA id y18sm203959wmd.29.2019.06.12.07.27.02
+        by smtp.gmail.com with ESMTPSA id y18sm203959wmd.29.2019.06.12.07.26.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 07:27:03 -0700 (PDT)
+        Wed, 12 Jun 2019 07:26:58 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
         wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
@@ -64,9 +64,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-usb@vger.kernel.or,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v4 5/6] usb: dwc3: qcom: Start USB in 'host mode' on the SDM845
-Date:   Wed, 12 Jun 2019 15:26:53 +0100
-Message-Id: <20190612142654.9639-6-lee.jones@linaro.org>
+Subject: [PATCH v4 1/6] i2c: i2c-qcom-geni: Provide support for ACPI
+Date:   Wed, 12 Jun 2019 15:26:49 +0100
+Message-Id: <20190612142654.9639-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190612142654.9639-1-lee.jones@linaro.org>
 References: <20190612142654.9639-1-lee.jones@linaro.org>
@@ -75,61 +75,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting with Device Tree, the current default boot configuration
-table option, the request to boot via 'host mode' comes from the
-'dr_mode' property.  A property of the same name can be used inside
-ACPI tables too.  However it is missing from the SDM845's ACPI tables
-so we have to supply this information using Platform Device Properties
-instead.
-
-This does not change the behaviour of any currently supported devices.
-The property is only set on ACPI enabled platforms, thus for H/W
-booting DT, unless a 'dr_mode' property is present, the default is
-still OTG (On-The-Go) as per [0].  Any new ACPI devices added will
-also be able to over-ride this implementation by providing a 'dr_mode'
-property in their ACPI tables.  In cases where 'dr_mode' is omitted
-from the tables AND 'host mode' should not be the default (very
-unlikely), then we will have to add some way of choosing between them
-at run time - most likely by ACPI HID.
-
-[0] Documentation/devicetree/bindings/usb/generic.txt
+Add a match table to allow automatic probing of ACPI device
+QCOM0220.  Ignore clock attainment errors.  Set default clock
+frequency value.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- drivers/usb/dwc3/dwc3-qcom.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/i2c/busses/i2c-qcom-geni.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index 1e1f12b7991d..55ba04254e38 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -444,6 +444,11 @@ static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
- 	return 0;
- }
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index db075bc0d952..9e3b8a98688d 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
  
-+static const struct property_entry dwc3_qcom_acpi_properties[] = {
-+	PROPERTY_ENTRY_STRING("dr_mode", "host"),
-+	{}
++#include <linux/acpi.h>
+ #include <linux/clk.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/err.h>
+@@ -483,6 +484,14 @@ static const struct i2c_algorithm geni_i2c_algo = {
+ 	.functionality	= geni_i2c_func,
+ };
+ 
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id geni_i2c_acpi_match[] = {
++	{ "QCOM0220"},
++	{ },
 +};
++MODULE_DEVICE_TABLE(acpi, geni_i2c_acpi_match);
++#endif
 +
- static int dwc3_qcom_acpi_register_core(struct platform_device *pdev)
+ static int geni_i2c_probe(struct platform_device *pdev)
  {
- 	struct dwc3_qcom 	*qcom = platform_get_drvdata(pdev);
-@@ -488,6 +493,13 @@ static int dwc3_qcom_acpi_register_core(struct platform_device *pdev)
- 		goto out;
+ 	struct geni_i2c_dev *gi2c;
+@@ -502,7 +511,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(gi2c->se.base);
+ 
+ 	gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
+-	if (IS_ERR(gi2c->se.clk)) {
++	if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(&pdev->dev)) {
+ 		ret = PTR_ERR(gi2c->se.clk);
+ 		dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
+ 		return ret;
+@@ -516,6 +525,9 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 		gi2c->clk_freq_out = KHZ(100);
  	}
  
-+	ret = platform_device_add_properties(qcom->dwc3,
-+					     dwc3_qcom_acpi_properties);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to add properties\n");
-+		goto out;
-+	}
++	if (has_acpi_companion(&pdev->dev))
++		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
 +
- 	ret = platform_device_add(qcom->dwc3);
- 	if (ret)
- 		dev_err(&pdev->dev, "failed to add device\n");
+ 	gi2c->irq = platform_get_irq(pdev, 0);
+ 	if (gi2c->irq < 0) {
+ 		dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
+@@ -660,6 +672,7 @@ static struct platform_driver geni_i2c_driver = {
+ 		.name = "geni_i2c",
+ 		.pm = &geni_i2c_pm_ops,
+ 		.of_match_table = geni_i2c_dt_match,
++		.acpi_match_table = ACPI_PTR(geni_i2c_acpi_match),
+ 	},
+ };
+ 
 -- 
 2.17.1
 
