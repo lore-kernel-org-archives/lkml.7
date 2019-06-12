@@ -2,262 +2,172 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A41C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42474C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D90D215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FC721721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WiFBUdjE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jkCOi89f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfFLT0r (ORCPT
+        id S1728779AbfFLT2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:26:47 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38092 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbfFLT0o (ORCPT
+        Wed, 12 Jun 2019 15:28:22 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35473 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728575AbfFLT0q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:26:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d18so18129517wrs.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:26:42 -0700 (PDT)
+        Wed, 12 Jun 2019 15:26:46 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d126so10259109pfd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:26:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zVoz266rOhzBvq1+fckdm28R8FS758kT1jJN+dLbL8A=;
-        b=WiFBUdjE8xWhBn9cC4dZyzht9pQDrd7MLBhLhWmk3GB2CQunKSEgt6uj3NIoSuy2/f
-         Py2ewqFlKgHEEhoyaVNLcVMVSjW9146l4m0MOsgyBrVC6stj+jPg0gPPw0Bw11szuBPe
-         za0uzX03kb3JeX5CX2q33rO3LKbQI0NC3mqThbYVoX9xp4ujwSt8fYymhaTBrZd/Jv4g
-         sSchxuk/8xp4+a7GWlFACFxzIa+uZinksMrx8GOL8pLyUNH57zxzWkhcX9tt0EvIZYxI
-         6UiGobqqIwf5E/MqgjwcHjKQPq9evXxrZAQJKBl1DlXRi9+6GzINpcop/pSKqmFhajqD
-         DuHg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JGTJNpxtoSxf9cQjifYgXwRhQ7ZHC2LuIfFDHnbUz+Q=;
+        b=jkCOi89f8z4k6wMOAeyYKznf4Y62pis19MeQNmtA7Jh53MHFibTLDJ9TYgKVn+f5kD
+         fLUDfVGDMuu4aWcnxDzxbp07lL+Lz51Iy00qrEIJCzXdYG49TZOl7ZAvAbf9jiUmmh/V
+         ih3U2U6lZeAoQ/pfzf5gNEqmoDoWlcBOwlo+E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zVoz266rOhzBvq1+fckdm28R8FS758kT1jJN+dLbL8A=;
-        b=S3y7f+a262dna4BHw4qYpKTO98n5ZP0b5MeMMDG92MNkLIh/Y33amOcLM7sY9Pv6se
-         3Uy1zASXfVkjIVPfUztSa1CVvNUaXHeFzoGTgmpLvf3Lncc2lpgLbmorPov4zgF3ImJs
-         g5OrTS5GE6+ccofnrhQITr3naCxY/AUnLuVwNKAxDFosQ9GTkLqgL3Er4AAHrmPv3Xlv
-         0ZSLgKPKKF5dtZTygAB/1au5+I9p+JClfs7cOQsvIc+w2QB99d9Ri9/E+jLS4/JnOgNd
-         78KdMXa3NrXLFrS5P7iXqbhUIV1pffYDGJ03aBaL/dse1y4r0diFrxNfLuMksH+SRgVi
-         3MOQ==
-X-Gm-Message-State: APjAAAUwGE+udjuayBLf8b+cwGlN5wGMuf9/ltdQF/+ZTIrDyLCS6kav
-        9kKDpkoFHUyva6YsV0N+68Gxf/1YflI=
-X-Google-Smtp-Source: APXvYqx+PJkYZMSI9t5sNkdtGQlgjC+5XYuoJ3aCb5UMpFJcNHRTFUxNRNF/4WQnfBFB2DpiJhgRuw==
-X-Received: by 2002:adf:ba8e:: with SMTP id p14mr13313189wrg.39.1560367601555;
-        Wed, 12 Jun 2019 12:26:41 -0700 (PDT)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id r5sm612526wrg.10.2019.06.12.12.26.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:26:40 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv4 08/28] timens/kernel: Take into account timens clock offsets in clock_nanosleep
-Date:   Wed, 12 Jun 2019 20:26:07 +0100
-Message-Id: <20190612192628.23797-9-dima@arista.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190612192628.23797-1-dima@arista.com>
-References: <20190612192628.23797-1-dima@arista.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JGTJNpxtoSxf9cQjifYgXwRhQ7ZHC2LuIfFDHnbUz+Q=;
+        b=QdF+c3YYecpf5ps+1otKW4uHtRIlmWsmtrbplz6OVmepczxmjfTLOvDtG0EFrIZAe4
+         VjQFn/EoUyaK0+nv0o1HdqrtodU38YT5sgS7hsu92HkVat4DleIpfV/Io3qxTf6WDTHD
+         Our0BZKOCh7ooNh5c+2d4VlKWhvRzFtqCCFcejYiEHAL7DRaRemIFvFbYoogm5fL6LB0
+         BpAhMFO1KqWfiCoSV/Rpn/1ZhodumnQGaf+ck2A0nilQJqc0Qf/dybYDuQhyYIyefBQk
+         OTQ6skTPPnVXuMmYE68FKQHeHP+hpLFa3uHBM6jDGQO/5achRowKmIobygXk8bMPD/HT
+         G9mw==
+X-Gm-Message-State: APjAAAWmWiY2o7oT/F14OSedUOgLnOCBX7ld1C/MyHYY1tj3EVerynN7
+        GV21uEjezrDd2lN543j3+ZgHBQ==
+X-Google-Smtp-Source: APXvYqzXNaVC/oJkIo+F4M5Yj007p4G4RNdM/LCI3g6mVncptMolQVeByev0CceqM+5WvJuPiF17VA==
+X-Received: by 2002:a62:5306:: with SMTP id h6mr89297716pfb.29.1560367605628;
+        Wed, 12 Jun 2019 12:26:45 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id e26sm326416pfn.94.2019.06.12.12.26.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 12:26:44 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 12:26:42 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Brian Norris <briannorris@google.com>, Pavel Machek <pavel@ucw.cz>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Doug Anderson <dianders@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Guenter Roeck <groeck@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Message-ID: <20190612192642.GK137143@google.com>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <20190610205233.GB137143@google.com>
+ <20190611104913.egsbwcedshjdy3m5@holly.lan>
+ <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+ <20190611223019.GH137143@google.com>
+ <20190612110325.xdn3q2aod52oalge@holly.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190612110325.xdn3q2aod52oalge@holly.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+Hi Daniel,
 
-Wire up clock_nanosleep() to timens offsets.
+On Wed, Jun 12, 2019 at 12:03:25PM +0100, Daniel Thompson wrote:
+> On Tue, Jun 11, 2019 at 03:30:19PM -0700, Matthias Kaehlcke wrote:
+> > On Tue, Jun 11, 2019 at 09:55:30AM -0700, Brian Norris wrote:
+> > > On Tue, Jun 11, 2019 at 3:49 AM Daniel Thompson
+> > > <daniel.thompson@linaro.org> wrote:
+> > > > This is a long standing flaw in the backlight interfaces. AFAIK generic
+> > > > userspaces end up with a (flawed) heuristic.
+> > > 
+> > > Bingo! Would be nice if we could start to fix this long-standing flaw.
+> > 
+> > Agreed!
+> > 
+> > How could a fix look like, a sysfs attribute? Would a boolean value
+> > like 'logarithmic_scale' or 'linear_scale' be enough or could more
+> > granularity be needed?
+> 
+> Certainly "linear" (this device will work more or less correctly if the
+> userspace applies perceptual curves). Not sure about logarithmic since
+> what is actually useful is something that is "perceptually linear"
+> (logarithmic is merely a way to approximate that).
+> 
+> I do wonder about a compatible string like most-detailed to
+> least-detailed description. This for a PWM with the auto-generated
+> tables we'd see something like:
+> 
+> cie-1991,perceptual,non-linear
+> 
+> For something that is non-linear but we are not sure what its tables are
+> we can offer just "non-linear".
 
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- include/linux/hrtimer.h    |  2 +-
- kernel/time/alarmtimer.c   |  2 ++
- kernel/time/hrtimer.c      |  8 ++++----
- kernel/time/posix-stubs.c  | 12 ++++++++++--
- kernel/time/posix-timers.c | 19 ++++++++++++++++---
- 5 files changed, 33 insertions(+), 10 deletions(-)
+Thanks for the feedback!
 
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 2e8957eac4d4..5a3b3e17d0e8 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -473,7 +473,7 @@ static inline u64 hrtimer_forward_now(struct hrtimer *timer,
- /* Precise sleep: */
- 
- extern int nanosleep_copyout(struct restart_block *, struct timespec64 *);
--extern long hrtimer_nanosleep(const struct timespec64 *rqtp,
-+extern long hrtimer_nanosleep(ktime_t rqtp,
- 			      const enum hrtimer_mode mode,
- 			      const clockid_t clockid);
- 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 6346e6ee0d32..f1f42df179d0 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -819,6 +819,8 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
- 		ktime_t now = alarm_bases[type].gettime();
- 
- 		exp = ktime_add_safe(now, exp);
-+	} else {
-+		exp = timens_ktime_to_host(which_clock, exp);
- 	}
- 
- 	ret = alarmtimer_do_nsleep(&alarm, exp, type);
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 41dfff23c1f9..b245f6ff9c8f 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1716,7 +1716,7 @@ static long __sched hrtimer_nanosleep_restart(struct restart_block *restart)
- 	return ret;
- }
- 
--long hrtimer_nanosleep(const struct timespec64 *rqtp,
-+long hrtimer_nanosleep(ktime_t rqtp,
- 		       const enum hrtimer_mode mode, const clockid_t clockid)
- {
- 	struct restart_block *restart;
-@@ -1729,7 +1729,7 @@ long hrtimer_nanosleep(const struct timespec64 *rqtp,
- 		slack = 0;
- 
- 	hrtimer_init_on_stack(&t.timer, clockid, mode);
--	hrtimer_set_expires_range_ns(&t.timer, timespec64_to_ktime(*rqtp), slack);
-+	hrtimer_set_expires_range_ns(&t.timer, rqtp, slack);
- 	ret = do_nanosleep(&t, mode);
- 	if (ret != -ERESTART_RESTARTBLOCK)
- 		goto out;
-@@ -1764,7 +1764,7 @@ SYSCALL_DEFINE2(nanosleep, struct __kernel_timespec __user *, rqtp,
- 
- 	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
- 	current->restart_block.nanosleep.rmtp = rmtp;
--	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
-+	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL, CLOCK_MONOTONIC);
- }
- 
- #endif
-@@ -1784,7 +1784,7 @@ SYSCALL_DEFINE2(nanosleep_time32, struct old_timespec32 __user *, rqtp,
- 
- 	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
- 	current->restart_block.nanosleep.compat_rmtp = rmtp;
--	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
-+	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL, CLOCK_MONOTONIC);
- }
- #endif
- 
-diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
-index edaf075d1ee4..4ee0dc180866 100644
---- a/kernel/time/posix-stubs.c
-+++ b/kernel/time/posix-stubs.c
-@@ -129,6 +129,7 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
- 		struct __kernel_timespec __user *, rmtp)
- {
- 	struct timespec64 t;
-+	ktime_t texp;
- 
- 	switch (which_clock) {
- 	case CLOCK_REALTIME:
-@@ -147,7 +148,10 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
- 		rmtp = NULL;
- 	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
- 	current->restart_block.nanosleep.rmtp = rmtp;
--	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
-+	texp = timespec64_to_ktime(t);
-+	if (flags & TIMER_ABSTIME)
-+		texp = timens_ktime_to_host(clockid, texp;
-+	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
- 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
- 				 which_clock);
- }
-@@ -215,6 +219,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
- 		struct old_timespec32 __user *, rmtp)
- {
- 	struct timespec64 t;
-+	ktime texp;
- 
- 	switch (which_clock) {
- 	case CLOCK_REALTIME:
-@@ -233,7 +238,10 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
- 		rmtp = NULL;
- 	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
- 	current->restart_block.nanosleep.compat_rmtp = rmtp;
--	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
-+	texp = timespec64_to_ktime(t);
-+	if (flags & TIMER_ABSTIME)
-+		texp = timens_ktime_to_host(clockid, texp;
-+	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
- 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
- 				 which_clock);
- }
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index dba77ee48e74..bb457962fc7c 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -1194,7 +1194,20 @@ SYSCALL_DEFINE2(clock_getres_time32, clockid_t, which_clock,
- static int common_nsleep(const clockid_t which_clock, int flags,
- 			 const struct timespec64 *rqtp)
- {
--	return hrtimer_nanosleep(rqtp, flags & TIMER_ABSTIME ?
-+	ktime_t texp = timespec64_to_ktime(*rqtp);
-+	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
-+				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
-+				 which_clock);
-+}
-+
-+static int common_nsleep_timens(const clockid_t which_clock, int flags,
-+			 const struct timespec64 *rqtp)
-+{
-+	ktime_t texp = timespec64_to_ktime(*rqtp);
-+	if (flags & TIMER_ABSTIME)
-+		texp = timens_ktime_to_host(which_clock, texp);
-+
-+	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
- 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
- 				 which_clock);
- }
-@@ -1275,7 +1288,7 @@ static const struct k_clock clock_monotonic = {
- 	.clock_getres		= posix_get_hrtimer_res,
- 	.clock_get_timespec	= posix_get_timespec,
- 	.clock_get_ktime	= posix_get_ktime,
--	.nsleep			= common_nsleep,
-+	.nsleep			= common_nsleep_timens,
- 	.timer_create		= common_timer_create,
- 	.timer_set		= common_timer_set,
- 	.timer_get		= common_timer_get,
-@@ -1322,7 +1335,7 @@ static const struct k_clock clock_boottime = {
- 	.clock_getres		= posix_get_hrtimer_res,
- 	.clock_get_ktime	= posix_get_boottime_ktime,
- 	.clock_get_timespec	= posix_get_boottime_timespec,
--	.nsleep			= common_nsleep,
-+	.nsleep			= common_nsleep_timens,
- 	.timer_create		= common_timer_create,
- 	.timer_set		= common_timer_set,
- 	.timer_get		= common_timer_get,
--- 
-2.22.0
+It seems clear that we want a string for the added flexibility. I can
+work on a patch with the compatible string like description you
+suggested and we can discuss in the review if we want to go with that
+or prefer something else.
 
+> > The new attribute could be optional (it only exists if explicitly
+> > specified by the driver) or be set to a default based on a heuristic
+> > if not specified and be 'fixed' on a case by case basis. The latter
+> > might violate "don't break userspace" though, so I'm not sure it's a
+> > good idea.
+> 
+> I think we should avoid any heuristic! There are several drivers and we
+> may not be able to work through all of them and make the correct
+> decision.
+
+Agreed
+
+> Instead one valid value for the sysfs should be "unknown" and this be
+> the default for drivers we have not analysed (this also makes it easy to
+> introduce change here).
+
+An "unknown" value sounds good, it allows userspace to just do what it
+did/would hace done before this attribute existed.
+
+> We should only set the property to something else for drivers that have
+> been reviewed.
+> 
+> There could be a special case for pwm_bl.c in that I'm prepared to
+> assume that the hardware components downstream of the PWM have a
+> roughly linear response and that if the user provided tables that their
+> function is to provide a perceptually comfortable response.
+
+Unfortunately this isn't universally true :(
+
+At least several Chrome OS devices use a linear brightness scale and
+userspace does the transformation in the animated slider. A quick
+'git grep -A10 brightness-levels arch' suggests that there are
+multiple other devices/platforms using a linear scale.
+
+We could treat devices with a predefined brightness table as
+"unknown", unless there is a (new optional) DT property that indicates
+the type of the scale.
+
+Cheers
+
+Matthias
