@@ -2,112 +2,139 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05759C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6405C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C694D21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:02:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="JO0+Cu/Y"
+	by mail.kernel.org (Postfix) with ESMTP id B7B0A20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439905AbfFLPCq (ORCPT
+        id S2439949AbfFLPF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:02:46 -0400
-Received: from node.akkea.ca ([192.155.83.177]:35090 "EHLO node.akkea.ca"
+        Wed, 12 Jun 2019 11:05:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39996 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408269AbfFLPCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:02:42 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id 8D73E4E204B; Wed, 12 Jun 2019 15:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1560351761; bh=v6z1WEtCF2fp4wYe56LRARRx9Esiw5fI6QhY0kCLmO4=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=JO0+Cu/YGtgmYx6NAWZcY1i5pinFHmUbP98a2MCXKNC+E2p59MUB9Ovk5hXVUoKnJ
-         2uTd1KSqXskIAEnViwmJtLyEBAVeOrXP2g6FBmBHFR3qHwZAz28XwbbhFIoep9xdxb
-         0NuaLvcfqyoj023w2kd4qLAL6SbHDELgqwgkn/lQ=
-To:     Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v15 0/3] Add support for the Purism Librem5 devkit
-X-PHP-Originating-Script: 1000:rcube.php
+        id S2437202AbfFLPF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:05:26 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 49BFFC1EB1F5;
+        Wed, 12 Jun 2019 15:05:22 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E70E377B;
+        Wed, 12 Jun 2019 15:05:17 +0000 (UTC)
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>,
+        "liwei (GF)" <liwei391@huawei.com>
+Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, dave.dice@oracle.com,
+        Rahul Yadav <rahul.x.yadav@oracle.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+ <cc3eee8c-5212-7af5-c932-897ab8f3f8bf@huawei.com>
+ <54241445-458C-4AE2-840B-6DFCCD410399@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <a52a5e25-2b71-b6d9-3fa1-fb43bae1cbc1@redhat.com>
+Date:   Wed, 12 Jun 2019 11:05:17 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 12 Jun 2019 09:02:41 -0600
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     Shawn Guo <shawnguo@kernel.org>, angus.ainslie@puri.sm,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-In-Reply-To: <20190610135258.GA7976@xo-6d-61-c0.localdomain>
-References: <20190528125747.1047-1-angus@akkea.ca>
- <20190605090315.GJ29853@dragon>
- <db174b0173d0bcdb9ab5ff4e2e1cc4bc@www.akkea.ca>
- <20190610135258.GA7976@xo-6d-61-c0.localdomain>
-Message-ID: <b1de3d5fd352744f2c1f4e7bae266d01@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
+In-Reply-To: <54241445-458C-4AE2-840B-6DFCCD410399@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 12 Jun 2019 15:05:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On 6/12/19 12:38 AM, Alex Kogan wrote:
+> Hi, Wei.
+>
+>> On Jun 11, 2019, at 12:22 AM, liwei (GF) <liwei391@huawei.com> wrote:
+>>
+>> Hi Alex,
+>>
+>> On 2019/3/29 23:20, Alex Kogan wrote:
+>>> In CNA, spinning threads are organized in two queues, a main queue for
+>>> threads running on the same node as the current lock holder, and a
+>>> secondary queue for threads running on other nodes. At the unlock time,
+>>> the lock holder scans the main queue looking for a thread running on
+>>> the same node. If found (call it thread T), all threads in the main queue
+>>> between the current lock holder and T are moved to the end of the
+>>> secondary queue, and the lock is passed to T. If such T is not found, the
+>>> lock is passed to the first node in the secondary queue. Finally, if the
+>>> secondary queue is empty, the lock is passed to the next thread in the
+>>> main queue. For more details, see https://urldefense.proofpoint.com/v2/url?u=https-3A__arxiv.org_abs_1810.05600&d=DwICbg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=Hvhk3F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=U7mfTbYj1r2Te2BBUUNbVrRPuTa_ujlpR4GZfUsrGTM&s=Dw4O1EniF-nde4fp6RA9ISlSMOjWuqeR9OS1G0iauj0&e=.
+>>>
+>>> Note that this variant of CNA may introduce starvation by continuously
+>>> passing the lock to threads running on the same node. This issue
+>>> will be addressed later in the series.
+>>>
+>>> Enabling CNA is controlled via a new configuration option
+>>> (NUMA_AWARE_SPINLOCKS), which is enabled by default if NUMA is enabled.
+>>>
+>>> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
+>>> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
+>>> ---
+>>> arch/x86/Kconfig                      |  14 +++
+>>> include/asm-generic/qspinlock_types.h |  13 +++
+>>> kernel/locking/mcs_spinlock.h         |  10 ++
+>>> kernel/locking/qspinlock.c            |  29 +++++-
+>>> kernel/locking/qspinlock_cna.h        | 173 ++++++++++++++++++++++++++++++++++
+>>> 5 files changed, 236 insertions(+), 3 deletions(-)
+>>> create mode 100644 kernel/locking/qspinlock_cna.h
+>>>
+>> (SNIP)
+>>> +
+>>> +static __always_inline int get_node_index(struct mcs_spinlock *node)
+>>> +{
+>>> +	return decode_count(node->node_and_count++);
+>> When nesting level is > 4, it won't return a index >= 4 here and the numa node number
+>> is changed by mistake. It will go into a wrong way instead of the following branch.
+>>
+>>
+>> 	/*
+>> 	 * 4 nodes are allocated based on the assumption that there will
+>> 	 * not be nested NMIs taking spinlocks. That may not be true in
+>> 	 * some architectures even though the chance of needing more than
+>> 	 * 4 nodes will still be extremely unlikely. When that happens,
+>> 	 * we fall back to spinning on the lock directly without using
+>> 	 * any MCS node. This is not the most elegant solution, but is
+>> 	 * simple enough.
+>> 	 */
+>> 	if (unlikely(idx >= MAX_NODES)) {
+>> 		while (!queued_spin_trylock(lock))
+>> 			cpu_relax();
+>> 		goto release;
+>> 	}
+> Good point.
+> This patch does not handle count overflows gracefully.
+> It can be easily fixed by allocating more bits for the count — we don’t really need 30 bits for #NUMA nodes.
 
-On 2019-06-10 07:52, Pavel Machek wrote:
-> On Wed 2019-06-05 06:48:05, Angus Ainslie wrote:
->> On 2019-06-05 03:03, Shawn Guo wrote:
->> >On Tue, May 28, 2019 at 05:57:44AM -0700, Angus Ainslie (Purism) wrote:
->> >>The Librem5 devkit is based on the imx8mq from NXP. This is a default
->> >>devicetree to boot the board to a command prompt.
->> >>
->> >>Changes since v14:
->> >>
->> >>Add regulator-always-on for the SNVS regulators.
->> >>Added pgc nodes.
->> >>Fixed charger pre-current.
->> >
->> >Since Pavel was reviewing your patches, you should copy him on the new
->> >version.  Has this version addressed all his review comments?
->> >
->> 
->> Sorry I had meant to include him in the CC.
->> 
->> I believe so but don't want to speak for him so we should see if he
->> has anymore.
-> 
-> I did not check the code, sorry.
-> 
-> I still believe your shutdown voltage is too low; try that. Battery
-> will go down from 3V
-> to 2.8V in seconds, so you don't really gain anything by using lower
-> threshold, and you
-> may not even have enough time to shutdown the system if you set it too 
-> low.
-> 
-> Normally something like 3.0V, 3.2V is reasonable shutdown voltage.
-> 
+Actually, the default setting uses 2 bits for 4-level nesting and 14
+bits for cpu numbers. That means it can support up to 16k-1 cpus. It is
+a limit that is likely to be exceeded in the foreseeable future.
+qspinlock also supports an additional mode with 21 bits used for cpu
+numbers. That can support up to 2M-1 cpus. However, this mode will be a
+little bit slower. That is why we don't want to use more than 2 bits for
+nesting as I have never see more than 2 level of nesting used in my
+testing. So it is highly unlikely we will ever hit more than 4 levels. I
+am not saying that it is impossible, though.
 
-I took another look at the BQ25896 datasheet and the minimum-sys-voltage 
-register is limited to 3.0-3.7 V.
-
-I'll submit a new version.
-
-Angus
-
-> Best regards,
-> 										Pavel
+Cheers,
+Longman
 
