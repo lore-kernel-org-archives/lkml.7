@@ -2,104 +2,188 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCFFC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F6AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C5A21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA23F21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560362203;
+	bh=VoAawK2xOQH5NjRKqSvezRO2WgOms/jtM3IzOhLvjKQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0E8s4dVcFhvFI+zWFvMjEz/HvC/QVcHUa40Hc+Czj6KBlTyWoQB/Fi6/kLMU+a31v
+	 68jYNQeCLLO/ZFm9wwZKH5/ccIhbD/FlXCDlL8hgiRRZIzyLTXuOQWRiQmRG1EblQD
+	 A4FXWJ0JrWMTWZ/W7WIEHcHT3hQwWVU/xmpRautM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404231AbfFLR4f (ORCPT
+        id S2388615AbfFLRxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:56:35 -0400
-Received: from gofer.mess.org ([88.97.38.141]:42583 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404183AbfFLR4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:56:32 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id BF6A860226; Wed, 12 Jun 2019 18:56:29 +0100 (BST)
-Date:   Wed, 12 Jun 2019 18:56:29 +0100
-From:   Sean Young <sean@mess.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     YueHaibing <yuehaibing@huawei.com>, tglx@linutronix.de,
-        corbet@lwn.net, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] media: ttpci: Fix build error without RC_CORE
-Message-ID: <20190612175629.srfw7ybr256se5rt@gofer.mess.org>
-References: <20190612034310.4640-1-yuehaibing@huawei.com>
- <20190612074254.eky2xo7bajorkhfy@gofer.mess.org>
- <20190612063708.64498b44@coco.lan>
+        Wed, 12 Jun 2019 13:53:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40390 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387793AbfFLRxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 13:53:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vL4lOYobBwCnYeVEKz9+S+U0qDj+pEo1Zutn3iMRF3w=; b=bVniTSEq3eGp3ZnjsE6pnPwGL6
+        TZk9luV9nGuNHvWkeiNmoA45pY9qIt75u0NyaHokBpcoDAU70f5Ghs70gmPhejltHdwbg9+IPhgT9
+        9tp3TFsK5WA/8SQ0y50q6yinOZYKyD2sth38rRfA8b6w6u4t5mjrDBjFbm3G2cYz/tNLA5fAdAMap
+        F2bdJFSgzgz+6l0eyb276DrHYeKnBt9PfhFw+0ZQIFMA77sdJsr2oyBJy4GVPNwu6JuLdppSWI9tw
+        RRFOwqTlyEpZy/OGQQRL4wh2MouDUfxf54Moc9U5oOL5bKxgPEiq2Y5KPG4bwwy772T3bnabxLL6l
+        19ZRnPnw==;
+Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hb7Qs-0002Dm-R9; Wed, 12 Jun 2019 17:53:10 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hb7Qq-0001hF-JY; Wed, 12 Jun 2019 14:53:08 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH v4 21/28] docs: ptp.txt: convert to ReST and move to driver-api
+Date:   Wed, 12 Jun 2019 14:52:57 -0300
+Message-Id: <7855f0fd13e76718a182f877927f4cbd690a4a38.1560361364.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1560361364.git.mchehab+samsung@kernel.org>
+References: <cover.1560361364.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612063708.64498b44@coco.lan>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 06:37:08AM -0300, Mauro Carvalho Chehab wrote:
-> Em Wed, 12 Jun 2019 08:42:55 +0100
-> Sean Young <sean@mess.org> escreveu:
-> 
-> > On Wed, Jun 12, 2019 at 11:43:10AM +0800, YueHaibing wrote:
-> > > If RC_CORE is not set, building fails:
-> > > 
-> > > drivers/media/pci/ttpci/av7110_ir.o: In function `av7110_ir_init':
-> > > av7110_ir.c:(.text+0x1b0): undefined reference to `rc_allocate_device'
-> > > av7110_ir.c:(.text+0x2c1): undefined reference to `rc_register_device'
-> > > av7110_ir.c:(.text+0x2dc): undefined reference to `rc_free_device'
-> > > 
-> > > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > > Fixes: 71f49a8bf5c5 ("media: ttpci: use rc-core for the IR receiver")
-> > > Signed-off-by: YueHaibing <yuehaibing@huawei.com>  
-> > 
-> > Thank you for spotting this and writing a patch.
-> > 
-> > > ---
-> > >  drivers/media/pci/ttpci/Kconfig | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/media/pci/ttpci/Kconfig b/drivers/media/pci/ttpci/Kconfig
-> > > index d96d4fa..b705631 100644
-> > > --- a/drivers/media/pci/ttpci/Kconfig
-> > > +++ b/drivers/media/pci/ttpci/Kconfig
-> > > @@ -7,7 +7,7 @@ config DVB_AV7110
-> > >  	depends on DVB_CORE && PCI && I2C
-> > >  	select TTPCI_EEPROM
-> > >  	select VIDEO_SAA7146_VV
-> > > -	select DVB_AV7110_IR if INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110  
-> > 
-> > This says if
-> >  - select DVB_AV7110_IR if INPUT_EVDEV and DVB_AV7110 are both y or m
-> >  - select DVB_AV7110_IR if INPUT_EVDEV=y
-> >    This exists for the case when INPUT_EVDEV=y and DVB_AV7110=m, which is fine
-> > 
-> > > +	select DVB_AV7110_IR if RC_CORE=DVB_AV7110 && (INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110)  
-> > 
-> > That's not exactly the same. For one thing it should not longer depend on
-> > INPUT_EVDEV=y.
-> > 
-> > Now if DVB_AV7110=m and RC_CORE=y is not allowed which should be (this is
-> > the case in Fedora default kernel config for example).
-> 
-> My suggestion here is to stop using select here, using, instead
-> a depends on for DVB_AV7110_IR, e. g. something like (untested):
-> 
-> config DVB_AV7110_IR
-> 	bool
-> 	depends on RC_CORE && DVB_AV7110
-> 	default DVB_AV7110
+The conversion is trivial: just adjust title markups.
 
-Build will fail if RC_CORE=m && DVB_AV7110=y. So it should be
+In order to avoid conflicts, let's add an :orphan: tag
+to it, to be removed when this file gets added to the
+driver-api book.
 
-        depends on RC_CORE=y || RC_CORE = DVB_AV7110
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+---
+ .../{ptp/ptp.txt => driver-api/ptp.rst}       | 26 +++++++++++++------
+ Documentation/networking/timestamping.txt     |  2 +-
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 20 insertions(+), 10 deletions(-)
+ rename Documentation/{ptp/ptp.txt => driver-api/ptp.rst} (88%)
 
+diff --git a/Documentation/ptp/ptp.txt b/Documentation/driver-api/ptp.rst
+similarity index 88%
+rename from Documentation/ptp/ptp.txt
+rename to Documentation/driver-api/ptp.rst
+index 11e904ee073f..b6e65d66d37a 100644
+--- a/Documentation/ptp/ptp.txt
++++ b/Documentation/driver-api/ptp.rst
+@@ -1,5 +1,8 @@
++:orphan:
+ 
+-* PTP hardware clock infrastructure for Linux
++===========================================
++PTP hardware clock infrastructure for Linux
++===========================================
+ 
+   This patch set introduces support for IEEE 1588 PTP clocks in
+   Linux. Together with the SO_TIMESTAMPING socket options, this
+@@ -22,7 +25,8 @@
+     - Period output signals configurable from user space
+     - Synchronization of the Linux system time via the PPS subsystem
+ 
+-** PTP hardware clock kernel API
++PTP hardware clock kernel API
++=============================
+ 
+    A PTP clock driver registers itself with the class driver. The
+    class driver handles all of the dealings with user space. The
+@@ -36,7 +40,8 @@
+    development, it can be useful to have more than one clock in a
+    single system, in order to allow performance comparisons.
+ 
+-** PTP hardware clock user space API
++PTP hardware clock user space API
++=================================
+ 
+    The class driver also creates a character device for each
+    registered clock. User space can use an open file descriptor from
+@@ -49,7 +54,8 @@
+    ancillary clock features. User space can receive time stamped
+    events via blocking read() and poll().
+ 
+-** Writing clock drivers
++Writing clock drivers
++=====================
+ 
+    Clock drivers include include/linux/ptp_clock_kernel.h and register
+    themselves by presenting a 'struct ptp_clock_info' to the
+@@ -66,14 +72,17 @@
+    class driver, since the lock may also be needed by the clock
+    driver's interrupt service routine.
+ 
+-** Supported hardware
++Supported hardware
++==================
++
++   * Freescale eTSEC gianfar
+ 
+-   + Freescale eTSEC gianfar
+      - 2 Time stamp external triggers, programmable polarity (opt. interrupt)
+      - 2 Alarm registers (optional interrupt)
+      - 3 Periodic signals (optional interrupt)
+ 
+-   + National DP83640
++   * National DP83640
++
+      - 6 GPIOs programmable as inputs or outputs
+      - 6 GPIOs with dedicated functions (LED/JTAG/clock) can also be
+        used as general inputs or outputs
+@@ -81,6 +90,7 @@
+      - GPIO outputs can produce periodic signals
+      - 1 interrupt pin
+ 
+-   + Intel IXP465
++   * Intel IXP465
++
+      - Auxiliary Slave/Master Mode Snapshot (optional interrupt)
+      - Target Time (optional interrupt)
+diff --git a/Documentation/networking/timestamping.txt b/Documentation/networking/timestamping.txt
+index bbdaf8990031..8dd6333c3270 100644
+--- a/Documentation/networking/timestamping.txt
++++ b/Documentation/networking/timestamping.txt
+@@ -368,7 +368,7 @@ ts[1] used to hold hardware timestamps converted to system time.
+ Instead, expose the hardware clock device on the NIC directly as
+ a HW PTP clock source, to allow time conversion in userspace and
+ optionally synchronize system time with a userspace PTP stack such
+-as linuxptp. For the PTP clock API, see Documentation/ptp/ptp.txt.
++as linuxptp. For the PTP clock API, see Documentation/driver-api/ptp.rst.
+ 
+ Note that if the SO_TIMESTAMP or SO_TIMESTAMPNS option is enabled
+ together with SO_TIMESTAMPING using SOF_TIMESTAMPING_SOFTWARE, a false
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5c5714eddde4..9d9399c9cf47 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12815,7 +12815,7 @@ L:	netdev@vger.kernel.org
+ S:	Maintained
+ W:	http://linuxptp.sourceforge.net/
+ F:	Documentation/ABI/testing/sysfs-ptp
+-F:	Documentation/ptp/*
++F:	Documentation/driver-api/ptp.rst
+ F:	drivers/net/phy/dp83640*
+ F:	drivers/ptp/*
+ F:	include/linux/ptp_cl*
+-- 
+2.21.0
 
-Thanks,
-
-Sean
