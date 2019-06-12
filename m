@@ -2,85 +2,93 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C760DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF3CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B55215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WwCSS6HP"
+	by mail.kernel.org (Postfix) with ESMTP id 9176920896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbfFLRqc (ORCPT
+        id S1729108AbfFLRuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:46:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40134 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfFLRqb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:46:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s/cPizosD0yo9hCc0bnbtGXeZtAcZupgNDhvNsY19l8=; b=WwCSS6HPwhqRa8GP/pqPBaFzP
-        GrvimiXjmrb2Lac/YuJURT5NEkTZ03tllxmZf4raxtLhj8xRzZpA1nyAi20YMkh9UtzIOSXqUwbaD
-        0BR7cC+o/zli58tv/fpRUXm2OVrbUwH/FYsmRNVzEpFcvERHHW2fDKvlb4bDkK0wlj0y0NUsd2qVZ
-        3JysHIJo4FFUfwPT8LTOXD+nG0luamwCYvjGn/kNL2+UTt0EWdKWBa4wSQAWIfqjKIpjtwNr2Lh14
-        88uqNEqXa1LNnW3eOP8p1dtHsQPLQ6Z3uJitSTklS2//XqtOvvjlDNUBvXXktfJT1Emo53PWq2got
-        rHLTovsbA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb7KI-0000Om-U3; Wed, 12 Jun 2019 17:46:23 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0A68B209B9C09; Wed, 12 Jun 2019 19:39:31 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 19:39:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
-        Li Zefan <lizefan@huawei.com>, Phil Auld <pauld@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org
-Subject: Re: [RESEND PATCH v3] cpuset: restore sanity to
- cpuset_cpus_allowed_fallback()
-Message-ID: <20190612173930.GL3402@hirez.programming.kicks-ass.net>
-References: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
- <20190612160244.GP3341036@devbig004.ftw2.facebook.com>
+        Wed, 12 Jun 2019 13:50:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:17070 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725764AbfFLRuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 13:50:37 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 10:50:36 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga005.jf.intel.com with ESMTP; 12 Jun 2019 10:50:35 -0700
+Date:   Wed, 12 Jun 2019 10:41:13 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [RFC PATCH] x86/cpufeatures: Enumerate new AVX512 bfloat16
+ instructions
+Message-ID: <20190612174112.GG180343@romley-ivt3.sc.intel.com>
+References: <1560186158-174788-1-git-send-email-fenghua.yu@intel.com>
+ <20190610192026.GI5488@zn.tnic>
+ <20190611181920.GC180343@romley-ivt3.sc.intel.com>
+ <20190611194701.GJ31772@zn.tnic>
+ <20190611222822.GD180343@romley-ivt3.sc.intel.com>
+ <3E5A0FA7E9CA944F9D5414FEC6C712209D8F4253@ORSMSX106.amr.corp.intel.com>
+ <20190612035908.GB32652@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612160244.GP3341036@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190612035908.GB32652@zn.tnic>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:02:44AM -0700, Tejun Heo wrote:
-> On Wed, Jun 12, 2019 at 11:50:48AM -0400, Joel Savitz wrote:
-> > In the case that a process is constrained by taskset(1) (i.e.
-> > sched_setaffinity(2)) to a subset of available cpus, and all of those are
-> > subsequently offlined, the scheduler will set tsk->cpus_allowed to
-> > the current value of task_cs(tsk)->effective_cpus.
-> > 
-> > This is done via a call to do_set_cpus_allowed() in the context of 
-> > cpuset_cpus_allowed_fallback() made by the scheduler when this case is
-> > detected. This is the only call made to cpuset_cpus_allowed_fallback()
-> > in the latest mainline kernel.
-> > 
-> > However, this is not sane behavior.
+On Wed, Jun 12, 2019 at 05:59:08AM +0200, Borislav Petkov wrote:
+> On Wed, Jun 12, 2019 at 03:29:57AM +0000, Yu, Fenghua wrote:
+> > My bad. I studied a bit more and found the patch #1 is not needed.
 > 
-> While not perfect (we'll need to stop updating task's cpumask from
-> cpuset to make), this is still a signifcant improvement.
+> Why, I think you were spot-on:
 > 
->  Acked-by: Tejun Heo <tj@kernel.org>
+> "And the two variables are ONLY used in resctrl monitoring
+> configuration. There is no need to store them in cpuinfo_x86 on each
+> CPU."
 > 
-> If there's no objection, I'll route it through the cgroup tree.
+> That was a real overkill to put them in cpuinfo_x86. The information
+> needed should simply be read out in rdt_get_mon_l3_config() and that's
+> it - no need to global values to store them.
+> 
+> Now removing them should be in a separate patch so that review is easy.
+> 
+> Or am I missing an aspect?
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+x86_init_cache_qos() fnds the minimum number of rmid on all CPUs and
+store it in boot_cpu_data.
+
+If removing the two variables from cpuinfo_x86 and getting number of
+rmid and occupancy scale in rdt_get_mon_l3_config() directly from
+CPUID on the current CPU, we need to assume all CPUs have the same
+number of rmid.
+
+Is this a right assumption?
+
+After think again, it might be a right assumption after all. AFAICT, each
+Intel platform that supports resctrl has the same number of rmid on all
+CPUs and there is no plan to have a resctrl platform that has different
+numbers of rmid on CPUs.
+
+So Ok, I will write the patch #1 that removes the two variables from
+cpuinfo_x86 and gets the info directly from CPUID in rdt_get_mon_l3_config().
+
+Thanks.
+
+-Fenghua
