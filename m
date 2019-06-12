@@ -2,70 +2,169 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA0FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11438C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56526207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01B0208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:27:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UcaAlYAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408758AbfFLJ06 (ORCPT
+        id S2408767AbfFLJ1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:26:58 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:32940 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408650AbfFLJ06 (ORCPT
+        Wed, 12 Jun 2019 05:27:37 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56215 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407865AbfFLJ1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:26:58 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r6so9644921qkc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:26:57 -0700 (PDT)
+        Wed, 12 Jun 2019 05:27:36 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so5769020wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mF1ZZIqX0fVgmACtu99hDygnph7n89tfAuCMAfh6B8w=;
+        b=UcaAlYAJVozvXtiF7F8GXev0nXIqbmMzwhuQ1PB+H04+cwHYz9NBMi6p+AnKOBkTSx
+         KZvqZZfIzpTTo9zcNkuKYFUL1JpoLl0RnDjXXQePseqqCoGnj8/kQOXDj7DnlOwUefZb
+         QcvdqbkpLaaKYmE/3Wlb/Q3HnUyoINIVJPPbK5WI/K/5jYITh0Ep7Gl4IMsbH2vG/ZlR
+         llpGk14nqREp4b8vB1mFT2Le3w4kaxyfl4nvjhJETmPK2rXN7NP0vhGWq5jg7K1CS/Ug
+         RdWhTKZhSJHwfMYKwRQbNQW4xHty4DCWdnOn+PzOQ0M4xEkEY14jEVBMvDM4TkLcavUU
+         H7fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xeo9d2N1hWRckWYqXOphjPdppgRAC+OLZIyxn8W5pHI=;
-        b=fZXGr+gbCXbtK/3Hguf4kj4dX0DjuErZGqvPn5ICA7ISi/6JreICr3grxNaHKNqzIi
-         4sB7zPkWkj/FLV+XH+8iv0sbuzOt8Cqhac04DKlYsMz4qizEuJ8JyTrOHhS6Hiv1kZy3
-         9fs4w0t1WLIWg4015WKozIqKIkMr2ymjSnCUJy3XjtvQENclq+K5bxFYUoNpcsudg3Dw
-         gJsg/tKAmrn7jZ1CxqgP5kkFwDXp1HatDi9YYmUGej9qkHMymeIV6FB70qbl2CwLxqnZ
-         JkvUWuR4y6Nmw9QPnJrPdrToUW/R6OVGvHH/Ty2oN7smFNRHJHZzqn9tCiiVmHJfQM0J
-         EW2w==
-X-Gm-Message-State: APjAAAXhx+ZDHWHx6wYVBVPcKMK2h75llNUqJHXs6YCp1eer09gdYUVl
-        2mbHfXDVoEKral+4RuxKaFqgOxn3UrsGTNCNp3c=
-X-Google-Smtp-Source: APXvYqx9MC+m4cJ+Di7eurv73JJcvCokdM6C1y31ZWxpbikgUv7cq3G8GlizVNkLgZ4BzXR68fXDvMBPT2DoHTfGKrE=
-X-Received: by 2002:a37:6ac3:: with SMTP id f186mr47898318qkc.281.1560331617021;
- Wed, 12 Jun 2019 02:26:57 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=mF1ZZIqX0fVgmACtu99hDygnph7n89tfAuCMAfh6B8w=;
+        b=KDS6CA159ijpwFw69xmFxrOWa4WVml837LwyN0fn95o/JmD2dxiTxUEvmoba41cq99
+         ZMSzcpRFRxVn5tZ1p11NYRztJgfJImbx6DI0kf3R0G0N9T9VXl2WLtR2rUsw2T7cxsye
+         9sq/9AbVY9VawLHGfT9cpvrJxImH2B3KDtXqWsw4GIBl/QufVQ20JK/NEVnRsTrUup4z
+         VdKa1hVRC0Yf9Bd3/d03XVHV557r36imA0Rgqut3LFvrrt/92yuMuNNCRtPXhZyeTnpy
+         tmSdVRrEHawQYxoxzydc5XSy+oesBCAr0ctUFw574JWMDr0VOitN6qjdg9OFe55HmSsC
+         2y/g==
+X-Gm-Message-State: APjAAAWGISU4zmarukGcTvLRYDRB+Th16itBnW2WOWgUJ4xMso98fvuX
+        sgVDoB3gKe7z5ahP897RVW8KTKGGJxM=
+X-Google-Smtp-Source: APXvYqwufgong1ncp9HKmZfLz2jY82v+4fTKjifwjzfUpmZBWzzsgb094Ud3jLgbkhbDIhoGryExqA==
+X-Received: by 2002:a7b:cb4b:: with SMTP id v11mr20533383wmj.85.1560331653524;
+        Wed, 12 Jun 2019 02:27:33 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id o2sm2016803wrq.56.2019.06.12.02.27.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 02:27:32 -0700 (PDT)
+Subject: Re: [PATCH v5 0/3] Make IPA use PM_EM
+To:     Quentin Perret <quentin.perret@arm.com>, edubezval@gmail.com,
+        rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        will.deacon@arm.com, catalin.marinas@arm.com,
+        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190530092038.12020-1-quentin.perret@arm.com>
+ <20190612091351.jet5sew5dnirsapz@queper01-lin>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e9b57e71-81eb-2ac8-cd4a-76b57eee63df@linaro.org>
+Date:   Wed, 12 Jun 2019 11:27:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190611184323.GA2329@kroah.com>
-In-Reply-To: <20190611184323.GA2329@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 12 Jun 2019 11:26:40 +0200
-Message-ID: <CAK8P3a1-gZwNCfGYTAnzr8YcRtWJ6WDLGcbB+eSbqin9ZzjAhg@mail.gmail.com>
-Subject: Re: [PATCH] mic: no need to check return value of debugfs_create functions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190612091351.jet5sew5dnirsapz@queper01-lin>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 8:43 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
->
-> Cc: Sudeep Dutt <sudeep.dutt@intel.com>
-> Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On 12/06/2019 11:13, Quentin Perret wrote:
+> Hi,
+> 
+> On Thursday 30 May 2019 at 10:20:35 (+0100), Quentin Perret wrote:
+>> Changes in v5:
+>> **************
+>>  - Changed patch 02 to guard IPA-specific code in cpu_cooling.c with
+>>    appropriate ifdefery (Daniel)
+>>  - Rebased on 5.2-rc2
+> 
+> Is there anything else I can do on this series ? Should I send a v6 with
+> Viresh's and Daniel's Acked-by ?
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+No need to send a V6 if there are no changes in the patches. The
+maintainer will take care of collecting the tags (which is usually
+automatic when using the patchwork tools).
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
