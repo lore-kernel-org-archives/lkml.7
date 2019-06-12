@@ -2,106 +2,139 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6B5C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12620C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F652082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC12E208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:23:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Wb2slfVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408843AbfFLKXJ (ORCPT
+        id S2408860AbfFLKXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 12 Jun 2019 06:23:13 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43282 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408847AbfFLKXJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Jun 2019 06:23:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44202 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407254AbfFLKXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:23:04 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 21158C0587F5;
-        Wed, 12 Jun 2019 10:23:04 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-159.ams2.redhat.com [10.36.116.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4D3560CCC;
-        Wed, 12 Jun 2019 10:22:59 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH v2 4/4] s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
-Date:   Wed, 12 Jun 2019 12:22:48 +0200
-Message-Id: <20190612102248.18903-5-david@redhat.com>
-In-Reply-To: <20190612102248.18903-1-david@redhat.com>
-References: <20190612102248.18903-1-david@redhat.com>
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5CAN8tl038317;
+        Wed, 12 Jun 2019 05:23:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560334988;
+        bh=gXlPsskpiWFKuL3pKSUlET3jukGcKHstSsj3yxbC3+Q=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Wb2slfVJ1rQBhaKZ4ASf+uNopTTbp4J3NtShek+8YU8hnDPfLVoKpkPI0xFCoYnGf
+         hCDRzscN825i8jiPk9pQKlxs4+5fu06BNgQ1OTUCPeMQGeub6fXRsYaFvGU/A2EJik
+         uIXd8WlYKqa26C7J51TcNR4cgsTG8+bwOpNAU1bA=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5CAN8vC078071
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Jun 2019 05:23:08 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 12
+ Jun 2019 05:23:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 12 Jun 2019 05:23:08 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5CAN5sd016514;
+        Wed, 12 Jun 2019 05:23:07 -0500
+Subject: Re: [GIT PULL] PHY: for 5.2-rc
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20190611140122.9429-1-kishon@ti.com>
+ <20190611170401.GA23216@kroah.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <1f381f69-ca3f-05d4-d183-91bd59c3a26b@ti.com>
+Date:   Wed, 12 Jun 2019 15:51:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 12 Jun 2019 10:23:04 +0000 (UTC)
+In-Reply-To: <20190611170401.GA23216@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's use the error value that is typically used if HW support is not
-available when trying to load a module - this is also what systemd's
-systemd-modules-load.service expects.
+Hi,
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/s390/crypto/sha1_s390.c   | 2 +-
- arch/s390/crypto/sha256_s390.c | 2 +-
- arch/s390/crypto/sha512_s390.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On 11/06/19 10:34 PM, Greg Kroah-Hartman wrote:
+> On Tue, Jun 11, 2019 at 07:31:22PM +0530, Kishon Vijay Abraham I wrote:
+>> Hi Greg,
+>>
+>> Please find the pull request for 5.2 -rc cycle.
+>>
+>> The major fix being moving supplies powering PLLs used by USB, SATA,
+>> PCIe to tegra-xusb driver fixing initialization failure.
+>>
+>> Others are minor fixes. Please see the tag message below for more
+>> details.
+>>
+>> Consider merging it in this -rc cycle and let me know if you want me
+>> to make any changes.
+>>
+>> Thanks
+>> Kishon
+>>
+>> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+>>
+>>   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+>>
+>> are available in the Git repository at:
+>>
+>>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.2-rc
+>>
+>> for you to fetch changes up to ada28f7b3a97fa720864c86504a7c426ee6f91c1:
+>>
+>>   phy: tegra: xusb: Add Tegra210 PLL power supplies (2019-06-07 15:58:34 +0530)
+>>
+>> ----------------------------------------------------------------
+>> phy: for 5.2-rc
+>>
+>>   *) Move Tegra124 PLL power supplies to be enabled by xusb-tegra124
+>>   *) Move Tegra210 PLL power supplies to be enabled by xusb-tegra210
+>>   *) Minor fixes: fix memory leaks at error path, fix sparse warnings
+>>      and addresses coverity.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>
+>> ----------------------------------------------------------------
+>> Colin Ian King (1):
+>>       phy: qcom-qusb2: fix missing assignment of ret when calling clk_prepare_enable
+>>
+>> Florian Fainelli (1):
+>>       phy: usb: phy-brcm-usb: Remove sysfs attributes upon driver removal
+>>
+>> Thierry Reding (3):
+>>       dt-bindings: phy: tegra-xusb: List PLL power supplies
+>>       phy: tegra: xusb: Add Tegra124 PLL power supplies
+>>       phy: tegra: xusb: Add Tegra210 PLL power supplies
+>>
+>> Yoshihiro Shimoda (1):
+>>       phy: renesas: rcar-gen2: Fix memory leak at error paths
+>>
+>> YueHaibing (1):
+>>       phy: ti: am654-serdes: Make serdes_am654_xlate() static
+> 
+> sparse fixes are not for the -rc cycle, unless they fix an actual bug.
+> 
+> Care to send these as a patch series and I can queue up the real
+> bugfixes for -final and take the others for 5.3-rc1?
 
-diff --git a/arch/s390/crypto/sha1_s390.c b/arch/s390/crypto/sha1_s390.c
-index 009572e8276d..7c15542d3685 100644
---- a/arch/s390/crypto/sha1_s390.c
-+++ b/arch/s390/crypto/sha1_s390.c
-@@ -86,7 +86,7 @@ static struct shash_alg alg = {
- static int __init sha1_s390_init(void)
- {
- 	if (!cpacf_query_func(CPACF_KIMD, CPACF_KIMD_SHA_1))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 	return crypto_register_shash(&alg);
- }
- 
-diff --git a/arch/s390/crypto/sha256_s390.c b/arch/s390/crypto/sha256_s390.c
-index 62833a1d8724..af7505148f80 100644
---- a/arch/s390/crypto/sha256_s390.c
-+++ b/arch/s390/crypto/sha256_s390.c
-@@ -117,7 +117,7 @@ static int __init sha256_s390_init(void)
- 	int ret;
- 
- 	if (!cpacf_query_func(CPACF_KIMD, CPACF_KIMD_SHA_256))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 	ret = crypto_register_shash(&sha256_alg);
- 	if (ret < 0)
- 		goto out;
-diff --git a/arch/s390/crypto/sha512_s390.c b/arch/s390/crypto/sha512_s390.c
-index be589c340d15..ad29db085a18 100644
---- a/arch/s390/crypto/sha512_s390.c
-+++ b/arch/s390/crypto/sha512_s390.c
-@@ -127,7 +127,7 @@ static int __init init(void)
- 	int ret;
- 
- 	if (!cpacf_query_func(CPACF_KIMD, CPACF_KIMD_SHA_512))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 	if ((ret = crypto_register_shash(&sha512_alg)) < 0)
- 		goto out;
- 	if ((ret = crypto_register_shash(&sha384_alg)) < 0)
--- 
-2.21.0
+Sure, I'll send the patches with an updated pull request.
 
+Thanks
+Kishon
