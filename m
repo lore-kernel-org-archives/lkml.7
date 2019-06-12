@@ -2,132 +2,92 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D0AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1D6C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265F2207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560332251;
-	bh=SbSPA8xt3FtSbVH4/KwmzKQS6tu9FOWGMzFrwJJKrBM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ik+aUGCjsUi3h02IXob+dnczhpDU97fOtobhqWcrLZ2L6rMEnrQH7ePpdW2yx/KrS
-	 gisRKNuCEI6luYWuokxJcab/usJCxnPFWcqvQA516flsxdeGMhiD0J/907ca+lu90f
-	 qw47JtUfGKnv9gO/rh0Hbubhytz59OwJyb+v4kqA=
+	by mail.kernel.org (Postfix) with ESMTP id 15BA92082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:38:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOwmIY2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408835AbfFLJha (ORCPT
+        id S2408859AbfFLJiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:37:30 -0400
-Received: from casper.infradead.org ([85.118.1.10]:45994 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408577AbfFLJh3 (ORCPT
+        Wed, 12 Jun 2019 05:38:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42026 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408773AbfFLJiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:37:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=04GCIstyKMujcBHa4O6zSpjG2Oz0E3c+JB6XSFE/UrI=; b=mu4uAjLNncFHGDGq4L4qZDo9wt
-        NsrMgf2WNt8yYLcUBfBCqqJ5qRlV7K2XZR20CBv9PM4ZzLdjwc7hpvOfnpX23SSj1M/KbK+6Qc1Ay
-        iXXoFcJxtG4o3fwbRzSJHZ6Wa9HCxObTuybjFsjVST3+ISYlEesSjhSU9WoBPW1aTYpDvp+vcrp8k
-        sWdNxkeY6U3J1Ury/o+wiAg8rxcMyjI2vsYwBgSa9ZdWtNZdxF73GtiaIDlXc/GbLbszm3ULwr20P
-        dScbq6e+TQBXi0RqRGvWXSGyENPNez5rN7S+iGF06x3utuGHkRSl0H7eM8P2PIHqk6foytMM9uZXN
-        lsAzhG+w==;
-Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hazgw-0004ue-4U; Wed, 12 Jun 2019 09:37:14 +0000
-Date:   Wed, 12 Jun 2019 06:37:08 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Sean Young <sean@mess.org>
-Cc:     YueHaibing <yuehaibing@huawei.com>, tglx@linutronix.de,
-        corbet@lwn.net, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] media: ttpci: Fix build error without RC_CORE
-Message-ID: <20190612063708.64498b44@coco.lan>
-In-Reply-To: <20190612074254.eky2xo7bajorkhfy@gofer.mess.org>
-References: <20190612034310.4640-1-yuehaibing@huawei.com>
-        <20190612074254.eky2xo7bajorkhfy@gofer.mess.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 12 Jun 2019 05:38:02 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l15so14761009otn.9;
+        Wed, 12 Jun 2019 02:38:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Uho8KQeGL4zvCiWfgtRd1WVA8bccWLCM5Olh/mEH/V0=;
+        b=OOwmIY2ri3gcT6Pn+fQxfeU643IzNCgpBtnRsglxxb2zPUAual001NiYqq/PxS14Mc
+         VyTziLa+0CSKtERPDlbeOg06mcYorg002XRe8tnfyg/NA2MJisNk8exLFcgFWDrjKt+6
+         /fK6XrJcD1yRTwCDZSScrRr/3GGZuYW+702rI3lYUYDFLmWpwtnfgy2QDWoaGS+gF+w8
+         cPyNi+22wC2rTiDqOqVOmVtc3N0HHOSKDNrEFvSrSofxkfJSsS4geeZz13fvkz/PT6K4
+         d/2NIHDSW11AnMZ6dLSo9ZG3Mfl/f/fpsM4D0CmWCx7QhKReApTWg8gYlHqa8o6osrNi
+         nIoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uho8KQeGL4zvCiWfgtRd1WVA8bccWLCM5Olh/mEH/V0=;
+        b=S9a38cjwPobNPRzLRwapOsMOfdQYNadFlY+ovquRe5tcA7ImWGPmG+D074SvUXBKjv
+         bn4JpKO/EAQyHkI4WeOmqTLB/f9TEkYkkgBszRas/3wiKiFTv5OB80H8aJlw6DC760EM
+         hS8+qOXWGivvV7lkemcXTNAuEAH8AfCpEfrZBeHbAtxyDUkFMys6ZPqMNLm1XssCgmhN
+         bWFVZ0Rtl435hcdxZ13eiBcv9u5I4Li/tdmXqSDHnvexj5fl1lHC73MLg8qFobvMwqqD
+         FYJ99JdjQSDA6x/IQBKrqhf1I9Vb9EbDEN9QP+PH9Ag0lEHRSMD6dxqhwuL64dGNE94n
+         LY5w==
+X-Gm-Message-State: APjAAAVyU21c1wKTWbrd0/wH/upcYx/lOEz6o2+ekYrQUlQGid2Kex6K
+        swo+qM4FOUr6pJaPU8ipZmpX3Anx4D7imRuygsY=
+X-Google-Smtp-Source: APXvYqxS6QKBxt7vLOAsARJg20qqX12U2VOEM9zQ24quttGdwmW1DulmY3Xq3y4pTVI85hKXWEgARZZlxuJmjXjSmP8=
+X-Received: by 2002:a9d:7601:: with SMTP id k1mr1632240otl.254.1560332282293;
+ Wed, 12 Jun 2019 02:38:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1558585131-1321-1-git-send-email-wanpengli@tencent.com>
+ <20190530193653.GA27551@linux.intel.com> <754c46dd-3ead-2c27-1bcc-52db26418390@redhat.com>
+In-Reply-To: <754c46dd-3ead-2c27-1bcc-52db26418390@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 12 Jun 2019 17:38:45 +0800
+Message-ID: <CANRm+Czg+5qe3eHrOo-=EbOJM5929Xge+rSwyQoksdkk6PcGzA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: LAPIC: Optimize timer latency consider world
+ switch time
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Jun 2019 08:42:55 +0100
-Sean Young <sean@mess.org> escreveu:
+On Fri, 31 May 2019 at 17:01, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 30/05/19 21:36, Sean Christopherson wrote:
+> >> +u32 __read_mostly vmentry_lapic_timer_advance_ns = 0;
+> >> +module_param(vmentry_lapic_timer_advance_ns, uint, S_IRUGO | S_IWUSR);
+> > Hmm, an interesting idea would be to have some way to "lock" this param,
+> > e.g. setting bit 0 locks the param.  That would allow KVM to calculate the
+> > cycles value to avoid the function call and the MUL+DIV.  If I'm not
+> > mistaken, vcpu->arch.virtual_tsc_khz is set only in kvm_set_tsc_khz().
+>
+> I would just make it read-only.  But I'm afraid we're entering somewhat
+> dangerous territory.  There is a risk that the guest ends up entering
+> the interrupt handler before the TSC deadline has actually expired, and
+> there would be no way to know what would happen; even guest hangs are
+> possible.
 
-> On Wed, Jun 12, 2019 at 11:43:10AM +0800, YueHaibing wrote:
-> > If RC_CORE is not set, building fails:
-> > 
-> > drivers/media/pci/ttpci/av7110_ir.o: In function `av7110_ir_init':
-> > av7110_ir.c:(.text+0x1b0): undefined reference to `rc_allocate_device'
-> > av7110_ir.c:(.text+0x2c1): undefined reference to `rc_register_device'
-> > av7110_ir.c:(.text+0x2dc): undefined reference to `rc_free_device'
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Fixes: 71f49a8bf5c5 ("media: ttpci: use rc-core for the IR receiver")
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>  
-> 
-> Thank you for spotting this and writing a patch.
-> 
-> > ---
-> >  drivers/media/pci/ttpci/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/pci/ttpci/Kconfig b/drivers/media/pci/ttpci/Kconfig
-> > index d96d4fa..b705631 100644
-> > --- a/drivers/media/pci/ttpci/Kconfig
-> > +++ b/drivers/media/pci/ttpci/Kconfig
-> > @@ -7,7 +7,7 @@ config DVB_AV7110
-> >  	depends on DVB_CORE && PCI && I2C
-> >  	select TTPCI_EEPROM
-> >  	select VIDEO_SAA7146_VV
-> > -	select DVB_AV7110_IR if INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110  
-> 
-> This says if
->  - select DVB_AV7110_IR if INPUT_EVDEV and DVB_AV7110 are both y or m
->  - select DVB_AV7110_IR if INPUT_EVDEV=y
->    This exists for the case when INPUT_EVDEV=y and DVB_AV7110=m, which is fine
-> 
-> > +	select DVB_AV7110_IR if RC_CORE=DVB_AV7110 && (INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110)  
-> 
-> That's not exactly the same. For one thing it should not longer depend on
-> INPUT_EVDEV=y.
-> 
-> Now if DVB_AV7110=m and RC_CORE=y is not allowed which should be (this is
-> the case in Fedora default kernel config for example).
+Agreed, do it in v3.
 
-My suggestion here is to stop using select here, using, instead
-a depends on for DVB_AV7110_IR, e. g. something like (untested):
-
-config DVB_AV7110_IR
-	bool
-	depends on RC_CORE && DVB_AV7110
-	default DVB_AV7110
-
-
-> 
-> >  	depends on VIDEO_DEV	# dependencies of VIDEO_SAA7146_VV
-> >  	select DVB_VES1820 if MEDIA_SUBDRV_AUTOSELECT
-> >  	select DVB_VES1X93 if MEDIA_SUBDRV_AUTOSELECT
-> > -- 
-> > 2.7.4
-> >   
-> 
-> Thanks,
-> 
-> Sean
-
-
-
-Thanks,
-Mauro
+Regards,
+Wanpeng Li
