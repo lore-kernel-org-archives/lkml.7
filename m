@@ -2,46 +2,46 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29778C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C16C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0558E20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC1720896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436532AbfFLMB0 (ORCPT
+        id S2437035AbfFLMEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:01:26 -0400
-Received: from sauhun.de ([88.99.104.3]:59056 "EHLO pokefinder.org"
+        Wed, 12 Jun 2019 08:04:42 -0400
+Received: from sauhun.de ([88.99.104.3]:59096 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405198AbfFLMBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:01:25 -0400
+        id S2405097AbfFLMEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:04:41 -0400
 Received: from localhost (p5486CACA.dip0.t-ipconnect.de [84.134.202.202])
-        by pokefinder.org (Postfix) with ESMTPSA id 32B0B2C54BC;
-        Wed, 12 Jun 2019 14:01:23 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 14:01:22 +0200
+        by pokefinder.org (Postfix) with ESMTPSA id E9AA82C54BC;
+        Wed, 12 Jun 2019 14:04:39 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 14:04:39 +0200
 From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
+To:     Mauro Carvalho Chehab <mchehab@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Ruslan Babayev <ruslan@babayev.com>,
-        Andrew de Quincey <adq_dvb@lidskialf.net>,
-        Michael Buesch <m@bues.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] media: tua6100: Remove some ugly defines
-Message-ID: <20190612120122.GA2805@kunai>
-References: <20190612081929.GA1687@kunai>
- <fa93fecaa9d8e33f7d3b335872e9082893b775ae.1560338665.git.mchehab+samsung@kernel.org>
+        Andrew de Quincey <adq_dvb@lidskialf.net>
+Subject: Re: linux-next: build warning after merge of the i2c tree
+Message-ID: <20190612120439.GB2805@kunai>
+References: <20190611102528.44ad5783@canb.auug.org.au>
+ <20190612081929.GA1687@kunai>
+ <20190612080226.45d2115a@coco.lan>
+ <20190612110904.qhuoxyljgoo76yjj@ninjato>
+ <20190612084824.16671efa@coco.lan>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+        protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
 Content-Disposition: inline
-In-Reply-To: <fa93fecaa9d8e33f7d3b335872e9082893b775ae.1560338665.git.mchehab+samsung@kernel.org>
+In-Reply-To: <20190612084824.16671efa@coco.lan>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,82 +49,42 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---J2SCkAp4GZ/dPZZf
+--/WwmFnJnmDyWGHa4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2019 at 08:25:03AM -0300, Mauro Carvalho Chehab wrote:
-> As reported by Stephen:
->=20
-> > After merging the i2c tree, today's linux-next build (x86_64 allmodconf=
-ig)
-> > produced this warning:
-> >
-> > drivers/media/dvb-frontends/tua6100.c: In function 'tua6100_set_params':
-> > drivers/media/dvb-frontends/tua6100.c:71: warning: "_P" redefined
-> >  #define _P 32
-> >
-> > In file included from include/acpi/platform/aclinux.h:54,
-> >                  from include/acpi/platform/acenv.h:152,
-> >                  from include/acpi/acpi.h:22,
-> >                  from include/linux/acpi.h:21,
-> >                  from include/linux/i2c.h:17,
-> >                  from drivers/media/dvb-frontends/tua6100.h:22,
-> >                  from drivers/media/dvb-frontends/tua6100.c:24:
-> > include/linux/ctype.h:14: note: this is the location of the previous de=
-finition
-> >  #define _P 0x10 /* punct */
-> >
-> > Exposed by commit
-> >
-> >   5213d7efc8ec ("i2c: acpi: export i2c_acpi_find_adapter_by_handle")
-> >
-> > Since that included <linux/acpi.h> from <linux/i2c.h>
-> >
-> > Originally introduced by commit
-> >
-> >   00be2e7c6415 ("V4L/DVB (4606): Add driver for TUA6100")
-> >
-> > The _P in <linux/ctype.h> has existed since before git.
->=20
-> The addition of include <linux/ctype.h> at the I2C code caused a
-> breakage at the tua6100 driver. The reason is that the code there
-> used defines for 3 parameters used at the calculus for the
-> divide ratio.
->=20
-> In thesis, those are board-dependent, but, as there's just one
-> driver using it (ttpci/budget-av), there was no need to make
-> the code more generic. While it sounds unlikely that this old
-> DVB-S frontend would ever be used on new projects, one might
-> some day come with a variant using a different configuration. So,
-> let's do the right thing and store those values at its private
-> struct.
->=20
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
+> > OK, so that means I should send my pull request after yours in the next
+> > merge window? To avoid the build breakage?
+>=20
+> Either that or you can apply my patch on your tree before the
+> patch that caused the breakage.=20
+>=20
+> Just let me know what works best for you.
+
+Hmm, the offending patch is already in -next and I don't rebase my tree.
+So, I guess it's the merge window dependency then.
 
 
---J2SCkAp4GZ/dPZZf
+--/WwmFnJnmDyWGHa4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A6Y4ACgkQFA3kzBSg
-Kba4Pg/+ONgJJSPFFjCsjZt5hyRLBQiQ9aFn+9zRmA2GDcSxjKb/NSZZInR+ggE9
-OQaO6dux7uA1X+UBlyQUSoxw8MHJGQqB8x1Xhg2EoZ5vOd53F2CJeQiUprr5GIok
-K7I5ETSMTgANqHqFZA2Ou65LFBE34RujYq7wv+2oAlviQiHx1wY0s5HmO9Rwya5R
-80frSRmQZ3Q+vZmvUU3o+kRMxpq+DZK8McFBNw50p9K5QSGgAQkvjdjIdyoveK6n
-tXZ5uaEQdiPgrkWiuTxmvwtA3KggWAaiKXQxBebIgD0iy2SaBfm1QfQI5oiQOcOF
-2CXYVo/1Y1AtCLFYOzNbNINKuVNphGSlR2SBzZ7Oc4kovrVt95VbAEMtHSkzhuwY
-FcxLMLH03T8vczUelYDUdv+atB4QoYBGs9WdliprT08DHNgBS+8ASRJM8cybGT9g
-DN1yFWE8YfhGVasuhIZul8shmfVthZIOo/GlaY0XxgODCkbB0Oq18moO4sjAquOA
-YnJg6IXDfzQUHAMSHuyquXb69I4QYeI+wibhw88/XNB1FpBVi6w0M3q8IxTj7gOY
-ZaFqAolAjnlXhBORhTdzKrInM0v0iaw1XGjKiUwfEEwZCTo0Oy5uczjlIkm86qFc
-3h7EtxA8SDpTzZ/4MfGmJRQkuGmclz/HtVN3bTMqsJs5zQM0gxs=
-=TVqj
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A6lcACgkQFA3kzBSg
+KbZjSg//Z00AABwaP2AKy0R5ADbslsPS/4ByNTm3ijHSx+dcZ29rhM4HOUfMXDDZ
+ksZ+1bvr+pGCR3qKFXv6kCuqWdAKnneKfYNSrib5esjWm++vyLW7lNXwQR7eOYsV
+pA1gS/XIG+EHLCvQFupOALutcMHRwKetxSj+y9SBeKVxmOVvvnsvT15wYWouPv/9
+5p/BooqZV9o5bNh0AUFwcvGv7kZA4ZDVOwIpiIndpJ/VnFmQQ6mCxuX+j2cal5Wg
+q7e6De2CDL+pUfIdcqb67SdE0gJEMHKbMAHw+Ll9cC6A4dytOd4C4Nppo1pAGp+/
+AbfASwT7YFfSMPSerXQAGdiSZfVxUKOJ7epaQGQRK5kL99XS3Ccuu8KOheiAG0Vv
+bKNpOauz1PNsmQeOBo3KHIfwdGx9H9I440IplefSJdygdMKGvYD2jY80cfU5iR1s
+n+c3kiydkIIFSoum+hAH0ObE39sX2WTneOg4OLPa4IokkzbIy1SVwYeqZw7qe/C5
+0VpaCD/T4rzTGoGFT0VELYnikOBOD2xH3eaxmu16plpqsoDRr2y7BuwwG3xAOMbF
+Nq13QVqR5kU233pVc9FIUbEx4c2LqsQ3F5kvxeMANR8MOIvAw+Rr+WdwsssfpSbu
+l7C+JWXxPACxQhu4Joz8XhF/q0JzNMat3F982qQ/0PK//cwIrhM=
+=82Kc
 -----END PGP SIGNATURE-----
 
---J2SCkAp4GZ/dPZZf--
+--/WwmFnJnmDyWGHa4--
