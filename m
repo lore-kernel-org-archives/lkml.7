@@ -2,112 +2,292 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0946DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CCEC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1708208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:30:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/cxH/Je"
+	by mail.kernel.org (Postfix) with ESMTP id 469152082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437949AbfFLOaX (ORCPT
+        id S2439766AbfFLOav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:30:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38243 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437757AbfFLOaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:30:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d18so17154287wrs.5;
-        Wed, 12 Jun 2019 07:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XlzePlwLp6r9/DZCVM1eao1U68xv73UqabDTl25TT1k=;
-        b=V/cxH/Je2VzkXC2fRode4EObJJqIc9g1gqfCqaZagRIJmspbHTOj5a0dGmiBF4FNZD
-         pbSPhLSgUWL8uMiP3Q3qUMouxDvNt8mQeyuQ3QV1F8CyT9bI4ay2+HhwCNYa5bOdsKNS
-         /Nu7oD24ZfI7/4oVsSenxVA6KmC8WntB8DRYlt6wkzesWrzq+E+RhwFtLVDpyj3DaIKO
-         BszCrDcl5a83d4WN2Shw/n13Bgas+ynwh+X6m35z3iE/sUY5fwbsV5CDZtyWCYFfNcGY
-         x4SZj1v8QbV7XPSG5Mfjb//6vzrMRuipeK/AM7ZL+ZLL++1b5LOpXo4U56WFpG29ZaPe
-         nK6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XlzePlwLp6r9/DZCVM1eao1U68xv73UqabDTl25TT1k=;
-        b=UqV2wHCtTzNG9RoQHjwTqeve1W555pX2e6QM5wZxDjBDO5lHvJ44HiIY8VuNpfkLue
-         xloNSyikFkLbctRiZyvOekLQPNgqSesw/T1TnB0X9522Sjc377K5KNh5DLUt21/EysCB
-         q7IyWqDt5fGa0rRkWMggMwrOfAHDlkihmEF+WGzlI196GGlUlWljEPA+ziaySOc3LGaP
-         46B5aoX7yhuM8PQ7erDZY5iNKYjD/7qbZXn/jacrul+p8s5OATwavuSOvk9Jly0s68yo
-         FS96buZSzforSdtupwCmf3iAMgqX41V9EbamliIsI5FklsgRWRhyXlXW8HySDv6pcW/Z
-         rgjA==
-X-Gm-Message-State: APjAAAXjY4Ni+5ifWQFz2SmB0El+AVFf1INoH8q1C5gdgX/kzStomDDK
-        W+nf37fhk4zzDu/54x9+DBs=
-X-Google-Smtp-Source: APXvYqwTi93jsKLq6ezoWfDiEySz/DRul9jQS1ckV4dzXmuJqXG9uqrYSHLF9TQ0JzW7Rk3PktuEqQ==
-X-Received: by 2002:a5d:5702:: with SMTP id a2mr10760836wrv.89.1560349820321;
-        Wed, 12 Jun 2019 07:30:20 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id x6sm23506761wru.0.2019.06.12.07.30.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 07:30:19 -0700 (PDT)
-Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
- <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <42ce2523-dab9-0cdf-e8ff-42631dd161b7@gmail.com>
-Date:   Wed, 12 Jun 2019 17:30:15 +0300
+        Wed, 12 Jun 2019 10:30:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:54366 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437584AbfFLOau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:30:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7BE32B;
+        Wed, 12 Jun 2019 07:30:49 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08D163F557;
+        Wed, 12 Jun 2019 07:30:44 -0700 (PDT)
+Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control the
+ tagged user addresses ABI
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <71ed41e2-47b8-3410-e759-21d972b7a33d@arm.com>
+Date:   Wed, 12 Jun 2019 15:30:44 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
+In-Reply-To: <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.06.2019 13:51, Bitan Biswas пишет:
-> Fix expression for residual bytes(less than word) transfer
-> in I2C PIO mode RX/TX.
+On 12/06/2019 12:43, Andrey Konovalov wrote:
+> From: Catalin Marinas <catalin.marinas@arm.com>
 > 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> It is not desirable to relax the ABI to allow tagged user addresses into
+> the kernel indiscriminately. This patch introduces a prctl() interface
+> for enabling or disabling the tagged ABI with a global sysctl control
+> for preventing applications from enabling the relaxed ABI (meant for
+> testing user-space prctl() return error checking without reconfiguring
+> the kernel). The ABI properties are inherited by threads of the same
+> application and fork()'ed children but cleared on execve().
+> 
+> The PR_SET_TAGGED_ADDR_CTRL will be expanded in the future to handle
+> MTE-specific settings like imprecise vs precise exceptions.
+> 
+> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
 > ---
+>  arch/arm64/include/asm/processor.h   |  6 +++
+>  arch/arm64/include/asm/thread_info.h |  1 +
+>  arch/arm64/include/asm/uaccess.h     |  3 +-
+>  arch/arm64/kernel/process.c          | 67 ++++++++++++++++++++++++++++
+>  include/uapi/linux/prctl.h           |  5 +++
+>  kernel/sys.c                         | 16 +++++++
+>  6 files changed, 97 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+> index fcd0e691b1ea..fee457456aa8 100644
+> --- a/arch/arm64/include/asm/processor.h
+> +++ b/arch/arm64/include/asm/processor.h
+> @@ -307,6 +307,12 @@ extern void __init minsigstksz_setup(void);
+>  /* PR_PAC_RESET_KEYS prctl */
+>  #define PAC_RESET_KEYS(tsk, arg)	ptrauth_prctl_reset_keys(tsk, arg)
+>  
+> +/* PR_TAGGED_ADDR prctl */
+> +long set_tagged_addr_ctrl(unsigned long arg);
+> +long get_tagged_addr_ctrl(void);
+> +#define SET_TAGGED_ADDR_CTRL(arg)	set_tagged_addr_ctrl(arg)
+> +#define GET_TAGGED_ADDR_CTRL()		get_tagged_addr_ctrl()
+> +
+>  /*
+>   * For CONFIG_GCC_PLUGIN_STACKLEAK
+>   *
+> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+> index f1d032be628a..354a31d2b737 100644
+> --- a/arch/arm64/include/asm/thread_info.h
+> +++ b/arch/arm64/include/asm/thread_info.h
+> @@ -99,6 +99,7 @@ void arch_release_task_struct(struct task_struct *tsk);
+>  #define TIF_SVE			23	/* Scalable Vector Extension in use */
+>  #define TIF_SVE_VL_INHERIT	24	/* Inherit sve_vl_onexec across exec */
+>  #define TIF_SSBD		25	/* Wants SSB mitigation */
+> +#define TIF_TAGGED_ADDR		26	/* Allow tagged user addresses */
+>  
+>  #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
+>  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
+> diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
+> index df729afca0ba..995b9ea11a89 100644
+> --- a/arch/arm64/include/asm/uaccess.h
+> +++ b/arch/arm64/include/asm/uaccess.h
+> @@ -73,7 +73,8 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
+>  {
+>  	unsigned long ret, limit = current_thread_info()->addr_limit;
+>  
+> -	addr = untagged_addr(addr);
+> +	if (test_thread_flag(TIF_TAGGED_ADDR))
+> +		addr = untagged_addr(addr);
+>  
+>  	__chk_user_ptr(addr);
+>  	asm volatile(
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index 3767fb21a5b8..69d0be1fc708 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+>  #include <linux/stddef.h>
+> +#include <linux/sysctl.h>
+>  #include <linux/unistd.h>
+>  #include <linux/user.h>
+>  #include <linux/delay.h>
+> @@ -323,6 +324,7 @@ void flush_thread(void)
+>  	fpsimd_flush_thread();
+>  	tls_thread_flush();
+>  	flush_ptrace_hw_breakpoint(current);
+> +	clear_thread_flag(TIF_TAGGED_ADDR);
+>  }
+>  
+>  void release_thread(struct task_struct *dead_task)
+> @@ -552,3 +554,68 @@ void arch_setup_new_exec(void)
+>  
+>  	ptrauth_thread_init_user(current);
+>  }
+> +
+> +/*
+> + * Control the relaxed ABI allowing tagged user addresses into the kernel.
+> + */
+> +static unsigned int tagged_addr_prctl_allowed = 1;
+> +
+> +long set_tagged_addr_ctrl(unsigned long arg)
+> +{
+> +	if (!tagged_addr_prctl_allowed)
+> +		return -EINVAL;
+> +	if (is_compat_task())
+> +		return -EINVAL;
+> +	if (arg & ~PR_TAGGED_ADDR_ENABLE)
+> +		return -EINVAL;
+> +
+> +	if (arg & PR_TAGGED_ADDR_ENABLE)
+> +		set_thread_flag(TIF_TAGGED_ADDR);
+> +	else
+> +		clear_thread_flag(TIF_TAGGED_ADDR);
+> +
+> +	return 0;
+> +}
+> +
+> +long get_tagged_addr_ctrl(void)
+> +{
+> +	if (!tagged_addr_prctl_allowed)
+> +		return -EINVAL;
+> +	if (is_compat_task())
+> +		return -EINVAL;
+> +
+> +	if (test_thread_flag(TIF_TAGGED_ADDR))
+> +		return PR_TAGGED_ADDR_ENABLE;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Global sysctl to disable the tagged user addresses support. This control
+> + * only prevents the tagged address ABI enabling via prctl() and does not
+> + * disable it for tasks that already opted in to the relaxed ABI.
+> + */
+> +static int zero;
+> +static int one = 1;
+> +
+> +static struct ctl_table tagged_addr_sysctl_table[] = {
+> +	{
+> +		.procname	= "tagged_addr",
+> +		.mode		= 0644,
+> +		.data		= &tagged_addr_prctl_allowed,
+> +		.maxlen		= sizeof(int),
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &zero,
+> +		.extra2		= &one,
+> +	},
+> +	{ }
+> +};
+> +
+> +static int __init tagged_addr_init(void)
+> +{
+> +	if (!register_sysctl("abi", tagged_addr_sysctl_table))
+> +		return -EINVAL;
+> +	return 0;
+> +}
+> +
+> +core_initcall(tagged_addr_init);
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 094bb03b9cc2..2e927b3e9d6c 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -229,4 +229,9 @@ struct prctl_mm_map {
+>  # define PR_PAC_APDBKEY			(1UL << 3)
+>  # define PR_PAC_APGAKEY			(1UL << 4)
+>  
+> +/* Tagged user address controls for arm64 */
+> +#define PR_SET_TAGGED_ADDR_CTRL		55
+> +#define PR_GET_TAGGED_ADDR_CTRL		56
+> +# define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
+> +
+>  #endif /* _LINUX_PRCTL_H */
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index 2969304c29fe..ec48396b4943 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -124,6 +124,12 @@
+>  #ifndef PAC_RESET_KEYS
+>  # define PAC_RESET_KEYS(a, b)	(-EINVAL)
+>  #endif
+> +#ifndef SET_TAGGED_ADDR_CTRL
+> +# define SET_TAGGED_ADDR_CTRL(a)	(-EINVAL)
+> +#endif
+> +#ifndef GET_TAGGED_ADDR_CTRL
+> +# define GET_TAGGED_ADDR_CTRL()		(-EINVAL)
+> +#endif
+>  
+>  /*
+>   * this is where the system-wide overflow UID and GID are defined, for
+> @@ -2492,6 +2498,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>  			return -EINVAL;
+>  		error = PAC_RESET_KEYS(me, arg2);
+>  		break;
+> +	case PR_SET_TAGGED_ADDR_CTRL:
+> +		if (arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +		error = SET_TAGGED_ADDR_CTRL(arg2);
+> +		break;
+> +	case PR_GET_TAGGED_ADDR_CTRL:
+> +		if (arg2 || arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +		error = GET_TAGGED_ADDR_CTRL();
+> +		break;
+>  	default:
+>  		error = -EINVAL;
+>  		break;
+> 
 
-[snip]
-
->  		/*
-> -		 * Update state before writing to FIFO.  If this casues us
-> +		 * Update state before writing to FIFO.  If this causes us
->  		 * to finish writing all bytes (AKA buf_remaining goes to 0) we
->  		 * have a potential for an interrupt (PACKET_XFER_COMPLETE is
-> -		 * not maskable).  We need to make sure that the isr sees
-> -		 * buf_remaining as 0 and doesn't call us back re-entrantly.
-> +		 * not maskable).
->  		 */
->  		buf_remaining -= words_to_transfer * BYTES_PER_FIFO_WORD;
-
-Looks like the comment could be removed altogether because it doesn't
-make sense since interrupt handler is under xfer_lock which is kept
-locked during of tegra_i2c_xfer_msg().
-
-Moreover the comment says that "PACKET_XFER_COMPLETE is not maskable",
-but then what I2C_INT_PACKET_XFER_COMPLETE masking does?
+-- 
+Regards,
+Vincenzo
