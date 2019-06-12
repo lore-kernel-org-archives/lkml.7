@@ -2,115 +2,130 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE47EC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD5EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957C620866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BA020866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyuWS3GD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o2tcCOnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731622AbfFLN2e (ORCPT
+        id S1732411AbfFLN3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:28:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45340 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbfFLN2d (ORCPT
+        Wed, 12 Jun 2019 09:29:06 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44553 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbfFLN3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:28:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so16888886wre.12;
-        Wed, 12 Jun 2019 06:28:31 -0700 (PDT)
+        Wed, 12 Jun 2019 09:29:06 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x47so18451114qtk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:29:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=CNyDYbzNuel0dys1IQuV1nwZIY+t4+V7JKy2VJB2erY=;
-        b=pyuWS3GDx6wVjS6cEDEx8LRrR35dtKO2Hw2h58DLZsTWIJd3Ft4NL4fUx1jbTAY3kM
-         tT3LiJai1UlggNCC7V4HBpRgxHqM769GllY6CBPd6sxD2dpSZAa1Y1RwJZX4EJ3x57Q2
-         wOcm8yb3ksPFjwOk5A/V2YMiwxWUqBWmQylcFQT0qmQNWoVCs9XtSjwIWZYPmfYsYQjq
-         +48PSC5R//q1PaMxHoGOPPjPafiSyNRmqrasFtAtx/TrzuWdDgi2OCSCDmsFAh+hj59a
-         XUrt9hDF73gr/xGVcRnmKdQIKkl/YSzvKJNPSuN1Hl7wS9JV5HftOc5CJeemTfwRwDTg
-         JVYw==
+        bh=hRmk80uWUR7VrRgMq1qmYqdYni4E52YtJ0uOYQzQzsI=;
+        b=o2tcCOnLfRipKMfsLNEjsMiaT8dVezFSqGbDqOcbTJGhy4irVj/rrKeJvAfTt2QUXy
+         pPC5NCVFXfyz5uX8nel9gRSGPLhVc9TzsQSRpuGO+GWRoftEl/4Pj0+qOUNaemLuztNd
+         LFcctTqAzbBO/WRBOwXD0acnOXPDHWVgHytnc5ibe7zcN8EdnioCVd4mcxtO72adrPkI
+         7IGfT1X4hiF+ffLvT/uDoI4FHipVZu3Tgwbr1C/h4yBP4y9ZeBDxXKL+Bc5anMvKJ3/7
+         IvuSqIy++VMLkuSZOf6yZhnrfSEwxUSMBTPVszBbkRkcRZbK3OSH/cUBRWjUs1mrUtFQ
+         VmNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=CNyDYbzNuel0dys1IQuV1nwZIY+t4+V7JKy2VJB2erY=;
-        b=lva8Bi2wvipy5R5bIpt9swu/k0iSxvJDzoP5TLWv4Jv25YTkNJgTxg7SRAqop8kwT3
-         f+t+KrMKzRBa4Ikry4Z6DNb9BoaazmWUPyww8/NzMb0CNvehNTmgLPl4dymR11SsbQaM
-         eCaBQxEZ92Os0AkVHd6uoPmpKee/xw0ina8zdsugfV56R74W7+P9pLQylMKJrq70+rKP
-         zMR1a4nGQVpg9yJt2KiTncAgJ0yo9OttNBRVM3U2owAqzCeF+SgNp1Q0eEjKEef36XVC
-         T3SFNx9eAOS3p+40FTeN0fgtiODxooYZtBU8CTRYczvf8DkBU7veWpNSteGLnDdxKp7S
-         R2aA==
-X-Gm-Message-State: APjAAAWdiyJjEQGqj7MTBVAvj52CRTBzxwX+jwQgmkLHjk/WvLwhP2dd
-        Fgmn3q/1HB0Q8/D6NGe/XHVETnFewEc=
-X-Google-Smtp-Source: APXvYqy9mInbXTt8kPG7W/KUJ5M8zbDloQLP+Puj+1e72bGowIAKkPFVRoBPZZxduk/GcAm86yd4Yg==
-X-Received: by 2002:adf:8044:: with SMTP id 62mr7474470wrk.20.1560346111335;
-        Wed, 12 Jun 2019 06:28:31 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([108.61.173.19])
-        by smtp.gmail.com with ESMTPSA id h90sm37628063wrh.15.2019.06.12.06.28.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 06:28:30 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 21:28:21 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org
-Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] selinux: fix a missing-check bug in selinux_add_mnt_opt( )
-Message-ID: <20190612132821.GA3816@zhanggen-UX430UQ>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hRmk80uWUR7VrRgMq1qmYqdYni4E52YtJ0uOYQzQzsI=;
+        b=V/lIxfJNokdOjwMZXvRISexqY7U7vBE7AjeYe331Ld9+hztoa/LM9DY+Rq1QZX5Je1
+         Unmk1Ehb08t+l3SgRI+8GcBcondBU3+8cSNJWAPv1NeOCYPKAKaNKxlgcVMg/+lJJS/W
+         9GoKTOHLII9kkzibZe5//Yy+riyiYEBSkU8Gt0kQriTj5ai7aZ9S8aNyMRPkc6ZRVeFA
+         8Njz8/6wsHei2vl9f2oUYjy2xuo4eckRjQvx9rI4QoxuULirkDnqzvyFQeuKrEJLeAhl
+         GvTJ2RTDeCnVxDq1e2XXC1DEqexuWL3LzwWpnXwilsd/9qGJn/GvUa/VnW6MCz0nPFYG
+         DUPg==
+X-Gm-Message-State: APjAAAVSmFFtDvnIcqqMEawKSFF84UFMt4iRq2ADWORm5yuKJOJY0sSv
+        gAvSqPO4CpBOxlMcWr3KyfM=
+X-Google-Smtp-Source: APXvYqyfS1aNYPX0MnuBwFACy4NpEHqjjsfH5U+NmftvCWlWW7ylQZXXidVeCAAc6XljGb9GnYF2BQ==
+X-Received: by 2002:aed:3b33:: with SMTP id p48mr63710269qte.143.1560346145378;
+        Wed, 12 Jun 2019 06:29:05 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id x40sm4864089qta.20.2019.06.12.06.29.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 06:29:04 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8FA2241149; Wed, 12 Jun 2019 10:28:52 -0300 (-03)
+Date:   Wed, 12 Jun 2019 10:28:52 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH 01/11] perf intel-pt: Add new packets for PEBS via PT
+Message-ID: <20190612132852.GB4836@kernel.org>
+References: <20190610072803.10456-1-adrian.hunter@intel.com>
+ <20190610072803.10456-2-adrian.hunter@intel.com>
+ <20190612000945.GE28689@kernel.org>
+ <e0a9a4e9-6c49-ecd1-4729-79002c66fafe@intel.com>
+ <20190612124140.GA4836@kernel.org>
+ <a3efee50-cf64-d139-237f-b51be8f76f3c@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a3efee50-cf64-d139-237f-b51be8f76f3c@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In selinux_add_mnt_opt(), 'val' is allocated by kmemdup_nul(). It returns
-NULL when fails. So 'val' should be checked. And 'mnt_opts' should be 
-freed when error.
+Em Wed, Jun 12, 2019 at 03:52:11PM +0300, Adrian Hunter escreveu:
+> On 12/06/19 3:41 PM, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Jun 12, 2019 at 08:58:00AM +0300, Adrian Hunter escreveu:
+> >> On 12/06/19 3:09 AM, Arnaldo Carvalho de Melo wrote:
+> >>> Em Mon, Jun 10, 2019 at 10:27:53AM +0300, Adrian Hunter escreveu:
+> >>>> Add 3 new packets to supports PEBS via PT, namely Block Begin Packet (BBP),
+> >>>> Block Item Packet (BIP) and Block End Packet (BEP). PEBS data is encoded
+> >>>> into multiple BIP packets that come between BBP and BEP. The BEP packet
+> >>>> might be associated with a FUP packet. That is indicated by using a
+> >>>> separate packet type (INTEL_PT_BEP_IP) similar to other packets types with
+> >>>> the _IP suffix.
+> >>>>
+> >>>> Refer to the Intel SDM for more information about PEBS via PT.
+> >>>
+> >>> In these cases would be nice to provide an URL and page number, for
+> >>> convenience.
+> >>
+> >> Intel SDM:
+> >>
+> >> 	https://software.intel.com/en-us/articles/intel-sdm
+> >>
+> >> May 2019 version: Vol. 3B 18.5.5.2 PEBS output to Intel® Processor Trace
+> > 
+> > Thanks! I'll add to that cset.
+> > 
+> > What about the kernel bits?
+> 
+> Awaiting V2, here is a link to the patches:
+> 
+> 	https://lore.kernel.org/lkml/20190502105022.15534-1-alexander.shishkin@linux.intel.com/
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Fixes: 757cbe597fe8 ("LSM: new method: ->sb_add_mnt_opt()")
----
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 3ec702c..b4b888e 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -1052,15 +1052,24 @@ static int selinux_add_mnt_opt(const char *option, const char *val, int len,
- 	if (token == Opt_error)
- 		return -EINVAL;
+yeah, I saw those and PeterZ's comments, that is why I asked about them
+:-)
  
--	if (token != Opt_seclabel)
--		val = kmemdup_nul(val, len, GFP_KERNEL);
-+	if (token != Opt_seclabel) {
-+			val = kmemdup_nul(val, len, GFP_KERNEL);
-+			if (!val) {
-+				rc = -ENOMEM;
-+				goto free_opt;
-+			}
-+	}
- 	rc = selinux_add_opt(token, val, mnt_opts);
- 	if (unlikely(rc)) {
- 		kfree(val);
--		if (*mnt_opts) {
--			selinux_free_mnt_opts(*mnt_opts);
--			*mnt_opts = NULL;
--		}
-+		goto free_opt;
-+	}
-+	return rc;
-+
-+free_opt:
-+	if (*mnt_opts) {
-+		selinux_free_mnt_opts(*mnt_opts);
-+		*mnt_opts = NULL;
- 	}
- 	return rc;
- }
+> There is also still a few more tools changes dependent upon the kernel patches.
+
+But I think I can go ahead and push the decoder bits, when the kernel
+patches get merged we'll be almost ready to make full use of what it
+provides, right?
+
+- Arnaldo
