@@ -2,123 +2,96 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102BDC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABACEC31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA33820866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863B0208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:11:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyAx8oEt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i68wzTyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438662AbfFLMLB (ORCPT
+        id S2407131AbfFLMLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:11:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42160 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfFLMLA (ORCPT
+        Wed, 12 Jun 2019 08:11:47 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42610 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406814AbfFLMLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:11:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id go2so6548911plb.9;
-        Wed, 12 Jun 2019 05:11:00 -0700 (PDT)
+        Wed, 12 Jun 2019 08:11:46 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y13so11873548lfh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:11:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OcNe+Ykv8pNI9AsJnYaHIthvaQkPPzEoKbyDzZPPFUQ=;
-        b=OyAx8oEtH/7qb7ZcfOcQCkmZIY6KpFzOsj2RUbbM46j9eGpnTEV7DhfEQgRk2QwnI6
-         nhryKjE6BT1mG2qXheqyOuKXz1wg4wUmp3BKsthcyffnvQ2hHFKsFWZ5ybK9n3deGyK0
-         Lgvd5LxDOJbuU5z/FjpUlX4RnSQ+ZM4m/GOUtqjJnXA+EHnd4QdCokj96nYOhTQ8Y12C
-         As+NlACfpVgzbwLiE//O25sCnpgLWkhkfayVQkblkjAJH0btXcY0L/8hjmtLbvelL5Gd
-         d6lQQ8HfujSdQVFllW7fHCXpfoYXTGSPAplA8sljcabbHssoVmVNSF5Mhq8hH2BEd+pi
-         nyCw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Duu79dpq4xQ4GqJnetl02QLC2/nvLqahgO6AyVV2eW0=;
+        b=i68wzTyTJMBYZeU/Uf8aHN3gFbC7lSoRCAZqZl+xhx72QGrEg3gqZ5/y1WcXz+vc9z
+         FL6gxN8vFOSjCuJqXkAx9zVf6miod5Aahafo/JHI2RJw/2eez0ZDr7jeu/PJ79VymTvj
+         3zzQbwQP5OZnLmuRwfuojhikVBJT1vGDYJSI9c/3KFaes0wXblo5dELdA/xtyE1gFn9z
+         FRZcIDktNxleExVJgqFoQYntcptFTRamGrwaCQol0FxU7gCy4pyW/dnBjS+U71GaRy1b
+         KNoRbWZNvqk5Vk3nntGu8CUDBKyEVszeEt4R72o/hqK3l8zTzt8VFBhODmKgqk6+COSf
+         AAPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=OcNe+Ykv8pNI9AsJnYaHIthvaQkPPzEoKbyDzZPPFUQ=;
-        b=dgBMPA5Ebvjh/uEC+1FcOIHG1JotvML7How5RJQ1j+x/sdksxHoSpp9JFDvcaMQV9C
-         +duDH3ZCGwIbntu60zf2vCo6wv75ZruJhXXwEzwKn5pgGU2OJe0YTvbmcRkNsmxKxz3z
-         7s6amFTfsoILZPjOg8keyz7qyVFCHSnh4+QUS7c9o/wKYWeVeDxj/DuJJP2MNLu+ofdr
-         X6oSqSfSQEtz/a2rKScuP00jrqscnrwD97qZWWjo1dX7jOaIw+0Nu8GhQoloD0qQQi6v
-         pxH1wszT9A7GdX8ThOuoN+N9Vz3/xGUYWtveO1YI6Apt9oDclyY4wyVjWq3b/xQi6XNu
-         sFDQ==
-X-Gm-Message-State: APjAAAUXQ9CQ83UWRhsz1FjmzUUAr0HEjGlisq+nRkBXTFjjZlsbiG7i
-        zfCOMnYtTmLBVFMfbG/HUeo=
-X-Google-Smtp-Source: APXvYqwEAEYrpAy3DKUJ4PFemUBZIB2HEUdg28z4c86rdecR/mAQ1vmRRjJTwNfNfGQH3ki7Uo4ggw==
-X-Received: by 2002:a17:902:768b:: with SMTP id m11mr9693804pll.191.1560341459773;
-        Wed, 12 Jun 2019 05:10:59 -0700 (PDT)
-Received: from bridge.tencent.com ([119.28.31.106])
-        by smtp.gmail.com with ESMTPSA id s5sm5035653pji.9.2019.06.12.05.10.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 05:10:59 -0700 (PDT)
-From:   Wenbin Zeng <wenbin.zeng@gmail.com>
-X-Google-Original-From: Wenbin Zeng <wenbinzeng@tencent.com>
-To:     bfields@fieldses.org, davem@davemloft.net, viro@zeniv.linux.org.uk
-Cc:     jlayton@kernel.org, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, wenbinzeng@tencent.com,
-        dsahern@gmail.com, nicolas.dichtel@6wind.com, willy@infradead.org,
-        edumazet@google.com, jakub.kicinski@netronome.com,
-        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH v3 3/3] auth_gss: fix deadlock that blocks rpcsec_gss_exit_net when use-gss-proxy==1
-Date:   Wed, 12 Jun 2019 20:09:30 +0800
-Message-Id: <1560341370-24197-4-git-send-email-wenbinzeng@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1560341370-24197-1-git-send-email-wenbinzeng@tencent.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Duu79dpq4xQ4GqJnetl02QLC2/nvLqahgO6AyVV2eW0=;
+        b=Bj3qX3An5yBTiR7n25ylrMF155lxywohWjRCNcyPZg2nUXAgVVroMePSkBW6izqAUl
+         ZWGc+nu6YNm506QohS3BsgurOSRcFpmS1uWrQKJuMxThaaYIeLcV2QT2uPXk68AyOZ4g
+         LDB2klBFiy1mpogZDWuPreDTzNL2D/3SRJPwi9H02+VgBEcQkdFiBNarLBCZ3aqt78p7
+         hBKK5NKzliPA3cbVX/kfZ4V/s0E/dMP30+5CAnA2OaAxMUnNKPmK/vPowDGInPZqPyyR
+         ufkCFYRRYyO52c0oK1/ZfMeslpf58H5jxD/PHIr+OZZmi6Gzo9+BW6uDib4pxgF1rQWa
+         SnpQ==
+X-Gm-Message-State: APjAAAXwJo3wyVE5K9f5w9Wt5dLlb1n+RHGU50LEwdudrred4MLgCJA6
+        TYVv3/9Cy859UNsvoIp5h0TRuZAqfooFAkd26GZNIA==
+X-Google-Smtp-Source: APXvYqxeSw1G1TV/Mz5WMMi5ca+pxpZ1Zqv2pYg8vcbT68h3rpCYOTh6UCtYKXmOybD0IJolLu2MDJSxPI1hB0SKH8g=
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr39539109lfn.165.1560341504411;
+ Wed, 12 Jun 2019 05:11:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190611140940.14357-1-icenowy@aosc.io> <20190611140940.14357-2-icenowy@aosc.io>
+In-Reply-To: <20190611140940.14357-2-icenowy@aosc.io>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 14:11:31 +0200
+Message-ID: <CACRpkdaj-VkHaENpSqW32gFYBuLDErzqoKZ-aD4W4htORN_SiA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] dt-bindings: pinctrl: add missing compatible
+ string for V3s
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When use-gss-proxy is set to 1, write_gssp() creates a rpc client in
-gssp_rpc_create(), this increases netns refcount by 2, these refcounts are
-supposed to be released in rpcsec_gss_exit_net(), but it will never happen
-because rpcsec_gss_exit_net() is triggered only when netns refcount gets
-to 0, specifically:
-    refcount=0 -> cleanup_net() -> ops_exit_list -> rpcsec_gss_exit_net
-It is a deadlock situation here, refcount will never get to 0 unless
-rpcsec_gss_exit_net() is called.
+On Tue, Jun 11, 2019 at 4:10 PM Icenowy Zheng <icenowy@aosc.io> wrote:
 
-This fix introduced a new callback i.e. evict in struct proc_ns_operations,
-which is called in nsfs_evict. Moving rpcsec_gss_exit_net to evict path
-gives it a chance to get called and avoids the above deadlock situation.
+> The pinctrl driver of V3s is already available and used in the kernel,
+> but the compatible string of it is forgotten to be added.
+>
+> Add the missing compatible string.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes in v2:
+> - Add the ACK tag by Maxime and the review tag by Rob.
 
-Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
-Cc: J. Bruce Fields <bfields@redhat.com>
----
- net/sunrpc/auth_gss/auth_gss.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Patch applied to the pinctrl tree.
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 3fd56c0..3e76c8a 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -2136,14 +2136,14 @@ static __net_init int rpcsec_gss_init_net(struct net *net)
- 	return gss_svc_init_net(net);
- }
- 
--static __net_exit void rpcsec_gss_exit_net(struct net *net)
-+static void rpcsec_gss_evict_net(struct net *net)
- {
- 	gss_svc_shutdown_net(net);
- }
- 
- static struct pernet_operations rpcsec_gss_net_ops = {
- 	.init = rpcsec_gss_init_net,
--	.exit = rpcsec_gss_exit_net,
-+	.evict = rpcsec_gss_evict_net,
- };
- 
- /*
--- 
-1.8.3.1
-
+Yours,
+Linus Walleij
