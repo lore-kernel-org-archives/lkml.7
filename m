@@ -2,137 +2,134 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C798C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EAAC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B052082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pkZ3HlON"
+	by mail.kernel.org (Postfix) with ESMTP id 3BA722082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408937AbfFLKis (ORCPT
+        id S2437047AbfFLKjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:38:48 -0400
-Received: from mout.web.de ([212.227.17.12]:35415 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407474AbfFLKis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:38:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1560335920;
-        bh=w7Zapu97qEenwfGP8VjODN6jV86L8V7ffF+//76IatM=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=pkZ3HlONe4+40eHueQucv6Xeqc1A/rYbNkDUO3XhfCvN/rCGD8DODqaj7aT2ayAzG
-         SKgDsJ/kn16PZRo9/AWahOg2zy5pLqDUyJj9rVQNFzGF4vzA8U3A44+GJaZMGawj0r
-         7hih7dCuoPuVICCCQnKvH6N+wEDl4DSUjGGGcMhQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.43.108] ([89.15.237.104]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MZlZK-1hwOLh1sdC-00LXk3; Wed, 12
- Jun 2019 12:38:39 +0200
-Subject: Re: [PATCH] Revert "usb: core: remove local_irq_save() around
- ->complete() handler"
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20190531215340.24539-1-smoch@web.de>
- <20190531220535.GA16603@kroah.com>
- <6c03445c-3607-9f33-afee-94613f8d6978@web.de>
- <20190601105008.zfqrtu6krw4mhisb@linutronix.de>
- <20190601110247.v4lzwvqhuwrjrotb@linutronix.de>
-From:   Soeren Moch <smoch@web.de>
-Message-ID: <fb64b378-57a1-19f4-0fd2-1689fc3d8540@web.de>
-Date:   Wed, 12 Jun 2019 12:38:29 +0200
+        Wed, 12 Jun 2019 06:39:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51410 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2407973AbfFLKjK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:39:10 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CAX50Z014689
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:39:09 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t2x2kn5mc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:39:08 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
+        Wed, 12 Jun 2019 11:39:07 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Jun 2019 11:39:03 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CAd28i32833698
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 10:39:02 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4EA3B42042;
+        Wed, 12 Jun 2019 10:39:02 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B61F142041;
+        Wed, 12 Jun 2019 10:39:01 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.145.62.239])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Jun 2019 10:39:01 +0000 (GMT)
+Subject: Re: [PATCH v2 1/4] s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+References: <20190612102248.18903-1-david@redhat.com>
+ <20190612102248.18903-2-david@redhat.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Wed, 12 Jun 2019 12:39:01 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190601110247.v4lzwvqhuwrjrotb@linutronix.de>
+In-Reply-To: <20190612102248.18903-2-david@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ITNzeUPAh3LVNjomSsgP/7ESekNXFtNIcYrM8VUzfhsiM22HdCO
- CWmklggNCUM0Uf4ZW2ZKTToWeTInSyP6JbGKafvWIP6EWHdDZ71Pic8v2sQXSlSz0jBYdKl
- SGZjq3HugqgJi0zhQl0zw3gbMgJkoqf1rUw4h/RS4cNzv4oVRvhzG6IYNcFsJbSKrM9sDd2
- GexEeIchvU8IqpVb1PH6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mKTjyQwiRoo=:jxymFFKr2qEOQchX/kGA8F
- 3Vb44yIm2uxAibNMScG0Q39c+yZMRO6Ly82yoN7ZYkQUTw1ddGd0AOeD1R93IgHeBuA3LPpy2
- S3iibh9PXMiC6laGMQJwPtB+A8OSQ/+H0w/IoxCB7NP8tocZP/qSvTcismqjjnagJi1npxKuM
- 1iNNDnt66/53JrWALQqNghnE8FJKBojKSkjHkGzlcL3nAhjwCdshD5J1fnd0uYqsxZIcUPIh4
- cW8KC0rxuNegknB+zqQ6pSqfGO/jV8HKJhYJ2vgvMVVmhIBb2emrR0IZVUT02TwxDebHRlDC/
- GTVLvx2Fi2PVW6EZ5CQUAhHbdNGLU6uzkl41o9TiiukD7TtubMMD8sraRwHT3t3bb6GhDeOjw
- OplazHsqxLjy0BLOD+mHKUTVhGvjtWrE4YKBzLnYowpcI/gkuNGgx5tbUQRnPmyKDLKy0Cxjg
- IbZr5ePmwgpPQWMc0mbUf5zp2pmDOYlqrjD+D2CJUKBAnfKotceym9fPSx5lXW8RRU3uXczmN
- LK9bSO2wcomdNUp+YB/wGDVc/c6hrHMAymlMNYQ5FZCVgQtJ7y5YgWN8hj/dufE/b3qsDM01f
- /s1Bsh3WM3EWSyytA1I9Qqap9KUnV+lpV1nAdGfYsDmkx1QOjZ6lrvV1SBW/wfGQvpCHPnxMT
- mUmx6LBPAAK2SS/6jNghnknFFXKCIwmDTvQUVOf5K5wP/piVV4sjyqWRV6O3stnyOPxcsuuyx
- VvaasqNBwSmDoO3o9SMlaYIMrtZso+46ZshdYIByDkmxlioKlNylR3ClB5F0mYQeCYrFe02uk
- /ji5C80f7yyJKg5Ul0cAYhNCv9PjD+K1rxsmPewnnISdhDP8DZ60omTmzmeOaeib16XBiym4o
- t2g62ePBcjlcdTYku3h6tYD0oslZl7BdCDEN1sdEmMbrinwVU1BYZ9ahU9PiMufHEmiZEGg54
- VFcLhy9Yh5+ruw1LmrwvUJsa/Gpq+JbVYvzfhZJyiv/SARdiciy9NAssRSZdLhEe2WT6KEX1e
- 5A==
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19061210-0028-0000-0000-000003799DB9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061210-0029-0000-0000-0000243991AC
+Message-Id: <7f313d87-f9ea-e291-49e2-8da29cf41680@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906120074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 01.06.19 13:02, Sebastian Andrzej Siewior wrote:
-> On 2019-06-01 12:50:08 [+0200], To Soeren Moch wrote:
->> I will look into this.
+On 12.06.19 12:22, David Hildenbrand wrote:
+> systemd-modules-load.service automatically tries to load the pkey module
+> on systems that have MSA.
 >
-> nothing obvious. If there is really blocken lock, could you please
-> enable lockdep
-> |CONFIG_LOCK_DEBUGGING_SUPPORT=3Dy
-> |CONFIG_PROVE_LOCKING=3Dy
-> |# CONFIG_LOCK_STAT is not set
-> |CONFIG_DEBUG_RT_MUTEXES=3Dy
-> |CONFIG_DEBUG_SPINLOCK=3Dy
-> |CONFIG_DEBUG_MUTEXES=3Dy
-> |CONFIG_DEBUG_WW_MUTEX_SLOWPATH=3Dy
-> |CONFIG_DEBUG_RWSEMS=3Dy
-> |CONFIG_DEBUG_LOCK_ALLOC=3Dy
-> |CONFIG_LOCKDEP=3Dy
-> |# CONFIG_DEBUG_LOCKDEP is not set
-> |CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
+> Pkey also requires the MSA3 facility and a bunch of subfunctions.
+> Failing with -EOPNOTSUPP makes "systemd-modules-load.service" fail on
+> any system that does not have all needed subfunctions. For example,
+> when running under QEMU TCG (but also on systems where protected keys
+> are disabled via the HMC).
 >
-> and send me the splat that lockdep will report?
+> Let's use -ENODEV, so systemd-modules-load.service properly ignores
+> failing to load the pkey module because of missing HW functionality.
 >
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/s390/crypto/pkey_api.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+> index 45eb0c14b880..ddfcefb47284 100644
+> --- a/drivers/s390/crypto/pkey_api.c
+> +++ b/drivers/s390/crypto/pkey_api.c
+> @@ -1695,15 +1695,15 @@ static int __init pkey_init(void)
+>  	 * are able to work with protected keys.
+>  	 */
+>  	if (!cpacf_query(CPACF_PCKMO, &pckmo_functions))
+> -		return -EOPNOTSUPP;
+> +		return -ENODEV;
+>  
+>  	/* check for kmc instructions available */
+>  	if (!cpacf_query(CPACF_KMC, &kmc_functions))
+> -		return -EOPNOTSUPP;
+> +		return -ENODEV;
+>  	if (!cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_128) ||
+>  	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_192) ||
+>  	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_256))
+> -		return -EOPNOTSUPP;
+> +		return -ENODEV;
+>  
+>  	pkey_debug_init();
+>  
+You missed one match in this file. Function pkey_clr2protkey()
+also does a cpacf_test_func() and may return -EOPNOTSUPP.
+I checked the call chain, it's save to change the returncode there also.
+If done, Thanks and add my
+reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
 
-Nothing interesting:
-
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 5.1.0 (root@matrix) (gcc version 7.4.0
-(Debian 7.4.0-6)) #6 SMP PREEMPT Wed Jun 12 11:28:41 CEST 2019
-[    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7),
-cr=3D10c5387d
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing
-instruction cache
-[    0.000000] OF: fdt: Machine model: TBS2910 Matrix ARM mini PC
-...
-[    0.000000] rcu: Preemptible hierarchical RCU implementation.
-[    0.000000] rcu:     RCU lockdep checking is enabled.
-...
-[    0.003546] Lock dependency validator: Copyright (c) 2006 Red Hat,
-Inc., Ingo Molnar
-[    0.003657] ... MAX_LOCKDEP_SUBCLASSES:  8
-[    0.003713] ... MAX_LOCK_DEPTH:          48
-[    0.003767] ... MAX_LOCKDEP_KEYS:        8191
-[    0.003821] ... CLASSHASH_SIZE:          4096
-[    0.003876] ... MAX_LOCKDEP_ENTRIES:     32768
-[    0.003931] ... MAX_LOCKDEP_CHAINS:      65536
-[    0.003986] ... CHAINHASH_SIZE:          32768
-[    0.004042]  memory used by lock dependency info: 5243 kB
-
-Nothing else.
-
-When stopping hostapd after it hangs:
-[  903.504475] ieee80211 phy0: rt2x00queue_flush_queue: Warning - Queue
-14 failed to flush
-
-Soeren
