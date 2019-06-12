@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3AFC31E4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3A9C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3CD208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E4521734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:44:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZYQEd649"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="crJJXXAC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438420AbfFLLn4 (ORCPT
+        id S2438450AbfFLLoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:43:56 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:39866 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438403AbfFLLnx (ORCPT
+        Wed, 12 Jun 2019 07:44:02 -0400
+Received: from mail-ot1-f73.google.com ([209.85.210.73]:47530 "EHLO
+        mail-ot1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438423AbfFLLn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:43:53 -0400
-Received: by mail-qk1-f201.google.com with SMTP id s67so13514180qkc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:43:53 -0700 (PDT)
+        Wed, 12 Jun 2019 07:43:59 -0400
+Received: by mail-ot1-f73.google.com with SMTP id n19so7599402ota.14
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:43:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=lneYlz8LHaEiU1JdbWuWSlmR06MpCpkboyQbci6TbSY=;
-        b=ZYQEd649LLsr0eo67tg5mBkc6yqoxRRkUvXmz72kCnd/9DceAYIH632RHTy/L9FYgN
-         XB0cqiUT3202g16B44AOr6KGjUuUQCuOjjfhX/1rdyfTYvOLIoAOYVJQEyUECaYKw2EI
-         wRT/I+bn5+fj2NWK1Uq2bsCtdk4XPg+CFAKbAVJ1PN2JQI+rUil/RmfEGI1P+fH7HVvB
-         bi61I1IZdPLHbF9O0x6GFnVgN1H+PpiOuX7A6ltMyEW2b4fJxpc44OPAWrBW3bGwUHZL
-         UOaZyEvgJIbhkL4J+WjiYsF7XS5CEf84amjDEh8dkaorHVY5qClgPk6YQHyQ5aqjEpT+
-         PVjA==
+        bh=Q196Me2jAIDAnTBGiPK/Cxn0vMZ4fncAn8y7f8WRTyA=;
+        b=crJJXXAC2Ku7R2O4W/i46T8MVMbfUT08MJ41XL5/hHP5V9FjHyo0Uen9LNxuGDN5Vy
+         63AWsHkedb9O9JWDh7PX7+icF3+aQrjNm9LMqOxXKSXvWvA1aCADx8vQJIjHIcqFjNdS
+         lYpx+uRnlnGYhTQ2lQa8QHdE77x+n4mpr2sUjGrEPZ8RUtGTjRZ6moY6dJvWWn+KRbsY
+         dQnCJW3fkugzHDg7Z7YzCoAOi+mpWJRQPWYBzTyBpPkH9NOLOyHd9BCpw34BLqWhA4XL
+         4AfxwDFDvKPDrbAnUzBzbdpr67Rfah4zZpcEFIF5+I68PhpwUQ4ynpp9B2e02i2b/LFy
+         ttKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=lneYlz8LHaEiU1JdbWuWSlmR06MpCpkboyQbci6TbSY=;
-        b=AZUHyilFTdtBRJXe+VmwAhW+KnSkBeYuuFTPlXn1n/IO+n7jac5d9H+5yX2LABweio
-         RJ9eX6YN1Hn5ICglFIJXiZe1H12ZihJ6e4XUoMbMSL8+gR6q409YMOdaCK8Lm0ugqpLo
-         czsJa4qddh8zTVxuxQ94ODQTqoTuMjrcpuWgrWoK2DBijNImyJWRkISdAkNyLlx76d7f
-         zT8p4n0jGNCTGTYpkTzF03M63EuOper6GmOvqSWFNG1wQ3tHqoAMuL2S50eYPOpuoO4a
-         AF5X9BXkAslJ1Lg3Bb3QzcrVJM9LfmldtmQj7bNfI6mdPpXCodfRVf0DvILAqV4HRAZi
-         a4xw==
-X-Gm-Message-State: APjAAAWauQocFimAl9ks7LPfaRW0sNOuMjmm4lIXovoq8BRLl3fgzWhc
-        tDLt8B5U6Nrj9as/kIZ5kZL+DaD4Sv1/JdUL
-X-Google-Smtp-Source: APXvYqycBZ/jgN95w1hvszVcRcdW7P9Dg7ub2DyBfBHGpLBHXa9MwJ+9kmDh7H9YZkcwArOGpwiZYJEXckCXcJ6D
-X-Received: by 2002:a37:a5d5:: with SMTP id o204mr25506301qke.155.1560339832693;
- Wed, 12 Jun 2019 04:43:52 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 13:43:22 +0200
+        bh=Q196Me2jAIDAnTBGiPK/Cxn0vMZ4fncAn8y7f8WRTyA=;
+        b=ofX2CRVb1bpEIXBjAj0IFRvR8eOppBP4ON/47RApw7W1R6k7J7vH84WL/w5nE5PzRT
+         9QAQiN77mZWTF39cDcKdnYNWd8jK8KunWgwBF/BdcR1OSOY+Bz34yJSnXL1/FBokKtLm
+         Bz1wqwffq01p9YViq6WvPH+JACwou+vs/9fAGmKDvhXlQ/C186R52U4z7nhMY41Hgo1a
+         /t+OZH0HNv5DtzJ+WGu9yGycdKLLXY+5m6OeNywTwWeC780OOSKEOfUQX5N5+Sca2/91
+         /p8HtbV784ppfZM6nM3hH2yrG/7igD3zfi1LX2rNlBGiDAK9jwu5cJqoM4ssYbA6ZDyf
+         ClaA==
+X-Gm-Message-State: APjAAAXRSgrtqXMfok44euBVsU0V1I8D8VAgpR3NfmOTR3zEEa+z9Xcb
+        cmNDBXyYYmXLqP8JXKOs1Zp44m5t+Ys9LfkN
+X-Google-Smtp-Source: APXvYqzBV++HnsJqGVA3TkWLFAlh+OLmBH/rJ20EXP8gbe+qklBNVVp+IuIonV1uuXEIF8K1ppBAgAEKJRpWB8lr
+X-Received: by 2002:aca:6c6:: with SMTP id 189mr17818209oig.167.1560339838959;
+ Wed, 12 Jun 2019 04:43:58 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 13:43:24 +0200
 In-Reply-To: <cover.1560339705.git.andreyknvl@google.com>
-Message-Id: <8f65548bef8544d49980a92d221b74440d544c1e.1560339705.git.andreyknvl@google.com>
+Message-Id: <4ed871e14cc265a519c6ba8660a1827844371791.1560339705.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1560339705.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v17 05/15] mm, arm64: untag user pointers in mm/gup.c
+Subject: [PATCH v17 07/15] fs, arm64: untag user pointers in copy_mount_options
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -106,41 +106,33 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-mm/gup.c provides a kernel interface that accepts user addresses and
-manipulates user pages directly (for example get_user_pages, that is used
-by the futex syscall). Since a user can provided tagged addresses, we need
-to handle this case.
+In copy_mount_options a user address is being subtracted from TASK_SIZE.
+If the address is lower than TASK_SIZE, the size is calculated to not
+allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
+However if the address is tagged, then the size will be calculated
+incorrectly.
 
-Add untagging to gup.c functions that use user addresses for vma lookups.
+Untag the address before subtracting.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- mm/gup.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index ddde097cf9e4..c37df3d455a2 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -802,6 +802,8 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- 	if (!nr_pages)
- 		return 0;
- 
-+	start = untagged_addr(start);
-+
- 	VM_BUG_ON(!!pages != !!(gup_flags & FOLL_GET));
- 
- 	/*
-@@ -964,6 +966,8 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
- 	struct vm_area_struct *vma;
- 	vm_fault_t ret, major = 0;
- 
-+	address = untagged_addr(address);
-+
- 	if (unlocked)
- 		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
+diff --git a/fs/namespace.c b/fs/namespace.c
+index b26778bdc236..2e85712a19ed 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2993,7 +2993,7 @@ void *copy_mount_options(const void __user * data)
+ 	 * the remainder of the page.
+ 	 */
+ 	/* copy_from_user cannot cross TASK_SIZE ! */
+-	size = TASK_SIZE - (unsigned long)data;
++	size = TASK_SIZE - (unsigned long)untagged_addr(data);
+ 	if (size > PAGE_SIZE)
+ 		size = PAGE_SIZE;
  
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
