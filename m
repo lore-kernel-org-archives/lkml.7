@@ -2,115 +2,69 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE1BC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A217C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A335215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:16:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="osWFZDHN"
+	by mail.kernel.org (Postfix) with ESMTP id 355E120B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfFLTQO (ORCPT
+        id S1728180AbfFLTQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:16:14 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35919 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfFLTQO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:16:14 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p15so367378qtl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=VM0X6sjIUXYgIgyRfttiOmJ9MQtVYKp30kcz3vOUcd8=;
-        b=osWFZDHNmnVngzJkRWmhdL6JobmUmTjdYAA3S1jiMrMfY3FmdHH38icHv8dXo1Tohc
-         mSXiMZChJeDdK+U8DMvHPW5aeQO8oKWBgQInrgerdzBRWqEAdKbBTTpYbG7l/KvSHJQm
-         aWb6+MdEAuYAsGuzGQSX/eZavG1WjeWvJr8Covmg+XJdIsjtgkmJNfJPZcj7K1fiaTNg
-         3pC2hp1o/HKnHMZLH8R4IVfHCmY0jMRECcspcwRN2a0I/M1hPWCtmiefmN6o+Ddx4Ahd
-         i4vFCh3B8XD2dlYfMRgKSTj2DTy01/twYA7iKw3x3bJyhHahvFsSQMdT23cTRKPmirRq
-         PJWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VM0X6sjIUXYgIgyRfttiOmJ9MQtVYKp30kcz3vOUcd8=;
-        b=jntlQPACYhXDK28UUbOlGvdjK3nQijnl2Bmjt37y8Pp+ou7pxpzmYmhK37yBr9UPzS
-         +lT7zAfXIuKPCAtXZazRI1Lp7woBOt2Lrj3upuj3WWtj6r1l3oAaNaymn0cZarTWlcX5
-         F2/1JKjTHLEAEUqjOKBpwAvSkh8tJfebDtZmi7dtyPTZ7HKOw1N8SUpqbGwDkk+vu96E
-         oL0jHmZeEJTOGigNKu+sMlSIpYAGPXotNOmqXJZ+iGzHax0DdHRRi6pr8yQ4eIx8GMWf
-         kgYjvJ/b9ivdBlhhNyi2IHZ8488hY9WNECy7Q26RaaIqA2NI9n/m0C2iw05/Ohu/jYF+
-         ML/A==
-X-Gm-Message-State: APjAAAWLQBk7EczJ6a3reag5wvNAunmLX9dvWfAoYnV6uaOqz79QuB6M
-        YsMVIPm+l7JOeikPW/uSGCEj/Q==
-X-Google-Smtp-Source: APXvYqwq5OuLqmcTYHYFkbjfzskyM1J/2vUhrTfX19xKEL2RF3CO3MzulELPQ4bfvgWOTUb6ZbUhpg==
-X-Received: by 2002:ac8:c0e:: with SMTP id k14mr29436661qti.72.1560366973092;
-        Wed, 12 Jun 2019 12:16:13 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id d25sm209437qko.96.2019.06.12.12.16.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 12:16:12 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     dan.j.williams@intel.com, osalvador@suse.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
-Date:   Wed, 12 Jun 2019 15:15:52 -0400
-Message-Id: <1560366952-10660-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 12 Jun 2019 15:16:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:12096 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727496AbfFLTQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 15:16:23 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 12:16:22 -0700
+X-ExtLoop1: 1
+Received: from suygunge-mobl.ger.corp.intel.com (HELO localhost) ([10.252.48.116])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jun 2019 12:16:19 -0700
+Date:   Wed, 12 Jun 2019 22:16:18 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, groeck@chromium.org,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        apronin@chromium.org, mka@chromium.org, swboyd@chromium.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM
+ operations
+Message-ID: <20190612191618.GC3378@linux.intel.com>
+References: <20190610220118.5530-1-dianders@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610220118.5530-1-dianders@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit "mm/sparsemem: Add helpers track active portions
-of a section at boot" [1] causes a crash below when the first kmemleak
-scan kthread kicks in. This is because kmemleak_scan() calls
-pfn_to_online_page(() which calls pfn_valid_within() instead of
-pfn_valid() on x86 due to CONFIG_HOLES_IN_ZONE=n.
+On Mon, Jun 10, 2019 at 03:01:18PM -0700, Douglas Anderson wrote:
+> From: Vadim Sukhomlinov <sukhomlinov@google.com>
+> 
+> TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+> future TPM operations. TPM 1.2 behavior was different, future TPM
+> operations weren't disabled, causing rare issues. This patch ensures
+> that future TPM operations are disabled.
+> 
+> Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+> [dianders: resolved merge conflicts with mainline]
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-The commit [1] did add an additional check of pfn_section_valid() in
-pfn_valid(), but forgot to add it in the above code path.
+Nice catch. Thank you.
 
-page:ffffea0002748000 is uninitialized and poisoned
-raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-------------[ cut here ]------------
-kernel BUG at include/linux/mm.h:1084!
-invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-CPU: 5 PID: 332 Comm: kmemleak Not tainted 5.2.0-rc4-next-20190612+ #6
-Hardware name: Lenovo ThinkSystem SR530 -[7X07RCZ000]-/-[7X07RCZ000]-,
-BIOS -[TEE113T-1.00]- 07/07/2017
-RIP: 0010:kmemleak_scan+0x6df/0xad0
-Call Trace:
- kmemleak_scan_thread+0x9f/0xc7
- kthread+0x1d2/0x1f0
- ret_from_fork+0x35/0x4
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-[1] https://patchwork.kernel.org/patch/10977957/
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- include/linux/memory_hotplug.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 0b8a5e5ef2da..f02be86077e3 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -28,6 +28,7 @@
- 	unsigned long ___nr = pfn_to_section_nr(___pfn);	   \
- 								   \
- 	if (___nr < NR_MEM_SECTIONS && online_section_nr(___nr) && \
-+	    pfn_section_valid(__nr_to_section(___nr), pfn) &&	   \
- 	    pfn_valid_within(___pfn))				   \
- 		___page = pfn_to_page(___pfn);			   \
- 	___page;						   \
--- 
-1.8.3.1
-
+/Jarkko
