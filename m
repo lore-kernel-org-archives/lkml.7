@@ -2,153 +2,172 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A2FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA9AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C89F2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GV8TEQCO"
+	by mail.kernel.org (Postfix) with ESMTP id 672442086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731442AbfFLIiC (ORCPT
+        id S1731500AbfFLIiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:38:02 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34485 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731305AbfFLIiB (ORCPT
+        Wed, 12 Jun 2019 04:38:07 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:48079 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731305AbfFLIiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:38:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p10so2686148pgn.1;
-        Wed, 12 Jun 2019 01:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y8/ijoFBBzQUZdRc/nUXq7hK8svsxDXIeuuqHmcmAoc=;
-        b=GV8TEQCOh5B4AGAP4tVJ15uzu8M39Wc0WW7bu2C6P5Rtl76Ovvve3sgrMqocaEHev6
-         dUiyDVb1JqMO9ZUAibNmvQckUpvpzXafikTakq8w03J4NEILhdG+NAe4F2b7KoAhxR2+
-         FV6CvFVcPymNDRbhKK/ZixiDCdWWNgIaMJVnUwpl0Czeznd8DN12Hdx+vw3xH/n//rH7
-         wpqJhbWxGIpJECiWbS1VYIJXa1os513IPOtSoVBwNMWj6+/FaEqsme+w/3eQsoi+5Qtn
-         nRtaicoiLZXLqtZqEwufrArEFDaY6kczPQDSeYmGOD3gZqGC3jCywGJv19FA/Kk993ch
-         DVhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y8/ijoFBBzQUZdRc/nUXq7hK8svsxDXIeuuqHmcmAoc=;
-        b=of4sEah5RtI157FvgKhVUMq4SQYBUtIAFFsOrY85gjC8SpRl+90YZVgzH2ptkv6K8P
-         YIHWTIL1V/A7TymY6emLWmwEtwf0tYA0gHHCc50vzVzBN+T99HWHTBJlb7M47KbSEmYL
-         PZazYiwgeKADi3K9iEi780RqD2oTgk0MmPVdKx3MQw0Y/ag3IsgnckOkgjUqcAuVhWJ1
-         m+n1BeHScllN2dqpAKOYUp6lsdaSUr9W6vgf5GX9XsfPtkDAkoaWfUj5CJsNChYUW+ne
-         sFBeeR/J0UKdMw4Pjw/aqtaa6z3/3QrfPMdKyniyhQGrFsT5DZLlYTLR0cxo4ve1pcTV
-         dwaQ==
-X-Gm-Message-State: APjAAAWN3gKCJlh03C4mgwgvqahbJqrzj8vWLdFM3Hq8ZtId2HR9l7q2
-        rX/IEsF2E/sBgQ1eb5yirWM=
-X-Google-Smtp-Source: APXvYqy8L6j92Kf5NlJ2DVY+WZ0swRdlLmRjdsE+S274zspfnrqzgl5GDm0qE16TzxsroAFMgJQdlA==
-X-Received: by 2002:a17:90a:ad86:: with SMTP id s6mr7022055pjq.42.1560328680781;
-        Wed, 12 Jun 2019 01:38:00 -0700 (PDT)
-Received: from bridge.tencent.com ([119.28.31.106])
-        by smtp.gmail.com with ESMTPSA id c11sm7108896pgg.2.2019.06.12.01.37.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 01:37:59 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 16:37:55 +0800
-From:   Wenbin Zeng <wenbin.zeng@gmail.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net, jlayton@kernel.org,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        wenbinzeng@tencent.com, dsahern@gmail.com,
-        nicolas.dichtel@6wind.com, willy@infradead.org,
-        edumazet@google.com, jakub.kicinski@netronome.com,
-        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] auth_gss: netns refcount leaks when
- use-gss-proxy==1
-Message-ID: <20190612083755.GA27776@bridge.tencent.com>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
- <20190515010331.GA3232@fieldses.org>
+        Wed, 12 Jun 2019 04:38:05 -0400
+X-UUID: 0fee5e1d994d40a2be57483e599bfb28-20190612
+X-UUID: 0fee5e1d994d40a2be57483e599bfb28-20190612
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1668390797; Wed, 12 Jun 2019 16:38:01 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Jun 2019 16:37:58 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 12 Jun 2019 16:37:58 +0800
+Message-ID: <1560328678.4743.6.camel@mtkswgap22>
+Subject: Re: [PATCH 2/2] mt76: mt7615: update peer's bssid when state
+ transition changes
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Lorenzo Bianconi <lorenzo@kernel.org>
+CC:     Sean Wang <sean.wang@mediatek.com>, YF Luo <yf.luo@mediatek.com>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>, Roy Luo <royluo@google.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        "Felix Fietkau" <nbd@nbd.name>
+Date:   Wed, 12 Jun 2019 16:37:58 +0800
+In-Reply-To: <20190612082618.GA8107@localhost.localdomain>
+References: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560221172.git.ryder.lee@mediatek.com>
+         <449fee28c558b6f02b62275f9beefaab02b47efc.1560221172.git.ryder.lee@mediatek.com>
+         <20190612082618.GA8107@localhost.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515010331.GA3232@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-SNTS-SMTP: 72901263F5700DB435DA5D08E473CCAD7D900AD367C6200865E79A301332B9AA2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 09:03:31PM -0400, J. Bruce Fields wrote:
-> Whoops, I was slow to test these.  I'm getting failuring krb5 nfs
-> mounts, and the following the server's logs.  Dropping the three patches
-> for now.
-My bad, I should have found it earlier. Thank you for testing it, Bruce.
-
-I figured it out, the problem that you saw is due to the following code:
-the if-condition is incorrect here because sn->gssp_clnt==NULL doesn't mean
-inexistence of 'use-gss-proxy':
-
--static __net_exit void rpcsec_gss_exit_net(struct net *net)
-+static void rpcsec_gss_evict_net(struct net *net)
- {
--       gss_svc_shutdown_net(net);
-+       struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
-+
-+       if (sn->gssp_clnt)
-+               gss_svc_shutdown_net(net);
- }
-
-Simply using the original logic in rpcsec_gss_exit_net() should be fine,
-i.e.:
-
--static __net_exit void rpcsec_gss_exit_net(struct net *net)
-+static void rpcsec_gss_evict_net(struct net *net)
- {
-        gss_svc_shutdown_net(net);
- }
-
-I'm going to submit v3 soon.
-
-Wenbin.
-
+On Wed, 2019-06-12 at 10:26 +0200, Lorenzo Bianconi wrote:
+> > Driver should update peer's bssid and bss information when
+> > state transition changes.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  .../net/wireless/mediatek/mt76/mt7615/main.c  |  5 +-
+> >  .../net/wireless/mediatek/mt76/mt7615/mcu.c   | 49 ++++++++++---------
+> >  2 files changed, 27 insertions(+), 27 deletions(-)
+> > 
 > 
-> --b.
+> [...]
 > 
-> [   40.894408] remove_proc_entry: removing non-empty directory 'net/rpc', leaking at least 'use-gss-proxy'
-> [   40.897352] WARNING: CPU: 2 PID: 31 at fs/proc/generic.c:683 remove_proc_entry+0x17d/0x190
-> [   40.899373] Modules linked in: nfsd nfs_acl lockd grace auth_rpcgss sunrpc
-> [   40.901335] CPU: 2 PID: 31 Comm: kworker/u8:1 Not tainted 5.1.0-10733-g4f10d1cb695e #2220
-> [   40.903759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
-> [   40.906972] Workqueue: netns cleanup_net
-> [   40.907828] RIP: 0010:remove_proc_entry+0x17d/0x190
-> [   40.908904] Code: 52 82 48 85 c0 48 8d 90 48 ff ff ff 48 0f 45 c2 48 8b 93 a8 00 00 00 4c 8b 80 d0 00 00 00 48 8b 92 d0 00 00 00 e8 a7 24 dc ff <0f> 0b e9 52 ff ff ff e8 a7 21 dc ff 0f 1f 80 00 00 00 00 0f 1f 44
-> [   40.912689] RSP: 0018:ffffc90000123d80 EFLAGS: 00010282
-> [   40.913495] RAX: 0000000000000000 RBX: ffff888079f96e40 RCX: 0000000000000000
-> [   40.914747] RDX: ffff88807fd24e80 RSI: ffff88807fd165b8 RDI: 00000000ffffffff
-> [   40.916107] RBP: ffff888079f96ef0 R08: 0000000000000000 R09: 0000000000000000
-> [   40.917253] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88807cd76d68
-> [   40.918508] R13: ffffffffa0057000 R14: ffff8880683db200 R15: ffffffff82970240
-> [   40.919642] FS:  0000000000000000(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
-> [   40.920956] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   40.921867] CR2: 00007f9d70010cb8 CR3: 000000007cc5c006 CR4: 00000000001606e0
-> [   40.923044] Call Trace:
-> [   40.923364]  sunrpc_exit_net+0xcc/0x190 [sunrpc]
-> [   40.924069]  ops_exit_list.isra.0+0x36/0x70
-> [   40.924713]  cleanup_net+0x1cb/0x2c0
-> [   40.925182]  process_one_work+0x219/0x620
-> [   40.925780]  worker_thread+0x3c/0x390
-> [   40.926312]  ? process_one_work+0x620/0x620
-> [   40.927015]  kthread+0x11d/0x140
-> [   40.927430]  ? kthread_park+0x80/0x80
-> [   40.927822]  ret_from_fork+0x3a/0x50
-> [   40.928281] irq event stamp: 11688
-> [   40.928780] hardirqs last  enabled at (11687): [<ffffffff811225fe>] console_unlock+0x41e/0x590
-> [   40.930319] hardirqs last disabled at (11688): [<ffffffff81001b2c>] trace_hardirqs_off_thunk+0x1a/0x1c
-> [   40.932123] softirqs last  enabled at (11684): [<ffffffff820002c5>] __do_softirq+0x2c5/0x4c5
-> [   40.933657] softirqs last disabled at (11673): [<ffffffff810bf970>] irq_exit+0x80/0x90
+> > diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> > index e82086eb8aa4..8fc12cd37906 100644
+> > --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> > +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> > @@ -741,17 +741,6 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+> >  	u8 *buf, *data, tx_wlan_idx = 0;
+> >  	struct req_hdr *hdr;
+> >  
+> > -	if (en) {
+> > -		len += sizeof(struct bss_info_omac);
+> > -		features |= BIT(BSS_INFO_OMAC);
+> > -		if (mvif->omac_idx > EXT_BSSID_START) {
+> > -			len += sizeof(struct bss_info_ext_bss);
+> > -			features |= BIT(BSS_INFO_EXT_BSS);
+> > -			ntlv++;
+> > -		}
+> > -		ntlv++;
+> > -	}
+> > -
+> >  	switch (vif->type) {
+> >  	case NL80211_IFTYPE_AP:
+> >  	case NL80211_IFTYPE_MESH_POINT:
+> > @@ -759,22 +748,23 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+> >  		conn_type = CONNECTION_INFRA_AP;
+> >  		break;
+> >  	case NL80211_IFTYPE_STATION: {
+> > -		struct ieee80211_sta *sta;
+> > -		struct mt7615_sta *msta;
+> > -
+> > -		rcu_read_lock();
+> > -
+> > -		sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
+> > -		if (!sta) {
+> > +		/* TODO: enable BSS_INFO_UAPSD & BSS_INFO_PM */
+> > +		if (en) {
+> > +			struct ieee80211_sta *sta;
+> > +			struct mt7615_sta *msta;
+> > +
+> > +			rcu_read_lock();
+> > +			sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
+> > +			if (!sta) {
+> > +				rcu_read_unlock();
+> > +				return -EINVAL;
+> > +			}
+> > +
+> > +			msta = (struct mt7615_sta *)sta->drv_priv;
+> > +			tx_wlan_idx = msta->wcid.idx;
+> >  			rcu_read_unlock();
+> > -			return -EINVAL;
+> >  		}
+> > -
+> > -		msta = (struct mt7615_sta *)sta->drv_priv;
+> > -		tx_wlan_idx = msta->wcid.idx;
+> >  		conn_type = CONNECTION_INFRA_STA;
+> > -
+> > -		rcu_read_unlock();
+> >  		break;
+> >  	}
+> >  	default:
+> > @@ -782,6 +772,17 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+> >  		break;
+> >  	}
+> >  
+> > +	if (en) {
+> > +		len += sizeof(struct bss_info_omac);
+> > +		features |= BIT(BSS_INFO_OMAC);
+> > +		if (mvif->omac_idx > EXT_BSSID_START) {
+> > +			len += sizeof(struct bss_info_ext_bss);
+> > +			features |= BIT(BSS_INFO_EXT_BSS);
+> > +			ntlv++;
+> > +		}
+> > +		ntlv++;
+> > +	}
 > 
+> What did you move this chunk down?
+
+Ah, my bad. I originally planned to add other conditions and it may
+change 'en' so moved these stuff behind them.
+
+Anyway I forgot to remove this part. Will fix it
+
+Ryder.
+
+> Regards,
+> Lorenzo
+> 
+> > +
+> >  	buf = kzalloc(len, GFP_KERNEL);
+> >  	if (!buf)
+> >  		return -ENOMEM;
+> > -- 
+> > 2.18.0
+> > 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
