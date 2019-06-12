@@ -2,151 +2,141 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04592C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D22C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC132053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11982053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5m+xNA8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUHfTS4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393568AbfFMRRJ (ORCPT
+        id S2393596AbfFMRRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:17:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46658 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfFLV1Z (ORCPT
+        Thu, 13 Jun 2019 13:17:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34633 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbfFLV0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:27:25 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so7144092pls.13;
-        Wed, 12 Jun 2019 14:27:25 -0700 (PDT)
+        Wed, 12 Jun 2019 17:26:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p10so3767886pgn.1;
+        Wed, 12 Jun 2019 14:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=y+wv7iX7SMqE+W9hLG2VgA3zTP87AXC2cEtK/8C9IT8=;
-        b=b5m+xNA8Efyi+r2WOXDP2kSW3aiv+dZt9eBtAIRennxzgY2X3R6YColvPxqu06SZRi
-         rxgcZlXpRDI7HJOdhFF85t2GdKbVenHQmRdJRm9ZH/fsynL/axVRXmVbaWxxKFRwt2m3
-         jD1N+oEwZNgFrldWru6EI4uhMJLzZPMjfQ8mR1g8WtQHKQSspy95XIrCG+suvIs06Lje
-         LXbdhsbh/D0u11MxwKsR4T8iINWGaCwCs+PLXp7sPYKFcI6ijgDBg/eiE/TNlIoYj+ek
-         3E+XGNy8URB1pqNwrxNeFrBaJPke+3K7fEZ4D9oyZO8LEUeGAjqPFxKIJtZQ31dsy/UG
-         E98g==
+        h=from:to:cc:subject:date:message-id;
+        bh=B9X0MPRX7xZfDuTbCvFOX7nvzRBpgFVnMaQCxz6OgdU=;
+        b=IUHfTS4RqAdZf2/0XbVg9yfHfkyKyBql+0jIyDfHuqTb8ueZ+sXHT7IaAw2b+3O8yD
+         GN7lJzAiKdQjIwn01eI7DL76WSgM7adjcAZV2+jdGEl/DQcEXECVfPfULEHRvRroLJZl
+         8aXZQrAvbQWmaAtgdPe6UA+Ki3X6ia22JhPhBVVv+5OEk9r4J3qP7vpM/w8BL9xvKl9Z
+         riFBc96sjOBT1tQNoGJwTQhx1biopgSoH38L2K1BBZlX/NQ/4JU9LAlNMw9SEHhlf3oj
+         B5v6aW0sT9rKn0QiaXvdI8bESveALGOQDqgvNMuuUEYiQ8ok5g/Er1vLp1T/QWyfM6kZ
+         fBCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=y+wv7iX7SMqE+W9hLG2VgA3zTP87AXC2cEtK/8C9IT8=;
-        b=lJzpnXQDYIv+6d4lzdiXob3iQZ43/DBsl3fRW8VqHHv2X06YVM0G7c9CvLIlrrpaAN
-         LStIGorhcx31KJIIlJKsGKxhFgT3er275I/g3gqTMey8duvHuGXCbNTpQIYFpRFqvRPH
-         EYeVbkPntBV1CWcUI0r5EQ7Cik1IV8Cv2UcVnLS6+TPrPvN1QcyxVXcRHfUoOoYbEB1H
-         vQdu67fkmEgUh+ElI087snEcfpgFnMll1JO894bCpxf6QBZ+2q0JVuAdsVPM+NBaz5j4
-         5g1Kbj1S0lJlEFrSnvIBg9lrxUHsJMr2m6fL2T9WxFSYQfAw0msU9ZpJMGqWyQNPLJhR
-         x13w==
-X-Gm-Message-State: APjAAAXOtwLayoFppv5m8WJ1mdel27aO7zHba6JZD91xgF2lzDhp8WqV
-        BL940wvfwf6at8s6rh4yfAo=
-X-Google-Smtp-Source: APXvYqyk+af3ljb+IEPx5dom264fLKvAzHu11B+zZ0MFoNlDkLVB49AGCOThA8e2flaZ57ISyJF88A==
-X-Received: by 2002:a17:902:b497:: with SMTP id y23mr59306507plr.309.1560374844699;
-        Wed, 12 Jun 2019 14:27:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B9X0MPRX7xZfDuTbCvFOX7nvzRBpgFVnMaQCxz6OgdU=;
+        b=undzYgRXlURuddZqezjH8TAzKHRFOhng0/sBr9tqC8jPeGqF3eErtd4jviqeVBT9fR
+         EFjE/yE3KKqgld+QAlvDQEHrt6qXZZS4LAnn5GP8N7IW/WxQKWVYuK12/BX2CdgYZMtt
+         nMI7+HbQsNAgkuCEj6ZdVjpGWxOVHnKhIRUEldVaBlgQR6Ld8IvlqS1hqhDVQnK+vC0K
+         i/5vZcb3GrO5VSkdHfsCI+XYBWMiPTMxSEELoK9bgn7aMj4+QJYUqf6/6n2D7vi36pPU
+         45oKz80LIjCSTKLH8fATxKDLlma8pl+8a2J/kuP/GOnAsvMFVYaCg2+Q+IAJntaB5k57
+         pbKQ==
+X-Gm-Message-State: APjAAAWc/zMJfdVdIxoU+b/sZBkx64ldPeUaZ7Gg9+5J8X5lfOsMqSrl
+        REURqJIz5XEDiaaY/hYo4Sc=
+X-Google-Smtp-Source: APXvYqx8PO+nnCxda+czlOB0lVkz7Xh5HzTIi4gQeji9cay7D3Vp9FWSoTGePngXLYiGjGFyzcZo9w==
+X-Received: by 2002:a17:90a:2ec2:: with SMTP id h2mr1211409pjs.119.1560374769098;
+        Wed, 12 Jun 2019 14:26:09 -0700 (PDT)
 Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id y133sm505346pfb.28.2019.06.12.14.27.22
+        by smtp.gmail.com with ESMTPSA id x8sm474023pfa.46.2019.06.12.14.26.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 14:27:24 -0700 (PDT)
+        Wed, 12 Jun 2019 14:26:08 -0700 (PDT)
 From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        jikos@kernel.org
-Cc:     hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+Cc:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        jikos@kernel.org, hdegoede@redhat.com, bjorn.andersson@linaro.org,
+        agross@kernel.org, lee.jones@linaro.org, xnox@ubuntu.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-Date:   Wed, 12 Jun 2019 14:27:21 -0700
-Message-Id: <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v6 0/5] Basic DT support for Lenovo Miix 630
+Date:   Wed, 12 Jun 2019 14:26:04 -0700
+Message-Id: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There needs to be coordination between hid-quirks and the elan_i2c driver
-about which devices are handled by what drivers.  Currently, both use
-whitelists, which results in valid devices being unhandled by default,
-when they should not be rejected by hid-quirks.  This is quickly becoming
-an issue.
+The Lenovo Miix 630 is one of three ARM based (specifically Qualcomm
+MSM8998) laptops that comes with Windows, and seems to have a dedicated
+following of folks intrested to get Linux up and running on it.
 
-Since elan_i2c has a maintained whitelist of what devices it will handle,
-which is now in a header file that hid-quirks can access, use that to
-implement a blacklist in hid-quirks so that only the devices that need to
-be handled by elan_i2c get rejected by hid-quirks, and everything else is
-handled by default.
+This series adds support for the basic functionality this is validated
+towork using devicetree.  Although the laptops do feed ACPI to Windows,
+the existing MSM8998 support in mainline is DT based, so DT provides a
+quick path to functionality while ACPI support is investigated.
 
-Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+The three devices are very similar, but do have differences in the set
+of peripherals supported, so the idea is that the vast majority of the
+support for all three can live in a common include, which should reduce
+overall duplication.  Adding support for the other two devices is tacked
+onto the end of the series.
 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index e5ca6fe2ca57..bd81bb090222 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -16,6 +16,7 @@
- #include <linux/export.h>
- #include <linux/slab.h>
- #include <linux/mutex.h>
-+#include <linux/input/elan-i2c-ids.h>
- 
- #include "hid-ids.h"
- 
-@@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
- 
- bool hid_ignore(struct hid_device *hdev)
- {
-+	int i;
-+
- 	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
- 		return false;
- 	if (hdev->quirks & HID_QUIRK_IGNORE)
-@@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
- 		break;
- 	case USB_VENDOR_ID_ELAN:
- 		/*
--		 * Many Elan devices have a product id of 0x0401 and are handled
--		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
--		 * is not (and cannot be) handled by that driver ->
--		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
-+		 * Blacklist of everything that gets handled by the elan_i2c
-+		 * input driver.  This avoids disabling valid touchpads and
-+		 * other ELAN devices.
- 		 */
--		if (hdev->product == 0x0401 &&
--		    strncmp(hdev->name, "ELAN0800", 8) != 0)
--			return true;
--		/* Same with product id 0x0400 */
--		if (hdev->product == 0x0400 &&
--		    strncmp(hdev->name, "QTEC0001", 8) != 0)
--			return true;
-+		if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
-+			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
-+				if (!strncmp(hdev->name, elan_acpi_id[i].id,
-+					     strlen(elan_acpi_id[i].id)))
-+					return true;
-+			for (i = 0; strlen(elan_of_match[i].name); ++i)
-+				if (!strncmp(hdev->name, elan_of_match[i].name,
-+					     strlen(elan_of_match[i].name)))
-+					return true;
-+		}
- 		break;
- 	}
- 
+The bleeding edge work for these laptops and work in progress can be
+found at https://github.com/aarch64-laptops/prebuilt
+
+v6:
+-Export the elan_i2c DT and ACPI ids so that hid-quirks can use them
+-Use the elan_i2c ids within hid-quirks to reduce duplication
+-Add DTs for the Asus and HP devices since the DT seems finalized, and
+folks have been asking
+
+v5:
+-Split out elan_i2c changes into their own patch
+-Use a static list of strings to match
+-Fixed typo of "whitelist"
+-Dropped incorrect thermal zones
+-Dropped tags from Bjorn and Lee since the functional should be
+identical, but the code is structured different
+
+v4:
+-Changed the hid-quirks ELAN handling around per Benjamin Tissoires
+-Dropped new DT binding
+
+v3:
+-Changed "clam" to "clamshell"
+-Defined a dt binding for the combo Elan keyboard + touchpad device
+-Adjusted the HID quirk to be correct for dt boot
+-Removed extranious comment in board dts
+-Fixed board level compatible
+
+v2:
+-Changed "cls" to "clam" since feedback indicated "cls" is too opaque,
+but
+"clamshell" is a mouthfull.  "clam" seems to be a happy medium.
+
+Jeffrey Hugo (5):
+  Input: elan_i2c: Export the device id whitelist
+  HID: quirks: Refactor ELAN 400 and 401 handling
+  arm64: dts: qcom: Add Lenovo Miix 630
+  arm64: dts: qcom: Add HP Envy x2
+  arm64: dts: qcom: Add Asus NovaGo TP370QL
+
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/msm8998-clamshell.dtsi      | 240 ++++++++++++++++++
+ .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 +++
+ drivers/hid/hid-quirks.c                      |  78 +++++-
+ drivers/input/mouse/elan_i2c_core.c           |   4 +
+ 5 files changed, 342 insertions(+), 11 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+
 -- 
 2.17.1
 
