@@ -2,89 +2,135 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B16DC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1B9C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E90207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C300020866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437708AbfFLJuw (ORCPT
+        id S2437724AbfFLJwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:50:52 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39593 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437364AbfFLJuw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:50:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so13515720wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:50:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PAvGFOoYzPS61be8d0hDk59IdKm5jv+M0Lyik/mzoSE=;
-        b=H6HnwMmEfVLqiSFxflIKrGX8lvGrrMUMCTWhtWX9JC6FZBwWqqHHrpMl3rvtu8/pR0
-         jP2TVE2YeiHJbuJkRMjDnJs2Get4JM55vrEu7L3K2w6W96o7AsAG7s8kDY/V60nXcX00
-         712VVmzEozDrKdoV8kfuO2b1RMjWtJ/GNKffOH6cH9ayfNJt4Dzdezo7ktVw8/qU3hsW
-         yIbY8357heW537h3uBMQEk1BvIZWUrd6Jh0ihFPe7kXaWSN8Aj/cFQQMz9qM+D1TPIQc
-         A6twkH+qNYdBjoIf8m0SI6e71CIY/uhbvYwZvc8o0m7HOo1IouvmBHaBRBn+VsUnKatn
-         mbpg==
-X-Gm-Message-State: APjAAAWU/bZXtpVCCjolH3L7FXJwJLtdW4CWrXRYfU/OcaRqUQUm+jAW
-        1HG9IaLL9An9nVo6PfI6Wt7l/w==
-X-Google-Smtp-Source: APXvYqxWCtXFIT7WAXyNcyUz59E7fx+sMjOkrh9/IR0cbl66vKkr0afl6Z0nTISHKI7+dI3deUDvpw==
-X-Received: by 2002:a5d:51cb:: with SMTP id n11mr14633941wrv.143.1560333050210;
-        Wed, 12 Jun 2019 02:50:50 -0700 (PDT)
-Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id q20sm44919103wra.36.2019.06.12.02.50.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 02:50:49 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] mpls: fix af_mpls dependencies for real
-Date:   Wed, 12 Jun 2019 11:50:37 +0200
-Message-Id: <20190612095037.6472-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 12 Jun 2019 05:52:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35500 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437415AbfFLJwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:52:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ECAA6AF52;
+        Wed, 12 Jun 2019 09:52:06 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 89C291E4328; Wed, 12 Jun 2019 11:46:34 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 11:46:34 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 02/10] fs/locks: Export F_LAYOUT lease to user space
+Message-ID: <20190612094634.GA14578@quack2.suse.cz>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606014544.8339-3-ira.weiny@intel.com>
+ <4e5eb31a41b91a28fbc83c65195a2c75a59cfa24.camel@kernel.org>
+ <20190611213812.GC14336@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611213812.GC14336@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy reported that selecting MPLS_ROUTING without PROC_FS breaks
-the build, because since commit c1a9d65954c6 ("mpls: fix af_mpls
-dependencies"), MPLS_ROUTING selects PROC_SYSCTL, but Kconfig's select
-doesn't recursively handle dependencies.
-Change the select into a dependency.
+On Tue 11-06-19 14:38:13, Ira Weiny wrote:
+> On Sun, Jun 09, 2019 at 09:00:24AM -0400, Jeff Layton wrote:
+> > On Wed, 2019-06-05 at 18:45 -0700, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > GUP longterm pins of non-pagecache file system pages (eg FS DAX) are
+> > > currently disallowed because they are unsafe.
+> > > 
+> > > The danger for pinning these pages comes from the fact that hole punch
+> > > and/or truncate of those files results in the pages being mapped and
+> > > pinned by a user space process while DAX has potentially allocated those
+> > > pages to other processes.
+> > > 
+> > > Most (All) users who are mapping FS DAX pages for long term pin purposes
+> > > (such as RDMA) are not going to want to deallocate these pages while
+> > > those pages are in use.  To do so would mean the application would lose
+> > > data.  So the use case for allowing truncate operations of such pages
+> > > is limited.
+> > > 
+> > > However, the kernel must protect itself and users from potential
+> > > mistakes and/or malicious user space code.  Rather than disabling long
+> > > term pins as is done now.   Allow for users who know they are going to
+> > > be pinning this memory to alert the file system of this intention.
+> > > Furthermore, allow users to be alerted such that they can react if a
+> > > truncate operation occurs for some reason.
+> > > 
+> > > Example user space pseudocode for a user using RDMA and wanting to allow
+> > > a truncate would look like this:
+> > > 
+> > > lease_break_sigio_handler() {
+> > > ...
+> > > 	if (sigio.fd == rdma_fd) {
+> > > 		complete_rdma_operations(...);
+> > > 		ibv_dereg_mr(mr);
+> > > 		close(rdma_fd);
+> > > 		fcntl(rdma_fd, F_SETLEASE, F_UNLCK);
+> > > 	}
+> > > }
+> > > 
+> > > setup_rdma_to_dax_file() {
+> > > ...
+> > > 	rdma_fd = open(...)
+> > > 	fcntl(rdma_fd, F_SETLEASE, F_LAYOUT);
+> > 
+> > I'm not crazy about this interface. F_LAYOUT doesn't seem to be in the
+> > same category as F_RDLCK/F_WRLCK/F_UNLCK.
+> > 
+> > Maybe instead of F_SETLEASE, this should use new
+> > F_SETLAYOUT/F_GETLAYOUT cmd values? There is nothing that would prevent
+> > you from setting both a lease and a layout on a file, and indeed knfsd
+> > can set both.
+> > 
+> > This interface seems to conflate the two.
+> 
+> I've been feeling the same way.  This is why I was leaning toward a new lease
+> type.  I called it "F_LONGTERM" but the name is not important.
+> 
+> I think the concept of adding "exclusive" to the layout lease can fix this
+> because the NFS lease is non-exclusive where the user space one (for the
+> purpose of GUP pinning) would need to be.
+> 
+> FWIW I have not worked out exactly what this new "exclusive" code will look
+> like.  Jan said:
+> 
+> 	"There actually is support for locks that are not broken after given
+> 	timeout so there shouldn't be too many changes need."
+> 
+> But I'm not seeing that for Lease code.  So I'm working on something for the
+> lease code now.
 
-Fixes: c1a9d65954c6 ("mpls: fix af_mpls dependencies")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- net/mpls/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yeah, sorry for misleading you. Somehow I thought that if lease_break_time
+== 0, we will wait indefinitely but when checking the code again, that
+doesn't seem to be the case.
 
-diff --git a/net/mpls/Kconfig b/net/mpls/Kconfig
-index 2b802a48d5a6..d1ad69b7942a 100644
---- a/net/mpls/Kconfig
-+++ b/net/mpls/Kconfig
-@@ -26,7 +26,7 @@ config NET_MPLS_GSO
- config MPLS_ROUTING
- 	tristate "MPLS: routing support"
- 	depends on NET_IP_TUNNEL || NET_IP_TUNNEL=n
--	select PROC_SYSCTL
-+	depends on PROC_SYSCTL
- 	---help---
- 	 Add support for forwarding of mpls packets.
- 
+								Honza
 -- 
-2.21.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
