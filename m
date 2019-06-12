@@ -2,129 +2,109 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C536C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A239C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1516A215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2BC20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:41:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjJhwpae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409115AbfFLMk1 (ORCPT
+        id S2437123AbfFLMlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:40:27 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:60350 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfFLMk0 (ORCPT
+        Wed, 12 Jun 2019 08:41:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39295 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408385AbfFLMlJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:40:26 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hb2Y9-0005YG-UZ; Wed, 12 Jun 2019 06:40:21 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hb2Y8-0002jU-NW; Wed, 12 Jun 2019 06:40:21 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Oleg Nesterov' <oleg@redhat.com>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        "'linux-kernel\@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'arnd\@arndb.de'" <arnd@arndb.de>,
-        "'dbueso\@suse.de'" <dbueso@suse.de>,
-        "'axboe\@kernel.dk'" <axboe@kernel.dk>,
-        "'dave\@stgolabs.net'" <dave@stgolabs.net>,
-        "'e\@80x24.org'" <e@80x24.org>,
-        "'jbaron\@akamai.com'" <jbaron@akamai.com>,
-        "'linux-fsdevel\@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-aio\@kvack.org'" <linux-aio@kvack.org>,
-        "'omar.kilani\@gmail.com'" <omar.kilani@gmail.com>,
-        "'tglx\@linutronix.de'" <tglx@linutronix.de>,
-        'Al Viro' <viro@ZenIV.linux.org.uk>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        "'linux-arch\@vger.kernel.org'" <linux-arch@vger.kernel.org>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
-        <20190529161157.GA27659@redhat.com>
-        <20190604134117.GA29963@redhat.com>
-        <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
-        <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
-        <87lfy96sta.fsf@xmission.com>
-        <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
-        <05ffd0f434c64262aa767db81ad75ac1@AcuMS.aculab.com>
-Date:   Wed, 12 Jun 2019 07:40:03 -0500
-In-Reply-To: <05ffd0f434c64262aa767db81ad75ac1@AcuMS.aculab.com> (David
-        Laight's message of "Tue, 11 Jun 2019 15:46:11 +0000")
-Message-ID: <8736kf3rks.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Wed, 12 Jun 2019 08:41:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j2so9604363pfe.6;
+        Wed, 12 Jun 2019 05:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=P5Dp1NVMrDezDBxchJbtidsCgF7ZHAzWG1BGHh9wI5w=;
+        b=TjJhwpae0AdVN7/Ih/nU7jzjIhzilu72zXxDDnWBWAlBD4gMj20MWAC3Rne5OJC+nb
+         NfofgLH9IOYbAcHkod3VkTu28KxuQ5y9EUyypzoGbR8R7EQ7mvCVesEfeEnErWWxhQ7G
+         wq/rVV53FchD0m9i3zJV1IiHdPXEUtOXlMljLswZQkzSxF/O67zI0ANCafg3EKmG2v10
+         rgE74XKRiAJf0UVnNp2gvX8b9M1JgKQ06Ry3iagSOeVZYT29CT73LHzSmtGQM79VKovU
+         FSj5xZ7IBWeqgYVSkOhh/zrC78DQDoXZggW8qJQWAyvTMvNR0jL6AE/UR1KdhcFkNZUW
+         lfmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P5Dp1NVMrDezDBxchJbtidsCgF7ZHAzWG1BGHh9wI5w=;
+        b=rhkLNQ7mAJTQ/DF01NWaP1PWgsthze2dYi8CoWPtpMNrZHMljXi80YqvbHJZcrON/s
+         ymTQoZzxKS2aiIaA0ouhY96o+mfJyz30JVYi/7DcY2VZrgVRUs+3RDjW5PDeq/lDnI9l
+         h5nSB2l5eRWjkk6IV1mIH+LXuQUCz91dzA+4FXPRoKFlJDFrQFtroLDhcEDxU/I3yYNO
+         UaSVtJvjAzNo7Fqx2RdY+a951kHPMdBeLhxY7hUpHWANW8EcH6vmwgYrm1fBbZcH0olw
+         7tLEdRKtjXE1fYR5xEjW6E9OThFYTAJQZsO0Iuxtk2rCBhZhfzb1WOxxYE14CwIaDoiQ
+         rPBg==
+X-Gm-Message-State: APjAAAUF7QUg8fewW3U2wRlOhXhaN4kJ+XIlz2Lle2B2MQNYvx+oc19p
+        Zk+vQjcaqtuQI8kZUoT7WqI=
+X-Google-Smtp-Source: APXvYqykw/FoscQaeHTHCdJKLksKNGhMrdKmKHPpcOTH2jsByq7pbFsayWBhId0XqaVmpkcv15zWJQ==
+X-Received: by 2002:a63:5247:: with SMTP id s7mr7454711pgl.29.1560343268513;
+        Wed, 12 Jun 2019 05:41:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i3sm17847203pfa.175.2019.06.12.05.41.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 05:41:07 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 05:41:06 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] hwmon: lm90: simplify getting the adapter of a client
+Message-ID: <20190612124106.GA26013@roeck-us.net>
+References: <20190610095157.11814-1-wsa+renesas@sang-engineering.com>
+ <20190610095157.11814-2-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hb2Y8-0002jU-NW;;;mid=<8736kf3rks.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/YVLyi/xjY76Y8LOZImydvuQ/haxaL6i0=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610095157.11814-2-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Laight <David.Laight@ACULAB.COM> writes:
+On Mon, Jun 10, 2019 at 11:51:54AM +0200, Wolfram Sang wrote:
+> We have a dedicated pointer for that, so use it. Much easier to read and
+> less computation involved.
+> 
+> Reported-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-> From: David Laight
->> Sent: 11 June 2019 10:52
-> ...
->> FWIW is ERESTARTNOHAND actually sane here?
->> If I've used setitimer() to get SIGALARM generated every second I'd
->> expect select() to return EINTR every second even if I don't
->> have a SIGALARM handler?
->
-> Actually no - after sigset(SIGALRM, SIG_IGN) I'd expect absolutely
-> nothing to happen when kill(pid, SIGALRM) is called.
->
-> However if I run:
->
-> 	struct itimerval itimerval = {{1, 0}, {1, 0}};
-> 	setitimer(ITIMER_REAL, &itimerval, NULL);
-> 	sigset(SIGALRM, SIG_IGN);
->
-> 	poll(0, 0, big_timeout);
->
-> I see (with strace) poll() repeatedly returning ERESTART_RESTARTBLOCK
-> and being restarted.
-> Replacing poll() with pselect() returns ERESTARTNOHAND.
-> (In both cases the timeout must be updated since the application
-> does see the timeout.)
->
-> I'm sure other unix kernels completely ignore signals set to SIG_IGN.
-> So this restart dance just isn't needed.
+Aplied.
 
-We also ignore such signals except when the signal is blocked when it is
-received.
+Thanks,
+Guenter
 
-We don't currently but it would be perfectly legitimate for
-set_current_blocked to dequeue and drop signals that have become
-unblocked whose handler is SIG_IGN.
-
-The dance would still be needed for the rare case where TIF_SIGPENDING
-gets set for a non-signal.
-
-Dropping the signal while it is blocked if it's handler is SIG_IGN looks
-like a bad idea.
-
-Eric
-
-
-
-
-
-
-
-
+> ---
+> 
+> Please apply to your subsystem tree.
+> 
+>  drivers/hwmon/lm90.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
+> index e562a578f20e..2ebcab8b0a9b 100644
+> --- a/drivers/hwmon/lm90.c
+> +++ b/drivers/hwmon/lm90.c
+> @@ -1718,7 +1718,7 @@ static int lm90_probe(struct i2c_client *client,
+>  		      const struct i2c_device_id *id)
+>  {
+>  	struct device *dev = &client->dev;
+> -	struct i2c_adapter *adapter = to_i2c_adapter(dev->parent);
+> +	struct i2c_adapter *adapter = client->adapter;
+>  	struct hwmon_channel_info *info;
+>  	struct regulator *regulator;
+>  	struct device *hwmon_dev;
