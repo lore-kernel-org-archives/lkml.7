@@ -2,123 +2,87 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAB8C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A24C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 467C5207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560339754;
-	bh=Dz6uAaYDqYj0e7XwXhyhaFSPJ/6tjvz9hNNJXh1jUOw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a0EN/rahKSEixNWTuYCfi1DPmyfwroVwrxIeOJJHGRDPFAk83VhELG2pe10Uxb9O8
-	 f2R+fusEIjwW7Nb42CmCgisSt6Iv7NnuybcKpnbhNIPwu92W5+M/OXycnS/RynCbYa
-	 HUJ7N3LTbF9LSMNgl9KbO3rQZvZB4nrg6Wkoq35A=
+	by mail.kernel.org (Postfix) with ESMTP id 6768920866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409027AbfFLLmd (ORCPT
+        id S1728720AbfFLLnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:42:33 -0400
-Received: from casper.infradead.org ([85.118.1.10]:58138 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405753AbfFLLmd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:42:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bwcoiqvF2SoNHiwEbIFT93eXz9rwnHVmrzehb7eUxsc=; b=YYw1CK+HomH1bUQdmOFtr1LLKo
-        nrI2pdZN1vJJdQLLReKvjE3gL7yk3BQbgk0EU5kvhYjFeSQ8AThy/qMchnF7lwPMA1vpKALnA4dIN
-        01Nb2u1tOwdct1BpWL4ME+XvkeFN581/KnIZSaTeDgl3AUzKZzYXIjjVgEHTueO9gr6Evdd72hqab
-        4/hL8rJUI/Got9CYd0zzpnEOojiS3ake9Qpn1JHduKs5utZTX0ePgiJB8SFrMdw0T1uFIVzH2kDhH
-        eYtn8yJ0G9qRHi5H8iMjCv5kBFLJhmIjmxjtNprdsFixXVJE7/5e07m7FbaPn+NxMb/LF/heEHWX9
-        72SZQ56g==;
-Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb1e0-0001Dc-CP; Wed, 12 Jun 2019 11:42:20 +0000
-Date:   Wed, 12 Jun 2019 08:42:13 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190612084213.4fb9e054@coco.lan>
-In-Reply-To: <20190612110039.GH32652@zn.tnic>
-References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-        <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
-        <20190608090556.GA32464@zn.tnic>
-        <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
-        <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
-        <20190611115651.GD31772@zn.tnic>
-        <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
-        <20190612034813.GA32652@zn.tnic>
-        <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
-        <20190612074242.53a4cf56@coco.lan>
-        <20190612110039.GH32652@zn.tnic>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 12 Jun 2019 07:43:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38074 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728601AbfFLLnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:43:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C388D7573D;
+        Wed, 12 Jun 2019 11:43:10 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-109.rdu2.redhat.com [10.10.120.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E2927614C4;
+        Wed, 12 Jun 2019 11:43:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <05ddc1e6-78ba-b60e-73b1-ffe86de2f2f8@tycho.nsa.gov>
+References: <05ddc1e6-78ba-b60e-73b1-ffe86de2f2f8@tycho.nsa.gov> <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk> <31009.1560262869@warthog.procyon.org.uk>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
+        Andy Lutomirski <luto@kernel.org>, viro@zeniv.linux.org.uk,
+        linux-usb@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: What do LSMs *actually* need for checks on notifications?
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <25044.1560339786.1@warthog.procyon.org.uk>
+Date:   Wed, 12 Jun 2019 12:43:06 +0100
+Message-ID: <25045.1560339786@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 12 Jun 2019 11:43:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Jun 2019 13:00:39 +0200
-Borislav Petkov <bp@alien8.de> escreveu:
+Stephen Smalley <sds@tycho.nsa.gov> wrote:
 
-> On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
-> > That's said, from the admin PoV, it makes sense to have a single
-> > daemon that collect errors from all error sources and take the
-> > needed actions.  
+> >   (6) The security attributes of all the objects between the object in (5)
+> >       and the object in (4), assuming we work from (5) towards (4) if the
+> >       two aren't coincident (WATCH_INFO_RECURSIVE).
 > 
-> Doing recovery actions in userspace is too flaky. Daemon can get killed
-> at any point in time and there are error types where you want to do
-> recovery *before* you return to userspace.
+> Does this apply to anything other than mount notifications?
 
-Yeah, some actions would work a lot better at Kernelspace. Yet, some
-actions would work a lot better if implemented on userspace.
+Not at the moment.  I'm considering making it such that you can make a watch
+on a keyring get automatically propagated to keys that get added to the
+keyring (and removed upon unlink) - the idea being that there is no 'single
+parent path' concept for a keyring as there is for a directory.
 
-For example, a server with multiple network interfaces may re-route
-the traffic to a backup interface if the main one has too many errors.
+I'm also pondering the idea of making it possible to have superblock watches
+automatically propagated to superblocks created by automount points on the
+watched superblock.
 
-This can easily be done on userspace.
+> And for mount notifications, isn't the notification actually for a change to
+> the mount namespace, not a change to any file?
 
-> Yes, we do have different error reporting facilities but I still think
-> that concentrating all the error information needed in order to do
-> proper recovery action is the better approach here. And make that part
-> of the kernel so that it is robust. Userspace can still configure it and
-> so on.
+Yes.
 
-If the error reporting facilities are for the same hardware "group"
-(like the machine's memory controllers), I agree with you: it makes
-sense to have a single driver. 
+> Hence, the real "object" for events that trigger mount notifications is the
+> mount namespace, right?
 
-If they are for completely independent hardware then implementing
-as separate drivers would work equally well, with the advantage of
-making easier to maintain and make it generic enough to support
-different vendors using the same IP block.
+Um... arguably.  Would that mean that that would need a label from somewhere?
+
+> The watched path is just a way of identifying a subtree of the mount
+> namespace for notifications - it isn't the real object being watched.
+
+I like that argument.
 
 Thanks,
-Mauro
+David
