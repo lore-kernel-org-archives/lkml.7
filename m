@@ -2,132 +2,57 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4A3C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2CEC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542002080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:02:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9M1dR9n"
+	by mail.kernel.org (Postfix) with ESMTP id 92F792080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436754AbfFLIC0 (ORCPT
+        id S2436767AbfFLIE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:02:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44612 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFLIC0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:02:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so8470581pgp.11;
-        Wed, 12 Jun 2019 01:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SXiUTg8P9kKRgYZobjR73yxrvyBI+QR3gHSn3xV2sNk=;
-        b=P9M1dR9nnALM0dwbM3XxQXTmmeCHWxxCR3IdHx6vDUqJrBbj3MJw+iS5S5/t9RDNy8
-         VXM0Wep6hlSbFgGcCd4t1g+rTd06lxmB90ehFdzKpl/nfPQkkJaaLXID0bb++uh5ZRWb
-         4f+eIAuGIQnSryRWwgi45NBtdSPkdKegHBuGbZYbDgDdACaI3HsmF2yZ1mkdDte/HPTn
-         MA7CPzCi+udHsV8KE61Vy23DzLpjmpJlkHiXrnQzduJsR8hnjOL988mxO+N43knNyH4j
-         MEQOEY/QXxjH4Gk8+6G3M0peyt8kYn4YW85dLcb2p55BwVIImhoBA+TvMkPFoCTVvEj/
-         pTxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SXiUTg8P9kKRgYZobjR73yxrvyBI+QR3gHSn3xV2sNk=;
-        b=GxLjlLMYgpOA6Qz6FurumSFs4IUd923W9E8xGHu69CIOOKIE9ejvJof+1LFTds7eXh
-         GpiYerZ8E/mS3oTgyLsVQmJGRKZ8edIZsFGEXiPhHwyLEdL9DChXYGSs2zKdH3fFL/fT
-         tFfJ0+ML/fkgehd/kaUmMYiia7pnKt5QY/QC06WEUf2Ykoiws69zTuseMd76coqTFgaS
-         We7xjZ5eCOHc514qmBNVfrfAeNlLmumybEYxE99M0Wc4QHwBwck72a9llxjlOFIRnoDj
-         Ih6EWR23c9lUB+37SnNkrm99dBSFxMVn7WM3P/BV0ZNnLHqMRNlv0+LzZzSJs7Vz0Ixp
-         ianw==
-X-Gm-Message-State: APjAAAVJ0xNatyYpSGQ7EjMJfabqSzfqoYnr4GR5P0MLHEew8bcXb+SN
-        o2lY+x3NfzgUu9Smez4aYZTt0M2d
-X-Google-Smtp-Source: APXvYqyXLoIbAePeHwNO0OOIUhplzQIrUNiANS5SrI0lvbzh0NuVJupyWFCAT364ZRU/Gs+muPfmOQ==
-X-Received: by 2002:aa7:972a:: with SMTP id k10mr52413613pfg.116.1560326545252;
-        Wed, 12 Jun 2019 01:02:25 -0700 (PDT)
-Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
-        by smtp.gmail.com with ESMTPSA id w62sm18263465pfw.132.2019.06.12.01.02.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 01:02:25 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 01:02:14 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH] dma-buf: refcount the attachment for cache_sgt_mapping
-Message-ID: <20190612080214.GA8876@Asurada>
-References: <20190612012219.21652-1-nicoleotsuka@gmail.com>
- <261b46c7-0c5e-4268-619d-f8381fbc3aeb@amd.com>
+        Wed, 12 Jun 2019 04:04:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41620 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725763AbfFLIE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 04:04:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6DDA5ABE9;
+        Wed, 12 Jun 2019 08:04:28 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 10:04:26 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     tmurphy@arista.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v2] iommu/amd: fix a null-ptr-deref in map_sg()
+Message-ID: <20190612080426.GL8151@suse.de>
+References: <20190506164440.37399-1-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <261b46c7-0c5e-4268-619d-f8381fbc3aeb@amd.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+In-Reply-To: <20190506164440.37399-1-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+On Mon, May 06, 2019 at 12:44:40PM -0400, Qian Cai wrote:
+> The commit 1a1079011da3 ("iommu/amd: Flush not present cache in
+> iommu_map_page") 
 
-Thanks for the quick reply.
+That patch was reverted by me in
 
-On Wed, Jun 12, 2019 at 07:45:38AM +0000, Koenig, Christian wrote:
-> Am 12.06.19 um 03:22 schrieb Nicolin Chen:
-> > Commit f13e143e7444 ("dma-buf: start caching of sg_table objects v2")
-> > added a support of caching the sgt pointer into an attach pointer to
-> > let users reuse the sgt pointer without another mapping. However, it
-> > might not totally work as most of dma-buf callers are doing attach()
-> > and map_attachment() back-to-back, using drm_prime.c for example:
-> >      drm_gem_prime_import_dev() {
-> >          attach = dma_buf_attach() {
-> >              /* Allocating a new attach */
-> >              attach = kzalloc();
-> >              /* .... */
-> >              return attach;
-> >          }
-> >          dma_buf_map_attachment(attach, direction) {
-> >              /* attach->sgt would be always empty as attach is new */
-> >              if (attach->sgt) {
-> >                  /* Reuse attach->sgt */
-> >              }
-> >              /* Otherwise, map it */
-> >              attach->sgt = map();
-> >          }
-> >      }
-> >
-> > So, for a cache_sgt_mapping use case, it would need to get the same
-> > attachment pointer in order to reuse its sgt pointer. So this patch
-> > adds a refcount to the attach() function and lets it search for the
-> > existing attach pointer by matching the dev pointer.
-> 
-> I don't think that this is a good idea.
-> 
-> We use sgt caching as workaround for locking order problems and want to 
-> remove it again in the long term.
+	97a18f548548a6ee1b9be14c6fc72090b8839875
 
-Oh. I thought it was for a performance improving purpose. It may
-be a misunderstanding then.
+because it caused issues by testers. So maybe re-submit the above patch
+with this fix included?
 
-> So what is the actual use case of this?
+Regards,
 
-We have some similar downstream changes at dma_buf to reduce the
-overhead from multiple clients of the same device doing attach()
-and map_attachment() calls for the same dma_buf.
+	Joerg
 
-We haven't used DRM/GRM_PRIME yet but I am also curious would it
-benefit DRM also if we reduce this overhead in the dma_buf?
-
-Thanks
-Nicolin
