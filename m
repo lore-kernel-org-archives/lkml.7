@@ -2,123 +2,168 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B079C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B572C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7B4208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B5C208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:51:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjVRjE0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405924AbfFLAuy (ORCPT
+        id S2406013AbfFLAvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:50:54 -0400
-Received: from mga09.intel.com ([134.134.136.24]:51300 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405015AbfFLAuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:50:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 17:50:52 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 17:50:48 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] swiotlb: Zero out bounce buffer for untrusted
- device
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
- <20190603011620.31999-4-baolu.lu@linux.intel.com>
- <20190610154553.GT28796@char.us.oracle.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <ec6ac2ba-7b88-2bcf-aa95-f8981b258c5c@linux.intel.com>
-Date:   Wed, 12 Jun 2019 08:43:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 11 Jun 2019 20:51:24 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41839 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405015AbfFLAvX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 20:51:23 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s24so5840650plr.8;
+        Tue, 11 Jun 2019 17:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cO1aoOgamWKzIBPutERy4+vShJ7ff0SjV7iwgqOmOxU=;
+        b=bjVRjE0AIuXeVIkRPq5d1Q0m6f/ChSKt7gvzCfbsz28S9ZzhVQDoKcXtAbRw1ACu7m
+         7kp5ZXFytWCzXikbqIWU3/EvpxFMQfB2WIIUqTOSaJMIVSVV+Dhm+q2vF1nsxPL0ZQZN
+         Xr4PWhZzFjjKM8olQlI+MNryiceHMLT2yhZwrxNEe+PPQiJHcsAN3gqc/Mj1eyT37wpG
+         c97pPNrG3ML1GaEN+kj4zNEVcoHq9wcOmaqbjGvpzCgZTLuyoJtUrBdZ/iSO7t17EGrG
+         4euwRIk+oYorOyunXr8AfmtpioQuylyPP3xvwk0CbS+/E00uzYIB370WOdBdaH6J7lDA
+         PWDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cO1aoOgamWKzIBPutERy4+vShJ7ff0SjV7iwgqOmOxU=;
+        b=DWHzqi77Honw22GNNGKJzjDVztRrpEDpOJN5MPQ81TQJOo7LHKh/cc+G84ZMw8DkKp
+         Re1wzNCtbLHlqgtrUaDvpXVGCxuf14elkTVvDBgwGzzbko145AbCYrEPDAxf/IIqDPib
+         Jt9ReXI60Bks+QfCXw6cj9toj2bYAqiGFYqWV4QBsZoOK8uTk6vcn+3v8hS2YXyBbUHw
+         gPI5JWgjDAU9qV/G164RE2uvsoI/0N/0RX4KFnw0GCyNiiupYpe134uKfnSAr+Qs/MCz
+         mpv448I3LadB4Ux9q+zQmGzC/KzS8sEa44i1XiRiBFImnl6AVm3nwohIJ2r97XShFHG/
+         5PxQ==
+X-Gm-Message-State: APjAAAUfealE+WXDh4NNevwFORAZjwLc+3Rzw+5DTot2W3xOJiM5y5JD
+        Vdw9MiZKG0I7wtIyntw+Yan0o03iM2Q=
+X-Google-Smtp-Source: APXvYqyv4mJyfH+lo6mByyMGtaJjJbLmgLMkrNCaA8Qe4uCJ+nryDBS0GuP0K4qXtHGMM5kn8Y9Izg==
+X-Received: by 2002:a17:902:28:: with SMTP id 37mr15273311pla.188.1560300682592;
+        Tue, 11 Jun 2019 17:51:22 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id y5sm14480199pgv.12.2019.06.11.17.51.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 17:51:21 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 17:51:20 -0700
+From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [RESEND] input: keyboard: imx: make sure keyboard can always
+ wake up system
+Message-ID: <20190612005120.GI143729@dtor-ws>
+References: <1554341727-16084-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190610154553.GT28796@char.us.oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554341727-16084-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Konrad,
-
-Thanks a lot for your reviewing.
-
-On 6/10/19 11:45 PM, Konrad Rzeszutek Wilk wrote:
-> On Mon, Jun 03, 2019 at 09:16:14AM +0800, Lu Baolu wrote:
->> This is necessary to avoid exposing valid kernel data to any
->> milicious device.
+On Thu, Apr 04, 2019 at 01:40:16AM +0000, Anson Huang wrote:
+> There are several scenarios that keyboard can NOT wake up system
+> from suspend, e.g., if a keyboard is depressed between system
+> device suspend phase and device noirq suspend phase, the keyboard
+> ISR will be called and both keyboard depress and release interrupts
+> will be disabled, then keyboard will no longer be able to wake up
+> system. Another scenario would be, if a keyboard is kept depressed,
+> and then system goes into suspend, the expected behavior would be
+> when keyboard is released, system will be waked up, but current
+> implementation can NOT achieve that, because both depress and release
+> interrupts are disabled in ISR, and the event check is still in
+> progress.
 > 
-> malicious
-
-Yes, thanks.
-
+> To fix these issues, need to make sure keyboard's depress or release
+> interrupt is enabled after noirq device suspend phase, this patch
+> moves the suspend/resume callback to noirq suspend/resume phase, and
+> enable the corresponding interrupt according to current keyboard status.
 > 
->>
->> Suggested-by: Christoph Hellwig <hch@lst.de>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   kernel/dma/swiotlb.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
->> index f956f785645a..ed41eb7f6131 100644
->> --- a/kernel/dma/swiotlb.c
->> +++ b/kernel/dma/swiotlb.c
->> @@ -35,6 +35,7 @@
->>   #include <linux/scatterlist.h>
->>   #include <linux/mem_encrypt.h>
->>   #include <linux/set_memory.h>
->> +#include <linux/pci.h>
->>   #ifdef CONFIG_DEBUG_FS
->>   #include <linux/debugfs.h>
->>   #endif
->> @@ -560,6 +561,11 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
->>   	 */
->>   	for (i = 0; i < nslots; i++)
->>   		io_tlb_orig_addr[index+i] = orig_addr + (i << IO_TLB_SHIFT);
->> +
->> +	/* Zero out the bounce buffer if the consumer is untrusted. */
->> +	if (dev_is_untrusted(hwdev))
->> +		memset(phys_to_virt(tlb_addr), 0, alloc_size);
-> 
-> What if the alloc_size is less than a PAGE? Should this at least have ALIGN or such?
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-It's the consumer (iommu subsystem) who requires this to be page
-aligned. For swiotlb, it just clears out all data in the allocated
-bounce buffer.
+Applied, thank you.
 
-Best regards,
-Baolu
+> ---
+>  drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
+> index cf08f4a..97500a2 100644
+> --- a/drivers/input/keyboard/imx_keypad.c
+> +++ b/drivers/input/keyboard/imx_keypad.c
+> @@ -524,11 +524,12 @@ static int imx_keypad_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static int __maybe_unused imx_kbd_suspend(struct device *dev)
+> +static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
+>  {
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct imx_keypad *kbd = platform_get_drvdata(pdev);
+>  	struct input_dev *input_dev = kbd->input_dev;
+> +	unsigned short reg_val = readw(kbd->mmio_base + KPSR);
+>  
+>  	/* imx kbd can wake up system even clock is disabled */
+>  	mutex_lock(&input_dev->mutex);
+> @@ -538,13 +539,20 @@ static int __maybe_unused imx_kbd_suspend(struct device *dev)
+>  
+>  	mutex_unlock(&input_dev->mutex);
+>  
+> -	if (device_may_wakeup(&pdev->dev))
+> +	if (device_may_wakeup(&pdev->dev)) {
+> +		if (reg_val & KBD_STAT_KPKD)
+> +			reg_val |= KBD_STAT_KRIE;
+> +		if (reg_val & KBD_STAT_KPKR)
+> +			reg_val |= KBD_STAT_KDIE;
+> +		writew(reg_val, kbd->mmio_base + KPSR);
+> +
+>  		enable_irq_wake(kbd->irq);
+> +	}
+>  
+>  	return 0;
+>  }
+>  
+> -static int __maybe_unused imx_kbd_resume(struct device *dev)
+> +static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
+>  {
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct imx_keypad *kbd = platform_get_drvdata(pdev);
+> @@ -568,7 +576,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
+>  	return ret;
+>  }
+>  
+> -static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
+> +static const struct dev_pm_ops imx_kbd_pm_ops = {
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume)
+> +};
+>  
+>  static struct platform_driver imx_keypad_driver = {
+>  	.driver		= {
+> -- 
+> 2.7.4
+> 
 
-> 
->> +
->>   	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
->>   	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
->>   		swiotlb_bounce(orig_addr, tlb_addr, mapping_size, DMA_TO_DEVICE);
->> -- 
->> 2.17.1
->>
-> 
+-- 
+Dmitry
