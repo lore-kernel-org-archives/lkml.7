@@ -2,315 +2,137 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD1EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE6AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E04206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3400A206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="W22AUT/i"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VEg4j6Ms";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="j2oDfdqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732613AbfFLOs0 (ORCPT
+        id S2408253AbfFLOsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:48:26 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37827 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732595AbfFLOsY (ORCPT
+        Wed, 12 Jun 2019 10:48:40 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49764 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392030AbfFLOsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:48:24 -0400
-Received: by mail-lf1-f65.google.com with SMTP id d11so4523089lfb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f2yfUh1O6xtSFOnykYthqxzvFKLH7PYK37VBbjd8PEs=;
-        b=W22AUT/iwP/Se+tpsaHDuqiGIC/Iu8AJyRmR9dkDH0d/svPWDPzmrp5a9d86jSMslV
-         lrMn8IqLBgEUxHY3dA3/ILa1MKBLiAhmvdL3vNwWQkIsbVcZo0SHX+AWyf9dELM5Jczf
-         xydRn0b5Mvv8g5S6jySHFZTn+TeEaEXpJa7DABBfvZQQAq3hRi+RuBZcmKByma21km5p
-         pauHVXPxErAaymoSmG0as3TZwMdqnZmA5D5mMRtbOYbXxe9r/46lGccdTFwaOiGmYk2j
-         9ruB6X4s2wdlpBAPX0GNFfvUiPMzQHNG47dLF2nfH/JOsQmecTVPa++g+nEykqmfRuuK
-         0giA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f2yfUh1O6xtSFOnykYthqxzvFKLH7PYK37VBbjd8PEs=;
-        b=ZhnmR/kWcK1Ui9WcAFpsKxYnIbWLA4Gez7yXBf1V1wfeNJ0/0/G31qATJvjZ8EvNlk
-         HU1WWo3Y1+BjeiMzOoNV5r06r58hzxGmrjlaFaluApM8/Nglfk+aaZu+xpUXuuJgXmZZ
-         6/HXbxByu56+k+fgnfAx/bX4jsERqPBRHADX04hF3hp/pbZpJlCEALgdABfEQydQdfAZ
-         qcCjd5kFeRZSwX/twOR/VfAvQRVpxiPmtNkRxflIzm4S3OT2Ubxu1P5WojA4OARLiEMt
-         XbEaxYfRRB/OPKR5s3Be0DudepczBoIOBGgsEBEQ1cuX3wk0/DS0dbBJuY35ywM2MiW3
-         EqiQ==
-X-Gm-Message-State: APjAAAX4bQWYZQj2rxgQKvP9d4UkGBiAesAIoF60hroHCiqLm6Qsn3YO
-        mfgS8mqVIJXUyzRZj8XbAn9ao4Xw6DT55/OyshXq
-X-Google-Smtp-Source: APXvYqzpBS7bekI/fIBvEsHuxDNV0EHnY2eBbkyJCY0LjpU6o3j296IhADIDMfyEZWaqtuPg5kloXXQOqCJVLYxcwOE=
-X-Received: by 2002:a19:230e:: with SMTP id j14mr2013079lfj.13.1560350900633;
- Wed, 12 Jun 2019 07:48:20 -0700 (PDT)
+        Wed, 12 Jun 2019 10:48:39 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 078EF6074C; Wed, 12 Jun 2019 14:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560350918;
+        bh=ogYzUcjHgCk+aG5ZVAvXyAiDxq61mB17ua8ybhd9qEg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VEg4j6MsN9sKZTQFf5spkgy7OTBADMwmoOhzBSLLXrCJ/c+rqWCek/yQhlDCghjM4
+         gixr3fQP3ozY6Df99fJDn5GZmEMQXPTrvWaSNvUL6PK280pBY6tqMjnDh8MKpUBlfZ
+         dw9bgAvhiTyt2sBXVyt/f1fXdaSo4vIgfS+yoUVs=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96E7760256;
+        Wed, 12 Jun 2019 14:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560350915;
+        bh=ogYzUcjHgCk+aG5ZVAvXyAiDxq61mB17ua8ybhd9qEg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=j2oDfdqNpUGj6YCGOEsImfaYefFvZdHO5Pttasvoq2m7sXDg+kWveprzehT6p+hGG
+         /1TI5U6qwt1AeC5spMob0yPvRWUaPzpe+R1Rb2sbgLXZxY1+IOnlL+hRxhlcr6O7Ff
+         gcCwsVYJEjW8tBa+acpGlZKomp4DgULqdpYe8s4s=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96E7760256
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        benjamin.tissoires@redhat.com, jikos@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org,
+        hdegoede@redhat.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
+ <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
+ <20190612003507.GG143729@dtor-ws>
+ <2282f3e1-e76a-4fe7-d447-51d9a4bee2de@codeaurora.org>
+ <20190612143715.GC4660@dell>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <77e54e66-c7c8-9fd3-995a-7633202bb81e@codeaurora.org>
+Date:   Wed, 12 Jun 2019 08:48:33 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <cover.1560045490.git.mchehab+samsung@kernel.org> <6094c48c791a28a0d28f9854e8f198625cc524f4.1560045490.git.mchehab+samsung@kernel.org>
-In-Reply-To: <6094c48c791a28a0d28f9854e8f198625cc524f4.1560045490.git.mchehab+samsung@kernel.org>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 12 Jun 2019 10:48:09 -0400
-Message-ID: <CAHC9VhTf0yrNuBj2h_P+=55z8c5p5B9Wto_h-yhYKuEzS9535w@mail.gmail.com>
-Subject: Re: [PATCH v3 18/33] docs: netlabel: convert docs to ReST and rename
- to *.rst
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        netdev@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190612143715.GC4660@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 8, 2019 at 10:27 PM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
->
-> Convert netlabel documentation to ReST.
->
-> This was trivial: just add proper title markups.
->
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  .../{cipso_ipv4.txt => cipso_ipv4.rst}        | 19 +++++++++++------
->  Documentation/netlabel/draft_ietf.rst         |  5 +++++
->  Documentation/netlabel/index.rst              | 21 +++++++++++++++++++
->  .../{introduction.txt => introduction.rst}    | 16 +++++++++-----
->  .../{lsm_interface.txt => lsm_interface.rst}  | 16 +++++++++-----
->  5 files changed, 61 insertions(+), 16 deletions(-)
->  rename Documentation/netlabel/{cipso_ipv4.txt => cipso_ipv4.rst} (87%)
->  create mode 100644 Documentation/netlabel/draft_ietf.rst
->  create mode 100644 Documentation/netlabel/index.rst
->  rename Documentation/netlabel/{introduction.txt => introduction.rst} (91%)
->  rename Documentation/netlabel/{lsm_interface.txt => lsm_interface.rst} (88%)
+On 6/12/2019 8:37 AM, Lee Jones wrote:
+> On Wed, 12 Jun 2019, Jeffrey Hugo wrote:
+> 
+>> On 6/11/2019 6:35 PM, Dmitry Torokhov wrote:
+>>> On Thu, Jun 06, 2019 at 09:13:22AM -0700, Jeffrey Hugo wrote:
+>>>> There needs to be coordination between hid-quirks and the elan_i2c driver
+>>>> about which devices are handled by what drivers.  Currently, both use
+>>>> whitelists, which results in valid devices being unhandled by default,
+>>>> when they should not be rejected by hid-quirks.  This is quickly becoming
+>>>> an issue.
+>>>>
+>>>> Since elan_i2c has a maintained whitelist of what devices it will handle,
+>>>> use that to implement a blacklist in hid-quirks so that only the devices
+>>>> that need to be handled by elan_i2c get rejected by hid-quirks, and
+>>>> everything else is handled by default.  The downside is the whitelist and
+>>>> blacklist need to be kept in sync.
+>>>>
+>>>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>>>> ---
+>>>>    drivers/hid/hid-quirks.c | 78 ++++++++++++++++++++++++++++++++++------
+>>>>    1 file changed, 67 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+>>>> index e5ca6fe2ca57..edebd0700e3d 100644
+>>>> --- a/drivers/hid/hid-quirks.c
+>>>> +++ b/drivers/hid/hid-quirks.c
+>>>> @@ -912,8 +912,66 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+>>>>    	{ }
+>>>>    };
+>>>> +/*
+>>>> + * List of device names that elan_i2c is handling and HID should ignore.  Must
+>>>> + * be kept in sync with elan_i2c
+>>>> + */
+>>>> +static const char *hid_elan_i2c_ignore[] = {
+>>>
+>>> If this is a copy of elan whitelist, then, if we do not want to bother
+>>> with sharing it in object form (as a elan-i2c-ids module), can we at
+>>> least move it into include/linux/input/elan-i2c-ids.h and consume from
+>>> hid-quirks.c?
+>>
+>> I can put it in a shared header file, however elan-i2c and hid-quirks
+>> would need to be updated in the same change to prevent a breakage, but
+>> that would seem to violate a concern Benjamin brought up in v4 given
+>> that elan-i2c is maintained in your input tree, and hid-quirks is
+>> maintained in his hid tree.
+>>
+>> Are you ok with the elan-i2c changes going through Benjamin's hid tree?
+> 
+> We co-ordinate cross-subsystem merges all the time.  That is never a
+> reason to not do the 'right thing (tm)'.  If this information can be
+> held in a single, central place, without the need for constant
+> re-alignment, I'm all for it.
+> 
 
-I'm fairly confident I've already acked this at least once, but here
-it is again:
+I'm aware coordination is a thing.  I'm trying to elicit some 
+coordination between Dmitry and Benjamin.
 
-Acked-by: Paul Moore <paul@paul-moore.com>
-
-> diff --git a/Documentation/netlabel/cipso_ipv4.txt b/Documentation/netlabel/cipso_ipv4.rst
-> similarity index 87%
-> rename from Documentation/netlabel/cipso_ipv4.txt
-> rename to Documentation/netlabel/cipso_ipv4.rst
-> index a6075481fd60..cbd3f3231221 100644
-> --- a/Documentation/netlabel/cipso_ipv4.txt
-> +++ b/Documentation/netlabel/cipso_ipv4.rst
-> @@ -1,10 +1,13 @@
-> +===================================
->  NetLabel CIPSO/IPv4 Protocol Engine
-> -==============================================================================
-> +===================================
-> +
->  Paul Moore, paul.moore@hp.com
->
->  May 17, 2006
->
-> - * Overview
-> +Overview
-> +========
->
->  The NetLabel CIPSO/IPv4 protocol engine is based on the IETF Commercial
->  IP Security Option (CIPSO) draft from July 16, 1992.  A copy of this
-> @@ -13,7 +16,8 @@ draft can be found in this directory
->  it to an RFC standard it has become a de-facto standard for labeled
->  networking and is used in many trusted operating systems.
->
-> - * Outbound Packet Processing
-> +Outbound Packet Processing
-> +==========================
->
->  The CIPSO/IPv4 protocol engine applies the CIPSO IP option to packets by
->  adding the CIPSO label to the socket.  This causes all packets leaving the
-> @@ -24,7 +28,8 @@ label by using the NetLabel security module API; if the NetLabel "domain" is
->  configured to use CIPSO for packet labeling then a CIPSO IP option will be
->  generated and attached to the socket.
->
-> - * Inbound Packet Processing
-> +Inbound Packet Processing
-> +=========================
->
->  The CIPSO/IPv4 protocol engine validates every CIPSO IP option it finds at the
->  IP layer without any special handling required by the LSM.  However, in order
-> @@ -33,7 +38,8 @@ NetLabel security module API to extract the security attributes of the packet.
->  This is typically done at the socket layer using the 'socket_sock_rcv_skb()'
->  LSM hook.
->
-> - * Label Translation
-> +Label Translation
-> +=================
->
->  The CIPSO/IPv4 protocol engine contains a mechanism to translate CIPSO security
->  attributes such as sensitivity level and category to values which are
-> @@ -42,7 +48,8 @@ Domain Of Interpretation (DOI) definition and are configured through the
->  NetLabel user space communication layer.  Each DOI definition can have a
->  different security attribute mapping table.
->
-> - * Label Translation Cache
-> +Label Translation Cache
-> +=======================
->
->  The NetLabel system provides a framework for caching security attribute
->  mappings from the network labels to the corresponding LSM identifiers.  The
-> diff --git a/Documentation/netlabel/draft_ietf.rst b/Documentation/netlabel/draft_ietf.rst
-> new file mode 100644
-> index 000000000000..5ed39ab8234b
-> --- /dev/null
-> +++ b/Documentation/netlabel/draft_ietf.rst
-> @@ -0,0 +1,5 @@
-> +Draft IETF CIPSO IP Security
-> +----------------------------
-> +
-> + .. include:: draft-ietf-cipso-ipsecurity-01.txt
-> +    :literal:
-> diff --git a/Documentation/netlabel/index.rst b/Documentation/netlabel/index.rst
-> new file mode 100644
-> index 000000000000..47f1e0e5acd1
-> --- /dev/null
-> +++ b/Documentation/netlabel/index.rst
-> @@ -0,0 +1,21 @@
-> +:orphan:
-> +
-> +========
-> +NetLabel
-> +========
-> +
-> +.. toctree::
-> +    :maxdepth: 1
-> +
-> +    introduction
-> +    cipso_ipv4
-> +    lsm_interface
-> +
-> +    draft_ietf
-> +
-> +.. only::  subproject and html
-> +
-> +   Indices
-> +   =======
-> +
-> +   * :ref:`genindex`
-> diff --git a/Documentation/netlabel/introduction.txt b/Documentation/netlabel/introduction.rst
-> similarity index 91%
-> rename from Documentation/netlabel/introduction.txt
-> rename to Documentation/netlabel/introduction.rst
-> index 3caf77bcff0f..9333bbb0adc1 100644
-> --- a/Documentation/netlabel/introduction.txt
-> +++ b/Documentation/netlabel/introduction.rst
-> @@ -1,10 +1,13 @@
-> +=====================
->  NetLabel Introduction
-> -==============================================================================
-> +=====================
-> +
->  Paul Moore, paul.moore@hp.com
->
->  August 2, 2006
->
-> - * Overview
-> +Overview
-> +========
->
->  NetLabel is a mechanism which can be used by kernel security modules to attach
->  security attributes to outgoing network packets generated from user space
-> @@ -12,7 +15,8 @@ applications and read security attributes from incoming network packets.  It
->  is composed of three main components, the protocol engines, the communication
->  layer, and the kernel security module API.
->
-> - * Protocol Engines
-> +Protocol Engines
-> +================
->
->  The protocol engines are responsible for both applying and retrieving the
->  network packet's security attributes.  If any translation between the network
-> @@ -24,7 +28,8 @@ the NetLabel kernel security module API described below.
->  Detailed information about each NetLabel protocol engine can be found in this
->  directory.
->
-> - * Communication Layer
-> +Communication Layer
-> +===================
->
->  The communication layer exists to allow NetLabel configuration and monitoring
->  from user space.  The NetLabel communication layer uses a message based
-> @@ -33,7 +38,8 @@ formatting of these NetLabel messages as well as the Generic NETLINK family
->  names can be found in the 'net/netlabel/' directory as comments in the
->  header files as well as in 'include/net/netlabel.h'.
->
-> - * Security Module API
-> +Security Module API
-> +===================
->
->  The purpose of the NetLabel security module API is to provide a protocol
->  independent interface to the underlying NetLabel protocol engines.  In addition
-> diff --git a/Documentation/netlabel/lsm_interface.txt b/Documentation/netlabel/lsm_interface.rst
-> similarity index 88%
-> rename from Documentation/netlabel/lsm_interface.txt
-> rename to Documentation/netlabel/lsm_interface.rst
-> index 638c74f7de7f..026fc267f798 100644
-> --- a/Documentation/netlabel/lsm_interface.txt
-> +++ b/Documentation/netlabel/lsm_interface.rst
-> @@ -1,10 +1,13 @@
-> +========================================
->  NetLabel Linux Security Module Interface
-> -==============================================================================
-> +========================================
-> +
->  Paul Moore, paul.moore@hp.com
->
->  May 17, 2006
->
-> - * Overview
-> +Overview
-> +========
->
->  NetLabel is a mechanism which can set and retrieve security attributes from
->  network packets.  It is intended to be used by LSM developers who want to make
-> @@ -12,7 +15,8 @@ use of a common code base for several different packet labeling protocols.
->  The NetLabel security module API is defined in 'include/net/netlabel.h' but a
->  brief overview is given below.
->
-> - * NetLabel Security Attributes
-> +NetLabel Security Attributes
-> +============================
->
->  Since NetLabel supports multiple different packet labeling protocols and LSMs
->  it uses the concept of security attributes to refer to the packet's security
-> @@ -24,7 +28,8 @@ configuration.  It is up to the LSM developer to translate the NetLabel
->  security attributes into whatever security identifiers are in use for their
->  particular LSM.
->
-> - * NetLabel LSM Protocol Operations
-> +NetLabel LSM Protocol Operations
-> +================================
->
->  These are the functions which allow the LSM developer to manipulate the labels
->  on outgoing packets as well as read the labels on incoming packets.  Functions
-> @@ -32,7 +37,8 @@ exist to operate both on sockets as well as the sk_buffs directly.  These high
->  level functions are translated into low level protocol operations based on how
->  the administrator has configured the NetLabel subsystem.
->
-> - * NetLabel Label Mapping Cache Operations
-> +NetLabel Label Mapping Cache Operations
-> +=======================================
->
->  Depending on the exact configuration, translation between the network packet
->  label and the internal LSM security identifier can be time consuming.  The
-> --
-> 2.21.0
->
-
-
--- 
-paul moore
-www.paul-moore.com
