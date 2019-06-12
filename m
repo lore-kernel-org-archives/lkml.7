@@ -2,96 +2,133 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60173C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2011C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4282B20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7658720874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:45:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMp6AnWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730613AbfFLF2w (ORCPT
+        id S1730642AbfFLFp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 01:28:52 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:16276 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725681AbfFLF2w (ORCPT
+        Wed, 12 Jun 2019 01:45:29 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35542 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfFLFp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 01:28:52 -0400
-X-IronPort-AV: E=Sophos;i="5.63,363,1557180000"; 
-   d="scan'208";a="386977124"
-Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 07:28:48 +0200
-Date:   Wed, 12 Jun 2019 07:28:48 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Himanshu Jha <himanshujha199640@gmail.com>,
-        cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-Subject: Re: Coccinelle: api: add devm_platform_ioremap_resource script
-In-Reply-To: <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
-Message-ID: <alpine.DEB.2.21.1906120727300.2535@hadrien>
-References: <20190406061112.31620-1-himanshujha199640@gmail.com> <f09006a3-691c-382a-23b8-8e9ff5b4a5f1@web.de> <alpine.DEB.2.21.1906081925090.2543@hadrien> <7b4fe770-dadd-80ba-2ba4-0f2bc90984ef@web.de> <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 12 Jun 2019 01:45:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id m24so11971519ioo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 22:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MEsvB5fyfvbyP3599I1p81WWc20wTxokr+RDfF0sbmk=;
+        b=MMp6AnWDzd6KBcaZ05OJj4lxPNM4qSHKTHwrNpVrZ6ybQr2zPK2djNtQPFmTBjpyxx
+         3zMDD1ABcGN/hggjsojOwF5gDw0N019Go6xCg+jQbC7QiDEBY5KDb8L7w52J7wk6djL7
+         LevIYXcqmW6kumT1P6CdW1N6dlNJqSod/jQGwFyfrxO9KW3vg1O+AbvCxC9omfwpbJwx
+         Dnu/RNlSn4zHBIhPOU5lxN6jS8ksoqnzLrUm1/ofe2JegPxv5OcJh4+TmeVXvmsYE0mh
+         8fSnavXYZBZDpnWmzWzIOiaOrHny6a71h2HBLD95a417HOxtpPywxe2+A16PcESVS/06
+         pheg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MEsvB5fyfvbyP3599I1p81WWc20wTxokr+RDfF0sbmk=;
+        b=lWK2GoOsbXV0A7SHJKNemDQJGTSxAGC/dq4UIMT32/uey/ZtKjl+qdvAx1YF9PVS3X
+         UkIj7qIejWfIgQiY2ouSILgWCt1WLtUeJ+UjJpwCNKZhZyUqlOpC9EfAyP73MLAlJBbA
+         s9r3JfMOyiWchi/rxEjbhKvcmWexoeDLOM28S6ERVzY4mFgthj3Suibrw1ChPIXbYiQd
+         0tDlFIdfu1qGkrdY7xOzjsJUha2x9rqHbdt1NLuiCNZSVbikk+GavhE4iybmG0g2hKyq
+         xyQ71OnikGS4MucWVhwhCX43yjJQuq+kHt1UiEHV0LiV/2oiYsiTYw3SGd3kZiR07LV2
+         Z+Gw==
+X-Gm-Message-State: APjAAAVqW4hP5CyEw5KRl80TrPe+934Qrhj/Wudkbt0gU1DVY2Am6zHJ
+        JTNApF7NNiyuzoXgnUrPjJyeWn+WNW/bHuFpIfM=
+X-Google-Smtp-Source: APXvYqyNZJk2JtmF9+zZry0oIFRzIeDg8CaNRuF7MiywyUo6BfIfixNhhb9KAbPbdN9/svG6rZSoslFGyGzak7gAUZE=
+X-Received: by 2002:a5e:c70c:: with SMTP id f12mr31599418iop.293.1560318328476;
+ Tue, 11 Jun 2019 22:45:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-133965833-1560317328=:2535"
+References: <20190611092144.11194-1-oded.gabbay@gmail.com> <20190611095857.GB24058@kroah.com>
+ <20190611151753.GA11404@infradead.org> <20190611152655.GA3972@kroah.com>
+ <CAFCwf13A73AxKzaa7Dk3tU-1NDgTFs4+xCO2os7SuSyUHZ9Z3Q@mail.gmail.com>
+ <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com> <ca81ca5d56a3a12db5a92f5cf9745763a86572e8.camel@kernel.crashing.org>
+In-Reply-To: <ca81ca5d56a3a12db5a92f5cf9745763a86572e8.camel@kernel.crashing.org>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 12 Jun 2019 15:45:17 +1000
+Message-ID: <CAOSf1CFcYnhKf0EJkm+E5uHg4e=QYGe+vAUz_TjX-v6UsmNtFA@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>, linuxppc-dev@ozlabs.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Russell Currey <ruscur@au1.ibm.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-133965833-1560317328=:2535
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-
-
-On Tue, 11 Jun 2019, Enrico Weigelt, metux IT consult wrote:
-
-> On 09.06.19 10:55, Markus Elfring wrote:
+On Wed, Jun 12, 2019 at 8:54 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
 >
-> <snip>
->
-> >> But there is not usually any interesting formatting on the left side of an
-> >> assignment (ie typically no newlines or comments).
+> On Tue, 2019-06-11 at 20:22 +0300, Oded Gabbay wrote:
 > >
-> > Is there any need to trigger additional source code reformatting?
+> > > So, to summarize:
+> > > If I call pci_set_dma_mask with 48, then it fails on POWER9. However,
+> > > in runtime, I don't know if its POWER9 or not, so upon failure I will
+> > > call it again with 32, which makes our device pretty much unusable.
+> > > If I call pci_set_dma_mask with 64, and do the dedicated configuration
+> > > in Goya's PCIe controller, then it won't work on x86-64, because bit
+> > > 59 will be set and the host won't like it (I checked it). In addition,
+> > > I might get addresses above 50 bits, which my device can't generate.
+> > >
+> > > I hope this makes things more clear. Now, please explain to me how I
+> > > can call pci_set_dma_mask without any regard to whether I run on
+> > > x86-64 or POWER9, considering what I wrote above ?
+> > >
+> > > Thanks,
+> > > Oded
 > >
-> >> I can see no purpose to factorizing the right parenthesis.
-> >
-> > These characters at the end of such a function call should be kept unchanged.
+> > Adding ppc mailing list.
 >
-> Agreed. OTOH, we all know that spatch results still need to be carefully
-> checked. I suspect trying to teach it all the formatting rules of the
-> kernel isn't an easy task.
+> You can't. Your device is broken. Devices that don't support DMAing to
+> the full 64-bit deserve to be added to the trash pile.
 >
-> > The flag “IORESOURCE_MEM” is passed as the second parameter for the call
-> > of the function “platform_get_resource” in this refactoring.
+> As a result, getting it to work will require hacks. Some GPUs have
+> similar issues and require similar hacks, it's unfortunate.
 >
-> In that particular case, we maybe should consider separate inline
-> helpers instead of passing this is a parameter.
->
-> Maybe it would even be more efficient to have completely separate
-> versions of devm_platform_ioremap_resource(), so we don't even have
-> to pass that parameter on stack.
+> Added a couple of guys on CC who might be able to help get those hacks
+> right.
 
-I'm lost as to why this discussion suddenly appeared.  What problem is
-actually being discussed?
+> It's still very fishy .. the idea is to detect the case where setting a
+> 64-bit mask will give your system memory mapped at a fixed high address
+> (1 << 59 in our case) and program that in your chip in the "Fixed high
+> bits" register that you seem to have (also make sure it doesn't affect
+> MSIs or it will break them).
 
-julia
---8323329-133965833-1560317328=:2535--
+Judging from the patch (https://lkml.org/lkml/2019/6/11/59) this is
+what they're doing.
+
+Also, are you sure about the MSI thing? The IODA3 spec says the only
+important bits for a 64bit MSI are bits 61:60 (to hit the window) and
+the lower bits that determine what IVE to use. Everything in between
+is ignored so ORing in bit 59 shouldn't break anything.
+
+> This will only work as long as all of the system memory can be
+> addressed at an offset from that fixed address that itself fits your
+> device addressing capabilities (50 bits in this case). It may or may
+> not be the case but there's no way to check since the DMA mask logic
+> won't really apply.
+>
+> You might want to consider fixing your HW in the next iteration... This
+> is going to bite you when x86 increases the max physical memory for
+> example, or on other architectures.
+
+Yes, do this. The easiest way to avoid this sort of wierd hack is to
+just design the PCIe interface to the spec in the first place.
