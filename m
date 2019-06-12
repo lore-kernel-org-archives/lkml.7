@@ -2,159 +2,94 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068A9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB189C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66D82053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGOyUJU0"
+	by mail.kernel.org (Postfix) with ESMTP id 7FB8D2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560446172;
+	bh=6/4G9x4zsQuQK8+ToSt6QVbv5k7TYmTi2yAsofevHsY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YRx9vDr2T/JDhcExEr4PGfilEoppJrPxqCQD1kr5GoRGrVJTF+BzDs9qX69gmwazU
+	 ZaxlxLLNUzZ2WPTw+abViHb0lPntC33o2gCux24jEBwPLwX65h7UZ0Hi+b/rapOsS3
+	 Wa2hT2KkFxlpA4gzAYvCaibOS3i0jFfbSbhZIQuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393714AbfFMRQH (ORCPT
+        id S2393722AbfFMRQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:16:07 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42310 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728720AbfFLVqk (ORCPT
+        Thu, 13 Jun 2019 13:16:11 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:47002 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728698AbfFLVon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:46:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l19so7042793pgh.9;
-        Wed, 12 Jun 2019 14:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MWVX/SDKQ5hCaU+PRwtbuc+mCAPdzcR+yRwlPuU4g8I=;
-        b=AGOyUJU0VcKoNIpBvixuxYn4aHrJUXO83cuRwHMEQFBLRJf9DqUjHmABD9e3+IxLB0
-         tDwiN+pENIXNk/XuKiiAEuWjTMjUyyL0ARNfaaAZRL7o1t0JruNjEQQbr4doyWOT58nO
-         cc+Et+RdXnNPfSlIZ4z8EX1pqCCs6ZWZ0puW7ocRCNo+KGEPT6a7DCLDuz4um3NCDDbC
-         gr6F3a+Y4qW/+Ats/18xShNwEI+aA1uwtzZltVJ8zHVofr+T47aMDAehK7BHmECPsvNe
-         dJ1ABRyGAEh6XmfYB9RrB0MeuRBKKY4ktWoC8gvlRJkZXk73NEKX9BZWH/mtlu5RPC1Q
-         uPDw==
+        Wed, 12 Jun 2019 17:44:43 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z23so16924778ote.13;
+        Wed, 12 Jun 2019 14:44:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MWVX/SDKQ5hCaU+PRwtbuc+mCAPdzcR+yRwlPuU4g8I=;
-        b=jIeQGXJUYR+IAoJhdHaLMu90z/JOyBpCnDtHB4JoiG+ZaUT0UKXqNYt87dwbYhQVy2
-         jWN+UqtO8XWb9DpPR6wwYuXL2/FfLfLkqZa0dVesXnKZCgts45VddnowxeDPGDMSIAZH
-         8Y6SWt4Xn/xkIZkB14+VbEkCSl6e0xAV+8wGyrnt1KLKCmQ46S85EKPOUNP4bT3HGQUE
-         lVOSZqichWxdO5bZ/LOSFi64xM3hz0gHnIW5HtWEENvCUf1A8sfQi0Eh936Pf/PZ5nC9
-         CgP9uf0lYBJmIKQTT0Fp08Br6/AKuOiZFRHMiFiAbfDK5rSCUzRGaFpfe+R5saV4LQfK
-         N7Bw==
-X-Gm-Message-State: APjAAAUQl3XVosOW8f2vE1aIb2eSCa9waG78QKzuQVvjspklRU0wh7eX
-        ML5cZk+rjcFD6jjoy3xjJLLdqxJJ
-X-Google-Smtp-Source: APXvYqyHfd7kIttaQoM9QuG1xNjOSAdXgcMOFu9Mt+x67Qtt2yv0ktA5jQMTfmOms5FxNyie6J7V8A==
-X-Received: by 2002:a63:c09:: with SMTP id b9mr26718386pgl.241.1560375999503;
-        Wed, 12 Jun 2019 14:46:39 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id g9sm384994pgs.78.2019.06.12.14.46.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 14:46:38 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 14:46:36 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     benjamin.tissoires@redhat.com, jikos@kernel.org,
-        hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-Message-ID: <20190612214636.GA40779@dtor-ws>
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
- <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6/4G9x4zsQuQK8+ToSt6QVbv5k7TYmTi2yAsofevHsY=;
+        b=YpKmT0+C2griVMmGw+n8I8gmxAGOjAW393yFX50SzCt8ExJDah1r2ImJwJOnIyxpHH
+         z/enpeUDMhm3A1q80aj1qAJ+A1zWd0Uj3ZRQ2ltJz6LWbgAW1H9VaeRmcpq2Y0RdJ9nt
+         xNyQTrv+ICjrVYBkrAdGvLuvRfeEowzaMV1EcNyrGSnvUyId+g+S2PUIf7JSMlWZnDur
+         YXKN6b1gD6vceR//bU9kH3tmJLPeOTewGz4q8J+LdwMSHyoiqrgx4Uoguwt0JyCvKW2b
+         ZriYTfGZNiCjft+toKKp7HkSd7IKKDEPrK8Uo8wGGuBZmU7LhTm7mFr3wKnGSUvV30Ik
+         OQRA==
+X-Gm-Message-State: APjAAAWMxxdwGKVK6aCOc8sa8MFXbfr3IPYTvFMA32cqOavCZ4yGB3qd
+        VEejyqgoHm77v6FlCoCSKFFCoHnT/vyBoUnde/8=
+X-Google-Smtp-Source: APXvYqxN1bHJmkJ+vh40QbfdXCtjCs4vHEb7WPek5QJRj8zdUZWlSjKRNzigkiS5uP3LHGJ4wWz6y073BK1+jYoNW44=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr18511958oto.118.1560375882780;
+ Wed, 12 Jun 2019 14:44:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190609111732.GA2885@amd> <007701d520c7$c397bda0$4ac738e0$@net>
+In-Reply-To: <007701d520c7$c397bda0$4ac738e0$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 12 Jun 2019 23:44:30 +0200
+Message-ID: <CAJZ5v0j2pb2WxSA+S44Mr-6bpOx-P9A_T2-sDG3CiWSqLMg3sA@mail.gmail.com>
+Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
+ speed, thermal related?
+To:     Doug Smythies <dsmythies@telus.net>, Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
-> There needs to be coordination between hid-quirks and the elan_i2c driver
-> about which devices are handled by what drivers.  Currently, both use
-> whitelists, which results in valid devices being unhandled by default,
-> when they should not be rejected by hid-quirks.  This is quickly becoming
-> an issue.
-> 
-> Since elan_i2c has a maintained whitelist of what devices it will handle,
-> which is now in a header file that hid-quirks can access, use that to
-> implement a blacklist in hid-quirks so that only the devices that need to
-> be handled by elan_i2c get rejected by hid-quirks, and everything else is
-> handled by default.
-> 
-> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
->  1 file changed, 16 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> index e5ca6fe2ca57..bd81bb090222 100644
-> --- a/drivers/hid/hid-quirks.c
-> +++ b/drivers/hid/hid-quirks.c
-> @@ -16,6 +16,7 @@
->  #include <linux/export.h>
->  #include <linux/slab.h>
->  #include <linux/mutex.h>
-> +#include <linux/input/elan-i2c-ids.h>
->  
->  #include "hid-ids.h"
->  
-> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->  
->  bool hid_ignore(struct hid_device *hdev)
->  {
-> +	int i;
-> +
->  	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
->  		return false;
->  	if (hdev->quirks & HID_QUIRK_IGNORE)
-> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
->  		break;
->  	case USB_VENDOR_ID_ELAN:
->  		/*
-> -		 * Many Elan devices have a product id of 0x0401 and are handled
-> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> -		 * is not (and cannot be) handled by that driver ->
-> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> +		 * Blacklist of everything that gets handled by the elan_i2c
-> +		 * input driver.  This avoids disabling valid touchpads and
-> +		 * other ELAN devices.
->  		 */
-> -		if (hdev->product == 0x0401 &&
-> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
-> -			return true;
-> -		/* Same with product id 0x0400 */
-> -		if (hdev->product == 0x0400 &&
-> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
-> -			return true;
-> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
-> +			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
-> +				if (!strncmp(hdev->name, elan_acpi_id[i].id,
-> +					     strlen(elan_acpi_id[i].id)))
-> +					return true;
-> +			for (i = 0; strlen(elan_of_match[i].name); ++i)
-> +				if (!strncmp(hdev->name, elan_of_match[i].name,
-> +					     strlen(elan_of_match[i].name)))
-> +					return true;
+On Wed, Jun 12, 2019 at 4:45 AM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> Hi,
+>
+> So, currently there seems to be 3 issues in this thread
+> (and I am guessing a little, without definitive data):
+>
+> 1.) On your system Kernel 5.4-rc2 (or 4) defaults to the intel_pstate CPU frequency
+> scaling driver and the powersave governor, but kernel 4.6 defaults to the
+> acpi-cpufreq CPU frequency scaling driver and the ondemand governor.
 
-Do we really need to blacklist the OF case here? I thought that in ACPI
-case we have clashes as HID gets matched by elan_i2c and CID is matched
-by i2c-hid, but I do not believe we'll run into the same situation on OF
-systems.
+Which means that intel_pstate works in the active mode by default and
+so it uses its internal governor.
 
-Thanks.
+That governor is more performance-oriented than ondemand and it very
+well may cause more power to be allocated for the processor - at the
+expense of the GPU.
 
--- 
-Dmitry
+The lower-than-expected frame rate may result from that, in principle.
+
+One way to mitigate that might be to use intel_pstate in the passive
+mode (pass intel_pstate=passive to the kernel in the command line)
+along with either ondemand or schedutil as the governor.
