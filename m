@@ -2,169 +2,126 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62338C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05F4C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBB720B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DAE20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ckbgKyCO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NGU+gcXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732516AbfFLOpV (ORCPT
+        id S1732523AbfFLOpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:45:21 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49284 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728679AbfFLOpS (ORCPT
+        Wed, 12 Jun 2019 10:45:47 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36680 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728707AbfFLOpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:45:18 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 326599B1;
-        Wed, 12 Jun 2019 16:45:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560350716;
-        bh=SUQ+g8BoQCUWiMccKA9g5COZBgRnGBPawulg/lxaGXk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ckbgKyCO98q5Digo+fghazWKwj4e1yeYWcdLYp4Swf+5zWeIBhr69UTh2dMma72by
-         5BTJqrjlIzrc3ouQsPWTu26SXKfaWL2Ze/wY82M5kW6NhtJYQHupbDaZKMbs/DJ5mo
-         /anUxCBB+Xpzn6kYdrnCtADLXhToGv1J8ek9gSp8=
-Date:   Wed, 12 Jun 2019 17:45:00 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] media: vsp1: drm: Remove vsp1_du_setup_lif()
-Message-ID: <20190612144500.GP5035@pendragon.ideasonboard.com>
-References: <20190517223143.26251-1-kieran.bingham+renesas@ideasonboard.com>
- <20190517223143.26251-4-kieran.bingham+renesas@ideasonboard.com>
+        Wed, 12 Jun 2019 10:45:46 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5CEjhlO123299;
+        Wed, 12 Jun 2019 09:45:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560350743;
+        bh=xyAWNTrYH0QoNd9ukAbvyzeuxkpCV6ALotpkbQS0afA=;
+        h=From:To:CC:Subject:Date;
+        b=NGU+gcXHrfLDdBMjSjJW29qFwrVKeVVvnTBrDiINwHuZzOcnJWCMSJYCkR+HIGIbu
+         a+9WF7E0LU/XEfGyUp5yCtIU1h8WO2alp8x7KMsaVKeHYeC5MdJ5GNC52CgmuhR2Ft
+         Wpd4TGQqjVBaeIVBoyjY0kE8ACWUvDUTmWeXUEQE=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5CEjhJS079595
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Jun 2019 09:45:43 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 12
+ Jun 2019 09:45:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 12 Jun 2019 09:45:43 -0500
+Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5CEjf5P083688;
+        Wed, 12 Jun 2019 09:45:41 -0500
+From:   Keerthy <j-keerthy@ti.com>
+To:     <lee.jones@linaro.org>, <broonie@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <t-kristo@ti.com>, <j-keerthy@ti.com>
+Subject: [RESEND PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator support
+Date:   Wed, 12 Jun 2019 20:16:20 +0530
+Message-ID: <20190612144620.28331-1-j-keerthy@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190517223143.26251-4-kieran.bingham+renesas@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+The LP8756x family has a single output 4-phase regulator
+configuration. Add support for the same. The control
+lies in the master buck which is buck0 for 4-phase
+configuration. Enable/disable/voltage set happen via
+buck0 registers.
 
-Thank you for the patch.
+Data Sheet: https://www.ti.com/lit/ds/symlink/lp87561-q1.pdf
 
-On Fri, May 17, 2019 at 11:31:43PM +0100, Kieran Bingham wrote:
-> The vsp1_du_setup_lif() function is deprecated, and the users have been
-> removed. Remove the implementation and the associated configuration
-> structure.
-> 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+---
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+patches 1/3 2/3 are already applied to linux-next.
 
-> ---
->  drivers/media/platform/vsp1/vsp1_drm.c | 47 --------------------------
->  include/media/vsp1.h                   | 22 ------------
->  2 files changed, 69 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vsp1/vsp1_drm.c b/drivers/media/platform/vsp1/vsp1_drm.c
-> index ce5c0780680f..12f76344bdec 100644
-> --- a/drivers/media/platform/vsp1/vsp1_drm.c
-> +++ b/drivers/media/platform/vsp1/vsp1_drm.c
-> @@ -817,53 +817,6 @@ int vsp1_du_atomic_disable(struct device *dev, unsigned int pipe_index)
->  }
->  EXPORT_SYMBOL_GPL(vsp1_du_atomic_disable);
->  
-> -/**
-> - * vsp1_du_setup_lif - Setup the output part of the VSP pipeline
-> - * @dev: the VSP device
-> - * @pipe_index: the DRM pipeline index
-> - * @cfg: the LIF configuration
-> - *
-> - * Configure the output part of VSP DRM pipeline for the given frame @cfg.width
-> - * and @cfg.height. This sets up formats on the BRx source pad, the WPF sink and
-> - * source pads, and the LIF sink pad.
-> - *
-> - * The @pipe_index argument selects which DRM pipeline to setup. The number of
-> - * available pipelines depend on the VSP instance.
-> - *
-> - * As the media bus code on the blend unit source pad is conditioned by the
-> - * configuration of its sink 0 pad, we also set up the formats on all blend unit
-> - * sinks, even if the configuration will be overwritten later by
-> - * vsp1_du_setup_rpf(). This ensures that the blend unit configuration is set to
-> - * a well defined state.
-> - *
-> - * Return 0 on success or a negative error code on failure.
-> - */
-> -int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
-> -		      const struct vsp1_du_lif_config *cfg)
-> -{
-> -	int ret;
-> -
-> -	struct vsp1_du_modeset_config modes = {
-> -		.width = cfg->width,
-> -		.height = cfg->height,
-> -		.interlaced = cfg->interlaced,
-> -	};
-> -	struct vsp1_du_enable_config enable = {
-> -		.callback = cfg->callback,
-> -		.callback_data = cfg->callback_data,
-> -	};
-> -
-> -	if (!cfg)
-> -		return vsp1_du_atomic_disable(dev, pipe_index);
-> -
-> -	ret = vsp1_du_atomic_modeset(dev, pipe_index, &modes);
-> -	if (ret)
-> -		return ret;
-> -
-> -	return vsp1_du_atomic_enable(dev, pipe_index, &enable);
-> -}
-> -EXPORT_SYMBOL_GPL(vsp1_du_setup_lif);
-> -
->  /**
->   * vsp1_du_atomic_begin - Prepare for an atomic update
->   * @dev: the VSP device
-> diff --git a/include/media/vsp1.h b/include/media/vsp1.h
-> index 13f5a1c4d45a..bc0a26d33d9a 100644
-> --- a/include/media/vsp1.h
-> +++ b/include/media/vsp1.h
-> @@ -20,28 +20,6 @@ int vsp1_du_init(struct device *dev);
->  #define VSP1_DU_STATUS_COMPLETE		BIT(0)
->  #define VSP1_DU_STATUS_WRITEBACK	BIT(1)
->  
-> -/**
-> - * struct vsp1_du_lif_config - VSP LIF configuration - Deprecated
-> - * @width: output frame width
-> - * @height: output frame height
-> - * @interlaced: true for interlaced pipelines
-> - * @callback: frame completion callback function (optional). When a callback
-> - *	      is provided, the VSP driver guarantees that it will be called once
-> - *	      and only once for each vsp1_du_atomic_flush() call.
-> - * @callback_data: data to be passed to the frame completion callback
-> - */
-> -struct vsp1_du_lif_config {
-> -	unsigned int width;
-> -	unsigned int height;
-> -	bool interlaced;
-> -
-> -	void (*callback)(void *data, unsigned int status, u32 crc);
-> -	void *callback_data;
-> -};
-> -
-> -int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
-> -		      const struct vsp1_du_lif_config *cfg);
-> -
->  /**
->   * struct vsp1_du_modeset_config - VSP LIF Mode configuration
->   * @width: output frame width
+Changes in v2:
 
+  * Changed if/else block to switch statement.
+
+ drivers/regulator/lp87565-regulator.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
+index 81eb4b890c0c..af00d1ffcf33 100644
+--- a/drivers/regulator/lp87565-regulator.c
++++ b/drivers/regulator/lp87565-regulator.c
+@@ -153,6 +153,12 @@ static const struct lp87565_regulator regulators[] = {
+ 			  LP87565_REG_BUCK2_CTRL_1,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK2_CTRL_2),
++	LP87565_REGULATOR("BUCK3210", LP87565_BUCK_3210, "buck3210",
++			  lp87565_buck_ops, 256, LP87565_REG_BUCK0_VOUT,
++			  LP87565_BUCK_VSET, LP87565_REG_BUCK0_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2, 3230,
++			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
+ };
+ 
+ static int lp87565_regulator_probe(struct platform_device *pdev)
+@@ -169,9 +175,18 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
+ 	config.driver_data = lp87565;
+ 	config.regmap = lp87565->regmap;
+ 
+-	if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87565_Q1) {
++	switch (lp87565->dev_type) {
++	case LP87565_DEVICE_TYPE_LP87565_Q1:
+ 		min_idx = LP87565_BUCK_10;
+ 		max_idx = LP87565_BUCK_23;
++		break;
++	case LP87565_DEVICE_TYPE_LP87561_Q1:
++		min_idx = LP87565_BUCK_3210;
++		max_idx = LP87565_BUCK_3210;
++	default:
++		dev_err(lp87565->dev, "Invalid lp config %d\n",
++			lp87565->dev_type);
++		return -EINVAL;
+ 	}
+ 
+ 	for (i = min_idx; i <= max_idx; i++) {
 -- 
-Regards,
+2.17.1
 
-Laurent Pinchart
