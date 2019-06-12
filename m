@@ -2,68 +2,115 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33421C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5153C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1446D207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB78207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBI9mrKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437621AbfFLJj6 (ORCPT
+        id S2437631AbfFLJkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:39:58 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35105 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437412AbfFLJj5 (ORCPT
+        Wed, 12 Jun 2019 05:40:15 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40934 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfFLJkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:39:57 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d23so17847569qto.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:39:57 -0700 (PDT)
+        Wed, 12 Jun 2019 05:40:14 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w196so11195626oie.7;
+        Wed, 12 Jun 2019 02:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FVoAL/mxIofQtM8+Ijg+ZIeTSoEU3dKXPoThV0hSLcA=;
+        b=jBI9mrKAUV2KSupGQPeN9PeAsaWi5QWlbK9xn9VFnhlMWui0B+zrXa9VMvPZZi1u8G
+         ABcXBOM/Fnmj8rqtjih6du5B7f7TR9+EiJnHnjYiUDnOLfzNqYA7SsxEqJYM9LGtxq3Y
+         n4M3ERAfKZ157LEl2SWirEMhaJ4IWORsk607AwSuhpLcyAgjpDDhOyvCUXbj84e+MEZw
+         3xyMTXbuM1rJgzWVSU4g1x5lwZ9CytCV9JEaKMNjJb7hJ3+DMytLWh/8lhITk9Kr9eqJ
+         6paymmbbSpp1C77hYAu14GFyMUzYdXjKGdI/u3gZq2esoWfK9YRmv3HpGRSIVptnzVj4
+         kvIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gJ5uEcQdLGxPj4sgIEL2qy1S+Og+9M7F0hxXgED9kTI=;
-        b=tkLFTLvbcNuppneAEvt+uPb+ap05G02rEGi1Wmo8GzEwQ0kPXWxejd5iDYhD4wtI8b
-         q+qcVh/Q1JvUIwvNArGpoRx6xU3l81Jh1hW7tPBx8I90KTdQaP11AmM+fO9oFS6Mc8dg
-         VgCcXJUZz/iq2Kf+1hsfFVHldM4gpv7cO1eo3H4yTXY16cbfuFDLTiTRNf1kEm6i362b
-         XRy7zMn/QpQh2GVKCcye4Vn/CTHea1nDu8HDo7BVfaC8BkSo2WuBwIG6iYlETceZRjBW
-         PAmzu6nTJ0yNuk/ti18r/BFKKpxwmkhMrtiJ+EYG2YkM+Hzt5klPrtiXSzdR71MHTeyH
-         y4RA==
-X-Gm-Message-State: APjAAAW7FQLhWtpNzWaxYCImiVCm1qqGx+2NgTC1hR/glhXcLJy0j8By
-        HLS1dhdtKCo8/Nr57RPd+AQLxm5qLkUwYqUPsO2H2/v8Yd8=
-X-Google-Smtp-Source: APXvYqzElkDKd2kzLm7SbVsppgYiLj1v0Cdg14m0I4m//egnblE/rwsl4lv34rLBpVvjWnt03LJkvFn7Lq6HE34uroI=
-X-Received: by 2002:aed:33a4:: with SMTP id v33mr35388568qtd.18.1560332396827;
- Wed, 12 Jun 2019 02:39:56 -0700 (PDT)
+        bh=FVoAL/mxIofQtM8+Ijg+ZIeTSoEU3dKXPoThV0hSLcA=;
+        b=ihGCiKBIkdI5W27XuSjW4MUqRqrWj86HWZqiLXfuAZDjSVMso+btMz+4KS1wCamjWz
+         Crb/1iJye+UrbA5egrLnDDRt0cahzXFNreeyPky9o8qu0xRnMVofxoHp4gaMcglYKunW
+         RuHUaY45RYKaasouP+ZTslc35f3i09Usjipur9RP70YDq1pF3pmVeOftjeBpzG4+DCJb
+         /Ujj0Xm5mDtbJAPQOfX+FDYhV5lAAqIy1ju+Jz2xboV2p0whaynhRLr5OoEe+3oRp2NR
+         Hwnj8YDVGogui+WbjGa4aAfGNe5YsFUQzRPeiswMJ6ZD//+kyVsa47BXf6ygU46wLOkK
+         LQuw==
+X-Gm-Message-State: APjAAAUL78gwVEV55FTNOTAdLeqvOaSqWOHIJEDdCasnqqOAW/oWCBks
+        2u/DFkKqxNteIjUvONj3GGK3efW75q1rINKUBquqkA==
+X-Google-Smtp-Source: APXvYqxrZ8xGXX06Vng88mRhUQ5foYHWXyowrcR5e4GnfKyCC7eZmipk8UwTkRegfTzEUFajgnulQAkCaiqR1kP+bFU=
+X-Received: by 2002:aca:544b:: with SMTP id i72mr18813897oib.174.1560332413690;
+ Wed, 12 Jun 2019 02:40:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190611184107.GA1873@kroah.com>
-In-Reply-To: <20190611184107.GA1873@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 12 Jun 2019 11:39:40 +0200
-Message-ID: <CAK8P3a3eQWeqVu_2VJ9=4Z3Fzp+B_zW1Zgcw_YFzC3qD05ygGw@mail.gmail.com>
-Subject: Re: [PATCH] genwq: no need to check return value of debugfs_create functions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Frank Haverkamp <haver@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1560332160-17050-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1560332160-17050-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 12 Jun 2019 17:40:57 +0800
+Message-ID: <CANRm+CxR_jrB=tMpmM9OMEJ-pm8gdfMNN7UsDdQ+YrG_akGdAg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] KVM: LAPIC: Optimize timer latency further
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 8:41 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Sorry, send out the wrong patchset, please ignore.
+On Wed, 12 Jun 2019 at 17:36, Wanpeng Li <kernellwp@gmail.com> wrote:
 >
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
+> Advance lapic timer tries to hidden the hypervisor overhead between the
+> host emulated timer fires and the guest awares the timer is fired. However,
+> it just hidden the time between apic_timer_fn/handle_preemption_timer ->
+> wait_lapic_expire, instead of the real position of vmentry which is
+> mentioned in the orignial commit d0659d946be0 ("KVM: x86: add option to
+> advance tscdeadline hrtimer expiration"). There is 700+ cpu cycles between
+> the end of wait_lapic_expire and before world switch on my haswell desktop.
 >
-> Cc: Frank Haverkamp <haver@linux.ibm.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> This patchset tries to narrow the last gap(wait_lapic_expire -> world switch),
+> it takes the real overhead time between apic_timer_fn/handle_preemption_timer
+> and before world switch into consideration when adaptively tuning timer
+> advancement. The patchset can reduce 40% latency (~1600+ cycles to ~1000+
+> cycles on a haswell desktop) for kvm-unit-tests/tscdeadline_latency when
+> testing busy waits.
+>
+> v2 -> v3:
+>  * expose 'kvm_timer.timer_advance_ns' to userspace
+>  * move the tracepoint below guest_exit_irqoff()
+>  * move wait_lapic_expire() before flushing the L1
+>
+> v1 -> v2:
+>  * fix indent in patch 1/4
+>  * remove the wait_lapic_expire() tracepoint and expose by debugfs
+>  * move the call to wait_lapic_expire() into vmx.c and svm.c
+>
+> Wanpeng Li (5):
+>   KVM: LAPIC: Extract adaptive tune timer advancement logic
+>   KVM: LAPIC: Fix lapic_timer_advance_ns parameter overflow
+>   KVM: LAPIC: Expose per-vCPU timer_advance_ns to userspace
+>   KVM: LAPIC: Delay trace advance expire delta
+>   KVM: LAPIC: Optimize timer latency further
+>
+>  arch/x86/kvm/debugfs.c | 16 +++++++++++++
+>  arch/x86/kvm/lapic.c   | 62 +++++++++++++++++++++++++++++---------------------
+>  arch/x86/kvm/lapic.h   |  3 ++-
+>  arch/x86/kvm/svm.c     |  4 ++++
+>  arch/x86/kvm/vmx/vmx.c |  4 ++++
+>  arch/x86/kvm/x86.c     |  7 +++---
+>  6 files changed, 65 insertions(+), 31 deletions(-)
+>
+> --
+> 2.7.4
+>
