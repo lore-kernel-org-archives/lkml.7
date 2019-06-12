@@ -2,94 +2,174 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5642EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E31C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C14206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF185206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IFX91dVs"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XgzGW5t5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732252AbfFLOoi (ORCPT
+        id S1732490AbfFLOou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:44:38 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43694 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732022AbfFLOoi (ORCPT
+        Wed, 12 Jun 2019 10:44:50 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49262 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732013AbfFLOot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:44:38 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f25so9039204pgv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:to:from:cc:subject:user-agent:date;
-        bh=bn95yZEQkFdm8IUCbmAacr/m8l86WxEth291aVhdSlM=;
-        b=IFX91dVs/IB2uQK3729zPrJd1Knz4V7aZ3QpOygS7GTDRBVhMj7KbxcyEvtjveJJR1
-         FXZzSv8Kt22j9edDD5+tQeVuKivqBejTI61b0MqQYaxytVcPL75KotXQ6tlJj2UeUYG6
-         wmvi++xeRnLF6l4+9zP3EmyJCLQ4PU2nvxyJw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:to:from:cc:subject
-         :user-agent:date;
-        bh=bn95yZEQkFdm8IUCbmAacr/m8l86WxEth291aVhdSlM=;
-        b=JqHr5K6B+C9OuPiUvm8KKCX7QnTZoBf1Evm2XZbIf6uxfjG++XNOUVOaaaQxz4SSBX
-         9MrxQnnY+BJW6q4LBJAk0oEZmvKx9lxoqBBsCaj3GN22/rh23Q7hmmsxcrXY15pewuaI
-         YUwXJDr5rxAleh53ur/qetfVnjqBXnC+QjePXzUJvXs1QpdH2NaYAUeXUrxpadZAUOKO
-         nNcmCBrcLuD69o/4xOW1m8dcQQrTe3H+l5JYE3TZYw0S4908oud8YlMX7wlxcSMjq0n8
-         Gom39qKmM/2kJytLZcFm4hgsqAEdVsfZ1kSPCNayHoLztdYOjKx9n+YXCMZDWL7tWMQ/
-         t7KA==
-X-Gm-Message-State: APjAAAV/Dejojw+w/Kj0mdCoIU3/0GpEDxuBLMQpElEk8KkZjRMg+NzY
-        DgHlvqgnhO/MKZaFmaozDLAif1HxRMI=
-X-Google-Smtp-Source: APXvYqw1pRLfvl+MD405r1Flh6E/r+OXWy06xK5xfjFjE5fHv/YEJIPlfXeLmPTH94Oncwk11xcypA==
-X-Received: by 2002:a62:5487:: with SMTP id i129mr82578482pfb.68.1560350677533;
-        Wed, 12 Jun 2019 07:44:37 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c133sm21450858pfb.111.2019.06.12.07.44.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 07:44:37 -0700 (PDT)
-Message-ID: <5d010fd5.1c69fb81.e7b77.87ae@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 12 Jun 2019 10:44:49 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9AA689B1;
+        Wed, 12 Jun 2019 16:44:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1560350687;
+        bh=vMR9A4FDBoZw7TYBoNxkxyC3Dk/Go+uEMd3khgtzWqE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XgzGW5t5NBsJJ/rOPqsxE1JJX8Vd4Am863+9wB/kricrA7DOoikdJm+yG7b1u6C6v
+         0T+vmOZQHATyliUqjepUAYCe+w0hUb0l6dvyhAgeLk3MIpNHWYCaypUI/srpuxuqQn
+         gKCsn5AZRk/7rPFaaQFH0YTDipPhDqMkd0DOCLPY=
+Date:   Wed, 12 Jun 2019 17:44:32 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] drm: rcar-du: Convert to the new VSP atomic API
+Message-ID: <20190612144432.GO5035@pendragon.ideasonboard.com>
+References: <20190517223143.26251-1-kieran.bingham+renesas@ideasonboard.com>
+ <20190517223143.26251-3-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
-References: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH next] of/fdt: Fix defined but not used compiler warning
-User-Agent: alot/0.8.1
-Date:   Wed, 12 Jun 2019 07:44:36 -0700
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190517223143.26251-3-kieran.bingham+renesas@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kefeng Wang (2019-06-11 18:00:11)
-> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler warning,
->=20
-> drivers/of/fdt.c:129:19: warning: =E2=80=98of_fdt_match=E2=80=99 defined =
-but not used [-Wunused-function]
->  static int __init of_fdt_match(const void *blob, unsigned long node,
->=20
-> Move of_fdt_match() and of_fdt_is_compatible() under CONFIG_OF_EARLY_FLAT=
-TREE
-> to fix it.
->=20
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Hi Kieran,
+
+Thank you for the patch.
+
+On Fri, May 17, 2019 at 11:31:42PM +0100, Kieran Bingham wrote:
+> The configuration API between the VSP and the DU has been updated to
+> provide finer grain control over modesetting, and enablement.
+> 
+> Split rcar_du_vsp_enable() into rcar_du_vsp_modeset() and
+> rcar_du_vsp_enable() accordingly, and update each function to use the
+> new VSP API.
+> 
+> There are no further users of the deprecated vsp1_du_setup_lif() which
+> can now be removed.
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 > ---
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c |  4 +++-
+>  drivers/gpu/drm/rcar-du/rcar_du_vsp.c  | 21 +++++++++++++++------
+>  drivers/gpu/drm/rcar-du/rcar_du_vsp.h  |  2 ++
+>  3 files changed, 20 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 2da46e3dc4ae..cccd6fe85749 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -492,8 +492,10 @@ static void rcar_du_crtc_setup(struct rcar_du_crtc *rcrtc)
+>  	rcar_du_group_write(rcrtc->group, rcrtc->index % 2 ? DS2PR : DS1PR, 0);
+>  
+>  	/* Enable the VSP compositor. */
+> -	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> +	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE)) {
+> +		rcar_du_vsp_modeset(rcrtc);
+>  		rcar_du_vsp_enable(rcrtc);
+> +	}
+>  
+>  	/* Turn vertical blanking interrupt reporting on. */
+>  	drm_crtc_vblank_on(&rcrtc->crtc);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+> index 5e4faf258c31..c170427fcad9 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+> @@ -44,16 +44,14 @@ static void rcar_du_vsp_complete(void *private, unsigned int status, u32 crc)
+>  	drm_crtc_add_crc_entry(&crtc->crtc, false, 0, &crc);
+>  }
+>  
+> -void rcar_du_vsp_enable(struct rcar_du_crtc *crtc)
+> +void rcar_du_vsp_modeset(struct rcar_du_crtc *crtc)
+>  {
+>  	const struct drm_display_mode *mode = &crtc->crtc.state->adjusted_mode;
+>  	struct rcar_du_device *rcdu = crtc->dev;
+> -	struct vsp1_du_lif_config cfg = {
+> +	struct vsp1_du_modeset_config cfg = {
+>  		.width = mode->hdisplay,
+>  		.height = mode->vdisplay,
+>  		.interlaced = mode->flags & DRM_MODE_FLAG_INTERLACE,
+> -		.callback = rcar_du_vsp_complete,
+> -		.callback_data = crtc,
+>  	};
+>  	struct rcar_du_plane_state state = {
+>  		.state = {
+> @@ -90,12 +88,23 @@ void rcar_du_vsp_enable(struct rcar_du_crtc *crtc)
+>  	 */
+>  	crtc->group->need_restart = true;
+>  
+> -	vsp1_du_setup_lif(crtc->vsp->vsp, crtc->vsp_pipe, &cfg);
+> +
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Extra blank line.
 
+Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +	vsp1_du_atomic_modeset(crtc->vsp->vsp, crtc->vsp_pipe, &cfg);
+> +}
+> +
+> +void rcar_du_vsp_enable(struct rcar_du_crtc *crtc)
+> +{
+> +	struct vsp1_du_enable_config cfg = {
+> +		.callback = rcar_du_vsp_complete,
+> +		.callback_data = crtc,
+> +	};
+> +
+> +	vsp1_du_atomic_enable(crtc->vsp->vsp, crtc->vsp_pipe, &cfg);
+>  }
+>  
+>  void rcar_du_vsp_disable(struct rcar_du_crtc *crtc)
+>  {
+> -	vsp1_du_setup_lif(crtc->vsp->vsp, crtc->vsp_pipe, NULL);
+> +	vsp1_du_atomic_disable(crtc->vsp->vsp, crtc->vsp_pipe);
+>  }
+>  
+>  void rcar_du_vsp_atomic_begin(struct rcar_du_crtc *crtc)
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_vsp.h b/drivers/gpu/drm/rcar-du/rcar_du_vsp.h
+> index 9b4724159378..a6f6bb4690f2 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_vsp.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_vsp.h
+> @@ -58,6 +58,7 @@ to_rcar_vsp_plane_state(struct drm_plane_state *state)
+>  #ifdef CONFIG_DRM_RCAR_VSP
+>  int rcar_du_vsp_init(struct rcar_du_vsp *vsp, struct device_node *np,
+>  		     unsigned int crtcs);
+> +void rcar_du_vsp_modeset(struct rcar_du_crtc *crtc);
+>  void rcar_du_vsp_enable(struct rcar_du_crtc *crtc);
+>  void rcar_du_vsp_disable(struct rcar_du_crtc *crtc);
+>  void rcar_du_vsp_atomic_begin(struct rcar_du_crtc *crtc);
+> @@ -73,6 +74,7 @@ static inline int rcar_du_vsp_init(struct rcar_du_vsp *vsp,
+>  {
+>  	return -ENXIO;
+>  }
+> +static inlinc void rcar_du_vsp_modeset(struct rcar_du_crtc *crtc) { };
+>  static inline void rcar_du_vsp_enable(struct rcar_du_crtc *crtc) { };
+>  static inline void rcar_du_vsp_disable(struct rcar_du_crtc *crtc) { };
+>  static inline void rcar_du_vsp_atomic_begin(struct rcar_du_crtc *crtc) { };
+
+-- 
+Regards,
+
+Laurent Pinchart
