@@ -2,87 +2,113 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6635C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE6DC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB46C20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C5820866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jCItuHIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfFLTqo (ORCPT
+        id S1728615AbfFLTrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:46:44 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34125 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbfFLTqn (ORCPT
+        Wed, 12 Jun 2019 15:47:20 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37263 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727924AbfFLTrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:46:43 -0400
-Received: by mail-qk1-f194.google.com with SMTP id t8so7498923qkt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:46:42 -0700 (PDT)
+        Wed, 12 Jun 2019 15:47:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t76so12610499oih.4;
+        Wed, 12 Jun 2019 12:47:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EwdJu4okQ0L+2u52FXeBDXEGzF/ps8ei03aC+UR7txM=;
+        b=jCItuHIqjcFP/izwsSFnf5iZ4EN8OEZMF4/+XoTAcFGTIvjn8FEFSDtrZZEXarIJht
+         XFvZdFpsTYx2UKP8PreoZMEQCIurJCAtxHYRQnD1cDiUz4rMk9IZ5jwLjsMkH6YwbfV8
+         JK7juYY/NCn4SQ+bolXDhhhULZdOmNaiTFX6lctDPTgbJ6gXu4x0ppbCc25UIyEGVQtp
+         oUF9u4OeEsxLsGYmWkYR/KK1cMA1rXxJ0a5UKjCDFAyN28VcUBpUKp09Cc2KrkGEUmwm
+         uhHb8XCubFuUi3Xf0TqPGnVSzGzpC6kjENt0cAfNwGqVy32ibiYbhHmkyb1DMkDKOBAr
+         C6pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=awKvrcBYA/jeY+x9Ws9Ds2K1tYqzjv4W7GVJwBBQDDg=;
-        b=SZde0WKONbJuPjFOFKLmPYLVI+Y1GJJEQAyVCNMFASg2gsQLhUFXb/pJvpzw52GXAP
-         CT57RDutwQmqukOxA9gQalIQ+MgTZzFcZDKiIYz0ZJ/OIyo2AGSX5QN00H8uHRoLHN+v
-         1pK2DO4YR26H/LFyfO2tRhpVfI1bfUyo9Sa67kWGFn8tCzXQwMay7CFqDGwA1+d9gjIj
-         hC9JNzv7WFhygrOkLA7+JeA7hwEnmaJoWzbZ/0n0k9os3s0iTUvpZb0sPGG6FLH52bZb
-         FRBWNdAWYxqSPviHZ7LTCppbu/Ar5KkNo7h23JmmKbyOlc2Np+SXvc+D+emlH1JzkFub
-         GHiA==
-X-Gm-Message-State: APjAAAXL+lD8Emy+EYQaVDYQ8wDyN3UUDSgpwPF/gSrZz+6x2am761Me
-        RE9eG7Gb5zUpw+afTmd3VcEOTkfHi+W3TSw1IQwelAoT
-X-Google-Smtp-Source: APXvYqy/7C/DFlnMzV/EeJFMQfzpJc0KAxUTTJcZe7DDjR0J8qFAwH3G2Na2bn79BjnbgFudbyd3QmkL7cATMJ2PI+s=
-X-Received: by 2002:a05:620a:10b2:: with SMTP id h18mr2594215qkk.14.1560368802397;
- Wed, 12 Jun 2019 12:46:42 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EwdJu4okQ0L+2u52FXeBDXEGzF/ps8ei03aC+UR7txM=;
+        b=gXvgu8JXznQEOFUpkx3VQfZjre+qsxVSkSBWDeUeBCAx+ys68pIDj4Ks4FFIp4e/EJ
+         h+29HGMkoN60nArVODe7tR82MRa/3xynbqA2OEyay4xYMVsr/WVf8i+opHErm/x2Ve5s
+         5aJVYFFiNZYiFbOCaKfTPDrj1QfA+tr4+S2r/S3B3SD+xOtBL8WLlZ1hnkEnazyYlHB6
+         rHPU9ch8Ec9RjpgBdQ3lN9pJ0cdLMfEEOrlq1s76JLnqGtTyN2c+Jh/BsdZM2mKCI6Xr
+         KI6KmB8WhZB7+6Uu90vdrx+NMy4sC+EbyxqTjDq0S4y75Cn6lKc9NP0b9wNrP5/VFLRv
+         bVkQ==
+X-Gm-Message-State: APjAAAV6COKj6NLHhODnvxQeOxKTcs5CoINdV83wKQno45B4DnQlaWnr
+        auVjru0VupKoyars4LLFR8Dlgmrj8npApSvu+VU=
+X-Google-Smtp-Source: APXvYqxI6uMKFy/wojvtvvvIYK/SGmxdGD9fTWk5+T6YyUI+oS3PdPTdR1rtH6s0f//6So6WdhsACfIUlxQ2vDXFdDk=
+X-Received: by 2002:aca:f144:: with SMTP id p65mr598979oih.47.1560368838921;
+ Wed, 12 Jun 2019 12:47:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
- <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
- <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
- <20190612122843.GJ3436@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190612122843.GJ3436@hirez.programming.kicks-ass.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 12 Jun 2019 21:46:25 +0200
-Message-ID: <CAK8P3a17e8Ox9FKW-OsBKuGqvbe5sEgeqqFd9RikHMi60WiSfA@mail.gmail.com>
-Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
+References: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
+ <20190608180626.30589-5-martin.blumenstingl@googlemail.com> <20190611163318.tfb5c4jbekjybj76@pengutronix.de>
+In-Reply-To: <20190611163318.tfb5c4jbekjybj76@pengutronix.de>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 12 Jun 2019 21:47:07 +0200
+Message-ID: <CAFBinCA1SVXVPJdLQr4S99qEoowqXsNqP5tr64xn46xjaKLqeA@mail.gmail.com>
+Subject: Re: [PATCH v2 04/14] pwm: meson: change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 7:55 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> On Wed, Jun 12, 2019 at 11:44:35AM +0200, Jason A. Donenfeld wrote:
+Hi Uwe,
 
-> > But there's still the
-> > issue of the 32-bit wraparound on the base implementation.
+On Tue, Jun 11, 2019 at 6:33 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+[...]
+> > @@ -463,7 +463,7 @@ static int meson_pwm_init_channels(struct meson_pwm=
+ *meson,
+> >
+> >               channel->mux.reg =3D meson->base + REG_MISC_AB;
+> >               channel->mux.shift =3D mux_reg_shifts[i];
+> > -             channel->mux.mask =3D BIT(MISC_CLK_SEL_WIDTH) - 1;
+> > +             channel->mux.mask =3D MISC_CLK_SEL_MASK;
+> >               channel->mux.flags =3D 0;
+> >               channel->mux.lock =3D &meson->lock;
+> >               channel->mux.table =3D NULL;
 >
-> If an architecture doesn't provide a sched_clock(), you're on a
-> seriously handicapped arch. It wraps in ~500 days, and aside from
-> changing jiffies_lock to a latch, I don't think we can do much about it.
+> IMHO clk_mux is ugly here. It could easily just take
 >
-> (the scheduler too expects sched_clock() to not wrap short of the u64
-> and so having those machines online for 500 days will get you 'funny'
-> results)
->
-> AFAICT only: alpha, h8300, hexagon, m68knommu, nds32, nios2, openrisc
-> are lacking any form of sched_clock(), the rest has it either natively
-> or through sched_clock_register().
+>         .mask =3D 3 << mux_reg_shifts[i],
+in most cases that would be even nicer to read because it could be expresse=
+d as:
+  .mask =3D GENMASK(5, 4)
 
-For completeness (as we already discussed on IRC), on many architectures
-this would depend on the clocksource driver: many (older) arm, mips, sh
-or m68k implementations don't have sched_clock(), as this depends on
-the clocksource driver. All the modern ones tend to have one, but older
-ones may only support an interval timer tick that cannot be read.
+so I like your idea in general
+though I think it should not block this patch
 
-        Arnd
+[...]
+> Apart from that, I wonder if the pwm-meson driver should better use
+> clk_register_mux instead of open coding it. (Though there doesn't seem
+> to exists a devm_ variant of it.)
+I tried to use clk_register_mux in the past. it works but it's not as
+nice to read as the open-coded variant because it takes 10 parameters.
+I find it easier to read 13 separate lines compared to reading a
+function call with 10 parameters
+
+
+Martin
