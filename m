@@ -2,89 +2,122 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061C1C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F20FC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9314208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2FE2080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732329AbfFLK7q (ORCPT
+        id S2438118AbfFLK7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:59:46 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:49707 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727993AbfFLK7p (ORCPT
+        Wed, 12 Jun 2019 06:59:49 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39803 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbfFLK7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:59:45 -0400
-Received: from [IPv6:2001:420:44c1:2579:6148:fbe2:6f51:a270] ([IPv6:2001:420:44c1:2579:6148:fbe2:6f51:a270])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id b0yhhDqIn5qKab0ylh7prm; Wed, 12 Jun 2019 12:59:43 +0200
-Subject: Re: [PATCH v2 1/3] drivers: media: i2c: fix warning same module names
-To:     Anders Roxell <anders.roxell@linaro.org>, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190612081208.1550-1-anders.roxell@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <95cce42c-6dcb-9bd4-3f60-0b3308909069@xs4all.nl>
-Date:   Wed, 12 Jun 2019 12:59:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 12 Jun 2019 06:59:48 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id F2751802E0; Wed, 12 Jun 2019 12:59:35 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 12:59:45 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com
+Subject: Re: [PATCH v2 0/5] Introduce MADV_COLD and MADV_PAGEOUT
+Message-ID: <20190612105945.GA16442@amd>
+References: <20190610111252.239156-1-minchan@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190612081208.1550-1-anders.roxell@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKQBud2byBg8C7Ebw8iwZZ7woleR5SlfSjCU98rzCz5XOjzE9kk4BU3lmERB2rTQxaglG7fN0P+rjWWDENKyf4EjvoUPpeZGqAbmR95wgztuxSBrluO0
- y9p594FpRlatR7GFx8Y91cV75Np1giZmX0GDyhWwReNiMMgZznGyx+o5wEm1q0ll/nhz/wAGh7DTDKxqrZNSHJ0Gi0fWh/emhvagMIxrWQdxIK4K6Vr18hUj
- b91WWqziVl/UMvDeOPKKakQ0ACnPAANNWJXS745DsqL2oGW1cdt95FuiMs1p4dn8AtAvjrSDC7GwS5HuqG8XMqRuljJNGVxo9ssowssvH9Wtooq0skMew9n4
- UCQ3Vz6JYZM1soLenzQel1FIUjUyFaXGA/HVZey1m+1IP1Fsc0U=
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Disposition: inline
+In-Reply-To: <20190610111252.239156-1-minchan@kernel.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 10:12 AM, Anders Roxell wrote:
-> When building with CONFIG_VIDEO_ADV7511 and CONFIG_DRM_I2C_ADV7511
-> enabled as loadable modules, we see the following warning:
-> 
-> warning: same module names found:
->   drivers/gpu/drm/bridge/adv7511/adv7511.ko
->   drivers/media/i2c/adv7511.ko
-> 
-> Rework so the names matches the config fragment.
-> 
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> ---
->  drivers/media/i2c/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> index d8ad9dad495d..b71a427a89fd 100644
-> --- a/drivers/media/i2c/Makefile
-> +++ b/drivers/media/i2c/Makefile
-> @@ -35,7 +35,8 @@ obj-$(CONFIG_VIDEO_ADV748X) += adv748x/
->  obj-$(CONFIG_VIDEO_ADV7604) += adv7604.o
->  obj-$(CONFIG_VIDEO_ADV7842) += adv7842.o
->  obj-$(CONFIG_VIDEO_AD9389B) += ad9389b.o
-> -obj-$(CONFIG_VIDEO_ADV7511) += adv7511.o
-> +obj-$(CONFIG_VIDEO_ADV7511) += video-adv7511.o
-> +video-adv7511-objs          := adv7511.o
 
-I prefer adv7511-v4l2 as the new name. 'video' is too vague and can easily be
-confused with drivers/video.
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think it is better to rename adv7511.c to adv7511-v4l2.c and add a comment
-at the top of that source explaining why it is named like that.
+Hi!
 
-Regards,
+> - Problem
+>=20
+> Naturally, cached apps were dominant consumers of memory on the system.
+> However, they were not significant consumers of swap even though they are
+> good candidate for swap. Under investigation, swapping out only begins
+> once the low zone watermark is hit and kswapd wakes up, but the overall
+> allocation rate in the system might trip lmkd thresholds and cause a cach=
+ed
+> process to be killed(we measured performance swapping out vs. zapping the
+> memory by killing a process. Unsurprisingly, zapping is 10x times faster
+> even though we use zram which is much faster than real storage) so kill
+> from lmkd will often satisfy the high zone watermark, resulting in very
+> few pages actually being moved to swap.
 
-	Hans
+Is it still faster to swap-in the application than to restart it?
 
->  obj-$(CONFIG_VIDEO_VPX3220) += vpx3220.o
->  obj-$(CONFIG_VIDEO_VS6624)  += vs6624.o
->  obj-$(CONFIG_VIDEO_BT819) += bt819.o
-> 
 
+> This approach is similar in spirit to madvise(MADV_WONTNEED), but the
+> information required to make the reclaim decision is not known to the app.
+> Instead, it is known to a centralized userspace daemon, and that daemon
+> must be able to initiate reclaim on its own without any app involvement.
+> To solve the concern, this patch introduces new syscall -
+>=20
+>     struct pr_madvise_param {
+>             int size;               /* the size of this structure */
+>             int cookie;             /* reserved to support atomicity */
+>             int nr_elem;            /* count of below arrary fields */
+>             int __user *hints;      /* hints for each range */
+>             /* to store result of each operation */
+>             const struct iovec __user *results;
+>             /* input address ranges */
+>             const struct iovec __user *ranges;
+>     };
+>    =20
+>     int process_madvise(int pidfd, struct pr_madvise_param *u_param,
+>                             unsigned long flags);
+
+That's quite a complex interface.
+
+Could we simply have feel_free_to_swap_out(int pid) syscall? :-).
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--zYM0uCDKw75PZbzx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0A2yEACgkQMOfwapXb+vK7ngCdHTHlKgNthsiwMrKqz+jDGcDZ
+sfAAn1C5KLFMD7cpycS9Ep2CWeYprU8B
+=j4LI
+-----END PGP SIGNATURE-----
+
+--zYM0uCDKw75PZbzx--
