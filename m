@@ -6,64 +6,65 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB9EC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88303C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27452215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6D9208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560304516;
-	bh=mjpZy/AXm9YfznLfbotCtjfRbleaCjIRMqbO8WDfh70=;
+	s=default; t=1560304520;
+	bh=qlNkLT4spnpEfd+L838OBJlNx2DAQrldqfx6iJBh698=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=GPfXOy9si8Vxjuah9nzbRsUTXogmCCo5l/kUOJ+ew870wVfqSAYhzbDqIY4NV/5l3
-	 GdDyPq2dfvFBK/1MOSz8H7cx6L7elFlVqb1WayqyBBCZIbGOYnKBOaHzCMp9cEN6zJ
-	 4R1umCKoPvLuY1eE0CjyHcpXRx0K0G3hEL0QeM3Y=
+	b=1kEosqzq/0Thu8T3khlknESDe1vCVKfALfHX4y01Zr+XLAJc4qEBL+fOmS69yx1va
+	 P3M/Devgx1XmiGNmly8/HdpI1ojRNwpkZQUSEJLUInQNZr14zUFiyEEpvG4G2H+qjI
+	 b2PcElkAD9KNxT1GMLz7P+4dC05o1340GksD9QOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437079AbfFLBzP (ORCPT
+        id S2408339AbfFLBzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408338AbfFLBzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 11 Jun 2019 21:55:13 -0400
-Subject: Re: [GIT PULL] Minor ptrace fixes for v5.2-rc5
+Received: from mail.kernel.org ([198.145.29.99]:52042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404758AbfFLBzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 21:55:11 -0400
+Subject: Re: [GIT PULL] VFIO fixes for v5.2-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560304513;
-        bh=mjpZy/AXm9YfznLfbotCtjfRbleaCjIRMqbO8WDfh70=;
+        s=default; t=1560304511;
+        bh=qlNkLT4spnpEfd+L838OBJlNx2DAQrldqfx6iJBh698=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=KeQ2dZWSNXS5341KaDgyM4gY77EDlRxXcGznim6yMmq4Fr02ng9n0YQhbvZYKJm+p
-         YcIkmOfyHFFi3PTlf22evlrIUryOyUjTj7qy1ikqFTCb00rznBIMZqZ6Scd7DE71d9
-         CNBRsbW+4cK+AWfQHBDad9Q9JSP7xBJlDpUIAj7k=
+        b=YpcV/lfMDn6YqKfnIehNmSCR9kWDwWEkC1oYlTAox85/PfBuTw2FNkeiH6Zr60oCS
+         ndGLCxP5vqwnPTbU8q+Shb2auFhUr7M0/aF4FTVMnh3SbEHms7mBJxORBtvoS6l1VB
+         Rm7/vXfq8njoS+Ipx2AxqyzI+LlkzWYuhLHZtIGY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <87d0jj6fcw.fsf@xmission.com>
-References: <87d0jj6fcw.fsf@xmission.com>
+In-Reply-To: <20190611114955.2d0b6388@x1.home>
+References: <20190611114955.2d0b6388@x1.home>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87d0jj6fcw.fsf@xmission.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git
- for-linus
-X-PR-Tracked-Commit-Id: f6581f5b55141a95657ef5742cf6a6bfa20a109f
+X-PR-Tracked-Message-Id: <20190611114955.2d0b6388@x1.home>
+X-PR-Tracked-Remote: git://github.com/awilliam/linux-vfio.git
+ tags/vfio-v5.2-rc5
+X-PR-Tracked-Commit-Id: 5715c4dd66a315515eedef3fc4cbe1bf4620f009
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aa7235483a838be79b7c22a86b0dc4cb12ee5dd6
-Message-Id: <156030451320.13515.9066573219794161403.pr-tracker-bot@kernel.org>
-Date:   Wed, 12 Jun 2019 01:55:13 +0000
-To:     ebiederm@xmission.com (Eric W. Biederman)
+X-PR-Merge-Commit-Id: c23b07125f8aebf8b39fffa325145826098f7d8f
+Message-Id: <156030451113.13515.13439301806650379331.pr-tracker-bot@kernel.org>
+Date:   Wed, 12 Jun 2019 01:55:11 +0000
+To:     Alex Williamson <alex.williamson@redhat.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 11 Jun 2019 15:23:27 -0500:
+The pull request you sent on Tue, 11 Jun 2019 11:49:55 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git for-linus
+> git://github.com/awilliam/linux-vfio.git tags/vfio-v5.2-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aa7235483a838be79b7c22a86b0dc4cb12ee5dd6
+https://git.kernel.org/torvalds/c/c23b07125f8aebf8b39fffa325145826098f7d8f
 
 Thank you!
 
