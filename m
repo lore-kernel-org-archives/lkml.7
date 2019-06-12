@@ -2,147 +2,148 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A5C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9416C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA07206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B658D21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560367396;
+	bh=NV6CAWoAmAxUEUfbDMwR/y4kWphXPGu1oOy5Nizf0fs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A+MhX8GkPyYx72Tp9bx9mvXnPkburq49gVok5DUqngU9ZwEU0OD/PXRH/RbI7Fioj
+	 9OUqwwZC0VxmJ+oOct3F8zw2hmH651HA9M4jGQ47PXB5aXhb1kk/3pGmhXnisKECjZ
+	 HshmDh3WpQT7TUrADs1iwcAP8x5/UdUMzSHfNNbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbfFLTWs (ORCPT
+        id S1728198AbfFLTXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:22:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33868 "EHLO mx1.redhat.com"
+        Wed, 12 Jun 2019 15:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbfFLTWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:22:47 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727769AbfFLTXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 15:23:15 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3DFCE30872DD;
-        Wed, 12 Jun 2019 19:22:47 +0000 (UTC)
-Received: from flask (unknown [10.40.205.10])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B49F118867;
-        Wed, 12 Jun 2019 19:22:44 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Wed, 12 Jun 2019 21:22:43 +0200
-Date:   Wed, 12 Jun 2019 21:22:43 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Optimize timer latency consider world
- switch time
-Message-ID: <20190612192243.GA23583@flask>
-References: <1560332419-17195-1-git-send-email-wanpengli@tencent.com>
- <20190612151447.GD20308@linux.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E91520896;
+        Wed, 12 Jun 2019 19:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560367394;
+        bh=NV6CAWoAmAxUEUfbDMwR/y4kWphXPGu1oOy5Nizf0fs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YA9bhlSCMj4KbygGwBHJT1K2gxbuDR6fl8c4iTJdA9/CZM8ZLzzSJ9/UIgyIcWUvQ
+         29nkRqarhkwbngAl1DBb1N7BQuHffboe+vNqVsOhuzOhG8hRUrJDIx97xCsPrIkzPA
+         FZobjhKujKUI7TkWnNupgJk2B/z2qpWRiKZd7NQg=
+Date:   Wed, 12 Jun 2019 12:23:12 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>
+Cc:     syzbot <syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in binder_transaction_buffer_release
+Message-ID: <20190612192312.GF18795@gmail.com>
+References: <000000000000afe2c70589526668@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612151447.GD20308@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 12 Jun 2019 19:22:47 +0000 (UTC)
+In-Reply-To: <000000000000afe2c70589526668@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-06-12 08:14-0700, Sean Christopherson:
-> On Wed, Jun 12, 2019 at 05:40:18PM +0800, Wanpeng Li wrote:
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > @@ -145,6 +145,12 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
-> >  static int __read_mostly lapic_timer_advance_ns = -1;
-> >  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
-> >  
-> > +/*
-> > + * lapic timer vmentry advance (tscdeadline mode only) in nanoseconds.
-> > + */
-> > +u32 __read_mostly vmentry_advance_ns = 300;
+On Mon, May 20, 2019 at 07:18:06AM -0700, syzbot wrote:
+> Hello,
 > 
-> Enabling this by default makes me nervous, e.g. nothing guarantees that
-> future versions of KVM and/or CPUs will continue to have 300ns of overhead
-> between wait_lapic_expire() and VM-Enter.
+> syzbot found the following crash on:
 > 
-> If we want it enabled by default so that it gets tested, the default
-> value should be extremely conservative, e.g. set the default to a small
-> percentage (25%?) of the latency of VM-Enter itself on modern CPUs,
-> VM-Enter latency being the min between VMLAUNCH and VMLOAD+VMRUN+VMSAVE.
+> HEAD commit:    72cf0b07 Merge tag 'sound-fix-5.2-rc1' of git://git.kernel..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17c7d4bca00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d103f114f9010324
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8b3c354d33c4ac78bfad
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> userspace arch: i386
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b99b44a00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
+> 
+> WARNING: CPU: 1 PID: 8535 at drivers/android/binder.c:2368
+> binder_transaction_buffer_release+0x673/0x8f0 drivers/android/binder.c:2368
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 8535 Comm: syz-executor.2 Not tainted 5.1.0+ #19
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  panic+0x2cb/0x715 kernel/panic.c:214
+>  __warn.cold+0x20/0x4c kernel/panic.c:571
+>  report_bug+0x263/0x2b0 lib/bug.c:186
+>  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+>  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+>  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> RIP: 0010:binder_transaction_buffer_release+0x673/0x8f0
+> drivers/android/binder.c:2368
+> Code: 31 ff 41 89 c5 89 c6 e8 7b 04 1f fc 45 85 ed 0f 85 1f 41 01 00 49 8d
+> 47 40 48 89 85 50 fe ff ff e9 9d fa ff ff e8 dd 02 1f fc <0f> 0b e9 7f fc ff
+> ff e8 d1 02 1f fc 48 89 d8 45 31 c9 4c 89 fe 4c
+> RSP: 0018:ffff88807b2775f0 EFLAGS: 00010293
+> RAX: ffff888092b1e040 RBX: 0000000000000060 RCX: 1ffff11012563caa
+> RDX: 0000000000000000 RSI: ffffffff85519e13 RDI: ffff888097a2d248
+> RBP: ffff88807b2777d8 R08: ffff888092b1e040 R09: ffffed100f64eee3
+> R10: ffffed100f64eee2 R11: ffff88807b277717 R12: ffff88808fd2c340
+> R13: 0000000000000068 R14: ffff88807b2777b0 R15: ffff88809f7ea580
+>  binder_transaction+0x153d/0x6620 drivers/android/binder.c:3484
+>  binder_thread_write+0x87e/0x2820 drivers/android/binder.c:3792
+>  binder_ioctl_write_read drivers/android/binder.c:4836 [inline]
+>  binder_ioctl+0x102f/0x1833 drivers/android/binder.c:5013
+>  __do_compat_sys_ioctl fs/compat_ioctl.c:1052 [inline]
+>  __se_compat_sys_ioctl fs/compat_ioctl.c:998 [inline]
+>  __ia32_compat_sys_ioctl+0x195/0x620 fs/compat_ioctl.c:998
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+>  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
+>  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> RIP: 0023:0xf7f9e849
+> Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90
+> 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90
+> 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+> RSP: 002b:00000000f7f9a0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
+> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000c0306201
+> RDX: 0000000020000140 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
 
-I share the sentiment.  We definitely must not enter the guest before
-the deadline has expired and CPUs are approaching 5 GHz (in turbo), so
-300 ns would be too much even today.
+Are any of the binder maintainers planning to fix this?  This seems to be the
+only open syzbot report for binder on the upstream kernel.
 
-I wrote a simple testcase for rough timing and there are 267 cycles
-(111 ns @ 2.4 GHz) between doing rdtsc() right after
-kvm_wait_lapic_expire() [1] and doing rdtsc() in the guest as soon as
-possible (see the attached kvm-unit-test).
-
-That is on a Haswell, where vmexit.flat reports 2120 cycles for a
-vmcall.  This would linearly (likely incorrect method in this case)
-translate to 230 cycles on a machine with 1800 cycles for a vmcall,
-which is less than 50 ns @ 5 GHz.
-
-I wouldn't go above 25 ns for a hard-coded default.
-
-(We could also do a similar measurement when initializing KVM and have a
- dynamic default, but I'm thinking it's going to be way too much code
- for the benefit.)
-
----
-1: This is how the TSC is read in KVM.
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index da24f1858acc..a7251ac0109b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6449,6 +6449,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		vcpu->arch.apic->lapic_timer.timer_advance_ns)
- 		kvm_wait_lapic_expire(vcpu);
- 
-+	vcpu->last_seen_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-+
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
- 	 * it's non-zero. Since vmentry is serialising on affected CPUs, there
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 6200d5a51f13..5e0ce8ca31e7 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7201,6 +7201,9 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
- 	case KVM_HC_SEND_IPI:
- 		ret = kvm_pv_send_ipi(vcpu->kvm, a0, a1, a2, a3, op_64_bit);
- 		break;
-+	case KVM_HC_LAST_SEEN_TSC:
-+		ret = vcpu->last_seen_tsc;
-+		break;
- 	default:
- 		ret = -KVM_ENOSYS;
- 		break;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index abafddb9fe2c..7f70fe7a28b1 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -323,6 +323,8 @@ struct kvm_vcpu {
- 	bool preempted;
- 	struct kvm_vcpu_arch arch;
- 	struct dentry *debugfs_dentry;
-+
-+	u64 last_seen_tsc;
- };
- 
- static inline int kvm_vcpu_exiting_guest_mode(struct kvm_vcpu *vcpu)
-diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
-index 6c0ce49931e5..dfbc6e9ad7a1 100644
---- a/include/uapi/linux/kvm_para.h
-+++ b/include/uapi/linux/kvm_para.h
-@@ -28,6 +28,7 @@
- #define KVM_HC_MIPS_CONSOLE_OUTPUT	8
- #define KVM_HC_CLOCK_PAIRING		9
- #define KVM_HC_SEND_IPI		10
-+#define KVM_HC_LAST_SEEN_TSC		11
- 
- /*
-  * hypercalls use architecture specific
+- Eric
