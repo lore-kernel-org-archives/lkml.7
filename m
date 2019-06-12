@@ -2,243 +2,142 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B206C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E942C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27AA6207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:45:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="P3uoWMoG"
+	by mail.kernel.org (Postfix) with ESMTP id 7E925207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408489AbfFLCpd (ORCPT
+        id S2408499AbfFLCqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 22:45:33 -0400
-Received: from cmta18.telus.net ([209.171.16.91]:49561 "EHLO cmta18.telus.net"
+        Tue, 11 Jun 2019 22:46:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:25730 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404957AbfFLCpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:45:33 -0400
-X-Greylist: delayed 487 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Jun 2019 22:45:31 EDT
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id at8YhJqoh7TgTat8ahtix1; Tue, 11 Jun 2019 20:37:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1560307044; bh=C7iEK0Eke4ArMRvKEyNha/brZ+KNznkDvwK77Ge8lOg=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=P3uoWMoGegghqpSztiStgmXBWm+W0X9WudvpXe4c8p6JeSvO/cDnXucs70vRVvSEs
-         ZUpUN+DMkhwou6C5C18T75CJ0p9msJWgktFpupK4OriITLTBhuJhxtP0kvhhNDXgG2
-         4SIIBYGbC3Uj9RurAplrmOmzsoiWmuuyxUc4dPh1Tn9nWGVrWRgsfDENQUpd/SxLRc
-         lxvukdrPKrn/8GP+BBNEO+8bEaDCVsSdl/+iAUW77bEIlSBsOLSCEm+wAOKc/NLDUk
-         dqWAQdYMGLDL4Nmp3ry4l5esS5Sj1gBpbHH847jV9BhJ9g59Ld1A0ucHbfWvyiOzyw
-         VR7AJILT9wmbQ==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=e6N4tph/ c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=SNZtMsJpNjCDGohZwB4A:9 a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Pavel Machek'" <pavel@ucw.cz>
-Cc:     "'kernel list'" <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <rui.zhang@intel.com>,
-        <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <linux-pm@vger.kernel.org>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <x86@kernel.org>, "Doug Smythies" <dsmythies@telus.net>
-References: <20190609111732.GA2885@amd>
-In-Reply-To: <20190609111732.GA2885@amd>
-Subject: RE: 5.2-rc2: low framerate in flightgear, cpu not running at full speed, thermal related?
-Date:   Tue, 11 Jun 2019 19:37:17 -0700
-Message-ID: <007701d520c7$c397bda0$4ac738e0$@net>
+        id S2404957AbfFLCqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 22:46:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 19:46:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,363,1557212400"; 
+   d="scan'208";a="184092883"
+Received: from haiyuewa-mobl.ccr.corp.intel.com (HELO [10.67.64.82]) ([10.67.64.82])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Jun 2019 19:46:43 -0700
+Subject: Re: [PATCHv7 1/3] dt-bindings: i2c: document bindings for
+ i2c-slave-mqueue
+To:     Rob Herring <robh@kernel.org>, Eduardo Valentin <eduval@amazon.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@intel.com, brendanhiggins@google.com,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190605164651.15991-1-eduval@amazon.com>
+ <20190605164651.15991-2-eduval@amazon.com> <20190611231425.GA29500@bogus>
+From:   "Wang, Haiyue" <haiyue.wang@linux.intel.com>
+Message-ID: <b3e5ac5c-baf7-bc8a-701a-4af3b8983155@linux.intel.com>
+Date:   Wed, 12 Jun 2019 10:46:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdUetT93sqqDOHM9SxGXaHA1lUJq/QB+0mKg
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfBYcp50dSmfNdIkD1x2A539XcokdexQ+6aPs+biVhnZkgF93098xHHUdmfH24aEmIYBb41wOmzZWbAYDGIfXRKq50MKLjXbFDTghK0xduBB8/ZobvidT
- gpqSYXX8Cr6MWiSL7C+8hfFJKnuWCPNyaJAJWILtiFFbGyT0+Qh0K4nsg12f+t2ThpeZx2VVoCqUjOvqQspfAaL91ev8iXBC3znWehwP3ns9w/8CISUipONg
- 06P+zg9MfgSnnWXaRLCdtXITdMtpoDp+vJZzaZsM6Sp/1BM0MjF/cOX83ocv2Y0gzy/cslsgarJls9Klx71dknyG7NpmduavN9we1fxQ9PupySIX87hUmDAi
- KM5cxcRKWg6kxjDAj19iVwskEZOwoFlg1OvFvzx3Wm2ww1dy/5i5LOZp2mEy4ebbxIFmDdxx/HIAQJxBnKEe69K1HxQ3e1kCCWZWQByQYIDs66CvbCnuPYXB
- hIlS5viOl2Pv28vYEmXlMPd9BC20kn3d275gUi9cofj5/lPmU5sWBi03BIE=
+In-Reply-To: <20190611231425.GA29500@bogus>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-So, currently there seems to be 3 issues in this thread
-(and I am guessing a little, without definitive data):
-
-1.) On your system Kernel 5.4-rc2 (or 4) defaults to the intel_pstate CPU frequency
-scaling driver and the powersave governor, but kernel 4.6 defaults to the
-acpi-cpufreq CPU frequency scaling driver and the ondemand governor.
-
-Suggest to check the related kernel configuration parameters.
-
-$ grep -A 10 -i "CPU frequency scaling drivers" .config
-# CPU frequency scaling drivers
-#
-CONFIG_X86_INTEL_PSTATE=y
-CONFIG_X86_PCC_CPUFREQ=y
-CONFIG_X86_ACPI_CPUFREQ=y
-CONFIG_X86_ACPI_CPUFREQ_CPB=y
-CONFIG_X86_POWERNOW_K8=y
-CONFIG_X86_AMD_FREQ_SENSITIVITY=m
-CONFIG_X86_SPEEDSTEP_CENTRINO=y
-CONFIG_X86_P4_CLOCKMOD=m
-
-2.) With kernel 5.2-rc2 there is thermal throttling (thermald?), but for 
-Kernel 4.6 it either doesn't hit the throttling threshold or is not enabled.
-
-I don't have input here.
-
-However note that the CPU frequency verses load graphs are quite different
-between acpi-cpufreq/ondemand and intel-pstate/powersave, with higher
-CPU frequencies at lower loads for the acpi-cpufreq driver and higher
-CPU frequencies at higher loads for the intel_pstate driver. The crossover
-point is about 35% load. So, the two driver/governors might well end up at
-different operating pointing terms of CPU frequencies. I do not have energy
-data for the CPU frequency verses load tests, which is really what matters.
-
-3.) The older kernel is still using the older acpi-cpufreq stuff where
-some CPU frequency memory registers show what was asked for and not what
-the system is actually giving.
-
-See below.
-
-On 2019.06.09 04:18 Pavel Machek wrote:
-
-> When I start flightgear, I get framerates around 20 fps and cpu at
-> 3GHz:
-> 
-> pavel@duo:~/bt$ cat /proc/cpuinfo  | grep MHz
-> cpu MHz		    : 3027.471
-> cpu MHz		      : 2981.863
-> cpu MHz		      	: 2958.352
-> cpu MHz			  : 2864.001
-> pavel@duo:~/bt$
+ÔÚ 2019-06-12 07:14, Rob Herring Ð´µÀ:
+> On Wed, Jun 05, 2019 at 09:46:49AM -0700, Eduardo Valentin wrote:
+>> Document the i2c-slave-mqueue binding by adding
+>> descriptor, required properties, and example.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Wolfram Sang <wsa@the-dreams.de>
+>> Cc: linux-i2c@vger.kernel.org
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+>> ---
+>>
+>> Changes from V6 to V7:
+>> - none
+>>
+>>   .../bindings/i2c/i2c-slave-mqueue.txt         | 34 +++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt b/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+>> new file mode 100644
+>> index 000000000000..eb1881a4fc0e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-slave-mqueue.txt
+>> @@ -0,0 +1,34 @@
+>> +===============================================
+>> +Device Tree for I2C slave message queue backend
+>> +===============================================
+>> +
+>> +Some protocols over I2C/SMBus are designed for bi-directional transferring
+>> +messages by using I2C Master Write protocol. This requires that both sides
+>> +of the communication have slave addresses.
+> So the address 0x10 in the example below is the address of the I2C
+> controller?
 >
-> (Ok, fgfs is really only running at single core, so why do both cores
-> run at 3GHz?)
+>> +
+>> +This I2C slave mqueue (message queue) is used to receive and queue
+Hi Rob, This is mqueue comes from, not from specs directly.
+>> +messages from the remote i2c intelligent device; and it will add the target
+>> +slave address (with R/W# bit is always 0) into the message at the first byte.
+>> +
+>> +Links
+>> +----
+>> +`Intelligent Platform Management Bus
+>> +Communications Protocol Specification
+>> +<https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/ipmp-spec-v1.0.pdf>`_
+>> +
+>> +`Management Component Transport Protocol (MCTP)
+>> +SMBus/I2C Transport Binding Specification
+>> +<https://www.dmtf.org/sites/default/files/standards/documents/DSP0237_1.1.0.pdf>`_
+>> +
+>> +Required Properties:
+>> +- compatible		: should be "i2c-slave-mqueue"
+> There is no mention of mqueue (or queue) in these specs. Where does that
+> come from? Perhaps something more closely matching the protocol would be
+> better name.
+>
+>> +- reg			: slave address
+>> +
+>> +Example:
+>> +
+>> +i2c {
+> Would there be other slaves?
+>
+> The common binding states 'multi-master' property should be present.
+>
+> I need a more complete example.
+>
+>> +	slave_mqueue: i2c-slave-mqueue {
+>> +		compatible = "i2c-slave-mqueue";
+>> +		reg = <0x10>;
 
-There is only 1 PLL (Phase Locked Loop) master clock generator in your
-processor. Basically, the CPU with the highest frequency demand wins.
-What is not shown in your data is that the not busy core is also
-probably in a deep idle state for most of the time, consuming little or no
-energy. Below is an example from my processor (i7-2600K) using
-turbostat (note C6 is my deepest idle state, and only it is shown
-for simplicity):
+Hi Eduardo,
 
-Core    CPU     Busy%   Bzy_MHz CPU%c6  PkgTmp  PkgWatt
--       -       12.52   3799    74.88   54      23.87
-0       0       0.05    3664    99.89   54      23.87
-0       4       0.00    3695
-1       1       0.07    3676    99.87
-1       5       0.00    3667
-2       2       0.09    3669    99.78
-2       6       0.00    3666
-3       3       0.04    3786    0.00
-3       7       99.92   3800
-
-Observe the busy core spending no time in C6, but the other 3
-spend most of the time there. However, for the little time that they are active,
-CPU 7 is the one demanding the high CPU frequency.
-
-Anticipated question:
-"Then why aren't all the CPU frequencies exactly the same?"
-My processor's max turbo frequency is a function of how many cores
-are active, and so actually varies under peak demand. Excerpt from
-turbostat, not in quiet mode:
-
-35 * 100.0 = 3500.0 MHz max turbo 4 active cores
-36 * 100.0 = 3600.0 MHz max turbo 3 active cores
-37 * 100.0 = 3700.0 MHz max turbo 2 active cores
-38 * 100.0 = 3800.0 MHz max turbo 1 active cores
-
-> The CPU is Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz . I guess it means
-> it should be able to sustain both cores running at 2.5GHz?
-
-No, that is more a function of your hardware's ability (or lack of) to move
-the waste heat away.
-
-> Situation is very different with v4.6 distro based kernel.
-> 
-> CPU MHz is only getting values round to 100MHz. It does not go above
-> 2.5GHz, but it does not go below 2.5GHz under the load, either.
-
-Yes, it is going above 2.5 GHz, see below.
-
-> v4.6:
-
-> cpu MHz         : 2501.000
-> cpu MHz         : 2501.000
-> cpu MHz         : 2501.000
-> cpu MHz         : 2501.000
-
-That seems to be the old acpi-cpufreq information,
-which is telling you what it's asking for and not what
-it actually is. And the "01" means it is asking for turbo
-range frequencies. Example from my system, while running the
-above CPU 7 busy test:
-
-Conditions: Old kernel (4.4), acpi-cpufreq driver, ondemand gov.
-
-doug@s15:~$ grep MHz /proc/cpuinfo
-cpu MHz         : 1600.000
-cpu MHz         : 1600.000
-cpu MHz         : 1600.000
-cpu MHz         : 1600.000
-cpu MHz         : 1600.000
-cpu MHz         : 1600.000
-cpu MHz         : 1600.000
-cpu MHz         : 3401.000
-
-CPUs 0-6 have very little load and are asking for the minimum
-available frequency. CPU 7 is asking for turbo.
-The turbostat data tells a different story.
-
-Conditions: New kernel (5.2-rc3), acpi-cpufreq driver, ondemand gov.
-
-doug@s15:~$ grep MHz /proc/cpuinfo
-cpu MHz         : 3611.623
-cpu MHz         : 3638.843
-cpu MHz         : 3662.703
-cpu MHz         : 3634.156
-cpu MHz         : 3611.601
-cpu MHz         : 3668.422
-cpu MHz         : 3611.471
-cpu MHz         : 3738.445
-
-Conditions: New kernel (5.2-rc3), intel_pstate driver, powersave gov.
-
-doug@s15:~$ grep MHz /proc/cpuinfo
-cpu MHz         : 3651.506
-cpu MHz         : 3643.422
-cpu MHz         : 3611.678
-cpu MHz         : 3674.237
-cpu MHz         : 3612.469
-cpu MHz         : 3670.185
-cpu MHz         : 3612.050
-cpu MHz         : 3727.283
-
-turbosat (tools/power/x86/turbostat/turbostat.c) commands used above:
-
-sudo turbostat --quiet --hide IRQ,Avg_MHz,SMI,\
-GFXMHz,TSC_MHz,GFXWatt,CorWatt,POLL%,CPU%c1,\
-CPU%c3,CPU%c7,CoreTmp,GFX%rc6,Pkg%pc2,Pkg%pc3,\
-Pkg%pc6,POLL,C1,C1E,C3,C6,C1%,C1E%,C3%,C6% \
---interval 5
-
-And:
-
-sudo turbostat
-
-... Doug
+Looks like the slave reg missed the key value bit:
 
 
+https://elinux.org/images/f/f6/ELCE15-WolframSang-ShinyNewI2CSlaveFramework.pdf
+
+Example: reg = <(I2C_OWN_SLAVE_ADDRESS | 0x42)>;
+
+
+>> +	};
+>> +};
+>> -- 
+>> 2.21.0
+>>
