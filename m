@@ -2,123 +2,127 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8051CC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64562C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C8821019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF1C217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560355185;
+	bh=SBs0sBaS1bjrbBA3vV/2M+UadszLHjGEqbP8e65F/no=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=M8/wsd8YSHCtyrYTATRdNIt3l8RcMfthxDrd2fUskhhADLORKnI4Gj0zmfW+Ru8K2
+	 5jf/MtHTBl9rdt9ADKH1f2Mnkyh96JzBrq8PkrjQWFpMuxXuYCn7pvwyd3TNXk2QQl
+	 D+L7lg4u6ImhmWyexRcFiKYeJuQv14OHTQF7TgdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440387AbfFLP7k (ORCPT
+        id S2502009AbfFLP7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 12 Jun 2019 11:59:43 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44402 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440381AbfFLP7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Jun 2019 11:59:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58036 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436987AbfFLP7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:59:36 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B96E4223882;
-        Wed, 12 Jun 2019 15:59:17 +0000 (UTC)
-Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B463183FD;
-        Wed, 12 Jun 2019 15:59:01 +0000 (UTC)
-Subject: Re: [PATCH v17 14/15] vfio/type1, arm64: untag user pointers in
- vaddr_get_pfn
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <e86d8cd6bd0ade9cce6304594bcaf0c8e7f788b0.1560339705.git.andreyknvl@google.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <ac482b04-94b1-ab29-97cc-3232fc44b3d1@redhat.com>
-Date:   Wed, 12 Jun 2019 17:58:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <e86d8cd6bd0ade9cce6304594bcaf0c8e7f788b0.1560339705.git.andreyknvl@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 12 Jun 2019 15:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=2JhpvVxjZMpldOqSbNerkDc47p59XIK1aaB3h7Mi9vw=; b=gmZepjTMHSy1
+        mRqgQR8FBSZFhKjIaXKdWzoA1B9eFFq0nZcTDV2PvZCaHRxH6oMakoafybMAhsxKm5Dm00zezugoL
+        eVF+mXAc3DaqJytHslOzkgFrB7CxR/t7aoUJWeKDmyMqtvL3L5lth6sP3jzc9bFLKKWkM7ho/J+sG
+        M29ME=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hb5ez-00036T-4m; Wed, 12 Jun 2019 15:59:37 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 9F7CF440046; Wed, 12 Jun 2019 16:59:36 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regmap: fix bulk writes on paged registers" to the regmap tree
+In-Reply-To: <20190612110343.4463-1-srinivas.kandagatla@linaro.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190612155936.9F7CF440046@finisterre.sirena.org.uk>
+Date:   Wed, 12 Jun 2019 16:59:36 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+The patch
 
-On 6/12/19 1:43 PM, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
-> 
-> vaddr_get_pfn() uses provided user pointers for vma lookups, which can
-> only by done with untagged pointers.
-> 
-> Untag user pointers in this function.
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+   regmap: fix bulk writes on paged registers
 
-Thanks
+has been applied to the regmap tree at
 
-Eric
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 3ddc375e7063..528e39a1c2dd 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -384,6 +384,8 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
->  
->  	down_read(&mm->mmap_sem);
->  
-> +	vaddr = untagged_addr(vaddr);
-> +
->  	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
->  
->  	if (vma && vma->vm_flags & VM_PFNMAP) {
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-5.2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From db057679de3e9e6a03c1bcd5aee09b0d25fd9f5b Mon Sep 17 00:00:00 2001
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Wed, 12 Jun 2019 12:03:43 +0100
+Subject: [PATCH] regmap: fix bulk writes on paged registers
+
+On buses like SlimBus and SoundWire which does not support
+gather_writes yet in regmap, A bulk write on paged register
+would be silently ignored after programming page.
+This is because local variable 'ret' value in regmap_raw_write_impl()
+gets reset to 0 once page register is written successfully and the
+code below checks for 'ret' value to be -ENOTSUPP before linearising
+the write buffer to send to bus->write().
+
+Fix this by resetting the 'ret' value to -ENOTSUPP in cases where
+gather_writes() is not supported or single register write is
+not possible.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/base/regmap/regmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index f1025452bb39..19f57ccfbe1d 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1637,6 +1637,8 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+ 					     map->format.reg_bytes +
+ 					     map->format.pad_bytes,
+ 					     val, val_len);
++	else
++		ret = -ENOTSUPP;
+ 
+ 	/* If that didn't work fall back on linearising by hand. */
+ 	if (ret == -ENOTSUPP) {
+-- 
+2.20.1
+
