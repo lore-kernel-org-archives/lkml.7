@@ -2,95 +2,83 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42778C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7605C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B45D20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A8520866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439309AbfFLMum (ORCPT
+        id S2409165AbfFLMx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:50:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39946 "EHLO mx1.redhat.com"
+        Wed, 12 Jun 2019 08:53:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:3953 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728774AbfFLMum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:50:42 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7DFA08553D;
-        Wed, 12 Jun 2019 12:50:41 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-228.sin2.redhat.com [10.67.116.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F8FD7B000;
-        Wed, 12 Jun 2019 12:49:45 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
-        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
-Subject: [PATCH v13 7/7] xfs: disable map_sync for async flush
-Date:   Wed, 12 Jun 2019 18:15:27 +0530
-Message-Id: <20190612124527.3763-8-pagupta@redhat.com>
-In-Reply-To: <20190612124527.3763-1-pagupta@redhat.com>
-References: <20190612124527.3763-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 12 Jun 2019 12:50:41 +0000 (UTC)
+        id S1726061AbfFLMx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:53:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 05:53:27 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga001.jf.intel.com with ESMTP; 12 Jun 2019 05:53:26 -0700
+Subject: Re: [PATCH 01/11] perf intel-pt: Add new packets for PEBS via PT
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+References: <20190610072803.10456-1-adrian.hunter@intel.com>
+ <20190610072803.10456-2-adrian.hunter@intel.com>
+ <20190612000945.GE28689@kernel.org>
+ <e0a9a4e9-6c49-ecd1-4729-79002c66fafe@intel.com>
+ <20190612124140.GA4836@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <a3efee50-cf64-d139-237f-b51be8f76f3c@intel.com>
+Date:   Wed, 12 Jun 2019 15:52:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190612124140.GA4836@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dont support 'MAP_SYNC' with non-DAX files and DAX files
-with asynchronous dax_device. Virtio pmem provides
-asynchronous host page cache flush mechanism. We don't
-support 'MAP_SYNC' with virtio pmem and xfs.
+On 12/06/19 3:41 PM, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Jun 12, 2019 at 08:58:00AM +0300, Adrian Hunter escreveu:
+>> On 12/06/19 3:09 AM, Arnaldo Carvalho de Melo wrote:
+>>> Em Mon, Jun 10, 2019 at 10:27:53AM +0300, Adrian Hunter escreveu:
+>>>> Add 3 new packets to supports PEBS via PT, namely Block Begin Packet (BBP),
+>>>> Block Item Packet (BIP) and Block End Packet (BEP). PEBS data is encoded
+>>>> into multiple BIP packets that come between BBP and BEP. The BEP packet
+>>>> might be associated with a FUP packet. That is indicated by using a
+>>>> separate packet type (INTEL_PT_BEP_IP) similar to other packets types with
+>>>> the _IP suffix.
+>>>>
+>>>> Refer to the Intel SDM for more information about PEBS via PT.
+>>>
+>>> In these cases would be nice to provide an URL and page number, for
+>>> convenience.
+>>
+>> Intel SDM:
+>>
+>> 	https://software.intel.com/en-us/articles/intel-sdm
+>>
+>> May 2019 version: Vol. 3B 18.5.5.2 PEBS output to Intel® Processor Trace
+> 
+> Thanks! I'll add to that cset.
+> 
+> What about the kernel bits?
 
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/xfs_file.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Awaiting V2, here is a link to the patches:
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index a7ceae90110e..f17652cca5ff 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1203,11 +1203,14 @@ xfs_file_mmap(
- 	struct file	*filp,
- 	struct vm_area_struct *vma)
- {
-+	struct dax_device 	*dax_dev;
-+
-+	dax_dev = xfs_find_daxdev_for_inode(file_inode(filp));
- 	/*
--	 * We don't support synchronous mappings for non-DAX files. At least
--	 * until someone comes with a sensible use case.
-+	 * We don't support synchronous mappings for non-DAX files and
-+	 * for DAX files if underneath dax_device is not synchronous.
- 	 */
--	if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
-+	if (!daxdev_mapping_supported(vma, dax_dev))
- 		return -EOPNOTSUPP;
- 
- 	file_accessed(filp);
--- 
-2.20.1
+	https://lore.kernel.org/lkml/20190502105022.15534-1-alexander.shishkin@linux.intel.com/
 
+There is also still a few more tools changes dependent upon the kernel patches.
