@@ -2,170 +2,105 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3B3C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C392C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D7620874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560336197;
-	bh=vc2wEkwX9nPPRxAp5ML83w7fcPIxhmz6XZU4rHDHsbA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UsEFpMEwdQnrZ1Q/vIb4omTyA2NW+2osYQb2dcjdGbIV+ZkU1nmG2eQvgTRi9r9cF
-	 EVxV+YX/Cr8+hy0AcmIxSFpmQpzMFin4jUdMNEoxqP//WDWOzfw+Y7nb3UfN51yAtm
-	 bCZYKU3vswvHiyIJXk5oUR/TulSkLW4RmST6Joy8=
+	by mail.kernel.org (Postfix) with ESMTP id 62F43208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbfFLKnR (ORCPT
+        id S1732303AbfFLKpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:43:17 -0400
-Received: from casper.infradead.org ([85.118.1.10]:52298 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfFLKnQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:43:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=j5f18jG0/5hJHpAfDLqIFHqkftIh9jPJlgCGS0EkQU8=; b=eJJvE3OkfHioiVyAUvod/xWHtV
-        WGv/N2PsOYiZL3mcChSb+TQTYzkHm+vRlydFYijkHHFga8gaiM762Vydaej5hAhzbSjxNiqWxgIJA
-        CP+d59zC2wQz9RD8blXdOwWCSaXxhKkLnL0ANjl1Av52CEhiwyF8dUYtZ6gkhHjowc6HcEJUfMXxQ
-        3IZlOYIDbwarslbdNgpOEhFI1jgMgaoyOKUYq/9U+JSs9ljCepmrURegpcxLjA4TTCktKSiFNfcHf
-        NqM603BOB5I95liq3KZ+VAN+23tDKLx8zqsZ0iq+w4xGbjjCop/u3ZV94XBFY3Q3nkJ8461iJMT/W
-        ecPejnfg==;
-Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb0iP-0007Id-65; Wed, 12 Jun 2019 10:42:49 +0000
-Date:   Wed, 12 Jun 2019 07:42:42 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190612074242.53a4cf56@coco.lan>
-In-Reply-To: <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
-References: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
-        <20190531051400.GA2275@cz.tnic>
-        <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
-        <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-        <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
-        <20190608090556.GA32464@zn.tnic>
-        <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
-        <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
-        <20190611115651.GD31772@zn.tnic>
-        <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
-        <20190612034813.GA32652@zn.tnic>
-        <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 12 Jun 2019 06:45:01 -0400
+Received: from sauhun.de ([88.99.104.3]:58420 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727111AbfFLKpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:45:01 -0400
+Received: from localhost (p5486CACA.dip0.t-ipconnect.de [84.134.202.202])
+        by pokefinder.org (Postfix) with ESMTPSA id 974242C54BC;
+        Wed, 12 Jun 2019 12:44:59 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 12:44:59 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
+        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
+        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
+Message-ID: <20190612104459.gvji3qxym5s4odfq@ninjato>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190612103453.ccet2pneairnlpcc@ninjato>
+ <20190612104011.GA4660@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ozob5i4arnc7fie4"
+Content-Disposition: inline
+In-Reply-To: <20190612104011.GA4660@dell>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Jun 2019 18:29:26 +1000
-Benjamin Herrenschmidt <benh@kernel.crashing.org> escreveu:
 
-> On Wed, 2019-06-12 at 05:48 +0200, Borislav Petkov wrote:
-> > On Wed, Jun 12, 2019 at 08:25:52AM +1000, Benjamin Herrenschmidt wrote:  
-> > > Yes, we would be in a world of pain already if tracepoints couldn't
-> > > handle concurrency :-)  
-> > 
-> > Right, lockless buffer and the whole shebang :)  
-> 
-> Yup.
-> 
-> > > Sort-of... I still don't see a race in what we propose but I might be
-> > > missing something subtle. We are talking about two drivers for two
-> > > different IP blocks updating different counters etc...  
-> > 
-> > If you do only *that* you should be fine. That should technically be ok.  
-> 
-> Yes, that' the point.
+--ozob5i4arnc7fie4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't think the EDAC core has any troubles with concurrency. 
 
-As far as I remember, the hacks we had to do at x86 world are due to 
-concurrency at the hardware side: having two RAS codes (either between
-a driver and BIOS APEI/GHES or between two drivers) accessing the same 
-set of MCA registers doesn't work at the Intel chipsets I'm aware of.
+> There are no cross-subsystem build dependencies on any of these
+> patches.  The only reason they are bundled together in the same
+> patch-set is for cross-subsystem visibility and understanding.
+>=20
+> There is wide interest in these devices.
 
-> 
-> > I still think, though, that the sensible thing to do is have one
-> > platform driver which concentrates all RAS functionality.   
->
+I see. That would have been a great cover-letter, Lee ;) Thanks for the
+heads up!
 
-> I tend to disagree here. We've been down that rabbit hole in the past
-> and we (Linux in general) are trying to move away from that sort of
-> "platform" overarching driver as much as possible.
+>=20
+> > Also, the current maintainer entry for this driver looks like:
+> >=20
+> > drivers/i2c/busses/i2c-qcom-geni.c:
+> >         Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
+> >         David Brown <david.brown@linaro.org> (maintainer:ARM/QUALCOMM S=
+UPPORT)
+> >         Alok Chauhan <alokc@codeaurora.org> (supporter:QUALCOMM GENERIC=
+ INTERFACE I2C DRIVER)
+> >=20
+> > I didn't hear from those people yet, would be great to have their acks.
+>=20
+> I will see if I can rouse them from their slumber.
 
-Without entering on ARM-specific architecture design, I tend to agree
-with the principle that different hardware components would use different
-RAS drivers, provided that they use the already existing RAS cores.
+Please do. If they are not to reach, we probably need to update the
+entry...
 
-Up to some extend, we have already multiple RAS drivers right now.
 
-Besides EDAC/MCE, there are for example, PCIe errors that can come via 
-AER. Network drivers also report errors using different mechanisms.
-I know a person that it is interested on working on an implementation
-to collect disk errors using a trace-based error report mechanism.
+--ozob5i4arnc7fie4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So, at the end of the day, different errors may come from different
-drivers using different non-overlapping error mechanisms.
+-----BEGIN PGP SIGNATURE-----
 
-That's said, from the admin PoV, it makes sense to have a single
-daemon that collect errors from all error sources and take the
-needed actions.
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A16sACgkQFA3kzBSg
+KbYxGA/9HiQnj0VnFh9GoFzMImS2pCdkGgsTJeZ+9OUV4xzVVVJ5IqvMsTVveAa2
+G8UW1TqfWoeNwaAW5z1DITb/F2FOhx162e7Qce8C5xYNJfybOJYixAvlkyjVBi0H
+fT4/ei14NJgNsy2cGs2UUSwKqwMmR7iom3DQQc3w6fMBiXciQGKNXJ7Gr1iatsg7
+jbOMUZ+SzeSLsfQutWvNR8kiN0K0AEnj9f5Q2nxPtwoK0cSx6HxH7x3KA6QK4NlO
+tOY4FrVg4yXCu2arTUcp+1PBo2E9svLocqZwyxa1bJyeIZYNMI9XJXoliMNdMsJF
+spDGdaHB3OPG1ipES/W6559y9MCdebjqlnE2JiSGmhNlrU+TIgj4q862zHTL9wyN
+Ugpc5IMvaVafCfUJTqLHF/lGKfs4J5d568psLyJamY9XqVWG1LY+s/RQtD1OMATU
+dfDs2ONGEbVK8Okvpck8cgPn25bOn0R67Kn5K31PX6qUhlggxeGl5laOhhdzg1h5
+80Or9O8URxb6SHStnsgy8uA9OF3gpfKnmE6PVXxfIShQiCz3UxC9l/j46zlObUPV
+Z1XeHI2cT0cjSTfgclEyM0Q33DyECfH3uTPuc0erjqNj+qWVxV506GsAOmU09GEP
+lXw8C3DCPAdqrxO/bcIi8xlY//b0s9uEHokcV5lutndaQFyj+oE=
+=E6Gx
+-----END PGP SIGNATURE-----
 
-> 
-> > It is the
-> > more sensible design and takes care of potential EDAC shortcomings and
-> > the need to communicate between the different logging functionality,
-> > as in, for example, "I had so many errors, lemme go and increase DRAM
-> > scrubber frequency." For example. And all the other advantages of having
-> > everything in a single driver.  
-> 
-> This is a policy. It should either belong to userspace, or be in some
-> generic RAS code in the kernel, there's no reason why these can't be
-> abstracted. Also in your specific example, it could be entirely local
-> to the MC EDAC / DRAM controller path, we could have a generic way for
-> EDAC to advertise that a given memory channel is giving lots of errors
-> and have memory controller drivers listen to it but usually the EDAC MC
-> driver *is* the only thing that looks like a MC driver to begin with,
-> so again, pretty much no overlap with L1/L2 caches RAS or PCIe RAS
-> etc...
-
-On userspace, I guess there's just the rasdaemon and the old legacy
-edac-utils. 
-
-Right now, the rasdaemon doesn't have anything like that, but we keep
-integrating new RAS report mechanisms to it (we just added support
-this week for network devlink error reports). 
-
-If I had to put a policy like that on userspace, rasdaemon should probably 
-be the right place to add it.
-
-Thanks,
-Mauro
+--ozob5i4arnc7fie4--
