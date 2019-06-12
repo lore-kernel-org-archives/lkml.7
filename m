@@ -2,101 +2,164 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3396DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1D1C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0816920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752FB20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:37:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1ykHWXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfFLShB convert rfc822-to-8bit (ORCPT
+        id S1727188AbfFLShF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 14:37:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50952 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbfFLShA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 14:37:00 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5350E308795D;
-        Wed, 12 Jun 2019 18:37:00 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-109.rdu2.redhat.com [10.10.120.109])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 42FE85F9C3;
-        Wed, 12 Jun 2019 18:36:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <0483c310-87c0-17b6-632e-d57b2274a32f@schaufler-ca.com>
-References: <0483c310-87c0-17b6-632e-d57b2274a32f@schaufler-ca.com> <9c41cd56-af21-f17d-ab54-66615802f30e@schaufler-ca.com> <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk> <31009.1560262869@warthog.procyon.org.uk> <14576.1560361278@warthog.procyon.org.uk>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     dhowells@redhat.com, Stephen Smalley <sds@tycho.nsa.gov>,
-        Andy Lutomirski <luto@kernel.org>, viro@zeniv.linux.org.uk,
-        linux-usb@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: What do LSMs *actually* need for checks on notifications?
+        Wed, 12 Jun 2019 14:37:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39833 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfFLShC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 14:37:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so10179381pfe.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DXItd4QKKcMyTRkmGL6RVgljzEiWFbcFIOw7FfH00GY=;
+        b=V1ykHWXuVctHxVCMZR31Lhf3ekEW5RMkXg6I05eaOkPCMQsvEUB1GVZaePVtkB/AkR
+         bWSJpUjVq7yRTAKhi/PaorCVoSomgKPHQvsWCaE+dw/19ArzU5MGJLobYMvq1YBz3bCg
+         CaZVseF+pNS62h+aqbO+KjLTbqJwEe1uqAAfLm39CR4/eXxMhNmm0pN471EUwlAs+qhh
+         leT90bOaEEsVRv/62wmo+FKl1YZoiEhxSA+DsweI4ZqY6+So33HOn5cK68e3IKzNWBAp
+         JcPEAhEDlISCS4ivdeUEp8kSAGLMQzJI513eyyHD1dHe8C150IH+AaURoTChf1U7GI+R
+         M53A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DXItd4QKKcMyTRkmGL6RVgljzEiWFbcFIOw7FfH00GY=;
+        b=p7KopVlq8LrqXTJgT9hXWY1KWqaZnVgvSWbQkMjHvIxSpXtwaHk8GJv07Zp46OdDXK
+         diwrBmaDJ4FNEUmxTUvCw3odpC7VLO2UtAWEBFOyCHhliwKHV1X1sRhGKLlXrxHm44ZA
+         s4Yojdb1TTyEEl4tiYU0e1cVN2ifJrzRni6a5bblIuGagJSIkgc21gDWhIBsIvS6Eh/3
+         Vg0SJoI9Qopvf/aa8VDnh1w6uIxJca8STBOckO4qIshOJHBffYUYHJtgrlSpKAii/M7i
+         dUQYdggL3+rhljwKpUaOXTHYVRdKRXP03YiaTkEtqqbbAxEzWLzb8LUejdn+sT73c0uB
+         U2Rw==
+X-Gm-Message-State: APjAAAVY2P0Bh43tEbz+aMoQnq+Gqsoe7wwlNJeP+4DCqIG3khgxWeTi
+        P6Ge/mV6Y+jXR6CepP3wQ+c=
+X-Google-Smtp-Source: APXvYqzjdoMxCVuEJbHHk09NkgKkEkrFSeajkMZcGBlMNFEnpUY9Mfd7qwmsZB2dZpGscl2+DABZMA==
+X-Received: by 2002:a62:4d04:: with SMTP id a4mr87702880pfb.177.1560364621102;
+        Wed, 12 Jun 2019 11:37:01 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id 3sm250910pfp.114.2019.06.12.11.36.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 11:37:00 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 00:06:55 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/i915/gvt: remove duplicate entry of trace
+Message-ID: <20190612183654.GA16750@hari-Inspiron-1545>
+References: <20190526075633.GA9245@hari-Inspiron-1545>
+ <20190612032236.GH9684@zhen-hp.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <17321.1560364615.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Wed, 12 Jun 2019 19:36:55 +0100
-Message-ID: <17322.1560364615@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 12 Jun 2019 18:37:00 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612032236.GH9684@zhen-hp.sh.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Casey Schaufler <casey@schaufler-ca.com> wrote:
-
-> >  (*) Device events (block/usb) don't require any permissions, but currently
-> >      only deliver hardware notifications.
+On Wed, Jun 12, 2019 at 11:22:36AM +0800, Zhenyu Wang wrote:
+> On 2019.05.26 13:26:33 +0530, Hariprasad Kelam wrote:
+> > Remove duplicate include of trace.h
+> > 
+> > Issue identified by includecheck
+> > 
+> > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> > ---
+> >  drivers/gpu/drm/i915/gvt/trace_points.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/i915/gvt/trace_points.c b/drivers/gpu/drm/i915/gvt/trace_points.c
+> > index a3deed69..569f5e3 100644
+> > --- a/drivers/gpu/drm/i915/gvt/trace_points.c
+> > +++ b/drivers/gpu/drm/i915/gvt/trace_points.c
+> > @@ -32,5 +32,4 @@
+> >  
+> >  #ifndef __CHECKER__
+> >  #define CREATE_TRACE_POINTS
+> > -#include "trace.h"
+> >  #endif
+> > -- 
 > 
-> How do you specify what device you want to watch?
-
-It's a general queue.
-
-> Don't you have to access a /dev/something?
-
-Not at the moment.  One problem is that there may not be a /dev/something for
-a device (take a bridge for example), and even if it does, the device driver
-doesn't necessarily have access to the path.  The messages contain the device
-name string as appears in dmesg ("3-7" for a USB device, for example).
-
-I think it would be wise to limit the general queue to hardware events that
-either get triggered by someone physically mucking around with the hardware or
-device errors, such as bad sectors or links going up and down.
-
-> > You can't find out what watches exist.
+> This actually caused build issue like
+> ERROR: "__tracepoint_gma_index" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_render_mmio" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_gvt_command" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_spt_guest_change" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_gma_translate" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_spt_alloc" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_spt_change" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_oos_sync" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_write_ir" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_propagate_event" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_inject_msi" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_spt_refcount" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_spt_free" [drivers/gpu/drm/i915/i915.ko] undefined!
+> ERROR: "__tracepoint_oos_change" [drivers/gpu/drm/i915/i915.ko] undefined!
+> scripts/Makefile.modpost:91: recipe for target '__modpost' failed
 > 
-> Not even your own?
-
-No.
-
-> > However, it should be noted that (1) is the creds of the buffer owner.
+> Looks we need fix like below.
 > 
-> How are buffers shared? Who besides the buffer creator can use it?
+> Subject: [PATCH] drm/i915/gvt: remove duplicate include of trace.h
+> 
+> This removes duplicate include of trace.h. Found by Hariprasad Kelam
+> with includecheck.
+> 
+> Reported-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/trace_points.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gvt/trace_points.c b/drivers/gpu/drm/i915/gvt/trace_points.c
+> index a3deed692b9c..fe552e877e09 100644
+> --- a/drivers/gpu/drm/i915/gvt/trace_points.c
+> +++ b/drivers/gpu/drm/i915/gvt/trace_points.c
+> @@ -28,8 +28,6 @@
+>   *
+>   */
+>  
+> -#include "trace.h"
+> -
+>  #ifndef __CHECKER__
+>  #define CREATE_TRACE_POINTS
+>  #include "trace.h"
+> -- 
+> 2.20.1
+> 
+> -- 
+> Open Source Technology Center, Intel ltd.
+> 
+> $gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
 
-When you open /dev/watch_queue, you get buffers private to that file object; a
-second open of the device, even by the same process, will get different
-buffers.
+Hi Zhenyu Wang,
+Thanks for correcting the patch.
+It seems we should first define CREATE_TRACE_POINTS and include trace.h as per documentation.
 
-The buffers are 'attached' to that file and are accessed by calling mmap() on
-the fd; shareability is governed by how shareable the fd and a mapping are
-shareable.
-
-> Can you glean information from the watch being deleted?
-> I wouldn't think so, and it seems like a one-time event
-> from the system, so I don't think an access check would
-> be required.
-
-As you say, it's a one-time message per watch.  The object that got deleted
-would need to be recreated, rewatched and made available to both parties.
-
-David
+Thanks,
+Hariprasad k
