@@ -2,97 +2,84 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF8EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8973CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4FA20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B3520866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBzl8rN/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eikelenboom.it header.i=@eikelenboom.it header.b="YziB4QXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438450AbfFLMFR (ORCPT
+        id S2438603AbfFLMI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:05:17 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36258 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436551AbfFLMFR (ORCPT
+        Wed, 12 Jun 2019 08:08:26 -0400
+Received: from server.eikelenboom.it ([91.121.65.215]:54960 "EHLO
+        server.eikelenboom.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436551AbfFLMIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:05:17 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f21so2810956pgi.3;
-        Wed, 12 Jun 2019 05:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Sff4ua3deUoFnvuxLiF7YAw+tlu26eK2pltBahQlIM=;
-        b=NBzl8rN/oAdi5zCjlv7rvRkehotFhdDepkjg+vDZhXE2PBPg4nQBNXqlJmq2U+KF4S
-         kTD54SprA0aT+K4kEoHLZCd6eqqrV9yzUfLQc6euPqP1jipjpdSrWxvI0TojAalKo5Lo
-         i2l/xMRZ2qDgmhxLrHkF425fsLUCOaK4xTCoRBz251ejL7b2ReCZgSL/wfrlSsO9iSqS
-         MD+vObqwcFZwMkOF1ht7AupR9jamsODZCqCRaKVy6qWtTQmsp33tN6cb/yHLTLxXYozj
-         Ur04IgsAU6GVoixxajT/6+KE54f/487NoF6wHAv7z3jWG2O2Ix90kdZ7JoGrq+otTevz
-         SELA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Sff4ua3deUoFnvuxLiF7YAw+tlu26eK2pltBahQlIM=;
-        b=piAVM/oeNfaWYuSZlNMhT7JZp/sB1DZ0vpFDVM4gGdxulnPrNsDv0zM1R5Z/tuvLJC
-         f1Djom1FrSex+s/reNnkt3tsEVbl7CpW7fpzEtk/GUFls+xvLs9TcsgJ31OyGbZNx4Y+
-         ANmG4cilXk/zI8brm8pgEJcHiID03Qn2yrFkFiOCgiupt2VQXg1KXkMsQwc7jAAcmIem
-         1M70OMmaDL4dCEoNpCK//Hb17Sz+iNnVBPtv/7ZnoupHLuMh5cw03GV4Vzz1jUi07j9+
-         03bpJV1Hn3AYqLV0nW3Hrq1T8PrM/oi/0f7OPE0FcJTLxdqYmLNc0Q7BKujVnqwSLUC4
-         OcIQ==
-X-Gm-Message-State: APjAAAWhdtv1zWVJqgEKBNDFqzGVHGDAa47GA+SddWL94XBu8bO5AzrA
-        frZwu1BIaiXYS3nIqMRmUSQ=
-X-Google-Smtp-Source: APXvYqxCFL0ITppBmVjK6Osmr2Z/1tpzGxQLw+hH/Obl7KNjP2Ump9ilyp3gg4RCZTal1u9xzomuiA==
-X-Received: by 2002:aa7:9a92:: with SMTP id w18mr56535444pfi.167.1560341116838;
-        Wed, 12 Jun 2019 05:05:16 -0700 (PDT)
-Received: from masabert (150-66-71-0m5.mineo.jp. [150.66.71.0])
-        by smtp.gmail.com with ESMTPSA id e16sm5309606pga.11.2019.06.12.05.05.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 05:05:16 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id DF87C2011BF; Wed, 12 Jun 2019 21:05:11 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        ricardo.ribalda@gmail.com, linux-media@vger.kernel.org
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH] media: imx214: Fix typo in module description of imx214
-Date:   Wed, 12 Jun 2019 21:05:10 +0900
-Message-Id: <20190612120510.839-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 12 Jun 2019 08:08:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=eikelenboom.it; s=20180706; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HMMzkEP4WbpPiU7OaAK4YYStnvL4huMRmKxIzkOsvO0=; b=YziB4QXQ1wZZTmpueJ7TbStAiC
+        2OB0T4AcHVrvcXFvdn+encKtRh++7eIctsFdZRN2IA428qb3nU1FiAGa68Q+vvyr6BL7ohsIraMK7
+        zJzAnpX/bMXKuE8eLl7Ued5Z8lCWfuCFrWtHbjg5lForaybVdp6y73fJa6pfzOXXUfBw=;
+Received: from ip4da85049.direct-adsl.nl ([77.168.80.73]:25793 helo=[10.97.34.6])
+        by server.eikelenboom.it with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <linux@eikelenboom.it>)
+        id 1hb23B-0004SJ-0E; Wed, 12 Jun 2019 14:08:21 +0200
+Subject: Re: [PATCH] fuse: require /dev/fuse reads to have enough buffer
+ capacity (take 2)
+To:     Kirill Smelkov <kirr@nexedi.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, gluster-devel@gluster.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it>
+ <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com>
+ <20190611202738.GA22556@deco.navytux.spb.ru>
+ <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com>
+ <20190612112544.GA21465@deco.navytux.spb.ru>
+From:   Sander Eikelenboom <linux@eikelenboom.it>
+Message-ID: <97c87eb3-5b95-c848-8c50-ed7b535220b0@eikelenboom.it>
+Date:   Wed, 12 Jun 2019 14:11:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612112544.GA21465@deco.navytux.spb.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a spelling typo found in imx214.c
+On 12/06/2019 13:25, Kirill Smelkov wrote:
+> On Wed, Jun 12, 2019 at 09:44:49AM +0200, Miklos Szeredi wrote:
+>> On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+>>
+>>> Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` for
+>>> header room change be accepted?
+>>
+>> Yes, next cycle.   For 4.2 I'll just push the revert.
+> 
+> Thanks Miklos. Please consider queuing the following patch for 5.3.
+> Sander, could you please confirm that glusterfs is not broken with this
+> version of the check?
+> 
+> Thanks beforehand,
+> Kirill
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
----
- drivers/media/i2c/imx214.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure will give it a spin this evening and report back.
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index 83e9961b0505..159a3a604f0e 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -1111,6 +1111,6 @@ static struct i2c_driver imx214_i2c_driver = {
- 
- module_i2c_driver(imx214_i2c_driver);
- 
--MODULE_DESCRIPTION("Sony IMX214 Camera drier");
-+MODULE_DESCRIPTION("Sony IMX214 Camera driver");
- MODULE_AUTHOR("Ricardo Ribalda <ricardo.ribalda@gmail.com>");
- MODULE_LICENSE("GPL v2");
--- 
-2.22.0
-
+--
+Sander
