@@ -2,190 +2,103 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6234EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5CAC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32343207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ogvmdw8x"
+	by mail.kernel.org (Postfix) with ESMTP id 6D180207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437541AbfFLJgZ (ORCPT
+        id S2437552AbfFLJgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:36:25 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46919 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437517AbfFLJgV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:36:21 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so6393086pls.13;
-        Wed, 12 Jun 2019 02:36:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8Dqc/R6tA+VMXmtA2D7t9ERetiSobjxfaHTvZxh87cs=;
-        b=ogvmdw8xHe041JGpZDrMyNMTMo403aGh6dtmODfjXYMSWl/FMLryX5X8fxEErLDW0V
-         NnVO7lEcxjvhnzsiJ7GYzXl/5bRpAxN7mJfjQdWziIE4UIUKr+ZiegjeP1oiztRF4OoN
-         xCxacdDxIuOnIYIF3PWA+SPiRpu9NhRA3FPPEoXoyxIxdjoy5saiTQWGC7Wgdo4QaZif
-         9Dkwfyr3P9FVBZQQUcySXMInu7qxfhmHwlws5m77HFWzm3WqZ7gVS7VqjzCQMN0tJ2Va
-         HXT56szHTYf5LNjNafY2jRMymy1kEtSMqQ0RQ1uxJRb4Mmy1og9BwZU/CjMBR6zqdliV
-         dmbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8Dqc/R6tA+VMXmtA2D7t9ERetiSobjxfaHTvZxh87cs=;
-        b=EhSdwdZ34foqIGzDMYEhoNcRoywsT5aE9//ByyXtyq58VMwZtZBTq8X887DL3dDFXu
-         TcEnOs37eB0B1rzQrWO3L5EtlMFF6Uybs7/ORhIa2EGyT80r6xalludtPXAG+3vtS7nl
-         GFrcwehySeeqy4XxTmgJu2Ai5v3lPcryAa+y2Pa/tSpW0FtzqI/95d0RSNOWig9HMrbP
-         EoTF5RB+ab5SwzWRQ5KCCE1RnbSCuhECIPaDSI2TSMw0GBRd0CJqP6GRjjqoz6XPUFYj
-         N9Rj2oRBliIV2dqmqssMjsrzxyVwAtZsl2r63Pj5HIkAXxrFkEEAu8HwKg6pBCQOk+TD
-         A+/Q==
-X-Gm-Message-State: APjAAAVk5mpQh42osc2w2WQCcQxAfHGgfQa//AObOXTUyiFcS/3DMcWh
-        +rPGCP5rn0u1SdfsRWmVr91x1cQ/
-X-Google-Smtp-Source: APXvYqzfj4TXkwPGhX58WBPRcCd4Q4fhf33MmMnBqLdu3/ifQwiblBrZlPpAFaTNkbaUQcfDK/XRhA==
-X-Received: by 2002:a17:902:30a3:: with SMTP id v32mr81641033plb.6.1560332180831;
-        Wed, 12 Jun 2019 02:36:20 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id 27sm6148936pgl.82.2019.06.12.02.36.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 12 Jun 2019 02:36:20 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v3 5/5] KVM: LAPIC: Optimize timer latency further
-Date:   Wed, 12 Jun 2019 17:36:00 +0800
-Message-Id: <1560332160-17050-6-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560332160-17050-1-git-send-email-wanpengli@tencent.com>
-References: <1560332160-17050-1-git-send-email-wanpengli@tencent.com>
+        Wed, 12 Jun 2019 05:36:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:48678 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437526AbfFLJgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:36:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6773028;
+        Wed, 12 Jun 2019 02:36:35 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E27453F246;
+        Wed, 12 Jun 2019 02:36:30 -0700 (PDT)
+Subject: Re: [PATCH 03/13] driver_find_device: Unify the match function with
+ class_find_device()
+To:     lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, minyard@acm.org, linux@armlinux.org.uk,
+        thierry.reding@gmail.com, will.deacon@arm.com, joro@8bytes.org,
+        oberpar@linux.ibm.com, sebott@linux.ibm.com, airlied@linux.ie,
+        daniel@ffwll.ch, nehal-bakulchandra.shah@amd.com,
+        shyam-sundar.s-k@amd.com, borntraeger@de.ibm.com
+References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
+ <1559747630-28065-4-git-send-email-suzuki.poulose@arm.com>
+ <20190612093246.GE4797@dell>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <136ab9e5-694a-c277-5125-070df60453e3@arm.com>
+Date:   Wed, 12 Jun 2019 10:36:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612093246.GE4797@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Hi Lee,
 
-Advance lapic timer tries to hidden the hypervisor overhead between the 
-host emulated timer fires and the guest awares the timer is fired. However, 
-it just hidden the time between apic_timer_fn/handle_preemption_timer -> 
-wait_lapic_expire, instead of the real position of vmentry which is 
-mentioned in the orignial commit d0659d946be0 ("KVM: x86: add option to 
-advance tscdeadline hrtimer expiration"). There is 700+ cpu cycles between 
-the end of wait_lapic_expire and before world switch on my haswell desktop.
+On 12/06/2019 10:32, Lee Jones wrote:
+> On Wed, 05 Jun 2019, Suzuki K Poulose wrote:
+> 
+>> The driver_find_device() accepts a match function pointer to
+>> filter the devices for lookup, similar to bus/class_find_device().
+>> However, there is a minor difference in the prototype for the
+>> match parameter for driver_find_device() with the now unified
+>> version accepted by {bus/class}_find_device(), where it doesn't
+>> accept a "const" qualifier for the data argument. This prevents
+>> us from reusing the generic match functions for driver_find_device().
+>>
+>> For this reason, change the prototype of the driver_find_device() to
+>> make the "match" parameter in line with {bus/class}_find_device()
+>> and adjust its callers to use the const qualifier. Also, we could
+>> now promote the "data" parameter to const as we pass it down
+>> as a const parameter to the match functions.
+>>
+>> Cc: Corey Minyard <minyard@acm.org>
+>> Cc: Russell King <linux@armlinux.org.uk>
+>> Cc: Thierry Reding <thierry.reding@gmail.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Joerg Roedel <joro@8bytes.org>
+>> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+>> Cc: Sebastian Ott <sebott@linux.ibm.com>
+>> Cc: David Airlie <airlied@linux.ie>
+>> Cc: Daniel Vetter <daniel@ffwll.ch>
+>> Cc: Nehal Shah <nehal-bakulchandra.shah@amd.com>
+>> Cc: Shyam Sundar S K <shyam-sundar.s-k@amd.com>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-This patch tries to narrow the last gap(wait_lapic_expire -> world switch), 
-it takes the real overhead time between apic_timer_fn/handle_preemption_timer
-and before world switch into consideration when adaptively tuning timer 
-advancement. The patch can reduce 40% latency (~1600+ cycles to ~1000+ cycles 
-on a haswell desktop) for kvm-unit-tests/tscdeadline_latency when testing 
-busy waits.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c   | 3 ++-
- arch/x86/kvm/lapic.h   | 2 +-
- arch/x86/kvm/svm.c     | 4 ++++
- arch/x86/kvm/vmx/vmx.c | 4 ++++
- arch/x86/kvm/x86.c     | 3 ---
- 5 files changed, 11 insertions(+), 5 deletions(-)
+>>   drivers/mfd/altera-sysmgr.c          | 4 ++--
+>>   drivers/mfd/syscon.c                 | 2 +-
+> 
+> I'm okay with the changes.  How do you plan on managing the merge?
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index af38ece..63513de 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1531,7 +1531,7 @@ static inline void adaptive_tune_timer_advancement(struct kvm_vcpu *vcpu,
- 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
- }
- 
--void wait_lapic_expire(struct kvm_vcpu *vcpu)
-+void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	u64 guest_tsc, tsc_deadline;
-@@ -1553,6 +1553,7 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
- 	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
- 		adaptive_tune_timer_advancement(vcpu, apic->lapic_timer.advance_expire_delta);
- }
-+EXPORT_SYMBOL_GPL(kvm_wait_lapic_expire);
- 
- static void start_sw_tscdeadline(struct kvm_lapic *apic)
- {
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 3e72a25..f974a3d 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -220,7 +220,7 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
- 
- bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
- 
--void wait_lapic_expire(struct kvm_vcpu *vcpu);
-+void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
- 
- bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
- 			struct kvm_vcpu **dest_vcpu);
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 6b92eaf..955cfcb 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5638,6 +5638,10 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	clgi();
- 	kvm_load_guest_xcr0(vcpu);
- 
-+	if (lapic_in_kernel(vcpu) &&
-+		vcpu->arch.apic->lapic_timer.timer_advance_ns)
-+		kvm_wait_lapic_expire(vcpu);
-+
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
- 	 * it's non-zero. Since vmentry is serialising on affected CPUs, there
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e1fa935..771d3bf 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6423,6 +6423,10 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	vmx_update_hv_timer(vcpu);
- 
-+	if (lapic_in_kernel(vcpu) &&
-+		vcpu->arch.apic->lapic_timer.timer_advance_ns)
-+		kvm_wait_lapic_expire(vcpu);
-+
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
- 	 * it's non-zero. Since vmentry is serialising on affected CPUs, there
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 4a7b00c..e154f52 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7903,9 +7903,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 	}
- 
- 	trace_kvm_entry(vcpu->vcpu_id);
--	if (lapic_in_kernel(vcpu) &&
--	    vcpu->arch.apic->lapic_timer.timer_advance_ns)
--		wait_lapic_expire(vcpu);
- 	guest_enter_irqoff();
- 
- 	fpregs_assert_state_consistent();
--- 
-2.7.4
+Thanks for looking the changes.
 
+I assume, Greg can pull this once we have got the Acks.
+Btw, would you mind providing the necessary tags here if you are OK with it ?
+
+
+Cheers
+Suzuki
