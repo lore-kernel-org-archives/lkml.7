@@ -2,106 +2,135 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09A7C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A264CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7998208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560344810;
-	bh=DsWkt0w0Fpfud6LWAZJ165X9OtQWGb7tOtf9BfXLfYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dNwnLkwyFc9Rl7TrBrlD66Civ3dz6t7UU2cyvfby/iN2nmsAVZFqwz4bb5qKGH86v
-	 pdCt8VA4AbnFbEzbsNeu6ALsR8OMD1CwvWFj9eZuCPZmM3FBGRTHxSxs4NJW6GrKoE
-	 L7j4nvlH9z0JMbUYHv8+G5RX+WGTjfdxpMn9/FnU=
+	by mail.kernel.org (Postfix) with ESMTP id 81049208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbfFLNGu (ORCPT
+        id S1732382AbfFLNIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45750 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 09:08:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:53052 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728322AbfFLNGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:06:49 -0400
-Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F3D6208C2;
-        Wed, 12 Jun 2019 13:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560344808;
-        bh=DsWkt0w0Fpfud6LWAZJ165X9OtQWGb7tOtf9BfXLfYU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vCmFgQiYcmFEOhtz/2577ShRIuWetu+xN0/oDdDGwnMgrOE34sL8WZc1sWUcDQb/p
-         GuZScr3rOS1wLoh/TnDQFDympPwV3cX4rJ2JpeZwR++cCHL+CSrxS8gCgFN9e7sqEy
-         pJegmpPjjsOCJHdJc1mjWU14LHsjQq4v/MKLnWJk=
-Date:   Wed, 12 Jun 2019 21:06:05 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        id S1728322AbfFLNIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:08:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8F4528;
+        Wed, 12 Jun 2019 06:08:20 -0700 (PDT)
+Received: from redmoon (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EF2E3F557;
+        Wed, 12 Jun 2019 06:08:18 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 14:08:13 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
-Message-ID: <20190612130602.GH11086@dragon>
-References: <20190606080255.25504-1-horia.geanta@nxp.com>
- <20190612103926.GE11086@dragon>
- <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
+ MSI_FLAG_MULTI_PCI_MSI
+Message-ID: <20190612130813.GA15747@redmoon>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
+ <20190611165935.GA22836@redmoon>
+ <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 11:45:18AM +0000, Horia Geanta wrote:
-> On 6/12/2019 1:40 PM, Shawn Guo wrote:
-> > On Thu, Jun 06, 2019 at 11:02:55AM +0300, Horia Geantă wrote:
-> >> From: Iuliana Prodan <iuliana.prodan@nxp.com>
-> >>
-> >> Add crypto node in device tree for CAAM support.
-> >>
-> >> Noteworthy is that on 7ulp the interrupt line is shared
-> >> between the two job rings.
-> >>
-> >> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> >> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-> >> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-> >> ---
-> >>
-> >> I've just realized that this patch should be merged through the crypto tree,
-> >> else bisectability could be affected due to cryptodev-2.6
-> >> commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7ULP")
-> >> ( https://patchwork.kernel.org/patch/10970017/ )
-> >> which should come first.
+On Wed, Jun 12, 2019 at 11:34:51AM +0000, Z.q. Hou wrote:
+> Hi Lorenzo,
+> 
+> Thanks a lot for your comments!
+> 
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: 2019年6月12日 1:00
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
+> > <leoyang.li@nxp.com>; catalin.marinas@arm.com; will.deacon@arm.com;
+> > Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>;
+> > Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
+> > MSI_FLAG_MULTI_PCI_MSI
 > > 
-> > I'm not sure I follow it.  This is a new device added to imx7ulp DT.
-> > It's never worked before on imx7ulp.  How would it affect git bisect?
+> > On Fri, Apr 12, 2019 at 08:35:36AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > The current code does not support multiple MSIs, so remove the
+> > > corresponding flag from the msi_domain_info structure.
 > > 
-> Driver corresponding to this device (drivers/crypto/caam) has to be updated
-> before adding the node in DT.
-> Is there any guarantee wrt. merge order of the crypto and DT trees?
+> > Please explain me what's the problem before removing multi MSI support.
+> 
+> NXP LX2 PCIe use the GIC-ITS instead of Mobiveil IP internal MSI
+> controller, so, I didn't encounter problem.
 
-Do not merge DT changes until driver part hits mainline.
+Well, you sent a patch to fix an issue, explain me the issue you
+are fixing then, aka what have you sent this patch for ?
 
-Shawn
+Lorenzo
+
+> Subbu, did you test with Endpoint supporting multi MSI?
+> 
+> Thanks,
+> Zhiqiang
+> 
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > ---
+> > > V5:
+> > >  - Corrected the subject.
+> > >
+> > >  drivers/pci/controller/pcie-mobiveil.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> > > b/drivers/pci/controller/pcie-mobiveil.c
+> > > index 563210e731d3..a0dd337c6214 100644
+> > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > @@ -703,7 +703,7 @@ static struct irq_chip mobiveil_msi_irq_chip = {
+> > >
+> > >  static struct msi_domain_info mobiveil_msi_domain_info = {
+> > >  	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS |
+> > MSI_FLAG_USE_DEF_CHIP_OPS |
+> > > -		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
+> > > +		   MSI_FLAG_PCI_MSIX),
+> > >  	.chip	= &mobiveil_msi_irq_chip,
+> > >  };
+> > >
+> > > --
+> > > 2.17.1
+> > >
