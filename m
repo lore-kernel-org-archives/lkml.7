@@ -2,92 +2,127 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11862C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00CAC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6D3208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:53:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jIFxE+K9"
+	by mail.kernel.org (Postfix) with ESMTP id A048B2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437293AbfFLIx1 (ORCPT
+        id S1731885AbfFLIyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:53:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37044 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407641AbfFLIx0 (ORCPT
+        Wed, 12 Jun 2019 04:54:03 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22117 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731698AbfFLIyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:53:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 131so14395251ljf.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nIawAQGWbLfWKTC3QZLXfcvTQA4CewZ25jbyqgy97+M=;
-        b=jIFxE+K9E+9sLfOXVhz7UhSXRSFRim36eS6PxLRxoAg84JEx1jh75jRvY3qyffVITd
-         lydhSmYqeZuBdXFrUO2/Sgn8Xtg4PTAZ+FTUb017+ByPeoR19sawrC03KCTTpAFi2Yoz
-         6L3AijeU2ipvMHlSkoZQpDNjNNy1e73Ao6OfLDP2mitZeLPhkISb2JCO6lmtDVhfqm8Q
-         4lJ0ruYaDTrE1CSiwuTn0QeCCc6ZvMJxAmCHrI9RtTmj2w8YuhwVHeZALl3GP9YO3Zxi
-         CUVQr73huP0KWf+XXV4eXtrMAML8vpFJJdDsZr5UJFb2i4zWu9LSo/FJtTTifNf7c6yW
-         AAtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nIawAQGWbLfWKTC3QZLXfcvTQA4CewZ25jbyqgy97+M=;
-        b=NbMRwWdbD5avvz6OOOq7aYEK7LbJNJsf5eJCiHZbt/JrW2ULcHBz4/7uzVKuHJ9KM0
-         camUUK+RQeDKIhpJwfbp/P57zL0jicQxDePbcmC2XooAgeHBwoyhQFsPxRmvgY5GScHe
-         Apby31G+pj7N6l2E4DLZqU7rnU+AFfqS9bFEXB2uFYMVfopo4z1aaICqFj6ti1ANB+JS
-         8xiidM81+pbBwN95/Pn86tKusFGA8AVRdILJKX7z6ixf+ZIC7avURmtbAEI3WSwzCUQZ
-         r3f7aNtPMen9SJHbt4ddo9mIPKujpPKBnGIokb1rITZ/w0gq4/FZ97c6f2YVrjkAtQEg
-         BIhw==
-X-Gm-Message-State: APjAAAVNkRExWNU6JGY7XfjnE2TnwgLVpB5FYqIpRnM59QSnTwkr/4XY
-        lqQex0UUsZ/ycbsp6lxLKVQgI32wbXYj9zOPvgDdlJE+xeE=
-X-Google-Smtp-Source: APXvYqxNIIw9LCbyTcI5g6LaBsQRBR0wCq3T/j2cKTZRbhzfeQ43ACd8rs8QCnicFF7qmbfskgJqAyNjSj9WpNbJRTY=
-X-Received: by 2002:a2e:9753:: with SMTP id f19mr3993428ljj.113.1560329604687;
- Wed, 12 Jun 2019 01:53:24 -0700 (PDT)
+        Wed, 12 Jun 2019 04:54:00 -0400
+X-UUID: 6321e93e977244288a8f257bf8af9ba0-20190612
+X-UUID: 6321e93e977244288a8f257bf8af9ba0-20190612
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1965707407; Wed, 12 Jun 2019 16:53:53 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Jun 2019 16:53:52 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 12 Jun 2019 16:53:51 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+CC:     Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v8 03/12] dt-binding: gce: add binding for gce client reg property
+Date:   Wed, 12 Jun 2019 16:53:40 +0800
+Message-ID: <20190612085349.21243-4-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
+References: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-13-grygorii.strashko@ti.com>
-In-Reply-To: <20190610171103.30903-13-grygorii.strashko@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 10:53:13 +0200
-Message-ID: <CACRpkdamGnFfvmdd_-DMph+AYCjYjF4sF+YOEqKig3L7kn4dkw@mail.gmail.com>
-Subject: Re: [PATCH-next 12/20] gpio: gpio-omap: simplify read-modify-write
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Russell King <rmk@arm.linux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 7:12 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
+cmdq driver provide a function that get the relationship
+of sub system number from device node for client.
+add specification for #subsys-cells, mediatek,gce-client-reg.
 
-> From: Russell King <rmk+kernel@armlinux.org.uk>
->
-> We already have a read-modify-write helper, but there's more that can
-> be done with a read-modify-write helper if it returned the new value.
-> Modify the existing helper to return the new value, and arrange for
-> it to take one less argument by having the caller compute the register
-> address.
->
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ .../devicetree/bindings/mailbox/mtk-gce.txt    | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-Patch applied.
+diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+index 1f7f8f2a3f49..d48282d6b02d 100644
+--- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
++++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+@@ -21,12 +21,21 @@ Required properties:
+ 	priority: Priority of GCE thread.
+ 	atomic_exec: GCE processing continuous packets of commands in atomic
+ 		way.
++- #subsys-cells: Should be 3.
++	<&phandle subsys_number start_offset size>
++	phandle: Label name of a gce node.
++	subsys_number: specify the sub-system id which is corresponding
++		       to the register address.
++	start_offset: the start offset of register address that GCE can access.
++	size: the total size of register address that GCE can access.
+ 
+ Required properties for a client device:
+ - mboxes: Client use mailbox to communicate with GCE, it should have this
+   property and list of phandle, mailbox specifiers.
+-- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+-  to the register address.
++Optional properties for a client device:
++- mediatek,gce-client-reg: Specify the sub-system id which is corresponding
++  to the register address, it should have this property and list of phandle,
++  sub-system specifiers.
+ 
+ Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+ or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+@@ -40,6 +49,7 @@ Example:
+ 		clocks = <&infracfg CLK_INFRA_GCE>;
+ 		clock-names = "gce";
+ 		#mbox-cells = <3>;
++		#subsys-cells = <3>;
+ 	};
+ 
+ Example for a client device:
+@@ -48,9 +58,9 @@ Example for a client device:
+ 		compatible = "mediatek,mt8173-mmsys";
+ 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+ 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+-		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+ 		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+ 				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+-
++		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
++					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+ 		...
+ 	};
+-- 
+2.18.0
 
-Yours,
-Linus Walleij
