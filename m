@@ -2,124 +2,190 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1B6C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80A9C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1FE320B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:48:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QukZpvZs"
+	by mail.kernel.org (Postfix) with ESMTP id A72E820874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407637AbfFLDsX (ORCPT
+        id S2436592AbfFLDty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:48:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52586 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407061AbfFLDsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:48:22 -0400
-Received: from zn.tnic (p200300EC2F0A680098854F45E2A0A47F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:9885:4f45:e2a0:a47f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4D1C1EC01AD;
-        Wed, 12 Jun 2019 05:48:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560311300;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=J1N1vI6eyDVtjlL+ZshOlH/0wAtVw2YVqy7wYoH0usQ=;
-        b=QukZpvZs6Q/q1XtjMMV2DJy8T8vdHnSMai/7i7ER9R2aJv1H0B+Durxvgx90070ANE8Ckk
-        RLdLhGXAFm1/6cbSsR3YiQ/slQq9Gp34Q0Fm/sva9NXybvOZaWTqEah1RuxY8ctl6Ny5wK
-        R+B8a35EGnwK+rKVfQiT5FBVW1u1aPY=
-Date:   Wed, 12 Jun 2019 05:48:14 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        James Morse <james.morse@arm.com>
-Cc:     "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190612034813.GA32652@zn.tnic>
-References: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
- <20190608090556.GA32464@zn.tnic>
- <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
- <20190611115651.GD31772@zn.tnic>
- <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+        Tue, 11 Jun 2019 23:49:54 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60556 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2407047AbfFLDtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 23:49:53 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 268FD9DDA16174A382EF;
+        Wed, 12 Jun 2019 11:49:49 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 12 Jun 2019 11:49:40 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <edumazet@google.com>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH net v2] tcp: avoid creating multiple req socks with the same tuples
+Date:   Wed, 12 Jun 2019 11:57:15 +0800
+Message-ID: <20190612035715.166676-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 08:25:52AM +1000, Benjamin Herrenschmidt wrote:
-> Yes, we would be in a world of pain already if tracepoints couldn't
-> handle concurrency :-)
+There is one issue about bonding mode BOND_MODE_BROADCAST, and
+two slaves with diffierent affinity, so packets will be handled
+by different cpu. These are two pre-conditions in this case.
 
-Right, lockless buffer and the whole shebang :)
+When two slaves receive the same syn packets at the same time,
+two request sock(reqsk) will be created if below situation happens:
+1. syn1 arrived tcp_conn_request, create reqsk1 and have not yet called
+inet_csk_reqsk_queue_hash_add.
+2. syn2 arrived tcp_v4_rcv, it goes to tcp_conn_request and create
+reqsk2
+because it can't find reqsk1 in the __inet_lookup_skb.
 
-> Sort-of... I still don't see a race in what we propose but I might be
-> missing something subtle. We are talking about two drivers for two
-> different IP blocks updating different counters etc...
+Then reqsk1 and reqsk2 are added to establish hash table, and two synack
+with different
+seq(seq1 and seq2) are sent to client, then tcp ack arrived and will be
+processed in tcp_v4_rcv and tcp_check_req, if __inet_lookup_skb find the
+reqsk2, and
+tcp ack packet is ack_seq is seq1, it will be failed after checking:
+TCP_SKB_CB(skb)->ack_seq != tcp_rsk(req)->snt_isn + 1)
+and then tcp rst will be sent to client and close the connection.
 
-If you do only *that* you should be fine. That should technically be ok.
+To fix this, call __inet_lookup_established() before __sk_nulls_add_node_rcu()
+in inet_ehash_insert(). If there is existed reqsk with same tuples in
+established hash table, directly to remove current reqsk2, and does not send
+synack to client.
 
-I still think, though, that the sensible thing to do is have one
-platform driver which concentrates all RAS functionality. It is the
-more sensible design and takes care of potential EDAC shortcomings and
-the need to communicate between the different logging functionality,
-as in, for example, "I had so many errors, lemme go and increase DRAM
-scrubber frequency." For example. And all the other advantages of having
-everything in a single driver.
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ v2: move __inet_lookup_established from tcp_conn_request() to inet_ehash_insert()
+ as Eric suggested.
+---
+ include/net/inet_connection_sock.h |  2 +-
+ net/ipv4/inet_connection_sock.c    | 16 ++++++++++++----
+ net/ipv4/inet_hashtables.c         | 13 +++++++++++++
+ net/ipv4/tcp_input.c               |  7 ++++---
+ 4 files changed, 30 insertions(+), 8 deletions(-)
 
-And x86 already does that - we even have a single driver for all AMD
-platforms - amd64_edac. Intel has a couple but there's still a lot of
-sharing.
-
-But apparently ARM folks want to have one driver per IP block. And we
-have this discussion each time a new vendor decides to upstream its
-driver. And there's no shortage of vendors in ARM-land trying to do
-that.
-
-James and I have tried to come up with a nice scheme to make that work
-on ARM and he has an example prototype here:
-
-http://www.linux-arm.org/git?p=linux-jm.git;a=shortlog;h=refs/heads/edac_dummy/v1
-
-to show how it could look like.
-
-But I'm slowly growing a serious aversion against having this very same
-discussion each time an ARM vendor sends a driver. And that happens
-pretty often nowadays.
-
+diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
+index c57d53e7e02c..2d3538e333cb 100644
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -263,7 +263,7 @@ struct dst_entry *inet_csk_route_child_sock(const struct sock *sk,
+ struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
+ 				      struct request_sock *req,
+ 				      struct sock *child);
+-void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
++bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
+ 				   unsigned long timeout);
+ struct sock *inet_csk_complete_hashdance(struct sock *sk, struct sock *child,
+ 					 struct request_sock *req,
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index 13ec7c3a9c49..fd45ed2fd985 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -749,7 +749,7 @@ static void reqsk_timer_handler(struct timer_list *t)
+ 	inet_csk_reqsk_queue_drop_and_put(sk_listener, req);
+ }
+ 
+-static void reqsk_queue_hash_req(struct request_sock *req,
++static bool reqsk_queue_hash_req(struct request_sock *req,
+ 				 unsigned long timeout)
+ {
+ 	req->num_retrans = 0;
+@@ -759,19 +759,27 @@ static void reqsk_queue_hash_req(struct request_sock *req,
+ 	timer_setup(&req->rsk_timer, reqsk_timer_handler, TIMER_PINNED);
+ 	mod_timer(&req->rsk_timer, jiffies + timeout);
+ 
+-	inet_ehash_insert(req_to_sk(req), NULL);
++	if (!inet_ehash_insert(req_to_sk(req), NULL)) {
++		if (timer_pending(&req->rsk_timer))
++			del_timer_sync(&req->rsk_timer);
++		return false;
++	}
+ 	/* before letting lookups find us, make sure all req fields
+ 	 * are committed to memory and refcnt initialized.
+ 	 */
+ 	smp_wmb();
+ 	refcount_set(&req->rsk_refcnt, 2 + 1);
++	return true;
+ }
+ 
+-void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
++bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
+ 				   unsigned long timeout)
+ {
+-	reqsk_queue_hash_req(req, timeout);
++	if (!reqsk_queue_hash_req(req, timeout))
++		return false;
++
+ 	inet_csk_reqsk_queue_added(sk);
++	return true;
+ }
+ EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
+ 
+diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+index c4503073248b..b6a1b5334565 100644
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -477,6 +477,7 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
+ 	struct inet_ehash_bucket *head;
+ 	spinlock_t *lock;
+ 	bool ret = true;
++	struct sock *reqsk = NULL;
+ 
+ 	WARN_ON_ONCE(!sk_unhashed(sk));
+ 
+@@ -486,6 +487,18 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
+ 	lock = inet_ehash_lockp(hashinfo, sk->sk_hash);
+ 
+ 	spin_lock(lock);
++	if (!osk)
++		reqsk = __inet_lookup_established(sock_net(sk), &tcp_hashinfo,
++							sk->sk_daddr, sk->sk_dport,
++							sk->sk_rcv_saddr, sk->sk_num,
++							sk->sk_bound_dev_if, sk->sk_bound_dev_if);
++	if (unlikely(reqsk)) {
++		ret = false;
++		reqsk_free(inet_reqsk(sk));
++		spin_unlock(lock);
++		return ret;
++	}
++
+ 	if (osk) {
+ 		WARN_ON_ONCE(sk->sk_hash != osk->sk_hash);
+ 		ret = sk_nulls_del_node_init_rcu(osk);
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 38dfc308c0fb..358272394590 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6570,9 +6570,10 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+ 		sock_put(fastopen_sk);
+ 	} else {
+ 		tcp_rsk(req)->tfo_listener = false;
+-		if (!want_cookie)
+-			inet_csk_reqsk_queue_hash_add(sk, req,
+-				tcp_timeout_init((struct sock *)req));
++		if (!want_cookie && !inet_csk_reqsk_queue_hash_add(sk, req,
++					tcp_timeout_init((struct sock *)req)))
++			return 0;
++
+ 		af_ops->send_synack(sk, dst, &fl, req, &foc,
+ 				    !want_cookie ? TCP_SYNACK_NORMAL :
+ 						   TCP_SYNACK_COOKIE);
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
