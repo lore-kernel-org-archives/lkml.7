@@ -2,108 +2,127 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2040C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12776C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602E520874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560326395;
-	bh=Pira0v0ul7UVM3qZDyFYVAAR7J0PTPWa45CPlZcjChE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mH5JL1jwH7JdfR18HguAGCf24LpOD1IaDySaXYR4DlJrlkDhvg1BkSabm4qdRcDf0
-	 WDDByL61Br5WRcUxlsqXV4X6ym2hUA3UhCUsILsTLDqFEpsUTXRR9YE9TH+im4ixGz
-	 +HTs+9yB7/qPxMk68w0+N0GJ9ePuhsr6ZxXMJF/Q=
+	by mail.kernel.org (Postfix) with ESMTP id E45C4208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbfFLH7y (ORCPT
+        id S1729823AbfFLIBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:59:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51470 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 04:01:24 -0400
+Received: from mga09.intel.com ([134.134.136.24]:29902 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfFLH7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:59:53 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2253020684;
-        Wed, 12 Jun 2019 07:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560326393;
-        bh=Pira0v0ul7UVM3qZDyFYVAAR7J0PTPWa45CPlZcjChE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rSYgpNa88LpUX7DREW9OmfEVBvQegl1m6j3eVb9d/Y6i5sDYKGEvg4juGZ+HRlBDf
-         TiKZxJQ40ANrjXh/NZrGou9oK3Zk52d5Bfj6gr2QQEWUHcWkPhGrsjv8rb0io9KYie
-         VvmsF2lY2wlRanaCKNUaebPH3FkKvQZION6pwCFM=
-Date:   Wed, 12 Jun 2019 16:59:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Fix to init kprobes in subsys_initcall
-Message-Id: <20190612165947.ba696696dac0faa3aa35a501@kernel.org>
-In-Reply-To: <155956708268.12228.10363800793132214198.stgit@devnote2>
-References: <20190603214105.715a4072472ef4946123dc20@kernel.org>
-        <155956708268.12228.10363800793132214198.stgit@devnote2>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726554AbfFLIBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 04:01:24 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 01:01:22 -0700
+X-ExtLoop1: 1
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 12 Jun 2019 01:01:19 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 12 Jun 2019 11:01:18 +0300
+Date:   Wed, 12 Jun 2019 11:01:18 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
+Message-ID: <20190612080118.GA18301@kuha.fi.intel.com>
+References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+ <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+Hi,
 
-Could you pick this to your ftrace/core branch?
-
-Thank you,
-
-
-On Mon,  3 Jun 2019 22:04:42 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Since arm64 kernel initializes breakpoint trap vector in arch_initcall(),
-> initializing kprobe (and run smoke test) in postcore_initcall() causes
-> a kernel panic.
+On Tue, Jun 11, 2019 at 09:44:23PM +0300, Andy Shevchenko wrote:
+> +Cc: Heikki.
+> Heikki, can you help here with swnodes?
 > 
-> To fix this issue, move the kprobe initialization in subsys_initcall()
-> (which is called right afer the arch_initcall).
-> 
-> In-kernel kprobe users (ftrace and bpf) are using fs_initcall() which is
-> called after subsys_initcall(), so this shouldn't cause more problem.
-> 
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
-> Fixes: b5f8b32c93b2 ("kprobes: Initialize kprobes at postcore_initcall")
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  kernel/kprobes.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 54aaaad00a47..5471efbeb937 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -2289,7 +2289,7 @@ static int __init init_kprobes(void)
->  		init_test_probes();
->  	return err;
->  }
-> -postcore_initcall(init_kprobes);
-> +subsys_initcall(init_kprobes);
->  
->  #ifdef CONFIG_DEBUG_FS
->  static void report_probe(struct seq_file *pi, struct kprobe *p,
-> 
+> On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
+> <lkml@metux.net> wrote:
+> >
+> > Hi folks,
+> >
+> >
+> > I'm looking for a way to inject fwnode data from a platform driver,
+> > in order to initialize generic drivers w/ board specific configuration.
+> > The idea is getting rid of passing driver specific pdata structs
+> > (which, IIRC, seem to be deprecated).
+> >
+> > An example usecase is the APUv2/3 board, which have things like gpios
+> > wired to buttons and LEDs. The board can only be detected via DMI
+> > string, no way to probe the platform devices - have to be initialized
+> > explicitly (that's how I'm already doing it now).
+> >
+> > The nicest way, IMHO, would be if I could just write some piece of DTS
+> > and some fancy magic all the rest under the hood. Such thing doesn't
+> > seem to exist yet. Does it make sense to implement that ? How could
+> > we do it ?
+> >
+> > Which other options do we have ?
+> >
+> > Or should we just leave everything as it is and stick w/ pdata structs ?
 
+The software nodes (drivers/base/swnode.c) were designed to supply
+fwnodes that describe devices in the same way DT does. The goal I had
+with the software nodes was exaclty to get rid of pdata, so they do
+sound like the thing you are looking for. If you check Rafael's latest
+linux-next branch [1], drivers/platform/x86/intel_cht_int33fe.c can be
+used as an example how to use the software nodes.
+
+I think it's time to add documentation for the software nodes to the
+kernel, but I'll list here the features the software nodes have:
+
+- The software nodes are created independently from device entries.
+- Software nodes support hierarchy. Every software node has a pointer
+  to a parent software node.
+- Software nodes can have device properties.
+- Software nodes can have reference pointers to other software nodes
+  (outside of the hierarchy).
+
+Creating the software nodes from static description (struct
+software_node - available from Linux kernel v5.3 onwards) is
+straightforward. Once you have them, when you create your device
+entries (struct device), you can associate a software node with a
+device just like like any other fwnode:
+
+        device_initialize(&my_dev);
+        my_dev.parent = parent;
+        my_dev.fwnode = software_node_fwnode(&my_node);
+        ...
+        device_add(&my_device);
+
+After that, you can access all the information the software nodes
+supply to the device by using fwnode_* APIs from your driver, just
+like with ACPI or DT. Basically the entire fwnode_* API is now
+supported with softwarw nodes, except the device graph (fwnode_graph*)
+API.
+
+One final note. The hardware description must always primarily come
+from the system firmware. You only use software nodes if it's too
+late to influence what goes to the ACPI tables, or if using DTS is not
+an option.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
+
+thanks,
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+heikki
