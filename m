@@ -2,145 +2,123 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA25C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9888AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C23B20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E2220866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="KGGpG8Iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfFLThA (ORCPT
+        id S1728599AbfFLTiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:37:00 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:49613 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727496AbfFLThA (ORCPT
+        Wed, 12 Jun 2019 15:38:02 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34905 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfFLTiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:37:00 -0400
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hb93J-000Cx6-6M; Wed, 12 Jun 2019 15:36:57 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Jan Kara <jack@suse.cz>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jeff Moyer <jmoyer@redhat.com>,
-        Theodore Ts'o <tytso@mit.edu>, amakhalov@vmware.com,
-        anishs@vmware.com, srivatsab@vmware.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stable <stable@vger.kernel.org>
-References: <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
- <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
- <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
- <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
- <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
- <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
- <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
- <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
- <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
- <20190612130446.GD14578@quack2.suse.cz>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <dd32ed59-a543-fc76-9a9a-2462f0119270@csail.mit.edu>
-Date:   Wed, 12 Jun 2019 12:36:53 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Wed, 12 Jun 2019 15:38:02 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y6so12608829oix.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Vsa8HyqC2oPVjqlWmiidGbfDST1iKBAlh+u3suUXlA=;
+        b=KGGpG8IzSmQohtF+bMSMFl4GFI15MvmdWRIlvGpQyOPp35DsSAu2JozT3LGhHlQ1ra
+         FNFgVxOVWVBq7FOtyKPIdP04Myv72GdGJDG/s4L7Mb6s3JvP+6MBMgEFXX5molJ7old0
+         6si/wHUAvzULxk8fzjD1TWJvwttYJbt+mBabkmLGSrfCl/NoFalC9FCSfvjjeeqANhG8
+         ouCGKedWKozURrDF2xKTG1yTWv9gz0MUFNadg/r0qBcUA5mNVxL/KhXg7SqNxGbX094l
+         O/yrR7vV4ZPh5idL0/z0TmmYhtzd+dhOi0QEo1kktO976505BmdBaX4Ld6+H5PqzWf8I
+         RRMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Vsa8HyqC2oPVjqlWmiidGbfDST1iKBAlh+u3suUXlA=;
+        b=uLpSl07SDhS8AQW3gGbmNBcu9ZNvb7KLMaJ7vfI/LBqiIwkAB/WCd6syVC94TlYVGa
+         MCKMshEfxAkeYJ6XneAS7p+K0yYMrC6MVNd9yDjVlgzApnU2690vnN3bCZDAhQIIlHVV
+         GJ5TmPFI8bLv/zLDhntE5EhcCA4g1CyzTOgfV6AU1uqGd8ZLRjtCx65NNTKLW5gUYxdm
+         mBmZ019MKNUKisVRDPb/m+txniqRhaIMrmccTynQ94uvwFawbjfi446pES1qwifeodNX
+         APYRWe9aAhlRZfE8C4J6c0dxJQyCN5G0CXgvxLFG/V1jCEehMjQCtofn/lqElC2b3a5H
+         ROmg==
+X-Gm-Message-State: APjAAAWvj2o8zc8Z7LJ1wGLfUNFOBEQFDMWTOuts/yJm4oBeLKX1XeKp
+        WlLd5pS+3fiIJ5w0eJIh1qTket0vvXmJ4g8pBVomhA==
+X-Google-Smtp-Source: APXvYqzW5RJxhzCoPftf/A/PNavKGkuPNW5LiOizI6LRDGXLVwIJ9/ouGmWX6jQxJ6p1DBRxRCBCrKftesSOqV/nJ+E=
+X-Received: by 2002:aca:fc50:: with SMTP id a77mr618670oii.0.1560368281476;
+ Wed, 12 Jun 2019 12:38:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190612130446.GD14578@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1560366952-10660-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1560366952-10660-1-git-send-email-cai@lca.pw>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 12 Jun 2019 12:37:49 -0700
+Message-ID: <CAPcyv4hn0Vz24s5EWKr39roXORtBTevZf7dDutH+jwapgV3oSw@mail.gmail.com>
+Subject: Re: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 12:16 PM Qian Cai <cai@lca.pw> wrote:
+>
+> The linux-next commit "mm/sparsemem: Add helpers track active portions
+> of a section at boot" [1] causes a crash below when the first kmemleak
+> scan kthread kicks in. This is because kmemleak_scan() calls
+> pfn_to_online_page(() which calls pfn_valid_within() instead of
+> pfn_valid() on x86 due to CONFIG_HOLES_IN_ZONE=n.
+>
+> The commit [1] did add an additional check of pfn_section_valid() in
+> pfn_valid(), but forgot to add it in the above code path.
+>
+> page:ffffea0002748000 is uninitialized and poisoned
+> raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+> raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+> page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+> ------------[ cut here ]------------
+> kernel BUG at include/linux/mm.h:1084!
+> invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+> CPU: 5 PID: 332 Comm: kmemleak Not tainted 5.2.0-rc4-next-20190612+ #6
+> Hardware name: Lenovo ThinkSystem SR530 -[7X07RCZ000]-/-[7X07RCZ000]-,
+> BIOS -[TEE113T-1.00]- 07/07/2017
+> RIP: 0010:kmemleak_scan+0x6df/0xad0
+> Call Trace:
+>  kmemleak_scan_thread+0x9f/0xc7
+>  kthread+0x1d2/0x1f0
+>  ret_from_fork+0x35/0x4
+>
+> [1] https://patchwork.kernel.org/patch/10977957/
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  include/linux/memory_hotplug.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 0b8a5e5ef2da..f02be86077e3 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -28,6 +28,7 @@
+>         unsigned long ___nr = pfn_to_section_nr(___pfn);           \
+>                                                                    \
+>         if (___nr < NR_MEM_SECTIONS && online_section_nr(___nr) && \
+> +           pfn_section_valid(__nr_to_section(___nr), pfn) &&      \
+>             pfn_valid_within(___pfn))                              \
+>                 ___page = pfn_to_page(___pfn);                     \
+>         ___page;                                                   \
 
-[ Adding Greg to CC ]
+Looks ok to me:
 
-On 6/12/19 6:04 AM, Jan Kara wrote:
-> On Tue 11-06-19 15:34:48, Srivatsa S. Bhat wrote:
->> On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
->>> On 5/30/19 3:45 AM, Paolo Valente wrote:
->>>>
->> [...]
->>>> At any rate, since you pointed out that you are interested in
->>>> out-of-the-box performance, let me complete the context: in case
->>>> low_latency is left set, one gets, in return for this 12% loss,
->>>> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
->>>> times of applications under load [1];
->>>> b) 500-1000% higher throughput in multi-client server workloads, as I
->>>> already pointed out [2].
->>>>
->>>
->>> I'm very happy that you could solve the problem without having to
->>> compromise on any of the performance characteristics/features of BFQ!
->>>
->>>
->>>> I'm going to prepare complete patches.  In addition, if ok for you,
->>>> I'll report these results on the bug you created.  Then I guess we can
->>>> close it.
->>>>
->>>
->>> Sounds great!
->>>
->>
->> Hi Paolo,
->>
->> Hope you are doing great!
->>
->> I was wondering if you got a chance to post these patches to LKML for
->> review and inclusion... (No hurry, of course!)
->>
->> Also, since your fixes address the performance issues in BFQ, do you
->> have any thoughts on whether they can be adapted to CFQ as well, to
->> benefit the older stable kernels that still support CFQ?
-> 
-> Since CFQ doesn't exist in current upstream kernel anymore, I seriously
-> doubt you'll be able to get any performance improvements for it in the
-> stable kernels...
-> 
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 
-I suspected as much, but that seems unfortunate though. The latest LTS
-kernel is based on 4.19, which still supports CFQ. It would have been
-great to have a process to address significant issues on older
-kernels too.
-
-Greg, do you have any thoughts on this? The context is that both CFQ
-and BFQ I/O schedulers have issues that cause I/O throughput to suffer
-upto 10x - 30x on certain workloads and system configurations, as
-reported in [1].
-
-In this thread, Paolo posted patches to fix BFQ performance on
-mainline. However CFQ suffers from the same performance collapse, but
-CFQ was removed from the kernel in v5.0. So obviously the usual stable
-backporting path won't work here for several reasons:
-
-  1. There won't be a mainline commit to backport from, as CFQ no
-     longer exists in mainline.
-
-  2. This is not a security/stability fix, and is likely to involve
-     invasive changes.
-
-I was wondering if there was a way to address the performance issues
-in CFQ in the older stable kernels (including the latest LTS 4.19),
-despite the above constraints, since the performance drop is much too
-significant. I guess not, but thought I'd ask :-)
-
-[1]. https://lore.kernel.org/lkml/8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu/ 
-
-
-Regards,
-Srivatsa
-VMware Photon OS
+...but why is pfn_to_online_page() a multi-line macro instead of a
+static inline like all the helper routines it invokes?
