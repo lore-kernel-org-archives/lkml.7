@@ -2,90 +2,104 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93FFC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81368C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B066F2080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF2E2080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:39:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K0s48gVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbfFLHiH (ORCPT
+        id S2406162AbfFLHjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:38:07 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:60470 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731536AbfFLHiG (ORCPT
+        Wed, 12 Jun 2019 03:39:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48528 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731513AbfFLHjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:38:06 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1haxpX-0006a0-OZ; Wed, 12 Jun 2019 09:37:59 +0200
-Date:   Wed, 12 Jun 2019 09:37:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Abel Vesa <abelvesa@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Carlo Caione <ccaione@baylibre.com>
-Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
-In-Reply-To: <86ftofgss2.wl-marc.zyngier@arm.com>
-Message-ID: <alpine.DEB.2.21.1906120937430.2214@nanos.tec.linutronix.de>
-References: <20190610121346.15779-1-abel.vesa@nxp.com> <20190610131921.GB14647@lakrids.cambridge.arm.com> <20190610132910.srd4j2gtidjeppdx@fsr-ub1664-175> <6f1052ea-623a-b2e8-9aa8-22aef5fab4ca@arm.com> <20190610135514.xd5myavjsloos2y3@fsr-ub1664-175>
- <7b86aa90-6d64-589c-f11e-d2ee6ab3fd54@arm.com> <VI1PR04MB5055A808A08A1C47784E4332EE130@VI1PR04MB5055.eurprd04.prod.outlook.com> <alpine.DEB.2.21.1906120913090.2214@nanos.tec.linutronix.de> <86ftofgss2.wl-marc.zyngier@arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 12 Jun 2019 03:39:51 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5C7d5Ha095716;
+        Wed, 12 Jun 2019 07:39:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=As3rSRodBmhvXpmKU3bKOUx22NatiWkZ+Xl8vHvw2I0=;
+ b=K0s48gVkXLccDgvtGOO1pRgDasSUhz/2p8XTi5OZfTjQK+SPko5B+83baAsqyqm+aDyp
+ 3dcsXVIwvH8FtNoa3Wb3Ki8yzaHhhDB02clxn87nazwG8SyyMEV86jUJd93Mru60iXz4
+ 3nOtaLg00NcuxGp4rYp10RWMv9UQMHRww8P8jGbG721i3+upFUkZUeczXNz7Q34nePJd
+ QfgCqskvhEaYhVCxeTVh96h72S5vlooV7G00NKzkHvyrWKz/F8cwJn5ar/pQjApT4lLN
+ /tIqbAILQB00D4LTC4hJgYeNs4bc9vhW2gTXKCjA9YiZdCc2z7yCDjnBpQiRvq3wr7cJ 3g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t05nqsju4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 07:39:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5C7ctEZ168459;
+        Wed, 12 Jun 2019 07:39:46 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2t04hysmur-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 07:39:46 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5C7diLb023411;
+        Wed, 12 Jun 2019 07:39:44 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 12 Jun 2019 00:39:43 -0700
+Date:   Wed, 12 Jun 2019 10:39:36 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] staging: kpc2000: remove unnecessary comments in
+ kp2000_pcie_probe
+Message-ID: <20190612073936.GD1915@kadam>
+References: <20190610200535.31820-1-simon@nikanor.nu>
+ <20190610200535.31820-3-simon@nikanor.nu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190610200535.31820-3-simon@nikanor.nu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9285 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906120053
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9285 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906120053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019, Marc Zyngier wrote:
-> On Wed, 12 Jun 2019 08:14:16 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
-> > On Mon, 10 Jun 2019, Leonard Crestez wrote:
-> > > On 6/10/2019 5:08 PM, Marc Zyngier wrote:
-> > > > Nobody is talking about performance here. It is strictly about
-> > > > correctness, and what I read about this system is that it cannot
-> > > > reliably use cpuidle.
-> > > My argument was that it's fine if PPIs and LPIs are broken as long as 
-> > > they're not used:
-> > > 
-> > >   * PPIs are only used for local timer which is not used for wakeup.
-> > 
-> > Huch? The timer has to bring the CPU out of idle as any other
-> > interrupt.
-> 
-> They use a separate hack for that, pretending that the timer is
-> stopped during idle (it isn't), and setup a broadcast timer when
-> entering idle. That timer uses an interrupt that can wake-up the
-> target CPU, and all is well in the world. Sort of.
-> 
-> Of course, this breaks as PPIs are not only used by the timer, but
-> also by a number of other HW bits (PMU, GIC, guest and hypervisor
-> timers), and they don't have corresponding hacks to back them up.
+On Mon, Jun 10, 2019 at 10:05:35PM +0200, Simon Sandström wrote:
+> @@ -349,9 +340,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+>  		goto err_remove_ida;
+>  	}
+>  
+> -	/*
+> -	 * Step 4: Setup the Register BAR
+> -	 */
+> +	// Setup the Register BAR
 
-Eew.
+Greg, are we moving the C++ style comments?  Linus is fine with them.  I
+don't like them but whatever...
 
+>  	reg_bar_phys_addr = pci_resource_start(pcard->pdev, REG_BAR);
+>  	reg_bar_phys_len = pci_resource_len(pcard->pdev, REG_BAR);
+>  
+
+regards,
+dan carpenter
