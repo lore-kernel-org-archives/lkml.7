@@ -2,103 +2,142 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7033DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D71C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4760B20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E049320652
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:13:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pJZ/5d5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389251AbfFLUBn (ORCPT
+        id S1728452AbfFLUNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 16:01:43 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43933 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388447AbfFLUBn (ORCPT
+        Wed, 12 Jun 2019 16:13:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40030 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfFLUNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 16:01:43 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i8so16669917oth.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:01:42 -0700 (PDT)
+        Wed, 12 Jun 2019 16:13:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so7791444wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:13:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=A36/iHVaO3uEyS+d/EzeUq+RkDaMz832JoNltOURTBo=;
+        b=pJZ/5d5bOCs+D/TMQ5HtKnIIGvOiYfkzCi/ZdmCXPovFoxtFlNW+znmeVJoNQ24uOO
+         SP6bNoCNILq9tzyaj/oXNFP72q58wVj6ldVo7xeSZ179In8KmiNQUIL8XU2paluGue7x
+         Q66eCs7deVGb04ErpjQlM4ZSoVDTf9QDkETW+J/XJ7bkdpTWNXfPsnhf0UC4pQJnbIuO
+         bkXgtexgQBm6pOpdRJsuutM7+EQydWCkL8IjcPlTk8hjbUceGQMlIgamepIbUVHaQ0g5
+         D1A9v2CpVNgp625F4yhbrH8LLw1kmqnefVhKPIN1l+ZwyYO5XiCJRPfsm6HCNkXLTRmZ
+         df0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0O8kud1OZKkvtHeAHVJbfPeAphq/Q2FLAtf0UYYJ3/U=;
-        b=jfvmGr6vXnwPJXt2O/LJ+JA/LZ9J7HqtQsp80r4ZrIQ3/S50EA+IwkiTBriCXwFyKg
-         MOFOGjaHZ/rDyA4dr+TqkDyKpGhurM6wkW23Ghi9L4gTt33Ov5swAa2pMYU9T4Nqxtv5
-         DqH304gbQO4Vt8Y54k1QkC42oQgs6zAY0osLuDATW1olzV3nasxDoAbi9MKjnyEjk+v7
-         UaeL80WnvyhOg0qPR6ULLu1EAZZ9s5b05Kls/6hcWIZVzeHS9orTunrnT79tXNWbNRxC
-         LntV3JrgK0/snHU0b+yacZr5vDlghoFK2iggtONksdaLiNKxd7ITfnRGFSYcCfzc30XU
-         qKvw==
-X-Gm-Message-State: APjAAAXWigCGwG9njgUW7o+dYs1+OwcaKpmZyWKgMuoFY+HL+bApB9yH
-        e+MnYwK9I3xR4vrtasPgCxaLQ0Ru
-X-Google-Smtp-Source: APXvYqzJVTYaWENbmZQvZgwch+ObRfP7lb9GuIMIds4iW518UgnGBKfuWXySpXfrM5XGqnpA5SJXCA==
-X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr33759232otn.71.1560369702116;
-        Wed, 12 Jun 2019 13:01:42 -0700 (PDT)
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com. [209.85.210.52])
-        by smtp.gmail.com with ESMTPSA id x128sm222264oig.54.2019.06.12.13.01.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 13:01:41 -0700 (PDT)
-Received: by mail-ot1-f52.google.com with SMTP id p4so13448958oti.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:01:40 -0700 (PDT)
-X-Received: by 2002:a05:6830:1192:: with SMTP id u18mr35659756otq.74.1560369700348;
- Wed, 12 Jun 2019 13:01:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190422183056.16375-1-leoyang.li@nxp.com> <20190510030525.GC15856@dragon>
-In-Reply-To: <20190510030525.GC15856@dragon>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 12 Jun 2019 15:01:29 -0500
-X-Gmail-Original-Message-ID: <CADRPPNT2G20j2pvSEyqX=_WNDPrcNR+xCR_XZukbnSW19wFLNA@mail.gmail.com>
-Message-ID: <CADRPPNT2G20j2pvSEyqX=_WNDPrcNR+xCR_XZukbnSW19wFLNA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: defconfig: Enable FSL_EDMA driver
-To:     Shawn Guo <shawnguo@kernel.org>, madalin.bucur@nxp.com,
-        Rob Herring <robh+dt@kernel.org>, aisheng.dong@nxp.com
-Cc:     Vinod Koul <vkoul@kernel.org>, Grant Likely <grant.likely@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=A36/iHVaO3uEyS+d/EzeUq+RkDaMz832JoNltOURTBo=;
+        b=lJ9p4uYFQ5sTgKbqSL6LfOKgN5/fhzrfeGYp9JA9VvFa4u5G6UGV0ScBy3iskBuvXf
+         aPwWOYIyr6fEwCUaW8NnKOWM4KuPJlp9GzUba4kEMYipFsprt3loGd9/VsrS5lAt51DM
+         G2PmEKZDybuBss06yXhoXQuh+aXUNzJPn8a27pDCewhOQDYvoqQddCtdYYQxiw4axq6L
+         RwEXpVHSdgdjXZOHlF8Om2APdhBo+Ojo43bG2QcDeHXyKCWqXSrEbs8Ml1JQ9Tw1oc5Q
+         ZV4D7NwZnauEtK6UNkJGh1Omav6epr8oLqESI6QWWKQ84KfKRedzBf4dYZQ0t+ytGNHB
+         CQ7Q==
+X-Gm-Message-State: APjAAAX80gMwiGwTo/d5PPmCZXjtMkWTBboGR81lPYkuEUduqn5ifPiu
+        vwKSYoKYFvO9Uu19Tj8LMWvwxsgJ04g=
+X-Google-Smtp-Source: APXvYqy97vxFMTVImWGLO4fTpqCWE48n7WZKaiHLH+Xz2zXVaLq3FZO40hl85YzJRhdjmrVU4HFB7A==
+X-Received: by 2002:a1c:343:: with SMTP id 64mr704892wmd.116.1560370422201;
+        Wed, 12 Jun 2019 13:13:42 -0700 (PDT)
+Received: from mai.imgcgcw.net (237.65.130.77.rev.sfr.net. [77.130.65.237])
+        by smtp.gmail.com with ESMTPSA id l8sm1119566wrg.40.2019.06.12.13.13.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 13:13:41 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rui.zhang@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        amit.kucheria@linaro.org
+Subject: [PATCH 1/2] thermal/drivers/core: Add init section table for self-encapsulation
+Date:   Wed, 12 Jun 2019 22:13:24 +0200
+Message-Id: <20190612201325.1150-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 10:15 PM Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Mon, Apr 22, 2019 at 01:30:56PM -0500, Li Yang wrote:
-> > Enables the FSL EDMA driver by default.  This also works around an issue
-> > that imx-i2c driver keeps deferring the probe because of the DMA is not
-> > ready.  And currently the DMA engine framework can not correctly tell
-> > if the DMA channels will truly become available later (it will never be
-> > available if the DMA driver is not enabled).
-> >
-> > This will cause indefinite messages like below:
-> > [    3.335829] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery not supported
-> > [    3.344455] ina2xx 0-0040: power monitor ina220 (Rshunt = 1000 uOhm)
-> > [    3.350917] lm90 0-004c: 0-004c supply vcc not found, using dummy regulator
-> > [    3.362089] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery not supported
-> > [    3.370741] ina2xx 0-0040: power monitor ina220 (Rshunt = 1000 uOhm)
-> > [    3.377205] lm90 0-004c: 0-004c supply vcc not found, using dummy regulator
-> > [    3.388455] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery not supported
-> > .....
-> >
-> > Signed-off-by: Li Yang <leoyang.li@nxp.com>
->
-> Applied, thanks.
+Currently the governors are declared in their respective files but they
+export their [un]register functions which in turn call the [un]register
+governors core's functions. That implies a cyclic dependency which is
+not desirable. There is a way to self-encapsulate the governors by letting
+them to declare themselves in a __init section table.
 
-Hi Shawn,
+Define the table in the asm generic linker description like the other
+tables and provide the specific macros to deal with.
 
-Is it possible to move this patch to the -fix series so that it can
-reach the mainline earlier?  It is having a boot failure in mainline
-for platforms using this device without this workaround.
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/thermal_core.h    | 15 +++++++++++++++
+ include/asm-generic/vmlinux.lds.h | 11 +++++++++++
+ 2 files changed, 26 insertions(+)
 
-I see Rob added a new API driver_deferred_probe_check_state() last
-year.  Probably we should update the imx-i2c driver to use the new API
-for optional dependencies to avoid this kind of situation completely?
+diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+index 0df190ed82a7..be901e84aa65 100644
+--- a/drivers/thermal/thermal_core.h
++++ b/drivers/thermal/thermal_core.h
+@@ -15,6 +15,21 @@
+ /* Initial state of a cooling device during binding */
+ #define THERMAL_NO_TARGET -1UL
+ 
++/* Init section thermal table */
++extern struct thermal_governor *__governor_thermal_table[];
++extern struct thermal_governor *__governor_thermal_table_end[];
++
++#define THERMAL_TABLE_ENTRY(table, name)			\
++	(static typeof(name) *__thermal_table_entry_##name	\
++	__used __section(__##table##_thermal_table) = &name)
++
++#define THERMAL_GOVERNOR_DECLARE(name)	THERMAL_TABLE_ENTRY(governor, name)
++
++#define for_each_governor_table(__governor)		\
++	for (__governor = __governor_thermal_table;	\
++	     __governor < __governor_thermal_table_end;	\
++	     __governor++)
++
+ /*
+  * This structure is used to describe the behavior of
+  * a certain cooling device on a certain trip point
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index f8f6f04c4453..8312fdc2b2fa 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -239,6 +239,16 @@
+ #define ACPI_PROBE_TABLE(name)
+ #endif
+ 
++#ifdef CONFIG_THERMAL
++#define THERMAL_TABLE(name)						\
++	. = ALIGN(8);							\
++	__##name##_thermal_table = .;					\
++	KEEP(*(__##name##_thermal_table))				\
++	__##name##_thermal_table_end = .;
++#else
++#define THERMAL_TABLE(name)
++#endif
++
+ #define KERNEL_DTB()							\
+ 	STRUCT_ALIGN();							\
+ 	__dtb_start = .;						\
+@@ -609,6 +619,7 @@
+ 	IRQCHIP_OF_MATCH_TABLE()					\
+ 	ACPI_PROBE_TABLE(irqchip)					\
+ 	ACPI_PROBE_TABLE(timer)						\
++	THERMAL_TABLE(governor)						\
+ 	EARLYCON_TABLE()						\
+ 	LSM_TABLE()
+ 
+-- 
+2.17.1
 
-Regards,
-Leo
