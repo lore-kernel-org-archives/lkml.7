@@ -2,125 +2,154 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DF6C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D625AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC264215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECCD217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:59:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="i98jcwEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbfFLT7e (ORCPT
+        id S2389492AbfFLT7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:59:34 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:36121 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387605AbfFLT7c (ORCPT
+        Wed, 12 Jun 2019 15:59:39 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34408 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388658AbfFLT7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:59:32 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TU03sVe_1560369565;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TU03sVe_1560369565)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 13 Jun 2019 03:59:28 +0800
-Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
- eligibility
-To:     Hugh Dickins <hughd@google.com>
-Cc:     mhocko@suse.com, vbabka@suse.cz, rientjes@google.com,
-        kirill@shutemov.name, kirill.shutemov@linux.intel.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
- <alpine.LSU.2.11.1906072008210.3614@eggly.anvils>
- <578b7903-40ef-e616-d700-473713f438c0@linux.alibaba.com>
- <alpine.LSU.2.11.1906121120240.1107@eggly.anvils>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <185ccaa5-c380-f84a-ddbb-b89c8f49445a@linux.alibaba.com>
-Date:   Wed, 12 Jun 2019 12:59:24 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 12 Jun 2019 15:59:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k11so50754wrl.1;
+        Wed, 12 Jun 2019 12:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DbdAX0bV85Dko/n1L+nFmKMabI9Kh0fLOwLLV1IH53M=;
+        b=i98jcwEgONXb3ZOPIzPaDduImuV0oAvjS9qfSmC5tx3AcS2Ny/sC+OFo8VMuEFDyN9
+         8kO0wtjx655Rhp9mXl4zeUa2GVSWhqtq7n2yidRk4ED+WXElWp2iY11rpMjQvLzvS4rm
+         VoHVs7TMtYOj7i25xCkTxoJKzPkdS8smwL7tmtAkI/LrVrplmn1MW6jkMpTmzk5PGL17
+         8zn0ZraSMPZcl4EQFRuMmHyhziVAiswTUj4qoARxdWiVw8Ugj6A40BQSdzWhVHg+pF/f
+         GTZaz8DuBDTGXA4qWGfQZ+Bn/+bcO3zDmCfeARHURfoOn8UAqxoydYC1adaol1wSMEW5
+         snzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DbdAX0bV85Dko/n1L+nFmKMabI9Kh0fLOwLLV1IH53M=;
+        b=QDB91pjWwIp1V59jGejr4lw0xFWdyB666c1cMb2vH+SSjLSfxNX4LRdZ7FopF3fD0C
+         uF4uVmAHUXvDA06GNIv8y9ia3amhlyc/RvX/m59ZVtMe7IIyxM7DUZesVz4xg8QQHBP3
+         sEVuydd7JAEQCOVffsyfK4OGDMrg0qFdOXLJ6aD4Z4SmbmFiu0zvw+D5tgEDA+SxeZC8
+         qIBQ3kXbiztPOkOtb+E+O2HiDMk8/rHDzXFaEHicULy64Sdpeojochf7AFRopOoUfhpj
+         lB18QWAi48XFv8DAW+J2JEh/aIDG5TIREP9Eq+psum4n5olVh8XOTs0YGnp0mWi2UsYz
+         B1LQ==
+X-Gm-Message-State: APjAAAWVAYsz6UjzxovP63dDj+VCbocX3y9FIr7VVF/9MgHL9w0I0sVQ
+        wkKDa8dW20JnhOINcO0SYX0=
+X-Google-Smtp-Source: APXvYqz8FPKyN4u6g2XV8ExWl7unahV+eyESFia516NWg/4YKZGCKK1sV/9qmYUtmXKVI4t10SWXMg==
+X-Received: by 2002:adf:a38b:: with SMTP id l11mr3832905wrb.325.1560369571376;
+        Wed, 12 Jun 2019 12:59:31 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 12:59:30 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        u.kleine-koenig@pengutronix.de, narmstrong@baylibre.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 01/14] pwm: meson: unify the parameter list of meson_pwm_{enable,disable}
+Date:   Wed, 12 Jun 2019 21:58:58 +0200
+Message-Id: <20190612195911.4442-2-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
+References: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1906121120240.1107@eggly.anvils>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a preparation for a future cleanup. Pass struct pwm_device
+instead of passing the individual values required by each function as
+these can be obtained for each struct pwm_device instance.
 
+As a nice side-effect the driver now uses "switch (pwm->hwpwm)"
+everywhere. Before some functions used "switch (id)" while others used
+"switch (pwm->hwpwm)".
 
-On 6/12/19 11:44 AM, Hugh Dickins wrote:
-> On Mon, 10 Jun 2019, Yang Shi wrote:
->> On 6/7/19 8:58 PM, Hugh Dickins wrote:
->>> Yes, that is correct; and correctly placed. But a little more is needed:
->>> see how mm/memory.c's transhuge_vma_suitable() will only allow a pmd to
->>> be used instead of a pte if the vma offset and size permit. smaps should
->>> not report a shmem vma as THPeligible if its offset or size prevent it.
->>>
->>> And I see that should also be fixed on anon vmas: at present smaps
->>> reports even a 4kB anon vma as THPeligible, which is not right.
->>> Maybe a test like transhuge_vma_suitable() can be added into
->>> transparent_hugepage_enabled(), to handle anon and shmem together.
->>> I say "like transhuge_vma_suitable()", because that function needs
->>> an address, which here you don't have.
->> Thanks for the remind. Since we don't have an address I'm supposed we just
->> need check if the vma's size is big enough or not other than other alignment
->> check.
->>
->> And, I'm wondering whether we could reuse transhuge_vma_suitable() by passing
->> in an impossible address, i.e. -1 since it is not a valid userspace address.
->> It can be used as and indicator that this call is from THPeligible context.
-> Perhaps, but sounds like it will abuse and uglify transhuge_vma_suitable()
-> just for smaps. Would passing transhuge_vma_suitable() the address
->      ((vma->vm_end & HPAGE_PMD_MASK) - HPAGE_PMD_SIZE)
-> give the the correct answer in all cases?
+No functional changes.
 
-Yes, it looks better.
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/pwm/pwm-meson.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
->
->>> The anon offset situation is interesting: usually anon vm_pgoff is
->>> initialized to fit with its vm_start, so the anon offset check passes;
->>> but I wonder what happens after mremap to a different address - does
->>> transhuge_vma_suitable() then prevent the use of pmds where they could
->>> actually be used? Not a Number#1 priority to investigate or fix here!
->>> but a curiosity someone might want to look into.
->> Will mark on my TODO list.
->>
->>> Even with your changes
->>> ShmemPmdMapped:     4096 kB
->>> THPeligible:    0
->>> will easily be seen: THPeligible reflects whether a huge page can be
->>> allocated and mapped by pmd in that vma; but if something else already
->>> allocated the huge page earlier, it will be mapped by pmd in this vma
->>> if offset and size allow, whatever THPeligible says. We could change
->>> transhuge_vma_suitable() to force ptes in that case, but it would be
->>> a silly change, just to make what smaps shows easier to explain.
->> Where did this come from? From the commit log? If so it is the example for
->> the wrong smap output. If that case really happens, I think we could document
->> it since THPeligible should just show the current status.
-> Please read again what I explained there: it's not necessarily an example
-> of wrong smaps output, it's reasonable smaps output for a reasonable case.
->
-> Yes, maybe Documentation/filesystems/proc.txt should explain "THPeligble"
-> a little better - "eligible for allocating THP pages" rather than just
-> "eligible for THP pages" would be good enough? we don't want to write
-> a book about the various cases.
-
-Yes, I agree.
-
->
-> Oh, and the "THPeligible" output lines up very nicely there in proc.txt:
-> could the actual alignment of that 0 or 1 be fixed in smaps itself too?
-
-Sure.
-
-Thanks,
-Yang
-
->
-> Thanks,
-> Hugh
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index 5fef7e925282..3fbbc4128ce8 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -183,15 +183,14 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+ 	return 0;
+ }
+ 
+-static void meson_pwm_enable(struct meson_pwm *meson,
+-			     struct meson_pwm_channel *channel,
+-			     unsigned int id)
++static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
+ {
++	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+ 	u32 value, clk_shift, clk_enable, enable;
+ 	unsigned int offset;
+ 	unsigned long flags;
+ 
+-	switch (id) {
++	switch (pwm->hwpwm) {
+ 	case 0:
+ 		clk_shift = MISC_A_CLK_DIV_SHIFT;
+ 		clk_enable = MISC_A_CLK_EN;
+@@ -228,12 +227,12 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+-static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
++static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
+ {
+ 	u32 value, enable;
+ 	unsigned long flags;
+ 
+-	switch (id) {
++	switch (pwm->hwpwm) {
+ 	case 0:
+ 		enable = MISC_A_EN;
+ 		break;
+@@ -266,7 +265,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		return -EINVAL;
+ 
+ 	if (!state->enabled) {
+-		meson_pwm_disable(meson, pwm->hwpwm);
++		meson_pwm_disable(meson, pwm);
+ 		channel->state.enabled = false;
+ 
+ 		return 0;
+@@ -293,7 +292,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	}
+ 
+ 	if (state->enabled && !channel->state.enabled) {
+-		meson_pwm_enable(meson, channel, pwm->hwpwm);
++		meson_pwm_enable(meson, pwm);
+ 		channel->state.enabled = true;
+ 	}
+ 
+-- 
+2.22.0
 
