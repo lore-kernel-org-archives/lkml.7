@@ -2,151 +2,139 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F9EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDE7C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6F021721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC0121721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="F2bLr6Us"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387935AbfFLT11 (ORCPT
+        id S1729237AbfFLT1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:27:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42978 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbfFLT1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:27:25 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C2A263087958;
-        Wed, 12 Jun 2019 19:27:25 +0000 (UTC)
-Received: from flask (unknown [10.40.205.10])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 428E260CCD;
-        Wed, 12 Jun 2019 19:27:20 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Wed, 12 Jun 2019 21:27:20 +0200
-Date:   Wed, 12 Jun 2019 21:27:20 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Optimize timer latency consider world
- switch time
-Message-ID: <20190612192720.GB23583@flask>
-References: <1560332419-17195-1-git-send-email-wanpengli@tencent.com>
- <20190612151447.GD20308@linux.intel.com>
- <20190612192243.GA23583@flask>
+        Wed, 12 Jun 2019 15:27:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35162 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729106AbfFLT1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 15:27:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m3so18175690wrv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:27:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Gc99P+6N6+xSxQKHKwT0OD+Dx6Ni+QOkx9u56EzlVmA=;
+        b=F2bLr6Usjp0SS+YH0qbHW4ub7lF+EA48coYkSUubqCXi4L86a8pbijVIRgDvpuSUsF
+         ZrK1Shovt+bDl648RmoiYd0gtNwx38PveHrl2akp0/4gVW6L1gdnFMajsh3iPjGadno4
+         0w+RVcfN1Az3gqf8b2lwzW/qAfl1AeEaqkzUE8yrXIb0ZD+g6RdrTckRWUM0PhWrh2oF
+         jusm5g5Vb6YDoIbI3gf+RwyYIJ0n0S8J7fniaqQsd3uOABGpnTgA2gFyawsrYMQJbKbD
+         hsRJOs43wENKcjTM9+yzTYzgj4XFg6jPN7rkBT7t0taep/aGmnhvlMKjsoLzm5ssPtn7
+         fTuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Gc99P+6N6+xSxQKHKwT0OD+Dx6Ni+QOkx9u56EzlVmA=;
+        b=aoCiLeFcMaQbg699mITRrRJ5CTscDHN86+0RQKJ7GxFs9zEvhHNsifPJMXtTdcFzK3
+         e7YgNGWY5cL+5duehQXBYW1K32BE1h4Vo2YLolm5JSRoukg1Rxt4jgochtAhRO47PMX8
+         S3cBKRYR0QLaHaCQ1XWXrDE45pIfH9G8t9OWaOK5n1C3Da0Bt8XuUENbR7QWIrmmYH00
+         yTwa+A5/x+OZlcMcMu3DuiI7zzqwOYXX0AtDwF9G/jVSBRztnLvflCYnQPEA9YsrSajs
+         K/t0PLUFUKLCjXeIZJ8MeY6NEolSDom4TuEbE0Kr2i6qVBIK2gK6CFEW7/nzX5hmdUPu
+         YsPw==
+X-Gm-Message-State: APjAAAV/dcDg2ckcQ+R3w3cWw0+cFK5/BoKva4MyXj4JkhYxXb1HBort
+        IJXFr5gnbov9APAC+TpCOVEaLftsFBU=
+X-Google-Smtp-Source: APXvYqxIsPY4F76dTJDcOjFZdmSdKlq0GPIonqcAmCK2zG2wSLgAsYvCqwuGTkiuPGkT6q30d63hgw==
+X-Received: by 2002:adf:ee42:: with SMTP id w2mr42257126wro.253.1560367627677;
+        Wed, 12 Jun 2019 12:27:07 -0700 (PDT)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id r5sm612526wrg.10.2019.06.12.12.27.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 12:27:07 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: [PATCHv4 26/28] x86/vdso: Align VDSO functions by CPU L1 cache line
+Date:   Wed, 12 Jun 2019 20:26:25 +0100
+Message-Id: <20190612192628.23797-27-dima@arista.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190612192628.23797-1-dima@arista.com>
+References: <20190612192628.23797-1-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190612192243.GA23583@flask>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 12 Jun 2019 19:27:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-06-12 21:22+0200, Radim Krčmář:
-> 2019-06-12 08:14-0700, Sean Christopherson:
-> > On Wed, Jun 12, 2019 at 05:40:18PM +0800, Wanpeng Li wrote:
-> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > @@ -145,6 +145,12 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
-> > >  static int __read_mostly lapic_timer_advance_ns = -1;
-> > >  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
-> > >  
-> > > +/*
-> > > + * lapic timer vmentry advance (tscdeadline mode only) in nanoseconds.
-> > > + */
-> > > +u32 __read_mostly vmentry_advance_ns = 300;
-> > 
-> > Enabling this by default makes me nervous, e.g. nothing guarantees that
-> > future versions of KVM and/or CPUs will continue to have 300ns of overhead
-> > between wait_lapic_expire() and VM-Enter.
-> > 
-> > If we want it enabled by default so that it gets tested, the default
-> > value should be extremely conservative, e.g. set the default to a small
-> > percentage (25%?) of the latency of VM-Enter itself on modern CPUs,
-> > VM-Enter latency being the min between VMLAUNCH and VMLOAD+VMRUN+VMSAVE.
-> 
-> I share the sentiment.  We definitely must not enter the guest before
-> the deadline has expired and CPUs are approaching 5 GHz (in turbo), so
-> 300 ns would be too much even today.
-> 
-> I wrote a simple testcase for rough timing and there are 267 cycles
-> (111 ns @ 2.4 GHz) between doing rdtsc() right after
-> kvm_wait_lapic_expire() [1] and doing rdtsc() in the guest as soon as
-> possible (see the attached kvm-unit-test).
+From: Andrei Vagin <avagin@gmail.com>
 
-I forgot to attach it, pasting here as a patch for kvm-unit-tests.
+After performance testing VDSO patches a noticeable 20% regression was
+found on gettime_perf selftest with a cold cache.
+As it turns to be, before time namespaces introduction, VDSO functions
+were quite aligned to cache lines, but adding a new code to adjust
+timens offset inside namespace created a small shift and vdso functions
+become unaligned on cache lines.
 
+Add align to vdso functions with gcc option to fix performance drop.
+
+Coping the resulting numbers from cover letter:
+
+Hot CPU cache (more gettime_perf.c cycles - the better):
+        | before     | CONFIG_TIME_NS=n | host        | inside timens
+--------|------------|------------------|-------------|-------------
+cycles  | 139887013  | 139453003        | 139899785   | 128792458
+diff (%)| 100        | 99.7             | 100         | 92
+
+Cold cache (lesser tsc per gettime_perf_cold.c cycle - the better):
+        | before     | CONFIG_TIME_NS=n | host        | inside timens
+--------|------------|------------------|-------------|-------------
+tsc     | 6748       | 6718             | 6862        | 12682
+diff (%)| 100        | 99.6             | 101.7       | 188
+
+Measured on Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+
+Co-developed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
-diff --git a/x86/Makefile.common b/x86/Makefile.common
-index e612dbe..ceed648 100644
---- a/x86/Makefile.common
-+++ b/x86/Makefile.common
-@@ -58,7 +58,7 @@ tests-common = $(TEST_DIR)/vmexit.flat $(TEST_DIR)/tsc.flat \
-                $(TEST_DIR)/init.flat $(TEST_DIR)/smap.flat \
-                $(TEST_DIR)/hyperv_synic.flat $(TEST_DIR)/hyperv_stimer.flat \
-                $(TEST_DIR)/hyperv_connections.flat \
--               $(TEST_DIR)/umip.flat
-+               $(TEST_DIR)/umip.flat $(TEST_DIR)/vmentry_latency.flat
+ arch/x86/entry/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index b58d34120fd8..c7bfd62d1fc3 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -4,6 +4,7 @@
+ #
  
- ifdef API
- tests-api = api/api-sample api/dirty-log api/dirty-log-perf
-diff --git a/x86/vmentry_latency.c b/x86/vmentry_latency.c
-new file mode 100644
-index 0000000..3859f09
---- /dev/null
-+++ b/x86/vmentry_latency.c
-@@ -0,0 +1,45 @@
-+#include "x86/vm.h"
-+
-+static u64 get_last_hypervisor_tsc_delta(void)
-+{
-+	u64 a = 0, b, c, d;
-+	u64 tsc;
-+
-+	/*
-+	 * The first vmcall is there to force a vm exit just before measuring.
-+	 */
-+	asm volatile ("vmcall" : "+a"(a), "=b"(b), "=c"(c), "=d"(d));
-+
-+	tsc = rdtsc();
-+
-+	/*
-+	 * The second hypercall recovers the value that was stored when vm
-+	 * entering to execute the rdtsc()
-+	 */
-+	a = 11;
-+	asm volatile ("vmcall" : "+a"(a), "=b"(b), "=c"(c), "=d"(d));
-+
-+	return tsc - a;
-+}
-+
-+static void vmentry_latency(void)
-+{
-+	unsigned i = 1000000;
-+	u64 min = -1;
-+
-+	while (i--) {
-+		u64 latency = get_last_hypervisor_tsc_delta();
-+		if (latency < min)
-+			min = latency;
-+	}
-+
-+	printf("vm entry latency is %"PRIu64" TSC cycles\n", min);
-+}
-+
-+int main(void)
-+{
-+	setup_vm();
-+	vmentry_latency();
-+
-+	return 0;
-+}
+ KBUILD_CFLAGS += $(DISABLE_LTO)
++KBUILD_CFLAGS += -falign-functions=$(CONFIG_X86_L1_CACHE_SHIFT)
+ KASAN_SANITIZE			:= n
+ UBSAN_SANITIZE			:= n
+ OBJECT_FILES_NON_STANDARD	:= y
+-- 
+2.22.0
+
