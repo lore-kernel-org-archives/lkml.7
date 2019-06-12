@@ -2,159 +2,135 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07317C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FC9C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C480320B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E14720B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXE5QOKT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSrXwfH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409191AbfFLNzb (ORCPT
+        id S2409199AbfFLNzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:55:31 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35730 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407368AbfFLNza (ORCPT
+        Wed, 12 Jun 2019 09:55:51 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37231 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407368AbfFLNzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:55:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m3so17064143wrv.2;
-        Wed, 12 Jun 2019 06:55:28 -0700 (PDT)
+        Wed, 12 Jun 2019 09:55:50 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 22so6653176wmg.2;
+        Wed, 12 Jun 2019 06:55:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eZX3anyZMMAgTvTOAbA6GQo46jqojN0EiJPMmbv67bA=;
-        b=JXE5QOKTWFbr6BQ6o8PjdWiflFieSzJ6ofNQwYduozexkoEMzTSrQiqW/WX/PoweCS
-         1JHqfWuLCQPWbjxM7j/IEGK8G3aFHQbXs2ETn3fbjYb2iZc3IYZuwMatIW4jOoZXrrcJ
-         Ep7sQzS6MyKKLHm6SSESA2PNYz1M1G2DbJ1Ws0OqQl46zKasVNBxemDAyR0OssSjWyo4
-         AVx1/z4GTPaC1YxzNZ/EHA8NfwxuD3nEO7m8kE4h0OAruSReCP6cf8LSvfR9g933kbWp
-         38G3wdqmlw/wB8sOdYU6a1K/vDcBi2LxDphJusEJMjhHwe6COutExhMCnfqk7BbCURMu
-         UxKw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fjT883ULUg0KOjRNnt91vQVYlbimQpF6GMAdv9NYHKo=;
+        b=KSrXwfH+q58M2eicVZryaiNSENDFaaaHyRQewqHcuQo+ReNIGhwdxOAX/gMVwkdSRH
+         0sOMSUwHm99wKLSu73yn/ZwMIoPXXP4gfWp5FyHo8dIxsyrx3smrsGYvHM+1yuzmAVtk
+         vNPiNaGGqUl3N37W1FivetZUVuKdun5i1zQkL9HlTvfCb2usP45LLssb1TLxYna5zu8K
+         KvG+cnvH32uVxlJvybU5FoWEMS5KT1nZvpxpdlA8ET0S7StY+rD3jFFzE3Dg6EVEgKob
+         WzJiLB6dJsLDGLZBnekVL3J/tNuHYTVglSy4RXOOKCHDXQxGCQ361xlym/rTKu+ziFE3
+         Jz8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eZX3anyZMMAgTvTOAbA6GQo46jqojN0EiJPMmbv67bA=;
-        b=SmU1fJTSKKHJlbvnN0m5fjoOv/BlidrSXQKE7Zz2auK7aMITl3UwzAVFdlC7mwcw3A
-         yD90N+xPzPOneu/r18Shsc6VyWqWHcOY9xrw4oxcUxK6ccBIbS+k81+nEurS+MsootSW
-         UeymnxPcJHy1ljTfSXIgDKH0+3sAk6eO+fOrDd52KVB5KlYCbZYO3Drud3ku+JYcWKNF
-         zQ0njeO+U6smUs0uPWcrwFGTSIATzEWymrJ+82sMMKO82ObxH1hUnbGhywjmQp6l53hu
-         cb3FwQVy05u5mhBdi3Bhr9HCamwtgMDg9bViJGpbZ5A9ePWQq4Oy4MIltEHGRQyTgZO3
-         59gw==
-X-Gm-Message-State: APjAAAUBS3CxIorLgl9Nw7zJyGeiwim/NQbW26FT2DAOyYN0dJESIvVP
-        bydK9EuQU+ah1m35IXJMs3E=
-X-Google-Smtp-Source: APXvYqwjyH5JmEcfzRpESprQR/QtSXTMaNRLBZytNj2AXDHNhT6aiWI7ZMCrVWWviowXrniWslUoeA==
-X-Received: by 2002:adf:e34e:: with SMTP id n14mr35430946wrj.169.1560347728053;
-        Wed, 12 Jun 2019 06:55:28 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id v18sm17973839wrs.80.2019.06.12.06.55.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fjT883ULUg0KOjRNnt91vQVYlbimQpF6GMAdv9NYHKo=;
+        b=SQxmf6doqmOTx31NGrjDyTBW6R9IXCasHrNJgC3HcUCZRdZenfQp8rucWtZ0jOc29A
+         q7poX+pl93th7xJYCWltSVJq1vVamZKzCdQBwj8xwNxnTP8JFp7ASC9O8nU9XboIZGnw
+         sJfo+4/8fVzXPurGHO14wJHrYDLQPHgy0jR5oD3/PiCjZWawRvdLq74l9Nw3oN0QWaGj
+         3NPGMRq95qQ48z+QT1Wb6+8D56wCKAjfUg8sVek/5xAuEr+rwK3o+R4iUhfnxFFiVvcw
+         kHaaq5nJLXpWJI1/omLWJPSANw7if2hVpoa66MdU7yv4N8c36ES60uuRFaY6AC+Dcjzp
+         lLmA==
+X-Gm-Message-State: APjAAAUPpakjMAYcO0Q2J2zdmX8dwu9zUkSK/LcPhKwGBQ5qko9tzaFh
+        +mOSNa869LpVM1kot53K7HJkQ5QBZ6c=
+X-Google-Smtp-Source: APXvYqwb3RJyDC2/Is1wPOQDLwHdvdsQtIwG01k8n/BMfJKenlOPGWZNNktln9OyaIoymd0o+CAY9A==
+X-Received: by 2002:a1c:cfc3:: with SMTP id f186mr20623819wmg.134.1560347748822;
+        Wed, 12 Jun 2019 06:55:48 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([108.61.173.19])
+        by smtp.gmail.com with ESMTPSA id p2sm22560305wrx.90.2019.06.12.06.55.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 06:55:26 -0700 (PDT)
-Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
- <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b6b24358-36a0-af98-1b29-9a622baa9600@gmail.com>
-Date:   Wed, 12 Jun 2019 16:55:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 06:55:48 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 21:55:38 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org
+Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5] selinux: fix a missing-check bug in
+ selinux_sb_eat_lsm_opts()
+Message-ID: <20190612135538.GA4257@zhanggen-UX430UQ>
+References: <20190612135114.GB4015@zhanggen-UX430UQ>
 MIME-Version: 1.0
-In-Reply-To: <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612135114.GB4015@zhanggen-UX430UQ>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.06.2019 13:51, Bitan Biswas пишет:
-> Fix expression for residual bytes(less than word) transfer
-> in I2C PIO mode RX/TX.
-> 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 4dfb4c1..0596c12 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -514,7 +514,8 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	 * If there is a partial word at the end of buf, handle it manually to
->  	 * prevent overwriting past the end of buf
->  	 */
-> -	if (rx_fifo_avail > 0 && buf_remaining > 0) {
-> +	if (rx_fifo_avail > 0 &&
-> +	    (buf_remaining > 0 && buf_remaining < BYTES_PER_FIFO_WORD)) {
+In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+returns NULL when fails. So 'arg' should be checked. And 'mnt_opts' 
+should be freed when error.
 
-The buf_remaining >= BYTES_PER_FIFO_WORD is not possible to happen
-because there are three possible cases:
-
-1) buf_remaining > rx_fifo_avail * 4:
-
-	In this case rx_fifo_avail = 0
-
-2) buf_remaining < rx_fifo_avail * 4;
-
-	In this case buf_remaining is always < 4 because
-	words_to_transfer is a buf_remaining rounded down to 4
-	and then divided by 4. Hence:
-
-	buf_remaining -= (buf_remaining / 4) * 4 always results
-	into buf_remaining < 4.
-
-3) buf_remaining == rx_fifo_avail * 4:
-
-	In this case rx_fifo_avail = 0 and buf_remaining = 0.
-
-Case 2 should never happen and means that something gone wrong.
-
->  		BUG_ON(buf_remaining > 3);
->  		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
->  		val = cpu_to_le32(val);
-> @@ -557,11 +558,10 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
->  			words_to_transfer = tx_fifo_avail;
->  
->  		/*
-> -		 * Update state before writing to FIFO.  If this casues us
-> +		 * Update state before writing to FIFO.  If this causes us
->  		 * to finish writing all bytes (AKA buf_remaining goes to 0) we
->  		 * have a potential for an interrupt (PACKET_XFER_COMPLETE is
-> -		 * not maskable).  We need to make sure that the isr sees
-> -		 * buf_remaining as 0 and doesn't call us back re-entrantly.
-> +		 * not maskable).
->  		 */
->  		buf_remaining -= words_to_transfer * BYTES_PER_FIFO_WORD;
->  		tx_fifo_avail -= words_to_transfer;
-> @@ -580,7 +580,8 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	 * prevent reading past the end of buf, which could cross a page
->  	 * boundary and fault.
->  	 */
-> -	if (tx_fifo_avail > 0 && buf_remaining > 0) {
-> +	if (tx_fifo_avail > 0 &&
-> +	    (buf_remaining > 0 && buf_remaining < BYTES_PER_FIFO_WORD)) {
->  		BUG_ON(buf_remaining > 3);
->  		memcpy(&val, buf, buf_remaining);
->  		val = le32_to_cpu(val);
-> 
-
-Same as for RX.
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
+---
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 3ec702c..7a56f2a 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2616,10 +2616,11 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+ 	char *from = options;
+ 	char *to = options;
+ 	bool first = true;
++	int rc;
+ 
+ 	while (1) {
+ 		int len = opt_len(from);
+-		int token, rc;
++		int token;
+ 		char *arg = NULL;
+ 
+ 		token = match_opt_prefix(from, len, &arg);
+@@ -2635,15 +2636,15 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+ 						*q++ = c;
+ 				}
+ 				arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
++				if (!arg) {
++					rc = -ENOMEM;
++					goto free_opt;
++				}
+ 			}
+ 			rc = selinux_add_opt(token, arg, mnt_opts);
+ 			if (unlikely(rc)) {
+ 				kfree(arg);
+-				if (*mnt_opts) {
+-					selinux_free_mnt_opts(*mnt_opts);
+-					*mnt_opts = NULL;
+-				}
+-				return rc;
++				goto free_opt;
+ 			}
+ 		} else {
+ 			if (!first) {	// copy with preceding comma
+@@ -2661,6 +2662,13 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+ 	}
+ 	*to = '\0';
+ 	return 0;
++
++free_opt:
++	if (*mnt_opts) {
++		selinux_free_mnt_opts(*mnt_opts);
++		*mnt_opts = NULL;
++	}
++	return rc;
+ }
+ 
+ static int selinux_sb_remount(struct super_block *sb, void *mnt_opts)
