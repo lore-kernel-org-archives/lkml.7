@@ -2,104 +2,1170 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81368C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529B8C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF2E2080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10CB20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K0s48gVk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uM+/Mejw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406162AbfFLHjv (ORCPT
+        id S2406502AbfFLHkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:39:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48528 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731513AbfFLHjv (ORCPT
+        Wed, 12 Jun 2019 03:40:20 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:50073 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406341AbfFLHkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:39:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5C7d5Ha095716;
-        Wed, 12 Jun 2019 07:39:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=As3rSRodBmhvXpmKU3bKOUx22NatiWkZ+Xl8vHvw2I0=;
- b=K0s48gVkXLccDgvtGOO1pRgDasSUhz/2p8XTi5OZfTjQK+SPko5B+83baAsqyqm+aDyp
- 3dcsXVIwvH8FtNoa3Wb3Ki8yzaHhhDB02clxn87nazwG8SyyMEV86jUJd93Mru60iXz4
- 3nOtaLg00NcuxGp4rYp10RWMv9UQMHRww8P8jGbG721i3+upFUkZUeczXNz7Q34nePJd
- QfgCqskvhEaYhVCxeTVh96h72S5vlooV7G00NKzkHvyrWKz/F8cwJn5ar/pQjApT4lLN
- /tIqbAILQB00D4LTC4hJgYeNs4bc9vhW2gTXKCjA9YiZdCc2z7yCDjnBpQiRvq3wr7cJ 3g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2t05nqsju4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 07:39:47 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5C7ctEZ168459;
-        Wed, 12 Jun 2019 07:39:46 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t04hysmur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 07:39:46 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5C7diLb023411;
-        Wed, 12 Jun 2019 07:39:44 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Jun 2019 00:39:43 -0700
-Date:   Wed, 12 Jun 2019 10:39:36 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] staging: kpc2000: remove unnecessary comments in
- kp2000_pcie_probe
-Message-ID: <20190612073936.GD1915@kadam>
-References: <20190610200535.31820-1-simon@nikanor.nu>
- <20190610200535.31820-3-simon@nikanor.nu>
+        Wed, 12 Jun 2019 03:40:20 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190612074017euoutp02190cb3b2f5811bcdb9197d64c7317850~nY4SY67Ac1438114381euoutp02f
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:40:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190612074017euoutp02190cb3b2f5811bcdb9197d64c7317850~nY4SY67Ac1438114381euoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560325217;
+        bh=y7oO7w4pPNdruh+oKzbgZppiKRKMF7N/04bhQshUzzo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=uM+/MejwGsq3c/92cZLXA3kMpNsYdDZ0Y2ChowmsPGWJy8GioP8MAusUk2xLGN5+r
+         ze1+zQkpRcGk5OdL/mpZw5htQMuTkgHHSovf4kcBKG2tJa0QQNNk+Mstrlln2qeEJu
+         dwgTzgYrcWH7CgM6YRI9kzSYBXsZr/zfgzAUxZ8g=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190612074016eucas1p151f750278bd518106f7a476e40c71efb~nY4RboZVW1705317053eucas1p1K;
+        Wed, 12 Jun 2019 07:40:16 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id F9.7D.04377.F5CA00D5; Wed, 12
+        Jun 2019 08:40:15 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190612074015eucas1p26ad775f808d669c187fca405a18d944b~nY4Qs3Ych0806708067eucas1p2Y;
+        Wed, 12 Jun 2019 07:40:15 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190612074014eusmtrp284b0e7d51c8ba07beb50f570ff3de924~nY4QdyXTQ0806008060eusmtrp2X;
+        Wed, 12 Jun 2019 07:40:14 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-ca-5d00ac5fc9f0
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 58.8D.04146.E5CA00D5; Wed, 12
+        Jun 2019 08:40:14 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190612074014eusmtip166e0507d4747b42d1fe365b90811e25c~nY4PoNQMw2868328683eusmtip1W;
+        Wed, 12 Jun 2019 07:40:14 +0000 (GMT)
+Subject: Re: [PATCH v2 2/7] drm/bridge: split some definitions of ANX78xx to
+ dedicated headers
+To:     Torsten Duwe <duwe@lst.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <69db0fb3-ec72-324a-2fef-2e6391fe4ec8@samsung.com>
+Date:   Wed, 12 Jun 2019 09:40:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190604122254.4EDDB68B20@newverein.lst.de>
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190610200535.31820-3-simon@nikanor.nu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9285 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906120053
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9285 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906120053
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SZ0xTURjlvk3j00fB9BN3jRqNW39cozEaNXnROKI/wBWt+oLKUFvAGUER
+        UreISChIGeKAGkkZ0hrUFGNFQhVEBUWpCiagxUgLARfSPoz8O+d8457z5XKkMpsJ5nZHRUva
+        KE2EmlFQZY97HdO3mvy2zDJ4puNzjioCJz7+jHBfWTKJjY8cNK7v+sbg7vqnBE7Iu8PgEmsN
+        jd057wl8Kvkai82fXtH4hTWTwfmvawnsbHuAcGLFIxa/K6pBuNicSuJeaxaFe23PiMWBYl7v
+        H0I0ZZmQmGU6IrZWfmHFjPhaSiz6WEiLFd3ZlGgxvOvX9Om0aC44xYgdDgcr3u120uKDqyZW
+        bD5jJ8Tia3HivcZ4Zm3ARsXCnVLE7lhJO3PRNsUup6mL3NepJw5e7Mik41FHPTqN/DkQ5kHV
+        jwb2NFJwSuEmAs/7dEomHgRP8suQTNwIcpKb+iucb+TF3XWyfgPBQ9sFQiYuBLf1jYR3b6Cw
+        DdrfvGS8hSChkoLLF57SXkIKiQiyi92Ut4sRpsDv4kbGi3lhERhvfSe9mBImgutnj8/hcCEU
+        PBYzknsCoCq9xTfrL8yH668SfP2kMBYSSjMGsAretBh9lkBwcnDebSXlqMsgKTeBkXEgtNtL
+        WBmPgj6LkZBxHDTfPEnKw3oEpUWWgeEFUGmvpb0HIPtd37HOlOUl0GTMZeW7DIUGV4DsYShc
+        KksjZZkHfZJS7h4PzTWlAwtVkP+8i7mI1IZByQyD0hgGpTH8fzcbUQVIJcXoIsMk3Zwo6cAM
+        nSZSFxMVNmPH3kgz6v+31X/snnJk/bXdhgQOqYfwD9P6NitpTazuUKQNAUeqg/g54X5blPxO
+        zaHDknbvVm1MhKSzoZEcpVbxR/ycm5RCmCZaCpekfZL2X5Xg/IPj0YaDleVrChRpfHXq1zrX
+        jrazc/OTxvGjPVeI2l9vj7Lh1lWbuh0fygtd++OCVryNvj++gN6zUjUtNnjp/WMVhUE94okx
+        1SdWT+bb1nWmmH8KrF543dSz/GjF8dCQ9SMly7iSae1fCzMnqOvsL92TRhCNXQ22FcO+S3l1
+        KZ0hnv2tBjWl26WZPZXU6jR/AUDj992zAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe89t0xqcpuGLQZcTFVlO56W9KxvRhzgQlVQfwlxt6GFKzo2d
+        aWmBCzFsFSgR1dRpeCFtpU4z2xJzlaKZ4m3RRZNupNa6akqmbbPAb7/nef6/5+WFR4iL7WSo
+        MDXdyBnS1WkMFUg8mesYDj9qW6KMrGhG6GJPJ4by2j8ANN9UiKPSRz0kGpz8QqGpwS4M5ZbX
+        UqjR8ZREP66PYOhcYYUA2d+6STTgKKZQ5bM+DI2OtQKU1/JIgIbrngLUYL+MoxmHlUAzrl5s
+        ZxBbPjOHsTarDbBW2yn2/cMJAVtk6iPYujc3SbZlqoxg71mGvb38ayRrrzlHsZ6eHgF7d2qU
+        ZFtLbAL29fkOjG2oyGGdz01U/PIESZxBl2Hk1qToeOMO5ogURUmkciSJipFLpNEy5baoWCZC
+        EZfMpaVmcoYIhUqSMmqbxPXf87GTBZ5i0gQ8g8AMhEJIx8CBuwfMIFAopisBHJqwkGYQ4O2H
+        QGfpZ3yBg+Cs20wthCYAPOv6CXyDIFoFx18M+QfBdAcBzV+uYr4Cp/MAnL0wJvClxLQTQM9Q
+        to8pehP80/Cc8rGIVsDS6m/+Jwh6Pfz8e9q/dQV9GBY5TMRCZjnsvPbOzwG0HFa5c/15nN4I
+        Z639/3g1zL1T9I9D4It3pVgBEFsW6ZZFimWRYlmklAGiBgRzGbxWo+WlEl6t5TPSNZIkndYO
+        vPfS1D7T0Az66w+6AC0EzDLRgyvziWJSnclnaV0ACnEmWBR1fIlSLEpWZ2VzBt0xQ0Yax7tA
+        rPdzhXjoiiSd9/rSjceksVIZkktl0bLorYgJEeXTbYliWqM2csc5Ts8Z/nuYMCDUBPhls735
+        lYzqwfQ+TN99b//9rLZDTd2oLzb10q7y/gTVL2X2SONSy6udN15qws6cLqga2Lz22afDNSWW
+        aoVu0HrJ7TR29b0Zn9pRtqtXH968QRa03bOn5XJj49f6lR/XOXIeb9mr2l0e2fJ2OPmETVT/
+        ULNakBh/u1Zxq41xrpK0MgzBp6ilYbiBV/8F19SQUUUDAAA=
+X-CMS-MailID: 20190612074015eucas1p26ad775f808d669c187fca405a18d944b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190604122323epcas3p1c0b76693ae6b8bd4ee024ee8d3cfbb4c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190604122323epcas3p1c0b76693ae6b8bd4ee024ee8d3cfbb4c
+References: <20190604122150.29D6468B05@newverein.lst.de>
+        <CGME20190604122323epcas3p1c0b76693ae6b8bd4ee024ee8d3cfbb4c@epcas3p1.samsung.com>
+        <20190604122254.4EDDB68B20@newverein.lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 10:05:35PM +0200, Simon Sandström wrote:
-> @@ -349,9 +340,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
->  		goto err_remove_ida;
->  	}
+On 04.06.2019 14:22, Torsten Duwe wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+>
+> Some definitions currently in analogix-anx78xx.h are not restricted to
+> the ANX78xx series, but also applicable to other DisplayPort
+> transmitters by Analogix.
+>
+> Split out them to dedicated headers, and make analogix-anx78xx.h include
+> them.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> ---
+>  drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h | 465 +--------------------
+>  .../gpu/drm/bridge/analogix/analogix-i2c-dptx.h    | 256 ++++++++++++
+>  .../drm/bridge/analogix/analogix-i2c-txcommon.h    | 242 +++++++++++
+>  3 files changed, 503 insertions(+), 460 deletions(-)
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
+>
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+> index 38753c870137..3fbe2c3244fd 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+> @@ -11,13 +11,15 @@
+>   * GNU General Public License for more details.
+>   *
+>   */
+> -
+>  #ifndef __ANX78xx_H
+>  #define __ANX78xx_H
 >  
-> -	/*
-> -	 * Step 4: Setup the Register BAR
-> -	 */
-> +	// Setup the Register BAR
-
-Greg, are we moving the C++ style comments?  Linus is fine with them.  I
-don't like them but whatever...
-
->  	reg_bar_phys_addr = pci_resource_start(pcard->pdev, REG_BAR);
->  	reg_bar_phys_len = pci_resource_len(pcard->pdev, REG_BAR);
+> -#define TX_P0				0x70
+> +#include "analogix-i2c-dptx.h"
+> +#include "analogix-i2c-txcommon.h"
+> +
+> +#define TX_P0				ANALOGIX_I2C_DPTX
+>  #define TX_P1				0x7a
+> -#define TX_P2				0x72
+> +#define TX_P2				ANALOGIX_I2C_TXCOMMON
 >  
+>  #define RX_P0				0x7e
+>  #define RX_P1				0x80
+> @@ -225,463 +227,6 @@
+>  #define SP_CLEAR_AVMUTE			BIT(4)
+>  #define SP_SET_AVMUTE			BIT(0)
+>  
+> -/***************************************************************/
+> -/* Register definition of device address 0x70                  */
+> -/***************************************************************/
+> -
+> -/* HDCP Status Register */
+> -#define SP_TX_HDCP_STATUS_REG		0x00
+> -#define SP_AUTH_FAIL			BIT(5)
+> -#define SP_AUTHEN_PASS			BIT(1)
+> -
+> -/* HDCP Control Register 0 */
+> -#define SP_HDCP_CTRL0_REG		0x01
+> -#define SP_RX_REPEATER			BIT(6)
+> -#define SP_RE_AUTH			BIT(5)
+> -#define SP_SW_AUTH_OK			BIT(4)
+> -#define SP_HARD_AUTH_EN			BIT(3)
+> -#define SP_HDCP_ENC_EN			BIT(2)
+> -#define SP_BKSV_SRM_PASS		BIT(1)
+> -#define SP_KSVLIST_VLD			BIT(0)
+> -/* HDCP Function Enabled */
+> -#define SP_HDCP_FUNCTION_ENABLED	(BIT(0) | BIT(1) | BIT(2) | BIT(3))
+> -
+> -/* HDCP Receiver BSTATUS Register 0 */
+> -#define	SP_HDCP_RX_BSTATUS0_REG		0x1b
+> -/* HDCP Receiver BSTATUS Register 1 */
+> -#define	SP_HDCP_RX_BSTATUS1_REG		0x1c
+> -
+> -/* HDCP Embedded "Blue Screen" Content Registers */
+> -#define SP_HDCP_VID0_BLUE_SCREEN_REG	0x2c
+> -#define SP_HDCP_VID1_BLUE_SCREEN_REG	0x2d
+> -#define SP_HDCP_VID2_BLUE_SCREEN_REG	0x2e
+> -
+> -/* HDCP Wait R0 Timing Register */
+> -#define SP_HDCP_WAIT_R0_TIME_REG	0x40
+> -
+> -/* HDCP Link Integrity Check Timer Register */
+> -#define SP_HDCP_LINK_CHECK_TIMER_REG	0x41
+> -
+> -/* HDCP Repeater Ready Wait Timer Register */
+> -#define SP_HDCP_RPTR_RDY_WAIT_TIME_REG	0x42
+> -
+> -/* HDCP Auto Timer Register */
+> -#define SP_HDCP_AUTO_TIMER_REG		0x51
+> -
+> -/* HDCP Key Status Register */
+> -#define SP_HDCP_KEY_STATUS_REG		0x5e
+> -
+> -/* HDCP Key Command Register */
+> -#define SP_HDCP_KEY_COMMAND_REG		0x5f
+> -#define SP_DISABLE_SYNC_HDCP		BIT(2)
+> -
+> -/* OTP Memory Key Protection Registers */
+> -#define SP_OTP_KEY_PROTECT1_REG		0x60
+> -#define SP_OTP_KEY_PROTECT2_REG		0x61
+> -#define SP_OTP_KEY_PROTECT3_REG		0x62
+> -#define SP_OTP_PSW1			0xa2
+> -#define SP_OTP_PSW2			0x7e
+> -#define SP_OTP_PSW3			0xc6
+> -
+> -/* DP System Control Registers */
+> -#define SP_DP_SYSTEM_CTRL_BASE		(0x80 - 1)
+> -/* Bits for DP System Control Register 2 */
+> -#define SP_CHA_STA			BIT(2)
+> -/* Bits for DP System Control Register 3 */
+> -#define SP_HPD_STATUS			BIT(6)
+> -#define SP_STRM_VALID			BIT(2)
+> -/* Bits for DP System Control Register 4 */
+> -#define SP_ENHANCED_MODE		BIT(3)
+> -
+> -/* DP Video Control Register */
+> -#define SP_DP_VIDEO_CTRL_REG		0x84
+> -#define SP_COLOR_F_MASK			0x06
+> -#define SP_COLOR_F_SHIFT		1
+> -#define SP_BPC_MASK			0xe0
+> -#define SP_BPC_SHIFT			5
+> -#  define SP_BPC_6BITS			0x00
+> -#  define SP_BPC_8BITS			0x01
+> -#  define SP_BPC_10BITS			0x02
+> -#  define SP_BPC_12BITS			0x03
+> -
+> -/* DP Audio Control Register */
+> -#define SP_DP_AUDIO_CTRL_REG		0x87
+> -#define SP_AUD_EN			BIT(0)
+> -
+> -/* 10us Pulse Generate Timer Registers */
+> -#define SP_I2C_GEN_10US_TIMER0_REG	0x88
+> -#define SP_I2C_GEN_10US_TIMER1_REG	0x89
+> -
+> -/* Packet Send Control Register */
+> -#define SP_PACKET_SEND_CTRL_REG		0x90
+> -#define SP_AUD_IF_UP			BIT(7)
+> -#define SP_AVI_IF_UD			BIT(6)
+> -#define SP_MPEG_IF_UD			BIT(5)
+> -#define SP_SPD_IF_UD			BIT(4)
+> -#define SP_AUD_IF_EN			BIT(3)
+> -#define SP_AVI_IF_EN			BIT(2)
+> -#define SP_MPEG_IF_EN			BIT(1)
+> -#define SP_SPD_IF_EN			BIT(0)
+> -
+> -/* DP HDCP Control Register */
+> -#define SP_DP_HDCP_CTRL_REG		0x92
+> -#define SP_AUTO_EN			BIT(7)
+> -#define SP_AUTO_START			BIT(5)
+> -#define SP_LINK_POLLING			BIT(1)
+> -
+> -/* DP Main Link Bandwidth Setting Register */
+> -#define SP_DP_MAIN_LINK_BW_SET_REG	0xa0
+> -#define SP_LINK_BW_SET_MASK		0x1f
+> -#define SP_INITIAL_SLIM_M_AUD_SEL	BIT(5)
+> -
+> -/* DP Training Pattern Set Register */
+> -#define SP_DP_TRAINING_PATTERN_SET_REG	0xa2
+> -
+> -/* DP Lane 0 Link Training Control Register */
+> -#define SP_DP_LANE0_LT_CTRL_REG		0xa3
+> -#define SP_TX_SW_SET_MASK		0x1b
+> -#define SP_MAX_PRE_REACH		BIT(5)
+> -#define SP_MAX_DRIVE_REACH		BIT(4)
+> -#define SP_PRE_EMP_LEVEL1		BIT(3)
+> -#define SP_DRVIE_CURRENT_LEVEL1		BIT(0)
+> -
+> -/* DP Link Training Control Register */
+> -#define SP_DP_LT_CTRL_REG		0xa8
+> -#define SP_LT_ERROR_TYPE_MASK		0x70
+> -#  define SP_LT_NO_ERROR		0x00
+> -#  define SP_LT_AUX_WRITE_ERROR		0x01
+> -#  define SP_LT_MAX_DRIVE_REACHED	0x02
+> -#  define SP_LT_WRONG_LANE_COUNT_SET	0x03
+> -#  define SP_LT_LOOP_SAME_5_TIME	0x04
+> -#  define SP_LT_CR_FAIL_IN_EQ		0x05
+> -#  define SP_LT_EQ_LOOP_5_TIME		0x06
+> -#define SP_LT_EN			BIT(0)
+> -
+> -/* DP CEP Training Control Registers */
+> -#define SP_DP_CEP_TRAINING_CTRL0_REG	0xa9
+> -#define SP_DP_CEP_TRAINING_CTRL1_REG	0xaa
+> -
+> -/* DP Debug Register 1 */
+> -#define SP_DP_DEBUG1_REG		0xb0
+> -#define SP_DEBUG_PLL_LOCK		BIT(4)
+> -#define SP_POLLING_EN			BIT(1)
+> -
+> -/* DP Polling Control Register */
+> -#define SP_DP_POLLING_CTRL_REG		0xb4
+> -#define SP_AUTO_POLLING_DISABLE		BIT(0)
+> -
+> -/* DP Link Debug Control Register */
+> -#define SP_DP_LINK_DEBUG_CTRL_REG	0xb8
+> -#define SP_M_VID_DEBUG			BIT(5)
+> -#define SP_NEW_PRBS7			BIT(4)
+> -#define SP_INSERT_ER			BIT(1)
+> -#define SP_PRBS31_EN			BIT(0)
+> -
+> -/* AUX Misc control Register */
+> -#define SP_AUX_MISC_CTRL_REG		0xbf
+> -
+> -/* DP PLL control Register */
+> -#define SP_DP_PLL_CTRL_REG		0xc7
+> -#define SP_PLL_RST			BIT(6)
+> -
+> -/* DP Analog Power Down Register */
+> -#define SP_DP_ANALOG_POWER_DOWN_REG	0xc8
+> -#define SP_CH0_PD			BIT(0)
+> -
+> -/* DP Misc Control Register */
+> -#define SP_DP_MISC_CTRL_REG		0xcd
+> -#define SP_EQ_TRAINING_LOOP		BIT(6)
+> -
+> -/* DP Extra I2C Device Address Register */
+> -#define SP_DP_EXTRA_I2C_DEV_ADDR_REG	0xce
+> -#define SP_I2C_STRETCH_DISABLE		BIT(7)
+> -
+> -#define SP_I2C_EXTRA_ADDR		0x50
+> -
+> -/* DP Downspread Control Register 1 */
+> -#define SP_DP_DOWNSPREAD_CTRL1_REG	0xd0
+> -
+> -/* DP M Value Calculation Control Register */
+> -#define SP_DP_M_CALCULATION_CTRL_REG	0xd9
+> -#define SP_M_GEN_CLK_SEL		BIT(0)
+> -
+> -/* AUX Channel Access Status Register */
+> -#define SP_AUX_CH_STATUS_REG		0xe0
+> -#define SP_AUX_STATUS			0x0f
+> -
+> -/* AUX Channel DEFER Control Register */
+> -#define SP_AUX_DEFER_CTRL_REG		0xe2
+> -#define SP_DEFER_CTRL_EN		BIT(7)
+> -
+> -/* DP Buffer Data Count Register */
+> -#define SP_BUF_DATA_COUNT_REG		0xe4
+> -#define SP_BUF_DATA_COUNT_MASK		0x1f
+> -#define SP_BUF_CLR			BIT(7)
+> -
+> -/* DP AUX Channel Control Register 1 */
+> -#define SP_DP_AUX_CH_CTRL1_REG		0xe5
+> -#define SP_AUX_TX_COMM_MASK		0x0f
+> -#define SP_AUX_LENGTH_MASK		0xf0
+> -#define SP_AUX_LENGTH_SHIFT		4
+> -
+> -/* DP AUX CH Address Register 0 */
+> -#define SP_AUX_ADDR_7_0_REG		0xe6
+> -
+> -/* DP AUX CH Address Register 1 */
+> -#define SP_AUX_ADDR_15_8_REG		0xe7
+> -
+> -/* DP AUX CH Address Register 2 */
+> -#define SP_AUX_ADDR_19_16_REG		0xe8
+> -#define SP_AUX_ADDR_19_16_MASK		0x0f
+> -
+> -/* DP AUX Channel Control Register 2 */
+> -#define SP_DP_AUX_CH_CTRL2_REG		0xe9
+> -#define SP_AUX_SEL_RXCM			BIT(6)
+> -#define SP_AUX_CHSEL			BIT(3)
+> -#define SP_AUX_PN_INV			BIT(2)
+> -#define SP_ADDR_ONLY			BIT(1)
+> -#define SP_AUX_EN			BIT(0)
+> -
+> -/* DP Video Stream Control InfoFrame Register */
+> -#define SP_DP_3D_VSC_CTRL_REG		0xea
+> -#define SP_INFO_FRAME_VSC_EN		BIT(0)
+> -
+> -/* DP Video Stream Data Byte 1 Register */
+> -#define SP_DP_VSC_DB1_REG		0xeb
+> -
+> -/* DP AUX Channel Control Register 3 */
+> -#define SP_DP_AUX_CH_CTRL3_REG		0xec
+> -#define SP_WAIT_COUNTER_7_0_MASK	0xff
+> -
+> -/* DP AUX Channel Control Register 4 */
+> -#define SP_DP_AUX_CH_CTRL4_REG		0xed
+> -
+> -/* DP AUX Buffer Data Registers */
+> -#define SP_DP_BUF_DATA0_REG		0xf0
+> -
+> -/***************************************************************/
+> -/* Register definition of device address 0x72                  */
+> -/***************************************************************/
+> -
+> -/*
+> - * Core Register Definitions
+> - */
+> -
+> -/* Device ID Low Byte Register */
+> -#define SP_DEVICE_IDL_REG		0x02
+> -
+> -/* Device ID High Byte Register */
+> -#define SP_DEVICE_IDH_REG		0x03
+> -
+> -/* Device version register */
+> -#define SP_DEVICE_VERSION_REG		0x04
+> -
+> -/* Power Down Control Register */
+> -#define SP_POWERDOWN_CTRL_REG		0x05
+> -#define SP_REGISTER_PD			BIT(7)
+> -#define SP_HDCP_PD			BIT(5)
+> -#define SP_AUDIO_PD			BIT(4)
+> -#define SP_VIDEO_PD			BIT(3)
+> -#define SP_LINK_PD			BIT(2)
+> -#define SP_TOTAL_PD			BIT(1)
+> -
+> -/* Reset Control Register 1 */
+> -#define SP_RESET_CTRL1_REG		0x06
+> -#define SP_MISC_RST			BIT(7)
+> -#define SP_VIDCAP_RST			BIT(6)
+> -#define SP_VIDFIF_RST			BIT(5)
+> -#define SP_AUDFIF_RST			BIT(4)
+> -#define SP_AUDCAP_RST			BIT(3)
+> -#define SP_HDCP_RST			BIT(2)
+> -#define SP_SW_RST			BIT(1)
+> -#define SP_HW_RST			BIT(0)
+> -
+> -/* Reset Control Register 2 */
+> -#define SP_RESET_CTRL2_REG		0x07
+> -#define SP_AUX_RST			BIT(2)
+> -#define SP_SERDES_FIFO_RST		BIT(1)
+> -#define SP_I2C_REG_RST			BIT(0)
+> -
+> -/* Video Control Register 1 */
+> -#define SP_VID_CTRL1_REG		0x08
+> -#define SP_VIDEO_EN			BIT(7)
+> -#define SP_VIDEO_MUTE			BIT(2)
+> -#define SP_DE_GEN			BIT(1)
+> -#define SP_DEMUX			BIT(0)
+> -
+> -/* Video Control Register 2 */
+> -#define SP_VID_CTRL2_REG		0x09
+> -#define SP_IN_COLOR_F_MASK		0x03
+> -#define SP_IN_YC_BIT_SEL		BIT(2)
+> -#define SP_IN_BPC_MASK			0x70
+> -#define SP_IN_BPC_SHIFT			4
+> -#  define SP_IN_BPC_12BIT		0x03
+> -#  define SP_IN_BPC_10BIT		0x02
+> -#  define SP_IN_BPC_8BIT		0x01
+> -#  define SP_IN_BPC_6BIT		0x00
+> -#define SP_IN_D_RANGE			BIT(7)
+> -
+> -/* Video Control Register 3 */
+> -#define SP_VID_CTRL3_REG		0x0a
+> -#define SP_HPD_OUT			BIT(6)
+> -
+> -/* Video Control Register 5 */
+> -#define SP_VID_CTRL5_REG		0x0c
+> -#define SP_CSC_STD_SEL			BIT(7)
+> -#define SP_XVYCC_RNG_LMT		BIT(6)
+> -#define SP_RANGE_Y2R			BIT(5)
+> -#define SP_CSPACE_Y2R			BIT(4)
+> -#define SP_RGB_RNG_LMT			BIT(3)
+> -#define SP_Y_RNG_LMT			BIT(2)
+> -#define SP_RANGE_R2Y			BIT(1)
+> -#define SP_CSPACE_R2Y			BIT(0)
+> -
+> -/* Video Control Register 6 */
+> -#define SP_VID_CTRL6_REG		0x0d
+> -#define SP_TEST_PATTERN_EN		BIT(7)
+> -#define SP_VIDEO_PROCESS_EN		BIT(6)
+> -#define SP_VID_US_MODE			BIT(3)
+> -#define SP_VID_DS_MODE			BIT(2)
+> -#define SP_UP_SAMPLE			BIT(1)
+> -#define SP_DOWN_SAMPLE			BIT(0)
+> -
+> -/* Video Control Register 8 */
+> -#define SP_VID_CTRL8_REG		0x0f
+> -#define SP_VID_VRES_TH			BIT(0)
+> -
+> -/* Total Line Status Low Byte Register */
+> -#define SP_TOTAL_LINE_STAL_REG		0x24
+> -
+> -/* Total Line Status High Byte Register */
+> -#define SP_TOTAL_LINE_STAH_REG		0x25
+> -
+> -/* Active Line Status Low Byte Register */
+> -#define SP_ACT_LINE_STAL_REG		0x26
+> -
+> -/* Active Line Status High Byte Register */
+> -#define SP_ACT_LINE_STAH_REG		0x27
+> -
+> -/* Vertical Front Porch Status Register */
+> -#define SP_V_F_PORCH_STA_REG		0x28
+> -
+> -/* Vertical SYNC Width Status Register */
+> -#define SP_V_SYNC_STA_REG		0x29
+> -
+> -/* Vertical Back Porch Status Register */
+> -#define SP_V_B_PORCH_STA_REG		0x2a
+> -
+> -/* Total Pixel Status Low Byte Register */
+> -#define SP_TOTAL_PIXEL_STAL_REG		0x2b
+> -
+> -/* Total Pixel Status High Byte Register */
+> -#define SP_TOTAL_PIXEL_STAH_REG		0x2c
+> -
+> -/* Active Pixel Status Low Byte Register */
+> -#define SP_ACT_PIXEL_STAL_REG		0x2d
+> -
+> -/* Active Pixel Status High Byte Register */
+> -#define SP_ACT_PIXEL_STAH_REG		0x2e
+> -
+> -/* Horizontal Front Porch Status Low Byte Register */
+> -#define SP_H_F_PORCH_STAL_REG		0x2f
+> -
+> -/* Horizontal Front Porch Statys High Byte Register */
+> -#define SP_H_F_PORCH_STAH_REG		0x30
+> -
+> -/* Horizontal SYNC Width Status Low Byte Register */
+> -#define SP_H_SYNC_STAL_REG		0x31
+> -
+> -/* Horizontal SYNC Width Status High Byte Register */
+> -#define SP_H_SYNC_STAH_REG		0x32
+> -
+> -/* Horizontal Back Porch Status Low Byte Register */
+> -#define SP_H_B_PORCH_STAL_REG		0x33
+> -
+> -/* Horizontal Back Porch Status High Byte Register */
+> -#define SP_H_B_PORCH_STAH_REG		0x34
+> -
+> -/* InfoFrame AVI Packet DB1 Register */
+> -#define SP_INFOFRAME_AVI_DB1_REG	0x70
+> -
+> -/* Bit Control Specific Register */
+> -#define SP_BIT_CTRL_SPECIFIC_REG	0x80
+> -#define SP_BIT_CTRL_SELECT_SHIFT	1
+> -#define SP_ENABLE_BIT_CTRL		BIT(0)
+> -
+> -/* InfoFrame Audio Packet DB1 Register */
+> -#define SP_INFOFRAME_AUD_DB1_REG	0x83
+> -
+> -/* InfoFrame MPEG Packet DB1 Register */
+> -#define SP_INFOFRAME_MPEG_DB1_REG	0xb0
+> -
+> -/* Audio Channel Status Registers */
+> -#define SP_AUD_CH_STATUS_BASE		0xd0
+> -
+> -/* Audio Channel Num Register 5 */
+> -#define SP_I2S_CHANNEL_NUM_MASK		0xe0
+> -#  define SP_I2S_CH_NUM_1		(0x00 << 5)
+> -#  define SP_I2S_CH_NUM_2		(0x01 << 5)
+> -#  define SP_I2S_CH_NUM_3		(0x02 << 5)
+> -#  define SP_I2S_CH_NUM_4		(0x03 << 5)
+> -#  define SP_I2S_CH_NUM_5		(0x04 << 5)
+> -#  define SP_I2S_CH_NUM_6		(0x05 << 5)
+> -#  define SP_I2S_CH_NUM_7		(0x06 << 5)
+> -#  define SP_I2S_CH_NUM_8		(0x07 << 5)
+> -#define SP_EXT_VUCP			BIT(2)
+> -#define SP_VBIT				BIT(1)
+> -#define SP_AUDIO_LAYOUT			BIT(0)
+> -
+> -/* Analog Debug Register 2 */
+> -#define SP_ANALOG_DEBUG2_REG		0xdd
+> -#define SP_FORCE_SW_OFF_BYPASS		0x20
+> -#define SP_XTAL_FRQ			0x1c
+> -#  define SP_XTAL_FRQ_19M2		(0x00 << 2)
+> -#  define SP_XTAL_FRQ_24M		(0x01 << 2)
+> -#  define SP_XTAL_FRQ_25M		(0x02 << 2)
+> -#  define SP_XTAL_FRQ_26M		(0x03 << 2)
+> -#  define SP_XTAL_FRQ_27M		(0x04 << 2)
+> -#  define SP_XTAL_FRQ_38M4		(0x05 << 2)
+> -#  define SP_XTAL_FRQ_52M		(0x06 << 2)
+> -#define SP_POWERON_TIME_1P5MS		0x03
+> -
+> -/* Analog Control 0 Register */
+> -#define SP_ANALOG_CTRL0_REG		0xe1
+> -
+> -/* Common Interrupt Status Register 1 */
+> -#define SP_COMMON_INT_STATUS_BASE	(0xf1 - 1)
+> -#define SP_PLL_LOCK_CHG			0x40
+> -
+> -/* Common Interrupt Status Register 2 */
+> -#define SP_COMMON_INT_STATUS2		0xf2
+> -#define SP_HDCP_AUTH_CHG		BIT(1)
+> -#define SP_HDCP_AUTH_DONE		BIT(0)
+> -
+> -#define SP_HDCP_LINK_CHECK_FAIL		BIT(0)
+> -
+> -/* Common Interrupt Status Register 4 */
+> -#define SP_COMMON_INT_STATUS4_REG	0xf4
+> -#define SP_HPD_IRQ			BIT(6)
+> -#define SP_HPD_ESYNC_ERR		BIT(4)
+> -#define SP_HPD_CHG			BIT(2)
+> -#define SP_HPD_LOST			BIT(1)
+> -#define SP_HPD_PLUG			BIT(0)
+> -
+> -/* DP Interrupt Status Register */
+> -#define SP_DP_INT_STATUS1_REG		0xf7
+> -#define SP_TRAINING_FINISH		BIT(5)
+> -#define SP_POLLING_ERR			BIT(4)
+> -
+> -/* Common Interrupt Mask Register */
+> -#define SP_COMMON_INT_MASK_BASE		(0xf8 - 1)
+> -
+> -#define SP_COMMON_INT_MASK4_REG		0xfb
+> -
+> -/* DP Interrupts Mask Register */
+> -#define SP_DP_INT_MASK1_REG		0xfe
+> -
+> -/* Interrupt Control Register */
+> -#define SP_INT_CTRL_REG			0xff
+> -
+>  /***************************************************************/
+>  /* Register definition of device address 0x7a                  */
+>  /***************************************************************/
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h b/drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
+> new file mode 100644
+> index 000000000000..5a54c6d86428
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
+> @@ -0,0 +1,256 @@
+> +/*
+> + * Copyright(c) 2016, Analogix Semiconductor.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 
-regards,
-dan carpenter
+
+Please use SPDX identifiers in all new files.
+
+
+> + *
+> + * Based on anx7808 driver obtained from chromeos with copyright:
+> + * Copyright(c) 2013, Google Inc.
+> + *
+> + */
+> +#ifndef _ANALOGIX_I2C_DPTX_H_
+> +#define _ANALOGIX_I2C_DPTX_H_
+> +
+> +#define ANALOGIX_I2C_DPTX		0x70
+> +
+> +/***************************************************************/
+> +/* Register definition of device address 0x70                  */
+> +/***************************************************************/
+> +
+> +/* HDCP Status Register */
+> +#define SP_TX_HDCP_STATUS_REG		0x00
+> +#define SP_AUTH_FAIL			BIT(5)
+> +#define SP_AUTHEN_PASS			BIT(1)
+> +
+> +/* HDCP Control Register 0 */
+> +#define SP_HDCP_CTRL0_REG		0x01
+> +#define SP_RX_REPEATER			BIT(6)
+> +#define SP_RE_AUTH			BIT(5)
+> +#define SP_SW_AUTH_OK			BIT(4)
+> +#define SP_HARD_AUTH_EN			BIT(3)
+> +#define SP_HDCP_ENC_EN			BIT(2)
+> +#define SP_BKSV_SRM_PASS		BIT(1)
+> +#define SP_KSVLIST_VLD			BIT(0)
+> +/* HDCP Function Enabled */
+> +#define SP_HDCP_FUNCTION_ENABLED	(BIT(0) | BIT(1) | BIT(2) | BIT(3))
+> +
+> +/* HDCP Receiver BSTATUS Register 0 */
+> +#define	SP_HDCP_RX_BSTATUS0_REG		0x1b
+> +/* HDCP Receiver BSTATUS Register 1 */
+> +#define	SP_HDCP_RX_BSTATUS1_REG		0x1c
+> +
+> +/* HDCP Embedded "Blue Screen" Content Registers */
+> +#define SP_HDCP_VID0_BLUE_SCREEN_REG	0x2c
+> +#define SP_HDCP_VID1_BLUE_SCREEN_REG	0x2d
+> +#define SP_HDCP_VID2_BLUE_SCREEN_REG	0x2e
+> +
+> +/* HDCP Wait R0 Timing Register */
+> +#define SP_HDCP_WAIT_R0_TIME_REG	0x40
+> +
+> +/* HDCP Link Integrity Check Timer Register */
+> +#define SP_HDCP_LINK_CHECK_TIMER_REG	0x41
+> +
+> +/* HDCP Repeater Ready Wait Timer Register */
+> +#define SP_HDCP_RPTR_RDY_WAIT_TIME_REG	0x42
+> +
+> +/* HDCP Auto Timer Register */
+> +#define SP_HDCP_AUTO_TIMER_REG		0x51
+> +
+> +/* HDCP Key Status Register */
+> +#define SP_HDCP_KEY_STATUS_REG		0x5e
+> +
+> +/* HDCP Key Command Register */
+> +#define SP_HDCP_KEY_COMMAND_REG		0x5f
+> +#define SP_DISABLE_SYNC_HDCP		BIT(2)
+> +
+> +/* OTP Memory Key Protection Registers */
+> +#define SP_OTP_KEY_PROTECT1_REG		0x60
+> +#define SP_OTP_KEY_PROTECT2_REG		0x61
+> +#define SP_OTP_KEY_PROTECT3_REG		0x62
+> +#define SP_OTP_PSW1			0xa2
+> +#define SP_OTP_PSW2			0x7e
+> +#define SP_OTP_PSW3			0xc6
+> +
+> +/* DP System Control Registers */
+> +#define SP_DP_SYSTEM_CTRL_BASE		(0x80 - 1)
+> +/* Bits for DP System Control Register 2 */
+> +#define SP_CHA_STA			BIT(2)
+> +/* Bits for DP System Control Register 3 */
+> +#define SP_HPD_STATUS			BIT(6)
+> +#define SP_STRM_VALID			BIT(2)
+> +/* Bits for DP System Control Register 4 */
+> +#define SP_ENHANCED_MODE		BIT(3)
+> +
+> +/* DP Video Control Register */
+> +#define SP_DP_VIDEO_CTRL_REG		0x84
+> +#define SP_COLOR_F_MASK			0x06
+> +#define SP_COLOR_F_SHIFT		1
+> +#define SP_BPC_MASK			0xe0
+> +#define SP_BPC_SHIFT			5
+> +#  define SP_BPC_6BITS			0x00
+> +#  define SP_BPC_8BITS			0x01
+> +#  define SP_BPC_10BITS			0x02
+> +#  define SP_BPC_12BITS			0x03
+> +
+> +/* DP Audio Control Register */
+> +#define SP_DP_AUDIO_CTRL_REG		0x87
+> +#define SP_AUD_EN			BIT(0)
+> +
+> +/* 10us Pulse Generate Timer Registers */
+> +#define SP_I2C_GEN_10US_TIMER0_REG	0x88
+> +#define SP_I2C_GEN_10US_TIMER1_REG	0x89
+> +
+> +/* Packet Send Control Register */
+> +#define SP_PACKET_SEND_CTRL_REG		0x90
+> +#define SP_AUD_IF_UP			BIT(7)
+> +#define SP_AVI_IF_UD			BIT(6)
+> +#define SP_MPEG_IF_UD			BIT(5)
+> +#define SP_SPD_IF_UD			BIT(4)
+> +#define SP_AUD_IF_EN			BIT(3)
+> +#define SP_AVI_IF_EN			BIT(2)
+> +#define SP_MPEG_IF_EN			BIT(1)
+> +#define SP_SPD_IF_EN			BIT(0)
+> +
+> +/* DP HDCP Control Register */
+> +#define SP_DP_HDCP_CTRL_REG		0x92
+> +#define SP_AUTO_EN			BIT(7)
+> +#define SP_AUTO_START			BIT(5)
+> +#define SP_LINK_POLLING			BIT(1)
+> +
+> +/* DP Main Link Bandwidth Setting Register */
+> +#define SP_DP_MAIN_LINK_BW_SET_REG	0xa0
+> +#define SP_LINK_BW_SET_MASK		0x1f
+> +#define SP_INITIAL_SLIM_M_AUD_SEL	BIT(5)
+> +
+> +/* DP Training Pattern Set Register */
+> +#define SP_DP_TRAINING_PATTERN_SET_REG	0xa2
+> +
+> +/* DP Lane 0 Link Training Control Register */
+> +#define SP_DP_LANE0_LT_CTRL_REG		0xa3
+> +#define SP_TX_SW_SET_MASK		0x1b
+> +#define SP_MAX_PRE_REACH		BIT(5)
+> +#define SP_MAX_DRIVE_REACH		BIT(4)
+> +#define SP_PRE_EMP_LEVEL1		BIT(3)
+> +#define SP_DRVIE_CURRENT_LEVEL1		BIT(0)
+> +
+> +/* DP Link Training Control Register */
+> +#define SP_DP_LT_CTRL_REG		0xa8
+> +#define SP_LT_ERROR_TYPE_MASK		0x70
+> +#  define SP_LT_NO_ERROR		0x00
+> +#  define SP_LT_AUX_WRITE_ERROR		0x01
+> +#  define SP_LT_MAX_DRIVE_REACHED	0x02
+> +#  define SP_LT_WRONG_LANE_COUNT_SET	0x03
+> +#  define SP_LT_LOOP_SAME_5_TIME	0x04
+> +#  define SP_LT_CR_FAIL_IN_EQ		0x05
+> +#  define SP_LT_EQ_LOOP_5_TIME		0x06
+> +#define SP_LT_EN			BIT(0)
+> +
+> +/* DP CEP Training Control Registers */
+> +#define SP_DP_CEP_TRAINING_CTRL0_REG	0xa9
+> +#define SP_DP_CEP_TRAINING_CTRL1_REG	0xaa
+> +
+> +/* DP Debug Register 1 */
+> +#define SP_DP_DEBUG1_REG		0xb0
+> +#define SP_DEBUG_PLL_LOCK		BIT(4)
+> +#define SP_POLLING_EN			BIT(1)
+> +
+> +/* DP Polling Control Register */
+> +#define SP_DP_POLLING_CTRL_REG		0xb4
+> +#define SP_AUTO_POLLING_DISABLE		BIT(0)
+> +
+> +/* DP Link Debug Control Register */
+> +#define SP_DP_LINK_DEBUG_CTRL_REG	0xb8
+> +#define SP_M_VID_DEBUG			BIT(5)
+> +#define SP_NEW_PRBS7			BIT(4)
+> +#define SP_INSERT_ER			BIT(1)
+> +#define SP_PRBS31_EN			BIT(0)
+> +
+> +/* AUX Misc control Register */
+> +#define SP_AUX_MISC_CTRL_REG		0xbf
+> +
+> +/* DP PLL control Register */
+> +#define SP_DP_PLL_CTRL_REG		0xc7
+> +#define SP_PLL_RST			BIT(6)
+> +
+> +/* DP Analog Power Down Register */
+> +#define SP_DP_ANALOG_POWER_DOWN_REG	0xc8
+> +#define SP_CH0_PD			BIT(0)
+> +
+> +/* DP Misc Control Register */
+> +#define SP_DP_MISC_CTRL_REG		0xcd
+> +#define SP_EQ_TRAINING_LOOP		BIT(6)
+> +
+> +/* DP Extra I2C Device Address Register */
+> +#define SP_DP_EXTRA_I2C_DEV_ADDR_REG	0xce
+> +#define SP_I2C_STRETCH_DISABLE		BIT(7)
+> +
+> +#define SP_I2C_EXTRA_ADDR		0x50
+> +
+> +/* DP Downspread Control Register 1 */
+> +#define SP_DP_DOWNSPREAD_CTRL1_REG	0xd0
+> +
+> +/* DP M Value Calculation Control Register */
+> +#define SP_DP_M_CALCULATION_CTRL_REG	0xd9
+> +#define SP_M_GEN_CLK_SEL		BIT(0)
+> +
+> +/* AUX Channel Access Status Register */
+> +#define SP_AUX_CH_STATUS_REG		0xe0
+> +#define SP_AUX_STATUS			0x0f
+> +
+> +/* AUX Channel DEFER Control Register */
+> +#define SP_AUX_DEFER_CTRL_REG		0xe2
+> +#define SP_DEFER_CTRL_EN		BIT(7)
+> +
+> +/* DP Buffer Data Count Register */
+> +#define SP_BUF_DATA_COUNT_REG		0xe4
+> +#define SP_BUF_DATA_COUNT_MASK		0x1f
+> +#define SP_BUF_CLR			BIT(7)
+> +
+> +/* DP AUX Channel Control Register 1 */
+> +#define SP_DP_AUX_CH_CTRL1_REG		0xe5
+> +#define SP_AUX_TX_COMM_MASK		0x0f
+> +#define SP_AUX_LENGTH_MASK		0xf0
+> +#define SP_AUX_LENGTH_SHIFT		4
+> +
+> +/* DP AUX CH Address Register 0 */
+> +#define SP_AUX_ADDR_7_0_REG		0xe6
+> +
+> +/* DP AUX CH Address Register 1 */
+> +#define SP_AUX_ADDR_15_8_REG		0xe7
+> +
+> +/* DP AUX CH Address Register 2 */
+> +#define SP_AUX_ADDR_19_16_REG		0xe8
+> +#define SP_AUX_ADDR_19_16_MASK		0x0f
+> +
+> +/* DP AUX Channel Control Register 2 */
+> +#define SP_DP_AUX_CH_CTRL2_REG		0xe9
+> +#define SP_AUX_SEL_RXCM			BIT(6)
+> +#define SP_AUX_CHSEL			BIT(3)
+> +#define SP_AUX_PN_INV			BIT(2)
+> +#define SP_ADDR_ONLY			BIT(1)
+> +#define SP_AUX_EN			BIT(0)
+> +
+> +/* DP Video Stream Control InfoFrame Register */
+> +#define SP_DP_3D_VSC_CTRL_REG		0xea
+> +#define SP_INFO_FRAME_VSC_EN		BIT(0)
+> +
+> +/* DP Video Stream Data Byte 1 Register */
+> +#define SP_DP_VSC_DB1_REG		0xeb
+> +
+> +/* DP AUX Channel Control Register 3 */
+> +#define SP_DP_AUX_CH_CTRL3_REG		0xec
+> +#define SP_WAIT_COUNTER_7_0_MASK	0xff
+> +
+> +/* DP AUX Channel Control Register 4 */
+> +#define SP_DP_AUX_CH_CTRL4_REG		0xed
+> +
+> +/* DP AUX Buffer Data Registers */
+> +#define SP_DP_BUF_DATA0_REG		0xf0
+> +
+> +#endif
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h b/drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
+> new file mode 100644
+> index 000000000000..f48293f86f9d
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
+> @@ -0,0 +1,242 @@
+> +/*
+> + * Copyright(c) 2016, Analogix Semiconductor. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+
+ditto
+
+
+With above fixed:
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+Â --
+Regards
+Andrzej
+
+
+> + *
+> + */
+> +#ifndef _ANALOGIX_I2C_TXCOMMON_H_
+> +#define _ANALOGIX_I2C_TXCOMMON_H_
+> +
+> +#define ANALOGIX_I2C_TXCOMMON		0x72
+> +
+> +/***************************************************************/
+> +/* Register definition of device address 0x72                  */
+> +/***************************************************************/
+> +
+> +/*
+> + * Core Register Definitions
+> + */
+> +
+> +/* Device ID Low Byte Register */
+> +#define SP_DEVICE_IDL_REG		0x02
+> +
+> +/* Device ID High Byte Register */
+> +#define SP_DEVICE_IDH_REG		0x03
+> +
+> +/* Device version register */
+> +#define SP_DEVICE_VERSION_REG		0x04
+> +
+> +/* Power Down Control Register */
+> +#define SP_POWERDOWN_CTRL_REG		0x05
+> +#define SP_REGISTER_PD			BIT(7)
+> +#define SP_HDCP_PD			BIT(5)
+> +#define SP_AUDIO_PD			BIT(4)
+> +#define SP_VIDEO_PD			BIT(3)
+> +#define SP_LINK_PD			BIT(2)
+> +#define SP_TOTAL_PD			BIT(1)
+> +
+> +/* Reset Control Register 1 */
+> +#define SP_RESET_CTRL1_REG		0x06
+> +#define SP_MISC_RST			BIT(7)
+> +#define SP_VIDCAP_RST			BIT(6)
+> +#define SP_VIDFIF_RST			BIT(5)
+> +#define SP_AUDFIF_RST			BIT(4)
+> +#define SP_AUDCAP_RST			BIT(3)
+> +#define SP_HDCP_RST			BIT(2)
+> +#define SP_SW_RST			BIT(1)
+> +#define SP_HW_RST			BIT(0)
+> +
+> +/* Reset Control Register 2 */
+> +#define SP_RESET_CTRL2_REG		0x07
+> +#define SP_AUX_RST			BIT(2)
+> +#define SP_SERDES_FIFO_RST		BIT(1)
+> +#define SP_I2C_REG_RST			BIT(0)
+> +
+> +/* Video Control Register 1 */
+> +#define SP_VID_CTRL1_REG		0x08
+> +#define SP_VIDEO_EN			BIT(7)
+> +#define SP_VIDEO_MUTE			BIT(2)
+> +#define SP_DE_GEN			BIT(1)
+> +#define SP_DEMUX			BIT(0)
+> +
+> +/* Video Control Register 2 */
+> +#define SP_VID_CTRL2_REG		0x09
+> +#define SP_IN_COLOR_F_MASK		0x03
+> +#define SP_IN_YC_BIT_SEL		BIT(2)
+> +#define SP_IN_BPC_MASK			0x70
+> +#define SP_IN_BPC_SHIFT			4
+> +#  define SP_IN_BPC_12BIT		0x03
+> +#  define SP_IN_BPC_10BIT		0x02
+> +#  define SP_IN_BPC_8BIT		0x01
+> +#  define SP_IN_BPC_6BIT		0x00
+> +#define SP_IN_D_RANGE			BIT(7)
+> +
+> +/* Video Control Register 3 */
+> +#define SP_VID_CTRL3_REG		0x0a
+> +#define SP_HPD_OUT			BIT(6)
+> +
+> +/* Video Control Register 5 */
+> +#define SP_VID_CTRL5_REG		0x0c
+> +#define SP_CSC_STD_SEL			BIT(7)
+> +#define SP_XVYCC_RNG_LMT		BIT(6)
+> +#define SP_RANGE_Y2R			BIT(5)
+> +#define SP_CSPACE_Y2R			BIT(4)
+> +#define SP_RGB_RNG_LMT			BIT(3)
+> +#define SP_Y_RNG_LMT			BIT(2)
+> +#define SP_RANGE_R2Y			BIT(1)
+> +#define SP_CSPACE_R2Y			BIT(0)
+> +
+> +/* Video Control Register 6 */
+> +#define SP_VID_CTRL6_REG		0x0d
+> +#define SP_TEST_PATTERN_EN		BIT(7)
+> +#define SP_VIDEO_PROCESS_EN		BIT(6)
+> +#define SP_VID_US_MODE			BIT(3)
+> +#define SP_VID_DS_MODE			BIT(2)
+> +#define SP_UP_SAMPLE			BIT(1)
+> +#define SP_DOWN_SAMPLE			BIT(0)
+> +
+> +/* Video Control Register 8 */
+> +#define SP_VID_CTRL8_REG		0x0f
+> +#define SP_VID_VRES_TH			BIT(0)
+> +
+> +/* Total Line Status Low Byte Register */
+> +#define SP_TOTAL_LINE_STAL_REG		0x24
+> +
+> +/* Total Line Status High Byte Register */
+> +#define SP_TOTAL_LINE_STAH_REG		0x25
+> +
+> +/* Active Line Status Low Byte Register */
+> +#define SP_ACT_LINE_STAL_REG		0x26
+> +
+> +/* Active Line Status High Byte Register */
+> +#define SP_ACT_LINE_STAH_REG		0x27
+> +
+> +/* Vertical Front Porch Status Register */
+> +#define SP_V_F_PORCH_STA_REG		0x28
+> +
+> +/* Vertical SYNC Width Status Register */
+> +#define SP_V_SYNC_STA_REG		0x29
+> +
+> +/* Vertical Back Porch Status Register */
+> +#define SP_V_B_PORCH_STA_REG		0x2a
+> +
+> +/* Total Pixel Status Low Byte Register */
+> +#define SP_TOTAL_PIXEL_STAL_REG		0x2b
+> +
+> +/* Total Pixel Status High Byte Register */
+> +#define SP_TOTAL_PIXEL_STAH_REG		0x2c
+> +
+> +/* Active Pixel Status Low Byte Register */
+> +#define SP_ACT_PIXEL_STAL_REG		0x2d
+> +
+> +/* Active Pixel Status High Byte Register */
+> +#define SP_ACT_PIXEL_STAH_REG		0x2e
+> +
+> +/* Horizontal Front Porch Status Low Byte Register */
+> +#define SP_H_F_PORCH_STAL_REG		0x2f
+> +
+> +/* Horizontal Front Porch Statys High Byte Register */
+> +#define SP_H_F_PORCH_STAH_REG		0x30
+> +
+> +/* Horizontal SYNC Width Status Low Byte Register */
+> +#define SP_H_SYNC_STAL_REG		0x31
+> +
+> +/* Horizontal SYNC Width Status High Byte Register */
+> +#define SP_H_SYNC_STAH_REG		0x32
+> +
+> +/* Horizontal Back Porch Status Low Byte Register */
+> +#define SP_H_B_PORCH_STAL_REG		0x33
+> +
+> +/* Horizontal Back Porch Status High Byte Register */
+> +#define SP_H_B_PORCH_STAH_REG		0x34
+> +
+> +/* InfoFrame AVI Packet DB1 Register */
+> +#define SP_INFOFRAME_AVI_DB1_REG	0x70
+> +
+> +/* Bit Control Specific Register */
+> +#define SP_BIT_CTRL_SPECIFIC_REG	0x80
+> +#define SP_BIT_CTRL_SELECT_SHIFT	1
+> +#define SP_ENABLE_BIT_CTRL		BIT(0)
+> +
+> +/* InfoFrame Audio Packet DB1 Register */
+> +#define SP_INFOFRAME_AUD_DB1_REG	0x83
+> +
+> +/* InfoFrame MPEG Packet DB1 Register */
+> +#define SP_INFOFRAME_MPEG_DB1_REG	0xb0
+> +
+> +/* Audio Channel Status Registers */
+> +#define SP_AUD_CH_STATUS_BASE		0xd0
+> +
+> +/* Audio Channel Num Register 5 */
+> +#define SP_I2S_CHANNEL_NUM_MASK		0xe0
+> +#  define SP_I2S_CH_NUM_1		(0x00 << 5)
+> +#  define SP_I2S_CH_NUM_2		(0x01 << 5)
+> +#  define SP_I2S_CH_NUM_3		(0x02 << 5)
+> +#  define SP_I2S_CH_NUM_4		(0x03 << 5)
+> +#  define SP_I2S_CH_NUM_5		(0x04 << 5)
+> +#  define SP_I2S_CH_NUM_6		(0x05 << 5)
+> +#  define SP_I2S_CH_NUM_7		(0x06 << 5)
+> +#  define SP_I2S_CH_NUM_8		(0x07 << 5)
+> +#define SP_EXT_VUCP			BIT(2)
+> +#define SP_VBIT				BIT(1)
+> +#define SP_AUDIO_LAYOUT			BIT(0)
+> +
+> +/* Analog Debug Register 2 */
+> +#define SP_ANALOG_DEBUG2_REG		0xdd
+> +#define SP_FORCE_SW_OFF_BYPASS		0x20
+> +#define SP_XTAL_FRQ			0x1c
+> +#  define SP_XTAL_FRQ_19M2		(0x00 << 2)
+> +#  define SP_XTAL_FRQ_24M		(0x01 << 2)
+> +#  define SP_XTAL_FRQ_25M		(0x02 << 2)
+> +#  define SP_XTAL_FRQ_26M		(0x03 << 2)
+> +#  define SP_XTAL_FRQ_27M		(0x04 << 2)
+> +#  define SP_XTAL_FRQ_38M4		(0x05 << 2)
+> +#  define SP_XTAL_FRQ_52M		(0x06 << 2)
+> +#define SP_POWERON_TIME_1P5MS		0x03
+> +
+> +/* Analog Control 0 Register */
+> +#define SP_ANALOG_CTRL0_REG		0xe1
+> +
+> +/* Common Interrupt Status Register 1 */
+> +#define SP_COMMON_INT_STATUS_BASE	(0xf1 - 1)
+> +#define SP_PLL_LOCK_CHG			0x40
+> +
+> +/* Common Interrupt Status Register 2 */
+> +#define SP_COMMON_INT_STATUS2		0xf2
+> +#define SP_HDCP_AUTH_CHG		BIT(1)
+> +#define SP_HDCP_AUTH_DONE		BIT(0)
+> +
+> +#define SP_HDCP_LINK_CHECK_FAIL		BIT(0)
+> +
+> +/* Common Interrupt Status Register 4 */
+> +#define SP_COMMON_INT_STATUS4_REG	0xf4
+> +#define SP_HPD_IRQ			BIT(6)
+> +#define SP_HPD_ESYNC_ERR		BIT(4)
+> +#define SP_HPD_CHG			BIT(2)
+> +#define SP_HPD_LOST			BIT(1)
+> +#define SP_HPD_PLUG			BIT(0)
+> +
+> +/* DP Interrupt Status Register */
+> +#define SP_DP_INT_STATUS1_REG		0xf7
+> +#define SP_TRAINING_FINISH		BIT(5)
+> +#define SP_POLLING_ERR			BIT(4)
+> +
+> +/* Common Interrupt Mask Register */
+> +#define SP_COMMON_INT_MASK_BASE		(0xf8 - 1)
+> +
+> +#define SP_COMMON_INT_MASK4_REG		0xfb
+> +
+> +/* DP Interrupts Mask Register */
+> +#define SP_DP_INT_MASK1_REG		0xfe
+> +
+> +/* Interrupt Control Register */
+> +#define SP_INT_CTRL_REG			0xff
+> +
+> +#endif /* _ANALOGIX_I2C_TXCOMMON_H_ */
+
+
