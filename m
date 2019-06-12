@@ -2,93 +2,110 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7E8C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D891AC31E45
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9082173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A4C21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDBd+Nyh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MQ8+52Gh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407038AbfFLAFV (ORCPT
+        id S2392151AbfFLAIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:05:21 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41495 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387864AbfFLAFV (ORCPT
+        Tue, 11 Jun 2019 20:08:36 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34115 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387856AbfFLAIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:05:21 -0400
-Received: by mail-lj1-f193.google.com with SMTP id s21so13434812lji.8;
-        Tue, 11 Jun 2019 17:05:19 -0700 (PDT)
+        Tue, 11 Jun 2019 20:08:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c85so8474648pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 17:08:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=twnhTVYd7tn35O7vvlIa3XEgKYk2/zieh7kgQ5Ms1VY=;
-        b=iDBd+Nyh60vWHvSGtVHWVETugM2fnnm+FqmmiJZ56NZHl6V9Aty9AmjFW8CRdEnVVB
-         aGKuXc3BMI1WRmMN59ZmT1r6kVO7qzb4q1bDpYmpS/ZUrVuenxbQGoF2Qv4WS5P5xTYu
-         MgUGL2vvXlsZ04GvxKv4oWOnyz8mNGE24H+bdBFJTo0aHTJ0k0u+7bh9tcE9VNAMwAtH
-         iKtxqCy1DSmKDdJUUU93WbsyygyX8RtwvZ5Owd5cCDJ9ZU6yAlx8+gKU6PDNIGy1Yrds
-         5FOvUqOWwAWAd5bt0eEYz6DGK7Ot7sHrl6lNbuwYOmPXTEQ7T1WTuP7Qnyr0A/A07xpx
-         QkCw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SGNSHS6b7nRtN7DrDXjS9yuoQKj+7ZkbE1CIpuAR0o0=;
+        b=MQ8+52GhzhWZKD3KJyvwipDYgFo0aBfeAV4asNBlO1HN3E7RBSFhPidXKlsrutqxjp
+         aBpiHXTYxXdT2Jo4++ZzdtJ1b49mQNMNGcn3EUCOpb5YopOUWVO7/8cOHObpXTvLnXrY
+         M6Mb/SFP008eotrXlq0XND7Q/TH/iECuXkvjg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=twnhTVYd7tn35O7vvlIa3XEgKYk2/zieh7kgQ5Ms1VY=;
-        b=fqEU0XMyfNflfhQT79oxZghavXpJ1dAzYWSMm/qb4gmos8iA2TeNBJ0PUDAE/Hziuc
-         bcmkQUVGTodSXW4WmUcE9UbCbklB1P7Hfg+uvtOj6dEzEdotDAAFyArOd3ScHgIQNVs5
-         0JS9pIniFAgDhZ4tXvbDA5Wd7OJm5Til/+3lHBMc+FZ4Th9Uj7DK21wcJRIHCksoumid
-         oyUuStSybwP7edfVFrdhM6JvHk+DDVpdY1QTx93zhasPNw8m+Rv31ORF54nq/akB0sbh
-         SVkLKb03VXRyP+j7I9Yb4Iqiz7BHFYtNrpDNWePKx+aosKbJYg7P7LG1/Z8/MzWuKwy8
-         Zlbw==
-X-Gm-Message-State: APjAAAVdLDPQZSMGnTI0GPYm3j5E17tzyOWa4m4EfXM7tVCJe8oCX3/+
-        qfJ4ROah2uLK8s8qnMM5gMeTz+fyeeBSbUV9JBw=
-X-Google-Smtp-Source: APXvYqyO/Oi3PmoK5iJ0YzdPrMw5xZcqUF1R75rhMCOs6SLJy8NUkUXX4LUB1wFJr6ZxPQT0SJAlgxYZrwxAPMCixo8=
-X-Received: by 2002:a2e:298a:: with SMTP id p10mr12710225ljp.74.1560297918252;
- Tue, 11 Jun 2019 17:05:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SGNSHS6b7nRtN7DrDXjS9yuoQKj+7ZkbE1CIpuAR0o0=;
+        b=iOl7TMgZXOvmvfR8ID6MehqsqrYbN2DKJ1au3LEPOCS6BMZZpRmBw5+9NVsrQ8ByaN
+         21XDpd/5y6KlTNB115W5R7LF1E6TRGWY2jfacxGxdmwa+2jpX+jJG//+O3LjfSxAx6JF
+         o1/E2zaP/3Zo27o4ivK9oXx2Y/DLeuxKba5NNKeQDW95bNHKk3QaLE2pTOeu8NKwHnMR
+         G1YXtbwl5bkraDugDCaLzSyyUoh/hzkFeGkkak/JmPzNECbSCSd6xnPwkV9Lm21j4WKc
+         uz0bM9zLJIZWITd32RC8Q+Rda4ha71OoqsIufHObneAmMeeN9Hq05ksNjZhvAndtMAFf
+         DGGQ==
+X-Gm-Message-State: APjAAAU6UCsFKc0PH6tqj6aqB6r1VXJ0+H/nYbvsE9pV3qaVHFb1JJhO
+        p6X6Gz7IxQMl32jOOSF76JLbJA==
+X-Google-Smtp-Source: APXvYqxc4ALuUprM7w4tknTdmgXVfcDqP+QnqH3fxaQ40gioXu/MGGHFvDTnkI3q1VGAjtu6Cx1+1Q==
+X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr29110581pjz.140.1560298115153;
+        Tue, 11 Jun 2019 17:08:35 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id u23sm10563943pfn.140.2019.06.11.17.08.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 17:08:33 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 17:08:32 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Qais.Yousef@arm.com, juri.lelli@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 2/5] PM / QOS: Pass request type to
+ dev_pm_qos_read_value()
+Message-ID: <20190612000832.GJ137143@google.com>
+References: <cover.1560163748.git.viresh.kumar@linaro.org>
+ <b414d788faf4c6f87d01086248db4d2e86635180.1560163748.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-References: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
-In-Reply-To: <20190611193836.2772-1-shyam.saini@amarulasolutions.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 11 Jun 2019 17:05:06 -0700
-Message-ID: <CAADnVQKwvfuoyDEu+rB8=btOi33LdrUvk4EkQM86sDpDG61kew@mail.gmail.com>
-Subject: Re: [PATCH V2] include: linux: Regularise the use of FIELD_SIZEOF macro
-To:     Shyam Saini <shyam.saini@amarulasolutions.com>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, devel@lists.orangefs.org,
-        linux-mm <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
-        bpf <bpf@vger.kernel.org>, kvm@vger.kernel.org,
-        mayhs11saini@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b414d788faf4c6f87d01086248db4d2e86635180.1560163748.git.viresh.kumar@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 5:00 PM Shyam Saini
-<shyam.saini@amarulasolutions.com> wrote:
->
-> Currently, there are 3 different macros, namely sizeof_field, SIZEOF_FIELD
-> and FIELD_SIZEOF which are used to calculate the size of a member of
-> structure, so to bring uniformity in entire kernel source tree lets use
-> FIELD_SIZEOF and replace all occurrences of other two macros with this.
->
-> For this purpose, redefine FIELD_SIZEOF in include/linux/stddef.h and
-> tools/testing/selftests/bpf/bpf_util.h and remove its defination from
-> include/linux/kernel.h
+On Mon, Jun 10, 2019 at 04:21:33PM +0530, Viresh Kumar wrote:
+> In order to use dev_pm_qos_read_value(), and other internal routines to
+> it, to read values for different QoS requests, pass request type as a
+> parameter to these routines.
 
-please dont. bpf_util.h is a user space header.
-Please leave it as-is.
+nit: I find that somewhat hard to parse, a possible improvement:
+
+"In order to allow dev_pm_qos_read_value() and other {related,similar}
+ internal routines to read values for different QoS requests, pass
+ request type as a parameter to these routines."
+
+(I'm not a native English speaker, so I don't claim this to be
+correct ;-)
+
+> For now, it only supports resume-latency request type.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  Documentation/power/pm_qos_interface.txt |  2 +-
+>  drivers/base/power/domain_governor.c     |  4 +--
+>  drivers/base/power/qos.c                 | 10 +++---
+>  drivers/base/power/runtime.c             |  2 +-
+>  drivers/cpuidle/governor.c               |  2 +-
+>  include/linux/pm_qos.h                   | 41 +++++++++++++++++-------
+>  6 files changed, 40 insertions(+), 21 deletions(-)
+
+looks good to me, however I'm just a QoS n00b:
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
