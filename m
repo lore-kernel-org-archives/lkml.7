@@ -2,82 +2,116 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA0CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C236C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493642064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560466354;
-	bh=cwqEDQ9LzRs9IdlLVfz/lVJIqr/Ide5wsCD6U6IV4HA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BcBbMG4KlyWX8NFddSeWXWGqK1tBWRWsKyYcYL48GYFEd3xEReOvpv/N54GQtNDzE
-	 c4q6gB2LcjIdVJCSmWJ0x9sw4SME0SPeAHg4dkgqPDNK72eH0Rg45Ure2J6CpJewd7
-	 tNG5VvFbonmacajlVVgqyIAc10NXAtBJt8729IdI=
+	by mail.kernel.org (Postfix) with ESMTP id 0681B2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfFMWwc (ORCPT
+        id S1727392AbfFMWzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 18:52:32 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36532 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfFMWwc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:52:32 -0400
-Received: by mail-qk1-f195.google.com with SMTP id g18so505730qkl.3;
-        Thu, 13 Jun 2019 15:52:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gdkOgkPervi+1nQkxYS09qW0ZcEmkBJxScc1uJAaFCg=;
-        b=W1cIn40qzsU+pXcCx0+yA/fodAnSnflEj51uza+GpD5I5s249U4CdNnzITZGe/FHIr
-         42ckQ3Av0ZJWTVxcLpLQK/H3Pv9lyMWS3Dt5EDJIQpH0mbU/sYPHJerw/Sp/AHWledph
-         vP1yBnLZM+aj2V0VkU1tWeQNFgE1Yc8FBIJnMoLHsHyLn/3nNfQtEgfOxoCCx+QxZjk4
-         h6Q9ZPNbMYOQmqKbOejTVaZ2/wTnFsVZ6Thmvljwlwt/1v2+6RTtrilWoHdt0O4y9L7y
-         yRrL5EbMGM0qy9h2dXH2BhfOuTRsru7fHtpGe6LxwMR1pgUhYxCm35YH/AsQyddB/Maf
-         S/qg==
-X-Gm-Message-State: APjAAAWmUONJDsE/OCJszRpBlyc/3oiA9jET3PoGZzwmN83rXXtHtabf
-        zVhnwxRbstETHm/We5oxvQyvEJM=
-X-Google-Smtp-Source: APXvYqwnB/OyQz+QMff0Pdx6WXfp9i0yCk1jXHrOelWB4Z3mC+eSjIA/7P5CQ2FV1CHjIniaMDzbBg==
-X-Received: by 2002:a37:d16:: with SMTP id 22mr54321805qkn.232.1560466351357;
-        Thu, 13 Jun 2019 15:52:31 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id f189sm610484qkj.13.2019.06.13.15.52.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 15:52:30 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 16:52:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Stefano Manni <stefano.manni@gmail.com>
-Cc:     nick@shmanahar.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, Stefano Manni <stefano.manni@gmail.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: input: Add wakeup-source for
- atmel,maxtouch
-Message-ID: <20190613225229.GA19122@bogus>
-References: <20190517211741.8906-1-stefano.manni@gmail.com>
- <20190517211741.8906-2-stefano.manni@gmail.com>
+        Thu, 13 Jun 2019 18:55:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41628 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbfFMWzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 18:55:15 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 34C6985539;
+        Thu, 13 Jun 2019 22:55:15 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E498C52CF;
+        Thu, 13 Jun 2019 22:55:14 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id 4C55D10517E;
+        Wed, 12 Jun 2019 18:51:28 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x5CLpOVJ028527;
+        Wed, 12 Jun 2019 18:51:24 -0300
+Date:   Wed, 12 Jun 2019 18:51:23 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v3 2/4] KVM: LAPIC: lapic timer interrupt is injected by
+ posted interrupt
+Message-ID: <20190612215120.GA28417@amt.cnet>
+References: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
+ <1560255429-7105-3-git-send-email-wanpengli@tencent.com>
+ <20190611201849.GA7520@amt.cnet>
+ <CANRm+CwrbMQpQ1d_KMp-EBMd-pXFVePQ8GV4Y4X0oy8-zGZCBQ@mail.gmail.com>
+ <20190612152231.GA22785@flask>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190517211741.8906-2-stefano.manni@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612152231.GA22785@flask>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 13 Jun 2019 22:55:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 23:17:41 +0200, Stefano Manni wrote:
-> Add wakeup support to the maxtouch driver.
+On Wed, Jun 12, 2019 at 05:22:31PM +0200, Radim Krčmář wrote:
+> 2019-06-12 09:48+0800, Wanpeng Li:
+> > On Wed, 12 Jun 2019 at 04:39, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > On Tue, Jun 11, 2019 at 08:17:07PM +0800, Wanpeng Li wrote:
+> > > > From: Wanpeng Li <wanpengli@tencent.com>
+> > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > > > @@ -133,6 +133,12 @@ inline bool posted_interrupt_inject_timer_enabled(struct kvm_vcpu *vcpu)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer_enabled);
+> > > >
+> > > > +static inline bool can_posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> > > > +{
+> > > > +     return posted_interrupt_inject_timer_enabled(vcpu) &&
+> > > > +             kvm_hlt_in_guest(vcpu->kvm);
+> > > > +}
+> > >
+> > > Hi Li,
+> > 
+> > Hi Marcelo,
+> > 
+> > >
+> > > Don't think its necessary to depend on kvm_hlt_in_guest: Can also use
+> > > exitless injection if the guest is running (think DPDK style workloads
+> > > that busy-spin on network card).
 > 
-> Signed-off-by: Stefano Manni <stefano.manni@gmail.com>
-> ---
->  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> I agree.
 > 
+> > There are some discussions here.
+> > 
+> > https://lkml.org/lkml/2019/6/11/424
+> > https://lkml.org/lkml/2019/6/5/436
+> 
+> Paolo wants to disable the APF synthetic halt first, which I think is
+> unrelated to the timer implementation.
+> The synthetic halt happens when the VCPU cannot progress because the
+> host swapped out its memory and any asynchronous event should unhalt it,
+> because we assume that the interrupt path wasn't swapped out.
+> 
+> The posted interrupt does a swake_up_one (part of vcpu kick), which is
+> everything what the non-posted path does after setting a KVM request --
+> it's a bug if we later handle the PIR differently from the KVM request,
+> so the guest is going to be woken up on any halt blocking in KVM (even
+> synthetic APF halt).
+> 
+> Paolo, have I missed the point?
+> 
+> Thanks.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+"Here you need to check kvm_halt_in_guest, not kvm_mwait_in_guest,
+because you need to go through kvm_apic_expired if the guest needs to be
+woken up from kvm_vcpu_block."
+
+Note: VMX preemption timer is disabled by Li's patch.
+
+
