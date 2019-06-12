@@ -2,124 +2,103 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA492C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73535C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDD021734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4365721019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OdaMxMVN";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="skghAik3"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="D1PZYPLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbfFLQD3 (ORCPT
+        id S2408335AbfFLQHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:03:29 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:46438 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728282AbfFLQD2 (ORCPT
+        Wed, 12 Jun 2019 12:07:08 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38216 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406078AbfFLQHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:03:28 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CFt5x2007161;
-        Wed, 12 Jun 2019 09:03:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=JYJYl1JZMZS+gwm7HkSwa2xytKuliQ4u4Wr1ZIGnmDQ=;
- b=OdaMxMVNyeqO+XNpn5tRMe+WAz5lJGPP4PdVXn5+CD64hJxpsdZ5dfrp1uF47MyjwAAx
- G+crqmfSd6MV/q4auqxIL98rj7cQCUfxOJgGz0E6dI/1fvFl1DH4JVXlD58IulOc33Tj
- F7MDzo7RhsvV6hSNRWDnfhv1/tZPM3d5WWKwRNIocUlgbUdpOe0jzEJgP92QDqVj10el
- 1DHxmsQZK01ehJAmcCTpC+lzsHqn6BXWFWDiqoWF/HkUx56wE+thDCr/2auKtbE2xp1x
- LU0XdotE14/aojLTsrP9d20yKdOFRb1HRYc5O+m5T92hx0zhbkTu4S+n0VgF0jpw8WcD dQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2t2r82axff-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jun 2019 09:03:13 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 12 Jun
- 2019 09:01:05 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.58) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 12 Jun 2019 09:01:05 -0700
+        Wed, 12 Jun 2019 12:07:08 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n11so16960819qtl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JYJYl1JZMZS+gwm7HkSwa2xytKuliQ4u4Wr1ZIGnmDQ=;
- b=skghAik3ZOEilhQHf4pEppfya8aSzqnoCFFwTRR7HcbEwPhp/esT2aJbMMtC9ZbAp44vgkioJzH8xIP4IS2nzPYvPpve/JU9bn2ps1jdQmA+S7fAumvzsjwr07i1iAFwdxv20o9Iez8x9aNxnwMe11aOxhEN0vvfxLj86k59DZw=
-Received: from MN2PR18MB2637.namprd18.prod.outlook.com (20.179.80.147) by
- MN2PR18MB2622.namprd18.prod.outlook.com (20.179.84.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.17; Wed, 12 Jun 2019 16:01:01 +0000
-Received: from MN2PR18MB2637.namprd18.prod.outlook.com
- ([fe80::3c77:9f53:7e47:7eb8]) by MN2PR18MB2637.namprd18.prod.outlook.com
- ([fe80::3c77:9f53:7e47:7eb8%7]) with mapi id 15.20.1987.012; Wed, 12 Jun 2019
- 16:01:01 +0000
-From:   Ganapathi Bhat <gbhat@marvell.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>,
-        "amitkarwar@gmail.com" <amitkarwar@gmail.com>,
-        "andreyknvl@google.com" <andreyknvl@google.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "huxinming820@gmail.com" <huxinming820@gmail.com>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "nishants@marvell.com" <nishants@marvell.com>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: RE: [EXT] INFO: trying to register non-static key in del_timer_sync
- (2)
-Thread-Topic: [EXT] INFO: trying to register non-static key in del_timer_sync
- (2)
-Thread-Index: AQHU8UKXrSaZj3qnvU6hFZ7GfmsosaaHYqxQgAJS84CAADevwIAOoBJw
-Date:   Wed, 12 Jun 2019 16:01:00 +0000
-Message-ID: <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
-References: <000000000000927a7b0586561537@google.com>
- <MN2PR18MB263783F52CAD4A335FD8BB34A01A0@MN2PR18MB2637.namprd18.prod.outlook.com>
- <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
- <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
-In-Reply-To: <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [106.193.128.232]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 921133ab-d3ec-44ba-e3b7-08d6ef4f2a54
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2622;
-x-ms-traffictypediagnostic: MN2PR18MB2622:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR18MB26223D12869F5F0D06BB8AB7A0EC0@MN2PR18MB2622.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1751;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(396003)(136003)(39860400002)(189003)(199004)(52536014)(78486014)(186003)(558084003)(5660300002)(71200400001)(25786009)(229853002)(33656002)(6916009)(26005)(74316002)(3846002)(7416002)(54906003)(86362001)(99286004)(76176011)(71190400001)(102836004)(11346002)(316002)(7696005)(6436002)(2906002)(6116002)(76116006)(256004)(446003)(66446008)(66556008)(73956011)(55016002)(66946007)(6246003)(9686003)(53936002)(8936002)(68736007)(8676002)(7736002)(966005)(4326008)(305945005)(6506007)(476003)(66066001)(66476007)(81156014)(486006)(14454004)(6306002)(64756008)(81166006)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2622;H:MN2PR18MB2637.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DEC65rI0s6EDJ7yAOUPWWRHLxl/llyRewlrxckX/3UuWNK27iA4f1FCwqwDG6ZpY7qfIrZczn9HHcsCXhNZsFJoCJk4GSFbzn67pANSvZkQ7J6Z510TzUDjToN+iLfyjf1/h6Aujx3fUft06t2KRDOlZYXfWJP9zZ2Ri6ZESV13LXX4wYJHm/wtN9ppj+gNFAQ3YjiteZkzwyuvZO08McADpMophXDwMM9jmzMGP03rQ4BAG7ipRwB5rxQ2+ZwyWHzhpKb2iGUzRJ/UEj8nLr+b5lEnGcQHxQpHmmCA3NPRVYnuGZsbl8sFRdjjlcOFytGnYpXnk6+zarOQE9x8QZANiTEMIXV+HB7q7S2VNnCk7Y5M+Z98YmK/ttrhgfiWIwZKvZZHuhDD25OEyU5NNb6xRh6W+JxOFFgI3SGD5vBQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=digitalocean.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Cu3Bb6FZyhJzR54vRUfsJH6eJeevJkiGlOgrBDKMJZY=;
+        b=D1PZYPLIOLDvCgCcePFLGP3Tt494J3J+QkMBkvlFMUiFQbQxxN/dXxIYTnB60YMySp
+         IJB2SmyDdC/Ir0cfoEFmyA2J3B2DkVd9MUTQUum5oigc6vHgApFEqPWKT+WxzFnZbWdP
+         uY1goooHNQAu5B1wnqc8WKNeDa1Z4B1dsa9bw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Cu3Bb6FZyhJzR54vRUfsJH6eJeevJkiGlOgrBDKMJZY=;
+        b=KC9we60f7MIKWPbmgPOHmTrkzgs87Hx3O596rBQ68WMnRWtnwNxjDplMPcFPmSSZCN
+         k7+qt2s+SBFit/DDGrYHXnOVZj/1hdY3g6mEzjykOXxMiJJo1n19NiG9GDWVE28wgL3w
+         xqHtIJoKhoB4EL2nu5v4DnJr8ZOkwyCdw3mdlCBCV+mFk3m0ra3dOUCI1ZpOB5Wrkm+Q
+         77mswx6KUc9ntS9tsyJQrqnHx8/WVWHXih2L/IUoWe1jb4HZuFBx+j+F5D2hDYsgjEPz
+         uyXno8E//36qRBrLqdrEzdbFjbdvPXl2VpGF9ZvJmtt0zCVn7iqxncUzjIK9WJT8c2rf
+         /Bww==
+X-Gm-Message-State: APjAAAV0DETGvkYzFt5jU60qfVRxI5HJGZiPC8OUbzJizkWAn+87pvxB
+        ZoCY1254xO0fPwF8HM6bSF/3cw==
+X-Google-Smtp-Source: APXvYqxRSkiZtxZjXlKBCTnqbclLJYBUiQ+1RhoCZcqQLHfVO3aMRqt+tS2hnloafUf78lsB80eCJQ==
+X-Received: by 2002:ac8:2b01:: with SMTP id 1mr557959qtu.177.1560355627366;
+        Wed, 12 Jun 2019 09:07:07 -0700 (PDT)
+Received: from sinkpad (modemcable060.224-21-96.mc.videotron.ca. [96.21.224.60])
+        by smtp.gmail.com with ESMTPSA id 34sm133332qtq.59.2019.06.12.09.07.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 09:07:06 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 12:06:58 -0400
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190612160658.GA26997@sinkpad>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
+ <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
+ <20190531210816.GA24027@sinkpad>
+ <20190606152637.GA5703@sinkpad>
+ <4bd9a132-bbdb-ec45-331f-829df07a7376@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 921133ab-d3ec-44ba-e3b7-08d6ef4f2a54
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 16:01:00.9315
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gbhat@marvell.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2622
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_09:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4bd9a132-bbdb-ec45-331f-829df07a7376@linux.intel.com>
+X-Mailer: Mutt 1.5.24 (2015-08-30)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRG1pdHJ5LA0KDQpXZSBoYXZlIGEgcGF0Y2ggdG8gZml4IHRoaXM6IGh0dHBzOi8vcGF0Y2h3
-b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA5OTAyNzUvDQoNClJlZ2FyZHMsDQpHYW5hcGF0aGkNCg==
+> The data on my side looks good with CORESCHED_STALL_FIX = true.
+
+Thank you for testing this fix, I'm glad it works for this use-case as
+well.
+
+We will be posting another (simpler) version today, stay tuned :-)
+
+Julien
