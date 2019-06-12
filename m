@@ -2,87 +2,248 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B84C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2A5C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEC420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GbbVQq0D"
+	by mail.kernel.org (Postfix) with ESMTP id 20E7B2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:14:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfFLPOZ (ORCPT
+        id S1729222AbfFLPOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:14:25 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:38052 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbfFLPOZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:14:25 -0400
-Received: by mail-yw1-f66.google.com with SMTP id k125so604338ywe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 08:14:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S/GB4a5TSispNPGgoL6ZNAOrf6nS5uurvxT3ihYPD/Y=;
-        b=GbbVQq0DRbYQmv73EzjW7DwgW/Urn4CFLavsKDLUU3dJtrrq/SV11swrqa2vQgovHb
-         sCEuJuHq0m3yfssNENG6l9iL8xMzQL+9LNOd5hdgCWNWe4NFxuUX25G7UXppctTU66ha
-         5a2JsaD+G+Fb3bPRcPAxcFMfxQnp5rI2rAALrcmclQA6VHlzTAaEaHzRK3ItaPfW1MLk
-         t6J/m3ZicM2QsoNeu9FH6VAkZYCzYV/jriV6ioCiK7JoRHWk65XRG/Zi5UjojjqTyCwX
-         ZMwsW7wbCivUt2G5ojspc3XcAz0jICcQDcbHogxXeYqf3pddTWD6GZdFscVvk9VM7Dcu
-         DpOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S/GB4a5TSispNPGgoL6ZNAOrf6nS5uurvxT3ihYPD/Y=;
-        b=TPZR/XOg8xlLWlA2qglL4ghhZ8MUr65L2Ngns5MHNIEUM30Wwg4ugdZTSHRx28I0Tx
-         DA5VlmZmdqA+ziHFMyLzN967Cxqz1leLNbN4xdNKcUq7fal0SuMi70tMps06FTU1LpEy
-         me1pJoRI9OR36hEkfk7xUCOaZY7jczoHVxrKRAs76Rq3rdXAoaOMgFLIU0pf6MDQt1P2
-         A0NXXowmwTL65uD6yM4qu2XLTYlo/X2Mse3IrPID/bMxx+h0Yq2DFvMQqQG4swnx+SPs
-         rqxR9dckMh8lnkRcIiGiyTNsVok4r2xyxTkIn/+XAo2iz1PDf4txFYauitWgov8D2VVk
-         dZDQ==
-X-Gm-Message-State: APjAAAXtK2c28wC/oXG1Wxd19gfJXjKghe7hylsLmZuzuw1RDArwQL4v
-        KflVI4kEAihYt5uNdFXMYV79cKIEPREWRwdzbQz3yw==
-X-Google-Smtp-Source: APXvYqy4NPrO4WjE4mjyLGgpcDGgvF3A2Bxmonui1RUQPoq/XgwD1e5jtQFHlL+GyogUVHY3TejSiHp2J39NHOAGSqU=
-X-Received: by 2002:a81:4c46:: with SMTP id z67mr31835690ywa.267.1560352462950;
- Wed, 12 Jun 2019 08:14:22 -0700 (PDT)
+        Wed, 12 Jun 2019 11:14:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:10017 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728203AbfFLPOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:14:50 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 08:14:48 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Jun 2019 08:14:47 -0700
+Date:   Wed, 12 Jun 2019 08:14:47 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Optimize timer latency consider world
+ switch time
+Message-ID: <20190612151447.GD20308@linux.intel.com>
+References: <1560332419-17195-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-References: <20190612142727.GA1710@ahmlpt0706>
-In-Reply-To: <20190612142727.GA1710@ahmlpt0706>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Wed, 12 Jun 2019 08:14:11 -0700
-Message-ID: <CABXOdTfrbQ-4YgLYTXQiMPpOgRL2Z+Gqsv+uDNcJ+CtuW++2aQ@mail.gmail.com>
-Subject: Re: [PATCH] gsmi: Replace printk with relevant pr_<level>
-To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Aaron Durbin <adurbin@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560332419-17195-1-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running checkpatch on the attachment, I get lots of
+On Wed, Jun 12, 2019 at 05:40:18PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Advance lapic timer tries to hidden the hypervisor overhead between the
+> host emulated timer fires and the guest awares the timer is fired. However,
+> even though after more sustaining optimizations, kvm-unit-tests/tscdeadline_latency 
+> still awares ~1000 cycles latency since we lost the time between the end of 
+> wait_lapic_expire and the guest awares the timer is fired. There are 
+> codes between the end of wait_lapic_expire and the world switch, furthermore, 
+> the world switch itself also has overhead. Actually the guest_tsc is equal 
+> to the target deadline time in wait_lapic_expire is too late, guest will
+> aware the latency between the end of wait_lapic_expire() and after vmentry 
+> to the guest. This patch takes this time into consideration. 
+> 
+> The vmentry+vmexit time which is measured by kvm-unit-tests/vmexit.falt is 
+> 1800 cycles on my 2.5GHz Skylake server, the vmentry_advance_ns module 
+> parameter default value is 300ns, it can be tuned/reworked in the further.
+> This patch can reduce average cyclictest latency from 3us to 2us on Skylake 
+> server. (guest w/ nohz=off, idle=poll, host w/ preemption_timer=N, the 
+> cyclictest latency is not too sensitive when preemption_timer=Y for this 
+> optimization in my testing).
+> 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> v2 -> v3:
+>  * read-only module parameter
+>  * get_vmentry_advance_cycles() not inline
+> v1 -> v2:
+>  * rename get_vmentry_advance_delta to get_vmentry_advance_cycles
+>  * cache vmentry_advance_cycles by setting param bit 0 
+>  * add param max limit 
+> 
+>  arch/x86/kvm/lapic.c   | 33 ++++++++++++++++++++++++++++++---
+>  arch/x86/kvm/lapic.h   |  3 +++
+>  arch/x86/kvm/vmx/vmx.c |  2 +-
+>  arch/x86/kvm/x86.c     |  8 ++++++++
+>  arch/x86/kvm/x86.h     |  2 ++
+>  5 files changed, 44 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index fcf42a3..c6d76f9 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1531,6 +1531,33 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+>  	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+>  }
+>  
+> +u64 compute_vmentry_advance_cycles(struct kvm_vcpu *vcpu)
+> +{
+> +	u64 cycles;
+> +	struct kvm_lapic *apic = vcpu->arch.apic;
+> +
+> +	cycles = vmentry_advance_ns * vcpu->arch.virtual_tsc_khz;
+> +	do_div(cycles, 1000000);
+> +
+> +	apic->lapic_timer.vmentry_advance_cycles = cycles;
+> +
+> +	return cycles;
+> +}
+> +
+> +u64 get_vmentry_advance_cycles(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_lapic *apic = vcpu->arch.apic;
+> +
+> +	if (unlikely(!vmentry_advance_ns))
+> +		return 0;
+> +
+> +	if (likely(apic->lapic_timer.vmentry_advance_cycles))
+> +		return apic->lapic_timer.vmentry_advance_cycles;
+> +
+> +	return compute_vmentry_advance_cycles(vcpu);
 
-ERROR: DOS line endings
+If vmentry_advance_ns is read-only, then we don't need to be able to
+compute lapic_timer.vmentry_advance_cycles on demand, e.g. it can be set
+during kvm_create_lapic() and recomputed in kvm_set_tsc_khz().
 
-plus
+Alternatively, it could be handled purely in kvm_set_tsc_khz() if the call
+to kvm_create_lapic() were moved before kvm_set_tsc_khz().
 
-WARNING: Possible unnecessary 'out of memory' message
+> +}
+> +EXPORT_SYMBOL_GPL(get_vmentry_advance_cycles);
+> +
+>  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+>  {
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+> @@ -1544,7 +1571,7 @@ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+>  
+>  	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
+>  	apic->lapic_timer.expired_tscdeadline = 0;
+> -	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+> +	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc()) + get_vmentry_advance_cycles(vcpu);
+>  	apic->lapic_timer.advance_expire_delta = guest_tsc - tsc_deadline;
+>  
+>  	if (guest_tsc < tsc_deadline)
+> @@ -1572,7 +1599,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
+>  	local_irq_save(flags);
+>  
+>  	now = ktime_get();
+> -	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+> +	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc()) + get_vmentry_advance_cycles(vcpu);
+>  	ns = (tscdeadline - guest_tsc) * 1000000ULL;
+>  	do_div(ns, this_tsc_khz);
+> @@ -2329,7 +2356,7 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+>  		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+>  		apic->lapic_timer.timer_advance_adjust_done = true;
+>  	}
+> -
+> +	apic->lapic_timer.vmentry_advance_cycles = 0;
+>  
+>  	/*
+>  	 * APIC is created enabled. This will prevent kvm_lapic_set_base from
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index f974a3d..fb32e69 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -33,6 +33,7 @@ struct kvm_timer {
+>  	u64 expired_tscdeadline;
+>  	u32 timer_advance_ns;
+>  	s64 advance_expire_delta;
+> +	u64 vmentry_advance_cycles;
+>  	atomic_t pending;			/* accumulated triggered timers */
+>  	bool hv_timer_in_use;
+>  	bool timer_advance_adjust_done;
+> @@ -221,6 +222,8 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
+>  bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
+>  
+>  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
+> +u64 compute_vmentry_advance_cycles(struct kvm_vcpu *vcpu);
+> +u64 get_vmentry_advance_cycles(struct kvm_vcpu *vcpu);
+>  
+>  bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
+>  			struct kvm_vcpu **dest_vcpu);
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 0861c71..0751a44 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7041,7 +7041,7 @@ static int vmx_set_hv_timer(struct kvm_vcpu *vcpu, u64 guest_deadline_tsc,
+>  
+>  	vmx = to_vmx(vcpu);
+>  	tscl = rdtsc();
+> -	guest_tscl = kvm_read_l1_tsc(vcpu, tscl);
+> +	guest_tscl = kvm_read_l1_tsc(vcpu, tscl) + get_vmentry_advance_cycles(vcpu);
+>  	delta_tsc = max(guest_deadline_tsc, guest_tscl) - guest_tscl;
+>  	lapic_timer_advance_cycles = nsec_to_cycles(vcpu,
+>  						    ktimer->timer_advance_ns);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 553c292..4b983bb 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -145,6 +145,12 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
+>  static int __read_mostly lapic_timer_advance_ns = -1;
+>  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
+>  
+> +/*
+> + * lapic timer vmentry advance (tscdeadline mode only) in nanoseconds.
+> + */
+> +u32 __read_mostly vmentry_advance_ns = 300;
 
-Hmm ... ok, the latter is a different issue, but it kind of
-contradicts "This also helps avoid checkpatch warnings".
+Enabling this by default makes me nervous, e.g. nothing guarantees that
+future versions of KVM and/or CPUs will continue to have 300ns of overhead
+between wait_lapic_expire() and VM-Enter.
 
-Guenter
+If we want it enabled by default so that it gets tested, the default
+value should be extremely conservative, e.g. set the default to a small
+percentage (25%?) of the latency of VM-Enter itself on modern CPUs,
+VM-Enter latency being the min between VMLAUNCH and VMLOAD+VMRUN+VMSAVE.
 
-
-On Wed, Jun 12, 2019 at 7:27 AM Saiyam Doshi <saiyamdoshi.in@gmail.com> wrote:
+> +module_param(vmentry_advance_ns, uint, S_IRUGO);
+> +
+>  static bool __read_mostly vector_hashing = true;
+>  module_param(vector_hashing, bool, S_IRUGO);
+>  
+> @@ -1592,6 +1598,8 @@ static int kvm_set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz)
+>  	kvm_get_time_scale(user_tsc_khz * 1000LL, NSEC_PER_SEC,
+>  			   &vcpu->arch.virtual_tsc_shift,
+>  			   &vcpu->arch.virtual_tsc_mult);
+> +	if (vcpu->arch.apic && user_tsc_khz != vcpu->arch.virtual_tsc_khz)
+> +		compute_vmentry_advance_cycles(vcpu);
+>  	vcpu->arch.virtual_tsc_khz = user_tsc_khz;
+>  
+>  	/*
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index a470ff0..2174355 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -294,6 +294,8 @@ extern u64 kvm_supported_xcr0(void);
+>  
+>  extern unsigned int min_timer_period_us;
+>  
+> +extern unsigned int vmentry_advance_ns;
+> +
+>  extern bool enable_vmware_backdoor;
+>  
+>  extern struct static_key kvm_no_apic_vcpu;
+> -- 
+> 2.7.4
+> 
