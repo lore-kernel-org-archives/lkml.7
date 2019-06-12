@@ -2,200 +2,130 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACED8C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D784C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8596620866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6352F2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IoAMjSO8"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VXwy9h0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438606AbfFLLpB (ORCPT
+        id S2438619AbfFLLpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:45:01 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:45635 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438454AbfFLLoD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:44:03 -0400
-Received: by mail-vs1-f74.google.com with SMTP id r17so1924521vsl.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=0pRrtQh1WGSItgbOKTKHJXYw3ig9cf9ovTOOwQBNCxo=;
-        b=IoAMjSO8LpV9sQ4rhyGuwSi9qAWnWdJKm92qjIFlDfIzZK27lRdtbBpUTTqSsHKQqq
-         mk4pY6s02uPltexkWHMnxfPS6E14WpHQTBtMuXD5ciPLmKwQYfFZ7D/irHKINjpULcIC
-         qesPb2LJHGU1U+hg3Lnr8sbHR2PLa6XJRSA+MwutfJ1QD1fm8gchvdk4JFKcehQpLj7U
-         rwlJqHzorntg7c/BDSuoHH78gq9KnzX7dlAs2pxjWc6C1dDkPCqTKTM+gMG73nj/ByrG
-         HBTS6w/3UTjUct6MrDb5Sf2LP5/PYv9l52cM1MNahSes/06CDdeCzTIAFl18VFOFWLlP
-         HuBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=0pRrtQh1WGSItgbOKTKHJXYw3ig9cf9ovTOOwQBNCxo=;
-        b=o73CiLC86QfSb+pSEqbw9TQA/20TTe550bnqY2o2UAWoWZ85KPVl/SmGPrLF4eQeJQ
-         G75TWvLHZFKUdsrrd9o4od1kqunbMej6n7N4pcbxeX4P/sFyLAzfzTxasJMnzyE25pqL
-         e93YngHYsALJSDzDW+xEDSzlB+iMC6OqYoF7guF94Y0N0Blt2gaZ6F80b5S2n4bEQTTn
-         DKfmBpUbdKdMbJJtPmHvDp2tnFbognYl1qzXccuP7Nau43MoG1i6TNcH2KFvgoqP2I5n
-         nyyWWHU/kU8hElMfQRjK726YqE01lviBowfdVWfrtU+JolQNFB79JTi77U8KCMagecYv
-         LE5w==
-X-Gm-Message-State: APjAAAWmKGdP2BxvZEPlMjNnT16Sm4OxBpHj/d5AvFgCKgIMzEuPWdww
-        MsPpOIVHk/NK5PvnqhNAn5HOLrc0ystARDDX
-X-Google-Smtp-Source: APXvYqyhjQEo4g9YND5Fe8F9dcUypnQYf8jfozQHANwshchy+6+kG6ludLuigCmoO08U0FojfDlhn98Rsb9Khi5b
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr28666032uaf.95.1560339842024;
- Wed, 12 Jun 2019 04:44:02 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 13:43:25 +0200
-In-Reply-To: <cover.1560339705.git.andreyknvl@google.com>
-Message-Id: <e2f35a0400150594a39d9c3f4b3088601fd5dc30.1560339705.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1560339705.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v17 08/15] userfaultfd, arm64: untag user pointers
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Wed, 12 Jun 2019 07:45:24 -0400
+Received: from mail-eopbgr30070.outbound.protection.outlook.com ([40.107.3.70]:58948
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2438385AbfFLLpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:45:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jTGv+xX4LM3gIAgfgklMFQRdQrCyRfepe2LtoLcwn10=;
+ b=VXwy9h0aJ8IQ5+l8RJIWDbJDMUvbadL6M4qHwr37YCLQOC7zAOVSWOP+ttixFfs2toP30t499aenkyWZg4PTCeCGuoyfqlTwpXQVRIkOKVrE/4niPufzdORCf7yL68BnMSdfOhD0JwRPYYUJhMCbuJcp8hTEzH2XXpeHjBW03ks=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3615.eurprd04.prod.outlook.com (52.134.7.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Wed, 12 Jun 2019 11:45:18 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1987.012; Wed, 12 Jun 2019
+ 11:45:18 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
+Thread-Topic: [PATCH] ARM: dts: imx7ulp: add crypto support
+Thread-Index: AQHVHD5HxT1VnrKm20mxf/1ryD4CPA==
+Date:   Wed, 12 Jun 2019 11:45:18 +0000
+Message-ID: <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190606080255.25504-1-horia.geanta@nxp.com>
+ <20190612103926.GE11086@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 29aeb5b6-26bc-4d3f-d758-08d6ef2b7152
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3615;
+x-ms-traffictypediagnostic: VI1PR0402MB3615:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR0402MB361523311C68FD2707C44CEB98EC0@VI1PR0402MB3615.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(366004)(136003)(39860400002)(199004)(189003)(5660300002)(14454004)(478600001)(66476007)(8936002)(4326008)(66556008)(81166006)(966005)(8676002)(66946007)(81156014)(9686003)(2906002)(55016002)(71190400001)(76116006)(6116002)(305945005)(6436002)(3846002)(53936002)(86362001)(26005)(25786009)(66446008)(73956011)(6306002)(186003)(6916009)(6246003)(7736002)(52536014)(102836004)(14444005)(7696005)(476003)(446003)(68736007)(71200400001)(33656002)(44832011)(64756008)(486006)(53546011)(54906003)(99286004)(256004)(229853002)(66066001)(74316002)(6506007)(76176011)(316002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3615;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: N6JF9H3tcPI6lNnadyCcfvFpql5wVS+TjQXIWCw/rnZ1Qg0t8EbyhoawVfzb9TXdPUITfWr9b6vmT0josa/AFsoYWwZ6kX3bGjUOgYv8o01ILstK/yOcyN3LLC5L6ldLe+IgSpcxH/627I+8iXoWHlyhtADoKvjFSXvMvEDiQn3Bs8+JRcpnhlFuu21BqzeZO0ri1VMktKj9KFUWtuHjC6FkkCL5i6TcegpSH/Ve8sG/KzfIZfqk6RJQmnrcypOO0O2jPZ6qH/SoNVXikTPKbJjytsOfE5bYPymgvtE9PGhURPT4pnOA7pxB9Sv6USUgeDEGaXeA8BsHFL/OLWa+4tV3qIYNX0eClNRZb9c6/VMtStHOoPxf4D7WzlYF1iCHOzwcTFRRuyhIuGYQkNp3FYdqgIhLXXlV+IhKad7b01A=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29aeb5b6-26bc-4d3f-d758-08d6ef2b7152
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 11:45:18.1981
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3615
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends arm64 kernel ABI to allow to
-pass tagged user pointers (with the top byte set to something else other
-than 0x00) as syscall arguments.
-
-userfaultfd code use provided user pointers for vma lookups, which can
-only by done with untagged pointers.
-
-Untag user pointers in validate_range().
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- fs/userfaultfd.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
-
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 3b30301c90ec..24d68c3b5ee2 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -1263,21 +1263,23 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
- }
- 
- static __always_inline int validate_range(struct mm_struct *mm,
--					  __u64 start, __u64 len)
-+					  __u64 *start, __u64 len)
- {
- 	__u64 task_size = mm->task_size;
- 
--	if (start & ~PAGE_MASK)
-+	*start = untagged_addr(*start);
-+
-+	if (*start & ~PAGE_MASK)
- 		return -EINVAL;
- 	if (len & ~PAGE_MASK)
- 		return -EINVAL;
- 	if (!len)
- 		return -EINVAL;
--	if (start < mmap_min_addr)
-+	if (*start < mmap_min_addr)
- 		return -EINVAL;
--	if (start >= task_size)
-+	if (*start >= task_size)
- 		return -EINVAL;
--	if (len > task_size - start)
-+	if (len > task_size - *start)
- 		return -EINVAL;
- 	return 0;
- }
-@@ -1327,7 +1329,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
- 		goto out;
- 	}
- 
--	ret = validate_range(mm, uffdio_register.range.start,
-+	ret = validate_range(mm, &uffdio_register.range.start,
- 			     uffdio_register.range.len);
- 	if (ret)
- 		goto out;
-@@ -1516,7 +1518,7 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
- 	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
- 		goto out;
- 
--	ret = validate_range(mm, uffdio_unregister.start,
-+	ret = validate_range(mm, &uffdio_unregister.start,
- 			     uffdio_unregister.len);
- 	if (ret)
- 		goto out;
-@@ -1667,7 +1669,7 @@ static int userfaultfd_wake(struct userfaultfd_ctx *ctx,
- 	if (copy_from_user(&uffdio_wake, buf, sizeof(uffdio_wake)))
- 		goto out;
- 
--	ret = validate_range(ctx->mm, uffdio_wake.start, uffdio_wake.len);
-+	ret = validate_range(ctx->mm, &uffdio_wake.start, uffdio_wake.len);
- 	if (ret)
- 		goto out;
- 
-@@ -1707,7 +1709,7 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
- 			   sizeof(uffdio_copy)-sizeof(__s64)))
- 		goto out;
- 
--	ret = validate_range(ctx->mm, uffdio_copy.dst, uffdio_copy.len);
-+	ret = validate_range(ctx->mm, &uffdio_copy.dst, uffdio_copy.len);
- 	if (ret)
- 		goto out;
- 	/*
-@@ -1763,7 +1765,7 @@ static int userfaultfd_zeropage(struct userfaultfd_ctx *ctx,
- 			   sizeof(uffdio_zeropage)-sizeof(__s64)))
- 		goto out;
- 
--	ret = validate_range(ctx->mm, uffdio_zeropage.range.start,
-+	ret = validate_range(ctx->mm, &uffdio_zeropage.range.start,
- 			     uffdio_zeropage.range.len);
- 	if (ret)
- 		goto out;
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
-
+On 6/12/2019 1:40 PM, Shawn Guo wrote:=0A=
+> On Thu, Jun 06, 2019 at 11:02:55AM +0300, Horia Geant=E3 wrote:=0A=
+>> From: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+>>=0A=
+>> Add crypto node in device tree for CAAM support.=0A=
+>>=0A=
+>> Noteworthy is that on 7ulp the interrupt line is shared=0A=
+>> between the two job rings.=0A=
+>>=0A=
+>> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+>> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>=0A=
+>> Signed-off-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+>> ---=0A=
+>>=0A=
+>> I've just realized that this patch should be merged through the crypto t=
+ree,=0A=
+>> else bisectability could be affected due to cryptodev-2.6=0A=
+>> commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7U=
+LP")=0A=
+>> ( https://patchwork.kernel.org/patch/10970017/ )=0A=
+>> which should come first.=0A=
+> =0A=
+> I'm not sure I follow it.  This is a new device added to imx7ulp DT.=0A=
+> It's never worked before on imx7ulp.  How would it affect git bisect?=0A=
+> =0A=
+Driver corresponding to this device (drivers/crypto/caam) has to be updated=
+=0A=
+before adding the node in DT.=0A=
+Is there any guarantee wrt. merge order of the crypto and DT trees?=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
