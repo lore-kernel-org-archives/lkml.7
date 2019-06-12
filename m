@@ -2,104 +2,89 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB57C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2F7C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D00F208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D3D208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:23:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jKAjTw51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409341AbfFLOXF (ORCPT
+        id S2437257AbfFLOXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:23:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36884 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbfFLOXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:23:05 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E8AA23003AEC;
-        Wed, 12 Jun 2019 14:23:04 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (unknown [10.36.118.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77A8C5D9CA;
-        Wed, 12 Jun 2019 14:22:57 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
-        <875zprm4jo.fsf@oldenburg2.str.redhat.com>
-        <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com>
-        <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
-        <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
-        <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
-        <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com>
-        <87wohzorj0.fsf@oldenburg2.str.redhat.com>
-        <1329439108.43041.1560348962006.JavaMail.zimbra@efficios.com>
-Date:   Wed, 12 Jun 2019 16:22:55 +0200
-In-Reply-To: <1329439108.43041.1560348962006.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Wed, 12 Jun 2019 10:16:02 -0400
-        (EDT)")
-Message-ID: <87blz27uio.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Wed, 12 Jun 2019 10:23:45 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14351 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbfFLOXp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:23:45 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d010aed0001>; Wed, 12 Jun 2019 07:23:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 12 Jun 2019 07:23:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 12 Jun 2019 07:23:44 -0700
+Received: from [10.21.132.143] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
+ 2019 14:23:42 +0000
+Subject: Re: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as
+ TIMER_DEFERRABLE (431235818bc3)
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
+ <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <36e34e81-8399-be71-2dd6-399d70057657@nvidia.com>
+Date:   Wed, 12 Jun 2019 15:23:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 12 Jun 2019 14:23:05 +0000 (UTC)
+In-Reply-To: <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560349421; bh=N5MzEerQSEvD2TnbxfmlJKEEgNNcq60nOgCTwn1HUfY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jKAjTw51G219XqRyB0ZJa7GBqFnXZ9/IObybwBeg3h50DbhSjH6ZrIk4o1BaspG6L
+         i16DYLhk2AZyasU+tAEDGlAHlmBEp39qus6gMP8gii6WR7p9+6AMtzs5F2zqkSCYZm
+         qS3kmVRviJz0g2HUoJHrsSAOIpXJQ9OMtSSFX4j/PkS2Sj5bFOBcQ4VRZqt3WlLIHR
+         NRvjAOXTSa3BHWDZ22CKSB0Yd5W6YDGTD9E0GV8QTM6sLh8fYahOb4AoaSsq4N4cTc
+         s7cq32cGYC5BlkIok1SnSAbS/4+aETpMRp8+dQ05HODpeyjwJCG8YlbDn2fFw4TZqf
+         K4s34cT0zT0nw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
 
->> It's the registration from libc.so which needs some care.  In
->> particular, we must not override an existing registration.
->
-> OK, so it could check if __rseq_abi.cpu_id is -1, and only
-> perform registration if it is the case. Or do you have another
-> approach in mind ?
+On 05/06/2019 23:01, Trond Myklebust wrote:
 
-No, __rseq_abi will not be shared with the outer libc, so the inner libc
-will always see -1 there, even if the outer libc has performed
-registration.
+...
 
-libio/vtables.c has some example what you can do:
+> I'd be OK with just reverting this patch if it is causing a performance
+> issue.
+> 
+> Anna?
 
-  /* In case this libc copy is in a non-default namespace, we always
-     need to accept foreign vtables because there is always a
-     possibility that FILE * objects are passed across the linking
-     boundary.  */
-  {
-    Dl_info di;
-    struct link_map *l;
-    if (!rtld_active ()
-        || (_dl_addr (_IO_vtable_check, &di, &l, NULL) != 0
-            && l->l_ns != LM_ID_BASE))
-      return;
-  }
+Any update on this?
 
-_IO_vtable_check would have to be replaced with your own function; the
-actual function doesn't really matter.
+Thanks
+Jon
 
-The rtld_active check covers the static dlopen case, where
-rtld_active () is false in the inner libc.
-
-Thanks,
-Florian
+-- 
+nvpublic
