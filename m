@@ -2,172 +2,101 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA9AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED67BC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672442086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24E7206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vZePWY3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731500AbfFLIiH (ORCPT
+        id S2406287AbfFLIib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:38:07 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:48079 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731305AbfFLIiF (ORCPT
+        Wed, 12 Jun 2019 04:38:31 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42792 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728740AbfFLIia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:38:05 -0400
-X-UUID: 0fee5e1d994d40a2be57483e599bfb28-20190612
-X-UUID: 0fee5e1d994d40a2be57483e599bfb28-20190612
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1668390797; Wed, 12 Jun 2019 16:38:01 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Jun 2019 16:37:58 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Jun 2019 16:37:58 +0800
-Message-ID: <1560328678.4743.6.camel@mtkswgap22>
-Subject: Re: [PATCH 2/2] mt76: mt7615: update peer's bssid when state
- transition changes
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Lorenzo Bianconi <lorenzo@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, YF Luo <yf.luo@mediatek.com>,
-        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, Roy Luo <royluo@google.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        "Felix Fietkau" <nbd@nbd.name>
-Date:   Wed, 12 Jun 2019 16:37:58 +0800
-In-Reply-To: <20190612082618.GA8107@localhost.localdomain>
-References: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560221172.git.ryder.lee@mediatek.com>
-         <449fee28c558b6f02b62275f9beefaab02b47efc.1560221172.git.ryder.lee@mediatek.com>
-         <20190612082618.GA8107@localhost.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 12 Jun 2019 04:38:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x17so624746wrl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:38:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=SlZ+ry2gVHb0vEOp99Y+xW09OJTo9PGHa87ZSVB1Oo0=;
+        b=vZePWY3yC7OOSFWVhWHTcSKE21kHBJxn1NAyVQ4M1543O3uRPAxhpZ30BUV8d245jD
+         LHWeRIT9vf3qLlW5oJ5aztvZ5nxEteoxnsMp92vu5OLwDZhZLwShdREC7G6Z1Y//U5qh
+         U9C59rbz9jrF69PSiz/8ItZi1bohtYAZ0z/CG8cpfLas1Q+6Gc+pVwmaSXyuIr39hpqY
+         V4GNXqM2lxrY6Uv6HEG74zfIZeFG0cTGnS0HYbXg7QztvrDZcamWwu4zfRqWlWbYsEn2
+         4eYKxZKI6XjHIoreXncIrwg/lJuHCnbRb9NYfZ9In1RIuMsikMFDhy/o5U0GoUQuyRNh
+         40VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=SlZ+ry2gVHb0vEOp99Y+xW09OJTo9PGHa87ZSVB1Oo0=;
+        b=RfocRO4U8S3OOfiDCPm06owQLZyizz33WqOH+rEl1zd3CBCi5WSzCn7YdmWGDX5z7y
+         wWybwsxbsBT1r/PFPmRjcrb68RLVRd8v5+aFKvlQk8b68AgKf6NoR6EM7Rw+hQToUOho
+         5Lyyzw+NmyHE0YiPobRF73PfnBXwuNkCr6xTbFUtjmLNPSrxTrQveXaAzIvyC81C6GRh
+         vDYSdpm6cri+KmjQpv4qFoSRys3Es2f/+ubUEe8Zb8Qkha4aB26xeplvDUoOYilutMaz
+         /dU4H9zOrAishx2N+Aj9juXERNTN48t5XEfRQRt3CrOAuTKSkdIIPzQozwJVhQzKTSSu
+         Fa6g==
+X-Gm-Message-State: APjAAAV4LPrwOW12X9s+CKFhUOVh0UKTGPrq+0v+kIGj/IeCDnBa332M
+        6Zxji3YJQQgphw0ht+0xYyFDlCkw22A=
+X-Google-Smtp-Source: APXvYqxo4tnsR2pPCujkEtj2aBkEhQ0kyZnmv+OP4MsXO0mj7wjW8QxjU+l+svLmRvcUDLaaflrCZw==
+X-Received: by 2002:a5d:6243:: with SMTP id m3mr24339559wrv.41.1560328708794;
+        Wed, 12 Jun 2019 01:38:28 -0700 (PDT)
+Received: from dell ([2a01:4c8:f:9687:619a:bb91:d243:fc8b])
+        by smtp.gmail.com with ESMTPSA id x25sm4426439wmc.36.2019.06.12.01.38.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Jun 2019 01:38:27 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 09:38:25 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH 1/3] mfd: madera: Update DT bindings to add additional
+ CODECs
+Message-ID: <20190612083825.GX4797@dell>
+References: <20190530143953.25799-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 72901263F5700DB435DA5D08E473CCAD7D900AD367C6200865E79A301332B9AA2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190530143953.25799-1-ckeepax@opensource.cirrus.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-12 at 10:26 +0200, Lorenzo Bianconi wrote:
-> > Driver should update peer's bssid and bss information when
-> > state transition changes.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> >  .../net/wireless/mediatek/mt76/mt7615/main.c  |  5 +-
-> >  .../net/wireless/mediatek/mt76/mt7615/mcu.c   | 49 ++++++++++---------
-> >  2 files changed, 27 insertions(+), 27 deletions(-)
-> > 
+On Thu, 30 May 2019, Charles Keepax wrote:
+
+> From: Richard Fitzgerald <rf@opensource.cirrus.com>
 > 
-> [...]
+> This adds the cs47l15, cs42l92, cs47l92 and cs47l93 to the list of
+> compatible strings and updates some properties that need to note
+> the new CODECs.
 > 
-> > diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> > index e82086eb8aa4..8fc12cd37906 100644
-> > --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> > +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> > @@ -741,17 +741,6 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
-> >  	u8 *buf, *data, tx_wlan_idx = 0;
-> >  	struct req_hdr *hdr;
-> >  
-> > -	if (en) {
-> > -		len += sizeof(struct bss_info_omac);
-> > -		features |= BIT(BSS_INFO_OMAC);
-> > -		if (mvif->omac_idx > EXT_BSSID_START) {
-> > -			len += sizeof(struct bss_info_ext_bss);
-> > -			features |= BIT(BSS_INFO_EXT_BSS);
-> > -			ntlv++;
-> > -		}
-> > -		ntlv++;
-> > -	}
-> > -
-> >  	switch (vif->type) {
-> >  	case NL80211_IFTYPE_AP:
-> >  	case NL80211_IFTYPE_MESH_POINT:
-> > @@ -759,22 +748,23 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
-> >  		conn_type = CONNECTION_INFRA_AP;
-> >  		break;
-> >  	case NL80211_IFTYPE_STATION: {
-> > -		struct ieee80211_sta *sta;
-> > -		struct mt7615_sta *msta;
-> > -
-> > -		rcu_read_lock();
-> > -
-> > -		sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
-> > -		if (!sta) {
-> > +		/* TODO: enable BSS_INFO_UAPSD & BSS_INFO_PM */
-> > +		if (en) {
-> > +			struct ieee80211_sta *sta;
-> > +			struct mt7615_sta *msta;
-> > +
-> > +			rcu_read_lock();
-> > +			sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
-> > +			if (!sta) {
-> > +				rcu_read_unlock();
-> > +				return -EINVAL;
-> > +			}
-> > +
-> > +			msta = (struct mt7615_sta *)sta->drv_priv;
-> > +			tx_wlan_idx = msta->wcid.idx;
-> >  			rcu_read_unlock();
-> > -			return -EINVAL;
-> >  		}
-> > -
-> > -		msta = (struct mt7615_sta *)sta->drv_priv;
-> > -		tx_wlan_idx = msta->wcid.idx;
-> >  		conn_type = CONNECTION_INFRA_STA;
-> > -
-> > -		rcu_read_unlock();
-> >  		break;
-> >  	}
-> >  	default:
-> > @@ -782,6 +772,17 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
-> >  		break;
-> >  	}
-> >  
-> > +	if (en) {
-> > +		len += sizeof(struct bss_info_omac);
-> > +		features |= BIT(BSS_INFO_OMAC);
-> > +		if (mvif->omac_idx > EXT_BSSID_START) {
-> > +			len += sizeof(struct bss_info_ext_bss);
-> > +			features |= BIT(BSS_INFO_EXT_BSS);
-> > +			ntlv++;
-> > +		}
-> > +		ntlv++;
-> > +	}
-> 
-> What did you move this chunk down?
+> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 
-Ah, my bad. I originally planned to add other conditions and it may
-change 'en' so moved these stuff behind them.
+Applied, thanks.
 
-Anyway I forgot to remove this part. Will fix it
-
-Ryder.
-
-> Regards,
-> Lorenzo
-> 
-> > +
-> >  	buf = kzalloc(len, GFP_KERNEL);
-> >  	if (!buf)
-> >  		return -ENOMEM;
-> > -- 
-> > 2.18.0
-> > 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
