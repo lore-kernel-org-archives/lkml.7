@@ -2,76 +2,80 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D37C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91191C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60E220874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E6A20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbfFLFzc (ORCPT
+        id S1730735AbfFLFzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 01:55:32 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:60554 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbfFLFzb (ORCPT
+        Wed, 12 Jun 2019 01:55:51 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:63763 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725601AbfFLFzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 01:55:31 -0400
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23990398AbfFLFz2EBmjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
-        Wed, 12 Jun 2019 07:55:28 +0200
-Date:   Wed, 12 Jun 2019 06:55:28 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-cc:     Alexandre Oliva <lxoliva@fsfla.org>, Tom Li <tomli@tomli.me>,
-        James Hogan <jhogan@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform
- Drivers
-In-Reply-To: <20190610214938.GB7147@darkstar.musicnaut.iki.fi>
-Message-ID: <alpine.LFD.2.21.1906102253080.19418@eddie.linux-mips.org>
-References: <20190211230614.GB22242@darkstar.musicnaut.iki.fi> <orva1jj9ht.fsf@lxoliva.fsfla.org> <20190217235951.GA20700@darkstar.musicnaut.iki.fi> <orpnrpj2rk.fsf@lxoliva.fsfla.org> <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org>
- <orlg1ryyo2.fsf@lxoliva.fsfla.org> <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org> <orwolaw5u1.fsf@lxoliva.fsfla.org> <alpine.LFD.2.21.1903082347330.31648@eddie.linux-mips.org> <or7ead4lq3.fsf@lxoliva.fsfla.org>
- <20190610214938.GB7147@darkstar.musicnaut.iki.fi>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 12 Jun 2019 01:55:50 -0400
+X-UUID: db192daf4e4c4231aab5289b95b197ca-20190612
+X-UUID: db192daf4e4c4231aab5289b95b197ca-20190612
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 565738570; Wed, 12 Jun 2019 13:55:40 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Jun 2019 13:55:37 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 12 Jun 2019 13:55:31 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jumin Li <jumin.li@mediatek.com>
+Subject: [PATCH 1/5] dt-bindings: usb: mtu3: fix typo of DMA clock name
+Date:   Wed, 12 Jun 2019 13:55:17 +0800
+Message-ID: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019, Aaro Koskinen wrote:
+Fix typo of dma_ck
 
-> However, with your patch the "nobody cared" is never reached so all is
-> good. I tried 10 boots with the patch and all were successful. Without
-> the patch 8 out of 10 failed with the "nobody cared" warning.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ Documentation/devicetree/bindings/usb/mediatek,mtu3.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- I wouldn't call it "good", just less obvious or painful.  This is still 
-causing wasted CPU cycles that are used for taking the phantom interrupts.
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+index 3382b5cb471d..5d740e9d4525 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+@@ -16,7 +16,7 @@ Required properties:
+ 	entry in clock-names
+  - clock-names : must contain "sys_ck" for clock of controller,
+ 	the following clocks are optional:
+-	"ref_ck", "mcu_ck" and "dam_ck";
++	"ref_ck", "mcu_ck" and "dma_ck";
+  - phys : see usb-hcd.txt in the current directory
+  - dr_mode : should be one of "host", "peripheral" or "otg",
+ 	refer to usb/generic.txt
+-- 
+2.21.0
 
- There is clearly a completion barrier missing somewhere that causes the 
-interrupt request to linger beyond the point interrupts are reenabled at 
-the CPU.
-
- One way to attempt to narrow it down might be taking a backtrace from 
-where IRQ 14 is found to be spurious.  This would indicate the offending 
-interrupt unmask action.  E.g. I see no explicit completion barrier 
-between the final `outb' in `mask_and_ack_8259A' and the following call to 
-`raw_spin_unlock_irqrestore', which are obviously otherwise unordered WRT 
-each other (because `outb' is I/O or MMIO and `raw_spin_unlock_irqrestore' 
-is contained within the CPU on UP).  I can see provisions however for 
-issuing an architecture-specific barrier in `do_raw_spin_unlock', which is 
-the workhorse for `raw_spin_unlock_irqrestore', so maybe this is the place 
-to look into?
-
- Also how's IRQ 14 registered as indicated by /proc/interrupts?
-
-  Maciej
