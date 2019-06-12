@@ -2,170 +2,372 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFD1C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3123AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4769320866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E231720B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="VfsjDGPx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3ynIIRB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439613AbfFLOJy (ORCPT
+        id S1729455AbfFLOKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:09:54 -0400
-Received: from mail-eopbgr690046.outbound.protection.outlook.com ([40.107.69.46]:43722
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437199AbfFLOJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:09:53 -0400
+        Wed, 12 Jun 2019 10:10:25 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:40424 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfFLOKY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:10:24 -0400
+Received: by mail-it1-f195.google.com with SMTP id q14so10747819itc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1sEo+HwAI3skkjlsHFLNUbRdicxZBgNeo5ltH1lbzpY=;
- b=VfsjDGPxSrXTBfXl1/QjBUojS/Z0royJvYC2xIcrkv4deWQF9Fg+2Rj05DnW1G9dSREkLwokkzFgBQjspZR2lpwau5r0SgoD9qIlKgY5UPTNwo9ZRGUbT0vgxXfcOEYy6ETe4lnJcF496c9GR5JCbRjVIwGKhaiOo725BW6nwKg=
-Received: from BN3PR03CA0063.namprd03.prod.outlook.com
- (2a01:111:e400:7a4d::23) by CY1PR03MB2265.namprd03.prod.outlook.com
- (2603:10b6:600:1::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.11; Wed, 12 Jun
- 2019 14:09:49 +0000
-Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::208) by BN3PR03CA0063.outlook.office365.com
- (2a01:111:e400:7a4d::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1987.10 via Frontend
- Transport; Wed, 12 Jun 2019 14:09:49 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.57)
- smtp.mailfrom=analog.com; linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Wed, 12 Jun 2019 14:09:49 +0000
-Received: from NWD2HUBCAS8.ad.analog.com (nwd2hubcas8.ad.analog.com [10.64.69.108])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5CE9mt1015437
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 12 Jun 2019 07:09:48 -0700
-Received: from NWD2MBX5.ad.analog.com ([fe80::49e:7a9f:284e:1a49]) by
- NWD2HUBCAS8.ad.analog.com ([fe80::90a0:b93e:53c6:afee%12]) with mapi id
- 14.03.0415.000; Wed, 12 Jun 2019 10:09:48 -0400
-From:   "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 2/2] dt-bindings: iio: frequency: Add docs for
- ADF4371 PLL
-Thread-Topic: [PATCH v5 2/2] dt-bindings: iio: frequency: Add docs for
- ADF4371 PLL
-Thread-Index: AQHVGtaWSysYYfF89kiPx+e4Rzh1OKaXT0YAgAEPFQA=
-Date:   Wed, 12 Jun 2019 14:09:47 +0000
-Message-ID: <1560348586.4768.5.camel@analog.com>
-References: <1559653697-2760-1-git-send-email-stefan.popa@analog.com>
-         <20190611215932.GA24974@bogus>
-In-Reply-To: <20190611215932.GA24974@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.32.224.122]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <79AF52B7F5E7FA4BB1D76ECE4FFEA5BD@analog.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mjjCY66dcOIAwrppTn005I91OQxD4XKkvl7VcngFu58=;
+        b=I3ynIIRBv5j5ZxLm6Hqet1vceV8wypAGaB8rtd67Z5X6g7XSzeyxDtbDjNYBNQbrty
+         QO6uqDL6Ky6815R1wmss1Zf5VrRG2LlKo09gByaxBfHksUxMp2sLoEtMnAu75o55jwlA
+         U4XOwtKYBolu3JHXGhPf5ByqHf/VC0ey2DzFcdKqyM4M8e5EC/dBn/ISqCWeTBPBaG68
+         1OwD5DAF9HKkUI1nqAVEx116koyduNaAoXMYby8ywZQyq1FSDGWnQEfS/Bx4A8KscvlN
+         iu0wZzQDEV4Z7mdR/PQOdJbgTNEovvcwZZKNn75TphH24AtaJn1GTT1DN/8MxEDz1Ghl
+         W9qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mjjCY66dcOIAwrppTn005I91OQxD4XKkvl7VcngFu58=;
+        b=ALuZziPF+md1l70ZSofXu12CkuFVao9bS7YV3OeVDNTHLOHTf2mQPYVZQr3JWx8mZf
+         GqDWzPdSTLsjbji6FGdAkNTYVpRb9xW8+4fdP46yOuGkBtZXMM1Zih2amRHH7NPqA/oE
+         sR45DPPIeKbzPjhCHTh10DQxa3GIopXlZRWMunA9oCXfHW9wkgUtCxE3Y8IkmqwmDohL
+         pIRXxiYp6IguAlBKTpQFW87va7BAuogkDqgE62P9A2tIboLOsN0EJhpcPluqrFbLepZw
+         9wa2VLhvi4PDqzF539zbgEkWj42/EtXw6omDk9D3jR76+Jr+7/ryRJ3MeZ+omF//b0l5
+         yrjA==
+X-Gm-Message-State: APjAAAXm1EInn9WQGj8ekhd9hMWepoMzA2PBtUZEL91LTEIlnZ+7g9QO
+        PK+0BmPjsBNlzX5ptdd9lLQqa4sOoOgZqdqWfw==
+X-Google-Smtp-Source: APXvYqzMwFcv3c1X1V0OlC6XalQIW3p0WyYba8hSLfuOZEqphjN7uIuOSEZtG6jMIfuZHq+8o8ICtv02BKLo7CTzi0E=
+X-Received: by 2002:a24:7cd8:: with SMTP id a207mr22042016itd.68.1560348623628;
+ Wed, 12 Jun 2019 07:10:23 -0700 (PDT)
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(396003)(136003)(2980300002)(189003)(199004)(55674003)(316002)(4326008)(54906003)(8676002)(246002)(1730700003)(6916009)(86362001)(2501003)(103116003)(5660300002)(70586007)(356004)(70206006)(50466002)(8936002)(102836004)(336012)(14454004)(186003)(26005)(11346002)(446003)(486006)(47776003)(476003)(126002)(2616005)(106002)(5640700003)(2906002)(436003)(426003)(229853002)(76176011)(2486003)(23676004)(6306002)(7696005)(36756003)(7736002)(3846002)(6116002)(6246003)(7636002)(478600001)(966005)(305945005)(72206003)(2351001)(7416002)(53376002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY1PR03MB2265;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7bac810d-d1ba-4324-5efb-08d6ef3fa1bd
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:CY1PR03MB2265;
-X-MS-TrafficTypeDiagnostic: CY1PR03MB2265:
-X-MS-Exchange-PUrlCount: 3
-X-Microsoft-Antispam-PRVS: <CY1PR03MB2265E577319C4D64D33711669DEC0@CY1PR03MB2265.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0066D63CE6
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: ZJNFJAinKbAPYfI63CyTiL/xe4vebqn4QaJpQ5/csfOqqLbCUafizC9cZzL70r1JnHylzKtoABhEv86Igf/BFx777UnWTrW+kfGSMi8ux2Y5fdThMmU0lBsmGLOyQI/L6V7cK8ke/EHg3PWgBIDepvOU+bngtn4VcvkNmYIdfWSTRy3OKCOEt88TX/Zm8CubD55KSpQqRfGDJHuWajtLEVbn6LzNkZ+gZbsqkURn5y3eRcdPpRfy5pD367bdHkwEtb8hH6CCfJU6Bzfwy/SdU5TjzdWdCKtJC/hn/Hq0cXyqZx+DvnNkOkK1xnK6oga13i6TKAss65m2J6D9t33ECRKs0pOfnUhbGuNr/7m/oQyJxrSixAywt2jxcgnU2AgNAcUAtN0hKcy+EAXPApJeu7VN8pcGYsy+jQE8k4hRwvs=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2019 14:09:49.3863
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bac810d-d1ba-4324-5efb-08d6ef3fa1bd
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR03MB2265
+References: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
+ <20190605144912.f0059d4bd13c563ddb37877e@linux-foundation.org>
+ <CAFgQCTur5ReVHm6NHdbD3wWM5WOiAzhfEXdLnBGRdZtf7q1HFw@mail.gmail.com>
+ <2b0a65ec-4fb0-430e-3e6a-b713fb5bb28f@nvidia.com> <CAFgQCTtS7qOByXBnGzCW-Rm9fiNsVmhQTgqmNU920m77XyAwZQ@mail.gmail.com>
+ <20190611122935.GA9919@dhcp-128-55.nay.redhat.com> <20190611164733.GA14336@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20190611164733.GA14336@iweiny-DESK2.sc.intel.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Wed, 12 Jun 2019 22:10:12 +0800
+Message-ID: <CAFgQCTvaoOgzkei6vSNUAfs2D0un3ypuoEM02C9gWB7SnNy5Gw@mail.gmail.com>
+Subject: Re: [PATCHv3 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in get_user_pages_fast()
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLA0KDQpJJ20gc29ycnkgSSBmb3Jnb3QgdG8gaW5jbHVkZSB5b3VyIFJldmlld2VkLWJ5
-IGluIHRoaXMgcGF0Y2ggc2VyaWVzLg0KSG93ZXZlciwgSSByZWFsaXplZCB0aGlzIG1pc3Rha2Ug
-YW5kIGFkZGVkIGl0IHRvIHY2IHdoaWNoIGluIHRoZSBtZWFudGltZQ0KSm9uYXRoYW4gaGFzIGFw
-cGxpZWQuDQoNCkkgd2lsbCBmaXggeW91ciByZW1hcmsgYmVsbG93IHJlZ2FyZGluZyBjbG9jay1u
-YW1lcyBpbiB0aGUgbmV4dCBwYXRjaA0Kc2VyaWVzIGZvciB0aGlzIGRldmljZS4NCg0KVGhhbmsg
-eW91LA0KLVN0ZWZhbg0KDQpPbiBNYSwgMjAxOS0wNi0xMSBhdCAxNTo1OSAtMDYwMCwgUm9iIEhl
-cnJpbmcgd3JvdGU6DQo+IA0KPiANCj4gT24gVHVlLCBKdW4gMDQsIDIwMTkgYXQgMDQ6MDg6MTdQ
-TSArMDMwMCwgU3RlZmFuIFBvcGEgd3JvdGU6DQo+ID4gDQo+ID4gRG9jdW1lbnQgc3VwcG9ydCBm
-b3IgQW5hbG9nIERldmljZXMgQURGNDM3MSBTUEkgV2lkZWJhbmQgU3ludGhlc2l6ZXIuDQo+ID4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIFBvcGEgPHN0ZWZhbi5wb3BhQGFuYWxvZy5jb20+
-DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiDCoMKgwqDCoMKgwqAtIE5vdGhpbmcg
-Y2hhbmdlZC4NCj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+IMKgwqDCoMKgwqDCoC0gTm90aGluZyBj
-aGFuZ2VkLg0KPiA+IENoYW5nZXMgaW4gdjQ6DQo+ID4gwqDCoMKgwqDCoMKgLSBOb3RoaW5nIGNo
-YW5nZWQuDQo+ID4gQ2hhbmdlcyBpbiB2NToNCj4gPiDCoMKgwqDCoMKgwqAtIE5vdGhpbmcgY2hh
-bmdlZC4NCj4gUGxlYXNlIGFkZCBhY2tzL3Jldmlld2VkLWJ5cyB3aGVuIHBvc3RpbmcgbmV3IHZl
-cnNpb25zLg0KPiANCj4gQnV0IHNvbWV0aGluZyBlbHNlIEkgbm90aWNlZDoNCj4gDQo+ID4gDQo+
-ID4gDQo+ID4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEu
-eWFtbCB8IDU0DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKw0KPiA+IMKgMSBmaWxlIGNoYW5n
-ZWQsIDU0IGluc2VydGlvbnMoKykNCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEueWFtbA0K
-PiA+IA0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9paW8vZnJlcXVlbmN5L2FkZjQzNzEueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2lpby9mcmVxdWVuY3kvYWRmNDM3MS55YW1sDQo+ID4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5kN2FkZjA3NA0KPiA+IC0tLSAvZGV2L251
-bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2ZyZXF1
-ZW5jeS9hZGY0MzcxLnlhbWwNCj4gPiBAQCAtMCwwICsxLDU0IEBADQo+ID4gKyMgU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICsk
-aWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2lpby9mcmVxdWVuY3kvYWRmNDM3MS55
-YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2Nv
-cmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBBbmFsb2cgRGV2aWNlcyBBREY0MzcxIFdpZGVi
-YW5kIFN5bnRoZXNpemVyDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArwqDCoC0gUG9w
-YSBTdGVmYW4gPHN0ZWZhbi5wb3BhQGFuYWxvZy5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlv
-bjogfA0KPiA+ICvCoMKgQW5hbG9nIERldmljZXMgQURGNDM3MSBTUEkgV2lkZWJhbmQgU3ludGhl
-c2l6ZXINCj4gPiArwqDCoGh0dHBzOi8vd3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVjaG5pY2Fs
-LWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvDQo+ID4gYWRmNDM3MS5wZGYNCj4gPiArDQo+ID4g
-K3Byb3BlcnRpZXM6DQo+ID4gK8KgwqBjb21wYXRpYmxlOg0KPiA+ICvCoMKgwqDCoGVudW06DQo+
-ID4gK8KgwqDCoMKgwqDCoC0gYWRpLGFkZjQzNzENCj4gPiArDQo+ID4gK8KgwqByZWc6DQo+ID4g
-K8KgwqDCoMKgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gK8KgwqBjbG9ja3M6DQo+ID4gK8KgwqDC
-oMKgZGVzY3JpcHRpb246DQo+ID4gK8KgwqDCoMKgwqDCoERlZmluaXRpb24gb2YgdGhlIGV4dGVy
-bmFsIGNsb2NrIChzZWUgY2xvY2svY2xvY2stYmluZGluZ3MudHh0KQ0KPiA+ICvCoMKgwqDCoG1h
-eEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICvCoMKgY2xvY2stbmFtZXM6DQo+ID4gK8KgwqDCoMKgZGVz
-Y3JpcHRpb246DQo+ID4gK8KgwqDCoMKgwqDCoE11c3QgYmUgImNsa2luIg0KPiBUaGlzIGNhbiBi
-ZSBhIHNjaGVtYToNCj4gDQo+IGNsb2NrLW5hbWVzOg0KPiDCoCBpdGVtczoNCj4gwqDCoMKgwqAt
-IGNsa2luDQo+IA0KPiA+IA0KPiA+ICvCoMKgwqDCoG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICty
-ZXF1aXJlZDoNCj4gPiArwqDCoC0gY29tcGF0aWJsZQ0KPiA+ICvCoMKgLSByZWcNCj4gPiArwqDC
-oC0gY2xvY2tzDQo+ID4gK8KgwqAtIGNsb2NrLW5hbWVzDQo+ID4gKw0KPiA+ICtleGFtcGxlczoN
-Cj4gPiArwqDCoC0gfA0KPiA+ICvCoMKgwqDCoHNwaTAgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKg
-I2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqAjc2l6ZS1jZWxscyA9
-IDwwPjsNCj4gPiArDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqBmcmVxdWVuY3lAMCB7DQo+ID4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJhZGksYWRmNDM3MSI7
-DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnID0gPDA+Ow0KPiA+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNwaS1tYXgtZnJlcXVlbmN5ID0gPDEwMDAw
-MDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2NrcyA9IDwmYWRm
-NDM3MV9jbGtpbj47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xvY2st
-bmFtZXMgPSAiY2xraW4iOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgfTsNCj4gPiArwqDCoMKgwqB9
-Ow0KPiA+ICsuLi4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4g
+On Wed, Jun 12, 2019 at 12:46 AM Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> On Tue, Jun 11, 2019 at 08:29:35PM +0800, Pingfan Liu wrote:
+> > On Fri, Jun 07, 2019 at 02:10:15PM +0800, Pingfan Liu wrote:
+> > > On Fri, Jun 7, 2019 at 5:17 AM John Hubbard <jhubbard@nvidia.com> wrote:
+> > > >
+> > > > On 6/5/19 7:19 PM, Pingfan Liu wrote:
+> > > > > On Thu, Jun 6, 2019 at 5:49 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > > ...
+> > > > >>> --- a/mm/gup.c
+> > > > >>> +++ b/mm/gup.c
+> > > > >>> @@ -2196,6 +2196,26 @@ static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
+> > > > >>>       return ret;
+> > > > >>>  }
+> > > > >>>
+> > > > >>> +#ifdef CONFIG_CMA
+> > > > >>> +static inline int reject_cma_pages(int nr_pinned, struct page **pages)
+> > > > >>> +{
+> > > > >>> +     int i;
+> > > > >>> +
+> > > > >>> +     for (i = 0; i < nr_pinned; i++)
+> > > > >>> +             if (is_migrate_cma_page(pages[i])) {
+> > > > >>> +                     put_user_pages(pages + i, nr_pinned - i);
+> > > > >>> +                     return i;
+> > > > >>> +             }
+> > > > >>> +
+> > > > >>> +     return nr_pinned;
+> > > > >>> +}
+> > > > >>
+> > > > >> There's no point in inlining this.
+> > > > > OK, will drop it in V4.
+> > > > >
+> > > > >>
+> > > > >> The code seems inefficient.  If it encounters a single CMA page it can
+> > > > >> end up discarding a possibly significant number of non-CMA pages.  I
+> > > > > The trick is the page is not be discarded, in fact, they are still be
+> > > > > referrenced by pte. We just leave the slow path to pick up the non-CMA
+> > > > > pages again.
+> > > > >
+> > > > >> guess that doesn't matter much, as get_user_pages(FOLL_LONGTERM) is
+> > > > >> rare.  But could we avoid this (and the second pass across pages[]) by
+> > > > >> checking for a CMA page within gup_pte_range()?
+> > > > > It will spread the same logic to hugetlb pte and normal pte. And no
+> > > > > improvement in performance due to slow path. So I think maybe it is
+> > > > > not worth.
+> > > > >
+> > > > >>
+> > > >
+> > > > I think the concern is: for the successful gup_fast case with no CMA
+> > > > pages, this patch is adding another complete loop through all the
+> > > > pages. In the fast case.
+> > > >
+> > > > If the check were instead done as part of the gup_pte_range(), then
+> > > > it would be a little more efficient for that case.
+> > > >
+> > > > As for whether it's worth it, *probably* this is too small an effect to measure.
+> > > > But in order to attempt a measurement: running fio (https://github.com/axboe/fio)
+> > > > with O_DIRECT on an NVMe drive, might shed some light. Here's an fio.conf file
+> > > > that Jan Kara and Tom Talpey helped me come up with, for related testing:
+> > > >
+> > > > [reader]
+> > > > direct=1
+> > > > ioengine=libaio
+> > > > blocksize=4096
+> > > > size=1g
+> > > > numjobs=1
+> > > > rw=read
+> > > > iodepth=64
+> > > >
+> > Unable to get a NVME device to have a test. And when testing fio on the
+> > tranditional disk, I got the error "fio: engine libaio not loadable
+> > fio: failed to load engine
+> > fio: file:ioengines.c:89, func=dlopen, error=libaio: cannot open shared object file: No such file or directory"
+> >
+> > But I found a test case which can be slightly adjusted to met the aim.
+> > It is tools/testing/selftests/vm/gup_benchmark.c
+> >
+> > Test enviroment:
+> >   MemTotal:       264079324 kB
+> >   MemFree:        262306788 kB
+> >   CmaTotal:              0 kB
+> >   CmaFree:               0 kB
+> >   on AMD EPYC 7601
+> >
+> > Test command:
+> >   gup_benchmark -r 100 -n 64
+> >   gup_benchmark -r 100 -n 64 -l
+> > where -r stands for repeat times, -n is nr_pages param for
+> > get_user_pages_fast(), -l is a new option to test FOLL_LONGTERM in fast
+> > path, see a patch at the tail.
+>
+> Thanks!  That is a good test to add.  You should add the patch to the series.
+OK.
+>
+> >
+> > Test result:
+> > w/o     477.800000
+> > w/o-l   481.070000
+> > a       481.800000
+> > a-l     640.410000
+> > b       466.240000  (question a: b outperforms w/o ?)
+> > b-l     529.740000
+> >
+> > Where w/o is baseline without any patch using v5.2-rc2, a is this series, b
+> > does the check in gup_pte_range(). '-l' means FOLL_LONGTERM.
+> >
+> > I am suprised that b-l has about 17% improvement than a. (640.41 -529.74)/640.41
+>
+> Wow that is bigger than I would have thought.  I suspect it gets worse as -n
+> increases?
+Yes. I test with -n 64/128/256/512. It has this trend. See the data below.
+
+>
+> >
+> > As for "question a: b outperforms w/o ?", I can not figure out why, maybe it can be
+> > considered as variance.
+>
+> :-/
+>
+> Does this change with larger -r or -n values?
+-r should have no effect on this. And I change -n 64/128/256/512. The
+data always shows b outperforms w/o a bit.
+
+      64        128         256        512
+a-l  633.23   676.83  747.14  683.19    (n=256 should be disturbed by
+something, but the overall trend keeps going up)
+b-l  528.32   529.10  523.95  512.88
+w/o  479.73   473.87  477.67  488.70
+b    470.13   467.11  463.06  469.62
+
+Thanks,
+  Pingfan
+>
+> >
+> > Based on the above result, I think it is better to do the check inside
+> > gup_pte_range().
+> >
+> > Any comment?
+>
+> I agree.
+>
+> Ira
+>
+> >
+> > Thanks,
+> >
+> >
+> > > Yeah, agreed. Data is more persuasive. Thanks for your suggestion. I
+> > > will try to bring out the result.
+> > >
+> > > Thanks,
+> > >   Pingfan
+> > >
+> >
+>
+> > ---
+> > Patch to do check inside gup_pte_range()
+> >
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 2ce3091..ba213a0 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -1757,6 +1757,10 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+> >               VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+> >               page = pte_page(pte);
+> >
+> > +             if (unlikely(flags & FOLL_LONGTERM) &&
+> > +                     is_migrate_cma_page(page))
+> > +                             goto pte_unmap;
+> > +
+> >               head = try_get_compound_head(page, 1);
+> >               if (!head)
+> >                       goto pte_unmap;
+> > @@ -1900,6 +1904,12 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+> >               refs++;
+> >       } while (addr += PAGE_SIZE, addr != end);
+> >
+> > +     if (unlikely(flags & FOLL_LONGTERM) &&
+> > +             is_migrate_cma_page(page)) {
+> > +             *nr -= refs;
+> > +             return 0;
+> > +     }
+> > +
+> >       head = try_get_compound_head(pmd_page(orig), refs);
+> >       if (!head) {
+> >               *nr -= refs;
+> > @@ -1941,6 +1951,12 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+> >               refs++;
+> >       } while (addr += PAGE_SIZE, addr != end);
+> >
+> > +     if (unlikely(flags & FOLL_LONGTERM) &&
+> > +             is_migrate_cma_page(page)) {
+> > +             *nr -= refs;
+> > +             return 0;
+> > +     }
+> > +
+> >       head = try_get_compound_head(pud_page(orig), refs);
+> >       if (!head) {
+> >               *nr -= refs;
+> > @@ -1978,6 +1994,12 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+> >               refs++;
+> >       } while (addr += PAGE_SIZE, addr != end);
+> >
+> > +     if (unlikely(flags & FOLL_LONGTERM) &&
+> > +             is_migrate_cma_page(page)) {
+> > +             *nr -= refs;
+> > +             return 0;
+> > +     }
+> > +
+> >       head = try_get_compound_head(pgd_page(orig), refs);
+> >       if (!head) {
+> >               *nr -= refs;
+>
+> > ---
+> > Patch for testing
+> >
+> > diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+> > index 7dd602d..61dec5f 100644
+> > --- a/mm/gup_benchmark.c
+> > +++ b/mm/gup_benchmark.c
+> > @@ -6,8 +6,9 @@
+> >  #include <linux/debugfs.h>
+> >
+> >  #define GUP_FAST_BENCHMARK   _IOWR('g', 1, struct gup_benchmark)
+> > -#define GUP_LONGTERM_BENCHMARK       _IOWR('g', 2, struct gup_benchmark)
+> > -#define GUP_BENCHMARK                _IOWR('g', 3, struct gup_benchmark)
+> > +#define GUP_FAST_LONGTERM_BENCHMARK  _IOWR('g', 2, struct gup_benchmark)
+> > +#define GUP_LONGTERM_BENCHMARK       _IOWR('g', 3, struct gup_benchmark)
+> > +#define GUP_BENCHMARK                _IOWR('g', 4, struct gup_benchmark)
+> >
+> >  struct gup_benchmark {
+> >       __u64 get_delta_usec;
+> > @@ -53,6 +54,11 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+> >                       nr = get_user_pages_fast(addr, nr, gup->flags & 1,
+> >                                                pages + i);
+> >                       break;
+> > +             case GUP_FAST_LONGTERM_BENCHMARK:
+> > +                     nr = get_user_pages_fast(addr, nr,
+> > +                                              (gup->flags & 1) | FOLL_LONGTERM,
+> > +                                              pages + i);
+> > +                     break;
+> >               case GUP_LONGTERM_BENCHMARK:
+> >                       nr = get_user_pages(addr, nr,
+> >                                           (gup->flags & 1) | FOLL_LONGTERM,
+> > @@ -96,6 +102,7 @@ static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
+> >
+> >       switch (cmd) {
+> >       case GUP_FAST_BENCHMARK:
+> > +     case GUP_FAST_LONGTERM_BENCHMARK:
+> >       case GUP_LONGTERM_BENCHMARK:
+> >       case GUP_BENCHMARK:
+> >               break;
+> > diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
+> > index c0534e2..ade8acb 100644
+> > --- a/tools/testing/selftests/vm/gup_benchmark.c
+> > +++ b/tools/testing/selftests/vm/gup_benchmark.c
+> > @@ -15,8 +15,9 @@
+> >  #define PAGE_SIZE sysconf(_SC_PAGESIZE)
+> >
+> >  #define GUP_FAST_BENCHMARK   _IOWR('g', 1, struct gup_benchmark)
+> > -#define GUP_LONGTERM_BENCHMARK       _IOWR('g', 2, struct gup_benchmark)
+> > -#define GUP_BENCHMARK                _IOWR('g', 3, struct gup_benchmark)
+> > +#define GUP_FAST_LONGTERM_BENCHMARK  _IOWR('g', 2, struct gup_benchmark)
+> > +#define GUP_LONGTERM_BENCHMARK       _IOWR('g', 3, struct gup_benchmark)
+> > +#define GUP_BENCHMARK                _IOWR('g', 4, struct gup_benchmark)
+> >
+> >  struct gup_benchmark {
+> >       __u64 get_delta_usec;
+> > @@ -37,7 +38,7 @@ int main(int argc, char **argv)
+> >       char *file = "/dev/zero";
+> >       char *p;
+> >
+> > -     while ((opt = getopt(argc, argv, "m:r:n:f:tTLUSH")) != -1) {
+> > +     while ((opt = getopt(argc, argv, "m:r:n:f:tTlLUSH")) != -1) {
+> >               switch (opt) {
+> >               case 'm':
+> >                       size = atoi(optarg) * MB;
+> > @@ -54,6 +55,9 @@ int main(int argc, char **argv)
+> >               case 'T':
+> >                       thp = 0;
+> >                       break;
+> > +             case 'l':
+> > +                     cmd = GUP_FAST_LONGTERM_BENCHMARK;
+> > +                     break;
+> >               case 'L':
+> >                       cmd = GUP_LONGTERM_BENCHMARK;
+> >                       break;
+> > --
+> > 2.7.5
+> >
+>
