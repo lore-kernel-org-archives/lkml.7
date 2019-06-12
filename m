@@ -2,79 +2,214 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D046C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9AFC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F5D20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A48520866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:12:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="FziY4W+Y";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="GNeJ8Ucv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbfFLOKv (ORCPT
+        id S1730743AbfFLOM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:10:51 -0400
-Received: from mga07.intel.com ([134.134.136.100]:5158 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfFLOKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:10:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 07:10:50 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by FMSMGA003.fm.intel.com with ESMTP; 12 Jun 2019 07:10:49 -0700
-Date:   Wed, 12 Jun 2019 07:10:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [RFC PATCH] x86/cpufeatures: Enumerate new AVX512 bfloat16
- instructions
-Message-ID: <20190612141049.GA20308@linux.intel.com>
-References: <1560186158-174788-1-git-send-email-fenghua.yu@intel.com>
- <20190610192026.GI5488@zn.tnic>
- <20190611181920.GC180343@romley-ivt3.sc.intel.com>
- <20190611194701.GJ31772@zn.tnic>
- <20190612033259.GE180343@romley-ivt3.sc.intel.com>
- <20190612040259.GC32652@zn.tnic>
+        Wed, 12 Jun 2019 10:12:29 -0400
+Received: from mail177-30.suw61.mandrillapp.com ([198.2.177.30]:2833 "EHLO
+        mail177-30.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730343AbfFLOM2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:12:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=CjNAq5zk83vG6ZLEovRMcdvyAIrKbCVDFfqUl9xCWCg=;
+ b=FziY4W+YP89SkqefJQT7Ywsih9Y+CkTucoZkCgT8aMmB2UlpIz9bocA72LlrvttwU6RLPEjVZqGi
+   TWPSRTiaJlpsN9XfcAr5A81Fv/9/Yj8KDc9pFYfizSNTInwwd3bX3Dp3msdXCSCdzpOlp8WFMtHK
+   XNN+CbbQzZ7MKAPHQM0=
+Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id h0444o22rtkv for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 14:12:27 +0000 (envelope-from <bounce-md_31050260.5d01084b.v1-cb302b60410f46c0947b9caae4c0bd51@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560348747; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=CjNAq5zk83vG6ZLEovRMcdvyAIrKbCVDFfqUl9xCWCg=; 
+ b=GNeJ8UcvkYLnolN14cVeeRXPweAaNyLeFmuimlh58slgybiZ5wZZK90Ms6xqWPB3iZow9O
+ jb67EGtCvGfTWetT+PfRkXnxHhKoPKRFoZ6olzyxGV5eaV5mJJyV12WOLd0GdKpnMhzF1hsa
+ 8rmDwD550hAba0jTkAbKWxBN8MVUY=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] fuse: require /dev/fuse reads to have enough buffer capacity (take 2)
+Received: from [87.98.221.171] by mandrillapp.com id cb302b60410f46c0947b9caae4c0bd51; Wed, 12 Jun 2019 14:12:27 +0000
+To:     Sander Eikelenboom <linux@eikelenboom.it>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        <gluster-devel@gluster.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Message-Id: <20190612141220.GA25389@deco.navytux.spb.ru>
+References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it> <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com> <20190611202738.GA22556@deco.navytux.spb.ru> <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com> <20190612112544.GA21465@deco.navytux.spb.ru> <f31ca7b5-0c9b-5fde-6a75-967265de67c6@eikelenboom.it>
+In-Reply-To: <f31ca7b5-0c9b-5fde-6a75-967265de67c6@eikelenboom.it>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.cb302b60410f46c0947b9caae4c0bd51
+X-Mandrill-User: md_31050260
+Date:   Wed, 12 Jun 2019 14:12:27 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612040259.GC32652@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 06:02:59AM +0200, Borislav Petkov wrote:
-> On Tue, Jun 11, 2019 at 08:32:59PM -0700, Fenghua Yu wrote:
-> > Currently KVM doesn't simulate scattered features (the ones in CPUID_LNX_*
-> > in cpuid_leafs) as reverse_cpuid[] doesn't contain CPUID_LNX_*.
+On Wed, Jun 12, 2019 at 03:03:49PM +0200, Sander Eikelenboom wrote:
+> On 12/06/2019 13:25, Kirill Smelkov wrote:
+> > On Wed, Jun 12, 2019 at 09:44:49AM +0200, Miklos Szeredi wrote:
+> >> On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wrot=
+e:
+> >>
+> >>> Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` =
+for
+> >>> header room change be accepted?
+> >>
+> >> Yes, next cycle.   For 4.2 I'll just push the revert.
+> > 
+> > Thanks Miklos. Please consider queuing the following patch for 5.3.
+> > Sander, could you please confirm that glusterfs is not broken with this
+> > version of the check?
+> > 
+> > Thanks beforehand,
+> > Kirill
 > 
-> 43500e6f294d ("x86/cpufeatures: Remove get_scattered_cpuid_leaf()")
 > 
-> > After the X86_FEATURES_CQM_* features are changed to scattered features,
-> > they will not be simulated by KVM any more as CPUID_F_0_EDX and CPUID_F_1_EDX
-> > are removed.
-> 
-> Does KVM even support resctrl? I doubt only exporting a couple of CPUID
-> bits into the guest is enough...
+> Hmm unfortunately it doesn't build, see below.
+> [...]
+> fs/fuse/dev.c:1336:14: error: =E2=80=98fuse_in_header=E2=80=99 undeclared=
+ (first use in this function)
+>        sizeof(fuse_in_header) + sizeof(fuse_write_in) + fc->max_write))
 
-KVM doesn't support resctrl.  Moving X86_FEATURES_CQM_* to a scattered
-leaf won't affect KVM.
+Sorry, my bad, it was missing "struct" before fuse_in_header. I
+originally compile-tested the patch with `make -j4`, was distracted onto
+other topic and did not see the error after returning due to long tail
+of successful CC lines. Apologize for the inconvenience. Below is a
+fixed patch that was both compile-tested and runtime-tested with my FUSE
+workloads (non-glusterfs).
 
-> > Should patch #1 simulate X86_FEATURE_CQM_* in KVM? Or let KVM guys handle
-> > the scattered features?
-> 
-> Right, the scattered thing was removed as KVM didn't need it,
-> apparently, see above.
+Kirill
 
-Let KVM people deal with it, in the unlikely event someone adds resctrl
-support to KVM.
+---- 8< ----
+From 98fd29bb6789d5f6c346274b99d47008ad856607 Mon Sep 17 00:00:00 2001
+From: Kirill Smelkov <kirr@nexedi.com>
+Date: Wed, 12 Jun 2019 17:06:18 +0300
+Subject: [PATCH v2] fuse: require /dev/fuse reads to have enough buffer cap=
+acity (take 2)
+
+[ This retries commit d4b13963f217 which was reverted in 766741fcaa1f.
+
+  In this version we require only `sizeof(fuse_in_header) + sizeof(fuse_wri=
+te_in)`
+  instead of 4K for FUSE request header room, because, contrary to
+  libfuse and kernel client behaviour, GlusterFS actually provides only
+  so much room for request header. ]
+
+A FUSE filesystem server queues /dev/fuse sys_read calls to get
+filesystem requests to handle. It does not know in advance what would be
+that request as it can be anything that client issues - LOOKUP, READ,
+WRITE, ... Many requests are short and retrieve data from the
+filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
+
+Before getting into operation phase, FUSE filesystem server and kernel
+client negotiate what should be the maximum write size the client will
+ever issue. After negotiation the contract in between server/client is
+that the filesystem server then should queue /dev/fuse sys_read calls with
+enough buffer capacity to receive any client request - WRITE in
+particular, while FUSE client should not, in particular, send WRITE
+requests with > negotiated max_write payload. FUSE client in kernel and
+libfuse historically reserve 4K for request header. However an existing
+filesystem server - GlusterFS - was found which reserves only 80 bytes
+for header room (=3D `sizeof(fuse_in_header) + sizeof(fuse_write_in)`).
+
+https://lore.kernel.org/linux-fsdevel/20190611202738.GA22556@deco.navytux.s=
+pb.ru/
+https://github.com/gluster/glusterfs/blob/v3.8.15-0-gd174f021a/xlators/moun=
+t/fuse/src/fuse-bridge.c#L4894
+
+Since
+
+=09`sizeof(fuse_in_header) + sizeof(fuse_write_in)` =3D=3D
+=09`sizeof(fuse_in_header) + sizeof(fuse_read_in)`  =3D=3D
+=09`sizeof(fuse_in_header) + sizeof(fuse_notify_retrieve_in)`
+
+is the absolute minimum any sane filesystem should be using for header
+room, the contract is that filesystem server should queue sys_reads with
+`sizeof(fuse_in_header) + sizeof(fuse_write_in)` + max_write buffer.
+
+If the filesystem server does not follow this contract, what can happen
+is that fuse_dev_do_read will see that request size is > buffer size,
+and then it will return EIO to client who issued the request but won't
+indicate in any way that there is a problem to filesystem server.
+This can be hard to diagnose because for some requests, e.g. for
+NOTIFY_REPLY which mimics WRITE, there is no client thread that is
+waiting for request completion and that EIO goes nowhere, while on
+filesystem server side things look like the kernel is not replying back
+after successful NOTIFY_RETRIEVE request made by the server.
+
+We can make the problem easy to diagnose if we indicate via error return to
+filesystem server when it is violating the contract.  This should not
+practically cause problems because if a filesystem server is using shorter
+buffer, writes to it were already very likely to cause EIO, and if the
+filesystem is read-only it should be too following FUSE_MIN_READ_BUFFER
+minimum buffer size.
+
+Please see [1] for context where the problem of stuck filesystem was hit
+for real (because kernel client was incorrectly sending more than
+max_write data with NOTIFY_REPLY; see also previous patch), how the
+situation was traced and for more involving patch that did not make it
+into the tree.
+
+[1] https://marc.info/?l=3Dlinux-fsdevel&m=3D155057023600853&w=3D2
+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
+---
+ fs/fuse/dev.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index ea8237513dfa..b2b2344eadcf 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1317,6 +1317,26 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud=
+, struct file *file,
+ =09unsigned reqsize;
+ =09unsigned int hash;
+ 
++=09/*
++=09 * Require sane minimum read buffer - that has capacity for fixed part
++=09 * of any request header + negotiated max_write room for data. If the
++=09 * requirement is not satisfied return EINVAL to the filesystem server
++=09 * to indicate that it is not following FUSE server/client contract.
++=09 * Don't dequeue / abort any request.
++=09 *
++=09 * Historically libfuse reserves 4K for fixed header room, but e.g.
++=09 * GlusterFS reserves only 80 bytes
++=09 *
++=09 *=09=3D `sizeof(fuse_in_header) + sizeof(fuse_write_in)`
++=09 *
++=09 * which is the absolute minimum any sane filesystem should be using
++=09 * for header room.
++=09 */
++=09if (nbytes < max_t(size_t, FUSE_MIN_READ_BUFFER,
++=09=09=09   sizeof(struct fuse_in_header) + sizeof(struct fuse_write_in) +
++=09=09=09=09fc->max_write))
++=09=09return -EINVAL;
++
+  restart:
+ =09spin_lock(&fiq->waitq.lock);
+ =09err =3D -EAGAIN;
+-- 
+2.20.1
+
