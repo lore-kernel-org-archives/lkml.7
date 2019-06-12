@@ -2,46 +2,80 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E467C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAB8C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0258520866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467C5207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560339754;
+	bh=Dz6uAaYDqYj0e7XwXhyhaFSPJ/6tjvz9hNNJXh1jUOw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=a0EN/rahKSEixNWTuYCfi1DPmyfwroVwrxIeOJJHGRDPFAk83VhELG2pe10Uxb9O8
+	 f2R+fusEIjwW7Nb42CmCgisSt6Iv7NnuybcKpnbhNIPwu92W5+M/OXycnS/RynCbYa
+	 HUJ7N3LTbF9LSMNgl9KbO3rQZvZB4nrg6Wkoq35A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438373AbfFLLhd (ORCPT
+        id S2409027AbfFLLmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:37:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45522 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438329AbfFLLhd (ORCPT
+        Wed, 12 Jun 2019 07:42:33 -0400
+Received: from casper.infradead.org ([85.118.1.10]:58138 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405753AbfFLLmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:37:33 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 92630260269;
-        Wed, 12 Jun 2019 12:37:30 +0100 (BST)
-Date:   Wed, 12 Jun 2019 13:37:27 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
+        Wed, 12 Jun 2019 07:42:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=bwcoiqvF2SoNHiwEbIFT93eXz9rwnHVmrzehb7eUxsc=; b=YYw1CK+HomH1bUQdmOFtr1LLKo
+        nrI2pdZN1vJJdQLLReKvjE3gL7yk3BQbgk0EU5kvhYjFeSQ8AThy/qMchnF7lwPMA1vpKALnA4dIN
+        01Nb2u1tOwdct1BpWL4ME+XvkeFN581/KnIZSaTeDgl3AUzKZzYXIjjVgEHTueO9gr6Evdd72hqab
+        4/hL8rJUI/Got9CYd0zzpnEOojiS3ake9Qpn1JHduKs5utZTX0ePgiJB8SFrMdw0T1uFIVzH2kDhH
+        eYtn8yJ0G9qRHi5H8iMjCv5kBFLJhmIjmxjtNprdsFixXVJE7/5e07m7FbaPn+NxMb/LF/heEHWX9
+        72SZQ56g==;
+Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hb1e0-0001Dc-CP; Wed, 12 Jun 2019 11:42:20 +0000
+Date:   Wed, 12 Jun 2019 08:42:13 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v3 1/3] i3c: fix i2c and i3c scl rate by bus mode
-Message-ID: <20190612133727.48f85060@collabora.com>
-In-Reply-To: <13D59CF9CEBAF94592A12E8AE55501350AABEC91@DE02WEMBXB.internal.synopsys.com>
-References: <cover.1560261604.git.vitor.soares@synopsys.com>
-        <b39923bda3625a5c6874755ae81cdfe85fb5abef.1560261604.git.vitor.soares@synopsys.com>
-        <20190612081533.2cf9e12a@collabora.com>
-        <13D59CF9CEBAF94592A12E8AE55501350AABEC91@DE02WEMBXB.internal.synopsys.com>
-Organization: Collabora
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190612084213.4fb9e054@coco.lan>
+In-Reply-To: <20190612110039.GH32652@zn.tnic>
+References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+        <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+        <20190608090556.GA32464@zn.tnic>
+        <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+        <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+        <20190611115651.GD31772@zn.tnic>
+        <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+        <20190612034813.GA32652@zn.tnic>
+        <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+        <20190612074242.53a4cf56@coco.lan>
+        <20190612110039.GH32652@zn.tnic>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -51,162 +85,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 11:16:34 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+Em Wed, 12 Jun 2019 13:00:39 +0200
+Borislav Petkov <bp@alien8.de> escreveu:
 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Wed, Jun 12, 2019 at 07:15:33
+> On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
+> > That's said, from the admin PoV, it makes sense to have a single
+> > daemon that collect errors from all error sources and take the
+> > needed actions.  
 > 
-> > On Tue, 11 Jun 2019 16:06:43 +0200
-> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> >   
-> > > Currently the I3C framework limits SCL frequency to FM speed when
-> > > dealing with a mixed slow bus, even if all I2C devices are FM+ capable.
-> > > 
-> > > The core was also not accounting for I3C speed limitations when
-> > > operating in mixed slow mode and was erroneously using FM+ speed as the
-> > > max I2C speed when operating in mixed fast mode.
-> > > 
-> > > Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
-> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > > Cc: Boris Brezillon <bbrezillon@kernel.org>
-> > > Cc: <stable@vger.kernel.org>
-> > > Cc: <linux-kernel@vger.kernel.org>
-> > > ---
-> > > Changes in v3:
-> > >   Change dev_warn() to dev_dbg()
-> > > 
-> > > Changes in v2:
-> > >   Enhance commit message
-> > >   Add dev_warn() in case user-defined i2c rate doesn't match LVR constraint
-> > >   Add dev_warn() in case user-defined i3c rate lower than i2c rate
-> > > 
-> > >  drivers/i3c/master.c | 61 +++++++++++++++++++++++++++++++++++++++++-----------
-> > >  1 file changed, 48 insertions(+), 13 deletions(-)
-> > > 
-> > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> > > index 5f4bd52..f8e580e 100644
-> > > --- a/drivers/i3c/master.c
-> > > +++ b/drivers/i3c/master.c
-> > > @@ -91,6 +91,12 @@ void i3c_bus_normaluse_unlock(struct i3c_bus *bus)
-> > >  	up_read(&bus->lock);
-> > >  }
-> > >  
-> > > +static struct i3c_master_controller *
-> > > +i3c_bus_to_i3c_master(struct i3c_bus *i3cbus)
-> > > +{
-> > > +	return container_of(i3cbus, struct i3c_master_controller, bus);
-> > > +}
-> > > +
-> > >  static struct i3c_master_controller *dev_to_i3cmaster(struct device *dev)
-> > >  {
-> > >  	return container_of(dev, struct i3c_master_controller, dev);
-> > > @@ -565,20 +571,48 @@ static const struct device_type i3c_masterdev_type = {
-> > >  	.groups	= i3c_masterdev_groups,
-> > >  };
-> > >  
-> > > -int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode)
-> > > +int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
-> > > +		     unsigned long max_i2c_scl_rate)
-> > >  {
-> > > -	i3cbus->mode = mode;
-> > >  
-> > > -	if (!i3cbus->scl_rate.i3c)
-> > > -		i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
-> > > +	struct i3c_master_controller *master = i3c_bus_to_i3c_master(i3cbus);
-> > >  
-> > > -	if (!i3cbus->scl_rate.i2c) {
-> > > -		if (i3cbus->mode == I3C_BUS_MODE_MIXED_SLOW)
-> > > -			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
-> > > -		else
-> > > -			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
-> > > +	i3cbus->mode = mode;
-> > > +
-> > > +	switch (i3cbus->mode) {
-> > > +	case I3C_BUS_MODE_PURE:
-> > > +		if (!i3cbus->scl_rate.i3c)
-> > > +			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
-> > > +		break;
-> > > +	case I3C_BUS_MODE_MIXED_FAST:
-> > > +		if (!i3cbus->scl_rate.i3c)
-> > > +			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
-> > > +		if (!i3cbus->scl_rate.i2c)
-> > > +			i3cbus->scl_rate.i2c = max_i2c_scl_rate;
-> > > +		break;
-> > > +	case I3C_BUS_MODE_MIXED_SLOW:
-> > > +		if (!i3cbus->scl_rate.i2c)
-> > > +			i3cbus->scl_rate.i2c = max_i2c_scl_rate;
-> > > +		if (!i3cbus->scl_rate.i3c ||
-> > > +		    i3cbus->scl_rate.i3c > i3cbus->scl_rate.i2c)
-> > > +			i3cbus->scl_rate.i3c = i3cbus->scl_rate.i2c;
-> > > +		break;
-> > > +	default:
-> > > +		return -EINVAL;
-> > >  	}
-> > >  
-> > > +	if (i3cbus->scl_rate.i3c < i3cbus->scl_rate.i2c)
-> > > +		dev_dbg(&master->dev,
-> > > +			"i3c-scl-hz=%ld lower than i2c-scl-hz=%ld\n",
-> > > +			i3cbus->scl_rate.i3c, i3cbus->scl_rate.i2c);
-> > > +
-> > > +	if (i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_SCL_RATE &&
-> > > +	    i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_PLUS_SCL_RATE &&
-> > > +	    i3cbus->mode != I3C_BUS_MODE_PURE)
-> > > +		dev_dbg(&master->dev,
-> > > +			"i2c-scl-hz=%ld not defined according MIPI I3C spec\n",
-> > > +			i3cbus->scl_rate.i2c);
-> > > +  
-> > 
-> > Again, that's not what I suggested, so I'll write it down:
-> > 
-> > 	dev_dbg(&master->dev, "i2c-scl = %ld Hz i3c-scl = %ld Hz\n",
-> > 		i3cbus->scl_rate.i2c, i3cbus->scl_rate.i3c);
-> >   
-> 
-> I'm not ok with that change. The reasons are:
->   i3cbus->scl_rate.i3c < i3cbus->scl_rate.i2c is an abnormal use case. As 
-> discuss early it can be cause by a wrong DT definition or just for 
-> testing purposes.
+> Doing recovery actions in userspace is too flaky. Daemon can get killed
+> at any point in time and there are error types where you want to do
+> recovery *before* you return to userspace.
 
-Is it buggy, and if it is, what are the symptoms? And I'm not talking
-about slow transfers here. Also, note that forcing the I2C/I3C rate
-through the DT already means you want to tweak the bus speed (either
-for debugging purposes or because slowing things down is needed to fix
-a HW bug).
+Yeah, some actions would work a lot better at Kernelspace. Yet, some
+actions would work a lot better if implemented on userspace.
 
-> 
->   i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_SCL_RATE && i3cbus->scl_rate.i2c 
-> != I3C_BUS_I2C_FM_PLUS_SCL_RATE, the MIPI I3C Spec v1.0 clearly says that 
-> all I2C devices on the bus shall have a LVR register and thus support FM 
-> or FM+ modes.
+For example, a server with multiple network interfaces may re-route
+the traffic to a backup interface if the main one has too many errors.
 
-Yet, you might want to apply a lower I2C freq, and this sounds like a
-valid case that doesn't deserve a dev_warn().
+This can easily be done on userspace.
 
-> By  definition a FM bus works at 400kHz and a FM+ bus 1MHz.
-> And for slaves, a FM device works up to 400kHz and a FM+ device works up 
-> to 1MHz respectively.
+> Yes, we do have different error reporting facilities but I still think
+> that concentrating all the error information needed in order to do
+> proper recovery action is the better approach here. And make that part
+> of the kernel so that it is robust. Userspace can still configure it and
+> so on.
 
-*up to*, that's the important thing to keep in mind. There's no problem
-driving the SCL signal at a lower freq.
+If the error reporting facilities are for the same hardware "group"
+(like the machine's memory controllers), I agree with you: it makes
+sense to have a single driver. 
 
-> 
-> Apart of that, if the I2C device support you can use a custom higher or 
-> lower rate, yet not defined according MIPI I3C spec.
+If they are for completely independent hardware then implementing
+as separate drivers would work equally well, with the advantage of
+making easier to maintain and make it generic enough to support
+different vendors using the same IP block.
 
-I'm not going to have this discussion again, sorry. I think I gave
-enough arguments to explain why having an I2C SLC rate that's slower
-than what I2C devices support is fine.
-
-> 
-> > dev_dbg() is not printed by default, so it's just fine to have a trace
-> > that prints the I3C and I2C rate unconditionally.  
-> 
-> I'm ok to change the way that user is notified and I think that is here 
-> the problem.
-> Maybe the best is to change the first dev_dbg() to dev_warn() and the 
-> second dev_info().
-
-Same here. I'm fine having a dev_warn() when the rate is higher than
-what's supported by devices present on the bus (because that case is
-buggy), but not when it's lower and still in the valid range.
+Thanks,
+Mauro
