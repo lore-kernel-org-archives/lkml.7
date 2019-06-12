@@ -2,128 +2,148 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=FSL_HELO_FAKE,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD74C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E0AC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FBB208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12F320866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=aampusa.onmicrosoft.com header.i=@aampusa.onmicrosoft.com header.b="MjnrJWbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfFLPBW (ORCPT
+        id S2437319AbfFLPCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:01:22 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41390 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfFLPBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:01:21 -0400
-Received: by mail-io1-f68.google.com with SMTP id w25so13177869ioc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 08:01:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=shuAyQ1I56gj94KbjmRqaQ587FUaZO/1wGxqCAR2L5g=;
-        b=jasr/6eNBT3Wy2jHPCQOQsFkc+rf0C3zTbErwqYuQkh1Gn06FKv94qkrmv1fUV6ixO
-         Jw3KCQjCB/vQbNW7RrN4tV7k9yeVVbtOrk1hW/eHMMxfVJokG8CYSxALkfZsuDGFB6MB
-         6J/dTIupA3tjx3ioJTaH3CuEovbEu5mxWMAzMlaJODNCvJlGQVf5MinWJt7g4077ZmCt
-         /RQjWKq+9Ollm6zQjqMAwsm9r5MRK30ngnAA0AuAsCpzwNqzK+ywYc50gjQLPGzkali3
-         zVuoQuSMoh4HF27CBEdAOP/taPqTP4x6c+5uh9zYX2kAgm07tbwPdrD5gkc991KKCF6A
-         Sixg==
-X-Gm-Message-State: APjAAAXg9AFbbFpgJgHyiiCT2vac2xlZUstd9BBdVuQdfuDGW1X3C/db
-        HhOwg1t5WoiD1zKtOkawpnThcA==
-X-Google-Smtp-Source: APXvYqxvIw+gJmjqKDyUCtIwpfzNKI1enkSa94j5cWvjhBtpZNh9a80WqyvkTu1WUeUpW3gtHtseKQ==
-X-Received: by 2002:a5e:820a:: with SMTP id l10mr33701840iom.283.1560351680686;
-        Wed, 12 Jun 2019 08:01:20 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id n7sm5939759ioo.79.2019.06.12.08.01.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 08:01:19 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 09:01:15 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "ernest.zhang" <ernest.zhang@bayhubtech.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 1/3] mmc: sdhci: sdhci-pci-o2micro: Correctly set bus
- width when tuning
-Message-ID: <20190612150115.GA27989@google.com>
-References: <20190610185354.35310-1-rrangel@chromium.org>
- <CAPDyKFppNgL_kZPV-QS6ZiJErde5ea8Nj-sQTy_vXhW9jfXhpg@mail.gmail.com>
+        Wed, 12 Jun 2019 11:02:13 -0400
+Received: from mail-eopbgr690135.outbound.protection.outlook.com ([40.107.69.135]:28719
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2407156AbfFLPCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:02:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=aampusa.onmicrosoft.com; s=selector2-aampusa-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sY91n2gfH7ELNe0tEiB3wb8cFi0Ou6TTCX3TC4csU8g=;
+ b=MjnrJWbgYaLdZOJ/0j9RBsmgiXzc7vJI8VODsHv+4b5Kl7vo7BuwcPi25BL6EVMlu1DC7e6WBoUMQif/PJ1lDnOHITWWc6ItMhB9L3JAA8ohNKQ8WtKG5UCQV9euO9T+aww3Hmqd0X1beSsCDKQHVp9US3TjxNwtedP7xPP6ZNg=
+Received: from BL0PR07MB4115.namprd07.prod.outlook.com (52.132.10.149) by
+ BL0PR07MB5555.namprd07.prod.outlook.com (20.177.242.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Wed, 12 Jun 2019 15:02:06 +0000
+Received: from BL0PR07MB4115.namprd07.prod.outlook.com
+ ([fe80::f064:5129:63c6:d3e]) by BL0PR07MB4115.namprd07.prod.outlook.com
+ ([fe80::f064:5129:63c6:d3e%6]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
+ 15:02:06 +0000
+From:   Ken Sloat <KSloat@aampglobal.com>
+To:     "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>
+CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Ken Sloat <KSloat@aampglobal.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable watchdog
+ on system suspend
+Thread-Topic: [PATCH v1 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
+ watchdog on system suspend
+Thread-Index: AQHVIS/MMKNdMTqzC02O6HgdHPA8iA==
+Date:   Wed, 12 Jun 2019 15:02:05 +0000
+Message-ID: <20190612150154.16778-1-ksloat@aampglobal.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [100.3.71.115]
+x-clientproxiedby: BN6PR11CA0065.namprd11.prod.outlook.com
+ (2603:10b6:404:f7::27) To BL0PR07MB4115.namprd07.prod.outlook.com
+ (2603:10b6:207:4c::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=KSloat@aampglobal.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 74876760-2732-4621-1172-08d6ef46eedb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR07MB5555;
+x-ms-traffictypediagnostic: BL0PR07MB5555:
+x-microsoft-antispam-prvs: <BL0PR07MB55551D75AC67AD69AECE387FADEC0@BL0PR07MB5555.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(136003)(366004)(346002)(396003)(376002)(189003)(199004)(2616005)(50226002)(80792005)(25786009)(73956011)(6916009)(186003)(86362001)(6506007)(486006)(15650500001)(478600001)(54906003)(476003)(386003)(4326008)(53936002)(256004)(102836004)(26005)(1076003)(66946007)(66476007)(66556008)(64756008)(66446008)(14444005)(5660300002)(72206003)(8676002)(2351001)(6436002)(6512007)(68736007)(52116002)(66066001)(3846002)(36756003)(99286004)(316002)(305945005)(8936002)(2906002)(7736002)(71200400001)(5640700003)(14454004)(6486002)(81166006)(2501003)(71190400001)(81156014)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR07MB5555;H:BL0PR07MB4115.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: aampglobal.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3aG4yUbVaHbPcLxmuKXLGisxqILGlaVSpGI3cHHHE6phpkoCF8XAQrc0YUffq6/OLusB/IvbC4Ytip9BK2EFsEVkhxMdhd3ZGxz661xs+dzUS/uxk6k6Dc3xTOnpXeeIlbYr4Z6wexxYratFYuHIrggd2W6tHZ3gDcwexyabWJ3FVnPhVaz/x0FgkSYY73Yup1xE0ncs3fm8UjN132dypByDgGech3g7zHFdadZ0fGfE/v/xGjeoAfSXSYEZQUb34m3PC1FQUEsqiIudskfSiztGKWyTteGpMkB8MCrrDcM37yyJ8LyUBIQljRWuEgV3PWZVHdwn7TaVMrV89cNUGfdokjKaOn+Zds0xSBHq+yJ5rB4hpqFYMySxZJkHK22BS4jgqzeGtqKj8Gh2nru1frJjiGQgnp/cuKDP/pzsgvQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFppNgL_kZPV-QS6ZiJErde5ea8Nj-sQTy_vXhW9jfXhpg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: aampglobal.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74876760-2732-4621-1172-08d6ef46eedb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 15:02:06.2951
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e20e3a66-8b9e-46e9-b859-cb654c1ec6ea
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ken.sloat@aampglobal.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5555
+X-MS-Exchange-CrossPremises-AuthAs: Internal
+X-MS-Exchange-CrossPremises-AuthMechanism: 06
+X-MS-Exchange-CrossPremises-AuthSource: BL0PR07MB4115.namprd07.prod.outlook.com
+X-MS-Exchange-CrossPremises-TransportTrafficType: Email
+X-MS-Exchange-CrossPremises-TransportTrafficSubType: 
+X-MS-Exchange-CrossPremises-SCL: 1
+X-MS-Exchange-CrossPremises-mapi-admin-submission: 
+X-MS-Exchange-CrossPremises-messagesource: StoreDriver
+X-MS-Exchange-CrossPremises-BCC: 
+X-MS-Exchange-CrossPremises-originalclientipaddress: 100.3.71.115
+X-MS-Exchange-CrossPremises-transporttraffictype: Email
+X-MS-Exchange-CrossPremises-transporttrafficsubtype: 
+X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
+X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
+X-OrganizationHeadersPreserved: BL0PR07MB5555.namprd07.prod.outlook.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 03:36:25PM +0200, Ulf Hansson wrote:
-> On Mon, 10 Jun 2019 at 20:54, Raul E Rangel <rrangel@chromium.org> wrote:
-> >
-> > sdhci_send_tuning uses mmc->ios.bus_width to determine the block size.
-> > Without this patch the block size would be set incorrectly when the
-> > bus_width == 8 which results in tuning failing.
-> >
-> > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> > ---
-> >
-> >  drivers/mmc/host/sdhci-pci-o2micro.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> > index b29bf4e7dcb48..dd21315922c87 100644
-> > --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> > +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> > @@ -115,6 +115,7 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> >          */
-> >         if (mmc->ios.bus_width == MMC_BUS_WIDTH_8) {
-> >                 current_bus_width = mmc->ios.bus_width;
-> > +               mmc->ios.bus_width = MMC_BUS_WIDTH_4;
-> 
-> This looks wrong.
-> 
-> mmc->ios.bus_width is not supposed to be updated by a host driver, but
-I guess I left this part out: The O2Micro controller only supports
-tuning at 4-bits. So the host driver needs to change the bus width while
-tuning and then set it back when done. Ideally I would have used
-`mmc_set_bus_width()`, but that is a core only function.
-
-If `sdhci_send_tuning()` didn't rely on mmc->ios.bus_width to determine
-the bus width, but instead read the HOST_CONTROL register then this
-patch wouldn't be needed.
-> rather the value should only be read.
-> 
-> >                 sdhci_set_bus_width(host, MMC_BUS_WIDTH_4);
-> >         }
-> >
-> > @@ -126,8 +127,10 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> >
-> >         sdhci_end_tuning(host);
-> >
-> > -       if (current_bus_width == MMC_BUS_WIDTH_8)
-> > +       if (current_bus_width == MMC_BUS_WIDTH_8) {
-> > +               mmc->ios.bus_width = MMC_BUS_WIDTH_8;
-> 
-> Ditto.
-> 
-> >                 sdhci_set_bus_width(host, current_bus_width);
-> > +       }
-> >
-> >         host->flags &= ~SDHCI_HS400_TUNING;
-> >         return 0;
-> > --
-> > 2.22.0.rc2.383.gf4fbbf30c2-goog
-> >
-> 
-> Kind regards
-> Uffe
-Thanks for the review!
+RnJvbTogS2VuIFNsb2F0IDxrc2xvYXRAYWFtcGdsb2JhbC5jb20+DQoNCkN1cnJlbnRseSwgdGhl
+IGF0bWVsLXNhbWE1ZDQtd2R0IGNvbnRpbnVlcyB0byBydW4gYWZ0ZXIgc3lzdGVtIHN1c3BlbmQu
+DQpVbmxlc3MgdGhlIHN5c3RlbSByZXN1bWVzIHdpdGhpbiB0aGUgd2F0Y2hkb2cgdGltZW91dCBw
+ZXJpb2Qgc28gdGhlDQp1c2Vyc3BhY2UgY2FuIGtpY2sgaXQsIHRoZSBzeXN0ZW0gd2lsbCBiZSBy
+ZXNldC4gVGhpcyBjaGFuZ2UgZGlzYWJsZXMNCnRoZSB3YXRjaGRvZyBvbiBzdXNwZW5kIGlmIGl0
+IGlzIGFjdGl2ZSBhbmQgcmUtZW5hYmxlcyBvbiByZXN1bWUuIFRoZXNlDQphY3Rpb25zIG9jY3Vy
+IGR1cmluZyB0aGUgbGF0ZSBhbmQgZWFybHkgcGhhc2VzIG9mIHN1c3BlbmQgYW5kIHJlc3VtZQ0K
+cmVzcGVjdGl2ZWx5IHRvIG1pbmltaXplIGNoYW5jZXMgd2hlcmUgYSBsb2NrIGNvdWxkIG9jY3Vy
+IHdoaWxlIHRoZQ0Kd2F0Y2hkb2cgaXMgZGlzYWJsZWQuDQoNClNpZ25lZC1vZmYtYnk6IEtlbiBT
+bG9hdCA8a3Nsb2F0QGFhbXBnbG9iYWwuY29tPg0KLS0tDQogZHJpdmVycy93YXRjaGRvZy9zYW1h
+NWQ0X3dkdC5jIHwgMzEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQ0KIDEgZmlsZSBj
+aGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy93YXRjaGRvZy9zYW1hNWQ0X3dkdC5jIGIvZHJpdmVycy93YXRjaGRvZy9zYW1hNWQ0
+X3dkdC5jDQppbmRleCAxMTE2OTUyMjNhYWUuLjg0ZWI0ZGIyMzk5MyAxMDA2NDQNCi0tLSBhL2Ry
+aXZlcnMvd2F0Y2hkb2cvc2FtYTVkNF93ZHQuYw0KKysrIGIvZHJpdmVycy93YXRjaGRvZy9zYW1h
+NWQ0X3dkdC5jDQpAQCAtMjgwLDYgKzI4MCwxOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rl
+dmljZV9pZCBzYW1hNWQ0X3dkdF9vZl9tYXRjaFtdID0gew0KIE1PRFVMRV9ERVZJQ0VfVEFCTEUo
+b2YsIHNhbWE1ZDRfd2R0X29mX21hdGNoKTsNCiANCiAjaWZkZWYgQ09ORklHX1BNX1NMRUVQDQor
+c3RhdGljIGludCBzYW1hNWQ0X3dkdF9zdXNwZW5kX2xhdGUoc3RydWN0IGRldmljZSAqZGV2KQ0K
+K3sNCisJc3RydWN0IHNhbWE1ZDRfd2R0ICp3ZHQ7DQorDQorCXdkdCA9IGRldl9nZXRfZHJ2ZGF0
+YShkZXYpOw0KKw0KKwlpZiAod2F0Y2hkb2dfYWN0aXZlKCZ3ZHQtPndkZCkpDQorCQlzYW1hNWQ0
+X3dkdF9zdG9wKCZ3ZHQtPndkZCk7DQorDQorCXJldHVybiAwOw0KK30NCisNCiBzdGF0aWMgaW50
+IHNhbWE1ZDRfd2R0X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogew0KIAlzdHJ1Y3Qgc2Ft
+YTVkNF93ZHQgKndkdCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KQEAgLTI5MywxMCArMzA1LDI1
+IEBAIHN0YXRpYyBpbnQgc2FtYTVkNF93ZHRfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCiAN
+CiAJcmV0dXJuIDA7DQogfQ0KKw0KK3N0YXRpYyBpbnQgc2FtYTVkNF93ZHRfcmVzdW1lX2Vhcmx5
+KHN0cnVjdCBkZXZpY2UgKmRldikNCit7DQorCXN0cnVjdCBzYW1hNWQ0X3dkdCAqd2R0Ow0KKw0K
+Kwl3ZHQgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCisNCisJaWYgKHdhdGNoZG9nX2FjdGl2ZSgm
+d2R0LT53ZGQpKQ0KKwkJc2FtYTVkNF93ZHRfc3RhcnQoJndkdC0+d2RkKTsNCisNCisJcmV0dXJu
+IDA7DQorfQ0KICNlbmRpZg0KIA0KLXN0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhzYW1hNWQ0X3dk
+dF9wbV9vcHMsIE5VTEwsDQotCQkJIHNhbWE1ZDRfd2R0X3Jlc3VtZSk7DQorc3RhdGljIGNvbnN0
+IHN0cnVjdCBkZXZfcG1fb3BzIHNhbWE1ZDRfd2R0X3BtX29wcyA9IHsNCisJU0VUX1NZU1RFTV9T
+TEVFUF9QTV9PUFMoTlVMTCwgc2FtYTVkNF93ZHRfcmVzdW1lKQ0KKwlTRVRfTEFURV9TWVNURU1f
+U0xFRVBfUE1fT1BTKHNhbWE1ZDRfd2R0X3N1c3BlbmRfbGF0ZSwNCisJCQlzYW1hNWQ0X3dkdF9y
+ZXN1bWVfZWFybHkpDQorfTsNCiANCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBzYW1h
+NWQ0X3dkdF9kcml2ZXIgPSB7DQogCS5wcm9iZQkJPSBzYW1hNWQ0X3dkdF9wcm9iZSwNCi0tIA0K
+Mi4xNy4xDQoNCg==
