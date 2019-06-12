@@ -2,99 +2,125 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963DFC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0799EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCEB20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB60A20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407479AbfFLDdR (ORCPT
+        id S2407613AbfFLDei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:33:17 -0400
-Received: from gate.crashing.org ([63.228.1.57]:59994 "EHLO gate.crashing.org"
+        Tue, 11 Jun 2019 23:34:38 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52528 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404347AbfFLDdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:33:17 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5C3WnMD029931;
-        Tue, 11 Jun 2019 22:32:50 -0500
-Message-ID: <9fc8153bf08d1a5fd166d0cb38585094bffa060b.camel@kernel.crashing.org>
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 12 Jun 2019 13:32:49 +1000
-In-Reply-To: <7dcf54a9-a7aa-3a4c-8e2d-556be633d6e0@lwfinger.net>
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
-         <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
-         <20190607172902.GA8183@lst.de>
-         <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
-         <20190610081825.GA16534@lst.de>
-         <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
-         <20190611060521.GA19512@lst.de>
-         <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
-         <0b257651bb7ac4a6f0a8dce5470120b7701720b9.camel@kernel.crashing.org>
-         <7dcf54a9-a7aa-3a4c-8e2d-556be633d6e0@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S2404347AbfFLDeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 23:34:37 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A77731A0C2D;
+        Wed, 12 Jun 2019 05:34:35 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 26B1E1A0C1D;
+        Wed, 12 Jun 2019 05:34:31 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4B33F402CA;
+        Wed, 12 Jun 2019 11:34:25 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, leonard.crestez@nxp.com,
+        viresh.kumar@linaro.org, abel.vesa@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] soc: imx8: Fix potential kernel dump in error path
+Date:   Wed, 12 Jun 2019 11:36:19 +0800
+Message-Id: <20190612033620.3556-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 20:52 -0500, Larry Finger wrote:
-> On 6/11/19 5:46 PM, Benjamin Herrenschmidt wrote:
-> > On Tue, 2019-06-11 at 17:20 -0500, Larry Finger wrote:
-> > > b43-pci-bridge 0001:11:00.0: dma_direct_supported: failed (mask =
-> > > 0x3fffffff,
-> > > min_mask = 0x5ffff000/0x5ffff000, dma bits = 0x1f
-> > 
-> > Ugh ? A mask with holes in it ? That's very wrong... That min_mask is
-> > bogus.
-> 
-> I agree, but that is not likely serious as most systems will have enough memory 
-> that the max_pfn term will be much larger than the initial min_mask, and 
-> min_mask will be unchanged by the min function. 
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Well no... it's too much memory that is the problem. If min_mask is
-bogus though it will cause problem later too, so one should look into
-it.
+When SoC's revision value is 0, SoC driver will print out
+"unknown" in sysfs's revision node, this "unknown" is a
+static string which can NOT be freed, this will caused below
+kernel dump in later error path which calls kfree:
 
-> In addition, min_mask is not 
-> used beyond this routine, and then only to decide if direct dma is supported. 
-> The following patch generates masks with no holes, but I cannot see that it is 
-> needed.
+kernel BUG at mm/slub.c:3942!
+Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc4-next-20190611-00023-g705146c-dirty #2197
+Hardware name: NXP i.MX8MQ EVK (DT)
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : kfree+0x170/0x1b0
+lr : imx8_soc_init+0xc0/0xe4
+sp : ffff00001003bd10
+x29: ffff00001003bd10 x28: ffff00001121e0a0
+x27: ffff000011482000 x26: ffff00001117068c
+x25: ffff00001121e100 x24: ffff000011482000
+x23: ffff000010fe2b58 x22: ffff0000111b9ab0
+x21: ffff8000bd9dfba0 x20: ffff0000111b9b70
+x19: ffff7e000043f880 x18: 0000000000001000
+x17: ffff000010d05fa0 x16: ffff0000122e0000
+x15: 0140000000000000 x14: 0000000030360000
+x13: ffff8000b94b5bb0 x12: 0000000000000038
+x11: ffffffffffffffff x10: ffffffffffffffff
+x9 : 0000000000000003 x8 : ffff8000b9488147
+x7 : ffff00001003bc00 x6 : 0000000000000000
+x5 : 0000000000000003 x4 : 0000000000000003
+x3 : 0000000000000003 x2 : b8793acd604edf00
+x1 : ffff7e000043f880 x0 : ffff7e000043f888
+Call trace:
+ kfree+0x170/0x1b0
+ imx8_soc_init+0xc0/0xe4
+ do_one_initcall+0x58/0x1b8
+ kernel_init_freeable+0x1cc/0x288
+ kernel_init+0x10/0x100
+ ret_from_fork+0x10/0x18
 
-The right fix is to round up max_pfn to a power of 2, something like
+This patch fixes this potential kernel dump when a chip's
+revision is "unknown", it is done by always printing out
+the revision value.
 
-min_mask = min_t(u64, min_mask, (roundup_pow_of_two(max_pfn - 1)) <<
-		PAGE_SHIFT) 
+Fixes: a7e26f356ca1 ("soc: imx: Add generic i.MX8 SoC driver")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/soc/imx/soc-imx8.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 2c2772e9702a..e3edd4f29e80 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -384,7 +384,8 @@ int dma_direct_supported(struct device *dev, u64 mask)
->          else
->                  min_mask = DMA_BIT_MASK(32);
-> 
-> -       min_mask = min_t(u64, min_mask, (max_pfn - 1) << PAGE_SHIFT);
-> +       min_mask = min_t(u64, min_mask, ((max_pfn - 1) << PAGE_SHIFT) |
-> +                                        DMA_BIT_MASK(PAGE_SHIFT));
-> 
->          /*
->           * This check needs to be against the actual bit mask value, so
-> 
-> 
-> Larry
+diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
+index 02309a2..86b925a 100644
+--- a/drivers/soc/imx/soc-imx8.c
++++ b/drivers/soc/imx/soc-imx8.c
+@@ -96,11 +96,6 @@ static const struct of_device_id imx8_soc_match[] = {
+ 	{ }
+ };
+ 
+-#define imx8_revision(soc_rev) \
+-	soc_rev ? \
+-	kasprintf(GFP_KERNEL, "%d.%d", (soc_rev >> 4) & 0xf,  soc_rev & 0xf) : \
+-	"unknown"
+-
+ static int __init imx8_soc_init(void)
+ {
+ 	struct soc_device_attribute *soc_dev_attr;
+@@ -135,7 +130,10 @@ static int __init imx8_soc_init(void)
+ 			soc_rev = data->soc_revision();
+ 	}
+ 
+-	soc_dev_attr->revision = imx8_revision(soc_rev);
++	soc_dev_attr->revision = kasprintf(GFP_KERNEL,
++					   "%d.%d",
++					   (soc_rev >> 4) & 0xf,
++					   soc_rev & 0xf);
+ 	if (!soc_dev_attr->revision) {
+ 		ret = -ENOMEM;
+ 		goto free_soc;
+-- 
+2.7.4
 
