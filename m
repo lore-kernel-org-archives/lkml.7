@@ -2,136 +2,105 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02198C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE507C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C3C2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A74A2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FskF3yeL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wONe3ABj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391899AbfFLDRu (ORCPT
+        id S2391947AbfFLDTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:17:50 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34216 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388207AbfFLDRt (ORCPT
+        Tue, 11 Jun 2019 23:19:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37702 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391176AbfFLDTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:17:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=IpLE7ds2K7OtQWpRAGotTZF/PZyEILhWbTrpge7p0cg=; b=FskF3yeL0/79r17kY13jKRiXqy
-        p61RiQCqPCuaV6wK9aOriMS+o6syY3+q3GH7ogGSRoDe/+XfIq7c3mE89pCRdTuPboH6VRQt+SStN
-        lqosfsN/knVsUPDu+htIe6f1BQyQUMMbTAHsbnhRwyfN1JGJR+U+4iTddXmRHS9eg0efGrhB8dqAc
-        zpbSCTiIS9/Zr9qngbf4DcdJs29NelKYWZh9P4OkM8JNtcY1hWacSQELN+riB9wmgX7oHFiAPeVK6
-        sxzet/L+MDj7qbMmQEjKczKQzlF02y9qoc9JSnRxJZliY/e3sLAx/rSp7MFgPmpuGpsNSOrSHcseo
-        CL/3eMUw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hatlL-0002pl-M5; Wed, 12 Jun 2019 03:17:24 +0000
-Subject: Re: linux-next 20190611: objtool warning
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>
-References: <a9ceb8f8-f2fd-e57d-3428-aaf50e011a43@infradead.org>
- <20190612025227.lxumqqtqao6iqms3@treble>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <18e6ef70-2fa3-3f70-0fcd-3eadef2cfceb@infradead.org>
-Date:   Tue, 11 Jun 2019 20:17:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 11 Jun 2019 23:19:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 20so8106225pgr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 20:19:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ate72NuJmVUI6S2BuZQCuvpskZE3U2N/nMIH2X9inqs=;
+        b=wONe3ABjpXyvX++muN+ZuuQPCqABZNEGqIqxYQ/Kt3+uMGojPLxRSIvfb/BY+fdwuG
+         KekIHVfMMPWEt2iVGpYLRtMDFlvWdWZQ5k1LeLMG6u/GZrzIezH7XP6vIhGcsBW+ii0L
+         gOnSHP9g6CBDUTxhU2oTLwRXVDlXsKmhEbPEYheQAqd7KVigbRcszf2ZesnwW85PE1dO
+         iyU20ncmowoBO3l8SVj5VyrMj5LmSNEaWqBtwhga5wxb4uKNqWI9n7cGRT4AetHicKKc
+         Aw/YlYfKfl5ziY0qdFhe1J71Org6PQArMHzDhgPN6gLNsPPoPq3bsND8qGL8LNA0flRp
+         9Seg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ate72NuJmVUI6S2BuZQCuvpskZE3U2N/nMIH2X9inqs=;
+        b=tNiJuzK2D9r7+0uWuMwNJtO6bp6qdHzU7A9SBa9vKo4V+pcEkliTgFXzxe6lgjTBxj
+         lOrDwBGkTXZc6d/VRr+Ep270CoI2j90CkcrwXIufSMVPZbDnaReWOwtq+ZjM2u9u2D1G
+         HGQvmCtInQDnWxifv89HzFPLnH2XLpYtWNJOJswmDUeF7Vv2FXUY/qGJ6gdIC1jjGrZl
+         0/FtDuarnURPWuJYdISpdPU++7Fv5KAhlyW3ANxs3M0aQV0SRIoVox9dImOdS2lcJrru
+         fSD9x/qMWxgS7C19OZ/MxX9GmHwHKlUslClh+Um+gsva3R3WJyT8ANlfrep2Dy8oxE+t
+         bdUw==
+X-Gm-Message-State: APjAAAUdSmDLTx9C2IhbHTymQPcmCJJ5lQx9hvxpgrC1krt6ZZKxEEL6
+        H+jUb+ShH+4v+YfXAO0igkgqxw==
+X-Google-Smtp-Source: APXvYqzHGgDNU6Vo6rIo/Aq12B4nqhPE19OxuX8C/VoLATKTH5QzhJS9otDk/sgsXlZcHlrej3ZyIg==
+X-Received: by 2002:a17:90a:22c6:: with SMTP id s64mr30744352pjc.5.1560309571012;
+        Tue, 11 Jun 2019 20:19:31 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id d9sm14160236pgj.34.2019.06.11.20.19.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 20:19:30 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 08:49:27 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
+Message-ID: <20190612031927.mgr62xiirjqrzkeu@vireshk-i7>
+References: <20190514005033.15593-1-robh@kernel.org>
+ <CACRpkdZabT3_vjkv0PR+GLC0ZXWzpMxfwJU6O9Y+omKJ=6zCaA@mail.gmail.com>
+ <20190527064146.5rlm2audk6uojdxn@vireshk-i7>
+ <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612025227.lxumqqtqao6iqms3@treble>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK3iS+Tv+0HYMApL6C6WQeVsf9hXgvpLpuR+dbDuygQdg@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 7:52 PM, Josh Poimboeuf wrote:
-> On Tue, Jun 11, 2019 at 06:59:22PM -0700, Randy Dunlap wrote:
->> Hi,
->>
->> New warning AFAIK:
->>
->> drivers/hwmon/smsc47m1.o: warning: objtool: fan_div_store()+0x11f: sibling call from callable instruction with modified stack frame
+On 11-06-19, 13:54, Rob Herring wrote:
+> On Mon, May 27, 2019 at 12:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > I checked SPEAr and it is missing interrupt-controller at few places and clocks
+> > everywhere. Missing clocks should be fine as SPEAr doesn't get clocks from DT.
 > 
-> I'm getting a different warning:
-> 
->   drivers/hwmon/smsc47m1.o: warning: objtool: fan_div_store()+0xb6: can't find jump dest instruction at .text+0x93a
-> 
-> But I bet the root cause is the same.
-> 
-> This fixes it for me:
-> 
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
-> Subject: [PATCH] hwmon/smsc47m1: Fix objtool warning caused by undefined behavior
-> 
-> Objtool is reporting the following warning:
-> 
->   drivers/hwmon/smsc47m1.o: warning: objtool: fan_div_store()+0xb6: can't find jump dest instruction at .text+0x93a
-> 
-> It's apparently caused by
-> 
->   2cf6745e69d1 ("hwmon: (smsc47m1) fix (suspicious) outside array bounds warnings")
-> 
-> which is somehow convincing GCC to add a jump past the end of the
-> function:
-> 
->   793:   45 85 ed                test   %r13d,%r13d
->   796:   0f 88 9e 01 00 00       js     93a <fan_div_store+0x25a>
->   ...
->   930:   e9 5e fe ff ff          jmpq   793 <fan_div_store+0xb3>
->   935:   e8 00 00 00 00          callq  93a <fan_div_store+0x25a>
-> 			936: R_X86_64_PLT32     __stack_chk_fail-0x4
->   <function end>
-> 
-> I suppose this falls under the category of undefined behavior, so we
-> probably can't call it a GCC bug.  But if the value of "nr" were out of
-> range somehow then it would start executing random code.  Use a runtime
-> BUG() assertion to avoid undefined behavior.
-> 
-> Fixes: 2cf6745e69d1 ("hwmon: (smsc47m1) fix (suspicious) outside array bounds warnings")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Clocks not from DT was supposed to be a transitional thing...
 
-Yes, that works for me.  Thanks.
+Right, but by the time I left ST in 2012, mainline clock's DT support
+wasn't there and the SPEAr core team got fired soon after that. No one
+was left in ST to do the porting, but there are still people using the
+SPEAr boards and there are products in market, so we can't delete the
+platform as well.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+So, no one is going to add clock DT support now.
 
-> ---
->  drivers/hwmon/smsc47m1.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > And interrupt-controller can be just added, I don't think there would be any
+> > platform dependent side-affects ?
 > 
-> diff --git a/drivers/hwmon/smsc47m1.c b/drivers/hwmon/smsc47m1.c
-> index 6d366c9cb906..b637836b58a1 100644
-> --- a/drivers/hwmon/smsc47m1.c
-> +++ b/drivers/hwmon/smsc47m1.c
-> @@ -352,7 +352,7 @@ static ssize_t fan_div_store(struct device *dev,
->  		smsc47m1_write_value(data, SMSC47M2_REG_FANDIV3, tmp);
->  		break;
->  	default:
-> -		unreachable();
-> +		BUG();
->  	}
->  
->  	/* Preserve fan min */
-> 
+> There shouldn't be.
 
+Okay, will send a patch for that then.
 
 -- 
-~Randy
+viresh
