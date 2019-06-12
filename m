@@ -2,308 +2,123 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17123C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021ACC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2530208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3A1208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="E8ZL5CJ1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UD7GmZY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407430AbfFLAdN (ORCPT
+        id S2407458AbfFLAfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:33:13 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38906 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407288AbfFLAdM (ORCPT
+        Tue, 11 Jun 2019 20:35:11 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39493 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407288AbfFLAfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:33:12 -0400
-Received: by mail-qk1-f193.google.com with SMTP id a27so8897202qkk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 17:33:11 -0700 (PDT)
+        Tue, 11 Jun 2019 20:35:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so793991pls.6;
+        Tue, 11 Jun 2019 17:35:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=YskuotKZ1ju/Sd7KV3N/54AMIwBSytcUxbzE4Q/MEzc=;
-        b=E8ZL5CJ1jB86Z76Sd+8CzpTe74eYEDALXhnwIMZY6Xnd56E1GB6lrqrBUWEha2yzN8
-         guVjrOerJH76HRTsEz1N5dSuRYuKOSafgJISU7eFmzPHt3IPscVy/jhPeX1nI19N+Lyf
-         goD2mGaVJ8Ohl+fJs319CcZHfZVy5oYlx0uJtOqnCPVHx/7pDZFFJhAZD7ZAuUM9dJRr
-         YHewdD1aTwQBwkMuABmJ/pK4mFYktN30yTezfXwdeFNYrg0Ryb9hboTTGQtR+ph7proj
-         Ry19sXP4Y5N6U2C6KPwwfnsIy77aIFfQ0nR4jbk55GlxRhAaJwjIou8T3Lg5fb78Vybg
-         9Frw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ph86gesNnRTM7ujmiRuSEJzFcbh48v/P7EOKY+OdFyY=;
+        b=UD7GmZY8FzpfopaVwv7Q21zdCVPYfTWHzMZb9BOJpgHB5l26CfIO2OuBfGjjrLkN3J
+         QsIYQ7jMZKuLuCSdRB13J78M7OvygaLDg9VciXMarUGgpDsiaHSdFn7md8E2qz8Tzqvv
+         I7myqDGnk/KAy0d/fZ6GSTIUGEbeYZ3THvuOJhN7HUhKXachfNyfN7/Kd/utKT6qqyBh
+         4YZN/lMsTQPXrGCsKu4j57kGZVzoA1sg5ZPykaxpziSP9r7nFEM6A7wseq5EDEaLY4cy
+         E7g1GugR03Y8NhGHxo4JQSfPmFlmNKzRZH0zn6zSUVKF6LfVkBtVTKlgzTtHRIElO26P
+         aPHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=YskuotKZ1ju/Sd7KV3N/54AMIwBSytcUxbzE4Q/MEzc=;
-        b=AjWSnp6RO8a6SPd1e2thgNLqDguFxvZXsnMfNZIU4S8ELFM8rKaimQRDsEsBl0pUgf
-         AT0GhN9EuHILdUexVb2mH6pga7HUPVpv26my1id3Vrbp5clqxFDRP854VzEq59+EJNNS
-         lrytE51T2K18EWT0KRS/iyndExlWeElDKvEOattMOmUQlEHhGaPE1hiBJIrbFphvP1Wm
-         +qnnP1sdHyNJv6jxy8s0t58a5Uz9lAOHbeMZ/dU15nmziwDRWeZBGZay/NRanDivd1M8
-         2HIxK4JffHE6qHJM0V/fjiov/tsh96VO9bmxEBXzTgy4ucCLlrf2DozKP98dkPtir9aQ
-         i0Vw==
-X-Gm-Message-State: APjAAAUVz06akViTq+z0U9BG1o++DPclfDVu0g8W4Bes1hTx8Akm6xOn
-        Rh0HhDU/mRAnKCFNMu14x3qi6A==
-X-Google-Smtp-Source: APXvYqwwj3fguJ4Uffl3GUJ338wFJOm4Bz3nYTMAQMgiP4kzMRCE6ZQKa9KLV004WVsIo67a611dxw==
-X-Received: by 2002:a37:795:: with SMTP id 143mr63565712qkh.140.1560299591236;
-        Tue, 11 Jun 2019 17:33:11 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id g54sm1672708qtc.61.2019.06.11.17.33.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ph86gesNnRTM7ujmiRuSEJzFcbh48v/P7EOKY+OdFyY=;
+        b=uXRuLl+pDmu3wYqX/MNWSMQO4f/tTWl5nHfLsxzlDaKn9P+BMYfa6L941aL+juWvbi
+         tuhekcEo/N7GbD7YdXMwZw+SIG9Loi9e+FO8WZCQI5MeO95+SrKe3eS0aIo/WRUF4gxu
+         +KSa5pjg8mAgd7LohPrJukqIpp+j0RXPYB8OqNVBLXTnIdpn2CcvpAkvm/GIU4ZoaaX+
+         BNJm/iGZlJoi956EQFmHh0LlCmuV3pxOc9xT1Gt1Lj8f11hg9v8v2rP9ISsezm+oB2hQ
+         F4bGQt6DIIkRvil++bkuNBSnKpK919UTg5LYWL9UTwDnkjIGG3j/A47zIKrz+zcTZrc5
+         Yc8Q==
+X-Gm-Message-State: APjAAAWKAnatrnD6sTenAc0W9Qas0AMF/iM1SwSe+UFLqrQPw0JX+KBl
+        n2p6ep6ZfOdv7WmF4Xmhf48=
+X-Google-Smtp-Source: APXvYqxZm72YQBMzfu3JeQ/pQSonMtBZam0wR61ec/mANR6WzsknWTt1c/ro/GU7bEt9Ot8Czc6tpw==
+X-Received: by 2002:a17:902:24c:: with SMTP id 70mr78198009plc.2.1560299710166;
+        Tue, 11 Jun 2019 17:35:10 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id a3sm227817pje.3.2019.06.11.17.35.08
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 17:33:10 -0700 (PDT)
-Message-ID: <8dfac9c5ff144ce2a3d221ea52d972ebdbd9910f.camel@ndufresne.ca>
-Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Pawel Osciak <posciak@chromium.org>
-Date:   Tue, 11 Jun 2019 20:33:08 -0400
-In-Reply-To: <41bac425-65bf-2cd7-ef70-e705f7b1717d@xs4all.nl>
-References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
-         <e40174b9a3d813389dc9529598541e4849067387.camel@ndufresne.ca>
-         <41bac425-65bf-2cd7-ef70-e705f7b1717d@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Tue, 11 Jun 2019 17:35:09 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 17:35:07 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     benjamin.tissoires@redhat.com, jikos@kernel.org,
+        bjorn.andersson@linaro.org, lee.jones@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org,
+        david.brown@linaro.org, hdegoede@redhat.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
+Message-ID: <20190612003507.GG143729@dtor-ws>
+References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
+ <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606161322.47192-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mardi 11 juin 2019 à 10:35 +0200, Hans Verkuil a écrit :
-> On 6/10/19 5:57 PM, Nicolas Dufresne wrote:
-> > Le lundi 03 juin 2019 à 13:28 +0200, Hans Verkuil a écrit :
-> > > Since Thomasz was very busy with other things, I've taken over this
-> > > patch series. This v4 includes his draft changes and additional changes
-> > > from me.
-> > > 
-> > > This series attempts to add the documentation of what was discussed
-> > > during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
-> > > later Embedded Linux Conference Europe 2014 in Düsseldorf and then
-> > > eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
-> > > video team (but mostly in a cosmetic way or making the document more
-> > > precise), during the several years of Chrome OS using the APIs in
-> > > production.
-> > > 
-> > > Note that most, if not all, of the API is already implemented in
-> > > existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
-> > > this series is just to formalize what we already have.
-> > > 
-> > > Thanks everyone for the huge amount of useful comments to previous
-> > > versions of this series. Much of the credits should go to Pawel Osciak
-> > > too, for writing most of the original text of the initial RFC.
-> > > 
-> > > This v4 incorporates all known comments (let me know if I missed
-> > > something!) and should be complete for the decoder.
-> > > 
-> > > For the encoder there are two remaining TODOs for the API:
-> > > 
-> > > 1) Setting the frame rate so bitrate control can make sense, since
-> > >    they need to know this information.
-> > > 
-> > >    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
-> > >    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
-> > >    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
-> > >    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
-> > >    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
-> > 
-> > Is ENUM_FRAMEINTERVALS really required ? This will be a hint to the
-> > encoder, so that the encoder round to it's internal precision does not
-> > seem very important.
+On Thu, Jun 06, 2019 at 09:13:22AM -0700, Jeffrey Hugo wrote:
+> There needs to be coordination between hid-quirks and the elan_i2c driver
+> about which devices are handled by what drivers.  Currently, both use
+> whitelists, which results in valid devices being unhandled by default,
+> when they should not be rejected by hid-quirks.  This is quickly becoming
+> an issue.
 > 
-> I don't like this proposal. Especially the use of S_PARM (I *hate* that ioctl).
-> I think the frame period should be a control with a min/max range, like
-> any other control.
+> Since elan_i2c has a maintained whitelist of what devices it will handle,
+> use that to implement a blacklist in hid-quirks so that only the devices
+> that need to be handled by elan_i2c get rejected by hid-quirks, and
+> everything else is handled by default.  The downside is the whitelist and
+> blacklist need to be kept in sync.
 > 
-> FRAMEINTERVALS really refers to the rate at which frames arrive when
-> capturing, and that's not quite what is happening in an encoder.
+> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/hid/hid-quirks.c | 78 ++++++++++++++++++++++++++++++++++------
+>  1 file changed, 67 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> index e5ca6fe2ca57..edebd0700e3d 100644
+> --- a/drivers/hid/hid-quirks.c
+> +++ b/drivers/hid/hid-quirks.c
+> @@ -912,8 +912,66 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+>  	{ }
+>  };
+>  
+> +/* 
+> + * List of device names that elan_i2c is handling and HID should ignore.  Must
+> + * be kept in sync with elan_i2c
+> + */
+> +static const char *hid_elan_i2c_ignore[] = {
 
-Only side is that this is exactly what happens when doing live encoding
-(to site GStreamer):
+If this is a copy of elan whitelist, then, if we do not want to bother
+with sharing it in object form (as a elan-i2c-ids module), can we at
+least move it into include/linux/input/elan-i2c-ids.h and consume from
+hid-quirks.c?
 
-   v4l2src ! v4l2encoder ! ...
+Thanks.
 
-The frameinterval is exactly what the V4L2 capture device reports.
-Though, a lot of encoder used for RTP transcoding takes a per frame
-duration as input, as RTP does not always expose the framerate (aka
-frame duration). Or the other way around is that the frameinterval is
-calculates and updated periodically (S_PARM do have this advantage that
-you are suppose to be able to change that while streaming, no idea if
-that works in practice). I do not like the ioctl() though. This could
-have been a control and could be called framerate to match what the
-rest of the world uses.
-
-> 
-> For now I want to concentrate on the decoder spec, and I'll come back to
-> this later.
-
-Ok.
-
-> 
-> > > 2) Interactions between OUTPUT and CAPTURE formats.
-> > > 
-> > >    The main problem is what to do if the capture sizeimage is too small
-> > >    for the OUTPUT resolution when streaming starts.
-> > > 
-> > >    Proposal: width and height of S_FMT(OUTPUT) are used to
-> > >    calculate a minimum sizeimage (app may request more). This is
-> > >    driver-specific.
-> > > 
-> > >    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
-> > >    for the encoder (i.e. we don't support mid-stream resolution
-> > >    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
-> > >    supported. See https://patchwork.linuxtv.org/patch/56478/ for
-> > >    the patch adding this flag.
-> > > 
-> > >    Of course, if we start to support mid-stream resolution
-> > >    changes (or other changes that require a source change event),
-> > >    then this flag should be dropped by the encoder driver and
-> > >    documentation on how to handle the source change event should
-> > >    be documented in the encoder spec. I prefer to postpone this
-> > >    until we have an encoder than can actually do mid-stream
-> > >    resolution changes.
-> > 
-> > For H264, mid-stream changes would make sense for the case we'd like
-> > the statefull encoder to emit multiple PPS at start, so then the switch
-> > would simply change the PPS index. The problem seems to be how do we
-> > expose "multiple" resolution in our interface ? As there is currently
-> > no solution to this, I would not see much use for having this supported
-> > at the moment.
-> 
-> I agree. That's why I want to postpone that part.
-> 
-> > >    If sizeimage of the OUTPUT is too small for the CAPTURE
-> > >    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
-> > >    then the second STREAMON (either CAPTURE or OUTPUT) will
-> > >    return -ENOMEM since there is not enough memory to do the
-> > >    encode.
-> > > 
-> > >    If V4L2_FMT_FLAG_FIXED_RESOLUTION is set (i.e. that should
-> > >    be the case for all current encoders), then any bitrate controls
-> > >    will be limited in range to what the current state (CAPTURE and
-> > >    OUTPUT formats and frame rate) supports.
-> 
-> Note that this flag will be inverted: V4L2_FMT_FLAG_DYN_RESOLUTION.
-> So this text is out of date in that regard.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > > Comments regarding these two encoder proposals are welcome!
-> > > 
-> > > Regards,
-> > > 
-> > > 	Hans
-> > > 
-> > > Changes since v3:
-> > > 
-> > > - Lots of stylistic fixes and fixing typos/grammar/etc.
-> > > 
-> > > Decoder:
-> > > 
-> > > - width/height for S_FMT(OUTPUT):
-> > > 
-> > >   Expects that the output width and height is always a valid
-> > >   resolution (i.e. never 0x0), and G/S/TRY_FMT and REQBUFS will use that
-> > >   instead of returning an error. Note that this resolution is a placeholder
-> > >   until the actual resolution is parsed from the stream.
-> > > 
-> > > - Dropped step 3 (Query the minimum number of buffers required for the CAPTURE
-> > >   queue via VIDIOC_G_CTRL().) in the Capture Setup section. It seems to be
-> > >   a left-over from earlier versions. The same information is also in Step 10,
-> > >   so no need to have this in two places.
-> > > 
-> > > - Added step 5 in the Capture Setup section: set COMPOSE rectangle if needed.
-> > > 
-> > > - VIDIO_DECODER_CMD: document EBUSY return while draining the queue.
-> > > 
-> > > Encoder:
-> > > 
-> > > - width/height for S_FMT(CAPTURE): The width/height for the CAPTURE format
-> > >   are marked as read-only and are based on the encoders current state such
-> > >   as the OUTPUT format.
-> > > 
-> > > - Drop TGT_COMPOSE support in the encoder: there are currently
-> > >   no encoders that can do composing/scaling.
-> > > 
-> > > - Document corner cases in the Drain sequence
-> > > 
-> > > - Document error handling.
-> > > 
-> > > - VIDIO_ENCODER_CMD: document EBUSY return while draining the queue.
-> > > 
-> > > Changes since v2:
-> > > (https://lore.kernel.org/patchwork/cover/1002474/)
-> > > Decoder:
-> > >  - Specified that the initial source change event is signaled
-> > >    regardless of whether the client-set format matches the
-> > >    stream format.
-> > >  - Dropped V4L2_CID_MIN_BUFFERS_FOR_OUTPUT since it's meaningless
-> > >    for the bitstream input buffers of decoders.
-> > >  - Explicitly stated that VIDIOC_REQBUFS is not allowed on CAPTURE
-> > >    if the stream information is not available.
-> > >  - Described decode error handling.
-> > >  - Mentioned that timestamps can be observed after a seek to
-> > >    determine whether the CAPTURE buffers originated from before
-> > >    or after the seek.
-> > >  - Explicitly stated that after a pair of V4L2_DEC_CMD_STOP and
-> > >    V4L2_DEC_CMD_START, the decoder is not reset and preserves
-> > >    all the state.
-> > > 
-> > > Encoder:
-> > >  - Specified that width and height of CAPTURE format are ignored
-> > >    and always zero.
-> > >  - Explicitly noted the common use case for the CROP target with
-> > >    macroblock-unaligned video resolutions.
-> > >  - Added a reference to Request API.
-> > >  - Dropped V4L2_CID_MIN_BUFFERS_FOR_CAPTURE since it's meaningless
-> > >    for the bitstream output buffers of encoders.
-> > >  - Explicitly stated that after a pair of V4L2_ENC_CMD_STOP and
-> > >    V4L2_ENC_CMD_START, the encoder is not reset and preserves
-> > >    all the state.
-> > > 
-> > > General:
-> > >  - Dropped format enumeration from "Initialization", since it's already
-> > >    a part of "Querying capabilities".
-> > >  - Many spelling, grammar, stylistic, etc. changes.
-> > >  - Changed the style of note blocks.
-> > >  - Rebased onto Hans' documentation cleanup series.
-> > >    (https://patchwork.kernel.org/cover/10775407/
-> > >     https://patchwork.kernel.org/patch/10776737/)
-> > >  - Moved the interfaces under the "Video Memory-To-Memory Interface"
-> > >    section.
-> > > 
-> > > For changes since v1 see the v2:
-> > > https://lore.kernel.org/patchwork/cover/1002474/
-> > > 
-> > > For changes since RFC see the v1:
-> > > https://patchwork.kernel.org/cover/10542207/
-> > > 
-> > > Tomasz Figa (2):
-> > >   media: docs-rst: Document memory-to-memory video decoder interface
-> > >   media: docs-rst: Document memory-to-memory video encoder interface
-> > > 
-> > >  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
-> > >  Documentation/media/uapi/v4l/dev-encoder.rst  |  608 +++++++++
-> > >  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    9 +-
-> > >  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |   10 +
-> > >  Documentation/media/uapi/v4l/v4l2.rst         |   12 +-
-> > >  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
-> > >  .../media/uapi/v4l/vidioc-encoder-cmd.rst     |   51 +-
-> > >  7 files changed, 1779 insertions(+), 36 deletions(-)
-> > >  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
-> > >  create mode 100644 Documentation/media/uapi/v4l/dev-encoder.rst
-> > > 
-
+-- 
+Dmitry
