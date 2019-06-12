@@ -2,114 +2,118 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34F5C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6C8C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47A12082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0152082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560352235;
+	bh=iAlfPhH3vjfdnREbF2DGNOK6HWcjZ/QZ1kmiH8Yo6JU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ga1UYFGWgC9E94+q57RnS975lT8XJyDWdlNZ7ySO1m+hct4WsAl0KC++FkpUaLTLy
+	 7j+0BjZ1w9Ah0oRwSix1NuUlHYZZneWJenBr2fzgN+nTxkLq27kQ3JuVEMMNdcjiQz
+	 3R52hSdb9erxqUo+3V/8t4bc2STZJl4DTLdXEEWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440063AbfFLPJW (ORCPT
+        id S2440030AbfFLPKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:09:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35984 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2439910AbfFLPJV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:09:21 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CF5Vpf015821
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:09:20 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t32ff450g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:09:19 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Wed, 12 Jun 2019 16:09:09 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Jun 2019 16:08:53 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CF8qKU27787328
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 15:08:52 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 214F85204E;
-        Wed, 12 Jun 2019 15:08:52 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id AFDCF52052;
-        Wed, 12 Jun 2019 15:08:51 +0000 (GMT)
-Date:   Wed, 12 Jun 2019 17:08:50 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
-References: <20190612133306.10231-1-david@redhat.com>
+        Wed, 12 Jun 2019 11:10:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439907AbfFLPKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:10:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8529C2082C;
+        Wed, 12 Jun 2019 15:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560352233;
+        bh=iAlfPhH3vjfdnREbF2DGNOK6HWcjZ/QZ1kmiH8Yo6JU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NWv/5AVhfagi241tNO0tjdnWXskJPJOEy+yWY1JtTig6WdcbsqzjUb9lg5FtDRztn
+         V53kBGKN3Ng76/W9rvHbNqWMKQRq2YytVVBuiqszSLBtzauiHovSv/PexzEF8SpI5A
+         qhxRM0VKfWRzi5xhub8C98MtxdPGxQsMp7RtDyB0=
+Date:   Wed, 12 Jun 2019 17:10:29 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, adurbin@chromium.org,
+        groeck@chromium.org, dlaurie@chromium.org
+Subject: Re: [PATCH] gsmi: Replace printk with relevant pr_<level>
+Message-ID: <20190612151029.GA21343@kroah.com>
+References: <20190612142727.GA1710@ahmlpt0706>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612133306.10231-1-david@redhat.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19061215-0008-0000-0000-000002F327F4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061215-0009-0000-0000-000022602A52
-Message-Id: <20190612150850.GA4038@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=884 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120101
+In-Reply-To: <20190612142727.GA1710@ahmlpt0706>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 03:33:02PM +0200, David Hildenbrand wrote:
-> s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
-> -ENODEV in case HW support is not available.
-> 
-> Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
-> ignores this error properly.
-> 
-> v2 -> v3:
-> - "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
-> -- Also convert pkey_clr2protkey() as requested by Harald
-> - Add r-b's (thanks!)
-> 
-> v1 -> v2:
-> - Include
-> -- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
-> -- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
-> -- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
-> 
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Harald Freudenberger <freude@linux.ibm.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> 
-> David Hildenbrand (4):
->   s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
->   s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
->   s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
->   s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
+On Wed, Jun 12, 2019 at 07:57:27PM +0530, Saiyam Doshi wrote:
+> >From 3a9cec48147b24fd9d793e0fdf20058461445646 Mon Sep 17 00:00:00 2001
+> From: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+> Date: Tue, 11 Jun 2019 19:21:50 +0530
+> Subject: [PATCH] gsmi: Replace printk with relevant pr_<level>
 
-Should I pick these up so they can go upstream via the s390 tree?
 
+Why is all of this in the changelog body?
+
+Please just use 'git send-email' if you can not use a decent email
+client.
+
+> Replace printk() with pr_* macros for logging consistency.
+> This also helps avoid checkpatch warnings.
+> 
+> Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+> ---
+>  drivers/firmware/google/gsmi.c | 59 ++++++++++++++++------------------
+>  1 file changed, 28 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
+> index edaa4e5d84ad..e4e7f04bced8 100644
+> --- a/drivers/firmware/google/gsmi.c
+> +++ b/drivers/firmware/google/gsmi.c
+> @@ -151,7 +151,7 @@ static struct gsmi_buf *gsmi_buf_alloc(void)
+>  
+>  	smibuf = kzalloc(sizeof(*smibuf), GFP_KERNEL);
+>  	if (!smibuf) {
+> -		printk(KERN_ERR "gsmi: out of memory\n");
+> +		pr_err("gsmi: out of memory\n");
+
+This message is not needed at all, checkpatch should have warned you
+about that.
+
+>  		return NULL;
+>  	}
+>  
+> @@ -159,7 +159,7 @@ static struct gsmi_buf *gsmi_buf_alloc(void)
+>  	smibuf->start = dma_pool_alloc(gsmi_dev.dma_pool, GFP_KERNEL,
+>  				       &smibuf->handle);
+>  	if (!smibuf->start) {
+> -		printk(KERN_ERR "gsmi: failed to allocate name buffer\n");
+> +		pr_err("gsmi: failed to allocate name buffer\n");
+>  		kfree(smibuf);
+>  		return NULL;
+>  	}
+> @@ -257,34 +257,33 @@ static int gsmi_exec(u8 func, u8 sub)
+>  		rc = 1;
+>  		break;
+>  	case GSMI_INVALID_PARAMETER:
+> -		printk(KERN_ERR "gsmi: exec 0x%04x: Invalid parameter\n", cmd);
+> +		pr_err("gsmi: exec 0x%04x: Invalid parameter\n", cmd);
+
+why not dev_err() for all of these?  It's a driver, you should have a
+device, use it so that the user has a chance to know what device is
+acting up.
+
+thanks,
+
+greg k-h
