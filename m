@@ -2,101 +2,101 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8FCC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C900FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1393A20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 927C42080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/GOFRJX"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="DIDleIoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfFLSET (ORCPT
+        id S1726857AbfFLSG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 14:04:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40202 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728199AbfFLSET (ORCPT
+        Wed, 12 Jun 2019 14:06:27 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36679 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbfFLSG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 14:04:19 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a21so15917549ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:04:17 -0700 (PDT)
+        Wed, 12 Jun 2019 14:06:26 -0400
+Received: by mail-qk1-f193.google.com with SMTP id g18so10996867qkl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:06:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=HA7VYYB6HYTnwOsfSZ6IJMiRwVIheU8PeAUQ4SUxsDE=;
-        b=Z/GOFRJXw0yo2NclXm9o0hxO/gUmaXJp5lNg1hcuR0tF6112X2HthCJzh8CXxy/QSX
-         Casq6IhYPWFHSOoYCLPqB5YZn+lGzUwQDR1WTAPmX/8rdQITptlPHe92KHb2/yaoL1Qt
-         OGcdLSSG0ZNjV51rjf3jHYjCGK90xs/bev2fp5W1lR0cxH4M1DMEqcSVFwkMuNOQm5xw
-         6YU/glgO1ALD0evMQ/dDqytfrdWiSyB7glDGSG68T2gHvfxZHd4tJisB95h9lQor2gZu
-         cbJMtpKGYitBwg44ruAKeGOHc2XkjHf/HsoByLHJvjodM4T3nwRt15ULmQgxdTiwyLJ3
-         C2PQ==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=700itWyKjvYiFLhP6jEPTeNmhf7t12dW5GgxWWewn2Y=;
+        b=DIDleIoBBRbSbyaPaKHTfUCkoX3V0qed/gmhgh/MpB+I7n+x7Wf4eypIwr94A3j01p
+         CFtBmztxBehhkx2xB/qty0kA44RYXzkb3W8eo3axjRSX3ri6VBAkuNuMdU035uUwHYVw
+         4VjEg40aFujRHdVN69xwSZo7QN4C/0uRdbu13unzNEt5X5pXdov+4KPeP6hWWbHpIC05
+         duGHjQ+6tOx0I8N+rfPDKQe5Y4EhqkbLQkdicV4O9/K3dZGIjTIGfueCbThEiCX+CLGr
+         3s1nf92yaFi+AsfIiXpq8R+4E6PReNn2enKx+i/CTEIH6tqqeN4F4yHUQNaTYKwkN10J
+         4LEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=HA7VYYB6HYTnwOsfSZ6IJMiRwVIheU8PeAUQ4SUxsDE=;
-        b=YX6zDitIyGbbGJW2hwaWSASsQRvidTn3UwXBlGZcb+lcWc3+Fb4K8PjLpSt7gixrkj
-         Y9mP9B/HUz9qqIBxSBsQU4t6E5taKXCW0OWq4DCXgFpfLnMxbp2Yfgj0UOpcagZn+dn/
-         KpOuwcF2/Rx94ph2MqewiJTixlb1ee7kVxiMxii+F4oYXaqVhKFO67Q6kWQGDuyXyfvk
-         akKJxGE0Bge0Bt2LKUg5VJ/ACVeTqWWCqsjw3OGGuMy5Fcu5LUV5qauZmvVIJNDQ+G/7
-         vxPrCl6UUtF7JWI0HgYwa1U2tgSZMcIWQxb66NxObQf5EybcKxfDhYAr2U/Zy/0Hz5CE
-         TaQA==
-X-Gm-Message-State: APjAAAU7LCxIxKuUEUJ8Fu9eUObp5Bacr9FGw/GmJFWk96/GxJwcmCQJ
-        oLs5sD8KBGILugZj53d42xg=
-X-Google-Smtp-Source: APXvYqzotGrbJI9s/KdrG87kqY2e2cD44RcIacKKFE4JrKA3iuS7uYtR1JSgUbX5wF56fdmAE1QXjA==
-X-Received: by 2002:a2e:890a:: with SMTP id d10mr1641465lji.145.1560362657186;
-        Wed, 12 Jun 2019 11:04:17 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.102.224])
-        by smtp.gmail.com with ESMTPSA id w205sm96813lff.92.2019.06.12.11.04.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=700itWyKjvYiFLhP6jEPTeNmhf7t12dW5GgxWWewn2Y=;
+        b=K70NRb2q8XRJw/MxemqPpvMlqhFbGmVyKUEvuvwv3ouZGTXgEFY0xPvqGMPZLhaRLB
+         dUpzxvQy6RChdbTtohR5vmeQ3YLk7YUs1UuU+ky45VU7TylG/D+TS0vcIWwW8Z4j/jIV
+         6QdRLG+ABdhzEB14EMRrseVPQAI2kxlwUmt+Ib3d3laqBy9FxPmuSWal6mG6rBNhP27f
+         1tvX6SUwWVJMBVBsJSbC9JppGg9pQ6eJxrr/SSleb3K3z1yEr79SPHkiS+M82y2gFiz2
+         rX4VsIRtYyvYjD7+v8HglsdmC1BEdDRRAgcHjPUjJufLOyCL+MtaHq2KJcx91+1CKACX
+         M3GA==
+X-Gm-Message-State: APjAAAUc6UeI8tdagNeYWRe5dt/M4//ygxCt8+rx8mCCJ0+UqNeZ0nH9
+        bWr3wsqY1UXVxIM9OG8mLeiSRA==
+X-Google-Smtp-Source: APXvYqzgCHuronfryuLazzGzUcrMlDx+deLUn6ZDEgSF5HxrTd3U1Gn+N6X5ZC28QcrrGGy2eb0IaA==
+X-Received: by 2002:ae9:e30d:: with SMTP id v13mr47611016qkf.148.1560362785429;
+        Wed, 12 Jun 2019 11:06:25 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id m44sm285864qtm.54.2019.06.12.11.06.24
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 11:04:16 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 90A854605BC; Wed, 12 Jun 2019 21:04:15 +0300 (MSK)
-Date:   Wed, 12 Jun 2019 21:04:15 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        linux-mm@kvack.org, Laurent Dufour <ldufour@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [RFC PATCH] binfmt_elf: Protect mm_struct access with mmap_sem
-Message-ID: <20190612180415.GE23535@uranus.lan>
-References: <20190612142811.24894-1-mkoutny@suse.com>
- <20190612170034.GE32656@bombadil.infradead.org>
- <20190612172914.GC9638@blackbody.suse.cz>
- <20190612175159.GF32656@bombadil.infradead.org>
+        Wed, 12 Jun 2019 11:06:25 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 11:06:20 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Toshiaki Makita <toshiaki.makita1@gmail.com>
+Subject: Re: [PATCH net v2] net: ethtool: Allow matching on vlan DEI bit
+Message-ID: <20190612110620.5f1653bc@cakuba.netronome.com>
+In-Reply-To: <20190612151838.7455-1-maxime.chevallier@bootlin.com>
+References: <20190612151838.7455-1-maxime.chevallier@bootlin.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190612175159.GF32656@bombadil.infradead.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 10:51:59AM -0700, Matthew Wilcox wrote:
-> On Wed, Jun 12, 2019 at 07:29:15PM +0200, Michal Koutný wrote:
-> > On Wed, Jun 12, 2019 at 10:00:34AM -0700, Matthew Wilcox <willy@infradead.org> wrote:
-> > > On Wed, Jun 12, 2019 at 04:28:11PM +0200, Michal Koutný wrote:
-> > > > -	/* N.B. passed_fileno might not be initialized? */
-> > > > +
-> > > 
-> > > Why did you delete this comment?
-> > The variable got removed in
-> >     d20894a23708 ("Remove a.out interpreter support in ELF loader")
-> > so it is not relevant anymore.
-> 
-> Better put that in the changelog for v2 then.  or even make it a
-> separate patch.
+On Wed, 12 Jun 2019 17:18:38 +0200, Maxime Chevallier wrote:
+> Using ethtool, users can specify a classification action matching on the
+> full vlan tag, which includes the DEI bit (also previously called CFI).
+>=20
+> However, when converting the ethool_flow_spec to a flow_rule, we use
+> dissector keys to represent the matching patterns.
+>=20
+> Since the vlan dissector key doesn't include the DEI bit, this
+> information was silently discarded when translating the ethtool
+> flow spec in to a flow_rule.
+>=20
+> This commit adds the DEI bit into the vlan dissector key, and allows
+> propagating the information to the driver when parsing the ethtool flow
+> spec.
+>=20
+> Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule stru=
+cture translator")
+> Reported-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-Just updated changelog should be fine, I guess. A separate commit
-just to remove an obsolete comment is too much.
+LGTM, thanks!
