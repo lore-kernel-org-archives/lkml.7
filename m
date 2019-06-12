@@ -2,101 +2,202 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECFFC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C9FC31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565D5207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:44:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="iEyNa/9v"
+	by mail.kernel.org (Postfix) with ESMTP id 4343A207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437628AbfFLJou (ORCPT
+        id S2437677AbfFLJpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:44:50 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:39201 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfFLJou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:44:50 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 3aa1f9dc
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 12 Jun 2019 09:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=jw7eJKusxhfbRUg0PWGjDLuQjpo=; b=iEyNa/
-        9vFkSoUFem/4Pu/awjoeqashzIFJISiTCNPKdUzn7hQx4KqPvqPCcgFNdMxH5Yq5
-        V4Fy+qpEabD3yVdgI5EgZGzWLu4XBukH577+njg1J9WlJJe7IHFQAcdS+PRHFu3d
-        TYZamduokgTVFNsfZz6AXwLR6BF/8/Drhb6GifEQa54hN8S1lYLrqV246QOTDFcT
-        /aM49qA9GYd2u85tCkTcI9L4sVP+nzuj65OE7GRa3q0QcUEo096xehr4bIbXE1Wa
-        QJ0ADw2gsYuGVMOSj21jDoFSQ+EdAnyG31LasHFqojL7im7Xvg+BSpGNP+nmpPyI
-        kU3o8F6B29879ssQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b4eda302 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 12 Jun 2019 09:12:33 +0000 (UTC)
-Received: by mail-ot1-f42.google.com with SMTP id l15so14776547otn.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:44:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAVMJn56Jsd37topsGQLIfJcL8H6isZf+/RZbVg9YrdTBomWlvAV
-        ZwxF6dCRC6Z/gCkacS0LFC+WqaFDmKdB0xfeP3Y=
-X-Google-Smtp-Source: APXvYqxKNF3YLrcFFKzHs347TJ70NrRaLOtWW6xv0Tv28ctD0qheDzojT1OXtZFdzGZJyU7SFW1HE/ancmk34KcQSgg=
-X-Received: by 2002:a9d:4f0f:: with SMTP id d15mr38574597otl.52.1560332686615;
- Wed, 12 Jun 2019 02:44:46 -0700 (PDT)
+        Wed, 12 Jun 2019 05:45:50 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:35281 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437298AbfFLJpu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:45:50 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 57F603C00C6;
+        Wed, 12 Jun 2019 11:45:47 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uyfoQNArz41o; Wed, 12 Jun 2019 11:45:41 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 3178E3C00BE;
+        Wed, 12 Jun 2019 11:45:41 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 12 Jun
+ 2019 11:45:41 +0200
+Date:   Wed, 12 Jun 2019 11:45:38 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kalle Valo <kvalo@codeaurora.org>, Eyal Reizer <eyalr@ti.com>
+CC:     Simon Horman <horms+renesas@verge.net.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
+ inverted IRQ
+Message-ID: <20190612094538.GA16575@vmlxhi-102.adit-jv.com>
+References: <20190607172958.20745-1-erosca@de.adit-jv.com>
+ <87tvcxncuq.fsf@codeaurora.org>
+ <20190610083012.GV5447@atomide.com>
+ <CAMuHMdUOc17ocqmt=oNmyN1UT_K7_y=af1pwjwr5PTgQL2o2OQ@mail.gmail.com>
+ <08bc4755-5f47-d792-8b5a-927b5fbe7619@arm.com>
 MIME-Version: 1.0
-References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
- <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de> <20190612090257.GF3436@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190612090257.GF3436@hirez.programming.kicks-ass.net>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 12 Jun 2019 11:44:35 +0200
-X-Gmail-Original-Message-ID: <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
-Message-ID: <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
-Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, clemens@ladisch.de,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <08bc4755-5f47-d792-8b5a-927b5fbe7619@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Peter,
+Hi,
 
-On Wed, Jun 12, 2019 at 11:03 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> How quasi? Do the comments in kernel/sched/clock.c look like something
-> you could use?
->
-> As already mentioned in the other tasks, anything ktime will be
-> horrifically crap when it ends up using the HPET, the code in
-> kernel/sched/clock.c is a best effort to keep using TSC even when it is
-> deemed unusable for timekeeping.
+cc: Linus Walleij
 
-Thanks for pointing that out. Indeed the HPET path is a bummer and I'd
-like to just escape using ktime all together.
+On Tue, Jun 11, 2019 at 10:00:41AM +0100, Marc Zyngier wrote:
+> On 11/06/2019 09:45, Geert Uytterhoeven wrote:
+> > CC irqchip
+> > 
+> > Original thread at
+> > https://lore.kernel.org/lkml/20190607172958.20745-1-erosca@de.adit-jv.com/
+> > 
+> > On Mon, Jun 10, 2019 at 10:30 AM Tony Lindgren <tony@atomide.com> wrote:
+> >> * Kalle Valo <kvalo@codeaurora.org> [190610 07:01]:
+> >>> Eugeniu Rosca <erosca@de.adit-jv.com> writes:
+> >>>
+> >>>> The wl1837mod datasheet [1] says about the WL_IRQ pin:
+> >>>>
+> >>>>  ---8<---
+> >>>> SDIO available, interrupt out. Active high. [..]
+> >>>> Set to rising edge (active high) on powerup.
+> >>>>  ---8<---
+> >>>>
+> >>>> That's the reason of seeing the interrupt configured as:
+> >>>>  - IRQ_TYPE_EDGE_RISING on HiKey 960/970
+> >>>>  - IRQ_TYPE_LEVEL_HIGH on a number of i.MX6 platforms
+> >>>>
+> >>>> We assert that all those platforms have the WL_IRQ pin connected
+> >>>> to the SoC _directly_ (confirmed on HiKey 970 [2]).
+> >>>>
+> >>>> That's not the case for R-Car Kingfisher extension target, which carries
+> >>>> a WL1837MODGIMOCT IC. There is an SN74LV1T04DBVR inverter present
+> >>>> between the WLAN_IRQ pin of the WL18* chip and the SoC, effectively
+> >>>> reversing the requirement quoted from [1]. IOW, in Kingfisher DTS
+> >>>> configuration we would need to use IRQ_TYPE_EDGE_FALLING or
+> >>>> IRQ_TYPE_LEVEL_LOW.
+> >>>>
+> >>>> Unfortunately, v4.2-rc1 commit bd763482c82ea2 ("wl18xx: wlan_irq:
+> >>>> support platform dependent interrupt types") made a special case out
+> >>>> of these interrupt types. After this commit, it is impossible to provide
+> >>>> an IRQ configuration via DTS which would describe an inverter present
+> >>>> between the WL18* chip and the SoC, generating the need for workarounds
+> >>>> like [3].
+> >>>>
+> >>>> Create a boolean OF property, called "invert-irq" to specify that
+> >>>> the WLAN_IRQ pin of WL18* is connected to the SoC via an inverter.
+> >>>>
+> >>>> This solution has been successfully tested on R-Car H3ULCB-KF-M06 using
+> >>>> the DTS configuration [4] combined with the "invert-irq" property.
+> >>>>
+> >>>> [1] http://www.ti.com/lit/ds/symlink/wl1837mod.pdf
+> >>>> [2] https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/
+> >>>> [3] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
+> >>>> [4] https://patchwork.kernel.org/patch/10895879/
+> >>>>     ("arm64: dts: ulcb-kf: Add support for TI WL1837")
+> >>>>
+> >>>> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> >>>
+> >>> Tony&Eyal, do you agree with this?
+> >>
+> >> Yeah if there's some hardware between the WLAN device and the SoC
+> >> inverting the interrupt, I don't think we have clear a way to deal
+> >> with it short of setting up a separate irqchip that does the
+> >> translation.
+> > 
+> > Yeah, inverting the interrupt type in DT works only for simple devices,
+> > that don't need configuration.
+> > A simple irqchip driver that just inverts the type sounds like a good
+> > solution to me. Does something like that already exists?
+> 
+> We already have plenty of that in the tree, the canonical example
+> probably being drivers/irqchip/irq-mtk-sysirq.c. It should be pretty
+> easy to turn this driver into something more generic.
 
-In fact, my accuracy requirements are very lax. I could probably even
-deal with an inaccuracy as huge as ~200 milliseconds. But what I do
-need is 64-bit, so that it doesn't wrap, allowing me to compare two
-stamps taken a long time apart, and for it to take into account sleep
-time, like CLOCK_BOOTTIME does, which means get_jiffies_64() doesn't
-fit the bill. I was under the impression that I could only get this
-with ktime_get_boot & co, because those add the sleep offset.
+I don't think drivers/irqchip/irq-mtk-sysirq.c can serve the
+use-case/purpose of this patch. The MTK driver seems to be dealing with
+the polarity inversion of on-SoC interrupts which are routed to GiC,
+whereas in this patch we are talking about an off-chip interrupt
+wired to R-Car GPIO controller.
 
-It looks like, though, kernel/sched/clock.c keeps track of some
-offsets too -- __sched_clock_offset and __gtod_offset, and the comment
-at the top mentions explicit sleep hooks. I wasn't sure which function
-to use from here, though. sched_clock() seems based on jiffies, which
-has the 32-bit wraparound issue, and the base implementation doesn't
-seem to take into account sleeptime. The x86 implementation seems use
-rdtsc and then adds cyc2ns_offset which looks to be based on
-cyc2ns_suspend, which I assume is what I want. But there's still the
-issue of the 32-bit wraparound on the base implementation.
+It looks to me that the nice DTS sketch shared by Linus Walleij in [5]
+might come closer to the concept proposed by Geert? FWIW, the
+infrastructure/implementation to make this possible is still not ready.
 
-I guess you know this code better than my quick perusal. Is there some
-clock in here that doesn't have a wrap around issue and takes into
-account sleeptime, without being super slow like ktime/hpet?
+One question to the wlcore/wl18xx maintainers: Why exactly do you give
+freedom to users to set the interrupt as LEVEL_LOW/EDGE_FALLING [6]?
+Apparently, this:
+ - complicates the wl18xx driver, thus increasing the chance for bugs
+ - is not supposed to reflect any HW differences between boards using
+   LEVEL_LOW/EDGE_FALLING and the boards using LEVEL_HIGH/EDGE_RISING
+ - doesn't bring any obvious advantage to the users, who are expected to
+   sense the same behavior regardless of the IRQ type set in DTS
+ - prevent the users to set IRQ type to LEVEL_LOW/EDGE_FALLING when
+   there is an inverter present between WL_IRQ and SoC
+ - seems to be not used almost at all, as 99% of mainline DTS set the
+   IRQ type to the canonical/NLCP LEVEL_HIGH/EDGE_RISING
 
-Jason
+[5] https://patchwork.ozlabs.org/patch/1095690/#2167076
+  ("[V1,1/2] gpio: make it possible to set active-state on GPIO lines")
+ --------------------8<-------------------
+ gpio0: gpio {
+    compatible = "foo,chip";
+    gpio-controller;
+    (...)
+ };
+
+ inv0: inverter {
+     compatible = "inverter";
+     gpio-controller;
+     gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+ };
+
+ consumer {
+    compatible = "bar";
+    gpios = <&inv0 0 GPIO_ACTIVE_HIGH>;
+ };
+ --------------------8<-------------------
+
+[6] bd763482c82ea2 ("wl18xx: wlan_irq: support platform dependent interrupt types")
+
+-- 
+Best Regards,
+Eugeniu.
