@@ -2,96 +2,237 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E5BC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1850C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56AD720866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:25:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IgwSAmIw"
+	by mail.kernel.org (Postfix) with ESMTP id 774142173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560371228;
+	bh=RBQpqmPN1eB+w8KVq3eTNkgh7136KTd34ZIGXDIkM1w=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=0xTxl/StK4QvYOWv+puRtvxKlMD1hQh3YWE7qZFbfyFRv9AApr3qyJ7NYdQHaukXO
+	 Q15KNEqlFKdlnATBX5UE4fVLAWh+aWDdcy3LjTQppoGAQf7DSyZDtuee4LKSrwaMkH
+	 TVwet4ZRp2yvmYsODXKhfaDDr4O3iI+LCRzwBSjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388836AbfFLUZz (ORCPT
+        id S2388989AbfFLU1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 16:25:55 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43056 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfFLUZz (ORCPT
+        Wed, 12 Jun 2019 16:27:07 -0400
+Received: from mail-io1-f42.google.com ([209.85.166.42]:36117 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388381AbfFLU1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 16:25:55 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w33so27590388edb.10;
-        Wed, 12 Jun 2019 13:25:54 -0700 (PDT)
+        Wed, 12 Jun 2019 16:27:06 -0400
+Received: by mail-io1-f42.google.com with SMTP id h6so14131176ioh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rr+UcwlwJTbzLmZhG++5L+DhQclZfV3f5YAuqDmwmms=;
-        b=IgwSAmIwB8o5pnvJP5+NLLZOxDikb0JvO0/F234+brtJzV8E2lrrQqCwOVsfbfj6nd
-         0Z+ntNXkXCjGtA9qweTdOBTa8wN97UiTZsF+XgsJ4ScA6rfPYx02ZtTyd71R/7ecFmkR
-         by1Td0EP68yHWlkLx7dzJL8mLMyjSPzoaOXtSuPFGfoyHClO0BEw13D6SkCf4yrv69/j
-         KZHgKJayT5NCD7fPOTZSgAtDVquxpSuMg3INmuzzrSFt1e2JU8QYUI0PWnbRjzFL4/Fd
-         ZFpFK7UMVW6mCl4OFynsy4x7J+UrB3sEUfmq6PYxWYYucF934lHL4Ke0RxhkMJz4XwNV
-         eQcw==
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=n01BMcs7fBxk+Su0IaHbrT19JaQ+6dWso0UN0D7p0L8=;
+        b=Lvgxfgrce6L8U858gDsUewPeiuZ+4j5QPRyin0guF5MFBp3T2S+UOXod7OOaIQptoL
+         0LKTT1Umw80y7bPLj7H3KyU8ISMb1+QAkHR9nm/pEYdmvYAALzD0MAtx2o6SSvaoy7dW
+         kM3jzBFy7YCQsATpSGFHx9LUaIdxDC81OdeKU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rr+UcwlwJTbzLmZhG++5L+DhQclZfV3f5YAuqDmwmms=;
-        b=ItPVYC8e+4A+TEMuPJt5SbcSVdKkKi9ix1XRgUAgEqasYSfOezL4n89CXEpG5WoTyx
-         uQie1icN2kY3PKxZQIn9JImzLdq6c3VriB/2mdtZFSnKuAJSOpookpN3yr+IO/yBLGm1
-         7xmKIkkIAzNlDnR5gmnlIuva0zj1H8QyCKF3nXb0NsirOQsVjCdpf+5AzN8ZbWsh2hIw
-         JIJuTKNe/kxlc5v+V7GskrfaBouPsGD3Vm39Ouhw55mQXrKb57qUKclE/jGzXQVNDtXs
-         Mke1f+kX92gST5EsWgF77koRfGBz/r4RJtZ8xIxSqJ+nHmawZ9SKYG5WUm6YVSbkcOY0
-         O4Kg==
-X-Gm-Message-State: APjAAAWaBxdIY8Gi5/yuKIPMIXfsXn0nd+DXZWDueY6e/WxTBK/uDjtm
-        3Zaun4B/uv+864yNhdNwgYKHPVu0tcQkrpc0Mps=
-X-Google-Smtp-Source: APXvYqx74hE7v8eNCwzdJlUe3z2p/fD1umQGPHswC0VFB/Ly6HT5L9+CGRV6bC2Kz4csAyuk9Zqj+Q0sSUTIsIsCNKw=
-X-Received: by 2002:a17:906:7712:: with SMTP id q18mr71477734ejm.133.1560371153299;
- Wed, 12 Jun 2019 13:25:53 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=n01BMcs7fBxk+Su0IaHbrT19JaQ+6dWso0UN0D7p0L8=;
+        b=UHwtrwPu449eUYRIiS5ND3jQr9W561c6hIWX1/Hli4Kxzfo8nKmlV1OaNns1MviVU5
+         8gLnOIptdHq8emzPWiCgm9WAkOnyRvhEvGR/lL53aMXbqFeVHsBJnjjHtrKaFrjmkjyJ
+         xNrwCO2G/XJGbsj8spkdUQrK94uwfs4GcEqoLAVpe7GlTW1oXAp1LQ+NXptF9ehS9LnW
+         ZOAbYdkQN4vhP5c7x/OuEqa2Mvf7SRhki3mEGribqNLwC7OYlXn1bU1MUOID4ctFjHku
+         lqC1lJ5yJIv/IxxjRxzgJcrS60KJDywOFy0fMO1J/BBDr+LOAdnsPPwy8WfUcXXKO780
+         tsJA==
+X-Gm-Message-State: APjAAAWAGlVO3gBxVRG1VGIs2GHtgzk3FyEP/Iltd9DdrQwNDXGrEMIX
+        vILAvIno16ZRofg9aOGxc5z7me+VnPU=
+X-Google-Smtp-Source: APXvYqyty9FFYerV5/56wDhSV6er5CSIOrKYh1N5f8wp3wX/W7O7t9rWjPxfLbqkiV7U+XUOXa0gmw==
+X-Received: by 2002:a6b:e60b:: with SMTP id g11mr53543825ioh.9.1560371225622;
+        Wed, 12 Jun 2019 13:27:05 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id a130sm413349itb.14.2019.06.12.13.27.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 13:27:04 -0700 (PDT)
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Thomas Renninger <trenn@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] cpupower update for Linux 5.2-rc6
+Message-ID: <376ea5d7-110a-71fe-7b02-efe1b0aed88e@linuxfoundation.org>
+Date:   Wed, 12 Jun 2019 14:27:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190612194409.197461-1-willemdebruijn.kernel@gmail.com> <20190612125911.509d79f2@cakuba.netronome.com>
-In-Reply-To: <20190612125911.509d79f2@cakuba.netronome.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Wed, 12 Jun 2019 16:25:16 -0400
-Message-ID: <CAF=yD-JAZfEG5JoNEQn60gnucJB1gsrFeT38DieG12NQb9DFnQ@mail.gmail.com>
-Subject: Re: [PATCH] locking/static_key: always define static_branch_deferred_inc
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     peterz@infradead.org, Network Development <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed;
+ boundary="------------DA1BC82BAC95C219E9AB2661"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:59 PM Jakub Kicinski
-<jakub.kicinski@netronome.com> wrote:
->
-> On Wed, 12 Jun 2019 15:44:09 -0400, Willem de Bruijn wrote:
-> > From: Willem de Bruijn <willemb@google.com>
-> >
-> > This interface is currently only defined if CONFIG_JUMP_LABEL. Make it
-> > available also when jump labels are disabled.
-> >
-> > Fixes: ad282a8117d50 ("locking/static_key: Add support for deferred static branches")
-> > Signed-off-by: Willem de Bruijn <willemb@google.com>
-> >
-> > ---
-> >
-> > The original patch went into 5.2-rc1, but this interface is not yet
-> > used, so this could target either 5.2 or 5.3.
->
-> Can we drop the Fixes tag?  It's an ugly omission but not a bug fix.
->
-> Are you planning to switch clean_acked_data_enable() to the helper once
-> merged?
+This is a multi-part message in MIME format.
+--------------DA1BC82BAC95C219E9AB2661
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Definitely, can do.
+Hi Rafael,
 
-Perhaps it's easiest to send both as a single patch set through net-next, then?
+Please pull the following update for Linux 5.2-rc6 or 5.3 depending on
+your pull request schedule for Linus.
+
+This cpupower update for Linux 5.2-rc6 consists of a fix and a minor
+spelling correction.
+
+diff is attached.
+
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+
+   Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux 
+tags/linux-cpupower-5.2-rc6
+
+for you to fetch changes up to 04507c0a9385cc8280f794a36bfff567c8cc1042:
+
+   cpupower : frequency-set -r option misses the last cpu in related cpu 
+list (2019-06-04 09:06:50 -0600)
+
+----------------------------------------------------------------
+linux-cpupower-5.2-rc6
+
+This cpupower update for Linux 5.2-rc6 consists of a fix and a minor
+spelling correction.
+
+----------------------------------------------------------------
+Abhishek Goel (1):
+       cpupower : frequency-set -r option misses the last cpu in related 
+cpu list
+
+Nick Black (1):
+       cpupower: correct spelling of interval
+
+  tools/power/cpupower/man/cpupower-monitor.1 | 2 +-
+  tools/power/cpupower/po/cs.po               | 2 +-
+  tools/power/cpupower/po/de.po               | 2 +-
+  tools/power/cpupower/po/fr.po               | 2 +-
+  tools/power/cpupower/po/it.po               | 2 +-
+  tools/power/cpupower/po/pt.po               | 2 +-
+  tools/power/cpupower/utils/cpufreq-set.c    | 2 ++
+  7 files changed, 8 insertions(+), 6 deletions(-)
+
+----------------------------------------------------------------
+
+--------------DA1BC82BAC95C219E9AB2661
+Content-Type: text/x-patch;
+ name="linux-cpupower-5.2-rc6.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-cpupower-5.2-rc6.diff"
+
+diff --git a/tools/power/cpupower/man/cpupower-monitor.1 b/tools/power/cpupower/man/cpupower-monitor.1
+index 914cbb9d9cd0..70a56476f4b0 100644
+--- a/tools/power/cpupower/man/cpupower-monitor.1
++++ b/tools/power/cpupower/man/cpupower-monitor.1
+@@ -61,7 +61,7 @@ Only display specific monitors. Use the monitor string(s) provided by \-l option
+ .PP
+ \-i seconds
+ .RS 4
+-Measure intervall.
++Measure interval.
+ .RE
+ .PP
+ \-c
+diff --git a/tools/power/cpupower/po/cs.po b/tools/power/cpupower/po/cs.po
+index cb22c45c5069..bfc7e1702ec9 100644
+--- a/tools/power/cpupower/po/cs.po
++++ b/tools/power/cpupower/po/cs.po
+@@ -98,7 +98,7 @@ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:74
+ #, c-format
+-msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
++msgid "\t -i: time interval to measure for in seconds (default 1)\n"
+ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:75
+diff --git a/tools/power/cpupower/po/de.po b/tools/power/cpupower/po/de.po
+index 840c17cc450a..70887bb8ba95 100644
+--- a/tools/power/cpupower/po/de.po
++++ b/tools/power/cpupower/po/de.po
+@@ -95,7 +95,7 @@ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:74
+ #, c-format
+-msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
++msgid "\t -i: time interval to measure for in seconds (default 1)\n"
+ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:75
+diff --git a/tools/power/cpupower/po/fr.po b/tools/power/cpupower/po/fr.po
+index b46ca2548f86..b6e505b34e4a 100644
+--- a/tools/power/cpupower/po/fr.po
++++ b/tools/power/cpupower/po/fr.po
+@@ -95,7 +95,7 @@ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:74
+ #, c-format
+-msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
++msgid "\t -i: time interval to measure for in seconds (default 1)\n"
+ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:75
+diff --git a/tools/power/cpupower/po/it.po b/tools/power/cpupower/po/it.po
+index f80c4ddb9bda..a1deeb52c9e0 100644
+--- a/tools/power/cpupower/po/it.po
++++ b/tools/power/cpupower/po/it.po
+@@ -95,7 +95,7 @@ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:74
+ #, c-format
+-msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
++msgid "\t -i: time interval to measure for in seconds (default 1)\n"
+ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:75
+diff --git a/tools/power/cpupower/po/pt.po b/tools/power/cpupower/po/pt.po
+index 990f5267ffe8..902186585bb9 100644
+--- a/tools/power/cpupower/po/pt.po
++++ b/tools/power/cpupower/po/pt.po
+@@ -93,7 +93,7 @@ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:74
+ #, c-format
+-msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
++msgid "\t -i: time interval to measure for in seconds (default 1)\n"
+ msgstr ""
+ 
+ #: utils/idle_monitor/cpupower-monitor.c:75
+diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
+index f49bc4aa2a08..6ed82fba5aaa 100644
+--- a/tools/power/cpupower/utils/cpufreq-set.c
++++ b/tools/power/cpupower/utils/cpufreq-set.c
+@@ -305,6 +305,8 @@ int cmd_freq_set(int argc, char **argv)
+ 				bitmask_setbit(cpus_chosen, cpus->cpu);
+ 				cpus = cpus->next;
+ 			}
++			/* Set the last cpu in related cpus list */
++			bitmask_setbit(cpus_chosen, cpus->cpu);
+ 			cpufreq_put_related_cpus(cpus);
+ 		}
+ 	}
+
+--------------DA1BC82BAC95C219E9AB2661--
