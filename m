@@ -6,59 +6,59 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABACEC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FFFC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863B0208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB52208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i68wzTyT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cs1gGg57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407131AbfFLMLr (ORCPT
+        id S1730164AbfFLMM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:11:47 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42610 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406814AbfFLMLq (ORCPT
+        Wed, 12 Jun 2019 08:12:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45552 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfFLMM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:11:46 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y13so11873548lfh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:11:45 -0700 (PDT)
+        Wed, 12 Jun 2019 08:12:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m23so14850318lje.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Duu79dpq4xQ4GqJnetl02QLC2/nvLqahgO6AyVV2eW0=;
-        b=i68wzTyTJMBYZeU/Uf8aHN3gFbC7lSoRCAZqZl+xhx72QGrEg3gqZ5/y1WcXz+vc9z
-         FL6gxN8vFOSjCuJqXkAx9zVf6miod5Aahafo/JHI2RJw/2eez0ZDr7jeu/PJ79VymTvj
-         3zzQbwQP5OZnLmuRwfuojhikVBJT1vGDYJSI9c/3KFaes0wXblo5dELdA/xtyE1gFn9z
-         FRZcIDktNxleExVJgqFoQYntcptFTRamGrwaCQol0FxU7gCy4pyW/dnBjS+U71GaRy1b
-         KNoRbWZNvqk5Vk3nntGu8CUDBKyEVszeEt4R72o/hqK3l8zTzt8VFBhODmKgqk6+COSf
-         AAPQ==
+        bh=ELkeEswy3RryzFI9wP7fvpF8yJjPUXwtrgXJFfzoWvc=;
+        b=cs1gGg57RFwsFNBg5Wz1FxALZjEjnWdh36wZ2+m8aRNowiw+keszis1eGyPtUSycfJ
+         jw4fgGS36H0s7D12QWk4cu5sD72scRy++h1LTxCTbcVox4Xjha4j2VqTkBupv8Ta2Ui+
+         irn2QLfGeUryARGROwaNwQt9HbqFNSh55sS39e3e7IdSxoAb6RCUk7ubQQvb3BRpq9Qj
+         ysE9d/YnTN4UNmKzzslol++aPGqWB5P+7Mqsp3Uyxu59iZ4oIRaUFQbuwvNOAOUbDXwZ
+         tgQdhfyVIfSiIroPFqotYYUROmQXrYohGNecKnbB1jB+kRnxiMrUHi3i6HtA6P0t39dW
+         WtmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Duu79dpq4xQ4GqJnetl02QLC2/nvLqahgO6AyVV2eW0=;
-        b=Bj3qX3An5yBTiR7n25ylrMF155lxywohWjRCNcyPZg2nUXAgVVroMePSkBW6izqAUl
-         ZWGc+nu6YNm506QohS3BsgurOSRcFpmS1uWrQKJuMxThaaYIeLcV2QT2uPXk68AyOZ4g
-         LDB2klBFiy1mpogZDWuPreDTzNL2D/3SRJPwi9H02+VgBEcQkdFiBNarLBCZ3aqt78p7
-         hBKK5NKzliPA3cbVX/kfZ4V/s0E/dMP30+5CAnA2OaAxMUnNKPmK/vPowDGInPZqPyyR
-         ufkCFYRRYyO52c0oK1/ZfMeslpf58H5jxD/PHIr+OZZmi6Gzo9+BW6uDib4pxgF1rQWa
-         SnpQ==
-X-Gm-Message-State: APjAAAXwJo3wyVE5K9f5w9Wt5dLlb1n+RHGU50LEwdudrred4MLgCJA6
-        TYVv3/9Cy859UNsvoIp5h0TRuZAqfooFAkd26GZNIA==
-X-Google-Smtp-Source: APXvYqxeSw1G1TV/Mz5WMMi5ca+pxpZ1Zqv2pYg8vcbT68h3rpCYOTh6UCtYKXmOybD0IJolLu2MDJSxPI1hB0SKH8g=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr39539109lfn.165.1560341504411;
- Wed, 12 Jun 2019 05:11:44 -0700 (PDT)
+        bh=ELkeEswy3RryzFI9wP7fvpF8yJjPUXwtrgXJFfzoWvc=;
+        b=rhLWeV9zLiosiYNNfsSUgBmKAAPU1r+jHt67A0lCAkCc9o0RSvHQwWMB+dZzQBbxbo
+         12zYyPSvCdQtXmt9XTymr08tsb72Vyy3gCyloFuOP4J3LKE+Lgb87swJzZXUCOlCCyrH
+         WiVJXashFvfDBMw4XKS069J6mTPfjsutWxChJfTUW2u3QuKrkdAAnitVhcZP6JuE+4PV
+         C6XCBibGzcmDJwPmUOwR7OJ0TYRQNo3bbPxip61ZxUNc3VOwYvsclfkEJPd8qiQk60uX
+         SctnJKdGt2IrLvSCIHPU3SPYVrap80GFBSQzdv6HftKSvnZPM0IX548uwVYvfzZKhDj5
+         U5nQ==
+X-Gm-Message-State: APjAAAWPJv1Rr25jfEmvZAmMJGX4VXPhInxhK77M1Smca31F8bCBvUrx
+        zWnLrc6x5c7fg+MpboZQ69d542i0Q5G2e+mQBzXcNA==
+X-Google-Smtp-Source: APXvYqwX/cz4Ov/rw6ige4uWEBhHtZdC1FwFiYjZbazDExi8Yz+Hq0FkTVaZ7z4h+4ZcFlJnGyli0LLghmuu6GyC4p8=
+X-Received: by 2002:a2e:9753:: with SMTP id f19mr4505822ljj.113.1560341575429;
+ Wed, 12 Jun 2019 05:12:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190611140940.14357-1-icenowy@aosc.io> <20190611140940.14357-2-icenowy@aosc.io>
-In-Reply-To: <20190611140940.14357-2-icenowy@aosc.io>
+References: <20190611140940.14357-1-icenowy@aosc.io> <20190611140940.14357-3-icenowy@aosc.io>
+In-Reply-To: <20190611140940.14357-3-icenowy@aosc.io>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 14:11:31 +0200
-Message-ID: <CACRpkdaj-VkHaENpSqW32gFYBuLDErzqoKZ-aD4W4htORN_SiA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] dt-bindings: pinctrl: add missing compatible
- string for V3s
+Date:   Wed, 12 Jun 2019 14:12:44 +0200
+Message-ID: <CACRpkdav8F0F=Kepa6YskZbFEC6vfGxRe89VpK+bw8o_+dgAdQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/11] dt-bindings: pinctrl: add compatible string for
+ Allwinner V3 pinctrl
 To:     Icenowy Zheng <icenowy@aosc.io>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -77,21 +77,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 4:10 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+On Tue, Jun 11, 2019 at 4:11 PM Icenowy Zheng <icenowy@aosc.io> wrote:
 
-> The pinctrl driver of V3s is already available and used in the kernel,
-> but the compatible string of it is forgotten to be added.
+> The Allwinner V3 SoC, despite come with the same die with V3s, has more
+> GPIO pins than V3s, and a different compatible string for pinctrl is
+> needed.
 >
-> Add the missing compatible string.
+> Add the compatible string for V3 pinctrl.
 >
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
 > Changes in v2:
-> - Add the ACK tag by Maxime and the review tag by Rob.
+> - Add the review tag by Rob.
 
-Patch applied to the pinctrl tree.
+Patch applied.
 
 Yours,
 Linus Walleij
