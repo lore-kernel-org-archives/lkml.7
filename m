@@ -2,129 +2,99 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D628EC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14E5C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05CB20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E56208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hkGN/gxL"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OdsPj6eZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730955AbfFLMZO (ORCPT
+        id S1731061AbfFLMZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:25:14 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39014 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbfFLMZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:25:14 -0400
-Received: from zn.tnic (p200300EC2F0A68007943916066B63355.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:7943:9160:66b6:3355])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6EC4A1EC0997;
-        Wed, 12 Jun 2019 14:25:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560342312;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=gi/Aj6c8mOFcV7aCIIIQ6awXYflOyKeKgs4zOZSR1Gg=;
-        b=hkGN/gxLvBDDeN2/dthWOwVSqcQr7cbO08nBiSouqNBUDNSo6FN9E75mDRlQfmb1TUMQSW
-        f60AzaJR9J8u0qrz0qP86tcyQZhGKvXvHk6842x/JFCws8NmX7mh86lPBnAjWM68rluWfQ
-        /R7uZ405Cnz6m0R9ecxSQQq+x1nP+gc=
-Date:   Wed, 12 Jun 2019 14:25:04 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190612122504.GI32652@zn.tnic>
-References: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
- <20190611115651.GD31772@zn.tnic>
- <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
- <20190612034813.GA32652@zn.tnic>
- <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
- <20190612074242.53a4cf56@coco.lan>
- <20190612110039.GH32652@zn.tnic>
- <20190612084213.4fb9e054@coco.lan>
- <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
+        Wed, 12 Jun 2019 08:25:33 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53891 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfFLMZd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:25:33 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5CCPOaE684584
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 12 Jun 2019 05:25:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5CCPOaE684584
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560342324;
+        bh=1Ft/NEpHiDfZbobbTni0/RYthf6VUsUQI2TbJTv2erE=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=OdsPj6eZfLVRKLAYWTN3IyyTluyauXb1OfxjVK9mTxFmVwKWf0fOc8gArwqCFMaaz
+         tV0pQ1st6OOC/E60y9lisSRQ/xYUaurD5+rwRe4QenvsQFQdmanzCe5o6BFDmHBShv
+         Gozx7vqIYl7Rl1BWRxMklpjoLrIXrx7LXwSlJpNZusGCMC6Wu3iiPrx+qROSBSaTLP
+         rTPW6xZ3Mg4qnNrgTJYwlBv/NzSTjPI1F0NzM1BzPCfg4HcQRpmXzTOcghwhFI1LSf
+         WCGfyHAL7FLxDEdsjZj672SU5OocH2gsmR3vdTqxtcIkTzC4cUYB726iq1QDVX9m0m
+         N2n+ajxRhj/9w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5CCPNsr684581;
+        Wed, 12 Jun 2019 05:25:23 -0700
+Date:   Wed, 12 Jun 2019 05:25:23 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Yangtao Li <tipbot@zytor.com>
+Message-ID: <tip-0e5aa23282f8e6ee38c18f67ddfdaaa32d3df86b@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
+        mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de
+Reply-To: linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
+          mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de
+In-Reply-To: <20190607174253.27403-1-tiny.windzz@gmail.com>
+References: <20190607174253.27403-1-tiny.windzz@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/core] hrtimer: Remove unused header include
+Git-Commit-ID: 0e5aa23282f8e6ee38c18f67ddfdaaa32d3df86b
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:57:40PM +1000, Benjamin Herrenschmidt wrote:
-> On Wed, 2019-06-12 at 08:42 -0300, Mauro Carvalho Chehab wrote:
-> > > Yes, we do have different error reporting facilities but I still
-> > > think
-> > > that concentrating all the error information needed in order to do
-> > > proper recovery action is the better approach here. And make that
-> > > part
-> > > of the kernel so that it is robust. Userspace can still configure
-> > > it and
-> > > so on.
-> > 
-> > If the error reporting facilities are for the same hardware "group"
-> > (like the machine's memory controllers), I agree with you: it makes
-> > sense to have a single driver. 
-> > 
-> > If they are for completely independent hardware then implementing
-> > as separate drivers would work equally well, with the advantage of
-> > making easier to maintain and make it generic enough to support
-> > different vendors using the same IP block.
-> 
-> Right. And if you really want a platform orchestrator for recovery in
-> the kenrel, it should be a separate one, that consumes data from the
-> individual IP block drivers that report the raw errors anyway.
+Commit-ID:  0e5aa23282f8e6ee38c18f67ddfdaaa32d3df86b
+Gitweb:     https://git.kernel.org/tip/0e5aa23282f8e6ee38c18f67ddfdaaa32d3df86b
+Author:     Yangtao Li <tiny.windzz@gmail.com>
+AuthorDate: Fri, 7 Jun 2019 13:42:53 -0400
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 12 Jun 2019 10:21:17 +0200
 
-Yap, I think we're in agreement here. I believe the important question
-is whether you need to get error information from multiple sources
-together in order to do proper recovery or doing it per error source
-suffices.
+hrtimer: Remove unused header include
 
-And I think the actual use cases could/should dictate our
-drivers/orchestrators design.
+seq_file.h does not need to be included, so remove it.
 
-Thus my question how you guys are planning on tying all that error info
-the drivers report, into the whole system design?
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190607174253.27403-1-tiny.windzz@gmail.com
 
-> But for the main case that really needs to be in the kernel, which is
-> DRAM, the recovery can usually be contained to the MC driver anyway.
+---
+ kernel/time/hrtimer.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Right, if that is enough to handle the error properly.
-
-The memory-failure.c example I gave before is the error reporting
-mechanism (x86 MCA) calling into the mm subsystem to poison and isolate
-page frames which are known to contain errors. So you have two things
-talking to each other.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 41dfff23c1f9..edb230aba3d1 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -30,7 +30,6 @@
+ #include <linux/syscalls.h>
+ #include <linux/interrupt.h>
+ #include <linux/tick.h>
+-#include <linux/seq_file.h>
+ #include <linux/err.h>
+ #include <linux/debugobjects.h>
+ #include <linux/sched/signal.h>
