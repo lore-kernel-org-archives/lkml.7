@@ -2,278 +2,126 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B7BC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDD8C46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83819215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09494215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOsdq0zE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJy20Mnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502123AbfFLQ2e (ORCPT
+        id S2502143AbfFLQ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:28:34 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33327 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502106AbfFLQ2e (ORCPT
+        Wed, 12 Jun 2019 12:28:58 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:35739 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502128AbfFLQ26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:28:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x15so9996710pfq.0;
-        Wed, 12 Jun 2019 09:28:33 -0700 (PDT)
+        Wed, 12 Jun 2019 12:28:58 -0400
+Received: by mail-it1-f195.google.com with SMTP id n189so11579265itd.0;
+        Wed, 12 Jun 2019 09:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9ucWxJ6q9SaBb2GtuoCWauKcHmhMhNM9AVCq4M27NX8=;
-        b=TOsdq0zEKlm1ovsLqsofSlAHa6P17YnxyTYaU0SrWx35AJQLEaLkF0+3Vu7rnet7kS
-         QxkXWuUBzC5I9Ox8e5luKErNSTypQjGJ2Q1wWrmjeitE7qA8Jvi71xrtaEX1rh4Qwc+Y
-         h3wSFAIKRAqmDhfys8Bm9Yu9mIrnwNwBvtrZcam657nib4HkVXSKKjfVlbGt3aFtYFGJ
-         MyXlAAGV88Qyq+89N2CFLXgheOeSe6fDhHox3L8iSsiYAy77Lx7pUWaFRD3RCZ0tarbX
-         Dxl6n6xUNhXMgoht0Lghj/t1sfKCR8htND5N8NfMAgKGBNPavYBTzy3lGAZJvT27clHh
-         ugtw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yATkbjTw8m3Q2dRPh5UAzdwM9szsemwHSJzk0zw5vRI=;
+        b=NJy20Mnqfu+Z39JVh+cD+rlnma0I6e0xYfIA6aMB86ck/8gq0ulfhoZuq50qFwrPjp
+         YpKU/FucIoUuzRYZBuWq/qrB7YbnqLf/E0CAeqUQoMjcBnZ5YL4pKqGx2Y5Nda09727g
+         okaSOVQ2IXunryTsYPSHYNJOHygLR3NZjF65121kpqkwqvSkFA0X4UsF75X7GjCdX3Cx
+         0yKoADdNzJm9pJjf0w4lyF3joG64/G+46n+aOxRS2U/sCcl/AztvAc13IVzrqRYASdM6
+         fwWD98c1SnsDyEGk+qZx3LXBk36NRosoeBukK8ohbPb3XYncV+zpmtf6vGlTzgesDLbR
+         ZIZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=9ucWxJ6q9SaBb2GtuoCWauKcHmhMhNM9AVCq4M27NX8=;
-        b=GKThGho7yNNl0yMTbduTJXshIEJZkZVCDeHNuuGxhejfznnhQS6JrIeAYHZysSP06m
-         jKNzmdz7BoUI5bf1OQrXqPGoBo4kLjfSI93M1jLD9r/D2BXLtRr1lHX//JUFIh7Ty/+L
-         3FFG6TQZmzf3kI91hZZ1dqIWuZ3Dhr5KnyUrQHeT7nRsVGST+ER5/LH3pI5UCS6CkK7a
-         jL1aeFNrpIpqq6ydg3BY02ZS2f18XHb7AW2rOW7va7Xc2quQDMf4aBALyEvsywPUBgjV
-         NIqzOWQJigYl2mQR9taUFQo6h1S7UR02qXpxlUmWzDwsjBeVYgGehJHId/FqAuQeqbmc
-         wQHw==
-X-Gm-Message-State: APjAAAXxjpFEg2ZifIOnvzZJXAFX1c2qGYmo06TVrhW/rVxEezpc1ABD
-        Pp/JP1Fn8nGAc18++X+Zpfw=
-X-Google-Smtp-Source: APXvYqx4AUVnFpEL1E+Qnsfwj4SRiJmLXGwFXB2fvIYC6OXMoah2zJ2Tiz3sgHkbW+X9oMz7oXpZhg==
-X-Received: by 2002:a63:610d:: with SMTP id v13mr25531305pgb.341.1560356912884;
-        Wed, 12 Jun 2019 09:28:32 -0700 (PDT)
-Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id 201sm70299pfz.24.2019.06.12.09.28.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 09:28:32 -0700 (PDT)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net,
-        davem@davemloft.net, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
-        nicolas.ferre@microchip.com, paulmck@linux.ibm.com
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yangtao Li <tiny.windzz@gmail.com>
-Subject: [RESEND, PATCH v4 2/2] dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
-Date:   Wed, 12 Jun 2019 12:28:16 -0400
-Message-Id: <20190612162816.31713-3-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190612162816.31713-1-tiny.windzz@gmail.com>
-References: <20190612162816.31713-1-tiny.windzz@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yATkbjTw8m3Q2dRPh5UAzdwM9szsemwHSJzk0zw5vRI=;
+        b=iIchdfm+/gMYv8AkV0JOyeWJFxlJ6OCnk0i8oNFa5noSpEAalw1XnjTxDDWFGHtTJp
+         YEsA0QjNxnTYp76ApTqQVvOP9/Ms42Vp6AEuhXecYAFs/XEP/oSo2PvgCU4dq2OHtLiJ
+         WP3gwDMYuKe6WJEJ7qmA85Nww3xHZBZI1/ZorQz0o1qJSp5ZyO4Ew9eo2uLP2tULb6X3
+         QJqza7L6K8SsjfWQJj/0TS2Fk6Hjk4ef2erc9Uv9dp5c6ikNcudELtHwl+/X2I90jECd
+         jlRaYZdsxmgnTWsz7nFm/JWMyhPkftlbvvpKs2cRZ+gyVaXTn3Vel069oP6xbNk06Qcm
+         6pYQ==
+X-Gm-Message-State: APjAAAUB3qB9YaNLAbDcrTp08DGN5fsGnDTRWgeCbhLQjmEPPB06GGa3
+        NJcqJ04w/7AW98vSjOd9xc4OG18t8By9W1Dw5UE=
+X-Google-Smtp-Source: APXvYqyFy2pdIz1NIdWEELkm+gtHMFJN4Sd8HaM3yVeRCc656dsv6Qlh7LAzwGcFw1K4ggW00KmzMxZsCUTJRrfmunM=
+X-Received: by 2002:a02:3b62:: with SMTP id i34mr50167719jaf.91.1560356937141;
+ Wed, 12 Jun 2019 09:28:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190607200225.21419-1-andrew.smirnov@gmail.com>
+ <20190607200225.21419-2-andrew.smirnov@gmail.com> <VI1PR04MB50558864B434388A52A00915EEEC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB50558864B434388A52A00915EEEC0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Wed, 12 Jun 2019 09:28:45 -0700
+Message-ID: <CAHQ1cqHw4whpq9Q0hNOrh4Q-72dxQVoNqJ-VEk9g7ZMimNTCkg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] crypto: caam - do not initialise clocks on the i.MX8
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Chris Spencer <christopher.spencer@sea.co.uk>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner Process Voltage Scaling Tables defines the voltage and
-frequency value based on the speedbin blown in the efuse combination.
-The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-provide the OPP framework with required information.
-This is used to determine the voltage and frequency value for each
-OPP of operating-points-v2 table when it is parsed by the OPP framework.
+On Wed, Jun 12, 2019 at 6:53 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+>
+> On 07.06.2019 23:03, Andrey Smirnov wrote:
+>
+> > There are no clocks that the CAAM driver needs to initialise on the
+> > i.MX8.
+>
+> The clk handling inside CAAM is very convoluted and this patch doesn't
+> help. All the driver actually does is "enable all required clocks", this
+> shouldn't be complicated.
+>
 
-The "allwinner,sun50i-h6-operating-points" DT extends the
-"operating-points-v2"
-with following parameters:
-- nvmem-cells (NVMEM area containig the speedbin information)
-- opp-microvolt-<name>: voltage in micro Volts.
-  At runtime, the platform can pick a <name> and matching
-  opp-microvolt-<name> property.
-                        HW:             <name>:
-                        sun50i-h6      speed0 speed1 speed2
+As I mentioned before, this patch is now dropped. It is replaced with
+a one-liner to avoid requesting "emi_slow" clock on i.mx8mq.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ++++++++++++++++++
- 1 file changed, 167 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+> I propose adding a const caam_soc_data struct which has a bool flag
+> marking if each clock is required or not, the replace all the
+> of_machine_is_compatible() logic with statements of the form:
+>
+> if (ctrlpriv->soc_data->need_ipg_clk)
+>      ctrlpriv->caam_ipg = devm_clk_get("ipg");
+>
+> You could even make all clks optional and claim that if a clk is not
+> listed in DT then it's assumed to be always on. However that means that
+> on some SOCs if DT is incorrect you can get a hang (due to missing clk)
+> instead of a probe error.
+>
 
-diff --git a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-new file mode 100644
-index 000000000000..7deae57a587b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-@@ -0,0 +1,167 @@
-+Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-+===================================
-+
-+For some SoCs, the CPU frequency subset and voltage value of each OPP
-+varies based on the silicon variant in use. Allwinner Process Voltage
-+Scaling Tables defines the voltage and frequency value based on the
-+speedbin blown in the efuse combination. The sun50i-cpufreq-nvmem driver
-+reads the efuse value from the SoC to provide the OPP framework with
-+required information.
-+
-+Required properties:
-+--------------------
-+In 'cpus' nodes:
-+- operating-points-v2: Phandle to the operating-points-v2 table to use.
-+
-+In 'operating-points-v2' table:
-+- compatible: Should be
-+	- 'allwinner,sun50i-h6-operating-points'.
-+- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-+		efuse registers that has information about the speedbin
-+		that is used to select the right frequency/voltage value
-+		pair. Please refer the for nvmem-cells bindings
-+		Documentation/devicetree/bindings/nvmem/nvmem.txt and
-+		also examples below.
-+
-+In every OPP node:
-+- opp-microvolt-<name>: Voltage in micro Volts.
-+			At runtime, the platform can pick a <name> and
-+			matching opp-microvolt-<name> property.
-+			[See: opp.txt]
-+			HW:		<name>:
-+			sun50i-h6	speed0 speed1 speed2
-+
-+Example 1:
-+---------
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <1>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <2>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <3>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+        };
-+
-+        cpu_opp_table: opp_table {
-+                compatible = "allwinner,sun50i-h6-operating-points";
-+                nvmem-cells = <&speedbin_efuse>;
-+                opp-shared;
-+
-+                opp@480000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <480000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@720000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <720000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@816000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <816000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@888000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <888000000>;
-+
-+                        opp-microvolt-speed0 = <940000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@1080000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1080000000>;
-+
-+                        opp-microvolt-speed0 = <1060000>;
-+                        opp-microvolt-speed1 = <880000>;
-+                        opp-microvolt-speed2 = <840000>;
-+                };
-+
-+                opp@1320000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1320000000>;
-+
-+                        opp-microvolt-speed0 = <1160000>;
-+                        opp-microvolt-speed1 = <940000>;
-+                        opp-microvolt-speed2 = <900000>;
-+                };
-+
-+                opp@1488000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1488000000>;
-+
-+                        opp-microvolt-speed0 = <1160000>;
-+                        opp-microvolt-speed1 = <1000000>;
-+                        opp-microvolt-speed2 = <960000>;
-+                };
-+        };
-+....
-+soc {
-+....
-+	sid: sid@3006000 {
-+		compatible = "allwinner,sun50i-h6-sid";
-+		reg = <0x03006000 0x400>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		....
-+		speedbin_efuse: speed@1c {
-+			reg = <0x1c 4>;
-+		};
-+        };
-+};
--- 
-2.17.0
+I agree with this approach in principle, but I'd rather focus this
+series on adding i.MX8MQ support with least amount changes needed. I
+have a separate series doing a bunch of devres related cleanup on this
+driver, which I plan to submit once i.MX8MQ is supported and we can
+(and I'd rather) address the problem there.
 
+> > +     clk_disable_unprepare(ctrlpriv->caam_ipg);
+> > +     if (ctrlpriv->caam_mem)
+> > +             clk_disable_unprepare(ctrlpriv->caam_mem);
+> > +     clk_disable_unprepare(ctrlpriv->caam_aclk);
+> > +     if (ctrlpriv->caam_emi_slow)
+> > +             clk_disable_unprepare(ctrlpriv->caam_emi_slow);
+>
+> Clock APIs have no effect if clk argument is NULL, please just drop
+> these if statements.
+
+As a part of my refactoring changes I replaced all of that code with
+devres, so it should already be addressed there.
+
+Thanks,
+Andrey Smirnov
