@@ -2,97 +2,160 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B50C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8585C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B28D208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8396B206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:23:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8reibrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408417AbfFLCXN (ORCPT
+        id S2408431AbfFLCXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 22:23:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34806 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405661AbfFLCXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:23:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63D5C3082E03;
-        Wed, 12 Jun 2019 02:23:12 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 32A02648BF;
-        Wed, 12 Jun 2019 02:23:11 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2391624B25;
-        Wed, 12 Jun 2019 02:23:10 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 22:23:09 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     cohuck@redhat.com, jack@suse.cz, kvm@vger.kernel.org,
-        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
-        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-        dm-devel@redhat.com, adilger kernel <adilger.kernel@dilger.ca>,
-        zwisler@kernel.org, aarcange@redhat.com,
-        dave jiang <dave.jiang@intel.com>, jstaron@google.com,
-        linux-nvdimm@lists.01.org,
-        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
-        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
-        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
-        kilobyte@angband.pl, rdunlap@infradead.org, riel@surriel.com,
-        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
-        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
-        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
-        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
-Message-ID: <332155967.34508010.1560306189624.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190611171416.GA1248@redhat.com>
-References: <20190611163802.25352-1-pagupta@redhat.com> <20190611163802.25352-5-pagupta@redhat.com> <20190611171416.GA1248@redhat.com>
-Subject: Re: [Qemu-devel] [PATCH v12 4/7] dm: enable synchronous dax
+        Tue, 11 Jun 2019 22:23:33 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50485 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408418AbfFLCXc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 22:23:32 -0400
+Received: by mail-it1-f195.google.com with SMTP id j194so8376521ite.0;
+        Tue, 11 Jun 2019 19:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z4yiZSQ99ENhZHrlff4q5E1G1jFsIl+eTmojhdm+HwU=;
+        b=V8reibrhUHw2gShqHRDeccOb27V+px/0LSyyh6pXic42k9lka9mR5WTZxN1laDtfwU
+         ipiIxqbrlvzwVsaBcbsEkRLFC78otUYZpmUubFnwW+YGcNogMK9lUVIZ1ts2uleI+6s9
+         4EqAQmUXst9DUl2MkB9FT0yry0GNJfH4iXwICAnGPhTNqaj3nvtU/1DOBJIN+jKsLqVf
+         awye1V2XPhvMBZPEQ3ZLRHVZDjCQ07FO9Tm1ceQNaC6IMvvNG7i9BSmEZ4haEfTpL0Mk
+         N1lin4CTKuO+eugkrbWTZa/W4l5mC5uteY6X6247c3ND0xr8QTz4yTJ8+Id9q1nJTsaW
+         MmRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z4yiZSQ99ENhZHrlff4q5E1G1jFsIl+eTmojhdm+HwU=;
+        b=rjVoZULGSfLEXYwxvcFQPmCv4M6zVLOj1a9N8hXFGmVF+i9R6z2L0eG9iAyHVOcAxE
+         714eh5HLN+izHugu7EeTTVwzrEkhIaAIfpxMfoDrWBwwrgxh3+GjKiC343Ds7SWke1O8
+         J/mMJumSHasO83fRCfJPkj0RyrdsKwuUfyDWPoZNav4PQ+mQqwu0l3doEIZ0AliDsqjo
+         iF8nZbIDyEAuJnC1eKsqD64kS2GePhazy8n3IepYIl+GNfP7DFjrO+sZ+FhlwrgWhPh0
+         EBgX7f0OAmJ/kYncrtmdK32r9cAd3Yk1BxA4sJqbasXd5M63vNppzF4b4aahm1HfjiMj
+         2Dkw==
+X-Gm-Message-State: APjAAAVlZ82yaXpZzhP5ZOpgumMOlxSoEdCmETF/MRoR8EPbtDAU0YbT
+        LJe5LNHPnsNSQ01AonoSP/Lx9Cd9ebR2hHaU3Fk=
+X-Google-Smtp-Source: APXvYqyV4Sr25JrYbJwzOp4KFbOubjnYsVo20OwRqvZS2jJQa/X2VrstTy079fHHhQkT9wlQN+DhbGBbRqPWpwO7Rn0=
+X-Received: by 2002:a05:660c:101:: with SMTP id w1mr3410942itj.49.1560306211305;
+ Tue, 11 Jun 2019 19:23:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.70, 10.4.195.27]
-Thread-Topic: enable synchronous dax
-Thread-Index: 7O59Nmg+n8QzGpvkvBkkxWqWG8w3fA==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 12 Jun 2019 02:23:12 +0000 (UTC)
+References: <1558678046-4052-1-git-send-email-ley.foon.tan@intel.com>
+ <1558678046-4052-2-git-send-email-ley.foon.tan@intel.com> <20190530152548.GD13993@redmoon>
+In-Reply-To: <20190530152548.GD13993@redmoon>
+From:   Ley Foon Tan <lftan.linux@gmail.com>
+Date:   Wed, 12 Jun 2019 10:23:20 +0800
+Message-ID: <CAFiDJ59Oa0_frzTYUfLdU-PfHRPGOHoYmBxRpS0ynue8e+21mg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: altera: Fix configuration type based on
+ secondary number
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 30, 2019 at 11:25 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Fri, May 24, 2019 at 02:07:25PM +0800, Ley Foon Tan wrote:
+> > This fix issue when access config from PCIe switch.
+> >
+> > Stratix 10 PCIe controller does not support Type 1 to Type 0 conversion
+> > as previous version (V1) does.
+> >
+> > The PCIe controller need to send Type 0 config TLP if the targeting bus
+> > matches with the secondary bus number, which is when the TLP is targeting
+> > the immediate device on the link.
+> >
+> > The PCIe controller send Type 1 config TLP if the targeting bus is
+> > larger than the secondary bus, which is when the TLP is targeting the
+> > device not immediate on the link.
+> >
+> > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> > ---
+> >  drivers/pci/controller/pcie-altera.c | 22 ++++++++++++++++++++--
+> >  1 file changed, 20 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> > index 27222071ace7..047bcc214f9b 100644
+> > --- a/drivers/pci/controller/pcie-altera.c
+> > +++ b/drivers/pci/controller/pcie-altera.c
+> > @@ -44,6 +44,8 @@
+> >  #define S10_RP_RXCPL_STATUS          0x200C
+> >  #define S10_RP_CFG_ADDR(pcie, reg)   \
+> >       (((pcie)->hip_base) + (reg) + (1 << 20))
+> > +#define S10_RP_SECONDARY(pcie)               \
+> > +     readb(S10_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
+> >
+> >  /* TLP configuration type 0 and 1 */
+> >  #define TLP_FMTTYPE_CFGRD0           0x04    /* Configuration Read Type 0 */
+> > @@ -63,6 +65,14 @@
+> >       ((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0         \
+> >                               : pcie->pcie_data->cfgwr1) << 24) |     \
+> >                               TLP_PAYLOAD_SIZE)
+> > +#define S10_TLP_CFGRD_DW0(pcie, bus)                                 \
+> > +     (((((bus) > S10_RP_SECONDARY(pcie)) ? pcie->pcie_data->cfgrd0   \
+> > +                             : pcie->pcie_data->cfgrd1) << 24) |     \
+> > +                             TLP_PAYLOAD_SIZE)
+> > +#define S10_TLP_CFGWR_DW0(pcie, bus)                                 \
+> > +     (((((bus) > S10_RP_SECONDARY(pcie)) ? pcie->pcie_data->cfgwr0   \
+> > +                             : pcie->pcie_data->cfgwr1) << 24) |     \
+> > +                             TLP_PAYLOAD_SIZE)
+> >  #define TLP_CFG_DW1(pcie, tag, be)   \
+> >       (((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
+> >  #define TLP_CFG_DW2(bus, devfn, offset)      \
+> > @@ -327,7 +337,11 @@ static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
+> >  {
+> >       u32 headers[TLP_HDR_SIZE];
+> >
+> > -     headers[0] = TLP_CFGRD_DW0(pcie, bus);
+> > +     if (pcie->pcie_data->version == ALTERA_PCIE_V1)
+> > +             headers[0] = TLP_CFGRD_DW0(pcie, bus);
+> > +     else
+> > +             headers[0] = S10_TLP_CFGRD_DW0(pcie, bus);
+> > +
+> >       headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
+> >       headers[2] = TLP_CFG_DW2(bus, devfn, where);
+> >
+> > @@ -342,7 +356,11 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+> >       u32 headers[TLP_HDR_SIZE];
+> >       int ret;
+> >
+> > -     headers[0] = TLP_CFGWR_DW0(pcie, bus);
+> > +     if (pcie->pcie_data->version == ALTERA_PCIE_V1)
+> > +             headers[0] = TLP_CFGWR_DW0(pcie, bus);
+> > +     else
+> > +             headers[0] = S10_TLP_CFGWR_DW0(pcie, bus);
+> > +
+>
+> Why don't you rewrite all these macros as an eg:
+>
+> static inline u32 get_tlp_header()
+> {}
+>
+> where you can also handle the version and everything needed to
+> detect what header should be set-up ?
+>
+Okay, will change this.
 
-> On Tue, Jun 11 2019 at 12:37pm -0400,
-> Pankaj Gupta <pagupta@redhat.com> wrote:
-> 
-> > This patch sets dax device 'DAXDEV_SYNC' flag if all the target
-> > devices of device mapper support synchrononous DAX. If device
-> > mapper consists of both synchronous and asynchronous dax devices,
-> > we don't set 'DAXDEV_SYNC' flag.
-> > 
-> > 'dm_table_supports_dax' is refactored to pass 'iterate_devices_fn'
-> > as argument so that the callers can pass the appropriate functions.
-> > 
-> > Suggested-by: Mike Snitzer <snitzer@redhat.com>
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> 
-> Thanks, and for the benefit of others, passing function pointers like
-> this is perfectly fine IMHO because this code is _not_ in the fast
-> path.  These methods are only for device creation.
-> 
-> Reviewed-by: Mike Snitzer <snitzer@redhat.com>
+Thanks.
 
-Thank you, Mike
-
-Best regards,
-Pankaj
-
-> 
-> 
+Regards
+Ley Foon
