@@ -2,446 +2,245 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31CFC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAACFC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7388820679
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A156F206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kok14rW9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hv8TgoCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439845AbfFLOmn (ORCPT
+        id S1728679AbfFLOnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:42:43 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49228 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbfFLOmn (ORCPT
+        Wed, 12 Jun 2019 10:43:39 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38125 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbfFLOnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:42:43 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 26F3C9B1;
-        Wed, 12 Jun 2019 16:42:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560350561;
-        bh=bbqf2pr9mGOVwu7kluY+31Fdz3yMgdiaC91VAV226KM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kok14rW9MXNNU8ZhmzW9G6qfO3O40vP7Zw9OMke10mis5+Hazk61CIF5VoxtFmZDc
-         jcR3DvynAVsF+DgjMLpbgDxJBSamqJ3lhhUBtwUQAnjHXQl0xRtlX3BYzumm9wMSbS
-         IFkhHMDmk/hnZ5l2bGuc0fNAcw4OFRmY1QAGRiJg=
-Date:   Wed, 12 Jun 2019 17:42:25 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] media: vsp1: drm: Split vsp1_du_setup_lif()
-Message-ID: <20190612144225.GN5035@pendragon.ideasonboard.com>
-References: <20190517223143.26251-1-kieran.bingham+renesas@ideasonboard.com>
- <20190517223143.26251-2-kieran.bingham+renesas@ideasonboard.com>
+        Wed, 12 Jun 2019 10:43:39 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d17so15648548oth.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:43:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u9tl7agUX8PHmzxevAoY1c85cGa1CD64Ig+RZa1dCBw=;
+        b=Hv8TgoCm9XsWIIy1dM5GKF7BGLp3MBxAoEkHX2+wYCS1rj2z8OH9JWJTgei2P9SlTZ
+         O5E1e2cMIAe8tB+Oa/eZNjBBWVNCoS6XkeW4GYs11XKchRDNMr/fTFOCnhMn6uylrKFn
+         zlQzDv5MO8mbeYuK7OG6/zP1ieM4dQKQtoqmt0JhSsZsk8t2EDIAuI3uIMz+TLjlQjsn
+         MOlamosxGzH3PaVCuwUW235refAjedOgkZu6eWIKabiuIK5z0szJZmUZHba88QH4O68W
+         ysYdujkB+J2D446ZLDzz3qcmLXzBkoQ9RwQduWEBQBzcLd3CaJc3CWGg0tdpUlzBVbNi
+         za4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u9tl7agUX8PHmzxevAoY1c85cGa1CD64Ig+RZa1dCBw=;
+        b=QCXQpJDAxfiJjnXxD6/F7FF6xnIq5R3G2qt50LiqGHWGCVg7oe8zIXA11PM/c6yHfP
+         35an/P2uvnsBlAODWNuHeSwXSqS6gA9MH3Oh/ZegIlgPJfnr8PyFNZKEcHH/PQEEG0pn
+         Pc/Oe+blYdZws1y+99rjwDq2DvfskYcPcDgJlR9zei5gCBVspJWDLEqLyJuF6Qg9Xev8
+         YKLekbiGulwKm/4pXDnlO3u4wK5WSpspneV+0NdsyM0VaCq26AroiL9pO8BBTSsYTbeO
+         KchLQqiHU4UYlid9oY99sIsvkA9NC4MFuf3uHIkmyvRLWtqx2t6pUtj8WH5aMn2ibYuY
+         ryBA==
+X-Gm-Message-State: APjAAAWlSNArnY1tBJDcs0a/NlvaX1sWuzwBomkD3xuZ8+HP8QeqjRnC
+        jIw1k1rkG3EdTzihUlWg5zazE43TaL+jkHn7w6yB+LxxMO8=
+X-Google-Smtp-Source: APXvYqzW+S+G564gDrL+10Ehj3IidoTdNSSRQmtjoKtKX/1ItY3A1Cf4VZL5QQjtRuXnaiaRUyVvCe318bhMpx3L7Ec=
+X-Received: by 2002:a05:6830:1319:: with SMTP id p25mr5907954otq.224.1560350618399;
+ Wed, 12 Jun 2019 07:43:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190517223143.26251-2-kieran.bingham+renesas@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190611000230.152670-1-fengc@google.com> <20190611000230.152670-3-fengc@google.com>
+In-Reply-To: <20190611000230.152670-3-fengc@google.com>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Wed, 12 Jun 2019 20:13:26 +0530
+Message-ID: <CAO_48GHkU5aZby7835mx+od6g2BbgvWLKo=dFOxnmEtscArDkg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 2/3] dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
+To:     Chenbo Feng <fengc@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+Hello Chenbo,
 
-Thank you for the patch.
-
-On Fri, May 17, 2019 at 11:31:41PM +0100, Kieran Bingham wrote:
-> Break vsp1_du_setup_lif() into components more suited to the DRM Atomic
-> API. The existing vsp1_du_setup_lif() API call is maintained as it is
-> still used from the DU.
-> 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Thanks very much for your patches. Other than a couple tiny nits
+below, I think these look good, and I will merge them before the end
+of this week.
+On Tue, 11 Jun 2019 at 05:32, Chenbo Feng <fengc@google.com> wrote:
+>
+> From: Greg Hackmann <ghackmann@google.com>
+>
+> This patch adds complimentary DMA_BUF_SET_NAME and DMA_BUF_GET_NAME
+> ioctls, which lets userspace processes attach a free-form name to each
+> buffer.
+This should remove the _GET_NAME bit since it's not there anymore.
+>
+> This information can be extremely helpful for tracking and accounting
+> shared buffers.  For example, on Android, we know what each buffer will
+> be used for at allocation time: GL, multimedia, camera, etc.  The
+> userspace allocator can use DMA_BUF_SET_NAME to associate that
+> information with the buffer, so we can later give developers a
+> breakdown of how much memory they're allocating for graphics, camera,
+> etc.
+>
+> Signed-off-by: Greg Hackmann <ghackmann@google.com>
+> Signed-off-by: Chenbo Feng <fengc@google.com>
 > ---
->  drivers/media/platform/vsp1/vsp1_drm.c | 233 ++++++++++++++++++-------
->  include/media/vsp1.h                   |  32 +++-
->  2 files changed, 199 insertions(+), 66 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vsp1/vsp1_drm.c b/drivers/media/platform/vsp1/vsp1_drm.c
-> index a4a45d68a6ef..ce5c0780680f 100644
-> --- a/drivers/media/platform/vsp1/vsp1_drm.c
-> +++ b/drivers/media/platform/vsp1/vsp1_drm.c
-> @@ -616,18 +616,15 @@ int vsp1_du_init(struct device *dev)
->  EXPORT_SYMBOL_GPL(vsp1_du_init);
->  
->  /**
-> - * vsp1_du_setup_lif - Setup the output part of the VSP pipeline
-> + * vsp1_du_atomic_modeset - Configure the mode as part of an atomic update
->   * @dev: the VSP device
->   * @pipe_index: the DRM pipeline index
-> - * @cfg: the LIF configuration
-> + * @cfg: the mode configuration
->   *
->   * Configure the output part of VSP DRM pipeline for the given frame @cfg.width
->   * and @cfg.height. This sets up formats on the BRx source pad, the WPF sink and
->   * source pads, and the LIF sink pad.
->   *
-> - * The @pipe_index argument selects which DRM pipeline to setup. The number of
-> - * available pipelines depend on the VSP instance.
-> - *
-
-Shouldn't this paragraph be preserved, as the function keeps its
-pipe_index argument ?
-
->   * As the media bus code on the blend unit source pad is conditioned by the
->   * configuration of its sink 0 pad, we also set up the formats on all blend unit
->   * sinks, even if the configuration will be overwritten later by
-> @@ -635,15 +632,14 @@ EXPORT_SYMBOL_GPL(vsp1_du_init);
->   * a well defined state.
->   *
->   * Return 0 on success or a negative error code on failure.
-> + *
-
-Not needed.
-
->   */
-> -int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
-> -		      const struct vsp1_du_lif_config *cfg)
-> +int vsp1_du_atomic_modeset(struct device *dev, unsigned int pipe_index,
-> +			   const struct vsp1_du_modeset_config *cfg)
->  {
->  	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
->  	struct vsp1_drm_pipeline *drm_pipe;
->  	struct vsp1_pipeline *pipe;
-> -	unsigned long flags;
-> -	unsigned int i;
->  	int ret;
->  
->  	if (pipe_index >= vsp1->info->lif_count)
-> @@ -652,60 +648,6 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
->  	drm_pipe = &vsp1->drm->pipe[pipe_index];
->  	pipe = &drm_pipe->pipe;
->  
-> -	if (!cfg) {
-> -		struct vsp1_brx *brx;
-> -
-> -		mutex_lock(&vsp1->drm->lock);
-> -
-> -		brx = to_brx(&pipe->brx->subdev);
-> -
-> -		/*
-> -		 * NULL configuration means the CRTC is being disabled, stop
-> -		 * the pipeline and turn the light off.
-> -		 */
-> -		ret = vsp1_pipeline_stop(pipe);
-> -		if (ret == -ETIMEDOUT)
-> -			dev_err(vsp1->dev, "DRM pipeline stop timeout\n");
-> -
-> -		for (i = 0; i < ARRAY_SIZE(pipe->inputs); ++i) {
-> -			struct vsp1_rwpf *rpf = pipe->inputs[i];
-> -
-> -			if (!rpf)
-> -				continue;
-> -
-> -			/*
-> -			 * Remove the RPF from the pipe and the list of BRx
-> -			 * inputs.
-> -			 */
-> -			WARN_ON(!rpf->entity.pipe);
-> -			rpf->entity.pipe = NULL;
-> -			list_del(&rpf->entity.list_pipe);
-> -			pipe->inputs[i] = NULL;
-> -
-> -			brx->inputs[rpf->brx_input].rpf = NULL;
-> -		}
-> -
-> -		drm_pipe->du_complete = NULL;
-> -		pipe->num_inputs = 0;
-> -
-> -		dev_dbg(vsp1->dev, "%s: pipe %u: releasing %s\n",
-> -			__func__, pipe->lif->index,
-> -			BRX_NAME(pipe->brx));
-> -
-> -		list_del(&pipe->brx->list_pipe);
-> -		pipe->brx->pipe = NULL;
-> -		pipe->brx = NULL;
-> -
-> -		mutex_unlock(&vsp1->drm->lock);
-> -
-> -		vsp1_dlm_reset(pipe->output->dlm);
-> -		vsp1_device_put(vsp1);
-> -
-> -		dev_dbg(vsp1->dev, "%s: pipeline disabled\n", __func__);
-> -
-> -		return 0;
-> -	}
-> -
->  	drm_pipe->width = cfg->width;
->  	drm_pipe->height = cfg->height;
->  	pipe->interlaced = cfg->interlaced;
-> @@ -722,8 +664,43 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
->  		goto unlock;
->  
->  	ret = vsp1_du_pipeline_setup_output(vsp1, pipe);
-> -	if (ret < 0)
-> -		goto unlock;
+>  drivers/dma-buf/dma-buf.c    | 49 +++++++++++++++++++++++++++++++++---
+>  include/linux/dma-buf.h      |  5 +++-
+>  include/uapi/linux/dma-buf.h |  3 +++
+>  3 files changed, 53 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index ffd5a2ad7d6f..c1da5f9ce44d 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -48,8 +48,24 @@ struct dma_buf_list {
+>
+>  static struct dma_buf_list db_list;
+>
+> +static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+> +{
+> +       struct dma_buf *dmabuf;
+> +       char name[DMA_BUF_NAME_LEN];
+> +       size_t ret = 0;
 > +
-> +unlock:
-> +	mutex_unlock(&vsp1->drm->lock);
+> +       dmabuf = dentry->d_fsdata;
+> +       mutex_lock(&dmabuf->lock);
+> +       if (dmabuf->name)
+> +               ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+> +       mutex_unlock(&dmabuf->lock);
 > +
-> +	return ret;
+> +       return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+> +                            dentry->d_name.name, ret > 0 ? name : "");
 > +}
 > +
-> +/**
-> + * vsp1_du_atomic_enable - Enable and start a DU pipeline
-> + * @dev: the VSP device
-> + * @pipe_index: the DRM pipeline index
-> + * @cfg: the enablement configuration
-
-Not a big fan of this description or of the vsp1_du_enable_config name,
-but I can't really think of a better alternative. vsp1_du_callback would
-be an option, but it would prevent us from adding new fields not related
-to the callback.
-
-> + *
-> + * The @pipe_index argument selects which DRM pipeline to enable. The number of
-> + * available pipelines depend on the VSP instance.
-> + *
-> + * The configuration passes a callback function to register notification of
-> + * frame completion events.
-> + *
-> + * Return 0 on success or a negative error code on failure.
-> + */
-> +int vsp1_du_atomic_enable(struct device *dev, unsigned int pipe_index,
-> +			  const struct vsp1_du_enable_config *cfg)
-> +{
-> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
-> +	struct vsp1_drm_pipeline *drm_pipe;
-> +	struct vsp1_pipeline *pipe;
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	if (pipe_index >= vsp1->info->lif_count)
-> +		return -EINVAL;
-> +
-> +	drm_pipe = &vsp1->drm->pipe[pipe_index];
-> +	pipe = &drm_pipe->pipe;
-> +
-> +	mutex_lock(&vsp1->drm->lock);
->  
->  	/* Enable the VSP1. */
->  	ret = vsp1_device_get(vsp1);
-> @@ -758,6 +735,132 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
->  	dev_dbg(vsp1->dev, "%s: pipeline enabled\n", __func__);
->  
->  	return 0;
-> +
-> +}
-> +EXPORT_SYMBOL_GPL(vsp1_du_atomic_enable);
-> +
-> +
-
-Extra blank line.
-
-> +/**
-> + * vsp1_du_atomic_disable - Disable and stop a DU pipeline
-> + * @dev: the VSP device
-> + * @pipe_index: the DRM pipeline index
-> + *
-> + * The @pipe_index argument selects which DRM pipeline to disable. The number
-> + * of available pipelines depend on the VSP instance.
-> + *
-> + * Return 0 on success or a negative error code on failure.
-> + */
-> +int vsp1_du_atomic_disable(struct device *dev, unsigned int pipe_index)
-> +{
-> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
-> +	struct vsp1_drm_pipeline *drm_pipe;
-> +	struct vsp1_pipeline *pipe;
-> +	struct vsp1_brx *brx;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	if (pipe_index >= vsp1->info->lif_count)
-> +		return -EINVAL;
-> +
-> +	drm_pipe = &vsp1->drm->pipe[pipe_index];
-> +	pipe = &drm_pipe->pipe;
-> +
-> +	mutex_lock(&vsp1->drm->lock);
-> +
-> +	brx = to_brx(&pipe->brx->subdev);
-> +
-> +	/*
-> +	 * NULL configuration means the CRTC is being disabled, stop
-> +	 * the pipeline and turn the light off.
-> +	 */
-
-I think you can now drop this comment, or at least the first part of the
-sentence.
-
-> +	ret = vsp1_pipeline_stop(pipe);
-> +	if (ret == -ETIMEDOUT)
-> +		dev_err(vsp1->dev, "DRM pipeline stop timeout\n");
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pipe->inputs); ++i) {
-> +		struct vsp1_rwpf *rpf = pipe->inputs[i];
-> +
-> +		if (!rpf)
-> +			continue;
-> +
-> +		/*
-> +		 * Remove the RPF from the pipe and the list of BRx
-> +		 * inputs.
-> +		 */
-
-This now holds on a single line.
-
-> +		WARN_ON(!rpf->entity.pipe);
-> +		rpf->entity.pipe = NULL;
-> +		list_del(&rpf->entity.list_pipe);
-> +		pipe->inputs[i] = NULL;
-> +
-> +		brx->inputs[rpf->brx_input].rpf = NULL;
-> +	}
-> +
-> +	drm_pipe->du_complete = NULL;
-> +	pipe->num_inputs = 0;
-> +
-> +	dev_dbg(vsp1->dev, "%s: pipe %u: releasing %s\n",
-> +		__func__, pipe->lif->index,
-> +		BRX_NAME(pipe->brx));
-
-And this can hold on two lines.
-
-> +
-> +	list_del(&pipe->brx->list_pipe);
-> +	pipe->brx->pipe = NULL;
-> +	pipe->brx = NULL;
-> +
-> +	mutex_unlock(&vsp1->drm->lock);
-> +
-> +	vsp1_dlm_reset(pipe->output->dlm);
-> +	vsp1_device_put(vsp1);
-> +
-> +	dev_dbg(vsp1->dev, "%s: pipeline disabled\n", __func__);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(vsp1_du_atomic_disable);
-> +
-> +/**
-> + * vsp1_du_setup_lif - Setup the output part of the VSP pipeline
-> + * @dev: the VSP device
-> + * @pipe_index: the DRM pipeline index
-> + * @cfg: the LIF configuration
-> + *
-> + * Configure the output part of VSP DRM pipeline for the given frame @cfg.width
-> + * and @cfg.height. This sets up formats on the BRx source pad, the WPF sink and
-> + * source pads, and the LIF sink pad.
-> + *
-> + * The @pipe_index argument selects which DRM pipeline to setup. The number of
-> + * available pipelines depend on the VSP instance.
-> + *
-> + * As the media bus code on the blend unit source pad is conditioned by the
-> + * configuration of its sink 0 pad, we also set up the formats on all blend unit
-> + * sinks, even if the configuration will be overwritten later by
-> + * vsp1_du_setup_rpf(). This ensures that the blend unit configuration is set to
-> + * a well defined state.
-> + *
-> + * Return 0 on success or a negative error code on failure.
-> + */
-> +int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
-> +		      const struct vsp1_du_lif_config *cfg)
-> +{
-> +	int ret;
-> +
-> +	struct vsp1_du_modeset_config modes = {
-> +		.width = cfg->width,
-> +		.height = cfg->height,
-> +		.interlaced = cfg->interlaced,
-> +	};
-> +	struct vsp1_du_enable_config enable = {
-> +		.callback = cfg->callback,
-> +		.callback_data = cfg->callback_data,
-> +	};
-> +
-> +	if (!cfg)
-> +		return vsp1_du_atomic_disable(dev, pipe_index);
-> +
-> +	ret = vsp1_du_atomic_modeset(dev, pipe_index, &modes);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return vsp1_du_atomic_enable(dev, pipe_index, &enable);
->  }
->  EXPORT_SYMBOL_GPL(vsp1_du_setup_lif);
->  
-> diff --git a/include/media/vsp1.h b/include/media/vsp1.h
-> index cc1b0d42ce95..13f5a1c4d45a 100644
-> --- a/include/media/vsp1.h
-> +++ b/include/media/vsp1.h
-> @@ -21,7 +21,7 @@ int vsp1_du_init(struct device *dev);
->  #define VSP1_DU_STATUS_WRITEBACK	BIT(1)
->  
->  /**
-> - * struct vsp1_du_lif_config - VSP LIF configuration
-> + * struct vsp1_du_lif_config - VSP LIF configuration - Deprecated
->   * @width: output frame width
->   * @height: output frame height
->   * @interlaced: true for interlaced pipelines
-> @@ -42,6 +42,30 @@ struct vsp1_du_lif_config {
->  int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
->  		      const struct vsp1_du_lif_config *cfg);
->  
-> +/**
-> + * struct vsp1_du_modeset_config - VSP LIF Mode configuration
-
-Maybe "VSP display mode configuration" as it's not restricted to the LIF
-?
-
-> + * @width: output frame width
-> + * @height: output frame height
-> + * @interlaced: true for interlaced pipelines
-> + */
-> +struct vsp1_du_modeset_config {
-> +	unsigned int width;
-> +	unsigned int height;
-> +	bool interlaced;
-> +};
-> +
-> +/**
-> + * struct vsp1_du_enable_config - VSP enable configuration
-> + * @callback: frame completion callback function (optional). When a callback
-> + *	      is provided, the VSP driver guarantees that it will be called once
-> + *	      and only once for each vsp1_du_atomic_flush() call.
-> + * @callback_data: data to be passed to the frame completion callback
-> + */
-> +struct vsp1_du_enable_config {
-> +	void (*callback)(void *data, unsigned int status, u32 crc);
-> +	void *callback_data;
-> +};
-> +
->  /**
->   * struct vsp1_du_atomic_config - VSP atomic configuration parameters
->   * @pixelformat: plane pixel format (V4L2 4CC)
-> @@ -106,6 +130,12 @@ struct vsp1_du_atomic_pipe_config {
->  	struct vsp1_du_writeback_config writeback;
+>  static const struct dentry_operations dma_buf_dentry_ops = {
+> -       .d_dname = simple_dname,
+> +       .d_dname = dmabuffs_dname,
 >  };
->  
+>
+>  static struct vfsmount *dma_buf_mnt;
+> @@ -297,6 +313,27 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
+>         return events;
+>  }
+>
+> +static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+> +{
+> +       char *name = strndup_user(buf, DMA_BUF_NAME_LEN);
+> +       long ret = 0;
 > +
-> +int vsp1_du_atomic_modeset(struct device *dev, unsigned int pipe_index,
-> +		    const struct vsp1_du_modeset_config *cfg);
-> +int vsp1_du_atomic_enable(struct device *dev, unsigned int pipe_index,
-> +		   const struct vsp1_du_enable_config *cfg);
-> +int vsp1_du_atomic_disable(struct device *dev, unsigned int pipe_index);
->  void vsp1_du_atomic_begin(struct device *dev, unsigned int pipe_index);
->  int vsp1_du_atomic_update(struct device *dev, unsigned int pipe_index,
->  			  unsigned int rpf,
+> +       if (IS_ERR(name))
+> +               return PTR_ERR(name);
+> +
+> +       mutex_lock(&dmabuf->lock);
+> +       if (!list_empty(&dmabuf->attachments)) {
+> +               ret = -EBUSY;
+> +               goto out_unlock;
+> +       }
+We might also want to document this better - that name change for a
+buffer is still allowed if it doesn't have any attached devices after
+its usage is done but before it is destroyed? (theoritically it could
+be reused with a different name?)
 
--- 
-Regards,
+> +       kfree(dmabuf->name);
+> +       dmabuf->name = name;
+> +
+> +out_unlock:
+> +       mutex_unlock(&dmabuf->lock);
+> +       return ret;
+> +}
+> +
+>  static long dma_buf_ioctl(struct file *file,
+>                           unsigned int cmd, unsigned long arg)
+>  {
+> @@ -335,6 +372,10 @@ static long dma_buf_ioctl(struct file *file,
+>                         ret = dma_buf_begin_cpu_access(dmabuf, direction);
+>
+>                 return ret;
+> +
+> +       case DMA_BUF_SET_NAME:
+> +               return dma_buf_set_name(dmabuf, (const char __user *)arg);
+> +
+>         default:
+>                 return -ENOTTY;
+>         }
+> @@ -376,6 +417,7 @@ static struct file *dma_buf_getfile(struct dma_buf *dmabuf, int flags)
+>                 goto err_alloc_file;
+>         file->f_flags = flags & (O_ACCMODE | O_NONBLOCK);
+>         file->private_data = dmabuf;
+> +       file->f_path.dentry->d_fsdata = dmabuf;
+>
+>         return file;
+>
+> @@ -1082,12 +1124,13 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
+>                         continue;
+>                 }
+>
+> -               seq_printf(s, "%08zu\t%08x\t%08x\t%08ld\t%s\t%08lu\n",
+> +               seq_printf(s, "%08zu\t%08x\t%08x\t%08ld\t%s\t%08lu\t%s\n",
+>                                 buf_obj->size,
+>                                 buf_obj->file->f_flags, buf_obj->file->f_mode,
+>                                 file_count(buf_obj->file),
+>                                 buf_obj->exp_name,
+> -                               file_inode(buf_obj->file)->i_ino);
+> +                               file_inode(buf_obj->file)->i_ino,
+> +                               buf_obj->name ?: "");
+>
+>                 robj = buf_obj->resv;
+>                 while (true) {
+> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+> index 58725f890b5b..582998e19df6 100644
+> --- a/include/linux/dma-buf.h
+> +++ b/include/linux/dma-buf.h
+> @@ -255,10 +255,12 @@ struct dma_buf_ops {
+>   * @file: file pointer used for sharing buffers across, and for refcounting.
+>   * @attachments: list of dma_buf_attachment that denotes all devices attached.
+>   * @ops: dma_buf_ops associated with this buffer object.
+> - * @lock: used internally to serialize list manipulation, attach/detach and vmap/unmap
+> + * @lock: used internally to serialize list manipulation, attach/detach and
+> + *        vmap/unmap, and accesses to name
+>   * @vmapping_counter: used internally to refcnt the vmaps
+>   * @vmap_ptr: the current vmap ptr if vmapping_counter > 0
+>   * @exp_name: name of the exporter; useful for debugging.
+> + * @name: userspace-provided name; useful for accounting and debugging.
+>   * @owner: pointer to exporter module; used for refcounting when exporter is a
+>   *         kernel module.
+>   * @list_node: node for dma_buf accounting and debugging.
+> @@ -286,6 +288,7 @@ struct dma_buf {
+>         unsigned vmapping_counter;
+>         void *vmap_ptr;
+>         const char *exp_name;
+> +       const char *name;
+>         struct module *owner;
+>         struct list_head list_node;
+>         void *priv;
+> diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
+> index d75df5210a4a..dbc7092e04b5 100644
+> --- a/include/uapi/linux/dma-buf.h
+> +++ b/include/uapi/linux/dma-buf.h
+> @@ -35,7 +35,10 @@ struct dma_buf_sync {
+>  #define DMA_BUF_SYNC_VALID_FLAGS_MASK \
+>         (DMA_BUF_SYNC_RW | DMA_BUF_SYNC_END)
+>
+> +#define DMA_BUF_NAME_LEN       32
+> +
+>  #define DMA_BUF_BASE           'b'
+>  #define DMA_BUF_IOCTL_SYNC     _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
+> +#define DMA_BUF_SET_NAME       _IOW(DMA_BUF_BASE, 1, const char *)
+>
+>  #endif
+> --
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
+>
 
-Laurent Pinchart
+Best,
+Sumit.
