@@ -2,214 +2,153 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9AFC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD418C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A48520866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B317521019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="FziY4W+Y";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="GNeJ8Ucv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RqyGGNem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbfFLOM3 (ORCPT
+        id S1731005AbfFLOMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:12:29 -0400
-Received: from mail177-30.suw61.mandrillapp.com ([198.2.177.30]:2833 "EHLO
-        mail177-30.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730343AbfFLOM2 (ORCPT
+        Wed, 12 Jun 2019 10:12:55 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46890 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730343AbfFLOMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:12:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=CjNAq5zk83vG6ZLEovRMcdvyAIrKbCVDFfqUl9xCWCg=;
- b=FziY4W+YP89SkqefJQT7Ywsih9Y+CkTucoZkCgT8aMmB2UlpIz9bocA72LlrvttwU6RLPEjVZqGi
-   TWPSRTiaJlpsN9XfcAr5A81Fv/9/Yj8KDc9pFYfizSNTInwwd3bX3Dp3msdXCSCdzpOlp8WFMtHK
-   XNN+CbbQzZ7MKAPHQM0=
-Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id h0444o22rtkv for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 14:12:27 +0000 (envelope-from <bounce-md_31050260.5d01084b.v1-cb302b60410f46c0947b9caae4c0bd51@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560348747; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=CjNAq5zk83vG6ZLEovRMcdvyAIrKbCVDFfqUl9xCWCg=; 
- b=GNeJ8UcvkYLnolN14cVeeRXPweAaNyLeFmuimlh58slgybiZ5wZZK90Ms6xqWPB3iZow9O
- jb67EGtCvGfTWetT+PfRkXnxHhKoPKRFoZ6olzyxGV5eaV5mJJyV12WOLd0GdKpnMhzF1hsa
- 8rmDwD550hAba0jTkAbKWxBN8MVUY=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] fuse: require /dev/fuse reads to have enough buffer capacity (take 2)
-Received: from [87.98.221.171] by mandrillapp.com id cb302b60410f46c0947b9caae4c0bd51; Wed, 12 Jun 2019 14:12:27 +0000
-To:     Sander Eikelenboom <linux@eikelenboom.it>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        <gluster-devel@gluster.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Message-Id: <20190612141220.GA25389@deco.navytux.spb.ru>
-References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it> <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com> <20190611202738.GA22556@deco.navytux.spb.ru> <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com> <20190612112544.GA21465@deco.navytux.spb.ru> <f31ca7b5-0c9b-5fde-6a75-967265de67c6@eikelenboom.it>
-In-Reply-To: <f31ca7b5-0c9b-5fde-6a75-967265de67c6@eikelenboom.it>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.cb302b60410f46c0947b9caae4c0bd51
-X-Mandrill-User: md_31050260
-Date:   Wed, 12 Jun 2019 14:12:27 +0000
+        Wed, 12 Jun 2019 10:12:54 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so13034847iol.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:12:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/fXeSKZUU3yYcblyjjUr+PT/LFbKmVa2WZrUUbFVZZ0=;
+        b=RqyGGNemS8/TLIB5Dxl8WKbnhdoc9LMeuNFDMIXpzQjCM/HDctfvLF5YywpxKCA/Ig
+         7yPInDXKSM+OBgqGqsVrQpGGSMEQJnBZzRWTeXWniVKBg7SCoM2gvK6O3d0P8Rg8Knn+
+         7kPR7R8/O8zpOPULyC4Ksbu0LYVjAmgEBBVgfE++N7YLTYojHXFhqZ0vW6rhH6pMWPEh
+         znEfqS3UxP9YqmjVyDU0ZSD9qVP5VjHuDoMiJyK4TV0iN4rGvAIFGHXw8tdLPBeeAWW2
+         UoTRDFKFZJo64q4YbPRkTQD0aMhiZQZ2yxkHKkLHVCVoyrmFLNaqdcqQ0dSaWHA8CBfu
+         d5uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/fXeSKZUU3yYcblyjjUr+PT/LFbKmVa2WZrUUbFVZZ0=;
+        b=NJxg6U+lAMvliauM7M2hwaVHA9bjQKf54EOZ0+IImcf/P6UUzrb5VFZd1k4Kl7l8Ae
+         a3MBnKQdI0Jabd7oWmxqL2BF9L76zKRPE4Kt6xGNIoLHzF52RhqN7Q1woaj47l1scA7e
+         tn1DjNvkgcgJRod6wsR5+SLBrhl0Az09vLVcVtw1mCTSpZDcqI5i6FGPCvmy+XLSDfSV
+         6cxc92JitZr9XgtFdhUCWiE8P806glrL1/TkIFq44z8dlrmLF2TiWjxAIQP13gh+Evxl
+         cJQHk2vGShfJMZIcGccTFf/MyL2askNLsNAsgOBs6UoA56bAyonKcDyxdFNAwApNGtTU
+         /gCg==
+X-Gm-Message-State: APjAAAW61JlssORPbjfhglwwSKfnL6eLmjGEI7mj7h6EXhK3WW+Q7t5b
+        TM1BSAO/kbYX+DBnem/UZaZgF7/kLg/yFaEBPKOlKg==
+X-Google-Smtp-Source: APXvYqwkiG/FnYs/yUolUcw3GIjfphJ0LlTz9nHHhg4BtY4TBFOFyCbFjrLUlM9TyKIfKg7WWD3xL1yeGraiKF5DRHU=
+X-Received: by 2002:a6b:641a:: with SMTP id t26mr7794304iog.3.1560348773474;
+ Wed, 12 Jun 2019 07:12:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190531150828.157832-1-elver@google.com> <20190531150828.157832-3-elver@google.com>
+ <CANpmjNP_-J5dZVtDeHUeDk2TBBkOgoPvGKq42Qd7rezbnFWNGg@mail.gmail.com>
+In-Reply-To: <CANpmjNP_-J5dZVtDeHUeDk2TBBkOgoPvGKq42Qd7rezbnFWNGg@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 12 Jun 2019 16:12:29 +0200
+Message-ID: <CACT4Y+a0H0NiMmydmw1qOA=zUXDmBZXHmh6-fp9nU0UtAPZvxQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] x86: Use static_cpu_has in uaccess region to avoid instrumentation
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 03:03:49PM +0200, Sander Eikelenboom wrote:
-> On 12/06/2019 13:25, Kirill Smelkov wrote:
-> > On Wed, Jun 12, 2019 at 09:44:49AM +0200, Miklos Szeredi wrote:
-> >> On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wrot=
-e:
-> >>
-> >>> Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` =
-for
-> >>> header room change be accepted?
-> >>
-> >> Yes, next cycle.   For 4.2 I'll just push the revert.
-> > 
-> > Thanks Miklos. Please consider queuing the following patch for 5.3.
-> > Sander, could you please confirm that glusterfs is not broken with this
-> > version of the check?
-> > 
-> > Thanks beforehand,
-> > Kirill
-> 
-> 
-> Hmm unfortunately it doesn't build, see below.
-> [...]
-> fs/fuse/dev.c:1336:14: error: =E2=80=98fuse_in_header=E2=80=99 undeclared=
- (first use in this function)
->        sizeof(fuse_in_header) + sizeof(fuse_write_in) + fc->max_write))
+On Fri, Jun 7, 2019 at 11:44 AM Marco Elver <elver@google.com> wrote:
+>
+> Gentle ping.  I would appreciate quick feedback if this approach is reasonable.
+>
+> Peter: since you suggested that we should not change objtool, did you
+> have a particular approach in mind that is maybe different from v2 and
+> v3? Or is this what you were thinking of?
+>
+> Many thanks!
+>
+> On Fri, 31 May 2019 at 17:11, Marco Elver <elver@google.com> wrote:
+> >
+> > This patch is a pre-requisite for enabling KASAN bitops instrumentation;
+> > using static_cpu_has instead of boot_cpu_has avoids instrumentation of
+> > test_bit inside the uaccess region. With instrumentation, the KASAN
+> > check would otherwise be flagged by objtool.
+> >
+> > For consistency, kernel/signal.c was changed to mirror this change,
+> > however, is never instrumented with KASAN (currently unsupported under
+> > x86 32bit).
+> >
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > Suggested-by: H. Peter Anvin <hpa@zytor.com>
+> > ---
+> > Changes in v3:
+> > * Use static_cpu_has instead of moving boot_cpu_has outside uaccess
+> >   region.
+> >
+> > Changes in v2:
+> > * Replaces patch: 'tools/objtool: add kasan_check_* to uaccess
+> >   whitelist'
+> > ---
+> >  arch/x86/ia32/ia32_signal.c | 2 +-
+> >  arch/x86/kernel/signal.c    | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+> > index 629d1ee05599..1cee10091b9f 100644
+> > --- a/arch/x86/ia32/ia32_signal.c
+> > +++ b/arch/x86/ia32/ia32_signal.c
+> > @@ -358,7 +358,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
+> >                 put_user_ex(ptr_to_compat(&frame->uc), &frame->puc);
+> >
+> >                 /* Create the ucontext.  */
+> > -               if (boot_cpu_has(X86_FEATURE_XSAVE))
+> > +               if (static_cpu_has(X86_FEATURE_XSAVE))
 
-Sorry, my bad, it was missing "struct" before fuse_in_header. I
-originally compile-tested the patch with `make -j4`, was distracted onto
-other topic and did not see the error after returning due to long tail
-of successful CC lines. Apologize for the inconvenience. Below is a
-fixed patch that was both compile-tested and runtime-tested with my FUSE
-workloads (non-glusterfs).
 
-Kirill
+Peter Z or A, does it look good to you? Could you please Ack this?
 
----- 8< ----
-From 98fd29bb6789d5f6c346274b99d47008ad856607 Mon Sep 17 00:00:00 2001
-From: Kirill Smelkov <kirr@nexedi.com>
-Date: Wed, 12 Jun 2019 17:06:18 +0300
-Subject: [PATCH v2] fuse: require /dev/fuse reads to have enough buffer cap=
-acity (take 2)
 
-[ This retries commit d4b13963f217 which was reverted in 766741fcaa1f.
-
-  In this version we require only `sizeof(fuse_in_header) + sizeof(fuse_wri=
-te_in)`
-  instead of 4K for FUSE request header room, because, contrary to
-  libfuse and kernel client behaviour, GlusterFS actually provides only
-  so much room for request header. ]
-
-A FUSE filesystem server queues /dev/fuse sys_read calls to get
-filesystem requests to handle. It does not know in advance what would be
-that request as it can be anything that client issues - LOOKUP, READ,
-WRITE, ... Many requests are short and retrieve data from the
-filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
-
-Before getting into operation phase, FUSE filesystem server and kernel
-client negotiate what should be the maximum write size the client will
-ever issue. After negotiation the contract in between server/client is
-that the filesystem server then should queue /dev/fuse sys_read calls with
-enough buffer capacity to receive any client request - WRITE in
-particular, while FUSE client should not, in particular, send WRITE
-requests with > negotiated max_write payload. FUSE client in kernel and
-libfuse historically reserve 4K for request header. However an existing
-filesystem server - GlusterFS - was found which reserves only 80 bytes
-for header room (=3D `sizeof(fuse_in_header) + sizeof(fuse_write_in)`).
-
-https://lore.kernel.org/linux-fsdevel/20190611202738.GA22556@deco.navytux.s=
-pb.ru/
-https://github.com/gluster/glusterfs/blob/v3.8.15-0-gd174f021a/xlators/moun=
-t/fuse/src/fuse-bridge.c#L4894
-
-Since
-
-=09`sizeof(fuse_in_header) + sizeof(fuse_write_in)` =3D=3D
-=09`sizeof(fuse_in_header) + sizeof(fuse_read_in)`  =3D=3D
-=09`sizeof(fuse_in_header) + sizeof(fuse_notify_retrieve_in)`
-
-is the absolute minimum any sane filesystem should be using for header
-room, the contract is that filesystem server should queue sys_reads with
-`sizeof(fuse_in_header) + sizeof(fuse_write_in)` + max_write buffer.
-
-If the filesystem server does not follow this contract, what can happen
-is that fuse_dev_do_read will see that request size is > buffer size,
-and then it will return EIO to client who issued the request but won't
-indicate in any way that there is a problem to filesystem server.
-This can be hard to diagnose because for some requests, e.g. for
-NOTIFY_REPLY which mimics WRITE, there is no client thread that is
-waiting for request completion and that EIO goes nowhere, while on
-filesystem server side things look like the kernel is not replying back
-after successful NOTIFY_RETRIEVE request made by the server.
-
-We can make the problem easy to diagnose if we indicate via error return to
-filesystem server when it is violating the contract.  This should not
-practically cause problems because if a filesystem server is using shorter
-buffer, writes to it were already very likely to cause EIO, and if the
-filesystem is read-only it should be too following FUSE_MIN_READ_BUFFER
-minimum buffer size.
-
-Please see [1] for context where the problem of stuck filesystem was hit
-for real (because kernel client was incorrectly sending more than
-max_write data with NOTIFY_REPLY; see also previous patch), how the
-situation was traced and for more involving patch that did not make it
-into the tree.
-
-[1] https://marc.info/?l=3Dlinux-fsdevel&m=3D155057023600853&w=3D2
-
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Cc: Han-Wen Nienhuys <hanwen@google.com>
-Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
----
- fs/fuse/dev.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index ea8237513dfa..b2b2344eadcf 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1317,6 +1317,26 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud=
-, struct file *file,
- =09unsigned reqsize;
- =09unsigned int hash;
- 
-+=09/*
-+=09 * Require sane minimum read buffer - that has capacity for fixed part
-+=09 * of any request header + negotiated max_write room for data. If the
-+=09 * requirement is not satisfied return EINVAL to the filesystem server
-+=09 * to indicate that it is not following FUSE server/client contract.
-+=09 * Don't dequeue / abort any request.
-+=09 *
-+=09 * Historically libfuse reserves 4K for fixed header room, but e.g.
-+=09 * GlusterFS reserves only 80 bytes
-+=09 *
-+=09 *=09=3D `sizeof(fuse_in_header) + sizeof(fuse_write_in)`
-+=09 *
-+=09 * which is the absolute minimum any sane filesystem should be using
-+=09 * for header room.
-+=09 */
-+=09if (nbytes < max_t(size_t, FUSE_MIN_READ_BUFFER,
-+=09=09=09   sizeof(struct fuse_in_header) + sizeof(struct fuse_write_in) +
-+=09=09=09=09fc->max_write))
-+=09=09return -EINVAL;
-+
-  restart:
- =09spin_lock(&fiq->waitq.lock);
- =09err =3D -EAGAIN;
--- 
-2.20.1
-
+> >                         put_user_ex(UC_FP_XSTATE, &frame->uc.uc_flags);
+> >                 else
+> >                         put_user_ex(0, &frame->uc.uc_flags);
+> > diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+> > index 364813cea647..52eb1d551aed 100644
+> > --- a/arch/x86/kernel/signal.c
+> > +++ b/arch/x86/kernel/signal.c
+> > @@ -391,7 +391,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+> >                 put_user_ex(&frame->uc, &frame->puc);
+> >
+> >                 /* Create the ucontext.  */
+> > -               if (boot_cpu_has(X86_FEATURE_XSAVE))
+> > +               if (static_cpu_has(X86_FEATURE_XSAVE))
+> >                         put_user_ex(UC_FP_XSTATE, &frame->uc.uc_flags);
+> >                 else
+> >                         put_user_ex(0, &frame->uc.uc_flags);
+> > --
+> > 2.22.0.rc1.257.g3120a18244-goog
+> >
