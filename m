@@ -2,51 +2,53 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9C8C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92087C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E771E215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F68D21744
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="h/VdZDVY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="ipmiOu/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437515AbfFLPg0 (ORCPT
+        id S2437721AbfFLPgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:36:26 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:29736 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409443AbfFLPgZ (ORCPT
+        Wed, 12 Jun 2019 11:36:31 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:63119 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437543AbfFLPgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:36:25 -0400
+        Wed, 12 Jun 2019 11:36:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1560353785; x=1591889785;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=iysjHFEmFK6WReRy+l8vRaIRl3mJUVuzUzI1BfSSuWA=;
-  b=h/VdZDVYQt+QuQNBHV4WQ+OaIWjgZxkOixOP5tuhujVKt3nw4Zw7Tj66
-   rcjM+fuAzhGM8euXjkXwb1oZC9MjkJ33u9BD/n7YQjxyO9Qwo8+wlGgFL
-   SYPcbygmmVGaWnFg3thwdySl+31uA18jG+QsdDO0nMt/E4MQ5r8a30n00
-   Y=;
+  t=1560353790; x=1591889790;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=YD1Fi0GvdNAKUu8A+dqXH3sOUetAnqKZZEfujw59KzM=;
+  b=ipmiOu/3ZJoQzP0NCQw2D2tIqIubIXK1aJ9JIAd2ArtpCWH/6wmlEAwR
+   4dIgwcsbumT1PSnwq9duknlEzaHWjYuxiciFx5n5nmIscQl9BLwrl2GiW
+   qEjeteP5YfoscJ60ckU8hF+8im11X0fJ1DJzaZpqASrv8IyN3RDaNFXHo
+   c=;
 X-IronPort-AV: E=Sophos;i="5.62,366,1554768000"; 
-   d="scan'208";a="400429507"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 12 Jun 2019 15:36:23 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 494C6A245B;
-        Wed, 12 Jun 2019 15:36:18 +0000 (UTC)
-Received: from EX13D08UEE002.ant.amazon.com (10.43.62.92) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 12 Jun 2019 15:36:18 +0000
+   d="scan'208";a="679536197"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 12 Jun 2019 15:36:28 +0000
+Received: from EX13MTAUEB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 5360CA2413;
+        Wed, 12 Jun 2019 15:36:27 +0000 (UTC)
+Received: from EX13D08UEB001.ant.amazon.com (10.43.60.245) by
+ EX13MTAUEB001.ant.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 12 Jun 2019 15:36:27 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEE002.ant.amazon.com (10.43.62.92) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 12 Jun 2019 15:36:18 +0000
+ EX13D08UEB001.ant.amazon.com (10.43.60.245) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 12 Jun 2019 15:36:26 +0000
 Received: from u6cf1b7119fa15b.ant.amazon.com (10.28.85.98) by
  mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Wed, 12 Jun 2019 15:36:15 +0000
+ 15.0.1367.3 via Frontend Transport; Wed, 12 Jun 2019 15:36:24 +0000
 From:   Sam Caccavale <samcacc@amazon.de>
 CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
         <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
@@ -57,10 +59,12 @@ CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
         <paullangton4@gmail.com>, <anirudhkaushik@google.com>,
         <x86@kernel.org>, <kvm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Sam Caccavale <samcacc@amazon.de>
-Subject: [v2, 0/4] x86 instruction emulator fuzzing
-Date:   Wed, 12 Jun 2019 17:35:56 +0200
-Message-ID: <20190612153600.13073-1-samcacc@amazon.de>
+Subject: [v2, 3/4] Demonstrating unit testing via simple-harness
+Date:   Wed, 12 Jun 2019 17:35:59 +0200
+Message-ID: <20190612153600.13073-4-samcacc@amazon.de>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190612153600.13073-1-samcacc@amazon.de>
+References: <20190612153600.13073-1-samcacc@amazon.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 To:     unlisted-recipients:; (no To-header on input)
@@ -69,84 +73,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
+Simple-harness.c uses inline asm support to generate asm and then has the
+emulator emulate this code.  This may be useful as a form of testing for
+the emulator.
 
-This series aims to provide an entrypoint for, and fuzz KVM's x86 instruction
-emulator from userspace.  It mirrors Xen's application of the AFL fuzzer to
-it's instruction emulator in the hopes of discovering vulnerabilities.
-Since this entrypoint also allows arbitrary execution of the emulators code
-from userspace, it may also be useful for testing.
-
-The current 4 patches build the emulator and 2 harnesses: simple-harness is
-an example of unit testing; afl-harness is a frontend for the AFL fuzzer.
-
-Patches
-=======
-
-- 01: Builds and links afl-harness with the required kernel objects.
-- 02: Introduces the minimal set of emulator operations and supporting code
-to emulate simple instructions.
-- 03: Demonstrates simple-harness as a unit test.
-- 04: Adds scripts for install, running, and crash triage.
-
-Any comments/suggestions are greatly appreciated.
-
-Best,
-Sam Caccavale
-
-Sam Caccavale (4):
-  Build target for emulate.o as a userspace binary
-  Emulate simple x86 instructions in userspace
-  Demonstrating unit testing via simple-harness
-  Added scripts for filtering, building, deploying
-
- tools/Makefile                                |   9 +
- tools/fuzz/x86ie/.gitignore                   |   2 +
- tools/fuzz/x86ie/Makefile                     |  54 +++
- tools/fuzz/x86ie/README.md                    |  12 +
- tools/fuzz/x86ie/afl-harness.c                | 151 +++++++
- tools/fuzz/x86ie/common.h                     |  87 ++++
- tools/fuzz/x86ie/emulator_ops.c               | 398 ++++++++++++++++++
- tools/fuzz/x86ie/emulator_ops.h               | 120 ++++++
- tools/fuzz/x86ie/scripts/afl-many             |  28 ++
- tools/fuzz/x86ie/scripts/bin.sh               |  49 +++
- tools/fuzz/x86ie/scripts/build.sh             |  32 ++
- tools/fuzz/x86ie/scripts/coalesce.sh          |   6 +
- tools/fuzz/x86ie/scripts/deploy.sh            |   9 +
- tools/fuzz/x86ie/scripts/deploy_remote.sh     |   9 +
- tools/fuzz/x86ie/scripts/gen_output.sh        |  11 +
- tools/fuzz/x86ie/scripts/install_afl.sh       |  14 +
- .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |   5 +
- tools/fuzz/x86ie/scripts/rebuild.sh           |   6 +
- tools/fuzz/x86ie/scripts/run.sh               |  10 +
- tools/fuzz/x86ie/scripts/summarize.sh         |   9 +
- tools/fuzz/x86ie/simple-harness.c             |  42 ++
- tools/fuzz/x86ie/stubs.c                      |  56 +++
- tools/fuzz/x86ie/stubs.h                      |  52 +++
- 23 files changed, 1171 insertions(+)
- create mode 100644 tools/fuzz/x86ie/.gitignore
- create mode 100644 tools/fuzz/x86ie/Makefile
- create mode 100644 tools/fuzz/x86ie/README.md
- create mode 100644 tools/fuzz/x86ie/afl-harness.c
- create mode 100644 tools/fuzz/x86ie/common.h
- create mode 100644 tools/fuzz/x86ie/emulator_ops.c
- create mode 100644 tools/fuzz/x86ie/emulator_ops.h
- create mode 100755 tools/fuzz/x86ie/scripts/afl-many
- create mode 100755 tools/fuzz/x86ie/scripts/bin.sh
- create mode 100755 tools/fuzz/x86ie/scripts/build.sh
- create mode 100755 tools/fuzz/x86ie/scripts/coalesce.sh
- create mode 100644 tools/fuzz/x86ie/scripts/deploy.sh
- create mode 100755 tools/fuzz/x86ie/scripts/deploy_remote.sh
- create mode 100755 tools/fuzz/x86ie/scripts/gen_output.sh
- create mode 100755 tools/fuzz/x86ie/scripts/install_afl.sh
- create mode 100755 tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
- create mode 100755 tools/fuzz/x86ie/scripts/rebuild.sh
- create mode 100755 tools/fuzz/x86ie/scripts/run.sh
- create mode 100755 tools/fuzz/x86ie/scripts/summarize.sh
+CR: https://code.amazon.com/reviews/CR-8591638
+---
+ tools/fuzz/x86ie/Makefile         |  7 ++++--
+ tools/fuzz/x86ie/simple-harness.c | 42 +++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+), 2 deletions(-)
  create mode 100644 tools/fuzz/x86ie/simple-harness.c
- create mode 100644 tools/fuzz/x86ie/stubs.c
- create mode 100644 tools/fuzz/x86ie/stubs.h
 
+diff --git a/tools/fuzz/x86ie/Makefile b/tools/fuzz/x86ie/Makefile
+index d45fe6d266b9..e79d275e1040 100644
+--- a/tools/fuzz/x86ie/Makefile
++++ b/tools/fuzz/x86ie/Makefile
+@@ -44,8 +44,11 @@ LOCAL_OBJS := emulator_ops.o stubs.o
+ afl-harness: afl-harness.o $(LOCAL_OBJS) $(KERNEL_OBJS)
+ 	@$(CC) -v $(KBUILD_CFLAGS) $(LOCAL_OBJS) $(KERNEL_OBJS) $< $(INCLUDES) -Istubs.h -o $@ -no-pie
+
+-all: afl-harness
++simple-harness: simple-harness.o $(LOCAL_OBJS) $(KERNEL_OBJS)
++	@$(CC) -v $(KBUILD_CFLAGS) $(LOCAL_OBJS) $(KERNEL_OBJS) $< $(INCLUDES) -Istubs.h -o $@ -no-pie
++
++all: afl-harness simple-harness
+
+ .PHONY: clean
+ clean:
+-	$(RM) -r *.o afl-harness
++	$(RM) -r *.o afl-harness simple-harness
+diff --git a/tools/fuzz/x86ie/simple-harness.c b/tools/fuzz/x86ie/simple-harness.c
+new file mode 100644
+index 000000000000..f21fdafe1dd1
+--- /dev/null
++++ b/tools/fuzz/x86ie/simple-harness.c
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <assert.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <string.h>
++#include "emulator_ops.h"
++#include <asm/kvm_emulate.h>
++
++extern void foo(void)
++{
++	asm volatile("__start:"
++		     ".byte 0x32, 0x05, 0x00, 0x00, 0x00, 0x00;" // xor eax,DWORD PTR [rip+0x0]
++		     ".byte 0x90;"
++		     //".byte 0x0f, 0x7f, 0xde;" // movq mm6,mm3
++		     ".byte 0x0f, 0x6f, 0xde;" // same instruction...
++		     ".byte 0x90;"
++		     "__end:");
++}
++
++int main(int argc, char **argv)
++{
++	extern unsigned char __start;
++	extern unsigned char __end;
++	struct state *state = create_emulator();
++	int rc;
++
++	/* Ensures the emulator is in a valid state. */
++	initialize_emulator(state);
++
++	/* Provide the emulator with instructions to emulate. */
++	state->data = &__start;
++	state->data_available = &__end - &__start;
++
++	/* rip addressed instruction */
++	rc = emulate_until_complete(state);
++
++	/* Free the emulator. */
++	free_emulator(state);
++
++	return 0;
++}
 --
 2.17.1
 
