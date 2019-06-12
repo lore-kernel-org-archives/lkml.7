@@ -2,190 +2,114 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80A9C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3581BC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72E820874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0891E20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436592AbfFLDty (ORCPT
+        id S2407664AbfFLDwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:49:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60556 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2407047AbfFLDtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:49:53 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 268FD9DDA16174A382EF;
-        Wed, 12 Jun 2019 11:49:49 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 12 Jun 2019 11:49:40 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <edumazet@google.com>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH net v2] tcp: avoid creating multiple req socks with the same tuples
-Date:   Wed, 12 Jun 2019 11:57:15 +0800
-Message-ID: <20190612035715.166676-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 11 Jun 2019 23:52:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59546 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407047AbfFLDwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 23:52:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 20:52:19 -0700
+X-ExtLoop1: 1
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by orsmga005.jf.intel.com with ESMTP; 11 Jun 2019 20:52:15 -0700
+Date:   Wed, 12 Jun 2019 11:52:29 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Willem de Bruijn <willemb@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        LKML <linux-kernel@vger.kernel.org>, "lkp@01.org" <lkp@01.org>,
+        "David S. Miller" <davem@davemloft.net>, ying.huang@intel.com
+Subject: Re: [LKP] [tcp] 8b27dae5a2: netperf.Throughput_Mbps -25.7% regression
+Message-ID: <20190612035133.GA18313@shbuild999.sh.intel.com>
+References: <20190403063436.GG20952@shao2-debian>
+ <20190530103048.hfld4t4m37jsg4yo@shbuild888>
+ <CANn89iL4TYBYVnRhzVAH8UXSptStnYkZ+Rq3swzsMWngRJmGCA@mail.gmail.com>
+ <20190530152314.ise5ycz6sdwfygph@shbuild888>
+ <20190604100735.s2g3tc35ofybimek@shbuild888>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604100735.s2g3tc35ofybimek@shbuild888>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is one issue about bonding mode BOND_MODE_BROADCAST, and
-two slaves with diffierent affinity, so packets will be handled
-by different cpu. These are two pre-conditions in this case.
+On Tue, Jun 04, 2019 at 06:07:35PM +0800, Feng Tang wrote:
+> On Thu, May 30, 2019 at 11:23:14PM +0800, Feng Tang wrote:
+> > Hi Eric,
+> > 
+> > On Thu, May 30, 2019 at 05:21:40AM -0700, Eric Dumazet wrote:
+> > > On Thu, May 30, 2019 at 3:31 AM Feng Tang <feng.tang@intel.com> wrote:
+> > > >
+> > > > On Wed, Apr 03, 2019 at 02:34:36PM +0800, kernel test robot wrote:
+> > > > > Greeting,
+> > > > >
+> > > > > FYI, we noticed a -25.7% regression of netperf.Throughput_Mbps due to commit:
+> > > > >
+> > > > >
+> > > > > commit: 8b27dae5a2e89a61c46c6dbc76c040c0e6d0ed4c ("tcp: add one skb cache for rx")
+> > > > > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> > > >
+> > > > Hi Eric,
+> > > >
+> > > > Could you help to check this? thanks,
+> > > >
+> > > 
+> > > Hmmm... patch is old and had some bugs that have been fixed.
+> > > 
+> > > What numbers do you have with more recent kernels ?
+> > 
+> > 
+> > I just run the test  with 5.2-rc2, and the regression is still there.
+> 
+> Hi Eric,
+> 
+> Any hint on this?
+> 
+> >From the perf data, the spinlock contention has an obvious increase:
+> 
+> 9.28            +7.6       16.91        perf-profile.calltrace.cycles-pp.native_queued_spin_lock_slowpath._raw_spin_lock.free_one_page.__free_pages_ok.___pskb_trim
+> 18.55           +8.6       27.14        perf-profile.calltrace.cycles-pp.native_queued_spin_lock_slowpath._raw_spin_lock_irqsave.get_page_from_freelist.__alloc_pages_nodemask.skb_page_frag_refill
 
-When two slaves receive the same syn packets at the same time,
-two request sock(reqsk) will be created if below situation happens:
-1. syn1 arrived tcp_conn_request, create reqsk1 and have not yet called
-inet_csk_reqsk_queue_hash_add.
-2. syn2 arrived tcp_v4_rcv, it goes to tcp_conn_request and create
-reqsk2
-because it can't find reqsk1 in the __inet_lookup_skb.
+Hi Eric,
 
-Then reqsk1 and reqsk2 are added to establish hash table, and two synack
-with different
-seq(seq1 and seq2) are sent to client, then tcp ack arrived and will be
-processed in tcp_v4_rcv and tcp_check_req, if __inet_lookup_skb find the
-reqsk2, and
-tcp ack packet is ack_seq is seq1, it will be failed after checking:
-TCP_SKB_CB(skb)->ack_seq != tcp_rsk(req)->snt_isn + 1)
-and then tcp rst will be sent to client and close the connection.
+Any thoughts?
 
-To fix this, call __inet_lookup_established() before __sk_nulls_add_node_rcu()
-in inet_ehash_insert(). If there is existed reqsk with same tuples in
-established hash table, directly to remove current reqsk2, and does not send
-synack to client.
+Actually I did some further check. The increased lock contention
+comes from the mm zone lock for page alloc/free. I did an 
+experiment by changing the SKB_FRAG_PAGE_ORDER from 32K to 64K,
+the lock contention is dramatically reduced, and the throughput
+got some recovery (10% ~ 15% gain) depending on HW platform, but
+can't fully recover the -25.7% loss. Hope this info helps.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- v2: move __inet_lookup_established from tcp_conn_request() to inet_ehash_insert()
- as Eric suggested.
----
- include/net/inet_connection_sock.h |  2 +-
- net/ipv4/inet_connection_sock.c    | 16 ++++++++++++----
- net/ipv4/inet_hashtables.c         | 13 +++++++++++++
- net/ipv4/tcp_input.c               |  7 ++++---
- 4 files changed, 30 insertions(+), 8 deletions(-)
+Thanks,
+Feng
 
-diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
-index c57d53e7e02c..2d3538e333cb 100644
---- a/include/net/inet_connection_sock.h
-+++ b/include/net/inet_connection_sock.h
-@@ -263,7 +263,7 @@ struct dst_entry *inet_csk_route_child_sock(const struct sock *sk,
- struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
- 				      struct request_sock *req,
- 				      struct sock *child);
--void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
-+bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
- 				   unsigned long timeout);
- struct sock *inet_csk_complete_hashdance(struct sock *sk, struct sock *child,
- 					 struct request_sock *req,
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index 13ec7c3a9c49..fd45ed2fd985 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -749,7 +749,7 @@ static void reqsk_timer_handler(struct timer_list *t)
- 	inet_csk_reqsk_queue_drop_and_put(sk_listener, req);
- }
- 
--static void reqsk_queue_hash_req(struct request_sock *req,
-+static bool reqsk_queue_hash_req(struct request_sock *req,
- 				 unsigned long timeout)
- {
- 	req->num_retrans = 0;
-@@ -759,19 +759,27 @@ static void reqsk_queue_hash_req(struct request_sock *req,
- 	timer_setup(&req->rsk_timer, reqsk_timer_handler, TIMER_PINNED);
- 	mod_timer(&req->rsk_timer, jiffies + timeout);
- 
--	inet_ehash_insert(req_to_sk(req), NULL);
-+	if (!inet_ehash_insert(req_to_sk(req), NULL)) {
-+		if (timer_pending(&req->rsk_timer))
-+			del_timer_sync(&req->rsk_timer);
-+		return false;
-+	}
- 	/* before letting lookups find us, make sure all req fields
- 	 * are committed to memory and refcnt initialized.
- 	 */
- 	smp_wmb();
- 	refcount_set(&req->rsk_refcnt, 2 + 1);
-+	return true;
- }
- 
--void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
-+bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
- 				   unsigned long timeout)
- {
--	reqsk_queue_hash_req(req, timeout);
-+	if (!reqsk_queue_hash_req(req, timeout))
-+		return false;
-+
- 	inet_csk_reqsk_queue_added(sk);
-+	return true;
- }
- EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
- 
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index c4503073248b..b6a1b5334565 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -477,6 +477,7 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
- 	struct inet_ehash_bucket *head;
- 	spinlock_t *lock;
- 	bool ret = true;
-+	struct sock *reqsk = NULL;
- 
- 	WARN_ON_ONCE(!sk_unhashed(sk));
- 
-@@ -486,6 +487,18 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
- 	lock = inet_ehash_lockp(hashinfo, sk->sk_hash);
- 
- 	spin_lock(lock);
-+	if (!osk)
-+		reqsk = __inet_lookup_established(sock_net(sk), &tcp_hashinfo,
-+							sk->sk_daddr, sk->sk_dport,
-+							sk->sk_rcv_saddr, sk->sk_num,
-+							sk->sk_bound_dev_if, sk->sk_bound_dev_if);
-+	if (unlikely(reqsk)) {
-+		ret = false;
-+		reqsk_free(inet_reqsk(sk));
-+		spin_unlock(lock);
-+		return ret;
-+	}
-+
- 	if (osk) {
- 		WARN_ON_ONCE(sk->sk_hash != osk->sk_hash);
- 		ret = sk_nulls_del_node_init_rcu(osk);
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 38dfc308c0fb..358272394590 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6570,9 +6570,10 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
- 		sock_put(fastopen_sk);
- 	} else {
- 		tcp_rsk(req)->tfo_listener = false;
--		if (!want_cookie)
--			inet_csk_reqsk_queue_hash_add(sk, req,
--				tcp_timeout_init((struct sock *)req));
-+		if (!want_cookie && !inet_csk_reqsk_queue_hash_add(sk, req,
-+					tcp_timeout_init((struct sock *)req)))
-+			return 0;
-+
- 		af_ops->send_synack(sk, dst, &fl, req, &foc,
- 				    !want_cookie ? TCP_SYNACK_NORMAL :
- 						   TCP_SYNACK_COOKIE);
--- 
-2.20.1
-
+> 
+> And for commit 8b27dae5a2 ("tcp: add one skb cache for rx"), IIUC, it
+> is not a real cache like the "tx skb cache" patch, and kind of a
+> delayed freeing.
+> 
+> Thanks,
+> Feng
+> 
+>  
