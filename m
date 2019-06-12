@@ -2,61 +2,59 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F5CC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02198C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D0A2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C3C2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:17:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FskF3yeL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437115AbfFLDPi (ORCPT
+        id S2391899AbfFLDRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:15:38 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29460 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406820AbfFLDPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:15:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 20:15:38 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 20:15:32 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] swiotlb: Zero out bounce buffer for untrusted
- device
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
- <20190603011620.31999-4-baolu.lu@linux.intel.com>
- <20190610154553.GT28796@char.us.oracle.com>
- <ec6ac2ba-7b88-2bcf-aa95-f8981b258c5c@linux.intel.com>
- <20190612010518.GB22479@char.us.oracle.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <8ad77caa-3245-4d06-314d-c4a92aa0f2ac@linux.intel.com>
-Date:   Wed, 12 Jun 2019 11:08:24 +0800
+        Tue, 11 Jun 2019 23:17:50 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34216 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388207AbfFLDRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 23:17:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=IpLE7ds2K7OtQWpRAGotTZF/PZyEILhWbTrpge7p0cg=; b=FskF3yeL0/79r17kY13jKRiXqy
+        p61RiQCqPCuaV6wK9aOriMS+o6syY3+q3GH7ogGSRoDe/+XfIq7c3mE89pCRdTuPboH6VRQt+SStN
+        lqosfsN/knVsUPDu+htIe6f1BQyQUMMbTAHsbnhRwyfN1JGJR+U+4iTddXmRHS9eg0efGrhB8dqAc
+        zpbSCTiIS9/Zr9qngbf4DcdJs29NelKYWZh9P4OkM8JNtcY1hWacSQELN+riB9wmgX7oHFiAPeVK6
+        sxzet/L+MDj7qbMmQEjKczKQzlF02y9qoc9JSnRxJZliY/e3sLAx/rSp7MFgPmpuGpsNSOrSHcseo
+        CL/3eMUw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hatlL-0002pl-M5; Wed, 12 Jun 2019 03:17:24 +0000
+Subject: Re: linux-next 20190611: objtool warning
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>
+References: <a9ceb8f8-f2fd-e57d-3428-aaf50e011a43@infradead.org>
+ <20190612025227.lxumqqtqao6iqms3@treble>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <18e6ef70-2fa3-3f70-0fcd-3eadef2cfceb@infradead.org>
+Date:   Tue, 11 Jun 2019 20:17:20 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190612010518.GB22479@char.us.oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190612025227.lxumqqtqao6iqms3@treble>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,79 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 6/12/19 9:05 AM, Konrad Rzeszutek Wilk wrote:
-> On Wed, Jun 12, 2019 at 08:43:40AM +0800, Lu Baolu wrote:
->> Hi Konrad,
+On 6/11/19 7:52 PM, Josh Poimboeuf wrote:
+> On Tue, Jun 11, 2019 at 06:59:22PM -0700, Randy Dunlap wrote:
+>> Hi,
 >>
->> Thanks a lot for your reviewing.
+>> New warning AFAIK:
 >>
->> On 6/10/19 11:45 PM, Konrad Rzeszutek Wilk wrote:
->>> On Mon, Jun 03, 2019 at 09:16:14AM +0800, Lu Baolu wrote:
->>>> This is necessary to avoid exposing valid kernel data to any
->>>> milicious device.
->>>
->>> malicious
->>
->> Yes, thanks.
->>
->>>
->>>>
->>>> Suggested-by: Christoph Hellwig <hch@lst.de>
->>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->>>> ---
->>>>    kernel/dma/swiotlb.c | 6 ++++++
->>>>    1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
->>>> index f956f785645a..ed41eb7f6131 100644
->>>> --- a/kernel/dma/swiotlb.c
->>>> +++ b/kernel/dma/swiotlb.c
->>>> @@ -35,6 +35,7 @@
->>>>    #include <linux/scatterlist.h>
->>>>    #include <linux/mem_encrypt.h>
->>>>    #include <linux/set_memory.h>
->>>> +#include <linux/pci.h>
->>>>    #ifdef CONFIG_DEBUG_FS
->>>>    #include <linux/debugfs.h>
->>>>    #endif
->>>> @@ -560,6 +561,11 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
->>>>    	 */
->>>>    	for (i = 0; i < nslots; i++)
->>>>    		io_tlb_orig_addr[index+i] = orig_addr + (i << IO_TLB_SHIFT);
->>>> +
->>>> +	/* Zero out the bounce buffer if the consumer is untrusted. */
->>>> +	if (dev_is_untrusted(hwdev))
->>>> +		memset(phys_to_virt(tlb_addr), 0, alloc_size);
->>>
->>> What if the alloc_size is less than a PAGE? Should this at least have ALIGN or such?
->>
->> It's the consumer (iommu subsystem) who requires this to be page
->> aligned. For swiotlb, it just clears out all data in the allocated
->> bounce buffer.
+>> drivers/hwmon/smsc47m1.o: warning: objtool: fan_div_store()+0x11f: sibling call from callable instruction with modified stack frame
 > 
-> I am thinking that the if you don't memset the full page the malicious hardware could read stale date from the rest of the page
-> that hasn't been cleared?
-
-Yes. My point is that this should be guaranteed by the bounce page
-implementation in iommu.
-
-Best regards,
-Baolu
-
+> I'm getting a different warning:
 > 
->>
->> Best regards,
->> Baolu
->>
->>>
->>>> +
->>>>    	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
->>>>    	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
->>>>    		swiotlb_bounce(orig_addr, tlb_addr, mapping_size, DMA_TO_DEVICE);
->>>> -- 
->>>> 2.17.1
->>>>
->>>
+>   drivers/hwmon/smsc47m1.o: warning: objtool: fan_div_store()+0xb6: can't find jump dest instruction at .text+0x93a
 > 
+> But I bet the root cause is the same.
+> 
+> This fixes it for me:
+> 
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+> Subject: [PATCH] hwmon/smsc47m1: Fix objtool warning caused by undefined behavior
+> 
+> Objtool is reporting the following warning:
+> 
+>   drivers/hwmon/smsc47m1.o: warning: objtool: fan_div_store()+0xb6: can't find jump dest instruction at .text+0x93a
+> 
+> It's apparently caused by
+> 
+>   2cf6745e69d1 ("hwmon: (smsc47m1) fix (suspicious) outside array bounds warnings")
+> 
+> which is somehow convincing GCC to add a jump past the end of the
+> function:
+> 
+>   793:   45 85 ed                test   %r13d,%r13d
+>   796:   0f 88 9e 01 00 00       js     93a <fan_div_store+0x25a>
+>   ...
+>   930:   e9 5e fe ff ff          jmpq   793 <fan_div_store+0xb3>
+>   935:   e8 00 00 00 00          callq  93a <fan_div_store+0x25a>
+> 			936: R_X86_64_PLT32     __stack_chk_fail-0x4
+>   <function end>
+> 
+> I suppose this falls under the category of undefined behavior, so we
+> probably can't call it a GCC bug.  But if the value of "nr" were out of
+> range somehow then it would start executing random code.  Use a runtime
+> BUG() assertion to avoid undefined behavior.
+> 
+> Fixes: 2cf6745e69d1 ("hwmon: (smsc47m1) fix (suspicious) outside array bounds warnings")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+
+Yes, that works for me.  Thanks.
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
+> ---
+>  drivers/hwmon/smsc47m1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/smsc47m1.c b/drivers/hwmon/smsc47m1.c
+> index 6d366c9cb906..b637836b58a1 100644
+> --- a/drivers/hwmon/smsc47m1.c
+> +++ b/drivers/hwmon/smsc47m1.c
+> @@ -352,7 +352,7 @@ static ssize_t fan_div_store(struct device *dev,
+>  		smsc47m1_write_value(data, SMSC47M2_REG_FANDIV3, tmp);
+>  		break;
+>  	default:
+> -		unreachable();
+> +		BUG();
+>  	}
+>  
+>  	/* Preserve fan min */
+> 
+
+
+-- 
+~Randy
