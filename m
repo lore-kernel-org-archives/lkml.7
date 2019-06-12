@@ -2,88 +2,106 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C70C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDBBC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6045420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D0920874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437932AbfFLPSZ (ORCPT
+        id S1729615AbfFLPSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:18:25 -0400
-Received: from mga12.intel.com ([192.55.52.136]:5808 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407138AbfFLPSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:18:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 08:18:24 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO localhost.localdomain) ([10.10.37.186])
-  by orsmga003.jf.intel.com with ESMTP; 12 Jun 2019 08:18:24 -0700
-Message-ID: <1560354254.22001.3.camel@intel.com>
-Subject: Re: [PATCH 5/6] dma: mic_x100_dma: no need to check return value of
- debugfs_create functions
-From:   Sudeep Dutt <sudeep.dutt@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sudeep Dutt <sudeep.dutt@intel.com>, dan.j.williams@intel.com,
-        vkoul@kernel.org, Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 12 Jun 2019 08:44:14 -0700
-In-Reply-To: <20190612122557.24158-5-gregkh@linuxfoundation.org>
-References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
-         <20190612122557.24158-5-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="us-ascii"
-X-Mailer: Evolution 3.12.11 (3.12.11-15.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 12 Jun 2019 11:18:45 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46931 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfFLPSp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:18:45 -0400
+X-Originating-IP: 90.88.159.246
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9184BFF81C;
+        Wed, 12 Jun 2019 15:18:40 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Toshiaki Makita <toshiaki.makita1@gmail.com>
+Subject: [PATCH net v2] net: ethtool: Allow matching on vlan DEI bit
+Date:   Wed, 12 Jun 2019 17:18:38 +0200
+Message-Id: <20190612151838.7455-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-12 at 14:25 +0200, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
-> 
+Using ethtool, users can specify a classification action matching on the
+full vlan tag, which includes the DEI bit (also previously called CFI).
 
-Thanks Greg.
+However, when converting the ethool_flow_spec to a flow_rule, we use
+dissector keys to represent the matching patterns.
 
-Reviewed-by: Sudeep Dutt <sudeep.dutt@intel.com>
+Since the vlan dissector key doesn't include the DEI bit, this
+information was silently discarded when translating the ethtool
+flow spec in to a flow_rule.
 
-> Cc: Sudeep Dutt <sudeep.dutt@intel.com>
-> Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/dma/mic_x100_dma.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/mic_x100_dma.c b/drivers/dma/mic_x100_dma.c
-> index 6a91e28d537d..584e09661507 100644
-> --- a/drivers/dma/mic_x100_dma.c
-> +++ b/drivers/dma/mic_x100_dma.c
-> @@ -728,10 +728,8 @@ static int mic_dma_driver_probe(struct mbus_device *mbdev)
->  	if (mic_dma_dbg) {
->  		mic_dma_dev->dbg_dir = debugfs_create_dir(dev_name(&mbdev->dev),
->  							  mic_dma_dbg);
-> -		if (mic_dma_dev->dbg_dir)
-> -			debugfs_create_file("mic_dma_reg", 0444,
-> -					    mic_dma_dev->dbg_dir, mic_dma_dev,
-> -					    &mic_dma_reg_fops);
-> +		debugfs_create_file("mic_dma_reg", 0444, mic_dma_dev->dbg_dir,
-> +				    mic_dma_dev, &mic_dma_reg_fops);
->  	}
->  	return 0;
->  }
+This commit adds the DEI bit into the vlan dissector key, and allows
+propagating the information to the driver when parsing the ethtool flow
+spec.
 
+Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
+Reported-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+V1 -> V2: Use "DEI" instead of the old name "CFI", as suggested by Toshiaki.
+          Perform endianness swap on the constant, sothat it's done at
+	  build-time, as suggested by Jakub.
+
+ include/net/flow_dissector.h | 1 +
+ net/core/ethtool.c           | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
+index 7c5a8d9a8d2a..dfabc0503446 100644
+--- a/include/net/flow_dissector.h
++++ b/include/net/flow_dissector.h
+@@ -46,6 +46,7 @@ struct flow_dissector_key_tags {
+ 
+ struct flow_dissector_key_vlan {
+ 	u16	vlan_id:12,
++		vlan_dei:1,
+ 		vlan_priority:3;
+ 	__be16	vlan_tpid;
+ };
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index d08b1e19ce9c..4d1011b2e24f 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -3020,6 +3020,11 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
+ 			match->mask.vlan.vlan_id =
+ 				ntohs(ext_m_spec->vlan_tci) & 0x0fff;
+ 
++			match->key.vlan.vlan_dei =
++				!!(ext_h_spec->vlan_tci & htons(0x1000));
++			match->mask.vlan.vlan_dei =
++				!!(ext_m_spec->vlan_tci & htons(0x1000));
++
+ 			match->key.vlan.vlan_priority =
+ 				(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
+ 			match->mask.vlan.vlan_priority =
+-- 
+2.20.1
 
