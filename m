@@ -2,1798 +2,293 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDA4C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14436C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DED0208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:56:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Eg+aH2Rl"
+	by mail.kernel.org (Postfix) with ESMTP id D518E20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437956AbfFLJ4O (ORCPT
+        id S1731917AbfFLJ5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:56:14 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16235 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfFLJ4N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:56:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d00cc360000>; Wed, 12 Jun 2019 02:56:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 12 Jun 2019 02:56:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 12 Jun 2019 02:56:05 -0700
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
- 2019 09:56:04 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 12 Jun 2019 09:56:04 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d00cc2f0000>; Wed, 12 Jun 2019 02:56:04 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V10 14/15] PCI: tegra: Add Tegra194 PCIe support
-Date:   Wed, 12 Jun 2019 15:23:38 +0530
-Message-ID: <20190612095339.20118-15-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612095339.20118-1-vidyas@nvidia.com>
-References: <20190612095339.20118-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 12 Jun 2019 05:57:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37334 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726668AbfFLJ5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:57:43 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0097F3162900;
+        Wed, 12 Jun 2019 09:57:39 +0000 (UTC)
+Received: from localhost.default (ovpn-116-101.phx2.redhat.com [10.3.116.101])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C9982CFA7;
+        Wed, 12 Jun 2019 09:57:34 +0000 (UTC)
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+Subject: [PATCH V6 0/6] x86/jump_label: Bound IPIs sent when updating a static key
+Date:   Wed, 12 Jun 2019 11:57:25 +0200
+Message-Id: <cover.1560325897.git.bristot@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560333366; bh=Nmv7U1HBLuoTENuFNqPB1hVDSgSJv/fZLJwfhTRs05g=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Eg+aH2Rlil6mPgjTUHMnbsLMC7Z59NaKpNvUhzLCAbtwvBZjQ73qeNqieoENH7JTg
-         FYztl+WD2MTO3maJCb0iy1uKnhaSrdQ0y68YOPhGVWjjf3MD7cWbUP+aieK74kR4Ys
-         5FkC+93VM8D3ODHKLr8rLDwdRlF/dDngzqjRsxBOyCMN0s+1/nq1VBG3L+3PPRvfig
-         2zYvGYgIfEWH2jpbNWMN3DJto3fo9dz5QDHeIxwdnPV0SLY3kbj1BjY5l8Bcetdllj
-         4Y24+AGH4CjuaXppKzbCPTvgvvNoBtAUrkylbc2tG1jVua9ctB8xOPAw5VIF0PgmBv
-         ZJgDiv0pyfctw==
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 12 Jun 2019 09:57:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Synopsys DesignWare core IP based PCIe host controller
-present in Tegra194 SoC.
+While tuning a system with CPUs isolated as much as possible, we've
+noticed that isolated CPUs were receiving bursts of 12 IPIs, periodically.
+Tracing the functions that emit IPIs, we saw chronyd - an unprivileged
+process -  generating the IPIs when changing a static key, enabling
+network timestaping on sockets.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-Changes since [v9]:
-* Used _relaxed() versions of readl() & writel()
+For instance, the trace pointed:
 
-Changes since [v8]:
-* Made it dependent on ARCH_TEGRA_194_SOC directly
+# trace-cmd record --func-stack -p function -l smp_call_function_single -e irq_vectors -f 'vector == 251'...
+# trace-cmde report...
+[...]
+         chronyd-858   [000]   433.286406: function:             smp_call_function_single
+         chronyd-858   [000]   433.286408: kernel_stack:         <stack trace>
+=> smp_call_function_many (ffffffffbc10ab22)
+=> smp_call_function (ffffffffbc10abaa)
+=> on_each_cpu (ffffffffbc10ac0b)
+=> text_poke_bp (ffffffffbc02436a)
+=> arch_jump_label_transform (ffffffffbc020ec8)
+=> __jump_label_update (ffffffffbc1b300f)
+=> jump_label_update (ffffffffbc1b30ed)
+=> static_key_slow_inc (ffffffffbc1b334d)
+=> net_enable_timestamp (ffffffffbc625c44)
+=> sock_enable_timestamp (ffffffffbc6127d5)
+=> sock_setsockopt (ffffffffbc612d2f)
+=> SyS_setsockopt (ffffffffbc60d5e6)
+=> tracesys (ffffffffbc7681c5)
+          <idle>-0     [001]   433.286416: call_function_single_entry: vector=251
+          <idle>-0     [001]   433.286419: call_function_single_exit: vector=251
+  
+[... The IPI takes place 12 times]
 
-Changes since [v7]:
-* Addressed review comments from Thierry
+The static key in case was the netstamp_needed_key. A static key
+change from enabled->disabled/disabled->enabled causes the code to be
+patched, and this is done in three steps:
 
-Changes since [v6]:
-* Removed code around "nvidia,disable-aspm-states" DT property
-* Refactored code to remove code duplication
+-- Pseudo-code #1 - Current implementation ---
+For each key to be updated:
+	1) add an int3 trap to the address that will be patched
+	    sync cores (send IPI to all other CPUs)
+	2) update all but the first byte of the patched range
+	    sync cores (send IPI to all other CPUs)
+	3) replace the first byte (int3) by the first byte of replacing opcode 
+	    sync cores (send IPI to all other CPUs)
+-- Pseudo-code #1 ---
 
-Changes since [v5]:
-* Addressed review comments from Thierry
+As the static key netstamp_needed_key has four entries (used in for
+places in the code) in our kernel, 3 IPIs were generated for each
+entry, resulting in 12 IPIs. The number of IPIs then is linear with
+regard to the number 'n' of entries of a key: O(n*3), which is O(n).
 
-Changes since [v4]:
-* None
+This algorithm works fine for the update of a single key. But we think
+it is possible to optimize the case in which a static key has more than
+one entry. For instance, the sched_schedstats jump label has 56 entries
+in my (updated) fedora kernel, resulting in 168 IPIs for each CPU in
+which the thread that is enabling is _not_ running.
 
-Changes since [v3]:
-* None
+Rather than doing each updated at once, it is possible to queue all updates
+first, and then apply all updates at once, rewriting the pseudo-code #1
+in this way:
 
-Changes since [v2]:
-* Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
-* Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
-* Removed .runtime_suspend() & .runtime_resume() implementations
+-- Pseudo-code #2 - proposal  ---
+1)  for each key in the queue:
+        add an int3 trap to the address that will be patched
+    sync cores (send IPI to all other CPUs)
 
-Changes since [v1]:
-* Made CONFIG_PCIE_TEGRA194 as 'm' by default from its previous 'y' state
-* Modified code as per changes made to DT documentation
-* Refactored code to address Bjorn & Thierry's review comments
-* Added goto to avoid recursion in tegra_pcie_dw_host_init() API
-* Merged .scan_bus() of dw_pcie_host_ops implementation to tegra_pcie_dw_host_init() API
+2)  for each key in the queue:
+        update all but the first byte of the patched range
+    sync cores (send IPI to all other CPUs)
 
- drivers/pci/controller/dwc/Kconfig         |   10 +
- drivers/pci/controller/dwc/Makefile        |    1 +
- drivers/pci/controller/dwc/pcie-tegra194.c | 1635 ++++++++++++++++++++
- 3 files changed, 1646 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+3)  for each key in the queue:
+        replace the first byte (int3) by the first byte of replacing opcode 
+    sync cores (send IPI to all other CPUs)
+-- Pseudo-code #2 - proposal  ---
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index a6ce1ee51b4c..4e7365c31eee 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -220,6 +220,16 @@ config PCI_MESON
- 	  and therefore the driver re-uses the DesignWare core functions to
- 	  implement the driver.
- 
-+config PCIE_TEGRA194
-+	tristate "NVIDIA Tegra194 (and later) PCIe controller"
-+	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-+	depends on PCI_MSI_IRQ_DOMAIN
-+	select PCIE_DW_HOST
-+	select PHY_TEGRA194_P2U
-+	help
-+	  Say Y here if you want support for DesignWare core based PCIe host
-+	  controller found in NVIDIA Tegra194 SoC.
-+
- config PCIE_UNIPHIER
- 	bool "Socionext UniPhier PCIe controllers"
- 	depends on ARCH_UNIPHIER || COMPILE_TEST
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index b085dfd4fab7..b30336181d46 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
- obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
- obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
- obj-$(CONFIG_PCI_MESON) += pci-meson.o
-+obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
- obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
- 
- # The following drivers are for devices that use the generic ACPI
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-new file mode 100644
-index 000000000000..84bd395b7243
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -0,0 +1,1635 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * PCIe host controller driver for Tegra194 SoC
-+ *
-+ * Copyright (C) 2019 NVIDIA Corporation.
-+ *
-+ * Author: Vidya Sagar <vidyas@nvidia.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/debugfs.h>
-+#include <linux/delay.h>
-+#include <linux/gpio.h>
-+#include <linux/interrupt.h>
-+#include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/kfifo.h>
-+#include <linux/kthread.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/pci-aspm.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/random.h>
-+#include <linux/reset.h>
-+#include <linux/resource.h>
-+#include <linux/types.h>
-+#include "pcie-designware.h"
-+#include <soc/tegra/bpmp.h>
-+#include <soc/tegra/bpmp-abi.h>
-+#include "../../pci.h"
-+
-+#define APPL_PINMUX				0x0
-+#define APPL_PINMUX_PEX_RST			BIT(0)
-+#define APPL_PINMUX_CLKREQ_OVERRIDE_EN		BIT(2)
-+#define APPL_PINMUX_CLKREQ_OVERRIDE		BIT(3)
-+#define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE_EN	BIT(4)
-+#define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE	BIT(5)
-+#define APPL_PINMUX_CLKREQ_OUT_OVRD_EN		BIT(9)
-+#define APPL_PINMUX_CLKREQ_OUT_OVRD		BIT(10)
-+
-+#define APPL_CTRL				0x4
-+#define APPL_CTRL_SYS_PRE_DET_STATE		BIT(6)
-+#define APPL_CTRL_LTSSM_EN			BIT(7)
-+#define APPL_CTRL_HW_HOT_RST_EN			BIT(20)
-+#define APPL_CTRL_HW_HOT_RST_MODE_MASK		GENMASK(1, 0)
-+#define APPL_CTRL_HW_HOT_RST_MODE_SHIFT		22
-+#define APPL_CTRL_HW_HOT_RST_MODE_IMDT_RST	0x1
-+
-+#define APPL_INTR_EN_L0_0			0x8
-+#define APPL_INTR_EN_L0_0_LINK_STATE_INT_EN	BIT(0)
-+#define APPL_INTR_EN_L0_0_MSI_RCV_INT_EN	BIT(4)
-+#define APPL_INTR_EN_L0_0_INT_INT_EN		BIT(8)
-+#define APPL_INTR_EN_L0_0_CDM_REG_CHK_INT_EN	BIT(19)
-+#define APPL_INTR_EN_L0_0_SYS_INTR_EN		BIT(30)
-+#define APPL_INTR_EN_L0_0_SYS_MSI_INTR_EN	BIT(31)
-+
-+#define APPL_INTR_STATUS_L0			0xC
-+#define APPL_INTR_STATUS_L0_LINK_STATE_INT	BIT(0)
-+#define APPL_INTR_STATUS_L0_INT_INT		BIT(8)
-+#define APPL_INTR_STATUS_L0_CDM_REG_CHK_INT	BIT(18)
-+
-+#define APPL_INTR_EN_L1_0_0				0x1C
-+#define APPL_INTR_EN_L1_0_0_LINK_REQ_RST_NOT_INT_EN	BIT(1)
-+
-+#define APPL_INTR_STATUS_L1_0_0				0x20
-+#define APPL_INTR_STATUS_L1_0_0_LINK_REQ_RST_NOT_CHGED	BIT(1)
-+
-+#define APPL_INTR_STATUS_L1_1			0x2C
-+#define APPL_INTR_STATUS_L1_2			0x30
-+#define APPL_INTR_STATUS_L1_3			0x34
-+#define APPL_INTR_STATUS_L1_6			0x3C
-+#define APPL_INTR_STATUS_L1_7			0x40
-+
-+#define APPL_INTR_EN_L1_8_0			0x44
-+#define APPL_INTR_EN_L1_8_BW_MGT_INT_EN		BIT(2)
-+#define APPL_INTR_EN_L1_8_AUTO_BW_INT_EN	BIT(3)
-+#define APPL_INTR_EN_L1_8_INTX_EN		BIT(11)
-+#define APPL_INTR_EN_L1_8_AER_INT_EN		BIT(15)
-+
-+#define APPL_INTR_STATUS_L1_8_0			0x4C
-+#define APPL_INTR_STATUS_L1_8_0_EDMA_INT_MASK	GENMASK(11, 6)
-+#define APPL_INTR_STATUS_L1_8_0_BW_MGT_INT_STS	BIT(2)
-+#define APPL_INTR_STATUS_L1_8_0_AUTO_BW_INT_STS	BIT(3)
-+
-+#define APPL_INTR_STATUS_L1_9			0x54
-+#define APPL_INTR_STATUS_L1_10			0x58
-+#define APPL_INTR_STATUS_L1_11			0x64
-+#define APPL_INTR_STATUS_L1_13			0x74
-+#define APPL_INTR_STATUS_L1_14			0x78
-+#define APPL_INTR_STATUS_L1_15			0x7C
-+#define APPL_INTR_STATUS_L1_17			0x88
-+
-+#define APPL_INTR_EN_L1_18				0x90
-+#define APPL_INTR_EN_L1_18_CDM_REG_CHK_CMPLT		BIT(2)
-+#define APPL_INTR_EN_L1_18_CDM_REG_CHK_CMP_ERR		BIT(1)
-+#define APPL_INTR_EN_L1_18_CDM_REG_CHK_LOGIC_ERR	BIT(0)
-+
-+#define APPL_INTR_STATUS_L1_18				0x94
-+#define APPL_INTR_STATUS_L1_18_CDM_REG_CHK_CMPLT	BIT(2)
-+#define APPL_INTR_STATUS_L1_18_CDM_REG_CHK_CMP_ERR	BIT(1)
-+#define APPL_INTR_STATUS_L1_18_CDM_REG_CHK_LOGIC_ERR	BIT(0)
-+
-+#define APPL_MSI_CTRL_2				0xB0
-+
-+#define APPL_LTR_MSG_1				0xC4
-+#define LTR_MSG_REQ				BIT(15)
-+#define LTR_MST_NO_SNOOP_SHIFT			16
-+
-+#define APPL_LTR_MSG_2				0xC8
-+#define APPL_LTR_MSG_2_LTR_MSG_REQ_STATE	BIT(3)
-+
-+#define APPL_LINK_STATUS			0xCC
-+#define APPL_LINK_STATUS_RDLH_LINK_UP		BIT(0)
-+
-+#define APPL_DEBUG				0xD0
-+#define APPL_DEBUG_PM_LINKST_IN_L2_LAT		BIT(21)
-+#define APPL_DEBUG_PM_LINKST_IN_L0		0x11
-+#define APPL_DEBUG_LTSSM_STATE_MASK		GENMASK(8, 3)
-+#define APPL_DEBUG_LTSSM_STATE_SHIFT		3
-+#define LTSSM_STATE_PRE_DETECT			5
-+
-+#define APPL_RADM_STATUS			0xE4
-+#define APPL_PM_XMT_TURNOFF_STATE		BIT(0)
-+
-+#define APPL_DM_TYPE				0x100
-+#define APPL_DM_TYPE_MASK			GENMASK(3, 0)
-+#define APPL_DM_TYPE_RP				0x4
-+#define APPL_DM_TYPE_EP				0x0
-+
-+#define APPL_CFG_BASE_ADDR			0x104
-+#define APPL_CFG_BASE_ADDR_MASK			GENMASK(31, 12)
-+
-+#define APPL_CFG_IATU_DMA_BASE_ADDR		0x108
-+#define APPL_CFG_IATU_DMA_BASE_ADDR_MASK	GENMASK(31, 18)
-+
-+#define APPL_CFG_MISC				0x110
-+#define APPL_CFG_MISC_SLV_EP_MODE		BIT(14)
-+#define APPL_CFG_MISC_ARCACHE_MASK		GENMASK(13, 10)
-+#define APPL_CFG_MISC_ARCACHE_SHIFT		10
-+#define APPL_CFG_MISC_ARCACHE_VAL		3
-+
-+#define APPL_CFG_SLCG_OVERRIDE			0x114
-+#define APPL_CFG_SLCG_OVERRIDE_SLCG_EN_MASTER	BIT(0)
-+
-+#define APPL_CAR_RESET_OVRD				0x12C
-+#define APPL_CAR_RESET_OVRD_CYA_OVERRIDE_CORE_RST_N	BIT(0)
-+
-+#define IO_BASE_IO_DECODE				BIT(0)
-+#define IO_BASE_IO_DECODE_BIT8				BIT(8)
-+
-+#define CFG_PREF_MEM_LIMIT_BASE_MEM_DECODE		BIT(0)
-+#define CFG_PREF_MEM_LIMIT_BASE_MEM_LIMIT_DECODE	BIT(16)
-+
-+#define CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF	0x718
-+#define CFG_TIMER_CTRL_ACK_NAK_SHIFT	(19)
-+
-+#define EVENT_COUNTER_ALL_CLEAR		0x3
-+#define EVENT_COUNTER_ENABLE_ALL	0x7
-+#define EVENT_COUNTER_ENABLE_SHIFT	2
-+#define EVENT_COUNTER_EVENT_SEL_MASK	GENMASK(7, 0)
-+#define EVENT_COUNTER_EVENT_SEL_SHIFT	16
-+#define EVENT_COUNTER_EVENT_Tx_L0S	0x2
-+#define EVENT_COUNTER_EVENT_Rx_L0S	0x3
-+#define EVENT_COUNTER_EVENT_L1		0x5
-+#define EVENT_COUNTER_EVENT_L1_1	0x7
-+#define EVENT_COUNTER_EVENT_L1_2	0x8
-+#define EVENT_COUNTER_GROUP_SEL_SHIFT	24
-+#define EVENT_COUNTER_GROUP_5		0x5
-+
-+#define PORT_LOGIC_ACK_F_ASPM_CTRL			0x70C
-+#define ENTER_ASPM					BIT(30)
-+#define L0S_ENTRANCE_LAT_SHIFT				24
-+#define L0S_ENTRANCE_LAT_MASK				GENMASK(26, 24)
-+#define L1_ENTRANCE_LAT_SHIFT				27
-+#define L1_ENTRANCE_LAT_MASK				GENMASK(29, 27)
-+#define N_FTS_SHIFT					8
-+#define N_FTS_MASK					GENMASK(7, 0)
-+#define N_FTS_VAL					52
-+
-+#define PORT_LOGIC_GEN2_CTRL				0x80C
-+#define PORT_LOGIC_GEN2_CTRL_DIRECT_SPEED_CHANGE	BIT(17)
-+#define FTS_MASK					GENMASK(7, 0)
-+#define FTS_VAL						52
-+
-+#define PORT_LOGIC_MSI_CTRL_INT_0_EN		0x828
-+
-+#define GEN3_EQ_CONTROL_OFF			0x8a8
-+#define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_SHIFT	8
-+#define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK	GENMASK(23, 8)
-+#define GEN3_EQ_CONTROL_OFF_FB_MODE_MASK	GENMASK(3, 0)
-+
-+#define GEN3_RELATED_OFF			0x890
-+#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
-+#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
-+#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
-+#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
-+
-+#define PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT	0x8D0
-+#define AMBA_ERROR_RESPONSE_CRS_SHIFT		3
-+#define AMBA_ERROR_RESPONSE_CRS_MASK		GENMASK(1, 0)
-+#define AMBA_ERROR_RESPONSE_CRS_OKAY		0
-+#define AMBA_ERROR_RESPONSE_CRS_OKAY_FFFFFFFF	1
-+#define AMBA_ERROR_RESPONSE_CRS_OKAY_FFFF0001	2
-+
-+#define PORT_LOGIC_MSIX_DOORBELL			0x948
-+
-+#define CAP_SPCIE_CAP_OFF			0x154
-+#define CAP_SPCIE_CAP_OFF_DSP_TX_PRESET0_MASK	GENMASK(3, 0)
-+#define CAP_SPCIE_CAP_OFF_USP_TX_PRESET0_MASK	GENMASK(11, 8)
-+#define CAP_SPCIE_CAP_OFF_USP_TX_PRESET0_SHIFT	8
-+
-+#define PL16G_CAP_OFF_DSP_16G_TX_PRESET_MASK	GENMASK(3, 0)
-+#define PL16G_CAP_OFF_USP_16G_TX_PRESET_MASK	GENMASK(7, 4)
-+#define PL16G_CAP_OFF_USP_16G_TX_PRESET_SHIFT	4
-+
-+#define PME_ACK_TIMEOUT 10000
-+
-+#define LTSSM_TIMEOUT 50000	/* 50ms */
-+
-+#define GEN3_GEN4_EQ_PRESET_INIT	5
-+
-+#define GEN1_CORE_CLK_FREQ	62500000
-+#define GEN2_CORE_CLK_FREQ	125000000
-+#define GEN3_CORE_CLK_FREQ	250000000
-+#define GEN4_CORE_CLK_FREQ	500000000
-+
-+static const unsigned int pcie_gen_freq[] = {
-+	GEN1_CORE_CLK_FREQ,
-+	GEN2_CORE_CLK_FREQ,
-+	GEN3_CORE_CLK_FREQ,
-+	GEN4_CORE_CLK_FREQ
-+};
-+
-+static const u32 event_cntr_ctrl_offset[] = {
-+	0x1d8,
-+	0x1a8,
-+	0x1a8,
-+	0x1a8,
-+	0x1c4,
-+	0x1d8
-+};
-+
-+static const u32 event_cntr_data_offset[] = {
-+	0x1dc,
-+	0x1ac,
-+	0x1ac,
-+	0x1ac,
-+	0x1c8,
-+	0x1dc
-+};
-+
-+struct tegra_pcie_dw {
-+	struct device *dev;
-+	struct resource *appl_res;
-+	struct resource *dbi_res;
-+	struct resource *atu_dma_res;
-+	void __iomem *appl_base;
-+	struct clk *core_clk;
-+	struct reset_control *core_apb_rst;
-+	struct reset_control *core_rst;
-+	struct dw_pcie pci;
-+	enum dw_pcie_device_mode mode;
-+	struct tegra_bpmp *bpmp;
-+
-+	bool supports_clkreq;
-+	bool enable_cdm_check;
-+	u8 init_link_width;
-+	bool link_state;
-+	u32 msi_ctrl_int;
-+	u32 num_lanes;
-+	u32 max_speed;
-+	u32 cid;
-+	bool update_fc_fixup;
-+	u32 cfg_link_cap_l1sub;
-+	u32 pcie_cap_base;
-+	u32 aspm_cmrt;
-+	u32 aspm_pwr_on_t;
-+	u32 aspm_l0s_enter_lat;
-+
-+	struct regulator *pex_ctl_supply;
-+
-+	unsigned int phy_count;
-+	struct phy **phys;
-+
-+	struct dentry *debugfs;
-+};
-+
-+static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
-+{
-+	return container_of(pci, struct tegra_pcie_dw, pci);
-+}
-+
-+static inline void appl_writel(struct tegra_pcie_dw *pcie, const u32 value,
-+			       const u32 reg)
-+{
-+	writel_relaxed(value, pcie->appl_base + reg);
-+}
-+
-+static inline u32 appl_readl(struct tegra_pcie_dw *pcie, const u32 reg)
-+{
-+	return readl_relaxed(pcie->appl_base + reg);
-+}
-+
-+struct tegra_pcie_soc {
-+	enum dw_pcie_device_mode mode;
-+};
-+
-+static void apply_bad_link_workaround(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+	u32 current_link_width;
-+	u16 val;
-+
-+	/*
-+	 * NOTE:- Since this scenario is uncommon and link as such is not
-+	 * stable anyway, not waiting to confirm if link is really
-+	 * transitioning to Gen-2 speed
-+	 */
-+	val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
-+	if (val & PCI_EXP_LNKSTA_LBMS) {
-+		current_link_width = (val & PCI_EXP_LNKSTA_NLW) >>
-+				     PCI_EXP_LNKSTA_NLW_SHIFT;
-+		if (pcie->init_link_width > current_link_width) {
-+			dev_warn(pci->dev, "PCIe link is bad, width reduced\n");
-+			val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
-+						PCI_EXP_LNKCTL2);
-+			val &= ~PCI_EXP_LNKCTL2_TLS;
-+			val |= PCI_EXP_LNKCTL2_TLS_2_5GT;
-+			dw_pcie_writew_dbi(pci, pcie->pcie_cap_base +
-+					   PCI_EXP_LNKCTL2, val);
-+
-+			val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
-+						PCI_EXP_LNKCTL);
-+			val |= PCI_EXP_LNKCTL_RL;
-+			dw_pcie_writew_dbi(pci, pcie->pcie_cap_base +
-+					   PCI_EXP_LNKCTL, val);
-+		}
-+	}
-+}
-+
-+static irqreturn_t tegra_pcie_rp_irq_handler(struct tegra_pcie_dw *pcie)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct pcie_port *pp = &pci->pp;
-+	u32 val, tmp;
-+	u16 val_w;
-+
-+	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
-+	if (val & APPL_INTR_STATUS_L0_LINK_STATE_INT) {
-+		val = appl_readl(pcie, APPL_INTR_STATUS_L1_0_0);
-+		if (val & APPL_INTR_STATUS_L1_0_0_LINK_REQ_RST_NOT_CHGED) {
-+			appl_writel(pcie, val, APPL_INTR_STATUS_L1_0_0);
-+
-+			/* SBR & Surprise Link Down WAR */
-+			val = appl_readl(pcie, APPL_CAR_RESET_OVRD);
-+			val &= ~APPL_CAR_RESET_OVRD_CYA_OVERRIDE_CORE_RST_N;
-+			appl_writel(pcie, val, APPL_CAR_RESET_OVRD);
-+			udelay(1);
-+			val = appl_readl(pcie, APPL_CAR_RESET_OVRD);
-+			val |= APPL_CAR_RESET_OVRD_CYA_OVERRIDE_CORE_RST_N;
-+			appl_writel(pcie, val, APPL_CAR_RESET_OVRD);
-+
-+			val = dw_pcie_readl_dbi(pci, PORT_LOGIC_GEN2_CTRL);
-+			val |= PORT_LOGIC_GEN2_CTRL_DIRECT_SPEED_CHANGE;
-+			dw_pcie_writel_dbi(pci, PORT_LOGIC_GEN2_CTRL, val);
-+		}
-+	}
-+
-+	if (val & APPL_INTR_STATUS_L0_INT_INT) {
-+		val = appl_readl(pcie, APPL_INTR_STATUS_L1_8_0);
-+		if (val & APPL_INTR_STATUS_L1_8_0_AUTO_BW_INT_STS) {
-+			appl_writel(pcie,
-+				    APPL_INTR_STATUS_L1_8_0_AUTO_BW_INT_STS,
-+				    APPL_INTR_STATUS_L1_8_0);
-+			apply_bad_link_workaround(pp);
-+		}
-+		if (val & APPL_INTR_STATUS_L1_8_0_BW_MGT_INT_STS) {
-+			appl_writel(pcie,
-+				    APPL_INTR_STATUS_L1_8_0_BW_MGT_INT_STS,
-+				    APPL_INTR_STATUS_L1_8_0);
-+
-+			val_w = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
-+						  PCI_EXP_LNKSTA);
-+			dev_dbg(pci->dev, "Link Speed : Gen-%u\n", val_w &
-+				PCI_EXP_LNKSTA_CLS);
-+		}
-+	}
-+
-+	val = appl_readl(pcie, APPL_INTR_STATUS_L0);
-+	if (val & APPL_INTR_STATUS_L0_CDM_REG_CHK_INT) {
-+		val = appl_readl(pcie, APPL_INTR_STATUS_L1_18);
-+		tmp = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
-+		if (val & APPL_INTR_STATUS_L1_18_CDM_REG_CHK_CMPLT) {
-+			dev_info(pci->dev, "CDM check complete\n");
-+			tmp |= PCIE_PL_CHK_REG_CHK_REG_COMPLETE;
-+		}
-+		if (val & APPL_INTR_STATUS_L1_18_CDM_REG_CHK_CMP_ERR) {
-+			dev_err(pci->dev, "CDM comparison mismatch\n");
-+			tmp |= PCIE_PL_CHK_REG_CHK_REG_COMPARISON_ERROR;
-+		}
-+		if (val & APPL_INTR_STATUS_L1_18_CDM_REG_CHK_LOGIC_ERR) {
-+			dev_err(pci->dev, "CDM Logic error\n");
-+			tmp |= PCIE_PL_CHK_REG_CHK_REG_LOGIC_ERROR;
-+		}
-+		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, tmp);
-+		tmp = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_ERR_ADDR);
-+		dev_err(pci->dev, "CDM Error Address Offset = 0x%08X\n", tmp);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t tegra_pcie_irq_handler(int irq, void *arg)
-+{
-+	struct tegra_pcie_dw *pcie = arg;
-+
-+	if (pcie->mode == DW_PCIE_RC_TYPE)
-+		return tegra_pcie_rp_irq_handler(pcie);
-+
-+	return IRQ_NONE;
-+}
-+
-+static int tegra_pcie_dw_rd_own_conf(struct pcie_port *pp, int where, int size,
-+				     u32 *val)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	/*
-+	 * This is an endpoint mode specific register happen to appear even
-+	 * when controller is operating in root port mode and system hangs
-+	 * when it is accessed with link being in ASPM-L1 state.
-+	 * So skip accessing it altogether
-+	 */
-+	if (where == PORT_LOGIC_MSIX_DOORBELL) {
-+		*val = 0x00000000;
-+		return PCIBIOS_SUCCESSFUL;
-+	}
-+
-+	return dw_pcie_read(pci->dbi_base + where, size, val);
-+}
-+
-+static int tegra_pcie_dw_wr_own_conf(struct pcie_port *pp, int where, int size,
-+				     u32 val)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	/*
-+	 * This is an endpoint mode specific register happen to appear even
-+	 * when controller is operating in root port mode and system hangs
-+	 * when it is accessed with link being in ASPM-L1 state.
-+	 * So skip accessing it altogether
-+	 */
-+	if (where == PORT_LOGIC_MSIX_DOORBELL)
-+		return PCIBIOS_SUCCESSFUL;
-+
-+	return dw_pcie_write(pci->dbi_base + where, size, val);
-+}
-+
-+#if defined(CONFIG_PCIEASPM)
-+static void disable_aspm_l11(struct tegra_pcie_dw *pcie)
-+{
-+	u32 val;
-+
-+	val = dw_pcie_readl_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub);
-+	val &= ~PCI_L1SS_CAP_ASPM_L1_1;
-+	dw_pcie_writel_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub, val);
-+}
-+
-+static void disable_aspm_l12(struct tegra_pcie_dw *pcie)
-+{
-+	u32 val;
-+
-+	val = dw_pcie_readl_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub);
-+	val &= ~PCI_L1SS_CAP_ASPM_L1_2;
-+	dw_pcie_writel_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub, val);
-+}
-+
-+static inline u32 event_counter_prog(struct tegra_pcie_dw *pcie, u32 event)
-+{
-+	u32 val;
-+
-+	val = dw_pcie_readl_dbi(&pcie->pci, event_cntr_ctrl_offset[pcie->cid]);
-+	val &= ~(EVENT_COUNTER_EVENT_SEL_MASK << EVENT_COUNTER_EVENT_SEL_SHIFT);
-+	val |= EVENT_COUNTER_GROUP_5 << EVENT_COUNTER_GROUP_SEL_SHIFT;
-+	val |= event << EVENT_COUNTER_EVENT_SEL_SHIFT;
-+	val |= EVENT_COUNTER_ENABLE_ALL << EVENT_COUNTER_ENABLE_SHIFT;
-+	dw_pcie_writel_dbi(&pcie->pci, event_cntr_ctrl_offset[pcie->cid], val);
-+	val = dw_pcie_readl_dbi(&pcie->pci, event_cntr_data_offset[pcie->cid]);
-+	return val;
-+}
-+
-+static int aspm_state_cnt(struct seq_file *s, void *data)
-+{
-+	struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)
-+				     dev_get_drvdata(s->private);
-+	u32 val;
-+
-+	seq_printf(s, "Tx L0s entry count : %u\n",
-+		   event_counter_prog(pcie, EVENT_COUNTER_EVENT_Tx_L0S));
-+
-+	seq_printf(s, "Rx L0s entry count : %u\n",
-+		   event_counter_prog(pcie, EVENT_COUNTER_EVENT_Rx_L0S));
-+
-+	seq_printf(s, "Link L1 entry count : %u\n",
-+		   event_counter_prog(pcie, EVENT_COUNTER_EVENT_L1));
-+
-+	seq_printf(s, "Link L1.1 entry count : %u\n",
-+		   event_counter_prog(pcie, EVENT_COUNTER_EVENT_L1_1));
-+
-+	seq_printf(s, "Link L1.2 entry count : %u\n",
-+		   event_counter_prog(pcie, EVENT_COUNTER_EVENT_L1_2));
-+
-+	/* Clear all counters */
-+	dw_pcie_writel_dbi(&pcie->pci, event_cntr_ctrl_offset[pcie->cid],
-+			   EVENT_COUNTER_ALL_CLEAR);
-+
-+	/* Re-enable counting */
-+	val = EVENT_COUNTER_ENABLE_ALL << EVENT_COUNTER_ENABLE_SHIFT;
-+	val |= EVENT_COUNTER_GROUP_5 << EVENT_COUNTER_GROUP_SEL_SHIFT;
-+	dw_pcie_writel_dbi(&pcie->pci, event_cntr_ctrl_offset[pcie->cid], val);
-+
-+	return 0;
-+}
-+#endif
-+
-+static int init_debugfs(struct tegra_pcie_dw *pcie)
-+{
-+#if defined(CONFIG_PCIEASPM)
-+	struct dentry *d;
-+
-+	d = debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt",
-+					pcie->debugfs, aspm_state_cnt);
-+	if (IS_ERR_OR_NULL(d))
-+		dev_err(pcie->dev,
-+			"Failed to create debugfs file \"aspm_state_cnt\"\n");
-+#endif
-+	return 0;
-+}
-+
-+static void tegra_pcie_enable_system_interrupts(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+	u32 val;
-+	u16 val_w;
-+
-+	val = appl_readl(pcie, APPL_INTR_EN_L0_0);
-+	val |= APPL_INTR_EN_L0_0_LINK_STATE_INT_EN;
-+	appl_writel(pcie, val, APPL_INTR_EN_L0_0);
-+
-+	val = appl_readl(pcie, APPL_INTR_EN_L1_0_0);
-+	val |= APPL_INTR_EN_L1_0_0_LINK_REQ_RST_NOT_INT_EN;
-+	appl_writel(pcie, val, APPL_INTR_EN_L1_0_0);
-+
-+	if (pcie->enable_cdm_check) {
-+		val = appl_readl(pcie, APPL_INTR_EN_L0_0);
-+		val |= APPL_INTR_EN_L0_0_CDM_REG_CHK_INT_EN;
-+		appl_writel(pcie, val, APPL_INTR_EN_L0_0);
-+
-+		val = appl_readl(pcie, APPL_INTR_EN_L1_18);
-+		val |= APPL_INTR_EN_L1_18_CDM_REG_CHK_CMP_ERR;
-+		val |= APPL_INTR_EN_L1_18_CDM_REG_CHK_LOGIC_ERR;
-+		appl_writel(pcie, val, APPL_INTR_EN_L1_18);
-+	}
-+
-+	val_w = dw_pcie_readw_dbi(&pcie->pci, pcie->pcie_cap_base +
-+				  PCI_EXP_LNKSTA);
-+	pcie->init_link_width = (val_w & PCI_EXP_LNKSTA_NLW) >>
-+				PCI_EXP_LNKSTA_NLW_SHIFT;
-+
-+	val_w = dw_pcie_readw_dbi(&pcie->pci, pcie->pcie_cap_base +
-+				  PCI_EXP_LNKCTL);
-+	val_w |= PCI_EXP_LNKCTL_LBMIE;
-+	dw_pcie_writew_dbi(&pcie->pci, pcie->pcie_cap_base + PCI_EXP_LNKCTL,
-+			   val_w);
-+}
-+
-+static void tegra_pcie_enable_legacy_interrupts(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+	u32 val;
-+
-+	/* Enable legacy interrupt generation */
-+	val = appl_readl(pcie, APPL_INTR_EN_L0_0);
-+	val |= APPL_INTR_EN_L0_0_SYS_INTR_EN;
-+	val |= APPL_INTR_EN_L0_0_INT_INT_EN;
-+	appl_writel(pcie, val, APPL_INTR_EN_L0_0);
-+
-+	val = appl_readl(pcie, APPL_INTR_EN_L1_8_0);
-+	val |= APPL_INTR_EN_L1_8_INTX_EN;
-+	val |= APPL_INTR_EN_L1_8_AUTO_BW_INT_EN;
-+	val |= APPL_INTR_EN_L1_8_BW_MGT_INT_EN;
-+	if (IS_ENABLED(CONFIG_PCIEAER))
-+		val |= APPL_INTR_EN_L1_8_AER_INT_EN;
-+	appl_writel(pcie, val, APPL_INTR_EN_L1_8_0);
-+}
-+
-+static void tegra_pcie_enable_msi_interrupts(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+	u32 val;
-+
-+	dw_pcie_msi_init(pp);
-+
-+	/* Enable MSI interrupt generation */
-+	val = appl_readl(pcie, APPL_INTR_EN_L0_0);
-+	val |= APPL_INTR_EN_L0_0_SYS_MSI_INTR_EN;
-+	val |= APPL_INTR_EN_L0_0_MSI_RCV_INT_EN;
-+	appl_writel(pcie, val, APPL_INTR_EN_L0_0);
-+}
-+
-+static void tegra_pcie_enable_interrupts(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+
-+	/* Clear interrupt statuses before enabling interrupts */
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L0);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_0_0);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_1);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_2);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_3);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_6);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_7);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_8_0);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_9);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_10);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_11);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_13);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_14);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_15);
-+	appl_writel(pcie, 0xFFFFFFFF, APPL_INTR_STATUS_L1_17);
-+
-+	tegra_pcie_enable_system_interrupts(pp);
-+	tegra_pcie_enable_legacy_interrupts(pp);
-+	if (IS_ENABLED(CONFIG_PCI_MSI))
-+		tegra_pcie_enable_msi_interrupts(pp);
-+}
-+
-+static void config_gen3_gen4_eq_presets(struct tegra_pcie_dw *pcie)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	u32 val, offset, i;
-+
-+	/* Program init preset */
-+	for (i = 0; i < pcie->num_lanes; i++) {
-+		dw_pcie_read(pci->dbi_base + CAP_SPCIE_CAP_OFF
-+				 + (i * 2), 2, &val);
-+		val &= ~CAP_SPCIE_CAP_OFF_DSP_TX_PRESET0_MASK;
-+		val |= GEN3_GEN4_EQ_PRESET_INIT;
-+		val &= ~CAP_SPCIE_CAP_OFF_USP_TX_PRESET0_MASK;
-+		val |= (GEN3_GEN4_EQ_PRESET_INIT <<
-+			   CAP_SPCIE_CAP_OFF_USP_TX_PRESET0_SHIFT);
-+		dw_pcie_write(pci->dbi_base + CAP_SPCIE_CAP_OFF
-+				 + (i * 2), 2, val);
-+
-+		offset = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_PL) +
-+				PCI_PL_16GT_LE_CTRL;
-+		dw_pcie_read(pci->dbi_base + offset + i, 1, &val);
-+		val &= ~PL16G_CAP_OFF_DSP_16G_TX_PRESET_MASK;
-+		val |= GEN3_GEN4_EQ_PRESET_INIT;
-+		val &= ~PL16G_CAP_OFF_USP_16G_TX_PRESET_MASK;
-+		val |= (GEN3_GEN4_EQ_PRESET_INIT <<
-+			PL16G_CAP_OFF_USP_16G_TX_PRESET_SHIFT);
-+		dw_pcie_write(pci->dbi_base + offset + i, 1, val);
-+	}
-+
-+	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-+	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-+	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+
-+	val = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-+	val &= ~GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK;
-+	val |= (0x3ff << GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_SHIFT);
-+	val &= ~GEN3_EQ_CONTROL_OFF_FB_MODE_MASK;
-+	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, val);
-+
-+	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-+	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-+	val |= (0x1 << GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT);
-+	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+
-+	val = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-+	val &= ~GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK;
-+	val |= (0x360 << GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_SHIFT);
-+	val &= ~GEN3_EQ_CONTROL_OFF_FB_MODE_MASK;
-+	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, val);
-+
-+	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-+	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-+	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+}
-+
-+static int tegra_pcie_dw_host_init(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+	u32 val, tmp, offset, speed;
-+	unsigned int count;
-+	u16 val_w;
-+
-+core_init:
-+	count = 200;
-+#if defined(CONFIG_PCIEASPM)
-+	offset = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
-+	pcie->cfg_link_cap_l1sub = offset + PCI_L1SS_CAP;
-+#endif
-+	val = dw_pcie_readl_dbi(pci, PCI_IO_BASE);
-+	val &= ~(IO_BASE_IO_DECODE | IO_BASE_IO_DECODE_BIT8);
-+	dw_pcie_writel_dbi(pci, PCI_IO_BASE, val);
-+
-+	val = dw_pcie_readl_dbi(pci, PCI_PREF_MEMORY_BASE);
-+	val |= CFG_PREF_MEM_LIMIT_BASE_MEM_DECODE;
-+	val |= CFG_PREF_MEM_LIMIT_BASE_MEM_LIMIT_DECODE;
-+	dw_pcie_writel_dbi(pci, PCI_PREF_MEMORY_BASE, val);
-+
-+	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
-+
-+	/* Configure FTS */
-+	val = dw_pcie_readl_dbi(pci, PORT_LOGIC_ACK_F_ASPM_CTRL);
-+	val &= ~(N_FTS_MASK << N_FTS_SHIFT);
-+	val |= N_FTS_VAL << N_FTS_SHIFT;
-+	dw_pcie_writel_dbi(pci, PORT_LOGIC_ACK_F_ASPM_CTRL, val);
-+
-+	val = dw_pcie_readl_dbi(pci, PORT_LOGIC_GEN2_CTRL);
-+	val &= ~FTS_MASK;
-+	val |= FTS_VAL;
-+	dw_pcie_writel_dbi(pci, PORT_LOGIC_GEN2_CTRL, val);
-+
-+	/* Enable as 0xFFFF0001 response for CRS */
-+	val = dw_pcie_readl_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT);
-+	val &= ~(AMBA_ERROR_RESPONSE_CRS_MASK << AMBA_ERROR_RESPONSE_CRS_SHIFT);
-+	val |= (AMBA_ERROR_RESPONSE_CRS_OKAY_FFFF0001 <<
-+		AMBA_ERROR_RESPONSE_CRS_SHIFT);
-+	dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, val);
-+
-+	/* Configure Max Speed from DT */
-+	if (pcie->max_speed && pcie->max_speed != -EINVAL) {
-+		val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base +
-+					PCI_EXP_LNKCAP);
-+		val &= ~PCI_EXP_LNKCAP_SLS;
-+		val |= pcie->max_speed;
-+		dw_pcie_writel_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP,
-+				   val);
-+	}
-+
-+	/* Configure Max lane width from DT */
-+	val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP);
-+	val &= ~PCI_EXP_LNKCAP_MLW;
-+	val |= (pcie->num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT);
-+	dw_pcie_writel_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP, val);
-+
-+	config_gen3_gen4_eq_presets(pcie);
-+
-+#if defined(CONFIG_PCIEASPM)
-+	/* Enable ASPM counters */
-+	val = EVENT_COUNTER_ENABLE_ALL << EVENT_COUNTER_ENABLE_SHIFT;
-+	val |= EVENT_COUNTER_GROUP_5 << EVENT_COUNTER_GROUP_SEL_SHIFT;
-+	dw_pcie_writel_dbi(pci, event_cntr_ctrl_offset[pcie->cid], val);
-+
-+	/* Program T_cmrt and T_pwr_on values */
-+	val = dw_pcie_readl_dbi(pci, pcie->cfg_link_cap_l1sub);
-+	val &= ~(PCI_L1SS_CAP_CM_RESTORE_TIME | PCI_L1SS_CAP_P_PWR_ON_VALUE);
-+	val |= (pcie->aspm_cmrt << 8);
-+	val |= (pcie->aspm_pwr_on_t << 19);
-+	dw_pcie_writel_dbi(pci, pcie->cfg_link_cap_l1sub, val);
-+
-+	/* Program L0s and L1 entrance latencies */
-+	val = dw_pcie_readl_dbi(pci, PORT_LOGIC_ACK_F_ASPM_CTRL);
-+	val &= ~L0S_ENTRANCE_LAT_MASK;
-+	val |= (pcie->aspm_l0s_enter_lat << L0S_ENTRANCE_LAT_SHIFT);
-+	val |= ENTER_ASPM;
-+	dw_pcie_writel_dbi(pci, PORT_LOGIC_ACK_F_ASPM_CTRL, val);
-+#endif
-+	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-+	val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-+	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+
-+	if (pcie->update_fc_fixup) {
-+		val = dw_pcie_readl_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF);
-+		val |= 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT;
-+		dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF, val);
-+	}
-+
-+	dw_pcie_setup_rc(pp);
-+
-+	clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
-+
-+	/* Assert RST */
-+	val = appl_readl(pcie, APPL_PINMUX);
-+	val &= ~APPL_PINMUX_PEX_RST;
-+	appl_writel(pcie, val, APPL_PINMUX);
-+
-+	usleep_range(100, 200);
-+
-+	/* Enable LTSSM */
-+	val = appl_readl(pcie, APPL_CTRL);
-+	val |= APPL_CTRL_LTSSM_EN;
-+	appl_writel(pcie, val, APPL_CTRL);
-+
-+	/* De-assert RST */
-+	val = appl_readl(pcie, APPL_PINMUX);
-+	val |= APPL_PINMUX_PEX_RST;
-+	appl_writel(pcie, val, APPL_PINMUX);
-+
-+	msleep(100);
-+
-+	val_w = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
-+	while (!(val_w & PCI_EXP_LNKSTA_DLLLA)) {
-+		if (count) {
-+			dev_dbg(pci->dev, "Waiting for link up\n");
-+			usleep_range(1000, 2000);
-+			val_w = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
-+						  PCI_EXP_LNKSTA);
-+			count--;
-+			continue;
-+		}
-+
-+		val = appl_readl(pcie, APPL_DEBUG);
-+		val &= APPL_DEBUG_LTSSM_STATE_MASK;
-+		val >>= APPL_DEBUG_LTSSM_STATE_SHIFT;
-+		tmp = appl_readl(pcie, APPL_LINK_STATUS);
-+		tmp &= APPL_LINK_STATUS_RDLH_LINK_UP;
-+		if (!(val == 0x11 && !tmp)) {
-+			dev_info(pci->dev, "Link is down\n");
-+			return 0;
-+		}
-+
-+		dev_info(pci->dev, "Link is down in DLL");
-+		dev_info(pci->dev, "Trying again with DLFE disabled\n");
-+		/* Disable LTSSM */
-+		val = appl_readl(pcie, APPL_CTRL);
-+		val &= ~APPL_CTRL_LTSSM_EN;
-+		appl_writel(pcie, val, APPL_CTRL);
-+
-+		reset_control_assert(pcie->core_rst);
-+		reset_control_deassert(pcie->core_rst);
-+
-+		offset = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_DLF);
-+		val = dw_pcie_readl_dbi(pci, offset + PCI_DLF_CAP);
-+		val &= ~PCI_DLF_EXCHANGE_ENABLE;
-+		dw_pcie_writel_dbi(pci, offset, val);
-+
-+		/* Retry now with DLF Exchange disabled */
-+		goto core_init;
-+	}
-+	dev_dbg(pci->dev, "Link is up\n");
-+
-+	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
-+		PCI_EXP_LNKSTA_CLS;
-+	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-+
-+	tegra_pcie_enable_interrupts(pp);
-+
-+	return 0;
-+}
-+
-+static int tegra_pcie_dw_link_up(struct dw_pcie *pci)
-+{
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+	u32 val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
-+
-+	return !!(val & PCI_EXP_LNKSTA_DLLLA);
-+}
-+
-+static void tegra_pcie_set_msi_vec_num(struct pcie_port *pp)
-+{
-+	pp->num_vectors = MAX_MSI_IRQS;
-+}
-+
-+static const struct dw_pcie_ops tegra_dw_pcie_ops = {
-+	.link_up = tegra_pcie_dw_link_up,
-+};
-+
-+static struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
-+	.rd_own_conf = tegra_pcie_dw_rd_own_conf,
-+	.wr_own_conf = tegra_pcie_dw_wr_own_conf,
-+	.host_init = tegra_pcie_dw_host_init,
-+	.set_num_vectors = tegra_pcie_set_msi_vec_num,
-+};
-+
-+static void tegra_pcie_disable_phy(struct tegra_pcie_dw *pcie)
-+{
-+	unsigned int phy_count = pcie->phy_count;
-+
-+	while (phy_count--) {
-+		phy_power_off(pcie->phys[phy_count]);
-+		phy_exit(pcie->phys[phy_count]);
-+	}
-+}
-+
-+static int tegra_pcie_enable_phy(struct tegra_pcie_dw *pcie)
-+{
-+	unsigned int i;
-+	int ret;
-+
-+	for (i = 0; i < pcie->phy_count; i++) {
-+		ret = phy_init(pcie->phys[i]);
-+		if (ret < 0)
-+			goto phy_power_off;
-+
-+		ret = phy_power_on(pcie->phys[i]);
-+		if (ret < 0)
-+			goto phy_exit;
-+	}
-+
-+	return 0;
-+
-+phy_power_off:
-+	while (i--) {
-+		phy_power_off(pcie->phys[i]);
-+phy_exit:
-+		phy_exit(pcie->phys[i]);
-+	}
-+
-+	return ret;
-+}
-+
-+static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
-+{
-+	struct device_node *np = pcie->dev->of_node;
-+	int ret;
-+
-+	ret = of_property_read_u32(np, "nvidia,aspm-cmrt-us", &pcie->aspm_cmrt);
-+	if (ret < 0) {
-+		dev_info(pcie->dev, "Failed to read ASPM T_cmrt: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(np, "nvidia,aspm-pwr-on-t-us",
-+				   &pcie->aspm_pwr_on_t);
-+	if (ret < 0)
-+		dev_info(pcie->dev, "Failed to read ASPM Power On time: %d\n",
-+			 ret);
-+
-+	ret = of_property_read_u32(np, "nvidia,aspm-l0s-entrance-latency-us",
-+				   &pcie->aspm_l0s_enter_lat);
-+	if (ret < 0)
-+		dev_info(pcie->dev,
-+			 "Failed to read ASPM L0s Entrance latency: %d\n", ret);
-+
-+	ret = of_property_read_u32(np, "num-lanes", &pcie->num_lanes);
-+	if (ret < 0) {
-+		dev_err(pcie->dev, "Failed to read num-lanes: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pcie->max_speed = of_pci_get_max_link_speed(np);
-+
-+	ret = of_property_read_u32_index(np, "nvidia,bpmp", 1, &pcie->cid);
-+	if (ret) {
-+		dev_err(pcie->dev, "Failed to read Controller-ID: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pcie->phy_count = of_property_count_strings(np, "phy-names");
-+	if (pcie->phy_count < 0) {
-+		dev_err(pcie->dev, "Failed to find PHY entries: %d\n",
-+			pcie->phy_count);
-+		return pcie->phy_count;
-+	}
-+
-+	if (of_property_read_bool(np, "nvidia,update-fc-fixup"))
-+		pcie->update_fc_fixup = true;
-+
-+	pcie->supports_clkreq =
-+		of_property_read_bool(pcie->dev->of_node, "supports-clkreq");
-+
-+	pcie->enable_cdm_check =
-+		of_property_read_bool(np, "snps,enable-cdm-check");
-+
-+	return 0;
-+}
-+
-+static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
-+					  bool enable)
-+{
-+	struct mrq_uphy_response resp;
-+	struct tegra_bpmp_message msg;
-+	struct mrq_uphy_request req;
-+	int err;
-+
-+	if (pcie->cid == 5)
-+		return 0;
-+
-+	memset(&req, 0, sizeof(req));
-+	memset(&resp, 0, sizeof(resp));
-+
-+	req.cmd = CMD_UPHY_PCIE_CONTROLLER_STATE;
-+	req.controller_state.pcie_controller = pcie->cid;
-+	req.controller_state.enable = enable;
-+
-+	memset(&msg, 0, sizeof(msg));
-+	msg.mrq = MRQ_UPHY;
-+	msg.tx.data = &req;
-+	msg.tx.size = sizeof(req);
-+	msg.rx.data = &resp;
-+	msg.rx.size = sizeof(resp);
-+
-+	if (irqs_disabled())
-+		err = tegra_bpmp_transfer_atomic(pcie->bpmp, &msg);
-+	else
-+		err = tegra_bpmp_transfer(pcie->bpmp, &msg);
-+
-+	return err;
-+}
-+
-+static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
-+{
-+	struct pcie_port *pp = &pcie->pci.pp;
-+	struct pci_dev *pdev;
-+	struct pci_bus *child;
-+
-+	list_for_each_entry(child, &pp->root_bus->children, node) {
-+		/* Bring downstream devices to D0 if they are not already in */
-+		if (child->parent == pp->root_bus)
-+			break;
-+	}
-+	list_for_each_entry(pdev, &child->devices, bus_list) {
-+		if (PCI_SLOT(pdev->devfn) == 0) {
-+			if (pci_set_power_state(pdev, PCI_D0))
-+				dev_err(pcie->dev,
-+					"Failed to transition %s to D0 state\n",
-+					dev_name(&pdev->dev));
-+		}
-+	}
-+}
-+
-+static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
-+					bool en_hw_hot_rst)
-+{
-+	int ret;
-+	u32 val;
-+
-+	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, true);
-+	if (ret) {
-+		dev_err(pcie->dev,
-+			"Failed to enable controller %u: %d\n", pcie->cid, ret);
-+		return ret;
-+	}
-+
-+	ret = regulator_enable(pcie->pex_ctl_supply);
-+	if (ret < 0) {
-+		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
-+		goto fail_reg_en;
-+	}
-+
-+	ret = clk_prepare_enable(pcie->core_clk);
-+	if (ret) {
-+		dev_err(pcie->dev, "Failed to enable core clock: %d\n", ret);
-+		goto fail_core_clk;
-+	}
-+
-+	ret = reset_control_deassert(pcie->core_apb_rst);
-+	if (ret) {
-+		dev_err(pcie->dev, "Failed to deassert core APB reset: %d\n",
-+			ret);
-+		goto fail_core_apb_rst;
-+	}
-+
-+	if (en_hw_hot_rst) {
-+		/* Enable HW_HOT_RST mode */
-+		val = appl_readl(pcie, APPL_CTRL);
-+		val &= ~(APPL_CTRL_HW_HOT_RST_MODE_MASK <<
-+			 APPL_CTRL_HW_HOT_RST_MODE_SHIFT);
-+		val |= APPL_CTRL_HW_HOT_RST_EN;
-+		appl_writel(pcie, val, APPL_CTRL);
-+	}
-+
-+	ret = tegra_pcie_enable_phy(pcie);
-+	if (ret) {
-+		dev_err(pcie->dev, "Failed to enable PHY: %d\n", ret);
-+		goto fail_phy;
-+	}
-+
-+	/* Update CFG base address */
-+	appl_writel(pcie, pcie->dbi_res->start & APPL_CFG_BASE_ADDR_MASK,
-+		    APPL_CFG_BASE_ADDR);
-+
-+	/* Configure this core for RP mode operation */
-+	appl_writel(pcie, APPL_DM_TYPE_RP, APPL_DM_TYPE);
-+
-+	appl_writel(pcie, 0x0, APPL_CFG_SLCG_OVERRIDE);
-+
-+	val = appl_readl(pcie, APPL_CTRL);
-+	appl_writel(pcie, val | APPL_CTRL_SYS_PRE_DET_STATE, APPL_CTRL);
-+
-+	val = appl_readl(pcie, APPL_CFG_MISC);
-+	val |= (APPL_CFG_MISC_ARCACHE_VAL << APPL_CFG_MISC_ARCACHE_SHIFT);
-+	appl_writel(pcie, val, APPL_CFG_MISC);
-+
-+	if (!pcie->supports_clkreq) {
-+		val = appl_readl(pcie, APPL_PINMUX);
-+		val |= APPL_PINMUX_CLKREQ_OUT_OVRD_EN;
-+		val |= APPL_PINMUX_CLKREQ_OUT_OVRD;
-+		appl_writel(pcie, val, APPL_PINMUX);
-+	}
-+
-+	/* Update iATU_DMA base address */
-+	appl_writel(pcie,
-+		    pcie->atu_dma_res->start & APPL_CFG_IATU_DMA_BASE_ADDR_MASK,
-+		    APPL_CFG_IATU_DMA_BASE_ADDR);
-+
-+	reset_control_deassert(pcie->core_rst);
-+
-+	pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
-+						      PCI_CAP_ID_EXP);
-+
-+#if defined(CONFIG_PCIEASPM)
-+	/* Disable ASPM-L1SS advertisement as there is no CLKREQ routing */
-+	if (!pcie->supports_clkreq) {
-+		disable_aspm_l11(pcie);
-+		disable_aspm_l12(pcie);
-+	}
-+#endif
-+	return ret;
-+
-+fail_phy:
-+	reset_control_assert(pcie->core_apb_rst);
-+fail_core_apb_rst:
-+	clk_disable_unprepare(pcie->core_clk);
-+fail_core_clk:
-+	regulator_disable(pcie->pex_ctl_supply);
-+fail_reg_en:
-+	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
-+
-+	return ret;
-+}
-+
-+static int __deinit_controller(struct tegra_pcie_dw *pcie)
-+{
-+	int ret;
-+
-+	ret = reset_control_assert(pcie->core_rst);
-+	if (ret) {
-+		dev_err(pcie->dev, "Failed to assert \"core\" reset: %d\n",
-+			ret);
-+		return ret;
-+	}
-+	tegra_pcie_disable_phy(pcie);
-+	ret = reset_control_assert(pcie->core_apb_rst);
-+	if (ret) {
-+		dev_err(pcie->dev, "Failed to assert APB reset: %d\n", ret);
-+		return ret;
-+	}
-+	clk_disable_unprepare(pcie->core_clk);
-+	ret = regulator_disable(pcie->pex_ctl_supply);
-+	if (ret) {
-+		dev_err(pcie->dev, "Failed to disable regulator: %d\n", ret);
-+		return ret;
-+	}
-+	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
-+	if (ret) {
-+		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
-+			pcie->cid, ret);
-+		return ret;
-+	}
-+	return ret;
-+}
-+
-+static int tegra_pcie_init_controller(struct tegra_pcie_dw *pcie)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct pcie_port *pp = &pci->pp;
-+	int ret;
-+
-+	ret = tegra_pcie_config_controller(pcie, false);
-+	if (ret < 0)
-+		return ret;
-+
-+	pp->root_bus_nr = -1;
-+	pp->ops = &tegra_pcie_dw_host_ops;
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (ret < 0) {
-+		dev_err(pcie->dev, "Failed to add PCIe port: %d\n", ret);
-+		goto fail_host_init;
-+	}
-+
-+	return 0;
-+
-+fail_host_init:
-+	return __deinit_controller(pcie);
-+}
-+
-+static int tegra_pcie_try_link_l2(struct tegra_pcie_dw *pcie)
-+{
-+	u32 val;
-+
-+	if (!tegra_pcie_dw_link_up(&pcie->pci))
-+		return 0;
-+
-+	val = appl_readl(pcie, APPL_RADM_STATUS);
-+	val |= APPL_PM_XMT_TURNOFF_STATE;
-+	appl_writel(pcie, val, APPL_RADM_STATUS);
-+
-+	return readl_poll_timeout_atomic(pcie->appl_base + APPL_DEBUG, val,
-+				 val & APPL_DEBUG_PM_LINKST_IN_L2_LAT,
-+				 1, PME_ACK_TIMEOUT);
-+}
-+
-+static void tegra_pcie_dw_pme_turnoff(struct tegra_pcie_dw *pcie)
-+{
-+	u32 data;
-+	int err;
-+
-+	if (!tegra_pcie_dw_link_up(&pcie->pci)) {
-+		dev_dbg(pcie->dev, "PCIe link is not up...!\n");
-+		return;
-+	}
-+
-+	if (tegra_pcie_try_link_l2(pcie)) {
-+		dev_info(pcie->dev, "Link didn't transition to L2 state\n");
-+		/*
-+		 * TX lane clock freq will reset to Gen1 only if link is in L2
-+		 * or detect state.
-+		 * So apply pex_rst to end point to force RP to go into detect
-+		 * state
-+		 */
-+		data = appl_readl(pcie, APPL_PINMUX);
-+		data &= ~APPL_PINMUX_PEX_RST;
-+		appl_writel(pcie, data, APPL_PINMUX);
-+
-+		err = readl_poll_timeout_atomic(pcie->appl_base + APPL_DEBUG,
-+						data,
-+						((data &
-+						APPL_DEBUG_LTSSM_STATE_MASK) >>
-+						APPL_DEBUG_LTSSM_STATE_SHIFT) ==
-+						LTSSM_STATE_PRE_DETECT,
-+						1, LTSSM_TIMEOUT);
-+		if (err) {
-+			dev_info(pcie->dev, "Link didn't go to detect state\n");
-+		} else {
-+			/* Disable LTSSM after link is in detect state */
-+			data = appl_readl(pcie, APPL_CTRL);
-+			data &= ~APPL_CTRL_LTSSM_EN;
-+			appl_writel(pcie, data, APPL_CTRL);
-+		}
-+	}
-+	/*
-+	 * DBI registers may not be accessible after this as PLL-E would be
-+	 * down depending on how CLKREQ is pulled by end point
-+	 */
-+	data = appl_readl(pcie, APPL_PINMUX);
-+	data |= (APPL_PINMUX_CLKREQ_OVERRIDE_EN | APPL_PINMUX_CLKREQ_OVERRIDE);
-+	/* Cut REFCLK to slot */
-+	data |= APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE_EN;
-+	data &= ~APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE;
-+	appl_writel(pcie, data, APPL_PINMUX);
-+}
-+
-+static int tegra_pcie_deinit_controller(struct tegra_pcie_dw *pcie)
-+{
-+	/*
-+	 * link doesn't go into L2 state with some of the endpoints with Tegra
-+	 * if they are not in D0 state. So, need to make sure that immediate
-+	 * downstream devices are in D0 state before sending PME_TurnOff to put
-+	 * link into L2 state
-+	 */
-+	tegra_pcie_downstream_dev_to_D0(pcie);
-+	dw_pcie_host_deinit(&pcie->pci.pp);
-+	tegra_pcie_dw_pme_turnoff(pcie);
-+	return __deinit_controller(pcie);
-+}
-+
-+static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
-+{
-+	struct pcie_port *pp = &pcie->pci.pp;
-+	struct device *dev = pcie->dev;
-+	char *name;
-+	int ret;
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		pp->msi_irq = of_irq_get_byname(dev->of_node, "msi");
-+		if (!pp->msi_irq) {
-+			dev_err(dev, "Failed to get MSI interrupt\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
-+			ret);
-+		pm_runtime_disable(dev);
-+		return ret;
-+	}
-+
-+	tegra_pcie_init_controller(pcie);
-+
-+	pcie->link_state = tegra_pcie_dw_link_up(&pcie->pci);
-+
-+	if (!pcie->link_state) {
-+		ret = -ENOMEDIUM;
-+		goto fail_host_init;
-+	}
-+
-+	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
-+	if (!name) {
-+		ret = -ENOMEM;
-+		goto fail_host_init;
-+	}
-+
-+	pcie->debugfs = debugfs_create_dir(name, NULL);
-+	if (!pcie->debugfs)
-+		dev_err(dev, "Failed to create debugfs\n");
-+	else
-+		init_debugfs(pcie);
-+
-+	return ret;
-+
-+fail_host_init:
-+	tegra_pcie_deinit_controller(pcie);
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+	return ret;
-+}
-+
-+static const struct tegra_pcie_soc tegra_pcie_rc_of_data = {
-+	.mode = DW_PCIE_RC_TYPE,
-+};
-+
-+static const struct of_device_id tegra_pcie_dw_of_match[] = {
-+	{
-+		.compatible = "nvidia,tegra194-pcie",
-+		.data = &tegra_pcie_rc_of_data,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tegra_pcie_dw_of_match);
-+
-+static int tegra_pcie_dw_probe(struct platform_device *pdev)
-+{
-+	const struct tegra_pcie_soc *data;
-+	struct device *dev = &pdev->dev;
-+	struct resource *atu_dma_res;
-+	struct tegra_pcie_dw *pcie;
-+	struct resource *dbi_res;
-+	struct pcie_port *pp;
-+	struct dw_pcie *pci;
-+	struct phy **phys;
-+	char *name;
-+	int ret;
-+	u32 i;
-+
-+	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	pci = &pcie->pci;
-+	pci->dev = &pdev->dev;
-+	pci->ops = &tegra_dw_pcie_ops;
-+	pp = &pci->pp;
-+	pcie->dev = &pdev->dev;
-+
-+	data = (struct tegra_pcie_soc *)of_device_get_match_data(dev);
-+	if (!data)
-+		return -EINVAL;
-+	pcie->mode = (enum dw_pcie_device_mode)data->mode;
-+
-+	ret = tegra_pcie_dw_parse_dt(pcie);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to parse device tree: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
-+	if (IS_ERR(pcie->pex_ctl_supply)) {
-+		dev_err(dev, "Failed to get regulator: %ld\n",
-+			PTR_ERR(pcie->pex_ctl_supply));
-+		return PTR_ERR(pcie->pex_ctl_supply);
-+	}
-+
-+	pcie->core_clk = devm_clk_get(dev, "core");
-+	if (IS_ERR(pcie->core_clk)) {
-+		dev_err(dev, "Failed to get core clock: %ld\n",
-+			PTR_ERR(pcie->core_clk));
-+		return PTR_ERR(pcie->core_clk);
-+	}
-+
-+	pcie->appl_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						      "appl");
-+	if (!pcie->appl_res) {
-+		dev_err(dev, "Failed to find \"appl\" region\n");
-+		return PTR_ERR(pcie->appl_res);
-+	}
-+	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
-+	if (IS_ERR(pcie->appl_base))
-+		return PTR_ERR(pcie->appl_base);
-+
-+	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
-+	if (IS_ERR(pcie->core_apb_rst)) {
-+		dev_err(dev, "Failed to get APB reset: %ld\n",
-+			PTR_ERR(pcie->core_apb_rst));
-+		return PTR_ERR(pcie->core_apb_rst);
-+	}
-+
-+	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
-+	if (!phys)
-+		return PTR_ERR(phys);
-+
-+	for (i = 0; i < pcie->phy_count; i++) {
-+		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
-+		if (!name) {
-+			dev_err(dev, "Failed to create P2U string\n");
-+			return -ENOMEM;
-+		}
-+		phys[i] = devm_phy_get(dev, name);
-+		kfree(name);
-+		if (IS_ERR(phys[i])) {
-+			ret = PTR_ERR(phys[i]);
-+			dev_err(dev, "Failed to get PHY: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	pcie->phys = phys;
-+
-+	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-+	if (!dbi_res) {
-+		dev_err(dev, "Failed to find \"dbi\" region\n");
-+		return PTR_ERR(dbi_res);
-+	}
-+	pcie->dbi_res = dbi_res;
-+
-+	pci->dbi_base = devm_ioremap_resource(dev, dbi_res);
-+	if (IS_ERR(pci->dbi_base))
-+		return PTR_ERR(pci->dbi_base);
-+
-+	/* Tegra HW locates DBI2 at a fixed offset from DBI */
-+	pci->dbi_base2 = pci->dbi_base + 0x1000;
-+
-+	atu_dma_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						   "atu_dma");
-+	if (!atu_dma_res) {
-+		dev_err(dev, "Failed to find \"atu_dma\" region\n");
-+		return PTR_ERR(atu_dma_res);
-+	}
-+	pcie->atu_dma_res = atu_dma_res;
-+	pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
-+	if (IS_ERR(pci->atu_base))
-+		return PTR_ERR(pci->atu_base);
-+
-+	pcie->core_rst = devm_reset_control_get(dev, "core");
-+	if (IS_ERR(pcie->core_rst)) {
-+		dev_err(dev, "Failed to get core reset: %ld\n",
-+			PTR_ERR(pcie->core_rst));
-+		return PTR_ERR(pcie->core_rst);
-+	}
-+
-+	pp->irq = platform_get_irq_byname(pdev, "intr");
-+	if (!pp->irq) {
-+		dev_err(dev, "Failed to get \"intr\" interrupt\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = devm_request_irq(dev, pp->irq, tegra_pcie_irq_handler,
-+			       IRQF_SHARED, "tegra-pcie-intr", pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq, ret);
-+		return ret;
-+	}
-+
-+	pcie->bpmp = tegra_bpmp_get(dev);
-+	if (IS_ERR(pcie->bpmp))
-+		return PTR_ERR(pcie->bpmp);
-+
-+	platform_set_drvdata(pdev, pcie);
-+
-+	if (pcie->mode == DW_PCIE_RC_TYPE) {
-+		ret = tegra_pcie_config_rp(pcie);
-+		if (ret && ret != -ENOMEDIUM)
-+			goto fail;
-+		else
-+			return 0;
-+	}
-+
-+fail:
-+	tegra_bpmp_put(pcie->bpmp);
-+	return ret;
-+}
-+
-+static int tegra_pcie_dw_remove(struct platform_device *pdev)
-+{
-+	struct tegra_pcie_dw *pcie = platform_get_drvdata(pdev);
-+
-+	if (pcie->mode != DW_PCIE_RC_TYPE)
-+		return 0;
-+
-+	if (!pcie->link_state)
-+		return 0;
-+
-+	debugfs_remove_recursive(pcie->debugfs);
-+	tegra_pcie_deinit_controller(pcie);
-+	pm_runtime_put_sync(pcie->dev);
-+	pm_runtime_disable(pcie->dev);
-+	tegra_bpmp_put(pcie->bpmp);
-+
-+	return 0;
-+}
-+
-+static int tegra_pcie_dw_suspend_late(struct device *dev)
-+{
-+	struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
-+	u32 val;
-+
-+	if (!pcie->link_state)
-+		return 0;
-+
-+	/* Enable HW_HOT_RST mode */
-+	val = appl_readl(pcie, APPL_CTRL);
-+	val &= ~(APPL_CTRL_HW_HOT_RST_MODE_MASK <<
-+		 APPL_CTRL_HW_HOT_RST_MODE_SHIFT);
-+	val |= APPL_CTRL_HW_HOT_RST_EN;
-+	appl_writel(pcie, val, APPL_CTRL);
-+
-+	return 0;
-+}
-+
-+static int tegra_pcie_dw_suspend_noirq(struct device *dev)
-+{
-+	struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
-+
-+	if (!pcie->link_state)
-+		return 0;
-+
-+	/* Save MSI interrupt vector */
-+	pcie->msi_ctrl_int = dw_pcie_readl_dbi(&pcie->pci,
-+					       PORT_LOGIC_MSI_CTRL_INT_0_EN);
-+	tegra_pcie_downstream_dev_to_D0(pcie);
-+	tegra_pcie_dw_pme_turnoff(pcie);
-+	return __deinit_controller(pcie);
-+}
-+
-+static int tegra_pcie_dw_resume_noirq(struct device *dev)
-+{
-+	struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (!pcie->link_state)
-+		return 0;
-+
-+	ret = tegra_pcie_config_controller(pcie, true);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = tegra_pcie_dw_host_init(&pcie->pci.pp);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to init host: %d\n", ret);
-+		goto fail_host_init;
-+	}
-+
-+	/* Restore MSI interrupt vector */
-+	dw_pcie_writel_dbi(&pcie->pci, PORT_LOGIC_MSI_CTRL_INT_0_EN,
-+			   pcie->msi_ctrl_int);
-+
-+	return 0;
-+fail_host_init:
-+	return __deinit_controller(pcie);
-+}
-+
-+static int tegra_pcie_dw_resume_early(struct device *dev)
-+{
-+	struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
-+	u32 val;
-+
-+	if (!pcie->link_state)
-+		return 0;
-+
-+	/* Disable HW_HOT_RST mode */
-+	val = appl_readl(pcie, APPL_CTRL);
-+	val &= ~(APPL_CTRL_HW_HOT_RST_MODE_MASK <<
-+		 APPL_CTRL_HW_HOT_RST_MODE_SHIFT);
-+	val |= APPL_CTRL_HW_HOT_RST_MODE_IMDT_RST <<
-+	       APPL_CTRL_HW_HOT_RST_MODE_SHIFT;
-+	val &= ~APPL_CTRL_HW_HOT_RST_EN;
-+	appl_writel(pcie, val, APPL_CTRL);
-+
-+	return 0;
-+}
-+
-+static void tegra_pcie_dw_shutdown(struct platform_device *pdev)
-+{
-+	struct tegra_pcie_dw *pcie = platform_get_drvdata(pdev);
-+
-+	if (pcie->mode != DW_PCIE_RC_TYPE)
-+		return;
-+
-+	if (!pcie->link_state)
-+		return;
-+
-+	debugfs_remove_recursive(pcie->debugfs);
-+	tegra_pcie_downstream_dev_to_D0(pcie);
-+
-+	disable_irq(pcie->pci.pp.irq);
-+	if (IS_ENABLED(CONFIG_PCI_MSI))
-+		disable_irq(pcie->pci.pp.msi_irq);
-+
-+	tegra_pcie_dw_pme_turnoff(pcie);
-+	__deinit_controller(pcie);
-+}
-+
-+static const struct dev_pm_ops tegra_pcie_dw_pm_ops = {
-+	.suspend_late = tegra_pcie_dw_suspend_late,
-+	.suspend_noirq = tegra_pcie_dw_suspend_noirq,
-+	.resume_noirq = tegra_pcie_dw_resume_noirq,
-+	.resume_early = tegra_pcie_dw_resume_early,
-+};
-+
-+static struct platform_driver tegra_pcie_dw_driver = {
-+	.probe = tegra_pcie_dw_probe,
-+	.remove = tegra_pcie_dw_remove,
-+	.shutdown = tegra_pcie_dw_shutdown,
-+	.driver = {
-+		.name	= "tegra194-pcie",
-+		.pm = &tegra_pcie_dw_pm_ops,
-+		.of_match_table = tegra_pcie_dw_of_match,
-+	},
-+};
-+module_platform_driver(tegra_pcie_dw_driver);
-+
-+MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
-+MODULE_DESCRIPTION("NVIDIA PCIe host controller driver");
-+MODULE_LICENSE("GPL v2");
+Doing the update in this way, the number of IPI becomes O(3) with regard
+to the number of keys, which is O(1).
+
+Currently, the jump label of a static key is transformed via the arch
+specific function:
+
+    void arch_jump_label_transform(struct jump_entry *entry,
+                                   enum jump_label_type type)
+
+The new approach (batch mode) uses two arch functions, the first has the
+same arguments of the arch_jump_label_transform(), and is the function:
+
+    bool arch_jump_label_transform_queue(struct jump_entry *entry,
+                                         enum jump_label_type type)
+
+Rather than transforming the code, it adds the jump_entry in a queue of
+entries to be updated.
+
+After queuing all jump_entries, the function:
+  
+    void arch_jump_label_transform_apply(void)
+
+Applies the changes in the queue.
+
+One easy way to see the benefits of this patch is switching the
+schedstats on and off. For instance:
+
+-------------------------- %< ---------------------------- 
+  #!/bin/bash
+
+  while [ true ]; do 
+      sysctl -w kernel.sched_schedstats=1
+      sleep 2
+      sysctl -w kernel.sched_schedstats=0
+      sleep 2
+  done
+-------------------------- >% ----------------------------
+
+while watching the IPI count:
+
+-------------------------- %< ---------------------------- 
+  # watch -n1 "cat /proc/interrupts | grep Function"
+-------------------------- >% ----------------------------
+
+With the current mode, it is possible to see +- 168 IPIs each 2 seconds,
+while with the batch mode the number of IPIs goes to 3 each 2 seconds.
+
+Regarding the performance impact of this patch set, I made two measurements:
+
+    The time to update a key (the task that is causing the change)
+    The time to run the int3 handler (the side effect on a thread that
+                                      hits the code being changed)
+
+The sched_schedstats static key was chosen as the key to being switched on and
+off. The reason being is that it is used in more than 56 places, in a hot path.
+The change in the schedstats static key will be done with the following
+command:
+
+while [ true ]; do
+    sysctl -w kernel.sched_schedstats=1
+    usleep 500000
+    sysctl -w kernel.sched_schedstats=0
+    usleep 500000
+done
+
+In this way, they key will be updated twice per second. To force the hit of the
+int3 handler, the system will also run a kernel compilation with two jobs per
+CPU. The test machine is a two nodes/24 CPUs box with an Intel Xeon processor
+@2.27GHz.
+
+Regarding the update part, on average, the regular kernel takes 57 ms to update
+the static key, while the kernel with the batch updates takes just 1.4 ms on
+average. Although it seems to be too good to be true, it makes sense: the
+sched_schedstats key is used in 56 places, so it was expected that it would take
+around 56 times to update the keys with the current implementation, as the
+IPIs are the most expensive part of the update.
+
+Regarding the int3 handler, the non-batch handler takes 45 ns on average, while
+the batch version takes around 180 ns. At first glance, it seems to be a high
+value. But it is not, considering that it is doing 56 updates, rather than one!
+It is taking four times more, only. This gain is possible because the patch
+uses a binary search in the vector: log2(56)=5.8. So, it was expected to have
+an overhead within four times.
+
+(voice of tv propaganda) But, that is not all! As the int3 handler keeps on for
+a shorter period (because the update part is on for a shorter time), the number
+of hits in the int3 handler decreased by 10%.
+
+The question then is: Is it worth paying the price of "135 ns" more in the int3
+handler?
+
+Considering that, in this test case, we are saving the handling of 53 IPIs,
+that takes more than these 135 ns, it seems to be a meager price to be paid.
+Moreover, the test case was forcing the hit of the int3, in practice, it
+does not take that often. While the IPI takes place on all CPUs, hitting
+the int3 handler or not!
+
+For instance, in an isolated CPU with a process running in user-space
+(nohz_full use-case), the chances of hitting the int3 handler is barely zero,
+while there is no way to avoid the IPIs. By bounding the IPIs, we are improving
+this scenario a lot.
+
+Changes from v5:
+  - Remove "Add for_each_label_entry helper" patch (Peter Zijlstra &
+    Borislav Petkov)
+  - Adjust the changelog of "jump_label: Sort entries of the same key by
+    the code" (Peter Zijlstra)
+  - Optimize poke_int3_handler() (Peter Zijlstra)
+  - Optimize __jump_label_update() (Peter Zijlstra)
+  - Remove "in_progress" var, use "nr_entries" instead (Peter Zijlstra)
+  - Use static allocated memory rather than dynamic (Peter Zijlstra)
+  - Remove all the control/fallback required by dynamic allocated memory.
+  - Undo the substitution of BUG() to WARN() - Running with inconsistent
+    code is a BUG (Peter Zijlstra)
+Changes from v4:
+  - Renamed jump_label_can_update_check() to jump_label_can_update()
+    (Borislav Petkov)
+  - Switch jump_label_can_update() return values to bool (Borislav Petkov)
+  - Accept the fact that some lines will be > 80 characters (Borislav Petkov)
+  - Local variables are now in the inverted Christmas three order
+    (Borislav Petkov)
+  - Removed superfluous helpers. (Borislav Petkov)
+  - Renamed text_to_poke to text_patch_loc, and handler to detour
+    (Borislav Petkov & Steven Rostedt)
+  - Re-applied the suggestion of not using BUG() from steven (Masami Hiramatsu)
+  - arch_jump_label_transform_queue() now returns 0 on success and
+    -ENOSPC/EINVAL on errors (Masami Hiramatsu)
+Changes from v3:
+  - Optimizations in the hot path of poke_int3_handler() (Masami Hiramatsu)
+  - Reduce code duplication in text_poke_bp()/text_poke_batch()
+    (Masami Hiramatsu)
+  - Set NOKPROBE_SYMBOL on functions called by poke_int3_handler()
+    (Masami Hiramatsu)
+Changes from v2:
+  - Switch the order of patches 8 and 9 (Steven Rostedt)
+  - Fallback in the case of failure in the batch mode (Steven Rostedt)
+  - Fix a pointer in patch 7 (Steven Rostedt)
+  - Adjust the commit log of the patch 1 (Borislav Petkov)
+  - Adjust the commit log of the patch 3 (Jiri Kosina/Thomas Gleixner)
+Changes from v1:
+  - Split the patch in jump-label/x86-jump-label/alternative (Jason Baron)
+  - Use bserach in the int3 handler (Steven Rostedt)
+  - Use a pre-allocated page to store the vector (Jason/Steven)
+  - Do performance tests in the int3 handler (peterz)
+
+Daniel Bristot de Oliveira (6):
+  jump_label: Add a jump_label_can_update() helper
+  x86/jump_label: Add a __jump_label_set_jump_code() helper
+  jump_label: Sort entries of the same key by the code
+  x86/alternative: Batch of patch operations
+  jump_label: Batch updates if arch supports it
+  x86/jump_label: Batch jump label updates
+
+ arch/x86/include/asm/jump_label.h    |   2 +
+ arch/x86/include/asm/text-patching.h |  15 +++
+ arch/x86/kernel/alternative.c        | 154 +++++++++++++++++++++------
+ arch/x86/kernel/jump_label.c         | 110 ++++++++++++++++---
+ include/linux/jump_label.h           |   3 +
+ kernel/jump_label.c                  |  65 +++++++++--
+ 6 files changed, 290 insertions(+), 59 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
