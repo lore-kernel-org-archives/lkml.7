@@ -2,111 +2,132 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA71C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA991C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA01C21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82054208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560346751;
+	bh=WBC3kV6boUG4g0ISh+/Q4tHQr5heRL1XoT+RzTqjx/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qJoHyEZp5N8TYgEtzliexRUtHTA+oUkBySF/wpLdYsIIv7qwi3sGH9Y1u5/IRwsyy
+	 Je7+pTB+VsngPSAuQfL3OjOhWNCw4zb/TViiBWfx1z3ZKkReOBD+BwuNh3SRWTI5VG
+	 ee2fFVPacTJNMZuadaLepZjHgXHmhUv5ExZ9C5YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408080AbfFLNjF convert rfc822-to-8bit (ORCPT
+        id S2408432AbfFLNjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 12 Jun 2019 09:39:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732411AbfFLNjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Jun 2019 09:39:05 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:48426 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732397AbfFLNjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:39:05 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-66-VETJ8E46Mh-MLo7lg8Dqqg-1; Wed, 12 Jun 2019 14:39:02 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 12 Jun 2019 14:39:00 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 12 Jun 2019 14:39:00 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Oleg Nesterov' <oleg@redhat.com>
-CC:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'arnd@arndb.de'" <arnd@arndb.de>,
-        "'dbueso@suse.de'" <dbueso@suse.de>,
-        "'axboe@kernel.dk'" <axboe@kernel.dk>,
-        "'dave@stgolabs.net'" <dave@stgolabs.net>,
-        "'e@80x24.org'" <e@80x24.org>,
-        "'jbaron@akamai.com'" <jbaron@akamai.com>,
-        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
-        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
-        "'tglx@linutronix.de'" <tglx@linutronix.de>,
-        'Al Viro' <viro@ZenIV.linux.org.uk>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Thread-Topic: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Thread-Index: AQHVH9JWknGdQ9+D0UeylJNmvFzQKKaWJ31QgAAjZdCAAbHqlYAAAXJw///4tQCAABGpsA==
-Date:   Wed, 12 Jun 2019 13:39:00 +0000
-Message-ID: <4f5f36915e484b5a9d12e840c79f54cb@AcuMS.aculab.com>
-References: <20190604134117.GA29963@redhat.com>
- <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
- <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
- <87lfy96sta.fsf@xmission.com>
- <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
- <95decc6904754004af8a5546aca0468a@AcuMS.aculab.com>
- <87pnnj2ca0.fsf@xmission.com>
- <a11bb1a2a6de4cf5aa773ea79c602f1a@AcuMS.aculab.com>
- <20190612133519.GA3276@redhat.com>
-In-Reply-To: <20190612133519.GA3276@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29FDC20B1F;
+        Wed, 12 Jun 2019 13:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560346744;
+        bh=WBC3kV6boUG4g0ISh+/Q4tHQr5heRL1XoT+RzTqjx/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jadukF9E0+CT+yi715fyqQx75FWd9SG+n5IHNuVSvny1BFdo4qJulitWVAdLiCDm+
+         dcXCnRt5p2izrUGcxU0FBywUIVl/Ontpx0aG5VLMjFxYO/y/itjIGLAjNgZEx3fOin
+         RQYkQugxl/iZJwGadx+LOtSpkmAkB3OGKlkVDxVE=
+Date:   Wed, 12 Jun 2019 21:38:22 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Igor Opaniuk <igor.opaniuk@gmail.com>
+Cc:     Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
+        linux-imx@nxp.com, Marcel Ziswiler <marcel@ziswiler.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ull-colibri: enable UHS-I for USDHC1
+Message-ID: <20190612132705.GJ11086@dragon>
+References: <20190606090612.16685-1-igor.opaniuk@gmail.com>
+ <3b84f3cc6cd5399f25ebd8e1c8559c58@agner.ch>
+ <CAByghJZJzFN9c9V-o=SV0z07++RPqsB0R8MTsovbtLr3vqJgyw@mail.gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: VETJ8E46Mh-MLo7lg8Dqqg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAByghJZJzFN9c9V-o=SV0z07++RPqsB0R8MTsovbtLr3vqJgyw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov
-> Sent: 12 June 2019 14:35
-> On 06/12, David Laight wrote:
+On Wed, Jun 12, 2019 at 03:49:03PM +0300, Igor Opaniuk wrote:
+> Hi Stefan,
+> 
+> On Wed, Jun 12, 2019 at 3:17 PM Stefan Agner <stefan@agner.ch> wrote:
 > >
-> > > > If I add a signal handler for SIGINT it is called when pselect()
-> > > > returns regardless of the return value.
+> > On 06.06.2019 11:06, Igor Opaniuk wrote:
+> > > From: Igor Opaniuk <igor.opaniuk@toradex.com>
 > > >
-> > > That is odd.  Is this with Oleg's fix applied?
+> > > Allows to use the SD interface at a higher speed mode if the card
+> > > supports it. For this the signaling voltage is switched from 3.3V to
+> > > 1.8V under the usdhc1's drivers control.
+> > >
+> > > Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+> > > ---
+> > >  arch/arm/boot/dts/imx6ul.dtsi                  |  4 ++++
+> > >  arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 11 +++++++++--
+> > >  arch/arm/boot/dts/imx6ull-colibri.dtsi         |  6 ++++++
+> > >  3 files changed, 19 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> > > index fc388b84bf22..91a0ced44e27 100644
+> > > --- a/arch/arm/boot/dts/imx6ul.dtsi
+> > > +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> > > @@ -857,6 +857,8 @@
+> > >                                        <&clks IMX6UL_CLK_USDHC1>,
+> > >                                        <&clks IMX6UL_CLK_USDHC1>;
+> > >                               clock-names = "ipg", "ahb", "per";
+> > > +                             fsl,tuning-step= <2>;
+> > > +                             fsl,tuning-start-tap = <20>;
+> > >                               bus-width = <4>;
+> > >                               status = "disabled";
+> > >                       };
+> > > @@ -870,6 +872,8 @@
+> > >                                        <&clks IMX6UL_CLK_USDHC2>;
+> > >                               clock-names = "ipg", "ahb", "per";
+> > >                               bus-width = <4>;
+> > > +                             fsl,tuning-step= <2>;
+> > > +                             fsl,tuning-start-tap = <20>;
+> > >                               status = "disabled";
+> > >                       };
+> > >
+> > > diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> > > b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> > > index 006690ea98c0..7dc7770cf52c 100644
+> > > --- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> > > +++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> > > @@ -145,13 +145,20 @@
+> > >  };
+> > >
+> > >  &usdhc1 {
+> > > -     pinctrl-names = "default";
+> > > +     pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
+> > >       pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_snvs_usdhc1_cd>;
+> > > -     no-1-8-v;
+> > > +     pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_snvs_usdhc1_cd>;
+> > > +     pinctrl-2 = <&pinctrl_usdhc1_100mhz &pinctrl_snvs_usdhc1_cd>;
 > >
-> > No it is a 5.1.0-rc5 kernel with no related local patches.
-> > So it is the 'historic' behaviour of pselect().
+> > Should that not be pinctrl_usdhc1_200mhz?
+> >
 > 
-> No, this is not historic behaviour,
-> 
-> > But not the original one! Under 2.6.22-5-31 the signal handler isn't caller
-> > when pselect() returns 1.
-> 
-> This is historic behaviour.
-> 
-> And it was broken by 854a6ed56839a4 ("signal: Add restore_user_sigmask()").
-> 
-> And this is what we already discussed many, many times in this thread ;)
+> Correct, thanks for pointing this out.
+> Taking into account that the patch was already accepted by Shawn, will
+> send another to fix this typo ASAP (added to my todo list).
 
-My brain hurts :-)
+I just fixed it up on my branch.
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Shawn
