@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B160C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB5EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC04E2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B552053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UUaKcHV0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mu7ieJ4d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393677AbfFMRPf (ORCPT
+        id S2393666AbfFMRPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:15:35 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:42988 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728765AbfFLVsa (ORCPT
+        Thu, 13 Jun 2019 13:15:34 -0400
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:48492 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbfFLVsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:48:30 -0400
-Received: by mail-qk1-f202.google.com with SMTP id l16so14878830qkk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 14:48:29 -0700 (PDT)
+        Wed, 12 Jun 2019 17:48:32 -0400
+Received: by mail-yw1-f73.google.com with SMTP id t128so18860884ywd.15
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 14:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=x5JY2SGL+SYSEHfOtRFLuisOxAVpr293xNU/5K/Orhw=;
-        b=UUaKcHV0d/LC9+lq01zBflV+hCjVCVqmBE3jKTCQMDYMhgFQy+hqBR570RqhY5BnO5
-         2IdZs3XxNUJtkmViwwhRiHpFp/XG+c+QSQrYmi51xctcNWKz5S4Txw2nmLK71Ro1G0EN
-         OaJ166g8QaVYhoP5Tsycy2cjIRDzgW4ij0dL3tEm4k9n+z0cxZ/9Hady/0qGiVWaVUTd
-         Y8An01p9TIj02KL22FwkySr1gVzpRzokRLgL8in5Bdgod1xbgpPxT104Qjd9D7R+5LZ0
-         /HmuO037rHLdWnkRlHMbQzG5jNpPL7ICo6CSqH65uQqvTLy7hmDpNxpPnOT3mViN9Rp3
-         B/9A==
+        bh=UTvLD/wD588ESHmoVIZCejau/hPfDwnsdJsCywqHwAA=;
+        b=Mu7ieJ4dJr5A88meQ9qVtn/HkSV/004ezi4zuqk7cCe+YsOH9wCM4of1Oqhr2u8V98
+         A7XEWbgP/tsh554OaRpnmXbSFFre7Jc+QrCaTmhJOqBSWnqBgBgTo9cBXLXVcmziWkS1
+         UjQXUsPXhBsbOWxWOGA6PMqDywM9rQ8BfeZRifMf/pQPnIYQ7ECbI3tgKqvYJFI8Cj3h
+         BIdUd4vPAPPZEIC14cPiFvZSxyRgoGgqjwM9FOZUONWn1COvjWof9/mLG+Xlg46zmROQ
+         1o7LZTchCx0+tfw8XyQx8m7VHr1vBOnvbdMnFrCNcHpK4S1tnsPi2ptbqadwtHiHkbGT
+         SJbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=x5JY2SGL+SYSEHfOtRFLuisOxAVpr293xNU/5K/Orhw=;
-        b=lRI3HRTkMG7q0fj777AKbOO7DqLX7ydt9Jp4KtmjJKFGPHUQJ7xUnGy4sFi9l1cq22
-         XV5jTKEAf42QGeJueAoweiKS8aQX2IIUfFL7MxEFcVrLamO5/B8EwRasmWJTW5zQ2qsv
-         otp/MH1RCMH6jiZMrGJjpGdwsi65IS+RqH/o0HoqBNj+iYMmUXAY3YYB2SdS3w7iZXal
-         ZBDiMt49SVYRKQqTm0oxCt9bdrfzg2c9dpkMDje3w8WxZfIHFITJUZi44GjGtslb8DdE
-         0f4fAK1Oj+QFwD1wPUiAp8w0aAFCrRWXjRllNjuURxzIjDPePmkjRQ3OzBMiIQu6bwbx
-         aSEw==
-X-Gm-Message-State: APjAAAUBif6uxz6+mIYpQ8FbEfZHCUlhDWre8WDWVCS/YoT7rMWD6IY7
-        bJ8QT4CqQeF+vzqGHyw324SKI8JTz6yaWufuvmqbTEWu/ZfoZJ+R+Uu7D1sUO7Qow10doTZYFzS
-        mbxmpzA+zpuWfhyZLWo+d5s9dztsudRiotPyVRKpY0GQO+VQWFF2q06npInGR+u86y/8=
-X-Google-Smtp-Source: APXvYqwr+6rEdJFDESoMYNaauRo/3rWccerZ0C2ktPwJ7mVmdx1JRJZW8i/Lp6aMelPjce+Ea2P6/S8itQ==
-X-Received: by 2002:ac8:7c7:: with SMTP id m7mr68019754qth.28.1560376108860;
- Wed, 12 Jun 2019 14:48:28 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 14:48:21 -0700
+        bh=UTvLD/wD588ESHmoVIZCejau/hPfDwnsdJsCywqHwAA=;
+        b=lcvn2s2kaYvKaOKgPaB6vHH3o469uKgALCkFFAJoI44PX/vaaYQoQl/6/9TWQbbmH8
+         Xb7E2LIiqgOybrPeHgDs7zDDEsaOC5XvdPsTdhyOiourLLpPkWPoHuqALbXjDw98bVvO
+         uJpym4JuClQexG7hcbYwYrfuK+oogaeSIDRZlhxPkVUYBIRaUX1UE2T0a2JghFci7Dlv
+         u5QmG/LJzeCkkIByT50xOWoXVFENK1Nft6TBLJakFIi6qt53eScflWTmvzYF7gz9tzGr
+         1lQ/QTXn7yiPYpM09HpyG0Te4oAsfWIehjokGSQrINURSaSn5VMsE051bX9Tvc6nyqZI
+         EVyw==
+X-Gm-Message-State: APjAAAUK9Fz8fCgETh2cxMT63ruCsmA4E/q2Hn0TksIvUeKJ7bgihRG8
+        Ui7jifSdsg73+ucmAddmfLCUL9dI+8Gq2XsdFvqUVW3cG6+B6QNnm6RmAoaz1LYq6L+Qsvthcdr
+        c5QkemdFeIfm6bG+jeBsNJQdCZ3zUK30RqD2poRpXcsgOVuwZq1BAs8lB+Gf5WjQesO4=
+X-Google-Smtp-Source: APXvYqxzVHSBLfhQspuBOmQnqTs3mkYhIaCZKmk5HFnMNN5m3v06aytJ4m926pXsuFtvTrJvWi1F8oKmwQ==
+X-Received: by 2002:a81:5944:: with SMTP id n65mr25260743ywb.182.1560376111464;
+ Wed, 12 Jun 2019 14:48:31 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 14:48:22 -0700
 In-Reply-To: <20190612214823.251491-1-fengc@google.com>
-Message-Id: <20190612214823.251491-2-fengc@google.com>
+Message-Id: <20190612214823.251491-3-fengc@google.com>
 Mime-Version: 1.0
 References: <20190612214823.251491-1-fengc@google.com>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v4 1/3] dma-buf: give each buffer a full-fledged inode
+Subject: [PATCH v4 2/3] dma-buf: add DMA_BUF_SET_NAME ioctls
 From:   Chenbo Feng <fengc@google.com>
 To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 Cc:     Sumit Semwal <sumit.semwal@linaro.org>, kernel-team@android.com
@@ -71,168 +71,174 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Greg Hackmann <ghackmann@google.com>
 
-By traversing /proc/*/fd and /proc/*/map_files, processes with CAP_ADMIN
-can get a lot of fine-grained data about how shmem buffers are shared
-among processes.  stat(2) on each entry gives the caller a unique
-ID (st_ino), the buffer's size (st_size), and even the number of pages
-currently charged to the buffer (st_blocks / 512).
+This patch adds complimentary DMA_BUF_SET_NAME  ioctls, which lets
+userspace processes attach a free-form name to each buffer.
 
-In contrast, all dma-bufs share the same anonymous inode.  So while we
-can count how many dma-buf fds or mappings a process has, we can't get
-the size of the backing buffers or tell if two entries point to the same
-dma-buf.  On systems with debugfs, we can get a per-buffer breakdown of
-size and reference count, but can't tell which processes are actually
-holding the references to each buffer.
-
-Replace the singleton inode with full-fledged inodes allocated by
-alloc_anon_inode().  This involves creating and mounting a
-mini-pseudo-filesystem for dma-buf, following the example in fs/aio.c.
+This information can be extremely helpful for tracking and accounting
+shared buffers.  For example, on Android, we know what each buffer will
+be used for at allocation time: GL, multimedia, camera, etc.  The
+userspace allocator can use DMA_BUF_SET_NAME to associate that
+information with the buffer, so we can later give developers a
+breakdown of how much memory they're allocating for graphics, camera,
+etc.
 
 Signed-off-by: Greg Hackmann <ghackmann@google.com>
 Signed-off-by: Chenbo Feng <fengc@google.com>
 ---
- drivers/dma-buf/dma-buf.c  | 63 ++++++++++++++++++++++++++++++++++----
- include/uapi/linux/magic.h |  1 +
- 2 files changed, 58 insertions(+), 6 deletions(-)
+ drivers/dma-buf/dma-buf.c    | 64 ++++++++++++++++++++++++++++++++++--
+ include/linux/dma-buf.h      |  5 ++-
+ include/uapi/linux/dma-buf.h |  3 ++
+ 3 files changed, 68 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 7c858020d14b..ffd5a2ad7d6f 100644
+index ffd5a2ad7d6f..87a928c93c1a 100644
 --- a/drivers/dma-buf/dma-buf.c
 +++ b/drivers/dma-buf/dma-buf.c
-@@ -34,8 +34,10 @@
- #include <linux/poll.h>
- #include <linux/reservation.h>
- #include <linux/mm.h>
-+#include <linux/mount.h>
- 
- #include <uapi/linux/dma-buf.h>
-+#include <uapi/linux/magic.h>
- 
- static inline int is_dma_buf_file(struct file *);
- 
-@@ -46,6 +48,25 @@ struct dma_buf_list {
+@@ -48,8 +48,24 @@ struct dma_buf_list {
  
  static struct dma_buf_list db_list;
  
-+static const struct dentry_operations dma_buf_dentry_ops = {
-+	.d_dname = simple_dname,
-+};
-+
-+static struct vfsmount *dma_buf_mnt;
-+
-+static struct dentry *dma_buf_fs_mount(struct file_system_type *fs_type,
-+		int flags, const char *name, void *data)
++static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
 +{
-+	return mount_pseudo(fs_type, "dmabuf:", NULL, &dma_buf_dentry_ops,
-+			DMA_BUF_MAGIC);
++	struct dma_buf *dmabuf;
++	char name[DMA_BUF_NAME_LEN];
++	size_t ret = 0;
++
++	dmabuf = dentry->d_fsdata;
++	mutex_lock(&dmabuf->lock);
++	if (dmabuf->name)
++		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
++	mutex_unlock(&dmabuf->lock);
++
++	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
++			     dentry->d_name.name, ret > 0 ? name : "");
 +}
 +
-+static struct file_system_type dma_buf_fs_type = {
-+	.name = "dmabuf",
-+	.mount = dma_buf_fs_mount,
-+	.kill_sb = kill_anon_super,
-+};
-+
- static int dma_buf_release(struct inode *inode, struct file *file)
- {
- 	struct dma_buf *dmabuf;
-@@ -338,6 +359,31 @@ static inline int is_dma_buf_file(struct file *file)
- 	return file->f_op == &dma_buf_fops;
+ static const struct dentry_operations dma_buf_dentry_ops = {
+-	.d_dname = simple_dname,
++	.d_dname = dmabuffs_dname,
+ };
+ 
+ static struct vfsmount *dma_buf_mnt;
+@@ -297,6 +313,42 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
+ 	return events;
  }
  
-+static struct file *dma_buf_getfile(struct dma_buf *dmabuf, int flags)
++/**
++ * dma_buf_set_name - Set a name to a specific dma_buf to track the usage.
++ * The name of the dma-buf buffer can only be set when the dma-buf is not
++ * attached to any devices. It could theoritically support changing the
++ * name of the dma-buf if the same piece of memory is used for multiple
++ * purpose between different devices.
++ *
++ * @dmabuf [in]     dmabuf buffer that will be renamed.
++ * @buf:   [in]     A piece of userspace memory that contains the name of
++ *                  the dma-buf.
++ *
++ * Returns 0 on success. If the dma-buf buffer is already attached to
++ * devices, return -EBUSY.
++ *
++ */
++static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
 +{
-+	struct file *file;
-+	struct inode *inode = alloc_anon_inode(dma_buf_mnt->mnt_sb);
++	char *name = strndup_user(buf, DMA_BUF_NAME_LEN);
++	long ret = 0;
 +
-+	if (IS_ERR(inode))
-+		return ERR_CAST(inode);
++	if (IS_ERR(name))
++		return PTR_ERR(name);
 +
-+	inode->i_size = dmabuf->size;
-+	inode_set_bytes(inode, dmabuf->size);
++	mutex_lock(&dmabuf->lock);
++	if (!list_empty(&dmabuf->attachments)) {
++		ret = -EBUSY;
++		goto out_unlock;
++	}
++	kfree(dmabuf->name);
++	dmabuf->name = name;
 +
-+	file = alloc_file_pseudo(inode, dma_buf_mnt, "dmabuf",
-+				 flags, &dma_buf_fops);
-+	if (IS_ERR(file))
-+		goto err_alloc_file;
-+	file->f_flags = flags & (O_ACCMODE | O_NONBLOCK);
-+	file->private_data = dmabuf;
-+
-+	return file;
-+
-+err_alloc_file:
-+	iput(inode);
-+	return file;
++out_unlock:
++	mutex_unlock(&dmabuf->lock);
++	return ret;
 +}
 +
- /**
-  * DOC: dma buf device access
-  *
-@@ -433,8 +479,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
- 	}
- 	dmabuf->resv = resv;
+ static long dma_buf_ioctl(struct file *file,
+ 			  unsigned int cmd, unsigned long arg)
+ {
+@@ -335,6 +387,10 @@ static long dma_buf_ioctl(struct file *file,
+ 			ret = dma_buf_begin_cpu_access(dmabuf, direction);
  
--	file = anon_inode_getfile("dmabuf", &dma_buf_fops, dmabuf,
--					exp_info->flags);
-+	file = dma_buf_getfile(dmabuf, exp_info->flags);
- 	if (IS_ERR(file)) {
- 		ret = PTR_ERR(file);
- 		goto err_dmabuf;
-@@ -1025,8 +1070,8 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
  		return ret;
++
++	case DMA_BUF_SET_NAME:
++		return dma_buf_set_name(dmabuf, (const char __user *)arg);
++
+ 	default:
+ 		return -ENOTTY;
+ 	}
+@@ -376,6 +432,7 @@ static struct file *dma_buf_getfile(struct dma_buf *dmabuf, int flags)
+ 		goto err_alloc_file;
+ 	file->f_flags = flags & (O_ACCMODE | O_NONBLOCK);
+ 	file->private_data = dmabuf;
++	file->f_path.dentry->d_fsdata = dmabuf;
  
- 	seq_puts(s, "\nDma-buf Objects:\n");
--	seq_printf(s, "%-8s\t%-8s\t%-8s\t%-8s\texp_name\n",
--		   "size", "flags", "mode", "count");
-+	seq_printf(s, "%-8s\t%-8s\t%-8s\t%-8s\texp_name\t%-8s\n",
-+		   "size", "flags", "mode", "count", "ino");
+ 	return file;
  
- 	list_for_each_entry(buf_obj, &db_list.head, list_node) {
- 		ret = mutex_lock_interruptible(&buf_obj->lock);
-@@ -1037,11 +1082,12 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
+@@ -1082,12 +1139,13 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
  			continue;
  		}
  
--		seq_printf(s, "%08zu\t%08x\t%08x\t%08ld\t%s\n",
-+		seq_printf(s, "%08zu\t%08x\t%08x\t%08ld\t%s\t%08lu\n",
+-		seq_printf(s, "%08zu\t%08x\t%08x\t%08ld\t%s\t%08lu\n",
++		seq_printf(s, "%08zu\t%08x\t%08x\t%08ld\t%s\t%08lu\t%s\n",
  				buf_obj->size,
  				buf_obj->file->f_flags, buf_obj->file->f_mode,
  				file_count(buf_obj->file),
--				buf_obj->exp_name);
-+				buf_obj->exp_name,
-+				file_inode(buf_obj->file)->i_ino);
+ 				buf_obj->exp_name,
+-				file_inode(buf_obj->file)->i_ino);
++				file_inode(buf_obj->file)->i_ino,
++				buf_obj->name ?: "");
  
  		robj = buf_obj->resv;
  		while (true) {
-@@ -1136,6 +1182,10 @@ static inline void dma_buf_uninit_debugfs(void)
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index 58725f890b5b..582998e19df6 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -255,10 +255,12 @@ struct dma_buf_ops {
+  * @file: file pointer used for sharing buffers across, and for refcounting.
+  * @attachments: list of dma_buf_attachment that denotes all devices attached.
+  * @ops: dma_buf_ops associated with this buffer object.
+- * @lock: used internally to serialize list manipulation, attach/detach and vmap/unmap
++ * @lock: used internally to serialize list manipulation, attach/detach and
++ *        vmap/unmap, and accesses to name
+  * @vmapping_counter: used internally to refcnt the vmaps
+  * @vmap_ptr: the current vmap ptr if vmapping_counter > 0
+  * @exp_name: name of the exporter; useful for debugging.
++ * @name: userspace-provided name; useful for accounting and debugging.
+  * @owner: pointer to exporter module; used for refcounting when exporter is a
+  *         kernel module.
+  * @list_node: node for dma_buf accounting and debugging.
+@@ -286,6 +288,7 @@ struct dma_buf {
+ 	unsigned vmapping_counter;
+ 	void *vmap_ptr;
+ 	const char *exp_name;
++	const char *name;
+ 	struct module *owner;
+ 	struct list_head list_node;
+ 	void *priv;
+diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
+index d75df5210a4a..dbc7092e04b5 100644
+--- a/include/uapi/linux/dma-buf.h
++++ b/include/uapi/linux/dma-buf.h
+@@ -35,7 +35,10 @@ struct dma_buf_sync {
+ #define DMA_BUF_SYNC_VALID_FLAGS_MASK \
+ 	(DMA_BUF_SYNC_RW | DMA_BUF_SYNC_END)
  
- static int __init dma_buf_init(void)
- {
-+	dma_buf_mnt = kern_mount(&dma_buf_fs_type);
-+	if (IS_ERR(dma_buf_mnt))
-+		return PTR_ERR(dma_buf_mnt);
++#define DMA_BUF_NAME_LEN	32
 +
- 	mutex_init(&db_list.lock);
- 	INIT_LIST_HEAD(&db_list.head);
- 	dma_buf_init_debugfs();
-@@ -1146,5 +1196,6 @@ subsys_initcall(dma_buf_init);
- static void __exit dma_buf_deinit(void)
- {
- 	dma_buf_uninit_debugfs();
-+	kern_unmount(dma_buf_mnt);
- }
- __exitcall(dma_buf_deinit);
-diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-index f8c00045d537..665e18627f78 100644
---- a/include/uapi/linux/magic.h
-+++ b/include/uapi/linux/magic.h
-@@ -91,5 +91,6 @@
- #define UDF_SUPER_MAGIC		0x15013346
- #define BALLOON_KVM_MAGIC	0x13661366
- #define ZSMALLOC_MAGIC		0x58295829
-+#define DMA_BUF_MAGIC		0x444d4142	/* "DMAB" */
+ #define DMA_BUF_BASE		'b'
+ #define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
++#define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
  
- #endif /* __LINUX_MAGIC_H__ */
+ #endif
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
