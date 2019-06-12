@@ -2,67 +2,127 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1DFC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC253C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCE820896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF74C20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:09:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JAj6hWom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409262AbfFLOEw (ORCPT
+        id S2439578AbfFLOJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:04:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37982 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2407368AbfFLOEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:04:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E134CB01F;
-        Wed, 12 Jun 2019 14:04:50 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 8BF8BDA88C; Wed, 12 Jun 2019 16:05:41 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 16:05:41 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.parri@amarulasolutions.com, peterz@infradead.org,
-        paulmck@linux.ibm.com
-Subject: Re: [PATCH 1/2] btrfs: Implement DRW lock
-Message-ID: <20190612140541.GL3563@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Nikolay Borisov <nborisov@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.parri@amarulasolutions.com, peterz@infradead.org,
-        paulmck@linux.ibm.com
-References: <20190606135219.1086-1-nborisov@suse.com>
- <20190606135219.1086-2-nborisov@suse.com>
+        Wed, 12 Jun 2019 10:09:02 -0400
+Received: from mout.gmx.net ([212.227.15.18]:58977 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436722AbfFLOJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:09:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1560348540;
+        bh=NvcCbtzx411aDDq6p/x++NbuHwp0vPYykyPBqyzTXdo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=JAj6hWom3G0AW7N/n9i/bla5sjTZYroeigS4FWQbsxhRiDD6Mo2KhiGIDrm16JV5F
+         V0U7TItkj91LwsyLQQ8sNOjue/h03sftfbG10FKerCUbx2xiqAQV2mAqY0Zi5+tfrf
+         HLm1gGBnBL4XIbK4VDqlEZlGYHvjqBpk/eIQXb7M=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from b450.lan ([79.195.235.197]) by mail.gmx.com (mrgmx002
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0Mb7lL-1hvD4y3XBr-00Kfie; Wed, 12
+ Jun 2019 16:08:59 +0200
+From:   Tim Schumacher <timschumi@gmx.de>
+To:     linux-input@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
+        timschumi@gmx.de
+Subject: [PATCH resend] Input: iforce - Add the Saitek R440 Force Wheel
+Date:   Wed, 12 Jun 2019 16:09:03 +0200
+Message-Id: <20190612140903.20058-1-timschumi@gmx.de>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606135219.1086-2-nborisov@suse.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DkjaIw6wDT3Xc+d7JtT/GaIRv489Y0suNvC0UFtBPFjp1A/jMQX
+ kzJQqyT0mDv49Gw153+FpsfuC4mp11vYjwRqno9eBt8RReT1N/OrwoEiFqRwrQH5A4TgXt5
+ LSBOvJfcD/q/8qNggxSdj5qfbibi8PXiXHKIhR80UWXbm55KrfBhdI39LWUvFz3C2r/ARcu
+ /5I9u/ugzVnkKJhOqrTTQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:D7U24nUWfy8=:KrdX7FauEncvLYAaKRpznB
+ 0b9xpZqtA8i8WqrccSIk6YIvFRltb8L32AdRczCe9AGzwZdTol0HHyUOWYezgV/OkT0NQsQYK
+ E0PISpz7av7dW5ZwZfzf0L88TI9fQRG8FfxME7tnIbc+yYjPoa/Sq5OQ8XIvY1Gx6KkkWGisc
+ N9ok7YxiLIPZvG4Qa//M2v7siTotSpEpKo5Xf+rFcJWuMvke5FeALDV6JxK8nuS+QyaGbP5mo
+ DIvF7zZuPcBVLRR2iBuq8ga4iJSX5d+7Ji++NOz4ea+vyDgnRIpwFKto8tW3tlmYP/+dUPev4
+ FymPxVrgQHzWPF/aXZjEik+g9FrPW+DakPW+DQ6KJcFz+/MOP3JC6HPgxAw+/6gP68ZFX+aOJ
+ EXU7jZ8BHWMuO/XFUceQqKXAezF5eCTeicaYUaYTiJVMN471UMCHtB1hBCUCbrKorqfNeBI7b
+ TFts/AMyxrJEIE+DvfGUO9JdeetWdmP1oWXGOUWZpbL8FUcdDH6A3MkQC5PwLQ+7YuXltCEoo
+ HcoYYPaqhW/x4mAzL3nvQouOXyokNZI43ANZYFQ/xA6C1Q16Ev6CbmGGcdyaDwjZsGiwTfgIN
+ kyNHY558/8UNpmYUJ/yPeB9PSaQFQoKcMzii8cG4Rp1pAW1uVoOs8KWz2B4nGpzlmvFd7K7mg
+ twIaclS026uplJ7OTO+A9BSPtf3i1+XAy1Awp5aPHFg6mdbsqeP98L/p5TjcdbGlaNHnh4cve
+ 2vBCairLM99es+vmzNpRFStDryStPzxi39OLhUgNZ2RGZgaLrMyCYaZqNASGQSt+W37zv+rGG
+ XroGgC/eAiupie3KfMazn2AqM6E3NaaH1Ao9aZVeVG4XzR2uvNmomjh9RBFmXmHBj9kOb2RiS
+ zEzhhvYCcQuRK33Y8wx4HyEMhEga2b2/nE6W6Z9NzPm+IENN09uJAi4c2ytAEhsMf1WzwvA3/
+ b2TyOfERReaPMshf4H87HCIbOU2piNS0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 04:52:18PM +0300, Nikolay Borisov wrote:
-> A (D)ouble (R)eader (W)riter lock is a locking primitive that allows
-> to have multiple readers or multiple writers but not multiple readers
-> and writers holding it concurrently. The code is factored out from
-> the existing open-coded locking scheme used to exclude pending
-> snapshots from nocow writers and vice-versa. Current implementation
-> actually favors Readers (that is snapshot creaters) to writers (nocow
-> writers of the filesystem).
-> 
-> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-> ---
->  fs/btrfs/Makefile   |  2 +-
->  fs/btrfs/drw_lock.c | 71 +++++++++++++++++++++++++++++++++++++++++++++
->  fs/btrfs/drw_lock.h | 23 +++++++++++++++
+Signed-off-by: Tim Schumacher <timschumi@gmx.de>
+=2D--
+Please note that I do NOT own this device.
 
-In v2, please use locking.[ch] instead of new files.
+I'm adding this based on the fact that this is an iforce-based
+device and that the Windows driver for the R440 works for the
+Logitech WingMan Formula Force after replacing the device/vendor
+IDs (I got the vendor/device IDs from there as well).
+
+Please don't add this patch if adding devices based on that is
+not ok.
+
+This patch is a resend of the patch I sent back in November,
+which apparently went unnoticed.
+=2D--
+ drivers/input/joystick/iforce/iforce-main.c | 1 +
+ drivers/input/joystick/iforce/iforce-usb.c  | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/input/joystick/iforce/iforce-main.c b/drivers/input/j=
+oystick/iforce/iforce-main.c
+index 55f5b7bb4cac..e000e7d5b4c1 100644
+=2D-- a/drivers/input/joystick/iforce/iforce-main.c
++++ b/drivers/input/joystick/iforce/iforce-main.c
+@@ -55,6 +55,7 @@ static struct iforce_device iforce_device[] =3D {
+ 	{ 0x05ef, 0x8888, "AVB Top Shot Force Feedback Racing Wheel",	btn_wheel,=
+ abs_wheel, ff_iforce }, //?
+ 	{ 0x061c, 0xc0a4, "ACT LABS Force RS",                          btn_whee=
+l, abs_wheel, ff_iforce }, //?
+ 	{ 0x061c, 0xc084, "ACT LABS Force RS",				btn_wheel, abs_wheel, ff_iforc=
+e },
++	{ 0x06a3, 0xff04, "Saitek R440 Force Wheel",			btn_wheel, abs_wheel, ff_=
+iforce }, //?
+ 	{ 0x06f8, 0x0001, "Guillemot Race Leader Force Feedback",	btn_wheel, abs=
+_wheel, ff_iforce }, //?
+ 	{ 0x06f8, 0x0001, "Guillemot Jet Leader Force Feedback",	btn_joystick, a=
+bs_joystick_rudder, ff_iforce },
+ 	{ 0x06f8, 0x0004, "Guillemot Force Feedback Racing Wheel",	btn_wheel, ab=
+s_wheel, ff_iforce }, //?
+diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/jo=
+ystick/iforce/iforce-usb.c
+index f1569ae8381b..afbcd1a522d4 100644
+=2D-- a/drivers/input/joystick/iforce/iforce-usb.c
++++ b/drivers/input/joystick/iforce/iforce-usb.c
+@@ -202,6 +202,7 @@ static const struct usb_device_id iforce_usb_ids[] =3D=
+ {
+ 	{ USB_DEVICE(0x05ef, 0x8888) },		/* AVB Top Shot FFB Racing Wheel */
+ 	{ USB_DEVICE(0x061c, 0xc0a4) },         /* ACT LABS Force RS */
+ 	{ USB_DEVICE(0x061c, 0xc084) },         /* ACT LABS Force RS */
++	{ USB_DEVICE(0x06a3, 0xff04) },		/* Saitek R440 Force Wheel */
+ 	{ USB_DEVICE(0x06f8, 0x0001) },		/* Guillemot Race Leader Force Feedback=
+ */
+ 	{ USB_DEVICE(0x06f8, 0x0003) },		/* Guillemot Jet Leader Force Feedback =
+*/
+ 	{ USB_DEVICE(0x06f8, 0x0004) },		/* Guillemot Force Feedback Racing Whee=
+l */
+=2D-
+2.22.0
+
