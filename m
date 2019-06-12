@@ -2,126 +2,89 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94F3C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2842CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8850C20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F094821734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="jjbfNYpP"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ra5npW31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbfFLPSv (ORCPT
+        id S1731298AbfFLPTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:18:51 -0400
-Received: from mx01-fr.bfs.de ([193.174.231.67]:24836 "EHLO mx01-fr.bfs.de"
+        Wed, 12 Jun 2019 11:19:00 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37940 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfFLPSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:18:49 -0400
-Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
-        by mx01-fr.bfs.de (Postfix) with ESMTPS id 3D0D2201F4;
-        Wed, 12 Jun 2019 17:18:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1560352722; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iz3CpY34we/DvAotNLRGWsXayWK0i3l2X+/9ZHiFnyw=;
-        b=jjbfNYpPxGZWgMtcEFGgK1M7jzrSmGfdOaQZfXN5TA7uwH5qjLXLYw/9ECOTC2PICKghjD
-        V3eKX1dCeTpnmLbZhkjskt+NIEO7og8F432987h0blEpWYrYxDMw03Kjw0aSiPuaU7s22E
-        m1x4nHyxmh9t7UIQqwo1HgsMPSkVVcxUAHSXkujKSYZWF8C+oQTGvz1BM35lUFomieE02i
-        +OJJit5QLNdPMBYmGWrgBh4pRB45VdylUdL31O2Wj9Tn+oyan/vnIqRfztl4OqS+TZ/7Kx
-        VEK4JbTC3m9TOwE0am5yfFhdCtgy0rHOyatoM1/oZAZOaJ2dRbFzaru/rZyIUg==
-Received: from [134.92.181.33] (unknown [134.92.181.33])
-        by mail-fr.bfs.de (Postfix) with ESMTPS id C86DEBEEBD;
-        Wed, 12 Jun 2019 17:18:41 +0200 (CEST)
-Message-ID: <5D0117D0.501@bfs.de>
-Date:   Wed, 12 Jun 2019 17:18:40 +0200
-From:   walter harms <wharms@bfs.de>
-Reply-To: wharms@bfs.de
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
+        id S1726454AbfFLPS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:18:59 -0400
+Received: from zn.tnic (p200300EC2F0A6800329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4194F1EC0A91;
+        Wed, 12 Jun 2019 17:18:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560352738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=5dfZK3tXx7WDVHAc/YaA1/OQSLM1t/haYBxe1ZP/QI8=;
+        b=ra5npW31O/i4KmeC7PC0PtP72fN4rwTkCSacHiW9yreAvSCu8IFWEj02GQq6EH/HJ4dfaM
+        aUVbROrQeqcph/3/wfUV1YhIxRelJiY1vH0yQJmXGucFB5H7+igye1nwBtPhuvlMoUNEIe
+        gEpdhA6ZPMg9URvNXm44UkE/1l/YsXU=
+Date:   Wed, 12 Jun 2019 17:18:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Pu Wen <puwen@hygon.cn>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86: mce: no need to check return value of
+ debugfs_create functions
+Message-ID: <20190612151856.GK32652@zn.tnic>
+References: <20190612151531.GA16278@kroah.com>
 MIME-Version: 1.0
-To:     Colin King <colin.king@canonical.com>
-CC:     Dan Murphy <dmurphy@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH][next] leds: lm36274: remove redundant initialization
- of variable ret
-References: <20190612145659.26514-1-colin.king@canonical.com>
-In-Reply-To: <20190612145659.26514-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: mx01-fr.bfs.de
-X-Spamd-Result: default: False [-3.10 / 7.00];
-         ARC_NA(0.00)[];
-         HAS_REPLYTO(0.00)[wharms@bfs.de];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         REPLYTO_ADDR_EQ_FROM(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         NEURAL_HAM(-0.00)[-0.999,0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         RCVD_TLS_ALL(0.00)[]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190612151531.GA16278@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Am 12.06.2019 16:56, schrieb Colin King:
-> From: Colin Ian King <colin.king@canonical.com>
+On Wed, Jun 12, 2019 at 05:15:31PM +0200, Greg Kroah-Hartman wrote:
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
 > 
-> The variable ret is being initialized with a value that is never
-> read, hence it is redundant and can be removed.  Also move the
-> declaration of ret to the for loop scope.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: <x86@kernel.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Pu Wen <puwen@hygon.cn>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
->  drivers/leds/leds-lm36274.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-lm36274.c b/drivers/leds/leds-lm36274.c
-> index ed9dc857ec8f..b55bd238c074 100644
-> --- a/drivers/leds/leds-lm36274.c
-> +++ b/drivers/leds/leds-lm36274.c
-> @@ -74,7 +74,6 @@ static int lm36274_parse_dt(struct lm36274 *lm36274_data)
->  	struct device *dev = &lm36274_data->pdev->dev;
->  	const char *name;
->  	int child_cnt;
-> -	int ret = -EINVAL;
->  
->  	/* There should only be 1 node */
->  	child_cnt = device_get_child_node_count(dev);
-> @@ -82,6 +81,8 @@ static int lm36274_parse_dt(struct lm36274 *lm36274_data)
->  		return -EINVAL;
->  
->  	device_for_each_child_node(dev, child) {
-> +		int ret;
-> +
->  		ret = fwnode_property_read_string(child, "label", &name);
->  		if (ret)
->  			snprintf(label, sizeof(label),
+>  arch/x86/kernel/cpu/mce/core.c     | 16 +++++---------
+>  arch/x86/kernel/cpu/mce/inject.c   | 34 +++++-------------------------
+>  arch/x86/kernel/cpu/mce/severity.c | 14 +++---------
+>  3 files changed, 13 insertions(+), 51 deletions(-)
 
-this looks odd,
-i would leave ret in place or move char *name also.
+I think I'm having a deja-vu:
 
-just my 2 cents,
+https://lkml.kernel.org/r/20190122215326.GM26587@zn.tnic
 
-re,
- wh
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
