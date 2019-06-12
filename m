@@ -2,101 +2,161 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA0CC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DE4C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B811E20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7CA20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=raithlin.onmicrosoft.com header.i=@raithlin.onmicrosoft.com header.b="PERUtsr9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EOISpQmt";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jUP7os4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437696AbfFLJrp (ORCPT
+        id S2437700AbfFLJs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:47:45 -0400
-Received: from mail-eopbgr670101.outbound.protection.outlook.com ([40.107.67.101]:21776
-        "EHLO CAN01-TO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437315AbfFLJro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:47:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=raithlin.onmicrosoft.com; s=selector1-raithlin-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eHwinwiRTyd7elaRQ4eGRyuD4IaBeL0SL6+sc7DP3fM=;
- b=PERUtsr91lOIUSqI2dLSpvwFl02mrftBVEbeIWRRWDbF5L+MVhSNAAUj8NYs8eynisF2RjxJFJBA+o9gtmA4woXocapUcjRZAgqyscF+/dy0+pN+DV41zdQxoPhENhiY1hBB1TNsphQ5bnchGjNPcXRbgJJ9ftfzvttBVxEYumk=
-Received: from YQXPR0101MB0792.CANPRD01.PROD.OUTLOOK.COM (52.132.75.161) by
- YQXPR0101MB1797.CANPRD01.PROD.OUTLOOK.COM (52.132.78.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Wed, 12 Jun 2019 09:47:40 +0000
-Received: from YQXPR0101MB0792.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::dc19:eb46:8b29:e502]) by YQXPR0101MB0792.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::dc19:eb46:8b29:e502%6]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
- 09:47:40 +0000
-From:   "Stephen  Bates" <sbates@raithlin.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "shhuiw@foxmail.com" <shhuiw@foxmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] io_uring: fix SQPOLL cpu check
-Thread-Topic: [PATCH] io_uring: fix SQPOLL cpu check
-Thread-Index: AQHVILE8MKvlFSwx2kqc/AjEamoMkaaXv8UAgAAXWoA=
-Date:   Wed, 12 Jun 2019 09:47:40 +0000
-Message-ID: <DCE71F95-F72A-414C-8A02-98CC81237F40@raithlin.com>
-References: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
- <20190612092403.GA38578@lakrids.cambridge.arm.com>
-In-Reply-To: <20190612092403.GA38578@lakrids.cambridge.arm.com>
-Accept-Language: en-CA, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/10.1a.0.190609
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sbates@raithlin.com; 
-x-originating-ip: [2001:bb6:a2c:ed58:2ca3:41e6:9240:e71d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a1fe94ea-82a4-494d-2714-08d6ef1b0258
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:YQXPR0101MB1797;
-x-ms-traffictypediagnostic: YQXPR0101MB1797:
-x-microsoft-antispam-prvs: <YQXPR0101MB17971289C5E96B4B10091EEDAAEC0@YQXPR0101MB1797.CANPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39830400003)(376002)(396003)(366004)(136003)(199004)(189003)(4744005)(76176011)(81156014)(54906003)(508600001)(6116002)(2906002)(8936002)(446003)(486006)(14444005)(36756003)(102836004)(99286004)(6506007)(71200400001)(14454004)(5660300002)(25786009)(33656002)(256004)(71190400001)(4326008)(2616005)(229853002)(6916009)(186003)(6246003)(7736002)(58126008)(305945005)(53936002)(8676002)(6486002)(11346002)(476003)(86362001)(66446008)(66476007)(68736007)(316002)(81166006)(73956011)(6512007)(46003)(66556008)(64756008)(76116006)(91956017)(66946007)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:YQXPR0101MB1797;H:YQXPR0101MB0792.CANPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: raithlin.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gj87e061HACEbkw7MSULW6nHSxRBzrrGWMJtYXQtiaG34stO+gtjL5UG9y/pjB0x7JGB5pSdkW2dq1VacqyQf6A7+kd/RPlRzPd6mkePxgY22D1NsOFhyjdpHVWU8xpH4Q47OPNgwE/FM6La2qkrsuxmWjqhWde1n0lkLnFo59pIf8StX6FF1SYIkcaU662IlyRCqDACUr3ZkaFYj+cxcBivjAqwmypyvvNvw9mzWHJEbGoY2vo/nTrLNDa+DKJe5RRjA97Ba2f5X1+Dkd5eoL3VXdJFZyX/cuLIyg/B1Il82wIsLeurw1mtnPB/aD0mJI4AzNquoiLO7rxYqndWJFo5uI6pUGyxIvch1OB6x2Oct09TMxUxUKxmLcDorExtdhgilgNcLWq2wPp2hlvM9SSGNNUg0AhvGgp9gg8/3Go=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F256B79C2DC9584FBE3C0FEB46796B20@CANPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Wed, 12 Jun 2019 05:48:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35540 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfFLJsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:48:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 91AE96020A; Wed, 12 Jun 2019 09:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560332934;
+        bh=A5Q4nuwELYGPEsPIrnbKYM/7ycbeZUO8bLNEPplxKP4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EOISpQmtkRdbP7TYk/oMunKmp9D5WZQeue2/qI4s4fUHYLUI2np6EqiJXzsbCgxiI
+         +hNvMzvf3ZF8drF3xRrGeAofXI6+ZWWZW7qYJwLWiBMKSkrFBPd0C+w7HbGchpwv0R
+         9P7NXjypaMLC8dvkbdxUeaI9hoycPiMEQVDG1IuE=
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C82E6020A;
+        Wed, 12 Jun 2019 09:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560332933;
+        bh=A5Q4nuwELYGPEsPIrnbKYM/7ycbeZUO8bLNEPplxKP4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jUP7os4jcFN03veZ3Wr9rOflWS/Gv9t7t/DDs3/Phz04lxOI1I1IYZhP8GWkeKVLf
+         HwdmFVVwUwBkfujUQfRazwZlcnCSsh3JK/jcPiN7azOgsylP/3i5ZIk0LEfhyTemIo
+         AQ9C0FuhgdNv7w0foiPlGo4DXg4QIWDSUXVx6D30=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C82E6020A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH 5/6] arm64: dts: Add ipq6018 SoC and CP01 board support
+To:     Christian Lamparter <chunkeey@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>, agross@kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?B?0J/QsNCy0LXQuw==?= <be.dissent@gmail.com>
+References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
+ <CAAd0S9DKqAgFPgLzHiCBiJgE+OmUW7ainyjM_3-RyfCoKEa51A@mail.gmail.com>
+ <50231fba-7212-f8b9-9313-0c79294d4cc6@codeaurora.org>
+ <4056907.DrFocau5Ix@debian64>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <1a00e8c8-d07c-3b02-8ea5-6d5f3e2c7b1a@codeaurora.org>
+Date:   Wed, 12 Jun 2019 15:18:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: raithlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1fe94ea-82a4-494d-2714-08d6ef1b0258
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 09:47:40.1021
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 18519031-7ff4-4cbb-bbcb-c3252d330f4b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sbates@raithlin.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQXPR0101MB1797
+In-Reply-To: <4056907.DrFocau5Ix@debian64>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBBYXJnaC4gTXkgb3JpZ2luYWwgcGF0Y2ggWzFdIGhhbmRsZWQgdGhhdCBjb3JyZWN0bHksIGFu
-ZCB0aGlzIGNhc2Ugd2FzDQo+IGV4cGxpY2l0bHkgY2FsbGVkIG91dCBpbiB0aGUgY29tbWl0IG1l
-c3NhZ2UsIHdoaWNoIHdhcyByZXRhaW5lZCBldmVuDQo+IHdoZW4gdGhlIHBhdGNoIHdhcyAic2lt
-cGxpZmllZCIuIFRoYXQncyByYXRoZXIgZGlzYXBwb2ludGluZy4gOi8NCiAgDQpJdCBsb29rcyBs
-aWtlIEplbnMgZGlkIGEgZml4IGZvciB0aGlzICg0NGE5YmQxOGEwZjA2YmJhIA0KIiBpb191cmlu
-ZzogZml4IGZhaWx1cmUgdG8gdmVyaWZ5IFNRX0FGRiBjcHUiKSB3aGljaCBpcyBpbiB0aGUgNS4y
-LXJjIHNlcmllcyANCmJ1dCB3aGljaCBoYXNu4oCZdCBiZWVuIGFwcGxpZWQgdG8gdGhlIHN0YWJs
-ZSBzZXJpZXMgeWV0LiBJIGFtIG5vdCBzdXJlIGhvdyANCkkgbWlzc2VkIHRoYXQgYnV0IGl0IG1h
-a2VzIG15IHBhdGNoIHJlZHVuZGFudC4NCg0KSmVucywgd2lsbCA0NGE5YmQxOGEwZjA2YmJhIGJl
-IGFwcGxpZWQgdG8gc3RhYmxlIGtlcm5lbHM/DQoNClN0ZXBoZW4NCg0K
+Hi Christian,
+
+On 6/10/2019 5:45 PM, Christian Lamparter wrote:
+> On Monday, June 10, 2019 12:09:56 PM CEST Sricharan R wrote:
+>> Hi Christian,
+>>
+>> On 6/6/2019 2:11 AM, Christian Lamparter wrote:
+>>> On Wed, Jun 5, 2019 at 7:16 PM Sricharan R <sricharan@codeaurora.org> wrote:
+>>>>
+>>>> Add initial device tree support for the Qualcomm IPQ6018 SoC and
+>>>> CP01 evaluation board.
+>>>>
+>>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>>>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+>>>>
+>>>> +       clocks {
+>>>> +               sleep_clk: sleep_clk {
+>>>> +                       compatible = "fixed-clock";
+>>>> +                       clock-frequency = <32000>;
+>>>> +                       #clock-cells = <0>;
+>>>> +               };
+>>>> +
+>>> Recently-ish, we ran into an issue with the clock-frequency of the sleep_clk
+>>> on older IPQ40XX (and IPQ806x) on the OpenWrt Github and ML.
+>>> From what I know, the external "32KHz" crystals have 32768 Hz, but the QSDK
+>>> declares them at 32000 Hz. Since you probably have access to the BOM and
+>>> datasheets. Can you please confirm what's the real clock frequency for
+>>> the IPQ6018.
+>>> (And maybe also for the sleep_clk of the IPQ4018 as well?).
+>>>
+>>
+>> What exactly is the issue that you faced ?
+>> Looking in to the docs, it is <32000> only on ipq6018 and ipq40xx as well.
+> 
+> We need just a confirmation.
+> 
+> Then again, Currently the qcom-ipq4019.dtsi is using 32768 Hz.
+> 
+> |		sleep_clk: sleep_clk {
+> |			compatible = "fixed-clock";
+> |			clock-frequency = <32768>;
+> |			#clock-cells = <0>;
+> |		};
+> 
+> <https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-ipq4019.dtsi#L144>
+> 
+> Which makes sense, because all previous Qualcomm Atheros MIPS and the
+> future IPQ8072 SoCs have been either using or deriving a 32768 Hz clock.
+> 
+> For example: The AR9344 derives the clock from the 25MHz/40MHz external
+> oscillator. This is explained in "8.16.9 Derived RTC Clock (DERIVED_RTC_CLK)".
+> Which mentions that the "32KHz" clock interval is 30.5 usec / 30.48 usec
+> depending whenever the external reference crystal has 40MHz or 25MHz.
+> (1/30.5usec = 32.7868852 kilohertz!). The QCA9558 datasheet says the same
+> in "10.19.11 Derived RTC Clock". 
+> 
+> For IPQ8072: I point to the post by Sven Eckelmann on the OpenWrt ML:
+> <http://lists.infradead.org/pipermail/openwrt-devel/2019-May/017131.html>
+> "I was only able to verify for IPQ8072 that it had a 32.768 KHz
+> sleep clock." 
+> 
+> So this is pretty much "why there is an issue", it's confusing.
+> Is possible can you please look if there are (fixed) divisors values
+> listed in the documentation or the registers and bits that the values
+> are stored in? Because then we could just calculate it. 
+> 
+
+Really sorry for the confusion. So looking little more, SLEEP_CLK is derived
+from an external 38.4MHZ crystal, it is 32.768 KHZ. Somehow the
+clk freq plan etc seems to mention them only as .032 MHZ and misses
+out. That means i will correct the patch for 32768 and probably the
+ipq8074.dtsi as well
+
+Regards,
+  Sricharan
+
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
