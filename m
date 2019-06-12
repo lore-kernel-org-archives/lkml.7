@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113AEC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E20C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A692086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CAA2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOvvwzHP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLfQOiMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407827AbfFLIdV (ORCPT
+        id S2408645AbfFLIdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:33:21 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45180 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407739AbfFLIdS (ORCPT
+        Wed, 12 Jun 2019 04:33:25 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43358 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408624AbfFLIdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:33:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bi6so5935155plb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:33:18 -0700 (PDT)
+        Wed, 12 Jun 2019 04:33:22 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cl9so6319172plb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:33:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NNIcg/6FzHv0SaLr8o+2YXmb6sNSUGijrDWegBfUk58=;
-        b=mOvvwzHPXtbeJQJgKDqkLn87pkjQYbEZSLBgDdPr55YYhw+JQsnz0osXnx9SgcHM5D
-         gSzYvEVPSL8B+n/X+xXWESg15Z+8sGqkJxi79mI3UsMehPqzERZvOp/WNs6E/j9Xlsyq
-         Rp/vsYZ4C62qzKb5k6grCJPVN9VToVF+hpYC28tEPuMZQ3m0ZXeWmXqxT5OIOTY8RcTM
-         zzhd6hX9TnBrH1POf6+nxLfSXP2oRx7wcA3cPU0QhtPQ5TB4iflsgGyDcj0C/nMEHKhA
-         FqCw4FjJwh91q/jqWkWUE2bA50rFcvRtZ5cn58PHtFeo+2L3qqSaWS4m77U6XRxTIkQ0
-         pBVg==
+        bh=YtcIT0Jg32O6R6ayXabHjP4bybCS1tEkrHIRDEcAfKg=;
+        b=gLfQOiMJREwfLUGXRDG7KOpR/5wG1izZ1Nif5YzwPV5Hj7i4bwIH2Mh2vYpcyc5nB6
+         UvGNDCNyfSxrvL79GEHgWUCd6+NkBhjyPsGE0PntsfIRSQwaGylm1UPm/uSTSRIN43D9
+         BDFn9H3lCoHIniq3aDXMFn2+LD4wha1P1UzvjwxwDtCGNl8a4h9Gubgd1PT71pe9sX7i
+         TtpX3QXehQ4H60y2rKeMGHF3A0t+PsEQLqux0C0uEtcN3hsS1W8WTXCkPxRGNiN4H1tP
+         YZpZf+jRWTkOqpmqqjoDKUMn8+vQVDb3cB1b5HSJEcwGeEkMQ+a+sq+a0ubdo8SwNI1F
+         GxuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NNIcg/6FzHv0SaLr8o+2YXmb6sNSUGijrDWegBfUk58=;
-        b=dmPg6+dQVxMRUgXhOEjrjqTfl1mSISZzOONhuYxOlMak0wQsWE3riJ8Vkw9W+pjwH3
-         Jc+WdxudaNuAPB+nMUuNekQMcbqg92gV+nHLc6ba05Xr91f7Qc5fKPM9k7QkXz0VIDvt
-         gbbfev4hM5WKNl77gOdGNur+aO9F8okw12XIT4Ap9jpOk4Olznlv2uT35SS+eoxoNdQp
-         uFrauuHRyjXBxDPSiDykwPRukw2v6UWZ134OyLngrOineJXTh4i+dgyljVCzKaTCyoUQ
-         fJRrtuJLayD/7ZwGAJUnmuvqQPU+ts2ekh5R7cqU8uUnvMdM3ldw1oc8YguBFg3QwzkC
-         kioQ==
-X-Gm-Message-State: APjAAAXQOjDHxsDFMKY231h7Lu7y5+bPGaJkbojgJ/344lbwasvySRAo
-        n2TyAxJqH2IFde+7hWlYCXQ=
-X-Google-Smtp-Source: APXvYqwx+IeAH5nURjmn+nAtr3THKqSpmGJOJTcW7P1j0EIpbWFp1Xgjqw3+CYbo4iwQey8e9QkC5g==
-X-Received: by 2002:a17:902:20e9:: with SMTP id v38mr39306822plg.62.1560328398066;
-        Wed, 12 Jun 2019 01:33:18 -0700 (PDT)
+        bh=YtcIT0Jg32O6R6ayXabHjP4bybCS1tEkrHIRDEcAfKg=;
+        b=m17wtya5z+ic/IUerrlx6RvQd2NHYd1EAk/giphHTv9tozKAuFogczrBZBiSLVbTzZ
+         4h8wMuN3VDUlZ0rwl/V+7fQnh0WozPrb3Q8DaUdyiO7S1hmJa/EJP1aQRTZ2iqIeuEVd
+         2yDmXsXSXoqQeE3Dbt7l+zeNhRceflmtQ/AmHBcsOwTXJjCebI/lCmBm41gM4o4CbJDr
+         ivWB1SzE2uR8FOev79KcPfTBjWp1IAqJ/3RC0LMfaIT6XKMzEk3+Kq8irwabxGXkYakP
+         KU0mNKRoRHSyjiR1wcMJWmtz+60Q0CNUYAX+O2kE/8Nf5yfjRDTkOIBsWCqgqeyr5Q1a
+         fw4w==
+X-Gm-Message-State: APjAAAUEhCF9xaA4Rvp+pAdjYgKew9UwROIaCSBySmsdAnqaWBsht1uQ
+        IVWst92mBC+kU0Jx2LmSAGE=
+X-Google-Smtp-Source: APXvYqwbAe6w+pBXWpV/khAknaLn9mlo9tU7IuRdpdOReRnnZw5AJcw0sBxGVtGoOg7RDSyg5KHqbg==
+X-Received: by 2002:a17:902:7246:: with SMTP id c6mr20639549pll.248.1560328401708;
+        Wed, 12 Jun 2019 01:33:21 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id d21sm18845991pfr.162.2019.06.12.01.33.15
+        by smtp.gmail.com with ESMTPSA id d21sm18845991pfr.162.2019.06.12.01.33.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 01:33:16 -0700 (PDT)
+        Wed, 12 Jun 2019 01:33:20 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 08/15] drm/bridge: tc358767: Increase AUX transfer length limit
-Date:   Wed, 12 Jun 2019 01:32:45 -0700
-Message-Id: <20190612083252.15321-9-andrew.smirnov@gmail.com>
+Subject: [PATCH v5 10/15] drm/bridge: tc358767: Add support for address-only I2C transfers
+Date:   Wed, 12 Jun 2019 01:32:47 -0700
+Message-Id: <20190612083252.15321-11-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190612083252.15321-1-andrew.smirnov@gmail.com>
 References: <20190612083252.15321-1-andrew.smirnov@gmail.com>
@@ -82,12 +82,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the datasheet tc358767 can transfer up to 16 bytes via
-its AUX channel, so the artificial limit of 8 appears to be too
-low. However only up to 15-bytes seem to be actually supported and
-trying to use 16-byte transfers results in transfers failing
-sporadically (with bogus status in case of I2C transfers), so limit it
-to 15.
+Transfer size of zero means a request to do an address-only
+transfer. Since the HW support this, we probably shouldn't be just
+ignoring such requests. While at it allow DP_AUX_I2C_MOT flag to pass
+through, since it is supported by the HW as well.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
@@ -102,22 +100,78 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: dri-devel@lists.freedesktop.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/gpu/drm/bridge/tc358767.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/tc358767.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index e60692b8cd69..8b53dc8908d3 100644
+index 7d0fbb12195b..4bb9b15e1324 100644
 --- a/drivers/gpu/drm/bridge/tc358767.c
 +++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -354,7 +354,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+@@ -145,6 +145,8 @@
+ 
+ /* AUX channel */
+ #define DP0_AUXCFG0		0x0660
++#define DP0_AUXCFG0_BSIZE	GENMASK(11, 8)
++#define DP0_AUXCFG0_ADDR_ONLY	BIT(4)
+ #define DP0_AUXCFG1		0x0664
+ #define AUX_RX_FILTER_EN		BIT(16)
+ 
+@@ -327,6 +329,18 @@ static int tc_aux_read_data(struct tc_data *tc, void *data, size_t size)
+ 	return size;
+ }
+ 
++static u32 tc_auxcfg0(struct drm_dp_aux_msg *msg, size_t size)
++{
++	u32 auxcfg0 = msg->request;
++
++	if (size)
++		auxcfg0 |= FIELD_PREP(DP0_AUXCFG0_BSIZE, size - 1);
++	else
++		auxcfg0 |= DP0_AUXCFG0_ADDR_ONLY;
++
++	return auxcfg0;
++}
++
+ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
  			       struct drm_dp_aux_msg *msg)
  {
- 	struct tc_data *tc = aux_to_tc(aux);
--	size_t size = min_t(size_t, 8, msg->size);
-+	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
- 	u8 request = msg->request & ~DP_AUX_I2C_MOT;
+@@ -336,9 +350,6 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 	u32 auxstatus;
  	int ret;
  
+-	if (size == 0)
+-		return 0;
+-
+ 	ret = tc_aux_wait_busy(tc, 100);
+ 	if (ret)
+ 		return ret;
+@@ -362,8 +373,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 	if (ret)
+ 		return ret;
+ 	/* Start transfer */
+-	ret = regmap_write(tc->regmap, DP0_AUXCFG0,
+-			   ((size - 1) << 8) | request);
++	ret = regmap_write(tc->regmap, DP0_AUXCFG0, tc_auxcfg0(msg, size));
+ 	if (ret)
+ 		return ret;
+ 
+@@ -377,8 +387,14 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 
+ 	if (auxstatus & AUX_TIMEOUT)
+ 		return -ETIMEDOUT;
+-
+-	size = FIELD_GET(AUX_BYTES, auxstatus);
++	/*
++	 * For some reason address-only DP_AUX_I2C_WRITE (MOT), still
++	 * reports 1 byte transferred in its status. To deal we that
++	 * we ignore aux_bytes field if we know that this was an
++	 * address-only transfer
++	 */
++	if (size)
++		size = FIELD_GET(AUX_BYTES, auxstatus);
+ 	msg->reply = FIELD_GET(AUX_STATUS, auxstatus);
+ 
+ 	switch (request) {
 -- 
 2.21.0
 
