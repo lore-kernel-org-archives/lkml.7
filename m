@@ -2,61 +2,54 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05294C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC995C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57C02173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3FF20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387844AbfFLTXQ (ORCPT
+        id S2388145AbfFLTYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:23:16 -0400
-Received: from mail-qt1-f176.google.com ([209.85.160.176]:41530 "EHLO
-        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbfFLTXQ (ORCPT
+        Wed, 12 Jun 2019 15:24:17 -0400
+Received: from emh07.mail.saunalahti.fi ([62.142.5.117]:44270 "EHLO
+        emh07.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727443AbfFLTYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:23:16 -0400
-Received: by mail-qt1-f176.google.com with SMTP id 33so11603694qtr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:23:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=jTgyXnqAA1RWkM9GuN0X0PVMrNnVGRWkQvCz1tb289s=;
-        b=lBn+D/uQ1jpmz7pbLk1Rt4AVs/DB7RQqei79CZ7U21rMewZECXK98yhrlSk1hLxGUf
-         x9BQGjjXGjj6EiVhq2kAY1qmygFuJl8hDRv2TY6SHGyuTNywqUJpPB+RRQfiJZgmbJgT
-         poo7KX5MuTxW05EyCH+Ul22gdy+Xw8LVZmpvqRATkxLHuejSqRt5rh4EbKtVrAW0/v58
-         nNpK3KgblnhPCvb7UMdAGxddlHajfCM629Tzd/O19oVSYr7V6ksxfRgPJdaFwO/jDXcR
-         nLYB/KPENp4HbUkN5crfZI4ejjZBwTpSxnK6n9AOnC9qfBgw/StIytaai8fhpOq9lar5
-         Ib+g==
-X-Gm-Message-State: APjAAAWUHtlahI5SKGq5bwA3g24WMpIw8bXGZ+sFFlHDaRctFLYXPvhH
-        FkDab1hx3pDTxCUburUqJr118Zt5SGM=
-X-Google-Smtp-Source: APXvYqxVBIzDgHYsuro2G3S0PSUvtErDwfCVKs8QllR8Gq0rOvWEEtD9UsxSAKB1Ac6RLWtQ5Bslhw==
-X-Received: by 2002:ac8:7652:: with SMTP id i18mr62832443qtr.10.1560367394552;
-        Wed, 12 Jun 2019 12:23:14 -0700 (PDT)
-Received: from ?IPv6:2601:543:8101:1d87::fd60? ([2601:543:8101:1d87::fd60])
-        by smtp.gmail.com with ESMTPSA id j37sm323900qtb.76.2019.06.12.12.23.13
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 12:23:13 -0700 (PDT)
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Stephane Eranian <eranian@google.com>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Laura Abbott <labbott@redhat.com>
-Subject: perf build failure with newer glibc headers
-Message-ID: <4c0a4264-7142-2e6d-540d-aa354700e0bb@redhat.com>
-Date:   Wed, 12 Jun 2019 15:23:12 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 12 Jun 2019 15:24:16 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-70-161-nat.elisa-mobile.fi [85.76.70.161])
+        by emh07.mail.saunalahti.fi (Postfix) with ESMTP id B32D2B0069;
+        Wed, 12 Jun 2019 22:24:12 +0300 (EEST)
+Date:   Wed, 12 Jun 2019 22:24:12 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc:     Alexandre Oliva <lxoliva@fsfla.org>, Tom Li <tomli@tomli.me>,
+        James Hogan <jhogan@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform
+ Drivers
+Message-ID: <20190612192412.GF26504@darkstar.musicnaut.iki.fi>
+References: <20190217235951.GA20700@darkstar.musicnaut.iki.fi>
+ <orpnrpj2rk.fsf@lxoliva.fsfla.org>
+ <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org>
+ <orlg1ryyo2.fsf@lxoliva.fsfla.org>
+ <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org>
+ <orwolaw5u1.fsf@lxoliva.fsfla.org>
+ <alpine.LFD.2.21.1903082347330.31648@eddie.linux-mips.org>
+ <or7ead4lq3.fsf@lxoliva.fsfla.org>
+ <20190610214938.GB7147@darkstar.musicnaut.iki.fi>
+ <alpine.LFD.2.21.1906102253080.19418@eddie.linux-mips.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.1906102253080.19418@eddie.linux-mips.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,26 +57,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-While doing some build experiments, I found a compile failure with perf and jvmti:
+On Wed, Jun 12, 2019 at 06:55:28AM +0100, Maciej W. Rozycki wrote:
+> On Tue, 11 Jun 2019, Aaro Koskinen wrote:
+> 
+> > However, with your patch the "nobody cared" is never reached so all is
+> > good. I tried 10 boots with the patch and all were successful. Without
+> > the patch 8 out of 10 failed with the "nobody cared" warning.
+> 
+>  I wouldn't call it "good", just less obvious or painful.  This is still 
+> causing wasted CPU cycles that are used for taking the phantom interrupts.
+>
+>  There is clearly a completion barrier missing somewhere that causes the 
+> interrupt request to linger beyond the point interrupts are reenabled at 
+> the CPU.
+> 
+>  One way to attempt to narrow it down might be taking a backtrace from 
+> where IRQ 14 is found to be spurious.  This would indicate the offending 
+> interrupt unmask action.  E.g. I see no explicit completion barrier 
 
-BUILDSTDERR:   gcc -Wp,-MD,./.xsk.o.d -Wp,-MT,xsk.o -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-jvmti/jvmti_agent.c:48:21: error: static declaration of 'gettid' follows non-static declaration
-BUILDSTDERR:    48 | static inline pid_t gettid(void)
-BUILDSTDERR:       |                     ^~~~~~
-BUILDSTDERR: In file included from /usr/include/unistd.h:1170,
-BUILDSTDERR:                  from jvmti/jvmti_agent.c:33:
-BUILDSTDERR: /usr/include/bits/unistd_ext.h:40:16: note: previous declaration of 'gettid' was here
-BUILDSTDERR:    40 | extern __pid_t gettid (void) __THROW;
-BUILDSTDERR:       |                ^~~~~~
+The first spurious IRQ is right after the driver registers:
 
+[    4.732000] [<ffffffff8020efac>] show_stack+0x90/0x140
+[    4.732000] [<ffffffff8052850c>] ata_bmdma_interrupt+0x2b4/0x39c
+[    4.732000] [<ffffffff80260368>] __handle_irq_event_percpu+0xb0/0x178
+[    4.732000] [<ffffffff80260464>] handle_irq_event_percpu+0x34/0x9c
+[    4.732000] [<ffffffff80260508>] handle_irq_event+0x3c/0x74
+[    4.732000] [<ffffffff80264d28>] handle_level_irq+0x118/0x154
+[    4.732000] [<ffffffff8025f978>] generic_handle_irq+0x34/0x50
+[    4.732000] [<ffffffff806b9600>] do_IRQ+0x18/0x24
+[    4.732000] [<ffffffff80208ce4>] handle_int+0x17c/0x188
+[    4.732000] [<ffffffff806b30c8>] arch_local_irq_restore+0x18/0x30
+[    4.732000] [<ffffffff802621f0>] __setup_irq+0x660/0x7a0
+[    4.732000] [<ffffffff80262798>] request_threaded_irq+0x114/0x19c
+[    4.732000] [<ffffffff80265d7c>] devm_request_threaded_irq+0xa0/0x10c
+[    4.732000] [<ffffffff80527f00>] ata_pci_sff_activate_host+0x1c0/0x274
+[    4.732000] [<ffffffff80528a30>] ata_pci_init_one+0x170/0x1c4
+[    4.732000] [<ffffffff8052a288>] cs5536_init_one+0x94/0xb8
 
-This is with the newer glibc headers that came into Fedora earlier this week
-(glibc-2.29.9000-27.fc31)  It looks like the newer headers now define gettid
-so the in file gettid no longer works. Note this was a custom build with
-jvmti enabled as regular Fedora doesn't have it enabled which is why this
-wasn't reported elsewhere.
+and the following ones do not seem to provide much info as I can only
+see the IRQ stack:
 
-I don't know enough about either the glibc headers or perf to make a suggestion
-on how to fix this but I'm happy to test.
+[    4.736000] [<ffffffff8020efac>] show_stack+0x90/0x140
+[    4.736000] [<ffffffff8052850c>] ata_bmdma_interrupt+0x2b4/0x39c
+[    4.736000] [<ffffffff80260368>] __handle_irq_event_percpu+0xb0/0x178
+[    4.736000] [<ffffffff80260464>] handle_irq_event_percpu+0x34/0x9c
+[    4.736000] [<ffffffff80260508>] handle_irq_event+0x3c/0x74
+[    4.736000] [<ffffffff80264d28>] handle_level_irq+0x118/0x154
+[    4.736000] [<ffffffff8025f978>] generic_handle_irq+0x34/0x50
+[    4.736000] [<ffffffff806b9600>] do_IRQ+0x18/0x24
+[    4.736000] [<ffffffff80208ce4>] handle_int+0x17c/0x188
+[    4.736000] [<ffffffff8022f330>] irq_exit+0x68/0xcc
 
-Thanks,
-Laura
+> between the final `outb' in `mask_and_ack_8259A' and the following call to 
+> `raw_spin_unlock_irqrestore', which are obviously otherwise unordered WRT 
+> each other (because `outb' is I/O or MMIO and `raw_spin_unlock_irqrestore' 
+> is contained within the CPU on UP).  I can see provisions however for 
+> issuing an architecture-specific barrier in `do_raw_spin_unlock', which is 
+> the workhorse for `raw_spin_unlock_irqrestore', so maybe this is the place 
+> to look into?
+> 
+>  Also how's IRQ 14 registered as indicated by /proc/interrupts?
+
+Not sure what you mean but here's the output:
+
+$ cat /proc/interrupts 
+           CPU0       
+  2:          0    XT-PIC   2  cascade
+  3:         20    XT-PIC   3  ttyS0
+  5:     543358    XT-PIC   5  timer
+ 11:          0    XT-PIC  11  ehci_hcd:usb1, ohci_hcd:usb2
+ 14:     100000    XT-PIC  14  pata_cs5536
+ 18:          0      MIPS   2  cascade
+ 22:          0      MIPS   6  cascade
+ 36:       3052  bonito_irq      eth0
+ERR:          0
+
+A.
