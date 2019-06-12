@@ -2,77 +2,188 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67248C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2CAC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35541206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PsNSMjSf"
+	by mail.kernel.org (Postfix) with ESMTP id 5292E208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389052AbfFLUrK (ORCPT
+        id S2389198AbfFLUxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 16:47:10 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45722 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfFLUrK (ORCPT
+        Wed, 12 Jun 2019 16:53:08 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:40001 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfFLUxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 16:47:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8WWENblypPDMsQ59pJNiVEtFrFCNg58U3zxKaLpaFTQ=; b=PsNSMjSfNbFfdWphzo5pEuc16P
-        tYmuUhf5z7/LnJHcCERNlRHBS/3tz7afG43iyyTQActU1unUuEQ9u6P6OGfY0ST3gNSD7BvT59hOQ
-        YyN3NRp5tKaouLgMGOd1wHIg2HvhKTWy4cF5SYJjGXbt8RqV74RcNHwMBKpKLaf66ZkLHenXOvm8+
-        7mIRuZKI97lrkqNh6LO6OSpCfrundVQEPBGV45cmQStWX1C9t+W7v5YTC0CnqY38K9t4SOOePFxxG
-        KOlmRIYFAbz6mQcRp4LXOfOqjaryv/Lk+RBVUwf1qXxxE9NiSA3qp5byYyY3hu5zLsv0Z24pOeYrU
-        TDGPQ/FQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbA9C-000305-2J; Wed, 12 Jun 2019 20:47:06 +0000
-Subject: Re: linux-next: Tree for Jun 12 (amdgpu: dcn10_hw_sequencer)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>
-References: <20190612170027.13dbb84b@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9b4f8e15-8f9f-51d9-c355-9c2e453921e3@infradead.org>
-Date:   Wed, 12 Jun 2019 13:47:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 16:53:07 -0400
+Received: by mail-io1-f72.google.com with SMTP id v11so13309465iop.7
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:53:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=YBsdv8D7E1Ty0uu7Bg8lmNFZhiJqH52Q0qJzpfU5W4o=;
+        b=CR/WuDRjga7ViwnyBAhykBdkjHQL8gZBWN9HryKb35oXYsFERXuKq3jGsBdxrzYq+6
+         ylZ4vPHvazS3JY/UjfCY3YQTPB+gfRSy5sXeCx2l068qHC+x/witti0zD+5FrYxfm84B
+         Q9R0Ak36lR/tYOktWkYKbdowD/JDJtuA3u4MFjfU5Bvpk1mGjZwx3ER/9DLS2iDOAN+v
+         ATD7TMm0c17iDXJuqt/oMIFc+JkV9l2AHrWHTiqEdYwHbwDNHXWNdb3tKd8rO+cWYKVs
+         KLV0kGNrztRGMs2PGHnvDm57wbxb9Z4xmtPHEnHVETQT9Q3BiN0Iju7WiiMoTbDM1b/+
+         t8xA==
+X-Gm-Message-State: APjAAAXAG0+upKWSPqpMDeQCkdC5KuOyfpGR87IQtiNBgPCGQwqXEFtV
+        dIZiE3blpL0S8rS6VSZ+uUypa0JftPQ0y1d5kM2rHAYkssQ8
+X-Google-Smtp-Source: APXvYqzuitS9InGBPzlAzfrFxYdSGNVQ94lDMrNOMZJucaif7L6M7OVxv4aGh3ipFrw0WfecBg7mjuVwMvQnbjJDoVZZA3btnItR
 MIME-Version: 1.0
-In-Reply-To: <20190612170027.13dbb84b@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:660c:ac8:: with SMTP id k8mr862525itl.147.1560372786518;
+ Wed, 12 Jun 2019 13:53:06 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 13:53:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a861f6058b2699e0@google.com>
+Subject: INFO: task syz-executor can't die for more than 143 seconds.
+From:   syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 12:00 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20190611:
-> 
+Hello,
 
-on x86_64:
+syzbot found the following crash on:
 
-../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: In function ‘dcn10_apply_ctx_for_surface’:
-../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2378:3: error: implicit declaration of function ‘udelay’ [-Werror=implicit-function-declaration]
-   udelay(underflow_check_delay_us);
-   ^
+HEAD commit:    81a72c79 Add linux-next specific files for 20190612
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1451d31ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8aa46bbce201b8b6
+dashboard link: https://syzkaller.appspot.com/bug?extid=8ab2d0f39fb79fe6ca40
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1250ae3ea00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1568557aa00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com
+
+INFO: task syz-executor050:8619 can't die for more than 143 seconds.
+syz-executor050 R  running task    27536  8619   8618 0x00004006
+Call Trace:
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1046:
+  #0: 00000000f58b83ec (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5262
+1 lock held by rsyslogd/8504:
+  #0: 00000000b8867a10 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by getty/8594:
+  #0: 000000008c94b07f (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000006c5169d5 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8595:
+  #0: 0000000042bd87ed (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000009ebc0e1a (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8596:
+  #0: 00000000ad647db4 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000f68a3152 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8597:
+  #0: 0000000072ec45a9 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000daa58f5f (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8598:
+  #0: 000000007698feb5 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000017a6b41f (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8599:
+  #0: 00000000f5a5df8a (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000003ed47aa1 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8600:
+  #0: 00000000ab9f490c (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000332ddba5 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+1 lock held by syz-executor050/8619:
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 PID: 1046 Comm: khungtaskd Not tainted 5.2.0-rc4-next-20190612 #13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:249 [inline]
+  watchdog+0xb88/0x12b0 kernel/hung_task.c:333
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 PID: 8619 Comm: syz-executor050 Not tainted 5.2.0-rc4-next-20190612  
+#13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:get_current arch/x86/include/asm/current.h:15 [inline]
+RIP: 0010:__sanitizer_cov_trace_pc+0x8/0x50 kernel/kcov.c:101
+Code: f4 ff ff ff e8 9d fa e9 ff 48 c7 05 ce b0 15 09 00 00 00 00 e9 a4 e9  
+ff ff 90 90 90 90 90 90 90 90 90 55 48 89 e5 48 8b 75 08 <65> 48 8b 04 25  
+c0 fd 01 00 65 8b 15 f0 fa 90 7e 81 e2 00 01 1f 00
+RSP: 0018:ffff8880a9acfd80 EFLAGS: 00000206
+RAX: 1ffffd40000720d9 RBX: 0000160000000000 RCX: ffffffff81682654
+RDX: 0000000000000000 RSI: ffffffff8168263c RDI: ffffea00003906c8
+RBP: ffff8880a9acfd80 R08: ffff88808fe146c0 R09: 0000000000000002
+R10: ffff88808fe14f78 R11: ffff88808fe146c0 R12: ffffea0000390688
+R13: dffffc0000000000 R14: ffffea0000390680 R15: 00000000049a5000
+FS:  0000555555a3e880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 00000000a3d59000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  page_to_boot_pfn include/linux/kexec.h:325 [inline]
+  kimage_alloc_page+0xac/0x9f0 kernel/kexec_core.c:708
+  kimage_load_normal_segment kernel/kexec_core.c:802 [inline]
+  kimage_load_segment+0x25d/0x740 kernel/kexec_core.c:919
+  do_kexec_load+0x41a/0x600 kernel/kexec.c:157
+  __do_sys_kexec_load kernel/kexec.c:251 [inline]
+  __se_sys_kexec_load kernel/kexec.c:226 [inline]
+  __x64_sys_kexec_load+0x1d5/0x260 kernel/kexec.c:226
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441149
+Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd407ca1e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000f6
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441149
+RDX: 0000000020000100 RSI: 0000000000000001 RDI: fffffffffffffffe
+RBP: 00000000006cb018 R08: 0000000000000004 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401f70
+R13: 0000000000402000 R14: 0000000000000000 R15: 0000000000000000
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- 
-~Randy
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
