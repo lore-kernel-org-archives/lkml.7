@@ -2,251 +2,151 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B86C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F9EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC6D2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="GymuE7Eo"
+	by mail.kernel.org (Postfix) with ESMTP id 2D6F021721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbfFLT1Z (ORCPT
+        id S2387935AbfFLT11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 12 Jun 2019 15:27:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42978 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729083AbfFLT1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Jun 2019 15:27:25 -0400
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:42883 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729083AbfFLT1I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:27:08 -0400
-Received: by mail-wr1-f46.google.com with SMTP id x17so2852225wrl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7rs0KnEcx59klLTCf2/DfuexlDXTmQ6L/KY+ZkNgoYU=;
-        b=GymuE7EoGLqFlGb4+s7ihWt1BliTJjy1DMzb1n/lWp4yLTjsRiqrvhB09Q3Hb8Q23S
-         3Emo+AScRPWUUD03IzjkhemPYrw39K5DSf5qqWmwmSpYfcuvwpI7BKkiMl0QVYKNgV8B
-         /meRYBC0HBEEqCAwV1y3rowaX9d1a8/Hsn3FGmAFi5ay5l75wsT5xlpvR3+Gg2f/ziJ0
-         DFaGkb0KNDGn5nhGhGXH+mCXn6xbUIxdLIqy8B2FQT+7qrX1i7VLSAMsNwyd/AsOaAGG
-         1zLXpqYv710x/k5yNqmEt7taoUDo8iyOV9iS2ua3AQIGoSna/DcaeadGRVPXoDAAxkSn
-         RklQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7rs0KnEcx59klLTCf2/DfuexlDXTmQ6L/KY+ZkNgoYU=;
-        b=JDqtY8ry4lPg+sf+vaLWWL1Sx+8NLdNf5ChUKDLBhsiPKamBmuYfj19dQcmd1abrZs
-         qYgyQYOevVq24Ag0Qr6/joyZHRenhKYVy6I83FarK8tpnmyTcZq14UENO8AH+KbkJR7E
-         0bbXiET3Biib8CsEd3gUEUH68DM0UQDlBttIfvZ17Ra/oh7+iXr5VpX+q7zyYIVuZwK4
-         dXmyfdFzgJgrjntqULOUfoekqcFMircPq2W4KoaT2otwOBW1+6WC/VEt/wZLoEs27qD9
-         EO/ZMyHjE1YAiQGjnBbpA0XFv7TrVxkfTId5c43vouOqaF92D6lyChPldnuRUZ+VJR72
-         5r7A==
-X-Gm-Message-State: APjAAAXkkSm5oWfL27QsfkEaGmPw14F3FtRtmp732uny4wJ4sAK2foEt
-        cknix9UMRanfj6mtIfToBivv+hTtBDQ=
-X-Google-Smtp-Source: APXvYqwHCjVUig0jhc6KiWJnvv5POK2g5ZL8BPe3jXQqd7tCK4pRGp+WdOiNjrZKXGLLRKCU27xCJw==
-X-Received: by 2002:adf:c506:: with SMTP id q6mr41598753wrf.219.1560367626298;
-        Wed, 12 Jun 2019 12:27:06 -0700 (PDT)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id r5sm612526wrg.10.2019.06.12.12.27.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:27:05 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org,
-        Andrei Vagin <avagin@gmail.com>
-Subject: [PATCHv4 25/28] selftest/timens: Add timer offsets test
-Date:   Wed, 12 Jun 2019 20:26:24 +0100
-Message-Id: <20190612192628.23797-26-dima@arista.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190612192628.23797-1-dima@arista.com>
-References: <20190612192628.23797-1-dima@arista.com>
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C2A263087958;
+        Wed, 12 Jun 2019 19:27:25 +0000 (UTC)
+Received: from flask (unknown [10.40.205.10])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 428E260CCD;
+        Wed, 12 Jun 2019 19:27:20 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Wed, 12 Jun 2019 21:27:20 +0200
+Date:   Wed, 12 Jun 2019 21:27:20 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Optimize timer latency consider world
+ switch time
+Message-ID: <20190612192720.GB23583@flask>
+References: <1560332419-17195-1-git-send-email-wanpengli@tencent.com>
+ <20190612151447.GD20308@linux.intel.com>
+ <20190612192243.GA23583@flask>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612192243.GA23583@flask>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 12 Jun 2019 19:27:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@openvz.org>
+2019-06-12 21:22+0200, Radim Krčmář:
+> 2019-06-12 08:14-0700, Sean Christopherson:
+> > On Wed, Jun 12, 2019 at 05:40:18PM +0800, Wanpeng Li wrote:
+> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > @@ -145,6 +145,12 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
+> > >  static int __read_mostly lapic_timer_advance_ns = -1;
+> > >  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
+> > >  
+> > > +/*
+> > > + * lapic timer vmentry advance (tscdeadline mode only) in nanoseconds.
+> > > + */
+> > > +u32 __read_mostly vmentry_advance_ns = 300;
+> > 
+> > Enabling this by default makes me nervous, e.g. nothing guarantees that
+> > future versions of KVM and/or CPUs will continue to have 300ns of overhead
+> > between wait_lapic_expire() and VM-Enter.
+> > 
+> > If we want it enabled by default so that it gets tested, the default
+> > value should be extremely conservative, e.g. set the default to a small
+> > percentage (25%?) of the latency of VM-Enter itself on modern CPUs,
+> > VM-Enter latency being the min between VMLAUNCH and VMLOAD+VMRUN+VMSAVE.
+> 
+> I share the sentiment.  We definitely must not enter the guest before
+> the deadline has expired and CPUs are approaching 5 GHz (in turbo), so
+> 300 ns would be too much even today.
+> 
+> I wrote a simple testcase for rough timing and there are 267 cycles
+> (111 ns @ 2.4 GHz) between doing rdtsc() right after
+> kvm_wait_lapic_expire() [1] and doing rdtsc() in the guest as soon as
+> possible (see the attached kvm-unit-test).
 
-Check that timer_create() takes into account clock offsets.
+I forgot to attach it, pasting here as a patch for kvm-unit-tests.
 
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- tools/testing/selftests/timens/.gitignore |   1 +
- tools/testing/selftests/timens/Makefile   |   3 +-
- tools/testing/selftests/timens/timer.c    | 116 ++++++++++++++++++++++
- 3 files changed, 119 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/timens/timer.c
-
-diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
-index 94ffdd9cead7..3b7eda8f35ce 100644
---- a/tools/testing/selftests/timens/.gitignore
-+++ b/tools/testing/selftests/timens/.gitignore
-@@ -1,4 +1,5 @@
- clock_nanosleep
- procfs
- timens
-+timer
- timerfd
-diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-index f96f50d1fef8..ae1ffd24cc43 100644
---- a/tools/testing/selftests/timens/Makefile
-+++ b/tools/testing/selftests/timens/Makefile
-@@ -1,5 +1,6 @@
--TEST_GEN_PROGS := timens timerfd clock_nanosleep procfs
-+TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs
+diff --git a/x86/Makefile.common b/x86/Makefile.common
+index e612dbe..ceed648 100644
+--- a/x86/Makefile.common
++++ b/x86/Makefile.common
+@@ -58,7 +58,7 @@ tests-common = $(TEST_DIR)/vmexit.flat $(TEST_DIR)/tsc.flat \
+                $(TEST_DIR)/init.flat $(TEST_DIR)/smap.flat \
+                $(TEST_DIR)/hyperv_synic.flat $(TEST_DIR)/hyperv_stimer.flat \
+                $(TEST_DIR)/hyperv_connections.flat \
+-               $(TEST_DIR)/umip.flat
++               $(TEST_DIR)/umip.flat $(TEST_DIR)/vmentry_latency.flat
  
- CFLAGS := -Wall -Werror
-+LDFLAGS := -lrt
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
+ ifdef API
+ tests-api = api/api-sample api/dirty-log api/dirty-log-perf
+diff --git a/x86/vmentry_latency.c b/x86/vmentry_latency.c
 new file mode 100644
-index 000000000000..6e33cd54d397
+index 0000000..3859f09
 --- /dev/null
-+++ b/tools/testing/selftests/timens/timer.c
-@@ -0,0 +1,116 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <sched.h>
++++ b/x86/vmentry_latency.c
+@@ -0,0 +1,45 @@
++#include "x86/vm.h"
 +
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <stdint.h>
-+#include <signal.h>
-+#include <time.h>
-+
-+#include "log.h"
-+#include "timens.h"
-+
-+int run_test(int clockid, struct timespec now)
++static u64 get_last_hypervisor_tsc_delta(void)
 +{
-+	struct itimerspec new_value;
-+	long long elapsed;
-+	timer_t fd;
-+	int i;
++	u64 a = 0, b, c, d;
++	u64 tsc;
 +
-+	for (i = 0; i < 2; i++) {
-+		struct sigevent sevp = {.sigev_notify = SIGEV_NONE};
-+		int flags = 0;
++	/*
++	 * The first vmcall is there to force a vm exit just before measuring.
++	 */
++	asm volatile ("vmcall" : "+a"(a), "=b"(b), "=c"(c), "=d"(d));
 +
-+		new_value.it_value.tv_sec = 3600;
-+		new_value.it_value.tv_nsec = 0;
-+		new_value.it_interval.tv_sec = 1;
-+		new_value.it_interval.tv_nsec = 0;
++	tsc = rdtsc();
 +
-+		if (i == 1) {
-+			new_value.it_value.tv_sec += now.tv_sec;
-+			new_value.it_value.tv_nsec += now.tv_nsec;
-+		}
++	/*
++	 * The second hypercall recovers the value that was stored when vm
++	 * entering to execute the rdtsc()
++	 */
++	a = 11;
++	asm volatile ("vmcall" : "+a"(a), "=b"(b), "=c"(c), "=d"(d));
 +
-+		if (timer_create(clockid, &sevp, &fd) == -1)
-+			return pr_perror("timerfd_create");
++	return tsc - a;
++}
 +
-+		if (i == 1)
-+			flags |= TIMER_ABSTIME;
-+		if (timer_settime(fd, flags, &new_value, NULL) == -1)
-+			return pr_perror("timerfd_settime");
++static void vmentry_latency(void)
++{
++	unsigned i = 1000000;
++	u64 min = -1;
 +
-+		if (timer_gettime(fd, &new_value) == -1)
-+			return pr_perror("timerfd_gettime");
-+
-+		elapsed = new_value.it_value.tv_sec;
-+		if (abs(elapsed - 3600) > 60) {
-+			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
-+					      clockid, elapsed);
-+			return 1;
-+		}
++	while (i--) {
++		u64 latency = get_last_hypervisor_tsc_delta();
++		if (latency < min)
++			min = latency;
 +	}
 +
-+	ksft_test_result_pass("clockid=%d\n", clockid);
++	printf("vm entry latency is %"PRIu64" TSC cycles\n", min);
++}
++
++int main(void)
++{
++	setup_vm();
++	vmentry_latency();
 +
 +	return 0;
 +}
-+
-+int main(int argc, char *argv[])
-+{
-+	int ret, status, len, fd;
-+	char buf[4096];
-+	pid_t pid;
-+	struct timespec btime_now, mtime_now;
-+
-+	nscheck();
-+
-+	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
-+	clock_gettime(CLOCK_BOOTTIME, &btime_now);
-+
-+	if (unshare(CLONE_NEWTIME))
-+		return pr_perror("unshare");
-+
-+	len = snprintf(buf, sizeof(buf), "%d %d 0\n%d %d 0",
-+			CLOCK_MONOTONIC, 70 * 24 * 3600,
-+			CLOCK_BOOTTIME, 9 * 24 * 3600);
-+	fd = open("/proc/self/timens_offsets", O_WRONLY);
-+	if (fd < 0)
-+		return pr_perror("/proc/self/timens_offsets");
-+
-+	if (write(fd, buf, len) != len)
-+		return pr_perror("/proc/self/timens_offsets");
-+
-+	close(fd);
-+	mtime_now.tv_sec += 70 * 24 * 3600;
-+	btime_now.tv_sec += 9 * 24 * 3600;
-+
-+	pid = fork();
-+	if (pid < 0)
-+		return pr_perror("Unable to fork");
-+	if (pid == 0) {
-+		ret = 0;
-+		ret |= run_test(CLOCK_BOOTTIME, btime_now);
-+		ret |= run_test(CLOCK_MONOTONIC, mtime_now);
-+		ret |= run_test(CLOCK_BOOTTIME_ALARM, btime_now);
-+
-+		if (ret)
-+			ksft_exit_fail();
-+		ksft_exit_pass();
-+		return ret;
-+	}
-+
-+	if (waitpid(pid, &status, 0) != pid)
-+		return pr_perror("Unable to wait the child process");
-+
-+	if (WIFEXITED(status))
-+		return WEXITSTATUS(status);
-+
-+	return 1;
-+}
-+
--- 
-2.22.0
-
