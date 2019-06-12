@@ -2,35 +2,51 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94B5C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596BEC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E92F20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242BA20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560342367;
+	bh=wczNPXZLnL6HqwLpJn7GMVKqkvkHn0jl5FDY27UAjhM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=FMsrg+XD4/mgcAq3jItleg32MJ8KFCScWRpIso26BfTLQb4LIkF+Voqnf7Rmt2vE/
+	 cpQFO8rTyNQK8Jl9Y9bSAWaM9gNGOMH9AdMP1TvG85sHw+3Qhw56uH7ALDCoOeKtWO
+	 GJhlaPXCwJgg374f35Ap4E9W2OWOqs++OUGxnjo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbfFLM0B (ORCPT
+        id S1731184AbfFLM0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:26:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47758 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727079AbfFLM0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:26:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A7D6AD3E;
-        Wed, 12 Jun 2019 12:25:59 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH v2 1/2] net: ethernet: wiznet: w5X00 add device tree support
-Date:   Wed, 12 Jun 2019 14:25:25 +0200
-Message-Id: <20190612122526.14332-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
+        Wed, 12 Jun 2019 08:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbfFLM0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:26:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D643320874;
+        Wed, 12 Jun 2019 12:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560342364;
+        bh=wczNPXZLnL6HqwLpJn7GMVKqkvkHn0jl5FDY27UAjhM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TaQ4iIgSMv5QJ1vtTO6Khgkel68PYje41aBD13uzeGtSPL9kAgE8UjQf4MuDURTSI
+         Sgr8ByFCBOO1ky8TACxeKu2ivnxMxC13BXUHR58e2h7O9ZRwYydABgxjuat4Kgikkn
+         31Uj3A1SixVnl/Jku9XJLG4MtsplSrOSX/BzWMgs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     dan.j.williams@intel.com, vkoul@kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] dma: amba-pl08x: no need to cast away call to debugfs_create_file()
+Date:   Wed, 12 Jun 2019 14:25:52 +0200
+Message-Id: <20190612122557.24158-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -38,69 +54,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The w5X00 chip provides an SPI to Ethernet inteface. This patch allows
-platform devices to be defined through the device tree.
+No need to check the return value of debugfs_create_file(), so no need
+to provide a fake "cast away" of the return value either.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/wiznet/w5100-spi.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ drivers/dma/amba-pl08x.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/wiznet/w5100-spi.c b/drivers/net/ethernet/wiznet/w5100-spi.c
-index 918b3e50850a..2b4126d2427d 100644
---- a/drivers/net/ethernet/wiznet/w5100-spi.c
-+++ b/drivers/net/ethernet/wiznet/w5100-spi.c
-@@ -15,6 +15,7 @@
- #include <linux/delay.h>
- #include <linux/netdevice.h>
- #include <linux/of_net.h>
-+#include <linux/of_device.h>
- #include <linux/spi/spi.h>
- 
- #include "w5100.h"
-@@ -409,14 +410,32 @@ static const struct w5100_ops w5500_ops = {
- 	.init = w5500_spi_init,
- };
- 
-+static const struct of_device_id w5100_of_match[] = {
-+	{ .compatible = "wiznet,w5100", .data = (const void*)W5100, },
-+	{ .compatible = "wiznet,w5200", .data = (const void*)W5200, },
-+	{ .compatible = "wiznet,w5500", .data = (const void*)W5500, },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, w5100_of_match);
-+
- static int w5100_spi_probe(struct spi_device *spi)
+diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
+index 464725dcad00..9adc7a2fa3d3 100644
+--- a/drivers/dma/amba-pl08x.c
++++ b/drivers/dma/amba-pl08x.c
+@@ -2508,9 +2508,8 @@ DEFINE_SHOW_ATTRIBUTE(pl08x_debugfs);
+ static void init_pl08x_debugfs(struct pl08x_driver_data *pl08x)
  {
--	const struct spi_device_id *id = spi_get_device_id(spi);
-+	const struct of_device_id *of_id;
- 	const struct w5100_ops *ops;
-+	kernel_ulong_t driver_data;
- 	int priv_size;
- 	const void *mac = of_get_mac_address(spi->dev.of_node);
+ 	/* Expose a simple debugfs interface to view all clocks */
+-	(void) debugfs_create_file(dev_name(&pl08x->adev->dev),
+-			S_IFREG | S_IRUGO, NULL, pl08x,
+-			&pl08x_debugfs_fops);
++	debugfs_create_file(dev_name(&pl08x->adev->dev), S_IFREG | S_IRUGO,
++			    NULL, pl08x, &pl08x_debugfs_fops);
+ }
  
--	switch (id->driver_data) {
-+	if (spi->dev.of_node) {
-+		of_id = of_match_device(w5100_of_match, &spi->dev);
-+		if (!of_id)
-+			return -ENODEV;
-+		driver_data = (kernel_ulong_t)of_id->data;
-+	} else {
-+		driver_data = spi_get_device_id(spi)->driver_data;
-+	}
-+
-+	switch (driver_data) {
- 	case W5100:
- 		ops = &w5100_spi_ops;
- 		priv_size = 0;
-@@ -453,6 +472,7 @@ static struct spi_driver w5100_spi_driver = {
- 	.driver		= {
- 		.name	= "w5100",
- 		.pm	= &w5100_pm_ops,
-+		.of_match_table = w5100_of_match,
- 	},
- 	.probe		= w5100_spi_probe,
- 	.remove		= w5100_spi_remove,
+ #else
 -- 
-2.21.0
+2.22.0
 
