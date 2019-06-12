@@ -2,178 +2,106 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13996C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817EDC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC56A208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E06208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:26:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b/xNVmBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405497AbfFLHZ7 convert rfc822-to-8bit (ORCPT
+        id S2405859AbfFLH0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:25:59 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:44754 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfFLHZm (ORCPT
+        Wed, 12 Jun 2019 03:26:04 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41983 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405528AbfFLH0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:25:42 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x5C7PHtx003180
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 12 Jun 2019 16:25:17 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x5C7PG92019680;
-        Wed, 12 Jun 2019 16:25:17 +0900
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x5C7PGFv022790;
-        Wed, 12 Jun 2019 16:25:16 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-5900495; Wed, 12 Jun 2019 16:24:18 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0319.002; Wed,
- 12 Jun 2019 16:24:17 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "xishi.qiuxishi@alibaba-inc.com" <xishi.qiuxishi@alibaba-inc.com>,
-        "Chen, Jerry T" <jerry.t.chen@intel.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] mm: hugetlb: soft-offline:
- dissolve_free_huge_page() return zero on !PageHuge
-Thread-Topic: [PATCH v2 2/2] mm: hugetlb: soft-offline:
- dissolve_free_huge_page() return zero on !PageHuge
-Thread-Index: AQHVH2UOI3n3iV7mFEufJF8BQjmdkqaWHQeAgADtBAA=
-Date:   Wed, 12 Jun 2019 07:24:16 +0000
-Message-ID: <20190612072422.GA28614@hori.linux.bs1.fc.nec.co.jp>
-References: <1560154686-18497-1-git-send-email-n-horiguchi@ah.jp.nec.com>
- <1560154686-18497-3-git-send-email-n-horiguchi@ah.jp.nec.com>
- <039dd97d-83f5-f71a-e78f-a451b0064903@oracle.com>
-In-Reply-To: <039dd97d-83f5-f71a-e78f-a451b0064903@oracle.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <BCCB33A416C92644BE29C96ADEA07518@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Wed, 12 Jun 2019 03:26:00 -0400
+Received: by mail-lj1-f196.google.com with SMTP id s21so14176597lji.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 00:25:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=msM4dgHT7OChSN8YMEnC/hlz7O4CQA3Qt/8x5kRoeWA=;
+        b=b/xNVmBGr774Ie44vkdUYzW5g96u3La3k0A9SkL3ZCvZkJF98mYXDQ6oP9LRZh7Wp/
+         2vvQhSHA3r4OQBrQ7F92Mofp94Op3kqIQEKS8O+hSDMP2fnYaKO61aP1PbwJcYdaNkud
+         Uyg/uruiDUcv2DAYwC7O9pg8remPu1Uh3BpmwKar4uCP4Sp2HYDx1JVC3VEx1wjMqJNo
+         bRXEiIeSR30mKPOoa8C77KYigxq3DHc3oCTvWo7Qzb1rVN30/VnNJ2zgp/VN1Is2rgqC
+         Y+sDCDqKg9uQcSI7N022tg6lqvie69RffAY9o34iLiLGyXRl91cmjVEhOhil7iISNP/k
+         aFrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=msM4dgHT7OChSN8YMEnC/hlz7O4CQA3Qt/8x5kRoeWA=;
+        b=ZfUT4Pq2jRgDRI27U0AsFJPd25jPxMxP5JiIDvbjDUWs8nsktNm7zf7Js8Pj5ODV+z
+         LYEwn5YFFcaZuWGJrONq6MOReDAku7q27/4dFrOHKAz83WBr/9bUlPTuDGWcy75b6Msa
+         bldzSmhweP2ca1tVR1O+ugOI9Niu2hLFseVhJdGkHUiG5IabdMzbprExFgJXq2g9iM/C
+         CvU+Z+TZA4KJRPbmDS3KeEgCf77vX/0pmy3lo4mDW0a1uSW4/y54RWdbsjHxwtLTmvCH
+         fkLtntauirRJ3B/77b0zuOxu08qSdpn1Euvzt3ZDlMj8PbwmoUOX9oE05WbaTHfCX0xv
+         OAQg==
+X-Gm-Message-State: APjAAAWjL7xSfjZBL1TrowzF2O3pDqt2yZznNfDK16zEqIQr0lQEfNlo
+        94IPPEgHCw3l+18suzu/7Jgv6sPOOF3Y8oTOLdLVGw==
+X-Google-Smtp-Source: APXvYqx5YwbEg0avWvoTtMnv22p8ShuveFC0J0UpmFk2uYfKnJ2tkg9tfFI9Py8uT6FyJuuL+H4KmQND6QpZjMGZBTE=
+X-Received: by 2002:a2e:7508:: with SMTP id q8mr26602026ljc.165.1560324358738;
+ Wed, 12 Jun 2019 00:25:58 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+References: <20190610084213.1052-1-lee.jones@linaro.org> <20190610084213.1052-3-lee.jones@linaro.org>
+In-Reply-To: <20190610084213.1052-3-lee.jones@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 09:25:47 +0200
+Message-ID: <CACRpkdaXHC6dfOMMOj-a8o1zCzqqZoeQLEEAZ=XpPWKN_nf=9w@mail.gmail.com>
+Subject: Re: [PATCH v3 3/8] pinctrl: msm: Add ability for drivers to supply a
+ reserved GPIO list
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:16:03AM -0700, Mike Kravetz wrote:
-> On 6/10/19 1:18 AM, Naoya Horiguchi wrote:
-> > madvise(MADV_SOFT_OFFLINE) often returns -EBUSY when calling soft offline
-> > for hugepages with overcommitting enabled. That was caused by the suboptimal
-> > code in current soft-offline code. See the following part:
-> > 
-> >     ret = migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL,
-> >                             MIGRATE_SYNC, MR_MEMORY_FAILURE);
-> >     if (ret) {
-> >             ...
-> >     } else {
-> >             /*
-> >              * We set PG_hwpoison only when the migration source hugepage
-> >              * was successfully dissolved, because otherwise hwpoisoned
-> >              * hugepage remains on free hugepage list, then userspace will
-> >              * find it as SIGBUS by allocation failure. That's not expected
-> >              * in soft-offlining.
-> >              */
-> >             ret = dissolve_free_huge_page(page);
-> >             if (!ret) {
-> >                     if (set_hwpoison_free_buddy_page(page))
-> >                             num_poisoned_pages_inc();
-> >             }
-> >     }
-> >     return ret;
-> > 
-> > Here dissolve_free_huge_page() returns -EBUSY if the migration source page
-> > was freed into buddy in migrate_pages(), but even in that case we actually
-> > has a chance that set_hwpoison_free_buddy_page() succeeds. So that means
-> > current code gives up offlining too early now.
-> > 
-> > dissolve_free_huge_page() checks that a given hugepage is suitable for
-> > dissolving, where we should return success for !PageHuge() case because
-> > the given hugepage is considered as already dissolved.
-> > 
-> > This change also affects other callers of dissolve_free_huge_page(),
-> > which are cleaned up together.
-> > 
-> > Reported-by: Chen, Jerry T <jerry.t.chen@intel.com>
-> > Tested-by: Chen, Jerry T <jerry.t.chen@intel.com>
-> > Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> > Fixes: 6bc9b56433b76 ("mm: fix race on soft-offlining")
-> > Cc: <stable@vger.kernel.org> # v4.19+
-> > ---
-> >  mm/hugetlb.c        | 15 +++++++++------
-> >  mm/memory-failure.c |  5 +----
-> >  2 files changed, 10 insertions(+), 10 deletions(-)
-> > 
-> > diff --git v5.2-rc3/mm/hugetlb.c v5.2-rc3_patched/mm/hugetlb.c
-> > index ac843d3..048d071 100644
-> > --- v5.2-rc3/mm/hugetlb.c
-> > +++ v5.2-rc3_patched/mm/hugetlb.c
-> > @@ -1519,7 +1519,12 @@ int dissolve_free_huge_page(struct page *page)
-> 
-> Please update the function description for dissolve_free_huge_page() as
-> well.  It currently says, "Returns -EBUSY if the dissolution fails because
-> a give page is not a free hugepage" which is no longer true as a result of
-> this change.
+On Mon, Jun 10, 2019 at 10:42 AM Lee Jones <lee.jones@linaro.org> wrote:
 
-Thanks for pointing out, I completely missed that.
+> When booting MSM based platforms with Device Tree or some ACPI
+> implementations, it is possible to provide a list of reserved pins
+> via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
+> However some ACPI tables are not populated with this information,
+> thus it has to come from a knowledgable device driver instead.
+>
+> Here we provide the MSM common driver with additional support to
+> parse this informtion and correctly populate the widely used
+> 'valid_mask'.
+>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> 
-> >  	int rc = -EBUSY;
-> >  
-> >  	spin_lock(&hugetlb_lock);
-> > -	if (PageHuge(page) && !page_count(page)) {
-> > +	if (!PageHuge(page)) {
-> > +		rc = 0;
-> > +		goto out;
-> > +	}
-> > +
-> > +	if (!page_count(page)) {
-> >  		struct page *head = compound_head(page);
-> >  		struct hstate *h = page_hstate(head);
-> >  		int nid = page_to_nid(head);
-> > @@ -1564,11 +1569,9 @@ int dissolve_free_huge_pages(unsigned long start_pfn, unsigned long end_pfn)
-> >  
-> >  	for (pfn = start_pfn; pfn < end_pfn; pfn += 1 << minimum_order) {
-> >  		page = pfn_to_page(pfn);
-> > -		if (PageHuge(page) && !page_count(page)) {
-> > -			rc = dissolve_free_huge_page(page);
-> > -			if (rc)
-> > -				break;
-> > -		}
-> 
-> We may want to consider keeping at least the PageHuge(page) check before
-> calling dissolve_free_huge_page().  dissolve_free_huge_pages is called as
-> part of memory offline processing.  We do not know if the memory to be offlined
-> contains huge pages or not.  With your changes, we are taking hugetlb_lock
-> on each call to dissolve_free_huge_page just to discover that the page is
-> not a huge page.
-> 
-> You 'could' add a PageHuge(page) check to dissolve_free_huge_page before
-> taking the lock.  However, you would need to check again after taking the
-> lock.
+I have queued patches 3 and 4 in the pin control tree on an
+immutable branch with Bjorn's ACKs:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+ib-qcom-acpi
 
-Right, I'll do this.
+I have also merge this to pinctrl's devel branch for next.
 
-What was in my mind when writing this was that I actually don't like
-PageHuge because it's slow (not inlined) and called anywhere in mm code,
-so I like to reduce it if possible.
-But I now see that dissolve_free_huge_page() are relatively rare event
-rather than hugepage allocation/free, so dissolve_free_huge_page should take
-burden to precheck PageHuge instead of speculatively taking hugetlb_lock
-and disrupting the hot path.
-
-Thanks,
-- Naoya
+Yours,
+Linus Walleij
