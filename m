@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB5DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966EDC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370C0217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7E9208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560341616;
-	bh=VzkLSGcPjGZ9zxQTwow3pQZPqT0PVx6/J+e/zLME1/s=;
+	s=default; t=1560341623;
+	bh=meMOfm/cp2ZdmdOTfHwzOUf3Ik63/BpInCj8Dv0OURk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSAmbfgqztDnz/rR3rccJOfz8tJJqK4rDxNixIEmqmOSGzKtd6b0FBhTU/Db5ZI/3
-	 967aLPse4A2YC1HiC0NrcQ/p4HIAq+dYgoiG2sDr/42ipUuAYctbeYfj+giBRkb6DM
-	 fVK6eJejMbJpBmCZa5y8v5FUFOHGDFU+RlWhgBus=
+	b=2mFiKx5JVdcLJQ6oy/EKOoAS8fC19orvKFJRYtFcQi9iqFpq270mldhnsq0ZiVwz8
+	 0QKhHlixOjflpAvOS7WPPR92chm2zlxpCGavFJZohrsvAB8DriObGAChBVhcHzluWn
+	 1JWrUPO/ikXXmlOsvsaWh967qbuwOms5IGKhjl6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438682AbfFLMNf (ORCPT
+        id S2438710AbfFLMNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:13:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53714 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 08:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438674AbfFLMNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:13:30 -0400
+        id S1731398AbfFLMNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:13:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B10C2173C;
-        Wed, 12 Jun 2019 12:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADCD121019;
+        Wed, 12 Jun 2019 12:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560341609;
-        bh=VzkLSGcPjGZ9zxQTwow3pQZPqT0PVx6/J+e/zLME1/s=;
+        s=default; t=1560341599;
+        bh=meMOfm/cp2ZdmdOTfHwzOUf3Ik63/BpInCj8Dv0OURk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xIWVqNFE2nkFvJpuwYJPFllQ7QHMXPFGKAwUffq7vm6sBOZDxe4NeBynIO5OyfsFn
-         qGueKqvHKONrl2RTzjLAJuqBmBXDquwWF0twnRgyCUNvPxsPEXlMxxXY8fmHhTUB5y
-         F3QIsSdhBcDHHA4Sr16ou/mnQd85PzAWnMVP0OUc=
+        b=bwxd+mORdOMEwy7oRUBVQ9NGUlquywuNXh1lFe/AvAVgSH1inkX1PrSyx8eWaqoFS
+         O1mdBM1EMzjnyxUwdVyLlgxdZLaSDJkz5ULfVpGAqKuTpJzAOiLQv/VV+xlUcvhU2H
+         bI5TP2yyMMQHPgVYww5iIsAA2Q+Dt63Q/FYxyJZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     dvhart@infradead.org, andy@infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
+        Ike Panhc <ike.pan@canonical.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] platform: x86: intel_telemetry: no need to check return value of debugfs_create functions
-Date:   Wed, 12 Jun 2019 14:12:58 +0200
-Message-Id: <20190612121258.19535-8-gregkh@linuxfoundation.org>
+Subject: [PATCH 4/8] platform: x86: ideapad-laptop: no need to check return value of debugfs_create functions
+Date:   Wed, 12 Jun 2019 14:12:54 +0200
+Message-Id: <20190612121258.19535-4-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612121258.19535-1-gregkh@linuxfoundation.org>
 References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
@@ -62,114 +61,80 @@ When calling debugfs functions, there is no need to ever check the
 return value.  The function can work or not, but the code logic should
 never do something different based on this.
 
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Cc: "David E. Box" <david.e.box@linux.intel.com>
+Cc: Ike Panhc <ike.pan@canonical.com>
 Cc: Darren Hart <dvhart@infradead.org>
 Cc: Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../platform/x86/intel_telemetry_debugfs.c    | 78 ++++---------------
- 1 file changed, 16 insertions(+), 62 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c | 36 ++++++---------------------
+ 1 file changed, 7 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index 98ba9185a27b..e84d3e983e0c 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -900,7 +900,7 @@ static int __init telemetry_debugfs_init(void)
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 5fb9bfdf1019..7598cd46cf60 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -316,34 +316,15 @@ static int debugfs_cfg_show(struct seq_file *s, void *data)
+ }
+ DEFINE_SHOW_ATTRIBUTE(debugfs_cfg);
+ 
+-static int ideapad_debugfs_init(struct ideapad_private *priv)
++static void ideapad_debugfs_init(struct ideapad_private *priv)
  {
- 	const struct x86_cpu_id *id;
- 	int err;
--	struct dentry *f;
+-	struct dentry *node;
 +	struct dentry *dir;
  
- 	/* Only APL supported for now */
- 	id = x86_match_cpu(telemetry_debugfs_cpu_ids);
-@@ -923,68 +923,22 @@ static int __init telemetry_debugfs_init(void)
+-	priv->debug = debugfs_create_dir("ideapad", NULL);
+-	if (priv->debug == NULL) {
+-		pr_err("failed to create debugfs directory");
+-		goto errout;
+-	}
+-
+-	node = debugfs_create_file("cfg", S_IRUGO, priv->debug, priv,
+-				   &debugfs_cfg_fops);
+-	if (!node) {
+-		pr_err("failed to create cfg in debugfs");
+-		goto errout;
+-	}
+-
+-	node = debugfs_create_file("status", S_IRUGO, priv->debug, priv,
+-				   &debugfs_status_fops);
+-	if (!node) {
+-		pr_err("failed to create status in debugfs");
+-		goto errout;
+-	}
+-
+-	return 0;
++	dir = debugfs_create_dir("ideapad", NULL);
++	priv->debug = dir;
  
- 	register_pm_notifier(&pm_notifier);
- 
--	err = -ENOMEM;
--	debugfs_conf->telemetry_dbg_dir = debugfs_create_dir("telemetry", NULL);
--	if (!debugfs_conf->telemetry_dbg_dir)
--		goto out_pm;
--
--	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
--				debugfs_conf->telemetry_dbg_dir, NULL,
--				&telem_pss_states_fops);
--	if (!f) {
--		pr_err("pss_sample_info debugfs register failed\n");
--		goto out;
--	}
--
--	f = debugfs_create_file("ioss_info", S_IFREG | S_IRUGO,
--				debugfs_conf->telemetry_dbg_dir, NULL,
--				&telem_ioss_states_fops);
--	if (!f) {
--		pr_err("ioss_sample_info debugfs register failed\n");
--		goto out;
--	}
--
--	f = debugfs_create_file("soc_states", S_IFREG | S_IRUGO,
--				debugfs_conf->telemetry_dbg_dir,
--				NULL, &telem_soc_states_fops);
--	if (!f) {
--		pr_err("ioss_sample_info debugfs register failed\n");
--		goto out;
--	}
--
--	f = debugfs_create_file("s0ix_residency_usec", S_IFREG | S_IRUGO,
--				debugfs_conf->telemetry_dbg_dir,
--				NULL, &telem_s0ix_fops);
--	if (!f) {
--		pr_err("s0ix_residency_usec debugfs register failed\n");
--		goto out;
--	}
--
--	f = debugfs_create_file("pss_trace_verbosity", S_IFREG | S_IRUGO,
--				debugfs_conf->telemetry_dbg_dir, NULL,
--				&telem_pss_trc_verb_ops);
--	if (!f) {
--		pr_err("pss_trace_verbosity debugfs register failed\n");
--		goto out;
--	}
--
--	f = debugfs_create_file("ioss_trace_verbosity", S_IFREG | S_IRUGO,
--				debugfs_conf->telemetry_dbg_dir, NULL,
--				&telem_ioss_trc_verb_ops);
--	if (!f) {
--		pr_err("ioss_trace_verbosity debugfs register failed\n");
--		goto out;
--	}
--
-+	dir = debugfs_create_dir("telemetry", NULL);
-+	debugfs_conf->telemetry_dbg_dir = dir;
-+
-+	debugfs_create_file("pss_info", S_IFREG | S_IRUGO, dir, NULL,
-+			    &telem_pss_states_fops);
-+	debugfs_create_file("ioss_info", S_IFREG | S_IRUGO, dir, NULL,
-+			    &telem_ioss_states_fops);
-+	debugfs_create_file("soc_states", S_IFREG | S_IRUGO, dir, NULL,
-+			    &telem_soc_states_fops);
-+	debugfs_create_file("s0ix_residency_usec", S_IFREG | S_IRUGO, dir, NULL,
-+			    &telem_s0ix_fops);
-+	debugfs_create_file("pss_trace_verbosity", S_IFREG | S_IRUGO, dir, NULL,
-+			    &telem_pss_trc_verb_ops);
-+	debugfs_create_file("ioss_trace_verbosity", S_IFREG | S_IRUGO, dir,
-+			    NULL, &telem_ioss_trc_verb_ops);
- 	return 0;
--
--out:
--	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
--	debugfs_conf->telemetry_dbg_dir = NULL;
--out_pm:
--	unregister_pm_notifier(&pm_notifier);
--
--	return err;
+-errout:
+-	return -ENOMEM;
++	debugfs_create_file("cfg", S_IRUGO, dir, priv, &debugfs_cfg_fops);
++	debugfs_create_file("status", S_IRUGO, dir, priv, &debugfs_status_fops);
  }
  
- static void __exit telemetry_debugfs_exit(void)
+ static void ideapad_debugfs_exit(struct ideapad_private *priv)
+@@ -1012,9 +993,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = ideapad_debugfs_init(priv);
+-	if (ret)
+-		goto debugfs_failed;
++	ideapad_debugfs_init(priv);
+ 
+ 	ret = ideapad_input_init(priv);
+ 	if (ret)
+@@ -1071,7 +1050,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	ideapad_input_exit(priv);
+ input_failed:
+ 	ideapad_debugfs_exit(priv);
+-debugfs_failed:
+ 	ideapad_sysfs_exit(priv);
+ 	return ret;
+ }
 -- 
 2.22.0
 
