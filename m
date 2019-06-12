@@ -2,361 +2,102 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98564C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A05C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEC2208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="M1FyFvBc"
+	by mail.kernel.org (Postfix) with ESMTP id 8FC39208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436756AbfFLNh7 (ORCPT
+        id S1731582AbfFLNiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:37:59 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:44832 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726822AbfFLNh7 (ORCPT
+        Wed, 12 Jun 2019 09:38:19 -0400
+Received: from outgoing2.flk.host-h.net ([188.40.0.84]:45811 "EHLO
+        outgoing2.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfFLNiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:37:59 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 63715C01C1;
-        Wed, 12 Jun 2019 13:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560346678; bh=pwJ+bIUg4ZRU+TeAoBcre13vJABWf7ItQBkeSFq80jw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=M1FyFvBcEOuv9D2MnCW4dFKFPlh8wFdwAXlsD9RP044qfIVftcgaKuR1mz52nvIjv
-         ZJESMBqgYe6BL4x2+zAX5OqlXMoGG4PuIRmJowBnvbHhqenvEXhca3LPsRQtOuHc0B
-         zT/n0sq7K+Bj6afc6XL0QkJNfKQ2PuIOlz0pwPfSAzMXcWL/tfpfu5QwECrGj0Rhbm
-         0Nak55zAKSy/619bKi/ESJ16bSkKk5clNbM1nck+ou2u7RSc9HMayaReGQ7hVMOaUX
-         m6+3xWM/0NKv9tN3griYs/+gTQjp6ptqNSz4Kt2GuulYn0tcYY2HaxTNIkvUJFiogy
-         QI3UI10YlGUmA==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id DD8FAA0093;
-        Wed, 12 Jun 2019 13:37:56 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 12 Jun 2019 06:37:56 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
- 12 Jun 2019 15:37:54 +0200
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Vitor Soares <Vitor.Soares@synopsys.com>
-CC:     "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v3 1/3] i3c: fix i2c and i3c scl rate by bus mode
-Thread-Topic: [PATCH v3 1/3] i3c: fix i2c and i3c scl rate by bus mode
-Thread-Index: AQHVIF7tXczCemTY50qlGHD151vpyqaXajaAgABfUkD///qegIAAOxPw
-Date:   Wed, 12 Jun 2019 13:37:53 +0000
-Message-ID: <13D59CF9CEBAF94592A12E8AE55501350AABECD8@DE02WEMBXB.internal.synopsys.com>
-References: <cover.1560261604.git.vitor.soares@synopsys.com>
-        <b39923bda3625a5c6874755ae81cdfe85fb5abef.1560261604.git.vitor.soares@synopsys.com>
-        <20190612081533.2cf9e12a@collabora.com>
-        <13D59CF9CEBAF94592A12E8AE55501350AABEC91@DE02WEMBXB.internal.synopsys.com>
- <20190612133727.48f85060@collabora.com>
-In-Reply-To: <20190612133727.48f85060@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc29hcmVzXGFw?=
- =?us-ascii?Q?cGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
- =?us-ascii?Q?OWUzNWJcbXNnc1xtc2ctNDUzNGUzNmQtOGQxNy0xMWU5LTgyNDYtYjgwOGNm?=
- =?us-ascii?Q?NTlkN2ZjXGFtZS10ZXN0XDQ1MzRlMzZlLThkMTctMTFlOS04MjQ2LWI4MDhj?=
- =?us-ascii?Q?ZjU5ZDdmY2JvZHkudHh0IiBzej0iNzYzOSIgdD0iMTMyMDQ4MjAyNzI0NTIy?=
- =?us-ascii?Q?MjI3IiBoPSJ0c1NIdFdLc21mQ1ZSQUdBYkNyZ3Q1aW5abUE9IiBpZD0iIiBi?=
- =?us-ascii?Q?bD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFCUUpBQUR6?=
- =?us-ascii?Q?dUo4SUpDSFZBYUlNdjB2YUhaSGtvZ3kvUzlvZGtlUU9BQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBSEFBQUFDa0NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBUUFCQUFBQVZ6ZGhHZ0FBQUFBQUFBQUFBQUFBQUo0QUFBQm1BR2tBYmdC?=
- =?us-ascii?Q?aEFHNEFZd0JsQUY4QWNBQnNBR0VBYmdCdUFHa0FiZ0JuQUY4QWR3QmhBSFFB?=
- =?us-ascii?Q?WlFCeUFHMEFZUUJ5QUdzQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFF?=
- =?us-ascii?Q?QUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FYd0J3?=
- =?us-ascii?Q?QUdFQWNnQjBBRzRBWlFCeUFITUFYd0JuQUdZQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFB?=
- =?us-ascii?Q?QUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJnQmxB?=
- =?us-ascii?Q?SElBY3dCZkFITUFZUUJ0QUhNQWRRQnVBR2NBWHdCakFHOEFiZ0JtQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFHOEFk?=
- =?us-ascii?Q?UUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBY3dCaEFH?=
- =?us-ascii?Q?MEFjd0IxQUc0QVp3QmZBSElBWlFCekFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
- =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QnpBRzBBYVFCakFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
- =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
- =?us-ascii?Q?bEFISUFjd0JmQUhNQWRBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
- =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFkQUJ6?=
- =?us-ascii?Q?QUcwQVl3QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
- =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCMUFHMEFZd0FBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
- =?us-ascii?Q?QUFBQUFBQ2VBQUFBWndCMEFITUFYd0J3QUhJQWJ3QmtBSFVBWXdCMEFGOEFk?=
- =?us-ascii?Q?QUJ5QUdFQWFRQnVBR2tBYmdCbkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQnpB?=
- =?us-ascii?Q?R0VBYkFCbEFITUFYd0JoQUdNQVl3QnZBSFVBYmdCMEFGOEFjQUJzQUdFQWJn?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhNQVlRQnNBR1VBY3dCZkFI?=
- =?us-ascii?Q?RUFkUUJ2QUhRQVpRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
- =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFjd0J1QUhBQWN3QmZBR3dBYVFCakFHVUFiZ0J6QUdV?=
- =?us-ascii?Q?QVh3QjBBR1VBY2dCdEFGOEFNUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
- =?us-ascii?Q?ekFHNEFjQUJ6QUY4QWJBQnBBR01BWlFCdUFITUFaUUJmQUhRQVpRQnlBRzBB?=
- =?us-ascii?Q?WHdCekFIUUFkUUJrQUdVQWJnQjBBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSFlBWndCZkFHc0FaUUI1?=
- =?us-ascii?Q?QUhjQWJ3QnlBR1FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
- =?us-ascii?Q?QUFBQ0FBQUFBQUE9Ii8+PC9tZXRhPg=3D=3D?=
-x-originating-ip: [10.107.19.137]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+        Wed, 12 Jun 2019 09:38:19 -0400
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1hb3SA-0002cQ-MP; Wed, 12 Jun 2019 15:38:15 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1hb3S9-0008Fs-BR; Wed, 12 Jun 2019 15:38:13 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: rockchip: select hdmiphy clock source for rk3228
+Date:   Wed, 12 Jun 2019 13:33:43 +0000
+Message-Id: <20190612133343.28309-1-justin.swartz@risingedge.co.za>
+X-Mailer: git-send-email 2.11.0
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25478/Wed Jun 12 10:14:54 2019)
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00816725645638)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0Q9DGisTdy29Heef28Cu3sipSDasLI4SayDByyq9LIhVhdOhMLyqSpQF
+ 5/Hc0ZQ9uUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
+ qhBpvAyWwieZyauFYqHkIbFa+ipFJdVl2Qo16OdG/SgJyrKdw0Znvotuy3L4aSJjqFExmwGwvf6h
+ PQx0fYKjNC9VXDo4KyWWo0k/XI0fGv8bNm7IfazUKrTRmPfW13HBdTouyUQiTqTLnMPwSR2klzqa
+ C1hRfn6HuUe9L0a5vwf8PHac6dlnibl3vcBqVmvQB4A18af9beWOg5a9y6QIDD3Rzcr8mH6eQvWp
+ DWTULXV1jJ5bfceEJeNruLKdflVX7oFNsdHVhnpudkCyIg6Nob+f0OfCg2lBMt3xu9nbye2CdJLN
+ jSo1M+TSg3TNDI3/M5s9/ot3ko3rrae7IifWc6pL546YUVQwaYLh3di89W/ji5iahyCgJgyv93tC
+ 61cbiLYl3RCqADG/Ryndzp4OfbK7c6EqHwlqvaI+zok/BsKQK4gft4+8sY8CNaDDoRMm0CGce/fp
+ WUXurEbGCiZ0ePvZjCuJdbYb9IXfYGRpVS/0hA4Mwkg/wxsjmSXwdCAtc5U5IMGqr3wBwEeX6Ai5
+ 5FPRpzhbYqsuNEW45+y/2kiUpWy9c957+6R4kroQiAThpzOdFqFvbdRuq0FZjQOwDKXnhaC6dkwF
+ 9ybSMhHO+IPM0C985aNe1vwE2plJLdOGZ2rsAWflnmUXwJv1R9bnj+xoJG4VhUotTJ0/e5GmrorL
+ FK/ZMFLi1pbAdLCagrvjp/Q1JFXRjdK3JtbOY4V5u4SqNrbdxyGLEIoLEuuC4P/fyEEgA3CnflZn
+ bjDB2+RGRgaXth2/9YEbMsGSn6owqJN0kS7MUpAEhFoAxikOdx3ALFboD0vMokt+4lO8Qp33tUy6
+ u+yjs2RdT0IB6AsIr4ufP+vb+wzRyy9zrSTy9lnigQ7EuDwJWw42swm4bO6gacpMpzJ5RNWFoIkg
+ vLC7uMZSLKkLPlzqsPnNmrTFfBI+gCHkFgyh9jAE9PwtDurXCCybWAnihjA708Lg3Y2gXyaf+rIt
+ vvthbyiMZOAfvJjwL84MO4Vozqbzv/NmqBexmg1oMlu3UCyNNO7qENlLqkRemjF1A1q3g0ZrubFa
+ n/xi+AGXOIO97ttnHrPmGyC6rR21+9c=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Date: Wed, Jun 12, 2019 at 12:37:27
+Unless explictly configured by a bootloader, the hdmiphy clock parent
+defaults to the xin24m clock source. This configuration does not yield
+any HDMI video output, so let hdmiphy_phy (the HDMI PHY output clock)
+be the parent instead.
 
-> On Wed, 12 Jun 2019 11:16:34 +0000
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
->=20
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > Date: Wed, Jun 12, 2019 at 07:15:33
-> >=20
-> > > On Tue, 11 Jun 2019 16:06:43 +0200
-> > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > >  =20
-> > > > Currently the I3C framework limits SCL frequency to FM speed when
-> > > > dealing with a mixed slow bus, even if all I2C devices are FM+ capa=
-ble.
-> > > >=20
-> > > > The core was also not accounting for I3C speed limitations when
-> > > > operating in mixed slow mode and was erroneously using FM+ speed as=
- the
-> > > > max I2C speed when operating in mixed fast mode.
-> > > >=20
-> > > > Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
-> > > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > > > Cc: Boris Brezillon <bbrezillon@kernel.org>
-> > > > Cc: <stable@vger.kernel.org>
-> > > > Cc: <linux-kernel@vger.kernel.org>
-> > > > ---
-> > > > Changes in v3:
-> > > >   Change dev_warn() to dev_dbg()
-> > > >=20
-> > > > Changes in v2:
-> > > >   Enhance commit message
-> > > >   Add dev_warn() in case user-defined i2c rate doesn't match LVR co=
-nstraint
-> > > >   Add dev_warn() in case user-defined i3c rate lower than i2c rate
-> > > >=20
-> > > >  drivers/i3c/master.c | 61 ++++++++++++++++++++++++++++++++++++++++=
-+-----------
-> > > >  1 file changed, 48 insertions(+), 13 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> > > > index 5f4bd52..f8e580e 100644
-> > > > --- a/drivers/i3c/master.c
-> > > > +++ b/drivers/i3c/master.c
-> > > > @@ -91,6 +91,12 @@ void i3c_bus_normaluse_unlock(struct i3c_bus *bu=
-s)
-> > > >  	up_read(&bus->lock);
-> > > >  }
-> > > > =20
-> > > > +static struct i3c_master_controller *
-> > > > +i3c_bus_to_i3c_master(struct i3c_bus *i3cbus)
-> > > > +{
-> > > > +	return container_of(i3cbus, struct i3c_master_controller, bus);
-> > > > +}
-> > > > +
-> > > >  static struct i3c_master_controller *dev_to_i3cmaster(struct devic=
-e *dev)
-> > > >  {
-> > > >  	return container_of(dev, struct i3c_master_controller, dev);
-> > > > @@ -565,20 +571,48 @@ static const struct device_type i3c_masterdev=
-_type =3D {
-> > > >  	.groups	=3D i3c_masterdev_groups,
-> > > >  };
-> > > > =20
-> > > > -int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mod=
-e)
-> > > > +int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mod=
-e,
-> > > > +		     unsigned long max_i2c_scl_rate)
-> > > >  {
-> > > > -	i3cbus->mode =3D mode;
-> > > > =20
-> > > > -	if (!i3cbus->scl_rate.i3c)
-> > > > -		i3cbus->scl_rate.i3c =3D I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > +	struct i3c_master_controller *master =3D i3c_bus_to_i3c_master(i3=
-cbus);
-> > > > =20
-> > > > -	if (!i3cbus->scl_rate.i2c) {
-> > > > -		if (i3cbus->mode =3D=3D I3C_BUS_MODE_MIXED_SLOW)
-> > > > -			i3cbus->scl_rate.i2c =3D I3C_BUS_I2C_FM_SCL_RATE;
-> > > > -		else
-> > > > -			i3cbus->scl_rate.i2c =3D I3C_BUS_I2C_FM_PLUS_SCL_RATE;
-> > > > +	i3cbus->mode =3D mode;
-> > > > +
-> > > > +	switch (i3cbus->mode) {
-> > > > +	case I3C_BUS_MODE_PURE:
-> > > > +		if (!i3cbus->scl_rate.i3c)
-> > > > +			i3cbus->scl_rate.i3c =3D I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > +		break;
-> > > > +	case I3C_BUS_MODE_MIXED_FAST:
-> > > > +		if (!i3cbus->scl_rate.i3c)
-> > > > +			i3cbus->scl_rate.i3c =3D I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > +		if (!i3cbus->scl_rate.i2c)
-> > > > +			i3cbus->scl_rate.i2c =3D max_i2c_scl_rate;
-> > > > +		break;
-> > > > +	case I3C_BUS_MODE_MIXED_SLOW:
-> > > > +		if (!i3cbus->scl_rate.i2c)
-> > > > +			i3cbus->scl_rate.i2c =3D max_i2c_scl_rate;
-> > > > +		if (!i3cbus->scl_rate.i3c ||
-> > > > +		    i3cbus->scl_rate.i3c > i3cbus->scl_rate.i2c)
-> > > > +			i3cbus->scl_rate.i3c =3D i3cbus->scl_rate.i2c;
-> > > > +		break;
-> > > > +	default:
-> > > > +		return -EINVAL;
-> > > >  	}
-> > > > =20
-> > > > +	if (i3cbus->scl_rate.i3c < i3cbus->scl_rate.i2c)
-> > > > +		dev_dbg(&master->dev,
-> > > > +			"i3c-scl-hz=3D%ld lower than i2c-scl-hz=3D%ld\n",
-> > > > +			i3cbus->scl_rate.i3c, i3cbus->scl_rate.i2c);
-> > > > +
-> > > > +	if (i3cbus->scl_rate.i2c !=3D I3C_BUS_I2C_FM_SCL_RATE &&
-> > > > +	    i3cbus->scl_rate.i2c !=3D I3C_BUS_I2C_FM_PLUS_SCL_RATE &&
-> > > > +	    i3cbus->mode !=3D I3C_BUS_MODE_PURE)
-> > > > +		dev_dbg(&master->dev,
-> > > > +			"i2c-scl-hz=3D%ld not defined according MIPI I3C spec\n",
-> > > > +			i3cbus->scl_rate.i2c);
-> > > > + =20
-> > >=20
-> > > Again, that's not what I suggested, so I'll write it down:
-> > >=20
-> > > 	dev_dbg(&master->dev, "i2c-scl =3D %ld Hz i3c-scl =3D %ld Hz\n",
-> > > 		i3cbus->scl_rate.i2c, i3cbus->scl_rate.i3c);
-> > >  =20
-> >=20
-> > I'm not ok with that change. The reasons are:
-> >   i3cbus->scl_rate.i3c < i3cbus->scl_rate.i2c is an abnormal use case. =
-As=20
-> > discuss early it can be cause by a wrong DT definition or just for=20
-> > testing purposes.
->=20
-> Is it buggy, and if it is, what are the symptoms? And I'm not talking
-> about slow transfers here. Also, note that forcing the I2C/I3C rate
-> through the DT already means you want to tweak the bus speed (either
-> for debugging purposes or because slowing things down is needed to fix
-> a HW bug).
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ drivers/clk/rockchip/clk-rk3228.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Does it need to be buggy to inform the user of such inconsistence?
+diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
+index 1c5267d134ee..00a195e6c014 100644
+--- a/drivers/clk/rockchip/clk-rk3228.c
++++ b/drivers/clk/rockchip/clk-rk3228.c
+@@ -699,6 +699,9 @@ static void __init rk3228_clk_init(struct device_node *np)
+ 		return;
+ 	}
+ 
++	/* Let hdmiphy_phy be the parent of the hdmiphy clock. */
++	writel_relaxed(HIWORD_UPDATE(0, 1, 13), reg_base + RK2928_MISC_CON);
++
+ 	ctx = rockchip_clk_init(np, reg_base, CLK_NR_CLKS);
+ 	if (IS_ERR(ctx)) {
+ 		pr_err("%s: rockchip clk init failed\n", __func__);
+-- 
+2.11.0
 
->=20
-> >=20
-> >   i3cbus->scl_rate.i2c !=3D I3C_BUS_I2C_FM_SCL_RATE && i3cbus->scl_rate=
-.i2c=20
-> > !=3D I3C_BUS_I2C_FM_PLUS_SCL_RATE, the MIPI I3C Spec v1.0 clearly says =
-that=20
-> > all I2C devices on the bus shall have a LVR register and thus support F=
-M=20
-> > or FM+ modes.
->=20
-> Yet, you might want to apply a lower I2C freq, and this sounds like a
-> valid case that doesn't deserve a dev_warn().
-
-I already said that I'm ok to change the dev_warn(), you just have to=20
-tell me what is the best message level to use.
-
->=20
-> > By  definition a FM bus works at 400kHz and a FM+ bus 1MHz.
-> > And for slaves, a FM device works up to 400kHz and a FM+ device works u=
-p=20
-> > to 1MHz respectively.
->=20
-> *up to*, that's the important thing to keep in mind. There's no problem
-> driving the SCL signal at a lower freq.
-
-We already know that a FM or FM+ supports lower frequencies due backyard=20
-capabilities.
-
->=20
-> >=20
-> > Apart of that, if the I2C device support you can use a custom higher or=
-=20
-> > lower rate, yet not defined according MIPI I3C spec.
->=20
-> I'm not going to have this discussion again, sorry. I think I gave
-> enough arguments to explain why having an I2C SLC rate that's slower
-> than what I2C devices support is fine.
-
-It is clear to me that the I2C devices on I3C bus shall support FM or=20
-FM+.
-If not they don't follow the MIPI I3C spec and for that reason I prefer=20
-to inform the user.
-
->=20
-> >=20
-> > > dev_dbg() is not printed by default, so it's just fine to have a trac=
-e
-> > > that prints the I3C and I2C rate unconditionally. =20
-> >=20
-> > I'm ok to change the way that user is notified and I think that is here=
-=20
-> > the problem.
-> > Maybe the best is to change the first dev_dbg() to dev_warn() and the=20
-> > second dev_info().
->=20
-> Same here. I'm fine having a dev_warn() when the rate is higher than
-> what's supported by devices present on the bus (because that case is
-> buggy), but not when it's lower and still in the valid range.
-
-Please take some time to analyze it again, my concern is only to inform=20
-the user about inconsistencies (forced or not) with the I3C specification=20
-and I already agreed to change the message levels.
-
-Best regards,
-Vitor Soares
