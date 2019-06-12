@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BF4C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DC4C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F117A21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A5E208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hBGTTVG6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ihFwqktA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438466AbfFLLoE (ORCPT
+        id S2438483AbfFLLoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:44:04 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:35096 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438421AbfFLLn4 (ORCPT
+        Wed, 12 Jun 2019 07:44:08 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:42669 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438467AbfFLLoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:43:56 -0400
-Received: by mail-yw1-f73.google.com with SMTP id p68so1345523ywp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:43:56 -0700 (PDT)
+        Wed, 12 Jun 2019 07:44:06 -0400
+Received: by mail-yw1-f74.google.com with SMTP id k142so16980572ywa.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=YVD/WVehggR5Wc73HNU/6Lbl/J+rO7t+BXcE3PMRRDE=;
-        b=hBGTTVG6ghhZ3+0guLELKJ8wGbky2Qh0tZY2BONpI+zCvbTSjhlIF7W0/JokOx5TzR
-         VO5Rbf4FBD1McYuvKbubXsd/VFsD/O7BipMIP18RAMdpnsTMlCRbLlZbiP7oKXwSNsh/
-         7N4rlsaJS9M2NXxtFUlEJJPsr6p+or/nlT4Zv12ZmDZup6gUVLdgoPgHeFDcpmGNRrjd
-         3ALIrSuYojaH/pslqsc0jXMozZhljZkCeYnT4XFg9eFUPMSJzEQdr0RcX9d6uIudOkk2
-         t4M2C4U//NS1sNKKoHlt+ReZpRZW4iLnE+17ISBaStJwmRniOrfV+Za5ClmC/tGhrMxn
-         H1LA==
+        bh=49lyybNUomf5TPPaYx2MdHbLNYXxhntLqw2Vq4fwp4Q=;
+        b=ihFwqktAIqrJiTQwTjUhK+MAdfOsiouWKHqO7ZjSSZRmzOCHa96d8VJOaNVIZNxAcO
+         AN6aXPp/RE1MrQ6zM8JJXD7nVRwFFfp5nOw9hthmPYYo49089cBtVFaOKAL5CUs7PfyJ
+         QVJHzuksJxoSuikR4fgviWI+uxOP0qQaG3AiODD2sa8fpyWPMeWsTelFk8q9IMn10OKD
+         +UNh5Ci6TXkOO1z7q/a2BisVOKAv5AoSV7//DSqtdeKoVvYLLBYkbZ3uB0cH3pp+Kewb
+         rQGpoPMvtpdogBshUOOc5uWdI95iNZkAb+XnamPk3rh+8KJ/cKljnQO2b6iriftiFlMR
+         wRJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=YVD/WVehggR5Wc73HNU/6Lbl/J+rO7t+BXcE3PMRRDE=;
-        b=OUYad0I8Z0VdRiiwFyWWIZ56rbnjwSRAn80Ay+onVyQeJAOrIjqOD1bWwF3Sx64p2t
-         4pvMI2HRnrWTRK3b4Il82SnDNB7mhpwLrcnvcxgEaXMgpsF1H17AEtvMTK1GS+eCcRpU
-         EuMsib/HcSphobUrxmBdbh34l0syxykKjAX0If7LdcCmzCVx5FWN8pP/WRBQ13Pde6S/
-         eL+cJwB8eWL2dfjxnWK/SuI9ZbmdkV4BL3io2mj9WzAH8TtGD6Rne23KT/c34hUNE0Pz
-         iAMEOiUoWNq45kybAycmRoY4ResutKLH3aXwsqYwcE0xPYLJrkWKpG7nsFnKSH4VjN/S
-         SSKA==
-X-Gm-Message-State: APjAAAW77zxhW3jF2Z1lo1MnSvIIoqSWxuogXN3/TeYRjmuL3bF74BBR
-        xp/g7WSplst02bdfXRq2ocx6AQK5PERJ5pG0
-X-Google-Smtp-Source: APXvYqzC8DIDqxpBDUE3Cs2MqoYPwBYxauFh78Yi9sE2QOVumKFBSV5WM5ycdrw0GZ9JIDvcxx34zgkY7MRSX6GJ
-X-Received: by 2002:a81:9947:: with SMTP id q68mr46506819ywg.197.1560339835908;
- Wed, 12 Jun 2019 04:43:55 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 13:43:23 +0200
+        bh=49lyybNUomf5TPPaYx2MdHbLNYXxhntLqw2Vq4fwp4Q=;
+        b=oygvvZ1Zvj8XUKVlMkytitNf1iQMFa6YhCUiXhLEBbxEj6Jq8y9clY6393AE4sMXBU
+         Gaz6ewHs7UtX5wHNd/K8C6rEUvyvhkxSPC8/d/JZQbYYqRYLDHBywIOBiUKuh+Vc0ZCT
+         gBAJYirl2tMz+HnaaKfKAu2DwnJCDfq6Bj78tVx6DBc5ujrMLcJ6+i/+eyFxN2bVSo/+
+         iZrGm1cbFGpCFI4Q07Fmh7ZWMepDkU+ozbQ0DxUdefOjC8WtjH2oapmlAXklPeFL7XTi
+         jFIJmC3+hq9dE9HJRpzPH3ei8m6oQQjnOvjf0bM2IloPKyTZQC7sVTSB2IuYJZVpXFUw
+         qJGA==
+X-Gm-Message-State: APjAAAUEQXg6N7HBejwmkPpMBqebl0Zb+53Jdfcib2M/4WOsJTF2tGG8
+        8V756cYB6ehICvC8dWSRZwca0xG7vJtyUkKd
+X-Google-Smtp-Source: APXvYqxF+/T3yPkem3l6CI+bv3/rmqxcJMbV/vABJbuoyeQcWj2Unps+PKPx2+cODkSgswAOZakXvU9OwOpzOWtl
+X-Received: by 2002:a81:2717:: with SMTP id n23mr31165867ywn.423.1560339845094;
+ Wed, 12 Jun 2019 04:44:05 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 13:43:26 +0200
 In-Reply-To: <cover.1560339705.git.andreyknvl@google.com>
-Message-Id: <4c0b9a258e794437a1c6cec97585b4b5bd2d3bba.1560339705.git.andreyknvl@google.com>
+Message-Id: <d9cbdcc3c4926bf70fe0014110901a0755e8e869.1560339705.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1560339705.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v17 06/15] mm, arm64: untag user pointers in get_vaddr_frames
+Subject: [PATCH v17 09/15] drm/amdgpu, arm64: untag user pointers
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -106,30 +106,49 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-get_vaddr_frames uses provided user pointers for vma lookups, which can
-only by done with untagged pointers. Instead of locating and changing
-all callers of this function, perform untagging in it.
+In amdgpu_gem_userptr_ioctl() and amdgpu_amdkfd_gpuvm.c/init_user_pages()
+an MMU notifier is set up with a (tagged) userspace pointer. The untagged
+address should be used so that MMU notifiers for the untagged address get
+correctly matched up with the right BO. This patch untag user pointers in
+amdgpu_gem_userptr_ioctl() for the GEM case and in amdgpu_amdkfd_gpuvm_
+alloc_memory_of_gpu() for the KFD case. This also makes sure that an
+untagged pointer is passed to amdgpu_ttm_tt_get_user_pages(), which uses
+it for vma lookups.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Suggested-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- mm/frame_vector.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c          | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/mm/frame_vector.c b/mm/frame_vector.c
-index c64dca6e27c2..c431ca81dad5 100644
---- a/mm/frame_vector.c
-+++ b/mm/frame_vector.c
-@@ -46,6 +46,8 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
- 	if (WARN_ON_ONCE(nr_frames > vec->nr_allocated))
- 		nr_frames = vec->nr_allocated;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index a6e5184d436c..5d476e9bbc43 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -1108,7 +1108,7 @@ int amdgpu_amdkfd_gpuvm_alloc_memory_of_gpu(
+ 		alloc_flags = 0;
+ 		if (!offset || !*offset)
+ 			return -EINVAL;
+-		user_addr = *offset;
++		user_addr = untagged_addr(*offset);
+ 	} else if (flags & ALLOC_MEM_FLAGS_DOORBELL) {
+ 		domain = AMDGPU_GEM_DOMAIN_GTT;
+ 		alloc_domain = AMDGPU_GEM_DOMAIN_CPU;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+index d4fcf5475464..e91df1407618 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c
+@@ -287,6 +287,8 @@ int amdgpu_gem_userptr_ioctl(struct drm_device *dev, void *data,
+ 	uint32_t handle;
+ 	int r;
  
-+	start = untagged_addr(start);
++	args->addr = untagged_addr(args->addr);
 +
- 	down_read(&mm->mmap_sem);
- 	locked = 1;
- 	vma = find_vma_intersection(mm, start, start + 1);
+ 	if (offset_in_page(args->addr | args->size))
+ 		return -EINVAL;
+ 
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
