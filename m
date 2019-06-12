@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E8FC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F55DC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1799B21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7F521721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="P9Cgtl8r"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="cP3ve+V2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388730AbfFLT1p (ORCPT
+        id S1728921AbfFLT05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:27:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34839 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728958AbfFLT1A (ORCPT
+        Wed, 12 Jun 2019 15:26:57 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38107 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728677AbfFLT0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:27:00 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so7705042wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:26:59 -0700 (PDT)
+        Wed, 12 Jun 2019 15:26:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d18so18129835wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:26:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v0w2fAP8QD6bB8DcWDxvNNp+o+Ahlw15ltjIv0biMp0=;
-        b=P9Cgtl8rtPH6CnBXJ2WrZ61Xvtj6wr+8jcQqJoTnznlbG673IBCqWln+TgQHiwW4B7
-         gn58pZ9bGUs10ce1hiVvZA8oPNCerSpRvv4A7TzopdK4Rvi2VCpzUgVfvksWWMUD3OLw
-         QJkLl5LPempub0cEHLSxmP9nUvJZaN1jR0ZWt5H7AceN/KdhYbfApN1S8O/QiSoBdmZ8
-         fepjimiJlY73o7R91al7+6gmdBVxh/qR7uA3/QDs/YyoTOyjGqTyIjH3YZO8tWXqSU1b
-         TB/XYKsv+VfmbVegN1nRbOVdVzbW06q6CkS5fX4YxcVxaztTOv4WExEUAo2KxWBxTske
-         5hgw==
+        bh=4nDl/CUmCqqh37N3cXS8r+aNsaHvCoXX3q5gpIkIcXw=;
+        b=cP3ve+V2cqLDHqdmmZWEIRkLThECV8dV9CpQoJNIPFK0OOyl/ECobu8g3pVyvDlF/5
+         N75tP0MJFDZSkg+g0Shq9KGffobsEPGgPJk11TBMBvqgLSYNqFDaW4asBO2bzEQqYn4Q
+         aboNx7HWRw1FAXssQZ2KToQglqdWfu/Zy6LJqzbTQVUn5GBTfKW5q4ZoOo+KfSj2fgDm
+         FehmyhHpObVdhb7DKtYfbdJ8BtyNp9ccDg6GkgIbxSd7su5z0qXpRHf/rTftjbH+mNaO
+         XLQ+vggFv8tm6QMbsuOqCXaCX85efXP2r8VMLnArHWepTMd7UJhqN4A+oNNaGUMSQgQr
+         4tAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v0w2fAP8QD6bB8DcWDxvNNp+o+Ahlw15ltjIv0biMp0=;
-        b=KbvBAjT2ZH98fkKuFG82v1bpyPE8Oi5oirJKOnSJzICrkz6gS4KZijznRJjDbxZsGb
-         gl95I88r9P8tm1xZHfajNUt+AmymJCEzJIGdZ9kvisXrJmy5WV69N+sG2lArJJ2XA3PQ
-         EJmSTl8HVLisY6/rOImRTQ0lTafaNhVuxMVvimRo3LLnwVkBf6+Ym3ud4nws1PU9bPiv
-         tztCyOQbgNizP/oEptX0xMUVaPfXsdUO3f03hcAXEeX92+ebN//U6jNU7yXryqO0Hy1Q
-         kBzj3tDUiCyb5d0S9Qz9nzFlWsbViD1uMb4EzRPh9WJ+EqkVD1fKQW+LfiA1NUA/NChe
-         T8AA==
-X-Gm-Message-State: APjAAAW0b+bkAL4+Ei4ndQG3iMCLe4X7rmENodrVA9KayaavIUyHcMo8
-        ma5jU20pQzMDO3zvVgzzyOSroF+a8nk=
-X-Google-Smtp-Source: APXvYqzBOMtoN8m4e061+TiW3T6LqW/AGon+Xmfv0twrcsAPW8KW3K2UPtDnZ2LOOnFtFcHak9Lcxg==
-X-Received: by 2002:a1c:be0a:: with SMTP id o10mr516744wmf.91.1560367619045;
-        Wed, 12 Jun 2019 12:26:59 -0700 (PDT)
+        bh=4nDl/CUmCqqh37N3cXS8r+aNsaHvCoXX3q5gpIkIcXw=;
+        b=YrGGw/UEN5s4b0d4IOqb8YMbQrRekD8kt1rIq4EC3Dnzx54kvOd+xzKcdWLUFDHOH/
+         EpQNaVP8loQOQaG95R6cmiABbdI9ttCmqfWttxBxovraI0RRNCf4zSTdvXvc4NKVHB+j
+         pmbqIJlAL1dkL7MjN0AWSXiVrAFvm1loOOQ2wR4ZHAvmzj97ez2a/+wS2es7v7X6xAko
+         vxPVR4j4wbwkVnCSijo9BzV6/Y1ljrnvcah/gFjyojg2lApKSUcmAT+uFH0mEjeJZCqg
+         4skuG2s1QtvYf8RhStYhWC3jzgw5dMgix/GEaLH1DhjgiXvtuyn4o+tUjO8XX0bqnTSw
+         WIBQ==
+X-Gm-Message-State: APjAAAVEvenmLvioyTMgSmLkgaERrkloOJBGxnGdP+j1gpyqQR52fOY3
+        6445ymX79HwTNsaKWckHQvNgbEp5kXQ=
+X-Google-Smtp-Source: APXvYqzvFvZKw4czh3fj4IC0HCIsTNt0UN8B6+q4hgTO1PoZvnQtXhK6OsfwFtRQLTAdWfRhowlMWg==
+X-Received: by 2002:a5d:4f8b:: with SMTP id d11mr19501473wru.264.1560367608606;
+        Wed, 12 Jun 2019 12:26:48 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id r5sm612526wrg.10.2019.06.12.12.26.57
+        by smtp.gmail.com with ESMTPSA id r5sm612526wrg.10.2019.06.12.12.26.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:26:58 -0700 (PDT)
+        Wed, 12 Jun 2019 12:26:48 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
-        Adrian Reber <adrian@lisas.de>,
+Cc:     Dmitry Safonov <dima@arista.com>, Adrian Reber <adrian@lisas.de>,
         Andrei Vagin <avagin@openvz.org>,
         Andy Lutomirski <luto@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
@@ -76,9 +75,9 @@ Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv4 20/28] timens/fs/proc: Introduce /proc/pid/timens_offsets
-Date:   Wed, 12 Jun 2019 20:26:19 +0100
-Message-Id: <20190612192628.23797-21-dima@arista.com>
+Subject: [PATCHv4 13/28] x86/vdso: Restrict splitting VVAR VMA
+Date:   Wed, 12 Jun 2019 20:26:12 +0100
+Message-Id: <20190612192628.23797-14-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612192628.23797-1-dima@arista.com>
 References: <20190612192628.23797-1-dima@arista.com>
@@ -89,283 +88,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+Although, time namespace can work with VVAR VMA split, it seems worth
+to forbid splitting VVAR resulting in stricter ABI and reducing amount
+of corner-cases to consider while working further on VDSO.
 
-API to set time namespace offsets for children processes, i.e.:
-echo "clockid off_ses off_nsec" > /proc/self/timens_offsets
+I don't think there is any use-case for partial mremap() of vvar,
+but if there is any - this patch can be easily reverted.
 
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
+Co-developed-by: Andrei Vagin <avagin@openvz.org>
+Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- fs/proc/base.c                 |  95 ++++++++++++++++++++++++++++++
- include/linux/time_namespace.h |  10 ++++
- kernel/time_namespace.c        | 104 +++++++++++++++++++++++++++++++++
- 3 files changed, 209 insertions(+)
+ arch/x86/entry/vdso/vma.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 9c8ca6cd3ce4..6a96b0543f69 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -94,6 +94,7 @@
- #include <linux/sched/debug.h>
- #include <linux/sched/stat.h>
- #include <linux/posix-timers.h>
-+#include <linux/time_namespace.h>
- #include <trace/events/oom.h>
- #include "internal.h"
- #include "fd.h"
-@@ -1516,6 +1517,97 @@ static const struct file_operations proc_pid_sched_autogroup_operations = {
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index 8db1f594e8b1..d2b421233ba5 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -84,6 +84,18 @@ static int vdso_mremap(const struct vm_special_mapping *sm,
+ 	return 0;
+ }
  
- #endif /* CONFIG_SCHED_AUTOGROUP */
- 
-+#ifdef CONFIG_TIME_NS
-+static int timens_offsets_show(struct seq_file *m, void *v)
++static int vvar_mremap(const struct vm_special_mapping *sm,
++		struct vm_area_struct *new_vma)
 +{
-+	struct task_struct *p;
++	unsigned long new_size = new_vma->vm_end - new_vma->vm_start;
++	const struct vdso_image *image = new_vma->vm_mm->context.vdso_image;
 +
-+	p = get_proc_task(file_inode(m->file));
-+	if (!p)
-+		return -ESRCH;
-+	proc_timens_show_offsets(p, m);
-+
-+	put_task_struct(p);
++	if (new_size != -image->sym_vvar_start)
++		return -EINVAL;
 +
 +	return 0;
 +}
 +
-+static ssize_t
-+timens_offsets_write(struct file *file, const char __user *buf,
-+	    size_t count, loff_t *ppos)
-+{
-+	struct inode *inode = file_inode(file);
-+	struct proc_timens_offset offsets[2];
-+	char *kbuf = NULL, *pos, *next_line;
-+	struct task_struct *p;
-+	int ret, noffsets;
-+
-+	/* Only allow < page size writes at the beginning of the file */
-+	if ((*ppos != 0) || (count >= PAGE_SIZE))
-+		return -EINVAL;
-+
-+	/* Slurp in the user data */
-+	kbuf = memdup_user_nul(buf, count);
-+	if (IS_ERR(kbuf))
-+		return PTR_ERR(kbuf);
-+
-+	/* Parse the user data */
-+	ret = -EINVAL;
-+	noffsets = 0;
-+	for (pos = kbuf; pos; pos = next_line) {
-+		struct proc_timens_offset *off = &offsets[noffsets];
-+		int err;
-+
-+		/* Find the end of line and ensure we don't look past it */
-+		next_line = strchr(pos, '\n');
-+		if (next_line) {
-+			*next_line = '\0';
-+			next_line++;
-+			if (*next_line == '\0')
-+				next_line = NULL;
-+		}
-+
-+		err = sscanf(pos, "%u %lld %lu", &off->clockid,
-+				&off->val.tv_sec, &off->val.tv_nsec);
-+		if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
-+			goto out;
-+		noffsets++;
-+		if (noffsets == ARRAY_SIZE(offsets)) {
-+			if (next_line)
-+				count = next_line - kbuf;
-+			break;
-+		}
-+	}
-+
-+	ret = -ESRCH;
-+	p = get_proc_task(inode);
-+	if (!p)
-+		goto out;
-+	ret = proc_timens_set_offset(file, p, offsets, noffsets);
-+	put_task_struct(p);
-+	if (ret)
-+		goto out;
-+
-+	ret = count;
-+out:
-+	kfree(kbuf);
-+	return ret;
-+}
-+
-+static int timens_offsets_open(struct inode *inode, struct file *filp)
-+{
-+	return single_open(filp, timens_offsets_show, inode);
-+}
-+
-+static const struct file_operations proc_timens_offsets_operations = {
-+	.open		= timens_offsets_open,
-+	.read		= seq_read,
-+	.write		= timens_offsets_write,
-+	.llseek		= seq_lseek,
-+	.release	= single_release,
-+};
-+#endif /* CONFIG_TIME_NS */
-+
- static ssize_t comm_write(struct file *file, const char __user *buf,
- 				size_t count, loff_t *offset)
+ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+ 		      struct vm_area_struct *vma, struct vm_fault *vmf)
  {
-@@ -2982,6 +3074,9 @@ static const struct pid_entry tgid_base_stuff[] = {
- #endif
- #ifdef CONFIG_SCHED_AUTOGROUP
- 	REG("autogroup",  S_IRUGO|S_IWUSR, proc_pid_sched_autogroup_operations),
-+#endif
-+#ifdef CONFIG_TIME_NS
-+	REG("timens_offsets",  S_IRUGO|S_IWUSR, proc_timens_offsets_operations),
- #endif
- 	REG("comm",      S_IRUGO|S_IWUSR, proc_pid_set_comm_operations),
- #ifdef CONFIG_HAVE_ARCH_TRACEHOOK
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index d32b55fad953..8cd16dfea42d 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -40,6 +40,16 @@ static inline void put_time_ns(struct time_namespace *ns)
- 	kref_put(&ns->kref, free_time_ns);
- }
+@@ -136,6 +148,7 @@ static const struct vm_special_mapping vdso_mapping = {
+ static const struct vm_special_mapping vvar_mapping = {
+ 	.name = "[vvar]",
+ 	.fault = vvar_fault,
++	.mremap = vvar_mremap,
+ };
  
-+extern void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m);
-+
-+struct proc_timens_offset {
-+	int clockid;
-+	struct timespec64 val;
-+};
-+
-+extern int proc_timens_set_offset(struct file *file, struct task_struct *p,
-+				struct proc_timens_offset *offsets, int n);
-+
- static inline void timens_add_monotonic(struct timespec64 *ts)
- {
-         struct timens_offsets *ns_offsets = current->nsproxy->time_ns->offsets;
-diff --git a/kernel/time_namespace.c b/kernel/time_namespace.c
-index 2a2cab14ac29..a32adeabf9f0 100644
---- a/kernel/time_namespace.c
-+++ b/kernel/time_namespace.c
-@@ -13,6 +13,7 @@
- #include <linux/user_namespace.h>
- #include <linux/proc_ns.h>
- #include <linux/sched/task.h>
-+#include <linux/seq_file.h>
- #include <linux/mm.h>
- #include <asm/vdso.h>
- 
-@@ -229,6 +230,109 @@ static struct user_namespace *timens_owner(struct ns_common *ns)
- 	return to_time_ns(ns)->user_ns;
- }
- 
-+static void show_offset(struct seq_file *m, int clockid, struct timespec64 *ts)
-+{
-+	seq_printf(m, "%d %lld %ld\n", clockid, ts->tv_sec, ts->tv_nsec);
-+}
-+
-+void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m)
-+{
-+	struct ns_common *ns;
-+	struct time_namespace *time_ns;
-+	struct timens_offsets *ns_offsets;
-+
-+	ns = timens_for_children_get(p);
-+	if (!ns)
-+		return;
-+	time_ns = to_time_ns(ns);
-+
-+	if (!time_ns->offsets) {
-+		put_time_ns(time_ns);
-+		return;
-+	}
-+	ns_offsets = time_ns->offsets;
-+
-+	show_offset(m, CLOCK_MONOTONIC, &ns_offsets->monotonic);
-+	show_offset(m, CLOCK_BOOTTIME, &ns_offsets->boottime);
-+	put_time_ns(time_ns);
-+}
-+
-+int proc_timens_set_offset(struct file *file, struct task_struct *p,
-+			   struct proc_timens_offset *offsets, int noffsets)
-+{
-+	struct ns_common *ns;
-+	struct time_namespace *time_ns;
-+	struct timens_offsets *ns_offsets;
-+	struct timespec64 *offset;
-+	struct timespec64 tp;
-+	int i, err;
-+
-+	ns = timens_for_children_get(p);
-+	if (!ns)
-+		return -ESRCH;
-+	time_ns = to_time_ns(ns);
-+
-+	if (!time_ns->offsets || time_ns->initialized ||
-+	    !file_ns_capable(file, time_ns->user_ns, CAP_SYS_TIME)) {
-+		put_time_ns(time_ns);
-+		return -EPERM;
-+	}
-+	ns_offsets = time_ns->offsets;
-+
-+	for (i = 0; i < noffsets; i++) {
-+		struct proc_timens_offset *off = &offsets[i];
-+
-+		switch (off->clockid) {
-+		case CLOCK_MONOTONIC:
-+			ktime_get_ts64(&tp);
-+			break;
-+		case CLOCK_BOOTTIME:
-+			ktime_get_boottime_ts64(&tp);
-+			break;
-+		default:
-+			err = -EINVAL;
-+			goto out;
-+		}
-+
-+		err = -ERANGE;
-+
-+		if (off->val.tv_sec > KTIME_SEC_MAX || off->val.tv_sec < -KTIME_SEC_MAX)
-+			goto out;
-+
-+		tp = timespec64_add(tp, off->val);
-+		/*
-+		 * KTIME_SEC_MAX is divided by 2 to be sure that KTIME_MAX is
-+		 * still unreachable.
-+		 */
-+		if (tp.tv_sec < 0 || tp.tv_sec > KTIME_SEC_MAX / 2)
-+			goto out;
-+	}
-+
-+	err = 0;
-+	/* don't report errors after this line */
-+	for (i = 0; i < noffsets; i++) {
-+		struct proc_timens_offset *off = &offsets[i];
-+
-+		switch (off->clockid) {
-+		case CLOCK_MONOTONIC:
-+			offset = &ns_offsets->monotonic;
-+			break;
-+		case CLOCK_BOOTTIME:
-+			offset = &ns_offsets->boottime;
-+			break;
-+		default:
-+			goto out;
-+		}
-+
-+		*offset = off->val;
-+	}
-+
-+out:
-+	put_time_ns(time_ns);
-+
-+	return err;
-+}
-+
- const struct proc_ns_operations timens_operations = {
- 	.name		= "time",
- 	.type		= CLONE_NEWTIME,
+ /*
 -- 
 2.22.0
 
