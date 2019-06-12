@@ -2,177 +2,104 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F88C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 625D7C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670282082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C70B2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:14:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMNMZ5l/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501907AbfFLPN6 (ORCPT
+        id S2501922AbfFLPOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:13:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39822 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2501887AbfFLPN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:13:58 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DE86F307D974;
-        Wed, 12 Jun 2019 15:13:52 +0000 (UTC)
-Received: from jsavitz.bos.com (dhcp-17-175.bos.redhat.com [10.18.17.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CD661665F1;
-        Wed, 12 Jun 2019 15:13:49 +0000 (UTC)
-From:   Joel Savitz <jsavitz@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joel Savitz <jsavitz@redhat.com>, Li Zefan <lizefan@huawei.com>,
-        Phil Auld <pauld@redhat.com>, Waiman Long <longman@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        cgroups@vger.kernel.org
-Subject: [PATCH v3] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
-Date:   Wed, 12 Jun 2019 11:13:15 -0400
-Message-Id: <1560352395-19977-1-git-send-email-jsavitz@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 12 Jun 2019 15:13:58 +0000 (UTC)
+        Wed, 12 Jun 2019 11:14:02 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43480 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2501887AbfFLPOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:14:00 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so13226287ios.10;
+        Wed, 12 Jun 2019 08:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vI+MjupPN0bdSLC0d4n9EKY3NhMFE/hPF7Qke//MIZg=;
+        b=FMNMZ5l/AMgRbC8NwAe+xwcMBIahtFMP/TeDWBxDwkaeY9lWLrRo/zIdPjWjzXGFtb
+         Tdxo2nt9ZqRQ2e3mT6RWTA+gsI1ZO8yllh9Utv6BPqo9fSyKFw8iwdAq7nST/Jl5aqGa
+         W7MDM7oTdJvy4cT6mshiFIljSfoM9pwrfIqTE0jKCXDtvG5NZ8+UNJ/VYTa9aqTZjvm2
+         vk78kFLYP618peEMo0ZEmiEab3aV1uO5NSQ6sbuE5hRNVHdY41xFflNoMflKGXui5lX5
+         vP0FQvZ0Z1rm1f7V02gWlj4DFCefbox2yDTCY++MP8HQsxKBekf7VVVMr2Rp4wh/kZZ5
+         GOqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vI+MjupPN0bdSLC0d4n9EKY3NhMFE/hPF7Qke//MIZg=;
+        b=Xd7PDEdt7eRevVzZkg5xovLO6QOO177xdW0jauptSVBEWZziMRJGuMgOH8+RdO1/mI
+         1ZRlrXWG753txr+03hr4AazX4JQ+DJq4DSJY5V2H83PDhV6NuGOH+uSaWmdHF7rkk8gd
+         A7wxV7oMQY4zl8ywVay7lhRJu+z/74GGp64FILbwuRlsFA9xiL9VSNJcYgYtYqY3Em0W
+         hGe1hMHKQFSFEZe2trlmzL1FyMm3Q9qYDm4eV8dl3TgbwyDtOxEqtC5wst5+VqTCvSNs
+         5dN5opyD8/cpl/4KkZmhbjWmulCTQg2Ci7Jj5a5oRxko/0gpMc2GFbAhGKgIC+juCj28
+         cYCg==
+X-Gm-Message-State: APjAAAVqVeS1tsE8lU3s7po5LO4rxS9haLlv6xFBiiQsjHWnM4ALTTc5
+        OkLGXeQtQDPiKDaChC+65iCXOR/twc2abxKqEWs=
+X-Google-Smtp-Source: APXvYqwJX3V/w2R1ujedyKrrjjM7vESmcNboL72M6UunCkoDmGIflaIXdl27ygYhJwTlO8YNS6zNuOylrvb7qqsjOx8=
+X-Received: by 2002:a6b:f90f:: with SMTP id j15mr25554922iog.43.1560352439357;
+ Wed, 12 Jun 2019 08:13:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
+ <20190606161322.47192-1-jeffrey.l.hugo@gmail.com> <20190612003507.GG143729@dtor-ws>
+ <nycvar.YFH.7.76.1906121644160.27227@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1906121644160.27227@cbobk.fhfr.pm>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Wed, 12 Jun 2019 08:13:47 -0700
+Message-ID: <CAKdAkRQOxTX51rhodoFyYpwi85pk8apvWjCLLX5Sw6NTH=j1kA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, agross@kernel.org,
+        David Brown <david.brown@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case that a process is constrained by taskset(1) (i.e.
-sched_setaffinity(2)) to a subset of available cpus, and all of those are
-subsequently offlined, the scheduler will set tsk->cpus_allowed to
-the current value of task_cs(tsk)->effective_cpus.
+On Wed, Jun 12, 2019 at 7:45 AM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Tue, 11 Jun 2019, Dmitry Torokhov wrote:
+>
+> > > +static const char *hid_elan_i2c_ignore[] = {
+> >
+> > If this is a copy of elan whitelist, then, if we do not want to bother
+> > with sharing it in object form (as a elan-i2c-ids module), can we at
+> > least move it into include/linux/input/elan-i2c-ids.h and consume from
+> > hid-quirks.c?
+>
+> Let's just not duplicate it in both objects. Why not properly export it
+> from hid_quirks?
 
-This is done via a call to do_set_cpus_allowed() in the context of 
-cpuset_cpus_allowed_fallback() made by the scheduler when this case is
-detected. This is the only call made to cpuset_cpus_allowed_fallback()
-in the latest mainline kernel.
+Strictly speaking Elan does not depend on HID; exporting it from
+quirks would mean adding this dependency. This also mean that you
+can't make Elan built-in while keeping HID as a module (I think this
+at least used to be config on some Chromebooks).
 
-However, this is not sane behavior.
+Thanks.
 
-I will demonstrate this on a system running the latest upstream kernel
-with the following initial configuration:
-
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	ffffffff,fffffff
-	Cpus_allowed_list:	0-63
-
-(Where cpus 32-63 are provided via smt.)
-
-If we limit our current shell process to cpu2 only and then offline it
-and reonline it:
-
-	# taskset -p 4 $$
-	pid 2272's current affinity mask: ffffffffffffffff
-	pid 2272's new affinity mask: 4
-
-	# echo off > /sys/devices/system/cpu/cpu2/online
-	# dmesg | tail -3
-	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
-	[ 2195.872700] IRQ 114: no longer affine to CPU2
-	[ 2195.879128] smpboot: CPU 2 is now offline
-
-	# echo on > /sys/devices/system/cpu/cpu2/online
-	# dmesg | tail -1
-	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
-
-
-We see that our current process now has an affinity mask containing
-every cpu available on the system _except_ the one we originally
-constrained it to:
-
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:   ffffffff,fffffffb
-	Cpus_allowed_list:      0-1,3-63 
-
-This is not sane behavior, as the scheduler can now not only place the
-process on previously forbidden cpus, it can't even schedule it on
-the cpu it was originally constrained to!
-
-Other cases result in even more exotic affinity masks. Take for instance
-a process with an affinity mask containing only cpus provided by smt at
-the moment that smt is toggled, in a configuration such as the following:
-
-	# taskset -p f000000000 $$
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	000000f0,00000000
-	Cpus_allowed_list:	36-39
-
-A double toggle of smt results in the following behavior:
-
-	# echo off > /sys/devices/system/cpu/smt/control
-	# echo on > /sys/devices/system/cpu/smt/control
-	# grep -i cpus /proc/$$/status
-	Cpus_allowed:	ffffff00,ffffffff
-	Cpus_allowed_list:	0-31,40-63
-
-This is even less sane than the previous case, as the new affinity mask
-excludes all smt-provided cpus with ids less than those that were
-previously in the affinity mask, as well as those that were actually in
-the mask.
-
-With this patch applied, both of these cases end in the following state:
-
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	ffffffff,ffffffff
-	Cpus_allowed_list:	0-63
-
-The original policy is discarded. Though not ideal, it is the simplest way
-to restore sanity to this fallback case without reinventing the cpuset
-wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
-for the previous affinity mask to be restored in this fallback case can use
-that mechanism instead.
-
-This patch modifies scheduler behavior by instead resetting the mask to
-task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
-mode. I tested the cases above on both modes.
-
-Note that the scheduler uses this fallback mechanism if and only if
-_every_ other valid avenue has been traveled, and it is the last resort
-before calling BUG().
-
-Suggested-by: Waiman Long <longman@redhat.com>
-Suggested-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Joel Savitz <jsavitz@redhat.com>
----
- kernel/cgroup/cpuset.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 6a1942ed781c..515525ff1cfd 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -3254,10 +3254,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
- 	spin_unlock_irqrestore(&callback_lock, flags);
- }
- 
-+/**
-+ * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
-+ * @tsk: pointer to task_struct with which the scheduler is struggling
-+ *
-+ * Description: In the case that the scheduler cannot find an allowed cpu in
-+ * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
-+ * mode however, this value is the same as task_cs(tsk)->effective_cpus,
-+ * which will not contain a sane cpumask during cases such as cpu hotplugging.
-+ * This is the absolute last resort for the scheduler and it is only used if
-+ * _every_ other avenue has been traveled.
-+ **/
-+
- void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
- {
- 	rcu_read_lock();
--	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
-+	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
-+		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
- 	rcu_read_unlock();
- 
- 	/*
 -- 
-2.18.1
-
+Dmitry
