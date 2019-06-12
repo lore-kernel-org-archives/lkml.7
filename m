@@ -2,105 +2,91 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C392C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6856C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F43208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C7C2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732303AbfFLKpB (ORCPT
+        id S2407513AbfFLKpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:45:01 -0400
-Received: from sauhun.de ([88.99.104.3]:58420 "EHLO pokefinder.org"
+        Wed, 12 Jun 2019 06:45:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:50006 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbfFLKpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:45:01 -0400
-Received: from localhost (p5486CACA.dip0.t-ipconnect.de [84.134.202.202])
-        by pokefinder.org (Postfix) with ESMTPSA id 974242C54BC;
-        Wed, 12 Jun 2019 12:44:59 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 12:44:59 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
-        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
-        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
-Message-ID: <20190612104459.gvji3qxym5s4odfq@ninjato>
-References: <20190610084213.1052-1-lee.jones@linaro.org>
- <20190612103453.ccet2pneairnlpcc@ninjato>
- <20190612104011.GA4660@dell>
+        id S1727111AbfFLKpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:45:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B34A28;
+        Wed, 12 Jun 2019 03:45:45 -0700 (PDT)
+Received: from C02TF0J2HF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9D343F246;
+        Wed, 12 Jun 2019 03:47:05 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 11:45:17 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v16 09/16] fs, arm64: untag user pointers in
+ fs/userfaultfd.c
+Message-ID: <20190612104517.GB28951@C02TF0J2HF1T.local>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <7d6fef00d7daf647b5069101da8cf5a202da75b0.1559580831.git.andreyknvl@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ozob5i4arnc7fie4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612104011.GA4660@dell>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <7d6fef00d7daf647b5069101da8cf5a202da75b0.1559580831.git.andreyknvl@google.com>
+User-Agent: Mutt/1.11.2 (2019-01-07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 03, 2019 at 06:55:11PM +0200, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
+> 
+> userfaultfd code use provided user pointers for vma lookups, which can
+> only by done with untagged pointers.
+> 
+> Untag user pointers in validate_range().
+> 
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
---ozob5i4arnc7fie4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> There are no cross-subsystem build dependencies on any of these
-> patches.  The only reason they are bundled together in the same
-> patch-set is for cross-subsystem visibility and understanding.
->=20
-> There is wide interest in these devices.
-
-I see. That would have been a great cover-letter, Lee ;) Thanks for the
-heads up!
-
->=20
-> > Also, the current maintainer entry for this driver looks like:
-> >=20
-> > drivers/i2c/busses/i2c-qcom-geni.c:
-> >         Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
-> >         David Brown <david.brown@linaro.org> (maintainer:ARM/QUALCOMM S=
-UPPORT)
-> >         Alok Chauhan <alokc@codeaurora.org> (supporter:QUALCOMM GENERIC=
- INTERFACE I2C DRIVER)
-> >=20
-> > I didn't hear from those people yet, would be great to have their acks.
->=20
-> I will see if I can rouse them from their slumber.
-
-Please do. If they are not to reach, we probably need to update the
-entry...
-
-
---ozob5i4arnc7fie4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A16sACgkQFA3kzBSg
-KbYxGA/9HiQnj0VnFh9GoFzMImS2pCdkGgsTJeZ+9OUV4xzVVVJ5IqvMsTVveAa2
-G8UW1TqfWoeNwaAW5z1DITb/F2FOhx162e7Qce8C5xYNJfybOJYixAvlkyjVBi0H
-fT4/ei14NJgNsy2cGs2UUSwKqwMmR7iom3DQQc3w6fMBiXciQGKNXJ7Gr1iatsg7
-jbOMUZ+SzeSLsfQutWvNR8kiN0K0AEnj9f5Q2nxPtwoK0cSx6HxH7x3KA6QK4NlO
-tOY4FrVg4yXCu2arTUcp+1PBo2E9svLocqZwyxa1bJyeIZYNMI9XJXoliMNdMsJF
-spDGdaHB3OPG1ipES/W6559y9MCdebjqlnE2JiSGmhNlrU+TIgj4q862zHTL9wyN
-Ugpc5IMvaVafCfUJTqLHF/lGKfs4J5d568psLyJamY9XqVWG1LY+s/RQtD1OMATU
-dfDs2ONGEbVK8Okvpck8cgPn25bOn0R67Kn5K31PX6qUhlggxeGl5laOhhdzg1h5
-80Or9O8URxb6SHStnsgy8uA9OF3gpfKnmE6PVXxfIShQiCz3UxC9l/j46zlObUPV
-Z1XeHI2cT0cjSTfgclEyM0Q33DyECfH3uTPuc0erjqNj+qWVxV506GsAOmU09GEP
-lXw8C3DCPAdqrxO/bcIi8xlY//b0s9uEHokcV5lutndaQFyj+oE=
-=E6Gx
------END PGP SIGNATURE-----
-
---ozob5i4arnc7fie4--
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
