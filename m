@@ -2,94 +2,123 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA32C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8183C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93AB520896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A939C208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LcKAST6B"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="j40w5J8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408596AbfFLMh7 (ORCPT
+        id S2409119AbfFLMiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:37:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48760 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406351AbfFLMh5 (ORCPT
+        Wed, 12 Jun 2019 08:38:16 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41425 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406351AbfFLMiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:37:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l/g0KnT/EyAvMoDe4YYe+/hlvBi7vzZDEnk1KrMoaBA=; b=LcKAST6BxZ0yaOkpMIf7Enjfj
-        6c1UeC9+DtFiAG+4D1XV7S0v/ELkcMzkURVHfKUblrSfnsOxjaT7amrayTl8QE7Smq9tJEjwDCWRd
-        cPbbPfreHmLvxItzPtzj01TyLpkUqy/kyuWCUwt7PAmxBBWhSBNFS/O2Q9nWYMpVJEIh8LvtVttjd
-        3KNMNDefD5IFT6bWTwg5AiN9UAusMV0sJPpB8YYd7y3pqpMB8efSmNBLxM2eJ58kVJO5XNksaSM2O
-        FqwQN4iCqdirubzy0TOiW6r/sZA9NbDScogy2w/raTG/y8nZlf2j6YFQA1y/4Snew3ovKOI6jiSdf
-        lwADVwjOA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb2Vl-00060B-5I; Wed, 12 Jun 2019 12:37:53 +0000
-Date:   Wed, 12 Jun 2019 05:37:53 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190612123751.GD32656@bombadil.infradead.org>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
+        Wed, 12 Jun 2019 08:38:15 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5CCb2S9686859
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 12 Jun 2019 05:37:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5CCb2S9686859
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560343023;
+        bh=eYKMpZEAjnJ8Js12oOCOaHQmVBeOrwt5sDU+OKEJZTU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=j40w5J8KWchEte2B1U3uMrs1/vfHUuuU5hL+FnDAJJnmomlYuDLVklWN6Pr4S9f4i
+         lcdiCO9kD4PkzSH0QKkb1DU9UreSJsSFk77jetMcBHB1c7KSW6kwwJAS1JreymKcR7
+         ZJapELuwESJJ6O0JHcfzJLWjNu4caqtdsDtbL4ViUbWsug8m0/575mqeuJTjrOLIcJ
+         ZwVt0qhRtovR2Ku+D63pAoYMgZRAtnRmntYCwB7kPQ/xej6nnwJnaeAHLDOTb7KyHj
+         5DIN7SCOXbv1qonO0uurGhz5i2TboGnviM7WrLSeEfNSXuR8Y3a5knE3oTH6Jt1US/
+         ywjv984Y6FLsw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5CCb1LD686855;
+        Wed, 12 Jun 2019 05:37:01 -0700
+Date:   Wed, 12 Jun 2019 05:37:01 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Rajneesh Bhardwaj <tipbot@zytor.com>
+Message-ID: <tip-61caa8621b9979a78b04e353ab2ee44a47ef7a62@git.kernel.org>
+Cc:     bp@alien8.de, lenb@kernel.org, kan.liang@linux.intel.com,
+        srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
+        rajneesh.bhardwaj@linux.intel.com, qiuxu.zhuo@intel.com,
+        mingo@kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, hpa@zytor.com,
+        andriy.shevchenko@linux.intel.com, linux-pm@vger.kernel.org,
+        dave.hansen@linux.intel.com
+Reply-To: andriy.shevchenko@linux.intel.com, linux-pm@vger.kernel.org,
+          kan.liang@linux.intel.com, srinivas.pandruvada@linux.intel.com,
+          dave.hansen@linux.intel.com, tglx@linutronix.de,
+          rajneesh.bhardwaj@linux.intel.com, bp@alien8.de,
+          qiuxu.zhuo@intel.com, lenb@kernel.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, peterz@infradead.org, hpa@zytor.com
+In-Reply-To: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
+References: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cpu] x86/cpu: Add Ice Lake NNPI to Intel family
+Git-Commit-ID: 61caa8621b9979a78b04e353ab2ee44a47ef7a62
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190608001036.GF14308@dread.disaster.area>
-User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
-> On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
-> > Are you suggesting that we have something like this from user space?
-> > 
-> > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
-> 
-> Rather than "unbreakable", perhaps a clearer description of the
-> policy it entails is "exclusive"?
-> 
-> i.e. what we are talking about here is an exclusive lease that
-> prevents other processes from changing the layout. i.e. the
-> mechanism used to guarantee a lease is exclusive is that the layout
-> becomes "unbreakable" at the filesystem level, but the policy we are
-> actually presenting to uses is "exclusive access"...
+Commit-ID:  61caa8621b9979a78b04e353ab2ee44a47ef7a62
+Gitweb:     https://git.kernel.org/tip/61caa8621b9979a78b04e353ab2ee44a47ef7a62
+Author:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+AuthorDate: Thu, 6 Jun 2019 06:54:19 +0530
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 12 Jun 2019 11:43:42 +0200
 
-That's rather different from the normal meaning of 'exclusive' in the
-context of locks, which is "only one user can have access to this at
-a time".  As I understand it, this is rather more like a 'shared' or
-'read' lock.  The filesystem would be the one which wants an exclusive
-lock, so it can modify the mapping of logical to physical blocks.
+x86/cpu: Add Ice Lake NNPI to Intel family
 
-The complication being that by default the filesystem has an exclusive
-lock on the mapping, and what we're trying to add is the ability for
-readers to ask the filesystem to give up its exclusive lock.
+Add the CPUID model number of Ice Lake Neural Network Processor for Deep
+Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
+model number 0x9D and this will be documented in a future version of Intel
+Software Development Manual.
 
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@suse.de
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
+
+---
+ arch/x86/include/asm/intel-family.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 9f15384c504a..087de5d3b93a 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -53,6 +53,7 @@
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+ 
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
++#define INTEL_FAM6_ICELAKE_NNPI		0x9D
+ 
+ /* "Small Core" Processors (Atom) */
+ 
